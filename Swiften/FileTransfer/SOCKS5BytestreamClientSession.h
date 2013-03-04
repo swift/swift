@@ -38,7 +38,7 @@ public:
 		Ready,
 		Writing,
 		Reading,
-		Finished,
+		Finished
 	};
 
 public:

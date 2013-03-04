@@ -15,7 +15,7 @@ namespace Swift {
 			struct PortMapping {
 				enum Protocol {
 					TCP,
-					UDP,
+					UDP
 				};
 
 				unsigned int publicPort;

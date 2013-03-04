@@ -39,4 +39,4 @@ QString ChatSnippet::wrapResizable(const QString& text) {
 	return "<span class='swift_resizable'>" + text + "</span>";
 }
 
-};
+}

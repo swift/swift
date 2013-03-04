@@ -62,4 +62,4 @@ namespace Swift {
 			std::deque<HostAddress> addressQueryResults;
 			boost::shared_ptr<Connection> currentConnection;
 	};
-};
+}

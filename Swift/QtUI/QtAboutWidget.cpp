@@ -19,7 +19,7 @@
 namespace Swift {
 
 QtAboutWidget::QtAboutWidget() : QDialog() {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 	setWindowTitle(QString(tr("About %1")).arg("Swift"));
 #endif
 	setWindowIcon(QIcon(":/logo-icon-16.png"));

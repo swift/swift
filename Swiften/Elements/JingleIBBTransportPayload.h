@@ -18,7 +18,7 @@ namespace Swift {
 
 			enum StanzaType {
 				IQStanza,
-				MessageStanza,
+				MessageStanza
 			};
 
 			void setStanzaType(StanzaType stanzaType) {

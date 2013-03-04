@@ -32,7 +32,7 @@ namespace Swift {
 
 			std::string convertIntToHexString(int h);
 			int convertHexStringToInt(const std::string& s);
-	};
+	}
 
 	class SWIFTEN_API makeString {
 		public:

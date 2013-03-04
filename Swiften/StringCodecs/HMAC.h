@@ -49,7 +49,7 @@ namespace Swift {
 
 			return hash(y);
 		}
-	};
+	}
 
 	template<typename Hash, int BlockSize>
 	class HMAC {

@@ -14,7 +14,7 @@ namespace Swift {
 QtTextEdit::QtTextEdit(QWidget* parent) : QTextEdit(parent){
 	connect(this, SIGNAL(textChanged()), this, SLOT(handleTextChanged()));
 	handleTextChanged();
-};
+}
 
 void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 	int key = event->key();

@@ -40,7 +40,8 @@ void RosterModel::setRoster(Roster* roster) {
 
 void RosterModel::reLayout() {
 	//emit layoutChanged();
-	reset();
+	beginResetModel();
+	endResetModel(); // TODO: Not sure if this isn't too early?
 	if (!roster_) {
 		return;
 	}
@@ -53,7 +54,7 @@ void RosterModel::reLayout() {
 
 void RosterModel::handleChildrenChanged(GroupRosterItem* /*group*/) {
 	reLayout();
-}							  
+}								
 
 void RosterModel::handleDataChanged(RosterItem* item) {
 	Q_ASSERT(item);
@@ -163,12 +164,12 @@ QIcon RosterModel::getPresenceIcon(RosterItem* item) const {
 	if (!contact) return QIcon();
 	QString iconString;
 	switch (contact->getStatusShow()) {
-	 	case StatusShow::Online: iconString = "online";break;
-	 	case StatusShow::Away: iconString = "away";break;
-	 	case StatusShow::XA: iconString = "away";break;
-	 	case StatusShow::FFC: iconString = "online";break;
-	 	case StatusShow::DND: iconString = "dnd";break;
-	 	case StatusShow::None: iconString = "offline";break;
+		case StatusShow::Online: iconString = "online";break;
+		case StatusShow::Away: iconString = "away";break;
+		case StatusShow::XA: iconString = "away";break;
+		case StatusShow::FFC: iconString = "online";break;
+		case StatusShow::DND: iconString = "dnd";break;
+		case StatusShow::None: iconString = "offline";break;
 	}
 	return QIcon(":/icons/" + iconString + ".png");
 }

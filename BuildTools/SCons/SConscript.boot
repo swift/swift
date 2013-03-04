@@ -54,6 +54,7 @@ vars.Add("sqlite_force_bundled", "Force use of the bundled SQLite", None)
 vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
+vars.Add(BoolVariable("qt5", "Compile in Qt5 mode", "no")) # TODO: auto-detect this
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
@@ -117,7 +118,9 @@ if env["PLATFORM"] == "darwin" :
 			env["CCFLAGS"] = ["-arch", "x86_64"]
 	if "cxx" not in env :
 		env["CXX"] = "clang++"
-		env["CXXFLAGS"] = ["-std=c++11"]
+		# Compiling Qt5 in C++0x mode includes headers that we don't have
+		if not env["qt5"] :
+			env["CXXFLAGS"] = ["-std=c++11"]
 	if "link" not in env :
 		env["LINK"] = "clang"
 		if platform.machine() == "x86_64" :
@@ -237,7 +240,7 @@ else :
 			"-Wno-global-constructors", # We depend on this for e.g. string constants
 			"-Wno-disabled-macro-expansion", # Caused due to system headers
 			"-Wno-c++11-extensions", # We use C++11; turn this off when we use -std=c++11
-			"-Wno-pedantic", # Fix these when we have time
+			"-Wno-long-long", # We use long long
 			"-Wno-padded",
 			])
 	else :

@@ -29,7 +29,7 @@ namespace Swift {
 				TopLevel = 0, 
 				PayloadLevel = 1,
 				FileOrFeatureLevel = 2,
-				FormOrDescriptionLevel = 3,
+				FormOrDescriptionLevel = 3
 			};
 			int level;
 			FormParserFactory* formParserFactory;

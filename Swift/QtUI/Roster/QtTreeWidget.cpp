@@ -10,6 +10,7 @@
 #include <boost/bind.hpp>
 
 #include <QUrl>
+#include <QMimeData>
 
 #include <Swiften/Base/Platform.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>

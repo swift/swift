@@ -23,7 +23,7 @@ namespace Swift {
 
 QtMUCSearchWindow::QtMUCSearchWindow() {
 	ui_.setupUi(this);
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 	setModal(true);

@@ -11,4 +11,4 @@ namespace Swift {
 SessionStream::~SessionStream() {
 }
 
-};
+}

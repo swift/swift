@@ -212,4 +212,4 @@ void BOSHSessionStream::handlePoolBOSHDataWritten(const SafeByteArray& data) {
 	onDataWritten(data);
 }
 
-};
+}

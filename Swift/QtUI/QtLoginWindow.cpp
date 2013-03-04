@@ -55,7 +55,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	uiEventStream_ = uiEventStream;
 
 	setWindowTitle("Swift");
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 	QtUtilities::setX11Resource(this, "Main");

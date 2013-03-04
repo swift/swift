@@ -25,7 +25,7 @@ public:
 			Negotiating,
 			Transferring,
 			WaitingForStart,
-			WaitingForAccept,
+			WaitingForAccept
 		};
 
 		FTState state;

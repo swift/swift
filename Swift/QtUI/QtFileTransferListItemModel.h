@@ -34,7 +34,7 @@ private:
 		State,
 		Progress,
 		OverallSize,
-		NoOfColumns,
+		NoOfColumns
 	};
 
 private:

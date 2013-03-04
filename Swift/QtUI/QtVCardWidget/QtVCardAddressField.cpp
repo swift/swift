@@ -156,7 +156,7 @@ void QtVCardAddressField::handleEditibleChanged(bool isEditable) {
 	foreach (QWidget* widget, textFields) {
 		QtResizableLineEdit* lineEdit;
 		if ((lineEdit = dynamic_cast<QtResizableLineEdit*>(widget))) {
-			lineEdit->setShown(isEditable ? true : !lineEdit->text().isEmpty());
+			lineEdit->setVisible(isEditable ? true : !lineEdit->text().isEmpty());
 			lineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
 		}
 	}

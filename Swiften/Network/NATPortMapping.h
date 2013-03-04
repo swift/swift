@@ -13,7 +13,7 @@ namespace Swift {
 	public:
 		enum Protocol {
 			TCP,
-			UDP,
+			UDP
 		};
 
 		NATPortMapping(int localPort, int publicPort, Protocol protocol = TCP, int leaseInSeconds = 60 * 60 * 24) : publicPort(publicPort), localPort(localPort), protocol(protocol), leaseInSeconds(leaseInSeconds) {

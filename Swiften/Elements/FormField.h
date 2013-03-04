@@ -101,14 +101,14 @@ namespace Swift {
 			name##FormField() : GenericFormField< valueType >() {} \
 	};
 
-	SWIFTEN_DECLARE_FORM_FIELD(Boolean, bool);
-	SWIFTEN_DECLARE_FORM_FIELD(Fixed, std::string);
-	SWIFTEN_DECLARE_FORM_FIELD(Hidden, std::string);
-	SWIFTEN_DECLARE_FORM_FIELD(ListSingle, std::string);
-	SWIFTEN_DECLARE_FORM_FIELD(TextMulti, std::string);
-	SWIFTEN_DECLARE_FORM_FIELD(TextPrivate, std::string);
-	SWIFTEN_DECLARE_FORM_FIELD(TextSingle, std::string);
-	SWIFTEN_DECLARE_FORM_FIELD(JIDSingle, JID);
-	SWIFTEN_DECLARE_FORM_FIELD(JIDMulti, std::vector<JID>);
-	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<std::string>);
+	SWIFTEN_DECLARE_FORM_FIELD(Boolean, bool)
+	SWIFTEN_DECLARE_FORM_FIELD(Fixed, std::string)
+	SWIFTEN_DECLARE_FORM_FIELD(Hidden, std::string)
+	SWIFTEN_DECLARE_FORM_FIELD(ListSingle, std::string)
+	SWIFTEN_DECLARE_FORM_FIELD(TextMulti, std::string)
+	SWIFTEN_DECLARE_FORM_FIELD(TextPrivate, std::string)
+	SWIFTEN_DECLARE_FORM_FIELD(TextSingle, std::string)
+	SWIFTEN_DECLARE_FORM_FIELD(JIDSingle, JID)
+	SWIFTEN_DECLARE_FORM_FIELD(JIDMulti, std::vector<JID>)
+	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<std::string>)
 }

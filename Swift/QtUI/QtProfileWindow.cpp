@@ -19,6 +19,7 @@
 #include <QTextDocument>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 namespace Swift {
 
@@ -75,7 +76,7 @@ void QtProfileWindow::setProcessing(bool processing) {
 
 void QtProfileWindow::setError(const std::string& error) {
 	if (!error.empty()) {
-		ui->errorLabel->setText("<font color='red'>" + Qt::escape(P2QSTRING(error)) + "</font>");
+		ui->errorLabel->setText("<font color='red'>" + QtUtilities::htmlEscape(P2QSTRING(error)) + "</font>");
 	}
 	else {
 		ui->errorLabel->setText("");

@@ -12,6 +12,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
+
 
 namespace Swift {
 
@@ -59,7 +61,7 @@ void QtVCardURLField::handleEditibleChanged(bool isEditable) {
 	} else {
 		if (urlLineEdit) urlLineEdit->hide();
 		if (urlLabel) {
-			urlLabel->setText(QString("<a href=\"%1\">%1</a>").arg(Qt::escape(urlLineEdit->text())));
+			urlLabel->setText(QString("<a href=\"%1\">%1</a>").arg(QtUtilities::htmlEscape(urlLineEdit->text())));
 			urlLabel->show();
 		}
 	}

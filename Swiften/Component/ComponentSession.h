@@ -35,7 +35,7 @@ namespace Swift {
 			struct Error : public Swift::Error {
 				enum Type {
 					AuthenticationFailedError,
-					UnexpectedElementError,
+					UnexpectedElementError
 				} type;
 				Error(Type type) : type(type) {}
 			};

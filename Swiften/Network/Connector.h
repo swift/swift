@@ -71,4 +71,4 @@ namespace Swift {
 			boost::shared_ptr<Connection> currentConnection;
 			bool foundSomeDNS;
 	};
-};
+}

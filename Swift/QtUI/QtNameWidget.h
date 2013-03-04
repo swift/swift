@@ -31,7 +31,7 @@ namespace Swift {
 		private:
 			enum Mode {
 				ShowNick,
-				ShowJID,
+				ShowJID
 			};
 
 			SettingsProvider* settings;

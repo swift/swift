@@ -23,7 +23,7 @@ namespace Swift {
 
 		private:
 			enum Level { 
-				TopLevel = 0, 
+				TopLevel = 0
 			};
 			int level;
 			std::string currentText;

@@ -29,5 +29,5 @@ class JingleParser : public GenericPayloadParser<JinglePayload> {
 			boost::shared_ptr<PayloadParser> currentPayloadParser;
 };
 
-};
+}
 

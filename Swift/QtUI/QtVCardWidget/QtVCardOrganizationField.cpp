@@ -41,7 +41,13 @@ void QtVCardOrganizationField::setupContentWidgets() {
 	unitsTreeWidget->header()->setStretchLastSection(false);
 	int closeIconWidth = unitsTreeWidget->fontMetrics().height();
 	unitsTreeWidget->header()->resizeSection(1, closeIconWidth);
+
+#if QT_VERSION >= 0x050000
+	unitsTreeWidget->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+#else
 	unitsTreeWidget->header()->setResizeMode(0, QHeaderView::Stretch);
+#endif
+
 	unitsTreeWidget->setHeaderHidden(true);
 	unitsTreeWidget->setRootIsDecorated(false);
 	unitsTreeWidget->setEditTriggers(QAbstractItemView::DoubleClicked);

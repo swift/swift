@@ -53,7 +53,7 @@ namespace Swift {
 					SessionStartError,
 					TLSClientCertificateError,
 					TLSError,
-					StreamError,
+					StreamError
 				} type;
 				Error(Type type) : type(type) {}
 			};

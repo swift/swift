@@ -26,7 +26,7 @@
 
 namespace Swift {
 	QtWhiteboardWindow::QtWhiteboardWindow(WhiteboardSession::ref whiteboardSession) : QWidget() {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 		setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 		layout = new QVBoxLayout(this);

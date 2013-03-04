@@ -17,7 +17,7 @@ namespace Swift {
 			enum State {
 				Requesting,
 				Available,
-				Error,
+				Error
 			};
 			virtual ~BlockList();
 

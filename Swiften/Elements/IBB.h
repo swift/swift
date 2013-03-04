@@ -21,11 +21,11 @@ namespace Swift {
 			enum Action {
 				Open,
 				Close,
-				Data,
+				Data
 			};
 			enum StanzaType {
 				IQStanza,
-				MessageStanza,
+				MessageStanza
 			};
 
 			IBB(Action action = Open, const std::string& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(-1), sequenceNumber(-1) {

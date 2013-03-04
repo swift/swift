@@ -7,6 +7,7 @@
 #include "Swift/QtUI/EventViewer/QtEvent.h"
 
 #include <QDateTime>
+#include <QColor>
 
 #include "Swift/Controllers/XMPPEvents/MessageEvent.h"
 #include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
@@ -25,8 +26,8 @@ QVariant QtEvent::data(int role) {
  	switch (role) {
 		case Qt::ToolTipRole: return QVariant(text()).toString() + "\n" + B2QDATE(event_->getTime()).toString();
 		case Qt::DisplayRole: return QVariant(text());
-		case Qt::TextColorRole: return active_ ? Qt::black : Qt::darkGray;
-		case Qt::BackgroundColorRole: return active_ ? Qt::white : Qt::lightGray;
+		case Qt::TextColorRole: return QColor(active_ ? Qt::black : Qt::darkGray);
+		case Qt::BackgroundColorRole: return QColor(active_ ? Qt::white : Qt::lightGray);
 		case SenderRole: return QVariant(sender());
 			/*case StatusTextRole: return statusText_;
 		case AvatarRole: return avatar_;

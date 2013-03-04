@@ -41,7 +41,7 @@ namespace Swift {
 				UndefinedCondition,
 				UnsupportedEncoding,
 				UnsupportedStanzaType,
-				UnsupportedVersion,
+				UnsupportedVersion
 			};
 
 			StreamError(Type type = UndefinedCondition, const std::string& text = std::string()) : type_(type), text_(text) { }

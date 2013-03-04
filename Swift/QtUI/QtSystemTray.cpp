@@ -9,7 +9,7 @@
 #include "Swift/QtUI/QtSystemTray.h"
 
 #include <QtDebug>
-#ifdef Q_WS_X11
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
 #include <QDBusInterface>
 #endif
 #include <QIcon>
@@ -24,7 +24,7 @@ QtSystemTray::QtSystemTray() : QObject(), trayMenu_(0), onlineIcon_(":icons/onli
 	trayIcon_->setToolTip("Swift");
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));
 	connect(&throbberMovie_, SIGNAL(frameChanged(int)), this, SLOT(handleThrobberFrameChanged(int)));
-#ifdef Q_WS_X11
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
 	bool isUnity = QDBusInterface("com.canonical.Unity.Launcher", "/com/canonical/Unity/Launcher").isValid();
 	if (isUnity) {
 		// Add an activation menu, because this is the only way to get the application to the

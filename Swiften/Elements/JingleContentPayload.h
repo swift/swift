@@ -23,7 +23,7 @@ namespace Swift {
 			enum Creator {
 				UnknownCreator,
 				InitiatorCreator,
-				ResponderCreator,
+				ResponderCreator
 			};
 
 			/*enum Senders {

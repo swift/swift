@@ -105,7 +105,7 @@ int QtFileTransferListItemModel::rowCount(const QModelIndex& /* parent */) const
 }
 
 QModelIndex QtFileTransferListItemModel::index(int row, int column, const QModelIndex& /* parent */) const {
-	return createIndex(row, column, 0);
+	return createIndex(row, column, (void*) 0);
 }
 
 }

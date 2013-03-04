@@ -207,4 +207,4 @@ void BasicSessionStream::handleDataWritten(const SafeByteArray& data) {
 	onDataWritten(data);
 }
 
-};
+}

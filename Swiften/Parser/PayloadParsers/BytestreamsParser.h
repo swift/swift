@@ -24,7 +24,7 @@ namespace Swift {
 		private:
 			enum Level { 
 				TopLevel = 0, 
-				PayloadLevel = 1,
+				PayloadLevel = 1
 			};
 			int level;
 	};

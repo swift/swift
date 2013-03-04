@@ -13,4 +13,4 @@ namespace Swift {
 		public:
 			virtual ~Error();
 	};
-};
+}

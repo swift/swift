@@ -30,7 +30,7 @@ namespace Swift {
 				ReadyForTransfer,
 				ReadingData,
 				WritingData,
-				Finished,
+				Finished
 			};
 
 			SOCKS5BytestreamServerSession(boost::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* registry);

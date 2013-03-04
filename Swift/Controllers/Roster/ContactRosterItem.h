@@ -26,7 +26,7 @@ class ContactRosterItem : public RosterItem {
 	public:
 		enum Feature {
 			FileTransferFeature,
-			WhiteboardFeature,
+			WhiteboardFeature
 		};
 		
 	public:

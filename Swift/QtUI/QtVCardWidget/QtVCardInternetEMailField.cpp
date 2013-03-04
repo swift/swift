@@ -12,6 +12,7 @@
 #include <Swiften/Base/Log.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 namespace Swift {
 
@@ -71,7 +72,7 @@ void QtVCardInternetEMailField::handleEditibleChanged(bool isEditable) {
 	} else {
 		if (emailLineEdit) emailLineEdit->hide();
 		if (emailLabel) {
-			emailLabel->setText(QString("<a href=\"mailto:%1\">%1</a>").arg(Qt::escape(emailLineEdit->text())));
+			emailLabel->setText(QString("<a href=\"mailto:%1\">%1</a>").arg(QtUtilities::htmlEscape(emailLineEdit->text())));
 			emailLabel->show();
 		}
 	}

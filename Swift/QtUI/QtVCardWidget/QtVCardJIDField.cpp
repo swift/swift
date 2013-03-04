@@ -11,6 +11,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 namespace Swift {
 
@@ -62,7 +63,7 @@ void QtVCardJIDField::handleEditibleChanged(bool isEditable) {
 	} else {
 		if (jidLineEdit) jidLineEdit->hide();
 		if (jidLabel) {
-			jidLabel->setText(QString("<a href=\"xmpp:%1\">%1</a>").arg(Qt::escape(jidLineEdit->text())));
+			jidLabel->setText(QString("<a href=\"xmpp:%1\">%1</a>").arg(QtUtilities::htmlEscape(jidLineEdit->text())));
 			jidLabel->show();
 		}
 	}

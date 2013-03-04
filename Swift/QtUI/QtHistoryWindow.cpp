@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
 #include <QLineEdit>
+#include "QtUtilities.h"
 
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
@@ -108,7 +109,7 @@ void QtHistoryWindow::addMessage(const std::string &message, const std::string &
 	QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
 
 	QString messageHTML(P2QSTRING(message));
-	messageHTML = Qt::escape(messageHTML);
+	messageHTML = QtUtilities::htmlEscape(messageHTML);
 	QString searchTerm = ui_.searchBox_->lineEdit()->text();
 	if (searchTerm.length()) {
 		messageHTML.replace(searchTerm, "<span style='background-color: yellow'>" + searchTerm + "</span>");
@@ -125,14 +126,14 @@ void QtHistoryWindow::addMessage(const std::string &message, const std::string &
 
 	if (addAtTheTop) {
 		bool appendToPrevious = ((senderIsSelf && previousTopMessageWasSelf_) || (!senderIsSelf && !previousTopMessageWasSelf_&& previousTopSenderName_ == P2QSTRING(senderName)));
-		conversation_->addMessageTop(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, Qt::escape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+		conversation_->addMessageTop(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 		previousTopMessageWasSelf_ = senderIsSelf;
 		previousTopSenderName_ = P2QSTRING(senderName);
 	}
 	else {
 		bool appendToPrevious = ((senderIsSelf && previousBottomMessageWasSelf_) || (!senderIsSelf && !previousBottomMessageWasSelf_&& previousBottomSenderName_ == P2QSTRING(senderName)));
-		conversation_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, Qt::escape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+		conversation_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 		previousBottomMessageWasSelf_ = senderIsSelf;
 		previousBottomSenderName_ = P2QSTRING(senderName);
 	}

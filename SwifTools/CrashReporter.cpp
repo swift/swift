@@ -73,6 +73,6 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path) {
 // Dummy implementation
 namespace Swift {
 	CrashReporter::CrashReporter(const boost::filesystem::path&) {}
-};
+}
 
 #endif

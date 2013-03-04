@@ -26,7 +26,7 @@ class JingleFileTransferDescriptionParser : public GenericPayloadParser<JingleFi
 		enum CurrentParseElement {
 			UnknownElement,
 			RequestElement,
-			OfferElement,
+			OfferElement
 		};
 		
 		PayloadParserFactoryCollection* factories;

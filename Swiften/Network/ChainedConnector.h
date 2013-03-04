@@ -49,4 +49,4 @@ namespace Swift {
 			boost::shared_ptr<Connector> currentConnector;
 			boost::shared_ptr<Error> lastError;
 	};
-};
+}

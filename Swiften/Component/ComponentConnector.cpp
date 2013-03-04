@@ -104,4 +104,4 @@ void ComponentConnector::handleTimeout() {
 	finish(boost::shared_ptr<Connection>());
 }
 
-};
+}

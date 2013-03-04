@@ -286,9 +286,9 @@ def generate(env):
 
 		# Commands for the qt support ...
 		QT4_UICCOM = '$QT4_UIC $QT4_UICFLAGS -o $TARGET $SOURCE',
-    # FIXME: The -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED flag is a hack to work
-    # around an issue in Qt
-    # See https://bugreports.qt-project.org/browse/QTBUG-22829
+		# FIXME: The -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED flag is a hack to work
+		# around an issue in Qt
+		# See https://bugreports.qt-project.org/browse/QTBUG-22829
 		QT4_MOCFROMHCOM = '$QT4_MOC -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED $QT4_MOCFROMHFLAGS $QT4_MOCINCFLAGS -o $TARGET $SOURCE',
 		QT4_MOCFROMCXXCOM = [
 			'$QT4_MOC -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED $QT4_MOCFROMCXXFLAGS $QT4_MOCINCFLAGS -o $TARGET $SOURCE',
@@ -395,7 +395,7 @@ def generate(env):
 	# TODO: Does dbusxml2cpp need an adapter
 	env.AddMethod(enable_modules, "EnableQt4Modules")
 
-def enable_modules(self, modules, debug=False, crosscompiling=False) :
+def enable_modules(self, modules, debug=False, crosscompiling=False, version='4') :
 	import sys
 
 	validModules = [
@@ -420,6 +420,11 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 		'QtWebKit',
 		'QtHelp',
 		'QtScript',
+
+		# Qt5 modules
+		'QtWidgets',
+		'QtMultimedia',
+		'QtWebKitWidgets',
 		]
 	staticModules = [
 		'QtUiTools',
@@ -440,6 +445,8 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 		'QtXml'			 : ['QT_XML_LIB'],
 		'QtOpenGL'	 : ['QT_OPENGL_LIB'],
 		'QtGui'			 : ['QT_GUI_LIB'],
+		'QtWidgets'  : ['QT_WIDGETS_LIB'],
+		'QtWebKitWidgets' : [],
 		'QtNetwork'  : ['QT_NETWORK_LIB'],
 		'QtCore'		 : ['QT_CORE_LIB'],
 	}
@@ -450,7 +457,8 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 
 	if sys.platform.startswith("linux") and not crosscompiling :
 		if debug : debugSuffix = '_debug'
-		self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "phonon")])
+		if version == '4' :
+			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "phonon")])
 		for module in modules :
 			self.AppendUnique(LIBS=[module+debugSuffix])
 			self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
@@ -472,8 +480,9 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			modules.remove("QtAssistant")
 			modules.append("QtAssistantClient")
 		# FIXME: Phonon Hack
-		self.AppendUnique(LIBS=['phonon'+debugSuffix+'4'])
-		self.AppendUnique(LIBS=[lib+debugSuffix+'4' for lib in modules if lib not in staticModules])
+		if version == '4' :
+			self.AppendUnique(LIBS=['phonon'+debugSuffix+version])
+		self.AppendUnique(LIBS=[lib+debugSuffix+version for lib in modules if lib not in staticModules])
 		self.PrependUnique(LIBS=[lib+debugSuffix for lib in modules if lib in staticModules])
 		if 'QtOpenGL' in modules:
 			self.AppendUnique(LIBS=['opengl32'])
@@ -498,7 +507,8 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 			self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
 
 		# FIXME: Phonon Hack
-		self.Append(LINKFLAGS=['-framework', "phonon"])
+		if version == '4' :
+			self.Append(LINKFLAGS=['-framework', "phonon"])
 
 		for module in modules :
 			if module in staticModules :
@@ -506,9 +516,9 @@ def enable_modules(self, modules, debug=False, crosscompiling=False) :
 				self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
 			else :
 				if len(self["QTDIR"]) > 0 :
-					self.Append(CPPFLAGS = ["-I" + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", "4", "Headers")])
+					self.Append(CPPFLAGS = ["-I" + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", version, "Headers")])
 				else :
-					self.Append(CPPFLAGS = ["-I" + os.path.join("/Library/Frameworks", module + ".framework", "Versions", "4", "Headers")])
+					self.Append(CPPFLAGS = ["-I" + os.path.join("/Library/Frameworks", module + ".framework", "Versions", version, "Headers")])
 				self.Append(LINKFLAGS=['-framework', module])
 		if 'QtOpenGL' in modules:
 			self.AppendUnique(LINKFLAGS="-F/System/Library/Frameworks")

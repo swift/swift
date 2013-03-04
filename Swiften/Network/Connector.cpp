@@ -183,4 +183,4 @@ void Connector::handleTimeout() {
 	handleConnectionConnectFinished(true);
 }
 
-};
+}

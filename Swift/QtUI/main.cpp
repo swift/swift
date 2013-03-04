@@ -33,7 +33,9 @@ int main(int argc, char* argv[]) {
 
 	Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
 
+#if QT_VERSION < 0x050000
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+#endif
 
 	// Parse program options
 	boost::program_options::options_description desc = Swift::QtSwift::getOptionsDescription();
@@ -62,7 +64,9 @@ int main(int argc, char* argv[]) {
 	}
 
 	// Translation
+#if QT_VERSION < 0x050000
 	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+#endif
 	boost::filesystem::path someTranslationPath = applicationPathProvider.getResourcePath("/translations/swift_en.qm");
 
 	QTranslator qtTranslator;

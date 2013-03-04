@@ -16,7 +16,7 @@ namespace Swift {
 				ConnectionWriteError,
 				XMLError,
 				AuthenticationFailedError,
-				UnexpectedElementError,
+				UnexpectedElementError
 			};
 
 			ComponentError(Type type = UnknownError) : type_(type) {}

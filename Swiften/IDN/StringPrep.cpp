@@ -14,7 +14,7 @@
 #elif defined(HAVE_LIBIDN)
 extern "C" {
 	#include <stringprep.h>
-};
+}
 #endif
 
 #include <vector>

@@ -29,7 +29,7 @@ namespace Swift {
 
 QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups) : eventStream_(eventStream), type_(type), model_(NULL) {
 	setupUi(this);
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 	QString title(type == UserSearchWindow::AddContact ? tr("Add Contact") : tr("Chat to User"));
@@ -264,7 +264,11 @@ void QtUserSearchWindow::setResultsForm(Form::ref results) {
 	resultsPage_->results_->setModel(newModel);
 	resultsPage_->results_->setItemDelegate(new QItemDelegate());
 	resultsPage_->results_->setHeaderHidden(false);
+#if QT_VERSION >= 0x050000
+	resultsPage_->results_->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+#else
 	resultsPage_->results_->header()->setResizeMode(QHeaderView::ResizeToContents);
+#endif
 	delete model_;
 	model_ = newModel;
 	resultsPage_->setNoResults(model_->rowCount() == 0);

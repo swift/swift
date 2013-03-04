@@ -23,7 +23,7 @@
 
 namespace Swift {
 QtChatTabs::QtChatTabs() : QWidget() {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-chat-16.png"));
 #else
 	setAttribute(Qt::WA_ShowWithoutActivating);
@@ -270,7 +270,7 @@ void QtChatTabs::moveEvent(QMoveEvent*) {
 
 void QtChatTabs::checkForFirstShow() {
 	if (!isVisible()) {
-#ifndef Q_WS_MAC
+#ifndef Q_OS_MAC
 		showMinimized();
 #else
 		/* https://bugreports.qt-project.org/browse/QTBUG-19194 

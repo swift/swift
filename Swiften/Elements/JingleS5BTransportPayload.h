@@ -20,7 +20,7 @@ namespace Swift {
 		public:
 			enum Mode {
 				TCPMode, // default case
-				UDPMode,
+				UDPMode
 			};
 
 			struct Candidate {
@@ -28,7 +28,7 @@ namespace Swift {
 					DirectType, // default case
 					AssistedType,
 					TunnelType,
-					ProxyType,
+					ProxyType
 				};
 
 				Candidate() : priority(0), type(DirectType) {}

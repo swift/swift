@@ -28,7 +28,7 @@ namespace Swift {
 			enum Step {
 				Initial,
 				Response,
-				Final,
+				Final
 			} step;
 			std::string host;
 			std::string cnonce;

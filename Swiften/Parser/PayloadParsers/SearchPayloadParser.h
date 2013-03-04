@@ -28,7 +28,7 @@ namespace Swift {
 			enum Level { 
 				TopLevel = 0, 
 				PayloadLevel = 1,
-				ItemLevel = 2,
+				ItemLevel = 2
 			};
 			int level;
 			FormParserFactory* formParserFactory;

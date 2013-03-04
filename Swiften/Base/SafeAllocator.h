@@ -27,4 +27,4 @@ namespace Swift {
 				std::allocator<T>::deallocate(p, num);
 			}
 	};
-};
+}

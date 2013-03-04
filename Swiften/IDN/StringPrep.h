@@ -17,7 +17,7 @@ namespace Swift {
 				NamePrep,
 				XMPPNodePrep,
 				XMPPResourcePrep,
-				SASLPrep,
+				SASLPrep
 			};
 
 			static std::string getPrepared(const std::string& s, Profile profile);

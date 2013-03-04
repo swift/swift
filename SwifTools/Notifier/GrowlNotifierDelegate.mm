@@ -8,7 +8,7 @@
 
 #include <SwifTools/Notifier/GrowlNotifier.h>
 
-@implementation GrowlNotifierDelegate;
+@implementation GrowlNotifierDelegate
 
 @synthesize registrationDictionary;
 @synthesize name;

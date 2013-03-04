@@ -41,7 +41,7 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent, bool disableAutoScro
 	connect(webView_, SIGNAL(clearRequested()), SLOT(handleClearRequested()));
 	connect(webView_, SIGNAL(fontGrowRequested()), SLOT(increaseFontSize()));
 	connect(webView_, SIGNAL(fontShrinkRequested()), SLOT(decreaseFontSize()));
-#ifdef Q_WS_X11
+#if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
 	/* To give a border on Linux, where it looks bad without */
 	QStackedWidget* stack = new QStackedWidget(this);
 	stack->addWidget(webView_);

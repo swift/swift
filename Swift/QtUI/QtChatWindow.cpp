@@ -25,6 +25,7 @@
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include "QtChatWindowJSBridge.h"
+#include "QtUtilities.h"
 
 #include <boost/cstdint.hpp>
 #include <boost/format.hpp>
@@ -33,6 +34,7 @@
 #include <QLabel>
 #include <qdebug.h>
 #include <QMessageBox>
+#include <QMimeData>
 #include <QInputDialog>
 #include <QApplication>
 #include <QBoxLayout>
@@ -487,7 +489,7 @@ std::string QtChatWindow::addMessage(const std::string &message, const std::stri
 
 QString QtChatWindow::linkimoticonify(const QString& message) const {
 	QString messageHTML(message);
-	messageHTML = Qt::escape(messageHTML);
+	messageHTML = QtUtilities::htmlEscape(messageHTML);
 	QMapIterator<QString, QString> it(emoticons_);
 	QString textStyle = showEmoticons_ ? "style='display:none'" : "";
 	QString imageStyle = showEmoticons_ ? "" : "style='display:none'";
@@ -504,8 +506,8 @@ QString QtChatWindow::linkimoticonify(const QString& message) const {
 
 QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight)
 {
-	QString color = Qt::escape(P2QSTRING(highlight.getTextColor()));
-	QString background = Qt::escape(P2QSTRING(highlight.getTextBackground()));
+	QString color = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextColor()));
+	QString background = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextBackground()));
 	if (color.isEmpty()) {
 		color = "black";
 	}
@@ -524,8 +526,8 @@ std::string QtChatWindow::addMessage(const QString &message, const std::string &
 
 	QString htmlString;
 	if (label) {
-		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \" class='swift_label'>").arg(Qt::escape(P2QSTRING(label->getForegroundColor()))).arg(Qt::escape(P2QSTRING(label->getBackgroundColor())));
-		htmlString += QString("%1</span> ").arg(Qt::escape(P2QSTRING(label->getDisplayMarking())));
+		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \" class='swift_label'>").arg(QtUtilities::htmlEscape(P2QSTRING(label->getForegroundColor()))).arg(QtUtilities::htmlEscape(P2QSTRING(label->getBackgroundColor())));
+		htmlString += QString("%1</span> ").arg(QtUtilities::htmlEscape(P2QSTRING(label->getDisplayMarking())));
 	}
 	QString messageHTML(message);
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
@@ -543,7 +545,7 @@ std::string QtChatWindow::addMessage(const QString &message, const std::string &
 	}
 	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
 	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -605,7 +607,7 @@ std::string formatSize(const boost::uintmax_t bytes) {
 }
 
 static QString encodeButtonArgument(const QString& str) {
-	return Qt::escape(P2QSTRING(Base64::encode(createByteArray(Q2PSTRING(str)))));
+	return QtUtilities::htmlEscape(P2QSTRING(Base64::encode(createByteArray(Q2PSTRING(str)))));
 }
 
 static QString decodeButtonArgument(const QString& str) {
@@ -653,7 +655,7 @@ std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool se
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 	std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = senderIsSelf;
 	previousSenderName_ = P2QSTRING(senderName);
@@ -677,7 +679,7 @@ std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
 			"</div>";
 	} else {
-		htmlString = "<div id='" + wb_id + "'>" + tr("%1 would like to start a whiteboard chat").arg(Qt::escape(contact_)) + ": <br/>" +
+		htmlString = "<div id='" + wb_id + "'>" + tr("%1 would like to start a whiteboard chat").arg(QtUtilities::htmlEscape(contact_)) + ": <br/>" +
 				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
 				buildChatWindowButton(tr("Accept"), ButtonWhiteboardSessionAcceptRequest, wb_id) +
 			"</div>";
@@ -691,7 +693,7 @@ std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 	std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id))));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id))));
 
 	previousMessageWasSelf_ = false;
 	previousSenderName_ = contact_;
@@ -766,7 +768,7 @@ void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
 		onAllMessagesRead();
 	}
 
-	QString errorMessageHTML(Qt::escape(P2QSTRING(errorMessage)));
+	QString errorMessageHTML(QtUtilities::htmlEscape(P2QSTRING(errorMessage)));
 	errorMessageHTML.replace("\n","<br/>");
 	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new SystemMessageSnippet("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_)));
 
@@ -1009,7 +1011,7 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	QString id = QString(ButtonMUCInvite + "%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 
 	htmlString += "<div id='" + id + "'>" +
-			buildChatWindowButton(tr("Accept Invite"), ButtonMUCInvite, Qt::escape(P2QSTRING(jid.toString())), Qt::escape(P2QSTRING(password)), id) +
+			buildChatWindowButton(tr("Accept Invite"), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id) +
 		"</div>";
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMUCInvite, senderName, false);
@@ -1021,7 +1023,7 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	}
 	QString qAvatarPath = "qrc:/icons/avatar.png";
 
-	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, Qt::escape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id)));
+	messageLog_->addMessageBottom(boost::shared_ptr<ChatSnippet>(new MessageSnippet(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id)));
 	previousMessageWasSelf_ = false;
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageKind_ = PreviousMessageWasMUCInvite;
