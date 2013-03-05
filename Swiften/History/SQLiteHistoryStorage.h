@@ -8,13 +8,14 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/History/HistoryStorage.h>
 #include <boost/thread.hpp>
 
 struct sqlite3;
 
 namespace Swift {
-	class SQLiteHistoryStorage : public HistoryStorage {
+	class SWIFTEN_API SQLiteHistoryStorage : public HistoryStorage {
 		public:
 			SQLiteHistoryStorage(const std::string& file);
 			~SQLiteHistoryStorage();

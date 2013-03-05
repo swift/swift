@@ -146,7 +146,7 @@ namespace Swift {
 				return compare(b, Swift::JID::WithResource) < 0;
 			}
 
-			friend std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
+			SWIFTEN_API friend std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
 
 			friend bool operator==(const Swift::JID& a, const Swift::JID& b) {
 				return a.compare(b, Swift::JID::WithResource) == 0;
@@ -168,6 +168,6 @@ namespace Swift {
 			std::string resource_;
 	};
 	
-	std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
+	SWIFTEN_API std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
 }
 
