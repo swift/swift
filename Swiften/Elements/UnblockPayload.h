@@ -14,7 +14,7 @@
 namespace Swift {
 	class UnblockPayload : public Payload {
 		public:
-			UnblockPayload() {
+			UnblockPayload(const std::vector<JID>& jids = std::vector<JID>()) : items(jids) {
 			}
 
 			void addItem(const JID& item) {

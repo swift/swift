@@ -44,14 +44,15 @@
 #include <Swiften/Disco/EntityCapsManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 
 namespace Swift {
 
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview)
- : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview) {
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager)
+	: myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview), clientBlockListManager_(clientBlockListManager) {
 	assert(fileTransferOverview);
 	iqRouter_ = iqRouter;
 	presenceOracle_ = presenceOracle;
@@ -183,6 +184,20 @@ void RosterController::handleSettingChanged(const std::string& settingPath) {
 	}
 }
 
+void RosterController::handleBlockingStateChanged() {
+	if (clientBlockListManager_->getBlockList()->getState() == BlockList::Available) {
+		roster_->setBlockedState(clientBlockListManager_->getBlockList()->getItems(), ContactRosterItem::IsBlocked);
+	}
+}
+
+void RosterController::handleBlockingItemAdded(const JID& jid) {
+	roster_->setBlockedState(std::vector<JID>(1, jid), ContactRosterItem::IsBlocked);
+}
+
+void RosterController::handleBlockingItemRemoved(const JID& jid) {
+	roster_->setBlockedState(std::vector<JID>(1, jid), ContactRosterItem::IsUnblocked);
+}
+
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	if (boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event)) {
 		RosterItemPayload item;
@@ -254,6 +269,18 @@ void RosterController::updateItem(const XMPPRosterItem& item) {
 	SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
 	request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
 	request->send();
+}
+
+void RosterController::initBlockingCommand() {
+	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+
+	blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&RosterController::handleBlockingStateChanged, this));
+	blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&RosterController::handleBlockingItemAdded, this, _1));
+	blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&RosterController::handleBlockingItemRemoved, this, _1));
+
+	if (blockList->getState() == BlockList::Available) {
+		roster_->setBlockedState(blockList->getItems(), ContactRosterItem::IsBlocked);
+	}
 }
 
 void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload) {

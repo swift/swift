@@ -22,7 +22,7 @@
 
 namespace Swift {
 
-Roster::Roster(bool sortByStatus, bool fullJIDMapping) {
+Roster::Roster(bool sortByStatus, bool fullJIDMapping) : blockingSupported_(false) {
 	sortByStatus_ = sortByStatus;
 	fullJIDMapping_ = fullJIDMapping;
 	root_ = new GroupRosterItem("Dummy-Root", NULL, sortByStatus_);
@@ -71,6 +71,28 @@ void Roster::setAvailableFeatures(const JID& jid, const std::set<ContactRosterIt
 	}
 }
 
+void Roster::setBlockedState(const std::vector<JID> &jids, ContactRosterItem::BlockState state) {
+	if (!blockingSupported_ ) {
+		foreach(ItemMap::value_type i, itemMap_) {
+			foreach(ContactRosterItem* item, i.second) {
+				item->setBlockState(ContactRosterItem::IsUnblocked);
+			}
+		}
+	}
+
+	foreach(const JID& jid, jids) {
+		ItemMap::const_iterator i = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
+		if (i == itemMap_.end()) {
+			continue;
+		}
+		foreach(ContactRosterItem* item, i->second) {
+			item->setBlockState(state);
+		}
+	}
+
+	blockingSupported_ = true;
+}
+
 void Roster::removeGroup(const std::string& group) {
 	root_->removeGroupChild(group);
 }
@@ -87,6 +109,9 @@ void Roster::addContact(const JID& jid, const JID& displayJID, const std::string
 	GroupRosterItem* group(getGroup(groupName));
 	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);	
 	item->setAvatarPath(avatarPath);
+	if (blockingSupported_) {
+		item->setBlockState(ContactRosterItem::IsUnblocked);
+	}
 	group->addChild(item);
 	ItemMap::iterator i = itemMap_.insert(std::make_pair(fullJIDMapping_ ? jid : jid.toBare(), std::vector<ContactRosterItem*>())).first;
 	if (!i->second.empty()) {

@@ -23,12 +23,14 @@ namespace Swift {
 	class SettingsProvider;
 	class HistoryController;
 	class HighlightManager;
+	class ClientBlockListManager;
 
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
+			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			virtual void setOnline(bool online);
 			virtual void handleNewFileTransferController(FileTransferController* ftc);
 			virtual void handleWhiteboardSessionRequest(bool senderIsSelf);
@@ -67,6 +69,10 @@ namespace Swift {
 			void handleSettingChanged(const std::string& settingPath);
 			void checkForDisplayingDisplayReceiptsAlert();
 
+			void handleBlockingStateChanged();
+			void handleBlockingItemAdded(const JID&);
+			void handleBlockingItemRemoved(const JID&);
+
 		private:
 			NickResolver* nickResolver_;
 			ChatStateNotifier* chatStateNotifier_;
@@ -86,6 +92,11 @@ namespace Swift {
 			std::map<std::string, FileTransferController*> ftControllers;
 			SettingsProvider* settings_;
 			std::string lastWbID_;
+
+			ClientBlockListManager* clientBlockListManager_;
+			boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
+			boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
+			boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
 	};
 }
 

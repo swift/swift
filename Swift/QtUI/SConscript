@@ -94,6 +94,7 @@ sources = [
     "QtLoginWindow.cpp",
     "QtMainWindow.cpp",
     "QtProfileWindow.cpp",
+    "QtBlockListEditorWindow.cpp",
     "QtNameWidget.cpp",
     "QtSettingsProvider.cpp",
     "QtStatusWidget.cpp",
@@ -273,6 +274,7 @@ myenv.Uic4("QtHistoryWindow.ui")
 myenv.Uic4("QtConnectionSettings.ui")
 myenv.Uic4("QtHighlightRuleWidget.ui")
 myenv.Uic4("QtHighlightEditorWidget.ui")
+myenv.Uic4("QtBlockListEditorWindow.ui")
 myenv.Uic4("QtSpellCheckerWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")

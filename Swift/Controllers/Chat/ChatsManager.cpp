@@ -43,6 +43,7 @@
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swift/Controllers/WhiteboardManager.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 
 namespace Swift {
 
@@ -75,7 +76,8 @@ ChatsManager::ChatsManager(
 		SettingsProvider* settings,
 		HistoryController* historyController,
 		WhiteboardManager* whiteboardManager,
-		HighlightManager* highlightManager) :
+		HighlightManager* highlightManager,
+		ClientBlockListManager* clientBlockListManager) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -88,7 +90,8 @@ ChatsManager::ChatsManager(
 			settings_(settings),
 			historyController_(historyController),
 			whiteboardManager_(whiteboardManager),
-			highlightManager_(highlightManager) {
+			highlightManager_(highlightManager),
+			clientBlockListManager_(clientBlockListManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -523,7 +526,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));

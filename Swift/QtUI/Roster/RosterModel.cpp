@@ -162,6 +162,10 @@ QString RosterModel::getStatusText(RosterItem* item) const {
 QIcon RosterModel::getPresenceIcon(RosterItem* item) const {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 	if (!contact) return QIcon();
+	if (contact->blockState() == ContactRosterItem::IsBlocked) {
+		return QIcon(":/icons/stop.png");
+	}
+
 	QString iconString;
 	switch (contact->getStatusShow()) {
 		case StatusShow::Online: iconString = "online";break;

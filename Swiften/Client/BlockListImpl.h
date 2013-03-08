@@ -19,7 +19,7 @@ namespace Swift {
 
 			void setState(State state);
 
-			virtual const std::set<JID>& getItems() const {
+			virtual const std::vector<JID>& getItems() const {
 				return items;
 			}
 
@@ -32,6 +32,6 @@ namespace Swift {
 
 		private:
 			State state;
-			std::set<JID> items;
+			std::vector<JID> items;
 	};
 }

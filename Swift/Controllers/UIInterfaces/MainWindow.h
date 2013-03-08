@@ -34,6 +34,7 @@ namespace Swift {
 			/** Must be able to cope with NULL to clear the roster */
 			virtual void setRosterModel(Roster* roster) = 0;
 			virtual void setConnecting() = 0;
+			virtual void setBlockingCommandAvailable(bool isAvailable) = 0;
 			virtual void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands) = 0;
 			virtual void setStreamEncryptionStatus(bool tlsInPlaceAndValid) = 0;
 			virtual void openCertificateDialog(const std::vector<Certificate::ref>& chain) = 0;

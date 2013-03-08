@@ -39,10 +39,11 @@ namespace Swift {
 	class NickManager;
 	class EntityCapsProvider;
 	class FileTransferManager;
-	
+	class ClientBlockListManager;
+
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;}
@@ -56,6 +57,8 @@ namespace Swift {
 
 			void setContactGroups(const JID& jid, const std::vector<std::string>& groups);
 			void updateItem(const XMPPRosterItem&);
+
+			void initBlockingCommand();
 
 		private:
 			void handleOnJIDAdded(const JID &jid);
@@ -76,6 +79,10 @@ namespace Swift {
 			void handleOnCapsChanged(const JID& jid);
 			void handleSettingChanged(const std::string& settingPath);
 
+			void handleBlockingStateChanged();
+			void handleBlockingItemAdded(const JID& jid);
+			void handleBlockingItemRemoved(const JID& jid);
+
 			JID myJID_;
 			XMPPRoster* xmppRoster_;
 			MainWindowFactory* mainWindowFactory_;
@@ -94,7 +101,11 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			EntityCapsProvider* entityCapsManager_;
 			FileTransferOverview* ftOverview_;
+			ClientBlockListManager* clientBlockListManager_;
 			
+			boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
+			boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
+			boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
 			boost::bsignals::scoped_connection changeStatusConnection_;
 			boost::bsignals::scoped_connection signOutConnection_;
 			boost::bsignals::scoped_connection uiEventConnection_;

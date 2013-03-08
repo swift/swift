@@ -66,11 +66,14 @@ namespace {
 }
 
 ClientBlockListManager::ClientBlockListManager(IQRouter* iqRouter) : iqRouter(iqRouter) {
+
 }
 
 ClientBlockListManager::~ClientBlockListManager() {
-	unblockResponder->stop();
-	blockResponder->stop();
+	if (blockList && blockList->getState() == BlockList::Available) {
+		unblockResponder->stop();
+		blockResponder->stop();
+	}
 	if (getRequest) {
 		getRequest->onResponse.disconnect(boost::bind(&ClientBlockListManager::handleBlockListReceived, this, _1, _2));
 	}
@@ -88,13 +91,36 @@ boost::shared_ptr<BlockList> ClientBlockListManager::getBlockList() {
 	return blockList;
 }
 
+GenericRequest<BlockPayload>::ref ClientBlockListManager::createBlockJIDRequest(const JID& jid) {
+	return createBlockJIDsRequest(std::vector<JID>(1, jid));
+}
+
+GenericRequest<BlockPayload>::ref ClientBlockListManager::createBlockJIDsRequest(const std::vector<JID>& jids) {
+	boost::shared_ptr<BlockPayload> payload = boost::make_shared<BlockPayload>(jids);
+	return boost::make_shared< GenericRequest<BlockPayload> >(IQ::Set, JID(), payload, iqRouter);
+}
+
+GenericRequest<UnblockPayload>::ref ClientBlockListManager::createUnblockJIDRequest(const JID& jid) {
+	return createUnblockJIDsRequest(std::vector<JID>(1, jid));
+}
+
+GenericRequest<UnblockPayload>::ref ClientBlockListManager::createUnblockJIDsRequest(const std::vector<JID>& jids) {
+	boost::shared_ptr<UnblockPayload> payload = boost::make_shared<UnblockPayload>(jids);
+	return boost::make_shared< GenericRequest<UnblockPayload> >(IQ::Set, JID(), payload, iqRouter);
+}
+
+GenericRequest<UnblockPayload>::ref ClientBlockListManager::createUnblockAllRequest() {
+	return createUnblockJIDsRequest(std::vector<JID>());
+}
+
+
 void ClientBlockListManager::handleBlockListReceived(boost::shared_ptr<BlockListPayload> payload, ErrorPayload::ref error) {
 	if (error || !payload) {
 		blockList->setState(BlockList::Error);
 	}
 	else {
-		blockList->setState(BlockList::Available);
 		blockList->setItems(payload->getItems());
+		blockList->setState(BlockList::Available);
 		blockResponder = boost::make_shared<BlockResponder>(blockList, iqRouter);
 		blockResponder->start();
 		unblockResponder = boost::make_shared<UnblockResponder>(blockList, iqRouter);

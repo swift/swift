@@ -16,7 +16,7 @@
 namespace Swift {
 
 
-ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid), displayJID_(displayJID) {
+ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid), displayJID_(displayJID), blockState_(BlockingNotSupported) {
 }
 
 ContactRosterItem::~ContactRosterItem() {
@@ -132,6 +132,14 @@ void ContactRosterItem::setSupportedFeatures(const std::set<Feature>& features) 
 
 bool ContactRosterItem::supportsFeature(const Feature feature) const {
 	return features_.find(feature) != features_.end();
+}
+
+void ContactRosterItem::setBlockState(BlockState state) {
+	blockState_ = state;
+}
+
+ContactRosterItem::BlockState ContactRosterItem::blockState() const {
+	return blockState_;
 }
 
 }

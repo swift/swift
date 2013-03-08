@@ -24,6 +24,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include "QtChatWindowJSBridge.h"
 #include "QtUtilities.h"
 
@@ -47,6 +48,7 @@
 #include <QTextEdit>
 #include <QTime>
 #include <QUrl>
+#include <QToolButton>
 #include <QPushButton>
 #include <QFileDialog>
 #include <QMenu>
@@ -66,7 +68,7 @@ const QString QtChatWindow::ButtonFileTransferAcceptRequest = QString("filetrans
 const QString QtChatWindow::ButtonMUCInvite = QString("mucinvite");
 
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), emoticons_(emoticons) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), emoticons_(emoticons), blockingState_(BlockingUnsupported) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	idCounter_ = 0;
@@ -105,21 +107,18 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	alertLabel_->setStyleSheet(alertStyleSheet_);
 	alertWidget_->hide();
 
-	QBoxLayout* subjectLayout = new QBoxLayout(QBoxLayout::LeftToRight);
+	subjectLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
 	subject_ = new QLineEdit(this);
-	subjectLayout->addWidget(subject_);
+	subjectLayout_->addWidget(subject_);
 	setSubject("");
 	subject_->setReadOnly(true);
 
-	actionButton_ = new QPushButton(this);
+	QPushButton* actionButton_ = new QPushButton(this);
 	actionButton_->setIcon(QIcon(":/icons/actions.png"));
 	connect(actionButton_, SIGNAL(clicked()), this, SLOT(handleActionButtonClicked()));
-	subjectLayout->addWidget(actionButton_);
-
 	subject_->hide();
-	actionButton_->hide();
 
-	layout->addLayout(subjectLayout);
+	layout->addLayout(subjectLayout_);
 
 	logRosterSplitter_ = new QSplitter(this);
 	logRosterSplitter_->setAutoFillBackground(true);
@@ -159,6 +158,12 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	correctingLabel_ = new QLabel(tr("Correcting"), this);
 	inputBarLayout->addWidget(correctingLabel_);
 	correctingLabel_->hide();
+
+	// using an extra layout to work around Qt margin glitches on OS X
+	QHBoxLayout* actionLayout = new QHBoxLayout();
+	actionLayout->addWidget(actionButton_);
+
+	inputBarLayout->addLayout(actionLayout);
 	layout->addLayout(inputBarLayout);
 
 	inputClearing_ = false;
@@ -415,7 +420,6 @@ void QtChatWindow::convertToMUC() {
 	setAcceptDrops(false);
 	treeWidget_->show();
 	subject_->show();
-	actionButton_->show();
 }
 
 void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
@@ -504,8 +508,7 @@ QString QtChatWindow::linkimoticonify(const QString& message) const {
 	return messageHTML;
 }
 
-QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight)
-{
+QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight) {
 	QString color = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextColor()));
 	QString background = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextBackground()));
 	if (color.isEmpty()) {
@@ -922,15 +925,26 @@ void QtChatWindow::handleActionButtonClicked() {
 	QAction* destroy = NULL;
 	QAction* invite = NULL;
 
-	foreach(ChatWindow::RoomAction availableAction, availableRoomActions_)
-	{
-		switch(availableAction)
+	QAction* block = NULL;
+	QAction* unblock = NULL;
+
+	if (availableRoomActions_.empty()) {
+		if (blockingState_ == IsBlocked) {
+			unblock = contextMenu.addAction(tr("Unblock"));
+		} else if (blockingState_ == IsUnblocked) {
+			block = contextMenu.addAction(tr("Block"));
+		}
+	} else {
+		foreach(ChatWindow::RoomAction availableAction, availableRoomActions_)
 		{
-			case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject…")); break;
-			case ChatWindow::Configure: configure = contextMenu.addAction(tr("Configure room…")); break;
-			case ChatWindow::Affiliations: affiliations = contextMenu.addAction(tr("Edit affiliations…")); break;
-			case ChatWindow::Destroy: destroy = contextMenu.addAction(tr("Destroy room")); break;
-			case ChatWindow::Invite: invite = contextMenu.addAction(tr("Invite person to this room…")); break;
+			switch(availableAction)
+			{
+				case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject…")); break;
+				case ChatWindow::Configure: configure = contextMenu.addAction(tr("Configure room…")); break;
+				case ChatWindow::Affiliations: affiliations = contextMenu.addAction(tr("Edit affiliations…")); break;
+				case ChatWindow::Destroy: destroy = contextMenu.addAction(tr("Destroy room")); break;
+				case ChatWindow::Invite: invite = contextMenu.addAction(tr("Invite person to this room…")); break;
+			}
 		}
 	}
 
@@ -970,6 +984,12 @@ void QtChatWindow::handleActionButtonClicked() {
 	else if (result == invite) {
 		onInvitePersonToThisMUCRequest();
 	}
+	else if (result == block) {
+		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, JID(Q2PSTRING(contact_))));
+	}
+	else if (result == unblock) {
+		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, JID(Q2PSTRING(contact_))));
+	}
 }
 
 void QtChatWindow::handleAffiliationEditorAccepted() {
@@ -981,9 +1001,12 @@ void QtChatWindow::setAffiliations(MUCOccupant::Affiliation affiliation, const s
 	affiliationEditor_->setAffiliations(affiliation, jids);
 }
 
-void QtChatWindow::setAvailableRoomActions(const std::vector<RoomAction> &actions)
-{
+void QtChatWindow::setAvailableRoomActions(const std::vector<RoomAction>& actions) {
 	availableRoomActions_ = actions;
+}
+
+void QtChatWindow::setBlockingState(BlockingState state) {
+	blockingState_ = state;
 }
 
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {

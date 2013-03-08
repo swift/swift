@@ -22,6 +22,9 @@ namespace Swift {
 	template<typename PAYLOAD_TYPE>
 	class GenericRequest : public Request {
 		public:
+			typedef boost::shared_ptr<GenericRequest<PAYLOAD_TYPE> > ref;
+
+		public:
 			/**
 			 * Create a request suitable for client use.
 			 * @param type Iq type - Get or Set.
@@ -61,7 +64,7 @@ namespace Swift {
 				onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
 			}
 
-		protected:
+		public:
 			boost::shared_ptr<PAYLOAD_TYPE> getPayloadGeneric() const {
 				return boost::dynamic_pointer_cast<PAYLOAD_TYPE>(getPayload());
 			}

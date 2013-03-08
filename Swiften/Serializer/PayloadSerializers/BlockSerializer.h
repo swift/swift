@@ -8,6 +8,7 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/JID/JID.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
@@ -24,6 +25,7 @@ namespace Swift {
 				for (std::vector<JID>::const_iterator i = items.begin(); i != items.end(); ++i) {
 					boost::shared_ptr<XMLElement> item = boost::make_shared<XMLElement>("item");
 					item->setAttribute("jid", *i);
+					element.addNode(item);
 				}
 				return element.serialize();
 			}

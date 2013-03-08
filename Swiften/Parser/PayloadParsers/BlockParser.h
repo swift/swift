@@ -7,13 +7,14 @@
 #pragma once
 
 #include <Swiften/Elements/Nickname.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	template<typename BLOCK_ELEMENT>
 	class BlockParser : public GenericPayloadParser<BLOCK_ELEMENT> {
 		public:
-			BlockParser() : GenericPayloadParser<BLOCK_ELEMENT>() {
+			BlockParser() : GenericPayloadParser<BLOCK_ELEMENT>(), level(0) {
 			}
 
 			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {

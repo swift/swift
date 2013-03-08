@@ -33,6 +33,7 @@
 #include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestBlockListDialogUIEvent.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swiften/Base/Platform.h>
@@ -138,6 +139,10 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	connect(viewLogsAction, SIGNAL(triggered()), SLOT(handleViewLogsAction()));
 	actionsMenu->addAction(viewLogsAction);
 #endif
+	openBlockingListEditor_ = new QAction(tr("Edit &Blocking List…"), this);
+	connect(openBlockingListEditor_, SIGNAL(triggered()), SLOT(handleEditBlockingList()));
+	actionsMenu->addAction(openBlockingListEditor_);
+	openBlockingListEditor_->setVisible(false);
 	addUserAction_ = new QAction(tr("&Add Contact…"), this);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
@@ -188,6 +193,10 @@ void QtMainWindow::handleToggleRequestDeliveryReceipts(bool enabled) {
 
 void QtMainWindow::handleShowCertificateInfo() {
 	onShowCertificateRequest();
+}
+
+void QtMainWindow::handleEditBlockingList() {
+	uiEventStream_->send(boost::make_shared<RequestBlockListDialogUIEvent>());
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {
@@ -357,6 +366,10 @@ void QtMainWindow::setAvailableAdHocCommands(const std::vector<DiscoItems::Item>
 		serverAdHocMenu_->addAction(action);
 		serverAdHocCommandActions_.append(action);
 	}
+}
+
+void QtMainWindow::setBlockingCommandAvailable(bool isAvailable) {
+	openBlockingListEditor_->setVisible(isAvailable);
 }
 
 }

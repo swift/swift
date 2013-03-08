@@ -22,6 +22,7 @@
 #include <Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h>
 #include <Swift/Controllers/UIInterfaces/WhiteboardWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/HighlightEditorWidgetFactory.h>
+#include <Swift/Controllers/UIInterfaces/BlockListEditorWidgetFactory.h>
 
 namespace Swift {
 	class UIFactory : 
@@ -40,7 +41,8 @@ namespace Swift {
 			public AdHocCommandWindowFactory,
 			public FileTransferListWidgetFactory,
 			public WhiteboardWindowFactory,
-			public HighlightEditorWidgetFactory {
+			public HighlightEditorWidgetFactory,
+			public BlockListEditorWidgetFactory {
 		public:
 			virtual ~UIFactory() {}
 	};

@@ -23,6 +23,7 @@ const std::string DiscoInfo::JingleTransportsS5BFeature = std::string("urn:xmpp:
 const std::string DiscoInfo::Bytestream = std::string("http://jabber.org/protocol/bytestreams");
 const std::string DiscoInfo::MessageDeliveryReceiptsFeature = std::string("urn:xmpp:receipts");
 const std::string DiscoInfo::WhiteboardFeature = std::string("http://swift.im/whiteboard");
+const std::string DiscoInfo::BlockingCommandFeature = std::string("urn:xmpp:blocking");
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {
 	if (category_ == other.category_) {

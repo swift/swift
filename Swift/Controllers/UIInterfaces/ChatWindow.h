@@ -39,6 +39,7 @@ namespace Swift {
 			enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
 			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
+			enum BlockingState {BlockingUnsupported, IsBlocked, IsUnblocked};
 			ChatWindow() {}
 			virtual ~ChatWindow() {}
 
@@ -89,6 +90,7 @@ namespace Swift {
 			virtual void setSubject(const std::string& subject) = 0;
 			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) = 0;
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &actions) = 0;
+			virtual void setBlockingState(BlockingState state) = 0;
 			/**
 			 * Set an alert on the window.
 			 * @param alertText Description of alert (required).

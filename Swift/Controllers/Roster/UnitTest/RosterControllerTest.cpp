@@ -37,6 +37,7 @@
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 
 using namespace Swift;
 
@@ -82,12 +83,14 @@ class RosterControllerTest : public CppUnit::TestFixture {
 
 			ftManager_ = new DummyFileTransferManager();
 			ftOverview_ = new FileTransferOverview(ftManager_);
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, ftOverview_);
+			clientBlockListManager_ = new ClientBlockListManager(router_);
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, ftOverview_, clientBlockListManager_);
 			mainWindow_ = mainWindowFactory_->last;
 		}
 
 		void tearDown() {
 			delete rosterController_;
+			delete clientBlockListManager_;
 			delete ftManager_;
 			delete jingleSessionManager_;
 			
@@ -337,6 +340,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		JingleSessionManager* jingleSessionManager_;
 		FileTransferManager* ftManager_;
 		FileTransferOverview* ftOverview_;
+		ClientBlockListManager* clientBlockListManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);

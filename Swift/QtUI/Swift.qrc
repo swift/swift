@@ -41,5 +41,6 @@
 		<file alias="icons/star-checked.png">../resources/icons/star-checked2.png</file>
 		<file alias="icons/star-unchecked.png">../resources/icons/star-unchecked2.png</file>
 		<file alias="icons/zzz.png">../resources/icons/zzz.png</file>
+		<file alias="icons/stop.png">../resources/icons/stop.png</file>
 	</qresource>
 </RCC>

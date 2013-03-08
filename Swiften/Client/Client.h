@@ -37,6 +37,7 @@ namespace Swift {
 	class JingleSessionManager;
 	class FileTransferManager;
 	class WhiteboardSessionManager;
+	class ClientBlockListManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -135,6 +136,10 @@ namespace Swift {
 			ClientDiscoManager* getDiscoManager() const {
 				return discoManager;
 			}
+
+			ClientBlockListManager* getClientBlockListManager() const {
+				return blockListManager;
+			}
 			
 			/**
 			 * Returns a FileTransferManager for the client. This is only available after the onConnected 
@@ -188,6 +193,7 @@ namespace Swift {
 			JingleSessionManager* jingleSessionManager;
 			FileTransferManager* fileTransferManager;
 			BlindCertificateTrustChecker* blindCertificateTrustChecker;
-		WhiteboardSessionManager* whiteboardSessionManager;
+			WhiteboardSessionManager* whiteboardSessionManager;
+			ClientBlockListManager* blockListManager;
 	};
 }

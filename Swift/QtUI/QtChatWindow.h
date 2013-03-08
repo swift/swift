@@ -132,7 +132,8 @@ namespace Swift {
 			void showRoomConfigurationForm(Form::ref);
 			void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true);
 			void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&);
-			void setAvailableRoomActions(const std::vector<RoomAction> &actions);
+			void setAvailableRoomActions(const std::vector<RoomAction>& actions);
+			void setBlockingState(BlockingState state);
 
 			InviteToChatWindow* createInviteToChatWindow();
 
@@ -209,6 +210,7 @@ namespace Swift {
 			QtChatTheme* theme_;
 			QtTextEdit* input_;
 			QWidget* midBar_; 
+			QBoxLayout* subjectLayout_;
 			QComboBox* labelsWidget_;
 			QtOccupantListWidget* treeWidget_;
 			QLabel* correctingLabel_;
@@ -217,7 +219,6 @@ namespace Swift {
 			QPushButton* alertButton_;
 			TabComplete* completer_;
 			QLineEdit* subject_;
-			QPushButton* actionButton_;
 			bool isCorrection_;
 			bool previousMessageWasSelf_;
 			PreviousMessageKind previousMessageKind_;
@@ -240,5 +241,6 @@ namespace Swift {
 			bool showEmoticons_;
 			QPalette defaultLabelsPalette_;
 			LabelModel* labelModel_;
+			BlockingState blockingState_;
 	};
 }

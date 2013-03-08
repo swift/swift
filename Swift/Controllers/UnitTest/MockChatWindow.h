@@ -60,6 +60,8 @@ namespace Swift {
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &) {}
 			virtual InviteToChatWindow* createInviteToChatWindow() {return NULL;}
 
+			virtual void setBlockingState(BlockingState) {}
+
 			std::string name_;
 			std::string lastMessageBody_;
 			std::vector<SecurityLabelsCatalog::Item> labels_;

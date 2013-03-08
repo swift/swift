@@ -36,14 +36,15 @@
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Highlighter.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -145,6 +146,19 @@ void ChatController::setToJID(const JID& jid) {
 	handleBareJIDCapsChanged(toJID_);
 }
 
+void ChatController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
+	ChatControllerBase::setAvailableServerFeatures(info);
+	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::BlockingCommandFeature)) {
+		boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+
+		blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&ChatController::handleBlockingStateChanged, this));
+		blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&ChatController::handleBlockingItemAdded, this, _1));
+		blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&ChatController::handleBlockingItemRemoved, this, _1));
+
+		handleBlockingStateChanged();
+	}
+}
+
 bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
 	return false;
 }
@@ -213,6 +227,36 @@ void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
 	} else {
 		chatWindow_->cancelAlert();
+	}
+}
+
+void ChatController::handleBlockingStateChanged() {
+	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+	if (blockList->getState() == BlockList::Available) {
+		if (blockList->isBlocked(toJID_.toBare())) {
+			chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
+			chatWindow_->setInputEnabled(false);
+			chatWindow_->setBlockingState(ChatWindow::IsBlocked);
+		} else {
+			chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
+		}
+	}
+}
+
+void ChatController::handleBlockingItemAdded(const JID& jid) {
+	if (jid == toJID_.toBare()) {
+		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
+		chatWindow_->setInputEnabled(false);
+		chatWindow_->setBlockingState(ChatWindow::IsBlocked);
+	}
+}
+
+void ChatController::handleBlockingItemRemoved(const JID& jid) {
+	if (jid == toJID_.toBare()) {
+		// FIXME: Support for different types of alerts.
+		chatWindow_->cancelAlert();
+		chatWindow_->setInputEnabled(true);
+		chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
 	}
 }
 

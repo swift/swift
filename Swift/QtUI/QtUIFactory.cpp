@@ -4,34 +4,35 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtUIFactory.h"
+#include <Swift/QtUI/QtUIFactory.h>
 
 #include <QSplitter>
 
-#include "QtXMLConsoleWidget.h"
-#include "QtChatTabs.h"
-#include "QtMainWindow.h"
-#include "QtLoginWindow.h"
-#include "QtSystemTray.h"
-#include "QtSettingsProvider.h"
-#include "QtMainWindow.h"
-#include "QtChatWindow.h"
-#include "QtJoinMUCWindow.h"
-#include "QtChatWindowFactory.h"
-#include "QtSwiftUtil.h"
-#include "MUCSearch/QtMUCSearchWindow.h"
-#include "UserSearch/QtUserSearchWindow.h"
-#include "QtProfileWindow.h"
-#include "QtContactEditWindow.h"
-#include "QtAdHocCommandWindow.h"
-#include "QtFileTransferListWidget.h"
-#include <QtHighlightEditorWidget.h>
-#include "Whiteboard/QtWhiteboardWindow.h"
+#include <Swift/QtUI/QtXMLConsoleWidget.h>
+#include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtMainWindow.h>
+#include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtSystemTray.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtMainWindow.h>
+#include <Swift/QtUI/QtChatWindow.h>
+#include <Swift/QtUI/QtJoinMUCWindow.h>
+#include <Swift/QtUI/QtChatWindowFactory.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/MUCSearch/QtMUCSearchWindow.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchWindow.h>
+#include <Swift/QtUI/QtProfileWindow.h>
+#include <Swift/QtUI/QtContactEditWindow.h>
+#include <Swift/QtUI/QtAdHocCommandWindow.h>
+#include <Swift/QtUI/QtFileTransferListWidget.h>
+#include <Swift/QtUI/QtHighlightEditorWidget.h>
+#include <Swift/QtUI/Whiteboard/QtWhiteboardWindow.h>
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
-#include <QtHistoryWindow.h>
+#include <Swift/QtUI/QtHistoryWindow.h>
 #include <Swiften/Whiteboard/WhiteboardSession.h>
-#include <QtSingleWindow.h>
+#include <Swift/QtUI/QtSingleWindow.h>
+#include <Swift/QtUI/QtBlockListEditorWindow.h>
 
 namespace Swift {
 
@@ -165,6 +166,10 @@ WhiteboardWindow* QtUIFactory::createWhiteboardWindow(boost::shared_ptr<Whiteboa
 
 HighlightEditorWidget* QtUIFactory::createHighlightEditorWidget() {
 	return new QtHighlightEditorWidget();
+}
+
+BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {
+	return new QtBlockListEditorWindow();
 }
 
 void QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {

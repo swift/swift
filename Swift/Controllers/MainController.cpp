@@ -87,6 +87,8 @@
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swift/Controllers/HighlightManager.h>
 #include <Swift/Controllers/HighlightEditorController.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swift/Controllers/BlockListController.h>
 
 namespace Swift {
 
@@ -130,6 +132,7 @@ MainController::MainController(
 	historyViewController_ = NULL;
 	eventWindowController_ = NULL;
 	profileController_ = NULL;
+	blockListController_ = NULL;
 	showProfileController_ = NULL;
 	contactEditController_ = NULL;
 	userSearchControllerChat_ = NULL;
@@ -321,10 +324,12 @@ void MainController::handleConnected() {
 		client_->getFileTransferManager()->startListeningOnPort(randomPort);
 		ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
 		fileTransferListController_->setFileTransferOverview(ftOverview_);
-		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_);
+		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_, client_->getClientBlockListManager());
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 		rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&MainController::handleShowCertificateRequest, this));
+
+		blockListController_ = new BlockListController(client_->getClientBlockListManager(), uiEventStream_, uiFactory_, eventController_);
 
 		contactEditController_ = new ContactEditController(rosterController_, client_->getVCardManager(), uiFactory_, uiEventStream_);
 		whiteboardManager_ = new WhiteboardManager(uiFactory_, uiEventStream_, client_->getNickResolver(), client_->getWhiteboardSessionManager());
@@ -337,9 +342,9 @@ void MainController::handleConnected() {
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 		historyController_ = new HistoryController(storages_->getHistoryStorage());
 		historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager());
 #else
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_, client_->getClientBlockListManager());
 #endif
 		
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
@@ -731,6 +736,10 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 	if (!error) {
 		chatsManager_->setServerDiscoInfo(info);
 		adHocManager_->setServerDiscoInfo(info);
+		if (info->hasFeature(DiscoInfo::BlockingCommandFeature)) {
+			rosterController_->getWindow()->setBlockingCommandAvailable(true);
+			rosterController_->initBlockingCommand();
+		}
 	}
 }
 

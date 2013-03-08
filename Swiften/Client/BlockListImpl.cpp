@@ -8,30 +8,47 @@
 
 #include <Swiften/Base/foreach.h>
 
+#include <algorithm>
+
 using namespace Swift;
 
-BlockListImpl::BlockListImpl() {
+BlockListImpl::BlockListImpl() : state(Init) {
 
 }
 
 void BlockListImpl::setItems(const std::vector<JID>& items) {
-	this->items = std::set<JID>(items.begin(), items.end());
+	foreach (const JID& jid, this->items) {
+		if (std::find(items.begin(), items.end(), jid) != items.end()) {
+			onItemRemoved(jid);
+		}
+	}
+
+	foreach (const JID& jid, items) {
+		if (std::find(this->items.begin(), this->items.end(), jid) != this->items.end()) {
+			onItemAdded(jid);
+		}
+	}
+	this->items = items;
 }
 
 void BlockListImpl::addItem(const JID& item) {
-	if (items.insert(item).second) {
+	if (std::find(items.begin(), items.end(), item) == items.end()) {
+		items.push_back(item);
 		onItemAdded(item);
 	}
 }
 
 void BlockListImpl::removeItem(const JID& item) {
-	if (items.erase(item)) {
+	size_t oldSize = items.size();
+	items.erase(std::remove(items.begin(), items.end(), item), items.end());
+	if (items.size() != oldSize) {
 		onItemRemoved(item);
 	}
 }
 
 void BlockListImpl::setState(State state) {
 	if (this->state != state) {
+		this->state = state;
 		onStateChanged();
 	}
 }
@@ -43,14 +60,13 @@ void BlockListImpl::addItems(const std::vector<JID>& items) {
 }
 
 void BlockListImpl::removeItems(const std::vector<JID>& items) {
-	foreach (const JID& item, items) {
+	std::vector<JID> itemsToRemove = items;
+	foreach (const JID& item, itemsToRemove) {
 		removeItem(item);
 	}
 }
 
 void BlockListImpl::removeAllItems() {
-	foreach (const JID& item, items) {
-		removeItem(item);
-	}
+	removeItems(items);
 }
 

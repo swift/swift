@@ -24,6 +24,7 @@ namespace Swift {
 			virtual void setConnecting() {}
 			virtual void setStreamEncryptionStatus(bool /*tlsInPlaceAndValid*/) {}
 			virtual void openCertificateDialog(const std::vector<Certificate::ref>& /*chain*/) {}
+			virtual void setBlockingCommandAvailable(bool /*isAvailable*/) {}
 			Roster* roster;
 
 	};

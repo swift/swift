@@ -74,6 +74,7 @@ namespace Swift {
 	class WhiteboardManager;
 	class HighlightManager;
 	class HighlightEditorController;
+	class BlockListController;
 
 	class MainController {
 		public:
@@ -154,6 +155,7 @@ namespace Swift {
 			HistoryViewController* historyViewController_;
 			HistoryController* historyController_;
 			FileTransferListController* fileTransferListController_;
+			BlockListController* blockListController_;
 			ChatsManager* chatsManager_;
 			ProfileController* profileController_;
 			ShowProfileController* showProfileController_;

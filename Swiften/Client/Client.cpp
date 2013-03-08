@@ -30,6 +30,7 @@
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 #ifndef SWIFT_EXPERIMENTAL_FT
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #endif
@@ -68,6 +69,7 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 	blindCertificateTrustChecker = new BlindCertificateTrustChecker();
 	
 	jingleSessionManager = new JingleSessionManager(getIQRouter());
+	blockListManager = new ClientBlockListManager(getIQRouter());
 	fileTransferManager = NULL;
 
 	whiteboardSessionManager = NULL;

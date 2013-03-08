@@ -4,24 +4,25 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Roster/QtRosterWidget.h"
+#include <Swift/QtUI/Roster/QtRosterWidget.h>
 
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QInputDialog>
 #include <QFileDialog>
 
-#include "Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h"
-#include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
-#include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
-#include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
-#include "Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h"
-#include "Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h"
-#include "QtContactEditWindow.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "QtSwiftUtil.h"
+#include <Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h>
+#include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/RenameGroupUIEvent.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
+#include <Swift/QtUI/QtContactEditWindow.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
@@ -59,6 +60,17 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		QAction* editContact = contextMenu.addAction(tr("Edit…"));
 		QAction* removeContact = contextMenu.addAction(tr("Remove"));
 		QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
+
+		QAction* unblockContact = NULL;
+		if (contact->blockState() == ContactRosterItem::IsBlocked) {
+			unblockContact = contextMenu.addAction(tr("Unblock"));
+		}
+
+		QAction* blockContact = NULL;
+		if (contact->blockState() == ContactRosterItem::IsUnblocked) {
+			blockContact = contextMenu.addAction(tr("Block"));
+		}
+
 #ifdef SWIFT_EXPERIMENTAL_FT
 		QAction* sendFile = NULL;
 		if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
@@ -71,6 +83,7 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 			startWhiteboardChat = contextMenu.addAction(tr("Start Whiteboard Chat"));
 		}
 #endif
+
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
@@ -82,6 +95,12 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		}
 		else if (result == showProfileForContact) {
 			eventStream_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
+		}
+		else if (unblockContact && result == unblockContact) {
+			eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
+		}
+		else if (blockContact && result == blockContact) {
+			eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, contact->getJID()));
 		}
 #ifdef SWIFT_EXPERIMENTAL_FT
 		else if (sendFile && result == sendFile) {

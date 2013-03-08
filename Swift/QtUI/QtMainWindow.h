@@ -53,6 +53,7 @@ namespace Swift {
 			QtChatListWindow* getChatListWindow();
 			void setRosterModel(Roster* roster);
 			void setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands);
+			void setBlockingCommandAvailable(bool isAvailable);
 		private slots:
 			void handleStatusChanged(StatusShow::Type showType, const QString &statusMessage);
 			void handleSettingChanged(const std::string& settingPath);
@@ -72,6 +73,7 @@ namespace Swift {
 			void handleTabChanged(int index);
 			void handleToggleRequestDeliveryReceipts(bool enabled);
 			void handleShowCertificateInfo();
+			void handleEditBlockingList();
 
 		private:
 			SettingsProvider* settings_;
@@ -85,6 +87,7 @@ namespace Swift {
 			QAction* showOfflineAction_;
 			QAction* compactRosterAction_;
 			QAction* showEmoticonsAction_;
+			QAction* openBlockingListEditor_;
 			QAction* toggleRequestDeliveryReceipts_;
 			QMenu* serverAdHocMenu_;
 			QtTabWidget* tabs_;

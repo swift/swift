@@ -28,6 +28,12 @@ class ContactRosterItem : public RosterItem {
 			FileTransferFeature,
 			WhiteboardFeature
 		};
+
+		enum BlockState {
+			BlockingNotSupported,
+			IsBlocked,
+			IsUnblocked
+		};
 		
 	public:
 		ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent);
@@ -53,6 +59,9 @@ class ContactRosterItem : public RosterItem {
 		void setSupportedFeatures(const std::set<Feature>& features);
 		bool supportsFeature(Feature feature) const;
 
+		void setBlockState(BlockState state);
+		BlockState blockState() const;
+
 	private:
 		JID jid_;
 		JID displayJID_;
@@ -63,6 +72,7 @@ class ContactRosterItem : public RosterItem {
 		boost::shared_ptr<Presence> shownPresence_;
 		std::vector<std::string> groups_;
 		std::set<Feature> features_;
+		BlockState blockState_;
 };
 
 }

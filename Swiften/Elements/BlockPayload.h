@@ -14,7 +14,7 @@
 namespace Swift {
 	class BlockPayload : public Payload {
 		public:
-			BlockPayload() {
+			BlockPayload(const std::vector<JID>& jids = std::vector<JID>()) : items(jids) {
 			}
 
 			void addItem(const JID& jid) {

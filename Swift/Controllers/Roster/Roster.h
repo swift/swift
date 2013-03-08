@@ -45,6 +45,7 @@ class Roster {
 		boost::signal<void (RosterItem*)> onDataChanged;
 		GroupRosterItem* getGroup(const std::string& groupName);
 		void setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features);
+		void setBlockedState(const std::vector<JID>& jids, ContactRosterItem::BlockState state);
 
 	private:
 		void handleDataChanged(RosterItem* item);
@@ -58,6 +59,7 @@ class Roster {
 		ItemMap itemMap_;
 		bool fullJIDMapping_;
 		bool sortByStatus_;
+		bool blockingSupported_;
 };
 
 }
