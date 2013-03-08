@@ -8,6 +8,7 @@
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/DateTime.h>
 #include <Swiften/Elements/Idle.h>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
@@ -47,7 +48,7 @@ std::string ContactRosterItem::getIdleText() const {
 	if (!idle || idle->getSince().is_not_a_date_time()) {
 		return "";
 	} else {
-		return boost::posix_time::to_simple_string(idle->getSince());
+		return dateTimeToLocalString(idle->getSince());
 	}
 }
 

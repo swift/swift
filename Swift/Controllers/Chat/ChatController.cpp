@@ -24,6 +24,7 @@
 #include <Swift/Controllers/StatusUtil.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/DateTime.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
@@ -65,7 +66,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	}
 	Idle::ref idle;
 	if (theirPresence && (idle = theirPresence->getPayload<Idle>())) {
-		startMessage += QT_TRANSLATE_NOOP("", ", who has been idle since ") + boost::posix_time::to_simple_string(idle->getSince());
+		startMessage += str(format(QT_TRANSLATE_NOOP("", ", who has been idle since %1%")) % dateTimeToLocalString(idle->getSince()));
 	}
 	startMessage += ": " + statusShowTypeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
 	if (theirPresence && !theirPresence->getStatus().empty()) {
@@ -342,7 +343,7 @@ std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> pr
 	}
 	Idle::ref idle;
 	if ((idle = presence->getPayload<Idle>())) {
-		response += QT_TRANSLATE_NOOP("", " and has been idle since ") + boost::posix_time::to_simple_string(idle->getSince());
+		response += str(format(QT_TRANSLATE_NOOP("", " and has been idle since %1%")) % dateTimeToLocalString(idle->getSince()));
 	}
 
 	if (!response.empty()) {

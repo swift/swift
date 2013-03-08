@@ -10,6 +10,7 @@
 #include <boost/date_time/time_facet.hpp>
 #include <boost/date_time/local_time/local_time.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include <Swiften/Base/String.h>
 
@@ -29,6 +30,10 @@ std::string dateTimeToString(const boost::posix_time::ptime& time) {
 	String::replaceAll(stampString, ',', ".");
 	stampString += "Z";
 	return stampString;
+}
+
+std::string dateTimeToLocalString(const boost::posix_time::ptime& time) {
+	return boost::posix_time::to_simple_string(boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local(time));
 }
 
 }

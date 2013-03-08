@@ -20,4 +20,9 @@ namespace Swift {
 	 * Converts a UTC ptime object to a XEP-0082 formatted string.
 	 */
 	SWIFTEN_API std::string dateTimeToString(const boost::posix_time::ptime& time);
+
+	/**
+	 * Converts a UTC ptime object to a localized human readable string.
+	 */
+	SWIFTEN_API std::string dateTimeToLocalString(const boost::posix_time::ptime& time);
 }
