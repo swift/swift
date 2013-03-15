@@ -18,7 +18,7 @@ namespace Swift {
 		ID_WWW = 1,
 		ID_HTTP = 2,
 		ID_WORD = 3,
-		ID_CHAR = 4,
+		ID_CHAR = 4
 	};
 
 	typedef boost::tuple<int, int> PositionPair;

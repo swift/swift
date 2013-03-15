@@ -65,7 +65,7 @@ MUCController::MUCController (
 		HistoryController* historyController,
 		MUCRegistry* mucRegistry,
 		HighlightManager* highlightManager) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), muc_(muc), nick_(nick), desiredNick_(nick), password_(password) {
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -279,7 +279,8 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't join room: %1%.")) % errorMessage);
 	chatWindow_->addErrorMessage(errorMessage);
 	parting_ = true;
-	if (!rejoinNick.empty()) {
+	if (!rejoinNick.empty() && renameCounter_ < 10) {
+		renameCounter_++;
 		setNick(rejoinNick);
 		rejoin();
 	}
@@ -289,6 +290,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 
 void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
+	renameCounter_ = 0;
 	joined_ = true;
 	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	setNick(nick);
@@ -516,6 +518,7 @@ void MUCController::setOnline(bool online) {
 		processUserPart();
 	} else {
 		if (shouldJoinOnReconnect_) {
+			renameCounter_ = 0;
 			chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString()));
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();

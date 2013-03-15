@@ -132,6 +132,7 @@ namespace Swift {
 			InviteToChatWindow* inviteWindow_;
 			XMPPRoster* xmppRoster_;
 			std::vector<HistoryMessage> joinContext_;
+			size_t renameCounter_;
 	};
 }
 
