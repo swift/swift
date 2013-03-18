@@ -393,7 +393,7 @@ if env["PLATFORM"] == "win32" :
         outfile.write('}')
         outfile.close()
         infile.close()
-      env.Command(["Swift/COPYING.rtf"], ["COPYING"], convertToRTF)
+      copying = env.Command(["Swift/COPYING.rtf"], ["COPYING"], convertToRTF)
 
       wixvariables = {
         'VCCRTFile': env["vcredist"],
@@ -404,7 +404,7 @@ if env["PLATFORM"] == "win32" :
         wixincludecontent += "<?define %s = \"%s\" ?>" % (key, wixvariables[key])
       wixincludecontent += "</Include>"
       myenv.WriteVal("..\\Packaging\\Wix\\variables.wxs", env.Value(wixincludecontent))
-      myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', windowsBundleFiles)
+      myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', windowsBundleFiles + copying)
       myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs')
       myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
       myenv.WiX_Light('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
