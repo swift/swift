@@ -4,15 +4,16 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtChatWindowFactory.h"
+#include <Swift/QtUI/QtChatWindowFactory.h>
 
 #include <QDesktopWidget>
-
-#include "QtChatTabs.h"
-#include "QtChatWindow.h"
-#include "QtSwiftUtil.h"
-#include "QtChatTheme.h"
 #include <qdebug.h>
+
+#include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtChatWindow.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtChatTheme.h>
+#include <Swift/QtUI/QtSingleWindow.h>
 
 
 namespace Swift {
@@ -20,7 +21,7 @@ namespace Swift {
 static const QString SPLITTER_STATE = "mucSplitterState";
 static const QString CHAT_TABS_GEOMETRY = "chatTabsGeometry";
 
-QtChatWindowFactory::QtChatWindowFactory(QSplitter* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, QMap<QString, QString> emoticons) : themePath_(themePath), emoticons_(emoticons) {
+QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, QMap<QString, QString> emoticons) : themePath_(themePath), emoticons_(emoticons) {
 	qtOnlySettings_ = qtSettings;
 	settings_ = settings;
 	tabs_ = tabs;

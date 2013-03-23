@@ -6,21 +6,24 @@
 
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swiften/JID/JID.h"
-#include "QtSettingsProvider.h"
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 
 #include <QObject>
 #include <QSplitter>
+
+#include <Swiften/JID/JID.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
+
 namespace Swift {
 	class QtChatTabs;
 	class QtChatTheme;
 	class UIEventStream;
 	class QtUIPreferences;
+	class QtSingleWindow;
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QSplitter* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, QMap<QString, QString> emoticons);
+			QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, QMap<QString, QString> emoticons);
 			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		signals:

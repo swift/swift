@@ -6,8 +6,10 @@
 
 #include <Swift/QtUI/QtSingleWindow.h>
 
-#include <Swift/QtUI/QtSettingsProvider.h>
+
 #include <Swiften/Base/foreach.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtChatTabs.h>
 
 namespace Swift {
 
@@ -26,6 +28,18 @@ QtSingleWindow::QtSingleWindow(QtSettingsProvider* settings) : QSplitter() {
 
 QtSingleWindow::~QtSingleWindow() {
 
+}
+
+void QtSingleWindow::addWidget(QWidget* widget) {
+	QtChatTabs* tabs = dynamic_cast<QtChatTabs*>(widget);
+	if (tabs) {
+		connect(tabs, SIGNAL(onTitleChanged(const QString&)), this, SLOT(handleTabsTitleChanged(const QString&)));
+	}
+	QSplitter::addWidget(widget);
+}
+
+void QtSingleWindow::handleTabsTitleChanged(const QString& title) {
+	setWindowTitle(title);
 }
 
 void QtSingleWindow::handleSplitterMoved(int, int) {

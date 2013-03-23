@@ -23,6 +23,7 @@ namespace Swift {
 			QtTabbable* getCurrentTab();
 		signals:
 			void geometryChanged();
+			void onTitleChanged(const QString& title);
 
 		protected slots:
 			void closeEvent(QCloseEvent* event);

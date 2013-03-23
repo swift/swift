@@ -17,11 +17,13 @@ namespace Swift {
 			QtSingleWindow(QtSettingsProvider* settings);
 			virtual ~QtSingleWindow();
 			void insertAtFront(QWidget* widget);
+			void addWidget(QWidget* widget);
 		protected:
 			void resizeEvent(QResizeEvent*);
 			void moveEvent(QMoveEvent*);
 		private slots:
 			void handleSplitterMoved(int, int);
+			void handleTabsTitleChanged(const QString& title);
 		private:
 			void handleGeometryChanged();
 			void restoreSplitters();

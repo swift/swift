@@ -251,7 +251,9 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 
 	std::string current(Q2PSTRING(qobject_cast<QtTabbable*>(tabs_->currentWidget())->windowTitle()));
 	ChatMessageSummarizer summary;
-	setWindowTitle(summary.getSummary(current, unreads).c_str());
+	QString title = summary.getSummary(current, unreads).c_str();
+	setWindowTitle(title);
+	emit onTitleChanged(title);
 }
 
 void QtChatTabs::flash() {
