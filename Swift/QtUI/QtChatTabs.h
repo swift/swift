@@ -17,7 +17,7 @@ namespace Swift {
 	class QtChatTabs : public QWidget {
 		Q_OBJECT
 		public:
-			QtChatTabs();
+			QtChatTabs(bool singleWindow);
 			void addTab(QtTabbable* tab);
 			void minimise();
 			QtTabbable* getCurrentTab();
@@ -45,6 +45,7 @@ namespace Swift {
 		private:
 			void checkForFirstShow();
 			QtTabWidget* tabs_;
+			bool singleWindow_;
 	};
 }
 

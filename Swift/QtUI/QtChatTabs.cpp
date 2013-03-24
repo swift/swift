@@ -22,7 +22,7 @@
 #include <qdebug.h>
 
 namespace Swift {
-QtChatTabs::QtChatTabs() : QWidget() {
+QtChatTabs::QtChatTabs(bool singleWindow) : QWidget(), singleWindow_(singleWindow) {
 #ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-chat-16.png"));
 #else
@@ -46,7 +46,6 @@ QtChatTabs::QtChatTabs() : QWidget() {
 	layout->setContentsMargins(0, 3, 0, 0);
 	layout->addWidget(tabs_);
 	setLayout(layout);
-	//resize(400, 300);
 }
 
 void QtChatTabs::closeEvent(QCloseEvent* event) {
@@ -114,7 +113,13 @@ void QtChatTabs::handleTabClosing() {
 	if (widget && ((index = tabs_->indexOf(widget)) >= 0)) {
 		tabs_->removeTab(index);
 		if (tabs_->count() == 0) {
-			hide();
+			if (!singleWindow_) {
+				hide();
+			}
+			else {
+				setWindowTitle("");
+				onTitleChanged("");
+			}
 		}
 		else {
 			handleTabTitleUpdated(tabs_->currentWidget());
