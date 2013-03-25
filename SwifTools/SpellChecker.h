@@ -20,7 +20,7 @@ namespace Swift {
 			}
 			virtual ~SpellChecker() {
 				delete parser_;
-			};
+			}
 			virtual bool isCorrect(const std::string& word) = 0;
 			virtual void getSuggestions(const std::string& word, std::vector<std::string>& list) = 0;
 			virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions) = 0;

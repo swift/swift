@@ -6,7 +6,11 @@
 
 #pragma once
 
+#include <Swiften/Base/Platform.h>
+
 #ifdef HAVE_HUNSPELL
+#define HAVE_SPELLCHECKER
+#elif defined(SWIFTEN_PLATFORM_MACOSX)
 #define HAVE_SPELLCHECKER
 #endif
 

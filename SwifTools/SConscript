@@ -41,6 +41,12 @@ if env["SCONS_STAGE"] == "build" :
 			"HunspellChecker.cpp",
 			"SpellParser.cpp",
 		]
+	elif swiftools_env["PLATFORM"] == "darwin" :
+		sources += [
+			"SpellCheckerFactory.cpp",
+			"MacOSXChecker.mm",
+			"SpellParser.cpp",
+		]
 
 
 	if swiftools_env.get("HAVE_SPARKLE", 0) :
