@@ -24,7 +24,6 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include "QtChatWindowJSBridge.h"
 #include "QtUtilities.h"
 
@@ -985,10 +984,10 @@ void QtChatWindow::handleActionButtonClicked() {
 		onInvitePersonToThisMUCRequest();
 	}
 	else if (result == block) {
-		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, JID(Q2PSTRING(contact_))));
+		onBlockUserRequest();
 	}
 	else if (result == unblock) {
-		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, JID(Q2PSTRING(contact_))));
+		onUnblockUserRequest();
 	}
 }
 

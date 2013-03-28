@@ -30,6 +30,7 @@
 #include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/Elements/Idle.h>
@@ -86,6 +87,8 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onWhiteboardSessionAccept.connect(boost::bind(&ChatController::handleWhiteboardSessionAccept, this));
 	chatWindow_->onWhiteboardSessionCancel.connect(boost::bind(&ChatController::handleWhiteboardSessionCancel, this));
 	chatWindow_->onWhiteboardWindowShow.connect(boost::bind(&ChatController::handleWhiteboardWindowShow, this));
+	chatWindow_->onBlockUserRequest.connect(boost::bind(&ChatController::handleBlockUserRequest, this));
+	chatWindow_->onUnblockUserRequest.connect(boost::bind(&ChatController::handleUnblockUserRequest, this));
 	handleBareJIDCapsChanged(toJID_);
 
 	settings_->onSettingChanged.connect(boost::bind(&ChatController::handleSettingChanged, this, _1));
@@ -233,7 +236,7 @@ void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 void ChatController::handleBlockingStateChanged() {
 	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
 	if (blockList->getState() == BlockList::Available) {
-		if (blockList->isBlocked(toJID_.toBare())) {
+		if (isInMUC_ ? blockList->isBlocked(toJID_) : blockList->isBlocked(toJID_.toBare())) {
 			chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
 			chatWindow_->setInputEnabled(false);
 			chatWindow_->setBlockingState(ChatWindow::IsBlocked);
@@ -244,7 +247,7 @@ void ChatController::handleBlockingStateChanged() {
 }
 
 void ChatController::handleBlockingItemAdded(const JID& jid) {
-	if (jid == toJID_.toBare()) {
+	if (toJID_ == (isInMUC_ ? jid: jid.toBare())) {
 		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
 		chatWindow_->setInputEnabled(false);
 		chatWindow_->setBlockingState(ChatWindow::IsBlocked);
@@ -252,11 +255,27 @@ void ChatController::handleBlockingItemAdded(const JID& jid) {
 }
 
 void ChatController::handleBlockingItemRemoved(const JID& jid) {
-	if (jid == toJID_.toBare()) {
+	if (toJID_ == (isInMUC_ ? jid: jid.toBare())) {
 		// FIXME: Support for different types of alerts.
 		chatWindow_->cancelAlert();
 		chatWindow_->setInputEnabled(true);
 		chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
+	}
+}
+
+void ChatController::handleBlockUserRequest() {
+	if (isInMUC_) {
+		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, toJID_));
+	} else {
+		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, toJID_.toBare()));
+	}
+}
+
+void ChatController::handleUnblockUserRequest() {
+	if (isInMUC_) {
+		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_));
+	} else {
+		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_.toBare()));
 	}
 }
 

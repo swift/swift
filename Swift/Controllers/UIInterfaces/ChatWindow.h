@@ -144,6 +144,10 @@ namespace Swift {
 			boost::signal<void ()> onWhiteboardSessionAccept;
 			boost::signal<void ()> onWhiteboardSessionCancel;
 			boost::signal<void ()> onWhiteboardWindowShow;
+
+			// Blocking Command related
+			boost::signal<void ()> onBlockUserRequest;
+			boost::signal<void ()> onUnblockUserRequest;
 	};
 }
 

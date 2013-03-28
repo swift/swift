@@ -73,6 +73,9 @@ namespace Swift {
 			void handleBlockingItemAdded(const JID&);
 			void handleBlockingItemRemoved(const JID&);
 
+			void handleBlockUserRequest();
+			void handleUnblockUserRequest();
+
 		private:
 			NickResolver* nickResolver_;
 			ChatStateNotifier* chatStateNotifier_;
