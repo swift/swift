@@ -30,7 +30,7 @@ boost::filesystem::path Paths::getExecutablePath() {
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 	ByteArray path;
 	path.resize(4096);
-	ssize_t size = readlink("/proc/self/exe", reinterpret_cast<char*>(vecptr(path)), path.size());
+	size_t size = static_cast<size_t>(readlink("/proc/self/exe", reinterpret_cast<char*>(vecptr(path)), path.size()));
 	if (size > 0) {
 		path.resize(size);
 		return boost::filesystem::path(std::string(reinterpret_cast<const char*>(vecptr(path)), path.size()).c_str()).parent_path();
