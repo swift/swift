@@ -9,8 +9,6 @@ if env["SCONS_STAGE"] == "flags" :
 			"LIBPATH": [Dir(".")],
 			"LIBS": ["SwifTools"]
 		}
-	if env["HAVE_HUNSPELL"] :
-		env.MergeFlags(env["HUNSPELL_FLAGS"])
 
 ################################################################################
 # Build
@@ -34,7 +32,7 @@ if env["SCONS_STAGE"] == "build" :
 		]
 	
 	if swiftools_env["HAVE_HUNSPELL"] :
-		swiftools_env.MergeFlags(swiftools_env["HUNSPELL_FLAGS"])
+		swiftools_env.UseFlags(swiftools_env["HUNSPELL_FLAGS"])
 		swiftools_env.Append(CPPDEFINES = ["HAVE_HUNSPELL"])
 		sources += [
 			"SpellCheckerFactory.cpp",
@@ -50,7 +48,7 @@ if env["SCONS_STAGE"] == "build" :
 
 
 	if swiftools_env.get("HAVE_SPARKLE", 0) :
-		swiftools_env.MergeFlags(swiftools_env["SPARKLE_FLAGS"])
+		swiftools_env.UseFlags(swiftools_env["SPARKLE_FLAGS"])
 		swiftools_env.Append(CPPDEFINES = ["HAVE_SPARKLE"])
 		sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
 

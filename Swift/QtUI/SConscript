@@ -47,6 +47,7 @@ if myenv.get("HAVE_SNARL", False) :
 	myenv.Append(CPPDEFINES = ["HAVE_SNARL"])
 if myenv.get("HAVE_HUNSPELL", True):
 	myenv.Append(CPPDEFINES = ["HAVE_HUNSPELL"])
+	myenv.UseFlags(myenv["HUNSPELL_FLAGS"])
 if env["PLATFORM"] == "win32" :
 	myenv.Append(LIBS = ["cryptui"])
 myenv.UseFlags(myenv["PLATFORM_FLAGS"])
