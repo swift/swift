@@ -65,8 +65,8 @@ void ChatControllerBase::createDayChangeTimer() {
 	if (timerFactory_) {
 		boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
 		boost::posix_time::ptime midnight(now.date() + boost::gregorian::days(1));
-		long millisecondsUntilMidnight = (midnight - now).total_milliseconds();
-		dateChangeTimer_ = boost::shared_ptr<Timer>(timerFactory_->createTimer(boost::numeric_cast<int>(millisecondsUntilMidnight)));
+		int millisecondsUntilMidnight = boost::numeric_cast<int>((midnight - now).total_milliseconds());
+		dateChangeTimer_ = boost::shared_ptr<Timer>(timerFactory_->createTimer(millisecondsUntilMidnight));
 		dateChangeTimer_->onTick.connect(boost::bind(&ChatControllerBase::handleDayChangeTick, this));
 		dateChangeTimer_->start();
 	}
