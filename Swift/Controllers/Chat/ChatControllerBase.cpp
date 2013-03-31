@@ -211,8 +211,10 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	std::string body = message->getBody();
 	HighlightAction highlight;
 	if (message->isError()) {
-		std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
-		chatWindow_->addErrorMessage(errorMessage);
+		if (!message->getTo().getResource().empty()) {
+			std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
+			chatWindow_->addErrorMessage(errorMessage);
+		}
 	}
 	else if (messageEvent->getStanza()->getPayload<MUCInvitationPayload>()) {
 		handleMUCInvitation(messageEvent->getStanza());
