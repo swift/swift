@@ -15,17 +15,28 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QStringList>
+#include <QTimer>
 
 namespace Swift {
 
 QtSpellCheckerWindow::QtSpellCheckerWindow(SettingsProvider* settings, QWidget* parent) : QDialog(parent) {
 	settings_ = settings;
 	ui_.setupUi(this);
+#ifdef HAVE_HUNSPELL
+	ui_.hunspellOptions->show();
+#else
+	ui_.hunspellOptions->hide();
+	QTimer::singleShot(0, this, SLOT(shrinkWindow()));
+#endif
 	connect(ui_.spellChecker, SIGNAL(toggled(bool)), this, SLOT(handleChecker(bool)));
 	connect(ui_.cancel, SIGNAL(clicked()), this, SLOT(handleCancel()));
 	connect(ui_.apply, SIGNAL(clicked()), this, SLOT(handleApply()));
 	connect(ui_.pathButton, SIGNAL(clicked()), this, SLOT(handlePathButton()));
 	setFromSettings();
+}
+
+void QtSpellCheckerWindow::shrinkWindow() {
+	resize(0,0);
 }
 
 void QtSpellCheckerWindow::setFromSettings() {

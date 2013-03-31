@@ -22,7 +22,8 @@ namespace Swift {
 			void handlePathButton();
 			void handlePersonalPathButton();
 			void handleApply();
-
+		private slots:
+			void shrinkWindow();
 		private:
 			void setEnabled(bool state);
 			void setFromSettings();
