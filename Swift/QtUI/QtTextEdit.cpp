@@ -141,7 +141,7 @@ void QtTextEdit::contextMenuEvent(QContextMenuEvent* event) {
 	QTextCursor cursor = cursorForPosition(event->pos());
 #ifdef HAVE_SPELLCHECKER
 	QAction* insertPoint = menu->actions().first();
-	QAction* settingsAction = new QAction(QApplication::translate("QtTextEdit", "Spell Checker Options", 0, QApplication::UnicodeUTF8), menu);
+	QAction* settingsAction = new QAction(tr("Spell Checker Options"), menu);
 	menu->insertAction(insertPoint, settingsAction);
 	menu->insertAction(insertPoint, menu->addSeparator());
 	addSuggestions(menu, event);
@@ -176,7 +176,7 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
 	std::vector<std::string> wordList;
 	checker_->getSuggestions(Q2PSTRING(cursor.selectedText()), wordList);
 	if (wordList.size() == 0) {
-		QAction* noSuggestions = new QAction(QApplication::translate("QtTextEdit", "No Suggestions", 0, QApplication::UnicodeUTF8), menu);
+		QAction* noSuggestions = new QAction(tr("No Suggestions"), menu);
 		noSuggestions->setDisabled(true);
 		menu->insertAction(insertPoint, noSuggestions);
 	}
