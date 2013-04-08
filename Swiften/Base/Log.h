@@ -38,3 +38,7 @@ namespace Swift {
 #define SWIFT_LOG(severity) \
 	if (Log::severity > Log::getLogLevel()) ; \
 	else Log().getStream(Log::severity, #severity, __FILE__, __LINE__, __FUNCTION__)
+
+#define SWIFT_LOG_ASSERT(test, severity) \
+	if (Log::severity > Log::getLogLevel() || (test)) ; \
+	else Log().getStream(Log::severity, #severity, __FILE__, __LINE__, __FUNCTION__) << "Assertion failed: " << #test << ". "
