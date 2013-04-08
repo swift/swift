@@ -11,7 +11,7 @@
 namespace Swift {
 	class IDNConverter;
 
-	namespace SWIFTEN_API PlatformIDNConverter {
-		IDNConverter* create();
+	namespace PlatformIDNConverter {
+		SWIFTEN_API IDNConverter* create();
 	}
 }
