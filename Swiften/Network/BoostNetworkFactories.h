@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -41,6 +41,10 @@ namespace Swift {
 				return connectionServerFactory;
 			}
 
+			NetworkEnvironment* getNetworkEnvironment() const SWIFTEN_OVERRIDE {
+				return networkEnvironment;
+			}
+
 			NATTraverser* getNATTraverser() const SWIFTEN_OVERRIDE {
 				return natTraverser;
 			}
@@ -70,6 +74,7 @@ namespace Swift {
 			DomainNameResolver* domainNameResolver;
 			ConnectionServerFactory* connectionServerFactory;
 			NATTraverser* natTraverser;
+			NetworkEnvironment* networkEnvironment;
 			XMLParserFactory* xmlParserFactory;
 			PlatformTLSFactories* tlsFactories;
 			ProxyProvider* proxyProvider;

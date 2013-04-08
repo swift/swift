@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,6 +12,7 @@
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Network/NullNATTraverser.h>
+#include <Swiften/Network/PlatformNetworkEnvironment.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
 #include <Swiften/Network/PlatformProxyProvider.h>
 #include <Swiften/IDN/PlatformIDNConverter.h>
@@ -28,6 +29,7 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(e
 #else
 	natTraverser = new NullNATTraverser(eventLoop);
 #endif
+	networkEnvironment = new PlatformNetworkEnvironment();
 	xmlParserFactory = new PlatformXMLParserFactory();
 	tlsFactories = new PlatformTLSFactories();
 	proxyProvider = new PlatformProxyProvider();
@@ -41,6 +43,7 @@ BoostNetworkFactories::~BoostNetworkFactories() {
 	delete proxyProvider;
 	delete tlsFactories;
 	delete xmlParserFactory;
+	delete networkEnvironment;
 	delete natTraverser;
 	delete connectionServerFactory;
 	delete connectionFactory;

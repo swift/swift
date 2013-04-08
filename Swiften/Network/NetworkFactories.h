@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2012 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -18,6 +18,7 @@ namespace Swift {
 	class ProxyProvider;
 	class EventLoop;
 	class IDNConverter;
+	class NetworkEnvironment;
 
 	/**
 	 * An interface collecting network factories.
@@ -31,6 +32,7 @@ namespace Swift {
 			virtual DomainNameResolver* getDomainNameResolver() const = 0;
 			virtual ConnectionServerFactory* getConnectionServerFactory() const = 0;
 			virtual NATTraverser* getNATTraverser() const = 0;
+			virtual NetworkEnvironment* getNetworkEnvironment() const = 0;
 			virtual XMLParserFactory* getXMLParserFactory() const = 0;
 			virtual TLSContextFactory* getTLSContextFactory() const = 0;
 			virtual ProxyProvider* getProxyProvider() const = 0;

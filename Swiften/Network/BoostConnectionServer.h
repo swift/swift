@@ -16,16 +16,12 @@
 #include <Swiften/Network/BoostConnection.h>
 #include <Swiften/Network/ConnectionServer.h>
 #include <Swiften/EventLoop/EventOwner.h>
+#include <boost/optional/optional_fwd.hpp>
 
 namespace Swift {
 	class SWIFTEN_API BoostConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<BoostConnectionServer> {
 		public:
 			typedef boost::shared_ptr<BoostConnectionServer> ref;
-
-			enum Error {
-				Conflict,
-				UnknownError
-			};
 
 			static ref create(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
 				return ref(new BoostConnectionServer(port, ioService, eventLoop));
@@ -35,6 +31,7 @@ namespace Swift {
 				return ref(new BoostConnectionServer(address, port, ioService, eventLoop));
 			}
 
+			virtual boost::optional<Error> tryStart(); // FIXME: This should become the new start
 			virtual void start();
 			virtual void stop();
 

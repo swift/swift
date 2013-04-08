@@ -12,13 +12,21 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
+#include <boost/optional/optional_fwd.hpp>
 
 namespace Swift {
 	class SWIFTEN_API ConnectionServer {
 		public:
+			enum Error {
+				Conflict,
+				UnknownError
+			};
+
 			virtual ~ConnectionServer();
 
 			virtual HostAddressPort getAddressPort() const = 0;
+
+			virtual boost::optional<Error> tryStart() = 0; // FIXME: This should become the new start
 
 			virtual void start() = 0;
 

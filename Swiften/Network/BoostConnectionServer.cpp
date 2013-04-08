@@ -10,6 +10,7 @@
 #include <boost/system/system_error.hpp>
 #include <boost/asio/placeholders.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/optional.hpp>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
@@ -22,6 +23,13 @@ BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int por
 }
 
 void BoostConnectionServer::start() {
+	boost::optional<Error> error = tryStart();
+	if (error) {
+		eventLoop->postEvent(boost::bind(boost::ref(onStopped), *error), shared_from_this());
+	}
+}
+
+boost::optional<BoostConnectionServer::Error> BoostConnectionServer::tryStart() {
 	try {
 		assert(!acceptor_);
 		if (address_.isValid()) {
@@ -38,12 +46,13 @@ void BoostConnectionServer::start() {
 	}
 	catch (const boost::system::system_error& e) {
 		if (e.code() == boost::asio::error::address_in_use) {
-			eventLoop->postEvent(boost::bind(boost::ref(onStopped), Conflict), shared_from_this());
+			return Conflict;
 		}
 		else {
-			eventLoop->postEvent(boost::bind(boost::ref(onStopped), UnknownError), shared_from_this());
+			return UnknownError;
 		}
 	}
+	return boost::optional<Error>();
 }
 
 
