@@ -10,20 +10,24 @@
 	],
 	"settings":
 	{
-		"tab_size": 4,
 		"translate_tabs_to_spaces": false
 	},
 	"build_systems":
 	[
 		{
-			"name": "Scons",
-			"cmd" : ["./scons"],
-			"working_dir": ".."
+			"name": "SCons",
+			"cmd" : ["python", "3rdParty/SCons/scons.py"],
+			"working_dir": "${project_path}/.."
 		},
 		{
-			"name": "Scons test",
-			"cmd" : ["./scons", "check=1"],
-			"working_dir": ".."
+			"name": "SCons (Swift)",
+			"cmd" : ["python", "3rdParty/SCons/scons.py", "Swift"],
+			"working_dir": "${project_path}/.."
+		},
+		{
+			"name": "SCons (Test)",
+			"cmd" : ["python", "3rdParty/SCons/scons.py", "check=1", "QA"],
+			"working_dir": "${project_path}/.."
 		}
 	]
 }
