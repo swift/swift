@@ -16,8 +16,10 @@ objects += myenv.SwiftenObject(["PlatformIDNConverter.cpp"])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
-#env.Append(UNITTEST_OBJECTS = myenv.SwiftenObject([
-#			File("UnitTest/IDNATest.cpp"),
-#])
+test_env = myenv.Clone()
+test_env.UseFlags(swiften_env["CPPUNIT_FLAGS"])
+env.Append(UNITTEST_OBJECTS = test_env.SwiftenObject([
+			File("UnitTest/IDNConverterTest.cpp"),
+]))
 
 
