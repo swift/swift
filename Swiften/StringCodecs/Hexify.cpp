@@ -33,20 +33,39 @@ std::string Hexify::hexify(const ByteArray& data) {
 	return std::string(result.str());
 }
 
-ByteArray Hexify::unhexify(const std::string& hexstring) {
-	if (hexstring.size() % 2) {
+
+static const unsigned char map[256] = {
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255, 
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	0,   1,   2,   3,   4,   5,   6,   7,
+	8,   9,   255, 255, 255, 255, 255, 255,
+	255, 10,  11,  12,  13,  14,  15,  255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 10,  11,  12,  13,  14,  15,  255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255,
+	255, 255, 255, 255, 255, 255, 255, 255
+};
+
+ByteArray Hexify::unhexify(const std::string& in) {
+	if (in.size() % 2) {
 		return ByteArray();
 	}
-	ByteArray result = ByteArray(hexstring.size() / 2);
-	for (size_t pos = 0; pos < hexstring.size() - 1; pos += 2) {
-		char c;
-		c = hexstring[pos];
-		int a = (c>='0'&&c<='9') ? c-'0' : (c>='A'&&c<='Z') ? c-'A' + 10 : (c>='a'&&c<='z') ? c-'a' + 10 : -1;
-		c = hexstring[pos+1];
-		int b = (c>='0'&&c<='9') ? c-'0' : (c>='A'&&c<='Z') ? c-'A' + 10 : (c>='a'&&c<='z') ? c-'a' + 10 : -1;
-		if (a == -1 || b == -1) return ByteArray(); // fail
-		result[pos/2] = (a<<4) | b;
 
+	ByteArray result(in.size() / 2);
+	for (size_t pos = 0; pos < in.size() - 1; pos += 2) {
+		unsigned char a = map[static_cast<size_t>(in[pos])];
+		unsigned char b = map[static_cast<size_t>(in[pos+1])];
+		if (a == 255 || b == 255) {
+			return ByteArray();
+		}
+		result[pos/2] = (a<<4) | b;
 	}
 	return result;
 }
