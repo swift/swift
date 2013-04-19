@@ -6,7 +6,7 @@ if env["TEST"] :
 	if env["SCONS_STAGE"] == "flags" :
 		env["UNITTEST_SOURCES"] = []
 		env["UNITTEST_OBJECTS"] = []
-	if env["SCONS_STAGE"] == "test" :
+	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.UseFlags(env.get("CHECKER_FLAGS",""))
 		myenv.UseFlags(env.get("SLIMBER_FLAGS",""))
@@ -26,4 +26,3 @@ if env["TEST"] :
 		else :
 			checker = myenv.Program("checker", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
 			myenv.Test(checker, is_checker = True)
-

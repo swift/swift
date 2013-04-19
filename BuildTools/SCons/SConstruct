@@ -578,9 +578,13 @@ for dir in os.listdir(Dir("#").abspath) :
 	if os.path.isfile(sconscript) :
 		modules.append(dir)
 
+# QA comes last
+modules.remove("QA")
+modules.append("QA")
+
 # Flags
 env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifTools"] and not m.startswith("3rdParty")]
-for stage in ["flags", "build", "test"] :
+for stage in ["flags", "build"] :
 	env["SCONS_STAGE"] = stage
 	SConscript(dirs = map(lambda x : root + "/" + x, modules))
 
