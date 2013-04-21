@@ -7,6 +7,7 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 ################################################################################
 
 	if env["SCONS_STAGE"] == "flags" :
+		env["HAVE_LIBNATPMP"] = True
 		env["LIBNATPMP_FLAGS"] = {
 				"CPPPATH": [Dir("src/libnatpmp")],
 				"LIBPATH": [Dir(".")],

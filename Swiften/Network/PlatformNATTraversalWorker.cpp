@@ -14,8 +14,12 @@
 #include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
 #include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
+#ifdef HAVE_LIBNATPMP
 #include <Swiften/Network/NATPMPInterface.h>
+#endif
+#ifdef HAVE_LIBMINIUPNPC
 #include <Swiften/Network/MiniUPnPInterface.h>
+#endif
 
 namespace Swift {
 
@@ -117,12 +121,17 @@ PlatformNATTraversalWorker::~PlatformNATTraversalWorker() {
 	addRequestToQueue(boost::shared_ptr<PlatformNATTraversalRequest>());
 	thread->join();
 	delete thread;
+#ifdef HAVE_LIBNATPMP
 	delete natPMPInterface;
+#endif
+#ifdef HAVE_LIBMINIUPNPC
 	delete miniUPnPInterface;
+#endif
 	delete nullNATTraversalInterface;
 }
 
 NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() const {
+#ifdef HAVE_LIBMINIUPNPC
 	if (boost::logic::indeterminate(miniUPnPSupported)) {
 		miniUPnPInterface = new MiniUPnPInterface();
 		miniUPnPSupported = miniUPnPInterface->isAvailable();
@@ -130,8 +139,9 @@ NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() co
 	if (miniUPnPSupported) {
 		return miniUPnPInterface;
 	}
+#endif
 
-
+#ifdef HAVE_LIBNATPMP
 	if (boost::logic::indeterminate(natPMPSupported)) {
 		natPMPInterface = new NATPMPInterface();
 		natPMPSupported = natPMPInterface->isAvailable();
@@ -139,6 +149,7 @@ NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() co
 	if (natPMPSupported) {
 		return natPMPInterface;
 	}
+#endif
 
 	return nullNATTraversalInterface;
 }

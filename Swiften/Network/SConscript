@@ -72,20 +72,24 @@ else :
 
 objects = myenv.SwiftenObject(sourceList)
 
-if myenv["experimental"] :
+if myenv["experimental"] :	
 	# LibNATPMP classes
-	natpmp_env = myenv.Clone()
-	natpmp_env.Append(CPPDEFINES = natpmp_env["LIBNATPMP_FLAGS"].get("INTERNAL_CPPDEFINES", []))
-	objects += natpmp_env.SwiftenObject([
-				"NATPMPInterface.cpp",
-			])
+	if myenv.get("HAVE_LIBNATPMP", False) :
+		natpmp_env = myenv.Clone()	
+		natpmp_env.Append(CPPDEFINES = natpmp_env["LIBNATPMP_FLAGS"].get("INTERNAL_CPPDEFINES", []))
+		myenv.Append(CPPDEFINES = ["HAVE_LIBNATPMP"])
+		objects += natpmp_env.SwiftenObject([
+					"NATPMPInterface.cpp",
+				])
 
 	# LibMINIUPnP classes
-	upnp_env = myenv.Clone()
-	upnp_env.Append(CPPDEFINES = upnp_env["LIBMINIUPNPC_FLAGS"].get("INTERNAL_CPPDEFINES", []))
-	objects += upnp_env.SwiftenObject([
-				"MiniUPnPInterface.cpp",
-			])
+	if myenv.get("HAVE_LIBMINIUPNPC", False) :
+		upnp_env = myenv.Clone()
+		upnp_env.Append(CPPDEFINES = upnp_env["LIBMINIUPNPC_FLAGS"].get("INTERNAL_CPPDEFINES", []))
+		myenv.Append(CPPDEFINES = ["HAVE_LIBMINIUPNPC"])
+		objects += upnp_env.SwiftenObject([
+					"MiniUPnPInterface.cpp",
+				])
 	objects += myenv.SwiftenObject([
 				"PlatformNATTraversalWorker.cpp",
 			])

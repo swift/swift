@@ -61,8 +61,8 @@ if env["SCONS_STAGE"] == "build" :
 		swiftools_env.Append(CPPDEFINES = ["HAVE_XSS"])
 		sources += ["Idle/XSSIdleQuerier.cpp"]
 
-	swiftools_env.UseFlags(swiftools_env["BREAKPAD_FLAGS"])
-	if env["HAVE_BREAKPAD"] :
+	if env.get("HAVE_BREAKPAD", False) :
+		swiftools_env.UseFlags(swiftools_env["BREAKPAD_FLAGS"])
 		swiftools_env.Append(CPPDEFINES = ["HAVE_BREAKPAD"])
 	sources += ["CrashReporter.cpp"]
 	

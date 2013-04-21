@@ -2,7 +2,12 @@ import Version, os.path
 
 Import(["env", "conf_env"])
 
-if env["SCONS_STAGE"] == "build" :
+if env["SCONS_STAGE"] == "build" and not GetOption("help") and not env.get("HAVE_LUA", 0) :
+	print "Warning: Lua was not found. Sluift will not be built."
+	if "Sluift" in env["PROJECTS"] :
+		env["PROJECTS"].remove("Sluift")
+		
+elif env["SCONS_STAGE"] == "build" :
 	lib_env = env.Clone()
 	lib_env.UseFlags(env["LUA_FLAGS"])
 	lib_env.UseFlags(env["SWIFTEN_FLAGS"])

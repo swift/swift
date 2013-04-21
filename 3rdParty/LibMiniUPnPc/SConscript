@@ -7,6 +7,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 ################################################################################
 
 	if env["SCONS_STAGE"] == "flags" :
+		env["HAVE_LIBMINIUPNPC"] = True
 		env["LIBMINIUPNPC_FLAGS"] = {
 				"CPPPATH": [Dir("src/miniupnpc")],
 				"LIBPATH": [Dir(".")],

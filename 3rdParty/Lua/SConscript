@@ -7,6 +7,7 @@ if env.get("LUA_BUNDLED", False) :
 ################################################################################
 
 	if env["SCONS_STAGE"] == "flags" :
+		env["HAVE_LUA"] = True
 		cppdefines = []
 		if not env["optimize"] :
 			cppdefines.append("LUA_USE_APICHECK")
