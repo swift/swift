@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 	if (vm.count("libs") > 0) {
 		printFlags(libs);
 	}
-	else if (vm.count("cflags") > 0) {
+	if (vm.count("cflags") > 0) {
 		printFlags(cflags);
 	}
 	return 0;

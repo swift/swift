@@ -20,7 +20,10 @@ swiften_env = env.Clone()
 swiften_env.UseFlags(swiften_env["SWIFTEN_FLAGS"])
 swiften_env.UseFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
 
-cppflags = replaceSwiftenPath(" ".join([swiften_env.subst("$_CPPDEFFLAGS"), swiften_env.subst("$_CPPINCFLAGS")]))
+cppflags = replaceSwiftenPath(" ".join([
+	swiften_env.subst("$CPPFLAGS").replace("-isystem ","-I"),
+	swiften_env.subst("$_CPPDEFFLAGS"), 
+	swiften_env.subst("$_CPPINCFLAGS")]))
 config_flags += cStringVariable(swiften_env, "CPPFLAGS", cppflags)
 
 libflags = replaceSwiftenPath(" ".join([

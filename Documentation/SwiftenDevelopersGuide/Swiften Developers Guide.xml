@@ -117,6 +117,21 @@
         whereas calling it with the <literal>--cflags</literal> option will return the
         list of C(++) compiler flags.
       </para>
+
+      <para>
+        An example of setting up a build of a Swiften application using SCons is shown
+        in <xref linkend="Example-SCons"/>.
+      </para>
+
+      <example id="Example-SCons">
+        <title><literal>SConstruct</literal> file to build Swiften application with SCons</title>
+        <programlisting>
+env = Environment()
+env["SWIFTEN_CONFIG"] = "/path/to/swiften-config"
+env.MergeFlags(env.subst("!$SWIFTEN_CONFIG --cflags --libs"))
+env.Program("EchoBot.cpp")
+        </programlisting>
+      </example>
     </sect1>
 
     <sect1>
