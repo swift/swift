@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,6 +12,8 @@
 
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/SimpleCertificate.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -25,7 +27,7 @@ class CertificateTest : public CppUnit::TestFixture {
 			SimpleCertificate::ref testling = boost::make_shared<SimpleCertificate>();
 			testling->setDER(createByteArray("abcdefg"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("2f:b5:e1:34:19:fc:89:24:68:65:e7:a3:24:f4:76:ec:62:4e:87:40"), testling->getSHA1Fingerprint());
+			CPPUNIT_ASSERT_EQUAL(std::string("2f:b5:e1:34:19:fc:89:24:68:65:e7:a3:24:f4:76:ec:62:4e:87:40"), Certificate::getSHA1Fingerprint(testling, boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create()).get()));
 		}
 };
 

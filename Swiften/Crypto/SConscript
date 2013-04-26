@@ -1,0 +1,28 @@
+Import("swiften_env", "env")
+
+
+objects = swiften_env.SwiftenObject([
+	"CryptoProvider.cpp",
+	"Hash.cpp"
+])
+
+myenv = swiften_env.Clone()
+if myenv["PLATFORM"] == "win32" :
+	objects += myenv.SwiftenObject(["WindowsCryptoProvider.cpp"])
+if myenv.get("HAVE_OPENSSL", False) :
+	myenv.Append(CPPDEFINES = ["HAVE_OPENSSL_CRYPTO_PROVIDER"])
+	objects += myenv.SwiftenObject(["OpenSSLCryptoProvider.cpp"])
+if myenv["PLATFORM"] == "darwin" and myenv["target"] == "native" :
+	myenv.Append(CPPDEFINES = ["HAVE_COMMONCRYPTO_CRYPTO_PROVIDER"])
+	objects += myenv.SwiftenObject(["CommonCryptoCryptoProvider.cpp"])
+
+objects += myenv.SwiftenObject(["PlatformCryptoProvider.cpp"])
+
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])
+
+if env["TEST"] :
+	test_env = myenv.Clone()
+	test_env.UseFlags(swiften_env["CPPUNIT_FLAGS"])
+	env.Append(UNITTEST_OBJECTS = test_env.SwiftenObject([
+				File("UnitTest/CryptoProviderTest.cpp"),
+	]))

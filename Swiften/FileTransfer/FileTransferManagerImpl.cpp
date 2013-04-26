@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 
 #include <boost/bind.hpp>
@@ -35,7 +41,7 @@
 
 namespace Swift {
 
-FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), connectionServerFactory(connectionServerFactory), bytestreamServer(NULL), s5bProxyFinder(NULL) {
+FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser, CryptoProvider* crypto) : ownJID(ownFullJID), jingleSM(jingleSessionManager), iqRouter(router), capsProvider(capsProvider), presenceOracle(presOracle), connectionServerFactory(connectionServerFactory), crypto(crypto), bytestreamServer(NULL), s5bProxyFinder(NULL) {
 	assert(!ownFullJID.isBare());
 
 	connectivityManager = new ConnectivityManager(natTraverser);
@@ -43,9 +49,9 @@ FileTransferManagerImpl::FileTransferManagerImpl(const JID& ownFullJID, JingleSe
 	bytestreamProxy = new SOCKS5BytestreamProxy(connectionFactory, timerFactory);
 
 	localCandidateGeneratorFactory = new DefaultLocalJingleTransportCandidateGeneratorFactory(connectivityManager, bytestreamRegistry, bytestreamProxy, ownFullJID);
-	remoteCandidateSelectorFactory = new DefaultRemoteJingleTransportCandidateSelectorFactory(connectionFactory, timerFactory);
-	outgoingFTManager = new OutgoingFileTransferManager(jingleSM, iqRouter, capsProvider, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy);
-	incomingFTManager = new IncomingFileTransferManager(jingleSM, iqRouter, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy, timerFactory);
+	remoteCandidateSelectorFactory = new DefaultRemoteJingleTransportCandidateSelectorFactory(connectionFactory, timerFactory, crypto);
+	outgoingFTManager = new OutgoingFileTransferManager(jingleSM, iqRouter, capsProvider, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy, crypto);
+	incomingFTManager = new IncomingFileTransferManager(jingleSM, iqRouter, remoteCandidateSelectorFactory, localCandidateGeneratorFactory, bytestreamRegistry, bytestreamProxy, timerFactory, crypto);
 	incomingFTManager->onIncomingFileTransfer.connect(onIncomingFileTransfer);
 }
 
@@ -70,7 +76,7 @@ void FileTransferManagerImpl::startListeningOnPort(int port) {
 	SWIFT_LOG(debug) << "Start listening on port " << port << " and hope it's not in use." << std::endl;
 	boost::shared_ptr<ConnectionServer> server = connectionServerFactory->createConnectionServer(HostAddress("0.0.0.0"), port);
 	server->start();
-	bytestreamServer = new SOCKS5BytestreamServer(server, bytestreamRegistry);
+	bytestreamServer = new SOCKS5BytestreamServer(server, bytestreamRegistry, crypto);
 	bytestreamServer->start();
 	connectivityManager->addListeningPort(port);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,6 +17,8 @@
 #include <Swiften/Network/PlatformProxyProvider.h>
 #include <Swiften/IDN/PlatformIDNConverter.h>
 #include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
@@ -35,9 +37,11 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(e
 	proxyProvider = new PlatformProxyProvider();
 	idnConverter = PlatformIDNConverter::create();
 	domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
+	cryptoProvider = PlatformCryptoProvider::create();
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
+	delete cryptoProvider;
 	delete domainNameResolver;
 	delete idnConverter;
 	delete proxyProvider;

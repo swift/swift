@@ -29,8 +29,6 @@
 #include <Swiften/FileTransfer/DefaultLocalJingleTransportCandidateGeneratorFactory.h>
 #include <Swiften/FileTransfer/DefaultRemoteJingleTransportCandidateSelectorFactory.h>
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/StringCodecs/MD5.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 

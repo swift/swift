@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,10 +16,11 @@
 
 namespace Swift {
 	class IDNConverter;
+	class CryptoProvider;
 
 	class SWIFTEN_API SCRAMSHA1ClientAuthenticator : public ClientAuthenticator {
 		public:
-			SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding, IDNConverter*);
+			SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding, IDNConverter*, CryptoProvider*);
 
 			void setTLSChannelBindingData(const ByteArray& channelBindingData);
 			
@@ -47,6 +48,7 @@ namespace Swift {
 			ByteArray serverSignature;
 			bool useChannelBinding;
 			IDNConverter* idnConverter;
+			CryptoProvider* crypto;
 			boost::optional<ByteArray> tlsChannelBindingData;
 	};
 }

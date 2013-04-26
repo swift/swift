@@ -67,7 +67,6 @@
 #include "Swiften/Disco/GetDiscoInfoRequest.h"
 #include "Swiften/Disco/ClientDiscoManager.h"
 #include "Swiften/VCards/GetVCardRequest.h"
-#include "Swiften/StringCodecs/SHA1.h"
 #include "Swiften/StringCodecs/Hexify.h"
 #include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
 #include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
@@ -89,6 +88,7 @@
 #include <Swift/Controllers/HighlightEditorController.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swift/Controllers/BlockListController.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
@@ -747,7 +747,7 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
 	if (!jid.equals(jid_, JID::WithoutResource) || !vCard || vCard->getPhoto().empty()) {
 		return;
 	}
-	std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+	std::string hash = Hexify::hexify(networkFactories_->getCryptoProvider()->getSHA1Hash(vCard->getPhoto()));
 	if (hash != vCardPhotoHash_) {
 		vCardPhotoHash_ = hash;
 		if (client_ && client_->isAvailable()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,6 +14,8 @@
 #include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Elements/ComponentHandshake.h>
 #include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -28,6 +30,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 		void setUp() {
 			server = boost::make_shared<MockSessionStream>();
 			sessionFinishedReceived = false;
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 		}
 
 		void testStart() {
@@ -70,7 +73,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<ComponentSession> createSession() {
-			boost::shared_ptr<ComponentSession> session = ComponentSession::create(JID("service.foo.com"), "servicesecret", server);
+			boost::shared_ptr<ComponentSession> session = ComponentSession::create(JID("service.foo.com"), "servicesecret", server, crypto.get());
 			session->onFinished.connect(boost::bind(&ComponentSessionTest::handleSessionFinished, this, _1));
 			return session;
 		}
@@ -212,6 +215,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 		bool sessionFinishedReceived;
 		bool needCredentials;
 		boost::shared_ptr<Error> sessionFinishedError;
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ComponentSessionTest);

@@ -35,6 +35,7 @@ namespace Swift {
 	class SOCKS5BytestreamRegistry;
 	class SOCKS5BytestreamProxy;
 	class IncrementalBytestreamHashCalculator;
+	class CryptoProvider;
 
 	class SWIFTEN_API IncomingJingleFileTransfer : public IncomingFileTransfer {
 		public:
@@ -57,7 +58,8 @@ namespace Swift {
 					IQRouter* router,
 					SOCKS5BytestreamRegistry* bytestreamRegistry,
 					SOCKS5BytestreamProxy* bytestreamProxy,
-					TimerFactory*);
+					TimerFactory*,
+					CryptoProvider*);
 			~IncomingJingleFileTransfer();
 
 			virtual void accept(WriteBytestream::ref);
@@ -103,6 +105,7 @@ namespace Swift {
 			JingleSession::ref session;
 			IQRouter* router;
 			JingleContentPayload::ref initialContent;
+			CryptoProvider* crypto;
 			State state;
 			JingleFileTransferDescription::ref description;
 			WriteBytestream::ref stream;

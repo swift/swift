@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,9 +14,11 @@
 #include "Swiften/VCards/VCardStorage.h"
 
 namespace Swift {
+	class CryptoProvider;
+
 	class VCardFileStorage : public VCardStorage {
 		public:
-			VCardFileStorage(boost::filesystem::path dir);
+			VCardFileStorage(boost::filesystem::path dir, CryptoProvider* crypto);
 
 			virtual VCard::ref getVCard(const JID& jid) const;
 			virtual void setVCard(const JID& jid, VCard::ref v);
@@ -31,6 +33,7 @@ namespace Swift {
 
 		private:
 			boost::filesystem::path vcardsPath;
+			CryptoProvider* crypto;
 			boost::filesystem::path cacheFile;
 			typedef std::map<JID, std::string> PhotoHashMap;
 			mutable PhotoHashMap photoHashes;

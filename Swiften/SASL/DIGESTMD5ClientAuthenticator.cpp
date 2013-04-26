@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,18 +8,14 @@
 
 #include <cassert>
 
-#include <Swiften/StringCodecs/MD5.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
-DIGESTMD5ClientAuthenticator::DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce) : ClientAuthenticator("DIGEST-MD5"), step(Initial), host(host), cnonce(nonce) {
-}
-
-bool DIGESTMD5ClientAuthenticator::canBeUsed() {
-	return MD5::isAllowedForCrypto();
+DIGESTMD5ClientAuthenticator::DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce, CryptoProvider* crypto) : ClientAuthenticator("DIGEST-MD5"), step(Initial), host(host), cnonce(nonce), crypto(crypto) {
 }
 
 boost::optional<SafeByteArray> DIGESTMD5ClientAuthenticator::getResponse() const {
@@ -37,7 +33,7 @@ boost::optional<SafeByteArray> DIGESTMD5ClientAuthenticator::getResponse() const
 
 		// Compute the response value
 		ByteArray A1 = concat(
-				MD5::getHash(
+				crypto->getMD5Hash(
 					concat(createSafeByteArray(getAuthenticationID().c_str()), createSafeByteArray(":"), createSafeByteArray(realm.c_str()), createSafeByteArray(":"), getPassword())),
 				createByteArray(":"), createByteArray(*challenge.getValue("nonce")), createByteArray(":"), createByteArray(cnonce));
 		if (!getAuthorizationID().empty()) {
@@ -45,10 +41,10 @@ boost::optional<SafeByteArray> DIGESTMD5ClientAuthenticator::getResponse() const
 		}
 		ByteArray A2 = createByteArray("AUTHENTICATE:" + digestURI);
 
-		std::string responseValue = Hexify::hexify(MD5::getHash(createByteArray(
-			Hexify::hexify(MD5::getHash(A1)) + ":"
+		std::string responseValue = Hexify::hexify(crypto->getMD5Hash(createByteArray(
+			Hexify::hexify(crypto->getMD5Hash(A1)) + ":"
 			+ *challenge.getValue("nonce") + ":" + nc + ":" + cnonce + ":" + qop + ":"
-			+ Hexify::hexify(MD5::getHash(A2)))));
+			+ Hexify::hexify(crypto->getMD5Hash(A2)))));
 
 
 		DIGESTMD5Properties response;

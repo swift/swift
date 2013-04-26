@@ -13,7 +13,6 @@
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
 #include <Swiften/Network/TimerFactory.h>

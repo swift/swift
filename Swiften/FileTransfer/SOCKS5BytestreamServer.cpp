@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,13 +10,13 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 
 namespace Swift {
 
-SOCKS5BytestreamServer::SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer, SOCKS5BytestreamRegistry* registry) : connectionServer(connectionServer), registry(registry) {
+SOCKS5BytestreamServer::SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer, SOCKS5BytestreamRegistry* registry, CryptoProvider* crypto) : connectionServer(connectionServer), registry(registry), crypto(crypto) {
 }
 
 void SOCKS5BytestreamServer::start() {
@@ -36,7 +36,7 @@ void SOCKS5BytestreamServer::removeReadBytestream(const std::string& id, const J
 }
 
 std::string SOCKS5BytestreamServer::getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to) {
-	return Hexify::hexify(SHA1::getHash(createByteArray(id + from.toString() + to.toString())));
+	return Hexify::hexify(crypto->getSHA1Hash(createByteArray(id + from.toString() + to.toString())));
 }
 
 void SOCKS5BytestreamServer::handleNewConnection(boost::shared_ptr<Connection> connection) {

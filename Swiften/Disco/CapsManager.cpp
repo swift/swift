@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-CapsManager::CapsManager(CapsStorage* capsStorage, StanzaChannel* stanzaChannel, IQRouter* iqRouter) : iqRouter(iqRouter), capsStorage(capsStorage), warnOnInvalidHash(true) {
+CapsManager::CapsManager(CapsStorage* capsStorage, StanzaChannel* stanzaChannel, IQRouter* iqRouter, CryptoProvider* crypto) : iqRouter(iqRouter), crypto(crypto), capsStorage(capsStorage), warnOnInvalidHash(true) {
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&CapsManager::handlePresenceReceived, this, _1));
 	stanzaChannel->onAvailableChanged.connect(boost::bind(&CapsManager::handleStanzaChannelAvailableChanged, this, _1));
 }
@@ -51,7 +51,7 @@ void CapsManager::handleStanzaChannelAvailableChanged(bool available) {
 
 void CapsManager::handleDiscoInfoReceived(const JID& from, const std::string& hash, DiscoInfo::ref discoInfo, ErrorPayload::ref error) {
 	requestedDiscoInfos.erase(hash);
-	if (error || !discoInfo || CapsInfoGenerator("").generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
+	if (error || !discoInfo || CapsInfoGenerator("", crypto).generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
 		if (warnOnInvalidHash && !error &&  discoInfo) {
 			std::cerr << "Warning: Caps from " << from.toString() << " do not verify" << std::endl;
 		}

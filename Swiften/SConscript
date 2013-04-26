@@ -221,8 +221,6 @@ if env["SCONS_STAGE"] == "build" :
 			"Session/BasicSessionStream.cpp",
 			"Session/BOSHSessionStream.cpp",
 			"StringCodecs/Base64.cpp",
-			"StringCodecs/SHA256.cpp",
-			"StringCodecs/MD5.cpp",
 			"StringCodecs/Hexify.cpp",
 			"Whiteboard/WhiteboardResponder.cpp",
 			"Whiteboard/WhiteboardSession.cpp",
@@ -241,6 +239,7 @@ if env["SCONS_STAGE"] == "build" :
 			"IDN",
 			"SASL",
 			"TLS",
+			"Crypto",
 			"EventLoop",
 			"Parser",
 			"JID",
@@ -267,11 +266,6 @@ if env["SCONS_STAGE"] == "build" :
 		])
 
 	myenv = swiften_env.Clone()
-	if myenv["PLATFORM"] == "win32":
-		sources.append("StringCodecs/SHA1_Windows.cpp")
-	else:
-		sources.append("StringCodecs/SHA1.cpp")
-
 	if myenv["PLATFORM"] != "darwin" and myenv["PLATFORM"] != "win32" and myenv.get("HAVE_GCONF", 0) :
 		env.MergeFlags(env["GCONF_FLAGS"])
 
@@ -441,11 +435,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("StreamStack/UnitTest/StreamStackTest.cpp"),
 			File("StreamStack/UnitTest/XMPPLayerTest.cpp"),
 			File("StringCodecs/UnitTest/Base64Test.cpp"),
-			File("StringCodecs/UnitTest/SHA1Test.cpp"),
-			File("StringCodecs/UnitTest/SHA256Test.cpp"),
-			File("StringCodecs/UnitTest/MD5Test.cpp"),
 			File("StringCodecs/UnitTest/HexifyTest.cpp"),
-			File("StringCodecs/UnitTest/HMACTest.cpp"),
 			File("StringCodecs/UnitTest/PBKDF2Test.cpp"),
 			File("TLS/UnitTest/ServerIdentityVerifierTest.cpp"),
 			File("TLS/UnitTest/CertificateTest.cpp"),

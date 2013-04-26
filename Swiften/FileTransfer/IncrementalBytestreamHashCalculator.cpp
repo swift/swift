@@ -4,17 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
+
 #include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
 
 #include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/StringCodecs/MD5.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
-IncrementalBytestreamHashCalculator::IncrementalBytestreamHashCalculator(bool doMD5, bool doSHA1) {
-	md5Hasher = doMD5 ? new MD5() : NULL;
-	sha1Hasher = doSHA1 ? new SHA1() : NULL;
+IncrementalBytestreamHashCalculator::IncrementalBytestreamHashCalculator(bool doMD5, bool doSHA1, CryptoProvider* crypto) {
+	md5Hasher = doMD5 ? crypto->createMD5() : NULL;
+	sha1Hasher = doSHA1 ? crypto->createSHA1() : NULL;
 }
 
 IncrementalBytestreamHashCalculator::~IncrementalBytestreamHashCalculator() {

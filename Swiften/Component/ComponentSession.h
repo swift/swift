@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,6 +20,7 @@
 
 namespace Swift {
 	class ComponentAuthenticator;
+	class CryptoProvider;
 
 	class SWIFTEN_API ComponentSession : public boost::enable_shared_from_this<ComponentSession> {
 		public:
@@ -42,8 +43,8 @@ namespace Swift {
 
 			~ComponentSession();
 
-			static boost::shared_ptr<ComponentSession> create(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream) {
-				return boost::shared_ptr<ComponentSession>(new ComponentSession(jid, secret, stream));
+			static boost::shared_ptr<ComponentSession> create(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream, CryptoProvider* crypto) {
+				return boost::shared_ptr<ComponentSession>(new ComponentSession(jid, secret, stream, crypto));
 			}
 
 			State getState() const {
@@ -61,7 +62,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
 		
 		private:
-			ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream>);
+			ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream>, CryptoProvider*);
 
 			void finishSession(Error::Type error);
 			void finishSession(boost::shared_ptr<Swift::Error> error);
@@ -78,6 +79,7 @@ namespace Swift {
 			JID jid;
 			std::string secret;
 			boost::shared_ptr<SessionStream> stream;
+			CryptoProvider* crypto;
 			boost::shared_ptr<Swift::Error> error;
 			State state;
 	};

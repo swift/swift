@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -13,11 +13,11 @@
 
 namespace Swift {
 
-FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& jid) {
+FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& jid, CryptoProvider* crypto) {
 	std::string profile = jid.toBare();
-	vcardStorage = new VCardFileStorage(baseDir / profile / "vcards");
+	vcardStorage = new VCardFileStorage(baseDir / profile / "vcards", crypto);
 	capsStorage = new CapsFileStorage(baseDir / "caps");
-	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars");
+	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars", crypto);
 	rosterStorage = new RosterFileStorage(baseDir / profile / "roster.xml");
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	historyStorage = new SQLiteHistoryStorage((baseDir / "history.db").string());

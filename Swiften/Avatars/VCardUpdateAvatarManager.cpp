@@ -11,7 +11,7 @@
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/VCardUpdate.h>
 #include <Swiften/VCards/GetVCardRequest.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Avatars/AvatarStorage.h>
 #include <Swiften/MUC/MUCRegistry.h>
@@ -20,7 +20,7 @@
 
 namespace Swift {
 
-VCardUpdateAvatarManager::VCardUpdateAvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : vcardManager_(vcardManager), avatarStorage_(avatarStorage), mucRegistry_(mucRegistry) {
+VCardUpdateAvatarManager::VCardUpdateAvatarManager(VCardManager* vcardManager, StanzaChannel* stanzaChannel, AvatarStorage* avatarStorage, CryptoProvider* crypto, MUCRegistry* mucRegistry) : vcardManager_(vcardManager), avatarStorage_(avatarStorage), crypto_(crypto), mucRegistry_(mucRegistry) {
 	stanzaChannel->onPresenceReceived.connect(boost::bind(&VCardUpdateAvatarManager::handlePresenceReceived, this, _1));
 	stanzaChannel->onAvailableChanged.connect(boost::bind(&VCardUpdateAvatarManager::handleStanzaChannelAvailableChanged, this, _1));
 	vcardManager_->onVCardChanged.connect(boost::bind(&VCardUpdateAvatarManager::handleVCardChanged, this, _1, _2));
@@ -54,7 +54,7 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 		setAvatarHash(from, "");
 	}
 	else {
-		std::string hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+		std::string hash = Hexify::hexify(crypto_->getSHA1Hash(vCard->getPhoto()));
 		if (!avatarStorage_->hasAvatar(hash)) {
 			avatarStorage_->addAvatar(hash, vCard->getPhoto());
 		}

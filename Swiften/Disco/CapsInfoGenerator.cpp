@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,7 +11,7 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/FormField.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/StringCodecs/Base64.h>
 
 namespace {
@@ -22,7 +22,7 @@ namespace {
 
 namespace Swift {
 
-CapsInfoGenerator::CapsInfoGenerator(const std::string& node) : node_(node) {
+CapsInfoGenerator::CapsInfoGenerator(const std::string& node, CryptoProvider* crypto) : node_(node), crypto_(crypto) {
 }
 
 CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
@@ -57,7 +57,7 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 		}
 	}
 
-	std::string version(Base64::encode(SHA1::getHash(createByteArray(serializedCaps))));
+	std::string version(Base64::encode(crypto_->getSHA1Hash(createByteArray(serializedCaps))));
 	return CapsInfo(node_, version, "sha-1");
 }
 

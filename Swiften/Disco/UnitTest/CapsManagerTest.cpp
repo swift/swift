@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,6 +16,8 @@
 #include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -41,18 +43,19 @@ class CapsManagerTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
 			storage = new CapsMemoryStorage();
 			user1 = JID("user1@bar.com/bla");
 			discoInfo1 = boost::make_shared<DiscoInfo>();
 			discoInfo1->addFeature("http://swift.im/feature1");
-			capsInfo1 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node1.im").generateCapsInfo(*discoInfo1.get()));
-			capsInfo1alt = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im").generateCapsInfo(*discoInfo1.get()));
+			capsInfo1 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node1.im", crypto.get()).generateCapsInfo(*discoInfo1.get()));
+			capsInfo1alt = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo1.get()));
 			user2 = JID("user2@foo.com/baz");
 			discoInfo2 = boost::make_shared<DiscoInfo>();
 			discoInfo2->addFeature("http://swift.im/feature2");
-			capsInfo2 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im").generateCapsInfo(*discoInfo2.get()));
+			capsInfo2 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo2.get()));
 			user3 = JID("user3@foo.com/baz");
 			legacyCapsInfo = boost::make_shared<CapsInfo>("http://swift.im", "ver1", "");
 		}
@@ -246,7 +249,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<CapsManager> createManager() {
-			boost::shared_ptr<CapsManager> manager(new CapsManager(storage, stanzaChannel, iqRouter));
+			boost::shared_ptr<CapsManager> manager(new CapsManager(storage, stanzaChannel, iqRouter, crypto.get()));
 			manager->setWarnOnInvalidHash(false);
 			//manager->onCapsChanged.connect(boost::bind(&CapsManagerTest::handleCapsChanged, this, _1));
 			return manager;
@@ -281,6 +284,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 		boost::shared_ptr<CapsInfo> capsInfo2;
 		boost::shared_ptr<CapsInfo> legacyCapsInfo;
 		JID user3;
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CapsManagerTest);

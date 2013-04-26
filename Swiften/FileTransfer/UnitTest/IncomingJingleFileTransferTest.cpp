@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -30,6 +36,8 @@
 #include <Swiften/Network/DummyConnectionFactory.h>
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 #include <iostream>
 
@@ -122,7 +130,7 @@ class IncomingJingleFileTransferTest : public CppUnit::TestFixture {
 public:
 		shared_ptr<IncomingJingleFileTransfer> createTestling() {
 			JID ourJID("our@jid.org/full");
-			return make_shared<IncomingJingleFileTransfer>(ourJID, shared_ptr<JingleSession>(fakeJingleSession), jingleContentPayload, fakeRJTCSF.get(), fakeLJTCF.get(), iqRouter, bytestreamRegistry, bytestreamProxy, timerFactory);
+			return boost::shared_ptr<IncomingJingleFileTransfer>(new IncomingJingleFileTransfer(ourJID, shared_ptr<JingleSession>(fakeJingleSession), jingleContentPayload, fakeRJTCSF.get(), fakeLJTCF.get(), iqRouter, bytestreamRegistry, bytestreamProxy, timerFactory, crypto.get()));
 		}
 
 		IQ::ref createIBBRequest(IBB::ref ibb, const JID& from, const std::string& id) {
@@ -132,6 +140,7 @@ public:
 		}
 
 		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			eventLoop = new DummyEventLoop();
 			fakeJingleSession = new FakeJingleSession("foo@bar.com/baz", "mysession");
 			jingleContentPayload = make_shared<JingleContentPayload>();
@@ -280,6 +289,7 @@ private:
 	DummyConnectionFactory* connectionFactory;
 	SOCKS5BytestreamProxy* bytestreamProxy;
 	DummyTimerFactory* timerFactory;
+	boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IncomingJingleFileTransferTest);

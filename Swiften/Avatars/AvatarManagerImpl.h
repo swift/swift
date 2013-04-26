@@ -17,10 +17,11 @@ namespace Swift {
 	class VCardUpdateAvatarManager;
 	class VCardAvatarManager;
 	class OfflineAvatarManager;
+	class CryptoProvider;
 
 	class AvatarManagerImpl : public AvatarManager {
 		public:
-			AvatarManagerImpl(VCardManager*, StanzaChannel*, AvatarStorage*, MUCRegistry* = NULL);
+			AvatarManagerImpl(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
 			virtual ~AvatarManagerImpl();
 
 			virtual boost::filesystem::path getAvatarPath(const JID&) const;

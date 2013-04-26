@@ -67,7 +67,7 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
 		sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
 
-		session_ = ComponentSession::create(jid_, secret_, sessionStream_);
+		session_ = ComponentSession::create(jid_, secret_, sessionStream_, networkFactories->getCryptoProvider());
 		stanzaChannel_->setSession(session_);
 		session_->onFinished.connect(boost::bind(&CoreComponent::handleSessionFinished, this, _1));
 		session_->start();

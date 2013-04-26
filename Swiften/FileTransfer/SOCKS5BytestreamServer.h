@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,10 +17,11 @@
 
 namespace Swift {
 	class SOCKS5BytestreamServerSession;
+	class CryptoProvider;
 
 	class SOCKS5BytestreamServer {
 		public:
-			SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer, SOCKS5BytestreamRegistry* registry);
+			SOCKS5BytestreamServer(boost::shared_ptr<ConnectionServer> connectionServer, SOCKS5BytestreamRegistry* registry, CryptoProvider* crypto);
 
 			HostAddressPort getAddressPort() const;
 
@@ -36,13 +37,14 @@ namespace Swift {
 		private:
 			void handleNewConnection(boost::shared_ptr<Connection> connection);
 
-			static std::string getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to);
+			std::string getSOCKSDestinationAddress(const std::string& id, const JID& from, const JID& to);
 
 		private:
 			friend class SOCKS5BytestreamServerSession;
 
 			boost::shared_ptr<ConnectionServer> connectionServer;
 			SOCKS5BytestreamRegistry* registry;
+			CryptoProvider* crypto;
 			std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > sessions;
 	};
 }

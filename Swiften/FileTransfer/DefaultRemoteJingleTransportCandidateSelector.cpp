@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/FileTransfer/DefaultRemoteJingleTransportCandidateSelector.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
@@ -18,7 +24,7 @@
 
 namespace Swift {
 
-DefaultRemoteJingleTransportCandidateSelector::DefaultRemoteJingleTransportCandidateSelector(ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : connectionFactory(connectionFactory), timerFactory(timerFactory) {
+DefaultRemoteJingleTransportCandidateSelector::DefaultRemoteJingleTransportCandidateSelector(ConnectionFactory* connectionFactory, TimerFactory* timerFactory, CryptoProvider* crypto) : connectionFactory(connectionFactory), timerFactory(timerFactory), crypto(crypto) {
 }
 
 DefaultRemoteJingleTransportCandidateSelector::~DefaultRemoteJingleTransportCandidateSelector() {
@@ -58,7 +64,7 @@ void DefaultRemoteJingleTransportCandidateSelector::tryNextCandidate(bool error)
 				lastCandidate.type == JingleS5BTransportPayload::Candidate::AssistedType || lastCandidate.type == JingleS5BTransportPayload::Candidate::ProxyType ) {
 				// create connection
 				connection = connectionFactory->createConnection();
-				s5bSession = boost::make_shared<SOCKS5BytestreamClientSession>(connection, lastCandidate.hostPort, SOCKS5BytestreamRegistry::getHostname(transportSID, requester, target), timerFactory);
+				s5bSession = boost::make_shared<SOCKS5BytestreamClientSession>(connection, lastCandidate.hostPort, SOCKS5BytestreamRegistry::getHostname(transportSID, requester, target, crypto), timerFactory);
 
 				// bind onReady to this method
 				s5bSession->onSessionReady.connect(boost::bind(&DefaultRemoteJingleTransportCandidateSelector::tryNextCandidate, this, _1));

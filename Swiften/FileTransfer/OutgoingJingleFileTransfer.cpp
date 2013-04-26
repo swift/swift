@@ -28,7 +28,7 @@
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxy.h>
 #include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 #include <Swiften/Base/Log.h>
 
@@ -44,8 +44,9 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(JingleSession::ref sessio
 					boost::shared_ptr<ReadBytestream> readStream,
 					const StreamInitiationFileInfo &fileInfo,
 					SOCKS5BytestreamRegistry* bytestreamRegistry,
-					SOCKS5BytestreamProxy* bytestreamProxy) :
-	session(session), router(router), idGenerator(idGenerator), fromJID(fromJID), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
+					SOCKS5BytestreamProxy* bytestreamProxy,
+					CryptoProvider* crypto) :
+	session(session), router(router), idGenerator(idGenerator), fromJID(fromJID), toJID(toJID), readStream(readStream), fileInfo(fileInfo), s5bRegistry(bytestreamRegistry), s5bProxy(bytestreamProxy), crypto(crypto), serverSession(NULL), contentID(JingleContentID(idGenerator->generateID(), JingleContentPayload::InitiatorCreator)), canceled(false) {
 	session->onSessionAcceptReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionAcceptReceived, this, _1, _2, _3));
 	session->onSessionTerminateReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleSessionTerminateReceived, this, _1));
 	session->onTransportInfoReceived.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransportInfoReceived, this, _1, _2));
@@ -60,7 +61,7 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(JingleSession::ref sessio
 	remoteCandidateSelector = remoteFactory->createCandidateSelector();
 	remoteCandidateSelector->onRemoteTransportCandidateSelectFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleRemoteTransportCandidateSelectFinished, this, _1));
 	// calculate both, MD5 and SHA-1 since we don't know which one the other side supports
-	hashCalculator = new IncrementalBytestreamHashCalculator(true, true);
+	hashCalculator = new IncrementalBytestreamHashCalculator(true, true, crypto);
 	this->readStream->onRead.connect(boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 }
 
@@ -92,7 +93,7 @@ void OutgoingJingleFileTransfer::cancel() {
 	if (ibbSession) {
 		ibbSession->stop();
 	}
-	SOCKS5BytestreamServerSession *serverSession = s5bRegistry->getConnectedSession(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID));
+	SOCKS5BytestreamServerSession *serverSession = s5bRegistry->getConnectedSession(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto));
 	if (serverSession) {
 		serverSession->stop();
 	}
@@ -200,14 +201,14 @@ void OutgoingJingleFileTransfer::startTransferViaTheirCandidateChoice(JingleS5BT
 	SWIFT_LOG(debug) << "Transferring data using their candidate." << std::endl;
 	if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
 		// connect to proxy
-		clientSession = s5bProxy->createSOCKS5BytestreamClientSession(candidate.hostPort, SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID));
+		clientSession = s5bProxy->createSOCKS5BytestreamClientSession(candidate.hostPort, SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto));
 		clientSession->onSessionReady.connect(boost::bind(&OutgoingJingleFileTransfer::proxySessionReady, this, candidate.jid, _1));
 		clientSession->start();
 
 		// on reply send activate
 
 	} else {
-		serverSession = s5bRegistry->getConnectedSession(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID));
+		serverSession = s5bRegistry->getConnectedSession(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto));
 		serverSession->onBytesSent.connect(boost::bind(boost::ref(onProcessedBytes), _1));
 		serverSession->onFinished.connect(boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
 		serverSession->startTransfer();
@@ -356,7 +357,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(JingleT
 		fillCandidateMap(ourCandidates, emptyCandidates);
 
 		transport = emptyCandidates;
-		s5bRegistry->addReadBytestream(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID), readStream);
+		s5bRegistry->addReadBytestream(SOCKS5BytestreamRegistry::getHostname(s5bSessionID, session->getInitiator(), toJID, crypto), readStream);
 	}
 	else {
 		SWIFT_LOG(debug) << "Unknown tranport payload: " << typeid(*payload).name() << std::endl;

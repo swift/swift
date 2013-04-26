@@ -4,30 +4,35 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
+	class Hash;
+	class CryptoProvider;
 
-class MD5;
-class SHA1;
+	class IncrementalBytestreamHashCalculator {
+	public:
+		IncrementalBytestreamHashCalculator(bool doMD5, bool doSHA1, CryptoProvider* crypto);
+		~IncrementalBytestreamHashCalculator();
 
-class IncrementalBytestreamHashCalculator {
-public:
-	IncrementalBytestreamHashCalculator(bool doMD5, bool doSHA1);
-	~IncrementalBytestreamHashCalculator();
+		void feedData(const ByteArray& data);
+		//void feedData(const SafeByteArray& data);
 
-	void feedData(const ByteArray& data);
-	//void feedData(const SafeByteArray& data);
+		std::string getSHA1String();
+		std::string getMD5String();
 
-	std::string getSHA1String();
-	std::string getMD5String();
-
-private:
-	MD5* md5Hasher;
-	SHA1* sha1Hasher;
-};
+	private:
+		Hash* md5Hasher;
+		Hash* sha1Hasher;
+	};
 
 }

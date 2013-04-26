@@ -10,9 +10,8 @@
 #include <map>
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/StringCodecs/HMAC_SHA1.h>
 #include <Swiften/StringCodecs/PBKDF2.h>
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Base/Concat.h>
@@ -36,7 +35,7 @@ static std::string escape(const std::string& s) {
 }
 
 
-SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding, IDNConverter* idnConverter) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding), idnConverter(idnConverter) {
+SCRAMSHA1ClientAuthenticator::SCRAMSHA1ClientAuthenticator(const std::string& nonce, bool useChannelBinding, IDNConverter* idnConverter, CryptoProvider* crypto) : ClientAuthenticator(useChannelBinding ? "SCRAM-SHA-1-PLUS" : "SCRAM-SHA-1"), step(Initial), clientnonce(nonce), useChannelBinding(useChannelBinding), idnConverter(idnConverter), crypto(crypto) {
 }
 
 boost::optional<SafeByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const {
@@ -44,9 +43,9 @@ boost::optional<SafeByteArray> SCRAMSHA1ClientAuthenticator::getResponse() const
 		return createSafeByteArray(concat(getGS2Header(), getInitialBareClientMessage()));
 	}
 	else if (step == Proof) {
-		ByteArray clientKey = HMAC_SHA1()(saltedPassword, createByteArray("Client Key"));
-		ByteArray storedKey = SHA1::getHash(clientKey);
-		ByteArray clientSignature = HMAC_SHA1()(createSafeByteArray(storedKey), authMessage);
+		ByteArray clientKey = crypto->getHMACSHA1(saltedPassword, createByteArray("Client Key"));
+		ByteArray storedKey = crypto->getSHA1Hash(clientKey);
+		ByteArray clientSignature = crypto->getHMACSHA1(createSafeByteArray(storedKey), authMessage);
 		ByteArray clientProof = clientKey;
 		for (unsigned int i = 0; i < clientProof.size(); ++i) {
 			clientProof[i] ^= clientSignature[i];
@@ -96,13 +95,13 @@ bool SCRAMSHA1ClientAuthenticator::setChallenge(const boost::optional<ByteArray>
 
 		// Compute all the values needed for the server signature
 		try {
-			saltedPassword = PBKDF2::encode<HMAC_SHA1>(idnConverter->getStringPrepared(getPassword(), IDNConverter::SASLPrep), salt, iterations);
+			saltedPassword = PBKDF2::encode(idnConverter->getStringPrepared(getPassword(), IDNConverter::SASLPrep), salt, iterations, crypto);
 		}
 		catch (const std::exception&) {
 		}
 		authMessage = concat(getInitialBareClientMessage(), createByteArray(","), initialServerMessage, createByteArray(","), getFinalMessageWithoutProof());
-		ByteArray serverKey = HMAC_SHA1()(saltedPassword, createByteArray("Server Key"));
-		serverSignature = HMAC_SHA1()(serverKey, authMessage);
+		ByteArray serverKey = crypto->getHMACSHA1(saltedPassword, createByteArray("Server Key"));
+		serverSignature = crypto->getHMACSHA1(serverKey, authMessage);
 
 		step = Proof;
 		return true;

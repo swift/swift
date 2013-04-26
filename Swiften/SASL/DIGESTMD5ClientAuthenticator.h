@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,13 +16,14 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
+	class CryptoProvider;
+
 	class SWIFTEN_API DIGESTMD5ClientAuthenticator : public ClientAuthenticator {
 		public:
-			DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce);
+			DIGESTMD5ClientAuthenticator(const std::string& host, const std::string& nonce, CryptoProvider*);
 			
 			virtual boost::optional<SafeByteArray> getResponse() const;
 			virtual bool setChallenge(const boost::optional<std::vector<unsigned char> >&);
-			static bool canBeUsed();
 
 		private:
 			enum Step {
@@ -32,6 +33,7 @@ namespace Swift {
 			} step;
 			std::string host;
 			std::string cnonce;
+			CryptoProvider* crypto;
 			DIGESTMD5Properties challenge;
 	};
 }

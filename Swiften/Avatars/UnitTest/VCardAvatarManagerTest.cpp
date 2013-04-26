@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,8 +19,9 @@
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -37,6 +38,8 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 	public:
 		class TestVCardStorage : public VCardStorage {
 			public:
+				TestVCardStorage(CryptoProvider* crypto) : VCardStorage(crypto), crypto(crypto) {}
+
 				virtual VCard::ref getVCard(const JID& jid) const {
 					VCardMap::const_iterator i = vcards.find(jid);
 					if (i != vcards.end()) {
@@ -57,7 +60,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 					}
 					VCard::ref vCard = getVCard(jid);
 					if (vCard && !vCard->getPhoto().empty()) {
-						return Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+						return Hexify::hexify(crypto->getSHA1Hash(vCard->getPhoto()));
 					}
 					else {
 						return "";
@@ -69,19 +72,21 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			private:
 				typedef std::map<JID, VCard::ref> VCardMap;
 				VCardMap vcards;
+				CryptoProvider* crypto;
 		};
 
 		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			ownJID = JID("foo@fum.com/bum");
 			stanzaChannel = new DummyStanzaChannel();
 			stanzaChannel->setAvailable(true);
 			iqRouter = new IQRouter(stanzaChannel);
 			mucRegistry = new DummyMUCRegistry();
 			avatarStorage = new AvatarMemoryStorage();
-			vcardStorage = new TestVCardStorage();
+			vcardStorage = new TestVCardStorage(crypto.get());
 			vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
 			avatar1 = createByteArray("abcdefg");
-			avatar1Hash = Hexify::hexify(SHA1::getHash(avatar1));
+			avatar1Hash = Hexify::hexify(crypto->getSHA1Hash(avatar1));
 			user1 = JID("user1@bar.com/bla");
 			user2 = JID("user2@foo.com/baz");
 		}
@@ -153,7 +158,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<VCardAvatarManager> createManager() {
-			boost::shared_ptr<VCardAvatarManager> result(new VCardAvatarManager(vcardManager, avatarStorage, mucRegistry));
+			boost::shared_ptr<VCardAvatarManager> result(new VCardAvatarManager(vcardManager, avatarStorage, crypto.get(), mucRegistry));
 			result->onAvatarChanged.connect(boost::bind(&VCardAvatarManagerTest::handleAvatarChanged, this, _1));
 			return result;
 		}
@@ -197,6 +202,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		std::vector<JID> changes;
 		JID user1;
 		JID user2;
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(VCardAvatarManagerTest);

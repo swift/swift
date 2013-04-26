@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-ClientDiscoManager::ClientDiscoManager(IQRouter* iqRouter, PresenceSender* presenceSender) {
+ClientDiscoManager::ClientDiscoManager(IQRouter* iqRouter, PresenceSender* presenceSender, CryptoProvider* crypto) : crypto(crypto) {
 	discoInfoResponder = new DiscoInfoResponder(iqRouter);
 	discoInfoResponder->start();
 	this->presenceSender = new PayloadAddingPresenceSender(presenceSender);
@@ -29,7 +29,7 @@ void ClientDiscoManager::setCapsNode(const std::string& node) {
 }
 
 void ClientDiscoManager::setDiscoInfo(const DiscoInfo& discoInfo) {
-	capsInfo = CapsInfo::ref(new CapsInfo(CapsInfoGenerator(capsNode).generateCapsInfo(discoInfo)));
+	capsInfo = CapsInfo::ref(new CapsInfo(CapsInfoGenerator(capsNode, crypto).generateCapsInfo(discoInfo)));
 	discoInfoResponder->clearDiscoInfo();
 	discoInfoResponder->setDiscoInfo(discoInfo);
 	discoInfoResponder->setDiscoInfo(capsInfo->getNode() + "#" + capsInfo->getVersion(), discoInfo);

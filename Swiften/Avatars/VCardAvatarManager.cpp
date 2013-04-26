@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,7 +9,7 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Elements/VCard.h>
-#include <Swiften/StringCodecs/SHA1.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Avatars/AvatarStorage.h>
 #include <Swiften/MUC/MUCRegistry.h>
@@ -18,7 +18,7 @@
 
 namespace Swift {
 
-VCardAvatarManager::VCardAvatarManager(VCardManager* vcardManager, AvatarStorage* avatarStorage, MUCRegistry* mucRegistry) : vcardManager_(vcardManager), avatarStorage_(avatarStorage), mucRegistry_(mucRegistry) {
+VCardAvatarManager::VCardAvatarManager(VCardManager* vcardManager, AvatarStorage* avatarStorage, CryptoProvider* crypto, MUCRegistry* mucRegistry) : vcardManager_(vcardManager), avatarStorage_(avatarStorage), crypto_(crypto), mucRegistry_(mucRegistry) {
 	vcardManager_->onVCardChanged.connect(boost::bind(&VCardAvatarManager::handleVCardChanged, this, _1));
 }
 
@@ -36,7 +36,7 @@ std::string VCardAvatarManager::getAvatarHash(const JID& jid) const {
 		if (!avatarStorage_->hasAvatar(hash)) {
 			VCard::ref vCard = vcardManager_->getVCard(avatarJID);
 			if (vCard) {
-				std::string newHash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+				std::string newHash = Hexify::hexify(crypto_->getSHA1Hash(vCard->getPhoto()));
 				if (newHash != hash) {
 					// Shouldn't happen, but sometimes seem to. Might be fixed if we
 					// move to a safer backend.

@@ -13,8 +13,8 @@
 #include <Swiften/Entity/GenericPayloadPersister.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/VCard.h"
 #include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
@@ -25,7 +25,7 @@ using namespace Swift;
 
 typedef GenericPayloadPersister<VCard, VCardParser, VCardSerializer> VCardPersister;
 
-VCardFileStorage::VCardFileStorage(boost::filesystem::path dir) : vcardsPath(dir) {
+VCardFileStorage::VCardFileStorage(boost::filesystem::path dir, CryptoProvider* crypto) : VCardStorage(crypto), vcardsPath(dir), crypto(crypto) {
 	cacheFile = vcardsPath / "phashes";
 	if (boost::filesystem::exists(cacheFile)) {
 		try {
@@ -88,7 +88,7 @@ std::string VCardFileStorage::getPhotoHash(const JID& jid) const {
 std::string VCardFileStorage::getAndUpdatePhotoHash(const JID& jid, VCard::ref vCard) const {
 	std::string hash;
 	if (vCard && !vCard->getPhoto().empty()) {
-		hash = Hexify::hexify(SHA1::getHash(vCard->getPhoto()));
+		hash = Hexify::hexify(crypto->getSHA1Hash(vCard->getPhoto()));
 	}
 	std::pair<PhotoHashMap::iterator, bool> r = photoHashes.insert(std::make_pair(jid, hash));
 	if (r.second) {

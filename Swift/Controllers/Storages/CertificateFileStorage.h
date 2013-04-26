@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,10 +12,11 @@
 
 namespace Swift {
 	class CertificateFactory;
+	class CryptoProvider;
 
 	class CertificateFileStorage : public CertificateStorage {
 		public:
-			CertificateFileStorage(const boost::filesystem::path& path, CertificateFactory* certificateFactory);
+			CertificateFileStorage(const boost::filesystem::path& path, CertificateFactory* certificateFactory, CryptoProvider* crypto);
 
 			virtual bool hasCertificate(Certificate::ref certificate) const;
 			virtual void addCertificate(Certificate::ref certificate);
@@ -26,6 +27,7 @@ namespace Swift {
 		private:
 			boost::filesystem::path path;
 			CertificateFactory* certificateFactory;
+			CryptoProvider* crypto;
 	};
 
 }

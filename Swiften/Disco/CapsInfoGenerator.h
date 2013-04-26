@@ -12,14 +12,16 @@
 
 namespace Swift {
 	class DiscoInfo;
+	class CryptoProvider;
 
 	class SWIFTEN_API CapsInfoGenerator {
 		public:
-			CapsInfoGenerator(const std::string& node);
+			CapsInfoGenerator(const std::string& node, CryptoProvider* crypto);
 
 			CapsInfo generateCapsInfo(const DiscoInfo& discoInfo) const;
 
 		private:
 			std::string node_;
+			CryptoProvider* crypto_;
 	};
 }

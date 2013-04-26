@@ -142,7 +142,7 @@ void CoreClient::connect(const ClientOptions& o) {
 }
 
 void CoreClient::bindSessionToStream() {
-	session_ = ClientSession::create(jid_, sessionStream_, networkFactories->getIDNConverter());
+	session_ = ClientSession::create(jid_, sessionStream_, networkFactories->getIDNConverter(), networkFactories->getCryptoProvider());
 	session_->setCertificateTrustChecker(certificateTrustChecker);
 	session_->setUseStreamCompression(options.useStreamCompression);
 	session_->setAllowPLAINOverNonTLS(options.allowPLAINWithoutTLS);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -22,10 +22,11 @@ namespace Swift {
 	class IQRouter;
 	class JID;
 	class CapsStorage;
+	class CryptoProvider;
 
 	class SWIFTEN_API CapsManager : public CapsProvider, public boost::bsignals::trackable { 
 		public:
-			CapsManager(CapsStorage*, StanzaChannel*, IQRouter*);
+			CapsManager(CapsStorage*, StanzaChannel*, IQRouter*, CryptoProvider*);
 
 			DiscoInfo::ref getCaps(const std::string&) const;
 
@@ -42,6 +43,7 @@ namespace Swift {
 
 		private:
 			IQRouter* iqRouter;
+			CryptoProvider* crypto;
 			CapsStorage* capsStorage;
 			bool warnOnInvalidHash;
 			std::set<std::string> requestedDiscoInfos;

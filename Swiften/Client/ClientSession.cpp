@@ -40,6 +40,7 @@
 #include <Swiften/SASL/EXTERNALClientAuthenticator.h>
 #include <Swiften/SASL/SCRAMSHA1ClientAuthenticator.h>
 #include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/TLS/CertificateTrustChecker.h>
 #include <Swiften/TLS/ServerIdentityVerifier.h>
@@ -57,11 +58,13 @@ namespace Swift {
 ClientSession::ClientSession(
 		const JID& jid, 
 		boost::shared_ptr<SessionStream> stream,
-		IDNConverter* idnConverter) :
+		IDNConverter* idnConverter,
+		CryptoProvider* crypto) :
 			localJID(jid),	
 			state(Initial), 
 			stream(stream),
 			idnConverter(idnConverter),
+			crypto(crypto),
 			allowPLAINOverNonTLS(false),
 			useStreamCompression(true),
 			useTLS(UseTLSWhenAvailable),
@@ -226,7 +229,7 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 					plus &= !finishMessage.empty();
 				}
 				s << boost::uuids::random_generator()();
-				SCRAMSHA1ClientAuthenticator* scramAuthenticator = new SCRAMSHA1ClientAuthenticator(s.str(), plus, idnConverter);
+				SCRAMSHA1ClientAuthenticator* scramAuthenticator = new SCRAMSHA1ClientAuthenticator(s.str(), plus, idnConverter, crypto);
 				if (plus) {
 					scramAuthenticator->setTLSChannelBindingData(finishMessage);
 				}
@@ -239,11 +242,11 @@ void ClientSession::handleElement(boost::shared_ptr<Element> element) {
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}
-			else if (streamFeatures->hasAuthenticationMechanism("DIGEST-MD5") && DIGESTMD5ClientAuthenticator::canBeUsed()) {
+			else if (streamFeatures->hasAuthenticationMechanism("DIGEST-MD5") && crypto->isMD5AllowedForCrypto()) {
 				std::ostringstream s;
 				s << boost::uuids::random_generator()();
 				// FIXME: Host should probably be the actual host
-				authenticator = new DIGESTMD5ClientAuthenticator(localJID.getDomain(), s.str());
+				authenticator = new DIGESTMD5ClientAuthenticator(localJID.getDomain(), s.str(), crypto);
 				state = WaitingForCredentials;
 				onNeedCredentials();
 			}

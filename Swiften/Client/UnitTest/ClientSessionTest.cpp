@@ -33,6 +33,8 @@
 #include <Swiften/Elements/ResourceBind.h>
 #include <Swiften/TLS/SimpleCertificate.h>
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -71,6 +73,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
 			server = boost::make_shared<MockSessionStream>();
 			sessionFinishedReceived = false;
@@ -342,7 +345,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<ClientSession> createSession() {
-			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get());
+			boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get(), crypto.get());
 			session->onFinished.connect(boost::bind(&ClientSessionTest::handleSessionFinished, this, _1));
 			session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
 			session->setAllowPLAINOverNonTLS(true);
@@ -625,6 +628,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		bool needCredentials;
 		boost::shared_ptr<Error> sessionFinishedError;
 		BlindCertificateTrustChecker* blindCertificateTrustChecker;
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);

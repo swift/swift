@@ -4,6 +4,12 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -14,6 +20,8 @@
 #include <Swiften/VCards/VCardMemoryStorage.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -34,11 +42,12 @@ class NickResolverTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			ownJID_ = JID("kev@wonderland.lit");
 			xmppRoster_ = new XMPPRosterImpl();
 			stanzaChannel_ = new DummyStanzaChannel();
 		  iqRouter_ = new IQRouter(stanzaChannel_);
-			vCardStorage_ = new VCardMemoryStorage();
+			vCardStorage_ = new VCardMemoryStorage(crypto.get());
 			vCardManager_ = new VCardManager(ownJID_, iqRouter_, vCardStorage_);
 			registry_ = new MUCRegistry();
 			resolver_ = new NickResolver(ownJID_, xmppRoster_, vCardManager_, registry_);
@@ -144,7 +153,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 		MUCRegistry* registry_;
 		NickResolver* resolver_;
 		JID ownJID_;
-
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(NickResolverTest);

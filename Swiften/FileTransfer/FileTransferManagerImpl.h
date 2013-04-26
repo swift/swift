@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <vector>
@@ -40,10 +46,11 @@ namespace Swift {
 	class SOCKS5BytestreamProxy;
 	class TimerFactory;
 	class SOCKS5BytestreamProxyFinder;
+	class CryptoProvider;
 
 	class FileTransferManagerImpl : public FileTransferManager {
 		public:
-			FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser);
+			FileTransferManagerImpl(const JID& ownFullJID, JingleSessionManager* jingleSessionManager, IQRouter* router, EntityCapsProvider* capsProvider, PresenceOracle* presOracle, ConnectionFactory* connectionFactory, ConnectionServerFactory* connectionServerFactory, TimerFactory* timerFactory, NATTraverser* natTraverser, CryptoProvider* crypto);
 			~FileTransferManagerImpl();
 			
 			void startListeningOnPort(int port);
@@ -68,6 +75,7 @@ namespace Swift {
 			PresenceOracle* presenceOracle;
 
 			ConnectionServerFactory* connectionServerFactory;
+			CryptoProvider* crypto;
 			SOCKS5BytestreamRegistry* bytestreamRegistry;
 			SOCKS5BytestreamServer* bytestreamServer;
 			SOCKS5BytestreamProxy* bytestreamProxy;

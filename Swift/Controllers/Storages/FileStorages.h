@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <boost/filesystem/path.hpp>
 
-#include "Swiften/Client/Storages.h"
+#include <Swiften/Client/Storages.h>
 
 namespace Swift {
 	class VCardFileStorage;
@@ -17,6 +17,7 @@ namespace Swift {
 	class RosterFileStorage;
 	class HistoryStorage;
 	class JID;
+	class CryptoProvider;
 
 	/**
 	 * A storages implementation that stores all controller data on disk.
@@ -37,7 +38,7 @@ namespace Swift {
 			 * \param jid the subdir in which profile-specific data will be stored. 
 			 *   The bare JID will be used as the subdir name.
 			 */
-			FileStorages(const boost::filesystem::path& baseDir, const JID& jid);
+			FileStorages(const boost::filesystem::path& baseDir, const JID& jid, CryptoProvider*);
 			~FileStorages();
 
 			virtual VCardStorage* getVCardStorage() const;

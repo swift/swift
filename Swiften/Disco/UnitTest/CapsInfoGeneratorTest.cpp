@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,6 +9,8 @@
 
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -19,6 +21,10 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
+		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+		}
+
 		void testGenerate_XEP0115SimpleExample() {
 			DiscoInfo discoInfo;
 			discoInfo.addIdentity(DiscoInfo::Identity("Exodus 0.9.1", "client", "pc"));
@@ -27,7 +33,7 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 			discoInfo.addFeature("http://jabber.org/protocol/disco#info");
 			discoInfo.addFeature("http://jabber.org/protocol/muc");
 
-			CapsInfoGenerator testling("http://code.google.com/p/exodus");
+			CapsInfoGenerator testling("http://code.google.com/p/exodus", crypto.get());
 			CapsInfo result = testling.generateCapsInfo(discoInfo);
 
 			CPPUNIT_ASSERT_EQUAL(std::string("http://code.google.com/p/exodus"), result.getNode());
@@ -74,11 +80,14 @@ class CapsInfoGeneratorTest : public CppUnit::TestFixture {
 			extension->addField(field);
 			discoInfo.addExtension(extension);
 
-			CapsInfoGenerator testling("http://psi-im.org");
+			CapsInfoGenerator testling("http://psi-im.org", crypto.get());
 			CapsInfo result = testling.generateCapsInfo(discoInfo);
 
 			CPPUNIT_ASSERT_EQUAL(std::string("q07IKJEyjvHSyhy//CH0CxmKi8w="), result.getVersion());
 		}
+		
+	private:
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CapsInfoGeneratorTest);

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <queue>
@@ -23,10 +29,11 @@ namespace Swift {
 
 class ConnectionFactory;
 class TimerFactory;
+class CryptoProvider;
 
 class DefaultRemoteJingleTransportCandidateSelector : public RemoteJingleTransportCandidateSelector {
 public:
-	DefaultRemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*);
+	DefaultRemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*, CryptoProvider*);
 	virtual ~DefaultRemoteJingleTransportCandidateSelector();
 
 	virtual void addRemoteTransportCandidates(JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
@@ -45,6 +52,7 @@ private:
 private:
 	ConnectionFactory* connectionFactory;
 	TimerFactory* timerFactory;
+	CryptoProvider* crypto;
 
 	std::priority_queue<JingleS5BTransportPayload::Candidate, std::vector<JingleS5BTransportPayload::Candidate>, JingleS5BTransportPayload::CompareCandidate> candidates;
 

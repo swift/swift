@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,9 +15,11 @@
 #include "Swiften/Avatars/AvatarStorage.h"
 
 namespace Swift {
+	class CryptoProvider;
+
 	class AvatarFileStorage : public AvatarStorage {
 		public:
-			AvatarFileStorage(const boost::filesystem::path& avatarsDir, const boost::filesystem::path& avatarsFile);
+			AvatarFileStorage(const boost::filesystem::path& avatarsDir, const boost::filesystem::path& avatarsFile, CryptoProvider* crypto);
 
 			virtual bool hasAvatar(const std::string& hash) const;
 			virtual void addAvatar(const std::string& hash, const ByteArray& avatar);
@@ -34,6 +36,7 @@ namespace Swift {
 		private:
 			boost::filesystem::path avatarsDir;
 			boost::filesystem::path avatarsFile;
+			CryptoProvider* crypto;
 			typedef std::map<JID, std::string> JIDAvatarMap;
 			JIDAvatarMap jidAvatars;
 	};

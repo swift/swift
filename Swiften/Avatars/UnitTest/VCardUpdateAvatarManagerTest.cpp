@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,8 +19,9 @@
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -37,19 +38,21 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			ownJID = JID("foo@fum.com/bum");
 			stanzaChannel = new DummyStanzaChannel();
 			stanzaChannel->setAvailable(true);
 			iqRouter = new IQRouter(stanzaChannel);
 			mucRegistry = new DummyMUCRegistry();
 			avatarStorage = new AvatarMemoryStorage();
-			vcardStorage = new VCardMemoryStorage();
+			vcardStorage = new VCardMemoryStorage(crypto.get());
 			vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
 			avatar1 = createByteArray("abcdefg");
-			avatar1Hash = Hexify::hexify(SHA1::getHash(avatar1));
+			avatar1Hash = Hexify::hexify(crypto->getSHA1Hash(avatar1));
 			user1 = JID("user1@bar.com/bla");
 			user2 = JID("user2@foo.com/baz");
 		}
+		
 
 		void tearDown() {
 			delete vcardManager;
@@ -113,7 +116,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			vcardManager->requestVCard(JID("foo@bar.com"));
 			stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
 			
-			CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(SHA1::getHash(ByteArray()))));
+			CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(crypto->getSHA1Hash(ByteArray()))));
 			CPPUNIT_ASSERT_EQUAL(std::string(), testling->getAvatarHash(JID("foo@bar.com")));
 		}
 
@@ -150,7 +153,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 	private:
 		boost::shared_ptr<VCardUpdateAvatarManager> createManager() {
-			boost::shared_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, mucRegistry));
+			boost::shared_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, crypto.get(), mucRegistry));
 			result->onAvatarChanged.connect(boost::bind(&VCardUpdateAvatarManagerTest::handleAvatarChanged, this, _1));
 			return result;
 		}
@@ -192,6 +195,7 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 		std::vector<JID> changes;
 		JID user1;
 		JID user2;
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(VCardUpdateAvatarManagerTest);

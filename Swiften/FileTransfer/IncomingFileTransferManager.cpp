@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
 
 IncomingFileTransferManager::IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router,
 							RemoteJingleTransportCandidateSelectorFactory* remoteFactory,
-														 LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory) : jingleSessionManager(jingleSessionManager), router(router), remoteFactory(remoteFactory), localFactory(localFactory), bytestreamRegistry(bytestreamRegistry), bytestreamProxy(bytestreamProxy), timerFactory(timerFactory) {
+														 LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory, CryptoProvider* crypto) : jingleSessionManager(jingleSessionManager), router(router), remoteFactory(remoteFactory), localFactory(localFactory), bytestreamRegistry(bytestreamRegistry), bytestreamProxy(bytestreamProxy), timerFactory(timerFactory), crypto(crypto) {
 	jingleSessionManager->addIncomingSessionHandler(this);
 }
 
@@ -35,7 +35,7 @@ bool IncomingFileTransferManager::handleIncomingJingleSession(JingleSession::ref
 			JingleFileTransferDescription::ref description = content->getDescription<JingleFileTransferDescription>();
 
 			if (description && description->getOffers().size() == 1) {
-				IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(recipient, session, content, remoteFactory, localFactory, router, bytestreamRegistry, bytestreamProxy, timerFactory);
+				IncomingJingleFileTransfer::ref transfer = boost::shared_ptr<IncomingJingleFileTransfer>(new IncomingJingleFileTransfer(recipient, session, content, remoteFactory, localFactory, router, bytestreamRegistry, bytestreamProxy, timerFactory, crypto));
 				onIncomingFileTransfer(transfer);
 			} else {
 				std::cerr << "Received a file-transfer request with no description or more than one file!" << std::endl;

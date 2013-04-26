@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,12 +12,12 @@
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
-AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& avatarsDir, const boost::filesystem::path& avatarsFile) : avatarsDir(avatarsDir), avatarsFile(avatarsFile) {
+AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& avatarsDir, const boost::filesystem::path& avatarsFile, CryptoProvider* crypto) : avatarsDir(avatarsDir), avatarsFile(avatarsFile), crypto(crypto) {
 	if (boost::filesystem::exists(avatarsFile)) {
 		try {
 			boost::filesystem::ifstream file(avatarsFile);
@@ -47,7 +47,7 @@ bool AvatarFileStorage::hasAvatar(const std::string& hash) const {
 }
 
 void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avatar) {
-	assert(Hexify::hexify(SHA1::getHash(avatar)) == hash);
+	assert(Hexify::hexify(crypto->getSHA1Hash(avatar)) == hash);
 
 	boost::filesystem::path avatarPath = getAvatarPath(hash);
 	if (!boost::filesystem::exists(avatarPath.parent_path())) {

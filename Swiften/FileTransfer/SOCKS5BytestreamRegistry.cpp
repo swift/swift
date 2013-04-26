@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,8 +11,8 @@
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
@@ -64,8 +64,8 @@ SOCKS5BytestreamServerSession* SOCKS5BytestreamRegistry::getConnectedSession(con
 	}
 }
 
-std::string SOCKS5BytestreamRegistry::getHostname(const std::string& sessionID, const JID& requester, const JID& target) {
-	return Hexify::hexify(SHA1::getHash(createSafeByteArray(sessionID + requester.toString() + target.toString())));
+std::string SOCKS5BytestreamRegistry::getHostname(const std::string& sessionID, const JID& requester, const JID& target, CryptoProvider* crypto) {
+	return Hexify::hexify(crypto->getSHA1Hash(createSafeByteArray(sessionID + requester.toString() + target.toString())));
 }
 
 }

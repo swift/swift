@@ -38,7 +38,7 @@
 namespace Swift {
 
 Client::Client(const JID& jid, const SafeString& password, NetworkFactories* networkFactories, Storages* storages) : CoreClient(jid, password, networkFactories), storages(storages) {
-	memoryStorages = new MemoryStorages();
+	memoryStorages = new MemoryStorages(networkFactories->getCryptoProvider());
 
 	softwareVersionResponder = new SoftwareVersionResponder(getIQRouter());
 	softwareVersionResponder->start();
@@ -53,14 +53,14 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 
 	stanzaChannelPresenceSender = new StanzaChannelPresenceSender(getStanzaChannel());
 	directedPresenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
-	discoManager = new ClientDiscoManager(getIQRouter(), directedPresenceSender);
+	discoManager = new ClientDiscoManager(getIQRouter(), directedPresenceSender, networkFactories->getCryptoProvider());
 
 	mucRegistry = new MUCRegistry();
 	mucManager = new MUCManager(getStanzaChannel(), getIQRouter(), directedPresenceSender, mucRegistry);
 
 	vcardManager = new VCardManager(jid, getIQRouter(), getStorages()->getVCardStorage());
-	avatarManager = new AvatarManagerImpl(vcardManager, getStanzaChannel(), getStorages()->getAvatarStorage(), mucRegistry);
-	capsManager = new CapsManager(getStorages()->getCapsStorage(), getStanzaChannel(), getIQRouter());
+	avatarManager = new AvatarManagerImpl(vcardManager, getStanzaChannel(), getStorages()->getAvatarStorage(), networkFactories->getCryptoProvider(), mucRegistry);
+	capsManager = new CapsManager(getStorages()->getCapsStorage(), getStanzaChannel(), getIQRouter(), networkFactories->getCryptoProvider());
 	entityCapsManager = new EntityCapsManager(capsManager, getStanzaChannel());
 
 	nickManager = new NickManagerImpl(jid.toBare(), vcardManager);
@@ -122,7 +122,7 @@ void Client::setSoftwareVersion(const std::string& name, const std::string& vers
 
 void Client::handleConnected() {
 #ifdef SWIFT_EXPERIMENTAL_FT
-	fileTransferManager = new FileTransferManagerImpl(getJID(), jingleSessionManager, getIQRouter(), getEntityCapsProvider(), presenceOracle, getNetworkFactories()->getConnectionFactory(), getNetworkFactories()->getConnectionServerFactory(), getNetworkFactories()->getTimerFactory(), getNetworkFactories()->getNATTraverser());
+	fileTransferManager = new FileTransferManagerImpl(getJID(), jingleSessionManager, getIQRouter(), getEntityCapsProvider(), presenceOracle, getNetworkFactories()->getConnectionFactory(), getNetworkFactories()->getConnectionServerFactory(), getNetworkFactories()->getTimerFactory(), getNetworkFactories()->getNATTraverser(), getNetworkFactories()->getCryptoProvider());
 #else
 	fileTransferManager = new DummyFileTransferManager();
 #endif

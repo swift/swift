@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,6 +16,7 @@ namespace Swift {
 	class DiscoInfoResponder;
 	class PayloadAddingPresenceSender;
 	class PresenceSender;
+	class CryptoProvider;
 
 	/**
 	 * Class responsible for managing outgoing disco information for a client.
@@ -36,7 +37,7 @@ namespace Swift {
 			 * \param presenceSender the presence sender to which all outgoing presence
 			 *   (with caps information) will be sent.
 			 */
-			ClientDiscoManager(IQRouter* iqRouter, PresenceSender* presenceSender);
+			ClientDiscoManager(IQRouter* iqRouter, PresenceSender* presenceSender, CryptoProvider* crypto);
 			~ClientDiscoManager();
 
 			/**
@@ -68,6 +69,7 @@ namespace Swift {
 
 		private:
 			PayloadAddingPresenceSender* presenceSender;
+			CryptoProvider* crypto;
 			DiscoInfoResponder* discoInfoResponder;
 			std::string capsNode;
 			CapsInfo::ref capsInfo;

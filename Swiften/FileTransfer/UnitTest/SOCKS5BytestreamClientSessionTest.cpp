@@ -30,6 +30,8 @@
 #include <Swiften/Network/DummyConnection.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -44,14 +46,12 @@ class SOCKS5BytestreamClientSessionTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testReadBytestream);
 	CPPUNIT_TEST_SUITE_END();
 
-	const HostAddressPort destinationAddressPort;
-	const std::string destination;
-
 public:
-	SOCKS5BytestreamClientSessionTest() : destinationAddressPort(HostAddressPort(HostAddress("127.0.0.1"), 8888)),
-		destination(SOCKS5BytestreamRegistry::getHostname("foo", JID("requester@example.com/test"), JID("target@example.com/test"))), eventLoop(NULL), timerFactory(NULL) { }
+	SOCKS5BytestreamClientSessionTest() : destinationAddressPort(HostAddressPort(HostAddress("127.0.0.1"), 8888)) {}
 
 	void setUp() {
+		crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+		destination = SOCKS5BytestreamRegistry::getHostname("foo", JID("requester@example.com/test"), JID("target@example.com/test"), crypto.get());
 		randomGen.seed(static_cast<unsigned int>(time(NULL)));
 		eventLoop = new DummyEventLoop();
 		timerFactory = new DummyTimerFactory();
@@ -297,10 +297,13 @@ private:
 	};
 
 private:
+	HostAddressPort destinationAddressPort;
+	std::string destination;
 	DummyEventLoop* eventLoop;
 	DummyTimerFactory* timerFactory;
 	boost::shared_ptr<MockeryConnection> connection;
 	const std::vector<HostAddressPort> failingPorts;
+	boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SOCKS5BytestreamClientSessionTest);

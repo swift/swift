@@ -10,14 +10,14 @@
 #include <boost/filesystem/fstream.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/StringCodecs/SHA1.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/TLS/CertificateFactory.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 
-CertificateFileStorage::CertificateFileStorage(const boost::filesystem::path& path, CertificateFactory* certificateFactory) : path(path), certificateFactory(certificateFactory) {
+CertificateFileStorage::CertificateFileStorage(const boost::filesystem::path& path, CertificateFactory* certificateFactory, CryptoProvider* crypto) : path(path), certificateFactory(certificateFactory), crypto(crypto) {
 }
 
 bool CertificateFileStorage::hasCertificate(Certificate::ref certificate) const {
@@ -56,7 +56,7 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
 }
 
 boost::filesystem::path CertificateFileStorage::getCertificatePath(Certificate::ref certificate) const {
-	return path / Hexify::hexify(SHA1::getHash(certificate->toDER()));
+	return path / Hexify::hexify(crypto->getSHA1Hash(certificate->toDER()));
 }
 
 }

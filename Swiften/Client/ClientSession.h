@@ -23,6 +23,7 @@ namespace Swift {
 	class ClientAuthenticator;
 	class CertificateTrustChecker;
 	class IDNConverter;
+	class CryptoProvider;
 
 	class SWIFTEN_API ClientSession : public boost::enable_shared_from_this<ClientSession> {
 		public:
@@ -67,8 +68,8 @@ namespace Swift {
 
 			~ClientSession();
 
-			static boost::shared_ptr<ClientSession> create(const JID& jid, boost::shared_ptr<SessionStream> stream, IDNConverter* idnConverter) {
-				return boost::shared_ptr<ClientSession>(new ClientSession(jid, stream, idnConverter));
+			static boost::shared_ptr<ClientSession> create(const JID& jid, boost::shared_ptr<SessionStream> stream, IDNConverter* idnConverter, CryptoProvider* crypto) {
+				return boost::shared_ptr<ClientSession>(new ClientSession(jid, stream, idnConverter, crypto));
 			}
 
 			State getState() const {
@@ -133,7 +134,8 @@ namespace Swift {
 			ClientSession(
 					const JID& jid, 
 					boost::shared_ptr<SessionStream>,
-					IDNConverter* idnConverter);
+					IDNConverter* idnConverter,
+					CryptoProvider* crypto);
 
 			void finishSession(Error::Type error);
 			void finishSession(boost::shared_ptr<Swift::Error> error);
@@ -164,6 +166,7 @@ namespace Swift {
 			State state;
 			boost::shared_ptr<SessionStream> stream;
 			IDNConverter* idnConverter;
+			CryptoProvider* crypto;
 			bool allowPLAINOverNonTLS;
 			bool useStreamCompression;
 			UseTLS useTLS;

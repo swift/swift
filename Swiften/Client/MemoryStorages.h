@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,6 +10,7 @@
 
 namespace Swift {
 	class VCardMemoryStorage;
+	class CryptoProvider;
 
 	/**
 	 * An implementation of Storages for storing all
@@ -17,7 +18,7 @@ namespace Swift {
 	 */
 	class MemoryStorages : public Storages {
 		public:
-			MemoryStorages();
+			MemoryStorages(CryptoProvider*);
 			~MemoryStorages();
 
 			virtual VCardStorage* getVCardStorage() const;

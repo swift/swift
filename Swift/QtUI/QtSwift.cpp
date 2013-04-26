@@ -159,8 +159,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs(splitter_ != NULL);
 	bool startMinimized = options.count("start-minimized") > 0;
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
-	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir());
-	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory());
+	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
+	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory(), networkFactories_.getCryptoProvider());
 	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, "", emoticons);
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 

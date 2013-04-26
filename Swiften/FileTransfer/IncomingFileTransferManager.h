@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,10 +20,11 @@ namespace Swift {
 	class SOCKS5BytestreamRegistry;
 	class SOCKS5BytestreamProxy;
 	class TimerFactory;
+	class CryptoProvider;
 
 	class IncomingFileTransferManager : public IncomingJingleSessionHandler {
 		public:
-			IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory);
+			IncomingFileTransferManager(JingleSessionManager* jingleSessionManager, IQRouter* router, RemoteJingleTransportCandidateSelectorFactory* remoteFactory, LocalJingleTransportCandidateGeneratorFactory* localFactory, SOCKS5BytestreamRegistry* bytestreamRegistry, SOCKS5BytestreamProxy* bytestreamProxy, TimerFactory* timerFactory, CryptoProvider* crypto);
 			~IncomingFileTransferManager();
 
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
@@ -39,5 +40,6 @@ namespace Swift {
 			SOCKS5BytestreamRegistry* bytestreamRegistry;
 			SOCKS5BytestreamProxy* bytestreamProxy;
 			TimerFactory* timerFactory;
+			CryptoProvider* crypto;
 	};
 }

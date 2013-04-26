@@ -19,7 +19,6 @@
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 #include <Swiften/Jingle/JingleContentID.h>
 #include <Swiften/Jingle/JingleSession.h>
-#include <Swiften/StringCodecs/SHA1.h>
 
 namespace Swift {
 
@@ -34,6 +33,7 @@ class IDGenerator;
 class IncrementalBytestreamHashCalculator;
 class SOCKS5BytestreamRegistry;
 class SOCKS5BytestreamProxy;
+class CryptoProvider;
 
 class SWIFTEN_API OutgoingJingleFileTransfer : public OutgoingFileTransfer {
 public:
@@ -47,7 +47,8 @@ public:
 					boost::shared_ptr<ReadBytestream>,
 					const StreamInitiationFileInfo&,
 					SOCKS5BytestreamRegistry*,
-					SOCKS5BytestreamProxy*);
+					SOCKS5BytestreamProxy*,
+					CryptoProvider*);
 	virtual ~OutgoingJingleFileTransfer();
 	
 	void start();
@@ -105,6 +106,7 @@ private:
 
 	SOCKS5BytestreamRegistry* s5bRegistry;
 	SOCKS5BytestreamProxy* s5bProxy;
+	CryptoProvider* crypto;
 	SOCKS5BytestreamClientSession::ref clientSession;
 	SOCKS5BytestreamServerSession* serverSession;
 	JingleContentID contentID;

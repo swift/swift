@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,6 +12,9 @@
 #include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
 #include <Swiften/Base/ByteArray.h>
 
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+
 using namespace Swift;
 
 class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
@@ -23,14 +26,18 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
+		void setUp() {
+			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+		}
+
 		void testGetInitialResponse() {
-			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
+			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh", crypto.get());
 
 			CPPUNIT_ASSERT(!testling.getResponse());
 		}
 
 		void testGetResponse() {
-			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
+			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh", crypto.get());
 
 			testling.setCredentials("user", createSafeByteArray("pass"), "");
 			testling.setChallenge(createByteArray(
@@ -44,7 +51,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 		}
 
 		void testGetResponse_WithAuthorizationID() {
-			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh");
+			DIGESTMD5ClientAuthenticator testling("xmpp.example.com", "abcdefgh", crypto.get());
 
 			testling.setCredentials("user", createSafeByteArray("pass"), "myauthzid");
 			testling.setChallenge(createByteArray(
@@ -56,6 +63,9 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(createSafeByteArray("authzid=\"myauthzid\",charset=utf-8,cnonce=\"abcdefgh\",digest-uri=\"xmpp/xmpp.example.com\",nc=00000001,nonce=\"O6skKPuaCZEny3hteI19qXMBXSadoWs840MchORo\",qop=auth,realm=\"example.com\",response=4293834432b6e7889a2dee7e8fe7dd06,username=\"user\""), response);
 		}
+	
+	private:
+		boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DIGESTMD5ClientAuthenticatorTest);

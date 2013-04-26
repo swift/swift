@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,6 +19,7 @@ namespace Swift {
 	class EventLoop;
 	class IDNConverter;
 	class NetworkEnvironment;
+	class CryptoProvider;
 
 	/**
 	 * An interface collecting network factories.
@@ -38,5 +39,6 @@ namespace Swift {
 			virtual ProxyProvider* getProxyProvider() const = 0;
 			virtual EventLoop* getEventLoop() const = 0;
 			virtual IDNConverter* getIDNConverter() const = 0;
+			virtual CryptoProvider* getCryptoProvider() const = 0;
 	};
 }

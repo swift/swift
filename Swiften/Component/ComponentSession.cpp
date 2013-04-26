@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-ComponentSession::ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream) : jid(jid), secret(secret), stream(stream), state(Initial) {
+ComponentSession::ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream, CryptoProvider* crypto) : jid(jid), secret(secret), stream(stream), crypto(crypto), state(Initial) {
 }
 
 ComponentSession::~ComponentSession() {
@@ -46,7 +46,7 @@ void ComponentSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
 void ComponentSession::handleStreamStart(const ProtocolHeader& header) {
 	checkState(WaitingForStreamStart);
 	state = Authenticating;
-	stream->writeElement(ComponentHandshake::ref(new ComponentHandshake(ComponentHandshakeGenerator::getHandshake(header.getID(), secret))));
+	stream->writeElement(ComponentHandshake::ref(new ComponentHandshake(ComponentHandshakeGenerator::getHandshake(header.getID(), secret, crypto))));
 }
 
 void ComponentSession::handleElement(boost::shared_ptr<Element> element) {

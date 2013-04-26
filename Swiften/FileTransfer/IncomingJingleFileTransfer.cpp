@@ -37,11 +37,13 @@ IncomingJingleFileTransfer::IncomingJingleFileTransfer(
 		IQRouter* router,
 		SOCKS5BytestreamRegistry* registry,
 		SOCKS5BytestreamProxy* proxy,
-		TimerFactory* timerFactory) :
+		TimerFactory* timerFactory,
+		CryptoProvider* crypto) :
 			ourJID(ourJID),
 			session(session),
 			router(router),
 			initialContent(content),
+			crypto(crypto),
 			state(Initial),
 			receivedBytes(0),
 			s5bRegistry(registry),
@@ -93,7 +95,7 @@ void IncomingJingleFileTransfer::accept(WriteBytestream::ref stream) {
 	assert(!this->stream);
 	this->stream = stream;
 
-	hashCalculator = new IncrementalBytestreamHashCalculator( algo == "md5" || hash.empty() , algo == "sha-1" || hash.empty() );
+	hashCalculator = new IncrementalBytestreamHashCalculator( algo == "md5" || hash.empty() , algo == "sha-1" || hash.empty(), crypto);
 	stream->onWrite.connect(boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 	stream->onWrite.connect(boost::bind(&IncomingJingleFileTransfer::handleWriteStreamDataReceived, this, _1));
 	onStateChange(FileTransfer::State(FileTransfer::State::Negotiating));
@@ -106,7 +108,7 @@ void IncomingJingleFileTransfer::accept(WriteBytestream::ref stream) {
 		SWIFT_LOG(debug) << "Got S5B transport payload!" << std::endl;
 		state = CreatingInitialTransports;
 		s5bSessionID = s5bTransport->getSessionID().empty() ? idGenerator.generateID() : s5bTransport->getSessionID();
-		s5bDestination = SOCKS5BytestreamRegistry::getHostname(s5bSessionID, ourJID, session->getInitiator());
+		s5bDestination = SOCKS5BytestreamRegistry::getHostname(s5bSessionID, ourJID, session->getInitiator(), crypto);
 		s5bRegistry->addWriteBytestream(s5bDestination, stream);
 		fillCandidateMap(theirCandidates, s5bTransport);
 		candidateSelector->addRemoteTransportCandidates(s5bTransport);
@@ -329,7 +331,7 @@ void IncomingJingleFileTransfer::useTheirCandidateChoiceForTransfer(JingleS5BTra
 
 	if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
 		// get proxy client session from s5bRegistry
-		clientSession = s5bProxy->createSOCKS5BytestreamClientSession(candidate.hostPort, SOCKS5BytestreamRegistry::getHostname(s5bSessionID, ourJID, session->getInitiator()));
+		clientSession = s5bProxy->createSOCKS5BytestreamClientSession(candidate.hostPort, SOCKS5BytestreamRegistry::getHostname(s5bSessionID, ourJID, session->getInitiator(), crypto));
 		clientSession->onSessionReady.connect(boost::bind(&IncomingJingleFileTransfer::proxySessionReady, this, candidate.jid, _1));
 		clientSession->start();
 
