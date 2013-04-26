@@ -16,32 +16,46 @@ using namespace Swift;
 
 class Base64Test : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(Base64Test);
-		CPPUNIT_TEST(testEncode);
-		CPPUNIT_TEST(testEncode_NonAscii);
+		CPPUNIT_TEST(testEncodeDecodeAllChars);
+		CPPUNIT_TEST(testEncodeDecodeOneBytePadding);
+		CPPUNIT_TEST(testEncodeDecodeTwoBytesPadding);
 		CPPUNIT_TEST(testEncode_NoData);
-		CPPUNIT_TEST(testDecode);
 		CPPUNIT_TEST(testDecode_NoData);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
-		void testEncode() {
-			std::string result(Base64::encode(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890")));
-			CPPUNIT_ASSERT_EQUAL(std::string("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA="), result);
+		void testEncodeDecodeAllChars() {
+			ByteArray input;
+			for (unsigned char i = 0; i < 255; ++i) {
+				input.push_back(i);
+			}
+			std::string result(Base64::encode(input));
+
+			CPPUNIT_ASSERT_EQUAL(std::string("AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+"), result);
+			CPPUNIT_ASSERT_EQUAL(input, Base64::decode(result));
 		}
 
-		void testEncode_NonAscii() {
-			std::string result(Base64::encode(createByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed")));
-			CPPUNIT_ASSERT_EQUAL(std::string("QgayPKawpkPSDYmwT/WM94uAlu0="), result);
+		void testEncodeDecodeOneBytePadding() {
+			ByteArray input = createByteArray("ABCDE", 5);
+
+			std::string result = Base64::encode(input);
+
+			CPPUNIT_ASSERT_EQUAL(std::string("QUJDREU="), result);
+			CPPUNIT_ASSERT_EQUAL(input, Base64::decode(result));
+		}
+
+		void testEncodeDecodeTwoBytesPadding() {
+			ByteArray input = createByteArray("ABCD", 4);
+
+			std::string result = Base64::encode(input);
+
+			CPPUNIT_ASSERT_EQUAL(std::string("QUJDRA=="), result);
+			CPPUNIT_ASSERT_EQUAL(input, Base64::decode(result));
 		}
 
 		void testEncode_NoData() {
 			std::string result(Base64::encode(ByteArray()));
 			CPPUNIT_ASSERT_EQUAL(std::string(""), result);
-		}
-
-		void testDecode() {
-			ByteArray result(Base64::decode("QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ejEyMzQ1Njc4OTA="));
-			CPPUNIT_ASSERT_EQUAL(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"), result);
 		}
 
 		void testDecode_NoData() {
