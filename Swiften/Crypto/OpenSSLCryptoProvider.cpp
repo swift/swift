@@ -104,45 +104,12 @@ namespace {
 
 
 	template<typename T>
-	class HMACHash : public Hash {
-		public:
-			HMACHash(const T& key) : finalized(false) {
-				HMAC_CTX_init(&context);
-				HMAC_Init(&context, vecptr(key), boost::numeric_cast<int>(key.size()), EVP_sha1());
-			}
-
-			~HMACHash() {
-				HMAC_CTX_cleanup(&context);
-			}
-
-			virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
-				return updateInternal(data);
-			}
-
-			virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
-				return updateInternal(data);
-			}
-
-			virtual std::vector<unsigned char> getHash() {
-				assert(!finalized);
-				std::vector<unsigned char> result(SHA_DIGEST_LENGTH);
-				unsigned int len = SHA_DIGEST_LENGTH;
-				HMAC_Final(&context, vecptr(result), &len);
-				return result;
-			}
-
-		private:
-			template<typename ContainerType>
-			Hash& updateInternal(const ContainerType& data) {
-				assert(!finalized);
-				HMAC_Update(&context, vecptr(data), data.size());
-				return *this;
-			}
-
-		private:
-			HMAC_CTX context;
-			bool finalized;
-	};
+	ByteArray getHMACSHA1Internal(const T& key, const ByteArray& data) {
+		unsigned int len = SHA_DIGEST_LENGTH;
+		std::vector<unsigned char> result(len);
+		HMAC(EVP_sha1(), vecptr(key), boost::numeric_cast<int>(key.size()), vecptr(data), data.size(), vecptr(result), &len);
+		return result;
+	}
 }
 
 OpenSSLCryptoProvider::OpenSSLCryptoProvider() {
@@ -159,12 +126,12 @@ Hash* OpenSSLCryptoProvider::createMD5() {
 	return new MD5Hash();
 }
 
-Hash* OpenSSLCryptoProvider::createHMACSHA1(const SafeByteArray& key) {
-	return new HMACHash<SafeByteArray>(key);
+ByteArray OpenSSLCryptoProvider::getHMACSHA1(const SafeByteArray& key, const ByteArray& data) {
+	return getHMACSHA1Internal(key, data);
 }
 
-Hash* OpenSSLCryptoProvider::createHMACSHA1(const ByteArray& key) {
-	return new HMACHash<ByteArray>(key);
+ByteArray OpenSSLCryptoProvider::getHMACSHA1(const ByteArray& key, const ByteArray& data) {
+	return getHMACSHA1Internal(key, data);
 }
 
 bool OpenSSLCryptoProvider::isMD5AllowedForCrypto() const {

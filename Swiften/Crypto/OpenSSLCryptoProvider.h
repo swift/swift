@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013  Remko Tronçon
+ * Copyright (c) 2013 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -17,8 +17,8 @@ namespace Swift {
 
 			virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
 			virtual Hash* createMD5() SWIFTEN_OVERRIDE;
-			virtual Hash* createHMACSHA1(const SafeByteArray& key) SWIFTEN_OVERRIDE;
-			virtual Hash* createHMACSHA1(const ByteArray& key) SWIFTEN_OVERRIDE;
+			virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
+			virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
 			virtual bool isMD5AllowedForCrypto() const SWIFTEN_OVERRIDE;
 	};
 }

@@ -77,7 +77,7 @@ namespace {
 			HCRYPTHASH hash;
 	};
 
-#if 0
+#if 0 // NOT YET DONE
 	// Haven't tested the code below properly yet, but figured out after writing
 	// it that PLAINTEXTKEYBLOB doesn't work on XP or 2k, and the workaround is a
 	// bit too ugly to try this now. So, using our own algorithm for now.  See
@@ -159,69 +159,35 @@ namespace {
 	};
 #endif
 
-	// Simple implementation. You can only call 'update' once.
+	// Simple implementation.
 	template<typename T>
-	class HMACHash : public Hash {
-		public:
-			HMACHash(const T& key, CryptoProvider* crypto) : crypto(crypto), finished(false) {
-				if (key.size() <= BLOCK_SIZE) {
-					paddedKey = key;
-				}
-				else {
-					assign(paddedKey, crypto->getSHA1Hash(key));
-				}
-				paddedKey.resize(BLOCK_SIZE, 0x0);
-			}
+	ByteArray getHMACSHA1Internal(const T& key, const ByteArray& data, CryptoProvider* crypto) {
+		static const int BLOCK_SIZE = 64;
 
-			~HMACHash() {
-			}
+		T paddedKey;
+		if (key.size() <= BLOCK_SIZE) {
+			paddedKey = key;
+		}
+		else {
+			assign(paddedKey, crypto->getSHA1Hash(key));
+		}
+		paddedKey.resize(BLOCK_SIZE, 0x0);
 
-			virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
-				return updateInternal(data);
-			}
+		// Create the first value
+		T x(paddedKey);
+		for (unsigned int i = 0; i < x.size(); ++i) {
+			x[i] ^= 0x36;
+		}
+		append(x, data);
 
-			virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
-				return updateInternal(data);
-			}
-
-			virtual std::vector<unsigned char> getHash() {
-				return result;
-			}
-
-		private:
-			template<typename ContainerType>
-			Hash& updateInternal(const ContainerType& data) {
-				assert(!finished);
-
-				// Create the first value
-				T x(paddedKey);
-				for (unsigned int i = 0; i < x.size(); ++i) {
-					x[i] ^= 0x36;
-				}
-				append(x, data);
-
-				// Create the second value
-				T y(paddedKey);
-				for (unsigned int i = 0; i < y.size(); ++i) {
-					y[i] ^= 0x5c;
-				}
-				append(y, crypto->getSHA1Hash(x));
-				result = crypto->getSHA1Hash(y);
-
-				finished = true;
-				return *this;
-			}
-
-		private:
-			static const int BLOCK_SIZE = 64;
-			CryptoProvider* crypto;
-			T paddedKey;
-			SafeByteArray data;
-			bool finished;
-			std::vector<unsigned char> result;
-	};
-
-
+		// Create the second value
+		T y(paddedKey);
+		for (unsigned int i = 0; i < y.size(); ++i) {
+			y[i] ^= 0x5c;
+		}
+		append(y, crypto->getSHA1Hash(x));
+		return crypto->getSHA1Hash(y);
+	}
 }
 
 WindowsCryptoProvider::WindowsCryptoProvider() {
@@ -247,10 +213,10 @@ bool WindowsCryptoProvider::isMD5AllowedForCrypto() const {
 	return !WindowsRegistry::isFIPSEnabled();
 }
 
-Hash* WindowsCryptoProvider::createHMACSHA1(const SafeByteArray& key) {
-	return new HMACHash<SafeByteArray>(key, this);
+ByteArray WindowsCryptoProvider::getHMACSHA1(const SafeByteArray& key, const ByteArray& data) {
+	return getHMACSHA1Internal(key, data, this);
 }
 
-Hash* WindowsCryptoProvider::createHMACSHA1(const ByteArray& key) {
-	return new HMACHash<ByteArray>(key, this);
+ByteArray WindowsCryptoProvider::getHMACSHA1(const ByteArray& key, const ByteArray& data) {
+	return getHMACSHA1Internal(key, data, this);
 }

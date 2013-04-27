@@ -100,42 +100,11 @@ namespace {
 	};
 
 	template<typename T>
-	class HMACHash : public Hash {
-		public:
-			HMACHash(const T& key) : finalized(false) {
-				CCHmacInit(&context, kCCHmacAlgSHA1, vecptr(key), key.size());
-			}
-
-			~HMACHash() {
-			}
-
-			virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
-				return updateInternal(data);
-			}
-
-			virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
-				return updateInternal(data);
-			}
-
-			virtual std::vector<unsigned char> getHash() {
-				assert(!finalized);
-				std::vector<unsigned char> result(CC_SHA1_DIGEST_LENGTH);
-				CCHmacFinal(&context, vecptr(result));
-				return result;
-			}
-
-		private:
-			template<typename ContainerType>
-			Hash& updateInternal(const ContainerType& data) {
-				assert(!finalized);
-				CCHmacUpdate(&context, vecptr(data), boost::numeric_cast<CC_LONG>(data.size()));
-				return *this;
-			}
-
-		private:
-			CCHmacContext context;
-			bool finalized;
-	};
+	ByteArray getHMACSHA1Internal(const T& key, const ByteArray& data) {
+		std::vector<unsigned char> result(CC_SHA1_DIGEST_LENGTH);
+		CCHmac(kCCHmacAlgSHA1, vecptr(key), key.size(), vecptr(data), boost::numeric_cast<CC_LONG>(data.size()), vecptr(result));
+		return result;
+	}
 }
 
 CommonCryptoCryptoProvider::CommonCryptoCryptoProvider() {
@@ -152,14 +121,13 @@ Hash* CommonCryptoCryptoProvider::createMD5() {
 	return new MD5Hash();
 }
 
-Hash* CommonCryptoCryptoProvider::createHMACSHA1(const SafeByteArray& key) {
-	return new HMACHash<SafeByteArray>(key);
+ByteArray CommonCryptoCryptoProvider::getHMACSHA1(const SafeByteArray& key, const ByteArray& data) {
+	return getHMACSHA1Internal(key, data);
 }
 
-Hash* CommonCryptoCryptoProvider::createHMACSHA1(const ByteArray& key) {
-	return new HMACHash<ByteArray>(key);
+ByteArray CommonCryptoCryptoProvider::getHMACSHA1(const ByteArray& key, const ByteArray& data) {
+	return getHMACSHA1Internal(key, data);
 }
-
 
 bool CommonCryptoCryptoProvider::isMD5AllowedForCrypto() const {
 	return true;
