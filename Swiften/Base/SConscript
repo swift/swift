@@ -4,6 +4,7 @@ objects = swiften_env.SwiftenObject([
 			"ByteArray.cpp",
 			"DateTime.cpp",
 			"SafeByteArray.cpp",
+			"SafeAllocator.cpp",
 			"Error.cpp",
 			"Log.cpp",
 			"Paths.cpp",
