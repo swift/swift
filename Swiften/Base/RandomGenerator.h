@@ -14,6 +14,10 @@ namespace Swift {
 		public:
 			virtual ~RandomGenerator();
 
+			/**
+			 * Generates a random integer between 0 and 'max',
+			 * 'max' inclusive.
+			 */
 			virtual int generateRandomInteger(int max) = 0;
 	};
 }
