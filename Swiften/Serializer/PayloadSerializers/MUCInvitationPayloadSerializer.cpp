@@ -37,6 +37,9 @@ std::string MUCInvitationPayloadSerializer::serializePayload(boost::shared_ptr<M
 	if (!payload->getThread().empty()) {
 		mucElement.setAttribute("thread", payload->getThread());
 	}
+	if (payload->getIsImpromptu()) {
+		mucElement.addNode(boost::make_shared<XMLElement>("impromptu", "http://swift.im/impromptu"));
+	}
 	return mucElement.serialize();
 }
 

@@ -34,9 +34,9 @@ namespace Swift {
 	class UIEventStream;
 	class TimerFactory;
 	class TabComplete;
-	class InviteToChatWindow;
 	class XMPPRoster;
 	class HighlightManager;
+	class UIEvent;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -48,17 +48,21 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
+			boost::signal<void ()> onImpromptuConfigCompleted;
 			virtual void setOnline(bool online);
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
-			static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts);
+			static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu);
 			static std::string concatenateListOfNames(const std::vector<NickJoinPart>& joinParts);
 			bool isJoined();
 			const std::string& getNick();
+			bool isImpromptu() const;
+			std::map<std::string, JID> getParticipantJIDs() const;
+			void sendInvites(const std::vector<JID>& jids, const std::string& reason) const;
 		
 		protected:
 			void preSendMessageRequest(boost::shared_ptr<Message> message);
@@ -102,7 +106,7 @@ namespace Swift {
 			void handleConfigurationFailed(ErrorPayload::ref);
 			void handleConfigurationFormReceived(Form::ref);
 			void handleDestroyRoomRequest();
-			void handleInvitePersonToThisMUCRequest();
+			void handleInvitePersonToThisMUCRequest(const std::vector<JID>& jidsToInvite);
 			void handleConfigurationCancelled();
 			void handleOccupantRoleChangeFailed(ErrorPayload::ref, const JID&, MUCOccupant::Role);
 			void handleGetAffiliationsRequest();
@@ -110,9 +114,14 @@ namespace Swift {
 			void handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes);
 			void handleInviteToMUCWindowDismissed();
 			void handleInviteToMUCWindowCompleted();
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 			void addRecentLogs();
 			void checkDuplicates(boost::shared_ptr<Message> newMessage);
 			void setNick(const std::string& nick);
+			void setImpromptuWindowTitle();
+			void handleRoomUnlocked();
+			void configureAsImpromptuRoom(Form::ref form);
+			Form::ref buildImpromptuRoomConfiguration(Form::ref roomConfigurationForm);
 
 		private:
 			MUC::ref muc_;
@@ -132,10 +141,11 @@ namespace Swift {
 			std::vector<NickJoinPart> joinParts_;
 			boost::posix_time::ptime lastActivity_;
 			boost::optional<std::string> password_;
-			InviteToChatWindow* inviteWindow_;
 			XMPPRoster* xmppRoster_;
 			std::vector<HistoryMessage> joinContext_;
 			size_t renameCounter_;
+			bool isImpromptu_;
+			bool isImpromptuAlreadyConfigured_;
 	};
 }
 

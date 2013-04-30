@@ -109,7 +109,7 @@ namespace Swift {
 			void show();
 			void activate();
 			void setUnreadMessageCount(int count);
-			void convertToMUC();
+			void convertToMUC(bool impromptuMUC = false);
 //			TreeWidget *getTreeWidget();
 			void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels);
 			void setSecurityLabelsEnabled(bool enabled);
@@ -133,14 +133,13 @@ namespace Swift {
 			virtual void setAvailableOccupantActions(const std::vector<OccupantAction>& actions);
 			void setSubject(const std::string& subject);
 			void showRoomConfigurationForm(Form::ref);
-			void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true);
+			void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true, bool isImpromptu = false, bool isContinuation = false);
 			void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&);
 			void setAvailableRoomActions(const std::vector<RoomAction>& actions);
 			void setBlockingState(BlockingState state);
+			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu);
 
-			InviteToChatWindow* createInviteToChatWindow();
-
-			static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString());
+			static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -176,7 +175,7 @@ namespace Swift {
 			void handleAlertButtonClicked();
 			void handleActionButtonClicked();
 
-			void handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3);
+			void handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
 			void handleAffiliationEditorAccepted();
 			void handleCurrentLabelChanged(int);
 
@@ -259,5 +258,8 @@ namespace Swift {
 			QPalette defaultLabelsPalette_;
 			LabelModel* labelModel_;
 			BlockingState blockingState_;
+			bool impromptu_;
+			bool isMUC_;
+			bool supportsImpromptuChat_;
 	};
 }

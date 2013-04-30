@@ -7,11 +7,13 @@
 #pragma once
 
 #include <list>
+#include <set>
+#include <map>
 #include <boost/shared_ptr.hpp>
 #include <Swiften/MUC/MUCBookmark.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <boost/filesystem/path.hpp>
-
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
@@ -19,6 +21,7 @@ namespace Swift {
 		public:
 			class Chat {
 				public:
+					Chat() : statusType(StatusShow::None), isMUC(false), unreadCount(0) {}
 					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, const boost::filesystem::path& avatarPath, bool isMUC, const std::string& nick = "")
 					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), unreadCount(unreadCount), avatarPath(avatarPath) {}
 					/** Assume that nicks and other transient features aren't important for equality */
@@ -35,6 +38,18 @@ namespace Swift {
 					void setAvatarPath(const boost::filesystem::path& path) {
 						avatarPath = path;
 					}
+					std::string getImpromptuTitle() const {
+						typedef std::pair<std::string, JID> StringJIDPair;
+						std::string title;
+						foreach(StringJIDPair pair, impromptuJIDs) {
+							if (title.empty()) {
+								title += pair.first;
+							} else {
+								title += ", " + pair.first;
+							}
+						}
+						return title;
+					}
 					JID jid;
 					std::string chatName;
 					std::string activity;
@@ -43,6 +58,7 @@ namespace Swift {
 					std::string nick;
 					int unreadCount;
 					boost::filesystem::path avatarPath;
+					std::map<std::string, JID> impromptuJIDs;
 			};
 			virtual ~ChatListWindow();
 

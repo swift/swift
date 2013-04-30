@@ -18,6 +18,7 @@
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/VCard.h>
+#include <Swiften/Elements/Presence.h>
 
 namespace Swift {
 	class UIEventStream;
@@ -28,6 +29,10 @@ namespace Swift {
 	class DiscoServiceWalker;
 	class RosterController;
 	class VCardManager;
+	class ContactSuggester;
+	class AvatarManager;
+	class PresenceOracle;
+	class Contact;
 
 	class UserSearchResult {
 		public:
@@ -41,9 +46,12 @@ namespace Swift {
 
 	class UserSearchController {
 		public:
-			enum Type {AddContact, StartChat};
-			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController);
+			enum Type {AddContact, StartChat, InviteToChat};
+			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController, ContactSuggester* contactSuggester, AvatarManager* avatarManager, PresenceOracle* presenceOracle);
 			~UserSearchController();
+
+			UserSearchWindow* getUserSearchWindow();
+			void setCanInitiateImpromptuMUC(bool supportsImpromptu);
 
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
@@ -54,8 +62,14 @@ namespace Swift {
 			void handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid);
 			void handleSearchResponse(boost::shared_ptr<SearchPayload> results, ErrorPayload::ref error);
 			void handleNameSuggestionRequest(const JID& jid);
+			void handleContactSuggestionsRequested(std::string text);
 			void handleVCardChanged(const JID& jid, VCard::ref vcard);
+			void handleAvatarChanged(const JID& jid);
+			void handlePresenceChanged(Presence::ref presence);
+			void handleJIDUpdateRequested(const std::vector<JID>& jids);
+			Contact convertJIDtoContact(const JID& jid);
 			void endDiscoWalker();
+			void initializeUserWindow();
 
 		private:
 			Type type_;
@@ -68,5 +82,8 @@ namespace Swift {
 			RosterController* rosterController_;
 			UserSearchWindow* window_;
 			DiscoServiceWalker* discoWalker_;
+			ContactSuggester* contactSuggester_;
+			AvatarManager* avatarManager_;
+			PresenceOracle* presenceOracle_;
 	};
 }

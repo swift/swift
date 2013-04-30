@@ -11,6 +11,8 @@
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchFirstPage.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 
+#include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
+
 namespace Swift {
 	class UserSearchModel;
 	class UserSearchDelegate;
@@ -20,9 +22,11 @@ namespace Swift {
 	class QtUserSearchFirstPage : public QWizardPage, public Ui::QtUserSearchFirstPage {
 		Q_OBJECT
 		public:
-			QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title);
+			QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title, SettingsProvider* settings);
 			virtual bool isComplete() const;
 		public slots:
 			void emitCompletenessCheck();
+		public:
+			QtSuggestingJIDInput* jid_;
 	};
 }

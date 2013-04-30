@@ -19,12 +19,13 @@
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swift/Controllers/UIInterfaces/InviteToChatWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swiften/Avatars/AvatarManager.h>
@@ -39,6 +40,7 @@
 #include <Swift/Controllers/Highlighter.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 
+#include <Swiften/Base/Log.h>
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
 
@@ -66,22 +68,22 @@ MUCController::MUCController (
 		HistoryController* historyController,
 		MUCRegistry* mucRegistry,
 		HighlightManager* highlightManager,
-		ChatMessageParser* chatMessageParser) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0) {
+		ChatMessageParser* chatMessageParser,
+		bool isImpromptu,
+		AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) :
+	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
 	shouldJoinOnReconnect_ = true;
 	doneGettingHistory_ = false;
 	events_ = uiEventStream;
-	inviteWindow_ = NULL;
 	xmppRoster_ = roster;
 	
 	roster_ = new Roster(false, true);
 	completer_ = new TabComplete();
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->setTabComplete(completer_);
-	chatWindow_->setName(muc->getJID().getNode());
 	chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
 	chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
@@ -89,7 +91,7 @@ MUCController::MUCController (
 	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
 	chatWindow_->onConfigurationFormCancelled.connect(boost::bind(&MUCController::handleConfigurationCancelled, this));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
-	chatWindow_->onInvitePersonToThisMUCRequest.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this));
+	chatWindow_->onInviteToChat.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this, _1));
 	chatWindow_->onGetAffiliationsRequest.connect(boost::bind(&MUCController::handleGetAffiliationsRequest, this));
 	chatWindow_->onChangeAffiliationsRequest.connect(boost::bind(&MUCController::handleChangeAffiliationsRequest, this, _1));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
@@ -99,10 +101,10 @@ MUCController::MUCController (
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
 	muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
 	muc_->onOccupantAffiliationChanged.connect(boost::bind(&MUCController::handleOccupantAffiliationChanged, this, _1, _2, _3));
-	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
-	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
 	muc_->onAffiliationListReceived.connect(boost::bind(&MUCController::handleAffiliationListReceived, this, _1, _2));
+	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
+	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	highlighter_->setMode(Highlighter::MUCMode);
 	highlighter_->setNick(nick_);
 	if (timerFactory) {
@@ -110,15 +112,23 @@ MUCController::MUCController (
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
 		loginCheckTimer_->start();
 	}
-	chatWindow_->convertToMUC();
+	if (isImpromptu) {
+		muc_->onUnlocked.connect(boost::bind(&MUCController::handleRoomUnlocked, this));
+		chatWindow_->convertToMUC(true);
+	} else {
+		chatWindow_->convertToMUC();
+		chatWindow_->setName(muc->getJID().getNode());
+	}
 	setOnline(true);
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
 	} 
 	handleBareJIDCapsChanged(muc->getJID());
+	eventStream_->onUIEvent.connect(boost::bind(&MUCController::handleUIEvent, this, _1));
 }
 
 MUCController::~MUCController() {
+	eventStream_->onUIEvent.disconnect(boost::bind(&MUCController::handleUIEvent, this, _1));
 	chatWindow_->setRosterModel(NULL);
 	delete roster_;
 	if (loginCheckTimer_) {
@@ -226,6 +236,28 @@ const std::string& MUCController::getNick() {
 	return nick_;
 }
 
+bool MUCController::isImpromptu() const {
+	return isImpromptu_;
+}
+
+std::map<std::string, JID> MUCController::getParticipantJIDs() const {
+	std::map<std::string, JID> participants;
+	typedef std::pair<std::string, MUCOccupant> MUCOccupantPair;
+	std::map<std::string, MUCOccupant> occupants = muc_->getOccupants();
+	foreach(const MUCOccupantPair& occupant, occupants) {
+		if (occupant.first != nick_) {
+			participants[occupant.first] = occupant.second.getRealJID().is_initialized() ? occupant.second.getRealJID().get().toBare() : JID();
+		}
+	}
+	return participants;
+}
+
+void MUCController::sendInvites(const std::vector<JID>& jids, const std::string& reason) const {
+	foreach (const JID& jid, jids) {
+		muc_->invitePerson(jid, reason, isImpromptu_);
+	}
+}
+
 void MUCController::handleJoinTimeoutTick() {
 	receivedActivity();
 	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString())), ChatWindow::DefaultDirection);
@@ -294,7 +326,12 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	receivedActivity();
 	renameCounter_ = 0;
 	joined_ = true;
-	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
+	std::string joinMessage;
+	if (isImpromptu_) {
+		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered chat as %1%.")) % nick);
+	} else {
+		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
+	}
 	setNick(nick);
 	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(joinMessage), ChatWindow::DefaultDirection);
 
@@ -308,6 +345,10 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	MUCOccupant occupant = muc_->getOccupant(nick);
 	setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
 	onUserJoined();
+
+	if (isImpromptu_) {
+		setImpromptuWindowTitle();
+	}
 }
 
 void MUCController::handleAvatarChanged(const JID& jid) {
@@ -344,15 +385,20 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 		std::string joinString;
 		MUCOccupant::Role role = occupant.getRole();
 		if (role != MUCOccupant::NoRole && role != MUCOccupant::Participant) {
-			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the room as a %2%.")) % occupant.getNick() % roleToFriendlyName(role));
+			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the %3% as a %2%.")) % occupant.getNick() % roleToFriendlyName(role) % (isImpromptu_ ? QT_TRANSLATE_NOOP("", "chat") : QT_TRANSLATE_NOOP("", "room")));
 		}
 		else {
-			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the room.")) % occupant.getNick());
+			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the %2%.")) % occupant.getNick() % (isImpromptu_ ? QT_TRANSLATE_NOOP("", "chat") : QT_TRANSLATE_NOOP("", "room")));
 		}
 		if (shouldUpdateJoinParts()) {
 			updateJoinParts();
 		} else {
 			addPresenceMessage(joinString);
+		}
+
+		if (isImpromptu_) {
+			setImpromptuWindowTitle();
+			onActivity("");
 		}
 	}
 	if (avatarManager_ != NULL) {
@@ -519,7 +565,11 @@ void MUCController::setOnline(bool online) {
 	} else {
 		if (shouldJoinOnReconnect_) {
 			renameCounter_ = 0;
-			chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+			if (isImpromptu_) {
+				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to enter chat")), ChatWindow::DefaultDirection);
+			} else {
+				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+			}
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}
@@ -592,6 +642,10 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 	if (clearAfter) {
 		clearPresenceQueue();
 	}
+
+	if (isImpromptu_) {
+		setImpromptuWindowTitle();
+	}
 }
 
 void MUCController::handleOccupantPresenceChange(boost::shared_ptr<Presence> presence) {
@@ -617,7 +671,7 @@ boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(boo
 }
 
 void MUCController::updateJoinParts() {
-	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(generateJoinPartString(joinParts_)));
+	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(generateJoinPartString(joinParts_, isImpromptu())));
 }
 
 void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent) {
@@ -658,7 +712,7 @@ std::string MUCController::concatenateListOfNames(const std::vector<NickJoinPart
 	return result;
 }
 
-std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart>& joinParts) {
+std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu) {
 	std::vector<NickJoinPart> sorted[4];
 	std::string eventStrings[4];
 	foreach (NickJoinPart event, joinParts) {
@@ -673,34 +727,34 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 			switch (i) {
 				case Join: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have entered the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% have joined the chat") : QT_TRANSLATE_NOOP("", "%1% have entered the room"));
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has entered the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% has joined the chat") : QT_TRANSLATE_NOOP("", "%1% has entered the room"));
 					}
 					break;
 				case Part: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have left the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% have left the chat") : QT_TRANSLATE_NOOP("", "%1% have left the room"));
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has left the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% have left the chat") : QT_TRANSLATE_NOOP("", "%1% has left the room"));
 					}
 					break;
 				case JoinThenPart: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have entered then left the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% have joined then left the chat") : QT_TRANSLATE_NOOP("", "%1% have entered then left the room"));
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has entered then left the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% has joined then left the chat") : QT_TRANSLATE_NOOP("", "%1% has entered then left the room"));
 					}
 					break;
 				case PartThenJoin: 
 					if (sorted[i].size() > 1) {
-						eventString = QT_TRANSLATE_NOOP("", "%1% have left then returned to the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% have left then returned to the chat") : QT_TRANSLATE_NOOP("", "%1% have left then returned to the room"));
 					}
 					else {
-						eventString = QT_TRANSLATE_NOOP("", "%1% has left then returned to the room");
+						eventString = (isImpromptu ? QT_TRANSLATE_NOOP("", "%1% has left then returned to the chat") : QT_TRANSLATE_NOOP("", "%1% has left then returned to the room"));
 					}
 					break;
 			}
@@ -746,8 +800,20 @@ void MUCController::handleOccupantRoleChangeFailed(ErrorPayload::ref error, cons
 	chatWindow_->addErrorMessage(chatMessageParser_->parseMessageBody(errorMessage));
 }
 
+void MUCController::configureAsImpromptuRoom(Form::ref form) {
+	muc_->configureRoom(buildImpromptuRoomConfiguration(form));
+	isImpromptuAlreadyConfigured_ = true;
+	onImpromptuConfigCompleted();
+}
+
 void MUCController::handleConfigurationFormReceived(Form::ref form) {
-	chatWindow_->showRoomConfigurationForm(form);
+	if (isImpromptu_) {
+		if (!isImpromptuAlreadyConfigured_) {
+			configureAsImpromptuRoom(form);
+		}
+	} else {
+		chatWindow_->showRoomConfigurationForm(form);
+	}
 }
 
 void MUCController::handleConfigurationCancelled() {
@@ -758,32 +824,18 @@ void MUCController::handleDestroyRoomRequest() {
 	muc_->destroyRoom();
 }
 
-void MUCController::handleInvitePersonToThisMUCRequest() {
-	if (!inviteWindow_) {
-		inviteWindow_ = chatWindow_->createInviteToChatWindow();
-		inviteWindow_->onCompleted.connect(boost::bind(&MUCController::handleInviteToMUCWindowCompleted, this));
-		inviteWindow_->onDismissed.connect(boost::bind(&MUCController::handleInviteToMUCWindowDismissed, this));
-	}
-	std::vector<std::pair<JID, std::string> > autoCompletes;
-	foreach (XMPPRosterItem item, xmppRoster_->getItems()) {
-		std::pair<JID, std::string> jidName;
-		jidName.first = item.getJID();
-		jidName.second = item.getName();
-		autoCompletes.push_back(jidName);
-		//std::cerr << "MUCController adding " << item.getJID().toString() << std::endl;
-	}
-	inviteWindow_->setAutoCompletions(autoCompletes);
+void MUCController::handleInvitePersonToThisMUCRequest(const std::vector<JID>& jidsToInvite) {
+	boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(muc_->getJID(), jidsToInvite));
+	eventStream_->send(event);
 }
 
-void MUCController::handleInviteToMUCWindowDismissed() {
-	inviteWindow_= NULL;
-}
-
-void MUCController::handleInviteToMUCWindowCompleted() {
-	foreach (const JID& jid, inviteWindow_->getJIDs()) {
-		muc_->invitePerson(jid, inviteWindow_->getReason());
+void MUCController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<InviteToMUCUIEvent> inviteEvent = boost::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
+	if (inviteEvent && inviteEvent->getRoom() == muc_->getJID()) {
+		foreach (const JID& jid, inviteEvent->getInvites()) {
+			muc_->invitePerson(jid, inviteEvent->getReason(), isImpromptu_);
+		}
 	}
-	inviteWindow_ = NULL;
 }
 
 void MUCController::handleGetAffiliationsRequest() {
@@ -860,10 +912,78 @@ void MUCController::checkDuplicates(boost::shared_ptr<Message> newMessage) {
 	}
 }
 
-void MUCController::setNick(const std::string& nick)
-{
+void MUCController::setNick(const std::string& nick) {
 	nick_ = nick;
 	highlighter_->setNick(nick_);
+}
+
+Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigurationForm) {
+	Form::ref result = boost::make_shared<Form>(Form::SubmitType);
+	std::string impromptuConfigs[] = { "muc#roomconfig_enablelogging", "muc#roomconfig_persistentroom", "muc#roomconfig_publicroom", "muc#roomconfig_whois"};
+	std::set<std::string> impromptuConfigsMissing(impromptuConfigs, impromptuConfigs + 4);
+	foreach (boost::shared_ptr<FormField> field, roomConfigurationForm->getFields()) {
+		boost::shared_ptr<FormField> resultField;
+		if (field->getName() == "muc#roomconfig_enablelogging") {
+			resultField = boost::make_shared<FormField>(FormField::BooleanType, "0");
+		}
+		if (field->getName() == "muc#roomconfig_persistentroom") {
+			resultField = boost::make_shared<FormField>(FormField::BooleanType, "0");
+		}
+		if (field->getName() == "muc#roomconfig_publicroom") {
+			resultField = boost::make_shared<FormField>(FormField::BooleanType, "0");
+		}
+		if (field->getName() == "muc#roomconfig_whois") {
+			resultField = boost::make_shared<FormField>(FormField::ListSingleType, "anyone");
+		}
+
+		if (field->getName() == "FORM_TYPE") {
+			resultField = boost::make_shared<FormField>(FormField::HiddenType, "http://jabber.org/protocol/muc#roomconfig");
+		}
+
+		if (resultField) {
+			impromptuConfigsMissing.erase(field->getName());
+			resultField->setName(field->getName());
+			result->addField(resultField);
+		}
+	}
+
+	foreach (const std::string& config, impromptuConfigsMissing) {
+		if (config == "muc#roomconfig_publicroom") {
+			chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "This server doesn't support hiding your chat from other users.")), ChatWindow::DefaultDirection);
+		} else if (config == "muc#roomconfig_whois") {
+			chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "This server doesn't support sharing people's real identity in this chat.")), ChatWindow::DefaultDirection);
+		}
+	}
+
+	return result;
+}
+
+void MUCController::setImpromptuWindowTitle() {
+	std::string title;
+	typedef std::pair<std::string, MUCOccupant> StringMUCOccupantPair;
+	std::map<std::string, MUCOccupant> occupants = muc_->getOccupants();
+	if (occupants.size() <= 1) {
+		title = QT_TRANSLATE_NOOP("", "Empty Chat");
+	} else {
+		foreach (StringMUCOccupantPair pair, occupants) {
+			if (pair.first != nick_) {
+				title += (title.empty() ? "" : ", ") + pair.first;
+			}
+		}
+	}
+	chatWindow_->setName(title);
+}
+
+void MUCController::handleRoomUnlocked() {
+	// Handle buggy MUC implementations where the joined room already exists and is unlocked.
+	// Configure the room again in this case.
+	if (!isImpromptuAlreadyConfigured_) {
+		if (isImpromptu_ && (muc_->getOccupant(nick_).getAffiliation() == MUCOccupant::Owner)) {
+			muc_->requestConfigurationForm();
+		} else if (isImpromptu_) {
+			onImpromptuConfigCompleted();
+		}
+	}
 }
 
 }

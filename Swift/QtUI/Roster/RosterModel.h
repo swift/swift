@@ -29,12 +29,15 @@ namespace Swift {
 			RosterModel(QtTreeWidget* view);
 			~RosterModel();
 			void setRoster(Roster* swiftRoster);
+			Qt::ItemFlags flags(const QModelIndex& index) const;
 			int columnCount(const QModelIndex& parent = QModelIndex()) const;
 			QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 			QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 			QModelIndex index(RosterItem* item) const;
 			QModelIndex parent(const QModelIndex& index) const;
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;
+			QMimeData* mimeData(const QModelIndexList& indexes) const;
+
 		signals:
 			void itemExpanded(const QModelIndex& item, bool expanded);
 		private:

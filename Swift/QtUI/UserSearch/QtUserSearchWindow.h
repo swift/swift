@@ -18,15 +18,17 @@ namespace Swift {
 	class UserSearchResult;
 	class UIEventStream;
 	class QtUserSearchFirstPage;
+	class QtUserSearchFirstMultiJIDPage;
 	class QtUserSearchFieldsPage;
 	class QtUserSearchResultsPage;
 	class QtUserSearchDetailsPage;
 	class QtFormResultItemModel;
+	class SettingsProvider;
 
 	class QtUserSearchWindow : public QWizard, public UserSearchWindow, private Ui::QtUserSearchWizard {
 		Q_OBJECT
 		public:
-			QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups);
+			QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider);
 			virtual ~QtUserSearchWindow();
 
 			virtual void addSavedServices(const std::vector<JID>& services);
@@ -41,19 +43,39 @@ namespace Swift {
 			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields);
 			virtual void setNameSuggestions(const std::vector<std::string>& suggestions);
 			virtual void prepopulateJIDAndName(const JID& jid, const std::string& name);
+			virtual void setContactSuggestions(const std::vector<Contact>& suggestions);
+			virtual void setJIDs(const std::vector<JID> &jids);
+			virtual void setRoomJID(const JID &roomJID);
+			virtual std::string getReason() const;
+			virtual std::vector<JID> getJIDs() const;
+			virtual void setCanStartImpromptuChats(bool supportsImpromptu);
+			virtual void updateContacts(const std::vector<Contact> &contacts);
 
 		protected:
 			virtual int nextId() const;
+
 		private slots:
 			void handleFirstPageRadioChange();
 			virtual void handleCurrentChanged(int);
 			virtual void handleAccepted();
+			void handleContactSuggestionRequested(const QString& text);
+			void addContact();
+			void handleAddViaSearch();
+			void handleListChanged(std::vector<Contact> list);
+			void handleJIDsAdded(std::vector<JID> jids);
+
+		private:
+			void setFirstPage(QString title = "");
+			void setSecondPage();
+			void setThirdPage();
+
 		private:
 			void clearForm();
 			void setError(const QString& error);
 			JID getServerToSearch();
 			void handleSearch();
 			JID getContactJID() const;
+			void addSearchedJIDToList(const JID& jid);
 
 		private:
 			UIEventStream* eventStream_;
@@ -61,10 +83,16 @@ namespace Swift {
 			QAbstractItemModel* model_;
 			UserSearchDelegate* delegate_;
 			QtUserSearchFirstPage* firstPage_;
+			QtUserSearchFirstMultiJIDPage* firstMultiJIDPage_;
 			QtUserSearchFieldsPage* fieldsPage_;
 			QtUserSearchResultsPage* resultsPage_;
 			QtUserSearchDetailsPage* detailsPage_;
 			JID myServer_;
+			JID roomJID_;
 			int lastPage_;
+			std::vector<Contact> contactVector_;
+			SettingsProvider* settings_;
+			bool searchNext_;
+			bool supportsImpromptu_;
 	};
 }

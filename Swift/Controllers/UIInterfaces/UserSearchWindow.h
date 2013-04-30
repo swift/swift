@@ -6,19 +6,20 @@
 
 #pragma once
 
-#include "Swiften/Base/boost_bsignals.h"
+#include <Swiften/Base/boost_bsignals.h>
 
 #include <vector>
 #include <string>
 
-#include "Swiften/JID/JID.h"
-#include "Swift/Controllers/Chat/UserSearchController.h"
+#include <Swiften/JID/JID.h>
+#include <Swift/Controllers/Chat/UserSearchController.h>
+#include <Swift/Controllers/Contact.h>
 
 namespace Swift {
 
 	class UserSearchWindow {
 		public:
-			enum Type {AddContact, ChatToContact};
+			enum Type {AddContact, ChatToContact, InviteToChat};
 			virtual ~UserSearchWindow() {}
 
 			virtual void clear() = 0;
@@ -31,10 +32,20 @@ namespace Swift {
 			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields) = 0;
 			virtual void setNameSuggestions(const std::vector<std::string>& suggestions) = 0;
 			virtual void prepopulateJIDAndName(const JID& jid, const std::string& name) = 0;
+			virtual void setContactSuggestions(const std::vector<Contact>& suggestions) = 0;
+			virtual void setJIDs(const std::vector<JID>&) = 0;
+			virtual void setRoomJID(const JID& roomJID) = 0;
+			virtual std::string getReason() const = 0;
+			virtual std::vector<JID> getJIDs() const = 0;
+			virtual void setCanStartImpromptuChats(bool supportsImpromptu) = 0;
+			virtual void updateContacts(const std::vector<Contact>& contacts) = 0;
+
 			virtual void show() = 0;
 
 			boost::signal<void (const JID&)> onFormRequested;
 			boost::signal<void (boost::shared_ptr<SearchPayload>, const JID&)> onSearchRequested;
 			boost::signal<void (const JID&)> onNameSuggestionRequested;
+			boost::signal<void (const std::string&)> onContactSuggestionsRequested;
+			boost::signal<void (const std::vector<JID>&)> onJIDUpdateRequested;
 	};
 }

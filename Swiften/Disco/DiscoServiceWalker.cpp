@@ -35,6 +35,7 @@ void DiscoServiceWalker::endWalk() {
 			request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, request));
 		}
 		active_ = false;
+		onWalkAborted();
 	}
 }
 

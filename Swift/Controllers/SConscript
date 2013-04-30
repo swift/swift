@@ -29,6 +29,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Chat/MUCSearchController.cpp",
 			"Chat/UserSearchController.cpp",
 			"Chat/ChatMessageParser.cpp",
+			"ContactSuggester.cpp",
 			"MainController.cpp",
 			"ProfileController.cpp",
 			"ShowProfileController.cpp",
@@ -83,7 +84,10 @@ if env["SCONS_STAGE"] == "build" :
 			"HighlightEditorController.cpp",
 			"HighlightManager.cpp",
 			"HighlightRule.cpp",
-			"Highlighter.cpp"
+			"Highlighter.cpp",
+			"ContactsFromXMPPRoster.cpp",
+			"ContactProvider.cpp",
+			"Contact.cpp"
 		])
 
 	env.Append(UNITTEST_SOURCES = [

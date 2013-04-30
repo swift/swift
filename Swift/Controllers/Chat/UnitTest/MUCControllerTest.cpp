@@ -26,8 +26,14 @@
 #include "Swiften/Network/TimerFactory.h"
 #include "Swiften/Elements/MUCUserPayload.h"
 #include "Swiften/Disco/DummyEntityCapsProvider.h"
+#include <Swiften/VCards/VCardMemoryStorage.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/VCards/VCardManager.h>
 #include <Swift/Controllers/Settings/DummySettingsProvider.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/Chat/UserSearchController.h>
+#include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 using namespace Swift;
 
@@ -46,6 +52,7 @@ class MUCControllerTest : public CppUnit::TestFixture {
 
 public:
 	void setUp() {
+		crypto_ = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 		self_ = JID("girl@wonderland.lit/rabbithole");
 		nick_ = "aLiCe";
 		mucJID_ = JID("teaparty@rooms.wonderland.lit");
@@ -55,6 +62,7 @@ public:
 		iqRouter_ = new IQRouter(iqChannel_);
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
+		userSearchWindowFactory_ = mocks_->InterfaceMock<UserSearchWindowFactory>();
 		presenceOracle_ = new PresenceOracle(stanzaChannel_);
 		presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
 		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
@@ -69,10 +77,14 @@ public:
 		muc_ = boost::make_shared<MUC>(stanzaChannel_, iqRouter_, directedPresenceSender_, mucJID_, mucRegistry_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
 		chatMessageParser_ = new ChatMessageParser(std::map<std::string, std::string>());
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, chatMessageParser_);
+		vcardStorage_ = new VCardMemoryStorage(crypto_.get());
+		vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, chatMessageParser_, false, NULL);
 	}
 
 	void tearDown() {
+		delete vcardManager_;
+		delete vcardStorage_;
 		delete highlightManager_;
 		delete settings_;
 		delete entityCapsProvider_;
@@ -304,25 +316,25 @@ public:
 	void testJoinPartStringContructionSimple() {
 		std::vector<NickJoinPart> list;
 		list.push_back(NickJoinPart("Kev", Join));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev has entered the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has entered the room"), MUCController::generateJoinPartString(list, false));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev has entered the room and Remko has left the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has entered the room and Remko has left the room"), MUCController::generateJoinPartString(list, false));
 		list.push_back(NickJoinPart("Bert", Join));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev and Bert have entered the room and Remko has left the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev and Bert have entered the room and Remko has left the room"), MUCController::generateJoinPartString(list, false));
 		list.push_back(NickJoinPart("Ernie", Join));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev, Bert and Ernie have entered the room and Remko has left the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev, Bert and Ernie have entered the room and Remko has left the room"), MUCController::generateJoinPartString(list, false));
 	}
 
 	void testJoinPartStringContructionMixed() {
 		std::vector<NickJoinPart> list;
 		list.push_back(NickJoinPart("Kev", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(std::string("Kev has entered then left the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Kev has entered then left the room"), MUCController::generateJoinPartString(list, false));
 		list.push_back(NickJoinPart("Remko", Part));
-		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room and Kev has entered then left the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room and Kev has entered then left the room"), MUCController::generateJoinPartString(list, false));
 		list.push_back(NickJoinPart("Bert", PartThenJoin));
-		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev has entered then left the room and Bert has left then returned to the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev has entered then left the room and Bert has left then returned to the room"), MUCController::generateJoinPartString(list, false));
 		list.push_back(NickJoinPart("Ernie", JoinThenPart));
-		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev and Ernie have entered then left the room and Bert has left then returned to the room"), MUCController::generateJoinPartString(list));
+		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev and Ernie have entered then left the room and Bert has left then returned to the room"), MUCController::generateJoinPartString(list, false));
 	}
 
 private:
@@ -335,6 +347,7 @@ private:
 	IQRouter* iqRouter_;
 	EventController* eventController_;
 	ChatWindowFactory* chatWindowFactory_;
+	UserSearchWindowFactory* userSearchWindowFactory_;
 	MUCController* controller_;
 //	NickResolver* nickResolver_;
 	PresenceOracle* presenceOracle_;
@@ -349,6 +362,9 @@ private:
 	DummySettingsProvider* settings_;
 	HighlightManager* highlightManager_;
 	ChatMessageParser* chatMessageParser_;
+	boost::shared_ptr<CryptoProvider> crypto_;
+	VCardManager* vcardManager_;
+	VCardMemoryStorage* vcardStorage_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

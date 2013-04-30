@@ -30,7 +30,7 @@ namespace Swift {
 
 QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent) {
 	eventStream_ = uiEventStream;
-	settings_ = settings;;
+	settings_ = settings;
 	bookmarksEnabled_ = false;
 	model_ = new ChatListModel();
 	setModel(model_);

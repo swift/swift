@@ -20,7 +20,7 @@ const ChatListWindow::Chat& ChatListRecentItem::getChat() const {
 
 QVariant ChatListRecentItem::data(int role) const {
 	switch (role) {
-		case Qt::DisplayRole: return P2QSTRING(chat_.chatName);
+		case Qt::DisplayRole: return chat_.impromptuJIDs.empty() ? P2QSTRING(chat_.chatName) : P2QSTRING(chat_.getImpromptuTitle());
 		case DetailTextRole: return P2QSTRING(chat_.activity);
 			/*case Qt::TextColorRole: return textColor_;
 		case Qt::BackgroundColorRole: return backgroundColor_;

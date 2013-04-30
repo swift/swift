@@ -37,18 +37,19 @@
 #include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
+#include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Highlighter.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
-
 
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, ChatMessageParser* chatMessageParser)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, ChatMessageParser* chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -92,9 +93,11 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onWhiteboardWindowShow.connect(boost::bind(&ChatController::handleWhiteboardWindowShow, this));
 	chatWindow_->onBlockUserRequest.connect(boost::bind(&ChatController::handleBlockUserRequest, this));
 	chatWindow_->onUnblockUserRequest.connect(boost::bind(&ChatController::handleUnblockUserRequest, this));
+	chatWindow_->onInviteToChat.connect(boost::bind(&ChatController::handleInviteToChat, this, _1));
 	handleBareJIDCapsChanged(toJID_);
 
 	settings_->onSettingChanged.connect(boost::bind(&ChatController::handleSettingChanged, this, _1));
+	eventStream_->onUIEvent.connect(boost::bind(&ChatController::handleUIEvent, this, _1));
 }
 
 void ChatController::handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/) {
@@ -104,6 +107,7 @@ void ChatController::handleContactNickChanged(const JID& jid, const std::string&
 }
 
 ChatController::~ChatController() {
+	eventStream_->onUIEvent.disconnect(boost::bind(&ChatController::handleUIEvent, this, _1));
 	settings_->onSettingChanged.disconnect(boost::bind(&ChatController::handleSettingChanged, this, _1));
 	nickResolver_->onNickChanged.disconnect(boost::bind(&ChatController::handleContactNickChanged, this, _1, _2));
 	delete chatStateNotifier_;
@@ -281,6 +285,19 @@ void ChatController::handleUnblockUserRequest() {
 		eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_.toBare()));
 	}
 }
+
+void ChatController::handleInviteToChat(const std::vector<JID>& droppedJIDs) {
+	boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs));
+	eventStream_->send(event);
+}
+
+void ChatController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+	boost::shared_ptr<InviteToMUCUIEvent> inviteEvent = boost::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
+	if (inviteEvent && inviteEvent->getRoom() == toJID_.toBare()) {
+		onConvertToMUC(detachChatWindow(), inviteEvent->getInvites(), inviteEvent->getReason());
+	}
+}
+
 
 void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
 	boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
@@ -471,6 +488,12 @@ void ChatController::logMessage(const std::string& message, const JID& fromJID, 
 	if (historyController_) {
 		historyController_->addMessage(message, fromJID, toJID, type, timeStamp);
 	}
+}
+
+ChatWindow* ChatController::detachChatWindow() {
+	chatWindow_->onUserTyping.disconnect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
+	chatWindow_->onUserCancelsTyping.disconnect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
+	return ChatControllerBase::detachChatWindow();
 }
 
 }

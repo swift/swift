@@ -24,4 +24,5 @@ const SettingsProvider::Setting<bool> SettingConstants::SPELL_CHECKER("spellChec
 const SettingsProvider::Setting<std::string> SettingConstants::DICT_PATH("dictPath", "/usr/share/myspell/dicts/");
 const SettingsProvider::Setting<std::string> SettingConstants::PERSONAL_DICT_PATH("personaldictPath", "/home/");
 const SettingsProvider::Setting<std::string> SettingConstants::DICT_FILE("dictFile", "en_US.dic");
+const SettingsProvider::Setting<std::string> SettingConstants::INVITE_AUTO_ACCEPT_MODE("inviteAutoAcceptMode", "presence");
 }

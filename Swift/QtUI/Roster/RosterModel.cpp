@@ -10,6 +10,7 @@
 
 #include <QColor>
 #include <QIcon>
+#include <QMimeData>
 #include <qdebug.h>
 
 #include "Swiften/Elements/StatusShow.h"
@@ -55,7 +56,7 @@ void RosterModel::reLayout() {
 
 void RosterModel::handleChildrenChanged(GroupRosterItem* /*group*/) {
 	reLayout();
-}								
+}
 
 void RosterModel::handleDataChanged(RosterItem* item) {
 	Q_ASSERT(item);
@@ -63,6 +64,14 @@ void RosterModel::handleDataChanged(RosterItem* item) {
 	if (modelIndex.isValid()) {
 		emit dataChanged(modelIndex, modelIndex);
 	}
+}
+
+Qt::ItemFlags RosterModel::flags(const QModelIndex& index) const {
+	Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+	if (dynamic_cast<GroupRosterItem*>(getItem(index)) == NULL) {
+		flags |= Qt::ItemIsDragEnabled;
+	}
+	return flags;
 }
 
 int RosterModel::columnCount(const QModelIndex& /*parent*/) const {
@@ -228,6 +237,27 @@ int RosterModel::rowCount(const QModelIndex& parent) const {
 	int count = group ? group->getDisplayedChildren().size() : 0;
 //	qDebug() << "rowCount = " << count << " where parent.isValid() == " << parent.isValid() << ", group == " << (group ? P2QSTRING(group->getDisplayName()) : "*contact*");
 	return count;
+}
+
+QMimeData* RosterModel::mimeData(const QModelIndexList& indexes) const {
+	QMimeData* data = QAbstractItemModel::mimeData(indexes);
+
+	ContactRosterItem *item = dynamic_cast<ContactRosterItem*>(getItem(indexes.first()));
+	if (item == NULL) {
+		return data;
+	}
+
+	QByteArray itemData;
+	QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+
+	// jid, chatName, activity, statusType, avatarPath
+	dataStream << P2QSTRING(item->getJID().toString());
+	dataStream << P2QSTRING(item->getDisplayName());
+	dataStream << P2QSTRING(item->getStatusText());
+	dataStream << item->getSimplifiedStatusShow();
+	dataStream << P2QSTRING(item->getAvatarPath().string());
+	data->setData("application/vnd.swift.contact-jid", itemData);
+	return data;
 }
 
 }

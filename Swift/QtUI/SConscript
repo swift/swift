@@ -136,7 +136,6 @@ sources = [
     "QtFormResultItemModel.cpp",
     "QtLineEdit.cpp",
     "QtJoinMUCWindow.cpp",
-    "QtInviteToChatWindow.cpp",
     "QtConnectionSettingsWindow.cpp",
     "Roster/RosterModel.cpp",
     "Roster/QtTreeWidget.cpp",
@@ -162,7 +161,12 @@ sources = [
     "MUCSearch/MUCSearchRoomItem.cpp",
     "MUCSearch/MUCSearchEmptyItem.cpp",
     "MUCSearch/MUCSearchDelegate.cpp",
+	"UserSearch/ContactListDelegate.cpp",
+	"UserSearch/ContactListModel.cpp",
+	"UserSearch/QtContactListWidget.cpp",
+    "UserSearch/QtSuggestingJIDInput.cpp",
     "UserSearch/QtUserSearchFirstPage.cpp",
+    "UserSearch/QtUserSearchFirstMultiJIDPage.cpp",
     "UserSearch/QtUserSearchFieldsPage.cpp",
     "UserSearch/QtUserSearchResultsPage.cpp",
     "UserSearch/QtUserSearchDetailsPage.cpp",
@@ -267,6 +271,7 @@ else :
 myenv.Uic4("MUCSearch/QtMUCSearchWindow.ui")
 myenv.Uic4("UserSearch/QtUserSearchWizard.ui")
 myenv.Uic4("UserSearch/QtUserSearchFirstPage.ui")
+myenv.Uic4("UserSearch/QtUserSearchFirstMultiJIDPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchFieldsPage.ui")
 myenv.Uic4("UserSearch/QtUserSearchResultsPage.ui")
 myenv.Uic4("QtBookmarkDetailWindow.ui")

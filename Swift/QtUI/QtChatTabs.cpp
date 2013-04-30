@@ -181,10 +181,9 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	}
 
 	QString tabText = tabbable->windowTitle().simplified();
-
 	// look for spectrum-generated and other long JID localparts, and
 	// try to abbreviate the resulting long tab texts
-	QRegExp hasTrailingGarbage("^(.[-\\w\\s&]+)([^\\s\\w].*)$");
+	QRegExp hasTrailingGarbage("^(.[-\\w\\s,&]+)([^\\s\\,w].*)$");
 	if (hasTrailingGarbage.exactMatch(tabText) &&
 	    hasTrailingGarbage.cap(1).simplified().length() >= 2 &&
 	    hasTrailingGarbage.cap(2).length() >= 7) {
@@ -193,10 +192,8 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 		// least a couple of characters.
 		tabText = hasTrailingGarbage.cap(1).simplified();
 	}
-
 	// QTabBar interprets &, so escape that
 	tabText.replace("&", "&&");
-
 	// see which alt[a-z] keys other tabs use
 	bool accelsTaken[26];
 	int i = 0;

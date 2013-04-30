@@ -24,10 +24,11 @@ namespace Swift {
 	class HistoryController;
 	class HighlightManager;
 	class ClientBlockListManager;
+	class UIEvent;
 
 	class ChatController : public ChatControllerBase {
 		public:
-			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, ChatMessageParser* chatMessageParser);
+			ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, ChatMessageParser* chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 			virtual ~ChatController();
 			virtual void setToJID(const JID& jid);
 			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
@@ -36,6 +37,7 @@ namespace Swift {
 			virtual void handleWhiteboardSessionRequest(bool senderIsSelf);
 			virtual void handleWhiteboardStateChange(const ChatWindow::WhiteboardSessionState state);
 			virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/);
+			virtual ChatWindow* detachChatWindow();
 
 		protected:
 			void cancelReplaces();
@@ -75,6 +77,12 @@ namespace Swift {
 
 			void handleBlockUserRequest();
 			void handleUnblockUserRequest();
+
+			void handleInviteToChat(const std::vector<JID>& droppedJIDs);
+			void handleInviteToMUCWindowDismissed();
+			void handleInviteToMUCWindowCompleted();
+
+			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 
 		private:
 			NickResolver* nickResolver_;

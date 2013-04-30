@@ -45,7 +45,7 @@ namespace Swift {
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {labels_ = labels;}
 			virtual void setSecurityLabelsEnabled(bool enabled) {labelsEnabled_ = enabled;}
 			virtual void setUnreadMessageCount(int /*count*/) {}
-			virtual void convertToMUC() {}
+			virtual void convertToMUC(bool /*impromptuMUC*/) {}
 			virtual void setSecurityLabelsError() {}
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return label_;}
 			virtual void setInputEnabled(bool /*enabled*/) {}
@@ -60,16 +60,16 @@ namespace Swift {
 			void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}
 			void setSubject(const std::string& /*subject*/) {}
 			virtual void showRoomConfigurationForm(Form::ref) {}
-			virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool = true) {}
+			virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool = true, bool = false, bool = false) {}
 
 			virtual std::string addWhiteboardRequest(bool) {return "";}
 			virtual void setWhiteboardSessionStatus(std::string, const ChatWindow::WhiteboardSessionState){}
 
 			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) {}
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &) {}
-			virtual InviteToChatWindow* createInviteToChatWindow() {return NULL;}
 
 			virtual void setBlockingState(BlockingState) {}
+			virtual void setCanInitiateImpromptuChats(bool /*supportsImpromptu*/) {}
 
 			std::string bodyFromMessage(const ChatMessage& message) {
 				boost::shared_ptr<ChatTextMessagePart> text;

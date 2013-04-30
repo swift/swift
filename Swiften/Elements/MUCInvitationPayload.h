@@ -15,7 +15,7 @@ namespace Swift {
 	class MUCInvitationPayload : public Payload {
 		public:
 			typedef boost::shared_ptr<MUCInvitationPayload> ref;
-			MUCInvitationPayload() : continuation_(false) {
+			MUCInvitationPayload() : continuation_(false), impromptu_(false) {
 			}
 
 			void setIsContinuation(bool b) {
@@ -24,6 +24,14 @@ namespace Swift {
 
 			bool getIsContinuation() const {
 				return continuation_;
+			}
+
+			void setIsImpromptu(bool b) {
+				impromptu_ = b;
+			}
+
+			bool getIsImpromptu() const {
+				return impromptu_;
 			}
 
 			void setJID(const JID& jid) {
@@ -60,6 +68,7 @@ namespace Swift {
 
 		private:
 			bool continuation_;
+			bool impromptu_;
 			JID jid_;
 			std::string password_;
 			std::string reason_;

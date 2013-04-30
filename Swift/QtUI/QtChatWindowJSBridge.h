@@ -20,7 +20,7 @@ public:
 	QtChatWindowJSBridge();
 	virtual ~QtChatWindowJSBridge();
 signals:
-	void buttonClicked(QString id, QString arg1, QString arg2, QString arg3);
+	void buttonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
 };
 
 }

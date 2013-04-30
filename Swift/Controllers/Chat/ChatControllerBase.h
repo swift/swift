@@ -45,6 +45,7 @@ namespace Swift {
 	class HighlightManager;
 	class Highlighter;
 	class ChatMessageParser;
+	class AutoAcceptMUCInviteDecider;
 
 	class ChatControllerBase : public boost::bsignals::trackable {
 		public:
@@ -64,9 +65,12 @@ namespace Swift {
 			int getUnreadCount();
 			const JID& getToJID() {return toJID_;}
 			void handleCapsChanged(const JID& jid);
+			void setCanStartImpromptuChats(bool supportsImpromptu);
+			virtual ChatWindow* detachChatWindow();
+			boost::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -124,5 +128,7 @@ namespace Swift {
 			MUCRegistry* mucRegistry_;
 			Highlighter* highlighter_;
 			ChatMessageParser* chatMessageParser_;
+			AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
+			UIEventStream* eventStream_;
 	};
 }

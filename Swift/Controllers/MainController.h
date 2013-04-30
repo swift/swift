@@ -79,6 +79,8 @@ namespace Swift {
 	class HighlightManager;
 	class HighlightEditorController;
 	class BlockListController;
+	class ContactSuggester;
+	class ContactsFromXMPPRoster;
 
 	class MainController {
 		public:
@@ -165,6 +167,9 @@ namespace Swift {
 			ProfileController* profileController_;
 			ShowProfileController* showProfileController_;
 			ContactEditController* contactEditController_;
+			ContactsFromXMPPRoster* contactsFromRosterProvider_;
+			ContactSuggester* contactSuggesterWithoutRoster_;
+			ContactSuggester* contactSuggesterWithRoster_;
 			JID jid_;
 			JID boundJID_;
 			SystemTrayController* systemTrayController_;
@@ -178,6 +183,7 @@ namespace Swift {
 			bool useDelayForLatency_;
 			UserSearchController* userSearchControllerChat_;
 			UserSearchController* userSearchControllerAdd_;
+			UserSearchController* userSearchControllerInvite_;
 			int timeBeforeNextReconnect_;
 			Timer::ref reconnectTimer_;
 			StatusTracker* statusTracker_;

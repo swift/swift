@@ -145,7 +145,7 @@ void QtUIFactory::handleChatWindowFontResized(int size) {
 }
 
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) {
-	return new QtUserSearchWindow(eventStream, type, groups);
+	return new QtUserSearchWindow(eventStream, type, groups, qtOnlySettings);
 }
 
 JoinMUCWindow* QtUIFactory::createJoinMUCWindow(UIEventStream* uiEventStream) {

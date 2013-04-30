@@ -49,6 +49,9 @@ namespace Swift {
 			/** Emitted for each service found. */
 			boost::signal<void(const JID&, boost::shared_ptr<DiscoInfo>)> onServiceFound;
 
+			/** Emitted when walking is aborted. */
+			boost::signal<void()> onWalkAborted;
+
 			/** Emitted when walking is complete.*/
 			boost::signal<void()> onWalkComplete;
 

@@ -45,11 +45,20 @@ namespace Swift {
 				return ownMUCJID.toBare();
 			}
 
+			/**
+			 * Returns if the room is unlocked and other people can join the room.
+			 * @return True if joinable by others; false otherwise.
+			 */
+			bool isUnlocked() const {
+				return isUnlocked_;
+			}
+
 			void joinAs(const std::string &nick);
 			void joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since);
 			/*void queryRoomInfo(); */
 			/*void queryRoomItems(); */
 			std::string getCurrentNick();
+			std::map<std::string, MUCOccupant> getOccupants() const;
 			void part();
 			void handleIncomingMessage(Message::ref message);
 			/** Expose public so it can be called when e.g. user goes offline */
@@ -67,7 +76,7 @@ namespace Swift {
 			void cancelConfigureRoom();
 			void destroyRoom();
 			/** Send an invite for the person to join the MUC */
-			void invitePerson(const JID& person, const std::string& reason = "");
+			void invitePerson(const JID& person, const std::string& reason = "", bool isImpromptu = false, bool isReuseChat = false);
 			void setCreateAsReservedIfNew() {createAsReservedIfNew = true;}
 			void setPassword(const boost::optional<std::string>& password);
 			
@@ -85,6 +94,7 @@ namespace Swift {
 			boost::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
 			boost::signal<void (Form::ref)> onConfigurationFormReceived;
 			boost::signal<void (MUCOccupant::Affiliation, const std::vector<JID>&)> onAffiliationListReceived;
+			boost::signal<void ()> onUnlocked;
 			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
 			/* boost::signal<void (const blah&)> onItemsResult; */
 			
@@ -121,6 +131,7 @@ namespace Swift {
 			boost::posix_time::ptime joinSince_;
 			bool createAsReservedIfNew;
 			bool unlocking;
+			bool isUnlocked_;
 			boost::optional<std::string> password;
 	};
 }

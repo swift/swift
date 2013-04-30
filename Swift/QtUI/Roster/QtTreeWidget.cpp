@@ -42,6 +42,7 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* setting
 #ifdef SWIFT_EXPERIMENTAL_FT
 	setAcceptDrops(true);
 #endif
+	setDragEnabled(true);
 	setRootIsDecorated(true);
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
 	connect(model_, SIGNAL(itemExpanded(const QModelIndex&, bool)), this, SLOT(handleModelItemExpanded(const QModelIndex&, bool)));
@@ -157,7 +158,7 @@ void QtTreeWidget::dragMoveEvent(QDragMoveEvent* event) {
 			}
 		}
 	}
-	event->ignore();
+	QTreeView::dragMoveEvent(event);
 }
 
 void QtTreeWidget::handleExpanded(const QModelIndex& index) {

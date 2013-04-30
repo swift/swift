@@ -19,7 +19,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/String.h>
@@ -92,7 +91,9 @@
 #include <Swift/Controllers/HighlightManager.h>
 #include <Swift/Controllers/HighlightEditorController.h>
 #include <Swift/Controllers/BlockListController.h>
-
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swift/Controllers/ContactSuggester.h>
+#include <Swift/Controllers/ContactsFromXMPPRoster.h>
 
 namespace Swift {
 
@@ -143,6 +144,10 @@ MainController::MainController(
 	contactEditController_ = NULL;
 	userSearchControllerChat_ = NULL;
 	userSearchControllerAdd_ = NULL;
+	userSearchControllerInvite_ = NULL;
+	contactsFromRosterProvider_ = NULL;
+	contactSuggesterWithoutRoster_ = NULL;
+	contactSuggesterWithRoster_ = NULL;
 	whiteboardManager_ = NULL;
 	adHocManager_ = NULL;
 	quitRequested_ = false;
@@ -282,6 +287,14 @@ void MainController::resetClient() {
 	userSearchControllerChat_ = NULL;
 	delete userSearchControllerAdd_;
 	userSearchControllerAdd_ = NULL;
+	delete userSearchControllerInvite_;
+	userSearchControllerInvite_ = NULL;
+	delete contactSuggesterWithoutRoster_;
+	contactSuggesterWithoutRoster_ = NULL;
+	delete contactSuggesterWithRoster_;
+	contactSuggesterWithRoster_ = NULL;
+	delete contactsFromRosterProvider_;
+	contactsFromRosterProvider_ = NULL;
 	delete adHocManager_;
 	adHocManager_ = NULL;
 	delete whiteboardManager_;
@@ -342,14 +355,22 @@ void MainController::handleConnected() {
 		 * be before they receive stanzas that need it (e.g. bookmarks).*/
 		client_->getVCardManager()->requestOwnVCard();
 
+		contactSuggesterWithoutRoster_ = new ContactSuggester();
+		contactSuggesterWithRoster_ = new ContactSuggester();
+
+		userSearchControllerInvite_ = new UserSearchController(UserSearchController::InviteToChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 		historyController_ = new HistoryController(storages_->getHistoryStorage());
 		historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, userSearchControllerInvite_);
 #else
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), &emoticons_);
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), &emoticons_, userSearchControllerInvite_);
 #endif
-		
+		contactsFromRosterProvider_ = new ContactsFromXMPPRoster(client_->getRoster(), client_->getAvatarManager(), client_->getPresenceOracle());
+		contactSuggesterWithoutRoster_->addContactProvider(chatsManager_);
+		contactSuggesterWithRoster_->addContactProvider(chatsManager_);
+		contactSuggesterWithRoster_->addContactProvider(contactsFromRosterProvider_);
+
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());
 
@@ -375,10 +396,11 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
-		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_);
-		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_);
+		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
+		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithoutRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
 		adHocManager_ = new AdHocManager(JID(boundJID_.getDomain()), uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
 		
+		chatsManager_->onImpromptuMUCServiceDiscovered.connect(boost::bind(&UserSearchController::setCanInitiateImpromptuMUC, userSearchControllerChat_, _1));
 	}
 	loginWindow_->setIsLoggingIn(false);
 

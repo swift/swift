@@ -27,5 +27,6 @@ namespace Swift {
 			static const SettingsProvider::Setting<std::string> DICT_PATH;
 			static const SettingsProvider::Setting<std::string> PERSONAL_DICT_PATH;
 			static const SettingsProvider::Setting<std::string> DICT_FILE;
+			static const SettingsProvider::Setting<std::string> INVITE_AUTO_ACCEPT_MODE;
 	};
 }

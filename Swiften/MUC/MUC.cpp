@@ -29,7 +29,7 @@ namespace Swift {
 
 typedef std::pair<std::string, MUCOccupant> StringMUCOccupantPair;
 
-MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry), createAsReservedIfNew(false), unlocking(false) {
+MUC::MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry), createAsReservedIfNew(false), unlocking(false), isUnlocked_(false) {
 	scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUC::handleIncomingPresence, this, _1));
 }
 
@@ -56,6 +56,10 @@ void MUC::setPassword(const boost::optional<std::string>& newPassword) {
 void MUC::joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since) {
 	joinSince_ = since;
 	internalJoin(nick);
+}
+
+std::map<std::string, MUCOccupant> MUC::getOccupants() const {
+	return occupants;
 }
 
 void MUC::internalJoin(const std::string &nick) {
@@ -97,6 +101,7 @@ void MUC::handleUserLeft(LeavingType type) {
 	occupants.clear();
 	joinComplete_ = false;
 	joinSucceeded_ = false;
+	isUnlocked_ = false;
 	presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 }
 
@@ -170,8 +175,9 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 			std::map<std::string,MUCOccupant>::iterator i = occupants.find(nick);
 			if (i != occupants.end()) {
 				//TODO: part type
-				onOccupantLeft(i->second, type, "");
 				occupants.erase(i);
+				MUCOccupant occupant = i->second;
+				onOccupantLeft(occupant, type, "");
 			}
 		}
 	} 
@@ -200,6 +206,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 		onOccupantPresenceChange(presence);
 	}
 	if (mucPayload && !joinComplete_) {
+		bool isLocked = false;
 		foreach (MUCUserPayload::StatusCode status, mucPayload->getStatusCodes()) {
 			if (status.code == 110) {
 				/* Simply knowing this is your presence is enough, 210 doesn't seem to be necessary. */
@@ -212,6 +219,7 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 				onJoinComplete(getOwnNick());
 			}
 			if (status.code == 201) {
+				isLocked = true;
 				/* Room is created and locked */
 				/* Currently deal with this by making an instant room */
 				if (ownMUCJID != presence->getFrom()) {
@@ -233,6 +241,10 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 				}
 			}
 		}
+		if (!isLocked && !isUnlocked_ && (presence->getFrom() == ownMUCJID)) {
+			isUnlocked_ = true;
+			onUnlocked();
+		}
 	}
 }
 
@@ -243,6 +255,8 @@ void MUC::handleCreationConfigResponse(MUCOwnerPayload::ref /*unused*/, ErrorPay
 		onJoinFailed(error);
 	} else {
 		onJoinComplete(getOwnNick()); /* Previously, this wasn't needed here, as the presence duplication bug caused an emit elsewhere. */
+		isUnlocked_ = true;
+		onUnlocked();
 	}
 }
 
@@ -386,13 +400,15 @@ void MUC::destroyRoom() {
 	request->send();
 }
 
-void MUC::invitePerson(const JID& person, const std::string& reason) {
+void MUC::invitePerson(const JID& person, const std::string& reason, bool isImpromptu, bool isReuseChat) {
 	Message::ref message = boost::make_shared<Message>();
 	message->setTo(person);
 	message->setType(Message::Normal);
 	MUCInvitationPayload::ref invite = boost::make_shared<MUCInvitationPayload>();
 	invite->setReason(reason);
 	invite->setJID(ownMUCJID.toBare());
+	invite->setIsImpromptu(isImpromptu);
+	invite->setIsContinuation(isReuseChat);
 	message->addPayload(invite);
 	stanzaChannel->sendMessage(message);
 }

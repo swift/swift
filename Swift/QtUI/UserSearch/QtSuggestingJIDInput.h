@@ -1,0 +1,57 @@
+/*
+ * Copyright (c) 2013 Tobias Markmann
+ * Licensed under the simplified BSD license.
+ * See Documentation/Licenses/BSD-simplified.txt for more information.
+ */
+
+#pragma once
+
+#include <QLineEdit>
+#include <QTreeView>
+
+#include <Swift/Controllers/Contact.h>
+
+namespace Swift {
+
+class ContactListDelegate;
+class SettingsProvider;
+class ContactListModel;
+
+class QtSuggestingJIDInput : public QLineEdit {
+	Q_OBJECT
+	public:
+		QtSuggestingJIDInput(QWidget* parent, SettingsProvider* settings);
+		virtual ~QtSuggestingJIDInput();
+
+		const Contact* getContact();
+
+		void setSuggestions(const std::vector<Contact>& suggestions);
+
+	signals:
+		void editingDone();
+
+	protected:
+		virtual void keyPressEvent(QKeyEvent* event);
+
+	private:
+		void handleSettingsChanged(const std::string& setting);
+
+	private slots:
+		void handleClicked(const QModelIndex& index);
+		void handleApplicationFocusChanged(QWidget* old, QWidget* now);
+
+	private:
+		void positionPopup();
+		void showPopup();
+		void hidePopup();
+
+	private:
+		SettingsProvider* settings_;
+		ContactListModel* contactListModel_;
+		QTreeView* treeViewPopup_;
+		ContactListDelegate* contactListDelegate_;
+		Contact manualContact_;
+		const Contact* currentContact_;
+};
+
+}

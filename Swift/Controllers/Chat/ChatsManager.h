@@ -11,16 +11,21 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/MUC/MUCBookmark.h>
+#include <Swiften/MUC/MUC.h>
 
+
+#include <Swift/Controllers/ContactProvider.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 
 
 namespace Swift {
@@ -29,7 +34,6 @@ namespace Swift {
 	class ChatControllerBase;
 	class MUCController;
 	class MUCManager;
-	class ChatWindowFactory;
 	class JoinMUCWindow;
 	class JoinMUCWindowFactory;
 	class NickResolver;
@@ -55,20 +59,39 @@ namespace Swift {
 	class HighlightManager;
 	class ClientBlockListManager;
 	class ChatMessageParser;
-	
-	class ChatsManager {
+	class DiscoServiceWalker;
+	class AutoAcceptMUCInviteDecider;
+	class UserSearchController;
+
+	class ChatsManager : public ContactProvider {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons, UserSearchController* inviteUserSearchController);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
+			std::vector<ChatListWindow::Chat> getRecentChats() const;
+			virtual std::vector<Contact> getContacts();
+
+			boost::signal<void (bool supportsImpromptu)> onImpromptuMUCServiceDiscovered;
+
+		private:
+			class SingleChatWindowFactoryAdapter : public ChatWindowFactory {
+				public:
+					SingleChatWindowFactoryAdapter(ChatWindow* chatWindow);
+					virtual ~SingleChatWindowFactoryAdapter();
+					virtual ChatWindow* createChatWindow(const JID &, UIEventStream*);
+
+				private:
+					ChatWindow* chatWindow_;
+			};
 
 		private:
 			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity);
 			void handleChatRequest(const std::string& contact);
-			void handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew);
+			void finalizeImpromptuJoin(MUC::ref muc, const std::vector<JID>& jidsToInvite, const std::string& reason, const boost::optional<JID>& reuseChatJID = boost::optional<JID>());
+			MUC::ref handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow = 0);
 			void handleSearchMUCRequest();
 			void handleMUCSelectedAfterSearch(const JID&);
 			void rebindControllerJID(const JID& from, const JID& to);
@@ -82,6 +105,7 @@ namespace Swift {
 			void handleNewFileTransferController(FileTransferController*);
 			void handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf);
 			void handleWhiteboardStateChange(const JID& contact, const ChatWindow::WhiteboardSessionState state);
+			boost::optional<ChatListWindow::Chat> removeExistingChat(const ChatListWindow::Chat& chat);
 			void appendRecent(const ChatListWindow::Chat& chat);
 			void prependRecent(const ChatListWindow::Chat& chat);
 			void setupBookmarks();
@@ -99,8 +123,14 @@ namespace Swift {
 			void handleRosterCleared();
 			void handleSettingChanged(const std::string& settingPath);
 			void markAllRecentsOffline();
+			void handleTransformChatToMUC(ChatController* chatController, ChatWindow* chatWindow, const std::vector<JID>& jidsToInvite, const std::string& reason);
+
+			void handleLocalServiceFound(const JID& service, boost::shared_ptr<DiscoInfo> info);
+			void handleLocalServiceWalkFinished();
 
 			void updatePresenceReceivingStateOnChatController(const JID&);
+			ChatListWindow::Chat updateChatStatusAndAvatarHelper(const ChatListWindow::Chat& chat) const;
+
 
 			ChatController* getChatControllerOrFindAnother(const JID &contact);
 			ChatController* createNewChatController(const JID &contact);
@@ -110,6 +140,7 @@ namespace Swift {
 		private:
 			std::map<JID, MUCController*> mucControllers_;
 			std::map<JID, ChatController*> chatControllers_;
+			std::map<ChatControllerBase*, SingleChatWindowFactoryAdapter*> chatWindowFactoryAdapters_;
 			EventController* eventController_;
 			JID jid_;
 			StanzaChannel* stanzaChannel_;
@@ -144,5 +175,10 @@ namespace Swift {
 			HighlightManager* highlightManager_;
 			ClientBlockListManager* clientBlockListManager_;
 			ChatMessageParser* chatMessageParser_;
+			JID localMUCServiceJID_;
+			boost::shared_ptr<DiscoServiceWalker> localMUCServiceFinderWalker_;
+			AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
+			UserSearchController* inviteUserSearchController_;
+			IDGenerator idGenerator_;
 	};
 }

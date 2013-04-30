@@ -8,12 +8,19 @@
 
 #include "Swift/QtUI/QtSwiftUtil.h"
 
+#include <Swiften/Base/Log.h>
+
 namespace Swift {
 
-QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title) {
+QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title, SettingsProvider* settings) {
 	setupUi(this);
 	setTitle(title);
 	setSubTitle(QString(tr("%1. If you know their address you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::AddContact ? tr("Add another user to your contact list") : tr("Chat to another user")));
+	jid_ = new QtSuggestingJIDInput(this, settings);
+	horizontalLayout_2->addWidget(jid_);
+	setTabOrder(byJID_, jid_);
+	setTabOrder(jid_, byLocalSearch_);
+	setTabOrder(byLocalSearch_, byRemoteSearch_);
 	connect(jid_, SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 	connect(service_->lineEdit(), SIGNAL(textChanged(const QString&)), this, SLOT(emitCompletenessCheck()));
 }

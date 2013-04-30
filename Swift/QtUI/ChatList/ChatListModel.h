@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-
 #include <QAbstractItemModel>
 #include <QList>
 

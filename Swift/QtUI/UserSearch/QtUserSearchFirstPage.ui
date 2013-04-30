@@ -34,10 +34,10 @@
        <property name="text">
         <string>I know their address:</string>
        </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
+       </property>
       </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="jid_"/>
      </item>
     </layout>
    </item>
@@ -47,6 +47,9 @@
       <widget class="QRadioButton" name="byLocalSearch_">
        <property name="text">
         <string>I'd like to search my server</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -71,6 +74,9 @@
       <widget class="QRadioButton" name="byRemoteSearch_">
        <property name="text">
         <string>I'd like to search another server:</string>
+       </property>
+       <property name="autoExclusive">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

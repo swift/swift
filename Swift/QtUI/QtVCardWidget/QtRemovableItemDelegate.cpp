@@ -15,12 +15,12 @@ QtRemovableItemDelegate::QtRemovableItemDelegate(const QStyle* style) : style(st
 
 }
 
-void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex&) const {
+void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	QStyleOption opt;
 	opt.state = QStyle::State(0);
 	opt.state |= QStyle::State_MouseOver;
 	painter->save();
-	painter->fillRect(option.rect, option.state & QStyle::State_Selected ? option.palette.highlight() : option.palette.base());
+	drawBackground(painter, option, index);
 	painter->translate(option.rect.x(), option.rect.y()+(option.rect.height() - 12)/2);
 	style->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, painter);
 	painter->restore();

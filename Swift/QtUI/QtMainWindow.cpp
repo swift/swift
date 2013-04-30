@@ -144,6 +144,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	actionsMenu->addAction(openBlockingListEditor_);
 	openBlockingListEditor_->setVisible(false);
 	addUserAction_ = new QAction(tr("&Add Contact…"), this);
+	addUserAction_->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
 	editUserAction_ = new QAction(tr("&Edit Selected Contact…"), this);
@@ -151,6 +152,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	actionsMenu->addAction(editUserAction_);
 	editUserAction_->setEnabled(false);
 	chatUserAction_ = new QAction(tr("Start &Chat…"), this);
+	chatUserAction_->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
 	serverAdHocMenu_ = new QMenu(tr("Run Server Command"), this);

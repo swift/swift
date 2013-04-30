@@ -30,16 +30,19 @@
 
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 #include <Swift/Controllers/HighlightManager.h>
 #include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
@@ -58,9 +61,21 @@ void ChatControllerBase::handleLogCleared() {
 	cancelReplaces();
 }
 
+ChatWindow* ChatControllerBase::detachChatWindow() {
+	ChatWindow* chatWindow = chatWindow_;
+	chatWindow_ = NULL;
+	return chatWindow;
+}
+
 void ChatControllerBase::handleCapsChanged(const JID& jid) {
 	if (jid.compare(toJID_, JID::WithoutResource) == 0) {
 		handleBareJIDCapsChanged(jid);
+	}
+}
+
+void ChatControllerBase::setCanStartImpromptuChats(bool supportsImpromptu) {
+	if (chatWindow_) {
+		chatWindow_->setCanInitiateImpromptuChats(supportsImpromptu);
 	}
 }
 
@@ -320,15 +335,19 @@ void ChatControllerBase::handleGeneralMUCInvitation(MUCInviteEvent::ref event) {
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
 	onUnreadCountChanged();
-	chatWindow_->addMUCInvitation(senderDisplayNameFromMessage(event->getInviter()), event->getRoomJID(), event->getReason(), event->getPassword(), event->getDirect());
+	chatWindow_->addMUCInvitation(senderDisplayNameFromMessage(event->getInviter()), event->getRoomJID(), event->getReason(), event->getPassword(), event->getDirect(), event->getImpromptu());
 	eventController_->handleIncomingEvent(event);
 }
 
 void ChatControllerBase::handleMUCInvitation(Message::ref message) {
 	MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
 
-	MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(toJID_, invite->getJID(), invite->getReason(), invite->getPassword(), true);
-	handleGeneralMUCInvitation(inviteEvent);
+	if (autoAcceptMUCInviteDecider_->isAutoAcceptedInvite(message->getFrom(), invite)) {
+		eventStream_->send(boost::make_shared<JoinMUCUIEvent>(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true));
+	} else {
+		MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(toJID_, invite->getJID(), invite->getReason(), invite->getPassword(), true, invite->getIsImpromptu());
+		handleGeneralMUCInvitation(inviteEvent);
+	}
 }
 
 void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
@@ -343,7 +362,7 @@ void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
 		password = *message->getPayload<MUCUserPayload>()->getPassword();
 	}
 
-	MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(invite.from, from, reason, password, false);
+	MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(invite.from, from, reason, password, false, false);
 	handleGeneralMUCInvitation(inviteEvent);
 }
 

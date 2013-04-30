@@ -30,7 +30,7 @@ namespace Swift {
 	class RosterItem;
 	class ContactRosterItem;
 	class FileTransferController;
-	class InviteToChatWindow;
+	class UserSearchWindow;
 
 
 	class ChatWindow {
@@ -116,7 +116,7 @@ namespace Swift {
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;
 			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
 			virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
-			virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true) = 0;
+			virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true, bool isImpromptu = false, bool isContinuation = false) = 0;
 
 			virtual std::string addWhiteboardRequest(bool senderIsSelf) = 0;
 			virtual void setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) = 0;
@@ -132,7 +132,7 @@ namespace Swift {
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
 			virtual void setCorrectionEnabled(Tristate enabled) = 0;
 			virtual void setUnreadMessageCount(int count) = 0;
-			virtual void convertToMUC() = 0;
+			virtual void convertToMUC(bool impromptuMUC = false) = 0;
 //			virtual TreeWidget *getTreeWidget() = 0;
 			virtual void setSecurityLabelsError() = 0;
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() = 0;
@@ -146,6 +146,7 @@ namespace Swift {
 			virtual void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>&) = 0;
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &actions) = 0;
 			virtual void setBlockingState(BlockingState state) = 0;
+			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu) = 0;
 			/**
 			 * Set an alert on the window.
 			 * @param alertText Description of alert (required).
@@ -168,8 +169,6 @@ namespace Swift {
 			 */
 			virtual void showRoomConfigurationForm(Form::ref) = 0;
 
-			virtual InviteToChatWindow* createInviteToChatWindow() = 0;
-
 			boost::signal<void ()> onClosed;
 			boost::signal<void ()> onAllMessagesRead;
 			boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
@@ -182,7 +181,7 @@ namespace Swift {
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
 			boost::signal<void (Form::ref)> onConfigureRequest;
 			boost::signal<void ()> onDestroyRequest;
-			boost::signal<void ()> onInvitePersonToThisMUCRequest;
+			boost::signal<void (const std::vector<JID>&)> onInviteToChat;
 			boost::signal<void ()> onConfigurationFormCancelled;
 			boost::signal<void ()> onGetAffiliationsRequest;
 			boost::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;

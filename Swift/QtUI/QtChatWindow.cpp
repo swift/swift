@@ -16,7 +16,6 @@
 #include "QtTextEdit.h"
 #include "QtSettingsProvider.h"
 #include "QtScaledAvatarCache.h"
-#include "QtInviteToChatWindow.h"
 #include <Swift/QtUI/QtUISettingConstants.h>
 
 #include <Swiften/StringCodecs/Base64.h>
@@ -68,7 +67,7 @@ const QString QtChatWindow::ButtonFileTransferAcceptRequest = QString("filetrans
 const QString QtChatWindow::ButtonMUCInvite = QString("mucinvite");
 
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), blockingState_(BlockingUnsupported) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	idCounter_ = 0;
@@ -189,11 +188,10 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 
 	jsBridge = new QtChatWindowJSBridge();
 	messageLog_->addToJSEnvironment("chatwindow", jsBridge);
-	connect(jsBridge, SIGNAL(buttonClicked(QString,QString,QString,QString)), this, SLOT(handleHTMLButtonClicked(QString,QString,QString,QString)));
+	connect(jsBridge, SIGNAL(buttonClicked(QString,QString,QString,QString,QString,QString)), this, SLOT(handleHTMLButtonClicked(QString,QString,QString,QString,QString,QString)));
 
 	settings_->onSettingChanged.connect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
 	showEmoticons_ = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
-
 }
 
 QtChatWindow::~QtChatWindow() {
@@ -425,10 +423,11 @@ void QtChatWindow::closeEvent(QCloseEvent* event) {
 	onClosed();
 }
 
-void QtChatWindow::convertToMUC() {
-	setAcceptDrops(false);
+void QtChatWindow::convertToMUC(bool impromptuMUC) {
+	impromptu_ = impromptuMUC;
+	isMUC_ = true;
 	treeWidget_->show();
-	subject_->show();
+	subject_->setVisible(!impromptu_);
 }
 
 void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
@@ -680,10 +679,10 @@ static QString decodeButtonArgument(const QString& str) {
 	return P2QSTRING(byteArrayToString(Base64::decode(Q2PSTRING(str))));
 }
 
-QString QtChatWindow::buildChatWindowButton(const QString& name, const QString& id, const QString& arg1, const QString& arg2, const QString& arg3) {
+QString QtChatWindow::buildChatWindowButton(const QString& name, const QString& id, const QString& arg1, const QString& arg2, const QString& arg3, const QString& arg4, const QString& arg5) {
 	QRegExp regex("[A-Za-z][A-Za-z0-9\\-\\_]+");
 	Q_ASSERT(regex.exactMatch(id));
-	QString html = QString("<input id='%2' type='submit' value='%1' onclick='chatwindow.buttonClicked(\"%2\", \"%3\", \"%4\", \"%5\");' />").arg(name).arg(id).arg(encodeButtonArgument(arg1)).arg(encodeButtonArgument(arg2)).arg(encodeButtonArgument(arg3));
+	QString html = QString("<input id='%2' type='submit' value='%1' onclick='chatwindow.buttonClicked(\"%2\", \"%3\", \"%4\", \"%5\", \"%6\", \"%7\");' />").arg(name).arg(id).arg(encodeButtonArgument(arg1)).arg(encodeButtonArgument(arg2)).arg(encodeButtonArgument(arg3)).arg(encodeButtonArgument(arg4)).arg(encodeButtonArgument(arg5));
 	return html;
 }
 
@@ -776,10 +775,12 @@ void QtChatWindow::setWhiteboardSessionStatus(std::string id, const ChatWindow::
 	messageLog_->setWhiteboardSessionStatus(P2QSTRING(id), state);
 }
 
-void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3) {
+void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3, QString encodedArgument4, QString encodedArgument5) {
 	QString arg1 = decodeButtonArgument(encodedArgument1);
 	QString arg2 = decodeButtonArgument(encodedArgument2);
 	QString arg3 = decodeButtonArgument(encodedArgument3);
+	QString arg4 = decodeButtonArgument(encodedArgument4);
+	QString arg5 = decodeButtonArgument(encodedArgument5);
 
 	if (id.startsWith(ButtonFileTransferCancel)) {
 		QString ft_id = arg1;
@@ -826,8 +827,9 @@ void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1,
 		QString roomJID = arg1;
 		QString password = arg2;
 		QString elementID = arg3;
-
-		eventStream_->send(boost::make_shared<JoinMUCUIEvent>(Q2PSTRING(roomJID), Q2PSTRING(password)));
+		QString isImpromptu = arg4;
+		QString isContinuation = arg5;
+		eventStream_->send(boost::make_shared<JoinMUCUIEvent>(Q2PSTRING(roomJID), Q2PSTRING(password), boost::optional<std::string>(), false, false, isImpromptu.contains("true"), isContinuation.contains("true")));
 		messageLog_->setMUCInvitationJoined(elementID);
 	}
 	else {
@@ -957,18 +959,32 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 	if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
 		// TODO: check whether contact actually supports file transfer
-		event->acceptProposedAction();
+		if (!isMUC_) {
+			event->acceptProposedAction();
+		}
+	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid")) {
+		if (isMUC_ || supportsImpromptuChat_) {
+			event->acceptProposedAction();
+		}
 	}
 }
 
 void QtChatWindow::dropEvent(QDropEvent *event) {
-	if (event->mimeData()->urls().size() == 1) {
-		onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
-	} else {
-		std::string messageText(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
-		ChatMessage message;
-		message.append(boost::make_shared<ChatTextMessagePart>(messageText));
-		addSystemMessage(message, DefaultDirection);
+	if (event->mimeData()->hasUrls()) {
+		if (event->mimeData()->urls().size() == 1) {
+			onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
+		} else {
+			std::string messageText(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
+			ChatMessage message;
+			message.append(boost::make_shared<ChatTextMessagePart>(messageText));
+			addSystemMessage(message, DefaultDirection);
+		}
+	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid")) {
+		QByteArray dataBytes = event->mimeData()->data("application/vnd.swift.contact-jid");
+		QDataStream dataStream(&dataBytes, QIODevice::ReadOnly);
+		QString jidString;
+		dataStream >> jidString;
+		onInviteToChat(std::vector<JID>(1, JID(Q2PSTRING(jidString))));
 	}
 }
 
@@ -1004,9 +1020,23 @@ void QtChatWindow::handleActionButtonClicked() {
 		} else if (blockingState_ == IsUnblocked) {
 			block = contextMenu.addAction(tr("Block"));
 		}
+
+		if (supportsImpromptuChat_) {
+			invite = contextMenu.addAction(tr("Invite person to this chat…"));
+		}
+
 	} else {
 		foreach(ChatWindow::RoomAction availableAction, availableRoomActions_)
 		{
+			if (impromptu_) {
+				// hide options we don't need in impromptu chats
+				if (availableAction == ChatWindow::ChangeSubject ||
+					availableAction == ChatWindow::Configure ||
+					availableAction == ChatWindow::Affiliations ||
+					availableAction == ChatWindow::Destroy) {
+					continue;
+				}
+			}
 			switch(availableAction)
 			{
 				case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject…")); break;
@@ -1052,7 +1082,7 @@ void QtChatWindow::handleActionButtonClicked() {
 		}
 	}
 	else if (result == invite) {
-		onInvitePersonToThisMUCRequest();
+		onInviteToChat(std::vector<JID>());
 	}
 	else if (result == block) {
 		onBlockUserRequest();
@@ -1079,6 +1109,10 @@ void QtChatWindow::setBlockingState(BlockingState state) {
 	blockingState_ = state;
 }
 
+void QtChatWindow::setCanInitiateImpromptuChats(bool supportsImpromptu) {
+	supportsImpromptuChat_ = supportsImpromptu;
+}
+
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	if (mucConfigurationWindow_) {
 		delete mucConfigurationWindow_.data();
@@ -1088,12 +1122,17 @@ void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	mucConfigurationWindow_->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
 }
 
-void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct) {
+void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
-	QString message = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + "\n";
+	QString message;
+	if (isImpromptu) {
+		message = QObject::tr("You've been invited to join a chat.") + "\n";
+	} else {
+		message = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + "\n";
+	}
 	QString htmlString = message;
 	if (!reason.empty()) {
 		htmlString += QObject::tr("Reason: %1").arg(P2QSTRING(reason)) + "\n";
@@ -1106,7 +1145,7 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 
 	QString id = QString(ButtonMUCInvite + "%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 	htmlString += "<div id='" + id + "'>" +
-			buildChatWindowButton(chatMessageToHTML(ChatMessage(Q2PSTRING((tr("Accept Invite"))))), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id) +
+			buildChatWindowButton(chatMessageToHTML(ChatMessage(Q2PSTRING((tr("Accept Invite"))))), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id, QtUtilities::htmlEscape(isImpromptu ? "true" : "false"), QtUtilities::htmlEscape(isContinuation ? "true" : "false")) +
 		"</div>";
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMUCInvite, senderName, false);
@@ -1123,11 +1162,5 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	previousSenderName_ = P2QSTRING(senderName);
 	previousMessageKind_ = PreviousMessageWasMUCInvite;
 }
-
-
-InviteToChatWindow* QtChatWindow::createInviteToChatWindow() {
-	return new QtInviteToChatWindow(this);
-}
-
 
 }

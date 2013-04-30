@@ -17,6 +17,7 @@ void MUCInvitationPayloadParser::handleTree(ParserElement::ref root) {
 	invite->setPassword(root->getAttributes().getAttribute("password"));
 	invite->setReason(root->getAttributes().getAttribute("reason"));
 	invite->setThread(root->getAttributes().getAttribute("thread"));
+	invite->setIsImpromptu(root->getChild("impromptu", "http://swift.im/impromptu") ? true : false);
 }
 
 }
