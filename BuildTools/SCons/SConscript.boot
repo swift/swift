@@ -118,7 +118,7 @@ if env["max_jobs"] :
 		pass
 
 # Set the default compiler to CLang on OS X, and set the necessary flags
-if env["PLATFORM"] == "darwin" :
+if env["PLATFORM"] == "darwin" and env["target"] == "native" :
 	if "cc" not in env :
 		env["CC"] = "clang"
 		if platform.machine() == "x86_64" :
@@ -312,15 +312,15 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 		env['CXXCOM'] = '$CXX -o $TARGET -c $CXXFLAGS $CCFLAGS $_CCCOMCOM ${SOURCES.abspath}'
 	else :
 		# Hard code values
-		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
+		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
 		if target == "iphone-device":
 			env["XCODE_ARCH_FLAGS"] = ["-arch", "armv6", "-arch", "armv7"]
 			sdkPart = "iPhoneOS"
 		else :
 			env["XCODE_ARCH_FLAGS"] = ["-arch", "i386"]
 			sdkPart = "iPhoneSimulator"
-		sdkVer = "4.3"
-		env["XCODE_SDKROOT"] = "/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
+		sdkVer = "6.0"
+		env["XCODE_SDKROOT"] = "/Applications/Xcode.app/Contents/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
 		env["IPHONEOS_DEPLOYMENT_TARGET"] = "4.1"
 
 	# Set the build flags
