@@ -8,13 +8,14 @@
 
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/CertificateWithKey.h>
+#include <boost/filesystem/path.hpp>
 
 namespace Swift {
 	class PKCS12Certificate : public Swift::CertificateWithKey {
 		public:
 			PKCS12Certificate() {}
 
-			PKCS12Certificate(const std::string& filename, const SafeByteArray& password) : password_(password) {
+			PKCS12Certificate(const boost::filesystem::path& filename, const SafeByteArray& password) : password_(password) {
 				readByteArrayFromFile(data_, filename);
 			}
 

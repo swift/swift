@@ -64,7 +64,7 @@ class FileSender {
 			client->sendPresence(Presence::create());
 
 			//ByteArray fileData;
-			//readByteArrayFromFile(fileData, file.string());
+			//readByteArrayFromFile(fileData, file);
 			
 			// gather file information
 			/*StreamInitiationFileInfo fileInfo;

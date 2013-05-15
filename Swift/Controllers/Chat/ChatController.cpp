@@ -285,7 +285,7 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
 		eraseIf(unackedStanzas_, PairSecondEquals<boost::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
 		replaceMessage(body, myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time(), HighlightAction());
 	} else {
-		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), std::string(avatarManager_->getAvatarPath(selfJID_).string()), boost::posix_time::microsec_clock::universal_time(), HighlightAction());
+		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), avatarManager_->getAvatarPath(selfJID_), boost::posix_time::microsec_clock::universal_time(), HighlightAction());
 	}
 
 	if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty() ) {

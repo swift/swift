@@ -14,6 +14,7 @@
 #include <sstream>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Network/ConnectionFactory.h>
 
 namespace Swift {
@@ -23,7 +24,7 @@ GNTPNotifier::GNTPNotifier(const std::string& name, const boost::filesystem::pat
 	std::ostringstream message;
 	message << "GNTP/1.0 REGISTER NONE\r\n";
 	message << "Application-Name: " << name << "\r\n";
-	message << "Application-Icon: file://" << icon.string() << "\r\n";
+	message << "Application-Icon: file://" << pathToString(icon) << "\r\n";
 	message << "Notifications-Count: " << getAllTypes().size() << "\r\n";
 	std::vector<Notifier::Type> defaultTypes = getDefaultTypes();
 	std::vector<Notifier::Type> allTypes = getAllTypes();
@@ -59,7 +60,7 @@ void GNTPNotifier::showMessage(Type type, const std::string& subject, const std:
 		message << "Notification-Name: " << typeToString(type) << "\r\n";
 		message << "Notification-Title: " << subject << "\r\n";
 		message << "Notification-Text: " << description << "\r\n";
-		message << "Notification-Icon: " << picture.string() << "\r\n";
+		message << "Notification-Icon: " << pathToString(picture) << "\r\n";
 		message << "\r\n";
 		send(message.str());
 	}

@@ -36,10 +36,11 @@ boost::filesystem::path Paths::getExecutablePath() {
 		return boost::filesystem::path(std::string(reinterpret_cast<const char*>(vecptr(path)), path.size()).c_str()).parent_path();
 	}
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
-	ByteArray data;
+	std::vector<wchar_t> data;
 	data.resize(2048);
-	GetModuleFileName(NULL, reinterpret_cast<char*>(vecptr(data)), data.size());
-	return boost::filesystem::path(std::string(reinterpret_cast<const char*>(vecptr(data)), data.size()).c_str()).parent_path();
+	GetModuleFileNameW(NULL, vecptr(data), data.size());
+	return boost::filesystem::path(
+			std::wstring(vecptr(data), data.size())).parent_path();
 #endif
 	return boost::filesystem::path();
 }

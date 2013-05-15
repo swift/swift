@@ -32,7 +32,7 @@ class CertificateTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			pathProvider = new PlatformApplicationPathProvider("FileReadBytestreamTest");
-			readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt").string());
+			readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt"));
 			certificateFactory = new CERTIFICATE_FACTORY();
 		}
 

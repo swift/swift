@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,7 +9,9 @@
 #include <QSound>
 #include <iostream>
 
-#include "SwifTools/Application/ApplicationPathProvider.h"
+#include <SwifTools/Application/ApplicationPathProvider.h>
+#include <QtSwiftUtil.h>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 	
@@ -28,10 +30,10 @@ void QtSoundPlayer::playSound(SoundEffect sound, const std::string& soundResourc
 void QtSoundPlayer::playSound(const std::string& soundResource) {
 	boost::filesystem::path resourcePath = applicationPathProvider->getResourcePath(soundResource);
 	if (boost::filesystem::exists(resourcePath)) {
-		QSound::play(resourcePath.string().c_str());
+		QSound::play(P2QSTRING(pathToString(resourcePath)));
 	}
 	else if (boost::filesystem::exists(soundResource)) {
-		QSound::play(soundResource.c_str());
+		QSound::play(P2QSTRING(soundResource));
 	}
 	else {
 		std::cerr << "Unable to find sound: " << soundResource << std::endl;

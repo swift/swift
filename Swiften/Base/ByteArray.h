@@ -10,6 +10,7 @@
 #include <string>
 
 #include <Swiften/Base/API.h>
+#include <boost/filesystem/path.hpp>
 
 namespace Swift {
 	typedef std::vector<unsigned char> ByteArray;
@@ -41,6 +42,6 @@ namespace Swift {
 			
 	SWIFTEN_API std::string byteArrayToString(const ByteArray& b);
 
-	SWIFTEN_API void readByteArrayFromFile(ByteArray&, const std::string& file);
+	SWIFTEN_API void readByteArrayFromFile(ByteArray&, const boost::filesystem::path& file);
 }
 

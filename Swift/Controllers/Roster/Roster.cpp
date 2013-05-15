@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -105,7 +105,7 @@ void Roster::handleChildrenChanged(GroupRosterItem* item) {
 	onChildrenChanged(item);
 }
 
-void Roster::addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& groupName, const std::string& avatarPath) {
+void Roster::addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& groupName, const boost::filesystem::path& avatarPath) {
 	GroupRosterItem* group(getGroup(groupName));
 	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);	
 	item->setAvatarPath(avatarPath);

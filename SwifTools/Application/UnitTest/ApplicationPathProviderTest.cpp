@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,6 +9,7 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 
+#include <Swiften/Base/Path.h>
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 using namespace Swift;
@@ -40,7 +41,7 @@ class ApplicationPathProviderTest : public CppUnit::TestFixture {
 		void testGetExecutableDir() {
 			boost::filesystem::path dir = testling_->getExecutableDir();
 			CPPUNIT_ASSERT(boost::filesystem::is_directory(dir));
-			CPPUNIT_ASSERT(boost::ends_with(dir.string(), "UnitTest"));
+			CPPUNIT_ASSERT(boost::ends_with(pathToString(dir), "UnitTest"));
 		}
 	
 	private:

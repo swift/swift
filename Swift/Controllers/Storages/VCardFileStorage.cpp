@@ -14,6 +14,7 @@
 #include <Swiften/Base/String.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include "Swiften/JID/JID.h"
 #include "Swiften/Elements/VCard.h"
@@ -66,7 +67,7 @@ boost::filesystem::path VCardFileStorage::getVCardPath(const JID& jid) const {
 	try {
 		std::string file(jid.toString());
 		String::replaceAll(file, '/', "%2f");
-		return boost::filesystem::path(vcardsPath / (file + ".xml"));
+		return boost::filesystem::path(vcardsPath / stringToPath(file + ".xml"));
 	}
 	catch (const boost::filesystem::filesystem_error& e) {
 		std::cerr << "ERROR: " << e.what() << std::endl;

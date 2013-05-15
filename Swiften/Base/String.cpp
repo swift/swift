@@ -1,15 +1,21 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
+
+#include <Swiften/Base/Platform.h>
 
 #include <cassert>
 #include <algorithm>
 #include <sstream>
 #include <iomanip>
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+#include <windows.h>
+#endif
 
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 
@@ -112,5 +118,36 @@ int String::convertHexStringToInt(const std::string& s) {
 	ss >> h;
 	return h;
 }
+
+
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+std::string convertWStringToString(const std::wstring& s) {
+	int utf8Size = WideCharToMultiByte(CP_UTF8, 0, s.c_str(), -1, NULL, 0, NULL, NULL);
+	if (utf8Size < 0) {
+		throw std::runtime_error("Conversion error");
+	}
+	std::vector<char> utf8Data(utf8Size);
+	int result = WideCharToMultiByte(
+			CP_UTF8, 0, s.c_str(), -1, vecptr(utf8Data), utf8Data.size(), NULL, NULL);
+	if (result < 0) {
+		throw std::runtime_error("Conversion error");
+	}
+	return std::string(vecptr(utf8Data), utf8Size-1 /* trailing 0 character */);
+}
+
+std::wstring convertStringToWString(const std::string& s) {
+	int utf16Size = MultiByteToWideChar(CP_UTF8, 0, s.c_str(), -1, NULL, 0);
+	if (utf16Size < 0) {
+		throw std::runtime_error("Conversion error");
+	}
+	std::vector<wchar_t> utf16Data(utf16Size);
+	int result = MultiByteToWideChar(
+			CP_UTF8, 0, s.c_str(), -1, vecptr(utf16Data), utf16Data.size());
+	if (result < 0) {
+		throw std::runtime_error("Conversion error");
+	}
+	return std::wstring(vecptr(utf16Data), utf16Size-1 /* trailing 0 character */);
+}
+#endif
 
 }

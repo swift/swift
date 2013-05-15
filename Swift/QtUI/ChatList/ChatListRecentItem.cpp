@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 ChatListRecentItem::ChatListRecentItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent) : ChatListItem(parent), chat_(chat) {
@@ -25,7 +26,7 @@ QVariant ChatListRecentItem::data(int role) const {
 		case Qt::BackgroundColorRole: return backgroundColor_;
 		case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
 		case StatusTextRole: return statusText_;*/
-		case AvatarRole: return QVariant(QString(chat_.avatarPath.string().c_str()));
+		case AvatarRole: return QVariant(P2QSTRING(pathToString(chat_.avatarPath)));
 		case PresenceIconRole: return getPresenceIcon();
 		default: return QVariant();
 	}

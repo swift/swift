@@ -4,9 +4,16 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 	ChatListWhiteboardItem::ChatListWhiteboardItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent) : ChatListItem(parent), chat_(chat) {
@@ -25,7 +32,7 @@ namespace Swift {
 			  case Qt::BackgroundColorRole: return backgroundColor_;
 			  case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
 			  case StatusTextRole: return statusText_;*/
-		case AvatarRole: return QVariant(QString(chat_.avatarPath.string().c_str()));
+		case AvatarRole: return QVariant(P2QSTRING(pathToString(chat_.avatarPath)));
 		case PresenceIconRole: return getPresenceIcon();
 		default: return QVariant();
 		}

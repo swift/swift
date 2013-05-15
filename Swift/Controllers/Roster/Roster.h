@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -28,7 +28,7 @@ class Roster {
 		Roster(bool sortByStatus = true, bool fullJIDMapping = false);
 		~Roster();
 
-		void addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& group, const std::string& avatarPath);
+		void addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& group, const boost::filesystem::path& avatarPath);
 		void removeContact(const JID& jid);
 		void removeContactFromGroup(const JID& jid, const std::string& group);
 		void removeGroup(const std::string& group);

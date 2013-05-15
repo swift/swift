@@ -9,6 +9,7 @@
 #include <string>
 
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/Platform.h>
 
 using namespace Swift;
 
@@ -24,6 +25,10 @@ class StringTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testReplaceAll_ConsecutiveChars);
 		CPPUNIT_TEST(testReplaceAll_MatchingReplace);
 		CPPUNIT_TEST(testSplit);
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+		CPPUNIT_TEST(testConvertWStringToString);
+		CPPUNIT_TEST(testConvertStringToWString);
+#endif
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -109,6 +114,16 @@ class StringTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("def"), result[1]);
 			CPPUNIT_ASSERT_EQUAL(std::string("ghi"), result[2]);
 		}
+
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+		void testConvertWStringToString() {
+			CPPUNIT_ASSERT_EQUAL(std::string("tron\xc3\xa7on"), convertWStringToString(std::wstring(L"tron\xe7on")));
+		}
+
+		void testConvertStringToWString() {
+			CPPUNIT_ASSERT(std::wstring(L"tron\xe7on") == convertStringToWString(std::string("tron\xc3\xa7on")));
+		}
+#endif
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StringTest);

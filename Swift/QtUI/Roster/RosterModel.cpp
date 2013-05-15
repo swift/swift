@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,6 +16,7 @@
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Swift/Controllers/Roster/GroupRosterItem.h"
 #include <Swift/Controllers/StatusUtil.h>
+#include <Swiften/Base/Path.h>
 
 #include "QtSwiftUtil.h"
 #include "Swift/QtUI/Roster/QtTreeWidget.h"
@@ -150,7 +151,7 @@ QString RosterModel::getAvatar(RosterItem* item) const {
 	if (!contact) {
 		return "";
 	}
-	return QString(contact->getAvatarPath().c_str());
+	return P2QSTRING(pathToString(contact->getAvatarPath()));
 }
 
 QString RosterModel::getStatusText(RosterItem* item) const {

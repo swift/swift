@@ -16,6 +16,7 @@
 
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Paths.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Version.h>
 
 #include "swiften-config.h"
@@ -90,12 +91,12 @@ int main(int argc, char* argv[]) {
 	for(size_t i = 0; i < libs.size(); ++i) {
 		if (inPlace) {
 			std::string lib = libs[i];
-			boost::replace_all(lib, "#", topSourcePath.string());
+			boost::replace_all(lib, "#", pathToString(topSourcePath));
 			libs[i] = lib;
 		}
 		else {
 			std::string lib = libs[i];
-			boost::replace_all(lib, "#", (topInstallPath / "lib").string());
+			boost::replace_all(lib, "#", pathToString(topInstallPath / "lib"));
 			boost::erase_all(lib, "/Swiften");
 			libs[i] = lib;
 		}
@@ -103,12 +104,12 @@ int main(int argc, char* argv[]) {
 	for(size_t i = 0; i < cflags.size(); ++i) {
 		if (inPlace) {
 			std::string cflag = cflags[i];
-			boost::replace_all(cflag, "#", topSourcePath.string());
+			boost::replace_all(cflag, "#", pathToString(topSourcePath));
 			cflags[i] = cflag;
 		}
 		else {
 			std::string cflag = cflags[i];
-			boost::replace_all(cflag, "#", (topInstallPath / "include").string());
+			boost::replace_all(cflag, "#", pathToString(topInstallPath / "include"));
 			cflags[i] = cflag;
 		}
 	}

@@ -69,7 +69,7 @@ boost::filesystem::path AvatarFileStorage::getAvatarPath(const std::string& hash
 
 ByteArray AvatarFileStorage::getAvatar(const std::string& hash) const {
 	ByteArray data;
-	readByteArrayFromFile(data, getAvatarPath(hash).string());
+	readByteArrayFromFile(data, getAvatarPath(hash));
 	return data;
 }
 

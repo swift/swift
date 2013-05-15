@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -23,6 +23,7 @@
 #include <QtChatWindowFactory.h>
 #include <QtSingleWindow.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/Path.h>
 #include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
 #include <Swift/Controllers/Storages/FileStoragesFactory.h>
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
@@ -129,14 +130,14 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	QCoreApplication::setApplicationVersion(buildVersion);
 
 	qtSettings_ = new QtSettingsProvider();
-	xmlSettings_ = loadSettingsFile(P2QSTRING((Paths::getExecutablePath() / "system-settings.xml").string()));
+	xmlSettings_ = loadSettingsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "system-settings.xml")));
 	settingsHierachy_ = new SettingsProviderHierachy();
 	settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
 	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
 
 	QMap<QString, QString> emoticons;
 	loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);
-	loadEmoticonsFile(P2QSTRING((Paths::getExecutablePath() / "emoticons.txt").string()), emoticons);
+	loadEmoticonsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "emoticons.txt")), emoticons);
 
 	if (options.count("netbook-mode")) {
 		splitter_ = new QtSingleWindow(qtSettings_);

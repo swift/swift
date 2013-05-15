@@ -11,6 +11,7 @@
 #include <sstream>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Platform.h>
 
 #define SWIFTEN_STRING_TO_CFSTRING(a) \
 	CFStringCreateWithBytes(NULL, reinterpret_cast<const UInt8*>(a.c_str()), a.size(), kCFStringEncodingUTF8, false)
@@ -32,7 +33,13 @@ namespace Swift {
 
 			std::string convertIntToHexString(int h);
 			int convertHexStringToInt(const std::string& s);
+
 	}
+
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+	SWIFTEN_API std::string convertWStringToString(const std::wstring& s);
+	SWIFTEN_API std::wstring convertStringToWString(const std::string& s);
+#endif
 
 	class SWIFTEN_API makeString {
 		public:

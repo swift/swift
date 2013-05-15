@@ -25,7 +25,7 @@ Storage::Storage(const boost::filesystem::path& path) : settingsPath_(path) {
 void Storage::load() {
 	if (boost::filesystem::exists(settingsPath_)) {
 		Swift::ByteArray data;
-		Swift::readByteArrayFromFile(data, settingsPath_.string());
+		Swift::readByteArrayFromFile(data, settingsPath_);
 		foreach (std::string line, Swift::String::split(Swift::byteArrayToString(data), '\n')) {
 			std::pair<std::string, std::string> pair = Swift::String::getSplittedAtFirst(line, '\t');
 			settings_[pair.first] = pair.second;

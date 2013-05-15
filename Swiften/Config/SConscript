@@ -37,12 +37,18 @@ config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
 
 config_env = env.Clone()
 # Create a local copy of Paths.cpp to avoid a Swiften dependency
-config_env.Install(".", "#/Swiften/Base/Paths.cpp")
+config_env.Install(".", [
+	"#/Swiften/Base/Paths.cpp",
+	"#/Swiften/Base/Path.cpp",
+	"#/Swiften/Base/String.cpp",
+])
 config_env.UseFlags(config_env["BOOST_FLAGS"])
 config_env.UseFlags(config_env["PLATFORM_FLAGS"])
 config_env.WriteVal("swiften-config.h", config_env.Value(config_flags))
 swiften_config = config_env.Program("swiften-config", [
 		"Paths.cpp",
+		"Path.cpp",
+		"String.cpp",
 		"swiften-config.cpp"
 	])
 

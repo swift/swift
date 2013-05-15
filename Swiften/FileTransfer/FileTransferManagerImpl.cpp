@@ -18,6 +18,7 @@
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/Path.h>
 #include "Swiften/Disco/EntityCapsProvider.h"
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
@@ -130,7 +131,7 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
 #if BOOST_FILESYSTEM_VERSION == 2 // TODO: Delete this when boost 1.44 becomes a minimum requirement, and we no longer need v2
 	std::string filename = filepath.filename();
 #else
-	std::string filename = filepath.filename().string();
+	std::string filename = pathToString(filepath.filename());
 #endif
 
 	boost::uintmax_t sizeInBytes = boost::filesystem::file_size(filepath);

@@ -52,11 +52,11 @@ std::string ContactRosterItem::getIdleText() const {
 	}
 }
 
-void ContactRosterItem::setAvatarPath(const std::string& path) {
+void ContactRosterItem::setAvatarPath(const boost::filesystem::path& path) {
 	avatarPath_ = path;
 	onDataChanged();
 }
-const std::string& ContactRosterItem::getAvatarPath() const {
+const boost::filesystem::path& ContactRosterItem::getAvatarPath() const {
 	return avatarPath_;
 }
 

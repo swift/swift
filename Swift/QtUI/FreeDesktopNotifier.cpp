@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -13,6 +13,7 @@
 #include <QStringList>
 #include <QtDBus/QtDBus>
 #include <algorithm>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 
@@ -43,7 +44,7 @@ void FreeDesktopNotifier::showMessage(Type type, const std::string& subject, con
 	hints["x-canonical-append"] = QString("allowed");
 	msg << applicationName.c_str();
 	msg << quint32(0); // ID of previous notification to replace
-	msg << imageScaler.getScaledImage(picture, 48).string().c_str(); // Icon to display
+	msg << pathToString(imageScaler.getScaledImage(picture, 48)); // Icon to display
 	msg << subject.c_str(); // Summary / Header of the message to display
 	msg << body; // Body of the message to display
 	msg << actions; // Actions from which the user may choose

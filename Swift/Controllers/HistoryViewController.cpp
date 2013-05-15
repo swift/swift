@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/Controllers/HistoryViewController.h>
 
 #include <Swift/Controllers/UIInterfaces/HistoryWindowFactory.h>
@@ -15,6 +21,7 @@
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swift/Controllers/Roster/SetPresence.h>
 #include <Swift/Controllers/Roster/SetAvatar.h>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 	static const std::string category[] = { "Contacts", "MUC", "Contacts" };
@@ -146,7 +153,7 @@ void HistoryViewController::handleNewMessage(const HistoryMessage& message) {
 
 	// update contacts
 	if (!contacts_[message.getType()].count(displayJID)) {
-		roster_->addContact(displayJID, displayJID, nickResolver_->jidToNick(displayJID), category[message.getType()], avatarManager_->getAvatarPath(displayJID).string());
+		roster_->addContact(displayJID, displayJID, nickResolver_->jidToNick(displayJID), category[message.getType()], avatarManager_->getAvatarPath(displayJID));
 	}
 
 	contacts_[message.getType()][displayJID].insert(message.getTime().date());
@@ -154,7 +161,7 @@ void HistoryViewController::handleNewMessage(const HistoryMessage& message) {
 
 void HistoryViewController::addNewMessage(const HistoryMessage& message, bool addAtTheTop) {
 	bool senderIsSelf = message.getFromJID().toBare() == selfJID_;
-	std::string avatarPath = avatarManager_->getAvatarPath(message.getFromJID()).string();
+	std::string avatarPath = pathToString(avatarManager_->getAvatarPath(message.getFromJID()));
 
 	std::string nick = message.getType() != HistoryMessage::Groupchat ? nickResolver_->jidToNick(message.getFromJID()) : message.getFromJID().getResource();
 	historyWindow_->addMessage(message.getMessage(), nick, senderIsSelf, avatarPath, message.getTime(), addAtTheTop);
@@ -177,7 +184,7 @@ void HistoryViewController::handleReturnPressed(const std::string& keyword) {
 			else {
 				nick = nickResolver_->jidToNick(jid);
 			}
-			roster_->addContact(jid, jid, nick, category[type], avatarManager_->getAvatarPath(jid).string());
+			roster_->addContact(jid, jid, nick, category[type], avatarManager_->getAvatarPath(jid));
 
 			Presence::ref presence = getPresence(jid, type == HistoryMessage::Groupchat);
 
@@ -323,8 +330,7 @@ void HistoryViewController::handlePresenceChanged(Presence::ref presence) {
 }
 
 void HistoryViewController::handleAvatarChanged(const JID& jid) {
-	std::string path = avatarManager_->getAvatarPath(jid).string();
-	roster_->applyOnItems(SetAvatar(jid, path));
+	roster_->applyOnItems(SetAvatar(jid, avatarManager_->getAvatarPath(jid)));
 }
 
 Presence::ref HistoryViewController::getPresence(const JID& jid, bool isMUC) {

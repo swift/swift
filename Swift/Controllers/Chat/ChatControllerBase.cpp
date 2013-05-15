@@ -18,6 +18,7 @@
 
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/Delay.h>
@@ -179,11 +180,11 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
-std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
-		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, avatarPath, time, highlight);
+		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	} else {
-		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time, highlight);
+		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	}
 }
 
@@ -266,7 +267,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			}
 		}
 		else {
-			lastMessagesUIID_[from] = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, std::string(avatarManager_->getAvatarPath(from).string()), timeStamp, highlight);
+			lastMessagesUIID_[from] = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, avatarManager_->getAvatarPath(from), timeStamp, highlight);
 		}
 
 		logMessage(body, from, selfJID_, timeStamp, true);

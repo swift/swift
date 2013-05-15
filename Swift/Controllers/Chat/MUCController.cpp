@@ -312,8 +312,7 @@ void MUCController::handleAvatarChanged(const JID& jid) {
 	if (parting_ || !jid.equals(toJID_, JID::WithoutResource)) {
 		return;
 	}
-	std::string path = avatarManager_->getAvatarPath(jid).string();
-	roster_->applyOnItems(SetAvatar(jid, path, JID::WithResource));
+	roster_->applyOnItems(SetAvatar(jid, avatarManager_->getAvatarPath(jid), JID::WithResource));
 }
 
 void MUCController::handleWindowClosed() {
@@ -337,7 +336,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	NickJoinPart event(occupant.getNick(), Join);
 	appendToJoinParts(joinParts_, event);
 	std::string groupName(roleToGroupName(occupant.getRole()));
-	roster_->addContact(jid, realJID, occupant.getNick(), groupName, avatarManager_->getAvatarPath(jid).string());
+	roster_->addContact(jid, realJID, occupant.getNick(), groupName, avatarManager_->getAvatarPath(jid));
 	roster_->getGroup(groupName)->setManualSort(roleToSortName(occupant.getRole()));
 	if (joined_) {
 		std::string joinString;
@@ -483,7 +482,7 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 		realJID = occupant.getRealJID().get();
 	}
 	std::string group(roleToGroupName(occupant.getRole()));
-	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid).string());
+	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid));
 	roster_->getGroup(group)->setManualSort(roleToSortName(occupant.getRole()));
 	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole())), ChatWindow::DefaultDirection);
 	if (nick == nick_) {
@@ -830,7 +829,7 @@ void MUCController::addRecentLogs() {
 		bool senderIsSelf = nick_ == message.getFromJID().getResource();
 
 		// the chatWindow uses utc timestamps
-		addMessage(message.getMessage(), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), std::string(avatarManager_->getAvatarPath(message.getFromJID()).string()), message.getTime() - boost::posix_time::hours(message.getOffset()), HighlightAction());
+		addMessage(message.getMessage(), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), avatarManager_->getAvatarPath(message.getFromJID()), message.getTime() - boost::posix_time::hours(message.getOffset()), HighlightAction());
 	}
 }
 

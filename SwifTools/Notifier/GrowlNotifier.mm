@@ -65,7 +65,7 @@ GrowlNotifier::~GrowlNotifier() {
 
 void GrowlNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picturePath, boost::function<void()> callback) {
 	ByteArray picture;
-	readByteArrayFromFile(picture, picturePath.string());
+	readByteArrayFromFile(picture, picturePath);
 
 	Context* context = new Context(callback);
 	// Growl sometimes sends timeout notifications twice for the same message. We therefore need

@@ -15,6 +15,7 @@
 #include <Swiften/Client/Client.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <boost/filesystem/operations.hpp>
+#include <Swiften/Base/Path.h>
 
 #include <Swiftob/Commands.h>
 
@@ -414,7 +415,7 @@ void LuaCommands::loadScript(boost::filesystem::path filePath) {
 	std::string filename = filePath.filename().string();
 #endif
 	filename += ".storage";
-	boost::filesystem::path storagePath(boost::filesystem::path(path_) / filename);
+	boost::filesystem::path storagePath(boost::filesystem::path(path_) / stringToPath(filename));
 	Storage* storage = new Storage(storagePath);
 	lua_pushlightuserdata(lua, storage);
 	lua_setfield(lua, LUA_REGISTRYINDEX, STORAGE);

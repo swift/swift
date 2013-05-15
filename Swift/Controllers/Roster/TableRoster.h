@@ -12,6 +12,7 @@
 
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/StatusShow.h>
+#include <boost/filesystem/path.hpp>
 
 namespace Swift {
 	class Roster;
@@ -21,13 +22,13 @@ namespace Swift {
 	class TableRoster {
 		public:
 			struct Item {
-				Item(const std::string& name, const std::string& description, const JID& jid, StatusShow::Type status, const std::string& avatarPath) : name(name), description(description), jid(jid), status(status), avatarPath(avatarPath) {
+				Item(const std::string& name, const std::string& description, const JID& jid, StatusShow::Type status, const boost::filesystem::path& avatarPath) : name(name), description(description), jid(jid), status(status), avatarPath(avatarPath) {
 				}
 				std::string name;
 				std::string description;
 				JID jid;
 				StatusShow::Type status;
-				std::string avatarPath;
+				boost::filesystem::path avatarPath;
 			};
 
 			struct Index {

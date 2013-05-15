@@ -61,7 +61,7 @@ void StatusCache::loadRecents() {
 	try {
 		if (boost::filesystem::exists(path_)) {
 			ByteArray data;
-			readByteArrayFromFile(data, path_.string());
+			readByteArrayFromFile(data, path_);
 			std::string stringData = byteArrayToString(data);
 			std::vector<std::string> lines;
 			boost::split(lines, stringData, boost::is_any_of("\n"));

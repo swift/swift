@@ -10,17 +10,18 @@
 #include "Swift/Controllers/Storages/CapsFileStorage.h"
 #include "Swift/Controllers/Storages/RosterFileStorage.h"
 #include <Swiften/History/SQLiteHistoryStorage.h>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 
 FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& jid, CryptoProvider* crypto) {
-	std::string profile = jid.toBare();
+	boost::filesystem::path profile = stringToPath(jid.toBare());
 	vcardStorage = new VCardFileStorage(baseDir / profile / "vcards", crypto);
 	capsStorage = new CapsFileStorage(baseDir / "caps");
 	avatarStorage = new AvatarFileStorage(baseDir / "avatars", baseDir / profile / "avatars", crypto);
 	rosterStorage = new RosterFileStorage(baseDir / profile / "roster.xml");
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
-	historyStorage = new SQLiteHistoryStorage((baseDir / "history.db").string());
+	historyStorage = new SQLiteHistoryStorage(baseDir / "history.db");
 #endif
 }
 

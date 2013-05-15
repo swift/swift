@@ -49,7 +49,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
 			boost::filesystem::path vcardFile(vcardsPath / "alice@wonderland.lit%2fTeaRoom.xml");
 			CPPUNIT_ASSERT(boost::filesystem::exists(vcardFile));
 			ByteArray data;
-			data.readFromFile(vcardFile.string());
+			data.readFromFile(vcardFile);
 			CPPUNIT_ASSERT(boost::starts_with(data.toString(), "<vCard xmlns=\"vcard-temp\">"));
 		}
 

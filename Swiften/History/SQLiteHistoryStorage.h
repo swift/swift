@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,13 +11,14 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/History/HistoryStorage.h>
 #include <boost/thread.hpp>
+#include <boost/filesystem/path.hpp>
 
 struct sqlite3;
 
 namespace Swift {
 	class SWIFTEN_API SQLiteHistoryStorage : public HistoryStorage {
 		public:
-			SQLiteHistoryStorage(const std::string& file);
+			SQLiteHistoryStorage(const boost::filesystem::path& file);
 			~SQLiteHistoryStorage();
 
 			void addMessage(const HistoryMessage& message);

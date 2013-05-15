@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -40,6 +40,7 @@
 #include <Swiften/Client/NickManager.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Disco/EntityCapsManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
@@ -73,7 +74,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
 	avatarManager_ = avatarManager;
 	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
-	mainWindow_->setMyAvatarPath(avatarManager_->getAvatarPath(myJID_).string());
+	mainWindow_->setMyAvatarPath(pathToString(avatarManager_->getAvatarPath(myJID_)));
 
 	nickManager_->onOwnNickChanged.connect(boost::bind(&MainWindow::setMyNick, mainWindow_, _1));
 	mainWindow_->setMyJID(jid);
@@ -125,11 +126,11 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 	std::string name = nickResolver_->jidToNick(jid);
 	if (!groups.empty()) {
 		foreach(const std::string& group, groups) {
-			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid).string());
+			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid));
 		}
 	} 
 	else {
-		roster_->addContact(jid, jid, name, QT_TRANSLATE_NOOP("", "Contacts"), avatarManager_->getAvatarPath(jid).string());
+		roster_->addContact(jid, jid, name, QT_TRANSLATE_NOOP("", "Contacts"), avatarManager_->getAvatarPath(jid));
 	}
 	applyAllPresenceTo(jid);
 }
@@ -164,7 +165,7 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const std::string& old
 	}
 	foreach(const std::string& group, groups) {
 		if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
-			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid).string());
+			roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid));
 		}
 	} 
 	foreach(const std::string& group, oldGroups) {
@@ -326,10 +327,10 @@ void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEven
 }
 
 void RosterController::handleAvatarChanged(const JID& jid) {
-	std::string path = avatarManager_->getAvatarPath(jid).string();
+	boost::filesystem::path path = avatarManager_->getAvatarPath(jid);
 	roster_->applyOnItems(SetAvatar(jid, path));
 	if (jid.equals(myJID_, JID::WithoutResource)) {
-		mainWindow_->setMyAvatarPath(path);
+		mainWindow_->setMyAvatarPath(pathToString(path));
 	}
 }
 

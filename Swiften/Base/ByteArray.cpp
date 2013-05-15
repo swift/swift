@@ -7,14 +7,14 @@
 #include <Swiften/Base/ByteArray.h>
 
 #include <boost/numeric/conversion/cast.hpp>
-#include <fstream>
+#include <boost/filesystem/fstream.hpp>
 
 namespace Swift {
 
 static const int BUFFER_SIZE = 4096;
 
-void readByteArrayFromFile(ByteArray& data, const std::string& file) {
-	std::ifstream input(file.c_str(), std::ios_base::in|std::ios_base::binary);
+void readByteArrayFromFile(ByteArray& data, const boost::filesystem::path& file) {
+	boost::filesystem::ifstream input(file, std::ios_base::in|std::ios_base::binary);
 	while (input.good()) {
 		size_t oldSize = data.size();
 		data.resize(oldSize + BUFFER_SIZE);

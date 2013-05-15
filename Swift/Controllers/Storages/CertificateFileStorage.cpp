@@ -24,7 +24,7 @@ bool CertificateFileStorage::hasCertificate(Certificate::ref certificate) const 
 	boost::filesystem::path certificatePath = getCertificatePath(certificate);
 	if (boost::filesystem::exists(certificatePath)) {
 		ByteArray data;
-		readByteArrayFromFile(data, certificatePath.string());
+		readByteArrayFromFile(data, certificatePath);
 		Certificate::ref storedCertificate = certificateFactory->createCertificateFromDER(data);
 		if (storedCertificate && storedCertificate->toDER() == certificate->toDER()) {
 			return true;

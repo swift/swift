@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,6 +11,7 @@
 #include <sqlite3.h>
 #include <Swiften/History/SQLiteHistoryStorage.h>
 #include <boost/date_time/gregorian/gregorian.hpp>
+#include <Swiften/Base/Path.h>
 
 inline std::string getEscapedString(const std::string& s) {
 	std::string result(s);
@@ -25,12 +26,12 @@ inline std::string getEscapedString(const std::string& s) {
 
 namespace Swift {
 
-SQLiteHistoryStorage::SQLiteHistoryStorage(const std::string& file) : db_(0) {
+SQLiteHistoryStorage::SQLiteHistoryStorage(const boost::filesystem::path& file) : db_(0) {
 	thread_ = new boost::thread(boost::bind(&SQLiteHistoryStorage::run, this));
 
-	sqlite3_open(file.c_str(), &db_);
+	sqlite3_open(pathToString(file).c_str(), &db_);
 	if (!db_) {
-		std::cerr << "Error opening database " << file << std::endl;
+		std::cerr << "Error opening database " << pathToString(file) << std::endl;
 	}
 
 	char* errorMessage;
