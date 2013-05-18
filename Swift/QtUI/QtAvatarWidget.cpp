@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,6 +19,7 @@
 #include <QPainter>
 
 #include <QtSwiftUtil.h>
+#include <Swiften/Base/Path.h>
 
 namespace Swift {
 
@@ -84,7 +85,7 @@ void QtAvatarWidget::mousePressEvent(QMouseEvent* event) {
 		QString fileName = QFileDialog::getOpenFileName(this, tr("Select picture"), "", tr("Image Files (*.png *.jpg *.jpeg *.gif)"));
 		if (!fileName.isEmpty()) {
 			ByteArray data;
-			readByteArrayFromFile(data, Q2PSTRING(fileName));
+			readByteArrayFromFile(data, stringToPath(Q2PSTRING(fileName)));
 
 			QBuffer buffer;
 			buffer.setData(reinterpret_cast<const char*>(vecptr(data)), data.size());
