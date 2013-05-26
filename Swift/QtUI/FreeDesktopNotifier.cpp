@@ -15,6 +15,8 @@
 #include <algorithm>
 #include <Swiften/Base/Path.h>
 
+#include <Swift/QtUI/QtSwiftUtil.h>
+
 namespace Swift {
 
 FreeDesktopNotifier::FreeDesktopNotifier(const std::string& name) : applicationName(name) {
@@ -44,7 +46,7 @@ void FreeDesktopNotifier::showMessage(Type type, const std::string& subject, con
 	hints["x-canonical-append"] = QString("allowed");
 	msg << applicationName.c_str();
 	msg << quint32(0); // ID of previous notification to replace
-	msg << pathToString(imageScaler.getScaledImage(picture, 48)); // Icon to display
+	msg << P2QSTRING(pathToString(imageScaler.getScaledImage(picture, 48))); // Icon to display
 	msg << subject.c_str(); // Summary / Header of the message to display
 	msg << body; // Body of the message to display
 	msg << actions; // Actions from which the user may choose
