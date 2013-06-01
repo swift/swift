@@ -6,7 +6,11 @@
 
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include <boost/shared_ptr.hpp>
+
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swiften/Base/foreach.h>
+
 
 namespace Swift {
 	class MockChatWindow : public ChatWindow {
@@ -14,11 +18,18 @@ namespace Swift {
 			MockChatWindow() : labelsEnabled_(false) {}
 			virtual ~MockChatWindow();
 
-			virtual std::string addMessage(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&, const HighlightAction&) {lastMessageBody_ = message; return "";}
-			virtual std::string addAction(const std::string& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime&, const HighlightAction&) {lastMessageBody_ = message; return "";}
-			virtual void addSystemMessage(const std::string& /*message*/, Direction) {}
-			virtual void addErrorMessage(const std::string& /*message*/) {}
-			virtual void addPresenceMessage(const std::string& /*message*/, Direction) {}
+			virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {
+			lastMessageBody_ = bodyFromMessage(message); return "id";};
+
+			virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {return "id";};
+
+			virtual void addSystemMessage(const ChatMessage& /*message*/, Direction /*direction*/) {};
+			virtual void addPresenceMessage(const ChatMessage& /*message*/, Direction /*direction*/) {};
+
+			virtual void addErrorMessage(const ChatMessage& /*message*/) {};
+			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {};
+			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {};
+			virtual void replaceLastMessage(const ChatMessage& /*message*/) {};
 
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/) { return 0; }
@@ -40,9 +51,7 @@ namespace Swift {
 			virtual void setInputEnabled(bool /*enabled*/) {}
 			virtual void setRosterModel(Roster* /*roster*/) {}
 			virtual void setTabComplete(TabComplete*) {}
-			virtual void replaceLastMessage(const std::string&) {}
-			virtual void replaceMessage(const std::string&, const std::string&, const boost::posix_time::ptime&, const HighlightAction&) {}
-			virtual void replaceWithAction(const std::string& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction&) {}
+
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {}
 			virtual void flash() {}
 			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {}
@@ -61,6 +70,16 @@ namespace Swift {
 			virtual InviteToChatWindow* createInviteToChatWindow() {return NULL;}
 
 			virtual void setBlockingState(BlockingState) {}
+
+			std::string bodyFromMessage(const ChatMessage& message) {
+				boost::shared_ptr<ChatTextMessagePart> text;
+				foreach (boost::shared_ptr<ChatMessagePart> part, message.getParts()) {
+					if ((text = boost::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
+						return text->text;
+					}
+				}
+				return "";
+			}
 
 			std::string name_;
 			std::string lastMessageBody_;

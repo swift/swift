@@ -21,7 +21,7 @@ namespace Swift {
 static const QString SPLITTER_STATE = "mucSplitterState";
 static const QString CHAT_TABS_GEOMETRY = "chatTabsGeometry";
 
-QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, QMap<QString, QString> emoticons) : themePath_(themePath), emoticons_(emoticons) {
+QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath) : themePath_(themePath) {
 	qtOnlySettings_ = qtSettings;
 	settings_ = settings;
 	tabs_ = tabs;
@@ -50,7 +50,7 @@ ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStre
 		}
 	}
 
-	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), theme_, eventStream, settings_, emoticons_);
+	QtChatWindow *chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), theme_, eventStream, settings_);
 	connect(chatWindow, SIGNAL(splitterMoved()), this, SLOT(handleSplitterMoved()));
 	connect(this, SIGNAL(changeSplitterState(QByteArray)), chatWindow, SLOT(handleChangeSplitterState(QByteArray)));
 

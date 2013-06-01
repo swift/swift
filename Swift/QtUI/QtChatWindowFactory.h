@@ -23,7 +23,7 @@ namespace Swift {
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, QMap<QString, QString> emoticons);
+			QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath);
 			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		signals:
@@ -37,7 +37,6 @@ namespace Swift {
 			QtSettingsProvider* qtOnlySettings_;
 			QtChatTabs* tabs_;
 			QtChatTheme* theme_;
-			QMap<QString, QString> emoticons_;
 	};
 }
 

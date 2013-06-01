@@ -1,29 +1,33 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/shared_ptr.hpp>
 #include <vector>
-
-#include "Swiften/Network/Timer.h"
+#include <map>
 #include <string>
-#include "Swiften/Client/ClientError.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swift/Controllers/Settings/SettingsProvider.h"
-#include "Swift/Controllers/ProfileSettingsProvider.h"
-#include "Swiften/Elements/CapsInfo.h"
-#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "Swiften/Client/ClientXMLTracer.h"
+
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Client/ClientError.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/CapsInfo.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/ProfileSettingsProvider.h>
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/UIEvents/UIEvent.h>
+
 
 namespace Swift {
 	class IdleDetector;
@@ -91,6 +95,7 @@ namespace Swift {
 					Notifier* notifier,
 					URIHandler* uriHandler,
 					IdleDetector* idleDetector,
+					const std::map<std::string, std::string>& emoticons,
 					bool useDelayForLatency);
 			~MainController();
 
@@ -184,5 +189,6 @@ namespace Swift {
 			WhiteboardManager* whiteboardManager_;
 			HighlightManager* highlightManager_;
 			HighlightEditorController* highlightEditorController_;
+			std::map<std::string, std::string> emoticons_;
 	};
 }

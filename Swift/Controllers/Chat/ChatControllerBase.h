@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,33 +8,35 @@
 
 #include <map>
 #include <vector>
+#include <string>
+
 #include <boost/shared_ptr.hpp>
-#include "Swiften/Base/boost_bsignals.h"
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "Swiften/Network/Timer.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Elements/Stanza.h"
-#include <string>
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
-#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/SecurityLabelsCatalog.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Base/IDGenerator.h"
-#include <Swift/Controllers/HistoryController.h>
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/SecurityLabelsCatalog.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/MUC/MUCRegistry.h>
+
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/HistoryController.h>
 #include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
 	class IQRouter;
 	class StanzaChannel;
-	class ChatWindow;
 	class ChatWindowFactory;
 	class AvatarManager;
 	class UIEventStream;
@@ -63,7 +65,7 @@ namespace Swift {
 			void handleCapsChanged(const JID& jid);
 
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::map<std::string, std::string>* emoticons);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -84,6 +86,7 @@ namespace Swift {
 			/** JID any iq for account should go to - bare except for PMs */
 			virtual JID getBaseJID();
 			virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) = 0;
+			ChatWindow::ChatMessage parseMessageBody(const std::string& body);
 
 		private:
 			IDGenerator idGenerator_;
@@ -120,5 +123,6 @@ namespace Swift {
 			HistoryController* historyController_;
 			MUCRegistry* mucRegistry_;
 			Highlighter* highlighter_;
+			const std::map<std::string, std::string>& emoticons_;
 	};
 }

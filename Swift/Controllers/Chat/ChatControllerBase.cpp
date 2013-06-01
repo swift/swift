@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Chat/ChatControllerBase.h"
+#include <Swift/Controllers/Chat/ChatControllerBase.h>
 
 #include <sstream>
 #include <map>
@@ -16,7 +16,6 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Path.h>
 #include <Swiften/Base/String.h>
@@ -25,19 +24,24 @@
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/Regex.h>
+
+#include <SwifTools/Linkify.h>
+
+#include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 #include <Swift/Controllers/HighlightManager.h>
 #include <Swift/Controllers/Highlighter.h>
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::map<std::string, std::string>* emoticons) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), emoticons_(*emoticons) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
@@ -76,7 +80,7 @@ void ChatControllerBase::createDayChangeTimer() {
 void ChatControllerBase::handleDayChangeTick() {
 	dateChangeTimer_->stop();
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	chatWindow_->addSystemMessage(str(format(QT_TRANSLATE_NOOP("", "The day is now %1%")) % std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10)), ChatWindow::DefaultDirection);
+	chatWindow_->addSystemMessage(parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The day is now %1%")) % std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10))), ChatWindow::DefaultDirection);
 	dayTicked();
 	createDayChangeTimer();
 }
@@ -182,17 +186,17 @@ void ChatControllerBase::activateChatWindow() {
 
 std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
-		return chatWindow_->addAction(String::getSplittedAtFirst(message, ' ').second, senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
+		return chatWindow_->addAction(parseMessageBody(String::getSplittedAtFirst(message, ' ').second), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	} else {
-		return chatWindow_->addMessage(message, senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
+		return chatWindow_->addMessage(parseMessageBody(message), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	}
 }
 
 void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
-		chatWindow_->replaceWithAction(String::getSplittedAtFirst(message, ' ').second, id, time, highlight);
+		chatWindow_->replaceWithAction(parseMessageBody(String::getSplittedAtFirst(message, ' ').second), id, time, highlight);
 	} else {
-		chatWindow_->replaceMessage(message, id, time, highlight);
+		chatWindow_->replaceMessage(parseMessageBody(message), id, time, highlight);
 	}
 }
 
@@ -214,7 +218,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	if (message->isError()) {
 		if (!message->getTo().getResource().empty()) {
 			std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
-			chatWindow_->addErrorMessage(errorMessage);
+			chatWindow_->addErrorMessage(parseMessageBody(errorMessage));
 		}
 	}
 	else if (messageEvent->getStanza()->getPayload<MUCInvitationPayload>()) {
@@ -239,7 +243,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
 			std::ostringstream s;
 			s << "The following message took " << (now - delayPayloads[i]->getStamp()).total_milliseconds() / 1000.0 <<  " seconds to be delivered from " << delayPayloads[i]->getFrom()->toString() << ".";
-			chatWindow_->addSystemMessage(std::string(s.str()), ChatWindow::DefaultDirection);
+			chatWindow_->addSystemMessage(parseMessageBody(std::string(s.str())), ChatWindow::DefaultDirection);
 		}
 		boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 
@@ -345,6 +349,91 @@ void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
 	handleGeneralMUCInvitation(inviteEvent);
 }
 
+typedef std::pair<std::string, std::string> StringPair;
+
+ChatWindow::ChatMessage ChatControllerBase::parseMessageBody(const std::string& body) {
+	ChatWindow::ChatMessage parsedMessage;
+	std::string remaining = body;
+	/* Parse one, URLs */
+	while (!remaining.empty()) {
+		bool found = false;
+		std::pair<std::vector<std::string>, size_t> links = Linkify::splitLink(remaining);
+		remaining = "";
+		for (size_t i = 0; i < links.first.size(); i++) {
+			const std::string& part = links.first[i];
+			if (found) {
+				// Must be on the last part, then
+				remaining = part;
+			}
+			else {
+				if (i == links.second) {
+					found = true;
+					parsedMessage.append(boost::make_shared<ChatWindow::ChatURIMessagePart>(part));
+				}
+				else {
+					parsedMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(part));
+				}
+			}
+		}
+	}
+	
+
+
+	std::string regexString;
+	/* Parse two, emoticons */
+	foreach (StringPair emoticon, emoticons_) {
+		/* Construct a regexp that finds an instance of any of the emoticons inside a group */
+		regexString += regexString.empty() ? "(" : "|";
+		regexString += Regex::escape(emoticon.first);
+	}
+	if (!regexString.empty()) {
+		regexString += ")";
+		boost::regex emoticonRegex(regexString);
+
+		ChatWindow::ChatMessage newMessage;
+		foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
+			boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+			if ((textPart = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+				try {
+					boost::match_results<std::string::const_iterator> match;
+					const std::string& text = textPart->text;
+					std::string::const_iterator start = text.begin();
+					while (regex_search(start, text.end(), match, emoticonRegex)) {
+						std::string::const_iterator matchStart = match[0].first;
+						std::string::const_iterator matchEnd = match[0].second;
+						if (start != matchStart) {
+							/* If we're skipping over plain text since the previous emoticon, record it as plain text */
+							newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
+						}
+						boost::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart = boost::make_shared<ChatWindow::ChatEmoticonMessagePart>();
+						std::map<std::string, std::string>::const_iterator emoticonIterator = emoticons_.find(match.str());
+						assert (emoticonIterator != emoticons_.end());
+						const StringPair& emoticon = *emoticonIterator;
+						emoticonPart->imagePath = emoticon.second;
+						emoticonPart->alternativeText = emoticon.first;
+						newMessage.append(emoticonPart);
+						start = matchEnd;
+					}
+					if (start != text.end()) {
+						/* If there's plain text after the last emoticon, record it */
+						newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
+					}
+
+				}
+				catch (std::runtime_error) {
+					/* Basically too expensive to compute the regex results and it gave up, so pass through as text */
+					newMessage.append(part);
+				}
+			}
+			else {
+				newMessage.append(part);
+			}
+		}
+		parsedMessage = newMessage;
+
+	}
+	return parsedMessage;
+}
 
 
 }

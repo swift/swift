@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,83 +12,87 @@
 
 #include <Swift/Controllers/MainController.h>
 
+#include <stdlib.h>
+
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <string>
-#include <stdlib.h>
+
 
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Client/Storages.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Client/Client.h>
+#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/VCardUpdate.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/VCards/GetVCardRequest.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+
+#include <SwifTools/Dock/Dock.h>
+#include <SwifTools/Notifier/TogglableNotifier.h>
+#include <SwifTools/Idle/IdleDetector.h>
+
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIInterfaces/UIFactory.h>
-#include "Swiften/Network/TimerFactory.h"
-#include "Swift/Controllers/BuildVersion.h"
-#include "Swiften/Client/Storages.h"
-#include "Swiften/VCards/VCardManager.h"
-#include "Swift/Controllers/Chat/UserSearchController.h"
-#include "Swift/Controllers/Chat/ChatsManager.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swift/Controllers/EventWindowController.h"
-#include "Swift/Controllers/UIInterfaces/LoginWindow.h"
-#include "Swift/Controllers/UIInterfaces/LoginWindowFactory.h"
-#include "Swift/Controllers/UIInterfaces/MainWindow.h"
-#include "Swift/Controllers/Chat/MUCController.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swift/Controllers/Roster/RosterController.h"
-#include "Swift/Controllers/SoundEventController.h"
-#include "Swift/Controllers/SoundPlayer.h"
-#include "Swift/Controllers/StatusTracker.h"
-#include "Swift/Controllers/SystemTray.h"
-#include "Swift/Controllers/SystemTrayController.h"
-#include "Swift/Controllers/XMLConsoleController.h"
+#include <Swift/Controllers/BuildVersion.h>
+#include <Swift/Controllers/Chat/UserSearchController.h>
+#include <Swift/Controllers/Chat/ChatsManager.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/EventWindowController.h>
+#include <Swift/Controllers/UIInterfaces/LoginWindow.h>
+#include <Swift/Controllers/UIInterfaces/LoginWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
+#include <Swift/Controllers/Chat/MUCController.h>
+#include <Swift/Controllers/Roster/RosterController.h>
+#include <Swift/Controllers/SoundEventController.h>
+#include <Swift/Controllers/SoundPlayer.h>
+#include <Swift/Controllers/StatusTracker.h>
+#include <Swift/Controllers/SystemTray.h>
+#include <Swift/Controllers/SystemTrayController.h>
+#include <Swift/Controllers/XMLConsoleController.h>
 #include <Swift/Controllers/HistoryController.h>
 #include <Swift/Controllers/HistoryViewController.h>
-#include "Swift/Controllers/FileTransferListController.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/PresenceNotifier.h"
-#include "Swift/Controllers/EventNotifier.h"
-#include "Swift/Controllers/Storages/StoragesFactory.h"
-#include "Swift/Controllers/WhiteboardManager.h"
-#include "SwifTools/Dock/Dock.h"
-#include "SwifTools/Notifier/TogglableNotifier.h"
-#include "Swiften/Base/foreach.h"
-#include "Swiften/Client/Client.h"
-#include "Swiften/Presence/PresenceSender.h"
-#include "Swiften/Elements/ChatState.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/VCardUpdate.h"
-#include "Swift/Controllers/Settings/SettingsProvider.h"
-#include "Swiften/Elements/DiscoInfo.h"
-#include "Swiften/Disco/CapsInfoGenerator.h"
-#include "Swiften/Disco/GetDiscoInfoRequest.h"
-#include "Swiften/Disco/ClientDiscoManager.h"
-#include "Swiften/VCards/GetVCardRequest.h"
-#include "Swiften/StringCodecs/Hexify.h"
-#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
-#include "Swift/Controllers/Storages/CertificateStorageFactory.h"
-#include "Swift/Controllers/Storages/CertificateStorageTrustChecker.h"
-#include "Swiften/Network/NetworkFactories.h"
+#include <Swift/Controllers/FileTransferListController.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/PresenceNotifier.h>
+#include <Swift/Controllers/EventNotifier.h>
+#include <Swift/Controllers/Storages/StoragesFactory.h>
+#include <Swift/Controllers/WhiteboardManager.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/Storages/CertificateStorageFactory.h>
+#include <Swift/Controllers/Storages/CertificateStorageTrustChecker.h>
 #include <Swift/Controllers/ProfileController.h>
 #include <Swift/Controllers/ShowProfileController.h>
 #include <Swift/Controllers/ContactEditController.h>
 #include <Swift/Controllers/XMPPURIController.h>
-#include "Swift/Controllers/AdHocManager.h"
-#include <SwifTools/Idle/IdleDetector.h>
+#include <Swift/Controllers/AdHocManager.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
-#include <Swiften/FileTransfer/FileTransferManager.h>
-#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swift/Controllers/SettingConstants.h>
-#include <Swiften/Client/StanzaChannel.h>
 #include <Swift/Controllers/HighlightManager.h>
 #include <Swift/Controllers/HighlightEditorController.h>
-#include <Swiften/Client/ClientBlockListManager.h>
 #include <Swift/Controllers/BlockListController.h>
-#include <Swiften/Crypto/CryptoProvider.h>
+
 
 namespace Swift {
 
@@ -109,6 +113,7 @@ MainController::MainController(
 		Notifier* notifier,
 		URIHandler* uriHandler,
 		IdleDetector* idleDetector,
+		const std::map<std::string, std::string>& emoticons,
 		bool useDelayForLatency) :
 			eventLoop_(eventLoop),
 			networkFactories_(networkFactories),
@@ -120,7 +125,8 @@ MainController::MainController(
 			idleDetector_(idleDetector),
 			loginWindow_(NULL) ,
 			useDelayForLatency_(useDelayForLatency),
-			ftOverview_(NULL) {
+			ftOverview_(NULL),
+			emoticons_(emoticons) {
 	storages_ = NULL;
 	certificateStorage_ = NULL;
 	statusTracker_ = NULL;
@@ -339,9 +345,9 @@ void MainController::handleConnected() {
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 		historyController_ = new HistoryController(storages_->getHistoryStorage());
 		historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager());
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), &emoticons_);
 #else
-		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_, client_->getClientBlockListManager());
+		chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), &emoticons_);
 #endif
 		
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));

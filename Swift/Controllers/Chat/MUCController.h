@@ -1,24 +1,27 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/signals/connection.hpp>
-
 #include <set>
 #include <string>
+#include <map>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/signals/connection.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Timer.h>
-#include <Swift/Controllers/Chat/ChatControllerBase.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/MUC/MUC.h>
 #include <Swiften/Elements/MUCOccupant.h>
+
+#include <Swift/Controllers/Chat/ChatControllerBase.h>
 #include <Swift/Controllers/Roster/RosterItem.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
@@ -45,7 +48,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::map<std::string, std::string>* emoticons);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;

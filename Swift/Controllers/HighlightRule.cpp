@@ -9,6 +9,7 @@
 #include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Regex.h>
 #include <Swift/Controllers/HighlightRule.h>
 
 namespace Swift {
@@ -24,16 +25,7 @@ HighlightRule::HighlightRule()
 
 boost::regex HighlightRule::regexFromString(const std::string & s) const
 {
-	// escape regex special characters: ^.$| etc
-	// these need to be escaped: [\^\$\|.........]
-	// and then C++ requires '\' to be escaped, too....
-	static const boost::regex esc("([\\^\\.\\$\\|\\(\\)\\[\\]\\*\\+\\?\\/\\{\\}\\\\])");
-	// matched character should be prepended with '\'
-	// replace matched special character with \\\1
-	// and escape once more for C++ rules...
-	static const std::string rep("\\\\\\1");
-	std::string escaped = boost::regex_replace(s , esc, rep);
-
+	std::string escaped = Regex::escape(s);
 	std::string word = matchWholeWords_ ? "\\b" : "";
 	boost::regex::flag_type flags = boost::regex::normal;
 	if (!matchCase_) {

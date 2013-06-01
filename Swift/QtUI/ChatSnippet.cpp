@@ -4,9 +4,10 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <Swift/QtUI/ChatSnippet.h>
+
 #include <QFile>
 
-#include "ChatSnippet.h"
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -42,6 +43,18 @@ QString ChatSnippet::wrapResizable(const QString& text) {
 
 QString ChatSnippet::directionToCSS(Direction direction) {
 	return direction == RTL ? QString("rtl") : QString("ltr");
+}
+
+ChatSnippet::Direction ChatSnippet::getDirection(const ChatWindow::ChatMessage& message) {
+	boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+	std::string text = "";
+	foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
+		if ((textPart = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+			text = textPart->text;
+			break;
+		}
+	}
+	return getDirection(text);
 }
 
 ChatSnippet::Direction ChatSnippet::getDirection(const std::string& message) {

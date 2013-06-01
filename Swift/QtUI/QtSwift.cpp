@@ -4,65 +4,70 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtSwift.h"
+#include <Swift/QtUI/QtSwift.h>
 
 #include <string>
-#include <QFile>
+#include <map>
+
 #include <boost/bind.hpp>
+
+#include <QFile>
 #include <QMessageBox>
 #include <QApplication>
 #include <QMap>
 #include <qdebug.h>
 
-#include <QtLoginWindow.h>
-#include <QtChatTabs.h>
-#include <QtSystemTray.h>
-#include <QtSoundPlayer.h>
-#include <QtSwiftUtil.h>
-#include <QtUIFactory.h>
-#include <QtChatWindowFactory.h>
-#include <QtSingleWindow.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Path.h>
-#include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
-#include <Swift/Controllers/Storages/FileStoragesFactory.h>
-#include <SwifTools/Application/PlatformApplicationPathProvider.h>
-#include <string>
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Client/Client.h>
+#include <Swiften/Base/Paths.h>
+
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
+#include <SwifTools/AutoUpdater/AutoUpdater.h>
+#include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
+
+#include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
+#include <Swift/Controllers/Storages/FileStoragesFactory.h>
 #include <Swift/Controllers/Settings/XMLSettingsProvider.h>
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/Controllers/MainController.h>
 #include <Swift/Controllers/ApplicationInfo.h>
 #include <Swift/Controllers/BuildVersion.h>
-#include <SwifTools/AutoUpdater/AutoUpdater.h>
-#include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
-#include "Swiften/Base/Paths.h"
 #include <Swift/Controllers/StatusCache.h>
 
+#include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtSystemTray.h>
+#include <Swift/QtUI/QtSoundPlayer.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUIFactory.h>
+#include <Swift/QtUI/QtChatWindowFactory.h>
+#include <Swift/QtUI/QtSingleWindow.h>
+
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
-#include "WindowsNotifier.h"
+#include <Swift/QtUI/WindowsNotifier.h>
 #elif defined(HAVE_GROWL)
-#include "SwifTools/Notifier/GrowlNotifier.h"
+#include <SwifTools/Notifier/GrowlNotifier.h>
 #elif defined(SWIFTEN_PLATFORM_LINUX)
-#include "FreeDesktopNotifier.h"
+#include <Swift/QtUI/FreeDesktopNotifier.h>
 #else
-#include "SwifTools/Notifier/NullNotifier.h"
+#include <SwifTools/Notifier/NullNotifier.h>
 #endif
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-#include "SwifTools/Dock/MacOSXDock.h"
+#include <SwifTools/Dock/MacOSXDock.h>
 #else
-#include "SwifTools/Dock/NullDock.h"
+#include <SwifTools/Dock/NullDock.h>
 #endif
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-#include "QtURIHandler.h"
+#include <Swift/QtUI/QtURIHandler.h>
 #elif defined(SWIFTEN_PLATFORM_WIN32)
 #include <SwifTools/URIHandler/NullURIHandler.h>
 #else
-#include "QtDBUSURIHandler.h"
+#include <Swift/QtUI/QtDBUSURIHandler.h>
 #endif
 
 namespace Swift{
@@ -104,7 +109,7 @@ XMLSettingsProvider* QtSwift::loadSettingsFile(const QString& fileName) {
 	return new XMLSettingsProvider("");
 }
 
-void QtSwift::loadEmoticonsFile(const QString& fileName, QMap<QString, QString>& emoticons)  {
+void QtSwift::loadEmoticonsFile(const QString& fileName, std::map<std::string, std::string>& emoticons)  {
 	QFile file(fileName);
 	if (file.exists() && file.open(QIODevice::ReadOnly)) {
 		while (!file.atEnd()) {
@@ -117,7 +122,7 @@ void QtSwift::loadEmoticonsFile(const QString& fileName, QMap<QString, QString>&
 				if (!emoticonFile.startsWith(":/") && !emoticonFile.startsWith("qrc:/")) {
 					emoticonFile = "file://" + emoticonFile;
 				}
-				emoticons[tokens[0]] = emoticonFile;
+				emoticons[Q2PSTRING(tokens[0])] = Q2PSTRING(emoticonFile);
 			}
 		}
 	}
@@ -135,7 +140,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
 	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
 
-	QMap<QString, QString> emoticons;
+	std::map<std::string, std::string> emoticons;
 	loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);
 	loadEmoticonsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "emoticons.txt")), emoticons);
 
@@ -162,7 +167,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
 	certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory(), networkFactories_.getCryptoProvider());
-	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, "", emoticons);
+	chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, "");
 	soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
 	// Ugly, because the dock depends on the tray, but the temporary
@@ -220,6 +225,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 				notifier_,
 				uriHandler_,
 				&idleDetector_,
+				emoticons,
 				options.count("latency-debug") > 0);
 		mainControllers_.push_back(mainController);
 	}

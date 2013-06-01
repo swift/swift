@@ -10,7 +10,11 @@
 
 #include <QString>
 #include <QDateTime>
-#include "QtChatTheme.h"
+
+#include <Swiften/Base/foreach.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/QtUI/QtChatTheme.h>
+
 
 namespace Swift {
 	class ChatSnippet {
@@ -48,6 +52,7 @@ namespace Swift {
 			static QString timeToEscapedString(const QDateTime& time);
 
 			static Direction getDirection(const std::string& message);
+			static Direction getDirection(const ChatWindow::ChatMessage& message);
 			static Direction getDirection(const QString& message);
 
 		protected:

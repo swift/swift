@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -67,7 +67,8 @@ public:
 		highlightManager_ = new HighlightManager(settings_);
 		muc_ = boost::make_shared<MUC>(stanzaChannel_, iqRouter_, directedPresenceSender_, mucJID_, mucRegistry_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_);
+		emoticons_ = new std::map<std::string, std::string>();
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, emoticons_);
 	}
 
 	void tearDown() {
@@ -86,6 +87,7 @@ public:
 		delete iqChannel_;
 		delete mucRegistry_;
 		delete avatarManager_;
+		delete emoticons_;
 	}
 
 	void finishJoin() {
@@ -345,6 +347,7 @@ private:
 	DummyEntityCapsProvider* entityCapsProvider_;
 	DummySettingsProvider* settings_;
 	HighlightManager* highlightManager_;
+	std::map<std::string, std::string>* emoticons_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

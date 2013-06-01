@@ -1,51 +1,53 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Chat/ChatController.h"
+#include <Swift/Controllers/Chat/ChatController.h>
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 #include <stdio.h>
 
-#include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Chat/ChatStateTracker.h>
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swiften/Client/NickResolver.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
-#include <Swift/Controllers/FileTransfer/FileTransferController.h>
-#include <Swift/Controllers/StatusUtil.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/Elements/DeliveryReceipt.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Elements/Idle.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+
+#include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/FileTransfer/FileTransferController.h>
+#include <Swift/Controllers/StatusUtil.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
-#include <Swiften/Elements/DeliveryReceipt.h>
-#include <Swiften/Elements/DeliveryReceiptRequest.h>
-#include <Swiften/Elements/Idle.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Highlighter.h>
-#include <Swiften/Base/Log.h>
-#include <Swiften/Client/ClientBlockListManager.h>
+
 
 namespace Swift {
 	
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::map<std::string, std::string>* emoticons)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, emoticons), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -77,7 +79,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	lastShownStatus_ = theirPresence ? theirPresence->getShow() : StatusShow::None;
 	chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
 	startMessage += ".";
-	chatWindow_->addSystemMessage(startMessage, ChatWindow::DefaultDirection);
+	chatWindow_->addSystemMessage(parseMessageBody(startMessage), ChatWindow::DefaultDirection);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
 	chatWindow_->onFileTransferStart.connect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
@@ -443,9 +445,9 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	std::string newStatusChangeString = getStatusChangeString(newPresence);
 	if (newStatusChangeString != lastStatusChangeString_) {
 		if (lastWasPresence_) {
-			chatWindow_->replaceLastMessage(newStatusChangeString);
+			chatWindow_->replaceLastMessage(parseMessageBody(newStatusChangeString));
 		} else {
-			chatWindow_->addPresenceMessage(newStatusChangeString, ChatWindow::DefaultDirection);
+			chatWindow_->addPresenceMessage(parseMessageBody(newStatusChangeString), ChatWindow::DefaultDirection);
 		}
 		lastStatusChangeString_ = newStatusChangeString;
 		lastWasPresence_ = true;

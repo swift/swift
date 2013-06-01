@@ -68,7 +68,7 @@ const QString QtChatWindow::ButtonFileTransferAcceptRequest = QString("filetrans
 const QString QtChatWindow::ButtonMUCInvite = QString("mucinvite");
 
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), emoticons_(emoticons), blockingState_(BlockingUnsupported) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), blockingState_(BlockingUnsupported) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	idCounter_ = 0;
@@ -222,7 +222,7 @@ bool QtChatWindow::appendToPreviousCheck(QtChatWindow::PreviousMessageKind messa
 	return previousMessageKind_ == messageKind && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_&& previousSenderName_ == P2QSTRING(senderName)));
 }
 
-ChatSnippet::Direction QtChatWindow::getActualDirection(const std::string& message, Direction direction) {
+ChatSnippet::Direction QtChatWindow::getActualDirection(const ChatMessage& message, Direction direction) {
 	if (direction == DefaultDirection) {
 		return QCoreApplication::translate("QApplication", "QT_LAYOUT_DIRECTION") == "RTL" ? ChatSnippet::RTL : ChatSnippet::LTR;
 	}
@@ -497,17 +497,51 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 }
 
 std::string QtChatWindow::addMessage(
-		const std::string& message, 
+		const ChatMessage& message, 
 		const std::string& senderName, 
 		bool senderIsSelf, 
 		boost::shared_ptr<SecurityLabel> label, 
 		const std::string& avatarPath, 
 		const boost::posix_time::ptime& time, 
 		const HighlightAction& highlight) {
-	return addMessage(linkimoticonify(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
+	return addMessage(chatMessageToHTML(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
 }
 
-QString QtChatWindow::linkimoticonify(const std::string& message) const {
+QString QtChatWindow::chatMessageToHTML(const ChatMessage& message) {
+	QString result;
+	foreach (boost::shared_ptr<ChatMessagePart> part, message.getParts()) {
+		boost::shared_ptr<ChatTextMessagePart> textPart;
+		boost::shared_ptr<ChatURIMessagePart> uriPart;
+		boost::shared_ptr<ChatEmoticonMessagePart> emoticonPart;
+		boost::shared_ptr<ChatHighlightingMessagePart> highlightPart;
+
+		if ((textPart = boost::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
+			QString text = QtUtilities::htmlEscape(P2QSTRING(textPart->text));
+			text.replace("\n","<br/>");
+			result += text;
+			continue;
+		}
+		if ((uriPart = boost::dynamic_pointer_cast<ChatURIMessagePart>(part))) {
+			QString uri = QtUtilities::htmlEscape(P2QSTRING(uriPart->target));
+			result += "<a href='" + uri + "' >" + uri + "</a>";
+			continue;
+		}
+		if ((emoticonPart = boost::dynamic_pointer_cast<ChatEmoticonMessagePart>(part))) {
+			QString textStyle = showEmoticons_ ? "style='display:none'" : "";
+			QString imageStyle = showEmoticons_ ? "" : "style='display:none'";
+			result += "<span class='swift_emoticon_image' " + imageStyle + "><img src='" + P2QSTRING(emoticonPart->imagePath) + "'/></span><span class='swift_emoticon_text' " + textStyle + ">" + QtUtilities::htmlEscape(P2QSTRING(emoticonPart->alternativeText)) + "</span>";
+			continue;
+		}
+		if ((highlightPart = boost::dynamic_pointer_cast<ChatHighlightingMessagePart>(part))) {
+			//FIXME: Maybe do something here. Anything, really.
+			continue;
+		}
+
+	}
+	return result;
+}
+
+/*QString QtChatWindow::linkimoticonify(const std::string& message) const {
 	return linkimoticonify(P2QSTRING(message));
 }
 
@@ -515,18 +549,17 @@ QString QtChatWindow::linkimoticonify(const QString& message) const {
 	QString messageHTML(message);
 	messageHTML = QtUtilities::htmlEscape(messageHTML);
 	QMapIterator<QString, QString> it(emoticons_);
-	QString textStyle = showEmoticons_ ? "style='display:none'" : "";
-	QString imageStyle = showEmoticons_ ? "" : "style='display:none'";
+	
 	if (messageHTML.length() < 500) {
 		while (it.hasNext()) {
 			it.next();
-			messageHTML.replace(it.key(), "<span class='swift_emoticon_image' " + imageStyle + "><img src='" + it.value() + "'/></span><span class='swift_emoticon_text' " + textStyle + ">"+it.key() + "</span>");
+			messageHTML.replace(it.key(), );
 		}
 		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
 	}
 	messageHTML.replace("\n","<br/>");
 	return messageHTML;
-}
+}*/
 
 QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight) {
 	QString color = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextColor()));
@@ -562,12 +595,12 @@ std::string QtChatWindow::addMessage(
 		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \" class='swift_label'>").arg(QtUtilities::htmlEscape(P2QSTRING(label->getForegroundColor()))).arg(QtUtilities::htmlEscape(P2QSTRING(label->getBackgroundColor())));
 		htmlString += QString("%1</span> ").arg(QtUtilities::htmlEscape(P2QSTRING(label->getDisplayMarking())));
 	}
-	QString messageHTML(message);
+
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 	QString styleSpanEnd = style == "" ? "" : "</span>";
 	QString highlightSpanStart = highlight.highlightText() ? getHighlightSpanStart(highlight) : "";
 	QString highlightSpanEnd = highlight.highlightText() ? "</span>" : "";
-	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + highlightSpanStart + messageHTML + highlightSpanEnd + styleSpanEnd + "</span>" ;
+	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + highlightSpanStart + message + highlightSpanEnd + styleSpanEnd + "</span>" ;
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
 	if (lastLineTracker_.getShouldMoveLastLine()) {
@@ -623,8 +656,8 @@ int QtChatWindow::getCount() {
 	return unreadCount_;
 }
 
-std::string QtChatWindow::addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	return addMessage(" *" + linkimoticonify(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight, ChatSnippet::getDirection(message));
+std::string QtChatWindow::addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	return addMessage(" *" + chatMessageToHTML(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight, ChatSnippet::getDirection(message));
 }
 
 // FIXME: Move this to a different file
@@ -802,36 +835,36 @@ void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1,
 	}
 }
 
-void QtChatWindow::addErrorMessage(const std::string& errorMessage) {
+void QtChatWindow::addErrorMessage(const ChatMessage& errorMessage) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
-	QString errorMessageHTML(linkimoticonify(errorMessage));
-	errorMessageHTML.replace("\n","<br/>");
+	QString errorMessageHTML(chatMessageToHTML(errorMessage));
+	
 	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_, ChatSnippet::getDirection(errorMessage)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
-void QtChatWindow::addSystemMessage(const std::string& message, Direction direction) {
+void QtChatWindow::addSystemMessage(const ChatMessage& message, Direction direction) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
-	QString messageHTML = linkimoticonify(message);
+	QString messageHTML = chatMessageToHTML(message);
 	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
 
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
-void QtChatWindow::replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(" *" + linkimoticonify(message) + "*", id, time, "font-style:italic ", highlight);
+void QtChatWindow::replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	replaceMessage(" *" + chatMessageToHTML(message) + "*", id, time, "font-style:italic ", highlight);
 }
 
-void QtChatWindow::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(linkimoticonify(message), id, time, "", highlight);
+void QtChatWindow::replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	replaceMessage(chatMessageToHTML(message), id, time, "", highlight);
 }
 
 void QtChatWindow::replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight) {
@@ -855,12 +888,12 @@ void QtChatWindow::replaceMessage(const QString& message, const std::string& id,
 	}
 }
 
-void QtChatWindow::addPresenceMessage(const std::string& message, Direction direction) {
+void QtChatWindow::addPresenceMessage(const ChatMessage& message, Direction direction) {
 	if (isWidgetSelected()) {
 		onAllMessagesRead();
 	}
 
-	QString messageHTML = linkimoticonify(message);
+	QString messageHTML = chatMessageToHTML(message);
 	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
 
 	previousMessageKind_ = PreviousMessageWasPresence;
@@ -932,13 +965,15 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
 	if (event->mimeData()->urls().size() == 1) {
 		onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
 	} else {
-		std::string message(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
+		std::string messageText(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
+		ChatMessage message;
+		message.append(boost::make_shared<ChatTextMessagePart>(messageText));
 		addSystemMessage(message, DefaultDirection);
 	}
 }
 
-void QtChatWindow::replaceLastMessage(const std::string& message) {
-	messageLog_->replaceLastMessage(linkimoticonify(message));
+void QtChatWindow::replaceLastMessage(const ChatMessage& message) {
+	messageLog_->replaceLastMessage(chatMessageToHTML(message));
 }
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {
@@ -1066,12 +1101,12 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	if (!direct) {
 		htmlString += QObject::tr("This person may not have really sent this invitation!") + "\n";
 	}
-	htmlString = linkimoticonify(htmlString);
+	htmlString = chatMessageToHTML(ChatMessage(Q2PSTRING(htmlString)));
 
 
 	QString id = QString(ButtonMUCInvite + "%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 	htmlString += "<div id='" + id + "'>" +
-			buildChatWindowButton(linkimoticonify(tr("Accept Invite")), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id) +
+			buildChatWindowButton(chatMessageToHTML(ChatMessage(Q2PSTRING((tr("Accept Invite"))))), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id) +
 		"</div>";
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMUCInvite, senderName, false);

@@ -87,17 +87,17 @@ namespace Swift {
 			static const QString ButtonMUCInvite;
 
 		public:
-			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QMap<QString, QString> emoticons);
+			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
 			~QtChatWindow();
-			std::string addMessage(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			std::string addAction(const std::string &message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 
-			void addSystemMessage(const std::string& message, Direction direction);
-			void addPresenceMessage(const std::string& message, Direction direction);
-			void addErrorMessage(const std::string& errorMessage);
+			void addSystemMessage(const ChatMessage& message, Direction direction);
+			void addPresenceMessage(const ChatMessage& message, Direction direction);
+			void addErrorMessage(const ChatMessage& message);
 
-			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			void replaceWithAction(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			// File transfer related stuff
 			std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes);
 			void setFileTransferProgress(std::string id, const int percentageDone);
@@ -122,7 +122,7 @@ namespace Swift {
 			void setRosterModel(Roster* roster);
 			void setTabComplete(TabComplete* completer);
 			int getCount();
-			void replaceLastMessage(const std::string& message);
+			void replaceLastMessage(const ChatMessage& message);
 			void setAckState(const std::string& id, AckState state);
 
 			// message receipts
@@ -214,9 +214,8 @@ namespace Swift {
 					const HighlightAction& highlight);
 			void handleOccupantSelectionChanged(RosterItem* item);
 			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
-			static ChatSnippet::Direction getActualDirection(const std::string& message, Direction direction);
-			QString linkimoticonify(const std::string& message) const;
-			QString linkimoticonify(const QString& message) const;
+			static ChatSnippet::Direction getActualDirection(const ChatMessage& message, Direction direction);
+			QString chatMessageToHTML(const ChatMessage& message);
 			QString getHighlightSpanStart(const HighlightAction& highlight);
 
 			int unreadCount_;
@@ -256,7 +255,6 @@ namespace Swift {
 			int idCounter_;
 			SettingsProvider* settings_;
 			std::vector<ChatWindow::RoomAction> availableRoomActions_;
-			QMap<QString, QString> emoticons_;
 			bool showEmoticons_;
 			QPalette defaultLabelsPalette_;
 			LabelModel* labelModel_;

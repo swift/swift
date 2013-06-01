@@ -128,7 +128,7 @@ void QtChatView::addMessageTop(boost::shared_ptr<ChatSnippet> snippet) {
 		double size = 1.0 + 0.2 * fontSizeSteps_;
 		QString sizeString(QString().setNum(size, 'g', 3) + "em");
 		const QWebElementCollection spans = firstElement_.findAll("span.swift_resizable");
-		foreach (QWebElement span, spans) {
+		Q_FOREACH (QWebElement span, spans) {
 			span.setStyleProperty("font-size", sizeString);
 		}
 	}
@@ -161,7 +161,7 @@ void QtChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 		double size = 1.0 + 0.2 * fontSizeSteps_;
 		QString sizeString(QString().setNum(size, 'g', 3) + "em");
 		const QWebElementCollection spans = lastElement_.findAll("span.swift_resizable");
-		foreach (QWebElement span, spans) {
+		Q_FOREACH (QWebElement span, spans) {
 			span.setStyleProperty("font-size", sizeString);
 		}
 	}
@@ -229,13 +229,13 @@ void QtChatView::replaceMessage(const QString& newMessage, const QString& id, co
 void QtChatView::showEmoticons(bool show) {
 	{
 		const QWebElementCollection spans = document_.findAll("span.swift_emoticon_image");
-		foreach (QWebElement span, spans) {
+		Q_FOREACH (QWebElement span, spans) {
 			span.setStyleProperty("display", show ? "inline" : "none");
 		}
 	}
 	{
 		const QWebElementCollection spans = document_.findAll("span.swift_emoticon_text");
-		foreach (QWebElement span, spans) {
+		Q_FOREACH (QWebElement span, spans) {
 			span.setStyleProperty("display", show ? "none" : "inline");
 		}
 	}
@@ -324,7 +324,7 @@ void QtChatView::resizeFont(int fontSizeSteps) {
 	QString sizeString(QString().setNum(size, 'g', 3) + "em");
 	//qDebug() << "Setting to " << sizeString;
 	const QWebElementCollection spans = document_.findAll("span.swift_resizable");
-	foreach (QWebElement span, spans) {
+	Q_FOREACH (QWebElement span, spans) {
 		span.setStyleProperty("font-size", sizeString);
 	}
 	webView_->setFontSizeIsMinimal(size == 1.0);
@@ -370,7 +370,7 @@ void QtChatView::resetView() {
 
 static QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
 	QWebElementCollection elements = document.findAll(elementName);
-	foreach(QWebElement element, elements) {
+	Q_FOREACH(QWebElement element, elements) {
 		if (element.attribute("id") == id) {
 			return element;
 		}

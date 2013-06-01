@@ -1,16 +1,30 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Chat/ChatsManager.h"
+#include <Swift/Controllers/Chat/ChatsManager.h>
 
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/DeliveryReceipt.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/MUC/MUCBookmarkManager.h>
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Elements/MUCInvitationPayload.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/StanzaChannel.h>
+
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
 #include <Swift/Controllers/Chat/MUCSearchController.h>
@@ -25,25 +39,12 @@
 #include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
-#include <Swiften/Presence/PresenceSender.h>
-#include <Swiften/Client/NickResolver.h>
-#include <Swiften/MUC/MUCManager.h>
-#include <Swiften/Elements/ChatState.h>
-#include <Swiften/Elements/MUCUserPayload.h>
-#include <Swiften/Elements/DeliveryReceipt.h>
-#include <Swiften/Elements/DeliveryReceiptRequest.h>
-#include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
-#include <Swiften/Avatars/AvatarManager.h>
-#include <Swiften/Elements/MUCInvitationPayload.h>
-#include <Swiften/Roster/XMPPRoster.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
-#include <Swiften/Client/StanzaChannel.h>
 #include <Swift/Controllers/WhiteboardManager.h>
-#include <Swiften/Client/ClientBlockListManager.h>
 
 namespace Swift {
 
@@ -77,7 +78,8 @@ ChatsManager::ChatsManager(
 		HistoryController* historyController,
 		WhiteboardManager* whiteboardManager,
 		HighlightManager* highlightManager,
-		ClientBlockListManager* clientBlockListManager) :
+		ClientBlockListManager* clientBlockListManager,
+		std::map<std::string, std::string>* emoticons) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -91,7 +93,8 @@ ChatsManager::ChatsManager(
 			historyController_(historyController),
 			whiteboardManager_(whiteboardManager),
 			highlightManager_(highlightManager),
-			clientBlockListManager_(clientBlockListManager) {
+			clientBlockListManager_(clientBlockListManager),
+			emoticons_(emoticons) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -526,7 +529,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, emoticons_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));
@@ -599,7 +602,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		if (createAsReservedIfNew) {
 			muc->setCreateAsReservedIfNew();
 		}
-		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_);
+		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, emoticons_);
 		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));

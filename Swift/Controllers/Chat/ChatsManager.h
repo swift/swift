@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,19 +7,21 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include <boost/shared_ptr.hpp>
 
-#include <string>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/MUC/MUCBookmark.h>
+
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swiften/MUC/MUCBookmark.h>
+
 
 namespace Swift {
 	class EventController;
@@ -55,7 +57,7 @@ namespace Swift {
 	
 	class ChatsManager {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::map<std::string, std::string>* emoticons);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -140,5 +142,6 @@ namespace Swift {
 			WhiteboardManager* whiteboardManager_;
 			HighlightManager* highlightManager_;
 			ClientBlockListManager* clientBlockListManager_;
+			std::map<std::string, std::string>* emoticons_;
 	};
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -32,6 +32,12 @@ class LinkifyTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testLinkify_NewLine);
 		CPPUNIT_TEST(testLinkify_Tab);
 		CPPUNIT_TEST(testLinkify_Action);
+
+		CPPUNIT_TEST(testLinkify_SplitNone);
+		CPPUNIT_TEST(testLinkify_SplitAll);
+		CPPUNIT_TEST(testLinkify_SplitFirst);
+		CPPUNIT_TEST(testLinkify_SplitSecond);
+		CPPUNIT_TEST(testLinkify_SplitMiddle);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -181,12 +187,57 @@ class LinkifyTest : public CppUnit::TestFixture {
 		}
 
 		void testLinkify_Action() {
-				std::string result = Linkify::linkify("*http://swift.im*");
+			std::string result = Linkify::linkify("*http://swift.im*");
 
-				CPPUNIT_ASSERT_EQUAL(
-						std::string("*<a href=\"http://swift.im\">http://swift.im</a>*"),
-						result);
+			CPPUNIT_ASSERT_EQUAL(
+					std::string("*<a href=\"http://swift.im\">http://swift.im</a>*"),
+					result);
+		}
+
+		void checkResult(const std::string& testling, size_t expectedIndex, std::string expectedSplit[]) {
+			std::pair<std::vector<std::string>, size_t> result = Linkify::splitLink(testling);
+			CPPUNIT_ASSERT_EQUAL(expectedIndex, result.second);
+			for (size_t i = 0; i < result.first.size(); i++) {
+				CPPUNIT_ASSERT_EQUAL(expectedSplit[i], result.first[i]);
 			}
+		}
+
+		void testLinkify_SplitNone() {
+			std::string testling = "http this ain't";
+			size_t expectedIndex = 1;
+			std::string expectedSplit[] = {"http this ain't"};
+			checkResult(testling, expectedIndex, expectedSplit);
+		}
+
+		void testLinkify_SplitAll() {
+			std::string testling = "http://swift.im";
+			size_t expectedIndex = 0;
+			std::string expectedSplit[] = {"http://swift.im"};
+			checkResult(testling, expectedIndex, expectedSplit);
+		}
+
+		void testLinkify_SplitFirst() {
+			std::string testling = "http://swift.im is a link";
+			size_t expectedIndex = 0;
+			std::string expectedSplit[] = {"http://swift.im", " is a link"};
+			checkResult(testling, expectedIndex, expectedSplit);
+		}
+
+		void testLinkify_SplitSecond() {
+			std::string testling = "this is a link: http://swift.im";
+			size_t expectedIndex = 1;
+			std::string expectedSplit[] = {"this is a link: ", "http://swift.im"};
+			checkResult(testling, expectedIndex, expectedSplit);
+		}
+
+		void testLinkify_SplitMiddle() {
+			std::string testling = "Shove a link like http://swift.im in the middle";
+			size_t expectedIndex = 1;
+			std::string expectedSplit[] = {"Shove a link like ","http://swift.im", " in the middle"};
+			checkResult(testling, expectedIndex, expectedSplit);
+		}
+
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(LinkifyTest);
