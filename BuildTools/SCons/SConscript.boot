@@ -117,6 +117,11 @@ if env["max_jobs"] :
 	except ImportError :
 		pass
 
+# Set speed options
+env.Decider("MD5-timestamp")
+env.SetOption("max_drift", 1)
+env.SetOption("implicit_cache", True)
+
 # Set the default compiler to CLang on OS X, and set the necessary flags
 if env["PLATFORM"] == "darwin" and env["target"] == "native" :
 	if "cc" not in env :
