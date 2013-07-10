@@ -73,6 +73,7 @@ vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0",
 # Set up default build & configure environment
 ################################################################################
 
+
 env_ENV = {
   'PATH' : os.environ['PATH'], 
   'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),

@@ -35,6 +35,9 @@ qrc_*
 ui_*
 config.py
 /QA/Checker/checker
+/.ninja_deps
+/.ninja_log
+/build.ninja
 config.log
 .sconf_temp
 .sconsign.dblite

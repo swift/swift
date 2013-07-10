@@ -33,7 +33,7 @@ def colorize(command, target, color) :
 		suffix = "\033[0m"
 	return "  " + prefix + command + suffix + " " + target
 
-if int(ARGUMENTS.get("V", 0)) == 0:
+if int(ARGUMENTS.get("V", 0)) == 0 and not ARGUMENTS.get("dump_trace", False) :
 	env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
 	env["SHCCCOMSTR"] = colorize("CC", "$TARGET", "green")
 	env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
@@ -558,6 +558,12 @@ else :
 ################################################################################
 # Project files
 ################################################################################
+
+if ARGUMENTS.get("dump_trace", False) :
+	env.SetOption("no_exec", True)
+	env["TEST"] = True
+	env.Decider(lambda x, y, z : True)
+	SCons.Node.Python.Value.changed_since_last_build = (lambda x, y, z: True)
 
 # Modules
 modules = []
