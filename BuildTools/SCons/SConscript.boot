@@ -85,6 +85,12 @@ else :
 
 Help(vars.GenerateHelpText(env))
 
+# Workaround for missing Visual Studio 2012 support in SCons
+# Requires scons to be run from a VS2012 console
+if env.get("MSVC_VERSION", "").startswith("11.0") :
+	env["ENV"]["LIB"] = os.environ["LIB"]
+	env["ENV"]["INCLUDE"] = os.environ["INCLUDE"]
+
 # Default environment variables
 env["PLATFORM_FLAGS"] = {
 		"LIBPATH": [],
