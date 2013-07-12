@@ -179,7 +179,7 @@ def render_tree(root, child_func, prune=0, margin=[0], visited={}):
        or in the whole tree if prune.
     """
 
-    rname = str(root)
+    rname = repr(str(root))
 
     children = child_func(root)
     retval = ""
@@ -223,7 +223,7 @@ def print_tree(root, child_func, prune=0, showtags=0, margin=[0], visited={}):
        or in the whole tree if prune.
     """
 
-    rname = str(root)
+    rname = repr(str(root))
 
     if showtags:
 
