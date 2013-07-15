@@ -23,7 +23,7 @@ namespace Swift {
 			}
 
 			virtual HWND getID() const {
-				return winId();
+				return (HWND) winId();
 			}
 	};
 }

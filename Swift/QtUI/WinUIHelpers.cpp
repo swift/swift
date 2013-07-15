@@ -47,7 +47,7 @@ void WinUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::ve
 
 	CRYPTUI_VIEWCERTIFICATE_STRUCT viewDialogProperties = { 0 };
 	viewDialogProperties.dwSize = sizeof(viewDialogProperties);
-	viewDialogProperties.hwndParent = parent->winId();
+	viewDialogProperties.hwndParent = (HWND) parent->winId();
 	viewDialogProperties.dwFlags = CRYPTUI_DISABLE_EDITPROPERTIES | CRYPTUI_DISABLE_ADDTOSTORE | CRYPTUI_ENABLE_REVOCATION_CHECKING;
 	viewDialogProperties.pCertContext = certificate_chain.get();
 	viewDialogProperties.cStores = 1;

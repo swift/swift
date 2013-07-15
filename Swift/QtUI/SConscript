@@ -359,7 +359,7 @@ if env.get("SWIFT_INSTALLDIR", "") :
     env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "swift", dir), resource)
     
 if env["PLATFORM"] == "win32" :
-  if env["DIST"] :
+  if env["DIST"] or ARGUMENTS.get("dump_trace") :
     commonResources[""] = commonResources.get("", []) + [
         #os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
         #os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
@@ -368,12 +368,21 @@ if env["PLATFORM"] == "win32" :
     if env["SWIFTEN_DLL"] :
       commonResources[""] = commonResources.get("", []) + ["#/Swiften/${SWIFTEN_LIBRARY_FILE}"]
     qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
-    qtlibs = ["QtCore4", "QtGui4", "QtNetwork4", "QtWebKit4", "QtXMLPatterns4", "phonon4"]
+    qtlibs = ["QtCore", "QtGui", "QtNetwork", "QtWebKit", "QtXMLPatterns"]
+    if qt_version == '4' :
+      qtlibs.append("phonon")
+      qtlibs = [lib + '4' for lib in qtlibs]
+    else :
+      qtlibs += ['QtQuick', 'QtQml', 'QtV8', 'QtMultimedia', 'QtSql', 'QtSensors', 'QtWidgets', 'QtWebKitWidgets', 'QtMultimediaWidgets', 'QtOpenGL', 'QtPrintSupport']
+      qtlibs = [lib.replace('Qt', 'Qt5') for lib in qtlibs]
+      qtlibs += ['icuin51', 'icuuc51', 'icudt51', 'libGLESv2', 'libEGL']
     windowsBundleFiles = myenv.WindowsBundle("Swift", 
       resources = commonResources,
       qtimageformats = qtimageformats,
-      qtlibs = qtlibs)
+      qtlibs = qtlibs,
+			qtversion = qt_version)
 
+  if env["DIST"] :
     #myenv.Append(NSIS_OPTIONS = [
     #    "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
     #    "/DbuildVersion=" + myenv["SWIFT_VERSION"]
