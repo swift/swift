@@ -179,42 +179,58 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
 		valid_ = false;
 		return;
 	}
-	try {
 #ifndef SWIFTEN_CACHE_JID_PREP
-		node_ = idnConverter->getStringPrepared(node, IDNConverter::NamePrep);
-		domain_ = idnConverter->getStringPrepared(domain, IDNConverter::XMPPNodePrep);
-		resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
+	node_ = idnConverter->getStringPrepared(node, IDNConverter::XMPPNodePrep);
+	domain_ = idnConverter->getStringPrepared(domain, IDNConverter::NamePrep);
+	resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
 #else
-		boost::mutex::scoped_lock lock(namePrepCacheMutex);
+	boost::mutex::scoped_lock lock(namePrepCacheMutex);
 
-		std::pair<PrepCache::iterator, bool> r;
+	std::pair<PrepCache::iterator, bool> r;
 
-		r = nodePrepCache.insert(std::make_pair(node, std::string()));
-		if (r.second) {
-			r.first->second = idnConverter->getStringPrepared(node, IDNConverter::NamePrep);
+	r = nodePrepCache.insert(std::make_pair(node, std::string()));
+	if (r.second) {
+		try {
+			r.first->second = idnConverter->getStringPrepared(node, IDNConverter::XMPPNodePrep);
 		}
-		node_ = r.first->second;
-
-		r = domainPrepCache.insert(std::make_pair(domain, std::string()));
-		if (r.second) {
-			r.first->second = idnConverter->getStringPrepared(domain, IDNConverter::XMPPNodePrep);
-		}
-		domain_ = r.first->second;
-
-		r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
-		if (r.second) {
-			r.first->second = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
-		}
-		resource_ = r.first->second;
-#endif
-
-		if (domain_.empty()) {
+		catch (...) {
+			nodePrepCache.erase(r.first);
 			valid_ = false;
 			return;
 		}
 	}
-	catch (const std::exception&) {
+	node_ = r.first->second;
+
+	r = domainPrepCache.insert(std::make_pair(domain, std::string()));
+	if (r.second) {
+		try {
+			r.first->second = idnConverter->getStringPrepared(domain, IDNConverter::NamePrep);
+		}
+		catch (...) {
+			domainPrepCache.erase(r.first);
+			valid_ = false;
+			return;
+		}
+	}
+	domain_ = r.first->second;
+
+	r = resourcePrepCache.insert(std::make_pair(resource, std::string()));
+	if (r.second) {
+		try {
+			r.first->second = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
+		}
+		catch (...) {
+			resourcePrepCache.erase(r.first);
+			valid_ = false;
+			return;
+		}
+	}
+	resource_ = r.first->second;
+#endif
+
+	if (domain_.empty()) {
 		valid_ = false;
+		return;
 	}
 }
 
