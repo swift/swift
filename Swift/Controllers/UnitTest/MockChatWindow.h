@@ -19,17 +19,17 @@ namespace Swift {
 			virtual ~MockChatWindow();
 
 			virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {
-			lastMessageBody_ = bodyFromMessage(message); return "id";};
+			lastMessageBody_ = bodyFromMessage(message); return "id";}
 
-			virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {return "id";};
+			virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {return "id";}
 
-			virtual void addSystemMessage(const ChatMessage& /*message*/, Direction /*direction*/) {};
-			virtual void addPresenceMessage(const ChatMessage& /*message*/, Direction /*direction*/) {};
+			virtual void addSystemMessage(const ChatMessage& /*message*/, Direction /*direction*/) {}
+			virtual void addPresenceMessage(const ChatMessage& /*message*/, Direction /*direction*/) {}
 
-			virtual void addErrorMessage(const ChatMessage& /*message*/) {};
-			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {};
-			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {};
-			virtual void replaceLastMessage(const ChatMessage& /*message*/) {};
+			virtual void addErrorMessage(const ChatMessage& /*message*/) {}
+			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
+			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
+			virtual void replaceLastMessage(const ChatMessage& /*message*/) {}
 
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/) { return 0; }

@@ -67,8 +67,7 @@ public:
 		highlightManager_ = new HighlightManager(settings_);
 		muc_ = boost::make_shared<MUC>(stanzaChannel_, iqRouter_, directedPresenceSender_, mucJID_, mucRegistry_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-		emoticons_ = new std::map<std::string, std::string>();
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, emoticons_);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, &emoticons_);
 	}
 
 	void tearDown() {
@@ -87,7 +86,6 @@ public:
 		delete iqChannel_;
 		delete mucRegistry_;
 		delete avatarManager_;
-		delete emoticons_;
 	}
 
 	void finishJoin() {
@@ -347,7 +345,7 @@ private:
 	DummyEntityCapsProvider* entityCapsProvider_;
 	DummySettingsProvider* settings_;
 	HighlightManager* highlightManager_;
-	std::map<std::string, std::string>* emoticons_;
+	std::map<std::string, std::string> emoticons_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);
