@@ -11,6 +11,7 @@
 
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
