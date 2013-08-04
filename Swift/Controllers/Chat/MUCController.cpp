@@ -37,6 +37,7 @@
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Roster/XMPPRoster.h>
 #include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
 
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
@@ -65,8 +66,8 @@ MUCController::MUCController (
 		HistoryController* historyController,
 		MUCRegistry* mucRegistry,
 		HighlightManager* highlightManager,
-		std::map<std::string, std::string>* emoticons) :
-			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, emoticons), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0) {
+		ChatMessageParser* chatMessageParser) :
+			ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -227,7 +228,7 @@ const std::string& MUCController::getNick() {
 
 void MUCController::handleJoinTimeoutTick() {
 	receivedActivity();
-	chatWindow_->addSystemMessage(parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString())), ChatWindow::DefaultDirection);
+	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Room %1% is not responding. This operation may never complete.")) % toJID_.toString())), ChatWindow::DefaultDirection);
 }
 
 void MUCController::receivedActivity() {
@@ -278,7 +279,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 		}
 	}
 	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't join room: %1%.")) % errorMessage);
-	chatWindow_->addErrorMessage(parseMessageBody(errorMessage));
+	chatWindow_->addErrorMessage(chatMessageParser_->parseMessageBody(errorMessage));
 	parting_ = true;
 	if (!rejoinNick.empty() && renameCounter_ < 10) {
 		renameCounter_++;
@@ -295,7 +296,7 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	joined_ = true;
 	std::string joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	setNick(nick);
-	chatWindow_->addSystemMessage(parseMessageBody(joinMessage), ChatWindow::DefaultDirection);
+	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(joinMessage), ChatWindow::DefaultDirection);
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	addRecentLogs();
@@ -361,7 +362,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 
 void MUCController::addPresenceMessage(const std::string& message) {
 	lastWasPresence_ = true;
-	chatWindow_->addPresenceMessage(parseMessageBody(message), ChatWindow::DefaultDirection);
+	chatWindow_->addPresenceMessage(chatMessageParser_->parseMessageBody(message), ChatWindow::DefaultDirection);
 }
 
 
@@ -448,7 +449,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	joined_ = true;
 
 	if (message->hasSubject() && message->getBody().empty()) {
-		chatWindow_->addSystemMessage(parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject())), ChatWindow::DefaultDirection);;
+		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject())), ChatWindow::DefaultDirection);;
 		chatWindow_->setSubject(message->getSubject());
 		doneGettingHistory_ = true;
 	}
@@ -485,7 +486,7 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 	std::string group(roleToGroupName(occupant.getRole()));
 	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid));
 	roster_->getGroup(group)->setManualSort(roleToSortName(occupant.getRole()));
-	chatWindow_->addSystemMessage(parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole()))), ChatWindow::DefaultDirection);
+	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole()))), ChatWindow::DefaultDirection);
 	if (nick == nick_) {
 		setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
 	}
@@ -518,7 +519,7 @@ void MUCController::setOnline(bool online) {
 	} else {
 		if (shouldJoinOnReconnect_) {
 			renameCounter_ = 0;
-			chatWindow_->addSystemMessage(parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+			chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();
 			}
@@ -616,7 +617,7 @@ boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(boo
 }
 
 void MUCController::updateJoinParts() {
-	chatWindow_->replaceLastMessage(parseMessageBody(generateJoinPartString(joinParts_)));
+	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(generateJoinPartString(joinParts_)));
 }
 
 void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent) {
@@ -736,13 +737,13 @@ void MUCController::handleConfigureRequest(Form::ref form) {
 void MUCController::handleConfigurationFailed(ErrorPayload::ref error) {
 	std::string errorMessage = getErrorMessage(error);
 	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Room configuration failed: %1%.")) % errorMessage);
-	chatWindow_->addErrorMessage(parseMessageBody(errorMessage));
+	chatWindow_->addErrorMessage(chatMessageParser_->parseMessageBody(errorMessage));
 }
 
 void MUCController::handleOccupantRoleChangeFailed(ErrorPayload::ref error, const JID&, MUCOccupant::Role) {
 	std::string errorMessage = getErrorMessage(error);
 	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Occupant role change failed: %1%.")) % errorMessage);
-	chatWindow_->addErrorMessage(parseMessageBody(errorMessage));
+	chatWindow_->addErrorMessage(chatMessageParser_->parseMessageBody(errorMessage));
 }
 
 void MUCController::handleConfigurationFormReceived(Form::ref form) {

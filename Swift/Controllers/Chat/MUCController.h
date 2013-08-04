@@ -48,7 +48,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::map<std::string, std::string>* emoticons);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser);
 			~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;

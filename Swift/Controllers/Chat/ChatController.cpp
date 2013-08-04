@@ -39,6 +39,7 @@
 #include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
 
 
 namespace Swift {
@@ -46,8 +47,8 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::map<std::string, std::string>* emoticons)
-	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, emoticons), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, ChatMessageParser* chatMessageParser)
+	: ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
 	isInMUC_ = isInMUC;
 	lastWasPresence_ = false;
 	chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -79,7 +80,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	lastShownStatus_ = theirPresence ? theirPresence->getShow() : StatusShow::None;
 	chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
 	startMessage += ".";
-	chatWindow_->addSystemMessage(parseMessageBody(startMessage), ChatWindow::DefaultDirection);
+	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(startMessage), ChatWindow::DefaultDirection);
 	chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
 	chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
 	chatWindow_->onFileTransferStart.connect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
@@ -445,9 +446,9 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	std::string newStatusChangeString = getStatusChangeString(newPresence);
 	if (newStatusChangeString != lastStatusChangeString_) {
 		if (lastWasPresence_) {
-			chatWindow_->replaceLastMessage(parseMessageBody(newStatusChangeString));
+			chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(newStatusChangeString));
 		} else {
-			chatWindow_->addPresenceMessage(parseMessageBody(newStatusChangeString), ChatWindow::DefaultDirection);
+			chatWindow_->addPresenceMessage(chatMessageParser_->parseMessageBody(newStatusChangeString), ChatWindow::DefaultDirection);
 		}
 		lastStatusChangeString_ = newStatusChangeString;
 		lastWasPresence_ = true;

@@ -45,6 +45,7 @@
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/WhiteboardManager.h>
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
 
 namespace Swift {
 
@@ -79,7 +80,7 @@ ChatsManager::ChatsManager(
 		WhiteboardManager* whiteboardManager,
 		HighlightManager* highlightManager,
 		ClientBlockListManager* clientBlockListManager,
-		std::map<std::string, std::string>* emoticons) :
+		const std::map<std::string, std::string>& emoticons) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -93,8 +94,7 @@ ChatsManager::ChatsManager(
 			historyController_(historyController),
 			whiteboardManager_(whiteboardManager),
 			highlightManager_(highlightManager),
-			clientBlockListManager_(clientBlockListManager),
-			emoticons_(emoticons) {
+			clientBlockListManager_(clientBlockListManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -108,6 +108,7 @@ ChatsManager::ChatsManager(
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = NULL;
 	profileSettings_ = profileSettings;
+	chatMessageParser_ = new ChatMessageParser(emoticons);
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 
@@ -152,6 +153,7 @@ ChatsManager::~ChatsManager() {
 	}
 	delete mucBookmarkManager_;
 	delete mucSearchController_;
+	delete chatMessageParser_;
 }
 
 void ChatsManager::saveRecents() {
@@ -529,7 +531,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, emoticons_);
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));
@@ -602,7 +604,7 @@ void ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional
 		if (createAsReservedIfNew) {
 			muc->setCreateAsReservedIfNew();
 		}
-		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, emoticons_);
+		MUCController* controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, chatMessageParser_);
 		mucControllers_[mucJID] = controller;
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));

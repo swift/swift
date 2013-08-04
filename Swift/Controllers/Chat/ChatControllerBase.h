@@ -44,6 +44,7 @@ namespace Swift {
 	class EntityCapsProvider;
 	class HighlightManager;
 	class Highlighter;
+	class ChatMessageParser;
 
 	class ChatControllerBase : public boost::bsignals::trackable {
 		public:
@@ -65,7 +66,7 @@ namespace Swift {
 			void handleCapsChanged(const JID& jid);
 
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::map<std::string, std::string>* emoticons);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -86,7 +87,6 @@ namespace Swift {
 			/** JID any iq for account should go to - bare except for PMs */
 			virtual JID getBaseJID();
 			virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) = 0;
-			ChatWindow::ChatMessage parseMessageBody(const std::string& body);
 
 		private:
 			IDGenerator idGenerator_;
@@ -123,6 +123,6 @@ namespace Swift {
 			HistoryController* historyController_;
 			MUCRegistry* mucRegistry_;
 			Highlighter* highlighter_;
-			const std::map<std::string, std::string>& emoticons_;
+			ChatMessageParser* chatMessageParser_;
 	};
 }
