@@ -1,7 +1,7 @@
 import SCons.Util, os
 
 def generate(env) :
-  def createWindowsBundle(env, bundle, resources = {}, qtimageformats = [], qtlibs = [], qtplatforms = [], qtversion = '4') :
+  def createWindowsBundle(env, bundle, resources = {}, qtplugins = {}, qtlibs = [], qtversion = '4') :
     all_files = []
     all_files += env.Install(bundle, bundle + ".exe")
     for lib in qtlibs :
@@ -9,8 +9,8 @@ def generate(env) :
     plugins_suffix = '4'
     if qtversion == '5' :
       plugins_suffix = ''
-    all_files += env.Install(os.path.join(bundle, "imageformats"), [os.path.join(env["QTDIR"], "plugins", "imageformats", "q" + codec + plugins_suffix + ".dll") for codec in qtimageformats])
-    all_files += env.Install(os.path.join(bundle, "platforms"), [os.path.join(env["QTDIR"], "plugins", "platforms", "q" + platform + plugins_suffix + ".dll") for platform in qtplatforms])
+    for plugin_type in qtplugins:
+      all_files += env.Install(os.path.join(bundle, plugin_type), [os.path.join(env["QTDIR"], "plugins", plugin_type, "q" + plugin + plugins_suffix + ".dll") for plugin in qtplugins[plugin_type]])
 
     for dir, resourceFiles in resources.items() :
       for resource in resourceFiles :

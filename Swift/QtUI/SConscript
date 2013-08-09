@@ -367,9 +367,9 @@ if env["PLATFORM"] == "win32" :
       ]
     if env["SWIFTEN_DLL"] :
       commonResources[""] = commonResources.get("", []) + ["#/Swiften/${SWIFTEN_LIBRARY_FILE}"]
-    qtimageformats = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
+    qtplugins = {}
+    qtplugins["imageformats"] = ["gif", "ico", "jpeg", "mng", "svg", "tiff"]
     qtlibs = ["QtCore", "QtGui", "QtNetwork", "QtWebKit", "QtXMLPatterns"]
-    qtplatforms = []
     if qt_version == '4' :
       qtlibs.append("phonon")
       qtlibs = [lib + '4' for lib in qtlibs]
@@ -377,12 +377,12 @@ if env["PLATFORM"] == "win32" :
       qtlibs += ['QtQuick', 'QtQml', 'QtV8', 'QtMultimedia', 'QtSql', 'QtSensors', 'QtWidgets', 'QtWebKitWidgets', 'QtMultimediaWidgets', 'QtOpenGL', 'QtPrintSupport']
       qtlibs = [lib.replace('Qt', 'Qt5') for lib in qtlibs]
       qtlibs += ['icuin51', 'icuuc51', 'icudt51', 'libGLESv2', 'libEGL']
-      qtplatforms = ['windows']
+      qtplugins["platforms"] = ['windows']
+      qtplugins["accessible"] = ["taccessiblewidgets"]
     windowsBundleFiles = myenv.WindowsBundle("Swift", 
       resources = commonResources,
-      qtimageformats = qtimageformats,
+      qtplugins = qtplugins,
       qtlibs = qtlibs,
-      qtplatforms = qtplatforms,
 			qtversion = qt_version)
 
   if env["DIST"] :
