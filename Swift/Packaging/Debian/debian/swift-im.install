@@ -1,2 +1,3 @@
 usr/bin/swift-im
 usr/share
+usr/share/lintian/overrides/swift-im

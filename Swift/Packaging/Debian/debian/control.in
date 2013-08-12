@@ -4,14 +4,14 @@ Priority: optional
 Maintainer: Swift Package Maintainer <packages@swift.im>
 Uploaders: Remko Tronçon <dev@el-tramo.be>, Kevin Smith <kevin@kismith.co.uk>
 Build-Depends: debhelper (>= 7), scons (>= 1.2.0), libssl-dev (>= 0.9.8g), libqt4-dev (>= 4.5.0), libxml2-dev (>= 2.7.6), libxss-dev (>= 1.2.0), libboost-dev (>= 1.34.1), libboost-filesystem-dev (>= 1.34.1), libboost-program-options-dev (>= 1.34.1), libboost-regex-dev (>= 1.34.1), libboost-signals-dev (>= 1.34.1), libboost-system-dev (>= 1.34.1), libboost-thread-dev (>= 1.34.1), libboost-date-time-dev (>= 1.34.1), libidn11-dev (>= 1.10), docbook-xsl (>= 1.75.0), docbook-xml (>= 4.5), xsltproc, libxml2-utils %WEBKIT_DEPENDENCY%
-Standards-Version: 3.9.3
+Standards-Version: 3.9.4
 Vcs-Git: git://swift.im/swift
 Vcs-Browser: http://swift.im/git/swift
 Homepage: http://swift.im
 
 Package: libswiften%SWIFTEN_SOVERSION%
 Architecture: any
-Section: net
+Section: libs
 Priority: optional
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: XMPP library
@@ -23,7 +23,7 @@ Package: libswiften-dev
 Architecture: any
 Section: libdevel
 Priority: optional
-Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}
+Depends: libswiften%SWIFTEN_SOVERSION% (= ${binary:Version}), ${shlibs:Depends}, ${misc:Depends}, libboost-dev (>= 1.34.1), libboost-filesystem-dev (>= 1.34.1), libboost-regex-dev (>= 1.34.1), libboost-signals-dev (>= 1.34.1), libboost-thread-dev (>= 1.34.1), libboost-date-time-dev (>= 1.34.1)
 Description: XMPP library (development files)
  Swiften is a robust, high-quality, standards-compliant, cross-platform,
  and performant C++ library for implementing XMPP applications. Swiften

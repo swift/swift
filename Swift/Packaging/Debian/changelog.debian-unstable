@@ -1,7 +1,17 @@
-swift-im (2.0~beta1+dev46-1) unstable; urgency=low
+swift-im (2.0+dev5-1) unstable; urgency=low
 
   * Update from upstream.
-  * Rename /usr/bin/swift binary to not conflict with other package. Closes: #674504
+  * Compiles with boost >= 1.50.0; will build on sid again. Closes: #713725
+  * Include dependencies for libswiften so that other packages 
+    can depend on it. Closes: #714902
+
+ -- Kevin Smith <kevin@kismith.co.uk>  Mon, 12 Aug 2013 16:18:09 -0000
+
+swift-im (2.0~beta1+dev47-1) unstable; urgency=low
+
+  * Update from upstream.
+  * Rename /usr/bin/swift binary to not conflict with
+    other package. Closes: #674504
 
  -- Kevin Smith <kevin@kismith.co.uk>  Tue, 12 Jun 2012 19:25:12 -0000
 

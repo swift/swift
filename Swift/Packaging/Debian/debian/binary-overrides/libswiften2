@@ -1,0 +1,2 @@
+# The upstream numbering scheme is that 2.0~beta1 is prior to 2.0 but that 2.0~beta1+dev10 is ten commits later than 2.0~beta1, so in this case the warning is redundant.
+libswiften2 binary: rc-version-greater-than-expected-version

@@ -23,6 +23,8 @@ install: build
 	dh_prep  
 	dh_installdirs
 	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) SWIFT_INSTALLDIR=$(CURDIR)/debian/tmp/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/tmp/usr $(CURDIR)/debian/tmp
+	mkdir -p $(CURDIR)/debian/tmp/usr/share/lintian/overrides
+	cp debian/binary-overrides/* $(CURDIR)/debian/tmp/usr/share/lintian/overrides/
 
 binary-indep: install
 binary-arch: install
