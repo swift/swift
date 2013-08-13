@@ -14,7 +14,10 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <net/if.h>
+
+#ifndef __ANDROID__
 #include <ifaddrs.h>
+#endif
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddress.h>
@@ -24,7 +27,7 @@ namespace Swift {
 
 std::vector<NetworkInterface> UnixNetworkEnvironment::getNetworkInterfaces() const {
 	std::map<std::string, NetworkInterface> interfaces;
-
+#ifndef __ANDROID__
 	ifaddrs* addrs = 0;
 	int ret = getifaddrs(&addrs);
 	if (ret != 0) {
@@ -49,7 +52,7 @@ std::vector<NetworkInterface> UnixNetworkEnvironment::getNetworkInterfaces() con
 	}
 
 	freeifaddrs(addrs);
-
+#endif
 	std::vector<NetworkInterface> result;
 	for (std::map<std::string,NetworkInterface>::const_iterator i = interfaces.begin(); i != interfaces.end(); ++i) {
 		result.push_back(i->second);

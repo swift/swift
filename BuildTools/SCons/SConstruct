@@ -333,6 +333,14 @@ if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
 	env["HAVE_LIBIDN"] = 1
 	env["LIBIDN_BUNDLED"] = 1
 
+# Unbound
+if env["unbound"] :
+    env["LDNS_BUNDLED"] = 1
+    env["UNBOUND_BUNDLED"] = 1
+else :
+    env["LDNS_FLAGS"] = {}
+    env["UNBOUND_FLAGS"] = {}
+
 # LibMiniUPnPc
 if env["experimental"] :
 	libminiupnpc_flags = {"CPPPATH": ["/usr/include/miniupnpc/"]}
@@ -427,7 +435,7 @@ if env["qt"] :
 
 # OpenSSL
 openssl_env = conf_env.Clone()
-if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device", "iphone-simulator", "xcode") :
+if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device", "iphone-simulator", "xcode", "android") :
 	env["OPENSSL_BUNDLED"] = True
 	env["HAVE_OPENSSL"] = True
 else :
@@ -480,7 +488,7 @@ if hunspell_conf.CheckCXXHeader("hunspell/hunspell.hxx") and hunspell_conf.Check
 hunspell_conf.Finish()
 
 # Bonjour
-if env["PLATFORM"] == "darwin" :
+if env["PLATFORM"] == "darwin" and env["target"] == "native" :
 	env["HAVE_BONJOUR"] = 1
 elif env.get("bonjour", False) :
 	bonjour_env = conf_env.Clone()

@@ -1,0 +1,34 @@
+diff --git a/3rdParty/LibNATPMP/src/libnatpmp/getgateway.h b/3rdParty/LibNATPMP/src/libnatpmp/getgateway.h
+index 9432528..51dadb7 100644
+--- a/3rdParty/LibNATPMP/src/libnatpmp/getgateway.h
++++ b/3rdParty/LibNATPMP/src/libnatpmp/getgateway.h
+@@ -27,6 +27,11 @@ typedef unsigned short uint16_t;
+ #endif
+ #include "declspec.h"
+ 
++#ifdef ANDROID
++#include <arpa/inet.h>
++#define in_addr_t uint32_t
++#endif
++
+ /* getdefaultgateway() :
+  * return value :
+  *    0 : success
+diff --git a/3rdParty/LibNATPMP/src/libnatpmp/natpmp.h b/3rdParty/LibNATPMP/src/libnatpmp/natpmp.h
+index 1175b58..c870371 100644
+--- a/3rdParty/LibNATPMP/src/libnatpmp/natpmp.h
++++ b/3rdParty/LibNATPMP/src/libnatpmp/natpmp.h
+@@ -39,6 +39,12 @@ typedef unsigned short uint16_t;
+ #include <netinet/in.h>
+ #endif
+ 
++#ifdef ANDROID
++#include <arpa/inet.h>
++#define in_addr_t uint32_t
++#endif
++
++
+ typedef struct {
+ 	int s;	/* socket */
+ 	in_addr_t gateway;	/* default gateway (IPv4) */
+-- 

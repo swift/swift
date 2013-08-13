@@ -19,13 +19,24 @@ def generate(env) :
 			for i in ["HOME", "USERPROFILE", "APPDATA"]:
 				if os.environ.get(i, "") :
 					test_env["ENV"][i] = os.environ[i]
-			if test_env["PLATFORM"] == "darwin" :
-				test_env["ENV"]["DYLD_FALLBACK_LIBRARY_PATH"] = ":".join(map(lambda x : str(x), test_env.get("LIBPATH", [])))
-			elif test_env["PLATFORM"] == "win32" :
-				test_env["ENV"]["PATH"] = ";".join(map(lambda x : str(x), test_env.get("LIBRUNPATH", []))) + ";" + test_env["ENV"]["PATH"]
+			if env["target"] == "android" :
+				test_env["ENV"]["PATH"] = env["android_sdk_bin"] + ";" + test_env["ENV"]["PATH"]
+			else :
+				if test_env["PLATFORM"] == "darwin" :
+					test_env["ENV"]["DYLD_FALLBACK_LIBRARY_PATH"] = ":".join(map(lambda x : str(x), test_env.get("LIBPATH", [])))
+				elif test_env["PLATFORM"] == "win32" :
+					test_env["ENV"]["PATH"] = ";".join(map(lambda x : str(x), test_env.get("LIBRUNPATH", []))) + ";" + test_env["ENV"]["PATH"]
+
 
 			# Run the test
-			test_env.Command("**dummy**", target, 
+			if env["target"] == "android":
+				exec_name = os.path.basename(cmd)
+				test_env.Command("**dummy**", target, SCons.Action.Action(
+					["adb shell mount -o rw,remount /system",
+					"adb push " + cmd + " /system/usr/bin/" + exec_name, 
+					"adb shell SWIFT_CLIENTTEST_JID=\"" + os.getenv("SWIFT_CLIENTTEST_JID") + "\" SWIFT_CLIENTTEST_PASS=\"" + os.getenv("SWIFT_CLIENTTEST_PASS") + "\" " + env.get("TEST_RUNNER", "") + "/system/usr/bin/" + exec_name], cmdstr = "$TESTCOMSTR"))
+			else :
+				test_env.Command("**dummy**", target, 
 					SCons.Action.Action(ignore_prefix + env.get("TEST_RUNNER", "") + cmd + " " + params, cmdstr = "$TESTCOMSTR"))
 
 	def registerScriptTests(env, scripts, name, type) :

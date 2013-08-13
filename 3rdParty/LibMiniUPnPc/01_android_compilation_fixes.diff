@@ -1,0 +1,16 @@
+diff --git a/3rdParty/LibMiniUPnPc/src/miniupnpc/miniwget.c b/3rdParty/LibMiniUPnPc/src/miniupnpc/miniwget.c
+index 87f6155..0c31416 100644
+--- a/3rdParty/LibMiniUPnPc/src/miniupnpc/miniwget.c
++++ b/3rdParty/LibMiniUPnPc/src/miniupnpc/miniwget.c
+@@ -44,6 +44,10 @@
+ #define MIN(x,y) (((x)<(y))?(x):(y))
+ #endif
+ 
++#ifdef __ANDROID__
++#define MIN(x,y) (((x)<(y))?(x):(y))
++#endif
++
+ #include "miniupnpcstrings.h"
+ #include "miniwget.h"
+ #include "connecthostport.h"
+-- 

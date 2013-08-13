@@ -7,7 +7,7 @@
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Network/BoostTimerFactory.h>
 #include <Swiften/Network/BoostConnectionFactory.h>
-#include <Swiften/Network/PlatformDomainNameResolver.h>
+
 #include <Swiften/Network/BoostConnectionServerFactory.h>
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
@@ -19,6 +19,12 @@
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+
+#ifdef USE_UNBOUND
+#include <Swiften/Network/UnboundDomainNameResolver.h>
+#else
+#include <Swiften/Network/PlatformDomainNameResolver.h>
+#endif
 
 namespace Swift {
 
@@ -36,7 +42,12 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(e
 	tlsFactories = new PlatformTLSFactories();
 	proxyProvider = new PlatformProxyProvider();
 	idnConverter = PlatformIDNConverter::create();
+#ifdef USE_UNBOUND
+	// TODO: What to do about idnConverter.
+	domainNameResolver = new UnboundDomainNameResolver(ioServiceThread.getIOService(), eventLoop);
+#else
 	domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
+#endif
 	cryptoProvider = PlatformCryptoProvider::create();
 }
 

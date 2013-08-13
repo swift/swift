@@ -1,0 +1,13 @@
+--- a/3rdParty/Unbound/src/unbound/libunbound/libunbound.c
++++ b/3rdParty/Unbound/src/unbound/libunbound/libunbound.c
+@@ -812,6 +812,10 @@ ub_ctx_resolvconf(struct ub_ctx* ctx, char* fname)
+ 	char* parse, *addr;
+ 	int r;
+ 
++#ifdef __ANDROID__
++	ub_ctx_set_fwd(ctx, "8.8.8.8");
++	ub_ctx_set_fwd(ctx, "8.8.4.4");
++#endif
+ 	if(fname == NULL) {
+ #if !defined(UB_ON_WINDOWS) || !defined(HAVE_WINDOWS_H)
+ 		fname = "/etc/resolv.conf";

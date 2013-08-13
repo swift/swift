@@ -19,7 +19,9 @@ vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
 vars.Add(BoolVariable("allow_warnings", "Allow compilation warnings during compilation", "yes"))
 vars.Add(BoolVariable("assertions", "Compile with assertions", "yes"))
 vars.Add(BoolVariable("max_jobs", "Build with maximum number of parallel jobs", "no"))
-vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device", "xcode"]))
+vars.Add(EnumVariable("target", "Choose a target platform for compilation", "native", ["native", "iphone-simulator", "iphone-device", "xcode", "android"]))
+vars.Add('android_toolchain', "Path to Android toolchain")
+vars.Add('android_sdk_bin', "Path to Android SDK's tools directory")
 vars.Add(BoolVariable("swift_mobile", "Build mobile Swift", "no"))
 vars.Add(BoolVariable("swiften_dll", "Build Swiften as dynamically linked library", "no"))
 if os.name != "nt" :
@@ -68,6 +70,7 @@ vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
 vars.Add(BoolVariable("enable_variants", "Build in a separate dir under build/, depending on compile flags", "no"))
 vars.Add(BoolVariable("experimental", "Build experimental features", "yes"))
 vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
+vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for DNS lookup.", "no"))
 
 ################################################################################
 # Set up default build & configure environment
@@ -284,7 +287,7 @@ if env["PLATFORM"] == "win32" :
 		env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
 		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
 
-if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
+if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode", "android"] :
 	env["PLATFORM_FLAGS"]["FRAMEWORKS"] += ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"]
 
 # Testing
@@ -350,6 +353,17 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"] + ["-isysroot", "$XCODE_SDKROOT", "-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
 	# Bit of a hack, because BOOST doesn't know the endianness for ARM
 	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"]) 
+
+################################################################################
+# Android
+################################################################################
+if target in ["android"] :
+	env["ENV"]["PATH"] = env["android_toolchain"] + "/bin:" + env["ENV"]["PATH"]
+	env["CC"] = "arm-linux-androideabi-gcc"
+	env["CXX"] = "arm-linux-androideabi-g++"
+	env["RANLIB"] = "arm-linux-androideabi-ranlib"
+	env.Append(CPPDEFINES = ["ANDROID"])
+	env.Append(CPPDEFINES = ["_REENTRANT", "_GLIBCXX__PTHREADS"])
 
 # CCache
 if env.get("ccache", False) :

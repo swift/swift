@@ -11,6 +11,9 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
 	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
 
+	if env.get("unbound", False) :
+		myenv.Append(CPPDEFINES = ["USE_UNBOUND"])
+
 	tester = myenv.Program("NetworkTest", [
 			"BoostConnectionServerTest.cpp",
 			"BoostConnectionTest.cpp",

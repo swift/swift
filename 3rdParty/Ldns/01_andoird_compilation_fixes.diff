@@ -1,0 +1,15 @@
+--- 3rdParty/Ldns/src/ldns/ldns/ldns.h	2013-04-12 14:30:16.000000000 +0200
++++ 3rdParty/Ldns/src/ldns/ldns/ldns.h	2013-04-12 14:30:48.000000000 +0200
+@@ -123,6 +123,12 @@
+ #include <ldns/sha1.h>
+ #include <ldns/sha2.h>
+ 
++#ifdef __ANDROID__
++#ifndef in_port_t
++#define in_port_t uint16_t
++#endif
++#endif
++
+ #ifdef __cplusplus
+ extern "C" {
+ #endif

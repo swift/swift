@@ -9,11 +9,17 @@
 #include <boost/bind.hpp>
 
 #include <algorithm>
-
 #include <Swiften/Base/sleep.h>
 #include <string>
 #include <Swiften/Base/ByteArray.h>
+#ifdef USE_UNBOUND
+#include <Swiften/Network/UnboundDomainNameResolver.h>
+#else
 #include <Swiften/Network/PlatformDomainNameResolver.h>
+#endif
+#include <Swiften/Network/BoostTimerFactory.h>
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
@@ -32,24 +38,34 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(DomainNameResolverTest);
 		CPPUNIT_TEST(testResolveAddress);
 		CPPUNIT_TEST(testResolveAddress_Error);
+#ifndef USE_UNBOUND
 		CPPUNIT_TEST(testResolveAddress_IPv6);
 		CPPUNIT_TEST(testResolveAddress_IPv4and6);
 		CPPUNIT_TEST(testResolveAddress_International);
+#endif
 		CPPUNIT_TEST(testResolveAddress_Localhost);
 		CPPUNIT_TEST(testResolveAddress_Parallel);
+#ifndef USE_UNBOUND
 		CPPUNIT_TEST(testResolveService);
+#endif
 		CPPUNIT_TEST(testResolveService_Error);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void setUp() {
+			ioServiceThread = new BoostIOServiceThread();
 			eventLoop = new DummyEventLoop();
+#ifdef USE_UNBOUND
+			resolver = new UnboundDomainNameResolver(ioServiceThread->getIOService(), eventLoop);
+#else
 			idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
 			resolver = new PlatformDomainNameResolver(idnConverter.get(), eventLoop);
+#endif
 			resultsAvailable = false;
 		}
 
 		void tearDown() {
+			delete ioServiceThread;
 			delete resolver;
 			delete eventLoop;
 		}
@@ -211,14 +227,16 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 			}
 
 	private:
+		BoostIOServiceThread* ioServiceThread;
 		DummyEventLoop* eventLoop;
 		boost::shared_ptr<IDNConverter> idnConverter;
+		boost::shared_ptr<TimerFactory> timerFactory;
 		bool resultsAvailable;
 		std::vector<HostAddress> addressQueryResult;
 		std::vector<HostAddress> allAddressQueryResults;
 		boost::optional<DomainNameResolveError> addressQueryError;
 		std::vector<DomainNameServiceQuery::Result> serviceQueryResult;
-		PlatformDomainNameResolver* resolver;
+		DomainNameResolver* resolver;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DomainNameResolverTest);

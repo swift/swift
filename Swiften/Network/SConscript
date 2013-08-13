@@ -2,6 +2,10 @@ Import("swiften_env")
 
 myenv = swiften_env.Clone()
 
+if myenv.get("unbound", False) :
+   myenv.MergeFlags(myenv.get("UNBOUND_FLAGS", {}))
+   myenv.MergeFlags(myenv.get("LDNS_FLAGS", {}))
+
 sourceList = [
 			"ProxiedConnection.cpp",
 			"HTTPConnectProxiedConnection.cpp",
@@ -30,9 +34,6 @@ sourceList = [
 			"DomainNameResolver.cpp",
 			"DomainNameAddressQuery.cpp",
 			"DomainNameServiceQuery.cpp",
-			"PlatformDomainNameResolver.cpp",
-			"PlatformDomainNameServiceQuery.cpp",
-			"PlatformDomainNameAddressQuery.cpp",
 			"StaticDomainNameResolver.cpp",
 			"HostAddress.cpp",
 			"HostAddressPort.cpp",
@@ -53,8 +54,16 @@ sourceList = [
 			"NATTraversalRemovePortForwardingRequest.cpp",
 			"NATTraversalInterface.cpp",
 	]
-		
-if myenv["PLATFORM"] == "darwin" :
+
+if myenv.get("unbound", False) :
+	myenv.Append(CPPDEFINES = "USE_UNBOUND")
+	sourceList.append("UnboundDomainNameResolver.cpp")
+else :
+	sourceList.append("PlatformDomainNameResolver.cpp")
+	sourceList.append("PlatformDomainNameServiceQuery.cpp")
+	sourceList.append("PlatformDomainNameAddressQuery.cpp")
+
+if myenv["PLATFORM"] == "darwin" and myenv["target"] != "android":
 	myenv.Append(FRAMEWORKS = ["CoreServices", "SystemConfiguration"])
 	sourceList += [ "MacOSXProxyProvider.cpp" ]
 	sourceList += [ "UnixNetworkEnvironment.cpp" ]
