@@ -33,8 +33,8 @@ def generate(env) :
 				exec_name = os.path.basename(cmd)
 				test_env.Command("**dummy**", target, SCons.Action.Action(
 					["adb shell mount -o rw,remount /system",
-					"adb push " + cmd + " /system/usr/bin/" + exec_name, 
-					"adb shell SWIFT_CLIENTTEST_JID=\"" + os.getenv("SWIFT_CLIENTTEST_JID") + "\" SWIFT_CLIENTTEST_PASS=\"" + os.getenv("SWIFT_CLIENTTEST_PASS") + "\" " + env.get("TEST_RUNNER", "") + "/system/usr/bin/" + exec_name], cmdstr = "$TESTCOMSTR"))
+					"adb push " + cmd + " /system/bin/" + exec_name, 
+					"adb shell SWIFT_CLIENTTEST_JID=\"" + os.getenv("SWIFT_CLIENTTEST_JID") + "\" SWIFT_CLIENTTEST_PASS=\"" + os.getenv("SWIFT_CLIENTTEST_PASS") + "\" " + env.get("TEST_RUNNER", "") + "/system/bin/" + exec_name], cmdstr = "$TESTCOMSTR"))
 			else :
 				test_env.Command("**dummy**", target, 
 					SCons.Action.Action(ignore_prefix + env.get("TEST_RUNNER", "") + cmd + " " + params, cmdstr = "$TESTCOMSTR"))
