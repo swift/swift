@@ -39,7 +39,7 @@ if env["SCONS_STAGE"] == "build" :
 			"HunspellChecker.cpp",
 			"SpellParser.cpp",
 		]
-	elif swiftools_env["PLATFORM"] == "darwin" :
+	elif swiftools_env["PLATFORM"] == "darwin" and env["target"] == "native" :
 		sources += [
 			"SpellCheckerFactory.cpp",
 			"MacOSXChecker.mm",
