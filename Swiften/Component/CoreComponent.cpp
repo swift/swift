@@ -20,7 +20,7 @@
 
 namespace Swift {
 
-CoreComponent::CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret) : eventLoop(eventLoop), networkFactories(networkFactories), jid_(jid), secret_(secret), disconnectRequested_(false) {
+CoreComponent::CoreComponent(const JID& jid, const std::string& secret, NetworkFactories* networkFactories) : networkFactories(networkFactories), jid_(jid), secret_(secret), disconnectRequested_(false) {
 	stanzaChannel_ = new ComponentSessionStanzaChannel();
 	stanzaChannel_->onMessageReceived.connect(boost::ref(onMessageReceived));
 	stanzaChannel_->onPresenceReceived.connect(boost::ref(onPresenceReceived));

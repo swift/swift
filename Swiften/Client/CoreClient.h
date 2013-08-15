@@ -50,7 +50,6 @@ namespace Swift {
 		public: 
 			/**
 			 * Constructs a client for the given JID with the given password.
-			 * The given eventLoop will be used to post events to.
 			 */
 			CoreClient(const JID& jid, const SafeByteArray& password, NetworkFactories* networkFactories);
 			~CoreClient();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
 	 */
 	class SWIFTEN_API Component : public CoreComponent {
 		public:
-			Component(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret);
+			Component(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
 			~Component();
 
 			/**

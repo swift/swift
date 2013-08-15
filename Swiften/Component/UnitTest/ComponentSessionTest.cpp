@@ -213,7 +213,6 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 
 		boost::shared_ptr<MockSessionStream> server;
 		bool sessionFinishedReceived;
-		bool needCredentials;
 		boost::shared_ptr<Error> sessionFinishedError;
 		boost::shared_ptr<CryptoProvider> crypto;
 };

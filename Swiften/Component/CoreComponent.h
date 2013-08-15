@@ -43,7 +43,7 @@ namespace Swift {
 	 */
 	class SWIFTEN_API CoreComponent : public Entity {
 		public:
-			CoreComponent(EventLoop* eventLoop, NetworkFactories* networkFactories, const JID& jid, const std::string& secret);
+			CoreComponent(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
 			~CoreComponent();
 
 			void connect(const std::string& host, int port);
@@ -88,7 +88,6 @@ namespace Swift {
 			void handleDataWritten(const SafeByteArray&);
 
 		private:
-			EventLoop* eventLoop;
 			NetworkFactories* networkFactories;
 			JID jid_;
 			std::string secret_;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,9 +14,8 @@ using namespace boost;
 
 class EchoComponent {
 	public:
-		EchoComponent(EventLoop* eventLoop, NetworkFactories* networkFactories) : jid("echo.wonderland.lit") {
-			component = new Component(eventLoop, networkFactories,
-					jid, "EchoSecret");
+		EchoComponent(NetworkFactories* networkFactories) : jid("echo.wonderland.lit") {
+			component = new Component(jid, "EchoSecret", networkFactories);
 			component->onConnected.connect(bind(&EchoComponent::handleConnected, this));
 			component->onMessageReceived.connect(
 					bind(&EchoComponent::handleMessageReceived, this, _1));
@@ -62,7 +61,7 @@ int main(int, char**) {
 	SimpleEventLoop eventLoop;
 	BoostNetworkFactories networkFactories(&eventLoop);
 
-	EchoComponent bot(&eventLoop, &networkFactories);
+	EchoComponent bot(&networkFactories);
 
 	eventLoop.run();
 	return 0;
