@@ -10,6 +10,7 @@
 #include <boost/bind.hpp>
 #include <iostream>
 #include <cassert>
+#include <boost/thread/locks.hpp>
 
 #include <Swiften/Base/Log.h>
 
