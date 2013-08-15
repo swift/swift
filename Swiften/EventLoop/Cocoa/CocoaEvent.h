@@ -13,10 +13,7 @@ namespace Swift {
 	class CocoaEventLoop;
 }
 
-@interface CocoaEvent : NSObject {
-	Swift::Event* event;
-	Swift::CocoaEventLoop* eventLoop;
-}
+@interface CocoaEvent : NSObject
 
 // Takes ownership of event
 - (id) initWithEvent: (Swift::Event*) e eventLoop: (Swift::CocoaEventLoop*) el;

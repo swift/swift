@@ -12,13 +12,18 @@
 using namespace Swift;
 
 @interface MacOSXURIEventHandler : NSObject {
-	URIHandler* handler;
 }
+
 - (id) initWithHandler: (URIHandler*) handler;
 - (void) getUrl: (NSAppleEventDescriptor*) event withReplyEvent: (NSAppleEventDescriptor*) replyEvent;
 
 @end
+
 @implementation MacOSXURIEventHandler
+	{
+		URIHandler* handler;
+	}
+
 	- (id) initWithHandler: (URIHandler*) h {
 		if ((self = [super init])) {
 			handler = h;

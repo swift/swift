@@ -9,9 +9,7 @@
 #include <Cocoa/Cocoa.h>
 #include <boost/function.hpp>
 
-@interface CocoaAction : NSObject {
-	boost::function<void ()>* function;
-}
+@interface CocoaAction : NSObject
 
 /**
  * Acquires ownership of 'f'.

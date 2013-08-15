@@ -6,13 +6,15 @@
 
 #include <SwifTools/Cocoa/CocoaAction.h>
 
-@implementation CocoaAction
+@implementation CocoaAction {
+	boost::function<void ()>* function;
+}
 
 - (id) initWithFunction: (boost::function<void()>*) f {
-    if ((self = [super init])) {
-			function = f;
-		}
-    return self;
+	if ((self = [super init])) {
+		function = f;
+	}
+	return self;
 }
 
 - (void) dealloc {

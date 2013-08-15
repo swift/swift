@@ -4,7 +4,10 @@
 #include "Slimber/Cocoa/CocoaMenulet.h"
 #include "Slimber/Cocoa/main.h"
 
-@implementation CocoaController
+@implementation CocoaController {
+	CocoaMenulet* menulet;
+	MainController* main;
+}
 
 - (void) dealloc {
 	delete main;
