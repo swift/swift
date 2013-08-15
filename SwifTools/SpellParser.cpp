@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Vlad Voicu
+ * Copyright (c) 2011-2013 Vlad Voicu
  * Licensed under the Simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/spirit/include/lex_lexertl.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <string>
 
@@ -40,14 +41,14 @@ struct counter
 	{
 		switch (t.id()) {
 			case ID_WWW:
-				position += t.value().size();
+				position += boost::numeric_cast<size_t>(t.value().size());
 				break;
 			case ID_HTTP:
-				position += t.value().size();
+				position += boost::numeric_cast<size_t>(t.value().size());
 				break;
 			case ID_WORD:       // matched a word
-				wordPositions.push_back(boost::tuples::make_tuple(position, position + t.value().size()));
-				position += t.value().size(); 
+				wordPositions.push_back(boost::tuples::make_tuple(position, position + boost::numeric_cast<size_t>(t.value().size())));
+				position += boost::numeric_cast<size_t>(t.value().size()); 
 				break;
 			case ID_CHAR:       // match a simple char
 				++position; 
