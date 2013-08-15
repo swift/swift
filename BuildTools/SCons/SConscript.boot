@@ -265,6 +265,8 @@ else :
 			"-Wno-c++11-extensions", # We use C++11; turn this off when we use -std=c++11
 			"-Wno-long-long", # We use long long
 			"-Wno-padded",
+			"-Wno-missing-variable-declarations", # Getting rid of CPPUnit warnings
+			"-Wno-direct-ivar-access", # Obj-C code warning
 			])
 	else :
 		env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls", "-Wno-unknown-pragmas"])
