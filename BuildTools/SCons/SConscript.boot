@@ -255,6 +255,7 @@ else :
 		env.Append(CXXFLAGS = [
 			"-Weverything",
 			"-Wno-unknown-warning-option", # To stay compatible between CLang versions
+			"-Wno-unknown-pragmas", # To stay compatible between CLang versions
 			"-Wno-weak-vtables", # Virtually none of our elements have outlined methods. This also seems to affect classes in .cpp files, which in turn affects all our tests, which may need fixing in CLang
 			"-Wno-shadow", # Also warns for shadowing on constructor arguments, which we do a lot
 			"-Wno-documentation", # We don't care about documentation warnings
