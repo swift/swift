@@ -1,3 +1,6 @@
+// Fix Boost-Cocoa conflict
+#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+
 #include <SwifTools/Dock/MacOSXDock.h>
 
 #include <AppKit/AppKit.h>
