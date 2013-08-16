@@ -6,7 +6,9 @@
 
 #include "Value.h"
 
-#include <lualib.h>
+extern "C" {
+	#include <lualib.h>
+}
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <Swiften/Base/foreach.h>

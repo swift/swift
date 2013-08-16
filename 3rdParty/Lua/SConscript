@@ -31,10 +31,6 @@ if env.get("LUA_BUNDLED", False) :
 
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
-		if env["PLATFORM"] == "win32" :
-			myenv.Append(CFLAGS = ["/TP"])
-		else :
-			myenv.Append(CFLAGS = ["-x", "c++"])
 
 		# Remove warn flags
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if not flag.startswith("-W")])

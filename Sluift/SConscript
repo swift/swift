@@ -8,17 +8,13 @@ if env["SCONS_STAGE"] == "build" and not GetOption("help") and not env.get("HAVE
 		env["PROJECTS"].remove("Sluift")
 		
 elif env["SCONS_STAGE"] == "build" :
-	lib_env = env.Clone()
-	lib_env.UseFlags(env["LUA_FLAGS"])
-	lib_env.UseFlags(env["SWIFTEN_FLAGS"])
-	lib_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
-	sluift_lib = lib_env.StaticLibrary("SluiftCore", [
-			"Lua/Value.cpp",
-			"sluift.cpp"
-		]);
+	sluift_sources = [
+		"Lua/Value.cpp",
+		"ClientHelpers.cpp",
+		"sluift.cpp"
+	]
 
 	myenv = env.Clone()
-	myenv.Append(LIBS = sluift_lib)
 	myenv.UseFlags(env.get("LUA_FLAGS", {}))
 	myenv.UseFlags(env["SWIFTEN_FLAGS"])
 	myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
@@ -27,10 +23,6 @@ elif env["SCONS_STAGE"] == "build" :
 		myenv.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 	elif myenv["PLATFORM"] == "darwin" :
 		myenv["SHLIBSUFFIX"] = ".so"
-	if env["PLATFORM"] == "win32" :
-		myenv.Append(CFLAGS = ["/TP"])
-	else :
-		myenv.Append(CFLAGS = ["-x", "c++"])
 
 	myenv["SLUIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "sluift")
 	def patchLua(env, target, source) :
@@ -51,13 +43,13 @@ elif env["SCONS_STAGE"] == "build" :
 	if myenv.get("HAVE_READLINE", False) :
 		myenv.Append(CPPDEFINES = ["LUA_USE_READLINE"])
 		myenv.MergeFlags(myenv["READLINE_FLAGS"])
-	env["SLUIFT"] = myenv.Program("sluift", [
+	env["SLUIFT"] = myenv.Program("sluift", sluift_sources + [
 			"lua.c",
 			"linit.c",
 		])
 
 	myenv.WriteVal("dll.c", myenv.Value(""))
-	myenv.SharedLibrary("sluift", ["dll.c"])
+	myenv.SharedLibrary("sluift", sluift_sources + ["dll.c"])
 
 	if env["PLATFORM"] == "win32" :
 		ssl_libs = []

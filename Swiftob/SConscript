@@ -13,7 +13,7 @@ elif env["SCONS_STAGE"] == "build":
 	myenv.UseFlags(myenv["SWIFTEN_FLAGS"])
 	myenv.UseFlags(myenv["SWIFTEN_DEP_FLAGS"])
 	sources = [
-		"linit.cpp",
+		"linit.c",
 		"Swiftob.cpp",
 		"Users.cpp",
 		"Commands.cpp",
