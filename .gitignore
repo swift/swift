@@ -41,6 +41,7 @@ config.py
 config.log
 .sconf_temp
 .sconsign.dblite
+.scons2ninja.deps
 Swiften/Examples/TuneBot/TuneBot
 Swift/QtUI/swift-im
 Swift/QtUI/swift
