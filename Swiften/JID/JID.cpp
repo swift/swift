@@ -132,6 +132,7 @@ struct EscapedCharacterFormatter {
 namespace Swift {
 
 JID::JID(const char* jid) : valid_(true) {
+	assert(jid);
 	initializeFromString(std::string(jid));
 }
 

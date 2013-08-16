@@ -47,6 +47,8 @@ namespace Swift {
 
 			/**
 			 * See std::string constructor.
+			 *
+			 * Must not be NULL.
 			 */
 			JID(const char*);
 
