@@ -85,9 +85,9 @@ void CoreComponent::disconnect() {
 		connector_->stop();
 		assert(!session_);
 	}
-	assert(!session_);
-	assert(!sessionStream_);
-	assert(!connector_);
+	//assert(!session_); /* commenting out until we have time to refactor to be like CoreClient */
+	//assert(!sessionStream_);
+	//assert(!connector_);
 	disconnectRequested_ = false;
 }
 
