@@ -7,15 +7,14 @@
 #include <Swiften/EventLoop/EventLoop.h>
 
 #include <algorithm>
-#include <boost/bind.hpp>
 #include <iostream>
 #include <cassert>
+#include <boost/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
 #include <boost/thread/locks.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <boost/thread/locks.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
 
 namespace lambda = boost::lambda;
 
