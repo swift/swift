@@ -141,7 +141,7 @@ class SluiftClient {
 				return event;
 			}
 			Watchdog watchdog(timeout, networkFactories.getTimerFactory());
-			while (!watchdog.getTimedOut() && pendingEvents.empty() && !client->isActive()) {
+			while (!watchdog.getTimedOut() && pendingEvents.empty() && client->isActive()) {
 				eventLoop.runUntilEvents();
 			}
 			if (watchdog.getTimedOut() || !client->isActive()) {
