@@ -73,10 +73,14 @@ using std::wstring;
     const fs::path dot_dot_path("..");
 #   include <sys/types.h>
 #   include <sys/stat.h>
-#   if !defined(__APPLE__) && !defined(__OpenBSD__)
+#   if !defined(__APPLE__) && !defined(__OpenBSD__) && !defined(ANDROID)
 #     include <sys/statvfs.h>
 #     define BOOST_STATVFS statvfs
 #     define BOOST_STATVFS_F_FRSIZE vfs.f_frsize
+#   elif defined (ANDROID)
+#     include <sys/vfs.h>
+#     define BOOST_STATVFS statfs
+#     define BOOST_STATVFS_F_FRSIZE static_cast<boost::uintmax_t>(vfs.f_bsize)
 #   else
 #     ifdef __OpenBSD__
 #     include <sys/param.h>

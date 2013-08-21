@@ -37,6 +37,7 @@ fi
 	random/variate_generator.hpp \
 	random/uniform_int.hpp \
 	regex.hpp \
+	scope_exit.hpp \
 	shared_ptr.hpp \
 	smart_ptr/make_shared.hpp \
 	serialization/serialization.hpp \
@@ -54,6 +55,7 @@ fi
 	uuid/uuid_generators.hpp \
 	variant.hpp \
 	spirit/include/lex_lexertl.hpp \
+	typeof/incr_registration_group.hpp \
 	$TARGET_DIR
 cp $1/LICENSE_1_0.txt $TARGET_DIR
 
