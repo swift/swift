@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -155,25 +155,25 @@ class SearchPayloadParserTest : public CppUnit::TestFixture {
 			Form::FormItem item = items[0];
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), item.size());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("Benvolio"), item[0]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Benvolio"), item[0]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("benvolio@montague.net"), item[2]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("benvolio@montague.net"), item[2]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("x-gender"), item[3]->getName());
 
 			item = items[1];
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), item.size());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("Romeo"), item[0]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Romeo"), item[0]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("romeo@montague.net"), item[2]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("romeo@montague.net"), item[2]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("x-gender"), item[3]->getName());
 		}
 };

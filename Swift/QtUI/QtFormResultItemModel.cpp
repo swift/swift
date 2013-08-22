@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include "QtFormResultItemModel.h"
 
 #include <boost/algorithm/string/join.hpp>
@@ -69,15 +75,16 @@ const std::string QtFormResultItemModel::getFieldValue(const Form::FormItem& ite
 	foreach(FormField::ref field, item) {
 		if (field->getName() == name) {
 			std::string delimiter = "";
-			if (boost::dynamic_pointer_cast<TextMultiFormField>(field)) {
+			if (field->getType() == FormField::TextMultiType) {
 				delimiter = "\n";
-			} else if (boost::dynamic_pointer_cast<JIDMultiFormField>(field)) {
+			}
+			else if (field->getType() == FormField::JIDMultiType) {
 				delimiter = ", ";
-			} else if (boost::dynamic_pointer_cast<ListMultiFormField>(field)) {
+			} 
+			else if (field->getType() == FormField::ListMultiType) {
 				delimiter = ", ";
 			}
-
-			return boost::algorithm::join(field->getRawValues(), delimiter);
+			return boost::algorithm::join(field->getValues(), delimiter);
 		}
 	}
 

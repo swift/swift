@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false) {
+FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false), parsingOption_(false) {
 }
 
 void FormParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
@@ -36,67 +36,62 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
 		else if (element == "instructions") {
 			currentText_.clear();
 		}
-		else if (element == "field") {
-			std::string type;
-			FormField::ref correspondingReportedField;
-			if (!parsingItem_) {
-				type = attributes.getAttribute("type");
-			} else {
-				foreach(FormField::ref field, getPayloadInternal()->getReportedFields()) {
-					if (field->getName() == attributes.getAttribute("var")) {
-						correspondingReportedField = field;
-						break;
-					}
-				}
-			}
-			if (type == "boolean" || boost::dynamic_pointer_cast<BooleanFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = BooleanFormFieldParseHelper::create();
-			}
-			else if (type == "fixed" || boost::dynamic_pointer_cast<FixedFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = FixedFormFieldParseHelper::create();
-			}
-			else if (type == "hidden" || boost::dynamic_pointer_cast<HiddenFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = HiddenFormFieldParseHelper::create();
-			}
-			else if (type == "jid-multi" || boost::dynamic_pointer_cast<JIDMultiFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = JIDMultiFormFieldParseHelper::create();
-			}
-			else if (type == "jid-single" || boost::dynamic_pointer_cast<JIDSingleFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = JIDSingleFormFieldParseHelper::create();
-			}
-			else if (type == "list-multi" || boost::dynamic_pointer_cast<ListMultiFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = ListMultiFormFieldParseHelper::create();
-			}
-			else if (type == "list-single" || boost::dynamic_pointer_cast<ListSingleFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = ListSingleFormFieldParseHelper::create();
-			}
-			else if (type == "text-multi" || boost::dynamic_pointer_cast<TextMultiFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = TextMultiFormFieldParseHelper::create();
-			}
-			else if (type == "text-private" || boost::dynamic_pointer_cast<TextPrivateFormField>(correspondingReportedField)) {
-				currentFieldParseHelper_ = TextPrivateFormFieldParseHelper::create();
-			}
-			else /*if (type == "text-single") || undefined */ {
-				currentFieldParseHelper_ = TextSingleFormFieldParseHelper::create();
-			}
-			if (currentFieldParseHelper_) {
-				currentFieldParseHelper_->getField()->setName(attributes.getAttribute("var"));
-				currentFieldParseHelper_->getField()->setLabel(attributes.getAttribute("label"));
-			}
-		}
 		else if (element == "reported") {
 			parsingReported_ = true;
-			level_ = PayloadLevel - 1;
 		}
 		else if (element == "item") {
 			parsingItem_ = true;
-			level_ = PayloadLevel - 1;
 		}
 	}
-	else if (level_ == FieldLevel && currentFieldParseHelper_) {
+	else if (level_ == FieldLevel && currentField_) {
 		currentText_.clear();
 		if (element == "option") {
 			currentOptionLabel_ = attributes.getAttribute("label");
+			currentOptionValue_ = "";
+			parsingOption_ = true;
+		}
+	}
+	if (level_ >= PayloadLevel) {
+		if (element == "field") {
+			currentField_ = boost::make_shared<FormField>();
+			std::string type = attributes.getAttribute("type");
+			FormField::Type fieldType = FormField::UnknownType;
+			if (type == "boolean") {
+				fieldType = FormField::BooleanType; 
+			}
+			if (type == "fixed") {
+				fieldType = FormField::FixedType; 
+			}
+			if (type == "hidden") {
+				fieldType = FormField::HiddenType; 
+			}
+			if (type == "list-single") {
+				fieldType = FormField::ListSingleType; 
+			}
+			if (type == "text-multi") {
+				fieldType = FormField::TextMultiType; 
+			}
+			if (type == "text-private") {
+				fieldType = FormField::TextPrivateType; 
+			}
+			if (type == "text-single") {
+				fieldType = FormField::TextSingleType; 
+			}
+			if (type == "jid-single") {
+				fieldType = FormField::JIDSingleType; 
+			}
+			if (type == "jid-multi") {
+				fieldType = FormField::JIDMultiType; 
+			}
+			if (type == "list-multi") {
+				fieldType = FormField::ListMultiType; 
+			}
+			currentField_->setType(fieldType);
+			currentField_->setName(attributes.getAttribute("var"));
+			currentField_->setLabel(attributes.getAttribute("label"));
+		}
+		else if (element == "value") {
+			currentText_.clear();
 		}
 	}
 	++level_;
@@ -123,42 +118,48 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
 				getPayloadInternal()->setInstructions(currentInstructions + "\n" + currentText_);
 			}
 		}
-		else if (element == "field") {
-			if (currentFieldParseHelper_) {
-				if (parsingReported_) {
-					getPayloadInternal()->addReportedField(currentFieldParseHelper_->getField());
-				} else if (parsingItem_) {
-					currentFields_.push_back(currentFieldParseHelper_->getField());
-				} else {
-					getPayloadInternal()->addField(currentFieldParseHelper_->getField());
-				}
-				currentFieldParseHelper_.reset();
+		else if (element == "reported") {
+			parsingReported_ = false;
+		}
+		else if (element == "item") {
+			parsingItem_ = false;
+			getPayloadInternal()->addItem(currentFields_);
+			currentFields_.clear();
+		}
+	}
+	else if (currentField_) {
+		if (element == "required") {
+			currentField_->setRequired(true);
+		}
+		else if (element == "desc") {
+			currentField_->setDescription(currentText_);
+		}
+		else if (element == "option") {
+			currentField_->addOption(FormField::Option(currentOptionLabel_, currentOptionValue_));
+			parsingOption_ = false;
+		}
+		else if (element == "value") {
+			if (parsingOption_) {
+				currentOptionValue_ = currentText_;
+			}
+			else {
+				currentField_->addValue(currentText_);
 			}
 		}
 	}
-	else if (level_ == FieldLevel && currentFieldParseHelper_) {
-		if (element == "required") {
-			currentFieldParseHelper_->getField()->setRequired(true);
+	if (level_ >= PayloadLevel && currentField_) {
+		if (element == "field") {
+			if (parsingReported_) {
+				getPayloadInternal()->addReportedField(currentField_);
+			} 
+			else if (parsingItem_) {
+				currentFields_.push_back(currentField_);
+			} 
+			else {
+				getPayloadInternal()->addField(currentField_);
+			}
+			currentField_.reset();
 		}
-		else if (element == "desc") {
-			currentFieldParseHelper_->getField()->setDescription(currentText_);
-		}
-		else if (element == "option") {
-			currentFieldParseHelper_->getField()->addOption(FormField::Option(currentOptionLabel_, currentText_));
-		}
-		else if (element == "value") {
-			currentFieldParseHelper_->addValue(currentText_);
-		}
-	}
-	if (element == "reported") {
-		parsingReported_ = false;
-		level_++;
-	}
-	else if (element == "item") {
-		parsingItem_ = false;
-		level_++;
-		getPayloadInternal()->addItem(currentFields_);
-		currentFields_.clear();
 	}
 }
 

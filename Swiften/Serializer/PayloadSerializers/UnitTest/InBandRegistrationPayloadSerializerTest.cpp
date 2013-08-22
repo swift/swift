@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h>
 
@@ -38,7 +39,7 @@ class InBandRegistrationPayloadSerializerTest : public CppUnit::TestFixture {
 			boost::shared_ptr<Form> form(new Form(Form::FormType));
 			form->setTitle("Contest Registration");
 
-			FormField::ref field = HiddenFormField::create("jabber:iq:register");
+			FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:iq:register");
 			field->setName("FORM_TYPE");
 			form->addField(field);
 			registration->setForm(form);

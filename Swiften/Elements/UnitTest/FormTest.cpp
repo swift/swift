@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/Form.h>
 
@@ -23,13 +24,13 @@ class FormTest : public CppUnit::TestFixture {
 		void testGetFormType() {
 			Form form;
 
-			form.addField(FixedFormField::create("Foo"));
+			form.addField(boost::make_shared<FormField>(FormField::FixedType, "Foo"));
 
-			FormField::ref field = HiddenFormField::create("jabber:bot");
+			FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:bot");
 			field->setName("FORM_TYPE");
 			form.addField(field);
 
-			form.addField(FixedFormField::create("Bar"));
+			form.addField(boost::make_shared<FormField>(FormField::FixedType, "Bar"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string("jabber:bot"), form.getFormType());
 		}
@@ -37,7 +38,7 @@ class FormTest : public CppUnit::TestFixture {
 		void testGetFormType_InvalidFormType() {
 			Form form;
 
-			FormField::ref field = FixedFormField::create("jabber:bot");
+			FormField::ref field = boost::make_shared<FormField>(FormField::FixedType, "jabber:bot");
 			field->setName("FORM_TYPE");
 			form.addField(field);
 
@@ -47,7 +48,7 @@ class FormTest : public CppUnit::TestFixture {
 		void testGetFormType_NoFormType() {
 			Form form;
 
-			form.addField(FixedFormField::create("Foo"));
+			form.addField(boost::make_shared<FormField>(FormField::FixedType, "Foo"));
 
 			CPPUNIT_ASSERT_EQUAL(std::string(""), form.getFormType());
 		}

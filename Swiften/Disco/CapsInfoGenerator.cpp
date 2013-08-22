@@ -49,7 +49,7 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 				continue;
 			}
 			serializedCaps += field->getName() + "<";
-			std::vector<std::string> values(field->getRawValues());
+			std::vector<std::string> values(field->getValues());
 			std::sort(values.begin(), values.end());
 			foreach(const std::string& value, values) {
 				serializedCaps += value + "<";

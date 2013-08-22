@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,8 +11,10 @@ namespace Swift {
 
 std::string Form::getFormType() const {
 	FormField::ref field = getField("FORM_TYPE");
-	boost::shared_ptr<HiddenFormField> f = boost::dynamic_pointer_cast<HiddenFormField>(field);
-	return (f ? f->getValue() : "");
+	if (field && field->getType() == FormField::HiddenType) {
+		return field->getValues().empty() ? "" : field->getValues()[0];
+	}
+	return "";
 }
 
 FormField::ref Form::getField(const std::string& name) const {

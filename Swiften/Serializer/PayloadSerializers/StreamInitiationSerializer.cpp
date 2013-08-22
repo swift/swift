@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -52,7 +52,7 @@ std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<Strea
 	boost::shared_ptr<XMLElement> featureElement(new XMLElement("feature", FEATURE_NEG_NS));
 	if (streamInitiation->getProvidedMethods().size() > 0) {
 		Form::ref form(new Form(Form::FormType));
-		ListSingleFormField::ref field = ListSingleFormField::create();
+		FormField::ref field = boost::make_shared<FormField>(FormField::ListSingleType);
 		field->setName("stream-method");
 		foreach(const std::string& method, streamInitiation->getProvidedMethods()) {
 			field->addOption(FormField::Option("", method));
@@ -62,7 +62,8 @@ std::string StreamInitiationSerializer::serializePayload(boost::shared_ptr<Strea
 	}
 	else if (!streamInitiation->getRequestedMethod().empty()) {
 		Form::ref form(new Form(Form::SubmitType));
-		ListSingleFormField::ref field = ListSingleFormField::create(streamInitiation->getRequestedMethod());
+		FormField::ref field = boost::make_shared<FormField>(FormField::ListSingleType);
+		field->addValue(streamInitiation->getRequestedMethod());
 		field->setName("stream-method");
 		form->addField(field);
 		featureElement->addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));

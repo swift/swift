@@ -96,8 +96,8 @@ void StreamInitiationParser::handleEndElement(const std::string& element, const 
 						}
 					}
 					else if (form->getType() == Form::SubmitType) {
-						if (field->getRawValues().size() > 0) {
-							getPayloadInternal()->setRequestedMethod(field->getRawValues()[0]);
+						if (!field->getValues().empty()) {
+							getPayloadInternal()->setRequestedMethod(field->getValues()[0]);
 						}
 					}
 				}

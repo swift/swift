@@ -120,6 +120,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/DiscoInfo.cpp",
 			"Elements/Presence.cpp",
 			"Elements/Form.cpp",
+			"Elements/FormField.cpp",
 			"Elements/StreamFeatures.cpp",
 			"Elements/Element.cpp",
 			"Elements/IQ.cpp",

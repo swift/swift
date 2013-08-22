@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -179,12 +179,12 @@ JID QtUserSearchWindow::getContactJID() const {
 			Form::FormItem item = dynamic_cast<QtFormResultItemModel*>(model_)->getForm()->getItems().at(row);
 			JID fallbackJid;
 			foreach(FormField::ref field, item) {
-				if (boost::dynamic_pointer_cast<JIDSingleFormField>(field)) {
-					jid = JID(field->getRawValues().at(0));
+				if (field->getType() == FormField::JIDSingleType) {
+					jid = JID(field->getJIDSingleValue());
 					break;
 				}
 				if (field->getName() == "jid") {
-					fallbackJid = field->getRawValues().at(0);
+					fallbackJid = field->getValues()[0];
 				}
 			}
 			if (!jid.isValid()) {

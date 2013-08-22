@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/PayloadSerializers/SearchPayloadSerializer.h>
 
@@ -78,62 +79,62 @@ class SearchPayloadSerializerTest : public CppUnit::TestFixture {
 			SearchPayload::ref payload(new SearchPayload());
 			boost::shared_ptr<Form> form(new Form(Form::ResultType));
 
-			FormField::ref field = HiddenFormField::create("jabber:iq:search");
+			FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:iq:search");
 			field->setName("FORM_TYPE");
 			form->addField(field);
 
 			// reported fields
-			field = TextSingleFormField::create();
+			field = boost::make_shared<FormField>(FormField::TextSingleType);
 			field->setName("first");
 			field->setLabel("Given Name");
 			form->addReportedField(field);
 
-			field = TextSingleFormField::create();
+			field = boost::make_shared<FormField>(FormField::TextSingleType);
 			field->setName("last");
 			field->setLabel("Family Name");
 			form->addReportedField(field);
 
-			field = JIDSingleFormField::create();
+			field = boost::make_shared<FormField>(FormField::JIDSingleType);
 			field->setName("jid");
 			field->setLabel("Jabber ID");
 			form->addReportedField(field);
 
-			field = ListSingleFormField::create();
+			field = boost::make_shared<FormField>(FormField::ListSingleType);
 			field->setName("x-gender");
 			field->setLabel("Gender");
 			form->addReportedField(field);
 
 			Form::FormItem firstItem;
-			field = TextSingleFormField::create("Benvolio");
+			field = boost::make_shared<FormField>(FormField::TextSingleType, "Benvolio");
 			field->setName("first");
 			firstItem.push_back(field);
 
-			field = TextSingleFormField::create("Montague");
+			field = boost::make_shared<FormField>(FormField::TextSingleType, "Montague");
 			field->setName("last");
 			firstItem.push_back(field);
 
-			field = TextSingleFormField::create("benvolio@montague.net");
+			field = boost::make_shared<FormField>(FormField::TextSingleType, "benvolio@montague.net");
 			field->setName("jid");
 			firstItem.push_back(field);
 
-			field = ListSingleFormField::create("male");
+			field = boost::make_shared<FormField>(FormField::ListSingleType, "male");
 			field->setName("x-gender");
 			firstItem.push_back(field);
 
 			Form::FormItem secondItem;
-			field = TextSingleFormField::create("Romeo");
+			field = boost::make_shared<FormField>(FormField::TextSingleType, "Romeo");
 			field->setName("first");
 			secondItem.push_back(field);
 
-			field = TextSingleFormField::create("Montague");
+			field = boost::make_shared<FormField>(FormField::TextSingleType, "Montague");
 			field->setName("last");
 			secondItem.push_back(field);
 
-			field = TextSingleFormField::create("romeo@montague.net");
+			field = boost::make_shared<FormField>(FormField::TextSingleType, "romeo@montague.net");
 			field->setName("jid");
 			secondItem.push_back(field);
 
-			field = ListSingleFormField::create("male");
+			field = boost::make_shared<FormField>(FormField::ListSingleType, "male");
 			field->setName("x-gender");
 			secondItem.push_back(field);
 

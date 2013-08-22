@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -37,6 +37,10 @@ FormSerializer::FormSerializer() : GenericPayloadSerializer<Form>() {
 }
 
 std::string FormSerializer::serializePayload(boost::shared_ptr<Form> form)  const {
+	if (!form) {
+		return "";
+	}
+
 	boost::shared_ptr<XMLElement> formElement(new XMLElement("x", "jabber:x:data"));
 	std::string type;
 	switch (form->getType()) {
@@ -92,65 +96,26 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 
 	// Set the value and type
 	std::string fieldType;
-	if (boost::dynamic_pointer_cast<BooleanFormField>(field)) {
-		fieldType = "boolean";
-		boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
-		valueElement->addNode(XMLTextNode::create(boost::dynamic_pointer_cast<BooleanFormField>(field)->getValue() ? "1" : "0"));
-		fieldElement->addNode(valueElement);
-	}
-	else if (boost::dynamic_pointer_cast<FixedFormField>(field)) {
-		fieldType = "fixed";
-		serializeValueAsString<FixedFormField>(field, fieldElement);
-	}
-	else if (boost::dynamic_pointer_cast<HiddenFormField>(field)) {
-		fieldType = "hidden";
-		serializeValueAsString<HiddenFormField>(field, fieldElement);
-	}
-	else if (boost::dynamic_pointer_cast<ListSingleFormField>(field)) {
-		fieldType = "list-single";
-		serializeValueAsString<ListSingleFormField>(field, fieldElement);
-	}
-	else if (boost::dynamic_pointer_cast<TextPrivateFormField>(field)) {
-		fieldType = "text-private";
-		serializeValueAsString<TextPrivateFormField>(field, fieldElement);
-	}
-	else if (boost::dynamic_pointer_cast<TextSingleFormField>(field)) {
-		fieldType = "text-single";
-		serializeValueAsString<TextSingleFormField>(field, fieldElement);
-	}
-	else if (boost::dynamic_pointer_cast<JIDMultiFormField>(field)) {
-		fieldType = "jid-multi";
-		std::vector<JID> jids = boost::dynamic_pointer_cast<JIDMultiFormField>(field)->getValue();
-		foreach(const JID& jid, jids) {
-			boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
-			valueElement->addNode(XMLTextNode::create(jid.toString()));
-			fieldElement->addNode(valueElement);
-		}
-	}
-	else if (boost::dynamic_pointer_cast<JIDSingleFormField>(field)) {
-		fieldType = "jid-single";
-		boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
-		valueElement->addNode(XMLTextNode::create(boost::dynamic_pointer_cast<JIDSingleFormField>(field)->getValue().toString()));
-		if ( boost::dynamic_pointer_cast<JIDSingleFormField>(field)->getValue().isValid()) fieldElement->addNode(valueElement);
-	}
-	else if (boost::dynamic_pointer_cast<ListMultiFormField>(field)) {
-		fieldType = "list-multi";
-		std::vector<std::string> lines = boost::dynamic_pointer_cast<ListMultiFormField>(field)->getValue();
-		foreach(const std::string& line, lines) {
-			boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
-			valueElement->addNode(XMLTextNode::create(line));
-			fieldElement->addNode(valueElement);
-		}
-	}
-	else if (boost::dynamic_pointer_cast<TextMultiFormField>(field)) {
-		fieldType = "text-multi";
-		multiLineify(boost::dynamic_pointer_cast<TextMultiFormField>(field)->getValue(), "value", fieldElement);
-	}
-	else {
-		assert(false);
+	switch (field->getType()) {
+		case FormField::UnknownType: fieldType = ""; break;
+		case FormField::BooleanType: fieldType = "boolean"; break;
+		case FormField::FixedType: fieldType = "fixed"; break;
+		case FormField::HiddenType: fieldType = "hidden"; break;
+		case FormField::ListSingleType: fieldType = "list-single"; break;
+		case FormField::TextMultiType: fieldType = "text-multi"; break;
+		case FormField::TextPrivateType: fieldType = "text-private"; break;
+		case FormField::TextSingleType: fieldType = "text-single"; break;
+		case FormField::JIDSingleType: fieldType = "jid-single"; break;
+		case FormField::JIDMultiType: fieldType = "jid-multi"; break;
+		case FormField::ListMultiType: fieldType = "list-multi"; break;
 	}
 	if (!fieldType.empty() && withTypeAttribute) {
 		fieldElement->setAttribute("type", fieldType);
+	}
+	foreach (const std::string& value, field->getValues()) {
+		boost::shared_ptr<XMLElement> valueElement = boost::make_shared<XMLElement>("value");
+		valueElement->addNode(boost::make_shared<XMLTextNode>(value));
+		fieldElement->addNode(valueElement);
 	}
 
 	foreach (const FormField::Option& option, field->getOptions()) {

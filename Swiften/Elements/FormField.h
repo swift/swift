@@ -1,11 +1,8 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
-
-// FIXME: We currently keep 2 values: the raw values, and the actual value.
-// We should only store the raw values, and deduce the actual values from this
 
 #pragma once
 
@@ -20,7 +17,25 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<FormField> ref;
 
-			virtual ~FormField() {}
+			enum Type {
+				UnknownType,
+				BooleanType,
+				FixedType,
+				HiddenType,
+				ListSingleType,
+				TextMultiType,
+				TextPrivateType,
+				TextSingleType,
+				JIDSingleType,
+				JIDMultiType,
+				ListMultiType
+			};
+
+			FormField(Type type = UnknownType) : type(type), required(false) {}
+			FormField(Type type, const std::string& value) : type(type), required(false) {
+				addValue(value);
+			}
+			virtual ~FormField();
 
 			struct Option {
 				Option(const std::string& label, const std::string& value) : label(label), value(value) {}
@@ -48,67 +63,72 @@ namespace Swift {
 				return options;
 			}
 
-			const std::vector<std::string>& getRawValues() const {
-				return rawValues;
+			const std::vector<std::string>& getValues() const {
+				return values;
 			}
 
-			void addRawValue(const std::string& value) {
-				rawValues.push_back(value);
+			void addValue(const std::string& value) {
+				values.push_back(value);
 			}
+
+			Type getType() const {
+				return type;
+			}
+
+			void setType(Type type) {
+				this->type = type;
+			}
+
+			// Type specific
+
+			bool getBoolValue() const {
+				assert(type == BooleanType || type == UnknownType);
+				if (values.empty()) {
+					return false;
+				}
+				return values[0] == "true" || values[0] == "1";
+			}
+
+			void setBoolValue(bool b);
+
+			JID getJIDSingleValue() const {
+				assert(type == JIDSingleType || type == UnknownType);
+				return values.empty() ? JID() : JID(values[0]);
+			}
+
+			JID getJIDMultiValue(size_t index) const {
+				assert(type == JIDMultiType || type == UnknownType);
+				return values.empty() ? JID() : JID(values[index]);
+			}
+
+			std::string getTextPrivateValue() const {
+				assert(type == TextPrivateType || type == UnknownType);
+				return values.empty() ? "" : values[0];
+			}
+
+			std::string getFixedValue() const {
+				assert(type == FixedType || type == UnknownType);
+				return values.empty() ? "" : values[0];
+			}
+
+			std::string getTextSingleValue() const {
+				assert(type == TextSingleType || type == UnknownType);
+				return values.empty() ? "" : values[0];
+			}
+
+			std::string getTextMultiValue() const;
+			void setTextMultiValue(const std::string& value);
 
 		protected:
-			FormField() : required(false) {}
 
 		private:
+			Type type;
 			std::string name;
 			std::string label;
 			std::string description;
 			bool required;
 			std::vector<Option> options;
-			std::vector<std::string> rawValues;
+			std::vector<std::string> values;
 	};
 
-	template<typename T> class GenericFormField : public FormField {
-		public:
-			const T& getValue() const {
-				return value;
-			}
-
-			void setValue(const T& value) {
-				this->value = value;
-			}
-
-		protected:
-			GenericFormField() : value() {}
-			GenericFormField(const T& value) : value(value) {}
-
-		private:
-			T value;
-	};
-
-#define SWIFTEN_DECLARE_FORM_FIELD(name, valueType) \
-	class name##FormField : public GenericFormField< valueType > { \
-		public: \
-			typedef boost::shared_ptr<name##FormField> ref; \
-			static ref create(const valueType& value) { \
-				return ref(new name##FormField(value)); \
-			} \
-			static ref create() { \
-				return ref(new name##FormField()); \
-			} \
-		private: \
-			name##FormField(valueType value) : GenericFormField< valueType >(value) {} \
-			name##FormField() : GenericFormField< valueType >() {} \
-	};
-
-	SWIFTEN_DECLARE_FORM_FIELD(Boolean, bool)
-	SWIFTEN_DECLARE_FORM_FIELD(Fixed, std::string)
-	SWIFTEN_DECLARE_FORM_FIELD(Hidden, std::string)
-	SWIFTEN_DECLARE_FORM_FIELD(ListSingle, std::string)
-	SWIFTEN_DECLARE_FORM_FIELD(TextMulti, std::string)
-	SWIFTEN_DECLARE_FORM_FIELD(TextPrivate, std::string)
-	SWIFTEN_DECLARE_FORM_FIELD(TextSingle, std::string)
-	SWIFTEN_DECLARE_FORM_FIELD(JIDSingle, JID)
-	SWIFTEN_DECLARE_FORM_FIELD(JIDMulti, std::vector<JID>)
-	SWIFTEN_DECLARE_FORM_FIELD(ListMulti, std::vector<std::string>)
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -54,13 +54,13 @@ class FormParserTest : public CppUnit::TestFixture {
 						"</field>"
 						"<field label=\"Password for special access\" type=\"text-private\" var=\"password\"/>"
 						"<field label=\"What features will the bot support?\" type=\"list-multi\" var=\"features\">"
-							"<value>news</value>"
-							"<value>search</value>"
 							"<option label=\"Contests\"><value>contests</value></option>"
 							"<option label=\"News\"><value>news</value></option>"
 							"<option label=\"Polls\"><value>polls</value></option>"
 							"<option label=\"Reminders\"><value>reminders</value></option>"
 							"<option label=\"Search\"><value>search</value></option>"
+							"<value>news</value>"
+							"<value>search</value>"
 						"</field>"
 						"<field label=\"Maximum number of subscribers\" type=\"list-single\" var=\"maxsubs\">"
 							"<value>20</value>"
@@ -84,37 +84,35 @@ class FormParserTest : public CppUnit::TestFixture {
 			Form* payload = dynamic_cast<Form*>(parser.getPayload().get());
 
 			CPPUNIT_ASSERT_EQUAL(10, static_cast<int>(payload->getFields().size()));
-			CPPUNIT_ASSERT_EQUAL(std::string("jabber:bot"), boost::dynamic_pointer_cast<HiddenFormField>(payload->getFields()[0])->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("jabber:bot"), payload->getFields()[0]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("FORM_TYPE"), payload->getFields()[0]->getName());
 			CPPUNIT_ASSERT(!payload->getFields()[0]->getRequired());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("Section 1: Bot Info"), boost::dynamic_pointer_cast<FixedFormField>(payload->getFields()[1])->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("Section 1: Bot Info"), payload->getFields()[1]->getValues()[0]);
 
 			CPPUNIT_ASSERT_EQUAL(std::string("The name of your bot"), payload->getFields()[2]->getLabel());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("This is a bot.\nA quite good one actually"), boost::dynamic_pointer_cast<TextMultiFormField>(payload->getFields()[3])->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("This is a bot.\nA quite good one actually"), payload->getFields()[3]->getTextMultiValue());
 
-			CPPUNIT_ASSERT_EQUAL(true, boost::dynamic_pointer_cast<BooleanFormField>(payload->getFields()[4])->getValue());
+			CPPUNIT_ASSERT_EQUAL(true, payload->getFields()[4]->getBoolValue());
 			CPPUNIT_ASSERT(payload->getFields()[4]->getRequired());
-			CPPUNIT_ASSERT_EQUAL(std::string("1"),  boost::dynamic_pointer_cast<BooleanFormField>(payload->getFields()[4])->getRawValues()[0]);
-
-			CPPUNIT_ASSERT_EQUAL(std::string("news"), boost::dynamic_pointer_cast<ListMultiFormField>(payload->getFields()[6])->getValue()[0]);
-			CPPUNIT_ASSERT_EQUAL(std::string("news"), payload->getFields()[6]->getRawValues()[0]);
-			CPPUNIT_ASSERT_EQUAL(std::string("search"), boost::dynamic_pointer_cast<ListMultiFormField>(payload->getFields()[6])->getValue()[1]);
-			CPPUNIT_ASSERT_EQUAL(std::string("search"), payload->getFields()[6]->getRawValues()[1]);
+			CPPUNIT_ASSERT_EQUAL(std::string("1"),  payload->getFields()[4]->getValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getFields()[6]->getValues().size()));
+			CPPUNIT_ASSERT_EQUAL(std::string("news"), payload->getFields()[6]->getValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("search"), payload->getFields()[6]->getValues()[1]);
 			CPPUNIT_ASSERT_EQUAL(5, static_cast<int>(payload->getFields()[6]->getOptions().size()));
 			CPPUNIT_ASSERT_EQUAL(std::string("Contests"), payload->getFields()[6]->getOptions()[0].label);
 			CPPUNIT_ASSERT_EQUAL(std::string("contests"), payload->getFields()[6]->getOptions()[0].value);
 			CPPUNIT_ASSERT_EQUAL(std::string("News"), payload->getFields()[6]->getOptions()[1].label);
 			CPPUNIT_ASSERT_EQUAL(std::string("news"), payload->getFields()[6]->getOptions()[1].value);
 
-			CPPUNIT_ASSERT_EQUAL(std::string("20"), boost::dynamic_pointer_cast<ListSingleFormField>(payload->getFields()[7])->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("20"), payload->getFields()[7]->getValues()[0]);
 
-			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com"), boost::dynamic_pointer_cast<JIDMultiFormField>(payload->getFields()[8])->getValue()[0]);
-			CPPUNIT_ASSERT_EQUAL(JID("baz@fum.org"), boost::dynamic_pointer_cast<JIDMultiFormField>(payload->getFields()[8])->getValue()[1]);
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com"), payload->getFields()[8]->getJIDMultiValue(0));
+			CPPUNIT_ASSERT_EQUAL(JID("baz@fum.org"), payload->getFields()[8]->getJIDMultiValue(1));
 			CPPUNIT_ASSERT_EQUAL(std::string("Tell all your friends about your new bot!"), payload->getFields()[8]->getDescription());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("foo"), boost::dynamic_pointer_cast<TextSingleFormField>(payload->getFields()[9])->getValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("foo"), payload->getFields()[9]->getValues()[0]);
 		}
 
 		void testParse_FormItems() {
@@ -157,29 +155,28 @@ class FormParserTest : public CppUnit::TestFixture {
 			Form::FormItem item = items[0];
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), item.size());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("Benvolio"), item[0]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Benvolio"), item[0]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
-			JIDSingleFormField::ref jidField = boost::dynamic_pointer_cast<JIDSingleFormField>(item[2]);
-			CPPUNIT_ASSERT(jidField);
-			CPPUNIT_ASSERT_EQUAL(JID("benvolio@montague.net"), jidField->getValue());
+			boost::shared_ptr<FormField> jidField = item[2];
+			CPPUNIT_ASSERT_EQUAL(JID("benvolio@montague.net"), jidField->getJIDSingleValue());
 			CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("x-gender"), item[3]->getName());
 
 			item = items[1];
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(4), item.size());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("Romeo"), item[0]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Romeo"), item[0]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
-			jidField = boost::dynamic_pointer_cast<JIDSingleFormField>(item[2]);
+			jidField = item[2];
 			CPPUNIT_ASSERT(jidField);
-			CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), jidField->getValue());
+			CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), jidField->getJIDSingleValue());
 			CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getRawValues()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getValues()[0]);
 			CPPUNIT_ASSERT_EQUAL(std::string("x-gender"), item[3]->getName());
 		}
 };
