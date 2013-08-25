@@ -27,7 +27,6 @@ void FormField::setTextMultiValue(const std::string& value) {
 }
 
 void FormField::setBoolValue(bool b) {
-	assert(type == BooleanType || type == UnknownType);
 	values.clear();
 	values.push_back(b ? "1" : "0");
 }

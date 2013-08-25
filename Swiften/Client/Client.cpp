@@ -14,6 +14,7 @@
 #include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/MUC/MUCManager.h>
+#include <Swiften/PubSub/PubSubManagerImpl.h>
 #include <Swiften/Client/MemoryStorages.h>
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardManager.h>
@@ -76,9 +77,12 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 #ifdef SWIFT_EXPERIMENTAL_WB
 	whiteboardSessionManager = new WhiteboardSessionManager(getIQRouter(), getStanzaChannel(), presenceOracle, getEntityCapsProvider());
 #endif
+
+	pubsubManager = new PubSubManagerImpl(getStanzaChannel(), getIQRouter());
 }
 
 Client::~Client() {
+	delete pubsubManager;
 	delete whiteboardSessionManager;
 
 	delete fileTransferManager;

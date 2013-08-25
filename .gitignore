@@ -51,6 +51,8 @@ checker-report.xml
 /VERSION.*
 cppcheck.log
 /build
+/generator
+/tmp
 /.settings/
 /include/
 /nbproject/private/

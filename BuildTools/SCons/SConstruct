@@ -570,6 +570,7 @@ else :
 if ARGUMENTS.get("dump_trace", False) :
 	env.SetOption("no_exec", True)
 	env["TEST"] = True
+	env["BOOST_BUILD_BCP"] = True
 	env.Decider(lambda x, y, z : True)
 	SCons.Node.Python.Value.changed_since_last_build = (lambda x, y, z: True)
 

@@ -35,6 +35,7 @@ namespace Swift {
 			 */
 			void addField(boost::shared_ptr<FormField> field) {assert(field);  fields_.push_back(field); }
 			const std::vector<boost::shared_ptr<FormField> >& getFields() const { return fields_; }
+			void clearFields() { fields_.clear(); }
 			void setTitle(const std::string& title) { title_ = title; }
 			const std::string& getTitle() const { return title_; }
 
@@ -50,9 +51,12 @@ namespace Swift {
 
 			void addReportedField(FormField::ref field);
 			const std::vector<FormField::ref>& getReportedFields() const;
+			void clearReportedFields() { reportedFields_.clear(); }
 
 			void addItem(const FormItem& item);
 			const std::vector<FormItem>& getItems() const;
+			void clearItems() { items_.clear(); }
+
 		private:
 			std::vector<boost::shared_ptr<FormField> > fields_;
 			std::vector<boost::shared_ptr<FormField> > reportedFields_;

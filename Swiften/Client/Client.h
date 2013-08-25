@@ -38,6 +38,7 @@ namespace Swift {
 	class FileTransferManager;
 	class WhiteboardSessionManager;
 	class ClientBlockListManager;
+	class PubSubManager;
 
 	/**
 	 * Provides the core functionality for writing XMPP client software.
@@ -158,6 +159,11 @@ namespace Swift {
 			void setAlwaysTrustCertificates();
 
 			WhiteboardSessionManager* getWhiteboardSessionManager() const;
+
+			PubSubManager* getPubSubManager() const {
+				return pubsubManager;
+			}
+
 		
 		public:
 			/**
@@ -195,5 +201,6 @@ namespace Swift {
 			BlindCertificateTrustChecker* blindCertificateTrustChecker;
 			WhiteboardSessionManager* whiteboardSessionManager;
 			ClientBlockListManager* blockListManager;
+			PubSubManager* pubsubManager;
 	};
 }

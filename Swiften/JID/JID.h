@@ -10,7 +10,7 @@
 #include <iosfwd>
 
 #include <Swiften/Base/API.h>
-
+#include <boost/optional/optional_fwd.hpp>
 
 namespace Swift {
 	class IDNConverter;
@@ -160,6 +160,11 @@ namespace Swift {
 				return a.compare(b, Swift::JID::WithResource) != 0;
 			}
 
+			/**
+			 * Returns an empty optional if the JID is invalid, and an
+			 * optional with a value if the JID is valid.
+			 */
+			static boost::optional<JID> parse(const std::string&);
 
 			/**
 			 * If Swiften was compiled with SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER (not default), use this method at 

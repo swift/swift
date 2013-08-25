@@ -1,0 +1,14 @@
+Import('env')
+Import('sluift_env')
+Import('sluift_variant')
+Import('sluift_sources')
+
+if sluift_variant == 'exe' :
+	env["SLUIFT"] = sluift_env.Program("sluift", sluift_sources + [
+		"#/Sluift/lua.c",
+		"#/Sluift/linit.c",
+	])
+else :
+	sluift_env.SharedLibrary("sluift", sluift_sources + [
+		"#/Sluift/dll.c"
+	])

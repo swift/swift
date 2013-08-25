@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -51,7 +51,12 @@
 #include <Swiften/Serializer/PayloadSerializers/ReplaceSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/UserLocationSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/IdleSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubOwnerPubSubSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubEventSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubErrorSerializer.h>
 
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
@@ -111,6 +116,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new ReplaceSerializer());
 	serializers_.push_back(new LastSerializer());
 	serializers_.push_back(new WhiteboardSerializer());
+	serializers_.push_back(new UserLocationSerializer());
 	serializers_.push_back(new IdleSerializer());
 	
 	serializers_.push_back(new StreamInitiationFileInfoSerializer());
@@ -124,6 +130,11 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new S5BProxyRequestSerializer());
 	serializers_.push_back(new DeliveryReceiptSerializer());
 	serializers_.push_back(new DeliveryReceiptRequestSerializer());
+
+	serializers_.push_back(new PubSubSerializer(this));
+	serializers_.push_back(new PubSubEventSerializer(this));
+	serializers_.push_back(new PubSubOwnerPubSubSerializer(this));
+	serializers_.push_back(new PubSubErrorSerializer());
 	
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);

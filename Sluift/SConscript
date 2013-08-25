@@ -10,21 +10,44 @@ if env["SCONS_STAGE"] == "build" and not GetOption("help") and not env.get("HAVE
 elif env["SCONS_STAGE"] == "build" :
 	sluift_sources = [
 		"Lua/Value.cpp",
+		"Lua/Exception.cpp",
+		"Lua/Check.cpp",
+		"Lua/FunctionRegistration.cpp",
+		"Lua/FunctionRegistry.cpp",
+		"Lua/LuaUtils.cpp",
+		"LuaElementConvertors.cpp",
+		"LuaElementConvertor.cpp",
+		"Response.cpp",
+		"ElementConvertors/VCardUpdateConvertor.cpp",
+		"ElementConvertors/PubSubEventConvertor.cpp",
+		"ElementConvertors/RawXMLElementConvertor.cpp",
+		"ElementConvertors/DOMElementConvertor.cpp",
+		"ElementConvertors/DefaultElementConvertor.cpp",
+		"ElementConvertors/DiscoInfoConvertor.cpp",
+		"ElementConvertors/DiscoItemsConvertor.cpp",
+		"ElementConvertors/FormConvertor.cpp",
+		"ElementConvertors/SoftwareVersionConvertor.cpp",
+		"ElementConvertors/VCardConvertor.cpp",
 		"ClientHelpers.cpp",
+		"SluiftClient.cpp",
+		"boot.c",
+		"client.cpp",
 		"sluift.cpp"
 	]
+	sluift_sources += env.SConscript("ElementConvertors/SConscript")
 
-	myenv = env.Clone()
-	myenv.UseFlags(env.get("LUA_FLAGS", {}))
-	myenv.UseFlags(env["SWIFTEN_FLAGS"])
-	myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
-	myenv["SHLIBPREFIX"] = ""
-	if myenv["PLATFORM"] == "win32" :
-		myenv.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
-	elif myenv["PLATFORM"] == "darwin" :
-		myenv["SHLIBSUFFIX"] = ".so"
+	sluift_env = env.Clone()
+	sluift_env.UseFlags(env.get("LUA_FLAGS", {}))
+	sluift_env.UseFlags(env["SWIFTEN_FLAGS"])
+	sluift_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
+	sluift_env["SHLIBPREFIX"] = ""
+	if sluift_env["PLATFORM"] == "win32" :
+		sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
+	elif sluift_env["PLATFORM"] == "darwin" :
+		sluift_env["SHLIBSUFFIX"] = ".so"
 
-	myenv["SLUIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "sluift")
+	# Generate a customized lua.c
+	sluift_env["SLUIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "sluift")
 	def patchLua(env, target, source) :
 		f = open(source[0].abspath, "r")
 		contents = f.read()
@@ -38,24 +61,27 @@ elif env["SCONS_STAGE"] == "build" :
 		f = open(target[0].abspath, "w")
 		f.write(contents)
 		f.close()
+	sluift_env.Command("lua.c", ["#/3rdParty/Lua/src/lua.c", sluift_env.Value(sluift_env["SLUIFT_VERSION"])], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
 
-	myenv.Command("lua.c", ["#/3rdParty/Lua/src/lua.c", myenv.Value(myenv["SLUIFT_VERSION"])], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
-	if myenv.get("HAVE_READLINE", False) :
-		myenv.Append(CPPDEFINES = ["LUA_USE_READLINE"])
-		myenv.MergeFlags(myenv["READLINE_FLAGS"])
-	env["SLUIFT"] = myenv.Program("sluift", sluift_sources + [
-			"lua.c",
-			"linit.c",
-		])
+	# Generate boot.cpp
+	def generate_embedded_lua(env, target, source) :
+		f = open(source[0].abspath, "r")
+		data = f.read()
+		f.close()
+		f = open(target[0].abspath, "w")
+		f.write('const char ' + source[0].name.replace(".", "_") + "[] = \"" + data.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"') + "\";")
+		f.close()
+	sluift_env.Command("boot.c", ["boot.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
 
-	myenv.WriteVal("dll.c", myenv.Value(""))
-	myenv.SharedLibrary("sluift", sluift_sources + ["dll.c"])
+	if sluift_env.get("HAVE_READLINE", False) :
+		sluift_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
+		sluift_env.MergeFlags(sluift_env["READLINE_FLAGS"])
 
-	if env["PLATFORM"] == "win32" :
-		ssl_libs = []
-		if myenv.get("OPENSSL_DIR", False) :
-			ssl_libs = [
-			os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
-			os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll")
-		]
-		myenv.WindowsBundle("Sluift", resources = {"": ssl_libs})
+	sluift_env.WriteVal("dll.c", sluift_env.Value(""))
+
+	sluift_sources = [env.File(x) for x in sluift_sources]
+	for sluift_variant in ['dll', 'exe'] :
+		SConscript(["SConscript.variant"], variant_dir = sluift_variant,
+				duplicate = 0,
+				exports = ['sluift_sources', 'sluift_variant', 'sluift_env'])
+

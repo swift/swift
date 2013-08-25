@@ -44,9 +44,9 @@ end
 print("Done. Waiting ...")
 while true do
 	for _, client in ipairs(clients) do
-		client:for_event(function(e) 
-				if e["type"] == "message" then client:send_message(e["from"], "Off with their heads!") end 
-			end, 1000)
+		for message in client:messages {timeout = 1000} do
+			client:send_message{to = e["from"], body = "Off with their heads!"}
+		end
 	end
 	sluift.sleep(1000)
 end

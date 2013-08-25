@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
+#pragma once
+
+#include <Swiften/Base/Override.h>
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Elements/PubSubOwnerPayload.h>
+#include <Swiften/Elements/Form.h>
+
+namespace Swift {
+	class SWIFTEN_API PubSubOwnerDefault : public PubSubOwnerPayload {
+		public:
+			
+			PubSubOwnerDefault();
+			
+			virtual ~PubSubOwnerDefault();
+
+			boost::shared_ptr<Form> getData() const {
+				return data;
+			}
+
+			void setData(boost::shared_ptr<Form> value) {
+				this->data = value ;
+			}
+
+
+		private:
+			boost::shared_ptr<Form> data;
+	};
+}

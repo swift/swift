@@ -125,6 +125,9 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/Element.cpp",
 			"Elements/IQ.cpp",
 			"Elements/Payload.cpp",
+			"Elements/PubSubPayload.cpp",
+			"Elements/PubSubOwnerPayload.cpp",
+			"Elements/PubSubEventPayload.cpp",
 			"Elements/RosterItemExchangePayload.cpp",
 			"Elements/RosterPayload.cpp",
 			"Elements/Stanza.cpp",
@@ -133,6 +136,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/StreamManagementEnabled.cpp",
 			"Elements/StreamResume.cpp",
 			"Elements/StreamResumed.cpp",
+			"Elements/UserLocation.cpp",
 			"Elements/VCard.cpp",
 			"Elements/MUCOccupant.cpp",
 			"Entity/Entity.cpp",
@@ -141,6 +145,8 @@ if env["SCONS_STAGE"] == "build" :
 			"MUC/MUCManager.cpp",
 			"MUC/MUCRegistry.cpp",
 			"MUC/MUCBookmarkManager.cpp",
+			"PubSub/PubSubManager.cpp",
+			"PubSub/PubSubManagerImpl.cpp",
 			"Queries/IQChannel.cpp",
 			"Queries/IQHandler.cpp",
 			"Queries/IQRouter.cpp",
@@ -207,6 +213,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.cpp",
 			"Serializer/PayloadSerializers/DeliveryReceiptSerializer.cpp",
 			"Serializer/PayloadSerializers/DeliveryReceiptRequestSerializer.cpp",
+			"Serializer/PayloadSerializers/UserLocationSerializer.cpp",
 			"Serializer/PayloadSerializers/WhiteboardSerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
@@ -231,6 +238,28 @@ if env["SCONS_STAGE"] == "build" :
 			"Whiteboard/WhiteboardClient.cpp",
 			"Elements/Whiteboard/WhiteboardColor.cpp",
 			"Whiteboard/WhiteboardTransformer.cpp",
+		]
+	
+	elements = [
+			"PubSub", "PubSubAffiliations", "PubSubAffiliation", "PubSubConfigure", "PubSubCreate", "PubSubDefault",
+			"PubSubItems", "PubSubItem", "PubSubOptions", "PubSubPublish", "PubSubRetract", "PubSubSubscribeOptions",
+			"PubSubSubscribe", "PubSubSubscriptions", "PubSubSubscription", "PubSubUnsubscribe",
+
+			"PubSubEvent", "PubSubEventAssociate", "PubSubEventCollection", "PubSubEventConfiguration", "PubSubEventDelete",
+			"PubSubEventDisassociate", "PubSubEventItem", "PubSubEventItems", "PubSubEventPurge", "PubSubEventRedirect",
+			"PubSubEventRetract", "PubSubEventSubscription",
+
+			"PubSubOwnerAffiliation", "PubSubOwnerAffiliations", "PubSubOwnerConfigure", "PubSubOwnerDefault",
+			"PubSubOwnerDelete", "PubSubOwnerPubSub", "PubSubOwnerPurge", "PubSubOwnerRedirect",
+			"PubSubOwnerSubscription", "PubSubOwnerSubscriptions",
+
+			"PubSubError",
+	]
+	for element in elements :
+		sources += [
+			"Elements/" + element + ".cpp", 
+			"Serializer/PayloadSerializers/" + element + "Serializer.cpp",
+			"Parser/PayloadParsers/" + element + "Parser.cpp",
 		]
 
 	SConscript(dirs = [

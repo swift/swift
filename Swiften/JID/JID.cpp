@@ -18,6 +18,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/algorithm/string/find_format.hpp>
 #include <boost/algorithm/string/finder.hpp>
+#include <boost/optional.hpp>
 #include <iostream>
 #include <sstream>
 
@@ -315,6 +316,11 @@ void JID::setIDNConverter(IDNConverter* converter) {
 std::ostream& operator<<(std::ostream& os, const JID& j) {
 	os << j.toString();
 	return os;
+}
+
+boost::optional<JID> JID::parse(const std::string& s) {
+	JID jid(s);
+	return jid.isValid() ? jid : boost::optional<JID>();
 }
 
 }

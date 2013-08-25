@@ -52,7 +52,9 @@ void XMLElement::setAttribute(const std::string& attribute, const std::string& v
 }
 
 void XMLElement::addNode(boost::shared_ptr<XMLNode> node) {
-	childNodes_.push_back(node);
+	if (node) {
+		childNodes_.push_back(node);
+	}
 }
 
 }

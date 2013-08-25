@@ -1,0 +1,42 @@
+
+Import('env')
+
+convertors = [
+	env.File("PubSubRetractConvertor.cpp"),
+	env.File("PubSubAffiliationsConvertor.cpp"),
+	env.File("PubSubPublishConvertor.cpp"),
+	env.File("PubSubItemsConvertor.cpp"),
+	env.File("PubSubOwnerRedirectConvertor.cpp"),
+	env.File("PubSubEventRedirectConvertor.cpp"),
+	env.File("PubSubConfigureConvertor.cpp"),
+	env.File("PubSubEventDisassociateConvertor.cpp"),
+	env.File("PubSubOwnerAffiliationsConvertor.cpp"),
+	env.File("PubSubOwnerConfigureConvertor.cpp"),
+	env.File("UserLocationConvertor.cpp"),
+	env.File("PubSubSubscribeOptionsConvertor.cpp"),
+	env.File("PubSubOwnerSubscriptionsConvertor.cpp"),
+	env.File("PubSubDefaultConvertor.cpp"),
+	env.File("PubSubEventCollectionConvertor.cpp"),
+	env.File("PubSubEventSubscriptionConvertor.cpp"),
+	env.File("PubSubEventRetractConvertor.cpp"),
+	env.File("PubSubItemConvertor.cpp"),
+	env.File("PubSubUnsubscribeConvertor.cpp"),
+	env.File("PubSubEventDeleteConvertor.cpp"),
+	env.File("PubSubCreateConvertor.cpp"),
+	env.File("PubSubOwnerPurgeConvertor.cpp"),
+	env.File("PubSubEventItemsConvertor.cpp"),
+	env.File("PubSubOptionsConvertor.cpp"),
+	env.File("PubSubEventItemConvertor.cpp"),
+	env.File("PubSubOwnerSubscriptionConvertor.cpp"),
+	env.File("PubSubOwnerAffiliationConvertor.cpp"),
+	env.File("PubSubEventPurgeConvertor.cpp"),
+	env.File("PubSubAffiliationConvertor.cpp"),
+	env.File("PubSubSubscribeConvertor.cpp"),
+	env.File("PubSubOwnerDeleteConvertor.cpp"),
+	env.File("PubSubOwnerDefaultConvertor.cpp"),
+	env.File("PubSubSubscriptionsConvertor.cpp"),
+	env.File("PubSubEventAssociateConvertor.cpp"),
+	env.File("PubSubSubscriptionConvertor.cpp"),
+	env.File("PubSubEventConfigurationConvertor.cpp")
+]
+Return('convertors')

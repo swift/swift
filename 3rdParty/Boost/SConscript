@@ -159,7 +159,7 @@ elif env.get("BOOST_BUNDLED", False) :
 		myenv.MergeFlags(myenv["BOOST_FLAGS"])
 		myenv.StaticLibrary("Swiften_Boost", sources)
 
-		if ARGUMENTS.get("BOOST_BUILD_BCP") or env.GetOption("clean") :
+		if ARGUMENTS.get("BOOST_BUILD_BCP") or env.get("BOOST_BUILD_BCP", False) or env.GetOption("clean") :
 			bcp_env = myenv.Clone()
 			bcp_env.MergeFlags(bcp_env["BOOST_FLAGS"])
 			bcp_env.Append(CPPPATH = ["src/tools/bcp"])

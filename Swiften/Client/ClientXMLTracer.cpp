@@ -9,10 +9,16 @@
 #include <iostream>
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Platform.h>
+
 namespace Swift {
 
 ClientXMLTracer::ClientXMLTracer(CoreClient* client, bool bosh) : bosh(bosh) {
+#ifdef SWIFTEN_PLATFORM_WIN32
+	beautifier = new XMLBeautifier(true, false);
+#else
 	beautifier = new XMLBeautifier(true, true);
+#endif
 	client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
 	client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,6 +10,8 @@
 #include <Swiften/Elements/UnblockPayload.h>
 #include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
+#include <Swiften/Parser/GenericPayloadParserFactory.h>
+#include <Swiften/Parser/GenericPayloadParserFactory2.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParser.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParserFactory.h>
@@ -68,6 +70,11 @@
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptRequestParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
 #include <Swiften/Parser/PayloadParsers/IdleParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubOwnerPubSubParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubEventParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubErrorParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/UserLocationParser.h>
 
 using namespace boost;
 
@@ -127,9 +134,14 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferHashParser> >("checksum"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<S5BProxyRequestParser> >("query", "http://jabber.org/protocol/bytestreams"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<WhiteboardParser> >("wb", "http://swift.im/whiteboard"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<UserLocationParser> >("geoloc", "http://jabber.org/protocol/geoloc"));
 	factories_.push_back(boost::make_shared<DeliveryReceiptParserFactory>());
 	factories_.push_back(boost::make_shared<DeliveryReceiptRequestParserFactory>());
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<IdleParser> >("idle", "urn:xmpp:idle:1"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<PubSubParser> >("pubsub", "http://jabber.org/protocol/pubsub", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<PubSubOwnerPubSubParser> >("pubsub", "http://jabber.org/protocol/pubsub#owner", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<PubSubEventParser> >("event", "http://jabber.org/protocol/pubsub#event", this));
+	factories_.push_back(boost::make_shared<PubSubErrorParserFactory>());
 
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());

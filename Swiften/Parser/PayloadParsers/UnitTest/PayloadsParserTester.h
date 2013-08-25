@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2013 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
-
-#include <cppunit/extensions/HelperMacros.h>
 
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 #include <Swiften/Parser/XMLParser.h>
@@ -32,9 +30,9 @@ namespace Swift {
 
 			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 				if (level == 0) {
-					CPPUNIT_ASSERT(!payloadParser.get());
+					assert(!payloadParser.get());
 					PayloadParserFactory* payloadParserFactory = factories.getPayloadParserFactory(element, ns, attributes);
-					CPPUNIT_ASSERT(payloadParserFactory);
+					assert(payloadParserFactory);
 					payloadParser.reset(payloadParserFactory->createPayloadParser());
 				}
 				payloadParser->handleStartElement(element, ns, attributes);

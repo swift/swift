@@ -63,6 +63,10 @@ namespace Swift {
 				return options;
 			}
 
+			void clearOptions() {
+				options.clear();
+			}
+
 			const std::vector<std::string>& getValues() const {
 				return values;
 			}

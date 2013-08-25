@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
+#pragma once
+
+#include <Swiften/Base/Override.h>
+
+#include <Sluift/GenericLuaElementConvertor.h>
+#include <Swiften/Elements/UserLocation.h>
+
+namespace Swift {
+	class LuaElementConvertors;
+
+	class UserLocationConvertor : public GenericLuaElementConvertor<UserLocation> {
+		public:
+			UserLocationConvertor(LuaElementConvertors* convertors);
+			virtual ~UserLocationConvertor();
+
+			virtual boost::shared_ptr<UserLocation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+			virtual void doConvertToLua(lua_State*, boost::shared_ptr<UserLocation>) SWIFTEN_OVERRIDE;
+
+		private:
+			LuaElementConvertors* convertors;
+	};
+}

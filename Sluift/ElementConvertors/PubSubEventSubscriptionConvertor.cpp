@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2013 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
+#include <Sluift/ElementConvertors/PubSubEventSubscriptionConvertor.h>
+
+#include <lua.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+
+#include <Swiften/Base/DateTime.h>
+
+#pragma clang diagnostic ignored "-Wunused-private-field"
+
+using namespace Swift;
+
+PubSubEventSubscriptionConvertor::PubSubEventSubscriptionConvertor(LuaElementConvertors* convertors) : 
+		GenericLuaElementConvertor<PubSubEventSubscription>("pubsub_event_subscription"),
+		convertors(convertors) {
+}
+
+PubSubEventSubscriptionConvertor::~PubSubEventSubscriptionConvertor() {
+}
+
+boost::shared_ptr<PubSubEventSubscription> PubSubEventSubscriptionConvertor::doConvertFromLua(lua_State* L) {
+	boost::shared_ptr<PubSubEventSubscription> result = boost::make_shared<PubSubEventSubscription>();
+	lua_getfield(L, -1, "node");
+	if (lua_isstring(L, -1)) {
+		result->setNode(std::string(lua_tostring(L, -1)));
+	}
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "jid");
+	if (lua_isstring(L, -1)) {
+		result->setJID(JID(std::string(lua_tostring(L, -1))));
+	}
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "subscription");
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "subscriptionid");
+	if (lua_isstring(L, -1)) {
+		result->setSubscriptionID(std::string(lua_tostring(L, -1)));
+	}
+	lua_pop(L, 1);
+	lua_getfield(L, -1, "expiry");
+	if (lua_isstring(L, -1)) {
+		result->setExpiry(stringToDateTime(std::string(lua_tostring(L, -1))));
+	}
+	lua_pop(L, 1);
+	return result;
+}
+
+void PubSubEventSubscriptionConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEventSubscription> payload) {
+	lua_createtable(L, 0, 0);
+	lua_pushstring(L, payload->getNode().c_str());
+	lua_setfield(L, -2, "node");
+	lua_pushstring(L, payload->getJID().toString().c_str());
+	lua_setfield(L, -2, "jid");
+	switch (payload->getSubscription()) {
+		case PubSubEventSubscription::None:
+			lua_pushstring(L, "none");
+			break;
+		case PubSubEventSubscription::Pending:
+			lua_pushstring(L, "pending");
+			break;
+		case PubSubEventSubscription::Subscribed:
+			lua_pushstring(L, "subscribed");
+			break;
+		case PubSubEventSubscription::Unconfigured:
+			lua_pushstring(L, "unconfigured");
+			break;
+	}
+	lua_setfield(L, -2, "subscription");
+	if (payload->getSubscriptionID()) {
+		lua_pushstring(L, (*payload->getSubscriptionID()).c_str());
+		lua_setfield(L, -2, "subscriptionid");
+	}
+	lua_pushstring(L, dateTimeToString(payload->getExpiry()).c_str());
+	lua_setfield(L, -2, "expiry");
+}

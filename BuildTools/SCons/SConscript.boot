@@ -247,9 +247,7 @@ if env["PLATFORM"] == "posix" and platform.machine() == "x86_64" :
 
 # Warnings
 if env["PLATFORM"] == "win32" :
-	# TODO: Find the ideal set of warnings
-	#env.Append(CCFLAGS = ["/Wall"])
-	pass
+	env.Append(CXXFLAGS = ["/wd4068"])
 else :
 	if "clang" in env["CXX"] :
 		env.Append(CXXFLAGS = [
