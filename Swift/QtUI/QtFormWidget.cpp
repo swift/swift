@@ -60,7 +60,7 @@ QListWidget* QtFormWidget::createList(FormField::ref field) {
 	std::vector<bool> selected;
 	foreach (FormField::Option option, field->getOptions()) {
 		listWidget->addItem(option.label.c_str());
-		if (field->getType() == FormField::ListMultiType) {
+		if (field->getType() == FormField::ListSingleType) {
 			selected.push_back(!field->getValues().empty() && option.value == field->getValues()[0]);
 		}
 		else if (field->getType() == FormField::ListMultiType) {
@@ -170,7 +170,7 @@ Form::ref QtFormWidget::getCompletedForm() {
 				resultField->addValue(field->getOptions()[listWidget->row(item)].value);
 			}
 		}
-		field->setName(field->getName());
+		resultField->setName(field->getName());
 		result->addField(resultField);
 	}
 	return result;
