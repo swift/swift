@@ -8,6 +8,8 @@
 
 #if defined(SLUIFT_BUILD_DLL)
 #define SLUIFT_API __declspec(dllexport)
+#elif __GNUC__ >= 4
+#define SLUIFT_API __attribute__((visibility("default")))
 #else
 #define SLUIFT_API
 #endif
