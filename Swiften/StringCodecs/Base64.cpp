@@ -70,8 +70,12 @@ SafeByteArray Base64::encode(const SafeByteArray& s) {
 	return encodeDetail<SafeByteArray>(s);
 }
 
-ByteArray Base64::decode(const std::string& input) {
+ByteArray Base64::decode(const std::string& input1) {
 	ByteArray result;
+	std::string input(input1);
+	input.erase(std::remove(input.begin(), input.end(), '\n'), input.end());
+	input.erase(std::remove(input.begin(), input.end(), '\r'), input.end());
+
 	if (input.size() % 4) {
 		return ByteArray();
 	}
