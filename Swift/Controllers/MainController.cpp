@@ -574,7 +574,7 @@ void MainController::performLoginFromCachedCredentials() {
 	ClientOptions clientOptions = clientOptions_;
 	bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
 	clientOptions.forgetPassword = eagle;
-	clientOptions.useTLS = eagle ? ClientOptions::RequireTLS : ClientOptions::UseTLSWhenAvailable;
+	clientOptions.useTLS = eagle ? ClientOptions::RequireTLS : clientOptions_.useTLS;
 	client_->connect(clientOptions);
 }
 
