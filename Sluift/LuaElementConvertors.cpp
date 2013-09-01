@@ -20,6 +20,7 @@
 #include <Sluift/ElementConvertors/SoftwareVersionConvertor.h>
 #include <Sluift/ElementConvertors/VCardUpdateConvertor.h>
 #include <Sluift/ElementConvertors/VCardConvertor.h>
+#include <Sluift/ElementConvertors/BodyConvertor.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/Lua/Exception.h>
 
@@ -28,6 +29,7 @@ using namespace Swift;
 LuaElementConvertors::LuaElementConvertors() {
 	registerConvertors();
 	convertors.push_back(boost::make_shared<PubSubEventConvertor>(this));
+	convertors.push_back(boost::make_shared<BodyConvertor>());
 	convertors.push_back(boost::make_shared<VCardConvertor>());
 	convertors.push_back(boost::make_shared<VCardUpdateConvertor>());
 	convertors.push_back(boost::make_shared<FormConvertor>());

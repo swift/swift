@@ -22,6 +22,7 @@ local subscriber_node
 
 local publish_item = {id = 'item_id', data = {{ _type = 'software_version', name = 'MyTest', os = 'Lua' }} }
 local publish_item2 = {id = 'item_id2', data = {{ _type = 'software_version', name = 'MyTest2', os = 'Lua' }} }
+local publish_item3 = {id = 'item_id3', data = {{ _type = 'software_version', name = 'MyTest3', os = 'Lua' }} }
 
 --------------------------------------------------------------------------------
 -- Helper methods
@@ -109,11 +110,40 @@ function test_subscriber_use_cases()
 	
 	-- 6.5 Retrieve items of a node
 	assert(node:create())
-	assert(node:publish {item = publish_item})
+	assert(node:set_configuration{configuration = {['pubsub#max_items'] = '10'}})
+	assert(node:publish{item = publish_item})
+	assert(node:publish{item = publish_item2})
 	local items = assert(subscriber_node:get_items())
-	assert(#items == 1)
+	assert(#items == 2)
 	assert(items[1].id == 'item_id')
 	assert(items[1].data[1].name == 'MyTest')
+	assert(items[2].id == 'item_id2')
+	assert(items[2].data[1].name == 'MyTest2')
+	assert(node:delete())
+
+	-- 6.5.7 Requesting most recent items
+	assert(node:create())
+	assert(node:set_configuration{configuration = {['pubsub#max_items'] = '10'}})
+	assert(node:publish{item = publish_item})
+	assert(node:publish{item = publish_item2})
+	assert(node:publish{item = publish_item3})
+	local items = assert(subscriber_node:get_items{maximum_items = 2})
+	assert(#items == 2)
+	assert(items[1].id == 'item_id2')
+	assert(items[1].data[1].name == 'MyTest2')
+	assert(items[2].id == 'item_id3')
+	assert(items[2].data[1].name == 'MyTest3')
+	assert(node:delete())
+	
+	-- 6.5.8 requesting specific item
+	assert(node:create())
+	assert(node:set_configuration{configuration = {['pubsub#max_items'] = '10'}})
+	assert(node:publish{item = publish_item})
+	assert(node:publish{item = publish_item2})
+	local items = assert(subscriber_node:get_item{id = 'item_id2'})
+	assert(#items == 1)
+	assert(items[1].id == 'item_id2')
+	assert(items[1].data[1].name == 'MyTest2')
 	assert(node:delete())
 end
 
@@ -141,7 +171,7 @@ function test_publisher_use_cases()
 	assert(node:create())
 	assert(subscriber_node:subscribe({ jid = subscriber_jid }))
 	assert(node:publish {items = {publish_item}})
-	assert(node:retract { item = 'item_id', notify = true })
+	assert(node:retract { id = 'item_id', notify = true })
 	assert(node:delete())
 
 	-- 7.2.2.1 Delete and notify
@@ -149,7 +179,7 @@ function test_publisher_use_cases()
 	assert(subscriber_node:subscribe({ jid = subscriber_jid }))
 	assert(node:publish {items = {publish_item}})
 	purge_pubsub_events(subscriber)
-	assert(node:retract { item = 'item_id', notify = true })
+	assert(node:retract { id = 'item_id', notify = true })
 	local event = assert(subscriber:get_next_event { type = 'pubsub' })
 	assert(event._type == 'pubsub_event_items')
 	assert(event.retracts[1].id == 'item_id')

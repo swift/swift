@@ -9,6 +9,7 @@
 #include <deque>
 #include <boost/optional.hpp>
 #include <boost/bind.hpp>
+#include <boost/function.hpp>
 
 #include <Swiften/Client/ClientOptions.h>
 #include <Sluift/globals.h>
@@ -101,7 +102,8 @@ namespace Swift {
 
 			void disconnect();
 			void setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os);
-			boost::optional<SluiftClient::Event> getNextEvent(boost::optional<Event::Type> type, int timeout);
+			boost::optional<SluiftClient::Event> getNextEvent(int timeout, 
+					boost::function<bool (const Event&)> condition = 0);
 			std::vector<XMPPRosterItem> getRoster();
 
 		private:

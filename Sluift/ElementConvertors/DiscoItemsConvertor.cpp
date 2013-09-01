@@ -49,12 +49,18 @@ void DiscoItemsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<DiscoIt
 		lua_createtable(L, boost::numeric_cast<int>(items.size()), 0);
 		for (size_t i = 0; i < items.size(); ++i) {
 			lua_createtable(L, 0, 0);
-			lua_pushstring(L, items[i].getName().c_str());
-			lua_setfield(L, -2, "name");
-			lua_pushstring(L, items[i].getNode().c_str());
-			lua_setfield(L, -2, "node");
-			lua_pushstring(L, items[i].getJID().toString().c_str());
-			lua_setfield(L, -2, "jid");
+			if (!items[i].getName().empty()) {
+				lua_pushstring(L, items[i].getName().c_str());
+				lua_setfield(L, -2, "name");
+			}
+			if (!items[i].getNode().empty()) {
+				lua_pushstring(L, items[i].getNode().c_str());
+				lua_setfield(L, -2, "node");
+			}
+			if (!items[i].getJID().isValid()) {
+				lua_pushstring(L, items[i].getJID().toString().c_str());
+				lua_setfield(L, -2, "jid");
+			}
 			lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
 		}
 		lua_setfield(L, -2, "items");

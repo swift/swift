@@ -18,6 +18,7 @@ elif env["SCONS_STAGE"] == "build" :
 		"LuaElementConvertors.cpp",
 		"LuaElementConvertor.cpp",
 		"Response.cpp",
+		"ElementConvertors/BodyConvertor.cpp",
 		"ElementConvertors/VCardUpdateConvertor.cpp",
 		"ElementConvertors/PubSubEventConvertor.cpp",
 		"ElementConvertors/RawXMLElementConvertor.cpp",

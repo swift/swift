@@ -25,6 +25,7 @@
 *.moc
 *.patch
 *.dSYM
+*.ld_*
 .gdb_history
 .clang_complete
 *~

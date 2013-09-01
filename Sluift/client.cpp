@@ -4,6 +4,11 @@
  * See the COPYING file for more information.
  */
 
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/assign/list_of.hpp>
+#include <iostream>
+
 #include <Sluift/SluiftClient.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/SoftwareVersion.h>
@@ -20,7 +25,6 @@
 #include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Presence/SubscriptionManager.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
-#include <boost/assign/list_of.hpp>
 #include <Sluift/Watchdog.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
 #include <Sluift/Lua/FunctionRegistration.h>
@@ -30,9 +34,9 @@
 #include <Sluift/Lua/Exception.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/globals.h>
-#include <iostream>
 
 using namespace Swift;
+namespace lambda = boost::lambda;
 
 static const std::string SLUIFT_CLIENT = Lua::FunctionRegistry::getMetaTableNameForType("Client");
 
@@ -376,12 +380,33 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 	}
 }
 
+struct CallUnaryLuaPredicateOnEvent {
+	CallUnaryLuaPredicateOnEvent(lua_State* L, int index) : L(L), index(index) {
+	}
+
+	bool operator()(const SluiftClient::Event& event) {
+		lua_pushvalue(L, index);
+		pushEvent(L, event);
+		if (lua_pcall(L, 1, 1, 0) != 0) {
+			throw Lua::Exception(lua_tostring(L, -1));
+		}
+		bool result = lua_toboolean(L, -1);
+		lua_pop(L, 1);
+		return result;
+	}
+
+	lua_State* L;
+	int index;
+};
+
+
 SLUIFT_LUA_FUNCTION(Client, get_next_event) {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 
 	int timeout = Sluift::globals.timeout;
 	boost::optional<SluiftClient::Event::Type> type;
+	int condition = 0;
 	if (lua_istable(L, 2)) {
 		if (boost::optional<std::string> typeString = Lua::getStringField(L, 2, "type")) {
 			if (*typeString == "message") {
@@ -397,9 +422,25 @@ SLUIFT_LUA_FUNCTION(Client, get_next_event) {
 		if (boost::optional<int> timeoutInt = Lua::getIntField(L, 2, "timeout")) {
 			timeout = *timeoutInt;
 		}
+		lua_getfield(L, 2, "if");
+		if (lua_isfunction(L, -1)) {
+			condition = Lua::absoluteOffset(L, -1);
+		}
 	}
 
-	if (boost::optional<SluiftClient::Event> event = client->getNextEvent(type, timeout)) {
+	boost::optional<SluiftClient::Event> event;
+	if (condition) {
+		event = client->getNextEvent(timeout, CallUnaryLuaPredicateOnEvent(L, condition));
+	}
+	else if (type) {
+		event = client->getNextEvent(
+				timeout, lambda::bind(&SluiftClient::Event::type, lambda::_1) == *type);
+	}
+	else {
+		event = client->getNextEvent(timeout);
+	}
+
+	if (event) {
 		pushEvent(L, *event);
 	}
 	else {
@@ -508,6 +549,12 @@ SLUIFT_LUA_FUNCTION(Client, set_caps_node) {
 	std::string node(Lua::checkString(L, 2));
 	client->getClient()->getDiscoManager()->setCapsNode(Lua::checkString(L, 2));
 	return 0;
+}
+
+SLUIFT_LUA_FUNCTION(Client, jid) {
+	SluiftClient* client = getClient(L);
+	lua_pushstring(L, client->getClient()->getJID().toString().c_str());
+	return 1;
 }
 
 SLUIFT_LUA_FUNCTION(Client, __gc) {

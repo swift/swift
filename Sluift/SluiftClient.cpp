@@ -87,14 +87,15 @@ void SluiftClient::setSoftwareVersion(const std::string& name, const std::string
 	client->setSoftwareVersion(name, version, os);
 }
 
-boost::optional<SluiftClient::Event> SluiftClient::getNextEvent(boost::optional<Event::Type> type, int timeout) {
+boost::optional<SluiftClient::Event> SluiftClient::getNextEvent(
+		int timeout, boost::function<bool (const Event&)> condition) {
 	Watchdog watchdog(timeout, networkFactories->getTimerFactory());
 	while (true) {
 		// Look for pending events in the queue
 		while (!pendingEvents.empty()) {
 			Event event = pendingEvents.front();
 			pendingEvents.pop_front();
-			if (!type || *type == event.type) {
+			if (!condition || condition(event)) {
 				return event;
 			}
 		}

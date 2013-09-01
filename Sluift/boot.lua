@@ -157,6 +157,12 @@ for method, event_type in pairs({message = 'message', presence = 'presence', pub
 		options['type'] = event_type
 		return client:for_each_event (options)
 	end
+
+	Client['get_next_' .. method] = function (client, ...)
+		local options = parse_options({}, ...)
+		options['type'] = event_type
+		return client:get_next_event(options)
+	end
 end
 
 for method, event_type in pairs({messages = 'message', pubsub_events = 'pubsub'}) do
@@ -222,6 +228,16 @@ for method, query_type in pairs(simple_pubsub_queries) do
 	end
 end
 
+for _, method in ipairs({'events', 'get_next_event', 'for_each_event'}) do
+	PubSub[method] = function (node, ...)
+		local options = parse_options({}, ...)
+		options['if'] = function (event) 
+			return event.type == 'pubsub' and event.from == node.jid and event.node == node
+		end
+		return node.client[method](node.client, options)
+ end
+end
+
 --------------------------------------------------------------------------------
 -- PubSubNode
 --------------------------------------------------------------------------------
@@ -247,7 +263,6 @@ local simple_pubsub_node_queries = {
 	get_configuration = 'pubsub_owner_configure',
 	get_subscriptions = 'pubsub_subscriptions',
 	get_affiliations = 'pubsub_affiliations',
-	get_items = 'pubsub_items',
 	get_default_subscription_options = 'pubsub_default',
 }
 for method, query_type in pairs(simple_pubsub_node_queries) do
@@ -257,6 +272,23 @@ for method, query_type in pairs(simple_pubsub_node_queries) do
 					_type = query_type, node = node.node 
 			}}, options))
 	end
+end
+
+function PubSubNode.get_items (node, ...)
+	local options = parse_options({}, ...)
+	local items = options.items or {}
+	if options.maximum_items then
+		items = merge_tables({maximum_items = options.maximum_items}, items)
+	end
+	items = merge_tables({_type = 'pubsub_items', node = node.node}, items)
+	return node.client:query_pubsub(merge_tables({ 
+		type = 'get', to = node.jid, query = items}, options))
+end
+
+function PubSubNode.get_item (node, ...)
+	local options = parse_options({}, ...)
+	if not type(options.id) == 'string' then error('Expected ID') end
+	return PubSubNode.get_items(node, {items = {{id = options.id}}})
 end
 
 function PubSubNode.create (node, options)
@@ -291,11 +323,12 @@ function PubSubNode.set_configuration(node, options)
 		}, options))
 end
 
-function PubSubNode.subscribe(node, options)
-	options = options or {}
+function PubSubNode.subscribe(node, ...)
+	local options = parse_options(...)
+	local jid = options.jid or sluift.jid.to_bare(node.client:jid())
 	return node.client:query_pubsub(merge_tables(
 		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_subscribe', node = node.node, jid = options['jid'] }
+				_type = 'pubsub_subscribe', node = node.node, jid = jid }
 		}, options))
 end
 
@@ -332,13 +365,11 @@ function PubSubNode.publish(node, ...)
 		}, options))
 end
 
-function PubSubNode.retract(node, options)
-	options = options or {}
-	local item_ids = options['items']
-	item_ids = item_ids or { options['item'] }
-	local items = {}
-	for _, item_id in ipairs(item_ids) do
-		items[#items+1] = { id = item_id }
+function PubSubNode.retract(node, ...)
+	local options = parse_options({}, ...)
+	local items = options.items
+	if options.id then
+		items = {{id = options.id}}
 	end
 	return node.client:query_pubsub(merge_tables(
 		{ type = 'set', to = node.jid, query = { 
@@ -346,12 +377,23 @@ function PubSubNode.retract(node, options)
 		}}, options))
 end
 
-function PubSubNode.purge(node, options)
-	options = options or {}
+function PubSubNode.purge(node, ...)
+	local options = parse_options({}, ...)
 	return node.client:query_pubsub(merge_tables(
 		{ type = 'set', to = node.jid, query = { 
 				_type = 'pubsub_owner_purge', node = node.node
 		}}, options))
+end
+
+-- Iterators over events
+for _, method in ipairs({'events', 'get_next_event', 'for_each_event'}) do
+	PubSubNode[method] = function (node, ...)
+		local options = parse_options({}, ...)
+		options['if'] = function (event) 
+			return event.type == 'pubsub' and event.from == node.jid and event.node == node.node
+		end
+		return node.client[method](node.client, options)
+	end
 end
 
 --------------------------------------------------------------------------------
