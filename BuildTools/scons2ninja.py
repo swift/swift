@@ -221,6 +221,9 @@ ninja_post = []
 scons_cmd = "scons"
 scons_dependencies = ['SConstruct'] + rglob('SConscript')
 
+def ninja_custom_command(ninja, line) :
+  return False
+
 CONFIGURATION_FILE = '.scons2ninja.conf'
 execfile(CONFIGURATION_FILE)
 
@@ -319,6 +322,10 @@ ninja.rule('lrelease',
 ninja.rule('ibtool',
   command = '$ibtool $ibtoolflags --compile $out $in',
   description = 'IBTOOL $out')
+
+ninja.rule('dsymutil',
+  command = '$dsymutil $dsymutilflags -o $out $in',
+  description = 'DSYMUTIL $out')
 
 ninja.rule('generator',
   command = "python " + SCRIPT + " ${scons_args}",
@@ -559,7 +566,12 @@ for line in build_lines :
     files, flags = extract_non_flags(flags)
     ninja.build(out, 'ibtool', files, ibtoolflags = flags)
 
-  else :
+  elif tool == 'dsymutil':
+    out, flags = extract_binary_flag("-o", flags)
+    files, flags = extract_non_flags(flags)
+    ninja.build(out, 'dsymutil', files, dsymutilflags = flags)
+
+  elif not ninja_custom_command(ninja, line)  :
     raise Exception("Unknown tool: '" + line + "'")
     
   
