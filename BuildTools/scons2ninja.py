@@ -11,7 +11,7 @@
 #
 ################################################################################
 
-import re, os, os.path, subprocess, sys, fnmatch
+import re, os, os.path, subprocess, sys, fnmatch, shlex
 
 ################################################################################
 # Helper methods & variables
@@ -40,6 +40,12 @@ def is_list(l) :
 
 def escape(s) :
   return s.replace(' ', '$ ').replace(':', '$:')
+
+def quote_spaces(s) :
+  if ' ' in s :
+    return '"' + s + '"'
+  else :
+    return s
   
 def to_list(l) :
   if not l :
@@ -114,7 +120,7 @@ def get_built_libs(libs, libpaths, outputs) :
   return result
 
 def parse_tool_command(line) :
-  command = line.split(' ')
+  command = shlex.split(line)
   flags = command[1:]
   tool = os.path.splitext(os.path.basename(command[0]))[0]
   if tool.startswith('clang++') or tool.startswith('g++') :
@@ -173,7 +179,7 @@ class NinjaBuilder :
     for var, value in kwargs.iteritems() :
       if var in ['deps', 'order_deps'] :
         continue
-      value = self.to_string(value)
+      value = self.to_string(value, quote = True)
       if var.endswith("flags") :
         value = self.get_flags_variable(var, value)
       self._build += "  " + var + " = " + value + "\n"
@@ -195,9 +201,12 @@ class NinjaBuilder :
     result += self._build + "\n"
     return result
   
-  def to_string(self, lst) :
+  def to_string(self, lst, quote = False) :
     if is_list(lst) :
-      return ' '.join([escape(x) for x in lst]) 
+      if quote :
+        return ' '.join([quote_spaces(x) for x in lst]) 
+      else :
+        return ' '.join([escape(x) for x in lst]) 
     if is_regexp(lst) :
       return ' '.join([escape(x) for x in self.targets if lst.match(x)])
     return escape(lst)
