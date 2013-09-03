@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/ContainerPayload.h>

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
 #include <Swiften/PubSub/PubSubManager.h>
