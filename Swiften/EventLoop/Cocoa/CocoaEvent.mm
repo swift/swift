@@ -2,10 +2,7 @@
 #include <Swiften/EventLoop/Event.h>
 #include <Swiften/EventLoop/Cocoa/CocoaEventLoop.h>
 
-@implementation CocoaEvent {
-	Swift::Event* event;
-	Swift::CocoaEventLoop* eventLoop;
-}
+@implementation CocoaEvent
 
 - (id) initWithEvent: (Swift::Event*) e eventLoop: (Swift::CocoaEventLoop*) el {
 	self = [super init]; 
