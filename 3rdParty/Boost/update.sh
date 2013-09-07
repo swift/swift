@@ -46,6 +46,7 @@ fi
 	serialization/list.hpp \
 	serialization/shared_ptr.hpp \
 	serialization/string.hpp \
+	serialization/set.hpp \
 	serialization/version.hpp \
 	serialization/split_member.hpp \
 	signals.hpp \
