@@ -247,13 +247,13 @@ QtSwift::~QtSwift() {
 		delete controller;
 	}
 	delete notifier_;
-	delete settingsHierachy_;
-	delete qtSettings_;
-	delete xmlSettings_;
 	foreach (QtSystemTray* tray, systemTrays_) {
 		delete tray;
 	}
 	delete tabs_;
+	delete settingsHierachy_;
+	delete qtSettings_;
+	delete xmlSettings_;
 	delete splitter_;
 	delete statusCache_;
 	delete uriHandler_;
