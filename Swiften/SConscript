@@ -303,7 +303,7 @@ if env["SCONS_STAGE"] == "build" :
 			myenv.Append(LINKFLAGS = ["-Wl,-soname,libSwiften.so.$SWIFTEN_VERSION_MAJOR"])
 			myenv["SHLIBSUFFIX"] = ""
 		elif myenv["PLATFORM"] == "darwin" :
-			myenv.Append(LINKFLAGS = ["-Wl,-install_name,libSwiften.so.$SWIFTEN_VERSION_MAJOR", "-Wl,-compatibility_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}", "-Wl,-current_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}"])
+			myenv.Append(LINKFLAGS = ["-Wl,-install_name,${SHLIBPREFIX}Swiften.${SWIFTEN_VERSION_MAJOR}${SHLIBSUFFIX}", "-Wl,-compatibility_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}", "-Wl,-current_version,${SWIFTEN_VERSION_MAJOR}.${SWIFTEN_VERSION_MINOR}"])
 		elif myenv["PLATFORM"] == "win32" :
 			res_env = myenv.Clone()
 			res_env.Append(CPPDEFINES = [
