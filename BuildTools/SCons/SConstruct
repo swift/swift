@@ -83,6 +83,12 @@ def CheckPKG(context, name):
 
 def CheckVersion(context, library, version, define, header, value) :
 	context.Message("Checking " + library + " version (>= " + version + ") ...")
+	version = GetVersion(context, define, header)
+	ok = version >= value
+	context.Result(ok)
+	return ok
+
+def GetVersion(context, define, header, extension = ".c") :
 	ret = context.TryRun("""
 #include <%(header)s>
 #include <stdio.h>
@@ -91,10 +97,12 @@ int main(int argc, char* argv[]) {
 	printf("%%d\\n", %(define)s);
 	return 0;
 }
-""" % { "header" : header, "define": define }, ".c")
-	ok = ret[0] and int(ret[1]) >= value
-	context.Result(ok)
-	return ok
+""" % { "header" : header, "define": define }, extension)
+	if ret[0] :
+	  return int(ret[1])
+	else :
+	  return -1
+
 
 conf = Configure(conf_env)
 
@@ -405,7 +413,26 @@ else :
 
 
 # Lua
-env["LUA_BUNDLED"] = 1
+lua_conf_env = conf_env.Clone()
+lua_flags = {}
+if env.get("lua_libdir", None) :
+	lua_flags["LIBPATH"] = [env["lua_libdir"]]
+if env.get("lua_includedir", None) :
+	lua_flags["CPPPATH"] = [env["lua_includedir"]]
+lua_conf_env.MergeFlags(lua_flags)
+conf = Configure(lua_conf_env)
+if not env.get("lua_force_bundled", False) and conf.CheckCXXHeader("lua.hpp") and conf.CheckLib(env["lua_libname"]) :
+	env["HAVE_LUA"] = 1
+	env["LUA_FLAGS"] = { "LIBS": [env["lua_libname"]] }
+	lua_version = GetVersion(conf, "LUA_VERSION_NUM", "lua.h")
+	if lua_version > 0 :
+		env["LUA_FLAGS"]["LUA_VERSION"] = str(lua_version // 100) + "." + str(lua_version % 100)
+	else :
+		print "Warning: Unable to determine Lua version. Not installing Lua libraries."
+	env["LUA_FLAGS"].update(lua_flags)
+else :
+	env["LUA_BUNDLED"] = 1
+conf.Finish()
 
 # Readline
 conf = Configure(conf_env)
