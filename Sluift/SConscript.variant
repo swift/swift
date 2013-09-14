@@ -1,3 +1,5 @@
+import os
+
 Import('env')
 Import('sluift_env')
 Import('sluift_variant')
@@ -8,7 +10,16 @@ if sluift_variant == 'exe' :
 		"#/Sluift/lua.c",
 		"#/Sluift/linit.c",
 	])
+	if sluift_env.get("SLUIFT_INSTALLDIR", "") :
+		sluift_env.Install(os.path.join(sluift_env["SLUIFT_INSTALLDIR"], "bin"), env["SLUIFT"])
 else :
-	sluift_env.SharedLibrary("sluift", sluift_sources + [
-		"#/Sluift/dll.c"
-	])
+	sluift_env["SLUIFT_DLL_SUFFIX"] = "${SHLIBSUFFIX}"
+	if sluift_env["PLATFORM"] == "darwin" :
+		sluift_env["SLUIFT_DLL_SUFFIX"] = ".so"
+	sluift_dll = sluift_env.SharedLibrary(sluift_env.File("sluift${SLUIFT_DLL_SUFFIX}"), 
+			sluift_sources + ["#/Sluift/dll.c"])
+	if sluift_env.get("SLUIFT_INSTALLDIR", False) and sluift_env.get("LUA_VERSION", False) :
+		sluift_env.Install(
+				os.path.join(sluift_env["SLUIFT_INSTALLDIR"], "lib", "lua", sluift_env["LUA_VERSION"]), 
+				sluift_dll)
+

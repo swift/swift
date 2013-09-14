@@ -41,11 +41,8 @@ elif env["SCONS_STAGE"] == "build" :
 	sluift_env.UseFlags(env.get("LUA_FLAGS", {}))
 	sluift_env.UseFlags(env["SWIFTEN_FLAGS"])
 	sluift_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
-	sluift_env["SHLIBPREFIX"] = ""
 	if sluift_env["PLATFORM"] == "win32" :
 		sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
-	elif sluift_env["PLATFORM"] == "darwin" :
-		sluift_env["SHLIBSUFFIX"] = ".so"
 
 	# Generate a customized lua.c
 	sluift_env["SLUIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "sluift")
@@ -85,4 +82,3 @@ elif env["SCONS_STAGE"] == "build" :
 		SConscript(["SConscript.variant"], variant_dir = sluift_variant,
 				duplicate = 0,
 				exports = ['sluift_sources', 'sluift_variant', 'sluift_env'])
-
