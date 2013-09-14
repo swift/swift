@@ -58,7 +58,9 @@ QtChatView::QtChatView(QtChatTheme* theme, QWidget* parent, bool disableAutoScro
 
 	webPage_ = new QWebPage(this);
 	webPage_->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-	//webPage_->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+	if (Log::getLogLevel() == Log::debug) {
+		webPage_->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, true);
+	}
 	webView_->setPage(webPage_);
 	connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
 	connect(webPage_, SIGNAL(scrollRequested(int, int, const QRect&)), SLOT(handleScrollRequested(int, int, const QRect&)));

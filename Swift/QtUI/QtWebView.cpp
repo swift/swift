@@ -11,6 +11,7 @@
 #include <QFocusEvent>
 #include <boost/numeric/conversion/cast.hpp>
 #include <QMenu>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 QtWebView::QtWebView(QWidget* parent) : QWebView(parent), fontSizeIsMinimal(false) {
@@ -18,6 +19,9 @@ QtWebView::QtWebView(QWidget* parent) : QWebView(parent), fontSizeIsMinimal(fals
 	filteredActions.push_back(QWebPage::CopyLinkToClipboard);
 	filteredActions.push_back(QWebPage::CopyImageToClipboard);
 	filteredActions.push_back(QWebPage::Copy);
+	if (Log::getLogLevel() == Log::debug) {
+		filteredActions.push_back(QWebPage::InspectElement);
+	}
 }
 
 void QtWebView::keyPressEvent(QKeyEvent* event) {
