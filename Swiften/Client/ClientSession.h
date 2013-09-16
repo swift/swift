@@ -94,7 +94,9 @@ namespace Swift {
 
 
 			bool getStreamManagementEnabled() const {
-				return stanzaAckRequester_;
+				// Explicitly convert to bool. In C++11, it would be cleaner to
+				// compare to nullptr.
+				return static_cast<bool>(stanzaAckRequester_);
 			}
 
 			bool getRosterVersioningSupported() const {

@@ -38,8 +38,10 @@ namespace Swift {
 				updatePayload(boost::make_shared<Subject>(subject));
 			}
 
+			// Explicitly convert to bool. In C++11, it would be cleaner to
+			// compare to nullptr.
 			bool hasSubject() {
-				return getPayload<Subject>();
+				return static_cast<bool>(getPayload<Subject>());
 			}
 
 			std::string getBody() const { 
