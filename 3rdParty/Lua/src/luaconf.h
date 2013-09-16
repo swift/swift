@@ -757,7 +757,9 @@ union luai_Cast { double l_d; long l_l; };
 ** without modifying the main part of the file.
 */
 
-
+#undef LUA_DL_DYLD
+#undef LUA_DL_DLOPEN
+#undef LUA_DL_DLL
 
 #endif
 

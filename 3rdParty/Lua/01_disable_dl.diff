@@ -1,0 +1,15 @@
+diff --git a/3rdParty/Lua/src/luaconf.h b/3rdParty/Lua/src/luaconf.h
+index e2cb261..ee37a9f 100644
+--- a/3rdParty/Lua/src/luaconf.h
++++ b/3rdParty/Lua/src/luaconf.h
+@@ -757,7 +757,9 @@ union luai_Cast { double l_d; long l_l; };
+ ** without modifying the main part of the file.
+ */
+ 
+-
++#undef LUA_DL_DYLD
++#undef LUA_DL_DLOPEN
++#undef LUA_DL_DLL
+ 
+ #endif
+ 
