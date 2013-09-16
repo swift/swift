@@ -177,6 +177,7 @@ if allLibsPresent :
 	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
 		# FIXME: Remove this workaround when UUID is available in most distros
 		env["BOOST_BUNDLED_UUID_ONLY"] = True
+	env["BOOST_FLAGS"]["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
 else :
 	env["BOOST_BUNDLED"] = True
 conf.Finish()
