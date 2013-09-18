@@ -19,10 +19,6 @@ namespace Swift {
 		protected:
 			virtual bool event(QEvent *e);
 			virtual void paintEvent(QPaintEvent* );
-
-		private:
-			QPixmap lightPixmap;
-			QPixmap darkPixmap;
 	};
 
 }

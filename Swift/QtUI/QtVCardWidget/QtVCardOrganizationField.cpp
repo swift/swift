@@ -39,7 +39,7 @@ void QtVCardOrganizationField::setupContentWidgets() {
 	unitsTreeWidget = new QTreeWidget(this);
 	unitsTreeWidget->setColumnCount(2);
 	unitsTreeWidget->header()->setStretchLastSection(false);
-	int closeIconWidth = unitsTreeWidget->fontMetrics().height();
+	int closeIconWidth = style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
 	unitsTreeWidget->header()->resizeSection(1, closeIconWidth);
 
 #if QT_VERSION >= 0x050000
@@ -76,6 +76,10 @@ void QtVCardOrganizationField::setOrganization(const VCard::Organization& organi
 		item->setFlags(item->flags() | Qt::ItemIsEditable);
 		unitsTreeWidget->addTopLevelItem(item);
 	}
+
+	QTreeWidgetItem* item = new QTreeWidgetItem(QStringList("") << "");
+	item->setFlags(item->flags() | Qt::ItemIsEditable);
+	unitsTreeWidget->addTopLevelItem(item);
 }
 
 VCard::Organization QtVCardOrganizationField::getOrganization() const {
@@ -87,10 +91,6 @@ VCard::Organization QtVCardOrganizationField::getOrganization() const {
 			organization.units.push_back(Q2PSTRING(row->text(0)));
 		}
 	}
-
-	QTreeWidgetItem* item = new QTreeWidgetItem(QStringList("") << "");
-	item->setFlags(item->flags() | Qt::ItemIsEditable);
-	unitsTreeWidget->addTopLevelItem(item);
 
 	return organization;
 }

@@ -16,6 +16,7 @@ class QtRemovableItemDelegate : public QItemDelegate {
 
 		virtual void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex&) const;
 		virtual QWidget* createEditor(QWidget*, const QStyleOptionViewItem&, const QModelIndex&) const;
+		virtual QSize sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const;
 
 	protected:
 		virtual bool editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index);

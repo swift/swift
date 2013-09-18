@@ -11,9 +11,7 @@ namespace Swift {
 QtResizableLineEdit::QtResizableLineEdit(QWidget* parent) :
 	QLineEdit(parent) {
 	connect(this, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)));
-	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
-	int marginHeight = 6;
-	setMaximumHeight(fontMetrics().height() + marginHeight);
+	setMinimumWidth(30);
 }
 
 QtResizableLineEdit::~QtResizableLineEdit() {
@@ -34,12 +32,16 @@ void QtResizableLineEdit::setEditable(const bool editable) {
 
 QSize QtResizableLineEdit::sizeHint() const {
 	int horizontalMargin = 10;
+	int verticalMargin = 6;
+	QSize textDimensions;
 #if QT_VERSION >= 0x040700
-	int w = fontMetrics().boundingRect(text().isEmpty() ? placeholderText() : text()).width() + horizontalMargin;
+	textDimensions = fontMetrics().boundingRect(text().isEmpty() ? placeholderText() : text()).size();
 #else
-	int w = fontMetrics().boundingRect(text().isEmpty() ? QString("   ") : text()).width() + horizontalMargin;
+	textDimensions = fontMetrics().boundingRect(text().isEmpty() ? QString("   ") : text()).size();
 #endif
-	return QSize(w, height());
+	textDimensions.setWidth(textDimensions.width() + horizontalMargin);
+	textDimensions.setHeight(textDimensions.height() + verticalMargin);
+	return textDimensions;
 }
 
 void QtResizableLineEdit::textChanged(QString) {

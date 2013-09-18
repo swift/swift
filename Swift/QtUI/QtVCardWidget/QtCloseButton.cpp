@@ -14,25 +14,11 @@
 namespace Swift {
 
 QtCloseButton::QtCloseButton(QWidget *parent) : QAbstractButton(parent) {
-	lightPixmap = QPixmap(12,12);
-	lightPixmap.fill(QColor(0,0,0,0));
-	QStyleOption opt;
-	opt.init(this);
-	opt.state = QStyle::State(0);
-	opt.state |= QStyle::State_MouseOver;
-	QPainter lightPixmapPainter(&lightPixmap);
-	style()->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, &lightPixmapPainter);
 
-	darkPixmap = QPixmap(12,12);
-	darkPixmap.fill(QColor(0,0,0,0));
-	opt.init(this);
-	opt.state = QStyle::State(0);
-	QPainter darkPixmapPainter(&darkPixmap);
-	style()->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, &darkPixmapPainter);
 }
 
 QSize QtCloseButton::sizeHint() const {
-	return QSize(width(), height());
+	return QSize(style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0), style()->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, 0, 0));
 }
 
 bool QtCloseButton::event(QEvent *e) {
@@ -45,11 +31,15 @@ bool QtCloseButton::event(QEvent *e) {
 void QtCloseButton::paintEvent(QPaintEvent *) {
 	QPainter painter(this);
 	painter.setRenderHint(QPainter::HighQualityAntialiasing);
-	if (underMouse()) {
-		painter.drawPixmap(0, 0, height(), height(), darkPixmap);
-	} else {
-		painter.drawPixmap(0, 0, height(), height(), lightPixmap);
+	QStyleOption opt;
+	opt.init(this);
+	opt.state |= QStyle::State_AutoRaise;
+	if (underMouse() && !isDown()) {
+		opt.state |= QStyle::State_Raised;
+	} else if (isDown()) {
+		opt.state |= QStyle::State_Sunken;
 	}
+	style()->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, &painter, this);
 }
 
 }

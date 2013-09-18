@@ -5,7 +5,7 @@
  */
 
 #include "QtRemovableItemDelegate.h"
-
+#include <Swiften/Base/Platform.h>
 #include <QEvent>
 #include <QPainter>
 
@@ -15,13 +15,21 @@ QtRemovableItemDelegate::QtRemovableItemDelegate(const QStyle* style) : style(st
 
 }
 
-void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
+void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex&) const {
 	QStyleOption opt;
-	opt.state = QStyle::State(0);
-	opt.state |= QStyle::State_MouseOver;
+	opt.state = option.state;
+	opt.state |= QStyle::State_AutoRaise;
+	if (option.state.testFlag(QStyle::State_MouseOver)) {
+		opt.state |= QStyle::State_Raised;
+	}
+	opt.rect = option.rect;
 	painter->save();
-	drawBackground(painter, option, index);
-	painter->translate(option.rect.x(), option.rect.y()+(option.rect.height() - 12)/2);
+	painter->fillRect(option.rect, option.state & QStyle::State_Selected ? option.palette.highlight() : option.palette.base());
+#ifdef SWIFTEN_PLATFORM_MACOSX
+	// workaround for Qt not painting relative to the cell we're in, on OS X
+	int height = style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
+	painter->translate(option.rect.x(), option.rect.y() + (option.rect.height() - height)/2);
+#endif
 	style->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, painter);
 	painter->restore();
 }
@@ -37,6 +45,11 @@ bool QtRemovableItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* mod
 	} else {
 		return QItemDelegate::editorEvent(event, model, option, index);
 	}
+}
+
+QSize QtRemovableItemDelegate::sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const {
+	QSize size(style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0), style->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, 0, 0));
+	return size;
 }
 
 }
