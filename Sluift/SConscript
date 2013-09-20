@@ -29,6 +29,7 @@ elif env["SCONS_STAGE"] == "build" :
 		"ElementConvertors/FormConvertor.cpp",
 		"ElementConvertors/SoftwareVersionConvertor.cpp",
 		"ElementConvertors/VCardConvertor.cpp",
+		"ElementConvertors/CommandConvertor.cpp",
 		"ClientHelpers.cpp",
 		"SluiftClient.cpp",
 		"boot.c",

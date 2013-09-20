@@ -173,13 +173,25 @@ for method, event_type in pairs({messages = 'message', pubsub_events = 'pubsub'}
 	end
 end
 
--- Register get_* convenience methods for some type of queries
-for _, query_type in ipairs({'software_version', 'disco_items', 'xml', 'dom', 'vcard'}) do
-	Client['get_' .. query_type] = function (client, options)
-		options = options or {}
-		if type(options) ~= 'table' then error('Invalid options: ' .. options) end 
-		options['query'] = merge_tables({_type = query_type}, options['query'] or {})
-		return client:get(options)
+--
+-- Register get_* and set_* convenience methods for some type of queries
+--
+-- Example usages:
+--	client:get_software_version{to = 'alice@wonderland.lit'}
+--	client:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
+--
+local get_set_shortcuts = {
+	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard'},
+	set = {'command'}
+}
+for query_action, query_types in pairs(get_set_shortcuts) do
+	for _, query_type in ipairs(query_types) do
+		Client[query_action .. '_' .. query_type] = function (client, options)
+			options = options or {}
+			if type(options) ~= 'table' then error('Invalid options: ' .. options) end 
+			options['query'] = merge_tables({_type = query_type}, options[query_type] or {})
+			return client[query_action](client, options)
+		end
 	end
 end
 
@@ -403,6 +415,7 @@ end
 local disco = {
 	features = {
 		DISCO_INFO = 'http://jabber.org/protocol/disco#info',
+		COMMANDS = 'http://jabber.org/protocol/commands',
 		USER_LOCATION = 'http://jabber.org/protocol/geoloc',
 		USER_TUNE = 'http://jabber.org/protocol/tune',
 		USER_AVATAR_METADATA = 'urn:xmpp:avatar:metadata',
