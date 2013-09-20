@@ -44,8 +44,8 @@ example_form = [[
 	</field>
 </x>]]
 
-form = sluift.from_xml(example_form)['data']
-print(form)
+form = sluift.from_xml(example_form)
+--print(form)
 
 -- Test form properties
 assert(form['title'] == 'Bot Configuration')
@@ -69,5 +69,11 @@ assert(form['features']['name'] == 'features')
 assert(form['FORM_TYPE']['value'] == 'jabber:bot')
 
 -- Test response form
-print(form:create_submission())
+submission = form:create_submission()
+assert(#(submission.fields) == 8)
+submission['description'] = 'my description'
+assert(submission['description']['value'] == 'my description')
+submission['type'] = 'cancel'
+assert(#(submission.fields) == 8)
+
 --print(sluift.to_xml({type = 'form', data = form}))

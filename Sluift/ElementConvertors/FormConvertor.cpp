@@ -18,7 +18,6 @@
 using namespace Swift;
 
 namespace {
-	// TODO: add __newindex to set a field value
 	int formIndex(lua_State* L) {
 		lua_getfield(L, 1, "fields");
 		if (lua_type(L, -1) != LUA_TTABLE) {
@@ -33,6 +32,32 @@ namespace {
 				return 1;
 			}
 			lua_pop(L, 2);
+		}
+		return 0;
+	}
+
+	int formNewIndex(lua_State* L) {
+		lua_getfield(L, 1, "fields");
+		bool foundField = false;
+		if (lua_type(L, -1) == LUA_TTABLE) {
+			for (lua_pushnil(L); lua_next(L, -2) != 0; ) {
+				lua_getfield(L, -1, "name");
+				if (lua_equal(L, -1, 2)) {
+					lua_pushvalue(L, 3);
+					lua_setfield(L, -3, "value");
+					foundField = true;
+					lua_pop(L, 3);
+					break;
+				}
+				lua_pop(L, 2);
+			}
+		}
+		lua_pop(L, 1);
+
+		if (!foundField) {
+			lua_pushvalue(L, 2);
+			lua_pushvalue(L, 3);
+			lua_rawset(L, 1);
 		}
 		return 0;
 	}
@@ -278,9 +303,12 @@ namespace {
 		}
 
 		Lua::pushValue(L, result);
+
 		lua_newtable(L);
 		lua_pushcfunction(L, formIndex);
 		lua_setfield(L, -2, "__index");
+		lua_pushcfunction(L, formNewIndex);
+		lua_setfield(L, -2, "__newindex");
 		lua_setmetatable(L, -2);
 	}
 
@@ -304,10 +332,12 @@ namespace {
 			field->setDescription("");
 			form->addField(field);
 		}
+		form->setType(Form::SubmitType);
 
 		// Convert back
 		convertFormToLua(L, form);
 		Lua::registerTableToString(L, -1);
+
 		return 1;
 	}
 }
@@ -325,7 +355,7 @@ boost::shared_ptr<Form> FormConvertor::doConvertFromLua(lua_State* L) {
 void FormConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Form> payload) {
 	convertFormToLua(L, payload);
 
+	lua_pushstring(L, "create_submission");
 	lua_pushcfunction(L, createSubmission);
-	lua_setfield(L, -2, "create_submission");
-
+	lua_rawset(L, -3);
 }
