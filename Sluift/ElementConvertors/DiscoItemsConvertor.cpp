@@ -57,7 +57,7 @@ void DiscoItemsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<DiscoIt
 				lua_pushstring(L, items[i].getNode().c_str());
 				lua_setfield(L, -2, "node");
 			}
-			if (!items[i].getJID().isValid()) {
+			if (items[i].getJID().isValid()) {
 				lua_pushstring(L, items[i].getJID().toString().c_str());
 				lua_setfield(L, -2, "jid");
 			}
