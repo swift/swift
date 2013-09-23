@@ -4,17 +4,32 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2013 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
-#include <Swift/Controllers/UIInterfaces/HistoryWindow.h>
-#include <Swift/QtUI/ui_QtHistoryWindow.h>
-#include <QtChatView.h>
-#include <QtTabbable.h>
-#include <Swift/QtUI/Roster/QtTreeWidget.h>
 #include <set>
+
 #include <QDate>
 
+#include <Swift/Controllers/UIInterfaces/HistoryWindow.h>
+
+#include <Swift/QtUI/QtTabbable.h>
+
+#include <Swift/QtUI/ui_QtHistoryWindow.h>
+
 namespace Swift {
+	class QtTabbable;
+	class QtTreeWidget;
+	class QtWebKitChatView;
+	class QtChatTheme;
+	class SettingsProvider;
+	class UIEventStream;
+
 	class QtHistoryWindow : public QtTabbable, public HistoryWindow {
 			Q_OBJECT
 
@@ -54,7 +69,7 @@ namespace Swift {
 
 			Ui::QtHistoryWindow ui_;
 			QtChatTheme* theme_;
-			QtChatView* conversation_;
+			QtWebKitChatView* conversation_;
 			QtTreeWidget* conversationRoster_;
 			std::set<QDate> dates_;
 			int idCounter_;

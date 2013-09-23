@@ -77,16 +77,6 @@ namespace Swift {
 		Q_OBJECT
 
 		public:
-			static const QString ButtonWhiteboardSessionCancel;
-			static const QString ButtonWhiteboardSessionAcceptRequest;
-			static const QString ButtonWhiteboardShowWindow;
-			static const QString ButtonFileTransferCancel;
-			static const QString ButtonFileTransferSetDescription;
-			static const QString ButtonFileTransferSendRequest;
-			static const QString ButtonFileTransferAcceptRequest;
-			static const QString ButtonMUCInvite;
-
-		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
 			~QtChatWindow();
 			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
@@ -139,8 +129,6 @@ namespace Swift {
 			void setBlockingState(BlockingState state);
 			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu);
 
-			static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
-
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
 			void handleFontResized(int fontSizeSteps);
@@ -174,20 +162,8 @@ namespace Swift {
 			void handleSplitterMoved(int pos, int index);
 			void handleAlertButtonClicked();
 			void handleActionButtonClicked();
-
-			void handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
 			void handleAffiliationEditorAccepted();
 			void handleCurrentLabelChanged(int);
-
-		private:
-			enum PreviousMessageKind {
-				PreviosuMessageWasNone,
-				PreviousMessageWasMessage,
-				PreviousMessageWasSystem,
-				PreviousMessageWasPresence,
-				PreviousMessageWasFileTransfer,
-				PreviousMessageWasMUCInvite
-			};
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -195,27 +171,10 @@ namespace Swift {
 			void beginCorrection();
 			void cancelCorrection();
 			void handleSettingChanged(const std::string& setting);
-			std::string addMessage(
-					const QString& message, 
-					const std::string& senderName, 
-					bool senderIsSelf, 
-					boost::shared_ptr<SecurityLabel> label, 
-					const std::string& avatarPath, 
-					const QString& style, 
-					const boost::posix_time::ptime& time, 
-					const HighlightAction& highlight,
-					ChatSnippet::Direction direction);
-			void replaceMessage(
-					const QString& message, 
-					const std::string& id, 
-					const boost::posix_time::ptime& time, 
-					const QString& style, 
-					const HighlightAction& highlight);
+
 			void handleOccupantSelectionChanged(RosterItem* item);
-			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const;
-			static ChatSnippet::Direction getActualDirection(const ChatMessage& message, Direction direction);
-			QString chatMessageToHTML(const ChatMessage& message);
-			QString getHighlightSpanStart(const HighlightAction& highlight);
+			void handleAppendedToLog();
+
 
 			int unreadCount_;
 			bool contactIsTyping_;
@@ -237,9 +196,6 @@ namespace Swift {
 			TabComplete* completer_;
 			QLineEdit* subject_;
 			bool isCorrection_;
-			bool previousMessageWasSelf_;
-			PreviousMessageKind previousMessageKind_;
-			QString previousSenderName_;
 			bool inputClearing_;
 			bool tabCompletion_;
 			UIEventStream* eventStream_;
@@ -247,14 +203,10 @@ namespace Swift {
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
 			QString alertStyleSheet_;
-			std::map<QString, QString> descriptions;
-			QtChatWindowJSBridge* jsBridge;
 			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
 			QPointer<QtAffiliationEditor> affiliationEditor_;
-			int idCounter_;
 			SettingsProvider* settings_;
 			std::vector<ChatWindow::RoomAction> availableRoomActions_;
-			bool showEmoticons_;
 			QPalette defaultLabelsPalette_;
 			LabelModel* labelModel_;
 			BlockingState blockingState_;

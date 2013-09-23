@@ -67,3 +67,7 @@ cppcheck.log
 /Swift/Packaging/WiX/gen_files.wxs
 /Swift/Packaging/WiX/variables.wxs
 /Packages
+cscope.sh
+cscope.out
+cscope.files
+ctags.sh

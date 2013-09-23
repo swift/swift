@@ -10,24 +10,19 @@
 #include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include "Roster/QtOccupantListWidget.h"
 #include "SwifTools/Linkify.h"
-#include "QtChatView.h"
-#include "MessageSnippet.h"
-#include "SystemMessageSnippet.h"
+#include "QtWebKitChatView.h"
 #include "QtTextEdit.h"
 #include "QtSettingsProvider.h"
 #include "QtScaledAvatarCache.h"
 #include <Swift/QtUI/QtUISettingConstants.h>
 
-#include <Swiften/StringCodecs/Base64.h>
 #include "SwifTools/TabComplete.h"
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include "QtChatWindowJSBridge.h"
 #include "QtUtilities.h"
 
 #include <boost/cstdint.hpp>
-#include <boost/format.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
 
@@ -57,20 +52,9 @@
 
 namespace Swift {
 
-const QString QtChatWindow::ButtonWhiteboardSessionCancel = QString("whiteboard-cancel");
-const QString QtChatWindow::ButtonWhiteboardSessionAcceptRequest = QString("whiteboard-acceptrequest");
-const QString QtChatWindow::ButtonWhiteboardShowWindow = QString("whiteboard-showwindow");
-const QString QtChatWindow::ButtonFileTransferCancel = QString("filetransfer-cancel");
-const QString QtChatWindow::ButtonFileTransferSetDescription = QString("filetransfer-setdescription");
-const QString QtChatWindow::ButtonFileTransferSendRequest = QString("filetransfer-sendrequest");
-const QString QtChatWindow::ButtonFileTransferAcceptRequest = QString("filetransfer-acceptrequest");
-const QString QtChatWindow::ButtonMUCInvite = QString("mucinvite");
-
-
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), previousMessageWasSelf_(false), previousMessageKind_(PreviosuMessageWasNone), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
 	settings_ = settings;
 	unreadCount_ = 0;
-	idCounter_ = 0;
 	inputEnabled_ = true;
 	completer_ = NULL;
 	affiliationEditor_ = NULL;
@@ -78,7 +62,6 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	isCorrection_ = false;
 	labelModel_ = NULL;
 	correctionEnabled_ = Maybe;
-	showEmoticons_ = true;
 	updateTitleWithUnreadCount();
 
 #ifdef SWIFT_EXPERIMENTAL_FT
@@ -122,7 +105,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	logRosterSplitter_ = new QSplitter(this);
 	logRosterSplitter_->setAutoFillBackground(true);
 	layout->addWidget(logRosterSplitter_);
-	messageLog_ = new QtChatView(theme, this);
+	messageLog_ = new QtWebKitChatView(this, eventStream_, theme, this); // I accept that passing the ChatWindow in so that the view can call the signals is somewhat inelegant, but it saves a lot of boilerplate. This patch is unpleasant enough already. So let's fix this soon (it at least needs fixing by the time history is sorted), but not now.
 	logRosterSplitter_->addWidget(messageLog_);
 
 	treeWidget_ = new QtOccupantListWidget(eventStream_, settings_, this);
@@ -186,16 +169,12 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QtChatWindow::handleOccupantSelectionChanged, this, _1));
 	treeWidget_->onOccupantActionSelected.connect(boost::bind(boost::ref(onOccupantActionSelected), _1, _2));
 
-	jsBridge = new QtChatWindowJSBridge();
-	messageLog_->addToJSEnvironment("chatwindow", jsBridge);
-	connect(jsBridge, SIGNAL(buttonClicked(QString,QString,QString,QString,QString,QString)), this, SLOT(handleHTMLButtonClicked(QString,QString,QString,QString,QString,QString)));
-
 	settings_->onSettingChanged.connect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
-	showEmoticons_ = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
+	messageLog_->showEmoticons(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
+
 }
 
 QtChatWindow::~QtChatWindow() {
-	delete jsBridge;
 	if (mucConfigurationWindow_) {
 		delete mucConfigurationWindow_.data();
 	}
@@ -203,8 +182,8 @@ QtChatWindow::~QtChatWindow() {
 
 void QtChatWindow::handleSettingChanged(const std::string& setting) {
 	if (setting == QtUISettingConstants::SHOW_EMOTICONS.getKey()) {
-		showEmoticons_ = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
-		messageLog_->showEmoticons(showEmoticons_);
+		bool showEmoticons = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
+		messageLog_->showEmoticons(showEmoticons);
 	}
 }
 
@@ -214,19 +193,6 @@ void QtChatWindow::handleLogCleared() {
 
 void QtChatWindow::handleOccupantSelectionChanged(RosterItem* item) {
 	onOccupantSelectionChanged(dynamic_cast<ContactRosterItem*>(item));
-}
-
-bool QtChatWindow::appendToPreviousCheck(QtChatWindow::PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) const {
-	return previousMessageKind_ == messageKind && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_&& previousSenderName_ == P2QSTRING(senderName)));
-}
-
-ChatSnippet::Direction QtChatWindow::getActualDirection(const ChatMessage& message, Direction direction) {
-	if (direction == DefaultDirection) {
-		return QCoreApplication::translate("QApplication", "QT_LAYOUT_DIRECTION") == "RTL" ? ChatSnippet::RTL : ChatSnippet::LTR;
-	}
-	else {
-		return ChatSnippet::getDirection(message);
-	}
 }
 
 void QtChatWindow::handleFontResized(int fontSizeSteps) {
@@ -495,410 +461,14 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-std::string QtChatWindow::addMessage(
-		const ChatMessage& message, 
-		const std::string& senderName, 
-		bool senderIsSelf, 
-		boost::shared_ptr<SecurityLabel> label, 
-		const std::string& avatarPath, 
-		const boost::posix_time::ptime& time, 
-		const HighlightAction& highlight) {
-	return addMessage(chatMessageToHTML(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
-}
 
-QString QtChatWindow::chatMessageToHTML(const ChatMessage& message) {
-	QString result;
-	foreach (boost::shared_ptr<ChatMessagePart> part, message.getParts()) {
-		boost::shared_ptr<ChatTextMessagePart> textPart;
-		boost::shared_ptr<ChatURIMessagePart> uriPart;
-		boost::shared_ptr<ChatEmoticonMessagePart> emoticonPart;
-		boost::shared_ptr<ChatHighlightingMessagePart> highlightPart;
-
-		if ((textPart = boost::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
-			QString text = QtUtilities::htmlEscape(P2QSTRING(textPart->text));
-			text.replace("\n","<br/>");
-			result += text;
-			continue;
-		}
-		if ((uriPart = boost::dynamic_pointer_cast<ChatURIMessagePart>(part))) {
-			QString uri = QtUtilities::htmlEscape(P2QSTRING(uriPart->target));
-			result += "<a href='" + uri + "' >" + uri + "</a>";
-			continue;
-		}
-		if ((emoticonPart = boost::dynamic_pointer_cast<ChatEmoticonMessagePart>(part))) {
-			QString textStyle = showEmoticons_ ? "style='display:none'" : "";
-			QString imageStyle = showEmoticons_ ? "" : "style='display:none'";
-			result += "<span class='swift_emoticon_image' " + imageStyle + "><img src='" + P2QSTRING(emoticonPart->imagePath) + "'/></span><span class='swift_emoticon_text' " + textStyle + ">" + QtUtilities::htmlEscape(P2QSTRING(emoticonPart->alternativeText)) + "</span>";
-			continue;
-		}
-		if ((highlightPart = boost::dynamic_pointer_cast<ChatHighlightingMessagePart>(part))) {
-			//FIXME: Maybe do something here. Anything, really.
-			continue;
-		}
-
-	}
-	return result;
-}
-
-/*QString QtChatWindow::linkimoticonify(const std::string& message) const {
-	return linkimoticonify(P2QSTRING(message));
-}
-
-QString QtChatWindow::linkimoticonify(const QString& message) const {
-	QString messageHTML(message);
-	messageHTML = QtUtilities::htmlEscape(messageHTML);
-	QMapIterator<QString, QString> it(emoticons_);
-	
-	if (messageHTML.length() < 500) {
-		while (it.hasNext()) {
-			it.next();
-			messageHTML.replace(it.key(), );
-		}
-		messageHTML = P2QSTRING(Linkify::linkify(Q2PSTRING(messageHTML)));
-	}
-	messageHTML.replace("\n","<br/>");
-	return messageHTML;
-}*/
-
-QString QtChatWindow::getHighlightSpanStart(const HighlightAction& highlight) {
-	QString color = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextColor()));
-	QString background = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextBackground()));
-	if (color.isEmpty()) {
-		color = "black";
-	}
-	if (background.isEmpty()) {
-		background = "yellow";
-	}
-
-	return QString("<span style=\"color: %1; background: %2\">").arg(color).arg(background);
-}
-
-std::string QtChatWindow::addMessage(
-		const QString& message, 
-		const std::string& senderName, 
-		bool senderIsSelf, 
-		boost::shared_ptr<SecurityLabel> label, 
-		const std::string& avatarPath, 
-		const QString& style, 
-		const boost::posix_time::ptime& time, 
-		const HighlightAction& highlight,
-		ChatSnippet::Direction direction) {
-
-	if (isWidgetSelected()) {
-		onAllMessagesRead();
-	}
-	QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
-
-	QString htmlString;
-	if (label) {
-		htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \" class='swift_label'>").arg(QtUtilities::htmlEscape(P2QSTRING(label->getForegroundColor()))).arg(QtUtilities::htmlEscape(P2QSTRING(label->getBackgroundColor())));
-		htmlString += QString("%1</span> ").arg(QtUtilities::htmlEscape(P2QSTRING(label->getDisplayMarking())));
-	}
-
-	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
-	QString styleSpanEnd = style == "" ? "" : "</span>";
-	QString highlightSpanStart = highlight.highlightText() ? getHighlightSpanStart(highlight) : "";
-	QString highlightSpanEnd = highlight.highlightText() ? "</span>" : "";
-	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + highlightSpanStart + message + highlightSpanEnd + styleSpanEnd + "</span>" ;
-
-	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
-	if (lastLineTracker_.getShouldMoveLastLine()) {
-		/* should this be queued? */
-		messageLog_->addLastSeenLine();
-		/* if the line is added we should break the snippet */
-		appendToPrevious = false;
-	}
-	QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
-	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), direction));
-
-	previousMessageWasSelf_ = senderIsSelf;
-	previousSenderName_ = P2QSTRING(senderName);
-	previousMessageKind_ = PreviousMessageWasMessage;
-	return id;
-}
 
 void QtChatWindow::flash() {
 	emit requestFlash();
 }
 
-void QtChatWindow::setAckState(std::string const& id, ChatWindow::AckState state) {
-	QString xml;
-	switch (state) {
-		case ChatWindow::Pending:
-			xml = "<img src='qrc:/icons/throbber.gif' title='" + tr("This message has not been received by your server yet.") + "'/>";
-			messageLog_->displayReceiptInfo(P2QSTRING(id), false);
-			break;
-		case ChatWindow::Received:
-			xml = "";
-			messageLog_->displayReceiptInfo(P2QSTRING(id), true);
-			break;
-		case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' title='" + tr("This message may not have been transmitted.") + "'/>"; break;
-	}
-	messageLog_->setAckXML(P2QSTRING(id), xml);
-}
-
-void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) {
-	QString xml;
-	switch (state) {
-		case ChatWindow::ReceiptReceived:
-			xml = "<img src='qrc:/icons/check.png' title='" + tr("The receipt for this message has been received.") + "'/>";
-			break;
-		case ChatWindow::ReceiptRequested:
-			xml = "<img src='qrc:/icons/warn.png' title='" + tr("The receipt for this message has not yet been received. The recipient(s) might not have received this message.") + "'/>";
-			break;
-	}
-	messageLog_->setReceiptXML(P2QSTRING(id), xml);
-}
-
 int QtChatWindow::getCount() {
 	return unreadCount_;
-}
-
-std::string QtChatWindow::addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	return addMessage(" *" + chatMessageToHTML(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight, ChatSnippet::getDirection(message));
-}
-
-// FIXME: Move this to a different file
-std::string formatSize(const boost::uintmax_t bytes) {
-	static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", NULL};
-	int power = 0;
-	double engBytes = bytes;
-	while (engBytes >= 1000) {
-		++power;
-		engBytes = engBytes / 1000.0;
-	}
-	return str( boost::format("%.1lf %sB") % engBytes % (power > 0 ? siPrefix[power-1] : "") );
-}
-
-static QString encodeButtonArgument(const QString& str) {
-	return QtUtilities::htmlEscape(P2QSTRING(Base64::encode(createByteArray(Q2PSTRING(str)))));
-}
-
-static QString decodeButtonArgument(const QString& str) {
-	return P2QSTRING(byteArrayToString(Base64::decode(Q2PSTRING(str))));
-}
-
-QString QtChatWindow::buildChatWindowButton(const QString& name, const QString& id, const QString& arg1, const QString& arg2, const QString& arg3, const QString& arg4, const QString& arg5) {
-	QRegExp regex("[A-Za-z][A-Za-z0-9\\-\\_]+");
-	Q_ASSERT(regex.exactMatch(id));
-	QString html = QString("<input id='%2' type='submit' value='%1' onclick='chatwindow.buttonClicked(\"%2\", \"%3\", \"%4\", \"%5\", \"%6\", \"%7\");' />").arg(name).arg(id).arg(encodeButtonArgument(arg1)).arg(encodeButtonArgument(arg2)).arg(encodeButtonArgument(arg3)).arg(encodeButtonArgument(arg4)).arg(encodeButtonArgument(arg5));
-	return html;
-}
-
-std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
-	SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
-	QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
-	
-	QString actionText;
-	QString htmlString;
-	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
-	if (senderIsSelf) {
-		// outgoing
-		actionText = tr("Send file");
-		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") <br/>" +
-			"<div id='" + ft_id + "'>" +
-				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
-				buildChatWindowButton(tr("Set Description"), ButtonFileTransferSetDescription, ft_id) +
-				buildChatWindowButton(tr("Send"), ButtonFileTransferSendRequest, ft_id) +
-			"</div>";
-	} else {
-		// incoming
-		actionText = tr("Receiving file");
-		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize  + ") <br/>" +
-			"<div id='" + ft_id + "'>" +
-				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
-				buildChatWindowButton(tr("Accept"), ButtonFileTransferAcceptRequest, ft_id, P2QSTRING(filename)) +
-			"</div>";
-	}
-
-	//addMessage(message, senderName, senderIsSelf, boost::shared_ptr<SecurityLabel>(), "", boost::posix_time::second_clock::local_time());
-
-	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasFileTransfer, senderName, senderIsSelf);
-	if (lastLineTracker_.getShouldMoveLastLine()) {
-		/* should this be queued? */
-		messageLog_->addLastSeenLine();
-		/* if the line is added we should break the snippet */
-		appendToPrevious = false;
-	}
-	QString qAvatarPath = "qrc:/icons/avatar.png";
-	std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
-
-	previousMessageWasSelf_ = senderIsSelf;
-	previousSenderName_ = P2QSTRING(senderName);
-	previousMessageKind_ = PreviousMessageWasFileTransfer;
-	return Q2PSTRING(ft_id);
-}
-
-void QtChatWindow::setFileTransferProgress(std::string id, const int percentageDone) {
-	messageLog_->setFileTransferProgress(P2QSTRING(id), percentageDone);
-}
-
-void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg) {
-	messageLog_->setFileTransferStatus(P2QSTRING(id), state, P2QSTRING(msg));
-}
-
-std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
-	QString wb_id = QString("wb%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
-	QString htmlString;
-	QString actionText;
-	if (senderIsSelf) {
-		actionText = tr("Starting whiteboard chat");
-		htmlString = "<div id='" + wb_id + "'>" + actionText + "<br />"+
-				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
-			"</div>";
-	} else {
-		actionText = tr("%1 would like to start a whiteboard chat");
-		htmlString = "<div id='" + wb_id + "'>" + actionText.arg(QtUtilities::htmlEscape(contact_)) + ": <br/>" +
-				buildChatWindowButton(tr("Cancel"), ButtonWhiteboardSessionCancel, wb_id) +
-				buildChatWindowButton(tr("Accept"), ButtonWhiteboardSessionAcceptRequest, wb_id) +
-			"</div>";
-	}
-
-	if (lastLineTracker_.getShouldMoveLastLine()) {
-		/* should this be queued? */
-		messageLog_->addLastSeenLine();
-		/* if the line is added we should break the snippet */
-//		appendToPrevious = false;
-	}
-	QString qAvatarPath = "qrc:/icons/avatar.png";
-	std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
-	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(contact_), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, false, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
-
-	previousMessageWasSelf_ = false;
-	previousSenderName_ = contact_;
-	return Q2PSTRING(wb_id);
-}
-
-void QtChatWindow::setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) {
-	messageLog_->setWhiteboardSessionStatus(P2QSTRING(id), state);
-}
-
-void QtChatWindow::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3, QString encodedArgument4, QString encodedArgument5) {
-	QString arg1 = decodeButtonArgument(encodedArgument1);
-	QString arg2 = decodeButtonArgument(encodedArgument2);
-	QString arg3 = decodeButtonArgument(encodedArgument3);
-	QString arg4 = decodeButtonArgument(encodedArgument4);
-	QString arg5 = decodeButtonArgument(encodedArgument5);
-
-	if (id.startsWith(ButtonFileTransferCancel)) {
-		QString ft_id = arg1;
-		onFileTransferCancel(Q2PSTRING(ft_id));
-	}
-	else if (id.startsWith(ButtonFileTransferSetDescription)) {
-		QString ft_id = arg1;
-		bool ok = false;
-		QString text = QInputDialog::getText(this, tr("File transfer description"),
-			tr("Description:"), QLineEdit::Normal, "", &ok);
-		if (ok) {
-			descriptions[ft_id] = text;
-		}
-	}
-	else if (id.startsWith(ButtonFileTransferSendRequest)) {
-		QString ft_id = arg1;
-		QString text = descriptions.find(ft_id) == descriptions.end() ? QString() : descriptions[ft_id];
-		onFileTransferStart(Q2PSTRING(ft_id), Q2PSTRING(text));
-	}
-	else if (id.startsWith(ButtonFileTransferAcceptRequest)) {
-		QString ft_id = arg1;
-		QString filename = arg2;
-
-		QString path = QFileDialog::getSaveFileName(this, tr("Save File"), filename);
-		if (!path.isEmpty()) {
-			onFileTransferAccept(Q2PSTRING(ft_id), Q2PSTRING(path));
-		}
-	}
-	else if (id.startsWith(ButtonWhiteboardSessionAcceptRequest)) {
-		QString id = arg1;
-		messageLog_->setWhiteboardSessionStatus(id, ChatWindow::WhiteboardAccepted);
-		onWhiteboardSessionAccept();
-	}
-	else if (id.startsWith(ButtonWhiteboardSessionCancel)) {
-		QString id = arg1;
-		messageLog_->setWhiteboardSessionStatus(id, ChatWindow::WhiteboardTerminated);
-		onWhiteboardSessionCancel();
-	}
-	else if (id.startsWith(ButtonWhiteboardShowWindow)) {
-		QString id = arg1;
-		onWhiteboardWindowShow();
-	}
-	else if (id.startsWith(ButtonMUCInvite)) {
-		QString roomJID = arg1;
-		QString password = arg2;
-		QString elementID = arg3;
-		QString isImpromptu = arg4;
-		QString isContinuation = arg5;
-		eventStream_->send(boost::make_shared<JoinMUCUIEvent>(Q2PSTRING(roomJID), Q2PSTRING(password), boost::optional<std::string>(), false, false, isImpromptu.contains("true"), isContinuation.contains("true")));
-		messageLog_->setMUCInvitationJoined(elementID);
-	}
-	else {
-		SWIFT_LOG(debug) << "Unknown HTML button! ( " << Q2PSTRING(id) << " )" << std::endl;
-	}
-}
-
-void QtChatWindow::addErrorMessage(const ChatMessage& errorMessage) {
-	if (isWidgetSelected()) {
-		onAllMessagesRead();
-	}
-
-	QString errorMessageHTML(chatMessageToHTML(errorMessage));
-	
-	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_, ChatSnippet::getDirection(errorMessage)));
-
-	previousMessageWasSelf_ = false;
-	previousMessageKind_ = PreviousMessageWasSystem;
-}
-
-void QtChatWindow::addSystemMessage(const ChatMessage& message, Direction direction) {
-	if (isWidgetSelected()) {
-		onAllMessagesRead();
-	}
-
-	QString messageHTML = chatMessageToHTML(message);
-	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
-
-	previousMessageKind_ = PreviousMessageWasSystem;
-}
-
-void QtChatWindow::replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(" *" + chatMessageToHTML(message) + "*", id, time, "font-style:italic ", highlight);
-}
-
-void QtChatWindow::replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(chatMessageToHTML(message), id, time, "", highlight);
-}
-
-void QtChatWindow::replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight) {
-	if (!id.empty()) {
-		if (isWidgetSelected()) {
-			onAllMessagesRead();
-		}
-
-		QString messageHTML(message);
-
-		QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
-		QString styleSpanEnd = style == "" ? "" : "</span>";
-		QString highlightSpanStart = highlight.highlightText() ? getHighlightSpanStart(highlight) : "";
-		QString highlightSpanEnd = highlight.highlightText() ? "</span>" : "";
-		messageHTML = styleSpanStart + highlightSpanStart + messageHTML + highlightSpanEnd + styleSpanEnd;
-
-		messageLog_->replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));
-	}
-	else {
-		std::cerr << "Trying to replace a message with no id";
-	}
-}
-
-void QtChatWindow::addPresenceMessage(const ChatMessage& message, Direction direction) {
-	if (isWidgetSelected()) {
-		onAllMessagesRead();
-	}
-
-	QString messageHTML = chatMessageToHTML(message);
-	messageLog_->addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
-
-	previousMessageKind_ = PreviousMessageWasPresence;
 }
 
 
@@ -988,9 +558,6 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
 	}
 }
 
-void QtChatWindow::replaceLastMessage(const ChatMessage& message) {
-	messageLog_->replaceLastMessage(chatMessageToHTML(message));
-}
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {
 	treeWidget_->setAvailableOccupantActions(actions);
@@ -1122,45 +689,91 @@ void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
 	mucConfigurationWindow_->onFormCancelled.connect(boost::bind(boost::ref(onConfigurationFormCancelled)));
 }
 
-void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) {
-	if (isWidgetSelected()) {
-		onAllMessagesRead();
-	}
-
-	QString message;
-	if (isImpromptu) {
-		message = QObject::tr("You've been invited to join a chat.") + "\n";
-	} else {
-		message = QObject::tr("You've been invited to enter the %1 room.").arg(P2QSTRING(jid.toString())) + "\n";
-	}
-	QString htmlString = message;
-	if (!reason.empty()) {
-		htmlString += QObject::tr("Reason: %1").arg(P2QSTRING(reason)) + "\n";
-	}
-	if (!direct) {
-		htmlString += QObject::tr("This person may not have really sent this invitation!") + "\n";
-	}
-	htmlString = chatMessageToHTML(ChatMessage(Q2PSTRING(htmlString)));
-
-
-	QString id = QString(ButtonMUCInvite + "%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
-	htmlString += "<div id='" + id + "'>" +
-			buildChatWindowButton(chatMessageToHTML(ChatMessage(Q2PSTRING((tr("Accept Invite"))))), ButtonMUCInvite, QtUtilities::htmlEscape(P2QSTRING(jid.toString())), QtUtilities::htmlEscape(P2QSTRING(password)), id, QtUtilities::htmlEscape(isImpromptu ? "true" : "false"), QtUtilities::htmlEscape(isContinuation ? "true" : "false")) +
-		"</div>";
-
-	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMUCInvite, senderName, false);
+void QtChatWindow::handleAppendedToLog() {
 	if (lastLineTracker_.getShouldMoveLastLine()) {
 		/* should this be queued? */
 		messageLog_->addLastSeenLine();
-		/* if the line is added we should break the snippet */
-		appendToPrevious = false;
 	}
-	QString qAvatarPath = "qrc:/icons/avatar.png";
+	if (isWidgetSelected()) {
+		onAllMessagesRead();
+	}
+}
 
-	messageLog_->addMessageBottom(boost::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::local_time()), qAvatarPath, false, appendToPrevious, theme_, id, ChatSnippet::getDirection(message)));
-	previousMessageWasSelf_ = false;
-	previousSenderName_ = P2QSTRING(senderName);
-	previousMessageKind_ = PreviousMessageWasMUCInvite;
+void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) {
+	handleAppendedToLog();
+	messageLog_->addMUCInvitation(senderName, jid, reason, password, direct, isImpromptu, isContinuation);
+}
+
+std::string QtChatWindow::addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	handleAppendedToLog();
+	return messageLog_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time, highlight);
+}
+
+std::string QtChatWindow::addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	handleAppendedToLog();
+	return messageLog_->addAction(message, senderName, senderIsSelf, label, avatarPath, time, highlight);
+}
+
+
+void QtChatWindow::addSystemMessage(const ChatMessage& message, Direction direction) {
+	handleAppendedToLog();
+	messageLog_->addSystemMessage(message, direction);
+}
+
+void QtChatWindow::addPresenceMessage(const ChatMessage& message, Direction direction) {
+	handleAppendedToLog();
+	messageLog_->addPresenceMessage(message, direction);
+}
+
+void QtChatWindow::addErrorMessage(const ChatMessage& message) {
+	handleAppendedToLog();
+	messageLog_->addErrorMessage(message);
+}
+
+
+void QtChatWindow::replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	handleAppendedToLog();
+	messageLog_->replaceMessage(message, id, time, highlight);
+}
+
+void QtChatWindow::replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	handleAppendedToLog();
+	messageLog_->replaceWithAction(message, id, time, highlight);
+}
+
+std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
+	handleAppendedToLog();
+	return messageLog_->addFileTransfer(senderName, senderIsSelf, filename, sizeInBytes);
+}
+
+void QtChatWindow::setFileTransferProgress(std::string id, const int percentageDone) {
+	messageLog_->setFileTransferProgress(id, percentageDone);
+}
+
+void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg) {
+	messageLog_->setFileTransferStatus(id, state, msg);
+}
+
+
+std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
+	handleAppendedToLog();
+	return messageLog_->addWhiteboardRequest(contact_, senderIsSelf);
+}
+
+void QtChatWindow::setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) {
+	messageLog_->setWhiteboardSessionStatus(id, state);
+}
+
+void QtChatWindow::replaceLastMessage(const ChatMessage& message) {
+	messageLog_->replaceLastMessage(message);
+}
+
+void QtChatWindow::setAckState(const std::string& id, AckState state) {
+	messageLog_->setAckState(id, state);
+}
+
+void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) {
+	messageLog_->setMessageReceiptState(id, state);
 }
 
 }

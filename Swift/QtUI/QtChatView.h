@@ -1,101 +1,62 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#ifndef SWIFT_QtChatView_H
-#define SWIFT_QtChatView_H
+#pragma once
 
-#include <QString>
-#include <QWidget>
-#include <QList>
-#include <QWebElement>
-
+#include <string>
 #include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "ChatSnippet.h"
+#include <QWidget>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
-class QWebPage;
-class QUrl;
-class QDate;
-
 namespace Swift {
-	class QtWebView;
-	class QtChatTheme;
+	class HighlightAction;
+	class SecurityLabel;
+
 	class QtChatView : public QWidget {
-			Q_OBJECT
+		Q_OBJECT
 		public:
-			QtChatView(QtChatTheme* theme, QWidget* parent, bool disableAutoScroll = false);
-			void addMessageTop(boost::shared_ptr<ChatSnippet> snippet);
-			void addMessageBottom(boost::shared_ptr<ChatSnippet> snippet);
-			void addLastSeenLine();
-			void replaceLastMessage(const QString& newMessage);
-			void replaceLastMessage(const QString& newMessage, const QString& note);
-			void replaceMessage(const QString& newMessage, const QString& id, const QDateTime& time);
-			void rememberScrolledToBottom();
-			void setAckXML(const QString& id, const QString& xml);
-			void setReceiptXML(const QString& id, const QString& xml);
-			void displayReceiptInfo(const QString& id, bool showIt);
+			QtChatView(QWidget* parent);
+			virtual ~QtChatView();
 
-			QString getLastSentMessage();
-			void addToJSEnvironment(const QString&, QObject*);
-			void setFileTransferProgress(QString id, const int percentageDone);
-			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
-			void setWhiteboardSessionStatus(QString id, const ChatWindow::WhiteboardSessionState state);
-			void setMUCInvitationJoined(QString id);
-			void showEmoticons(bool show);
-			int getSnippetPositionByDate(const QDate& date);
+			/** Add message to window.
+			 * @return id of added message (for acks).
+			 */
+			virtual std::string addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			/** Adds action to window.
+			 * @return id of added message (for acks);
+			 */
+			virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 
-		signals:
-			void gotFocus();
-			void fontResized(int);
-			void logCleared();
-			void scrollRequested(int pos);
-			void scrollReachedTop();
-			void scrollReachedBottom();
+			virtual void addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) = 0;
+			virtual void addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) = 0;
+
+			virtual void addErrorMessage(const ChatWindow::ChatMessage& message) = 0;
+			virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message) = 0;
+			virtual void setAckState(const std::string& id, ChatWindow::AckState state) = 0;
+			
+			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;
+			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
+			virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState state, const std::string& msg = "") = 0;
+			virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) = 0;
+			virtual std::string addWhiteboardRequest(const QString& contact, bool senderIsSelf) = 0;
+			virtual void setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) = 0;
+			virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) = 0;
+
+			virtual void showEmoticons(bool show) = 0;
+			virtual void addLastSeenLine() = 0;
 
 		public slots:
-			void copySelectionToClipboard();
-			void scrollToBottom();
-			void handleLinkClicked(const QUrl&);
-			void handleKeyPressEvent(QKeyEvent* event);
-			void resetView();
-			void resetTopInsertPoint();
-			void increaseFontSize(int numSteps = 1);
-			void decreaseFontSize();
-			void resizeFont(int fontSizeSteps);
+			virtual void resizeFont(int fontSizeSteps) = 0;
+			virtual void scrollToBottom() = 0;
+			virtual void handleKeyPressEvent(QKeyEvent* event) = 0;
 
-		private slots:
-			void handleViewLoadFinished(bool);
-			void handleFrameSizeChanged();
-			void handleClearRequested();
-			void handleScrollRequested(int dx, int dy, const QRect& rectToScroll);
-
-		private:
-			void headerEncode();
-			void messageEncode();
-			void addToDOM(boost::shared_ptr<ChatSnippet> snippet);
-			QWebElement snippetToDOM(boost::shared_ptr<ChatSnippet> snippet);
-
-			bool viewReady_;
-			bool isAtBottom_;
-			bool topMessageAdded_;
-			int scrollBarMaximum_;
-			QtWebView* webView_;
-			QWebPage* webPage_;
-			int fontSizeSteps_;
-			QtChatTheme* theme_;
-			QWebElement newInsertPoint_;
-			QWebElement topInsertPoint_;
-			QWebElement lineSeparator_;
-			QWebElement lastElement_;
-			QWebElement firstElement_;
-			QWebElement document_;
-			bool disableAutoScroll_;
 	};
 }
-
-#endif

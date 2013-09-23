@@ -4,14 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <QtHistoryWindow.h>
-#include <QtTabbable.h>
+/*
+ * Copyright (c) 2013 Kevin Smith
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
 
-#include <QtSwiftUtil.h>
-#include <MessageSnippet.h>
-#include <Swiften/History/HistoryMessage.h>
+#include <QtHistoryWindow.h>
+
 #include <string>
 
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -20,14 +24,20 @@
 #include <QMenu>
 #include <QTextDocument>
 #include <QDateTime>
+#include <QLineEdit>
+
+#include <Swiften/History/HistoryMessage.h>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/MessageSnippet.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
 #include <Swift/QtUI/ChatSnippet.h>
-#include <QLineEdit>
-#include "QtUtilities.h"
-
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/date_time/gregorian/gregorian.hpp>
+#include <Swift/QtUI/QtUtilities.h>
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
+#include <Swift/QtUI/QtWebKitChatView.h>
 
 namespace Swift {
 
@@ -40,7 +50,7 @@ QtHistoryWindow::QtHistoryWindow(SettingsProvider* settings, UIEventStream* even
 	idCounter_ = 0;
 
 	delete ui_.conversation_;
-	conversation_ = new QtChatView(theme_, this, true);
+	conversation_ = new QtWebKitChatView(NULL, NULL, theme_, this, true); // Horrible unsafe. Do not do this. FIXME
 	QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 	sizePolicy.setHorizontalStretch(80);
 	sizePolicy.setVerticalStretch(0);
