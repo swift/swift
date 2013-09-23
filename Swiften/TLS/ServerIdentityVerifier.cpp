@@ -21,6 +21,9 @@ ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idn
 bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 	bool hasSAN = false;
 
+	if (certificate == NULL) {
+	    return false;
+	}
 	// DNS names
 	std::vector<std::string> dnsNames = certificate->getDNSNames();
 	foreach (const std::string& dnsName, dnsNames) {
