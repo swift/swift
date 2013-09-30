@@ -44,6 +44,7 @@ fi
 	serialization/serialization.hpp \
 	serialization/vector.hpp \
 	serialization/list.hpp \
+	serialization/map.hpp \
 	serialization/shared_ptr.hpp \
 	serialization/string.hpp \
 	serialization/set.hpp \
