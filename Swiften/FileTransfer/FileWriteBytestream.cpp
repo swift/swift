@@ -23,6 +23,9 @@ FileWriteBytestream::~FileWriteBytestream() {
 }
 
 void FileWriteBytestream::write(const std::vector<unsigned char>& data) {
+	if (data.empty()) {
+		return;
+	}
 	if (!stream) {
 		stream = new boost::filesystem::ofstream(file, std::ios_base::out|std::ios_base::binary);
 	}
