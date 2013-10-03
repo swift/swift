@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -38,7 +38,7 @@ string ChatMessageSummarizer::getSummary(const string& current, const vector<Unr
 		string result(QT_TRANSLATE_NOOP("", "%1% and %2% others (%3%)"));
 		myString = str(format(result) % myString % others.size() % otherCount);
 	} else if (!others.empty()) {
-		string result(QT_TRANSLATE_NOOP("", "%1%, %2% (%3%)"));
+		string result(QT_TRANSLATE_NOOP("", "%1%; %2% (%3%)"));
 		myString = str(format(result) % myString % others[0].first % otherCount);
 	}
 	return myString;

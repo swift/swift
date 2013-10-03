@@ -72,7 +72,7 @@ public:
 		unreads.push_back(UnreadPair("Bob", 3));
 		unreads.push_back(UnreadPair("Betty", 7));
 		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob (3), Betty (7)"), summary.getSummary(current, unreads));
+		CPPUNIT_ASSERT_EQUAL(string("Bob (3); Betty (7)"), summary.getSummary(current, unreads));
 	}
 
 	void testCurrentNoneOtherCount() {
@@ -82,7 +82,7 @@ public:
 		unreads.push_back(UnreadPair("Bob", 0));
 		unreads.push_back(UnreadPair("Betty", 7));
 		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob, Betty (7)"), summary.getSummary(current, unreads));
+		CPPUNIT_ASSERT_EQUAL(string("Bob; Betty (7)"), summary.getSummary(current, unreads));
 	}
 
 	void testCurrentNoneOthersCount() {
