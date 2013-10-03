@@ -4,51 +4,53 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtChatWindow.h"
-#include "Swift/Controllers/Roster/Roster.h"
-#include "Swift/Controllers/Roster/RosterItem.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Roster/QtOccupantListWidget.h"
-#include "SwifTools/Linkify.h"
-#include "QtWebKitChatView.h"
-#include "QtTextEdit.h"
-#include "QtSettingsProvider.h"
-#include "QtScaledAvatarCache.h"
-#include <Swift/QtUI/QtUISettingConstants.h>
-
-#include "SwifTools/TabComplete.h"
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
-#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include "QtUtilities.h"
+#include <Swift/QtUI/QtChatWindow.h>
 
 #include <boost/cstdint.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <QLabel>
 #include <qdebug.h>
-#include <QMessageBox>
-#include <QMimeData>
-#include <QInputDialog>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QFileInfo>
+#include <QInputDialog>
+#include <QLabel>
 #include <QLineEdit>
+#include <QMenu>
+#include <QMessageBox>
+#include <QMimeData>
+#include <QPushButton>
 #include <QSplitter>
 #include <QString>
+#include <QTextDocument>
 #include <QTextEdit>
 #include <QTime>
-#include <QUrl>
 #include <QToolButton>
-#include <QPushButton>
-#include <QFileDialog>
-#include <QMenu>
-#include <QTextDocument>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <QUrl>
+
 #include <Swiften/Base/Log.h>
+
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/RosterItem.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+
+#include <SwifTools/TabComplete.h>
+
+#include <Swift/QtUI/Roster/QtOccupantListWidget.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtScaledAvatarCache.h>
+#include <Swift/QtUI/QtTextEdit.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/QtUtilities.h>
+#include <Swift/QtUI/QtWebKitChatView.h>
 
 namespace Swift {
 
