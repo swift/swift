@@ -6,20 +6,23 @@
 
 #pragma once
 
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swift/QtUI/QtMUCConfigurationWindow.h>
-#include <Swift/QtUI/QtAffiliationEditor.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/ChatSnippet.h>
-
-#include <QtTabbable.h>
-
-#include <SwifTools/LastLineTracker.h>
-
 #include <map>
+
 #include <QPointer>
 #include <QTextCursor>
 #include <QMap>
+
+#include <SwifTools/LastLineTracker.h>
+
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+
+#include <Swift/QtUI/ChatSnippet.h>
+#include <Swift/QtUI/QtAffiliationEditor.h>
+#include <Swift/QtUI/QtMUCConfigurationWindow.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtTabbable.h>
+
+
 
 class QTextEdit;
 class QLineEdit;
