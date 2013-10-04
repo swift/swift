@@ -175,8 +175,8 @@ void MUC::handleIncomingPresence(Presence::ref presence) {
 			std::map<std::string,MUCOccupant>::iterator i = occupants.find(nick);
 			if (i != occupants.end()) {
 				//TODO: part type
-				occupants.erase(i);
 				MUCOccupant occupant = i->second;
+				occupants.erase(i);
 				onOccupantLeft(occupant, type, "");
 			}
 		}

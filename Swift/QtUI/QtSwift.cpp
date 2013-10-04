@@ -251,10 +251,10 @@ QtSwift::~QtSwift() {
 		delete tray;
 	}
 	delete tabs_;
+	delete splitter_;
 	delete settingsHierachy_;
 	delete qtSettings_;
 	delete xmlSettings_;
-	delete splitter_;
 	delete statusCache_;
 	delete uriHandler_;
 	delete dock_;
