@@ -59,6 +59,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
 	QtUtilities::setX11Resource(this, "Main");
+	setAccessibleName(tr("Swift Login Window"));
+	//setAccessibleDescription(tr("This window is used for providing credentials to log into your XMPP service"));
 
 	resize(200, 500);
 	setContentsMargins(0,0,0,0);
@@ -93,11 +95,14 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	jidLabel->setText("<font size='-1'>" + tr("User address:") + "</font>");
 	layout->addWidget(jidLabel);
 
+
 	username_ = new QComboBox(this);
 	username_->setEditable(true);
 	username_->setWhatsThis(tr("User address - looks like someuser@someserver.com"));
 	username_->setToolTip(tr("User address - looks like someuser@someserver.com"));
 	username_->view()->installEventFilter(this);
+	username_->setAccessibleName(tr("User address (of the form someuser@someserver.com)"));
+	username_->setAccessibleDescription(tr("This is the user address that you'll be using to log in with"));
 	layout->addWidget(username_);
 	QLabel* jidHintLabel = new QLabel(this);
 	jidHintLabel->setText("<font size='-1' color='grey' >" + tr("Example: alice@wonderland.lit") + "</font>");
@@ -107,6 +112,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 
 	QLabel* passwordLabel = new QLabel();
 	passwordLabel->setText("<font size='-1'>" + tr("Password:") + "</font>");
+	passwordLabel->setAccessibleName(tr("User password"));
+	passwordLabel->setAccessibleDescription(tr("This is the password you'll use to log in to the XMPP service"));
 	layout->addWidget(passwordLabel);
 
 
@@ -129,6 +136,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	certificateButton_->setIcon(QIcon(":/icons/certificate.png"));
 	certificateButton_->setToolTip(tr("Click if you have a personal certificate used for login to the service."));
 	certificateButton_->setWhatsThis(tr("Click if you have a personal certificate used for login to the service."));
+	certificateButton_->setAccessibleName(tr("Login with certificate"));
+	certificateButton_->setAccessibleDescription(tr("Click if you have a personal certificate used for login to the service."));
 
 	credentialsLayout->addWidget(certificateButton_);
 	connect(certificateButton_, SIGNAL(clicked(bool)), SLOT(handleCertficateChecked(bool)));
@@ -137,6 +146,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	loginButton_->setText(tr("Connect"));
 	loginButton_->setAutoDefault(true);
 	loginButton_->setDefault(true);
+	loginButton_->setAccessibleName(tr("Connect now"));
 	layout->addWidget(loginButton_);
 
 	QLabel* connectionOptionsLabel = new QLabel(this);

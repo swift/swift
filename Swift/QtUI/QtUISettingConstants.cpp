@@ -15,4 +15,5 @@ const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_NICK_IN_ROSTER_
 const SettingsProvider::Setting<int> QtUISettingConstants::CHATWINDOW_FONT_SIZE("chatWindowFontSize", 0);
 const SettingsProvider::Setting<int> QtUISettingConstants::HISTORYWINDOW_FONT_SIZE("historyWindowFontSize", 0);
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_EMOTICONS("showEmoticons", true);
+const SettingsProvider::Setting<bool> QtUISettingConstants::USE_PLAIN_CHATS("plainChats", false);
 }

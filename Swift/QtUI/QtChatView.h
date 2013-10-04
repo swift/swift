@@ -47,7 +47,7 @@ namespace Swift {
 			virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState state, const std::string& msg = "") = 0;
 			virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) = 0;
 			virtual std::string addWhiteboardRequest(const QString& contact, bool senderIsSelf) = 0;
-			virtual void setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) = 0;
+			virtual void setWhiteboardSessionStatus(const std::string& id, const ChatWindow::WhiteboardSessionState state) = 0;
 			virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) = 0;
 
 			virtual void showEmoticons(bool show) = 0;

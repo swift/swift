@@ -18,5 +18,6 @@ namespace Swift {
 			static const SettingsProvider::Setting<int> CHATWINDOW_FONT_SIZE;
 			static const SettingsProvider::Setting<int> HISTORYWINDOW_FONT_SIZE;
 			static const SettingsProvider::Setting<bool> SHOW_EMOTICONS;
+			static const SettingsProvider::Setting<bool> USE_PLAIN_CHATS;
 	};
 }

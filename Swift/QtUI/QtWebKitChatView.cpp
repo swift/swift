@@ -720,7 +720,7 @@ std::string QtWebKitChatView::addWhiteboardRequest(const QString& contact, bool 
 	return Q2PSTRING(wb_id);
 }
 
-void QtWebKitChatView::setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state) {
+void QtWebKitChatView::setWhiteboardSessionStatus(const std::string& id, const ChatWindow::WhiteboardSessionState state) {
 	setWhiteboardSessionStatus(P2QSTRING(id), state);
 }
 
