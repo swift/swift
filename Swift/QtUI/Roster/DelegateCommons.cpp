@@ -14,7 +14,9 @@ namespace Swift {
 
 void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, const QString& text, int flags) {
 	QString adjustedText(painter->fontMetrics().elidedText(text, Qt::ElideRight, region.width(), Qt::TextShowMnemonic));
+	painter->setClipRect(region);
 	painter->drawText(region, flags, adjustedText.simplified());
+	painter->setClipping(false);
 }
 
 void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, bool isIdle, int unreadCount, bool compact) const {
