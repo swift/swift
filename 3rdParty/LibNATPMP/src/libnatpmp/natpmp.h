@@ -39,6 +39,12 @@ typedef unsigned short uint16_t;
 #include <netinet/in.h>
 #endif
 
+#ifdef ANDROID
+#include <arpa/inet.h>
+#define in_addr_t uint32_t
+#endif
+
+
 typedef struct {
 	int s;	/* socket */
 	in_addr_t gateway;	/* default gateway (IPv4) */

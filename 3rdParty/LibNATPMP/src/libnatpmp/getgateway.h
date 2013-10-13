@@ -27,6 +27,11 @@ typedef unsigned short uint16_t;
 #endif
 #include "declspec.h"
 
+#ifdef ANDROID
+#include <arpa/inet.h>
+#define in_addr_t uint32_t
+#endif
+
 /* getdefaultgateway() :
  * return value :
  *    0 : success
