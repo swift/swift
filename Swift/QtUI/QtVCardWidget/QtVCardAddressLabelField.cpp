@@ -81,17 +81,19 @@ VCard::AddressLabel QtVCardAddressLabelField::getAddressLabel() const {
 }
 
 void QtVCardAddressLabelField::handleEditibleChanged(bool isEditable) {
-	if (addressLabelPlainTextEdit) {
-		addressLabelPlainTextEdit->setReadOnly(!isEditable);
-		addressLabelPlainTextEdit->setStyleSheet(isEditable ? "" : "QPlainTextEdit { background: transparent; }");
-	}
+	assert(addressLabelPlainTextEdit);
+	assert(deliveryTypeLabel);
+	assert(domesticRadioButton);
+	assert(internationalRadioButton);
 
-	if (deliveryTypeLabel) {
-		deliveryTypeLabel->setText(buttonGroup->checkedButton() == 0 ? "" : buttonGroup->checkedButton()->text());
-		deliveryTypeLabel->setVisible(!isEditable);
-	}
-	if (domesticRadioButton) domesticRadioButton->setVisible(isEditable);
-	if (internationalRadioButton) internationalRadioButton->setVisible(isEditable);
+	addressLabelPlainTextEdit->setReadOnly(!isEditable);
+	addressLabelPlainTextEdit->setStyleSheet(isEditable ? "" : "QPlainTextEdit { background: transparent; }");
+
+	deliveryTypeLabel->setText(buttonGroup->checkedButton() == 0 ? "" : buttonGroup->checkedButton()->text());
+	deliveryTypeLabel->setVisible(!isEditable);
+
+	domesticRadioButton->setVisible(isEditable);
+	internationalRadioButton->setVisible(isEditable);
 }
 
 }

@@ -42,10 +42,10 @@ std::string QtVCardTitleField::getTitle() const {
 }
 
 void QtVCardTitleField::handleEditibleChanged(bool isEditable) {
-	if (titleLineEdit) {
-		titleLineEdit->setEditable(isEditable);
-		titleLineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
-	}
+	assert(titleLineEdit);
+
+	titleLineEdit->setEditable(isEditable);
+	titleLineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
 }
 
 }

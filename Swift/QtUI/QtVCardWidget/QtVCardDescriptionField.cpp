@@ -44,21 +44,21 @@ std::string QtVCardDescriptionField::getDescription() const {
 }
 
 void QtVCardDescriptionField::handleEditibleChanged(bool isEditable) {
-	if (descriptionPlainTextEdit) {
-		if (isEditable) {
-			descriptionPlainTextEdit->setMinimumHeight(70);
-		} else {
-			QFontMetrics inputMetrics(descriptionPlainTextEdit->document()->defaultFont());
-			QRect horizontalBounds = contentsRect().adjusted(0,0,0,9999);
-			QRect boundingRect = inputMetrics.boundingRect(horizontalBounds, Qt::TextWordWrap, descriptionPlainTextEdit->toPlainText() + "A");
-			int left, top, right, bottom;
-			getContentsMargins(&left, &top, &right, &bottom);
-			int height = boundingRect.height() + top + bottom + inputMetrics.height();
-			descriptionPlainTextEdit->setMinimumHeight(height > 70 ? 70 : height);
-		}
-		descriptionPlainTextEdit->setReadOnly(!isEditable);
-		descriptionPlainTextEdit->setStyleSheet(isEditable ? "" : "QPlainTextEdit { background: transparent; }");
+	assert(descriptionPlainTextEdit);
+
+	if (isEditable) {
+		descriptionPlainTextEdit->setMinimumHeight(70);
+	} else {
+		QFontMetrics inputMetrics(descriptionPlainTextEdit->document()->defaultFont());
+		QRect horizontalBounds = contentsRect().adjusted(0,0,0,9999);
+		QRect boundingRect = inputMetrics.boundingRect(horizontalBounds, Qt::TextWordWrap, descriptionPlainTextEdit->toPlainText() + "A");
+		int left, top, right, bottom;
+		getContentsMargins(&left, &top, &right, &bottom);
+		int height = boundingRect.height() + top + bottom + inputMetrics.height();
+		descriptionPlainTextEdit->setMinimumHeight(height > 70 ? 70 : height);
 	}
+	descriptionPlainTextEdit->setReadOnly(!isEditable);
+	descriptionPlainTextEdit->setStyleSheet(isEditable ? "" : "QPlainTextEdit { background: transparent; }");
 }
 
 }

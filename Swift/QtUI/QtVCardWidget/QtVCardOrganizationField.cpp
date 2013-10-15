@@ -96,23 +96,24 @@ VCard::Organization QtVCardOrganizationField::getOrganization() const {
 }
 
 void QtVCardOrganizationField::handleEditibleChanged(bool isEditable) {
-	if (organizationLineEdit) {
-		organizationLineEdit->setVisible(isEditable);
-		organizationLabel->setVisible(!isEditable);
+	assert(organizationLineEdit);
+	assert(unitsTreeWidget);
 
-		if (!isEditable) {
-			QString label;
-			for(int i=0; i < unitsTreeWidget->topLevelItemCount(); ++i) {
-				QTreeWidgetItem* row = unitsTreeWidget->topLevelItem(i);
-				if (!row->text(0).isEmpty()) {
-					label += row->text(0) + ", ";
-				}
+	organizationLineEdit->setVisible(isEditable);
+	organizationLabel->setVisible(!isEditable);
+
+	if (!isEditable) {
+		QString label;
+		for(int i=0; i < unitsTreeWidget->topLevelItemCount(); ++i) {
+			QTreeWidgetItem* row = unitsTreeWidget->topLevelItem(i);
+			if (!row->text(0).isEmpty()) {
+				label += row->text(0) + ", ";
 			}
-			label += organizationLineEdit->text();
-			organizationLabel->setText(label);
 		}
+		label += organizationLineEdit->text();
+		organizationLabel->setText(label);
 	}
-	if (unitsTreeWidget) unitsTreeWidget->setVisible(isEditable);
+	unitsTreeWidget->setVisible(isEditable);
 }
 
 void QtVCardOrganizationField::handleItemChanged(QTreeWidgetItem *, int) {

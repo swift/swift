@@ -138,20 +138,30 @@ VCard::Address QtVCardAddressField::getAddress() const {
 }
 
 void QtVCardAddressField::handleEditibleChanged(bool isEditable) {
-	if (streetLineEdit) streetLineEdit->setEditable(isEditable);
-	if (poboxLineEdit) poboxLineEdit->setEditable(isEditable);
-	if (addressextLineEdit) addressextLineEdit->setEditable(isEditable);
-	if (cityLineEdit) cityLineEdit->setEditable(isEditable);
-	if (pocodeLineEdit) pocodeLineEdit->setEditable(isEditable);
-	if (regionLineEdit) regionLineEdit->setEditable(isEditable);
-	if (countryLineEdit) countryLineEdit->setEditable(isEditable);
+	assert(streetLineEdit);
+	assert(poboxLineEdit);
+	assert(addressextLineEdit);
+	assert(cityLineEdit);
+	assert(pocodeLineEdit);
+	assert(regionLineEdit);
+	assert(countryLineEdit);
+	assert(deliveryTypeLabel);
+	assert(domesticRadioButton);
+	assert(internationalRadioButton);
 
-	if (deliveryTypeLabel) {
-		deliveryTypeLabel->setText(buttonGroup->checkedButton() == 0 ? "" : buttonGroup->checkedButton()->text());
-		deliveryTypeLabel->setVisible(!isEditable);
-	}
-	if (domesticRadioButton) domesticRadioButton->setVisible(isEditable);
-	if (internationalRadioButton) internationalRadioButton->setVisible(isEditable);
+	streetLineEdit->setEditable(isEditable);
+	poboxLineEdit->setEditable(isEditable);
+	addressextLineEdit->setEditable(isEditable);
+	cityLineEdit->setEditable(isEditable);
+	pocodeLineEdit->setEditable(isEditable);
+	regionLineEdit->setEditable(isEditable);
+	countryLineEdit->setEditable(isEditable);
+
+	deliveryTypeLabel->setText(buttonGroup->checkedButton() == 0 ? "" : buttonGroup->checkedButton()->text());
+	deliveryTypeLabel->setVisible(!isEditable);
+
+	domesticRadioButton->setVisible(isEditable);
+	internationalRadioButton->setVisible(isEditable);
 
 	foreach (QWidget* widget, textFields) {
 		QtResizableLineEdit* lineEdit;

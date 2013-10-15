@@ -55,15 +55,16 @@ std::string QtVCardURLField::getURL() const {
 }
 
 void QtVCardURLField::handleEditibleChanged(bool isEditable) {
+	assert(urlLineEdit);
+	assert(urlLabel);
+
 	if (isEditable) {
-		if (urlLineEdit) urlLineEdit->show();
-		if (urlLabel) urlLabel->hide();
+		urlLineEdit->show();
+		urlLabel->hide();
 	} else {
-		if (urlLineEdit) urlLineEdit->hide();
-		if (urlLabel) {
-			urlLabel->setText(QString("<a href=\"%1\">%1</a>").arg(QtUtilities::htmlEscape(urlLineEdit->text())));
-			urlLabel->show();
-		}
+		urlLineEdit->hide();
+		urlLabel->setText(QString("<a href=\"%1\">%1</a>").arg(QtUtilities::htmlEscape(urlLineEdit->text())));
+		urlLabel->show();
 	}
 }
 

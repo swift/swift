@@ -4,17 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardGeneralField.h"
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
+
+#include <cassert>
 
 #include <QHBoxLayout>
-#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
 QtVCardGeneralField::QtVCardGeneralField(QWidget* parent, QGridLayout* layout, bool editable, int row, QString label, bool preferrable, bool taggable) :
-	QWidget(parent), preferrable(preferrable), taggable(taggable), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
+	QWidget(parent), editable(editable), preferrable(preferrable), taggable(taggable), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
 	tagComboBox(0), closeButton(0) {
-	setEditable(editable);
 }
 
 QtVCardGeneralField::~QtVCardGeneralField() {
@@ -54,6 +54,7 @@ void QtVCardGeneralField::initialize() {
 	tagLabel->hide();
 
 	childWidgets << label << tagComboBox << tagLabel << closeButton;
+	setEditable(editable);
 }
 
 bool QtVCardGeneralField::isEditable() const {
@@ -61,24 +62,22 @@ bool QtVCardGeneralField::isEditable() const {
 }
 
 void QtVCardGeneralField::setEditable(bool editable) {
+	assert(tagComboBox);
+	assert(closeButton);
+
 	this->editable = editable;
-	if (tagComboBox) {
-		if (taggable) {
-			tagLabel->setText(tagComboBox->itemText(0));
-			tagComboBox->setVisible(editable);
-			tagLabel->setVisible(!editable);
-		} else {
-			tagLabel->hide();
-			tagComboBox->hide();
-		}
+	if (taggable) {
+		tagLabel->setText(tagComboBox->itemText(0));
+		tagComboBox->setVisible(editable);
+		tagLabel->setVisible(!editable);
+	} else {
+		tagLabel->hide();
+		tagComboBox->hide();
 	}
-	if (closeButton) closeButton->setVisible(editable);
-	if (preferredCheckBox) {
-		if (editable) {
-			preferredCheckBox->show();
-		} else if (!preferredCheckBox->isChecked()) {
-			preferredCheckBox->hide();
-		}
+	closeButton->setVisible(editable);
+	if (preferrable) {
+		assert(preferredCheckBox);
+		preferredCheckBox->setVisible(editable ? true : preferredCheckBox->isChecked());
 		preferredCheckBox->setEnabled(editable);
 	}
 	editableChanged(this->editable);

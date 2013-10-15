@@ -66,15 +66,16 @@ VCard::EMailAddress QtVCardInternetEMailField::getInternetEMailAddress() const {
 }
 
 void QtVCardInternetEMailField::handleEditibleChanged(bool isEditable) {
+	assert(emailLineEdit);
+	assert(emailLabel);
+
 	if (isEditable) {
-		if (emailLineEdit) emailLineEdit->show();
-		if (emailLabel) emailLabel->hide();
+		emailLineEdit->show();
+		emailLabel->hide();
 	} else {
-		if (emailLineEdit) emailLineEdit->hide();
-		if (emailLabel) {
-			emailLabel->setText(QString("<a href=\"mailto:%1\">%1</a>").arg(QtUtilities::htmlEscape(emailLineEdit->text())));
-			emailLabel->show();
-		}
+		emailLineEdit->hide();
+		emailLabel->setText(QString("<a href=\"mailto:%1\">%1</a>").arg(QtUtilities::htmlEscape(emailLineEdit->text())));
+		emailLabel->show();
 	}
 }
 

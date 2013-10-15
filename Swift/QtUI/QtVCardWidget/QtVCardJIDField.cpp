@@ -57,15 +57,16 @@ JID QtVCardJIDField::getJID() const {
 }
 
 void QtVCardJIDField::handleEditibleChanged(bool isEditable) {
+	assert(jidLineEdit);
+	assert(jidLabel);
+
 	if (isEditable) {
-		if (jidLineEdit) jidLineEdit->show();
-		if (jidLabel) jidLabel->hide();
+		jidLineEdit->show();
+		jidLabel->hide();
 	} else {
-		if (jidLineEdit) jidLineEdit->hide();
-		if (jidLabel) {
-			jidLabel->setText(QString("<a href=\"xmpp:%1\">%1</a>").arg(QtUtilities::htmlEscape(jidLineEdit->text())));
-			jidLabel->show();
-		}
+		jidLineEdit->hide();
+		jidLabel->setText(QString("<a href=\"xmpp:%1\">%1</a>").arg(QtUtilities::htmlEscape(jidLineEdit->text())));
+		jidLabel->show();
 	}
 }
 

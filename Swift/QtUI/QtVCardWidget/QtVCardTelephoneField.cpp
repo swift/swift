@@ -91,10 +91,10 @@ VCard::Telephone QtVCardTelephoneField::getTelephone() const {
 }
 
 void QtVCardTelephoneField::handleEditibleChanged(bool isEditable) {
-	if (telephoneLineEdit) {
-		telephoneLineEdit->setEditable(isEditable);
-		telephoneLineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
-	}
+	assert(telephoneLineEdit);
+
+	telephoneLineEdit->setEditable(isEditable);
+	telephoneLineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
 }
 
 }

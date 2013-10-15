@@ -41,10 +41,10 @@ std::string QtVCardRoleField::getRole() const {
 }
 
 void QtVCardRoleField::handleEditibleChanged(bool isEditable) {
-	if (roleLineEdit) {
-		roleLineEdit->setEditable(isEditable);
-		roleLineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
-	}
+	assert(roleLineEdit);
+
+	roleLineEdit->setEditable(isEditable);
+	roleLineEdit->setStyleSheet(isEditable ? "" : "QLineEdit { border: none; background: transparent; }");
 }
 
 }
