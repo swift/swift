@@ -4,8 +4,9 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardPhotoAndNameFields.h"
-#include "ui_QtVCardPhotoAndNameFields.h"
+#include <Swift/QtUI/QtVCardWidget/QtVCardPhotoAndNameFields.h>
+
+#include <Swift/QtUI/QtVCardWidget/ui_QtVCardPhotoAndNameFields.h>
 
 #include <QMenu>
 
@@ -68,8 +69,12 @@ void QtVCardPhotoAndNameFields::setEditable(bool editable) {
 	ui->lineEditFAMILY->setVisible(editable);
 	ui->lineEditSUFFIX->setVisible(editable);
 	ui->labelFULLNAME->setVisible(!editable);
-	ui->labelFULLNAME->setText(	ui->lineEditPREFIX->text() + " " + ui->lineEditGIVEN->text() + " " +
-								ui->lineEditMIDDLE->text() + " " + ui->lineEditFAMILY->text() + " " + ui->lineEditSUFFIX->text());
+
+	QStringList fullname;
+	fullname << ui->lineEditPREFIX->text() << ui->lineEditGIVEN->text() << ui->lineEditMIDDLE->text();
+	fullname << ui->lineEditFAMILY->text() << ui->lineEditSUFFIX->text();
+	fullname = fullname.filter(".*\\S.*");
+	ui->labelFULLNAME->setText(fullname.join(" "));
 
 	prepareAddFieldMenu();
 }
