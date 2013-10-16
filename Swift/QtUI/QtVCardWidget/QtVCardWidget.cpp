@@ -176,6 +176,7 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
 	}
 
 	setEditable(editable);
+	window()->resize(sizeHint().width(), size().height() < 200 ? 200 : size().height());
 }
 
 VCard::ref QtVCardWidget::getVCard() {
