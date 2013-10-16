@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include <Swiften/Elements/VCard.h>
-
 #include <QTreeWidget>
 
-#include "QtRemovableItemDelegate.h"
-#include "QtResizableLineEdit.h"
-#include "QtVCardFieldInfo.h"
-#include "QtVCardGeneralField.h"
+#include <Swiften/Elements/VCard.h>
+
+#include <Swift/QtUI/QtVCardWidget/QtRemovableItemDelegate.h>
+#include <Swift/QtUI/QtVCardWidget/QtResizableLineEdit.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardFieldInfo.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
 
 namespace Swift {
 
@@ -39,6 +39,10 @@ class QtVCardOrganizationField : public QtVCardGeneralField {
 
 	private slots:
 		void handleItemChanged(QTreeWidgetItem*, int);
+		void handleRowsRemoved(const QModelIndex&, int, int);
+
+	private:
+		void guaranteeEmptyRow();
 
 	private:
 		QLabel* organizationLabel;

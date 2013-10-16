@@ -4,12 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardOrganizationField.h"
+#include <Swift/QtUI/QtVCardWidget/QtVCardOrganizationField.h>
+
+#include <boost/algorithm/string.hpp>
 
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
-#include <boost/algorithm/string.hpp>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 
@@ -37,6 +38,7 @@ void QtVCardOrganizationField::setupContentWidgets() {
 	itemDelegate = new QtRemovableItemDelegate(style());
 
 	unitsTreeWidget = new QTreeWidget(this);
+	connect(unitsTreeWidget->model(), SIGNAL(rowsRemoved(QModelIndex, int, int)), SLOT(handleRowsRemoved(QModelIndex,int,int)));
 	unitsTreeWidget->setColumnCount(2);
 	unitsTreeWidget->header()->setStretchLastSection(false);
 	int closeIconWidth = style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
@@ -117,6 +119,14 @@ void QtVCardOrganizationField::handleEditibleChanged(bool isEditable) {
 }
 
 void QtVCardOrganizationField::handleItemChanged(QTreeWidgetItem *, int) {
+	guaranteeEmptyRow();
+}
+
+void QtVCardOrganizationField::handleRowsRemoved(const QModelIndex&, int, int) {
+	guaranteeEmptyRow();
+}
+
+void QtVCardOrganizationField::guaranteeEmptyRow() {
 	bool hasEmptyRow = false;
 	QList<QTreeWidgetItem*> rows = unitsTreeWidget->findItems("", Qt::MatchFixedString);
 	foreach(QTreeWidgetItem* row, rows) {
@@ -129,8 +139,8 @@ void QtVCardOrganizationField::handleItemChanged(QTreeWidgetItem *, int) {
 		QTreeWidgetItem* item = new QTreeWidgetItem(QStringList("") << "");
 		item->setFlags(item->flags() | Qt::ItemIsEditable);
 		unitsTreeWidget->addTopLevelItem(item);
+		unitsTreeWidget->setCurrentItem(item);
 	}
-	getTagComboBox()->hide();
 }
 
 }
