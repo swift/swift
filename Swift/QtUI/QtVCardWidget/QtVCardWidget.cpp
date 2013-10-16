@@ -4,29 +4,26 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardWidget.h"
-#include "ui_QtVCardWidget.h"
+#include <Swift/QtUI/QtVCardWidget/QtVCardWidget.h>
 
 #include <QDebug>
 #include <QLineEdit>
 #include <QMenu>
 
-#include "QtVCardAddressField.h"
-#include "QtVCardAddressLabelField.h"
-#include "QtVCardBirthdayField.h"
-#include "QtVCardDescriptionField.h"
-#include "QtVCardGeneralField.h"
-#include "QtVCardInternetEMailField.h"
-#include "QtVCardJIDField.h"
-#include "QtVCardOrganizationField.h"
-#include "QtVCardRoleField.h"
-#include "QtVCardTelephoneField.h"
-#include "QtVCardTitleField.h"
-#include "QtVCardURLField.h"
-
+#include <Swift/QtUI/QtVCardWidget/ui_QtVCardWidget.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardAddressField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardAddressLabelField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardBirthdayField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardDescriptionField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardInternetEMailField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardJIDField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardOrganizationField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardRoleField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardTelephoneField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardTitleField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardURLField.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
-
-#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -42,7 +39,6 @@ QtVCardWidget::QtVCardWidget(QWidget* parent) :
 	ui->cardFields->setColumnStretch(4,2);
 	menu = new QMenu(this);
 
-	menu->addMenu(ui->photoAndName->getAddFieldMenu());
 	ui->toolButton->setMenu(menu);
 
 	addFieldType(menu, boost::make_shared<QtVCardInternetEMailField::FieldInfo>());
@@ -89,7 +85,6 @@ void QtVCardWidget::setEditable(bool editable) {
 }
 
 void QtVCardWidget::setVCard(VCard::ref vcard) {
-	SWIFT_LOG(debug) << std::endl;
 	clearFields();
 	this->vcard = vcard;
 	ui->photoAndName->setFormattedName(P2QSTRING(vcard->getFullName()));
@@ -184,7 +179,6 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
 }
 
 VCard::ref QtVCardWidget::getVCard() {
-	SWIFT_LOG(debug) << std::endl;
 	clearEmptyFields();
 	vcard->setFullName(Q2PSTRING(ui->photoAndName->getFormattedName()));
 	vcard->setNickname(Q2PSTRING(ui->photoAndName->getNickname()));

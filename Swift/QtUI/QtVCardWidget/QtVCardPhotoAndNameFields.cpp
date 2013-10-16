@@ -33,17 +33,10 @@ QtVCardPhotoAndNameFields::QtVCardPhotoAndNameFields(QWidget* parent) :
 	ui->lineEditSUFFIX->setPlaceholderText(tr("Suffix"));
 #endif
 
-	addFieldMenu = new QMenu("Name", this);
-
-	actionSignalMapper = new QSignalMapper(this);
-
-	connect(actionSignalMapper, SIGNAL(mapped(const QString &)), this, SLOT(showField(const QString &)));
-	prepareAddFieldMenu();
 }
 
 QtVCardPhotoAndNameFields::~QtVCardPhotoAndNameFields() {
 	delete ui;
-	delete actionSignalMapper;
 }
 
 bool QtVCardPhotoAndNameFields::isEditable() const {
@@ -75,12 +68,6 @@ void QtVCardPhotoAndNameFields::setEditable(bool editable) {
 	fullname << ui->lineEditFAMILY->text() << ui->lineEditSUFFIX->text();
 	fullname = fullname.filter(".*\\S.*");
 	ui->labelFULLNAME->setText(fullname.join(" "));
-
-	prepareAddFieldMenu();
-}
-
-QMenu* QtVCardPhotoAndNameFields::getAddFieldMenu() const {
-	return addFieldMenu;
 }
 
 void QtVCardPhotoAndNameFields::setAvatar(const ByteArray &data, const std::string &type) {
@@ -149,33 +136,6 @@ void QtVCardPhotoAndNameFields::setSuffix(const QString suffix) {
 
 QString QtVCardPhotoAndNameFields::getSuffix() const {
 	return ui->lineEditSUFFIX->text();
-}
-
-void QtVCardPhotoAndNameFields::prepareAddFieldMenu() {
-	foreach(QAction* action, addFieldMenu->actions()) {
-		actionSignalMapper->removeMappings(action);
-	}
-
-	addFieldMenu->clear();
-	foreach(QObject* obj, children()) {
-		QLineEdit* lineEdit = 0;
-		if (!(lineEdit = dynamic_cast<QLineEdit*>(obj))) continue;
-		if (lineEdit->isHidden()) {
-#if QT_VERSION >= 0x040700
-			QAction* action = addFieldMenu->addAction(QString("Add ") + lineEdit->placeholderText(), actionSignalMapper, SLOT(map()));
-#else
-			QAction* action = addFieldMenu->addAction(QString("Add ") + lineEdit->toolTip(), actionSignalMapper, SLOT(map()));
-#endif
-			actionSignalMapper->setMapping(action, lineEdit->objectName());
-		}
-	}
-}
-
-void QtVCardPhotoAndNameFields::showField(const QString& widgetName) {
-	QLineEdit* lineEditToShow = findChild<QLineEdit*>(widgetName);
-	if (lineEditToShow) lineEditToShow->show();
-
-	prepareAddFieldMenu();
 }
 
 }
