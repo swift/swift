@@ -44,8 +44,7 @@ QtContactListWidget::QtContactListWidget(QWidget* parent, SettingsProvider* sett
 	setItemDelegateForColumn(0, contactListDelegate_);
 	setItemDelegateForColumn(1, removableItemDelegate_);
 
-	int closeIconWidth = fontMetrics().height();
-	header()->resizeSection(1, closeIconWidth);
+	header()->resizeSection(1, removableItemDelegate_->sizeHint(QStyleOptionViewItem(), QModelIndex()).width());
 
 	header()->setStretchLastSection(false);
 #if QT_VERSION >= 0x050000

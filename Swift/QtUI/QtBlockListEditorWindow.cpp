@@ -77,8 +77,7 @@ QtBlockListEditorWindow::QtBlockListEditorWindow() : QWidget(), ui(new Ui::QtBlo
 
 	ui->blockListTreeWidget->setColumnCount(2);
 	ui->blockListTreeWidget->header()->setStretchLastSection(false);
-	int closeIconWidth = style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
-	ui->blockListTreeWidget->header()->resizeSection(1, closeIconWidth);
+	ui->blockListTreeWidget->header()->resizeSection(1, itemDelegate->sizeHint(QStyleOptionViewItem(), QModelIndex()).width());
 
 #if QT_VERSION >= 0x050000
 	ui->blockListTreeWidget->header()->setSectionResizeMode(0, QHeaderView::Stretch);

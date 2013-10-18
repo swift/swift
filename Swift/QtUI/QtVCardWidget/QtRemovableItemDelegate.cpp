@@ -48,7 +48,7 @@ bool QtRemovableItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* mod
 }
 
 QSize QtRemovableItemDelegate::sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const {
-	QSize size(style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0), style->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, 0, 0));
+	QSize size(style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0) + 2, style->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, 0, 0) + 2);
 	return size;
 }
 

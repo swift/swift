@@ -41,8 +41,7 @@ void QtVCardOrganizationField::setupContentWidgets() {
 	connect(unitsTreeWidget->model(), SIGNAL(rowsRemoved(QModelIndex, int, int)), SLOT(handleRowsRemoved(QModelIndex,int,int)));
 	unitsTreeWidget->setColumnCount(2);
 	unitsTreeWidget->header()->setStretchLastSection(false);
-	int closeIconWidth = style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
-	unitsTreeWidget->header()->resizeSection(1, closeIconWidth);
+	unitsTreeWidget->header()->resizeSection(1, itemDelegate->sizeHint(QStyleOptionViewItem(), QModelIndex()).width());
 
 #if QT_VERSION >= 0x050000
 	unitsTreeWidget->header()->setSectionResizeMode(0, QHeaderView::Stretch);
