@@ -39,7 +39,13 @@ QtVCardWidget::QtVCardWidget(QWidget* parent) :
 	ui->cardFields->setColumnStretch(4,2);
 	menu = new QMenu(this);
 
-	ui->toolButton->setMenu(menu);
+	toolButton = new QToolButton(this);
+	toolButton->setText(tr("Add Field"));
+	toolButton->setArrowType(Qt::NoArrow);
+	toolButton->setAutoRaise(false);
+	toolButton->setPopupMode(QToolButton::InstantPopup);
+	toolButton->hide();
+	toolButton->setMenu(menu);
 
 	addFieldType(menu, boost::make_shared<QtVCardInternetEMailField::FieldInfo>());
 	addFieldType(menu, boost::make_shared<QtVCardTelephoneField::FieldInfo>());
@@ -72,14 +78,7 @@ void QtVCardWidget::setEditable(bool editable) {
 	foreach(QtVCardGeneralField* field, fields) {
 		field->setEditable(editable);
 	}
-
-	if (editable) {
-		ui->toolButton->show();
-		//if ((findChild<QtVCardBirthdayField*>() == 0)) {
-		//}
-	} else {
-		ui->toolButton->hide();
-	}
+	toolButton->setVisible(editable);
 
 	editableChanged(editable);
 }
@@ -175,6 +174,7 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
 		appendField(urlField);
 	}
 
+	relayoutToolButton();
 	setEditable(editable);
 	window()->resize(sizeHint().width(), size().height() < 200 ? 200 : size().height());
 }
@@ -294,6 +294,7 @@ void QtVCardWidget::addField() {
 			newGeneralField->initialize();
 		}
 		appendField(newGeneralField);
+		relayoutToolButton();
 	}
 }
 
@@ -303,10 +304,12 @@ void QtVCardWidget::removeField(QtVCardGeneralField *field) {
 }
 
 void QtVCardWidget::addFieldType(QMenu* menu, boost::shared_ptr<QtVCardFieldInfo> fieldType) {
-	QAction* action = new QAction(tr("Add ") + fieldType->getMenuName(), this);
-	actionFieldInfo[action] = fieldType;
-	connect(action, SIGNAL(triggered()), this, SLOT(addField()));
-	menu->addAction(action);
+	if (!fieldType->getMenuName().isEmpty()) {
+		QAction* action = new QAction(tr("Add ") + fieldType->getMenuName(), this);
+		actionFieldInfo[action] = fieldType;
+		connect(action, SIGNAL(triggered()), this, SLOT(addField()));
+		menu->addAction(action);
+	}
 }
 
 int QtVCardWidget::fieldTypeInstances(boost::shared_ptr<QtVCardFieldInfo> fieldType) {
@@ -323,6 +326,10 @@ void layoutDeleteChildren(QLayout *layout) {
 		if ((child = layout->takeAt(0)) != 0) {
 			if (child->layout()) {
 				layoutDeleteChildren(child->layout());
+			}
+			if (dynamic_cast<QToolButton*>(child->widget())) {
+				delete child;
+				break;
 			}
 			delete child->widget();
 			delete child;
@@ -358,6 +365,10 @@ void QtVCardWidget::clearEmptyFields() {
 void QtVCardWidget::appendField(QtVCardGeneralField *field) {
 	connect(field, SIGNAL(deleteField(QtVCardGeneralField*)), SLOT(removeField(QtVCardGeneralField*)));
 	fields.push_back(field);
+}
+
+void QtVCardWidget::relayoutToolButton() {
+	ui->cardFields->addWidget(toolButton, ui->cardFields->rowCount(), ui->cardFields->columnCount()-2, 1, 1, Qt::AlignRight);
 }
 
 }

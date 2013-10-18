@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QWidget>
+#include <QToolButton>
 #include <Swiften/Elements/VCard.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -47,10 +48,12 @@ namespace Swift {
 			void clearFields();
 			void clearEmptyFields();
 			void appendField(QtVCardGeneralField* field);
+			void relayoutToolButton();
 
 		private:
 			VCard::ref vcard;
 			Ui::QtVCardWidget* ui;
+			QToolButton* toolButton;
 			bool editable;
 			QMenu* menu;
 			std::list<QtVCardGeneralField*> fields;

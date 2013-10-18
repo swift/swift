@@ -53,13 +53,10 @@ void QtProfileWindow::setEnabled(bool b) {
 }
 
 void QtProfileWindow::setEditable(bool b) {
-	if (b) {
-		ui->savePushButton->show();
-		ui->vcard->setEditable(true);
-	} else {
-		ui->savePushButton->hide();
-		ui->vcard->setEditable(false);
-	}
+	ui->throbberLabel->setVisible(b);
+	ui->errorLabel->setVisible(b);
+	ui->savePushButton->setVisible(b);
+	ui->vcard->setEditable(b);
 	updateTitle();
 }
 
