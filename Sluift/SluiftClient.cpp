@@ -52,9 +52,10 @@ void SluiftClient::connect() {
 	client->connect(options);
 }
 
-void SluiftClient::connect(const std::string& host) {
+void SluiftClient::connect(const std::string& host, int port) {
 	rosterReceived = false;
 	options.manualHostname = host;
+	options.manualPort = port;
 	client->connect(options);
 }
 

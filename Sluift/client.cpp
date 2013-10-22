@@ -48,16 +48,20 @@ SLUIFT_LUA_FUNCTION(Client, async_connect) {
 	SluiftClient* client = getClient(L);
 
 	std::string host;
+	int port = -1;
 	if (lua_istable(L, 2)) {
 		if (boost::optional<std::string> hostString = Lua::getStringField(L, 2, "host")) {
 			host = *hostString;
 		}
+		if (boost::optional<int> portInt = Lua::getIntField(L, 2, "port")) {
+			port = *portInt;
+		}
 	}
-	if (host.empty()) {
+	if (host.empty() && port == -1) {
 		client->connect();
 	}
 	else {
-		client->connect(host);
+		client->connect(host, port);
 	}
 	return 0;
 }
@@ -315,6 +319,14 @@ SLUIFT_LUA_FUNCTION(Client, send) {
 SLUIFT_LUA_FUNCTION(Client, set_options) {
 	SluiftClient* client = getClient(L);
 	Lua::checkType(L, 2, LUA_TTABLE);
+	lua_getfield(L, 2, "host");
+	if (!lua_isnil(L, -1)) {
+		client->getOptions().manualHostname = lua_tostring(L, -1);
+	}
+	lua_getfield(L, 2, "port");
+	if (!lua_isnil(L, -1)) {
+		client->getOptions().manualPort = lua_tointeger(L, -1);
+	}
 	lua_getfield(L, 2, "ack");
 	if (!lua_isnil(L, -1)) {
 		client->getOptions().useAcks = lua_toboolean(L, -1);

@@ -75,7 +75,7 @@ namespace Swift {
 			}
 
 			void connect();
-			void connect(const std::string& host);
+			void connect(const std::string& host, int port);
 			void waitConnected();
 			bool isConnected() const;
 
