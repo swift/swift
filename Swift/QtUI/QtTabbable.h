@@ -6,8 +6,9 @@
 
 #pragma once
 
-#include <QKeyEvent>
 #include <QWidget>
+#include <QShortcut>
+#include <QList>
 
 
 namespace Swift {
@@ -15,16 +16,13 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			enum AlertType {NoActivity, WaitingActivity, ImpendingActivity};
-			~QtTabbable();
+			virtual ~QtTabbable();
 			bool isWidgetSelected();
 			virtual AlertType getWidgetAlertState() {return NoActivity;}
 			virtual int getCount() {return 0;}
 		protected:
-			QtTabbable() : QWidget() {}
-			void keyPressEvent(QKeyEvent* event);
-
-		protected slots:
-			void handleKeyPressEvent(QKeyEvent* event);
+			QtTabbable();
+			bool event(QEvent* event);
 
 		signals:
 			void titleUpdated();
@@ -36,5 +34,8 @@ namespace Swift {
 			void requestNextTab();
 			void requestActiveTab();
 			void requestFlash();
+
+		private:
+			QList<QShortcut*> shortcuts;
 	};
 }

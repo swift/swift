@@ -226,7 +226,6 @@ void QtChatWindow::setTabComplete(TabComplete* completer) {
 
 void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	event->ignore();
-	QtTabbable::handleKeyPressEvent(event);
 	if (event->isAccepted()) {
 		return;
 	}
