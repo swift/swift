@@ -60,11 +60,15 @@ function test_entity_use_cases()
 	-- 5.6 Subscriptions
 	assert(node:create())
 	assert(subscriber_node:subscribe({ jid = subscriber_jid }))
-	local service_subscriptions = assert(pubsub:get_subscriptions())
-	-- FIXME: Doesn't seem to return anything on M-Link. Test this later if this is supposed to work.
-	--print(service_subscriptions)
-	local node_subscriptions = assert(node:get_subscriptions())
-	--print(node_subscriptions)
+	local service_subscriptions = assert(subscriber_pubsub:get_subscriptions())
+	assert(#service_subscriptions == 1)
+	assert(service_subscriptions[1].node == node_id)
+	assert(service_subscriptions[1].jid == subscriber_jid)
+	assert(service_subscriptions[1].subscription == 'subscribed')
+	local node_subscriptions = assert(subscriber_node:get_subscriptions())
+	assert(#node_subscriptions == 1)
+	assert(node_subscriptions[1].jid == subscriber_jid)
+	assert(node_subscriptions[1].subscription == 'subscribed')
 	assert(node:delete())
 
 	-- 5.7 Retrieve affiliations
