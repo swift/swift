@@ -22,7 +22,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="204"/>
         <source>This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent.</source>
-        <translation>ייתכן ושיחה זו לא תומכת בקבלות משלוח. אתה עשויה שלא לקבל קבלות משלוח עבור ההודעות שנשלחות מן הקצה שלך.</translation>
+        <translation>ייתכן כי שיחה זו לא תומכת בקבלות משלוח. אתה עשוי שלא לקבל קבלות משלוח עבור ההודעות אשר נשלחות מן הקצה שלך.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="216"/>
@@ -33,17 +33,17 @@
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="324"/>
         <source>%1% has gone offline</source>
-        <translation>‫%1% במצב לא מקוון כעת</translation>
+        <translation>%1% במצב לא מקוון כעת</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="328"/>
         <source>%1% has become available</source>
-        <translation>‫%1% במצב זמין כעת</translation>
+        <translation>%1% במצב זמין כעת</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="330"/>
         <source>%1% has gone away</source>
-        <translation>‫%1% במצב נעדר כעת</translation>
+        <translation>%1% במצב נעדר כעת</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="332"/>
@@ -58,7 +58,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="209"/>
         <source>Couldn&apos;t send message: %1%</source>
-        <translation>לא ניתן היה לשלוח הודעה: %1%</translation>
+        <translation>לא היתה אפשרות לשלוח הודעה: %1%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="269"/>
@@ -68,7 +68,6 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="275"/>
         <source>Bad request</source>
-        <translatorcomment>בקשה שגויה</translatorcomment>
         <translation>בקשה רעה</translation>
     </message>
     <message>
@@ -89,7 +88,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="279"/>
         <source>Recipient can no longer be contacted</source>
-        <translation>לא ניתן לתקשר עוד עם נמען</translation>
+        <translation>אין אפשרות לתקשר עוד עם נמען</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/ChatControllerBase.cpp" line="280"/>
@@ -187,12 +186,12 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="233"/>
         <source>Unable to enter this room</source>
-        <translation>לא ניתן להיכנס אל חדר זה</translation>
+        <translation>אין אפשרות להיכנס אל חדר זה</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="239"/>
         <source>Unable to enter this room as %1%, retrying as %2%</source>
-        <translation>לא ניתן להיכנס אל חדר זה תחת השם %1%, מנסה כעת להיכנס בשם %2%</translation>
+        <translation>אין אפשרות להיכנס אל חדר זה תחת השם %1%, מנסה כעת להיכנס בתור %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="243"/>
@@ -236,12 +235,12 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="332"/>
         <source>%1% has entered the room as a %2%.</source>
-        <translation>‫%1% נכנס/ה אל החדר בתפקיד %2%.</translation>
+        <translation>%1% נכנס/ה אל החדר בתפקיד %2%.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="335"/>
         <source>%1% has entered the room.</source>
-        <translation>‫%1% נכנס/ה אל החדר.</translation>
+        <translation>%1% נכנס/ה אל החדר.</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="384"/>
@@ -266,7 +265,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="470"/>
         <source>%1% is now a %2%</source>
-        <translation>‫%1% מצוי/ה כעת במצב %2%</translation>
+        <translation>%1% מצוי/ה כעת במצב %2%</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="486"/>
@@ -321,7 +320,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="667"/>
         <source>%1% has left the room</source>
-        <translation>‫%1% עזב/ה את החדר</translation>
+        <translation>%1% עזב/ה את החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="719"/>
@@ -341,7 +340,7 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="247"/>
         <source>The correct room password is needed</source>
-        <translation>הסיסמה המדויקת נחוצה</translation>
+        <translation>סיסמת חדר מדויקת הינה נחוצה</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="632"/>
@@ -352,42 +351,42 @@
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="656"/>
         <source>%1% have entered the room</source>
-        <translation>‫%1% נכנסו אל החדר</translation>
+        <translation>%1% נכנסו אל החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="659"/>
         <source>%1% has entered the room</source>
-        <translation>‫%1% נכנס/ה אל החדר</translation>
+        <translation>%1% נכנס/ה אל החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="664"/>
         <source>%1% have left the room</source>
-        <translation>‫%1% עזבו את החדר</translation>
+        <translation>%1% עזבו את החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="672"/>
         <source>%1% have entered then left the room</source>
-        <translation>‫%1% נכנסו אל החדר ואז עזבו</translation>
+        <translation>%1% נכנסו ואז עזבו את החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="675"/>
         <source>%1% has entered then left the room</source>
-        <translation>‫%1% נכנס/ה אל החדר ואז עזב/ה</translation>
+        <translation>%1% נכנס/ה ואז עזב/ה את החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="680"/>
         <source>%1% have left then returned to the room</source>
-        <translation>‫%1% עזבו ואז חזרו אל החדר</translation>
+        <translation>%1% עזבו ואז חזרו אל החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/Chat/MUCController.cpp" line="683"/>
         <source>%1% has left then returned to the room</source>
-        <translation>‫%1% עזב/ה ואז חזר/ה אל החדר</translation>
+        <translation>%1% עזב/ה ואז חזר/ה אל החדר</translation>
     </message>
     <message>
         <location filename="../Controllers/EventNotifier.cpp" line="59"/>
         <source>%1% wants to add you to his/her contact list</source>
-        <translation>‫%1% רוצה להוסיפך אל רשימת הקשרים שלו/שלה</translation>
+        <translation>%1% רוצה להוסיף אותך אל רשימת הקשרים שלו/שלה</translation>
     </message>
     <message>
         <location filename="../Controllers/EventNotifier.cpp" line="63"/>
@@ -412,7 +411,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="568"/>
         <source>Unable to find server</source>
-        <translation>לא ניתן למצוא שרת</translation>
+        <translation>אין אפשרות למצוא שרת</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="569"/>
@@ -422,7 +421,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="570"/>
         <source>Error while receiving server data</source>
-        <translation>שגיאה במהלך קבלת נתונים של שרת</translation>
+        <translation>שגיאה במהלך קבלת נתוני שרת</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="571"/>
@@ -432,13 +431,13 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="572"/>
         <source>Error parsing server data</source>
-        <translation>שגיאה בניתוח נתונים של שרת</translation>
+        <translation>שגיאה בניתוח נתוני שרת</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="573"/>
         <source>Login/password invalid</source>
         <translatorcomment>credentials</translatorcomment>
-        <translation>נתוני התחברות שגויים</translation>
+        <translation>התחברות/סיסמה שגויים</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="574"/>
@@ -483,7 +482,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="582"/>
         <source>Error loading certificate (Invalid password?)</source>
-        <translation>בגיאה בטעינת תעודה (סיסמה שגויה?)</translation>
+        <translation>שגיאה בטעינת תעודה (סיסמה שגויה?)</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="583"/>
@@ -528,7 +527,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="592"/>
         <source>Certificate cannot be used for encrypting your connection</source>
-        <translation>לא ניתן להשתמש בתעודה עבור הצפנת חיבורך</translation>
+        <translation>תעודה לא שמישה עבור הצפנת החיבור שלך</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="593"/>
@@ -559,7 +558,7 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="598"/>
         <source>Unable to determine certificate revocation state</source>
-        <translation>לא ניתן לקבוע מצב פסילות של תעודה</translation>
+        <translation>אין אפשרות לקבוע מצב פסילות של תעודה</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="608"/>
@@ -574,17 +573,17 @@
     <message>
         <location filename="../Controllers/MainController.cpp" line="628"/>
         <source>Disconnected from %1%: %2%. To reconnect, Sign Out and provide your password again.</source>
-        <translation>מנותק מן ‫%1%: ‫%2%. כדי להתחבר שוב, התנתק וספק את סיסמתך פעם נוספת.</translation>
+        <translation>מנותק מן %1%: ‏%2%. כדי להתחבר שוב, התנתק וספק את הסיסמה שלך פעם נוספת.</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="634"/>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
-        <translation>מתחבר מחדש כעת אל %1% נכשל: %2%. ניסיון נוסף בעוד %3% שניות.</translation>
+        <translation>מתחבר מחדש כעת אל %1% נכשל: %2%. ניסיון נוסף יערך בעוד %3% שניות.</translation>
     </message>
     <message>
         <location filename="../Controllers/MainController.cpp" line="637"/>
         <source>Disconnected from %1%: %2%.</source>
-        <translation>מנותק מן ‫%1%: ‫%2%.</translation>
+        <translation>מנותק מן %1%: ‏%2%.</translation>
     </message>
     <message>
         <location filename="../Controllers/Roster/RosterController.cpp" line="131"/>
@@ -623,7 +622,7 @@
     <message>
         <location filename="../Controllers/ProfileController.cpp" line="62"/>
         <source>There was an error publishing your profile data</source>
-        <translation>ארעה שגיאה בפרסום נתוני דיוקנך</translation>
+        <translation>אירעה שגיאה בפרסום נתוני הדיוקן שלך</translation>
     </message>
     <message>
         <location filename="../Controllers/ChatMessageSummarizer.cpp" line="33"/>
@@ -689,12 +688,12 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="84"/>
         <source>Quit %1</source>
-        <translation>יציאה מן %1</translation>
+        <translation>צא מתוך %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="85"/>
         <source>About %1</source>
-        <translation>אודות ‫%1</translation>
+        <translation>אודות %1</translation>
     </message>
 </context>
 <context>
@@ -749,13 +748,11 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="22"/>
         <source>&amp;Undo</source>
-        <translatorcomment>&amp;ביטול ביצוע</translatorcomment>
         <translation>&amp;בטל</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="23"/>
         <source>&amp;Redo</source>
-        <translatorcomment>&amp;ביצוע חוזר</translatorcomment>
         <translation>בצע &amp;שוב</translation>
     </message>
     <message>
@@ -784,12 +781,12 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="76"/>
         <source>Show Details...</source>
-        <translation>הצג פרטים...</translation>
+        <translation>הצגת פרטים...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="77"/>
         <source>Hide Details...</source>
-        <translation>הסתר פרטים...</translation>
+        <translation>הסתרת פרטים...</translation>
     </message>
 </context>
 <context>
@@ -802,12 +799,12 @@
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="68"/>
         <source>%1 would like to add you to their contact list.</source>
-        <translation>‫%1 רוצה להוסיפך אל רשימת הקשרים שלהם.</translation>
+        <translation>%1 רוצה להוסיפך אל רשימת הקשרים שלהם.</translation>
     </message>
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="71"/>
         <source>%1 would like to add you to their contact list, saying &apos;%2&apos;</source>
-        <translation>‫%1 רוצה להוסיפך אל רשימת הקשרים שלהם, באומרם &apos;%2&apos;</translation>
+        <translation>%1 רוצה להוסיפך אל רשימת הקשרים שלהם, באומרם &apos;%2&apos;</translation>
     </message>
     <message>
         <location filename="../QtUI/EventViewer/QtEvent.cpp" line="81"/>
@@ -827,7 +824,7 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="985"/>
         <source>This person may not have really sent this invitation!</source>
-        <translation>אפשרי שאישיות זו לא באמת שלחה את הזמנה זו!</translation>
+        <translation>אפשרי כי אישיות זו לא באמת שלחה את הזמנה זו!</translation>
     </message>
     <message>
         <location filename="../QtUI/QtFileTransferListItemModel.cpp" line="46"/>
@@ -915,14 +912,12 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="30"/>
         <source>Top</source>
-        <translatorcomment>ראש</translatorcomment>
-        <translation>שיא</translation>
+        <translation>למעלה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="31"/>
         <source>Bottom</source>
-        <translatorcomment>תחת</translatorcomment>
-        <translation>תחתית</translation>
+        <translation>למטה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="32"/>
@@ -1008,12 +1003,12 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="49"/>
         <source>Top</source>
-        <translation>שיא</translation>
+        <translation>למעלה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="50"/>
         <source>Bottom</source>
-        <translation>תחתית</translation>
+        <translation>למטה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="51"/>
@@ -1041,7 +1036,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="56"/>
         <source>&lt; &amp;Back</source>
-        <translation>&lt; &amp;קודם</translation>
+        <translation>&lt; &amp;אחורה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="57"/>
@@ -1056,7 +1051,7 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="59"/>
         <source>Go Back</source>
-        <translation>חזרה</translation>
+        <translation>חזור</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="60"/>
@@ -1091,12 +1086,12 @@
     <message>
         <location filename="../QtUI/QtStrings.h" line="66"/>
         <source>&amp;Next</source>
-        <translation>&amp;הבא</translation>
+        <translation>&amp;קדימה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtStrings.h" line="67"/>
         <source>&amp;Next &gt;</source>
-        <translation>&amp;הבא &gt;</translation>
+        <translation>&amp;קדימה &gt;</translation>
     </message>
 </context>
 <context>
@@ -1104,8 +1099,7 @@
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="14"/>
         <source>Edit Affiliations</source>
-        <translatorcomment>עריכת</translatorcomment>
-        <translation>ערוך שיוכים</translation>
+        <translation>עריכת שיוכים</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="28"/>
@@ -1135,12 +1129,12 @@
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="68"/>
         <source>Add User</source>
-        <translation>הוסף משתמש</translation>
+        <translation>הוספת משתמש</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="75"/>
         <source>Remove User</source>
-        <translation>הסר משתמש</translation>
+        <translation>הסרת משתמש</translation>
     </message>
 </context>
 <context>
@@ -1163,7 +1157,7 @@
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="60"/>
         <source>Your Nickname:</source>
-        <translation>שם כינוייך:</translation>
+        <translation>שם כינוי:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="70"/>
@@ -1177,7 +1171,7 @@
     </message>
     <message>
         <source>Join automatically</source>
-        <translation type="obsolete">הצטרפות אוטומטית</translation>
+        <translation type="obsolete">הצטרף אוטומטית</translation>
     </message>
 </context>
 <context>
@@ -1244,7 +1238,7 @@
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="134"/>
         <source>Allow sending password over insecure connection</source>
-        <translation>התר שליחת סיסמתך על פני חיבור לא מאובטח</translation>
+        <translation>התר שליחת סיסמה על פני חיבור לא מאובטח</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="157"/>
@@ -1327,12 +1321,12 @@
     <message>
         <location filename="../QtUI/QtHistoryWindow.ui" line="42"/>
         <source>Next</source>
-        <translation>הבא</translation>
+        <translation>קדימה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHistoryWindow.ui" line="52"/>
         <source>Previous</source>
-        <translation>הקודם</translation>
+        <translation>אחורה</translation>
     </message>
 </context>
 <context>
@@ -1341,7 +1335,7 @@
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="20"/>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="113"/>
         <source>Enter Room</source>
-        <translation>כנס אל חדר</translation>
+        <translation>כניסה אל חדר</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="28"/>
@@ -1351,7 +1345,7 @@
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="42"/>
         <source>Your Nickname:</source>
-        <translation>שם כינוייך:</translation>
+        <translation>שם כינוי:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="59"/>
@@ -1361,7 +1355,7 @@
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="71"/>
         <source>Automatically configure newly created rooms</source>
-        <translation>הגדר אוטומטית חדרים חדשים שנוצרים</translation>
+        <translation>הגדר אוטומטית חדרים חדשים אשר נוצרים</translation>
     </message>
     <message>
         <source>Room:</source>
@@ -1374,7 +1368,7 @@
     </message>
     <message>
         <source>Nickname:</source>
-        <translation type="obsolete">כינוי:</translation>
+        <translation type="obsolete">שם כינוי:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="106"/>
@@ -1449,7 +1443,7 @@
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui" line="20"/>
         <source>Add another user to your contact list. If you know their address you can add them directly, or you can search for them.</source>
-        <translation>הוסף משתמש אחר אל רשימת הקשרים שלך. אם כתובתם ידועה לך ביכולתך להוסיפה ישירות, לחלופין ביכולתך לחפש עבורם.</translation>
+        <translation>הוסף משתמש אחר אל רשימת הקשרים שלך. אם כתובתם ידועה לך באפשרותך להוסיפה ישירות, לחלופין באפשרותך לחפש עבורם.</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.ui" line="35"/>
@@ -1506,7 +1500,7 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="23"/>
         <source>About %1</source>
-        <translation>אודות ‫%1</translation>
+        <translation>אודות %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="40"/>
@@ -1516,18 +1510,18 @@
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="43"/>
         <source>Built with Qt %1</source>
-        <translation>הודר באמצעות Qt ‫%1</translation>
+        <translation>הודר בעזרת Qt %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="44"/>
         <source>Running with Qt %1</source>
-        <translation>מורץ בעזרת Qt ‫%1</translation>
+        <translation>מורץ בעזרת Qt %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="50"/>
         <source>Using the English translation by
 %1</source>
-        <translation>ממשק תורגם לשפה העברית באדיבות
+        <translation>ממשק זה תורגם לשפה העברית באדיבות
 %1</translation>
     </message>
     <message>
@@ -1546,7 +1540,7 @@
     <message>
         <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="39"/>
         <source>Back</source>
-        <translation>חזרה</translation>
+        <translation>אחורה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="42"/>
@@ -1556,7 +1550,7 @@
     <message>
         <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="45"/>
         <source>Complete</source>
-        <translation>הושלם</translation>
+        <translation>השלם</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAdHocCommandWindow.cpp" line="86"/>
@@ -1579,7 +1573,7 @@
     <message>
         <location filename="../QtUI/QtAffiliationEditor.cpp" line="48"/>
         <source>Add User</source>
-        <translation>הוסף משתמש</translation>
+        <translation>הוספת משתמש</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.cpp" line="48"/>
@@ -1597,7 +1591,7 @@
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="73"/>
         <source>Select picture ...</source>
-        <translation>בחר תמונה ...</translation>
+        <translation>בחירת תמונה ...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="76"/>
@@ -1612,11 +1606,11 @@
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="81"/>
         <source>Image Files (*.png *.jpg *.jpeg *.gif)</source>
-        <translation>קבצי תמונה ‪(*.png *.jpg *.jpeg *.gif)</translation>
+        <translation>קבצי תמונה (‎*.png *.jpg *.jpeg *.gif)</translation>
     </message>
     <message>
         <source>Image Files (*.png *.jpg *.gif)</source>
-        <translation type="obsolete">קבצי תמונה ‭(*.png *.jpg *.gif)‬</translation>
+        <translation type="obsolete">קבצי תמונה (‎*.png *.jpg *.gif)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="95"/>
@@ -1626,6 +1620,7 @@
     <message>
         <location filename="../QtUI/QtAvatarWidget.cpp" line="95"/>
         <source>The selected picture is in an unrecognized format</source>
+        <translatorcomment>התמונה הנבחרת מצויה בתוך פורמט לא מוכר</translatorcomment>
         <translation>הפורמט של התמונה הנבחרת אינו מוכר</translation>
     </message>
 </context>
@@ -1776,7 +1771,7 @@
         <location filename="../QtUI/QtChatView.cpp" line="219"/>
         <source>%1 edited</source>
         <translatorcomment>ערוכה</translatorcomment>
-        <translation>%1 ערוך</translation>
+        <translation type="unfinished">%1 ערוך</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatView.cpp" line="400"/>
@@ -1847,22 +1842,22 @@
         <location filename="../QtUI/QtChatWindow.cpp" line="269"/>
         <source>This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message</source>
         <translatorcomment>שיחה זו עשויה ש</translatorcomment>
-        <translation>אפשרי ששיחה זו לא תומכת בתיקון הודעות. אם תשלח תיקון בכל זאת, זה עשוי להופיע כהודעה כפולה</translation>
+        <translation>אפשרי כי שיחה זו לא תומכת בתיקון הודעות. אם תשלח תיקון בכל זאת, זה עשוי להופיע בתור הודעה כפולה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="271"/>
         <source>This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message</source>
-        <translation>שיחה זו לא תומכת בתיקון הודעות. אם תשלח תיקון בכל זאת, זה יופיע כהודעה כפולה</translation>
+        <translation>שיחה זו לא תומכת בתיקון הודעות.  אם תשלח תיקון בכל זאת, זו תופיע בתור הודעה כפולה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="546"/>
         <source>This message has not been received by your server yet.</source>
-        <translation>הודעה זו לא התקבלה עדיין על ידי שרתך.</translation>
+        <translation>הודעה זו טרם התקבלה על ידי השרת שלך.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="553"/>
         <source>This message may not have been transmitted.</source>
-        <translation>אפשרי שהודעה זו לא שודרה.</translation>
+        <translation>אפשרי כי הודעה זו לא שודרה.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="562"/>
@@ -1872,7 +1867,7 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="565"/>
         <source>The receipt for this message has not yet been received. The recipient(s) might not have received this message.</source>
-        <translation>הקבלה עבור הודעה זו עדיין לא התקבלה. ייתכן שהקצה המרוחק לא קיבל את הודעה זו.</translation>
+        <translation>הקבלה עבור הודעה זו טרם התקבלה. ייתכן כי הקצה המרוחק לא קיבל את הודעה זו.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="613"/>
@@ -1906,7 +1901,8 @@
         <location filename="../QtUI/QtChatWindow.cpp" line="624"/>
         <location filename="../QtUI/QtChatWindow.cpp" line="665"/>
         <source>Accept</source>
-        <translation>הסכם</translation>
+        <translatorcomment>הסכם</translatorcomment>
+        <translation>קבל</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="659"/>
@@ -1916,7 +1912,7 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="663"/>
         <source>%1 would like to start a whiteboard chat</source>
-        <translation>‫%1 רוצה להתחיל שיחת לוח לבן</translation>
+        <translation>%1 רוצה להתחיל שיחת לוח לבן</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="700"/>
@@ -1936,17 +1932,17 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="906"/>
         <source>Change subject…</source>
-        <translation>שנה נושא…</translation>
+        <translation>שינוי נושא…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="907"/>
         <source>Configure room…</source>
-        <translation>הגדר חדר…</translation>
+        <translation>הגדרת חדר…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="908"/>
         <source>Edit affiliations…</source>
-        <translation>ערוך שיוכים…</translation>
+        <translation>עריכת שיוכים…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="909"/>
@@ -1956,12 +1952,12 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="910"/>
         <source>Invite person to this room…</source>
-        <translation>הזמן אישיות אל חדר זה…</translation>
+        <translation>הזמנת אישיות אל חדר זה…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="920"/>
         <source>Change room subject</source>
-        <translation>שנה נושא חדר</translation>
+        <translation>שינוי נושא חדר</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="920"/>
@@ -1971,12 +1967,12 @@
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="938"/>
         <source>Confirm room destruction</source>
-        <translation>אמת חורבן חדר</translation>
+        <translation>אמת החרבת חדר</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="939"/>
         <source>Are you sure you want to destroy the room?</source>
-        <translation>האם אתה בטוח שברצונך להרוס את החדר?</translation>
+        <translation>האם אתה בטוח כי ברצונך להרוס את חדר זה?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatWindow.cpp" line="940"/>
@@ -1990,7 +1986,7 @@
     </message>
     <message>
         <source>Couldn&apos;t send message: %1</source>
-        <translation type="obsolete">לא ניתן היה לשלוח הודעה: %1</translation>
+        <translation type="obsolete">לא היתה אפשרות לשלוח הודעה: %1</translation>
     </message>
 </context>
 <context>
@@ -2016,12 +2012,12 @@
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="28"/>
         <source>Edit contact</source>
-        <translation>ערוך קשר</translation>
+        <translation>עריכת קשר</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="43"/>
         <source>Remove contact</source>
-        <translation>הסר קשר</translation>
+        <translation>הסרת קשר</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="46"/>
@@ -2036,7 +2032,7 @@
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="95"/>
         <source>Are you sure you want to delete this contact?</source>
-        <translation>האם אתה בטוח שברצונך למחוק את קשר זה?</translation>
+        <translation>האם אתה בטוח כי ברצונך למחוק את קשר זה?</translation>
     </message>
     <message>
         <location filename="../QtUI/QtContactEditWindow.cpp" line="96"/>
@@ -2083,7 +2079,6 @@
     <message>
         <location filename="../QtUI/QtInviteToChatWindow.cpp" line="31"/>
         <source>If you want to provide a reason for the invitation, enter it here</source>
-        <translatorcomment>ניתן להזינה כאן</translatorcomment>
         <translation>אם ברצונך לספק סיבה עבור ההזמנה, הזן אותה כאן</translation>
     </message>
 </context>
@@ -2153,7 +2148,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="178"/>
         <source>&amp;About %1</source>
-        <translation>&amp;אודות %1‫</translation>
+        <translation>&amp;אודות %1</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="183"/>
@@ -2198,7 +2193,7 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="369"/>
         <source>Confirm terms of use</source>
-        <translation>אמת תנאי שימוש</translation>
+        <translation>אשר תנאי שימוש</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="412"/>
@@ -2208,18 +2203,18 @@
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="412"/>
         <source>P12 files (*.cert *.p12 *.pfx);;All files (*.*)</source>
-        <translation>קבצי P12 ‫(‪*.cert *.p12 *.pfx‬);;כל הקבצים (*.*)</translation>
+        <translation>קבצי P12 ‏(‎*.cert *.p12 *.pfx);;כל הקבצים (*.*)</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="525"/>
         <source>The certificate presented by the server is not valid.</source>
-        <translation>התעודה המוצגת על ידי השרת אינה תקפה.</translation>
+        <translation>התעודה אשר מוצגת על ידי השרת אינה תקפה.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtLoginWindow.cpp" line="526"/>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
         <translatorcomment>you know for certain it</translatorcomment>
-        <translation>האם ברצונך לסמוך על תעודה זו לצמיתות? פעולה זו צריכה להיעשות אך ורק אם ידוע לך בוודאות שתעודה זו מדויקת.</translation>
+        <translation>האם ברצונך לסמוך על תעודה זו לצמיתות? על פעולה זו להיעשות אך ורק אם ידוע לך בוודאות כי תעודה זו הינה מדויקת.</translation>
     </message>
     <message>
         <source>Subject: %1</source>
@@ -2227,7 +2222,7 @@
     </message>
     <message>
         <source>SHA-1 Fingerprint: %1</source>
-        <translation type="obsolete">טביעת אצבע SHA-1: ‫%1</translation>
+        <translation type="obsolete">טביעת אצבע SHA-1: ‏%1</translation>
     </message>
 </context>
 <context>
@@ -2293,32 +2288,32 @@
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="122"/>
         <source>Edit &amp;Profile…</source>
-        <translation>ערוך &amp;דיוקן…</translation>
+        <translation>עריכת &amp;דיוקן…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="125"/>
         <source>Enter &amp;Room…</source>
-        <translation>כנס אל &amp;חדר…</translation>
+        <translation>כניסה אל &amp;חדר…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="129"/>
         <source>&amp;View History…</source>
-        <translation>&amp;הצג היסטוריה…</translation>
+        <translation>&amp;הצגת היסטוריה…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="133"/>
         <source>&amp;Add Contact…</source>
-        <translation>הוסף &amp;קשר…</translation>
+        <translation>הוספת &amp;קשר…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="136"/>
         <source>&amp;Edit Selected Contact…</source>
-        <translation>&amp;ערוך קשר נבחר…</translation>
+        <translation>&amp;עריכת קשר נבחר…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="140"/>
         <source>Start &amp;Chat…</source>
-        <translation>התחל &amp;שיחה…</translation>
+        <translation>התחלת &amp;שיחה…</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="143"/>
@@ -2348,23 +2343,23 @@
     </message>
     <message>
         <source>Edit &amp;Profile</source>
-        <translation type="obsolete">עריכת &amp;פרופיל</translation>
+        <translation type="obsolete">ערוך &amp;דיוקן</translation>
     </message>
     <message>
         <source>Enter &amp;Room</source>
-        <translation type="obsolete">כניסה אל &amp;חדר</translation>
+        <translation type="obsolete">כנס אל &amp;חדר</translation>
     </message>
     <message>
         <source>&amp;Add Contact</source>
-        <translation type="obsolete">&amp;הוספת קשר</translation>
+        <translation type="obsolete">&amp;הוסף קשר</translation>
     </message>
     <message>
         <source>&amp;Edit Selected Contact</source>
-        <translation type="obsolete">&amp;עריכת קשר נוכחי</translation>
+        <translation type="obsolete">&amp;ערוך קשר נוכחי</translation>
     </message>
     <message>
         <source>Start &amp;Chat</source>
-        <translation type="obsolete">התחלת &amp;שיחה</translation>
+        <translation type="obsolete">התחל &amp;שיחה</translation>
     </message>
     <message>
         <location filename="../QtUI/QtMainWindow.cpp" line="146"/>
@@ -2465,7 +2460,7 @@
     <message>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="58"/>
         <source>Edit…</source>
-        <translation>ערוך…</translation>
+        <translation>עריכה…</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="59"/>
@@ -2476,7 +2471,7 @@
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="63"/>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="83"/>
         <source>Send File</source>
-        <translation>שלח קובץ</translation>
+        <translation>שליחת קובץ</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="69"/>
@@ -2491,12 +2486,12 @@
     <message>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="96"/>
         <source>Rename</source>
-        <translation>שנה שם</translation>
+        <translation>שינוי שם</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="106"/>
         <source>Rename group</source>
-        <translation>שנה שם קבוצה</translation>
+        <translation>שינוי שם קבוצה</translation>
     </message>
     <message>
         <location filename="../QtUI/Roster/QtRosterWidget.cpp" line="106"/>
@@ -2526,7 +2521,7 @@
 
 If you choose to defer this choice, you will be asked again when you next login.</source>
         <translation>%1 רוצה להוסיפך אל רשימת הקשרים שלהם.
- האם ברצונך להוסיפם אל רשימת הקשרים שלך ולשתף את מצב חיבורך כאשר הינך במצב מקוון? 
+ האם ברצונך להוסיפם אל רשימת הקשרים שלך ולשתף את מצב החיבור שלך כאשר מצב זה הינו מקוון? 
 
 במידה ותיבחר האפשרות לדחות, אני אתשאל אותך שוב בהתחברותך הבאה.</translation>
     </message>
@@ -2576,7 +2571,7 @@ If you choose to defer this choice, you will be asked again when you next login.
     </message>
     <message>
         <source>Enter a new name for group &apos;%1&apos;:</source>
-        <translation type="obsolete">נא להזין שם חדש עבור הקבוצה &apos;%1&apos;:</translation>
+        <translation type="obsolete">הזן שם חדש עבור הקבוצה &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
@@ -2584,7 +2579,7 @@ If you choose to defer this choice, you will be asked again when you next login.
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchDetailsPage.cpp" line="22"/>
         <source>Please choose a name for the contact, and select the groups you want to add the contact to.</source>
-        <translation>נא להזין שם עבור הקשר, ולבחור את הקבוצות אליהן ברצונך להוסיף את הקשר.</translation>
+        <translation>אנא בחר שם עבור הקשר, ובחר את הקבוצות אליהן ברצונך להוסיף את הקשר.</translation>
     </message>
 </context>
 <context>
@@ -2592,12 +2587,12 @@ If you choose to defer this choice, you will be asked again when you next login.
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>%1. If you know their address you can enter it directly, or you can search for them.</source>
-        <translation>%1. אם כתובתם ידועה לך ביכולתך להזינה ישירות, לחלופין ביכולתך לחפש עבורם.</translation>
+        <translation>%1. אם כתובתם ידועה לך באפשרותך להזינה ישירות, לחלופין באפשרותך לחפש עבורם.</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
         <source>Add another user to your contact list</source>
-        <translation>הוסף משתמש אחר אל רשימת קשרים</translation>
+        <translation>הוסף משתמש אחר אל רשימת הקשרים שלך</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchFirstPage.cpp" line="16"/>
@@ -2610,7 +2605,7 @@ If you choose to defer this choice, you will be asked again when you next login.
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="35"/>
         <source>Add Contact</source>
-        <translation>הוסף קשר</translation>
+        <translation>הוספת קשר</translation>
     </message>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWindow.cpp" line="35"/>
@@ -2667,7 +2662,7 @@ If you choose to defer this choice, you will be asked again when you next login.
     <message>
         <location filename="../QtUI/Whiteboard/QtWhiteboardWindow.cpp" line="380"/>
         <source>Closing window is equivalent closing the session. Are you sure you want to do this?</source>
-        <translation>סגירת חלון הינה שקולה אל סגירת הסשן. האם אתה בטוח שברצונך לעשות זאת?</translation>
+        <translation>סגירת חלון הינה שקולה לסגירת סשן זה. האם אתה בטוח כי ברצונך לעשות זאת?</translation>
     </message>
 </context>
 <context>
@@ -2715,7 +2710,7 @@ If you choose to defer this choice, you will be asked again when you next login.
         <location filename="../QtUI/QtAboutWidget.cpp" line="52"/>
         <source>TRANSLATION_LICENSE</source>
         <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
-        <translatorcomment>&apos;תרגום זה הינו רשוי תחת הרשיון BSD. למידע נוסף אצל http://www.opensource.org/licenses/bsd-license.php&apos;</translatorcomment>
+        <translatorcomment>&apos;תרגום זה הינו רשוי תחת הרשיון BSD. למידע נוסף ראה http://www.opensource.org/licenses/bsd-license.php&apos;</translatorcomment>
         <translation>&apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</translation>
     </message>
 </context>
