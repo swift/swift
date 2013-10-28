@@ -268,7 +268,7 @@ local function pubsub_node_configuration_to_form(configuration)
 end
 
 function PubSubNode.list_items (node, options)
-	return node.client:get_disco_items(merge_tables({to = node.jid, query = { node = node.node }}, options))
+	return node.client:get_disco_items(merge_tables({to = node.jid, disco_items = { node = node.node }}, options))
 end
 
 local simple_pubsub_node_queries = {
