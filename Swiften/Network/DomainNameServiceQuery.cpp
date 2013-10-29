@@ -35,7 +35,7 @@ DomainNameServiceQuery::~DomainNameServiceQuery() {
 
 void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Result>& queries, RandomGenerator& generator) {
 	ResultPriorityComparator comparator;
-	std::sort(queries.begin(), queries.end(), comparator);
+	std::stable_sort(queries.begin(), queries.end(), comparator);
 
 	std::vector<DomainNameServiceQuery::Result>::iterator i = queries.begin();
 	while (i != queries.end()) {
