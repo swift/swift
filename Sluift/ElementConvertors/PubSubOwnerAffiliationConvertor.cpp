@@ -32,6 +32,26 @@ boost::shared_ptr<PubSubOwnerAffiliation> PubSubOwnerAffiliationConvertor::doCon
 	}
 	lua_pop(L, 1);
 	lua_getfield(L, -1, "type");
+	if (lua_isstring(L, -1)) {
+		if (std::string(lua_tostring(L, -1)) == "none") {
+			result->setType(PubSubOwnerAffiliation::None);
+		}
+		if (std::string(lua_tostring(L, -1)) == "member") {
+			result->setType(PubSubOwnerAffiliation::Member);
+		}
+		if (std::string(lua_tostring(L, -1)) == "outcast") {
+			result->setType(PubSubOwnerAffiliation::Outcast);
+		}
+		if (std::string(lua_tostring(L, -1)) == "owner") {
+			result->setType(PubSubOwnerAffiliation::Owner);
+		}
+		if (std::string(lua_tostring(L, -1)) == "publisher") {
+			result->setType(PubSubOwnerAffiliation::Publisher);
+		}
+		if (std::string(lua_tostring(L, -1)) == "publish_only") {
+			result->setType(PubSubOwnerAffiliation::PublishOnly);
+		}
+	}
 	lua_pop(L, 1);
 	return result;
 }

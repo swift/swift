@@ -32,6 +32,17 @@ boost::shared_ptr<PubSubDefault> PubSubDefaultConvertor::doConvertFromLua(lua_St
 	}
 	lua_pop(L, 1);
 	lua_getfield(L, -1, "type");
+	if (lua_isstring(L, -1)) {
+		if (std::string(lua_tostring(L, -1)) == "none") {
+			result->setType(PubSubDefault::None);
+		}
+		if (std::string(lua_tostring(L, -1)) == "collection") {
+			result->setType(PubSubDefault::Collection);
+		}
+		if (std::string(lua_tostring(L, -1)) == "leaf") {
+			result->setType(PubSubDefault::Leaf);
+		}
+	}
 	lua_pop(L, 1);
 	return result;
 }

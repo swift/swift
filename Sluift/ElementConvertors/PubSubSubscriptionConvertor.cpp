@@ -49,6 +49,20 @@ boost::shared_ptr<PubSubSubscription> PubSubSubscriptionConvertor::doConvertFrom
 	}
 	lua_pop(L, 1);
 	lua_getfield(L, -1, "subscription");
+	if (lua_isstring(L, -1)) {
+		if (std::string(lua_tostring(L, -1)) == "none") {
+			result->setSubscription(PubSubSubscription::None);
+		}
+		if (std::string(lua_tostring(L, -1)) == "pending") {
+			result->setSubscription(PubSubSubscription::Pending);
+		}
+		if (std::string(lua_tostring(L, -1)) == "subscribed") {
+			result->setSubscription(PubSubSubscription::Subscribed);
+		}
+		if (std::string(lua_tostring(L, -1)) == "unconfigured") {
+			result->setSubscription(PubSubSubscription::Unconfigured);
+		}
+	}
 	lua_pop(L, 1);
 	return result;
 }

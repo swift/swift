@@ -32,6 +32,20 @@ boost::shared_ptr<PubSubOwnerSubscription> PubSubOwnerSubscriptionConvertor::doC
 	}
 	lua_pop(L, 1);
 	lua_getfield(L, -1, "subscription");
+	if (lua_isstring(L, -1)) {
+		if (std::string(lua_tostring(L, -1)) == "none") {
+			result->setSubscription(PubSubOwnerSubscription::None);
+		}
+		if (std::string(lua_tostring(L, -1)) == "pending") {
+			result->setSubscription(PubSubOwnerSubscription::Pending);
+		}
+		if (std::string(lua_tostring(L, -1)) == "subscribed") {
+			result->setSubscription(PubSubOwnerSubscription::Subscribed);
+		}
+		if (std::string(lua_tostring(L, -1)) == "unconfigured") {
+			result->setSubscription(PubSubOwnerSubscription::Unconfigured);
+		}
+	}
 	lua_pop(L, 1);
 	return result;
 }
