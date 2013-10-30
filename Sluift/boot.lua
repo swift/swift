@@ -275,6 +275,8 @@ local simple_pubsub_node_queries = {
 	get_configuration = 'pubsub_owner_configure',
 	get_subscriptions = 'pubsub_subscriptions',
 	get_affiliations = 'pubsub_affiliations',
+	get_owner_subscriptions = 'pubsub_owner_subscriptions',
+	get_owner_affiliations = 'pubsub_owner_affiliations',
 	get_default_subscription_options = 'pubsub_default',
 }
 for method, query_type in pairs(simple_pubsub_node_queries) do
@@ -334,6 +336,15 @@ function PubSubNode.set_configuration(node, options)
 				_type = 'pubsub_owner_configure', node = node.node, data = configuration }
 		}, options))
 end
+
+function PubSubNode.set_owner_affiliations(node, ...)
+	local options = parse_options({}, ...)
+	return node.client:query_pubsub(merge_tables({ 
+		type = 'set', to = node.jid, query = merge_tables({
+				_type = 'pubsub_owner_affiliations', node = node.node, 
+		}, options.affiliations)}, options))
+end
+
 
 function PubSubNode.subscribe(node, ...)
 	local options = parse_options(...)

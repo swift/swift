@@ -286,7 +286,25 @@ function test_owner_use_cases()
 	-- 8.7 Process pending subscription requests
 	-- TODO
 	
-	-- ...
+	-- 8.8 Manage Subscriptions
+	assert(node:create())
+	assert(subscriber_node:subscribe({ jid = subscriber_jid }))
+	local items = assert(node:get_owner_subscriptions())
+	assert(#items == 1)
+	assert(items[1].jid == subscriber_jid)
+	assert(items[1].subscription == "subscribed")
+	assert(node:delete())
+ 
+	-- 8.9 Manage Affiliations
+	assert(node:create())
+	assert(node:set_owner_affiliations{affiliations = {{jid = subscriber_jid, type = 'publisher'}}})
+	local items = assert(node:get_owner_affiliations())
+	assert(#items == 2)
+	assert(items[1].jid == publisher_jid)
+	assert(items[1].type == "owner")
+	assert(items[2].jid == subscriber_jid)
+	assert(items[2].type == "publisher")
+	assert(node:delete())
 end
 
 function run_tests() 
