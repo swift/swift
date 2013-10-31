@@ -1,3 +1,4 @@
 usr/lib/libSwiften.so
 usr/include
 usr/bin/swiften-config
+usr/share/lintian/overrides/libswiften-dev
