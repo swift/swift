@@ -81,7 +81,7 @@ else :
 
 objects = myenv.SwiftenObject(sourceList)
 
-if myenv["experimental"] :	
+if myenv["experimental_ft"] :	
 	# LibNATPMP classes
 	if myenv.get("HAVE_LIBNATPMP", False) :
 		natpmp_env = myenv.Clone()	

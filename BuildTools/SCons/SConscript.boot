@@ -72,7 +72,8 @@ vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccep
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
 vars.Add(BoolVariable("enable_variants", "Build in a separate dir under build/, depending on compile flags", "no"))
-vars.Add(BoolVariable("experimental", "Build experimental features", "yes"))
+vars.Add(BoolVariable("experimental_ft", "Build experimental file transfer", "yes"))
+vars.Add(BoolVariable("experimental", "Build experimental features", "no"))
 vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
 vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for DNS lookup.", "no"))
 
@@ -241,8 +242,11 @@ if env.get("mac106", 0) :
 if not env["assertions"] :
 	env.Append(CPPDEFINES = ["NDEBUG"])
 
+if env["experimental_ft"] :
+	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT"])
+
 if env["experimental"] :
-	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT", "SWIFT_EXPERIMENTAL_HISTORY", "SWIFT_EXPERIMENTAL_WB"])
+	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_HISTORY", "SWIFT_EXPERIMENTAL_WB"])
 
 # If we build shared libs on AMD64, we need -fPIC.
 # This should have no performance impact om AMD64

@@ -351,7 +351,7 @@ else :
     env["UNBOUND_FLAGS"] = {}
 
 # LibMiniUPnPc
-if env["experimental"] :
+if env["experimental_ft"] :
 	libminiupnpc_flags = {"CPPPATH": ["/usr/include/miniupnpc/"]}
 	libminiupnpc_conf_env = conf_env.Clone()
 	if env.get("libminiupnpc_libdir", None) :
@@ -372,7 +372,7 @@ else :
 	env["LIBMINIUPNPC_FLAGS"] = {}
 
 # LibNATPMP
-if env["experimental"] :
+if env["experimental_ft"] :
 	libnatpmp_flags = {}
 	libnatpmp_conf_env = conf_env.Clone()
 	if env.get("libnatpmp_libdir", None) :
