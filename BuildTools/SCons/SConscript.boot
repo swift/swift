@@ -354,6 +354,7 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
 	env["LD"] = env["CC"]
 	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden", "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"]])
+	env.Append(LINKFLAGS = "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"])
 	if os.environ.get("GCC_THUMB_SUPPORT", False) :
 		env.Append(CCFLAGS = ["-mthumb"])
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
