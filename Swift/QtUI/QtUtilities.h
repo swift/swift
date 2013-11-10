@@ -9,7 +9,14 @@
 class QWidget;
 class QString;
 
+#include <QKeyEvent>
+
 namespace QtUtilities {
 	void setX11Resource(QWidget* widget, const QString& c);
 	QString htmlEscape(const QString& s);
+	#ifdef SWIFTEN_PLATFORM_MACOSX
+	const Qt::KeyboardModifier ctrlHardwareKeyModifier = Qt::MetaModifier;
+	#else
+	const Qt::KeyboardModifier ctrlHardwareKeyModifier = Qt::ControlModifier;
+	#endif
 }

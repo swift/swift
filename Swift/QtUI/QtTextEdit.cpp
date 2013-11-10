@@ -1,28 +1,31 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#include <Swift/QtUI/QtTextEdit.h>
+
 #include <boost/tuple/tuple.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
-
-#include <Swiften/Base/foreach.h>
-
-#include <SwifTools/SpellCheckerFactory.h>
-#include <SwifTools/SpellChecker.h>
-
-#include <Swift/QtUI/QtTextEdit.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtSpellCheckerWindow.h>
-#include <Swift/Controllers/SettingConstants.h>
 
 #include <QApplication>
 #include <QFontMetrics>
 #include <QKeyEvent>
 #include <QDebug>
 #include <QMenu>
+
+#include <Swiften/Base/foreach.h>
+
+#include <SwifTools/SpellCheckerFactory.h>
+#include <SwifTools/SpellChecker.h>
+
+#include <Swift/Controllers/SettingConstants.h>
+
+#include <Swift/QtUI/QtSpellCheckerWindow.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 namespace Swift {
 
@@ -62,6 +65,11 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 			   || (key == Qt::Key_Down)) {
 		emit unhandledKeyPressEvent(event);
 		QTextEdit::keyPressEvent(event);
+	}
+	else if ((key == Qt::Key_K && modifiers == QtUtilities::ctrlHardwareKeyModifier)) {
+		QTextCursor cursor = textCursor();
+		cursor.setPosition(toPlainText().size(), QTextCursor::KeepAnchor);
+		cursor.removeSelectedText();
 	}
 	else {
 		QTextEdit::keyPressEvent(event);

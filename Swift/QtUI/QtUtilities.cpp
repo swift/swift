@@ -18,6 +18,7 @@
 
 namespace QtUtilities {
 
+
 void setX11Resource(QWidget* widget, const QString& c) {
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
 	char res_class[] = SWIFT_APPLICATION_NAME;

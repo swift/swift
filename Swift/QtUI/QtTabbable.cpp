@@ -13,16 +13,9 @@
 #include <Swiften/Base/Platform.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 namespace Swift {
-
-namespace {
-#ifdef SWIFTEN_PLATFORM_MACOSX
-const Qt::KeyboardModifier ctrlHardwareKeyModifier = Qt::MetaModifier;
-#else
-const Qt::KeyboardModifier ctrlHardwareKeyModifier = Qt::ControlModifier;
-#endif
-}
 
 QtTabbable::QtTabbable() : QWidget() {
 	shortcuts << new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_W), window(), SLOT(close()));
@@ -52,9 +45,9 @@ bool QtTabbable::event(QEvent* event) {
 	if (keyEvent) {
 		// According to Qt's focus documentation, one can only override CTRL+TAB via reimplementing QWidget::event().
 #ifdef SWIFTEN_PLATFORM_LINUX
-		if (keyEvent->modifiers() == ctrlHardwareKeyModifier && keyEvent->key() == Qt::Key_Tab && event->type() != QEvent::KeyRelease) {
+		if (keyEvent->modifiers() == QtUtilities::ctrlHardwareKeyModifier && keyEvent->key() == Qt::Key_Tab && event->type() != QEvent::KeyRelease) {
 #else
-		if (keyEvent->modifiers() == ctrlHardwareKeyModifier && keyEvent->key() == Qt::Key_Tab) {
+		if (keyEvent->modifiers() == QtUtilities::ctrlHardwareKeyModifier && keyEvent->key() == Qt::Key_Tab) {
 #endif
 			emit requestNextTab();
 			return true;
