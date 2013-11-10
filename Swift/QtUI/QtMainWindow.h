@@ -6,16 +6,18 @@
 
 #pragma once
 
+#include <vector>
+
 #include <QWidget>
 #include <QMenu>
 #include <QList>
-#include "Swift/Controllers/UIInterfaces/MainWindow.h"
-#include "Swift/QtUI/QtRosterHeader.h"
-#include "Swift/QtUI/EventViewer/QtEventWindow.h"
-#include "Swift/QtUI/ChatList/QtChatListWindow.h"
-#include "Swift/QtUI/QtLoginWindow.h"
 
-#include <vector>
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
+
+#include <Swift/QtUI/QtRosterHeader.h>
+#include <Swift/QtUI/EventViewer/QtEventWindow.h>
+#include <Swift/QtUI/ChatList/QtChatListWindow.h>
+#include <Swift/QtUI/QtLoginWindow.h>
 
 class QComboBox;
 class QLineEdit;

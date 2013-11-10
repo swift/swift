@@ -79,16 +79,16 @@ public:
 		chatMessageParser_ = new ChatMessageParser(std::map<std::string, std::string>());
 		vcardStorage_ = new VCardMemoryStorage(crypto_.get());
 		vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, chatMessageParser_, false, NULL);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, chatMessageParser_, false, NULL, vcardManager_);
 	}
 
 	void tearDown() {
+		delete controller_;
 		delete vcardManager_;
 		delete vcardStorage_;
 		delete highlightManager_;
 		delete settings_;
 		delete entityCapsProvider_;
-		delete controller_;
 		delete eventController_;
 		delete presenceOracle_;
 		delete mocks_;

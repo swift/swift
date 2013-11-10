@@ -30,6 +30,7 @@
 #include <Swiften/Roster/XMPPRoster.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/VCards/VCardManager.h>
 
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
@@ -123,7 +124,8 @@ ChatsManager::ChatsManager(
 		HighlightManager* highlightManager,
 		ClientBlockListManager* clientBlockListManager,
 		const std::map<std::string, std::string>& emoticons,
-		UserSearchController* inviteUserSearchController) :
+		UserSearchController* inviteUserSearchController,
+		VCardManager* vcardManager) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
 			useDelayForLatency_(useDelayForLatency), 
@@ -138,7 +140,8 @@ ChatsManager::ChatsManager(
 			whiteboardManager_(whiteboardManager),
 			highlightManager_(highlightManager),
 			clientBlockListManager_(clientBlockListManager),
-			inviteUserSearchController_(inviteUserSearchController) {
+			inviteUserSearchController_(inviteUserSearchController),
+			vcardManager_(vcardManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;
 	stanzaChannel_ = stanzaChannel;
@@ -767,7 +770,7 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 		if (reuseChatwindow) {
 			chatWindowFactoryAdapter = new SingleChatWindowFactoryAdapter(reuseChatwindow);
 		}
-		controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, chatMessageParser_, isImpromptu, autoAcceptMUCInviteDecider_);
+		controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, chatMessageParser_, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_);
 		if (chatWindowFactoryAdapter) {
 			/* The adapters are only passed to chat windows, which are deleted in their
 			 * controllers' dtor, which are deleted in ChatManager's dtor. The adapters

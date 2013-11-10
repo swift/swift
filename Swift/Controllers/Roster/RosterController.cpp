@@ -4,55 +4,58 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Roster/RosterController.h"
+#include <Swift/Controllers/Roster/RosterController.h>
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/JID/JID.h"
-#include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/UIInterfaces/MainWindow.h"
-#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swiften/Roster/GetRosterRequest.h"
-#include "Swiften/Roster/SetRosterRequest.h"
-#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
-#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Presence/SubscriptionManager.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swift/Controllers/Roster/Roster.h"
-#include "Swift/Controllers/Roster/SetPresence.h"
-#include "Swift/Controllers/Roster/AppearOffline.h"
-#include "Swift/Controllers/Roster/SetAvatar.h"
-#include "Swift/Controllers/Roster/SetName.h"
-#include "Swift/Controllers/Roster/OfflineRosterFilter.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swiften/Roster/XMPPRoster.h"
-#include "Swiften/Roster/XMPPRosterItem.h"
-#include "Swift/Controllers/UIEvents/AddContactUIEvent.h"
-#include "Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h"
-#include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
-#include "Swift/Controllers/UIEvents/RenameGroupUIEvent.h"
-#include "Swift/Controllers/UIEvents/SendFileUIEvent.h"
-#include <Swiften/FileTransfer/FileTransferManager.h>
-#include <Swiften/Client/NickManager.h>
-#include <Swift/Controllers/Intl.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swift/Controllers/SettingConstants.h>
 #include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/NickManager.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Presence/SubscriptionManager.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Roster/GetRosterRequest.h>
+#include <Swiften/Roster/SetRosterRequest.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Roster/XMPPRosterItem.h>
+
+#include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/Roster/AppearOffline.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/OfflineRosterFilter.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/RosterVCardProvider.h>
+#include <Swift/Controllers/Roster/SetAvatar.h>
+#include <Swift/Controllers/Roster/SetName.h>
+#include <Swift/Controllers/Roster/SetPresence.h>
+#include <Swift/Controllers/Roster/SetVCard.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/UIEvents/AddContactUIEvent.h>
+#include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/RenameGroupUIEvent.h>
+#include <Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
+#include <Swift/Controllers/UIInterfaces/MainWindowFactory.h>
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 
 namespace Swift {
 
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager)
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager)
 	: myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview), clientBlockListManager_(clientBlockListManager) {
 	assert(fileTransferOverview);
 	iqRouter_ = iqRouter;
@@ -62,6 +65,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	settings_ = settings;
 	expandiness_ = new RosterGroupExpandinessPersister(roster_, settings);
 	mainWindow_->setRosterModel(roster_);
+	rosterVCardProvider_ = new RosterVCardProvider(roster_, vcardManager, JID::WithoutResource);
 	
 	changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
 	signOutConnection_ = mainWindow_->onSignOutRequest.connect(boost::bind(boost::ref(onSignOutRequest)));
@@ -99,8 +103,8 @@ RosterController::~RosterController() {
 	if (mainWindow_->canDelete()) {
 		delete mainWindow_;
 	}
-	delete roster_;
-	
+	delete rosterVCardProvider_;
+	delete roster_;	
 }
 
 void RosterController::setEnabled(bool enabled) {

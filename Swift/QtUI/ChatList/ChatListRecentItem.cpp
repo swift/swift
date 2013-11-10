@@ -4,10 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
-
-#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swiften/Base/Path.h>
+
+#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
+#include <Swift/QtUI/QtResourceHelper.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 ChatListRecentItem::ChatListRecentItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent) : ChatListItem(parent), chat_(chat) {
@@ -33,16 +34,7 @@ QVariant ChatListRecentItem::data(int role) const {
 }
 
 QIcon ChatListRecentItem::getPresenceIcon() const {
-	QString iconString;
-	switch (chat_.statusType) {
-	 	case StatusShow::Online: iconString = "online";break;
-	 	case StatusShow::Away: iconString = "away";break;
-	 	case StatusShow::XA: iconString = "away";break;
-	 	case StatusShow::FFC: iconString = "online";break;
-	 	case StatusShow::DND: iconString = "dnd";break;
-	 	case StatusShow::None: iconString = "offline";break;
-	}
-	return QIcon(":/icons/" + iconString + ".png");
+	return QIcon(statusShowTypeToIconPath(chat_.statusType));
 }
 
 }

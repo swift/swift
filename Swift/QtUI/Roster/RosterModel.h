@@ -6,10 +6,12 @@
 
 #pragma once
 
-#include "Swift/Controllers/Roster/Roster.h"
-
 #include <QAbstractItemModel>
 #include <QList>
+
+#include <Swift/Controllers/Roster/Roster.h>
+
+#include <Swift/QtUI/QtScaledAvatarCache.h>
 
 namespace Swift {
 	enum RosterRoles {
@@ -56,5 +58,6 @@ namespace Swift {
 			void reLayout();
 			Roster* roster_;
 			QtTreeWidget* view_;
+			QtScaledAvatarCache* cachedImageScaler_;
 	};
 }

@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtMainWindow.h"
+#include <Swift/QtUI/QtMainWindow.h>
 
 #include <boost/optional.hpp>
 #include <boost/bind.hpp>
@@ -21,11 +21,8 @@
 #include <QAction>
 #include <QTabWidget>
 
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtTabWidget.h>
-#include <Swift/QtUI/QtSettingsProvider.h>
-#include <Swift/QtUI/QtLoginWindow.h>
-#include <Roster/QtRosterWidget.h>
+#include <Swiften/Base/Platform.h>
+
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestHistoryUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
@@ -34,10 +31,14 @@
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestBlockListDialogUIEvent.h>
-#include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/Controllers/SettingConstants.h>
-#include <Swiften/Base/Platform.h>
 
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtTabWidget.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/Roster/QtRosterWidget.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Swift/QtUI/CocoaUIHelpers.h>
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)

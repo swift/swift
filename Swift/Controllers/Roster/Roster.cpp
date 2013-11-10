@@ -4,21 +4,22 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Roster/Roster.h"
+#include <Swift/Controllers/Roster/Roster.h>
 
-#include "Swiften/Base/foreach.h"
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/RosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swift/Controllers/Roster/RosterItemOperation.h"
-
-#include <boost/bind.hpp>
-
 #include <iostream>
 #include <set>
 #include <deque>
+
+#include <boost/bind.hpp>
+
+#include <Swiften/Base/foreach.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/RosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/RosterItemOperation.h>
 
 namespace Swift {
 
@@ -38,6 +39,10 @@ Roster::~Roster() {
 		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
 		if (group) {
 			queue.insert(queue.begin(), group->getChildren().begin(), group->getChildren().end());
+		}
+		ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+		if (contact) {
+			contact->onVCardRequested.disconnect(boost::bind(boost::ref(onVCardUpdateRequested), contact->getJID()));
 		}
 		delete item;
 	}
@@ -107,7 +112,8 @@ void Roster::handleChildrenChanged(GroupRosterItem* item) {
 
 void Roster::addContact(const JID& jid, const JID& displayJID, const std::string& name, const std::string& groupName, const boost::filesystem::path& avatarPath) {
 	GroupRosterItem* group(getGroup(groupName));
-	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);	
+	ContactRosterItem *item = new ContactRosterItem(jid, displayJID, name, group);
+	item->onVCardRequested.connect(boost::bind(boost::ref(onVCardUpdateRequested), jid));
 	item->setAvatarPath(avatarPath);
 	if (blockingSupported_) {
 		item->setBlockState(ContactRosterItem::IsUnblocked);

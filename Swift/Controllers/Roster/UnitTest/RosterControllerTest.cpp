@@ -8,36 +8,40 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Base/foreach.h>
-#include "Swift/Controllers/Roster/RosterController.h"
-#include "Swift/Controllers/UnitTest/MockMainWindowFactory.h"
-// #include "Swiften/Elements/Payload.h"
-// #include "Swiften/Elements/RosterItemPayload.h"
-// #include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Queries/DummyIQChannel.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Queries/IQRouter.h"
-#include "Swiften/Roster/XMPPRosterImpl.h"
-#include "Swift/Controllers/Roster/Roster.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Settings/DummySettingsProvider.h"
-#include "Swiften/Avatars/NullAvatarManager.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Presence/SubscriptionManager.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include <Swiften/Client/DummyNickManager.h>
-#include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/Disco/CapsProvider.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
+#include <Swiften/Avatars/NullAvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/DummyNickManager.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Disco/CapsProvider.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Presence/SubscriptionManager.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
+// #include <Swiften/Elements/Payload.h>
+// #include <Swiften/Elements/RosterItemPayload.h>
+// #include <Swiften/Elements/RosterPayload.h>
+
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/RosterController.h>
+#include <Swift/Controllers/Settings/DummySettingsProvider.h>
+#include <Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UnitTest/MockMainWindowFactory.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 
 using namespace Swift;
 
@@ -84,12 +88,18 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			ftManager_ = new DummyFileTransferManager();
 			ftOverview_ = new FileTransferOverview(ftManager_);
 			clientBlockListManager_ = new ClientBlockListManager(router_);
-			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, ftOverview_, clientBlockListManager_);
+			crypto_ = PlatformCryptoProvider::create();
+			vcardStorage_ = new VCardMemoryStorage(crypto_);
+			vcardManager_ = new VCardManager(jid_, router_, vcardStorage_);
+			rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, ftOverview_, clientBlockListManager_, vcardManager_);
 			mainWindow_ = mainWindowFactory_->last;
 		}
 
 		void tearDown() {
 			delete rosterController_;
+			delete vcardManager_;
+			delete vcardStorage_;
+			delete crypto_;
 			delete clientBlockListManager_;
 			delete ftManager_;
 			delete jingleSessionManager_;
@@ -341,6 +351,9 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		FileTransferManager* ftManager_;
 		FileTransferOverview* ftOverview_;
 		ClientBlockListManager* clientBlockListManager_;
+		CryptoProvider* crypto_;
+		VCardStorage* vcardStorage_;
+		VCardManager* vcardManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);

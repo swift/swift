@@ -4,14 +4,15 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Elements/Idle.h>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
 
 namespace Swift {
 
@@ -50,6 +51,16 @@ std::string ContactRosterItem::getIdleText() const {
 	} else {
 		return dateTimeToLocalString(idle->getSince());
 	}
+}
+
+std::string ContactRosterItem::getOfflineSinceText() const {
+	if (offlinePresence_) {
+		boost::optional<boost::posix_time::ptime> delay = offlinePresence_->getTimestamp();
+		if (offlinePresence_->getType() == Presence::Unavailable && delay) {
+			return dateTimeToLocalString(*delay);
+		}
+	}
+	return "";
 }
 
 void ContactRosterItem::setAvatarPath(const boost::filesystem::path& path) {
@@ -136,12 +147,20 @@ bool ContactRosterItem::supportsFeature(const Feature feature) const {
 
 void ContactRosterItem::setBlockState(BlockState state) {
 	blockState_ = state;
+	onDataChanged();
 }
 
 ContactRosterItem::BlockState ContactRosterItem::blockState() const {
 	return blockState_;
 }
 
+VCard::ref ContactRosterItem::getVCard() const {
+	return vcard_;
 }
 
+void ContactRosterItem::setVCard(VCard::ref vcard) {
+	vcard_ = vcard;
+	onDataChanged();
+}
 
+}

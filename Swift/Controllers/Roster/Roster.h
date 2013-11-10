@@ -7,15 +7,17 @@
 #pragma once
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swift/Controllers/Roster/RosterItemOperation.h"
-#include "Swift/Controllers/Roster/RosterFilter.h"
-#include <Swift/Controllers/Roster/ContactRosterItem.h>
-
 #include <vector>
 #include <map>
-#include "Swiften/Base/boost_bsignals.h"
+
 #include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/Roster/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/RosterFilter.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 
@@ -43,6 +45,7 @@ class Roster {
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;
 		boost::signal<void (RosterItem*)> onDataChanged;
+		boost::signal<void (JID&)> onVCardUpdateRequested;
 		GroupRosterItem* getGroup(const std::string& groupName);
 		void setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features);
 		void setBlockedState(const std::vector<JID>& jids, ContactRosterItem::BlockState state);

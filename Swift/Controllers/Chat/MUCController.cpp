@@ -33,6 +33,7 @@
 #include <Swiften/MUC/MUC.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/RosterVCardProvider.h>
 #include <Swift/Controllers/Roster/SetAvatar.h>
 #include <Swift/Controllers/Roster/SetPresence.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
@@ -70,7 +71,8 @@ MUCController::MUCController (
 		HighlightManager* highlightManager,
 		ChatMessageParser* chatMessageParser,
 		bool isImpromptu,
-		AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) :
+		AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
+		VCardManager* vcardManager) :
 	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false) {
 	parting_ = true;
 	joined_ = false;
@@ -81,6 +83,7 @@ MUCController::MUCController (
 	xmppRoster_ = roster;
 	
 	roster_ = new Roster(false, true);
+	rosterVCardProvider_ = new RosterVCardProvider(roster_, vcardManager, JID::WithResource);
 	completer_ = new TabComplete();
 	chatWindow_->setRosterModel(roster_);
 	chatWindow_->setTabComplete(completer_);
@@ -130,6 +133,7 @@ MUCController::MUCController (
 MUCController::~MUCController() {
 	eventStream_->onUIEvent.disconnect(boost::bind(&MUCController::handleUIEvent, this, _1));
 	chatWindow_->setRosterModel(NULL);
+	delete rosterVCardProvider_;
 	delete roster_;
 	if (loginCheckTimer_) {
 		loginCheckTimer_->stop();

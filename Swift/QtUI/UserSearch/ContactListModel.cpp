@@ -6,12 +6,14 @@
 
 #include <Swift/QtUI/UserSearch/ContactListModel.h>
 
-#include <Swift/QtUI/QtSwiftUtil.h>
+#include <QMimeData>
+
 #include <Swiften/Base/Path.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/StatusShow.h>
 
-#include <QMimeData>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtResourceHelper.h>
 
 namespace Swift {
 
@@ -158,16 +160,7 @@ QVariant ContactListModel::dataForContact(const Contact& contact, int role) cons
 }
 
 QIcon ContactListModel::getPresenceIconForContact(const Contact& contact) const {
-	QString iconString;
-	switch (contact.statusType) {
-		case StatusShow::Online: iconString = "online";break;
-		case StatusShow::Away: iconString = "away";break;
-		case StatusShow::XA: iconString = "away";break;
-		case StatusShow::FFC: iconString = "online";break;
-		case StatusShow::DND: iconString = "dnd";break;
-		case StatusShow::None: iconString = "offline";break;
-	}
-	return QIcon(":/icons/" + iconString + ".png");
+	return QIcon(statusShowTypeToIconPath(contact.statusType));
 }
 
 }

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/MainWindow.h"
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
 
 namespace Swift {
 	class Roster;

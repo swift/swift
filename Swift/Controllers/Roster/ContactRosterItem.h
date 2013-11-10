@@ -6,19 +6,22 @@
 
 #pragma once
 
-#include <string>
-#include "Swiften/JID/JID.h"
-#include "Swift/Controllers/Roster/RosterItem.h"
-#include "Swiften/Elements/StatusShow.h"
-#include "Swiften/Elements/Presence.h"
-
 #include <map>
 #include <set>
+#include <string>
+
 #include <boost/bind.hpp>
-#include "Swiften/Base/boost_bsignals.h"
-#include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/StatusShow.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/Roster/RosterItem.h>
 
 namespace Swift {
 
@@ -44,6 +47,7 @@ class ContactRosterItem : public RosterItem {
 		StatusShow::Type getSimplifiedStatusShow() const;
 		std::string getStatusText() const;
 		std::string getIdleText() const;
+		std::string getOfflineSinceText() const;
 		void setAvatarPath(const boost::filesystem::path& path);
 		const boost::filesystem::path& getAvatarPath() const;
 		const JID& getJID() const;
@@ -63,6 +67,11 @@ class ContactRosterItem : public RosterItem {
 		void setBlockState(BlockState state);
 		BlockState blockState() const;
 
+		VCard::ref getVCard() const;
+		void setVCard(VCard::ref vcard);
+
+		boost::signal<void ()> onVCardRequested;
+
 	private:
 		JID jid_;
 		JID displayJID_;
@@ -74,6 +83,7 @@ class ContactRosterItem : public RosterItem {
 		std::vector<std::string> groups_;
 		std::set<Feature> features_;
 		BlockState blockState_;
+		VCard::ref vcard_;
 };
 
 }

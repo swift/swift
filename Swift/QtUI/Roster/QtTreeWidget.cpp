@@ -4,27 +4,34 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "Roster/QtTreeWidget.h"
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
 
 #include <QUrl>
 #include <QMimeData>
+#include <QObject>
+#include <QLabel>
+#include <QTimer>
+#include <QToolTip>
 
 #include <Swiften/Base/Platform.h>
+
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
-#include <QtSwiftUtil.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
+ 
 #include <Swift/QtUI/QtUISettingConstants.h>
+
+#include <QtSwiftUtil.h>
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent) {
+QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent), tooltipShown_(false) {
 	eventStream_ = eventStream;
 	settings_ = settings;
 	model_ = new RosterModel(this);
@@ -66,10 +73,23 @@ void QtTreeWidget::handleSettingChanged(const std::string& setting) {
 	}
 }
 
+void QtTreeWidget::handleRefreshTooltip() {
+	if (tooltipShown_) {
+		QPoint position = QCursor::pos();
+		QModelIndex index = indexAt(mapFromGlobal(position));
+		QToolTip::showText(position, model_->data(index, Qt::ToolTipRole).toString());
+	}
+}
+
 void QtTreeWidget::setRosterModel(Roster* roster) {
 	roster_ = roster;
 	model_->setRoster(roster);
 	expandAll();
+}
+
+void QtTreeWidget::refreshTooltip() {
+	// Qt needs some time to emit the events we need to detect tooltip's visibility correctly; 20 ms should be enough
+	QTimer::singleShot(20, this, SLOT(handleRefreshTooltip()));
 }
 
 QtTreeWidgetItem* QtTreeWidget::getRoot() {
@@ -159,6 +179,23 @@ void QtTreeWidget::dragMoveEvent(QDragMoveEvent* event) {
 		}
 	}
 	QTreeView::dragMoveEvent(event);
+}
+
+bool QtTreeWidget::event(QEvent* event) {
+	QChildEvent* childEvent = NULL;
+	if ((childEvent = dynamic_cast<QChildEvent*>(event))) {
+		if (childEvent->polished()) {
+			if (dynamic_cast<QLabel*>(childEvent->child())) {
+				tooltipShown_ = true;
+			}
+		}
+		else if (childEvent->removed()) {
+			if (childEvent->child()->objectName() == "qtooltip_label") {
+				tooltipShown_ = false;
+			}
+		}
+	}
+	return QAbstractItemView::event(event);
 }
 
 void QtTreeWidget::handleExpanded(const QModelIndex& index) {

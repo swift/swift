@@ -10,10 +10,11 @@
  * See the COPYING file for more information.
  */
 
-#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
-
-#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swiften/Base/Path.h>
+
+#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtResourceHelper.h>
 
 namespace Swift {
 	ChatListWhiteboardItem::ChatListWhiteboardItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent) : ChatListItem(parent), chat_(chat) {
@@ -39,16 +40,7 @@ namespace Swift {
 	}
 
 	QIcon ChatListWhiteboardItem::getPresenceIcon() const {
-		QString iconString;
-		switch (chat_.statusType) {
-	 	case StatusShow::Online: iconString = "online";break;
-	 	case StatusShow::Away: iconString = "away";break;
-	 	case StatusShow::XA: iconString = "away";break;
-	 	case StatusShow::FFC: iconString = "online";break;
-	 	case StatusShow::DND: iconString = "dnd";break;
-	 	case StatusShow::None: iconString = "offline";break;
-		}
-		return QIcon(":/icons/" + iconString + ".png");
+		return QIcon(statusShowTypeToIconPath(chat_.statusType));
 	}
 }
 

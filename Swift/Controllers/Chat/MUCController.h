@@ -37,6 +37,8 @@ namespace Swift {
 	class XMPPRoster;
 	class HighlightManager;
 	class UIEvent;
+	class VCardManager;
+	class RosterVCardProvider;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -48,8 +50,8 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
-			~MUCController();
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager);
+			virtual ~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
 			boost::signal<void ()> onImpromptuConfigCompleted;
@@ -146,6 +148,7 @@ namespace Swift {
 			size_t renameCounter_;
 			bool isImpromptu_;
 			bool isImpromptuAlreadyConfigured_;
+			RosterVCardProvider* rosterVCardProvider_;
 	};
 }
 

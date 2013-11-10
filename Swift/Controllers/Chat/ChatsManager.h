@@ -62,10 +62,11 @@ namespace Swift {
 	class DiscoServiceWalker;
 	class AutoAcceptMUCInviteDecider;
 	class UserSearchController;
+	class VCardManager;
 
 	class ChatsManager : public ContactProvider {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons, UserSearchController* inviteUserSearchController);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons, UserSearchController* inviteUserSearchController, VCardManager* vcardManager);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -180,5 +181,6 @@ namespace Swift {
 			AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
 			UserSearchController* inviteUserSearchController_;
 			IDGenerator idGenerator_;
+			VCardManager* vcardManager_;
 	};
 }

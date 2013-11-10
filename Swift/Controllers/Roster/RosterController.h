@@ -6,19 +6,22 @@
 
 #pragma once
 
-#include "Swiften/JID/JID.h"
 #include <string>
 #include <set>
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/ErrorPayload.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Avatars/AvatarManager.h"
-#include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "RosterGroupExpandinessPersister.h"
-#include "Swift/Controllers/FileTransfer/FileTransferOverview.h"
 
-#include "Swiften/Base/boost_bsignals.h"
 #include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/VCards/VCardManager.h>
+
+#include <Swift/Controllers/UIEvents/UIEvent.h>
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
+#include <Swift/Controllers/Roster/RosterGroupExpandinessPersister.h>
 
 namespace Swift {
 	class IQRouter;
@@ -40,10 +43,11 @@ namespace Swift {
 	class EntityCapsProvider;
 	class FileTransferManager;
 	class ClientBlockListManager;
+	class RosterVCardProvider;
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
 			~RosterController();
 			void showRosterWindow();
 			MainWindow* getWindow() {return mainWindow_;}
@@ -102,6 +106,7 @@ namespace Swift {
 			EntityCapsProvider* entityCapsManager_;
 			FileTransferOverview* ftOverview_;
 			ClientBlockListManager* clientBlockListManager_;
+			RosterVCardProvider* rosterVCardProvider_;
 			
 			boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
 			boost::bsignals::scoped_connection blockingOnItemAddedConnection_;

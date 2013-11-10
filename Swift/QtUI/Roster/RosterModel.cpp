@@ -4,7 +4,7 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "RosterModel.h"
+#include <Swift/QtUI/Roster/RosterModel.h>
 
 #include <boost/bind.hpp>
 
@@ -13,22 +13,26 @@
 #include <QMimeData>
 #include <qdebug.h>
 
-#include "Swiften/Elements/StatusShow.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include <Swift/Controllers/StatusUtil.h>
+#include <Swiften/Elements/StatusShow.h>
 #include <Swiften/Base/Path.h>
 
-#include "QtSwiftUtil.h"
-#include "Swift/QtUI/Roster/QtTreeWidget.h"
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
+#include <Swift/QtUI/Roster/RosterTooltip.h>
+#include <Swift/QtUI/QtResourceHelper.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
-RosterModel::RosterModel(QtTreeWidget* view) : view_(view) {
-	roster_ = NULL;
+RosterModel::RosterModel(QtTreeWidget* view) : roster_(NULL), view_(view) {
+	const int tooltipAvatarSize = 96; // maximal suggested size according to XEP-0153
+	cachedImageScaler_ = new QtScaledAvatarCache(tooltipAvatarSize);
 }
 
 RosterModel::~RosterModel() {
+	delete cachedImageScaler_;
 }
 
 void RosterModel::setRoster(Roster* roster) {
@@ -63,6 +67,7 @@ void RosterModel::handleDataChanged(RosterItem* item) {
 	QModelIndex modelIndex = index(item);
 	if (modelIndex.isValid()) {
 		emit dataChanged(modelIndex, modelIndex);
+		view_->refreshTooltip();
 	}
 }
 
@@ -141,16 +146,7 @@ QString RosterModel::getToolTip(RosterItem* item) const {
 	QString tip(P2QSTRING(item->getDisplayName()));
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 	if (contact) {
-		if (contact->getDisplayJID().isValid()) {
-			tip += "\n" + P2QSTRING(contact->getDisplayJID().toBare().toString());
-		}
-		tip += "\n " + P2QSTRING(statusShowTypeToFriendlyName(contact->getStatusShow()));
-		if (!getStatusText(item).isEmpty()) {
-			tip += ": " + getStatusText(item);
-		}
-		if (!contact->getIdleText().empty()) {
-			tip += "\n " + tr("Idle since ") + P2QSTRING(contact->getIdleText());
-		}
+		return RosterTooltip::buildDetailedTooltip(contact, cachedImageScaler_);
 	}
 	return tip;
 }
@@ -176,16 +172,7 @@ QIcon RosterModel::getPresenceIcon(RosterItem* item) const {
 		return QIcon(":/icons/stop.png");
 	}
 
-	QString iconString;
-	switch (contact->getStatusShow()) {
-		case StatusShow::Online: iconString = "online";break;
-		case StatusShow::Away: iconString = "away";break;
-		case StatusShow::XA: iconString = "away";break;
-		case StatusShow::FFC: iconString = "online";break;
-		case StatusShow::DND: iconString = "dnd";break;
-		case StatusShow::None: iconString = "offline";break;
-	}
-	return QIcon(":/icons/" + iconString + ".png");
+	return QIcon(statusShowTypeToIconPath(contact->getStatusShow()));
 }
 
 

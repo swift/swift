@@ -11,8 +11,9 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QDragMoveEvent>
-#include "Swift/QtUI/Roster/RosterModel.h"
-#include "Swift/QtUI/Roster/RosterDelegate.h"
+ 
+#include <Swift/QtUI/Roster/RosterModel.h>
+#include <Swift/QtUI/Roster/RosterDelegate.h>
 
 namespace Swift {
 class UIEventStream;
@@ -27,6 +28,7 @@ class QtTreeWidget : public QTreeView{
 		QtTreeWidgetItem* getRoot();
 		void setRosterModel(Roster* roster);
 		Roster* getRoster() {return roster_;}
+		void refreshTooltip();
 		boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
 
 	private slots:
@@ -36,15 +38,19 @@ class QtTreeWidget : public QTreeView{
 		void handleCollapsed(const QModelIndex&);
 		void handleClicked(const QModelIndex&);
 		void handleSettingChanged(const std::string& setting);
+		void handleRefreshTooltip();
+
 	protected:
 		void dragEnterEvent(QDragEnterEvent* event);
 		void dropEvent(QDropEvent* event);
 		void dragMoveEvent(QDragMoveEvent* event);
+		bool event(QEvent* event);
 
 	protected:
 		QModelIndexList getSelectedIndexes() const;
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
+
 	protected slots:
 		virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous);
 	protected:
@@ -56,6 +62,7 @@ class QtTreeWidget : public QTreeView{
 		RosterDelegate* delegate_;
 		QtTreeWidgetItem* treeRoot_;
 		SettingsProvider* settings_;
+		bool tooltipShown_;
 };
 
 }

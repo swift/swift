@@ -7,12 +7,14 @@
 #pragma once
 
 #include <string>
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/StatusShow.h"
-#include "Swiften/Elements/DiscoItems.h"
-#include "Swiften/TLS/Certificate.h"
-#include "Swiften/Base/boost_bsignals.h"
+
 #include <boost/shared_ptr.hpp>
+
+#include <Swiften/JID/JID.h>
+#include <Swiften/Elements/StatusShow.h>
+#include <Swiften/Elements/DiscoItems.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 	class Roster;

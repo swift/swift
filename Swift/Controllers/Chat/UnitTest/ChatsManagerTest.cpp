@@ -6,53 +6,58 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <hippomocks.h>
 
 #include <boost/bind.hpp>
 
-#include <Swift/Controllers/Chat/ChatsManager.h>
-
-#include <Swift/Controllers/Chat/UnitTest/MockChatListWindow.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swift/Controllers/Settings/DummySettingsProvider.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
-#include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
-#include <Swift/Controllers/UIInterfaces/WhiteboardWindowFactory.h>
-#include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
-#include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
-#include <Swiften/Client/Client.h>
-#include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/Disco/CapsProvider.h>
-#include <Swiften/MUC/MUCManager.h>
-#include <Swift/Controllers/Chat/ChatController.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
-#include <Swift/Controllers/Chat/MUCController.h>
-#include <Swiften/Presence/StanzaChannelPresenceSender.h>
-#include <Swiften/Avatars/NullAvatarManager.h>
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
+#include <Swiften/Avatars/NullAvatarManager.h>
+#include <Swiften/Base/Algorithm.h>
+#include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Disco/CapsProvider.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Elements/DeliveryReceipt.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
+#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
-#include <Swiften/Client/NickResolver.h>
-#include <Swiften/Presence/DirectedPresenceSender.h>
-#include <Swiften/Roster/XMPPRosterImpl.h>
-#include <Swift/Controllers/UnitTest/MockChatWindow.h>
-#include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/Queries/DummyIQChannel.h>
-#include <Swiften/Presence/PresenceOracle.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
-#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/ProfileSettingsProvider.h>
-#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
-#include <Swiften/Elements/DeliveryReceiptRequest.h>
-#include <Swiften/Elements/DeliveryReceipt.h>
-#include <Swiften/Base/Algorithm.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/WhiteboardManager.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
-#include <Swiften/Client/ClientBlockListManager.h>
+
+#include <Swift/Controllers/Chat/ChatsManager.h>
+#include <Swift/Controllers/Chat/ChatController.h>
+#include <Swift/Controllers/Chat/MUCController.h>
+#include <Swift/Controllers/Chat/UnitTest/MockChatListWindow.h>
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
+#include <Swift/Controllers/ProfileSettingsProvider.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/DummySettingsProvider.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/WhiteboardWindowFactory.h>
+#include <Swift/Controllers/UnitTest/MockChatWindow.h>
+#include <Swift/Controllers/WhiteboardManager.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+
 
 using namespace Swift;
 
@@ -109,9 +114,12 @@ public:
 		wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
 		highlightManager_ = new HighlightManager(settings_);
 
+		crypto_ = PlatformCryptoProvider::create();
+		vcardStorage_ = new VCardMemoryStorage(crypto_);
+		vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
 		clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, NULL);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, NULL, vcardManager_);
 
 		manager_->setAvatarManager(avatarManager_);
 	}
@@ -123,6 +131,9 @@ public:
 		delete avatarManager_;
 		delete manager_;
 		delete clientBlockListManager_;
+		delete vcardManager_;
+		delete vcardStorage_;
+		delete crypto_;
 		delete ftOverview_;
 		delete ftManager_;
 		delete wbSessionManager_;
@@ -488,6 +499,9 @@ private:
 	WhiteboardManager* wbManager_;
 	HighlightManager* highlightManager_;
 	ClientBlockListManager* clientBlockListManager_;
+	VCardManager* vcardManager_;
+	CryptoProvider* crypto_;
+	VCardStorage* vcardStorage_;
 	std::map<std::string, std::string> emoticons_;
 };
 
