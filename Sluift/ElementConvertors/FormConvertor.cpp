@@ -92,7 +92,7 @@ namespace {
 		}
 
 		if (field->getType() == FormField::ListMultiType || field->getType() == FormField::JIDMultiType || field->getType() == FormField::TextMultiType) {
-			luaField["values"] = Lua::valueRef(Lua::Array(field->getValues().begin(), field->getValues().end()));
+			luaField["value"] = Lua::valueRef(Lua::Array(field->getValues().begin(), field->getValues().end()));
 		}
 		else if (field->getType() == FormField::BooleanType) {
 			luaField["value"] = Lua::boolRef(field->getBoolValue());
@@ -179,7 +179,7 @@ namespace {
 			result->setBoolValue(*value);
 		}
 		else {
-			lua_getfield(L, -1, "values");
+			lua_getfield(L, -1, "value");
 			if (lua_istable(L, -1)) {
 				for (lua_pushnil(L); lua_next(L, -2); ) {
 					if (lua_isstring(L, -1)) {

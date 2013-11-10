@@ -59,10 +59,10 @@ assert(public_field['required'] == true)
 -- Test multi field
 features_field = form['fields'][8]
 assert(features_field['name'] == 'features')
-assert(type(features_field['values']) == 'table')
-assert(#features_field['values'] == 2)
-assert(features_field['values'][1] == 'news')
-assert(features_field['values'][2] == 'search')
+assert(type(features_field['value']) == 'table')
+assert(#features_field['value'] == 2)
+assert(features_field['value'][1] == 'news')
+assert(features_field['value'][2] == 'search')
 
 -- Test shortcut index
 assert(form['features']['name'] == 'features')
