@@ -139,6 +139,7 @@ void ContactRosterItem::removeGroup(const std::string& group) {
 
 void ContactRosterItem::setSupportedFeatures(const std::set<Feature>& features) {
 	features_ = features;
+	onDataChanged();
 }
 
 bool ContactRosterItem::supportsFeature(const Feature feature) const {

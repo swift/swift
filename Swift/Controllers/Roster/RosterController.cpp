@@ -35,6 +35,8 @@
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/RosterVCardProvider.h>
 #include <Swift/Controllers/Roster/SetAvatar.h>
+#include <Swift/Controllers/Roster/SetAvailableFeatures.h>
+#include <Swift/Controllers/Roster/SetBlockingState.h>
 #include <Swift/Controllers/Roster/SetName.h>
 #include <Swift/Controllers/Roster/SetPresence.h>
 #include <Swift/Controllers/Roster/SetVCard.h>
@@ -191,16 +193,18 @@ void RosterController::handleSettingChanged(const std::string& settingPath) {
 
 void RosterController::handleBlockingStateChanged() {
 	if (clientBlockListManager_->getBlockList()->getState() == BlockList::Available) {
-		roster_->setBlockedState(clientBlockListManager_->getBlockList()->getItems(), ContactRosterItem::IsBlocked);
+		foreach(const JID& jid, clientBlockListManager_->getBlockList()->getItems()) {
+			roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsBlocked));
+		}
 	}
 }
 
 void RosterController::handleBlockingItemAdded(const JID& jid) {
-	roster_->setBlockedState(std::vector<JID>(1, jid), ContactRosterItem::IsBlocked);
+	roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsBlocked));
 }
 
 void RosterController::handleBlockingItemRemoved(const JID& jid) {
-	roster_->setBlockedState(std::vector<JID>(1, jid), ContactRosterItem::IsUnblocked);
+	roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsUnblocked));
 }
 
 void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
@@ -282,9 +286,11 @@ void RosterController::initBlockingCommand() {
 	blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&RosterController::handleBlockingStateChanged, this));
 	blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&RosterController::handleBlockingItemAdded, this, _1));
 	blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&RosterController::handleBlockingItemRemoved, this, _1));
-
+	roster_->setBlockingSupported(true);
 	if (blockList->getState() == BlockList::Available) {
-		roster_->setBlockedState(blockList->getItems(), ContactRosterItem::IsBlocked);
+		foreach(const JID& jid, blockList->getItems()) {
+			roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsBlocked));
+		}
 	}
 }
 
@@ -356,7 +362,7 @@ void RosterController::handleOnCapsChanged(const JID& jid) {
 		if (info->hasFeature(DiscoInfo::WhiteboardFeature)) {
 			features.insert(ContactRosterItem::WhiteboardFeature);
 		}
-		roster_->setAvailableFeatures(jid, features);
+		roster_->applyOnItems(SetAvailableFeatures(jid, features));
 	}
 }
 

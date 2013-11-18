@@ -47,8 +47,7 @@ class Roster {
 		boost::signal<void (RosterItem*)> onDataChanged;
 		boost::signal<void (JID&)> onVCardUpdateRequested;
 		GroupRosterItem* getGroup(const std::string& groupName);
-		void setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features);
-		void setBlockedState(const std::vector<JID>& jids, ContactRosterItem::BlockState state);
+		void setBlockingSupported(bool isSupported);
 
 	private:
 		void handleDataChanged(RosterItem* item);

@@ -66,36 +66,15 @@ GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 	return group;
 }
 
-void Roster::setAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& features) {
-	ItemMap::const_iterator i = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
-	if (i == itemMap_.end()) {
-		return;
-	}
-	foreach(ContactRosterItem* item, i->second) {
-		item->setSupportedFeatures(features);
-	}
-}
-
-void Roster::setBlockedState(const std::vector<JID> &jids, ContactRosterItem::BlockState state) {
-	if (!blockingSupported_ ) {
+void Roster::setBlockingSupported(bool isSupported) {
+	if (!blockingSupported_) {
 		foreach(ItemMap::value_type i, itemMap_) {
 			foreach(ContactRosterItem* item, i.second) {
 				item->setBlockState(ContactRosterItem::IsUnblocked);
 			}
 		}
 	}
-
-	foreach(const JID& jid, jids) {
-		ItemMap::const_iterator i = itemMap_.find(fullJIDMapping_ ? jid : jid.toBare());
-		if (i == itemMap_.end()) {
-			continue;
-		}
-		foreach(ContactRosterItem* item, i->second) {
-			item->setBlockState(state);
-		}
-	}
-
-	blockingSupported_ = true;
+	blockingSupported_ = isSupported;
 }
 
 void Roster::removeGroup(const std::string& group) {
