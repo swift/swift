@@ -340,6 +340,10 @@ SLUIFT_LUA_FUNCTION(Client, set_options) {
 		bool useTLS = lua_toboolean(L, -1);
 		client->getOptions().useTLS = (useTLS ? ClientOptions::UseTLSWhenAvailable : ClientOptions::NeverUseTLS);
 	}
+	lua_getfield(L, 2, "bosh_url");
+	if (!lua_isnil(L, -1)) {
+		client->getOptions().boshURL = URL::fromString(lua_tostring(L, -1));
+	}
 	lua_pushvalue(L, 1);
 	return 0;
 }
