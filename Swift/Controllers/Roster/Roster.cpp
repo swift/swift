@@ -19,7 +19,7 @@
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/RosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
-#include <Swift/Controllers/Roster/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 
 namespace Swift {
 

@@ -9,7 +9,7 @@
 #include <Swiften/VCards/VCardManager.h>
 
 #include <Swift/Controllers/Roster/Roster.h>
-#include <Swift/Controllers/Roster/SetVCard.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetVCard.h>
 
 namespace Swift {
 

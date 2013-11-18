@@ -6,30 +6,31 @@
 
 #pragma once
 
+#include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
 
-#include <Swift/Controllers/Roster/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 
 class RosterItem;
 
-class SetBlockingState : public RosterItemOperation {
+class SetVCard : public RosterItemOperation {
 	public:
-		SetBlockingState(const JID& jid, ContactRosterItem::BlockState state, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), state_(state), compareType_(compareType) {
+		SetVCard(const JID& jid, VCard::ref vcard, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), vcard_(vcard), compareType_(compareType) {
 		}
 
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 			if (contact && contact->getJID().equals(jid_, compareType_)) {
-				contact->setBlockState(state_);
+				contact->setVCard(vcard_);
 			}
 		}
 
 	private:
 		JID jid_;
-		ContactRosterItem::BlockState state_;
+		VCard::ref vcard_;
 		JID::CompareType compareType_;
 };
 

@@ -6,11 +6,13 @@
 
 #pragma once
 
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/JID/JID.h"
-#include "Swift/Controllers/Roster/RosterItemOperation.h"
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
 #include <boost/filesystem/path.hpp>
+
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 

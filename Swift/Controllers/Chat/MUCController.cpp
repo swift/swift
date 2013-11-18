@@ -10,38 +10,39 @@
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
-#include <Swift/Controllers/Intl.h>
-#include <Swiften/Base/format.h>
-#include <Swiften/Network/Timer.h>
-#include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Base/foreach.h>
-#include <SwifTools/TabComplete.h>
-#include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
-#include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
-#include <Swift/Controllers/Roster/GroupRosterItem.h>
-#include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/format.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/MUC/MUC.h>
-#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Roster/XMPPRoster.h>
+
+#include <SwifTools/TabComplete.h>
+
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/RosterVCardProvider.h>
-#include <Swift/Controllers/Roster/SetAvatar.h>
-#include <Swift/Controllers/Roster/SetPresence.h>
-#include <Swiften/Disco/EntityCapsProvider.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Swift/Controllers/Highlighter.h>
-#include <Swift/Controllers/Chat/ChatMessageParser.h>
-
-#include <Swiften/Base/Log.h>
+#include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
 

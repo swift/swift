@@ -29,17 +29,17 @@
 #include <Swiften/Roster/XMPPRosterItem.h>
 
 #include <Swift/Controllers/Intl.h>
-#include <Swift/Controllers/Roster/AppearOffline.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/OfflineRosterFilter.h>
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/RosterVCardProvider.h>
-#include <Swift/Controllers/Roster/SetAvatar.h>
-#include <Swift/Controllers/Roster/SetAvailableFeatures.h>
-#include <Swift/Controllers/Roster/SetBlockingState.h>
-#include <Swift/Controllers/Roster/SetName.h>
-#include <Swift/Controllers/Roster/SetPresence.h>
-#include <Swift/Controllers/Roster/SetVCard.h>
+#include <Swift/Controllers/Roster/ItemOperations/AppearOffline.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetAvailableFeatures.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetBlockingState.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetName.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetVCard.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/UIEvents/AddContactUIEvent.h>
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>

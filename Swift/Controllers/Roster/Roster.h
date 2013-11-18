@@ -15,7 +15,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 
-#include <Swift/Controllers/Roster/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/RosterFilter.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 

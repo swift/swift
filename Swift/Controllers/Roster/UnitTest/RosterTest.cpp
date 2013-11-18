@@ -6,11 +6,12 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <boost/shared_ptr.hpp>
 
-#include "Swift/Controllers/Roster/Roster.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swift/Controllers/Roster/SetPresence.h"
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
 
 using namespace Swift;
 

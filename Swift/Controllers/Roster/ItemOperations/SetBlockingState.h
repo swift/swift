@@ -8,28 +8,28 @@
 
 #include <Swiften/JID/JID.h>
 
-#include <Swift/Controllers/Roster/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 
 class RosterItem;
 
-class SetAvailableFeatures : public RosterItemOperation {
+class SetBlockingState : public RosterItemOperation {
 	public:
-		SetAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& availableFeatures, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), availableFeatures_(availableFeatures), compareType_(compareType) {
+		SetBlockingState(const JID& jid, ContactRosterItem::BlockState state, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), state_(state), compareType_(compareType) {
 		}
 
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 			if (contact && contact->getJID().equals(jid_, compareType_)) {
-				contact->setSupportedFeatures(availableFeatures_);
+				contact->setBlockState(state_);
 			}
 		}
 
 	private:
 		JID jid_;
-		std::set<ContactRosterItem::Feature> availableFeatures_;
+		ContactRosterItem::BlockState state_;
 		JID::CompareType compareType_;
 };
 

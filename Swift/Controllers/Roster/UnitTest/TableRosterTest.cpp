@@ -15,13 +15,14 @@ std::ostream& operator<<(std::ostream& os, const Swift::TableRoster::Index& i) {
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
 
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
-#include <Swift/Controllers/Roster/SetPresence.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
 
 using namespace Swift;
 

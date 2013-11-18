@@ -12,16 +12,17 @@
 
 #include <Swift/Controllers/HistoryViewController.h>
 
-#include <Swift/Controllers/UIInterfaces/HistoryWindowFactory.h>
-#include <Swift/Controllers/UIEvents/RequestHistoryUIEvent.h>
-#include <Swift/Controllers/HistoryController.h>
-#include <Swiften/History/HistoryMessage.h>
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/NickResolver.h>
-#include <Swiften/Avatars/AvatarManager.h>
-#include <Swift/Controllers/Roster/SetPresence.h>
-#include <Swift/Controllers/Roster/SetAvatar.h>
-#include <Swiften/Base/Path.h>
+#include <Swiften/History/HistoryMessage.h>
+
+#include <Swift/Controllers/HistoryController.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
+#include <Swift/Controllers/UIEvents/RequestHistoryUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/HistoryWindowFactory.h>
 
 namespace Swift {
 	static const std::string category[] = { "Contacts", "MUC", "Contacts" };

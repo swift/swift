@@ -6,31 +6,30 @@
 
 #pragma once
 
-#include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
 
-#include <Swift/Controllers/Roster/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 
 class RosterItem;
 
-class SetVCard : public RosterItemOperation {
+class SetAvailableFeatures : public RosterItemOperation {
 	public:
-		SetVCard(const JID& jid, VCard::ref vcard, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), vcard_(vcard), compareType_(compareType) {
+		SetAvailableFeatures(const JID& jid, const std::set<ContactRosterItem::Feature>& availableFeatures, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), availableFeatures_(availableFeatures), compareType_(compareType) {
 		}
 
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 			if (contact && contact->getJID().equals(jid_, compareType_)) {
-				contact->setVCard(vcard_);
+				contact->setSupportedFeatures(availableFeatures_);
 			}
 		}
 
 	private:
 		JID jid_;
-		VCard::ref vcard_;
+		std::set<ContactRosterItem::Feature> availableFeatures_;
 		JID::CompareType compareType_;
 };
 
