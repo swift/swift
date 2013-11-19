@@ -344,6 +344,10 @@ SLUIFT_LUA_FUNCTION(Client, set_options) {
 	if (!lua_isnil(L, -1)) {
 		client->getOptions().boshURL = URL::fromString(lua_tostring(L, -1));
 	}
+	lua_getfield(L, 2, "allow_plain_without_tls");
+	if (!lua_isnil(L, -1)) {
+		client->getOptions().allowPLAINWithoutTLS = lua_toboolean(L, -1);
+	}
 	lua_pushvalue(L, 1);
 	return 0;
 }
