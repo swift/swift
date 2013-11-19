@@ -36,9 +36,6 @@ SluiftClient::SluiftClient(
 	client->onPresenceReceived.connect(boost::bind(&SluiftClient::handleIncomingPresence, this, _1));
 	client->getPubSubManager()->onEvent.connect(boost::bind(&SluiftClient::handleIncomingPubSubEvent, this, _1, _2));
 	client->getRoster()->onInitialRosterPopulated.connect(boost::bind(&SluiftClient::handleInitialRosterPopulated, this));
-	if (globals->debug) {
-		tracer = new ClientXMLTracer(client);
-	}
 }
 
 SluiftClient::~SluiftClient() {
@@ -49,6 +46,9 @@ SluiftClient::~SluiftClient() {
 void SluiftClient::connect() {
 	rosterReceived = false;
 	disconnectedError = boost::optional<ClientError>();
+	if (globals->debug) {
+		tracer = new ClientXMLTracer(client, options.boshURL.isEmpty()? false: true);
+	}
 	client->connect(options);
 }
 
@@ -56,6 +56,9 @@ void SluiftClient::connect(const std::string& host, int port) {
 	rosterReceived = false;
 	options.manualHostname = host;
 	options.manualPort = port;
+	if (globals->debug) {
+		tracer = new ClientXMLTracer(client, options.boshURL.isEmpty()? false: true);
+	}
 	client->connect(options);
 }
 
