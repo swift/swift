@@ -93,6 +93,20 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 
 	connect(tabs_, SIGNAL(currentChanged(int)), this, SLOT(handleTabChanged(int)));
 
+	tabBarCombo_ = NULL;
+	if (settings_->getSetting(QtUISettingConstants::USE_SCREENREADER)) {
+		tabs_->tabBar()->hide();
+		tabBarCombo_ = new QComboBox(this);
+		tabBarCombo_->setAccessibleName("Current View");
+		tabBarCombo_->addItem(tr("Contacts"));
+		tabBarCombo_->addItem(tr("Chats"));
+		tabBarCombo_->addItem(tr("Notices"));
+		tabBarCombo_->setCurrentIndex(tabs_->currentIndex());
+		mainLayout->addWidget(tabBarCombo_);
+		connect(tabBarCombo_, SIGNAL(currentIndexChanged(int)), tabs_, SLOT(setCurrentIndex(int)));
+	}
+
+
 	this->setLayout(mainLayout);
 
 	QMenu* viewMenu = new QMenu(tr("&View"), this);

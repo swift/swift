@@ -93,6 +93,7 @@ namespace Swift {
 			QAction* toggleRequestDeliveryReceipts_;
 			QMenu* serverAdHocMenu_;
 			QtTabWidget* tabs_;
+			QComboBox* tabBarCombo_;
 			QWidget* contactsTabWidget_;
 			QWidget* eventsTabWidget_;
 			QtEventWindow* eventWindow_;
