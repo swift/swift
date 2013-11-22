@@ -108,7 +108,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	logRosterSplitter_ = new QSplitter(this);
 	logRosterSplitter_->setAutoFillBackground(true);
 	layout->addWidget(logRosterSplitter_);
-	if (settings_->getSetting(QtUISettingConstants::USE_PLAIN_CHATS)) {
+	if (settings_->getSetting(QtUISettingConstants::USE_PLAIN_CHATS) || settings_->getSetting(QtUISettingConstants::USE_SCREENREADER)) {
 		messageLog_ = new QtPlainChatView(this);
 	}
 	else {

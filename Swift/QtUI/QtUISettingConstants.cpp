@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Kevin Smith
+ * Copyright (c) 2012-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,4 +16,5 @@ const SettingsProvider::Setting<int> QtUISettingConstants::CHATWINDOW_FONT_SIZE(
 const SettingsProvider::Setting<int> QtUISettingConstants::HISTORYWINDOW_FONT_SIZE("historyWindowFontSize", 0);
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_EMOTICONS("showEmoticons", true);
 const SettingsProvider::Setting<bool> QtUISettingConstants::USE_PLAIN_CHATS("plainChats", false);
+const SettingsProvider::Setting<bool> QtUISettingConstants::USE_SCREENREADER("screenreader", false);
 }

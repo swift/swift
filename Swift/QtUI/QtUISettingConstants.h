@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Kevin Smith
+ * Copyright (c) 2012-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,5 +19,6 @@ namespace Swift {
 			static const SettingsProvider::Setting<int> HISTORYWINDOW_FONT_SIZE;
 			static const SettingsProvider::Setting<bool> SHOW_EMOTICONS;
 			static const SettingsProvider::Setting<bool> USE_PLAIN_CHATS;
+			static const SettingsProvider::Setting<bool> USE_SCREENREADER;
 	};
 }

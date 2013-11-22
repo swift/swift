@@ -24,6 +24,7 @@ QtPlainChatView::QtPlainChatView(QWidget* parent) : QtChatView(parent) {
 	mainLayout->setContentsMargins(0,0,0,0);
 	log_ = new QTextEdit(this);
 	log_->setReadOnly(true);
+	log_->setAccessibleName(tr("Chat Messages"));
 	mainLayout->addWidget(log_);
 }
 
