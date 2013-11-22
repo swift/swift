@@ -37,6 +37,7 @@ QtChatTabs::QtChatTabs(bool singleWindow) : QWidget(), singleWindow_(singleWindo
 	tabs_->setDocumentMode(true);
 	/*Closable tabs are only in Qt4.5 and later*/
 	tabs_->setTabsClosable(true);
+	tabs_->setMovable(true);
 	connect(tabs_, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
 #else
 #warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.
