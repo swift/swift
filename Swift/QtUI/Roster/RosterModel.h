@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -28,7 +28,7 @@ namespace Swift {
 	class RosterModel : public QAbstractItemModel {
 		Q_OBJECT
 		public:
-			RosterModel(QtTreeWidget* view);
+			RosterModel(QtTreeWidget* view, bool screenReaderMode);
 			~RosterModel();
 			void setRoster(Roster* swiftRoster);
 			Qt::ItemFlags flags(const QModelIndex& index) const;
@@ -56,8 +56,12 @@ namespace Swift {
 			int getChildCount(RosterItem* item) const;
 			bool getIsIdle(RosterItem* item) const;
 			void reLayout();
+			/** calculates screenreader-friendly text if in screenreader mode, otherwise uses alternative text */
+			QString getScreenReaderTextOr(RosterItem* item, const QString& alternative) const;
+		private:
 			Roster* roster_;
 			QtTreeWidget* view_;
 			QtScaledAvatarCache* cachedImageScaler_;
+			bool screenReader_;
 	};
 }

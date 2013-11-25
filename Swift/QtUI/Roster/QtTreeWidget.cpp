@@ -34,7 +34,7 @@ namespace Swift {
 QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent), tooltipShown_(false) {
 	eventStream_ = eventStream;
 	settings_ = settings;
-	model_ = new RosterModel(this);
+	model_ = new RosterModel(this, settings_->getSetting(QtUISettingConstants::USE_SCREENREADER));
 	setModel(model_);
 	delegate_ = new RosterDelegate(this, settings_->getSetting(QtUISettingConstants::COMPACT_ROSTER));
 	setItemDelegate(delegate_);

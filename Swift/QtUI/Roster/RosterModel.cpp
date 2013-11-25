@@ -18,6 +18,7 @@
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/StatusUtil.h>
 
 #include <Swift/QtUI/Roster/QtTreeWidget.h>
 #include <Swift/QtUI/Roster/RosterTooltip.h>
@@ -26,7 +27,7 @@
 
 namespace Swift {
 
-RosterModel::RosterModel(QtTreeWidget* view) : roster_(NULL), view_(view) {
+RosterModel::RosterModel(QtTreeWidget* view, bool screenReaderMode) : roster_(NULL), view_(view), screenReader_(screenReaderMode) {
 	const int tooltipAvatarSize = 96; // maximal suggested size according to XEP-0153
 	cachedImageScaler_ = new QtScaledAvatarCache(tooltipAvatarSize);
 }
@@ -92,16 +93,31 @@ QVariant RosterModel::data(const QModelIndex& index, int role) const {
 	if (!item) return QVariant();
 
 	switch (role) {
-		case Qt::DisplayRole: return P2QSTRING(item->getDisplayName());
+		case Qt::DisplayRole: return getScreenReaderTextOr(item, P2QSTRING(item->getDisplayName()));
 		case Qt::TextColorRole: return getTextColor(item);
 		case Qt::BackgroundColorRole: return getBackgroundColor(item);
 		case Qt::ToolTipRole: return getToolTip(item);
-		case StatusTextRole: return getStatusText(item);
+		case StatusTextRole: return getScreenReaderTextOr(item, getStatusText(item));
 		case AvatarRole: return getAvatar(item);
 		case PresenceIconRole: return getPresenceIcon(item);
 		case ChildCountRole: return getChildCount(item);
 		case IdleRole: return getIsIdle(item);
 		default: return QVariant();
+	}
+}
+
+QString RosterModel::getScreenReaderTextOr(RosterItem* item, const QString& alternative) const {
+	QString name = P2QSTRING(item->getDisplayName());
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	if (contact && screenReader_) {
+		name += ": " + P2QSTRING(statusShowTypeToFriendlyName(contact->getStatusShow()));
+		if (!contact->getStatusText().empty()) {
+			name += " (" + P2QSTRING(contact->getStatusText()) + ")";
+		}
+		return name;
+	}
+	else {
+		return alternative;
 	}
 }
 
