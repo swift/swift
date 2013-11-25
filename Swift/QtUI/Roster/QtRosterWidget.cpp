@@ -8,8 +8,10 @@
 
 #include <QContextMenuEvent>
 #include <QMenu>
+#include <QMessageBox>
 #include <QInputDialog>
 #include <QFileDialog>
+#include <QPushButton>
 
 #include <Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h>
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
@@ -62,7 +64,8 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
 
 		QAction* unblockContact = NULL;
-		if (contact->blockState() == ContactRosterItem::IsBlocked) {
+		if (contact->blockState() == ContactRosterItem::IsBlocked ||
+			contact->blockState() == ContactRosterItem::IsDomainBlocked) {
 			unblockContact = contextMenu.addAction(tr("Unblock"));
 		}
 
@@ -97,7 +100,18 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 			eventStream_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
 		}
 		else if (unblockContact && result == unblockContact) {
-			eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
+			if (contact->blockState() == ContactRosterItem::IsDomainBlocked) {
+				QMessageBox messageBox(QMessageBox::Question, tr("Swift"), tr("You've blocked everyone on the %1 domain, including %2.\nYou can't just unblock %2. Do you want to unblock the complete %1 domain?.").arg(P2QSTRING(contact->getJID().getDomain()), P2QSTRING(contact->getJID().toString())), QMessageBox::NoButton, this);
+				QPushButton *unblockDomainButton = messageBox.addButton(tr("Unblock %1 domain").arg(P2QSTRING(contact->getJID().getDomain())), QMessageBox::AcceptRole);
+				messageBox.addButton(QMessageBox::Abort);
+
+				messageBox.exec();
+				if (messageBox.clickedButton() == unblockDomainButton)  {
+					eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID().getDomain()));
+				}
+			} else {
+				eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
+			}
 		}
 		else if (blockContact && result == blockContact) {
 			eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, contact->getJID()));

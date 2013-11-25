@@ -145,11 +145,13 @@ void BlockListController::handleBlockListChanged() {
 		blockListBeforeEdit = blockListManager_->getBlockList()->getItems();
 
 		foreach (const JID& jid, jidsToBlock) {
-			blockListBeforeEdit.push_back(jid);
+			if (std::find(blockListBeforeEdit.begin(), blockListBeforeEdit.end(), jid) == blockListBeforeEdit.end()) {
+				blockListBeforeEdit.push_back(jid);
+			}
 		}
 
 		foreach (const JID& jid, jidsToUnblock) {
-			blockListBeforeEdit.erase(std::remove(blockListBeforeEdit.begin(), blockListBeforeEdit.end(), jid), blockListBeforeEdit.end());;
+			blockListBeforeEdit.erase(std::remove(blockListBeforeEdit.begin(), blockListBeforeEdit.end(), jid), blockListBeforeEdit.end());
 		}
 
 		blockListEditorWidget_->setCurrentBlockList(blockListBeforeEdit);

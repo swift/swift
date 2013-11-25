@@ -36,7 +36,8 @@ class ContactRosterItem : public RosterItem {
 		enum BlockState {
 			BlockingNotSupported,
 			IsBlocked,
-			IsUnblocked
+			IsUnblocked,
+			IsDomainBlocked
 		};
 		
 	public:

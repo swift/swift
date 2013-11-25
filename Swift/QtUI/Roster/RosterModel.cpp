@@ -184,7 +184,8 @@ QString RosterModel::getStatusText(RosterItem* item) const {
 QIcon RosterModel::getPresenceIcon(RosterItem* item) const {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 	if (!contact) return QIcon();
-	if (contact->blockState() == ContactRosterItem::IsBlocked) {
+	if (contact->blockState() == ContactRosterItem::IsBlocked ||
+		contact->blockState() == ContactRosterItem::IsDomainBlocked) {
 		return QIcon(":/icons/stop.png");
 	}
 

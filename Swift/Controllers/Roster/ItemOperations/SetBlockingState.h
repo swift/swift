@@ -17,13 +17,22 @@ class RosterItem;
 
 class SetBlockingState : public RosterItemOperation {
 	public:
-		SetBlockingState(const JID& jid, ContactRosterItem::BlockState state, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(true, jid), jid_(jid), state_(state), compareType_(compareType) {
+		SetBlockingState(const JID& jid, ContactRosterItem::BlockState state, JID::CompareType compareType = JID::WithoutResource) : RosterItemOperation(!jid.getNode().empty(), jid), jid_(jid), state_(state), compareType_(compareType) {
+			if (state_ == ContactRosterItem::IsBlocked && jid.getNode().empty()) {
+				state_ = ContactRosterItem::IsDomainBlocked;
+			}
 		}
 
 		virtual void operator() (RosterItem* item) const {
 			ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-			if (contact && contact->getJID().equals(jid_, compareType_)) {
-				contact->setBlockState(state_);
+			if (jid_.getNode().empty()) {
+				if (contact && contact->getJID().getDomain() == jid_.getDomain()) {
+					contact->setBlockState(state_);
+				}
+			} else {
+				if (contact && contact->getJID().equals(jid_, compareType_)) {
+					contact->setBlockState(state_);
+				}
 			}
 		}
 
