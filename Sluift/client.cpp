@@ -325,7 +325,7 @@ SLUIFT_LUA_FUNCTION(Client, set_options) {
 	}
 	lua_getfield(L, 2, "port");
 	if (!lua_isnil(L, -1)) {
-		client->getOptions().manualPort = lua_tointeger(L, -1);
+		client->getOptions().manualPort = boost::numeric_cast<int>(lua_tointeger(L, -1));
 	}
 	lua_getfield(L, 2, "ack");
 	if (!lua_isnil(L, -1)) {
@@ -352,6 +352,23 @@ SLUIFT_LUA_FUNCTION(Client, set_options) {
 	return 0;
 }
 
+static std::string convertPresenceTypeToString(Presence::Type type) {
+	std::string result;
+
+	switch (type) {
+		case Presence::Available: result = "available"; break;
+		case Presence::Error: result = "error"; break;
+		case Presence::Probe: result = "probe"; break;
+		case Presence::Subscribe: result = "subscribe"; break;
+		case Presence::Subscribed: result = "subscribed"; break;
+		case Presence::Unavailable: result = "unavailable"; break;
+		case Presence::Unsubscribe: result = "unsubscribe"; break;
+		case Presence::Unsubscribed: result = "unsubscribed"; break;
+	}
+
+	return result;
+}
+
 static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 	switch (event.type) {
 		case SluiftClient::Event::MessageType: {
@@ -369,7 +386,8 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 			Lua::Table result = boost::assign::map_list_of
 				("type", boost::make_shared<Lua::Value>(std::string("presence")))
 				("from", boost::make_shared<Lua::Value>(presence->getFrom().toString()))
-				("status", boost::make_shared<Lua::Value>(presence->getStatus()));
+				("status", boost::make_shared<Lua::Value>(presence->getStatus()))
+				("presence_type", boost::make_shared<Lua::Value>(convertPresenceTypeToString(presence->getType())));
 			Lua::pushValue(L, result);
 			if (!presence->getPayloads().empty()) {
 				const std::vector<boost::shared_ptr<Payload> > payloads = presence->getPayloads();
