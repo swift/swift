@@ -145,6 +145,7 @@ sources = [
     "Roster/RosterDelegate.cpp",
     "Roster/GroupItemDelegate.cpp",
     "Roster/DelegateCommons.cpp",
+    "Roster/QtFilterWidget.cpp",
     "Roster/QtRosterWidget.cpp",
     "Roster/QtOccupantListWidget.cpp",
     "Roster/RosterTooltip.cpp",

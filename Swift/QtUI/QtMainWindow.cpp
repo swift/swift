@@ -33,6 +33,7 @@
 #include <Swift/Controllers/UIEvents/RequestBlockListDialogUIEvent.h>
 #include <Swift/Controllers/SettingConstants.h>
 
+#include <Swift/QtUI/Roster/QtFilterWidget.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabWidget.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
@@ -76,7 +77,9 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	contactTabLayout->setContentsMargins(0, 0, 0, 0);
 
 	treeWidget_ = new QtRosterWidget(uiEventStream_, settings_, this);
+
 	contactTabLayout->addWidget(treeWidget_);
+	new QtFilterWidget(this, treeWidget_, contactTabLayout);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
 
