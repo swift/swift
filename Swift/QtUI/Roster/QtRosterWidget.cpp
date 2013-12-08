@@ -101,8 +101,8 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		}
 		else if (unblockContact && result == unblockContact) {
 			if (contact->blockState() == ContactRosterItem::IsDomainBlocked) {
-				QMessageBox messageBox(QMessageBox::Question, tr("Swift"), tr("You've blocked everyone on the %1 domain, including %2.\nYou can't just unblock %2. Do you want to unblock the complete %1 domain?.").arg(P2QSTRING(contact->getJID().getDomain()), P2QSTRING(contact->getJID().toString())), QMessageBox::NoButton, this);
-				QPushButton *unblockDomainButton = messageBox.addButton(tr("Unblock %1 domain").arg(P2QSTRING(contact->getJID().getDomain())), QMessageBox::AcceptRole);
+				QMessageBox messageBox(QMessageBox::Question, tr("Swift"), tr("%2 is currently blocked because of a block on all users of the %1 service.\n %2 cannot be unblocked individually; do you want to unblock all %1 users?").arg(P2QSTRING(contact->getJID().getDomain()), P2QSTRING(contact->getJID().toString())), QMessageBox::NoButton, this);
+				QPushButton* unblockDomainButton = messageBox.addButton(tr("Unblock %1 domain").arg(P2QSTRING(contact->getJID().getDomain())), QMessageBox::AcceptRole);
 				messageBox.addButton(QMessageBox::Abort);
 
 				messageBox.exec();
