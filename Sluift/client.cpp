@@ -47,8 +47,8 @@ static inline SluiftClient* getClient(lua_State* L) {
 SLUIFT_LUA_FUNCTION(Client, async_connect) {
 	SluiftClient* client = getClient(L);
 
-	std::string host;
-	int port = -1;
+	std::string host = client->getOptions().manualHostname;
+	int port = client->getOptions().manualPort;
 	if (lua_istable(L, 2)) {
 		if (boost::optional<std::string> hostString = Lua::getStringField(L, 2, "host")) {
 			host = *hostString;
@@ -57,12 +57,7 @@ SLUIFT_LUA_FUNCTION(Client, async_connect) {
 			port = *portInt;
 		}
 	}
-	if (host.empty() && port == -1) {
-		client->connect();
-	}
-	else {
-		client->connect(host, port);
-	}
+	client->connect(host, port);
 	return 0;
 }
 

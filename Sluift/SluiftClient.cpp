@@ -56,6 +56,7 @@ void SluiftClient::connect(const std::string& host, int port) {
 	rosterReceived = false;
 	options.manualHostname = host;
 	options.manualPort = port;
+	disconnectedError = boost::optional<ClientError>();
 	if (globals->debug) {
 		tracer = new ClientXMLTracer(client, options.boshURL.isEmpty()? false: true);
 	}
