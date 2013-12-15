@@ -13,7 +13,10 @@ example_form = [[
 	</field>
 	<field type='fixed'><value>Section 1: Bot Info</value></field>
 	<field type='text-single' label='The name of your bot' var='botname'/>
-	<field type='text-multi' label='Helpful description of your bot' var='description'/>
+	<field type='text-multi' label='Helpful description of your bot' var='description'>
+		<value>This is</value>
+		<value>my bot</value>
+	</field>
 	<field type='boolean' label='Public bot?' var='public'>
 		<required/>
 	</field>
@@ -71,9 +74,19 @@ assert(form['FORM_TYPE']['value'] == 'jabber:bot')
 -- Test response form
 submission = form:create_submission()
 assert(#(submission.fields) == 8)
+description_submit_value = submission['description']['value']
+assert(type(description_submit_value) == 'table')
+assert(description_submit_value[1] == 'This is')
+assert(description_submit_value[2] == 'my bot')
+
 submission['description'] = 'my description'
 assert(submission['description']['value'] == 'my description')
 submission['type'] = 'cancel'
-assert(#(submission.fields) == 8)
+
+-- Test text-multi field
+text_multi_field = form['fields'][4]
+assert(text_multi_field['name'] == 'description')
+assert(type(text_multi_field['value']) == 'table')
+
 
 --print(sluift.to_xml({type = 'form', data = form}))

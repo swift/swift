@@ -90,17 +90,15 @@ namespace {
 		if (!field->getDescription().empty()) {
 			luaField["description"] = Lua::valueRef(field->getDescription());
 		}
-
-		if (field->getType() == FormField::ListMultiType || field->getType() == FormField::JIDMultiType || field->getType() == FormField::TextMultiType) {
-			luaField["value"] = Lua::valueRef(Lua::Array(field->getValues().begin(), field->getValues().end()));
-		}
-		else if (field->getType() == FormField::BooleanType) {
+		if (field->getType() == FormField::BooleanType) {
 			luaField["value"] = Lua::boolRef(field->getBoolValue());
 		}
-		else if (!field->getValues().empty()) {
+		else if (field->getValues().size() > 1) {
+			luaField["value"] = Lua::valueRef(Lua::Array(field->getValues().begin(), field->getValues().end()));
+		}
+		else if (field->getValues().size() == 1) {
 			luaField["value"] = Lua::valueRef(field->getValues()[0]);
 		}
-
 		if (!field->getOptions().empty()) {
 			Lua::Array options;
 			foreach(const FormField::Option& option, field->getOptions()) {
