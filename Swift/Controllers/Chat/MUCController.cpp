@@ -32,6 +32,7 @@
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetMUC.h>
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/RosterVCardProvider.h>
 #include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
@@ -385,6 +386,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	appendToJoinParts(joinParts_, event);
 	std::string groupName(roleToGroupName(occupant.getRole()));
 	roster_->addContact(jid, realJID, occupant.getNick(), groupName, avatarManager_->getAvatarPath(jid));
+	roster_->applyOnItems(SetMUC(jid, occupant.getRole(), occupant.getAffiliation()));
 	roster_->getGroup(groupName)->setManualSort(roleToSortName(occupant.getRole()));
 	if (joined_) {
 		std::string joinString;
@@ -537,6 +539,7 @@ void MUCController::handleOccupantRoleChanged(const std::string& nick, const MUC
 	std::string group(roleToGroupName(occupant.getRole()));
 	roster_->addContact(jid, realJID, nick, group, avatarManager_->getAvatarPath(jid));
 	roster_->getGroup(group)->setManualSort(roleToSortName(occupant.getRole()));
+	roster_->applyOnItems(SetMUC(jid, occupant.getRole(), occupant.getAffiliation()));
 	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "%1% is now a %2%")) % nick % roleToFriendlyName(occupant.getRole()))), ChatWindow::DefaultDirection);
 	if (nick == nick_) {
 		setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
@@ -548,6 +551,9 @@ void MUCController::handleOccupantAffiliationChanged(const std::string& nick, co
 	if (nick == nick_) {
 		setAvailableRoomActions(affiliation, muc_->getOccupant(nick_).getRole());
 	}
+	JID jid(nickToJID(nick));
+	MUCOccupant occupant = muc_->getOccupant(nick);
+	roster_->applyOnItems(SetMUC(jid, occupant.getRole(), affiliation));
 }
 
 std::string MUCController::roleToGroupName(MUCOccupant::Role role) {

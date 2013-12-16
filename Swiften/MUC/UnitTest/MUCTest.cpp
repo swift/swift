@@ -10,7 +10,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
 
-#include <Swiften/MUC/MUC.h>
+#include <Swiften/MUC/MUCImpl.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Presence/StanzaChannelPresenceSender.h>
 #include <Swiften/Presence/DirectedPresenceSender.h>
@@ -158,7 +158,7 @@ class MUCTest : public CppUnit::TestFixture {
 
 	private:
 		MUC::ref createMUC(const JID& jid) {
-			return boost::make_shared<MUC>(channel, router, presenceSender, jid, mucRegistry);
+			return boost::make_shared<MUCImpl>(channel, router, presenceSender, jid, mucRegistry);
 		}
 
 		void handleJoinFinished(const std::string& nick, ErrorPayload::ref error) {

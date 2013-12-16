@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2013 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -36,50 +36,46 @@ namespace Swift {
 			enum LeavingType { LeavePart, LeaveKick, LeaveBan, LeaveDestroy, LeaveNotMember, Disconnect };
 
 		public:
-			MUC(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry);
+			virtual ~MUC();
 
 			/**
 			 * Returns the (bare) JID of the MUC.
 			 */
-			JID getJID() const {
-				return ownMUCJID.toBare();
-			}
+			virtual JID getJID() const = 0;
 
 			/**
 			 * Returns if the room is unlocked and other people can join the room.
 			 * @return True if joinable by others; false otherwise.
 			 */
-			bool isUnlocked() const {
-				return isUnlocked_;
-			}
+			virtual bool isUnlocked() const = 0;
 
-			void joinAs(const std::string &nick);
-			void joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since);
-			/*void queryRoomInfo(); */
-			/*void queryRoomItems(); */
-			std::string getCurrentNick();
-			std::map<std::string, MUCOccupant> getOccupants() const;
-			void part();
-			void handleIncomingMessage(Message::ref message);
+			virtual void joinAs(const std::string &nick) = 0;
+			virtual void joinWithContextSince(const std::string &nick, const boost::posix_time::ptime& since) = 0;
+			/*virtual void queryRoomInfo(); */
+			/*virtual void queryRoomItems(); */
+			/*virtual std::string getCurrentNick() = 0; */
+			virtual std::map<std::string, MUCOccupant> getOccupants() const = 0;
+			virtual void part() = 0;
+			/*virtual void handleIncomingMessage(Message::ref message) = 0; */
 			/** Expose public so it can be called when e.g. user goes offline */
-			void handleUserLeft(LeavingType);
+			virtual void handleUserLeft(LeavingType) = 0;
 			/** Get occupant information*/
-			const MUCOccupant& getOccupant(const std::string& nick);
-			bool hasOccupant(const std::string& nick);
-			void kickOccupant(const JID& jid);
-			void changeOccupantRole(const JID& jid, MUCOccupant::Role role);
-			void requestAffiliationList(MUCOccupant::Affiliation);
-			void changeAffiliation(const JID& jid, MUCOccupant::Affiliation affiliation);
-			void changeSubject(const std::string& subject);
-			void requestConfigurationForm();
-			void configureRoom(Form::ref);
-			void cancelConfigureRoom();
-			void destroyRoom();
+			virtual const MUCOccupant& getOccupant(const std::string& nick) = 0;
+			virtual bool hasOccupant(const std::string& nick) = 0;
+			virtual void kickOccupant(const JID& jid) = 0;
+			virtual void changeOccupantRole(const JID& jid, MUCOccupant::Role role) = 0;
+			virtual void requestAffiliationList(MUCOccupant::Affiliation) = 0;
+			virtual void changeAffiliation(const JID& jid, MUCOccupant::Affiliation affiliation) = 0;
+			virtual void changeSubject(const std::string& subject) = 0;
+			virtual void requestConfigurationForm() = 0;
+			virtual void configureRoom(Form::ref) = 0;
+			virtual void cancelConfigureRoom() = 0;
+			virtual void destroyRoom() = 0;
 			/** Send an invite for the person to join the MUC */
-			void invitePerson(const JID& person, const std::string& reason = "", bool isImpromptu = false, bool isReuseChat = false);
-			void setCreateAsReservedIfNew() {createAsReservedIfNew = true;}
-			void setPassword(const boost::optional<std::string>& password);
-			
+			virtual void invitePerson(const JID& person, const std::string& reason = "", bool isImpromptu = false, bool isReuseChat = false) = 0;
+			virtual void setCreateAsReservedIfNew() = 0;
+			virtual void setPassword(const boost::optional<std::string>& password) = 0;
+
 		public:
 			boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
 			boost::signal<void (ErrorPayload::ref)> onJoinFailed;
@@ -97,41 +93,6 @@ namespace Swift {
 			boost::signal<void ()> onUnlocked;
 			/* boost::signal<void (const MUCInfo&)> onInfoResult; */
 			/* boost::signal<void (const blah&)> onItemsResult; */
-			
 
-		private:
-			bool isFromMUC(const JID& j) const {
-				return ownMUCJID.equals(j, JID::WithoutResource);
-			}
-
-			const std::string& getOwnNick() const {
-				return ownMUCJID.getResource();
-			}
-
-		private:
-			void handleIncomingPresence(Presence::ref presence);
-			void internalJoin(const std::string& nick);
-			void handleCreationConfigResponse(MUCOwnerPayload::ref, ErrorPayload::ref);
-			void handleOccupantRoleChangeResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&, MUCOccupant::Role);
-			void handleAffiliationChangeResponse(MUCAdminPayload::ref, ErrorPayload::ref, const JID&, MUCOccupant::Affiliation);
-			void handleAffiliationListResponse(MUCAdminPayload::ref, ErrorPayload::ref, MUCOccupant::Affiliation);
-			void handleConfigurationFormReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
-			void handleConfigurationResultReceived(MUCOwnerPayload::ref, ErrorPayload::ref);
-
-		private:
-			JID ownMUCJID;
-			StanzaChannel* stanzaChannel;
-			IQRouter* iqRouter_;
-			DirectedPresenceSender* presenceSender;
-			MUCRegistry* mucRegistry;
-			std::map<std::string, MUCOccupant> occupants;
-			bool joinSucceeded_;
-			bool joinComplete_;
-			boost::bsignals::scoped_connection scopedConnection_;
-			boost::posix_time::ptime joinSince_;
-			bool createAsReservedIfNew;
-			bool unlocking;
-			bool isUnlocked_;
-			boost::optional<std::string> password;
 	};
 }

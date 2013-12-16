@@ -5,6 +5,7 @@
  */
 
 #include <Swiften/MUC/MUCManager.h>
+#include <Swiften/MUC/MUCImpl.h>
 
 namespace Swift {
 
@@ -12,7 +13,7 @@ MUCManager::MUCManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, Directe
 }
 
 MUC::ref MUCManager::createMUC(const JID& jid) {
-	return MUC::ref(new MUC(stanzaChannel, iqRouter, presenceSender, jid, mucRegistry));
+	return boost::make_shared<MUCImpl>(stanzaChannel, iqRouter, presenceSender, jid, mucRegistry);
 }
 
 }

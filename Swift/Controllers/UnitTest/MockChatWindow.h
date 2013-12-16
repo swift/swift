@@ -49,7 +49,8 @@ namespace Swift {
 			virtual void setSecurityLabelsError() {}
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return label_;}
 			virtual void setInputEnabled(bool /*enabled*/) {}
-			virtual void setRosterModel(Roster* /*roster*/) {}
+			virtual void setRosterModel(Roster* roster) { roster_ = roster; }
+			Roster* getRosterModel() { return roster_; }
 			virtual void setTabComplete(TabComplete*) {}
 
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {}
@@ -86,6 +87,7 @@ namespace Swift {
 			std::vector<SecurityLabelsCatalog::Item> labels_;
 			bool labelsEnabled_;
 			SecurityLabelsCatalog::Item label_;
+			Roster* roster_;
 	};
 }
 

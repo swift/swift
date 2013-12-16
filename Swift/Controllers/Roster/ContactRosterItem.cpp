@@ -11,13 +11,15 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Elements/Idle.h>
-
+#include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 
 namespace Swift {
 
 
-ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent) : RosterItem(name, parent), jid_(jid), displayJID_(displayJID), blockState_(BlockingNotSupported) {
+ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent)
+: RosterItem(name, parent), jid_(jid), displayJID_(displayJID), mucRole_(MUCOccupant::NoRole), mucAffiliation_(MUCOccupant::NoAffiliation), blockState_(BlockingNotSupported)
+{
 }
 
 ContactRosterItem::~ContactRosterItem() {
@@ -135,6 +137,40 @@ void ContactRosterItem::addGroup(const std::string& group) {
 }
 void ContactRosterItem::removeGroup(const std::string& group) {
 	groups_.erase(std::remove(groups_.begin(), groups_.end(), group), groups_.end());
+}
+
+MUCOccupant::Role ContactRosterItem::getMUCRole() const
+{
+	return mucRole_;
+}
+
+void ContactRosterItem::setMUCRole(const MUCOccupant::Role& role)
+{
+	mucRole_ = role;
+}
+
+MUCOccupant::Affiliation ContactRosterItem::getMUCAffiliation() const
+{
+	return mucAffiliation_;
+}
+
+void ContactRosterItem::setMUCAffiliation(const MUCOccupant::Affiliation& affiliation)
+{
+	mucAffiliation_ = affiliation;
+}
+
+std::string ContactRosterItem::getMUCAffiliationText() const
+{
+	std::string affiliationString;
+	switch (mucAffiliation_) {
+		case MUCOccupant::Owner: affiliationString = QT_TRANSLATE_NOOP("", "Owner"); break;
+		case MUCOccupant::Admin: affiliationString = QT_TRANSLATE_NOOP("", "Admin"); break;
+		case MUCOccupant::Member: affiliationString = QT_TRANSLATE_NOOP("", "Member"); break;
+		case MUCOccupant::Outcast: affiliationString = QT_TRANSLATE_NOOP("", "Outcast"); break;
+		case MUCOccupant::NoAffiliation: affiliationString = ""; break;
+	}
+
+	return affiliationString;
 }
 
 void ContactRosterItem::setSupportedFeatures(const std::set<Feature>& features) {

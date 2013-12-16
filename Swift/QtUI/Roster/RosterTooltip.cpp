@@ -39,6 +39,7 @@ QString RosterTooltip::buildDetailedTooltip(ContactRosterItem* contact, QtScaled
 						"%6"
 						"%7"
 						"%8"
+						"%9"
 					"</td>"
 				"</tr>"
 			"</table>");
@@ -55,6 +56,7 @@ QString RosterTooltip::buildDetailedTooltip(ContactRosterItem* contact, QtScaled
 						"%6"
 						"%7"
 						"%8"
+						"%9"
 					"</td>"
 				"</tr>"
 			"</table>");
@@ -97,7 +99,12 @@ QString RosterTooltip::buildDetailedTooltip(ContactRosterItem* contact, QtScaled
 		lastSeen = htmlEscape(lastSeen) + "<br/>";
 	}
 
-	return tooltipTemplate.arg(scaledAvatarPath, htmlEscape(fullName), htmlEscape(bareJID), presenceIconTag, htmlEscape(statusMessage), idleString, lastSeen, vCardSummary);
+	QString mucOccupant= P2QSTRING(contact->getMUCAffiliationText());
+	if (!mucOccupant.isEmpty()) {
+		mucOccupant = htmlEscape(mucOccupant) + "<br/>";
+	}
+
+	return tooltipTemplate.arg(scaledAvatarPath, htmlEscape(fullName), htmlEscape(bareJID), presenceIconTag, htmlEscape(statusMessage), mucOccupant, idleString, lastSeen, vCardSummary);
 }
 
 QString RosterTooltip::buildVCardSummary(VCard::ref vcard) {

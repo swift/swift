@@ -9,6 +9,7 @@
 #include <boost/algorithm/string.hpp>
 #include <hippomocks.h>
 
+#include "Swiften/Base/foreach.h"
 #include "Swift/Controllers/XMPPEvents/EventController.h"
 #include "Swiften/Presence/DirectedPresenceSender.h"
 #include "Swiften/Presence/StanzaChannelPresenceSender.h"
@@ -20,6 +21,7 @@
 #include "Swiften/Roster/XMPPRoster.h"
 #include "Swift/Controllers/UIEvents/UIEventStream.h"
 #include "Swift/Controllers/UnitTest/MockChatWindow.h"
+#include "Swiften/MUC/UnitTest/MockMUC.h"
 #include "Swiften/Client/DummyStanzaChannel.h"
 #include "Swiften/Queries/DummyIQChannel.h"
 #include "Swiften/Presence/PresenceOracle.h"
@@ -33,6 +35,8 @@
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/Chat/UserSearchController.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 
 using namespace Swift;
@@ -48,6 +52,7 @@ class MUCControllerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testMessageWithEmptyLabelItem);
 	CPPUNIT_TEST(testMessageWithLabelItem);
 	CPPUNIT_TEST(testCorrectMessageWithLabelItem);
+	CPPUNIT_TEST(testRoleAffiliationStates);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -74,7 +79,7 @@ public:
 		entityCapsProvider_ = new DummyEntityCapsProvider();
 		settings_ = new DummySettingsProvider();
 		highlightManager_ = new HighlightManager(settings_);
-		muc_ = boost::make_shared<MUC>(stanzaChannel_, iqRouter_, directedPresenceSender_, mucJID_, mucRegistry_);
+		muc_ = boost::make_shared<MockMUC>(mucJID_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
 		chatMessageParser_ = new ChatMessageParser(std::map<std::string, std::string>());
 		vcardStorage_ = new VCardMemoryStorage(crypto_.get());
@@ -337,10 +342,73 @@ public:
 		CPPUNIT_ASSERT_EQUAL(std::string("Remko has left the room, Kev and Ernie have entered then left the room and Bert has left then returned to the room"), MUCController::generateJoinPartString(list, false));
 	}
 
+	JID jidFromOccupant(const MUCOccupant& occupant) {
+		return JID(mucJID_.toString()+"/"+occupant.getNick());
+	}
+
+	void testRoleAffiliationStates() {
+
+		typedef std::map<std::string, MUCOccupant> occupant_map;
+		occupant_map occupants;
+		occupants.insert(occupant_map::value_type("Kev", MUCOccupant("Kev", MUCOccupant::Participant, MUCOccupant::Owner)));
+		occupants.insert(occupant_map::value_type("Remko", MUCOccupant("Remko", MUCOccupant::Participant, MUCOccupant::Owner)));
+		occupants.insert(occupant_map::value_type("Bert", MUCOccupant("Bert", MUCOccupant::Participant, MUCOccupant::Owner)));
+		occupants.insert(occupant_map::value_type("Ernie", MUCOccupant("Ernie", MUCOccupant::Participant, MUCOccupant::Owner)));
+
+		/* populate the MUC with fake users */
+		typedef const std::pair<std::string,MUCOccupant> occupantIterator;
+		foreach(occupantIterator &occupant, occupants) {
+			muc_->insertOccupant(occupant.second);
+		}
+
+		std::vector<MUCOccupant> alterations;
+		alterations.push_back(MUCOccupant("Kev", MUCOccupant::Visitor, MUCOccupant::Admin));
+		alterations.push_back(MUCOccupant("Remko", MUCOccupant::Moderator, MUCOccupant::Member));
+		alterations.push_back(MUCOccupant("Bert", MUCOccupant::Visitor, MUCOccupant::Outcast));
+		alterations.push_back(MUCOccupant("Ernie", MUCOccupant::NoRole, MUCOccupant::Member));
+		alterations.push_back(MUCOccupant("Bert", MUCOccupant::Moderator, MUCOccupant::Owner));
+		alterations.push_back(MUCOccupant("Kev", MUCOccupant::Participant, MUCOccupant::Outcast));
+		alterations.push_back(MUCOccupant("Bert", MUCOccupant::Visitor, MUCOccupant::NoAffiliation));
+		alterations.push_back(MUCOccupant("Remko", MUCOccupant::NoRole, MUCOccupant::NoAffiliation));
+		alterations.push_back(MUCOccupant("Ernie", MUCOccupant::Visitor, MUCOccupant::Outcast));
+
+		foreach(const MUCOccupant& alteration, alterations) {
+			/* perform an alteration to a user's role and affiliation */
+			occupant_map::iterator occupant = occupants.find(alteration.getNick());
+			CPPUNIT_ASSERT(occupant != occupants.end());
+			const JID jid = jidFromOccupant(occupant->second);
+			/* change the affiliation, leave the role in place */
+			muc_->changeAffiliation(jid, alteration.getAffiliation());
+			occupant->second = MUCOccupant(occupant->first, occupant->second.getRole(), alteration.getAffiliation());
+			testRoleAffiliationStatesVerify(occupants);
+			/* change the role, leave the affiliation in place */
+			muc_->changeOccupantRole(jid, alteration.getRole());
+			occupant->second = MUCOccupant(occupant->first, alteration.getRole(), occupant->second.getAffiliation());
+			testRoleAffiliationStatesVerify(occupants);
+		}
+	}
+
+	void testRoleAffiliationStatesVerify(const std::map<std::string, MUCOccupant> &occupants) {
+		/* verify that the roster is in sync */
+		GroupRosterItem* group = window_->getRosterModel()->getRoot();
+		foreach(RosterItem* rosterItem, group->getChildren()) {
+			GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(rosterItem);
+			CPPUNIT_ASSERT(child);
+			foreach(RosterItem* childItem, child->getChildren()) {
+				ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(childItem);
+				CPPUNIT_ASSERT(item);
+				std::map<std::string, MUCOccupant>::const_iterator occupant = occupants.find(item->getJID().getResource());
+				CPPUNIT_ASSERT(occupant != occupants.end());
+				CPPUNIT_ASSERT(item->getMUCRole() == occupant->second.getRole());
+				CPPUNIT_ASSERT(item->getMUCAffiliation() == occupant->second.getAffiliation());
+			}
+		}
+	}
+
 private:
 	JID self_;
 	JID mucJID_;
-	MUC::ref muc_;
+	MockMUC::ref muc_;
 	std::string nick_;
 	DummyStanzaChannel* stanzaChannel_;
 	DummyIQChannel* iqChannel_;

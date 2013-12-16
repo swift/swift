@@ -18,6 +18,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/StatusShow.h>
+#include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
 
@@ -61,7 +62,13 @@ class ContactRosterItem : public RosterItem {
 		/** Only used so a contact can know about the groups it's in*/
 		void addGroup(const std::string& group);
 		void removeGroup(const std::string& group);
-		
+
+		MUCOccupant::Role getMUCRole() const;
+		void setMUCRole(const MUCOccupant::Role& role);
+		MUCOccupant::Affiliation getMUCAffiliation() const;
+		void setMUCAffiliation(const MUCOccupant::Affiliation& affiliation);
+		std::string getMUCAffiliationText() const;
+
 		void setSupportedFeatures(const std::set<Feature>& features);
 		bool supportsFeature(Feature feature) const;
 
@@ -82,6 +89,8 @@ class ContactRosterItem : public RosterItem {
 		boost::shared_ptr<Presence> offlinePresence_;
 		boost::shared_ptr<Presence> shownPresence_;
 		std::vector<std::string> groups_;
+		MUCOccupant::Role mucRole_;
+		MUCOccupant::Affiliation mucAffiliation_;
 		std::set<Feature> features_;
 		BlockState blockState_;
 		VCard::ref vcard_;
