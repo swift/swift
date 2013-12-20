@@ -364,6 +364,20 @@ static std::string convertPresenceTypeToString(Presence::Type type) {
 	return result;
 }
 
+static std::string convertMessageTypeToString(Message::Type type) {
+	std::string result;
+
+	switch (type) {
+		case Message::Normal: result = "normal"; break;
+		case Message::Chat: result = "chat"; break;
+		case Message::Error: result = "error"; break;
+		case Message::Groupchat: result = "groupchat"; break;
+		case Message::Headline: result = "headline"; break;
+	}
+
+	return result;
+}
+
 static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 	switch (event.type) {
 		case SluiftClient::Event::MessageType: {
@@ -371,7 +385,8 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 			Lua::Table result = boost::assign::map_list_of
 				("type", boost::make_shared<Lua::Value>(std::string("message")))
 				("from", boost::make_shared<Lua::Value>(message->getFrom().toString()))
-				("body", boost::make_shared<Lua::Value>(message->getBody()));
+				("body", boost::make_shared<Lua::Value>(message->getBody()))
+				("message_type", boost::make_shared<Lua::Value>(convertMessageTypeToString(message->getType())));
 			Lua::pushValue(L, result);
 			Lua::registerTableToString(L, -1);
 			break;
