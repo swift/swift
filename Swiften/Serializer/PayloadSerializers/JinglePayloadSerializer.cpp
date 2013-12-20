@@ -11,6 +11,7 @@
 #include <boost/smart_ptr/intrusive_ptr.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -93,7 +94,7 @@ std::string JinglePayloadSerializer::actionToString(JinglePayload::Action action
 		case JinglePayload::TransportReplace:
 			return "transport-replace";
 		case JinglePayload::UnknownAction:
-			std::cerr << "Serializing unknown action value." << std::endl;
+			SWIFT_LOG(warning) << "Serializing unknown action value." << std::endl;
 			return "";
 	}
 	assert(false);
@@ -103,7 +104,7 @@ std::string JinglePayloadSerializer::actionToString(JinglePayload::Action action
 std::string JinglePayloadSerializer::reasonTypeToString(JinglePayload::Reason::Type type) const {
 	switch(type) {
 		case JinglePayload::Reason::UnknownType:
-			std::cerr << "Unknown jingle reason type!" << std::endl;
+			SWIFT_LOG(warning) << "Unknown jingle reason type!" << std::endl;
 			return "";
 		case JinglePayload::Reason::AlternativeSession:
 			return "alternative-session";

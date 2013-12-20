@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -46,7 +46,7 @@ void VCardUpdateAvatarManager::handlePresenceReceived(boost::shared_ptr<Presence
 
 void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vCard) {
 	if (!vCard) {
-		std::cerr << "Warning: " << from << ": null vcard payload" << std::endl;
+		SWIFT_LOG(debug) << "Missing element: " << from << ": null vcard payload" << std::endl;
 		return;
 	}
 

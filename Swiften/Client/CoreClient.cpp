@@ -450,11 +450,11 @@ void CoreClient::resetSession() {
 
 void CoreClient::forceReset() {
 	if (connector_) {
-		std::cerr << "Warning: Client not disconnected properly: Connector still active" << std::endl;
+		SWIFT_LOG(warning) << "Client not disconnected properly: Connector still active" << std::endl;
 		resetConnector();
 	}
 	if (sessionStream_ || connection_) {
-		std::cerr << "Warning: Client not disconnected properly: Session still active" << std::endl;
+		SWIFT_LOG(warning) << "Client not disconnected properly: Session still active" << std::endl;
 		resetSession();
 	}
 }
