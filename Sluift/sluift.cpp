@@ -21,12 +21,14 @@
 #include <Sluift/Lua/FunctionRegistration.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
 #include <Sluift/Lua/Debug.h>
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
 
@@ -78,6 +80,11 @@ SLUIFT_LUA_FUNCTION(Sluift, sleep) {
 		Sluift::globals.eventLoop.runOnce();
 	}
 	return 0;
+}
+
+SLUIFT_LUA_FUNCTION(Sluift, new_uuid) {
+	lua_pushstring(L, IDGenerator().generateID().c_str());
+	return 1;
 }
 
 static int sluift_index(lua_State* L) {
@@ -214,6 +221,45 @@ SLUIFT_LUA_FUNCTION(Base64, decode) {
 }
 
 /*******************************************************************************
+ * IDN Functions
+ ******************************************************************************/
+
+SLUIFT_LUA_FUNCTION(IDN, encode) {
+	IDNConverter* converter = Sluift::globals.networkFactories.getIDNConverter();
+	lua_pushstring(L, converter->getIDNAEncoded(Lua::checkString(L, 1)).c_str());
+	return 1;
+}
+
+SLUIFT_LUA_FUNCTION(IDN, stringprep) {
+	IDNConverter* converter = Sluift::globals.networkFactories.getIDNConverter();
+	IDNConverter::StringPrepProfile profile;
+	std::string profileString = Lua::checkString(L, 2);
+	if (profileString == "nameprep") {
+		profile = IDNConverter::NamePrep;
+	}
+	else if (profileString == "xmpp_nodeprep") {
+		profile = IDNConverter::XMPPNodePrep;
+	}
+	else if (profileString == "xmpp_resourceprep") {
+		profile = IDNConverter::XMPPResourcePrep;
+	}
+	else if (profileString == "saslprep") {
+		profile = IDNConverter::SASLPrep;
+	}
+	else {
+		throw Lua::Exception("Invalid profile");
+	}
+	try {
+		lua_pushstring(L, converter->getStringPrepared(Lua::checkString(L, 1), profile).c_str());
+	}
+	catch (const std::exception&) {
+		throw Lua::Exception("Error");
+	}
+	return 1;
+}
+
+
+/*******************************************************************************
  * Module registration
  ******************************************************************************/
 
@@ -239,6 +285,8 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_setfield(L, -2, "jid");
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "Base64");
 	lua_setfield(L, -2, "base64");
+	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "IDN");
+	lua_setfield(L, -2, "idn");
 
 	// Register convenience functions
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.bootIndex);
