@@ -24,4 +24,13 @@ LUALIB_API void luaL_openlibs (lua_State *L) {
     lua_pushstring(L, lib->name);
     lua_call(L, 1, 0);
   }
+
+	/* Import sluift into global namespace */
+  lua_getfield(L, LUA_GLOBALSINDEX, "sluift");
+	for (lua_pushnil(L); lua_next(L, -2); ) {
+		lua_pushvalue(L, -2);
+		lua_pushvalue(L, -2);
+		lua_settable(L, LUA_GLOBALSINDEX);
+		lua_pop(L, 1);
+	}
 }
