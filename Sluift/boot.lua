@@ -122,14 +122,14 @@ end
 -- Client
 --------------------------------------------------------------------------------
 
-function Client.connect (client, ...)
+function Client:connect (...)
 	local options = parse_options({}, ...)
 	local f = options.f
-	client:async_connect(options)
-	client:wait_connected()
+	self:async_connect(options)
+	self:wait_connected()
 	if f then
-		local result = { xpcall(function() return f(client) end, debug.traceback) }
-		client:disconnect()
+		local result = { xpcall(function() return f(self) end, debug.traceback) }
+		self:disconnect()
 		if result[1] then
 			table.remove(result, 1)
 			return unpack(result)
@@ -140,17 +140,17 @@ function Client.connect (client, ...)
 	return true
 end
 
-function Client.events (client, options)
+function Client:events (options)
 	local function client_events_iterator(s)
 		return s['client']:get_next_event(s['options'])
 	end
-	return client_events_iterator, {client = client, options = options}
+	return client_events_iterator, {client = self, options = options}
 end
 
-function Client.for_each_event (client, ...)
+function Client:for_each_event (...)
 	local options = parse_options({}, ...)
 	if not type(options.f) == 'function' then error('Expected function') end
-	for event in client:events(options) do
+	for event in self:events(options) do
 		local result = options.f(event)
 		if result then
 			return result
@@ -202,8 +202,8 @@ for query_action, query_types in pairs(get_set_shortcuts) do
 	end
 end
 
-function Client.pubsub (client, jid)
-	local result = { client = client, jid = jid }
+function Client:pubsub (jid)
+	local result = { client = self, jid = jid }
 	setmetatable(result, PubSub)
 	return result
 end
@@ -222,12 +222,12 @@ local function process_pubsub_event (event)
 	end
 end
 
-function PubSub.list_nodes (service, options)
-	return service.client:get_disco_items(merge_tables({to = service.jid}, options))
+function PubSub:list_nodes (options)
+	return self.client:get_disco_items(merge_tables({to = self.jid}, options))
 end
 
-function PubSub.node (service, node)
-	local result = { client = service.client, jid = service.jid, node = node }
+function PubSub:node (node)
+	local result = { client = self.client, jid = self.jid, node = node }
 	setmetatable(result, PubSubNode)
 	return result
 end
@@ -274,8 +274,8 @@ local function pubsub_node_configuration_to_form(configuration)
 	return { type = "submit", fields = fields }
 end
 
-function PubSubNode.list_items (node, options)
-	return node.client:get_disco_items(merge_tables({to = node.jid, disco_items = { node = node.node }}, options))
+function PubSubNode:list_items (options)
+	return self.client:get_disco_items(merge_tables({to = self.jid, disco_items = { node = self.node }}, options))
 end
 
 local simple_pubsub_node_queries = {
@@ -295,89 +295,89 @@ for method, query_type in pairs(simple_pubsub_node_queries) do
 	end
 end
 
-function PubSubNode.get_items (node, ...)
+function PubSubNode:get_items (...)
 	local options = parse_options({}, ...)
 	local items = options.items or {}
 	if options.maximum_items then
 		items = merge_tables({maximum_items = options.maximum_items}, items)
 	end
-	items = merge_tables({_type = 'pubsub_items', node = node.node}, items)
-	return node.client:query_pubsub(merge_tables({ 
-		type = 'get', to = node.jid, query = items}, options))
+	items = merge_tables({_type = 'pubsub_items', node = self.node}, items)
+	return self.client:query_pubsub(merge_tables({ 
+		type = 'get', to = self.jid, query = items}, options))
 end
 
-function PubSubNode.get_item (node, ...)
+function PubSubNode:get_item (...)
 	local options = parse_options({}, ...)
 	if not type(options.id) == 'string' then error('Expected ID') end
-	return PubSubNode.get_items(node, {items = {{id = options.id}}})
+	return self:get_items{items = {{id = options.id}}}
 end
 
-function PubSubNode.create (node, options)
+function PubSubNode:create (options)
 	options = options or {}
 	local configure
 	if options['configuration'] then
 		configure = { data = pubsub_node_configuration_to_form(options['configuration']) }
 	end
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_create', node = node.node, configure = configure }
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_create', node = self.node, configure = configure }
 		}, options))
 end
 
-function PubSubNode.delete (node, options)
+function PubSubNode:delete (options)
 	options = options or {}
 	local redirect
 	if options['redirect'] then
 		redirect = {uri = options['redirect']}
 	end
-	return node.client:query_pubsub(merge_tables({ type = 'set', to = node.jid, query = { 
-			_type = 'pubsub_owner_delete', node = node.node, redirect = redirect 
+	return self.client:query_pubsub(merge_tables({ type = 'set', to = self.jid, query = { 
+			_type = 'pubsub_owner_delete', node = self.node, redirect = redirect 
 		}}, options))
 end
 
-function PubSubNode.set_configuration(node, options)
+function PubSubNode:set_configuration(options)
 	options = options or {}
 	local configuration = pubsub_node_configuration_to_form(options['configuration'])
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_owner_configure', node = node.node, data = configuration }
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_owner_configure', node = self.node, data = configuration }
 		}, options))
 end
 
-function PubSubNode.set_owner_affiliations(node, ...)
+function PubSubNode:set_owner_affiliations(...)
 	local options = parse_options({}, ...)
-	return node.client:query_pubsub(merge_tables({ 
-		type = 'set', to = node.jid, query = merge_tables({
-				_type = 'pubsub_owner_affiliations', node = node.node, 
+	return self.client:query_pubsub(merge_tables({ 
+		type = 'set', to = self.jid, query = merge_tables({
+				_type = 'pubsub_owner_affiliations', node = self.node, 
 		}, options.affiliations)}, options))
 end
 
 
-function PubSubNode.subscribe(node, ...)
+function PubSubNode:subscribe(...)
 	local options = parse_options(...)
-	local jid = options.jid or sluift.jid.to_bare(node.client:jid())
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_subscribe', node = node.node, jid = jid }
+	local jid = options.jid or sluift.jid.to_bare(self.client:jid())
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_subscribe', node = self.node, jid = jid }
 		}, options))
 end
 
-function PubSubNode.unsubscribe(node, options)
+function PubSubNode:unsubscribe(options)
 	options = options or {}
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_unsubscribe', node = node.node, jid = options['jid'] }
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_unsubscribe', node = self.node, jid = options['jid'] }
 		}, options))
 end
 
-function PubSubNode.get_subscription_options (node, options)
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'get', to = node.jid, query = { 
-				_type = 'pubsub_options', node = node.node, jid = options['jid'] }
+function PubSubNode:get_subscription_options (options)
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'get', to = self.jid, query = { 
+				_type = 'pubsub_options', node = self.node, jid = options['jid'] }
 		}, options))
 end
 
-function PubSubNode.publish(node, ...)
+function PubSubNode:publish(...)
 	local options = parse_options({}, ...)
 	local items = options.items or {}
 	if options.item then
@@ -389,29 +389,29 @@ function PubSubNode.publish(node, ...)
 		end
 		options.item = nil
 	end
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_publish', node = node.node, items = items }
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_publish', node = self.node, items = items }
 		}, options))
 end
 
-function PubSubNode.retract(node, ...)
+function PubSubNode:retract(...)
 	local options = parse_options({}, ...)
 	local items = options.items
 	if options.id then
 		items = {{id = options.id}}
 	end
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_retract', node = node.node, items = items, notify = options['notify']
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_retract', node = self.node, items = items, notify = options['notify']
 		}}, options))
 end
 
-function PubSubNode.purge(node, ...)
+function PubSubNode:purge(...)
 	local options = parse_options({}, ...)
-	return node.client:query_pubsub(merge_tables(
-		{ type = 'set', to = node.jid, query = { 
-				_type = 'pubsub_owner_purge', node = node.node
+	return self.client:query_pubsub(merge_tables(
+		{ type = 'set', to = self.jid, query = { 
+				_type = 'pubsub_owner_purge', node = self.node
 		}}, options))
 end
 
