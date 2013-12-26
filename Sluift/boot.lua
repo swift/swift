@@ -48,26 +48,33 @@ local function table_value_tostring(value)
 	end
 end
 
-local function table_tostring(table, indent, accumulator)
+local function table_tostring(table, print_functions, indent, accumulator, history)
 	local INDENT = '  '
 	local accumulator = accumulator or ''
+	local history = history or {}
 	local indent = indent or ''
 	accumulator = accumulator .. '{'
+	history[table] = true
 	local is_first = true
 	for key, value in pairs(table) do
-		if type(value) ~= 'function' then
+		if print_functions or type(value) ~= 'function' then
 			if not is_first then
 				accumulator = accumulator .. ','
 			end
 			is_first = false
 			accumulator = accumulator .. '\n' .. indent .. INDENT .. '[' .. table_value_tostring(key) .. '] = '
 			if type(value) == 'table' then
-				accumulator = table_tostring(value, indent .. INDENT, accumulator)
+				if history[value] then
+					accumulator = accumulator .. "..."
+				else
+					accumulator = table_tostring(value, print_functions, indent .. INDENT, accumulator, history)
+				end
 			else
 				accumulator = accumulator .. table_value_tostring(value)
 			end
 		end
 	end
+	history[table] = false
 	if not is_first then
 		accumulator = accumulator .. '\n' .. indent
 	end
@@ -76,7 +83,7 @@ local function table_tostring(table, indent, accumulator)
 end
 
 local function tprint(table)
-	print(table_tostring(table))
+	print(table_tostring(table, true))
 end
 
 local function register_table_tostring(table)
