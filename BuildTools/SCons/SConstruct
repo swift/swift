@@ -422,7 +422,7 @@ if env.get("lua_includedir", None) :
 	lua_flags["CPPPATH"] = [env["lua_includedir"]]
 lua_conf_env.MergeFlags(lua_flags)
 conf = Configure(lua_conf_env)
-if not env.get("lua_force_bundled", False) and conf.CheckCXXHeader("lua.hpp") and conf.CheckLib(env["lua_libname"]) :
+if not env.get("lua_force_bundled", False) and conf.CheckLibWithHeader(env["lua_libname"], "lua.hpp", "cxx", autoadd = 0) :
 	env["HAVE_LUA"] = 1
 	env["LUA_FLAGS"] = { "LIBS": [env["lua_libname"]] }
 	lua_version = GetVersion(conf, "LUA_VERSION_NUM", "lua.h")

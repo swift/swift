@@ -19,6 +19,6 @@ namespace Swift {
 		LuaElementConvertors elementConvertor;
 		SimpleEventLoop eventLoop;
 		BoostNetworkFactories networkFactories;
-		int bootIndex;
+		int coreLibIndex;
 	};
 }

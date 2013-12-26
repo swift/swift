@@ -4,6 +4,12 @@
 	See the COPYING file for more information.
 --]]
 
+local _G = _G
+local pairs, ipairs, print, tostring, type, error = pairs, ipairs, print, tostring, type, error
+local setmetatable, getmetatable = setmetatable, getmetatable
+local string = string
+_ENV = nil
+
 local Client = {}
 local PubSub = {}
 local PubSubNode = {}
@@ -23,11 +29,12 @@ local function merge_tables(...)
 end
 
 local function clone_table(table) 
- return merge_tables(table)
+	return merge_tables(table)
 end
 
 local function parse_options(unnamed_parameters, arg1, arg2)
 	local options = {}
+	local f
 	if type(arg1) == 'table' then
 		options = arg1
 		f = arg2
@@ -103,7 +110,7 @@ local function get_by_type(table, typ)
 		if v['_type'] == typ then
 			return v
 		end
- end
+	end
 end
 
 local function register_get_by_type_index(table)
@@ -118,6 +125,20 @@ local function register_get_by_type_index(table)
 	return table
 end
 
+local function call(options)
+	local f = options[1]
+	local result = { xpcall(f, debug.traceback) }
+	if options.finally then
+		options.finally()
+	end
+	if result[1] then
+		table.remove(result, 1)
+		return unpack(result)
+	else
+		error(result[2])
+	end
+end
+
 --------------------------------------------------------------------------------
 -- Client
 --------------------------------------------------------------------------------
@@ -128,14 +149,7 @@ function Client:connect (...)
 	self:async_connect(options)
 	self:wait_connected()
 	if f then
-		local result = { xpcall(function() return f(self) end, debug.traceback) }
-		self:disconnect()
-		if result[1] then
-			table.remove(result, 1)
-			return unpack(result)
-		else
-			error(result[2])
-		end
+		return call {function() return f(self) end, finally = function() self:disconnect() end}
 	end
 	return true
 end
@@ -178,6 +192,11 @@ for method, event_type in pairs({messages = 'message', pubsub_events = 'pubsub'}
 		options['type'] = event_type
 		return client:events (options)
 	end
+end
+
+-- Process all pending events
+function Client:process_events ()
+	for event in self:events{timeout=0} do end
 end
 
 --
@@ -254,7 +273,7 @@ for _, method in ipairs({'events', 'get_next_event', 'for_each_event'}) do
 			return event.type == 'pubsub' and event.from == node.jid and event.node == node
 		end
 		return node.client[method](node.client, options)
- end
+	end
 end
 
 --------------------------------------------------------------------------------

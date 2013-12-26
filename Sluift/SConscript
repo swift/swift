@@ -32,7 +32,7 @@ elif env["SCONS_STAGE"] == "build" :
 		"ElementConvertors/CommandConvertor.cpp",
 		"ClientHelpers.cpp",
 		"SluiftClient.cpp",
-		"boot.c",
+		"core.c",
 		"client.cpp",
 		"sluift.cpp"
 	]
@@ -42,6 +42,8 @@ elif env["SCONS_STAGE"] == "build" :
 	sluift_env.UseFlags(env.get("LUA_FLAGS", {}))
 	sluift_env.UseFlags(env["SWIFTEN_FLAGS"])
 	sluift_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
+	# Support compilation on both Lua 5.1 and Lua 5.2
+	sluift_env.Append(CPPDEFINES = ["LUA_COMPAT_ALL"])
 	if sluift_env["PLATFORM"] == "win32" :
 		sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 
@@ -62,7 +64,7 @@ elif env["SCONS_STAGE"] == "build" :
 		f.close()
 	sluift_env.Command("lua.c", ["#/3rdParty/Lua/src/lua.c", sluift_env.Value(sluift_env["SLUIFT_VERSION"])], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
 
-	# Generate boot.cpp
+	# Generate core.cpp
 	def generate_embedded_lua(env, target, source) :
 		f = open(source[0].abspath, "r")
 		data = f.read()
@@ -70,7 +72,7 @@ elif env["SCONS_STAGE"] == "build" :
 		f = open(target[0].abspath, "w")
 		f.write('const char ' + source[0].name.replace(".", "_") + "[] = \"" + data.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"') + "\";")
 		f.close()
-	sluift_env.Command("boot.c", ["boot.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
+	sluift_env.Command("core.c", ["core.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
 
 	if sluift_env.get("HAVE_READLINE", False) :
 		sluift_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])

@@ -40,7 +40,7 @@ namespace Swift {
 	}
 }
 
-extern "C" const char boot_lua[];
+extern "C" const char core_lua[];
 
 /*******************************************************************************
  * Module functions
@@ -263,21 +263,21 @@ SLUIFT_LUA_FUNCTION(IDN, stringprep) {
  * Module registration
  ******************************************************************************/
 
-static const luaL_reg sluift_functions[] = { {NULL, NULL} };
+static const luaL_Reg sluift_functions[] = { {NULL, NULL} };
 
 SLUIFT_API int luaopen_sluift(lua_State* L) {
 	// Initialize globals
 	Sluift::globals.debug = false;
 	Sluift::globals.timeout = -1;
 
-	luaL_register(L, "sluift", sluift_functions);
+	luaL_register(L, lua_tostring(L, 1), sluift_functions);
 
-	// Load bootstrap code
-	if (luaL_loadbuffer(L, boot_lua, strlen(boot_lua), "boot.lua") != 0) {
+	// Load core lib code
+	if (luaL_loadbuffer(L, core_lua, strlen(core_lua), "core.lua") != 0) {
 		lua_error(L);
 	}
 	lua_call(L, 0, 1);
-	Sluift::globals.bootIndex = luaL_ref(L, LUA_REGISTRYINDEX);
+	Sluift::globals.coreLibIndex = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	// Register functions
 	Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, "Sluift");
@@ -289,14 +289,13 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_setfield(L, -2, "idn");
 
 	// Register convenience functions
-	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.bootIndex);
-	lua_getfield(L, -1, "tprint");
-	lua_setfield(L, -3, "tprint");
-	lua_pop(L, 1);
-
-	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.bootIndex);
-	lua_getfield(L, -1, "disco");
-	lua_setfield(L, -3, "disco");
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	std::vector<std::string> coreLibExports = boost::assign::list_of
+		("tprint")("disco");
+	foreach (const std::string& coreLibExport, coreLibExports) {
+		lua_getfield(L, -1, coreLibExport.c_str());
+		lua_setfield(L, -3, coreLibExport.c_str());
+	}
 	lua_pop(L, 1);
 
 	// Set read only
@@ -312,7 +311,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	foreach (const std::string& table, tables) {
 		Lua::FunctionRegistry::getInstance().registerTypeMetaTable(L, table);
 		luaL_getmetatable(L, Lua::FunctionRegistry::getMetaTableNameForType(table).c_str());
-		lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.bootIndex);
+		lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 		lua_getfield(L, -1, table.c_str());
 		if (!lua_isnil(L, -1)) {
 			for (lua_pushnil(L); lua_next(L, -2); ) {

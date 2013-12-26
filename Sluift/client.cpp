@@ -419,7 +419,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 			lua_pushstring(L, event.from.toString().c_str());
 			lua_setfield(L, -2, "from");
 
-			lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.bootIndex);
+			lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 			lua_getfield(L, -1, "process_pubsub_event");
 			lua_pushvalue(L, -3);
 			lua_call(L, 1, 0);

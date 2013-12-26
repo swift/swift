@@ -2,6 +2,6 @@ lua.c
 sluift_dll.cpp
 sluift
 dll.c
-boot.c
+core.c
 dll/
 exe/
