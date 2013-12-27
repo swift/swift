@@ -14,6 +14,7 @@
 #include <boost/program_options.hpp>
 #include <boost/version.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/assign/list_of.hpp>
 #include <Sluift/Console.h>
 #include <Sluift/StandardTerminal.h>
 #include <Sluift/sluift.h>
@@ -151,8 +152,13 @@ int main(int argc, char* argv[]) {
 		if (arguments.count("interactive") || arguments.count("script") == 0) {
 			// Import some useful functions into the global namespace
 			lua_getglobal(L, "sluift");
-			lua_getfield(L, -1, "help");
-			lua_setglobal(L, "help");
+			std::vector<std::string> globalImports = boost::assign::list_of
+				("help")("with");
+			foreach (const std::string& globalImport, globalImports) {
+				lua_getfield(L, -1, globalImport.c_str());
+				lua_setglobal(L, globalImport.c_str());
+			}
+			lua_pop(L, 1);
 			
 			std::cout << SLUIFT_WELCOME_STRING << std::endl;
 #ifdef HAVE_EDITLINE

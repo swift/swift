@@ -97,8 +97,29 @@ local function copy(object)
 	end
 end
 
+local function clear(table)
+	setmetatable(table, nil)
+	for key, value in pairs(table) do
+		rawset(table, key, nil)
+	end
+end
+
 local function trim(string)
 	return string:gsub("^%s*(.-)%s*$", "%1")
+end
+
+local function keys(table)
+	local result = {}
+	for key in pairs(table) do
+		result[#result+1] = key
+	end
+	return result
+end
+
+local function insert_all(table, values)
+	for _, value in pairs(values) do
+		table[#table+1] = value
+	end
 end
 
 --------------------------------------------------------------------------------
@@ -405,7 +426,9 @@ end
 _H = {
 	[[ Client interface ]]
 }
-local Client = {}
+local Client = {
+	_with_prompt = function(client) return client:jid() end
+}
 Client.__index = Client
 register_class_table_help(Client, "Client")
 
@@ -423,6 +446,90 @@ _H = {
 local PubSubNode = {}
 PubSubNode.__index = PubSubNode
 register_class_table_help(PubSubNode, "PubSubNode")
+
+
+--------------------------------------------------------------------------------
+-- with
+--------------------------------------------------------------------------------
+
+local original_G
+
+local function with (target, f)
+	-- Dynamic scope
+	if f then
+		with(target)
+		return call{f, finally = function() with() end}
+	end
+
+	-- No scope
+	if target then
+		if not original_G then
+			original_G = copy(_G)
+			setmetatable(original_G, getmetatable(_G))
+			clear(_G)
+		end
+
+		setmetatable(_G, { 
+			__index = function(_, key)
+				local value = target[key]
+				if value then
+					if type(value) == 'function' then
+						-- Add 'self' argument to all functions
+						return function(...) return value(target, ...) end
+					else
+						return value
+					end
+				else
+					return original_G[key]
+				end
+			end,
+			__newindex = original_G,
+			_completions = function ()
+				local result = {}
+				if type(target) == "table" then
+					insert_all(result, keys(target))
+				end
+				local mt = getmetatable(target)
+				if mt and type(mt.__index) == 'table' then
+					insert_all(result, keys(mt.__index))
+				end
+				insert_all(result, keys(original_G))
+				return result
+			end
+		})
+
+		-- Set prompt
+		local prompt = nil
+		
+		-- Try '_with_prompt' in metatable
+		local target_metatable = getmetatable(target)
+		if target_metatable then
+			if type(target_metatable._with_prompt) == "function" then
+				prompt = target_metatable._with_prompt(target)
+			else
+				prompt = target_metatable._with_prompt
+			end
+		end
+
+		if not prompt then
+			-- Use tostring()
+			local target_string = tostring(target)
+			if string.len(target_string) > 25 then
+				prompt = string.sub(target_string, 0, 22) .. "..."
+			else
+				prompt = target_string
+			end
+		end
+		rawset(_G, "_PROMPT", prompt .. '> ')
+	else
+		-- Reset _G
+		clear(_G)
+		for key, value in pairs(original_G) do
+			_G[key] = value
+		end
+		setmetatable(_G, original_G)
+	end
+end
 
 --------------------------------------------------------------------------------
 -- Client
@@ -884,4 +991,5 @@ return {
 	help = help,
 	extra_help = extra_help,
 	copy = copy,
+	with = with
 }
