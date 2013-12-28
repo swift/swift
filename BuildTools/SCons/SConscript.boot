@@ -64,6 +64,11 @@ vars.Add(PathVariable("lua_includedir", "Lua headers location", None, PathVariab
 vars.Add(PathVariable("lua_libdir", "Lua library location", None, PathVariable.PathAccept))
 vars.Add("lua_libname", "Lua library name", "liblua" if os.name == "nt" else "lua")
 vars.Add("lua_force_bundled", "Force use of the bundled Lua", None)
+
+vars.Add(PathVariable("editline_includedir", "Readline headers location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("editline_libdir", "Readline library location", None, PathVariable.PathAccept))
+vars.Add("editline_libname", "Readline library name", "libedit" if os.name == "nt" else "edit")
+
 vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))

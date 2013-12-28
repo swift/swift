@@ -6,12 +6,29 @@ Import('sluift_variant')
 Import('sluift_sources')
 
 if sluift_variant == 'exe' :
-	env["SLUIFT"] = sluift_env.Program("sluift", sluift_sources + [
-		"#/Sluift/lua.c",
-		"#/Sluift/linit.c",
-	])
-	if sluift_env.get("SLUIFT_INSTALLDIR", "") :
-		sluift_env.Install(os.path.join(sluift_env["SLUIFT_INSTALLDIR"], "bin"), env["SLUIFT"])
+	common_objects = sluift_env.StaticObject(sluift_sources)
+
+	sluift_exe_env = sluift_env.Clone()
+	tokenize = sluift_exe_env.StaticObject("#/Sluift/tokenize.cpp")
+	exe_sources = tokenize + [
+		"#/Sluift/Console.cpp",
+		"#/Sluift/Terminal.cpp",
+		"#/Sluift/StandardTerminal.cpp",
+		"#/Sluift/Completer.cpp",
+		"#/Sluift/main.cpp",
+	]
+
+	if sluift_exe_env.get("HAVE_EDITLINE", False) :
+		sluift_exe_env.Append(CPPDEFINES = ["HAVE_EDITLINE"])
+		sluift_exe_env.MergeFlags(sluift_exe_env["EDITLINE_FLAGS"])
+		exe_sources += ["#/Sluift/EditlineTerminal.cpp"]
+
+	env["SLUIFT"] = sluift_exe_env.Program("sluift", common_objects + exe_sources)
+	if sluift_exe_env.get("SLUIFT_INSTALLDIR", "") :
+		sluift_exe_env.Install(os.path.join(sluift_exe_env["SLUIFT_INSTALLDIR"], "bin"), env["SLUIFT"])
+
+	# Unit tests
+	env.Append(UNITTEST_OBJECTS = tokenize + ["#/Sluift/UnitTest/TokenizeTest.cpp"])
 else :
 	sluift_env["SLUIFT_DLL_SUFFIX"] = "${SHLIBSUFFIX}"
 	if sluift_env["PLATFORM"] == "darwin" :

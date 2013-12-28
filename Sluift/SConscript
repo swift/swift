@@ -47,22 +47,10 @@ elif env["SCONS_STAGE"] == "build" :
 	if sluift_env["PLATFORM"] == "win32" :
 		sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 
-	# Generate a customized lua.c
-	sluift_env["SLUIFT_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "sluift")
-	def patchLua(env, target, source) :
-		f = open(source[0].abspath, "r")
-		contents = f.read()
-		f.close()
-		if env["PLATFORM"] == "win32" :
-			key = "Z"
-		else :
-			key = "D"
-		contents = contents.replace("LUA_RELEASE", "\"== Sluift XMPP Console (%(version)s) == \\nPress Ctrl-%(key)s to exit\"" % {"version": source[1].get_contents(), "key" : key})
-		contents = contents.replace("LUA_COPYRIGHT", "")
-		f = open(target[0].abspath, "w")
-		f.write(contents)
-		f.close()
-	sluift_env.Command("lua.c", ["#/3rdParty/Lua/src/lua.c", sluift_env.Value(sluift_env["SLUIFT_VERSION"])], env.Action(patchLua, cmdstr = "$GENCOMSTR"))
+	# Generate Version.h
+	version_header = "#pragma once\n\n"
+	version_header += "#define SLUIFT_VERSION_STRING \"" + Version.getBuildVersion(env.Dir("#").abspath, "sluift") + "\"\n"
+	sluift_env.WriteVal("Version.h", sluift_env.Value(version_header))
 
 	# Generate core.cpp
 	def generate_embedded_lua(env, target, source) :
@@ -73,10 +61,6 @@ elif env["SCONS_STAGE"] == "build" :
 		f.write('const char ' + source[0].name.replace(".", "_") + "[] = \"" + data.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"') + "\";")
 		f.close()
 	sluift_env.Command("core.c", ["core.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
-
-	if sluift_env.get("HAVE_READLINE", False) :
-		sluift_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
-		sluift_env.MergeFlags(sluift_env["READLINE_FLAGS"])
 
 	sluift_env.WriteVal("dll.c", sluift_env.Value(""))
 

@@ -1,4 +1,5 @@
 lua.c
+Version.h
 sluift_dll.cpp
 sluift
 dll.c

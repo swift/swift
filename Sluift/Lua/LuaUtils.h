@@ -8,8 +8,12 @@
 
 #include <lua.hpp>
 #include <boost/optional.hpp>
+#include <string>
+#include <vector>
 
-struct lua_State;
+#if LUA_VERSION_NUM < 502
+#define lua_pushglobaltable(L) lua_pushvalue(L, LUA_GLOBALSINDEX)
+#endif
 
 namespace Swift {
 	namespace Lua {

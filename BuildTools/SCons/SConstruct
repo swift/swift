@@ -436,10 +436,18 @@ else :
 conf.Finish()
 
 # Readline
-conf = Configure(conf_env)
-if conf.CheckCHeader(["stdio.h", "readline/readline.h"]) and conf.CheckLib("readline") :
-	env["HAVE_READLINE"] = True
-	env["READLINE_FLAGS"] = { "LIBS": ["readline"] }
+editline_conf_env = conf_env.Clone()
+editline_flags = {}
+if env.get("editline_libdir", None) :
+	editline_flags["LIBPATH"] = [env["editline_libdir"]]
+if env.get("editline_includedir", None) :
+	editline_flags["CPPPATH"] = [env["editline_includedir"]]
+editline_conf_env.MergeFlags(editline_flags)
+conf = Configure(editline_conf_env)
+if conf.CheckLibWithHeader(env["editline_libname"], ["stdio.h", "editline/readline.h"], "c") :
+	env["HAVE_EDITLINE"] = 1
+	env["EDITLINE_FLAGS"] = { "LIBS": [env["editline_libname"]] }
+	env["EDITLINE_FLAGS"].update(editline_flags)
 conf.Finish()
 
 # Avahi
