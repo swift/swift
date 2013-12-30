@@ -52,13 +52,16 @@ elif env["SCONS_STAGE"] == "build" :
 	version_header += "#define SLUIFT_VERSION_STRING \"" + Version.getBuildVersion(env.Dir("#").abspath, "sluift") + "\"\n"
 	sluift_env.WriteVal("Version.h", sluift_env.Value(version_header))
 
-	# Generate core.cpp
+	# Generate core.c
 	def generate_embedded_lua(env, target, source) :
 		f = open(source[0].abspath, "r")
 		data = f.read()
 		f.close()
+		data_bytes = bytearray(data)
 		f = open(target[0].abspath, "w")
-		f.write('const char ' + source[0].name.replace(".", "_") + "[] = \"" + data.replace("\\", "\\\\").replace("\n", "\\n").replace('"', '\\"') + "\";")
+		f.write('#include <stddef.h>\n')
+		f.write('const size_t ' + source[0].name.replace(".", "_") + "_size = " + str(len(data_bytes)) + ";\n")
+		f.write('const char ' + source[0].name.replace(".", "_") + "[] = {" + ", ".join([str(b) for b in data_bytes]) + "};\n")
 		f.close()
 	sluift_env.Command("core.c", ["core.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
 

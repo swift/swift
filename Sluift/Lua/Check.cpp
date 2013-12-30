@@ -43,7 +43,7 @@ std::string Lua::checkString(lua_State* L, int arg) {
 	return std::string(s);
 }
 
-void* Lua::checkUserDataRaw(lua_State* L, int arg, const char* tableName) {
+void* Lua::checkUserDataRaw(lua_State* L, int arg) {
 	void* userData = lua_touserdata(L, arg);
 	if (!userData) {
 		throw Lua::Exception(getArgTypeError(L, arg, LUA_TUSERDATA));
@@ -51,10 +51,6 @@ void* Lua::checkUserDataRaw(lua_State* L, int arg, const char* tableName) {
 	if (!lua_getmetatable(L, arg)) {
 		throw Lua::Exception(getArgTypeError(L, arg, LUA_TUSERDATA));
 	}
-	lua_getfield(L, LUA_REGISTRYINDEX, tableName);
-	if (!lua_rawequal(L, -1, -2)) {
-		throw Lua::Exception(getArgTypeError(L, arg, LUA_TUSERDATA));
-	}
-	lua_pop(L, 2);
+	lua_pop(L, 1);
 	return userData;
 }

@@ -18,10 +18,8 @@ namespace Swift {
 				~FunctionRegistry();
 				static FunctionRegistry& getInstance();
 
-				void addFunction(const std::string& name, lua_CFunction function, const std::string& type);
-
-				static std::string getMetaTableNameForType(const std::string& type);
-				void registerTypeMetaTable(lua_State* L, const std::string& type);
+				void addFunction(const std::string& name, lua_CFunction function, const std::string& type,
+						const std::string& helpDescription, const std::string& helpParameters, const std::string& helpOptions);
 
 				void createFunctionTable(lua_State* L, const std::string& type);
 
@@ -39,6 +37,9 @@ namespace Swift {
 					std::string name;
 					lua_CFunction function;
 					std::string type;
+					std::string helpDescription;
+					std::string helpParameters;
+					std::string helpOptions;
 				};
 				std::vector<Registration> registrations;
 		};

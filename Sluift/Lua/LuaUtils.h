@@ -24,6 +24,10 @@ namespace Swift {
 
 		void registerTableToString(lua_State* L, int index);
 		void registerGetByTypeIndex(lua_State* L, int index);
+		void registerHelp(lua_State* L, int index, 
+				const std::string& description, const std::string& parameters, const std::string& options);
+		void registerClassHelp(lua_State* L, const std::string& name, const std::string& description);
+		void registerExtraHelp(lua_State* L, int index, const std::string& name);
 
 		inline int absoluteOffset(lua_State* L, int index) {
 			return index > 0 ? index : lua_gettop(L) + index + 1;

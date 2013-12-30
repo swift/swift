@@ -14,6 +14,7 @@
 #include <cassert>
 #include <sstream>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <Sluift/globals.h>
 
 using namespace Swift::Lua;
@@ -76,4 +77,104 @@ boost::optional<int> Swift::Lua::getIntField(lua_State* L, int index, const std:
 	}
 	lua_pop(L, 1);
 	return result;
+}
+
+void Swift::Lua::registerHelp(lua_State* L, int index, const std::string& description, const std::string& parameters, const std::string& options) {
+	index = Lua::absoluteOffset(L, index);
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "register_help");
+	lua_pushvalue(L, index);
+
+	lua_newtable(L);
+	lua_pushstring(L, description.c_str());
+	lua_rawseti(L, -2, 1);
+
+	if (!parameters.empty()) {
+		std::istringstream s(parameters);
+		lua_newtable(L);
+		int i = 1;
+		for (std::string line; std::getline(s, line); ) {
+			std::string trimmedLine = boost::trim_copy(line);
+			if (trimmedLine.empty()) {
+				continue;
+			}
+			size_t splitIndex = trimmedLine.find_first_of(" \t");
+			std::string key;
+			std::string value;
+			if (splitIndex == std::string::npos) {
+				key = trimmedLine;
+			}
+			else {
+				key = trimmedLine.substr(0, splitIndex);
+				value = boost::trim_copy(trimmedLine.substr(splitIndex+1));
+			}
+			lua_createtable(L, 2, 0);
+			lua_pushstring(L, key.c_str());
+			lua_rawseti(L, -2, 1);
+			lua_pushstring(L, value.c_str());
+			lua_rawseti(L, -2, 2);
+
+			lua_rawseti(L, -2, i++);
+		}
+		lua_setfield(L, -2, "parameters");
+	}
+	if (!options.empty()) {
+		std::istringstream s(options);
+		lua_newtable(L);
+		for (std::string line; std::getline(s, line); ) {
+			std::string trimmedLine = boost::trim_copy(line);
+			if (trimmedLine.empty()) {
+				continue;
+			}
+			size_t splitIndex = trimmedLine.find_first_of(" \t");
+			std::string key;
+			std::string value;
+			if (splitIndex == std::string::npos) {
+				key = trimmedLine;
+			}
+			else {
+				key = trimmedLine.substr(0, splitIndex);
+				value = boost::trim_copy(trimmedLine.substr(splitIndex+1));
+			}
+			lua_pushstring(L, value.c_str());
+			lua_setfield(L, -2, key.c_str());
+		}
+		lua_setfield(L, -2, "options");
+	}
+
+	if (lua_pcall(L, 2, 0, 0) != 0) {
+		throw Lua::Exception(lua_tostring(L, -1));
+	}
+	lua_pop(L, 1);
+}
+
+void Swift::Lua::registerClassHelp(lua_State* L, const std::string& name, const std::string& description) {
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "register_class_help");
+	lua_pushstring(L, name.c_str());
+
+	lua_newtable(L);
+	lua_pushstring(L, description.c_str());
+	lua_rawseti(L, -2, 1);
+
+	if (lua_pcall(L, 2, 0, 0) != 0) {
+		throw Lua::Exception(lua_tostring(L, -1));
+	}
+	lua_pop(L, 1);
+}
+
+void Swift::Lua::registerExtraHelp(lua_State* L, int index, const std::string& name) {
+	index = Lua::absoluteOffset(L, index);
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "extra_help");
+	lua_getfield(L, -1, name.c_str());
+	if (!lua_isnil(L, -1)) {
+		lua_getfield(L, -3, "register_help");
+		lua_pushvalue(L, index);
+		lua_pushvalue(L, -3);
+		if (lua_pcall(L, 2, 0, 0) != 0) {
+			throw Lua::Exception(lua_tostring(L, -1));
+		}
+	}
+	lua_pop(L, 3);
 }

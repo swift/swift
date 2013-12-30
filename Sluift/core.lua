@@ -5,46 +5,16 @@
 --]]
 
 local _G = _G
-local pairs, ipairs, print, tostring, type, error = pairs, ipairs, print, tostring, type, error
+local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack
 local setmetatable, getmetatable = setmetatable, getmetatable
-local string = string
+local string = require "string"
+local table = require "table"
+local debug = require "debug"
 _ENV = nil
 
-local Client = {}
-local PubSub = {}
-local PubSubNode = {}
-
 --------------------------------------------------------------------------------
--- Utility methods
+-- Table utility methods
 --------------------------------------------------------------------------------
-
-local function merge_tables(...)
-	local result = {}
-	for _, table in ipairs({...}) do
-		for k, v in pairs(table) do
-			result[k] = v
-		end
-	end
-	return result
-end
-
-local function clone_table(table) 
-	return merge_tables(table)
-end
-
-local function parse_options(unnamed_parameters, arg1, arg2)
-	local options = {}
-	local f
-	if type(arg1) == 'table' then
-		options = arg1
-		f = arg2
-	elseif type(arg1) == 'function' then
-		f = arg1
-	end
-	options.f = f or options.f
-	return clone_table(options)
-end
-
 
 local function table_value_tostring(value)
 	local result = tostring(value)
@@ -89,21 +59,310 @@ local function table_tostring(table, print_functions, indent, accumulator, histo
 	return accumulator
 end
 
-local function tprint(table)
-	print(table_tostring(table, true))
-end
-
-local function register_table_tostring(table)
+local function register_table_tostring(table, print_functions)
 	if type(table) == 'table' then
 		local metatable = getmetatable(table)
 		if not metatable then
 			metatable = {}
 			setmetatable(table, metatable)
 		end
-		metatable.__tostring = table_tostring
+		if print_functions then
+			metatable.__tostring = function(table) return table_tostring(table, true) end
+		else
+			metatable.__tostring = table_tostring
+		end
 	end
 	return table
 end
+
+local function merge_tables(...)
+	local result = {}
+	for _, table in ipairs({...}) do
+		for k, v in pairs(table) do
+			result[k] = v
+		end
+	end
+	return result
+end
+
+local function copy(object)
+	if type(object) == 'table' then
+		local copy = {}
+		for key, value in pairs(object) do
+			copy[key] = value
+		end
+		return copy
+	else
+		return object
+	end
+end
+
+local function trim(string)
+	return string:gsub("^%s*(.-)%s*$", "%1")
+end
+
+--------------------------------------------------------------------------------
+-- Help
+--------------------------------------------------------------------------------
+
+-- Contains help for native methods that we want access to from here
+local extra_help = {}
+local help_data = {}
+local help_classes = {}
+local help_class_metatables = {}
+
+local _H
+
+local function get_synopsis(description) 
+	return description:gsub("[\n\r].*", "")
+end
+
+local function format_description(text)
+	local result = {}
+	local trim_whitespace
+	for line in (text .. "\n"):gmatch"(.-)\n" do
+		if not trim_whitespace and line:find('[^%s]') then
+			trim_whitespace = line:match("^(%s*)")
+		end
+		if trim_whitespace then
+			line = line:gsub("^" .. trim_whitespace, "")
+		end
+		table.insert(result, line)
+	end
+	return trim(table.concat(result, "\n"))
+end
+
+local function strip_links(text)
+	return text:gsub("(@{(%w*)})", "`%2`")
+end
+
+local function register_help(target, help) 
+	assert(target)
+	if not help then
+		help = _H
+	end
+	assert(help)
+
+	-- Transform description into canonical representation
+	local parameters = {}
+	for _, parameter in pairs(help.parameters or {}) do
+		local parameter_description = parameter[2]
+		if parameter_description and #parameter_description == 0 then
+			parameter_description = nil
+		end
+		if type(parameter) == "table" then
+			parameters[#parameters+1] = { name = parameter[1], description = parameter_description }
+		else
+			parameters[#parameters+1] = { name = parameter }
+		end
+	end
+	local options = {}
+	for option_name, option_description in pairs(help.options or {}) do
+		if type(option_description) == "table" then
+			options[#options+1] = { name = option_description.name, description = option_description.description }
+		else
+			options[#options+1] = { name = option_name, description = option_description }
+		end
+	end
+	local description = format_description(help[1] or help.description or "")
+	local synopsis = get_synopsis(description)
+	if #description == 0 then
+		synopsis = nil
+		description = nil
+	end
+	local data = {
+		description = description,
+		synopsis = synopsis,
+		parameters = parameters,
+		options = options,
+		classes = help.classes
+	}
+	register_table_tostring(data, true)
+	help_data[target] = data
+end
+
+local function register_class_help(class, help)
+	help_classes[#help_classes+1] = class
+	register_help(class, help)
+end
+
+local function register_class_table_help(target, class, help)
+	register_help(target, help)
+	help_class_metatables[class] = target
+	register_class_help(class, help)
+end
+
+_H = {
+	[[ 
+		Retrieves the help information from `target`.
+
+		Returns a table with the following fields: 
+
+		- `description`: the description of `target`
+		- `parameters`: an array of parameters of `target` represented as tables with `name` and `description` fields.
+		- `options`: an array of options (named parameters) of `target` represented as tables with `name` and 
+		  `description` fields.
+		- `methods`: an array of methods
+		- `fields`: an array of fields
+	]],
+	parameters = { {"target", "The target to retrieve help of"} }
+}
+local function get_help(target) 
+	if not target then error("Nil argument or argument missing") end
+	local help = help_data[target] or help_data[getmetatable(target)] or {}
+
+	-- Collect child methods and fields
+	local children = {}
+	if type(target) == "table" then children = target end
+	local mt
+	if type(target) == "string" then
+		mt = help_class_metatables[target]
+	else
+		mt = getmetatable(target)
+	end
+	if mt and type(mt.__index) == "table" then
+		children = merge_tables(children, mt.__index)
+	end
+
+	local methods = {}
+	local fields = {}
+	for name, value in pairs(children) do
+		if name:sub(1, 1) ~= "_" then 
+			if type(value) == "function" then
+				methods[#methods+1] = { name = name, ref = value }
+			else
+				fields[#fields+1] = { name = name, description = nil }
+			end
+		end
+	end
+	if next(methods) ~= nil then
+		help.methods = methods
+	end
+	if next(fields) ~= nil then
+		help.fields = fields
+	end
+	if next(help) then
+		return help
+	else
+		return nil
+	end
+end
+register_help(get_help)
+
+_H = {
+	[[ 
+		Prints the help of `target`.
+
+		`target` can be any object. When `target` is a string, prints the help of the class with
+		the given name.
+	]],
+	parameters = { {"target", "The target to retrieve help of"} }
+}
+local function help(target)
+	print()
+	if not target then 
+		print("Call `help(target)` to get the help of a specific `target`.")
+		print("`target` can be any object. When `target` is a string, prints")
+		print("the help of the class with the given name.")
+		print()
+		print("For general information about sluift, type:")
+		print("  help(sluift)")
+		print()
+		return
+	end
+	local data = get_help(target)
+	if not data then
+		print("No help available\n")
+		return
+	end
+
+	-- Collect help of children
+	local methods = {}
+	for _, method in pairs(data.methods or {}) do
+		local description
+		local method_help = get_help(method.ref)
+		if method_help and method_help.description then
+			description = method_help.synopsis
+		end
+		methods[#methods+1] = { name = method.name, description = description }
+	end
+	local fields = copy(data.fields or {})
+
+	table.sort(methods, function (a, b) return (a.name or "") < (b.name or "") end)
+	table.sort(fields, function (a, b) return (a.name or "") < (b.name or "") end)
+
+	local classes = {}
+	for _, class in pairs(data.classes or {}) do
+		classes[#classes+1] = { name = class, description = get_help(class).synopsis }
+	end
+
+	print(strip_links(data.description) or "(No description available)")
+	for _, p in ipairs({
+			{"Parameters", data.parameters}, {"Options", data.options}, {"Methods", methods}, {"Fields", fields}, {"Classes", classes}}) do
+		if p[2] and next(p[2]) ~= nil then
+			print()
+			print(p[1] .. ":")
+			for _, parameter in ipairs(p[2]) do
+				if parameter.description then
+					print("  " .. parameter.name .. ": " .. strip_links(parameter.description))
+				else
+					print("  " .. parameter.name)
+				end
+			end
+		end
+	end
+
+	print()
+end
+register_help(help)
+
+--------------------------------------------------------------------------------
+-- Utility methods
+--------------------------------------------------------------------------------
+
+_H = {
+	[[ Perform a shallow copy of `object`. ]],
+	parameters = {{"object", "the object to copy"}}
+}
+register_help(copy)
+
+_H = {
+	[[ Pretty-print a table ]],
+	parameters = {{"table", "the table to print"}}
+}
+local function tprint(table)
+	print(table_tostring(table, true))
+end
+register_help(tprint)
+
+local function remove_help_parameters(elements, table)
+	if type(elements) ~= "table" then
+		elements = {elements}
+	end
+	local result = copy(table)
+	for k, v in ipairs(table) do
+		for _, element in ipairs(elements) do
+			if v.name == element then
+				result[k] = nil
+			end
+		end
+	end
+	return result
+end
+
+local function parse_options(unnamed_parameters, arg1, arg2)
+	local options = {}
+	local f
+	if type(arg1) == 'table' then
+		options = arg1
+		f = arg2
+	elseif type(arg1) == 'function' then
+		f = arg1
+	end
+	options.f = f or options.f
+	return copy(options)
+end
+
 
 local function get_by_type(table, typ)
 	for _, v in ipairs(table) do
@@ -140,9 +399,86 @@ local function call(options)
 end
 
 --------------------------------------------------------------------------------
+-- Metatables
+--------------------------------------------------------------------------------
+
+_H = {
+	[[ Client interface ]]
+}
+local Client = {}
+Client.__index = Client
+register_class_table_help(Client, "Client")
+
+
+_H = {
+	[[ Interface to communicate with a PubSub service ]]
+}
+local PubSub = {}
+PubSub.__index = PubSub
+register_class_table_help(PubSub, "PubSub")
+
+_H = {
+	[[ Interface to communicate with a PubSub node on a service ]]
+}
+local PubSubNode = {}
+PubSubNode.__index = PubSubNode
+register_class_table_help(PubSubNode, "PubSubNode")
+
+--------------------------------------------------------------------------------
 -- Client
 --------------------------------------------------------------------------------
 
+extra_help = {
+	["Client.get_next_event"] = {
+		[[ Returns the next event. ]],
+		parameters = { "self" },
+		options = {
+			type = "The type of event to return (`message`, `presence`, `pubsub`). When omitted, all event types are returned.",
+			timeout = "The amount of time to wait for events.",
+			["if"] = "A function to filter events. When this function, called with the event as a parameter, returns true, the event will be returned"
+		}
+	},
+	["Client.get"] = {
+		[[ Sends a `get` query. ]],
+		parameters = { "self" },
+		options = {
+			to = "The JID of the target to send the query to",
+			query = "The query to send",
+			timeout = "The amount of time to wait for the query to finish",
+		}
+	},
+	["Client.set"] = {
+		[[ Sends a `set` query. ]],
+		parameters = { "self" },
+		options = {
+			to = "The JID of the target to send the query to",
+			query = "The query to send.",
+			timeout = "The amount of time to wait for the query to finish.",
+		}
+	},
+	["Client.async_connect"] = {
+		[[ 
+			Connect to the server asynchronously.
+			
+			This method immediately returns.
+		]],
+		parameters = { "self" },
+		options = {
+			host = "The host to connect to. When omitted, is determined by resolving the client JID.",
+			port = "The port to connect to. When omitted, is determined by resolving the client JID."
+		}
+	}
+}
+
+_H = {
+	[[
+		Connect to the server.
+
+		This method blocks until the connection has been established.
+	]],
+	parameters = { "self" },
+	options = extra_help["Client.async_connect"].options
+}
 function Client:connect (...)
 	local options = parse_options({}, ...)
 	local f = options.f
@@ -153,14 +489,36 @@ function Client:connect (...)
 	end
 	return true
 end
+register_help(Client.connect)
 
+
+_H = {
+	[[
+		Returns an iterator over all events.
+
+		This function blocks until `timeout` is reached (or blocks forever if it is omitted).
+	]],
+	parameters = { "self" },
+	options = extra_help["Client.get_next_event"].options
+}
 function Client:events (options)
 	local function client_events_iterator(s)
 		return s['client']:get_next_event(s['options'])
 	end
 	return client_events_iterator, {client = self, options = options}
 end
+register_help(Client.events)
 
+
+_H = {
+	[[
+		Calls `f` for each event.
+	]],
+	parameters = { "self" },
+	options = merge_tables(get_help(Client.events).options, {
+		f = "The functor to call with each event. Required."
+	})
+}
 function Client:for_each_event (...)
 	local options = parse_options({}, ...)
 	if not type(options.f) == 'function' then error('Expected function') end
@@ -171,33 +529,59 @@ function Client:for_each_event (...)
 		end
 	end
 end
+register_help(Client.for_each_event)
 
 for method, event_type in pairs({message = 'message', presence = 'presence', pubsub_event = 'pubsub'}) do
+	_H = {
+		"Call `f` for all events of type `" .. event_type .. "`.",
+		parameters = { "self" },
+		options = remove_help_parameters("type", get_help(Client.for_each_event).options)
+	}
 	Client['for_each_' .. method] = function (client, ...)
 		local options = parse_options({}, ...)
 		options['type'] = event_type
 		return client:for_each_event (options)
 	end
+	register_help(Client['for_each_' .. method])
 
+	_H = {
+		"Get the next event of type `" .. event_type .. "`.",
+		parameters = { "self" },
+		options = remove_help_parameters("type", extra_help["Client.get_next_event"].options)
+	}
 	Client['get_next_' .. method] = function (client, ...)
 		local options = parse_options({}, ...)
 		options['type'] = event_type
 		return client:get_next_event(options)
 	end
+	register_help(Client['get_next_' .. method])
 end
 
 for method, event_type in pairs({messages = 'message', pubsub_events = 'pubsub'}) do
+	_H = {
+		"Returns an iterator over all events of type `" .. event_type .. "`.",
+		parameters = { "self" },
+		options = remove_help_parameters("type", get_help(Client.for_each_event).options)
+	}
 	Client[method] = function (client, ...)
 		local options = parse_options({}, ...)
 		options['type'] = event_type
 		return client:events (options)
 	end
+	register_help(Client[method])
 end
 
--- Process all pending events
+_H = {
+	[[ 
+		Process all pending events
+	]],
+	parameters = { "self" }
+}
 function Client:process_events ()
 	for event in self:events{timeout=0} do end
 end
+register_help(Client.process_events)
+
 
 --
 -- Register get_* and set_* convenience methods for some type of queries
@@ -212,26 +596,40 @@ local get_set_shortcuts = {
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
 	for _, query_type in ipairs(query_types) do
-		Client[query_action .. '_' .. query_type] = function (client, options)
+		_H = {
+			"Sends a `" .. query_action .. "` query of type `" .. query_type .. "`.\n" ..
+			"Apart from the options below, all top level elements of `" .. query_type .. "` can be passed.",
+			parameters = { "self" },
+			options = remove_help_parameters({"query", "type"}, extra_help["Client.get"].options),
+		}
+		local method = query_action .. '_' .. query_type
+		Client[method] = function (client, options)
 			options = options or {}
 			if type(options) ~= 'table' then error('Invalid options: ' .. options) end 
 			options['query'] = merge_tables({_type = query_type}, options[query_type] or {})
 			return client[query_action](client, options)
 		end
+		register_help(Client[method])
 	end
 end
 
+_H = {
+	[[ Returns a @{PubSub} object for communicating with the PubSub service at `jid`. ]],
+	parameters = { 
+		"self", 
+		{"jid", "The JID of the PubSub service"}
+	}
+}
 function Client:pubsub (jid)
 	local result = { client = self, jid = jid }
 	setmetatable(result, PubSub)
 	return result
 end
+register_help(Client.pubsub)
 
 --------------------------------------------------------------------------------
 -- PubSub
 --------------------------------------------------------------------------------
-
-PubSub.__index = PubSub
 
 local function process_pubsub_event (event)
 	if event._type == 'pubsub_event_items' then
@@ -279,8 +677,6 @@ end
 --------------------------------------------------------------------------------
 -- PubSubNode
 --------------------------------------------------------------------------------
-
-PubSubNode.__index = PubSubNode
 
 local function pubsub_node_configuration_to_form(configuration)
 	if not configuration then
@@ -463,11 +859,29 @@ local disco = {
 
 --------------------------------------------------------------------------------
 
+_H = nil
+
+extra_help['sluift'] = {
+	[[
+		This module provides methods for XMPP communication.
+
+		The main entry point of this module is the `new_client` method, which creates a
+		new client for communicating with an XMPP server.
+	]],
+	classes = help_classes
+}
+
 return {
 	Client = Client,
+	register_help = register_help,
+	register_class_help = register_class_help,
 	register_table_tostring = register_table_tostring,
 	register_get_by_type_index = register_get_by_type_index,
 	process_pubsub_event = process_pubsub_event,
 	tprint = tprint,
 	disco = disco,
+	get_help = get_help,
+	help = help,
+	extra_help = extra_help,
+	copy = copy,
 }

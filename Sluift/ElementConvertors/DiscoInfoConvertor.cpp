@@ -99,3 +99,18 @@ void DiscoInfoConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<DiscoInf
 	
 	// TODO: Extension
 }
+
+boost::optional<LuaElementConvertor::Documentation> DiscoInfoConvertor::getDocumentation() const {
+	return Documentation(
+			"DiscoInfo", 
+			"Represents `disco#info` service discovery data.\n\n"
+			"This table has the following structure:\n\n"
+			"- `node`: string\n"
+			"- `identities`: array(table)\n"
+			"  - `name`: string\n"
+			"  - `category`: string\n"
+			"  - `type`: string\n"
+			"  - `language`: string\n"
+			"- `features`: array(string)\n"
+	);
+}

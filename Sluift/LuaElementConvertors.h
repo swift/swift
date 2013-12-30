@@ -37,6 +37,10 @@ namespace Swift {
 			 */
 			int convertToLuaUntyped(lua_State*, boost::shared_ptr<Payload>);
 
+			const std::vector< boost::shared_ptr<LuaElementConvertor> >& getConvertors() const {
+				return convertors;
+			}
+
 		private:
 			boost::optional<std::string> doConvertToLuaUntyped(lua_State*, boost::shared_ptr<Payload>);
 			void registerConvertors();

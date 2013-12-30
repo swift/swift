@@ -18,6 +18,7 @@
 #include <Sluift/SluiftClient.h>
 #include <Sluift/globals.h>
 #include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/Lua/FunctionRegistration.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Base/foreach.h>
@@ -25,6 +26,7 @@
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
+#include <Sluift/LuaElementConvertor.h>
 #include <Sluift/Lua/Debug.h>
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/StringCodecs/Hexify.h>
@@ -41,25 +43,43 @@ namespace Swift {
 }
 
 extern "C" const char core_lua[];
+extern "C" size_t core_lua_size;
 
 /*******************************************************************************
  * Module functions
  ******************************************************************************/
 
-SLUIFT_LUA_FUNCTION(Sluift, new_client) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, new_client,
+
+		"Creates a new client.\n\nReturns a @{Client} object.\n",
+
+		"jid  The JID to connect as\n"
+		"passphrase  The passphrase to use\n",
+
+		""
+) {
 	Lua::checkString(L, 1);
 	JID jid(std::string(Lua::checkString(L, 1)));
 	std::string password(Lua::checkString(L, 2));
 
 	SluiftClient** client = reinterpret_cast<SluiftClient**>(lua_newuserdata(L, sizeof(SluiftClient*)));
-	luaL_getmetatable(L, Lua::FunctionRegistry::getMetaTableNameForType("Client").c_str());
-	lua_setmetatable(L, -2);
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "Client");
+	lua_setmetatable(L, -3);
+	lua_pop(L, 1);
 
 	*client = new SluiftClient(jid, password, &Sluift::globals.networkFactories, &Sluift::globals.eventLoop, &Sluift::globals);
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, sha1) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, sha1,
+		"Compute the SHA-1 hash of given data",
+		"data  the data to hash",
+		""
+) {
 	static boost::shared_ptr<CryptoProvider> crypto(PlatformCryptoProvider::create());
 	if (!lua_isstring(L, 1)) {
 		throw Lua::Exception("Expected string");
@@ -71,7 +91,12 @@ SLUIFT_LUA_FUNCTION(Sluift, sha1) {
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, sleep) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, sleep,
+		"Sleeps for the given time.",
+		"milliseconds  the amount of milliseconds to sleep",
+		""
+) {
 	Sluift::globals.eventLoop.runOnce();
 	int timeout = Lua::checkIntNumber(L, 1);
 	Watchdog watchdog(timeout, Sluift::globals.networkFactories.getTimerFactory());
@@ -82,7 +107,10 @@ SLUIFT_LUA_FUNCTION(Sluift, sleep) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, new_uuid) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, new_uuid,
+		"Generates a new UUID", "", ""
+) {
 	lua_pushstring(L, IDGenerator().generateID().c_str());
 	return 1;
 }
@@ -122,7 +150,12 @@ static int sluift_newindex(lua_State* L) {
 	}
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, from_xml) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, from_xml,
+		"Convert a raw XML string into a structured representation.",
+		"string  the string to convert",
+		""
+) {
 	PayloadsParserTester parser;
 	if (!parser.parse(Lua::checkString(L, 1))) {
 		throw Lua::Exception("Error in XML");
@@ -130,7 +163,12 @@ SLUIFT_LUA_FUNCTION(Sluift, from_xml) {
 	return Sluift::globals.elementConvertor.convertToLua(L, parser.getPayload());
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, to_xml) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, to_xml,
+		"Convert a structured element into XML.",
+		"element  the element to convert",
+		""
+) {
 	static FullPayloadSerializerCollection serializers;
 	boost::shared_ptr<Payload> payload = Sluift::globals.elementConvertor.convertFromLua(L, 1);
 	if (!payload) {
@@ -144,7 +182,12 @@ SLUIFT_LUA_FUNCTION(Sluift, to_xml) {
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, hexify) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, hexify,
+		"Convert binary data into hexadecimal format.",
+		"data  the data to convert",
+		""
+) {
 	if (!lua_isstring(L, 1)) {
 		throw Lua::Exception("Expected string");
 	}
@@ -154,7 +197,12 @@ SLUIFT_LUA_FUNCTION(Sluift, hexify) {
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Sluift, unhexify) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, unhexify,
+		"Convert hexadecimal data into binary data.",
+		"data  the data in hexadecimal format",
+		""
+) {
 	if (!lua_isstring(L, 1)) {
 		throw Lua::Exception("Expected string");
 	}
@@ -273,7 +321,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	luaL_register(L, lua_tostring(L, 1), sluift_functions);
 
 	// Load core lib code
-	if (luaL_loadbuffer(L, core_lua, strlen(core_lua), "core.lua") != 0) {
+	if (luaL_loadbuffer(L, core_lua, core_lua_size, "core.lua") != 0) {
 		lua_error(L);
 	}
 	lua_call(L, 0, 1);
@@ -291,7 +339,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	// Register convenience functions
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 	std::vector<std::string> coreLibExports = boost::assign::list_of
-		("tprint")("disco");
+		("tprint")("disco")("help")("get_help")("copy");
 	foreach (const std::string& coreLibExport, coreLibExports) {
 		lua_getfield(L, -1, coreLibExport.c_str());
 		lua_setfield(L, -3, coreLibExport.c_str());
@@ -307,21 +355,25 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_setmetatable(L, -2);
 	
 	// Load client metatable
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 	std::vector<std::string> tables = boost::assign::list_of("Client");
-	foreach (const std::string& table, tables) {
-		Lua::FunctionRegistry::getInstance().registerTypeMetaTable(L, table);
-		luaL_getmetatable(L, Lua::FunctionRegistry::getMetaTableNameForType(table).c_str());
-		lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	foreach(const std::string& table, tables) {
 		lua_getfield(L, -1, table.c_str());
-		if (!lua_isnil(L, -1)) {
-			for (lua_pushnil(L); lua_next(L, -2); ) {
-				lua_pushvalue(L, -2);
-				lua_pushvalue(L, -2);
-				lua_settable(L, -7);
-				lua_pop(L, 1);
-			}
-		}
-		lua_pop(L, 2);
+		Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, table);
+		lua_pop(L, 1);
 	}
+	lua_pop(L, 1);
+
+	// Register documentation for all elements
+	foreach (boost::shared_ptr<LuaElementConvertor> convertor, Sluift::globals.elementConvertor.getConvertors()) {
+		boost::optional<LuaElementConvertor::Documentation> documentation = convertor->getDocumentation();
+		if (documentation) {
+			Lua::registerClassHelp(L, documentation->className, documentation->description);
+		}
+	}
+
+	// Register global documentation
+	Lua::registerExtraHelp(L, -1, "sluift");
+
 	return 1;
 }

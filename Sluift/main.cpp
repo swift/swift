@@ -32,7 +32,7 @@ using namespace Swift;
 #endif
 
 static const std::string SLUIFT_WELCOME_STRING(
-		"== Sluift XMPP Console (" SLUIFT_VERSION_STRING ")\nPress Ctrl-" EXIT_KEY " to exit");
+		"== Sluift XMPP Console (" SLUIFT_VERSION_STRING ")\nPress Ctrl-" EXIT_KEY " to exit. Type help() for help.");
 
 static const luaL_Reg defaultLibraries[] = {
 	{"", luaopen_base},
@@ -57,9 +57,14 @@ static void checkResult(lua_State* L, int result) {
 static void initialize(lua_State* L) {
 	lua_gc(L, LUA_GCSTOP, 0);
 	for (const luaL_Reg* lib = defaultLibraries; lib->func; lib++) {
+#if LUA_VERSION_NUM >= 502
+		luaL_requiref(L, lib->name, lib->func, 1);
+		lua_pop(L, 1);
+#else
 		lua_pushcfunction(L, lib->func);
 		lua_pushstring(L, lib->name);
 		lua_call(L, 1, 0);
+#endif
 	}
 	lua_gc(L, LUA_GCRESTART, 0);
 }
@@ -80,10 +85,6 @@ static void runScript(lua_State* L, const std::string& script, const std::vector
 	}
 	checkResult(L, Console::call(L, boost::numeric_cast<int>(scriptArguments.size()), false));
 }
-
-// void runConsole() {
-	// contents = contents.replace("LUA_RELEASE", "\"== Sluift XMPP Console (%(version)s) == \\nPress Ctrl-%(key)s to exit\"" % {"version": source[1].get_contents(), "key" : key})
-// }
 
 int main(int argc, char* argv[]) {
 	// Parse program options
@@ -148,6 +149,11 @@ int main(int argc, char* argv[]) {
 
 		// Run console
 		if (arguments.count("interactive") || arguments.count("script") == 0) {
+			// Import some useful functions into the global namespace
+			lua_getglobal(L, "sluift");
+			lua_getfield(L, -1, "help");
+			lua_setglobal(L, "help");
+			
 			std::cout << SLUIFT_WELCOME_STRING << std::endl;
 #ifdef HAVE_EDITLINE
 			EditlineTerminal& terminal = EditlineTerminal::getInstance();

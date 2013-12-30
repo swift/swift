@@ -38,10 +38,8 @@
 using namespace Swift;
 namespace lambda = boost::lambda;
 
-static const std::string SLUIFT_CLIENT = Lua::FunctionRegistry::getMetaTableNameForType("Client");
-
 static inline SluiftClient* getClient(lua_State* L) {
-	return *Lua::checkUserData<SluiftClient>(L, 1, SLUIFT_CLIENT.c_str());
+	return *Lua::checkUserData<SluiftClient>(L, 1);
 }
 
 SLUIFT_LUA_FUNCTION(Client, async_connect) {
@@ -61,22 +59,47 @@ SLUIFT_LUA_FUNCTION(Client, async_connect) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, wait_connected) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, wait_connected,
+		"Block until the client is connected.\n\nThis is useful after an `async_connect`.",
+		"self",
+		""
+) {
 	getClient(L)->waitConnected();
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, is_connected) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, is_connected,
+		"Checks whether this client is still connected.\n\nReturns a boolean.",
+		"self\n",
+		""
+) {
 	lua_pushboolean(L, getClient(L)->isConnected());
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Client, disconnect) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, disconnect,
+		"Disconnect from the server",
+		"self\n",
+		""
+) {
 	getClient(L)->disconnect();
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, set_version) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, set_version,
+
+		"Sets the published version of this client.",
+
+		"self",
+
+		"name  the name of the client software\n"
+		"version  the version identifier of this client\n"
+		"os  the OS this client is running on\n"
+) {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	if (boost::shared_ptr<SoftwareVersion> version = boost::dynamic_pointer_cast<SoftwareVersion>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "software_version"))) {
@@ -85,7 +108,12 @@ SLUIFT_LUA_FUNCTION(Client, set_version) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, get_contacts) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, get_contacts,
+		"Returns a table of all the contacts in the contact list.",
+		"self\n",
+		""
+) {
 	Sluift::globals.eventLoop.runOnce();
 
 	SluiftClient* client = getClient(L);
@@ -111,7 +139,15 @@ SLUIFT_LUA_FUNCTION(Client, get_contacts) {
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Client, send_message) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, send_message,
+		"Send a message.",
+		"self\n"
+		"body  the body of the message. Can alternatively be specified using the `body` option\n",
+		"to  the JID to send the message to\n"
+		"body  the body of the message\n"
+		"type  the type of message to send (`normal`, `chat`, `error`, `groupchat`, `headline`)\n"
+) {
 	Sluift::globals.eventLoop.runOnce();
 	JID to;
 	std::string body;
@@ -168,7 +204,18 @@ SLUIFT_LUA_FUNCTION(Client, send_message) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, send_presence) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, send_presence,
+		"Send presence.",
+
+		"self\n"
+		"body  the text of the presence. Can alternatively be specified using the `status` option\n",
+
+		"to  the JID to send the message to\n"
+		"status  the text of the presence\n"
+		"priority  the priority of the presence\n"
+		"type  the type of message to send (`available`, `error`, `probe`, `subscribe`, `subscribed`, `unavailable`, `unsubscribe`, `unsubscribed`)\n"
+) {
 	Sluift::globals.eventLoop.runOnce();
 	boost::shared_ptr<Presence> presence = boost::make_shared<Presence>();
 	
@@ -303,7 +350,15 @@ SLUIFT_LUA_FUNCTION(Client, set) {
 	return sendQuery(L, IQ::Set);
 }
 
-SLUIFT_LUA_FUNCTION(Client, send) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, send,
+		"Sends a raw string",
+
+		"self\n"
+		"data  the string to send\n",
+
+		""
+) {
 	Sluift::globals.eventLoop.runOnce();
 
 	getClient(L)->getClient()->sendData(std::string(Lua::checkString(L, 2)));
@@ -311,7 +366,21 @@ SLUIFT_LUA_FUNCTION(Client, send) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, set_options) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, set_options,
+
+		"Sets the connection options of this client.",
+
+		"self",
+
+		"host  The host to connect to. When omitted, is determined from resolving the JID domain.\n"
+		"port  The port to connect to. When omitted, is determined from resolving the JID domain.\n"
+		"ack  Request acknowledgements\n"
+		"compress  Use stream compression when available\n"
+		"tls  Use TLS when available\n"
+		"bosh_url  Connect using the specified BOSH URL\n"
+		"allow_plain_without_tls  Allow PLAIN authentication without a TLS encrypted connection\n"
+) {
 	SluiftClient* client = getClient(L);
 	Lua::checkType(L, 2, LUA_TTABLE);
 	lua_getfield(L, 2, "host");
@@ -498,7 +567,13 @@ SLUIFT_LUA_FUNCTION(Client, get_next_event) {
 }
 
 
-SLUIFT_LUA_FUNCTION(Client, add_contact) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, add_contact,
+		"Add a contact to the contact list.",
+		"self\n",
+		"jid  The JID of the contact to add\n"
+		"name  The name to use in the contact list\n"
+		"groups  An array of group names to add the contact to\n") {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	RosterItemPayload item;
@@ -550,7 +625,13 @@ SLUIFT_LUA_FUNCTION(Client, add_contact) {
 	return 1;
 }
 
-SLUIFT_LUA_FUNCTION(Client, remove_contact) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, remove_contact,
+		"Remove a contact from the contact list.",
+		"self\n"
+		"jid  the JID of the contact to remove\n",
+		""
+) {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	JID jid(Lua::checkString(L, 2));
@@ -562,7 +643,13 @@ SLUIFT_LUA_FUNCTION(Client, remove_contact) {
 		SetRosterRequest::create(roster, client->getClient()->getIQRouter()), -1).convertToLuaResult(L);
 }
 
-SLUIFT_LUA_FUNCTION(Client, confirm_subscription) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, confirm_subscription,
+		"Confirm subscription of a contact.",
+		"self\n"
+		"jid  the JID of the contact to confirm the subscription of\n",
+		""
+) {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	JID jid(Lua::checkString(L, 2));
@@ -570,7 +657,13 @@ SLUIFT_LUA_FUNCTION(Client, confirm_subscription) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, cancel_subscription) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, cancel_subscription,
+		"Cancel the subscription of a contact.",
+		"self\n"
+		"jid  the JID of the contact to cancel the subscription of\n",
+		""
+) {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	JID jid(Lua::checkString(L, 2));
@@ -578,7 +671,13 @@ SLUIFT_LUA_FUNCTION(Client, cancel_subscription) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, set_disco_info) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, set_disco_info,
+		"Sets the service discovery information for this client",
+		"self\n"
+		"disco_info  A structured representation of the service discovery information\n",
+		""
+) {
 	SluiftClient* client = getClient(L);
 	if (!lua_istable(L, 2)) {
 		throw Lua::Exception("Missing disco info");
@@ -592,14 +691,25 @@ SLUIFT_LUA_FUNCTION(Client, set_disco_info) {
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, set_caps_node) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, set_caps_node,
+		"Sets the caps node of this client",
+		"self\n"
+		"node  The caps node (e.g. 'http://swift.im/sluift')\n",
+		""
+) {
 	SluiftClient* client = getClient(L);
 	std::string node(Lua::checkString(L, 2));
 	client->getClient()->getDiscoManager()->setCapsNode(Lua::checkString(L, 2));
 	return 0;
 }
 
-SLUIFT_LUA_FUNCTION(Client, jid) {
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, jid,
+		"Returns the JID of this client",
+		"self\n",
+		""
+) {
 	SluiftClient* client = getClient(L);
 	lua_pushstring(L, client->getClient()->getJID().toString().c_str());
 	return 1;
