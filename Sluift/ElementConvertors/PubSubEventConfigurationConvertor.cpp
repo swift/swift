@@ -49,3 +49,12 @@ void PubSubEventConfigurationConvertor::doConvertToLua(lua_State* L, boost::shar
 		lua_setfield(L, -2, "data");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventConfigurationConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventConfiguration",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `data`: @{Form}\n"
+	);
+}

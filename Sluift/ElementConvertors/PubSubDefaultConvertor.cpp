@@ -66,3 +66,12 @@ void PubSubDefaultConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubS
 	}
 	lua_setfield(L, -2, "type");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubDefaultConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubDefault",
+		"This table has the following fields:\n\n"
+		"- `node`: string (Optional)\n"
+		"- `type`: `\"none\"`, `\"collection\"`, or `\"leaf\"`\n"
+	);
+}

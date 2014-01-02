@@ -68,3 +68,12 @@ void PubSubSubscriptionsConvertor::doConvertToLua(lua_State* L, boost::shared_pt
 		}
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubSubscriptionsConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubSubscriptions",
+		"This table has the following fields:\n\n"
+		"- `node`: string (Optional)\n"
+		"- `subscriptions`: array<@{PubSubSubscription}>\n"
+	);
+}

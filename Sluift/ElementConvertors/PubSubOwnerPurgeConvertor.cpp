@@ -39,3 +39,11 @@ void PubSubOwnerPurgeConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<P
 	lua_pushstring(L, payload->getNode().c_str());
 	lua_setfield(L, -2, "node");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubOwnerPurgeConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubOwnerPurge",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+	);
+}

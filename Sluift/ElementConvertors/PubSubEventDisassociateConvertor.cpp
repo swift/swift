@@ -39,3 +39,11 @@ void PubSubEventDisassociateConvertor::doConvertToLua(lua_State* L, boost::share
 	lua_pushstring(L, payload->getNode().c_str());
 	lua_setfield(L, -2, "node");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventDisassociateConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventDisassociate",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+	);
+}

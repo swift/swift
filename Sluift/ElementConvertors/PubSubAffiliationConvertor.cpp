@@ -82,3 +82,12 @@ void PubSubAffiliationConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<
 	}
 	lua_setfield(L, -2, "type");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubAffiliationConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubAffiliation",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `type`: `\"none\"`, `\"member\"`, `\"outcast\"`, `\"owner\"`, `\"publisher\"`, or `\"publish_only\"`\n"
+	);
+}

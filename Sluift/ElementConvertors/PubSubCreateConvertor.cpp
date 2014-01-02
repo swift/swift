@@ -49,3 +49,12 @@ void PubSubCreateConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSu
 		lua_setfield(L, -2, "configure");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubCreateConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubCreate",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `configure`: @{PubSubConfigure}\n"
+	);
+}

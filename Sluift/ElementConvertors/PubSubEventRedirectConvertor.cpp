@@ -39,3 +39,11 @@ void PubSubEventRedirectConvertor::doConvertToLua(lua_State* L, boost::shared_pt
 	lua_pushstring(L, payload->getURI().c_str());
 	lua_setfield(L, -2, "uri");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventRedirectConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventRedirect",
+		"This table has the following fields:\n\n"
+		"- `uri`: string\n"
+	);
+}

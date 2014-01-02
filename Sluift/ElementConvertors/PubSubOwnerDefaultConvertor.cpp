@@ -42,3 +42,11 @@ void PubSubOwnerDefaultConvertor::doConvertToLua(lua_State* L, boost::shared_ptr
 		lua_setfield(L, -2, "data");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubOwnerDefaultConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubOwnerDefault",
+		"This table has the following fields:\n\n"
+		"- `data`: @{Form}\n"
+	);
+}

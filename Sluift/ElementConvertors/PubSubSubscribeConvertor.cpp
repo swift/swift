@@ -58,3 +58,13 @@ void PubSubSubscribeConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Pu
 		lua_setfield(L, -2, "options");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubSubscribeConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubSubscribe",
+		"This table has the following fields:\n\n"
+		"- `node`: string (Optional)\n"
+		"- `jid`: jid (string)\n"
+		"- `options`: @{PubSubOptions}\n"
+	);
+}

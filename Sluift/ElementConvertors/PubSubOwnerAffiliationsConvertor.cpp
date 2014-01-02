@@ -66,3 +66,12 @@ void PubSubOwnerAffiliationsConvertor::doConvertToLua(lua_State* L, boost::share
 		}
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubOwnerAffiliationsConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubOwnerAffiliations",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `affiliations`: array<@{PubSubOwnerAffiliation}>\n"
+	);
+}

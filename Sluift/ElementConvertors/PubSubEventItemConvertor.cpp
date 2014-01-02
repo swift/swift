@@ -90,3 +90,14 @@ void PubSubEventItemConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Pu
 		lua_setfield(L, -2, "id");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventItemConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventItem",
+		"This table has the following fields:\n\n"
+		"- `node`: string (Optional)\n"
+		"- `publisher`: string (Optional)\n"
+		"- `data`: array<element (table)>\n"
+		"- `id`: string (Optional)\n"
+	);
+}

@@ -230,3 +230,32 @@ void UserLocationConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<UserL
 		lua_setfield(L, -2, "speed");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> UserLocationConvertor::getDocumentation() const {
+	return Documentation(
+		"UserLocation",
+		"This table has the following fields:\n\n"
+		"- `area`: string (Optional)\n"
+		"- `altitude`: @{float} (Optional)\n"
+		"- `locality`: string (Optional)\n"
+		"- `latitude`: @{float} (Optional)\n"
+		"- `accuracy`: @{float} (Optional)\n"
+		"- `description`: string (Optional)\n"
+		"- `country_code`: string (Optional)\n"
+		"- `timestamp`: datetime (string) (Optional)\n"
+		"- `floor`: string (Optional)\n"
+		"- `building`: string (Optional)\n"
+		"- `room`: string (Optional)\n"
+		"- `country`: string (Optional)\n"
+		"- `region`: string (Optional)\n"
+		"- `uri`: string (Optional)\n"
+		"- `longitude`: @{float} (Optional)\n"
+		"- `error`: @{float} (Optional)\n"
+		"- `postal_code`: string (Optional)\n"
+		"- `bearing`: @{float} (Optional)\n"
+		"- `text`: string (Optional)\n"
+		"- `datum`: string (Optional)\n"
+		"- `street`: string (Optional)\n"
+		"- `speed`: @{float} (Optional)\n"
+	);
+}

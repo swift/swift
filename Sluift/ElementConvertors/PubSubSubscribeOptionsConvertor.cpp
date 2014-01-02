@@ -39,3 +39,11 @@ void PubSubSubscribeOptionsConvertor::doConvertToLua(lua_State* L, boost::shared
 	lua_pushboolean(L, payload->isRequired());
 	lua_setfield(L, -2, "required");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubSubscribeOptionsConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubSubscribeOptions",
+		"This table has the following fields:\n\n"
+		"- `required`: boolean\n"
+	);
+}

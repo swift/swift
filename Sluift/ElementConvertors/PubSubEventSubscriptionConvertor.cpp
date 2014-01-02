@@ -93,3 +93,15 @@ void PubSubEventSubscriptionConvertor::doConvertToLua(lua_State* L, boost::share
 	lua_pushstring(L, dateTimeToString(payload->getExpiry()).c_str());
 	lua_setfield(L, -2, "expiry");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventSubscriptionConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventSubscription",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `jid`: jid (string)\n"
+		"- `subscription`: `\"none\"`, `\"pending\"`, `\"subscribed\"`, or `\"unconfigured\"`\n"
+		"- `subscriptionid`: string (Optional)\n"
+		"- `expiry`: datetime (string)\n"
+	);
+}

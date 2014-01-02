@@ -57,3 +57,13 @@ void PubSubUnsubscribeConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<
 		lua_setfield(L, -2, "subscriptionid");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubUnsubscribeConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubUnsubscribe",
+		"This table has the following fields:\n\n"
+		"- `node`: string (Optional)\n"
+		"- `jid`: jid (string)\n"
+		"- `subscriptionid`: string (Optional)\n"
+	);
+}

@@ -84,3 +84,14 @@ void PubSubItemsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSub
 		lua_setfield(L, -2, "subscriptionid");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubItemsConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubItems",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `items`: array<@{PubSubItem}>\n"
+		"- `maximum_items`: number (Optional)\n"
+		"- `subscriptionid`: string (Optional)\n"
+	);
+}

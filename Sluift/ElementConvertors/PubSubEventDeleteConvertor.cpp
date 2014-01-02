@@ -49,3 +49,12 @@ void PubSubEventDeleteConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<
 		lua_setfield(L, -2, "redirects");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventDeleteConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventDelete",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `redirects`: @{PubSubEventRedirect}\n"
+	);
+}

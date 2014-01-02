@@ -49,3 +49,12 @@ void PubSubOwnerDeleteConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<
 		lua_setfield(L, -2, "redirect");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubOwnerDeleteConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubOwnerDelete",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `redirect`: @{PubSubOwnerRedirect}\n"
+	);
+}

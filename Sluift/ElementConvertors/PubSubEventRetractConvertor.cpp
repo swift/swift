@@ -39,3 +39,11 @@ void PubSubEventRetractConvertor::doConvertToLua(lua_State* L, boost::shared_ptr
 	lua_pushstring(L, payload->getID().c_str());
 	lua_setfield(L, -2, "id");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventRetractConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventRetract",
+		"This table has the following fields:\n\n"
+		"- `id`: string\n"
+	);
+}

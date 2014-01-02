@@ -70,3 +70,12 @@ void PubSubItemConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubI
 	lua_pushstring(L, payload->getID().c_str());
 	lua_setfield(L, -2, "id");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubItemConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubItem",
+		"This table has the following fields:\n\n"
+		"- `data`: array<element (table)>\n"
+		"- `id`: string\n"
+	);
+}

@@ -100,3 +100,13 @@ void PubSubEventItemsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<P
 		lua_setfield(L, -2, "retracts");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventItemsConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventItems",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `items`: array<@{PubSubEventItem}>\n"
+		"- `retracts`: array<@{PubSubEventRetract}>\n"
+	);
+}

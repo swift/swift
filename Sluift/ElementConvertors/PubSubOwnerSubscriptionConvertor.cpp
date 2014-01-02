@@ -70,3 +70,12 @@ void PubSubOwnerSubscriptionConvertor::doConvertToLua(lua_State* L, boost::share
 	}
 	lua_setfield(L, -2, "subscription");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubOwnerSubscriptionConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubOwnerSubscription",
+		"This table has the following fields:\n\n"
+		"- `jid`: jid (string)\n"
+		"- `subscription`: `\"none\"`, `\"pending\"`, `\"subscribed\"`, or `\"unconfigured\"`\n"
+	);
+}

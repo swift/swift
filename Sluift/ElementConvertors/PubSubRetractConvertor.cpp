@@ -77,3 +77,13 @@ void PubSubRetractConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubS
 	lua_pushboolean(L, payload->isNotify());
 	lua_setfield(L, -2, "notify");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubRetractConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubRetract",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `items`: array<@{PubSubItem}>\n"
+		"- `notify`: boolean\n"
+	);
+}

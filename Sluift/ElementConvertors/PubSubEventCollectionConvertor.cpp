@@ -61,3 +61,13 @@ void PubSubEventCollectionConvertor::doConvertToLua(lua_State* L, boost::shared_
 		lua_setfield(L, -2, "associate");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubEventCollectionConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubEventCollection",
+		"This table has the following fields:\n\n"
+		"- `node`: string (Optional)\n"
+		"- `disassociate`: @{PubSubEventDisassociate}\n"
+		"- `associate`: @{PubSubEventAssociate}\n"
+	);
+}

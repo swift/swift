@@ -70,3 +70,12 @@ void PubSubPublishConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubS
 		lua_setfield(L, -2, "items");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubPublishConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubPublish",
+		"This table has the following fields:\n\n"
+		"- `node`: string\n"
+		"- `items`: array<@{PubSubItem}>\n"
+	);
+}

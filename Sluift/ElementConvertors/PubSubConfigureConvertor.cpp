@@ -42,3 +42,11 @@ void PubSubConfigureConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Pu
 		lua_setfield(L, -2, "data");
 	}
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubConfigureConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubConfigure",
+		"This table has the following fields:\n\n"
+		"- `data`: @{Form}\n"
+	);
+}

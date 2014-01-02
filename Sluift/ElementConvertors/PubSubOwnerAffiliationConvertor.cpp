@@ -82,3 +82,12 @@ void PubSubOwnerAffiliationConvertor::doConvertToLua(lua_State* L, boost::shared
 	}
 	lua_setfield(L, -2, "type");
 }
+
+boost::optional<LuaElementConvertor::Documentation> PubSubOwnerAffiliationConvertor::getDocumentation() const {
+	return Documentation(
+		"PubSubOwnerAffiliation",
+		"This table has the following fields:\n\n"
+		"- `jid`: jid (string)\n"
+		"- `type`: `\"none\"`, `\"member\"`, `\"outcast\"`, `\"owner\"`, `\"publisher\"`, or `\"publish_only\"`\n"
+	);
+}
