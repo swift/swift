@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -40,9 +40,6 @@ namespace Swift {
 	class UIEventStream;
 	class QtChatWindowJSBridge;
 	class SettingsProvider;
-
-	// FIXME: Move this to a different file
-	std::string formatSize(const boost::uintmax_t bytes);
 
 	class LabelModel : public QAbstractListModel {
 		Q_OBJECT

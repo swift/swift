@@ -206,7 +206,7 @@ bool QtHighlightRulesItemModel::setData(const QModelIndex &index, const QVariant
 			highlightManager_->setRule(index.row(), r);
 			emit dataChanged(index, index);
 			foreach (int column, changedColumns) {
-				QModelIndex i = createIndex(index.row(), column, (void*) 0);
+				QModelIndex i = createIndex(index.row(), column, static_cast<void*>(0));
 				emit dataChanged(i, i);
 			}
 		}
@@ -227,7 +227,7 @@ int QtHighlightRulesItemModel::rowCount(const QModelIndex& /* parent */) const
 
 QModelIndex QtHighlightRulesItemModel::index(int row, int column, const QModelIndex& /* parent */) const
 {
-	return createIndex(row, column, (void*) 0);
+	return createIndex(row, column, static_cast<void*>(0));
 }
 
 bool QtHighlightRulesItemModel::insertRows(int row, int count, const QModelIndex& /* parent */)

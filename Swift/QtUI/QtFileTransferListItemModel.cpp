@@ -9,9 +9,8 @@
 #include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
 
-#include "QtChatWindow.h" // for formatSize
-
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/FileSize.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include "QtSwiftUtil.h"
@@ -109,7 +108,7 @@ int QtFileTransferListItemModel::rowCount(const QModelIndex& /* parent */) const
 }
 
 QModelIndex QtFileTransferListItemModel::index(int row, int column, const QModelIndex& /* parent */) const {
-	return createIndex(row, column, (void*) 0);
+	return createIndex(row, column, static_cast<void*>(0));
 }
 
 }

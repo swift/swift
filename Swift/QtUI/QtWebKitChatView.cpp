@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include "QtWebKitChatView.h"
-
-#include <boost/format.hpp>
 
 #include <QtDebug>
 #include <QEventLoop>
@@ -23,6 +21,7 @@
 #include <QFileDialog>
 
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/FileSize.h>
 #include <Swiften/StringCodecs/Base64.h>
 
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
@@ -619,18 +618,6 @@ std::string QtWebKitChatView::addMessage(
 
 std::string QtWebKitChatView::addAction(const ChatWindow::ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	return addMessage(" *" + chatMessageToHTML(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight, ChatSnippet::getDirection(message));
-}
-
-// FIXME: Move this to a different file
-std::string formatSize(const boost::uintmax_t bytes) {
-	static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", NULL};
-	int power = 0;
-	double engBytes = bytes;
-	while (engBytes >= 1000) {
-		++power;
-		engBytes = engBytes / 1000.0;
-	}
-	return str( boost::format("%.1lf %sB") % engBytes % (power > 0 ? siPrefix[power-1] : "") );
 }
 
 static QString encodeButtonArgument(const QString& str) {

@@ -16,6 +16,7 @@ objects = swiften_env.SwiftenObject([
 			"BoostRandomGenerator.cpp",
 			"sleep.cpp",
 			"URL.cpp",
-			"Regex.cpp"
+			"Regex.cpp",
+			"FileSize.cpp"
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
