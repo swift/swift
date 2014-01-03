@@ -50,7 +50,7 @@ namespace Swift {
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 			boost::signal<void (unsigned long long)> onBytesSent;
-			boost::signal<void (unsigned long long)> onBytesReceived;
+			// boost::signal<void (unsigned long long)> onBytesReceived;
 
 			const std::string& getStreamID() const {
 				return streamID;

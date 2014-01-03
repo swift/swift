@@ -11,6 +11,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
+#include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
 #include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
@@ -42,6 +43,10 @@ class PlatformNATTraversalRequest : public boost::enable_shared_from_this<Platfo
 			return worker->getNATTraversalInterface();
 		}
 
+		EventLoop* getEventLoop() const {
+			return worker->getEventLoop();
+		}
+
 
 		virtual void runBlocking() = 0;
 
@@ -63,7 +68,7 @@ class PlatformNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPReq
 		}
 
 		virtual void runBlocking() {
-			onResult(getNATTraversalInterface()->getPublicIP());
+			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->getPublicIP()));
 		}
 };
 
@@ -81,7 +86,7 @@ class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortReq
 		}
 
 		virtual void runBlocking() {
-			onResult(getNATTraversalInterface()->addPortForward(boost::numeric_cast<int>(localIP), boost::numeric_cast<int>(publicIP)));
+			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->addPortForward(boost::numeric_cast<int>(localIP), boost::numeric_cast<int>(publicIP))));
 		}
 
 	private:
@@ -103,7 +108,7 @@ class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemov
 		}
 
 		virtual void runBlocking() {
-			onResult(getNATTraversalInterface()->removePortForward(mapping));
+			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->removePortForward(mapping)));
 		}
 
 	private:

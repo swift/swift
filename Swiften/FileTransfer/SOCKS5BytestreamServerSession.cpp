@@ -68,7 +68,7 @@ void SOCKS5BytestreamServerSession::startReceiving(boost::shared_ptr<WriteBytest
 	writeBytestream = stream;
 	state = ReadingData;
 	writeBytestream->write(unprocessedData);
-	onBytesReceived(unprocessedData.size());
+	// onBytesReceived(unprocessedData.size());
 	unprocessedData.clear();
 }
 
@@ -82,7 +82,7 @@ void SOCKS5BytestreamServerSession::handleDataRead(boost::shared_ptr<SafeByteArr
 		process();
 	} else {
 		writeBytestream->write(createByteArray(vecptr(*data), data->size()));
-		onBytesReceived(data->size());
+		// onBytesReceived(data->size());
 	}
 }
 

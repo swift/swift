@@ -46,6 +46,10 @@ namespace Swift {
 			void start();
 			void stop();
 
+			EventLoop* getEventLoop() const {
+				return eventLoop;
+			}
+
 		private:
 			EventLoop* eventLoop;
 			bool stopRequested;

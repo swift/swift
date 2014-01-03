@@ -160,7 +160,7 @@ void SOCKS5BytestreamClientSession::startReceiving(boost::shared_ptr<WriteBytest
 		state = Reading;
 		writeBytestream = writeStream;
 		writeBytestream->write(unprocessedData);
-		onBytesReceived(unprocessedData.size());
+		//onBytesReceived(unprocessedData.size());
 		unprocessedData.clear();
 	} else {
 		SWIFT_LOG(debug) << "Session isn't ready for transfer yet!" << std::endl;
@@ -241,7 +241,7 @@ void SOCKS5BytestreamClientSession::handleDataRead(boost::shared_ptr<SafeByteArr
 	}
 	else {
 		writeBytestream->write(createByteArray(vecptr(*data), data->size()));
-		onBytesReceived(data->size());
+		//onBytesReceived(data->size());
 	}
 }
 
