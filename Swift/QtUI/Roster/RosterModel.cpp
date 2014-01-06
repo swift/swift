@@ -97,7 +97,7 @@ QVariant RosterModel::data(const QModelIndex& index, int role) const {
 		case Qt::TextColorRole: return getTextColor(item);
 		case Qt::BackgroundColorRole: return getBackgroundColor(item);
 		case Qt::ToolTipRole: return getToolTip(item);
-		case StatusTextRole: return getScreenReaderTextOr(item, getStatusText(item));
+		case StatusTextRole: return getStatusText(item);
 		case AvatarRole: return getAvatar(item);
 		case PresenceIconRole: return getPresenceIcon(item);
 		case ChildCountRole: return getChildCount(item);
