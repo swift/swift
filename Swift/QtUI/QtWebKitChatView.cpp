@@ -536,6 +536,22 @@ std::string QtWebKitChatView::addMessage(
 	return addMessage(chatMessageToHTML(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
 }
 
+QString QtWebKitChatView::getHighlightSpanStart(const std::string& text, const std::string& background) {
+	QString ecsapeColor = QtUtilities::htmlEscape(P2QSTRING(text));
+	QString escapeBackground = QtUtilities::htmlEscape(P2QSTRING(background));
+	if (ecsapeColor.isEmpty()) {
+		ecsapeColor = "black";
+	}
+	if (escapeBackground.isEmpty()) {
+		escapeBackground = "yellow";
+	}
+	return QString("<span style=\"color: %1; background: %2\">").arg(ecsapeColor).arg(escapeBackground);
+}
+
+QString QtWebKitChatView::getHighlightSpanStart(const HighlightAction& highlight) {
+	return getHighlightSpanStart(highlight.getTextColor(), highlight.getTextBackground());
+}
+
 QString QtWebKitChatView::chatMessageToHTML(const ChatWindow::ChatMessage& message) {
 	QString result;
 	foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
@@ -562,26 +578,13 @@ QString QtWebKitChatView::chatMessageToHTML(const ChatWindow::ChatMessage& messa
 			continue;
 		}
 		if ((highlightPart = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part))) {
-			//FIXME: Maybe do something here. Anything, really.
+			QString spanStart = getHighlightSpanStart(highlightPart->foregroundColor, highlightPart->backgroundColor);
+			result += spanStart + QtUtilities::htmlEscape(P2QSTRING(highlightPart->text)) + "</span>";
 			continue;
 		}
 
 	}
 	return result;
-}
-
-
-QString QtWebKitChatView::getHighlightSpanStart(const HighlightAction& highlight) {
-	QString color = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextColor()));
-	QString background = QtUtilities::htmlEscape(P2QSTRING(highlight.getTextBackground()));
-	if (color.isEmpty()) {
-		color = "black";
-	}
-	if (background.isEmpty()) {
-		background = "yellow";
-	}
-
-	return QString("<span style=\"color: %1; background: %2\">").arg(color).arg(background);
 }
 
 std::string QtWebKitChatView::addMessage(

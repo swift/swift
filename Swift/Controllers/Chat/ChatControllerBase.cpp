@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -42,7 +42,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
 	chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
 	chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
 	chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
@@ -201,15 +201,15 @@ std::string ChatControllerBase::addMessage(const std::string& message, const std
 	if (boost::starts_with(message, "/me ")) {
 		return chatWindow_->addAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	} else {
-		return chatWindow_->addMessage(chatMessageParser_->parseMessageBody(message), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
+		return chatWindow_->addMessage(chatMessageParser_->parseMessageBody(message,senderIsSelf), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	}
 }
 
-void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, bool senderIsSelf, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
 		chatWindow_->replaceWithAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), id, time, highlight);
 	} else {
-		chatWindow_->replaceMessage(chatMessageParser_->parseMessageBody(message), id, time, highlight);
+		chatWindow_->replaceMessage(chatMessageParser_->parseMessageBody(message,senderIsSelf), id, time, highlight);
 	}
 }
 
@@ -280,7 +280,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			std::map<JID, std::string>::iterator lastMessage;
 			lastMessage = lastMessagesUIID_.find(from);
 			if (lastMessage != lastMessagesUIID_.end()) {
-				replaceMessage(body, lastMessagesUIID_[from], timeStamp, highlight);
+				replaceMessage(body, lastMessagesUIID_[from], isIncomingMessageFromMe(message), timeStamp, highlight);
 			}
 		}
 		else {

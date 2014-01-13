@@ -174,8 +174,8 @@ namespace Swift {
 			HistoryController* historyController_;
 			WhiteboardManager* whiteboardManager_;
 			HighlightManager* highlightManager_;
+			std::map<std::string, std::string> emoticons_;
 			ClientBlockListManager* clientBlockListManager_;
-			ChatMessageParser* chatMessageParser_;
 			JID localMUCServiceJID_;
 			boost::shared_ptr<DiscoServiceWalker> localMUCServiceFinderWalker_;
 			AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;

@@ -145,6 +145,7 @@ ChatsManager::ChatsManager(
 			historyController_(historyController),
 			whiteboardManager_(whiteboardManager),
 			highlightManager_(highlightManager),
+			emoticons_(emoticons),
 			clientBlockListManager_(clientBlockListManager),
 			inviteUserSearchController_(inviteUserSearchController),
 			vcardManager_(vcardManager) {
@@ -161,7 +162,6 @@ ChatsManager::ChatsManager(
 	uiEventStream_ = uiEventStream;
 	mucBookmarkManager_ = NULL;
 	profileSettings_ = profileSettings;
-	chatMessageParser_ = new ChatMessageParser(emoticons);
 	presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
 	uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
 
@@ -208,7 +208,6 @@ ChatsManager::~ChatsManager() {
 	}
 	delete mucBookmarkManager_;
 	delete mucSearchController_;
-	delete chatMessageParser_;
 	delete autoAcceptMUCInviteDecider_;
 }
 
@@ -697,7 +696,8 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	assert(chatControllers_.find(contact) == chatControllers_.end());
-	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, autoAcceptMUCInviteDecider_);
+	boost::shared_ptr<ChatMessageParser> chatMessageParser = boost::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), false); /* a message parser that knows this is a chat (not a room/MUC) */
+	ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, autoAcceptMUCInviteDecider_);
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));
@@ -781,7 +781,8 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 		if (reuseChatwindow) {
 			chatWindowFactoryAdapter = new SingleChatWindowFactoryAdapter(reuseChatwindow);
 		}
-		controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, chatMessageParser_, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_);
+		boost::shared_ptr<ChatMessageParser> chatMessageParser = boost::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), true); /* a message parser that knows this is a room/MUC (not a chat) */
+		controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_);
 		if (chatWindowFactoryAdapter) {
 			/* The adapters are only passed to chat windows, which are deleted in their
 			 * controllers' dtor, which are deleted in ChatManager's dtor. The adapters

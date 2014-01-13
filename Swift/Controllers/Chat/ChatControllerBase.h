@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -55,7 +55,7 @@ namespace Swift {
 			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			void replaceMessage(const std::string& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceMessage(const std::string& message, const std::string& id, bool senderIsSelf, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			virtual void setOnline(bool online);
 			virtual void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;}
@@ -70,7 +70,7 @@ namespace Swift {
 			boost::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
 		protected:
-			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ChatMessageParser* chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+			ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 
 			/**
 			 * Pass the Message appended, and the stanza used to send it.
@@ -127,7 +127,7 @@ namespace Swift {
 			HistoryController* historyController_;
 			MUCRegistry* mucRegistry_;
 			Highlighter* highlighter_;
-			ChatMessageParser* chatMessageParser_;
+			boost::shared_ptr<ChatMessageParser> chatMessageParser_;
 			AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
 			UIEventStream* eventStream_;
 	};

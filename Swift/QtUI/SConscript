@@ -127,9 +127,7 @@ sources = [
     "QtContactEditWindow.cpp",
     "QtContactEditWidget.cpp",
     "QtSingleWindow.cpp",
-    "QtHighlightEditorWidget.cpp",
-    "QtHighlightRulesItemModel.cpp",
-    "QtHighlightRuleWidget.cpp",
+    "QtHighlightEditor.cpp",
     "QtColorToolButton.cpp",
     "QtClosableLineEdit.cpp",
     "ChatSnippet.cpp",
@@ -286,8 +284,7 @@ myenv.Uic4("QtAffiliationEditor.ui")
 myenv.Uic4("QtJoinMUCWindow.ui")
 myenv.Uic4("QtHistoryWindow.ui")
 myenv.Uic4("QtConnectionSettings.ui")
-myenv.Uic4("QtHighlightRuleWidget.ui")
-myenv.Uic4("QtHighlightEditorWidget.ui")
+myenv.Uic4("QtHighlightEditor.ui")
 myenv.Uic4("QtBlockListEditorWindow.ui")
 myenv.Uic4("QtSpellCheckerWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")

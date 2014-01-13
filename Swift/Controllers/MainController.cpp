@@ -1,11 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
- * Licensed under the GNU General Public License v3.
- * See Documentation/Licenses/GPLv3.txt for more information.
- */
-
-/*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Kevin Smith and Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -369,6 +363,7 @@ void MainController::handleConnected() {
 		contactSuggesterWithoutRoster_->addContactProvider(chatsManager_);
 		contactSuggesterWithRoster_->addContactProvider(chatsManager_);
 		contactSuggesterWithRoster_->addContactProvider(contactsFromRosterProvider_);
+		highlightEditorController_->setContactSuggester(contactSuggesterWithoutRoster_);
 
 		client_->onMessageReceived.connect(boost::bind(&ChatsManager::handleIncomingMessage, chatsManager_, _1));
 		chatsManager_->setAvatarManager(client_->getAvatarManager());

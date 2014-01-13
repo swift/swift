@@ -62,6 +62,7 @@ if env["SCONS_STAGE"] == "build" :
 			"UIEvents/UIEvent.cpp",
 			"UIInterfaces/XMLConsoleWidget.cpp",
 			"UIInterfaces/ChatListWindow.cpp",
+			"UIInterfaces/HighlightEditorWindow.cpp",
 			"PreviousStatusStore.cpp",
 			"ProfileSettingsProvider.cpp",
 			"Settings/SettingsProviderHierachy.cpp",

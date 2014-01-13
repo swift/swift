@@ -25,7 +25,7 @@
 #include <Swift/QtUI/QtContactEditWindow.h>
 #include <Swift/QtUI/QtAdHocCommandWindow.h>
 #include <Swift/QtUI/QtFileTransferListWidget.h>
-#include <Swift/QtUI/QtHighlightEditorWidget.h>
+#include <Swift/QtUI/QtHighlightEditor.h>
 #include <Swift/QtUI/Whiteboard/QtWhiteboardWindow.h>
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
@@ -164,8 +164,8 @@ WhiteboardWindow* QtUIFactory::createWhiteboardWindow(boost::shared_ptr<Whiteboa
 	return new QtWhiteboardWindow(whiteboardSession);
 }
 
-HighlightEditorWidget* QtUIFactory::createHighlightEditorWidget() {
-	return new QtHighlightEditorWidget();
+HighlightEditorWindow* QtUIFactory::createHighlightEditorWindow() {
+	return new QtHighlightEditor(qtOnlySettings);
 }
 
 BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {

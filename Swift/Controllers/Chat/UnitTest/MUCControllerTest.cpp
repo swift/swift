@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -81,7 +81,7 @@ public:
 		highlightManager_ = new HighlightManager(settings_);
 		muc_ = boost::make_shared<MockMUC>(mucJID_);
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-		chatMessageParser_ = new ChatMessageParser(std::map<std::string, std::string>());
+		chatMessageParser_ = boost::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getRules(), true);
 		vcardStorage_ = new VCardMemoryStorage(crypto_.get());
 		vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
 		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, chatMessageParser_, false, NULL, vcardManager_);
@@ -105,7 +105,6 @@ public:
 		delete iqChannel_;
 		delete mucRegistry_;
 		delete avatarManager_;
-		delete chatMessageParser_;
 	}
 
 	void finishJoin() {
@@ -429,7 +428,7 @@ private:
 	DummyEntityCapsProvider* entityCapsProvider_;
 	DummySettingsProvider* settings_;
 	HighlightManager* highlightManager_;
-	ChatMessageParser* chatMessageParser_;
+	boost::shared_ptr<ChatMessageParser> chatMessageParser_;
 	boost::shared_ptr<CryptoProvider> crypto_;
 	VCardManager* vcardManager_;
 	VCardMemoryStorage* vcardStorage_;

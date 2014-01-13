@@ -4,12 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <vector>
 #include <string>
 
 #include <boost/regex.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 #include <Swift/Controllers/HighlightAction.h>
 
@@ -26,14 +34,13 @@ namespace Swift {
 			const HighlightAction& getAction() const { return action_; }
 			HighlightAction& getAction() { return action_; }
 
-			static HighlightRule fromString(const std::string&);
-			std::string toString() const;
-
 			const std::vector<std::string>& getSenders() const { return senders_; }
 			void setSenders(const std::vector<std::string>&);
+			const std::vector<boost::regex>& getSenderRegex() const { return senderRegex_; }
 
 			const std::vector<std::string>& getKeywords() const { return keywords_; }
 			void setKeywords(const std::vector<std::string>&);
+			const std::vector<boost::regex>& getKeywordRegex() const { return keywordRegex_; }
 
 			bool getNickIsKeyword() const { return nickIsKeyword_; }
 			void setNickIsKeyword(bool);
@@ -53,6 +60,9 @@ namespace Swift {
 			bool isEmpty() const;
 
 		private:
+			friend class boost::serialization::access;
+			template<class Archive> void serialize(Archive & ar, const unsigned int version);
+
 			static std::string boolToString(bool);
 			static bool boolFromString(const std::string&);
 
@@ -73,5 +83,19 @@ namespace Swift {
 
 			HighlightAction action_;
 	};
+
+	template<class Archive>
+	void HighlightRule::serialize(Archive& ar, const unsigned int /*version*/)
+	{
+		ar & senders_;
+		ar & keywords_;
+		ar & nickIsKeyword_;
+		ar & matchChat_;
+		ar & matchMUC_;
+		ar & matchCase_;
+		ar & matchWholeWords_;
+		ar & action_;
+		updateRegex();
+	}
 
 }

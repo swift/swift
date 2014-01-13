@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -148,8 +148,9 @@ namespace Swift {
 					const HighlightAction& highlight);
 			bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf);
 			static ChatSnippet::Direction getActualDirection(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction);
-			QString chatMessageToHTML(const ChatWindow::ChatMessage& message);
+			QString getHighlightSpanStart(const std::string& text, const std::string& background);
 			QString getHighlightSpanStart(const HighlightAction& highlight);
+			QString chatMessageToHTML(const ChatWindow::ChatMessage& message);
 			static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
 
 		private:

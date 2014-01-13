@@ -48,28 +48,136 @@ public:
 		CPPUNIT_ASSERT_EQUAL(path, part->imagePath);
 	}
 
+	void assertHighlight(const ChatWindow::ChatMessage& result, size_t index, const std::string& text) {
+		boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(result.getParts()[index]);
+		CPPUNIT_ASSERT_EQUAL(text, part->text);
+	}
+
 	void assertURL(const ChatWindow::ChatMessage& result, size_t index, const std::string& text) {
 		boost::shared_ptr<ChatWindow::ChatURIMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatURIMessagePart>(result.getParts()[index]);
 		CPPUNIT_ASSERT_EQUAL(text, part->target);
 	}
 
+	static HighlightRule ruleFromKeyword(const std::string& keyword, bool matchCase, bool matchWholeWord)
+	{
+		HighlightRule rule;
+		std::vector<std::string> keywords;
+		keywords.push_back(keyword);
+		rule.setKeywords(keywords);
+		rule.setMatchCase(matchCase);
+		rule.setMatchWholeWords(matchWholeWord);
+		rule.setMatchChat(true);
+		return rule;
+	}
+
+	static const HighlightRulesListPtr ruleListFromKeyword(const std::string& keyword, bool matchCase, bool matchWholeWord)
+	{
+		boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
+		list->addRule(ruleFromKeyword(keyword, matchCase, matchWholeWord));
+		return list;
+	}
+
+	static const HighlightRulesListPtr ruleListFromKeywords(const HighlightRule &rule1, const HighlightRule &rule2)
+	{
+		boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
+		list->addRule(rule1);
+		list->addRule(rule2);
+		return list;
+	}
+
 	void testFullBody() {
-		ChatMessageParser testling(emoticons_);
-		ChatWindow::ChatMessage result = testling.parseMessageBody(":) shiny :( :) http://wonderland.lit/blah http://denmark.lit boom boom");
+		const std::string no_special_message = "a message with no special content";
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+		ChatWindow::ChatMessage result = testling.parseMessageBody(no_special_message);
+		assertText(result, 0, no_special_message);
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeyword("trigger", false, false));
+		result = testling.parseMessageBody(":) shiny :( trigger :) http://wonderland.lit/blah http://denmark.lit boom boom");
 		assertEmoticon(result, 0, smile1_, smile1Path_);
 		assertText(result, 1, " shiny ");
 		assertEmoticon(result, 2, smile2_, smile2Path_);
 		assertText(result, 3, " ");
-		assertEmoticon(result, 4, smile1_, smile1Path_);
+		assertHighlight(result, 4, "trigger");
 		assertText(result, 5, " ");
-		assertURL(result, 6, "http://wonderland.lit/blah");
+		assertEmoticon(result, 6, smile1_, smile1Path_);
 		assertText(result, 7, " ");
-		assertURL(result, 8, "http://denmark.lit");
-		assertText(result, 9, " boom boom");
+		assertURL(result, 8, "http://wonderland.lit/blah");
+		assertText(result, 9, " ");
+		assertURL(result, 10, "http://denmark.lit");
+		assertText(result, 11, " boom boom");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeyword("trigger", false, false));
+		result = testling.parseMessageBody("testtriggermessage");
+		assertText(result, 0, "test");
+		assertHighlight(result, 1, "trigger");
+		assertText(result, 2, "message");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeyword("trigger", false, true));
+		result = testling.parseMessageBody("testtriggermessage");
+		assertText(result, 0, "testtriggermessage");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeyword("trigger", true, false));
+		result = testling.parseMessageBody("TrIgGeR");
+		assertText(result, 0, "TrIgGeR");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeyword("trigger", false, false));
+		result = testling.parseMessageBody("TrIgGeR");
+		assertHighlight(result, 0, "TrIgGeR");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeyword("trigger", false, false));
+		result = testling.parseMessageBody("partialTrIgGeRmatch");
+		assertText(result, 0, "partial");
+		assertHighlight(result, 1, "TrIgGeR");
+		assertText(result, 2, "match");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, false), ruleFromKeyword("three", false, false)));
+		result = testling.parseMessageBody("zero one two three");
+		assertText(result, 0, "zero ");
+		assertHighlight(result, 1, "one");
+		assertText(result, 2, " two ");
+		assertHighlight(result, 3, "three");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, false), ruleFromKeyword("three", false, false)));
+		result = testling.parseMessageBody("zero oNe two tHrEe");
+		assertText(result, 0, "zero ");
+		assertHighlight(result, 1, "oNe");
+		assertText(result, 2, " two ");
+		assertHighlight(result, 3, "tHrEe");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, false), ruleFromKeyword("three", true, false)));
+		result = testling.parseMessageBody("zero oNe two tHrEe");
+		assertText(result, 0, "zero ");
+		assertHighlight(result, 1, "oNe");
+		assertText(result, 2, " two tHrEe");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", true, false), ruleFromKeyword("three", true, false)));
+		result = testling.parseMessageBody("zero oNe two tHrEe");
+		assertText(result, 0, "zero oNe two tHrEe");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, false), ruleFromKeyword("three", false, false)));
+		result = testling.parseMessageBody("zeroonetwothree");
+		assertText(result, 0, "zero");
+		assertHighlight(result, 1, "one");
+		assertText(result, 2, "two");
+		assertHighlight(result, 3, "three");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", true, false), ruleFromKeyword("three", false, false)));
+		result = testling.parseMessageBody("zeroOnEtwoThReE");
+		assertText(result, 0, "zeroOnEtwo");
+		assertHighlight(result, 1, "ThReE");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, true), ruleFromKeyword("three", false, false)));
+		result = testling.parseMessageBody("zeroonetwothree");
+		assertText(result, 0, "zeroonetwo");
+		assertHighlight(result, 1, "three");
+
+		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, true), ruleFromKeyword("three", false, true)));
+		result = testling.parseMessageBody("zeroonetwothree");
+		assertText(result, 0, "zeroonetwothree");
 	}
 
 	void testOneEmoticon() {
-		ChatMessageParser testling(emoticons_);
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
 		ChatWindow::ChatMessage result = testling.parseMessageBody(" :) ");
 		assertText(result, 0, " ");
 		assertEmoticon(result, 1, smile1_, smile1Path_);
@@ -78,26 +186,26 @@ public:
 
 
 	void testBareEmoticon() {
-		ChatMessageParser testling(emoticons_);
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
 		ChatWindow::ChatMessage result = testling.parseMessageBody(":)");
 		assertEmoticon(result, 0, smile1_, smile1Path_);
 	}
 
 	void testHiddenEmoticon() {
-		ChatMessageParser testling(emoticons_);
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
 		ChatWindow::ChatMessage result = testling.parseMessageBody("b:)a");
 		assertText(result, 0, "b:)a");
 	}
 
 	void testEndlineEmoticon() {
-		ChatMessageParser testling(emoticons_);
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
 		ChatWindow::ChatMessage result = testling.parseMessageBody("Lazy:)");
 		assertText(result, 0, "Lazy");
 		assertEmoticon(result, 1, smile1_, smile1Path_);
 	}
 
 	void testBoundedEmoticons() {
-		ChatMessageParser testling(emoticons_);
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
 		ChatWindow::ChatMessage result = testling.parseMessageBody(":)Lazy:(");
 		assertEmoticon(result, 0, smile1_, smile1Path_);
 		assertText(result, 1, "Lazy");
@@ -105,13 +213,12 @@ public:
 	}
 
 	void testEmoticonParenthesis() {
-		ChatMessageParser testling(emoticons_);
+		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
 		ChatWindow::ChatMessage result = testling.parseMessageBody("(Like this :))");
 		assertText(result, 0, "(Like this ");
 		assertEmoticon(result, 1, smile1_, smile1Path_);
 		assertText(result, 2, ")");
 	}
-
 
 private:
 	std::map<std::string, std::string> emoticons_;
@@ -122,4 +229,3 @@ private:
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatMessageParserTest);
-

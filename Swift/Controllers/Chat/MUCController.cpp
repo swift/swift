@@ -71,7 +71,7 @@ MUCController::MUCController (
 		HistoryController* historyController,
 		MUCRegistry* mucRegistry,
 		HighlightManager* highlightManager,
-		ChatMessageParser* chatMessageParser,
+		boost::shared_ptr<ChatMessageParser> chatMessageParser,
 		bool isImpromptu,
 		AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
 		VCardManager* vcardManager) :

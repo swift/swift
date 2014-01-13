@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/Highlighter.h>
 #include <Swift/Controllers/HighlightManager.h>
@@ -24,9 +30,11 @@ void Highlighter::setMode(Mode mode)
 
 HighlightAction Highlighter::findAction(const std::string& body, const std::string& sender) const
 {
-	foreach (const HighlightRule & r, manager_->getRules()) {
-		if (r.isMatch(body, sender, nick_, messageType_)) {
-			return r.getAction();
+	HighlightRulesListPtr rules = manager_->getRules();
+	for (size_t i = 0; i < rules->getSize(); ++i) {
+		const HighlightRule& rule = rules->getRule(i);
+		if (rule.isMatch(body, sender, nick_, messageType_)) {
+			return rule.getAction();
 		}
 	}
 

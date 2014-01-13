@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <vector>
@@ -19,15 +25,32 @@ namespace Swift {
 
 	class HighlightManager {
 		public:
+
+			class HighlightRulesList {
+			public:
+				friend class HighlightManager;
+				size_t getSize() const { return list_.size(); }
+				const HighlightRule& getRule(const size_t index) const { return list_[index]; }
+				void addRule(const HighlightRule &rule) { list_.push_back(rule); }
+				void combineRules(const HighlightRulesList &rhs) {
+					list_.insert(list_.end(), rhs.list_.begin(), rhs.list_.end());
+				}
+			private:
+				std::vector<HighlightRule> list_;
+			};
+
 			HighlightManager(SettingsProvider* settings);
 
 			Highlighter* createHighlighter();
 
-			const std::vector<HighlightRule>& getRules() const { return rules_; }
+			boost::shared_ptr<const HighlightManager::HighlightRulesList> getRules() const { return rules_; }
+
 			HighlightRule getRule(int index) const;
 			void setRule(int index, const HighlightRule& rule);
 			void insertRule(int index, const HighlightRule& rule);
 			void removeRule(int index);
+			void storeSettings();
+			void loadSettings();
 
 			boost::signal<void (const HighlightAction&)> onHighlight;
 
@@ -35,15 +58,14 @@ namespace Swift {
 			void handleSettingChanged(const std::string& settingPath);
 
 			std::string rulesToString() const;
-			static std::vector<HighlightRule> rulesFromString(const std::string&);
 			static std::vector<HighlightRule> getDefaultRules();
 
 			SettingsProvider* settings_;
 			bool storingSettings_;
-			void storeSettings();
-			void loadSettings();
 
-			std::vector<HighlightRule> rules_;
+			boost::shared_ptr<HighlightManager::HighlightRulesList> rules_;
 	};
+
+	typedef boost::shared_ptr<const HighlightManager::HighlightRulesList> HighlightRulesListPtr;
 
 }
