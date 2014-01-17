@@ -1,44 +1,32 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
+#include <algorithm>
+
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
 	class Watchdog {
 		public:
-			Watchdog(int timeout, TimerFactory* timerFactory) : timedOut(false) {
-				if (timeout > 0) {
-					timer = timerFactory->createTimer(timeout);
-					timer->start();
-					timer->onTick.connect(boost::bind(&Watchdog::handleTimerTick, this));
-				}
-				else if (timeout == 0) {
-					timedOut = true;
-				}
-			}
-
-			~Watchdog() {
-				if (timer) {
-					timer->stop();
-				}
-			}
+			Watchdog(int timeout, TimerFactory* timerFactory);
+			~Watchdog();
 
 			bool getTimedOut() const {
 				return timedOut;
 			}
 
 		private:
-			void handleTimerTick() {
-				timedOut = true;
-			}
+			void handleTimerTick();
 
 		private:
 			Timer::ref timer;
+			int remainingTime;
+			TimerFactory* timerFactory;
 			bool timedOut;
 	};
 }

@@ -25,7 +25,6 @@
 #include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Presence/SubscriptionManager.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
-#include <Sluift/Watchdog.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
 #include <Sluift/Lua/FunctionRegistration.h>
 #include <Swiften/Base/foreach.h>

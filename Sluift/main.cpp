@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -15,6 +15,7 @@
 #include <boost/version.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/assign/list_of.hpp>
+#include <Sluift/globals.h>
 #include <Sluift/Console.h>
 #include <Sluift/StandardTerminal.h>
 #include <Sluift/sluift.h>
@@ -47,6 +48,10 @@ static const luaL_Reg defaultLibraries[] = {
 	{"sluift", luaopen_sluift},
 	{NULL, NULL}
 };
+
+static void handleInterruptSignal(int) {
+	Sluift::globals.interruptRequested = 1;
+}
 
 static void checkResult(lua_State* L, int result) {
 	if (result && !lua_isnil(L, -1)) {
@@ -150,6 +155,9 @@ int main(int argc, char* argv[]) {
 
 		// Run console
 		if (arguments.count("interactive") || arguments.count("script") == 0) {
+			// Set up signal handler
+			signal(SIGINT, handleInterruptSignal);
+
 			// Import some useful functions into the global namespace
 			lua_getglobal(L, "sluift");
 			std::vector<std::string> globalImports = boost::assign::list_of

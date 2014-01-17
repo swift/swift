@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,11 @@
 #include <Sluift/LuaElementConvertors.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
+#include <signal.h>
 
 namespace Swift {
 	struct SluiftGlobals {
-		SluiftGlobals() : networkFactories(&eventLoop) {}
+		SluiftGlobals() : networkFactories(&eventLoop), interruptRequested(0) {}
 
 		int timeout;
 		bool debug;
@@ -20,5 +21,6 @@ namespace Swift {
 		SimpleEventLoop eventLoop;
 		BoostNetworkFactories networkFactories;
 		int coreLibIndex;
+		sig_atomic_t interruptRequested;
 	};
 }

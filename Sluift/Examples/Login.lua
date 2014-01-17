@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2010-2013 Remko Tronçon
+	Copyright (c) 2010-2014 Remko Tronçon
 	Licensed under the GNU General Public License v3.
 	See Documentation/Licenses/GPLv3.txt for more information.
 --]]
@@ -21,7 +21,7 @@ sluift.debug = os.getenv("SLUIFT_DEBUG") or false
 
 print("Connecting " .. os.getenv("SLUIFT_JID") .. " ...")
 c = sluift.new_client(os.getenv("SLUIFT_JID"), os.getenv("SLUIFT_PASS"))
-c:set_options({compress = false, tls = false})
+c:set_options{compress = false, tls = false}
 c:connect()
 c:send_presence("")
 
