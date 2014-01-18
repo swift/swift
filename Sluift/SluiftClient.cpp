@@ -97,18 +97,22 @@ void SluiftClient::setSoftwareVersion(const std::string& name, const std::string
 boost::optional<SluiftClient::Event> SluiftClient::getNextEvent(
 		int timeout, boost::function<bool (const Event&)> condition) {
 	Watchdog watchdog(timeout, networkFactories->getTimerFactory());
+	size_t currentIndex = 0;
 	while (true) {
 		// Look for pending events in the queue
-		while (!pendingEvents.empty()) {
-			Event event = pendingEvents.front();
-			pendingEvents.pop_front();
+		while (currentIndex < pendingEvents.size()) {
+			Event event = pendingEvents[currentIndex];
 			if (!condition || condition(event)) {
+				pendingEvents.erase(
+						pendingEvents.begin() 
+						+ boost::numeric_cast<int>(currentIndex));
 				return event;
 			}
+			++currentIndex;
 		}
 
 		// Wait for new events
-		while (!watchdog.getTimedOut() && pendingEvents.empty() && client->isActive()) {
+		while (!watchdog.getTimedOut() && currentIndex >= pendingEvents.size() && client->isActive()) {
 			eventLoop->runUntilEvents();
 		}
 
