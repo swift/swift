@@ -170,6 +170,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		Client, send_message,
 		"Send a message.",
 		"self\n"
+		"to  the JID to send the message to\n"
 		"body  the body of the message. Can alternatively be specified using the `body` option\n",
 		"to  the JID to send the message to\n"
 		"body  the body of the message\n"
@@ -183,8 +184,8 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	if (lua_isstring(L, index)) {
 		to = std::string(lua_tostring(L, index));
 		++index;
-		if (!lua_isstring(L, index)) {
-			std::string body = lua_tostring(L, index);
+		if (lua_isstring(L, index)) {
+			body = lua_tostring(L, index);
 			++index;
 		}
 	}
