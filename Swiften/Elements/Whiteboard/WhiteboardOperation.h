@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <boost/smart_ptr/shared_ptr.hpp>
 #include <string>
 
@@ -14,6 +15,8 @@ namespace Swift {
 	public:
 		typedef boost::shared_ptr<WhiteboardOperation> ref;
 	public:
+		WhiteboardOperation() {}
+		SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(WhiteboardOperation)
 		virtual ~WhiteboardOperation(){}
 
 		std::string getID() const {

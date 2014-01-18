@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
+ */
+
 #include <sstream>
 #include <stack>
 
@@ -38,13 +44,13 @@ void XMLBeautifier::indent() {
 }
 
 // all bold but reset
-const char colorBlue[] = "\x1b[01;34m";
-const char colorCyan[] = "\x1b[01;36m";
-const char colorGreen[] = "\x1b[01;32m";
-const char colorMagenta[] = "\x1b[01;35m";
-const char colorRed[] = "\x1b[01;31m";
-const char colorReset[] = "\x1b[0m";
-const char colorYellow[] = "\x1b[01;33m";
+// static const char colorBlue[] = "\x1b[01;34m";
+static const char colorCyan[] = "\x1b[01;36m";
+static const char colorGreen[] = "\x1b[01;32m";
+// static const char colorMagenta[] = "\x1b[01;35m";
+static const char colorRed[] = "\x1b[01;31m";
+static const char colorReset[] = "\x1b[0m";
+static const char colorYellow[] = "\x1b[01;33m";
 
 
 

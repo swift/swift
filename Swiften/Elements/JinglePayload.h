@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,6 +11,7 @@
 #include <boost/optional.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/JingleContentPayload.h>
@@ -42,7 +43,6 @@ namespace Swift {
 					};
 					Reason() : type(UnknownType), text("") {}
 					Reason(Type type, const std::string& text = "") : type(type), text(text) {}
-					~Reason() {}
 					Type type;
 					std::string text;
 			};

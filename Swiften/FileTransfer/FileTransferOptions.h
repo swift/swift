@@ -14,7 +14,7 @@ namespace Swift {
 		public:
 			FileTransferOptions() : allowInBand(false) {
 			}
-
+			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(FileTransferOptions)
 			~FileTransferOptions();
 
 			FileTransferOptions& withInBandAllowed(bool b) {
@@ -25,6 +25,8 @@ namespace Swift {
 			bool isInBandAllowed() const {
 				return allowInBand;
 			}
+
+			SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(FileTransferOptions)
 
 		private:
 			bool allowInBand;

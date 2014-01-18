@@ -313,7 +313,7 @@ void ChatsManager::loadRecents() {
 		// boost searilaize based format
 		ByteArray debase64 = Base64::decode(recentsString);
 		std::vector<ChatListWindow::Chat> recentChats;
-		std::stringstream deserializeStream(std::string((const char*)debase64.data(), debase64.size()));
+		std::stringstream deserializeStream(std::string(reinterpret_cast<const char*>(vecptr(debase64)), debase64.size()));
 		try {
 			boost::archive::text_iarchive ia(deserializeStream);
 			ia >> recentChats;

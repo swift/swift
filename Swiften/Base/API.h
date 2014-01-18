@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Remko Tronçon
+ * Copyright (c) 2012-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/Platform.h>
+#include <boost/config.hpp>
 
 #ifdef SWIFTEN_STATIC
 # define SWIFTEN_API 
@@ -22,4 +23,20 @@
 # else
 #  define SWIFTEN_API 
 # endif
+#endif
+
+#ifdef BOOST_NO_DEFAULTED_FUNCTIONS
+#  define SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(cls)
+#  define SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(cls)
+#else
+#  define SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(cls) \
+		cls(const cls&) = default;
+#  define SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(cls) \
+		cls& operator=(const cls&) = default;
+#endif
+
+#ifdef BOOST_NO_NOEXCEPT
+#define SWIFTEN_NOEXCEPT throw()
+#else
+#define SWIFTEN_NOEXCEPT noexcept
 #endif

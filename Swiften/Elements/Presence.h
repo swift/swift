@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,6 +12,7 @@
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Elements/StatusShow.h>
 
+
 namespace Swift {
 	class SWIFTEN_API Presence : public Stanza {
 		public:
@@ -21,6 +22,7 @@ namespace Swift {
 
 			Presence();
 			Presence(const std::string& status);
+			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Presence)
 			virtual ~Presence();
 
 			static ref create() {

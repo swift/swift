@@ -25,6 +25,7 @@ namespace Swift {
 
 			Stanza();
 			virtual ~Stanza();
+			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Stanza)
 
 			template<typename T> 
 			boost::shared_ptr<T> getPayload() const {

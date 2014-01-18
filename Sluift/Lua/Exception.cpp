@@ -11,5 +11,5 @@ using namespace Swift::Lua;
 Exception::Exception(const std::string& what) : std::runtime_error(what) {
 }
 
-Exception::~Exception() throw() {
+Exception::~Exception() SWIFTEN_NOEXCEPT {
 }

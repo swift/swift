@@ -8,6 +8,7 @@
 
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Base/API.h>
 
 struct lua_State;
 
@@ -15,6 +16,7 @@ namespace Swift {
 	namespace Sluift {
 		struct Response {
 			Response(boost::shared_ptr<Payload> result, boost::shared_ptr<ErrorPayload> error) : result(result), error(error) {}
+			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Response)
 			~Response();
 
 			static Response withResult(boost::shared_ptr<Payload> response) {

@@ -15,9 +15,6 @@ namespace Swift {
 	public:
 		typedef boost::shared_ptr<WhiteboardInsertOperation> ref;
 	public:
-		~WhiteboardInsertOperation() {
-		}
-
 		WhiteboardElement::ref getElement() const {
 			return element_;
 		}

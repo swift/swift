@@ -15,9 +15,6 @@ namespace Swift {
 	public:
 		typedef boost::shared_ptr<WhiteboardDeleteOperation> ref;
 	public:
-		~WhiteboardDeleteOperation() {
-		}
-
 		std::string getElementID() const {
 			return elementID_;
 		}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <algorithm>
+
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	void secureZeroMemory(char* memory, size_t numberOfBytes);
@@ -19,16 +21,16 @@ namespace Swift {
 				typedef SafeAllocator<U> other;
 			};
 
-			SafeAllocator() throw() {}
-			SafeAllocator(const SafeAllocator&) throw() : std::allocator<T>() {}
-			template <class U> SafeAllocator(const SafeAllocator<U>&) throw() {}
-			~SafeAllocator() throw() {}
+			SafeAllocator() SWIFTEN_NOEXCEPT {}
+			SafeAllocator(const SafeAllocator&) SWIFTEN_NOEXCEPT : std::allocator<T>() {}
+			template <class U> SafeAllocator(const SafeAllocator<U>&) SWIFTEN_NOEXCEPT {}
+			~SafeAllocator() SWIFTEN_NOEXCEPT {}
 
 			void deallocate (T* p, size_t num) {
 				secureZeroMemory(reinterpret_cast<char*>(p), num);
 				std::allocator<T>::deallocate(p, num);
 			}
 
-		private:
+			SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(SafeAllocator)
 	};
 }
