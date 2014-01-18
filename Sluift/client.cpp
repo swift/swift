@@ -41,6 +41,22 @@ static inline SluiftClient* getClient(lua_State* L) {
 	return *Lua::checkUserData<SluiftClient>(L, 1);
 }
 
+static inline int getGlobalTimeout(lua_State* L) {
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.moduleLibIndex);
+	lua_getfield(L, -1, "timeout");
+	int result = boost::numeric_cast<int>(lua_tointeger(L, -1));
+	lua_pop(L, 2);
+	return result;
+}
+
+static inline bool getGlobalDebug(lua_State* L) {
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.moduleLibIndex);
+	lua_getfield(L, -1, "debug");
+	int result = lua_toboolean(L, -1);
+	lua_pop(L, 2);
+	return result;
+}
+
 SLUIFT_LUA_FUNCTION(Client, async_connect) {
 	SluiftClient* client = getClient(L);
 
@@ -54,7 +70,19 @@ SLUIFT_LUA_FUNCTION(Client, async_connect) {
 			port = *portInt;
 		}
 	}
+	client->setTraceEnabled(getGlobalDebug(L));
 	client->connect(host, port);
+	return 0;
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, set_trace_enabled,
+		"Enable/disable tracing of the data sent/received.\n\n.",
+		"self\n"
+		"enable  a boolean specifying whether to enable/disable tracing",
+		""
+) {
+	getClient(L)->setTraceEnabled(lua_toboolean(L, 1));
 	return 0;
 }
 
@@ -64,7 +92,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		"self",
 		""
 ) {
-	getClient(L)->waitConnected();
+	getClient(L)->waitConnected(getGlobalTimeout(L));
 	return 0;
 }
 
@@ -274,7 +302,7 @@ static int sendQuery(lua_State* L, IQ::Type type) {
 		to = JID(*toString);
 	}
 
-	int timeout = Sluift::globals.timeout;
+	int timeout = getGlobalTimeout(L);
 	if (boost::optional<int> timeoutInt = Lua::getIntField(L, 2, "timeout")) {
 		timeout = *timeoutInt;
 	}
@@ -306,7 +334,7 @@ SLUIFT_LUA_FUNCTION(Client, query_pubsub) {
 		to = JID(*toString);
 	}
 
-	int timeout = Sluift::globals.timeout;
+	int timeout = getGlobalTimeout(L);
 	if (boost::optional<int> timeoutInt = Lua::getIntField(L, 2, "timeout")) {
 		timeout = *timeoutInt;
 	}
@@ -520,7 +548,7 @@ SLUIFT_LUA_FUNCTION(Client, get_next_event) {
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 
-	int timeout = Sluift::globals.timeout;
+	int timeout = getGlobalTimeout(L);
 	boost::optional<SluiftClient::Event::Type> type;
 	int condition = 0;
 	if (lua_istable(L, 2)) {

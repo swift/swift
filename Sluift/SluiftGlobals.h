@@ -13,14 +13,17 @@
 
 namespace Swift {
 	struct SluiftGlobals {
-		SluiftGlobals() : networkFactories(&eventLoop), interruptRequested(0) {}
+		SluiftGlobals() : 
+			networkFactories(&eventLoop), 
+			coreLibIndex(-1),
+			moduleLibIndex(-1),
+			interruptRequested(0) {}
 
-		int timeout;
-		bool debug;
 		LuaElementConvertors elementConvertor;
 		SimpleEventLoop eventLoop;
 		BoostNetworkFactories networkFactories;
 		int coreLibIndex;
+		int moduleLibIndex;
 		sig_atomic_t interruptRequested;
 	};
 }

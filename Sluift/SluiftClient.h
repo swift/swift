@@ -12,7 +12,6 @@
 #include <boost/function.hpp>
 
 #include <Swiften/Client/ClientOptions.h>
-#include <Sluift/globals.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
@@ -62,8 +61,7 @@ namespace Swift {
 					const JID& jid, 
 					const std::string& password, 
 					NetworkFactories* networkFactories, 
-					SimpleEventLoop* eventLoop, 
-					SluiftGlobals* globals);
+					SimpleEventLoop* eventLoop);
 			~SluiftClient();
 
 			Client* getClient() {
@@ -76,8 +74,9 @@ namespace Swift {
 
 			void connect();
 			void connect(const std::string& host, int port);
-			void waitConnected();
+			void waitConnected(int timeout);
 			bool isConnected() const;
+			void setTraceEnabled(bool b);
 
 			template<typename T>
 				Sluift::Response sendPubSubRequest(
@@ -119,7 +118,6 @@ namespace Swift {
 		private:
 			NetworkFactories* networkFactories;
 			SimpleEventLoop* eventLoop;
-			SluiftGlobals* globals;
 			Client* client;
 			ClientOptions options;
 			ClientXMLTracer* tracer;

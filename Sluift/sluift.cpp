@@ -70,7 +70,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	lua_setmetatable(L, -3);
 	lua_pop(L, 1);
 
-	*client = new SluiftClient(jid, password, &Sluift::globals.networkFactories, &Sluift::globals.eventLoop, &Sluift::globals);
+	*client = new SluiftClient(jid, password, &Sluift::globals.networkFactories, &Sluift::globals.eventLoop);
 	return 1;
 }
 
@@ -113,41 +113,6 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 ) {
 	lua_pushstring(L, IDGenerator().generateID().c_str());
 	return 1;
-}
-
-static int sluift_index(lua_State* L) {
-	try {
-		std::string key(Lua::checkString(L, 2));
-		if (key == "debug") {
-			lua_pushboolean(L, Sluift::globals.debug);
-			return 1;
-		}
-		else if (key == "timeout") {
-			lua_pushnumber(L, Sluift::globals.timeout);
-			return 1;
-		}
-		return 0;
-	}
-	catch (const std::exception& e) {
-		return luaL_error(L, e.what());
-	}
-}
-
-
-static int sluift_newindex(lua_State* L) {
-	try {
-		std::string key(Lua::checkString(L, 2));
-		if (key == "debug") {
-			Sluift::globals.debug = lua_toboolean(L, 3);
-		}
-		else if (key == "timeout") {
-			Sluift::globals.timeout = Lua::checkIntNumber(L, 3);
-		}
-		return 0;
-	}
-	catch (const std::exception& e) {
-		return luaL_error(L, e.what());
-	}
 }
 
 SLUIFT_LUA_FUNCTION_WITH_HELP(
@@ -314,11 +279,15 @@ SLUIFT_LUA_FUNCTION(IDN, stringprep) {
 static const luaL_Reg sluift_functions[] = { {NULL, NULL} };
 
 SLUIFT_API int luaopen_sluift(lua_State* L) {
-	// Initialize globals
-	Sluift::globals.debug = false;
-	Sluift::globals.timeout = -1;
-
+	// Initialize & store the module table
 	luaL_register(L, lua_tostring(L, 1), sluift_functions);
+	lua_pushinteger(L, -1);
+	lua_setfield(L, -2, "timeout");
+	lua_pushboolean(L, 0);
+	lua_setfield(L, -2, "debug");
+
+	lua_pushvalue(L, -1);
+	Sluift::globals.moduleLibIndex = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	// Load core lib code
 	if (luaL_loadbuffer(L, core_lua, core_lua_size, "core.lua") != 0) {
@@ -346,14 +315,6 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	}
 	lua_pop(L, 1);
 
-	// Set read only
-	lua_createtable(L, 0, 0);
-	lua_pushcclosure(L, sluift_index, 0);
-	lua_setfield(L, -2, "__index");
-	lua_pushcclosure(L, sluift_newindex, 0);
-	lua_setfield(L, -2, "__newindex");
-	lua_setmetatable(L, -2);
-	
 	// Load client metatable
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 	std::vector<std::string> tables = boost::assign::list_of("Client");

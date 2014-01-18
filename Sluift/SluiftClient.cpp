@@ -23,11 +23,9 @@ SluiftClient::SluiftClient(
 		const JID& jid, 
 		const std::string& password, 
 		NetworkFactories* networkFactories, 
-		SimpleEventLoop* eventLoop,
-		SluiftGlobals* globals) :
+		SimpleEventLoop* eventLoop) :
 			networkFactories(networkFactories), 
 			eventLoop(eventLoop),
-			globals(globals),
 			tracer(NULL) {
 	client = new Client(jid, password, networkFactories);
 	client->setAlwaysTrustCertificates();
@@ -46,9 +44,6 @@ SluiftClient::~SluiftClient() {
 void SluiftClient::connect() {
 	rosterReceived = false;
 	disconnectedError = boost::optional<ClientError>();
-	if (globals->debug) {
-		tracer = new ClientXMLTracer(client, options.boshURL.isEmpty()? false: true);
-	}
 	client->connect(options);
 }
 
@@ -57,14 +52,21 @@ void SluiftClient::connect(const std::string& host, int port) {
 	options.manualHostname = host;
 	options.manualPort = port;
 	disconnectedError = boost::optional<ClientError>();
-	if (globals->debug) {
-		tracer = new ClientXMLTracer(client, options.boshURL.isEmpty()? false: true);
-	}
 	client->connect(options);
 }
 
-void SluiftClient::waitConnected() {
-	Watchdog watchdog(globals->timeout, networkFactories->getTimerFactory());
+void SluiftClient::setTraceEnabled(bool b) {
+	if (b && !tracer) {
+		tracer = new ClientXMLTracer(client, options.boshURL.isEmpty()? false: true);
+	}
+	else if (!b && tracer) {
+		delete tracer;
+		tracer = NULL;
+	}
+}
+
+void SluiftClient::waitConnected(int timeout) {
+	Watchdog watchdog(timeout, networkFactories->getTimerFactory());
 	while (!watchdog.getTimedOut() && client->isActive() && !client->isAvailable()) {
 		eventLoop->runUntilEvents();
 	}
