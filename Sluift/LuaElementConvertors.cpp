@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -22,6 +22,9 @@
 #include <Sluift/ElementConvertors/VCardConvertor.h>
 #include <Sluift/ElementConvertors/BodyConvertor.h>
 #include <Sluift/ElementConvertors/CommandConvertor.h>
+#include <Sluift/ElementConvertors/StatusShowConvertor.h>
+#include <Sluift/ElementConvertors/StatusConvertor.h>
+#include <Sluift/ElementConvertors/DelayConvertor.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/Lua/Exception.h>
 
@@ -29,6 +32,9 @@ using namespace Swift;
 
 LuaElementConvertors::LuaElementConvertors() {
 	registerConvertors();
+	convertors.push_back(boost::make_shared<StatusConvertor>());
+	convertors.push_back(boost::make_shared<StatusShowConvertor>());
+	convertors.push_back(boost::make_shared<DelayConvertor>());
 	convertors.push_back(boost::make_shared<CommandConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventConvertor>(this));
 	convertors.push_back(boost::make_shared<BodyConvertor>());
