@@ -112,6 +112,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		"self\n",
 		""
 ) {
+	Sluift::globals.eventLoop.runOnce();
 	getClient(L)->disconnect();
 	return 0;
 }
