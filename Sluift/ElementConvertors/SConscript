@@ -8,6 +8,7 @@ convertors = [
 	env.File("PubSubItemsConvertor.cpp"),
 	env.File("PubSubOwnerRedirectConvertor.cpp"),
 	env.File("PubSubEventRedirectConvertor.cpp"),
+	env.File("UserTuneConvertor.cpp"),
 	env.File("PubSubConfigureConvertor.cpp"),
 	env.File("PubSubEventDisassociateConvertor.cpp"),
 	env.File("PubSubOwnerAffiliationsConvertor.cpp"),

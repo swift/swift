@@ -72,7 +72,22 @@ local function register_table_tostring(table, print_functions)
 			metatable.__tostring = table_tostring
 		end
 	end
-	return table
+end
+
+-- FIXME: Not really a good or efficiant equals, but does the trick for now
+local function table_equals(t1, t2) 
+	return tostring(t1) == tostring(t2) 
+end
+
+local function register_table_equals(table)
+	if type(table) == 'table' then
+		local metatable = getmetatable(table)
+		if not metatable then
+			metatable = {}
+			setmetatable(table, metatable)
+		end
+		metatable.__eq = table_equals
+	end
 end
 
 local function merge_tables(...)
@@ -983,6 +998,7 @@ return {
 	register_help = register_help,
 	register_class_help = register_class_help,
 	register_table_tostring = register_table_tostring,
+	register_table_equals = register_table_equals,
 	register_get_by_type_index = register_get_by_type_index,
 	process_pubsub_event = process_pubsub_event,
 	tprint = tprint,

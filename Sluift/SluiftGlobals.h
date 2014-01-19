@@ -9,6 +9,9 @@
 #include <Sluift/LuaElementConvertors.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
+#ifdef HAVE_ITUNES
+#include <Sluift/ITunesInterface.h>
+#endif
 #include <signal.h>
 
 namespace Swift {
@@ -25,5 +28,8 @@ namespace Swift {
 		int coreLibIndex;
 		int moduleLibIndex;
 		sig_atomic_t interruptRequested;
+#ifdef HAVE_ITUNES
+		ITunesInterface iTunes;
+#endif
 	};
 }

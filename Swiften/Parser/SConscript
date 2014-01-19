@@ -74,6 +74,7 @@ sources = [
 		"PayloadParsers/DeliveryReceiptParser.cpp",
 		"PayloadParsers/DeliveryReceiptRequestParser.cpp",
 		"PayloadParsers/UserLocationParser.cpp",
+		"PayloadParsers/UserTuneParser.cpp",
 		"PayloadParsers/WhiteboardParser.cpp",
 		"PayloadParsers/PubSubErrorParserFactory.cpp",
 		"PlatformXMLParserFactory.cpp",

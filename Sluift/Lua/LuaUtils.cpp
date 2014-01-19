@@ -32,6 +32,17 @@ void Swift::Lua::registerTableToString(lua_State* L, int index) {
 	lua_pop(L, 1);
 }
 
+void Swift::Lua::registerTableEquals(lua_State* L, int index) {
+	index = Lua::absoluteOffset(L, index);
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "register_table_equals");
+	lua_pushvalue(L, index);
+	if (lua_pcall(L, 1, 0, 0) != 0) {
+		throw Lua::Exception(lua_tostring(L, -1));
+	}
+	lua_pop(L, 1);
+}
+
 void Swift::Lua::registerGetByTypeIndex(lua_State* L, int index) {
 	index = Lua::absoluteOffset(L, index);
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);

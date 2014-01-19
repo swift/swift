@@ -23,6 +23,7 @@ namespace Swift {
 		int convertTableToString(lua_State* L);
 
 		void registerTableToString(lua_State* L, int index);
+		void registerTableEquals(lua_State* L, int index);
 		void registerGetByTypeIndex(lua_State* L, int index);
 		void registerHelp(lua_State* L, int index, 
 				const std::string& description, const std::string& parameters, const std::string& options);

@@ -33,6 +33,7 @@
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Sluift/ITunesInterface.h>
 
 using namespace Swift;
 
@@ -176,7 +177,6 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	return 1;
 }
 
-
 /*******************************************************************************
  * JID Functions
  ******************************************************************************/
@@ -271,6 +271,34 @@ SLUIFT_LUA_FUNCTION(IDN, stringprep) {
 	return 1;
 }
 
+/*******************************************************************************
+ * iTunes Functions
+ ******************************************************************************/
+
+#ifdef HAVE_ITUNES
+SLUIFT_LUA_FUNCTION(iTunes, get_current_track) {
+	boost::optional<ITunesInterface::Track> track = Sluift::globals.iTunes.getCurrentTrack();
+	if (!track) {
+		return 0;
+	}
+	lua_createtable(L, 0, 0);
+	lua_pushstring(L, track->artist.c_str());
+	lua_setfield(L, -2, "artist");
+	lua_pushstring(L, track->name.c_str());
+	lua_setfield(L, -2, "name");
+	lua_pushstring(L, track->album.c_str());
+	lua_setfield(L, -2, "album");
+	lua_pushinteger(L, track->trackNumber);
+	lua_setfield(L, -2, "track_number");
+	lua_pushnumber(L, track->duration);
+	lua_setfield(L, -2, "duration");
+	lua_pushinteger(L, track->rating);
+	lua_setfield(L, -2, "rating");
+	Lua::registerTableToString(L, -1);
+	Lua::registerTableEquals(L, -1);
+	return 1;
+}
+#endif
 
 /*******************************************************************************
  * Module registration
@@ -296,6 +324,11 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_call(L, 0, 1);
 	Sluift::globals.coreLibIndex = luaL_ref(L, LUA_REGISTRYINDEX);
 
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "Client");
+	lua_setmetatable(L, -3);
+	lua_pop(L, 1);
+
 	// Register functions
 	Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, "Sluift");
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "JID");
@@ -304,6 +337,10 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_setfield(L, -2, "base64");
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "IDN");
 	lua_setfield(L, -2, "idn");
+#ifdef HAVE_ITUNES
+	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "iTunes");
+	lua_setfield(L, -2, "itunes");
+#endif
 
 	// Register convenience functions
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -75,6 +75,7 @@
 #include <Swiften/Parser/PayloadParsers/PubSubEventParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubErrorParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/UserLocationParser.h>
+#include <Swiften/Parser/PayloadParsers/UserTuneParser.h>
 
 using namespace boost;
 
@@ -135,6 +136,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<S5BProxyRequestParser> >("query", "http://jabber.org/protocol/bytestreams"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<WhiteboardParser> >("wb", "http://swift.im/whiteboard"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<UserLocationParser> >("geoloc", "http://jabber.org/protocol/geoloc"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<UserTuneParser> >("tune", "http://jabber.org/protocol/tune"));
 	factories_.push_back(boost::make_shared<DeliveryReceiptParserFactory>());
 	factories_.push_back(boost::make_shared<DeliveryReceiptRequestParserFactory>());
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<IdleParser> >("idle", "urn:xmpp:idle:1"));

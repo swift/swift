@@ -1,6 +1,6 @@
 import Version, os.path
 
-Import(["env", "conf_env"])
+Import(["env"])
 
 if env["SCONS_STAGE"] == "build" and not GetOption("help") and not env.get("HAVE_LUA", 0) :
 	print "Warning: Lua was not found. Sluift will not be built."
@@ -42,6 +42,8 @@ elif env["SCONS_STAGE"] == "build" :
 	]
 	sluift_sources += env.SConscript("ElementConvertors/SConscript")
 
+
+
 	sluift_env = env.Clone()
 	sluift_env.UseFlags(env.get("LUA_FLAGS", {}))
 	sluift_env.UseFlags(env["SWIFTEN_FLAGS"])
@@ -50,6 +52,13 @@ elif env["SCONS_STAGE"] == "build" :
 	sluift_env.Append(CPPDEFINES = ["LUA_COMPAT_ALL"])
 	if sluift_env["PLATFORM"] == "win32" :
 		sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
+
+	if sluift_env["PLATFORM"] == "darwin" and os.path.isdir("/Applications/iTunes.app") :
+		sluift_env.Append(FRAMEWORKS = ["ScriptingBridge"])
+		sluift_env.Command("iTunes.h", "/Applications/iTunes.app", 
+				"sdef ${SOURCE} | sdp -fh --basename iTunes -o ${TARGET.dir}")
+		sluift_env.Append(CPPDEFINES = ["HAVE_ITUNES"])
+		sluift_sources += ["ITunesInterface.mm"]
 
 	# Generate Version.h
 	version_header = "#pragma once\n\n"

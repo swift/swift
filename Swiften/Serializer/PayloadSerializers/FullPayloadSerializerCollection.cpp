@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -52,6 +52,7 @@
 #include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/UserLocationSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/UserTuneSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/IdleSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerPubSubSerializer.h>
@@ -117,6 +118,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new LastSerializer());
 	serializers_.push_back(new WhiteboardSerializer());
 	serializers_.push_back(new UserLocationSerializer());
+	serializers_.push_back(new UserTuneSerializer());
 	serializers_.push_back(new IdleSerializer());
 	
 	serializers_.push_back(new StreamInitiationFileInfoSerializer());

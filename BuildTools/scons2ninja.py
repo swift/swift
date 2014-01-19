@@ -343,6 +343,9 @@ ninja.rule('generator',
   generator = '1',
   description = 'Regenerating build.ninja')
 
+ninja.rule('sdef',
+  command = 'sdef $in | sdp -fh --basename $basename -o $outdir',
+  description = 'SDEF $out')
 
 ################################################################################
 # Build Statements
@@ -579,6 +582,15 @@ for line in build_lines :
     out, flags = extract_binary_flag("-o", flags)
     files, flags = extract_non_flags(flags)
     ninja.build(out, 'dsymutil', files, dsymutilflags = flags)
+
+  elif tool == 'sdef' :
+    source = flags[0];
+    outdir, flags = extract_binary_flag("-o", flags)
+    basename, flags = extract_binary_flag("--basename", flags)
+    ninja.build(os.path.join(outdir, basename + ".h"), 'sdef', [source], 
+        basename = basename,
+        outdir = outdir)
+
 
   elif not ninja_custom_command(ninja, line)  :
     raise Exception("Unknown tool: '" + line + "'")

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,7 @@
 #include <Sluift/ElementConvertors/PubSubItemsConvertor.h>
 #include <Sluift/ElementConvertors/PubSubOwnerRedirectConvertor.h>
 #include <Sluift/ElementConvertors/PubSubEventRedirectConvertor.h>
+#include <Sluift/ElementConvertors/UserTuneConvertor.h>
 #include <Sluift/ElementConvertors/PubSubConfigureConvertor.h>
 #include <Sluift/ElementConvertors/PubSubEventDisassociateConvertor.h>
 #include <Sluift/ElementConvertors/PubSubOwnerAffiliationsConvertor.h>
@@ -48,6 +49,7 @@ void LuaElementConvertors::registerConvertors() {
 	convertors.push_back(boost::make_shared<PubSubItemsConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubOwnerRedirectConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventRedirectConvertor>(this));
+	convertors.push_back(boost::make_shared<UserTuneConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubConfigureConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventDisassociateConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubOwnerAffiliationsConvertor>(this));
