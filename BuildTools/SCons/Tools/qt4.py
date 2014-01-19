@@ -455,7 +455,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 		except: pass
 	debugSuffix = ''
 
-	if sys.platform.startswith("linux") and not crosscompiling :
+	if sys.platform != "win32" and sys.platform != "darwin" and not crosscompiling :
 		if debug : debugSuffix = '_debug'
 		if version == '4' :
 			self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "phonon")])
