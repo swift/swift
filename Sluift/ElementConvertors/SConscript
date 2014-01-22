@@ -38,6 +38,7 @@ convertors = [
 	env.File("PubSubSubscriptionsConvertor.cpp"),
 	env.File("PubSubEventAssociateConvertor.cpp"),
 	env.File("PubSubSubscriptionConvertor.cpp"),
+	env.File("SecurityLabelConvertor.cpp"),
 	env.File("PubSubEventConfigurationConvertor.cpp")
 ]
 Return('convertors')

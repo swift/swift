@@ -54,7 +54,7 @@ namespace Swift {
 				if (!index.isValid()) {
 					return QVariant();
 				}
-				SecurityLabel::ref label = availableLabels_[index.row()].getLabel();
+				boost::shared_ptr<SecurityLabel> label = availableLabels_[index.row()].getLabel();
 				if (label && role == Qt::TextColorRole) {
 					return P2QSTRING(label->getForegroundColor());
 				}

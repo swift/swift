@@ -130,6 +130,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/PubSubEventPayload.cpp",
 			"Elements/RosterItemExchangePayload.cpp",
 			"Elements/RosterPayload.cpp",
+			"Elements/SecurityLabel.cpp",
 			"Elements/Stanza.cpp",
 			"Elements/StanzaAck.cpp",
 			"Elements/StatusShow.cpp",

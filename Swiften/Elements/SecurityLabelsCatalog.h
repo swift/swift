@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -22,11 +22,11 @@ namespace Swift {
 			class Item {
 				public:
 					Item() : default_(false) {}
-					SecurityLabel::ref getLabel() const {
+					boost::shared_ptr<SecurityLabel> getLabel() const {
 						return label_;
 					}
 
-					void setLabel(SecurityLabel::ref label) {
+					void setLabel(boost::shared_ptr<SecurityLabel> label) {
 						label_ = label;
 					}
 
@@ -42,7 +42,7 @@ namespace Swift {
 						default_ = isDefault;
 					}
 				private:
-					SecurityLabel::ref label_;
+					boost::shared_ptr<SecurityLabel> label_;
 					std::string selector_;
 					bool default_;
 			};

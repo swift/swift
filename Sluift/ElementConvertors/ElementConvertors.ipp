@@ -40,6 +40,7 @@
 #include <Sluift/ElementConvertors/PubSubSubscriptionsConvertor.h>
 #include <Sluift/ElementConvertors/PubSubEventAssociateConvertor.h>
 #include <Sluift/ElementConvertors/PubSubSubscriptionConvertor.h>
+#include <Sluift/ElementConvertors/SecurityLabelConvertor.h>
 #include <Sluift/ElementConvertors/PubSubEventConfigurationConvertor.h>
 
 void LuaElementConvertors::registerConvertors() {
@@ -79,5 +80,6 @@ void LuaElementConvertors::registerConvertors() {
 	convertors.push_back(boost::make_shared<PubSubSubscriptionsConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventAssociateConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubSubscriptionConvertor>(this));
+	convertors.push_back(boost::make_shared<SecurityLabelConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventConfigurationConvertor>(this));
 }

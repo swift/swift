@@ -210,7 +210,7 @@ public:
 	}
 
 	void testMessageWithLabelItem() {
-		SecurityLabel::ref label = boost::make_shared<SecurityLabel>();
+		boost::shared_ptr<SecurityLabel> label = boost::make_shared<SecurityLabel>();
 		label->setLabel("a");
 		SecurityLabelsCatalog::Item labelItem;
 		labelItem.setSelector("Bob");
@@ -237,12 +237,12 @@ public:
 	}
 
 	void testCorrectMessageWithLabelItem() {
-		SecurityLabel::ref label = boost::make_shared<SecurityLabel>();
+		boost::shared_ptr<SecurityLabel> label = boost::make_shared<SecurityLabel>();
 		label->setLabel("a");
 		SecurityLabelsCatalog::Item labelItem;
 		labelItem.setSelector("Bob");
 		labelItem.setLabel(label);
-		SecurityLabel::ref label2 = boost::make_shared<SecurityLabel>();
+		boost::shared_ptr<SecurityLabel> label2 = boost::make_shared<SecurityLabel>();
 		label->setLabel("b");
 		SecurityLabelsCatalog::Item labelItem2;
 		labelItem2.setSelector("Charlie");

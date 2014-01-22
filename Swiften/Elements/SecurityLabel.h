@@ -1,61 +1,77 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
- * Licensed under the GNU General Public License v3.
- * See Documentation/Licenses/GPLv3.txt for more information.
+ * Copyright (c) 2010-2014 Remko Tronçon
+ * Licensed under the GNU General Public License.
+ * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
-
-#include <string>
+#include <Swiften/Base/Override.h>
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
+#include <vector>
+#include <string>
+
+
 
 namespace Swift {
-	class SecurityLabel : public Payload {
+	class SWIFTEN_API SecurityLabel : public Payload {
 		public:
-			typedef boost::shared_ptr<SecurityLabel> ref;
-			SecurityLabel() {}
+			
+			SecurityLabel();
+			
+			virtual ~SecurityLabel();
 
-			const std::string& getDisplayMarking() const { return displayMarking_; }
-
-			void setDisplayMarking(const std::string& displayMarking) { 
-				displayMarking_ = displayMarking;
+			const std::vector< std::string >& getEquivalentLabels() const {
+				return equivalentLabels;
 			}
 
-			const std::string& getForegroundColor() const { 
-				return foregroundColor_; 
+			void setEquivalentLabels(const std::vector< std::string >& value) {
+				this->equivalentLabels = value ;
 			}
 
-			void setForegroundColor(const std::string& foregroundColor) { 
-				foregroundColor_ = foregroundColor;
+			void addEquivalentLabel(const std::string& value) {
+				this->equivalentLabels.push_back(value);
 			}
 
-			const std::string& getBackgroundColor() const { 
-				return backgroundColor_; 
+			const std::string& getForegroundColor() const {
+				return foregroundColor;
 			}
 
-			void setBackgroundColor(const std::string& backgroundColor) { 
-				backgroundColor_ = backgroundColor;
+			void setForegroundColor(const std::string& value) {
+				this->foregroundColor = value ;
 			}
 
-			const std::string& getLabel() const { return label_; }
-
-			void setLabel(const std::string& label) {
-				label_ = label;
+			const std::string& getDisplayMarking() const {
+				return displayMarking;
 			}
 
-			const std::vector<std::string>& getEquivalentLabels() const { return equivalentLabels_; }
-
-			void addEquivalentLabel(const std::string& label) {
-				equivalentLabels_.push_back(label);
+			void setDisplayMarking(const std::string& value) {
+				this->displayMarking = value ;
 			}
+
+			const std::string& getBackgroundColor() const {
+				return backgroundColor;
+			}
+
+			void setBackgroundColor(const std::string& value) {
+				this->backgroundColor = value ;
+			}
+
+			const std::string& getLabel() const {
+				return label;
+			}
+
+			void setLabel(const std::string& value) {
+				this->label = value ;
+			}
+
 
 		private:
-			std::string displayMarking_;
-			std::string foregroundColor_;
-			std::string backgroundColor_;
-			std::string label_;
-			std::vector<std::string> equivalentLabels_;
+			std::vector< std::string > equivalentLabels;
+			std::string foregroundColor;
+			std::string displayMarking;
+			std::string backgroundColor;
+			std::string label;
 	};
 }
