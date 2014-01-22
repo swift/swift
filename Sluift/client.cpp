@@ -57,6 +57,46 @@ static inline bool getGlobalDebug(lua_State* L) {
 	return result;
 }
 
+static void addPayloadsToTable(lua_State* L, const std::vector<boost::shared_ptr<Payload> >& payloads) {
+	if (!payloads.empty()) {
+		lua_createtable(L, boost::numeric_cast<int>(payloads.size()), 0);
+		for (size_t i = 0; i < payloads.size(); ++i) {
+			Sluift::globals.elementConvertor.convertToLua(L, payloads[i]);
+			lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
+		}
+		Lua::registerGetByTypeIndex(L, -1);
+		lua_setfield(L, -2, "payloads");
+	}
+}
+
+static boost::shared_ptr<Payload> getPayload(lua_State* L, int index) {
+	if (lua_type(L, index) == LUA_TTABLE) {
+		return Sluift::globals.elementConvertor.convertFromLua(L, index);
+	}
+	else if (lua_type(L, index) == LUA_TSTRING) {
+		return boost::make_shared<RawXMLPayload>(Lua::checkString(L, index));
+	}
+	else {
+		return boost::shared_ptr<Payload>();
+	}
+}
+
+static std::vector< boost::shared_ptr<Payload> > getPayloadsFromTable(lua_State* L, int index) {
+	index = Lua::absoluteOffset(L, index);
+	std::vector< boost::shared_ptr<Payload> > result;
+	lua_getfield(L, index, "payloads");
+	if (lua_istable(L, -1)) {
+		for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1)) {
+			boost::shared_ptr<Payload> payload = getPayload(L, -1);
+			if (payload) {
+				result.push_back(payload);
+			}
+		}
+	}
+	lua_pop(L, 1);
+	return result;
+}
+
 SLUIFT_LUA_FUNCTION(Client, async_connect) {
 	SluiftClient* client = getClient(L);
 
@@ -176,10 +216,12 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		"to  the JID to send the message to\n"
 		"body  the body of the message\n"
 		"type  the type of message to send (`normal`, `chat`, `error`, `groupchat`, `headline`)\n"
+		"payloads  payloads to add to the message\n"
 ) {
 	Sluift::globals.eventLoop.runOnce();
 	JID to;
 	std::string body;
+	std::vector<boost::shared_ptr<Payload> > payloads;
 	int index = 2;
 	Message::Type type = Message::Chat;
 	if (lua_isstring(L, index)) {
@@ -216,6 +258,8 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 				type = Message::Headline;
 			}
 		}
+
+		payloads = getPayloadsFromTable(L, index);
 	}
 
 	if (!to.isValid()) {
@@ -229,6 +273,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	message->setTo(to);
 	message->setBody(body);
 	message->setType(type);
+	message->addPayloads(payloads.begin(), payloads.end());
 	getClient(L)->getClient()->sendMessage(message);
 	return 0;
 }
@@ -244,6 +289,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		"status  the text of the presence\n"
 		"priority  the priority of the presence\n"
 		"type  the type of message to send (`available`, `error`, `probe`, `subscribe`, `subscribed`, `unavailable`, `unsubscribe`, `unsubscribed`)\n"
+		"payloads  payloads to add to the presence\n"
 ) {
 	Sluift::globals.eventLoop.runOnce();
 	boost::shared_ptr<Presence> presence = boost::make_shared<Presence>();
@@ -289,6 +335,8 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 				presence->setType(Presence::Unsubscribed);
 			}
 		}
+		std::vector< boost::shared_ptr<Payload> > payloads = getPayloadsFromTable(L, index);
+		presence->addPayloads(payloads.begin(), payloads.end());
 	}
 
 	getClient(L)->getClient()->getPresenceSender()->sendPresence(presence);
@@ -311,12 +359,7 @@ static int sendQuery(lua_State* L, IQ::Type type) {
 
 	boost::shared_ptr<Payload> payload;
 	lua_getfield(L, 2, "query");
-	if (lua_type(L, -1) == LUA_TTABLE) {
-		payload = Sluift::globals.elementConvertor.convertFromLua(L, -1);
-	}
-	else if (lua_type(L, -1) == LUA_TSTRING) {
-		payload = boost::make_shared<RawXMLPayload>(Lua::checkString(L, -1));
-	}
+	payload = getPayload(L, -1);
 	lua_pop(L, 1);
 
 	return client->sendRequest(
@@ -361,7 +404,7 @@ SLUIFT_LUA_FUNCTION(Client, query_pubsub) {
 	if (!lua_istable(L, -1)) {
 		throw Lua::Exception("Missing/incorrect query");
 	}
-	boost::shared_ptr<Payload> payload = Sluift::globals.elementConvertor.convertFromLua(L, -1);
+	boost::shared_ptr<Payload> payload = getPayload(L, -1);
 
 	if (false) { }
 	SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(DISPATCH_PUBSUB_PAYLOAD)
@@ -486,6 +529,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 				("body", boost::make_shared<Lua::Value>(message->getBody()))
 				("message_type", boost::make_shared<Lua::Value>(convertMessageTypeToString(message->getType())));
 			Lua::pushValue(L, result);
+			addPayloadsToTable(L, message->getPayloads());
 			Lua::registerTableToString(L, -1);
 			break;
 		}
@@ -497,16 +541,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 				("status", boost::make_shared<Lua::Value>(presence->getStatus()))
 				("presence_type", boost::make_shared<Lua::Value>(convertPresenceTypeToString(presence->getType())));
 			Lua::pushValue(L, result);
-			if (!presence->getPayloads().empty()) {
-				const std::vector<boost::shared_ptr<Payload> > payloads = presence->getPayloads();
-				lua_createtable(L, boost::numeric_cast<int>(payloads.size()), 0);
-				for (size_t i = 0; i < payloads.size(); ++i) {
-					Sluift::globals.elementConvertor.convertToLua(L, payloads[i]);
-					lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
-				}
-				Lua::registerGetByTypeIndex(L, -1);
-				lua_setfield(L, -2, "payloads");
-			}
+			addPayloadsToTable(L, presence->getPayloads());
 			Lua::registerTableToString(L, -1);
 			break;
 		}

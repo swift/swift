@@ -58,6 +58,11 @@ namespace Swift {
 				payloads_.push_back(payload);
 			}
 
+			template<typename InputIterator>
+			void addPayloads(InputIterator begin, InputIterator end) {
+				payloads_.insert(payloads_.end(), begin, end);
+			}
+
 			void updatePayload(boost::shared_ptr<Payload> payload);
 
 			boost::shared_ptr<Payload> getPayloadOfSameType(boost::shared_ptr<Payload>) const;
