@@ -43,7 +43,7 @@ boost::shared_ptr<PubSubOptions> PubSubOptionsConvertor::doConvertFromLua(lua_St
 		}
 	}
 	lua_pop(L, 1);
-	lua_getfield(L, -1, "subscriptionid");
+	lua_getfield(L, -1, "subscription_id");
 	if (lua_isstring(L, -1)) {
 		result->setSubscriptionID(std::string(lua_tostring(L, -1)));
 	}
@@ -62,7 +62,7 @@ void PubSubOptionsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubS
 	}
 	if (payload->getSubscriptionID()) {
 		lua_pushstring(L, (*payload->getSubscriptionID()).c_str());
-		lua_setfield(L, -2, "subscriptionid");
+		lua_setfield(L, -2, "subscription_id");
 	}
 }
 
@@ -73,6 +73,6 @@ boost::optional<LuaElementConvertor::Documentation> PubSubOptionsConvertor::getD
 		"- `node`: string\n"
 		"- `jid`: jid (string)\n"
 		"- `data`: @{Form}\n"
-		"- `subscriptionid`: string (Optional)\n"
+		"- `subscription_id`: string (Optional)\n"
 	);
 }
