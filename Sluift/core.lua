@@ -4,6 +4,7 @@
 	See the COPYING file for more information.
 --]]
 
+local sluift = select(1, ...)
 local _G = _G
 local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack
 local setmetatable, getmetatable = setmetatable, getmetatable
@@ -891,7 +892,8 @@ end
 
 
 function PubSubNode:subscribe(...)
-	local options = parse_options(...)
+	local options = parse_options({}, ...)
+	tprint(options)
 	local jid = options.jid or sluift.jid.to_bare(self.client:jid())
 	return self.client:query_pubsub(merge_tables(
 		{ type = 'set', to = self.jid, query = { 
@@ -903,7 +905,8 @@ function PubSubNode:unsubscribe(options)
 	options = options or {}
 	return self.client:query_pubsub(merge_tables(
 		{ type = 'set', to = self.jid, query = { 
-				_type = 'pubsub_unsubscribe', node = self.node, jid = options['jid'] }
+				_type = 'pubsub_unsubscribe', node = self.node, jid = options['jid'], 
+				subscription_id = 'subscription_id'}
 		}, options))
 end
 

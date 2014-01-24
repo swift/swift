@@ -321,7 +321,8 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	if (luaL_loadbuffer(L, core_lua, core_lua_size, "core.lua") != 0) {
 		lua_error(L);
 	}
-	lua_call(L, 0, 1);
+	lua_pushvalue(L, -2);
+	lua_call(L, 1, 1);
 	Sluift::globals.coreLibIndex = luaL_ref(L, LUA_REGISTRYINDEX);
 
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
