@@ -107,7 +107,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 			testling->setSID("mySID");
 			CPPUNIT_ASSERT(testling->isReadyToSend());
-			connectionFactory->connections[0]->onDisconnected(false);
+			connectionFactory->connections[0]->onDisconnected(boost::optional<Connection::Error>());
 			CPPUNIT_ASSERT(!testling->isReadyToSend());
 		}
 
