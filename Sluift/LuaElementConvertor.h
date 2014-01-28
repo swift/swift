@@ -8,6 +8,7 @@
 
 #include <Swiften/Base/Override.h>
 
+#include <string>
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 

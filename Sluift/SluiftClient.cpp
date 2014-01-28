@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/SluiftClient.h>
+
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Client/Client.h>
