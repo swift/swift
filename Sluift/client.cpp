@@ -213,14 +213,17 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		"self\n"
 		"to  the JID to send the message to\n"
 		"body  the body of the message. Can alternatively be specified using the `body` option\n",
+
 		"to  the JID to send the message to\n"
 		"body  the body of the message\n"
+		"subject  the subject of the MUC room to set\n"
 		"type  the type of message to send (`normal`, `chat`, `error`, `groupchat`, `headline`)\n"
 		"payloads  payloads to add to the message\n"
 ) {
 	Sluift::globals.eventLoop.runOnce();
 	JID to;
-	std::string body;
+	boost::optional<std::string> body;
+	boost::optional<std::string> subject;
 	std::vector<boost::shared_ptr<Payload> > payloads;
 	int index = 2;
 	Message::Type type = Message::Chat;
@@ -238,7 +241,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		}
 
 		if (boost::optional<std::string> value = Lua::getStringField(L, index, "body")) {
-			body = *value;
+			body = value;
 		}
 
 		if (boost::optional<std::string> value = Lua::getStringField(L, index, "type")) {
@@ -259,21 +262,29 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 			}
 		}
 
+		if (boost::optional<std::string> value = Lua::getStringField(L, index, "subject")) {
+			subject = value;
+		}
+
 		payloads = getPayloadsFromTable(L, index);
 	}
 
 	if (!to.isValid()) {
 		throw Lua::Exception("Missing 'to'");
 	}
-	if (body.empty()) {
-		throw Lua::Exception("Missing 'body'");
+	if ((!body || body->empty()) && !subject && payloads.empty()) {
+		throw Lua::Exception("Missing any of 'body', 'subject' or 'payloads'");
 	}
-
 	Message::ref message = boost::make_shared<Message>();
 	message->setTo(to);
-	message->setBody(body);
-	message->setType(type);
+	if (body && !body->empty()) {
+		message->setBody(*body);
+	}
+	if (subject) {
+		message->setSubject(*subject);
+	}
 	message->addPayloads(payloads.begin(), payloads.end());
+	message->setType(type);
 	getClient(L)->getClient()->sendMessage(message);
 	return 0;
 }
