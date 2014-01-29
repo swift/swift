@@ -325,11 +325,6 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_call(L, 1, 1);
 	Sluift::globals.coreLibIndex = luaL_ref(L, LUA_REGISTRYINDEX);
 
-	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
-	lua_getfield(L, -1, "Client");
-	lua_setmetatable(L, -3);
-	lua_pop(L, 1);
-
 	// Register functions
 	Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, "Sluift");
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "JID");
