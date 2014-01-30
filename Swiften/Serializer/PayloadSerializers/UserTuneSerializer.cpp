@@ -4,45 +4,51 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma clang diagnostic ignored "-Wunused-private-field"
+
 #include <Swiften/Serializer/PayloadSerializers/UserTuneSerializer.h>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <Swiften/Serializer/XML/XMLElement.h>
 #include <boost/lexical_cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
-namespace Swift {
+using namespace Swift;
 
-UserTuneSerializer::UserTuneSerializer() {
+UserTuneSerializer::UserTuneSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
 }
 
-std::string UserTuneSerializer::serializePayload(
-		boost::shared_ptr<UserTune> payload) const {
-	XMLElement result("tune", "http://jabber.org/protocol/tune");
-	if (boost::optional<std::string> value = payload->getArtist()) {
-		result.addNode(boost::make_shared<XMLElement>("artist", "", *value));
-	}
-	if (boost::optional<unsigned int> value = payload->getLength()) {
-		result.addNode(boost::make_shared<XMLElement>("length", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<unsigned int> value = payload->getRating()) {
-		result.addNode(boost::make_shared<XMLElement>("rating", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<std::string> value = payload->getSource()) {
-		result.addNode(boost::make_shared<XMLElement>("source", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getTitle()) {
-		result.addNode(boost::make_shared<XMLElement>("title", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getTrack()) {
-		result.addNode(boost::make_shared<XMLElement>("track", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getURI()) {
-		result.addNode(boost::make_shared<XMLElement>("uri", "", *value));
-	}
-	return result.serialize();
+UserTuneSerializer::~UserTuneSerializer() {
 }
 
+std::string UserTuneSerializer::serializePayload(boost::shared_ptr<UserTune> payload) const {
+	if (!payload) {
+		return "";
+	}
+	XMLElement element("tune", "http://jabber.org/protocol/tune");
+	if (payload->getRating()) {
+		element.addNode(boost::make_shared<XMLElement>("rating", "", boost::lexical_cast<std::string>(*payload->getRating())));
+	}
+	if (payload->getTitle()) {
+		element.addNode(boost::make_shared<XMLElement>("title", "", *payload->getTitle()));
+	}
+	if (payload->getTrack()) {
+		element.addNode(boost::make_shared<XMLElement>("track", "", *payload->getTrack()));
+	}
+	if (payload->getArtist()) {
+		element.addNode(boost::make_shared<XMLElement>("artist", "", *payload->getArtist()));
+	}
+	if (payload->getURI()) {
+		element.addNode(boost::make_shared<XMLElement>("uri", "", *payload->getURI()));
+	}
+	if (payload->getSource()) {
+		element.addNode(boost::make_shared<XMLElement>("source", "", *payload->getSource()));
+	}
+	if (payload->getLength()) {
+		element.addNode(boost::make_shared<XMLElement>("length", "", boost::lexical_cast<std::string>(*payload->getLength())));
+	}
+	return element.serialize();
 }
+
+

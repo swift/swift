@@ -117,8 +117,8 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new ReplaceSerializer());
 	serializers_.push_back(new LastSerializer());
 	serializers_.push_back(new WhiteboardSerializer());
-	serializers_.push_back(new UserLocationSerializer());
-	serializers_.push_back(new UserTuneSerializer());
+	serializers_.push_back(new UserLocationSerializer(this));
+	serializers_.push_back(new UserTuneSerializer(this));
 	serializers_.push_back(new IdleSerializer());
 	
 	serializers_.push_back(new StreamInitiationFileInfoSerializer());

@@ -6,14 +6,26 @@
 
 #pragma once
 
+#include <Swiften/Base/Override.h>
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/UserTune.h>
+#include <boost/shared_ptr.hpp>
 
 namespace Swift {
-	class UserTuneSerializer : public GenericPayloadSerializer<UserTune> {
-		public:
-			UserTuneSerializer();
+	class PayloadSerializerCollection;
 
-			virtual std::string serializePayload(boost::shared_ptr<UserTune>)  const;
+	class SWIFTEN_API UserTuneSerializer : public GenericPayloadSerializer<UserTune> {
+		public:
+			UserTuneSerializer(PayloadSerializerCollection* serializers);
+			virtual ~UserTuneSerializer();
+
+			virtual std::string serializePayload(boost::shared_ptr<UserTune>) const SWIFTEN_OVERRIDE;
+
+		private:
+			
+
+		private:
+			PayloadSerializerCollection* serializers;
 	};
 }

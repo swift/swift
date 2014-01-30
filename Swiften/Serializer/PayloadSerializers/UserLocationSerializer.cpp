@@ -4,91 +4,97 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma clang diagnostic ignored "-Wunused-private-field"
+
 #include <Swiften/Serializer/PayloadSerializers/UserLocationSerializer.h>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/lexical_cast.hpp>
-
-#include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Base/DateTime.h>
+#include <boost/lexical_cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
-namespace Swift {
+using namespace Swift;
 
-UserLocationSerializer::UserLocationSerializer() {
+UserLocationSerializer::UserLocationSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
 }
 
-std::string UserLocationSerializer::serializePayload(
-		boost::shared_ptr<UserLocation> payload) const {
-	XMLElement result("geoloc", "http://jabber.org/protocol/geoloc");
-	if (boost::optional<std::string> value = payload->getArea()) {
-		result.addNode(boost::make_shared<XMLElement>("area", "", *value));
-	}
-	if (boost::optional<float> value = payload->getAltitude()) {
-		result.addNode(boost::make_shared<XMLElement>("alt", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<std::string> value = payload->getLocality()) {
-		result.addNode(boost::make_shared<XMLElement>("locality", "", *value));
-	}
-	if (boost::optional<float> value = payload->getLatitude()) {
-		result.addNode(boost::make_shared<XMLElement>("lat", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<float> value = payload->getAccuracy()) {
-		result.addNode(boost::make_shared<XMLElement>("accuracy", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<std::string> value = payload->getDescription()) {
-		result.addNode(boost::make_shared<XMLElement>("description", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getCountryCode()) {
-		result.addNode(boost::make_shared<XMLElement>("countrycode", "", *value));
-	}
-	if (boost::optional<boost::posix_time::ptime> value = payload->getTimestamp()) {
-		result.addNode(boost::make_shared<XMLElement>("timestamp", "", dateTimeToString(*value)));
-	}
-	if (boost::optional<std::string> value = payload->getFloor()) {
-		result.addNode(boost::make_shared<XMLElement>("floor", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getBuilding()) {
-		result.addNode(boost::make_shared<XMLElement>("building", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getRoom()) {
-		result.addNode(boost::make_shared<XMLElement>("room", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getCountry()) {
-		result.addNode(boost::make_shared<XMLElement>("country", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getRegion()) {
-		result.addNode(boost::make_shared<XMLElement>("region", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getURI()) {
-		result.addNode(boost::make_shared<XMLElement>("uri", "", *value));
-	}
-	if (boost::optional<float> value = payload->getLongitude()) {
-		result.addNode(boost::make_shared<XMLElement>("lon", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<float> value = payload->getError()) {
-		result.addNode(boost::make_shared<XMLElement>("error", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<std::string> value = payload->getPostalCode()) {
-		result.addNode(boost::make_shared<XMLElement>("postalcode", "", *value));
-	}
-	if (boost::optional<float> value = payload->getBearing()) {
-		result.addNode(boost::make_shared<XMLElement>("bearing", "", boost::lexical_cast<std::string>(*value)));
-	}
-	if (boost::optional<std::string> value = payload->getText()) {
-		result.addNode(boost::make_shared<XMLElement>("text", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getDatum()) {
-		result.addNode(boost::make_shared<XMLElement>("datum", "", *value));
-	}
-	if (boost::optional<std::string> value = payload->getStreet()) {
-		result.addNode(boost::make_shared<XMLElement>("street", "", *value));
-	}
-	if (boost::optional<float> value = payload->getSpeed()) {
-		result.addNode(boost::make_shared<XMLElement>("speed", "", boost::lexical_cast<std::string>(*value)));
-	}
-	return result.serialize();
+UserLocationSerializer::~UserLocationSerializer() {
 }
 
+std::string UserLocationSerializer::serializePayload(boost::shared_ptr<UserLocation> payload) const {
+	if (!payload) {
+		return "";
+	}
+	XMLElement element("geoloc", "http://jabber.org/protocol/geoloc");
+	if (payload->getArea()) {
+		element.addNode(boost::make_shared<XMLElement>("area", "", *payload->getArea()));
+	}
+	if (payload->getAltitude()) {
+		element.addNode(boost::make_shared<XMLElement>("alt", "", boost::lexical_cast<std::string>(*payload->getAltitude())));
+	}
+	if (payload->getLocality()) {
+		element.addNode(boost::make_shared<XMLElement>("locality", "", *payload->getLocality()));
+	}
+	if (payload->getLatitude()) {
+		element.addNode(boost::make_shared<XMLElement>("lat", "", boost::lexical_cast<std::string>(*payload->getLatitude())));
+	}
+	if (payload->getAccuracy()) {
+		element.addNode(boost::make_shared<XMLElement>("accuracy", "", boost::lexical_cast<std::string>(*payload->getAccuracy())));
+	}
+	if (payload->getDescription()) {
+		element.addNode(boost::make_shared<XMLElement>("description", "", *payload->getDescription()));
+	}
+	if (payload->getCountryCode()) {
+		element.addNode(boost::make_shared<XMLElement>("countrycode", "", *payload->getCountryCode()));
+	}
+	if (payload->getTimestamp()) {
+		element.addNode(boost::make_shared<XMLElement>("timestamp", "", dateTimeToString(*payload->getTimestamp())));
+	}
+	if (payload->getFloor()) {
+		element.addNode(boost::make_shared<XMLElement>("floor", "", *payload->getFloor()));
+	}
+	if (payload->getBuilding()) {
+		element.addNode(boost::make_shared<XMLElement>("building", "", *payload->getBuilding()));
+	}
+	if (payload->getRoom()) {
+		element.addNode(boost::make_shared<XMLElement>("room", "", *payload->getRoom()));
+	}
+	if (payload->getCountry()) {
+		element.addNode(boost::make_shared<XMLElement>("country", "", *payload->getCountry()));
+	}
+	if (payload->getRegion()) {
+		element.addNode(boost::make_shared<XMLElement>("region", "", *payload->getRegion()));
+	}
+	if (payload->getURI()) {
+		element.addNode(boost::make_shared<XMLElement>("uri", "", *payload->getURI()));
+	}
+	if (payload->getLongitude()) {
+		element.addNode(boost::make_shared<XMLElement>("lon", "", boost::lexical_cast<std::string>(*payload->getLongitude())));
+	}
+	if (payload->getError()) {
+		element.addNode(boost::make_shared<XMLElement>("error", "", boost::lexical_cast<std::string>(*payload->getError())));
+	}
+	if (payload->getPostalCode()) {
+		element.addNode(boost::make_shared<XMLElement>("postalcode", "", *payload->getPostalCode()));
+	}
+	if (payload->getBearing()) {
+		element.addNode(boost::make_shared<XMLElement>("bearing", "", boost::lexical_cast<std::string>(*payload->getBearing())));
+	}
+	if (payload->getText()) {
+		element.addNode(boost::make_shared<XMLElement>("text", "", *payload->getText()));
+	}
+	if (payload->getDatum()) {
+		element.addNode(boost::make_shared<XMLElement>("datum", "", *payload->getDatum()));
+	}
+	if (payload->getStreet()) {
+		element.addNode(boost::make_shared<XMLElement>("street", "", *payload->getStreet()));
+	}
+	if (payload->getSpeed()) {
+		element.addNode(boost::make_shared<XMLElement>("speed", "", boost::lexical_cast<std::string>(*payload->getSpeed())));
+	}
+	return element.serialize();
 }
+
+
