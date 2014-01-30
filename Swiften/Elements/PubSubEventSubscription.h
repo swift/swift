@@ -9,12 +9,12 @@
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/optional.hpp>
 #include <string>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 
-#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubEventSubscription : public PubSubEventPayload {

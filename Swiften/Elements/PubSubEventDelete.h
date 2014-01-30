@@ -12,8 +12,8 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include <Swiften/Elements/PubSubEventRedirect.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
+#include <Swiften/Elements/PubSubEventRedirect.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubEventDelete : public PubSubEventPayload {

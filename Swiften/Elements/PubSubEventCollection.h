@@ -13,8 +13,8 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include <Swiften/Elements/PubSubEventDisassociate.h>
 #include <Swiften/Elements/PubSubEventAssociate.h>
+#include <Swiften/Elements/PubSubEventDisassociate.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
 
 namespace Swift {

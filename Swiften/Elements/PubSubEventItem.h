@@ -11,8 +11,8 @@
 #include <Swiften/Elements/Payload.h>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <Swiften/Elements/Payload.h>
 

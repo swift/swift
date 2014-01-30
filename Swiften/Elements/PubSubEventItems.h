@@ -10,12 +10,12 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <boost/shared_ptr.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <Swiften/Elements/PubSubEventItem.h>
-#include <Swiften/Elements/PubSubEventRetract.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
+#include <Swiften/Elements/PubSubEventRetract.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubEventItems : public PubSubEventPayload {

@@ -11,8 +11,8 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
-#include <Swiften/Serializer/PayloadSerializers/PubSubSubscriptionSerializer.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubSubscriptionSerializer.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;

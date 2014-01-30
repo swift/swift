@@ -11,8 +11,8 @@
 #include <Swiften/Elements/Payload.h>
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Elements/PubSubOwnerPayload.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubOwnerDefault : public PubSubOwnerPayload {

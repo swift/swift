@@ -13,8 +13,8 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include <Swiften/Elements/PubSubSubscribeOptions.h>
 #include <Swiften/Elements/PubSubPayload.h>
+#include <Swiften/Elements/PubSubSubscribeOptions.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {

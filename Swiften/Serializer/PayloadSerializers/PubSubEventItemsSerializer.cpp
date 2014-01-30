@@ -12,8 +12,8 @@
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Serializer/PayloadSerializers/PubSubEventRetractSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubEventItemSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubEventRetractSerializer.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;

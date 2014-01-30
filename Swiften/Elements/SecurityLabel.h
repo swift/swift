@@ -9,8 +9,8 @@
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
-#include <vector>
 #include <string>
+#include <vector>
 
 
 

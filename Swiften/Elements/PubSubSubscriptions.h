@@ -11,11 +11,11 @@
 #include <Swiften/Elements/Payload.h>
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <Swiften/Elements/PubSubSubscription.h>
 #include <Swiften/Elements/PubSubPayload.h>
+#include <Swiften/Elements/PubSubSubscription.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubSubscriptions : public PubSubPayload {

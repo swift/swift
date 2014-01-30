@@ -13,8 +13,8 @@
 
 #include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/PubSubEventRetractParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubEventItemParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubEventRetractParser.h>
 
 using namespace Swift;
 

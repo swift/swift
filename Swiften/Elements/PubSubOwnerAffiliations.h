@@ -10,11 +10,11 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <boost/shared_ptr.hpp>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <Swiften/Elements/PubSubOwnerPayload.h>
 #include <Swiften/Elements/PubSubOwnerAffiliation.h>
+#include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubOwnerAffiliations : public PubSubOwnerPayload {

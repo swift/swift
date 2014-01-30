@@ -9,9 +9,9 @@
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/optional.hpp>
 #include <string>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 
 

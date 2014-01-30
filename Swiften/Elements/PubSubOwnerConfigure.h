@@ -13,8 +13,8 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include <Swiften/Elements/PubSubOwnerPayload.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
 	class SWIFTEN_API PubSubOwnerConfigure : public PubSubOwnerPayload {
