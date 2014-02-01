@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -12,6 +12,7 @@
 #include <lua.hpp>
 
 #include <Sluift/Lua/Exception.h>
+#include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 
@@ -41,6 +42,15 @@ std::string Lua::checkString(lua_State* L, int arg) {
 		throw Lua::Exception(getArgTypeError(L, arg, LUA_TSTRING));
 	}
 	return std::string(s);
+}
+
+ByteArray Lua::checkByteArray(lua_State* L, int arg) {
+	size_t len;
+	const char *s = lua_tolstring(L, arg, &len);
+	if (!s) {
+		throw Lua::Exception(getArgTypeError(L, arg, LUA_TSTRING));
+	}
+	return createByteArray(s, len);
 }
 
 void* Lua::checkUserDataRaw(lua_State* L, int arg) {

@@ -189,3 +189,11 @@ void Swift::Lua::registerExtraHelp(lua_State* L, int index, const std::string& n
 	}
 	lua_pop(L, 3);
 }
+
+void Swift::Lua::pushStringArray(lua_State* L, const std::vector<std::string>& strings) {
+	lua_createtable(L, strings.size(), 0);
+	for (size_t i = 0; i < strings.size(); ++i) {
+		lua_pushstring(L, strings[i].c_str());
+		lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
+	}
+}

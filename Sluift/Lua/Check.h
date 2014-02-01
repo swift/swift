@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,8 @@
 
 #include <string>
 
+#include <Swiften/Base/ByteArray.h>
+
 struct lua_State;
 
 namespace Swift {
@@ -15,6 +17,7 @@ namespace Swift {
 		void checkType(lua_State* L, int arg, int type);
 		int checkIntNumber(lua_State* L, int arg);
 		std::string checkString(lua_State* L, int arg);
+		ByteArray checkByteArray(lua_State* L, int arg);
 
 		void* checkUserDataRaw(lua_State* L, int arg);
 

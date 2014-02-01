@@ -37,5 +37,7 @@ namespace Swift {
 		boost::optional<std::string> getStringField(lua_State* L, int index, const std::string&);
 		boost::optional<bool> getBooleanField(lua_State* L, int index, const std::string&);
 		boost::optional<int> getIntField(lua_State* L, int index, const std::string&);
+
+		void pushStringArray(lua_State* L, const std::vector<std::string>& strings);
 	}
 }

@@ -13,6 +13,6 @@ namespace Swift {
 		public:
 			virtual ~CertificateFactory();
 
-			virtual Certificate::ref createCertificateFromDER(const ByteArray& der) = 0;
+			virtual Certificate* createCertificateFromDER(const ByteArray& der) = 0;
 	};
 }

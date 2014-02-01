@@ -12,8 +12,8 @@
 namespace Swift {
 	class SchannelCertificateFactory : public CertificateFactory {
 		public:
-			virtual Certificate::ref createCertificateFromDER(const ByteArray& der) {
-				return Certificate::ref(new SchannelCertificate(der));
+			virtual Certificate* createCertificateFromDER(const ByteArray& der) {
+				return new SchannelCertificate(der);
 			}
 	};
 }

@@ -6,7 +6,7 @@
 
 local sluift = select(1, ...)
 local _G = _G
-local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack
+local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack, io = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack, io
 local setmetatable, getmetatable = setmetatable, getmetatable
 local string = require "string"
 local table = require "table"
@@ -433,6 +433,13 @@ local function call(options)
 	else
 		error(result[2])
 	end
+end
+
+local function read_file(file)
+	local f = io.open(file, 'rb')
+	local result = f:read('*all')
+	f:close()
+	return result
 end
 
 --------------------------------------------------------------------------------
@@ -1005,6 +1012,7 @@ return {
 	register_get_by_type_index = register_get_by_type_index,
 	process_pubsub_event = process_pubsub_event,
 	tprint = tprint,
+	read_file = read_file,
 	disco = disco,
 	get_help = get_help,
 	help = help,

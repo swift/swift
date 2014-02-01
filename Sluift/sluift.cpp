@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -26,6 +26,8 @@
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateFactory.h>
 #include <Sluift/LuaElementConvertor.h>
 #include <Sluift/Lua/Debug.h>
 #include <Swiften/StringCodecs/Base64.h>
@@ -176,6 +178,42 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	lua_pushlstring(L, reinterpret_cast<char*>(vecptr(result)), result.size());
 	return 1;
 }
+
+/*******************************************************************************
+ * Crypto functions
+ ******************************************************************************/
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Crypto, new_certificate,
+		"Creates a new X.509 certificate from DER data.\n",
+
+		"der  the DER-encoded certificate data",
+
+		"") {
+	ByteArray certData(Lua::checkByteArray(L, 1));
+	Certificate::ref cert(Sluift::globals.tlsFactories.getCertificateFactory()->createCertificateFromDER(certData));
+	lua_createtable(L, 0, 0);
+	lua_pushstring(L, cert->getSubjectName().c_str());
+	lua_setfield(L, -2, "subject_name");
+	lua_pushstring(L, Certificate::getSHA1Fingerprint(cert, Sluift::globals.networkFactories.getCryptoProvider()).c_str());
+	lua_setfield(L, -2, "sha1_fingerprint");
+
+	Lua::pushStringArray(L, cert->getCommonNames());
+	lua_setfield(L, -2, "common_names");
+
+	Lua::pushStringArray(L, cert->getSRVNames());
+	lua_setfield(L, -2, "srv_names");
+
+	Lua::pushStringArray(L, cert->getDNSNames());
+	lua_setfield(L, -2, "dns_names");
+
+	Lua::pushStringArray(L, cert->getXMPPAddresses());
+	lua_setfield(L, -2, "xmpp_addresses");
+
+	Lua::registerTableToString(L, -1);
+	return 1;
+}
+
 
 /*******************************************************************************
  * JID Functions
@@ -333,6 +371,8 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_setfield(L, -2, "base64");
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "IDN");
 	lua_setfield(L, -2, "idn");
+	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "Crypto");
+	lua_setfield(L, -2, "crypto");
 #ifdef HAVE_ITUNES
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "iTunes");
 	lua_setfield(L, -2, "itunes");
@@ -341,7 +381,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	// Register convenience functions
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 	std::vector<std::string> coreLibExports = boost::assign::list_of
-		("tprint")("disco")("help")("get_help")("copy")("with");
+		("tprint")("disco")("help")("get_help")("copy")("with")("read_file");
 	foreach (const std::string& coreLibExport, coreLibExports) {
 		lua_getfield(L, -1, coreLibExport.c_str());
 		lua_setfield(L, -3, coreLibExport.c_str());

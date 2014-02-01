@@ -9,6 +9,7 @@
 #include <Sluift/LuaElementConvertors.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/TLS/PlatformTLSFactories.h>
 #ifdef HAVE_ITUNES
 #include <Sluift/ITunesInterface.h>
 #endif
@@ -25,6 +26,7 @@ namespace Swift {
 		LuaElementConvertors elementConvertor;
 		SimpleEventLoop eventLoop;
 		BoostNetworkFactories networkFactories;
+		PlatformTLSFactories tlsFactories;
 		int coreLibIndex;
 		int moduleLibIndex;
 		sig_atomic_t interruptRequested;
