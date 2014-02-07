@@ -9,7 +9,7 @@
 #include <deque>
 #include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
-
+#include <boost/optional.hpp>
 #include <Swiften/Base/API.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
 #include <Swiften/Network/Connection.h>
@@ -28,8 +28,8 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<Connector> ref;
 
-			static Connector::ref create(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
-				return ref(new Connector(hostname, port, doServiceLookups, resolver, connectionFactory, timerFactory));
+			static Connector::ref create(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+				return ref(new Connector(hostname, port, serviceLookupPrefix, resolver, connectionFactory, timerFactory));
 			}
 
 			void setTimeoutMilliseconds(int milliseconds);
@@ -39,7 +39,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Connection>, boost::shared_ptr<Error>)> onConnectFinished;
 
 		private:
-			Connector(const std::string& hostname, int port, bool doServiceLookups, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+			Connector(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
 
 			void handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result);
 			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
@@ -57,7 +57,7 @@ namespace Swift {
 		private:
 			std::string hostname;
 			int port;
-			bool doServiceLookups;
+			boost::optional<std::string> serviceLookupPrefix;
 			DomainNameResolver* resolver;
 			ConnectionFactory* connectionFactory;
 			TimerFactory* timerFactory;

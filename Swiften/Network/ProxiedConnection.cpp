@@ -53,7 +53,7 @@ void ProxiedConnection::cancelConnector() {
 void ProxiedConnection::connect(const HostAddressPort& server) {
 	server_ = server;
 
-	connector_ = Connector::create(proxyHost_, proxyPort_, false, resolver_, connectionFactory_, timerFactory_);
+	connector_ = Connector::create(proxyHost_, proxyPort_, boost::optional<std::string>(), resolver_, connectionFactory_, timerFactory_);
 	connector_->onConnectFinished.connect(boost::bind(&ProxiedConnection::handleConnectFinished, shared_from_this(), _1));
 	connector_->start();
 }

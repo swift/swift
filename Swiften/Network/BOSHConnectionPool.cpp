@@ -225,7 +225,7 @@ void BOSHConnectionPool::handleConnectionDisconnected(bool/* error*/, BOSHConnec
 }
 
 boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
-	Connector::ref connector = Connector::create(boshURL.getHost(), URL::getPortOrDefaultPort(boshURL), false, resolver, connectionFactory, timerFactory);
+	Connector::ref connector = Connector::create(boshURL.getHost(), URL::getPortOrDefaultPort(boshURL), boost::optional<std::string>(), resolver, connectionFactory, timerFactory);
 	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connector, xmlParserFactory);
 	connection->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
 	connection->onSessionStarted.connect(boost::bind(&BOSHConnectionPool::handleSessionStarted, this, _1, _2));

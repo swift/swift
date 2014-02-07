@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #include <Swiften/Client/CoreClient.h>
 
 #include <boost/bind.hpp>
+#include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
@@ -108,9 +109,13 @@ void CoreClient::connect(const ClientOptions& o) {
 	// Create connector
 	std::string host = o.manualHostname.empty() ?  jid_.getDomain() : o.manualHostname;
 	int port = o.manualPort;
+	boost::optional<std::string> serviceLookupPrefix;
+	if (o.manualHostname.empty()) {
+		serviceLookupPrefix = "_xmpp-client._tcp.";
+	}
 	assert(!connector_);
 	if (options.boshURL.isEmpty()) {
-		connector_ = boost::make_shared<ChainedConnector>(host, port, o.manualHostname.empty(), networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
+		connector_ = boost::make_shared<ChainedConnector>(host, port, serviceLookupPrefix, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
 		connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
 		connector_->setTimeoutMilliseconds(2*60*1000);
 		connector_->start();

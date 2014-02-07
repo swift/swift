@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -75,7 +75,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_NoServiceLookups() {
-			Connector::ref testling(createConnector(4321, false));
+			Connector::ref testling(createConnector(4321, boost::optional<std::string>()));
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			resolver->addAddress("foo.com", host3.getAddress());
@@ -91,7 +91,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 		}
 
 		void testConnect_NoServiceLookups_DefaultPort() {
-			Connector::ref testling(createConnector(-1, false));
+			Connector::ref testling(createConnector(-1, boost::optional<std::string>()));
 			resolver->addXMPPClientService("foo.com", host1);
 			resolver->addXMPPClientService("foo.com", host2);
 			resolver->addAddress("foo.com", host3.getAddress());
@@ -312,8 +312,8 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 
 	private:
-		Connector::ref createConnector(int port = -1, bool doServiceLookups = true) {
-			Connector::ref connector = Connector::create("foo.com", port, doServiceLookups, resolver, connectionFactory, timerFactory);
+		Connector::ref createConnector(int port = -1, boost::optional<std::string> serviceLookupPrefix = boost::optional<std::string>("_xmpp-client._tcp.")) {
+			Connector::ref connector = Connector::create("foo.com", port, serviceLookupPrefix, resolver, connectionFactory, timerFactory);
 			connector->onConnectFinished.connect(boost::bind(&ConnectorTest::handleConnectorFinished, this, _1, _2));
 			return connector;
 		}
