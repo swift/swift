@@ -84,7 +84,7 @@ namespace Swift {
 
 
 			enum AckState {Pending, Received, Failed};
-			enum ReceiptState {ReceiptRequested, ReceiptReceived};
+			enum ReceiptState {ReceiptRequested, ReceiptReceived, ReceiptFailed};
 			enum Tristate {Yes, No, Maybe};
 			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact, ShowProfile};
 			enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};

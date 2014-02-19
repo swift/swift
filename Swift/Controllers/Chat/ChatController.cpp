@@ -188,12 +188,21 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	chatStateTracker_->handleMessageReceived(message);
 	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
 
+	// handle XEP-0184 Message Receipts
+	// incomming receipts
 	if (boost::shared_ptr<DeliveryReceipt> receipt = message->getPayload<DeliveryReceipt>()) {
 		SWIFT_LOG(debug) << "received receipt for id: " << receipt->getReceivedID() << std::endl;
 		if (requestedReceipts_.find(receipt->getReceivedID()) != requestedReceipts_.end()) {
 			chatWindow_->setMessageReceiptState(requestedReceipts_[receipt->getReceivedID()], ChatWindow::ReceiptReceived);
 			requestedReceipts_.erase(receipt->getReceivedID());
 		}
+	// incomming errors in response to send out receipts
+	} else if (message->getPayload<DeliveryReceiptRequest>() && (message->getType() == Message::Error)) {
+		if (requestedReceipts_.find(message->getID()) != requestedReceipts_.end()) {
+			chatWindow_->setMessageReceiptState(requestedReceipts_[message->getID()], ChatWindow::ReceiptFailed);
+			requestedReceipts_.erase(message->getID());
+		}
+	// incoming receipt requests
 	} else if (message->getPayload<DeliveryReceiptRequest>()) {
 		if (receivingPresenceFromUs_) {
 			boost::shared_ptr<Message> receiptMessage = boost::make_shared<Message>();
