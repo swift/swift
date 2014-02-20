@@ -6,6 +6,8 @@
 
 #include "QtXMLConsoleWidget.h"
 
+#include <Swiften/Base/format.h>
+
 #include <QCloseEvent>
 #include <QTextEdit>
 #include <QVBoxLayout>
@@ -75,11 +77,15 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 }
 
 void QtXMLConsoleWidget::handleDataRead(const SafeByteArray& data) {
-	appendTextIfEnabled(std::string(tr("<!-- IN -->").toUtf8()) + "\n" + safeByteArrayToString(data) + "\n", QColor(33,98,33));
+	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+	std::string tag = str(format(std::string(QT_TRANSLATE_NOOP("", "<!-- IN %1% -->"))) % std::string(boost::posix_time::to_iso_extended_string(now)));
+	appendTextIfEnabled(tag + "\n" + safeByteArrayToString(data) + "\n", QColor(33,98,33));
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const SafeByteArray& data) {
-	appendTextIfEnabled(std::string(tr("<!-- OUT -->").toUtf8()) + "\n" + safeByteArrayToString(data) + "\n", QColor(155,1,0));
+	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
+	std::string tag = str(format(std::string(QT_TRANSLATE_NOOP("", "<!-- OUT %1% -->"))) % std::string(boost::posix_time::to_iso_extended_string(now)));
+	appendTextIfEnabled(tag + "\n" + safeByteArrayToString(data) + "\n", QColor(155,1,0));
 }
 
 void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QColor& color) {
