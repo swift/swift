@@ -15,9 +15,12 @@
 
 namespace Swift {
 QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) : QDialog(parent), event_(event) {
-	QString text = QString(tr("%1 would like to add you to their contact list.\n Would you like to add them to your contact list and share your status when you're online? \n\nIf you choose to defer this choice, you will be asked again when you next login.")).arg(event->getJID().toString().c_str());
+	QString text = QString(tr("%1 would like to add you to their contact list.")).arg(event->getJID().toString().c_str());
 	QVBoxLayout* layout = new QVBoxLayout();
 	QLabel* label = new QLabel(text, this);
+	layout->addWidget(label);
+	label = new QLabel(tr("Would you like to add them to your contact list and share your status when you're online?"));
+	//layout->addWidget(new QLabel);
 	layout->addWidget(label);
 
 	if (event_->getConcluded()) {
@@ -27,10 +30,10 @@ QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<Subsc
 		layout->addWidget(doneLabel);
 		layout->addWidget(okButton);
 	} else {
-		QPushButton* yesButton = new QPushButton(tr("Yes"), this);
+		QPushButton* yesButton = new QPushButton(tr("Accept"), this);
 		yesButton->setDefault(true);
 		connect(yesButton, SIGNAL(clicked()), this, SLOT(handleYes()));
-		QPushButton* noButton = new QPushButton(tr("No"), this);
+		QPushButton* noButton = new QPushButton(tr("Reject"), this);
 		connect(noButton, SIGNAL(clicked()), this, SLOT(handleNo()));
 		QPushButton* deferButton = new QPushButton(tr("Defer"), this);
 		deferButton->setShortcut(QKeySequence(Qt::Key_Escape));
@@ -40,8 +43,11 @@ QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<Subsc
 		buttonLayout->addWidget(yesButton);
 		buttonLayout->addWidget(noButton);
 		buttonLayout->addWidget(deferButton);
-	
+		layout->addWidget(new QLabel);
 		layout->addLayout(buttonLayout);
+		layout->addWidget(new QLabel);
+		QLabel *footer = new QLabel(tr("(If you choose to defer this choice, you will be asked again when you next login.)"));
+		layout->addWidget(footer);
 	}
 
 	setLayout(layout);
