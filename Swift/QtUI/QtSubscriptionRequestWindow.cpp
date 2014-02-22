@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -11,11 +11,11 @@
 #include <QVBoxLayout>
 #include <QLabel>
 
-#include "Swift/QtUI/QtSwiftUtil.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) : QDialog(parent), event_(event) {
-	QString text = QString(tr("%1 would like to add you to their contact list.")).arg(event->getJID().toString().c_str());
+	QString text = QString(tr("%1 would like to add you to their contact list.")).arg(P2QSTRING(event->getJID().toString()));
 	QVBoxLayout* layout = new QVBoxLayout();
 	QLabel* label = new QLabel(text, this);
 	layout->addWidget(label);
@@ -46,7 +46,7 @@ QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<Subsc
 		layout->addWidget(new QLabel);
 		layout->addLayout(buttonLayout);
 		layout->addWidget(new QLabel);
-		QLabel *footer = new QLabel(tr("(If you choose to defer this choice, you will be asked again when you next login.)"));
+		QLabel* footer = new QLabel(tr("(If you choose to defer this choice, you will be asked again when you next login.)"));
 		layout->addWidget(footer);
 	}
 
