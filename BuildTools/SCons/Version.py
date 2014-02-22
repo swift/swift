@@ -1,19 +1,23 @@
 import subprocess, os, datetime, re, os.path
 
-def getGitBuildVersion(project) :
-  tag = git("describe --tags --exact --match \"" + project + "-*\"")
+def getGitBuildVersion(root, project) :
+  tag = git("describe --tags --exact --match \"" + project + "-*\"", root)
   if tag :
     return tag.rstrip()[len(project)+1:]
-  tag = git("describe --tags --match \"" + project + "-*\"")
+  tag = git("describe --tags --match \"" + project + "-*\"", root)
   if tag :
     m = re.match(project + "-(.*)-(.*)-(.*)", tag)
     if m :
       return m.group(1) + "-dev" + m.group(2)
   return None
     
-def git(cmd) :
-  p = subprocess.Popen("git " + cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
+def git(cmd, root) :
+  full_cmd = "git " + cmd
+  p = subprocess.Popen(full_cmd, cwd=root, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
   gitVersion = p.stdout.read()
+  # error = p.stderr.read()
+  # if error:
+  #   print "Git error: " + error
   p.stdin.close()
   return gitVersion if p.wait() == 0 else None
 
@@ -25,7 +29,7 @@ def getBuildVersion(root, project) :
     f.close()
     return version
 
-  gitVersion = getGitBuildVersion(project) 
+  gitVersion = getGitBuildVersion(root, project) 
   if gitVersion :
     return gitVersion
 

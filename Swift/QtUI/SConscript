@@ -429,6 +429,7 @@ if env["PLATFORM"] == "win32" :
         wixincludecontent += "<?define %s = \"%s\" ?>" % (key, wixvariables[key])
       wixincludecontent += "</Include>"
       myenv.WriteVal("..\\Packaging\\Wix\\variables.wxs", env.Value(wixincludecontent))
+      myenv["WIX_SOURCE_OBJECT_DIR"] = "Swift\\QtUI\\Swift"
       myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', windowsBundleFiles + copying)
       myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs')
       myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')

@@ -20,7 +20,7 @@ def generate(env) :
 		return [ "" + include for include in includes ]
 
 	heat_builder = SCons.Builder.Builder(
- 		action = '"$WIX_HEAT" dir Swift\\QtUI\\Swift -cg Files $WIX_HEAT_OPTIONS -o ${TARGET} -t Swift\\Packaging\\WiX\\include.xslt',
+ 		action = '"$WIX_HEAT" dir "$WIX_SOURCE_OBJECT_DIR" -cg Files $WIX_HEAT_OPTIONS -o ${TARGET} -t Swift\\Packaging\\WiX\\include.xslt',
 		suffix = '.wxi')
 
 
@@ -38,7 +38,7 @@ def generate(env) :
 
 
 	light_builder = SCons.Builder.Builder(
- 		action = '"$WIX_LIGHT" $WIX_LIGHT_OPTIONS -b Swift\\QtUI\\Swift ${SOURCES} -o ${TARGET}',
+ 		action = '"$WIX_LIGHT" $WIX_LIGHT_OPTIONS -b "$WIX_SOURCE_OBJECT_DIR" ${SOURCES} -o ${TARGET}',
 		src_suffix = '.wixobj',
  		src_builder = candle_builder)
 
