@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include "QtXMLConsoleWidget.h"
 
-#include <Swiften/Base/format.h>
+#include <string>
 
 #include <QCloseEvent>
 #include <QTextEdit>
@@ -15,8 +15,9 @@
 #include <QScrollBar>
 #include <QCheckBox>
 
-#include "QtSwiftUtil.h"
-#include <string>
+#include <Swiften/Base/format.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
@@ -78,13 +79,13 @@ void QtXMLConsoleWidget::closeEvent(QCloseEvent* event) {
 
 void QtXMLConsoleWidget::handleDataRead(const SafeByteArray& data) {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	std::string tag = str(format(std::string(QT_TRANSLATE_NOOP("", "<!-- IN %1% -->"))) % std::string(boost::posix_time::to_iso_extended_string(now)));
+	std::string tag = Q2PSTRING(tr("<!-- IN %1 -->").arg(P2QSTRING(boost::posix_time::to_iso_extended_string(now))));
 	appendTextIfEnabled(tag + "\n" + safeByteArrayToString(data) + "\n", QColor(33,98,33));
 }
 
 void QtXMLConsoleWidget::handleDataWritten(const SafeByteArray& data) {
 	boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-	std::string tag = str(format(std::string(QT_TRANSLATE_NOOP("", "<!-- OUT %1% -->"))) % std::string(boost::posix_time::to_iso_extended_string(now)));
+	std::string tag = Q2PSTRING(tr("<!-- OUT %1 -->").arg(P2QSTRING(boost::posix_time::to_iso_extended_string(now))));
 	appendTextIfEnabled(tag + "\n" + safeByteArrayToString(data) + "\n", QColor(155,1,0));
 }
 
