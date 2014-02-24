@@ -18,7 +18,7 @@ namespace Swift {
 
 
 ContactRosterItem::ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent)
-: RosterItem(name, parent), jid_(jid), displayJID_(displayJID), mucRole_(MUCOccupant::NoRole), mucAffiliation_(MUCOccupant::NoAffiliation), blockState_(BlockingNotSupported)
+: RosterItem(name, parent), jid_(jid), displayJID_(displayJID.toBare()), mucRole_(MUCOccupant::NoRole), mucAffiliation_(MUCOccupant::NoAffiliation), blockState_(BlockingNotSupported)
 {
 }
 

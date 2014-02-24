@@ -114,7 +114,8 @@ QString RosterTooltip::buildVCardSummary(VCard::ref vcard) {
 	// star | name | content
 	QString currentBlock;
 	foreach (const VCard::Telephone& tel, vcard->getTelephones()) {
-		QString field = buildVCardField(tel.isPreferred, QObject::tr("Telephone"), htmlEscape(P2QSTRING(tel.number)));
+		QString type = tel.isFax ? QObject::tr("Fax") : QObject::tr("Telephone");
+		QString field = buildVCardField(tel.isPreferred, type, htmlEscape(P2QSTRING(tel.number)));
 		if (tel.isPreferred) {
 			currentBlock = field;
 			break;
