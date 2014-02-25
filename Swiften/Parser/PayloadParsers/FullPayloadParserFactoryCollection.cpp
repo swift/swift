@@ -76,6 +76,11 @@
 #include <Swiften/Parser/PayloadParsers/PubSubErrorParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/UserLocationParser.h>
 #include <Swiften/Parser/PayloadParsers/UserTuneParser.h>
+#include <Swiften/Parser/PayloadParsers/ResultSetParser.h>
+#include <Swiften/Parser/PayloadParsers/ForwardedParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMArchivedParser.h>
 
 using namespace boost;
 
@@ -144,6 +149,11 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<PubSubOwnerPubSubParser> >("pubsub", "http://jabber.org/protocol/pubsub#owner", this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<PubSubEventParser> >("event", "http://jabber.org/protocol/pubsub#event", this));
 	factories_.push_back(boost::make_shared<PubSubErrorParserFactory>());
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<ResultSetParser> >("set", "http://jabber.org/protocol/rsm"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<ForwardedParser> >("forwarded", "urn:xmpp:forward:0", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<MAMResultParser> >("result", "urn:xmpp:mam:0", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMQueryParser> >("query", "urn:xmpp:mam:0"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMArchivedParser> >("archived", "urn:xmpp:mam:0"));
 
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());

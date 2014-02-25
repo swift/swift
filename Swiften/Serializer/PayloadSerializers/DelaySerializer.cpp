@@ -20,7 +20,7 @@ DelaySerializer::DelaySerializer() : GenericPayloadSerializer<Delay>() {
 
 std::string DelaySerializer::serializePayload(boost::shared_ptr<Delay> delay)  const {
 	XMLElement delayElement("delay", "urn:xmpp:delay");
-	if (delay->getFrom()) {
+	if (delay->getFrom() && delay->getFrom()->isValid()) {
 		delayElement.setAttribute("from", delay->getFrom()->toString());
 	}
 	delayElement.setAttribute("stamp", dateTimeToString(delay->getStamp()));

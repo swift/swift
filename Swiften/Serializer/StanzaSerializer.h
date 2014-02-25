@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2013-2014 Kevin Smith and Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -18,7 +18,8 @@ namespace Swift {
 		public:
 			StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers);
 
-			virtual SafeByteArray serialize(boost::shared_ptr<Element>) const;
+			virtual SafeByteArray serialize(boost::shared_ptr<Element> element) const;
+			virtual SafeByteArray serialize(boost::shared_ptr<Element> element, const std::string& xmlns) const;
 			virtual void setStanzaSpecificAttributes(boost::shared_ptr<Element>, XMLElement&) const = 0;
 
 		private:

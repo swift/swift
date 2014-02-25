@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -23,9 +23,13 @@ StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerColl
 }
 
 SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<Element> element) const {
+	return serialize(element, "");
+}
+
+SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<Element> element, const std::string& xmlns) const {
 	boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
 
-	XMLElement stanzaElement(tag_);
+	XMLElement stanzaElement(tag_, xmlns);
 	if (stanza->getFrom().isValid()) {
 		stanzaElement.setAttribute("from", stanza->getFrom());
 	}
