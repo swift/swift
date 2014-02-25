@@ -186,7 +186,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 		}
 	}
 	chatStateTracker_->handleMessageReceived(message);
-	chatStateNotifier_->receivedMessageFromContact(message->getPayload<ChatState>());
+	chatStateNotifier_->receivedMessageFromContact(!!message->getPayload<ChatState>());
 
 	// handle XEP-0184 Message Receipts
 	// incomming receipts

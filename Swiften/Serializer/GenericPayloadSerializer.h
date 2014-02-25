@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
 			}
 
 			virtual bool canSerialize(boost::shared_ptr<Payload> element) const {
-				return boost::dynamic_pointer_cast<PAYLOAD_TYPE>(element);
+				return !!boost::dynamic_pointer_cast<PAYLOAD_TYPE>(element);
 			}
 
 			virtual std::string serializePayload(boost::shared_ptr<PAYLOAD_TYPE>) const = 0;

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -135,7 +135,7 @@ void BOSHConnection::write(const SafeByteArray& data, bool streamRestart, bool t
 
 void BOSHConnection::handleConnectFinished(Connection::ref connection) {
 	cancelConnector();
-	connectionReady_ = connection;
+	connectionReady_ = !!connection;
 	if (connectionReady_) {
 		connection_ = connection;
 		connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));

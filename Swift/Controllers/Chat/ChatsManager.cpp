@@ -798,7 +798,7 @@ void ChatsManager::handleSearchMUCRequest() {
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	JID jid = message->getFrom();
 	boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
-	bool isInvite = message->getPayload<MUCInvitationPayload>();
+	bool isInvite = !!message->getPayload<MUCInvitationPayload>();
 	bool isMediatedInvite = (message->getPayload<MUCUserPayload>() && message->getPayload<MUCUserPayload>()->getInvite());
 	if (isMediatedInvite) {
 		jid = (*message->getPayload<MUCUserPayload>()->getInvite()).from;

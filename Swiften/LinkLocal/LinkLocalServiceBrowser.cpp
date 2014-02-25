@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -52,7 +52,7 @@ void LinkLocalServiceBrowser::stop() {
 }
 
 bool LinkLocalServiceBrowser::isRunning() const {
-	return browseQuery;
+	return !!browseQuery;
 }
 
 bool LinkLocalServiceBrowser::hasError() const {
@@ -60,7 +60,7 @@ bool LinkLocalServiceBrowser::hasError() const {
 }
 
 bool LinkLocalServiceBrowser::isRegistered() const {
-	return registerQuery;
+	return !!registerQuery;
 }
 
 void LinkLocalServiceBrowser::registerService(const std::string& name, int port, const LinkLocalServiceInfo& info) {
