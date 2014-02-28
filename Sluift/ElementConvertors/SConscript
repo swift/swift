@@ -39,6 +39,14 @@ convertors = [
 	env.File("PubSubEventAssociateConvertor.cpp"),
 	env.File("PubSubSubscriptionConvertor.cpp"),
 	env.File("SecurityLabelConvertor.cpp"),
-	env.File("PubSubEventConfigurationConvertor.cpp")
+	env.File("PubSubEventConfigurationConvertor.cpp"),
+	env.File("IQConvertor.cpp"),
+	env.File("PresenceConvertor.cpp"),
+	env.File("MessageConvertor.cpp"),
+	env.File("ResultSetConvertor.cpp"),
+	env.File("ForwardedConvertor.cpp"),
+	env.File("MAMResultConvertor.cpp"),
+	env.File("MAMQueryConvertor.cpp"),
+	env.File("MAMArchivedConvertor.cpp")
 ]
 Return('convertors')

@@ -25,7 +25,7 @@ class MAMQuerySerializerTest : public CppUnit::TestFixture {
 
 	public:
 		void testSerialize() {
-			MAMQuerySerializer serializer(&serializers);
+			MAMQuerySerializer serializer;
 
 			boost::shared_ptr<Form> parameters(boost::make_shared<Form>());
 

@@ -16,7 +16,7 @@
 
 using namespace Swift;
 
-MAMQuerySerializer::MAMQuerySerializer(PayloadSerializerCollection* serializers) : serializers_(serializers) {
+MAMQuerySerializer::MAMQuerySerializer() {
 }
 
 MAMQuerySerializer::~MAMQuerySerializer() {

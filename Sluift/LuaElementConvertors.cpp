@@ -25,6 +25,14 @@
 #include <Sluift/ElementConvertors/StatusShowConvertor.h>
 #include <Sluift/ElementConvertors/StatusConvertor.h>
 #include <Sluift/ElementConvertors/DelayConvertor.h>
+#include <Sluift/ElementConvertors/IQConvertor.h>
+#include <Sluift/ElementConvertors/PresenceConvertor.h>
+#include <Sluift/ElementConvertors/MessageConvertor.h>
+#include <Sluift/ElementConvertors/ResultSetConvertor.h>
+#include <Sluift/ElementConvertors/ForwardedConvertor.h>
+#include <Sluift/ElementConvertors/MAMResultConvertor.h>
+#include <Sluift/ElementConvertors/MAMQueryConvertor.h>
+#include <Sluift/ElementConvertors/MAMArchivedConvertor.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/Lua/Exception.h>
 
@@ -47,6 +55,14 @@ LuaElementConvertors::LuaElementConvertors() {
 	convertors.push_back(boost::make_shared<DOMElementConvertor>());
 	convertors.push_back(boost::make_shared<RawXMLElementConvertor>());
 	convertors.push_back(boost::make_shared<DefaultElementConvertor>());
+	convertors.push_back(boost::make_shared<IQConvertor>(this));
+	convertors.push_back(boost::make_shared<PresenceConvertor>(this));
+	convertors.push_back(boost::make_shared<MessageConvertor>(this));
+	convertors.push_back(boost::make_shared<ResultSetConvertor>(this));
+	convertors.push_back(boost::make_shared<ForwardedConvertor>(this));
+	convertors.push_back(boost::make_shared<MAMResultConvertor>(this));
+	convertors.push_back(boost::make_shared<MAMQueryConvertor>(this));
+	convertors.push_back(boost::make_shared<MAMArchivedConvertor>(this));
 }
 
 LuaElementConvertors::~LuaElementConvertors() {

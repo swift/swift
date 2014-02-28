@@ -22,7 +22,7 @@ class MAMArchivedSerializerTest : public CppUnit::TestFixture {
 
 	public:
 		void testSerialize() {
-			MAMArchivedSerializer serializer(&serializers);
+			MAMArchivedSerializer serializer;
 
 			boost::shared_ptr<MAMArchived> archived(boost::make_shared<MAMArchived>());
 			archived->setBy("juliet@capulet.lit");

@@ -13,7 +13,7 @@
 
 using namespace Swift;
 
-MAMArchivedSerializer::MAMArchivedSerializer(PayloadSerializerCollection* serializers) : serializers_(serializers) {
+MAMArchivedSerializer::MAMArchivedSerializer() {
 }
 
 MAMArchivedSerializer::~MAMArchivedSerializer() {

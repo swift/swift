@@ -58,6 +58,11 @@
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerPubSubSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubEventSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubErrorSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/ResultSetSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/ForwardedSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MAMQuerySerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MAMArchivedSerializer.h>
 
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
@@ -137,6 +142,12 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new PubSubEventSerializer(this));
 	serializers_.push_back(new PubSubOwnerPubSubSerializer(this));
 	serializers_.push_back(new PubSubErrorSerializer());
+
+	serializers_.push_back(new ResultSetSerializer());
+	serializers_.push_back(new ForwardedSerializer(this));
+	serializers_.push_back(new MAMResultSerializer(this));
+	serializers_.push_back(new MAMQuerySerializer());
+	serializers_.push_back(new MAMArchivedSerializer());
 	
 	foreach(PayloadSerializer* serializer, serializers_) {
 		addSerializer(serializer);

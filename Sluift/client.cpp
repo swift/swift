@@ -18,6 +18,7 @@
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/MAMQuery.h>
 #include <Swiften/Disco/ClientDiscoManager.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Presence/PresenceSender.h>
@@ -25,14 +26,20 @@
 #include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Presence/SubscriptionManager.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
+#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
 #include <Sluift/Lua/FunctionRegistration.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/IDGenerator.h>
 #include <Sluift/Lua/Check.h>
 #include <Sluift/Lua/Value.h>
 #include <Sluift/Lua/Exception.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/globals.h>
+#include <Sluift/ElementConvertors/StanzaConvertor.h>
+#include <Sluift/ElementConvertors/IQConvertor.h>
+#include <Sluift/ElementConvertors/PresenceConvertor.h>
+#include <Sluift/ElementConvertors/MessageConvertor.h>
 
 using namespace Swift;
 namespace lambda = boost::lambda;
@@ -236,21 +243,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		}
 
 		if (boost::optional<std::string> value = Lua::getStringField(L, index, "type")) {
-			if (*value == "normal") {
-				type = Message::Normal;
-			}
-			else if (*value == "chat") {
-				type = Message::Chat;
-			}
-			else if (*value == "error") {
-				type = Message::Error;
-			}
-			else if (*value == "groupchat") {
-				type = Message::Groupchat;
-			}
-			else if (*value == "headline") {
-				type = Message::Headline;
-			}
+			type = MessageConvertor::convertMessageTypeFromString(*value);
 		}
 
 		if (boost::optional<std::string> value = Lua::getStringField(L, index, "subject")) {
@@ -312,30 +305,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 			presence->setPriority(*value);
 		}
 		if (boost::optional<std::string> value = Lua::getStringField(L, index, "type")) {
-			if (*value == "available") {
-				presence->setType(Presence::Available);
-			}
-			else if (*value == "error") {
-				presence->setType(Presence::Error);
-			}
-			else if (*value == "probe") {
-				presence->setType(Presence::Probe);
-			}
-			else if (*value == "subscribe") {
-				presence->setType(Presence::Subscribe);
-			}
-			else if (*value == "subscribed") {
-				presence->setType(Presence::Subscribed);
-			}
-			else if (*value == "unavailable") {
-				presence->setType(Presence::Unavailable);
-			}
-			else if (*value == "unsubscribe") {
-				presence->setType(Presence::Unsubscribe);
-			}
-			else if (*value == "unsubscribed") {
-				presence->setType(Presence::Unsubscribed);
-			}
+			presence->setType(PresenceConvertor::convertPresenceTypeFromString(*value));
 		}
 		std::vector< boost::shared_ptr<Payload> > payloads = getPayloadsFromTable(L, index);
 		presence->addPayloads(payloads.begin(), payloads.end());
@@ -388,15 +358,7 @@ SLUIFT_LUA_FUNCTION(Client, query_pubsub) {
 
 	IQ::Type type;
 	if (boost::optional<std::string> queryType = Lua::getStringField(L, 2, "type")) {
-		if (*queryType == "get") {
-			type = IQ::Get;
-		}
-		else if (*queryType == "set") {
-			type = IQ::Set;
-		}
-		else {
-			throw Lua::Exception("Illegal query type: '" + *queryType + "'");
-		}
+		type = IQConvertor::convertIQTypeFromString(*queryType);
 	}
 	else {
 		throw Lua::Exception("Missing query type");
@@ -490,35 +452,33 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	return 0;
 }
 
-static std::string convertPresenceTypeToString(Presence::Type type) {
-	std::string result;
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, send_mam_query,
 
-	switch (type) {
-		case Presence::Available: result = "available"; break;
-		case Presence::Error: result = "error"; break;
-		case Presence::Probe: result = "probe"; break;
-		case Presence::Subscribe: result = "subscribe"; break;
-		case Presence::Subscribed: result = "subscribed"; break;
-		case Presence::Unavailable: result = "unavailable"; break;
-		case Presence::Unsubscribe: result = "unsubscribe"; break;
-		case Presence::Unsubscribed: result = "unsubscribed"; break;
+		"Builds and sends a MAM query.\n",
+
+		"self\n"
+		"mam_query  parameters for the query\n"
+		"jid  optional jid to set in the 'to' field of the IQ stanza",
+
+		"See help('MAMQuery') for details."
+) {
+	if (!lua_istable(L, 2)) {
+		throw Lua::Exception("Missing MAMQuery");
 	}
-
-	return result;
-}
-
-static std::string convertMessageTypeToString(Message::Type type) {
-	std::string result;
-
-	switch (type) {
-		case Message::Normal: result = "normal"; break;
-		case Message::Chat: result = "chat"; break;
-		case Message::Error: result = "error"; break;
-		case Message::Groupchat: result = "groupchat"; break;
-		case Message::Headline: result = "headline"; break;
+	if (boost::shared_ptr<MAMQuery> mamQuery = boost::dynamic_pointer_cast<MAMQuery>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "mam_query"))) {
+			IQRouter *router = getClient(L)->getClient()->getIQRouter();
+			JID jid;
+			lua_getfield(L, 2, "jid");
+			if (!lua_isnil(L, -1)) {
+				jid = JID(lua_tostring(L, -1));
+			}
+			router->sendIQ(IQ::createRequest(IQ::Get, jid, IDGenerator().generateID(), mamQuery));
 	}
-
-	return result;
+	else {
+		throw Lua::Exception("Illegal MAMQuery");
+	}
+	return 0;
 }
 
 static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
@@ -529,7 +489,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 				("type", boost::make_shared<Lua::Value>(std::string("message")))
 				("from", boost::make_shared<Lua::Value>(message->getFrom().toString()))
 				("body", boost::make_shared<Lua::Value>(message->getBody()))
-				("message_type", boost::make_shared<Lua::Value>(convertMessageTypeToString(message->getType())));
+				("message_type", boost::make_shared<Lua::Value>(MessageConvertor::convertMessageTypeToString(message->getType())));
 			Lua::pushValue(L, result);
 			addPayloadsToTable(L, message->getPayloads());
 			Lua::registerTableToString(L, -1);
@@ -541,7 +501,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 				("type", boost::make_shared<Lua::Value>(std::string("presence")))
 				("from", boost::make_shared<Lua::Value>(presence->getFrom().toString()))
 				("status", boost::make_shared<Lua::Value>(presence->getStatus()))
-				("presence_type", boost::make_shared<Lua::Value>(convertPresenceTypeToString(presence->getType())));
+				("presence_type", boost::make_shared<Lua::Value>(PresenceConvertor::convertPresenceTypeToString(presence->getType())));
 			Lua::pushValue(L, result);
 			addPayloadsToTable(L, presence->getPayloads());
 			Lua::registerTableToString(L, -1);

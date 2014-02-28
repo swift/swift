@@ -17,12 +17,9 @@ namespace Swift {
 
 	class SWIFTEN_API MAMArchivedSerializer : public GenericPayloadSerializer<MAMArchived> {
 		public:
-			MAMArchivedSerializer(PayloadSerializerCollection* serializers);
+			MAMArchivedSerializer();
 			virtual ~MAMArchivedSerializer();
 
 			virtual std::string serializePayload(boost::shared_ptr<MAMArchived>) const SWIFTEN_OVERRIDE;
-
-		private:
-			PayloadSerializerCollection* serializers_;
 	};
 }
