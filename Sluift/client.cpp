@@ -49,14 +49,6 @@ static inline int getGlobalTimeout(lua_State* L) {
 	return result;
 }
 
-static inline bool getGlobalDebug(lua_State* L) {
-	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.moduleLibIndex);
-	lua_getfield(L, -1, "debug");
-	int result = lua_toboolean(L, -1);
-	lua_pop(L, 2);
-	return result;
-}
-
 static void addPayloadsToTable(lua_State* L, const std::vector<boost::shared_ptr<Payload> >& payloads) {
 	if (!payloads.empty()) {
 		lua_createtable(L, boost::numeric_cast<int>(payloads.size()), 0);
@@ -110,7 +102,6 @@ SLUIFT_LUA_FUNCTION(Client, async_connect) {
 			port = *portInt;
 		}
 	}
-	client->setTraceEnabled(getGlobalDebug(L));
 	client->connect(host, port);
 	return 0;
 }

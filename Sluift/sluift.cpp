@@ -48,6 +48,15 @@ namespace Swift {
 extern "C" const char core_lua[];
 extern "C" size_t core_lua_size;
 
+static inline bool getGlobalDebug(lua_State* L) {
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.moduleLibIndex);
+	lua_getfield(L, -1, "debug");
+	int result = lua_toboolean(L, -1);
+	lua_pop(L, 2);
+	return result;
+}
+
+
 /*******************************************************************************
  * Module functions
  ******************************************************************************/
@@ -74,6 +83,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	lua_pop(L, 1);
 
 	*client = new SluiftClient(jid, password, &Sluift::globals.networkFactories, &Sluift::globals.eventLoop);
+	(*client)->setTraceEnabled(getGlobalDebug(L));
 	return 1;
 }
 
