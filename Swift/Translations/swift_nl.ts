@@ -158,7 +158,7 @@
     </message>
     <message>
         <source>Unable to enter this room as %1%, retrying as %2%</source>
-        <translation>Kan deze kamer niet betreden als %1%; als %2% opniew aan het proberen</translation>
+        <translation>Kan deze kamer niet betreden als %1%; als %2% opnieuw aan het proberen</translation>
     </message>
     <message>
         <source>Only members may enter</source>
@@ -602,7 +602,7 @@
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation>&amp;Opniew</translation>
+        <translation>&amp;Opnieuw</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
@@ -766,7 +766,7 @@
     </message>
     <message>
         <source>&amp;Redo</source>
-        <translation>&amp;Opniew</translation>
+        <translation>&amp;Opnieuw</translation>
     </message>
     <message>
         <source>Cu&amp;t</source>
@@ -1098,7 +1098,7 @@
     </message>
     <message>
         <source>Automatically configure newly created rooms</source>
-        <translation>Configureer niewe kamer automatisch</translation>
+        <translation>Configureer nieuwe kamer automatisch</translation>
     </message>
 </context>
 <context>
@@ -2035,7 +2035,7 @@ afbeelding</translation>
     </message>
     <message>
         <source>Enter a new name for group &apos;%1&apos;:</source>
-        <translation>Geef een niewe naam voor groep &apos;%1&apos;:</translation>
+        <translation>Geef een nieuwe naam voor groep &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
@@ -2102,7 +2102,7 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
     </message>
     <message>
         <source>Enter a new name for group &apos;%1&apos;:</source>
-        <translation type="obsolete">Geef een niewe naam voor groep &apos;%1&apos;:</translation>
+        <translation type="obsolete">Geef een nieuwe naam voor groep &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
