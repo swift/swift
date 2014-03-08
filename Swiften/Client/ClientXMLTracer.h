@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,6 +16,7 @@ namespace Swift {
 		public:
 			ClientXMLTracer(CoreClient* client, bool bosh = false);
 			~ClientXMLTracer();
+
 		private:
 			void printData(char direction, const SafeByteArray& data);
 			void printLine(char c);
@@ -23,5 +24,7 @@ namespace Swift {
 		private:
 			XMLBeautifier *beautifier;
 			bool bosh;
+			boost::bsignals::scoped_connection onDataReadConnection;
+			boost::bsignals::scoped_connection onDataWrittenConnection;
 	};
 }

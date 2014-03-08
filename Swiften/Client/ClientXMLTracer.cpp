@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,8 +19,8 @@ ClientXMLTracer::ClientXMLTracer(CoreClient* client, bool bosh) : bosh(bosh) {
 #else
 	beautifier = new XMLBeautifier(true, true);
 #endif
-	client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
-	client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
+	onDataReadConnection = client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
+	onDataWrittenConnection = client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
 }
 
 ClientXMLTracer::~ClientXMLTracer() {
