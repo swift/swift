@@ -60,7 +60,7 @@ QtHistoryWindow::QtHistoryWindow(SettingsProvider* settings, UIEventStream* even
 	ui_.bottomLayout_->addWidget(conversation_);
 
 	delete ui_.conversationRoster_;
-	conversationRoster_ = new QtTreeWidget(eventStream, settings, this);
+	conversationRoster_ = new QtTreeWidget(eventStream, settings, QtTreeWidget::MessageDefaultJID, this);
 	QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Expanding);
 	sizePolicy2.setVerticalStretch(80);
 	conversationRoster_->setSizePolicy(sizePolicy2);

@@ -99,7 +99,7 @@ namespace Swift {
 			void show();
 			void activate();
 			void setUnreadMessageCount(int count);
-			void convertToMUC(bool impromptuMUC = false);
+			void convertToMUC(MUCType mucType);
 //			TreeWidget *getTreeWidget();
 			void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels);
 			void setSecurityLabelsEnabled(bool enabled);

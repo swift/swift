@@ -1,25 +1,26 @@
 /*
- * Copyright (c) 2011-2012 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 
-#include "Roster/QtOccupantListWidget.h"
+#include <Swift/QtUI/Roster/QtOccupantListWidget.h>
 
 #include <QContextMenuEvent>
 #include <QMenu>
 #include <QAction>
 #include <QInputDialog>
 
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "QtSwiftUtil.h"
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
-QtOccupantListWidget::QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QtTreeWidget(eventStream, settings, parent) {
+QtOccupantListWidget::QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent) : QtTreeWidget(eventStream, settings, privateMessageTarget, parent) {
 
 }
 

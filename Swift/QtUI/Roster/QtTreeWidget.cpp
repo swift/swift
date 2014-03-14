@@ -26,12 +26,12 @@
 #include <Swift/Controllers/Settings/SettingsProvider.h>
  
 #include <Swift/QtUI/QtUISettingConstants.h>
-
+#include <Swift/QtUI/Roster/RosterModel.h>
 #include <QtSwiftUtil.h>
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent), tooltipShown_(false) {
+QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent) : QTreeView(parent), messageTarget_(messageTarget), tooltipShown_(false) {
 	eventStream_ = eventStream;
 	settings_ = settings;
 	model_ = new RosterModel(this, settings_->getSetting(QtUISettingConstants::USE_SCREENREADER));
@@ -137,12 +137,24 @@ void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex&
 	QTreeView::currentChanged(current, previous);
 }
 
-
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
-	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (contact) {
-		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(contact->getJID())));
+	switch (messageTarget_) {
+	case MessageDisplayJID: {
+		QString indexJID = index.data(DisplayJIDRole).toString();
+		if (!indexJID.isEmpty()) {
+			JID target = JID(Q2PSTRING(indexJID)).toBare();
+			eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
+			break;
+		}
+	}
+	case MessageDefaultJID: {
+		QString indexJID = index.data(JIDRole).toString();
+		if (!indexJID.isEmpty()) {
+			JID target = JID(Q2PSTRING(indexJID));
+			eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
+		}
+		break;
+	}
 	}
 }
 
@@ -228,6 +240,10 @@ void QtTreeWidget::drawBranches(QPainter*, const QRect&, const QModelIndex&) con
 
 void QtTreeWidget::show() {
 	QWidget::show();
+}
+
+void QtTreeWidget::setMessageTarget(MessageTarget messageTarget) {
+	messageTarget_ = messageTarget;
 }
 
 }

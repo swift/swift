@@ -92,6 +92,7 @@ namespace Swift {
 			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
 			enum BlockingState {BlockingUnsupported, IsBlocked, IsUnblocked};
 			enum Direction { UnknownDirection, DefaultDirection };
+			enum MUCType { StandardMUC, ImpromptuMUC };
 
 			ChatWindow() {}
 			virtual ~ChatWindow() {}
@@ -132,7 +133,7 @@ namespace Swift {
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;
 			virtual void setCorrectionEnabled(Tristate enabled) = 0;
 			virtual void setUnreadMessageCount(int count) = 0;
-			virtual void convertToMUC(bool impromptuMUC = false) = 0;
+			virtual void convertToMUC(MUCType mucType) = 0;
 //			virtual TreeWidget *getTreeWidget() = 0;
 			virtual void setSecurityLabelsError() = 0;
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() = 0;

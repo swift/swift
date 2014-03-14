@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2011-2012 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include "Swift/QtUI/Roster/QtTreeWidget.h"
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
+#include <Swiften/Base/boost_bsignals.h>
+
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
 class SettingsProvider;
@@ -17,7 +18,7 @@ class SettingsProvider;
 class QtOccupantListWidget : public QtTreeWidget {
 	Q_OBJECT
 	public:
-		QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent = 0);
+		QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent = NULL);
 		virtual ~QtOccupantListWidget();
 		void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
 		boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;

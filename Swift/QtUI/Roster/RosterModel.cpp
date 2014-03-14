@@ -102,6 +102,8 @@ QVariant RosterModel::data(const QModelIndex& index, int role) const {
 		case PresenceIconRole: return getPresenceIcon(item);
 		case ChildCountRole: return getChildCount(item);
 		case IdleRole: return getIsIdle(item);
+		case JIDRole: return getJID(item);
+		case DisplayJIDRole: return getDisplayJID(item);
 		default: return QVariant();
 	}
 }
@@ -179,6 +181,16 @@ QString RosterModel::getStatusText(RosterItem* item) const {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
 	if (!contact) return "";
 	return P2QSTRING(contact->getStatusText());
+}
+
+QString RosterModel::getJID(RosterItem* item) const {
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	return contact ? P2QSTRING(contact->getJID().toString()) : QString();
+}
+
+QString RosterModel::getDisplayJID(RosterItem* item) const {
+	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+	return contact ? P2QSTRING(contact->getDisplayJID().toString()) : QString();
 }
 
 QIcon RosterModel::getPresenceIcon(RosterItem* item) const {

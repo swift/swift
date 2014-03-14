@@ -45,7 +45,7 @@ namespace Swift {
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {labels_ = labels;}
 			virtual void setSecurityLabelsEnabled(bool enabled) {labelsEnabled_ = enabled;}
 			virtual void setUnreadMessageCount(int /*count*/) {}
-			virtual void convertToMUC(bool /*impromptuMUC*/) {}
+			virtual void convertToMUC(MUCType /*mucType*/) {}
 			virtual void setSecurityLabelsError() {}
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return label_;}
 			virtual void setInputEnabled(bool /*enabled*/) {}

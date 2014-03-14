@@ -104,8 +104,6 @@ MUCController::MUCController (
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
-	muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
-	muc_->onOccupantAffiliationChanged.connect(boost::bind(&MUCController::handleOccupantAffiliationChanged, this, _1, _2, _3));
 	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
 	muc_->onAffiliationListReceived.connect(boost::bind(&MUCController::handleAffiliationListReceived, this, _1, _2));
 	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
@@ -119,9 +117,11 @@ MUCController::MUCController (
 	}
 	if (isImpromptu) {
 		muc_->onUnlocked.connect(boost::bind(&MUCController::handleRoomUnlocked, this));
-		chatWindow_->convertToMUC(true);
+		chatWindow_->convertToMUC(ChatWindow::ImpromptuMUC);
 	} else {
-		chatWindow_->convertToMUC();
+		muc_->onOccupantRoleChanged.connect(boost::bind(&MUCController::handleOccupantRoleChanged, this, _1, _2, _3));
+		muc_->onOccupantAffiliationChanged.connect(boost::bind(&MUCController::handleOccupantAffiliationChanged, this, _1, _2, _3));
+		chatWindow_->convertToMUC(ChatWindow::StandardMUC);
 		chatWindow_->setName(muc->getJID().getNode());
 	}
 	setOnline(true);
@@ -154,7 +154,7 @@ void MUCController::handleWindowOccupantSelectionChanged(ContactRosterItem* item
 	if (item) {
 		MUCOccupant::Affiliation affiliation = muc_->getOccupant(getNick()).getAffiliation();
 		MUCOccupant::Role role = muc_->getOccupant(getNick()).getRole();
-		if (role == MUCOccupant::Moderator)
+		if (role == MUCOccupant::Moderator && !isImpromptu_)
 		{
 			if (affiliation == MUCOccupant::Admin || affiliation == MUCOccupant::Owner) {
 				actions.push_back(ChatWindow::Ban);
@@ -348,8 +348,12 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	clearPresenceQueue();
 	shouldJoinOnReconnect_ = true;
 	setEnabled(true);
-	MUCOccupant occupant = muc_->getOccupant(nick);
-	setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
+	if (isImpromptu_) {
+		setAvailableRoomActions(MUCOccupant::NoAffiliation, MUCOccupant::Participant);
+	} else {
+		MUCOccupant occupant = muc_->getOccupant(nick);
+		setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
+	}
 	onUserJoined();
 
 	if (isImpromptu_) {
@@ -384,13 +388,18 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
 	currentOccupants_.insert(occupant.getNick());
 	NickJoinPart event(occupant.getNick(), Join);
 	appendToJoinParts(joinParts_, event);
-	std::string groupName(roleToGroupName(occupant.getRole()));
+	MUCOccupant::Role role = MUCOccupant::Participant;
+	MUCOccupant::Affiliation affiliation = MUCOccupant::NoAffiliation;
+	if (!isImpromptu_) {
+		role = occupant.getRole();
+		affiliation = occupant.getAffiliation();
+	}
+	std::string groupName(roleToGroupName(role));
 	roster_->addContact(jid, realJID, occupant.getNick(), groupName, avatarManager_->getAvatarPath(jid));
-	roster_->applyOnItems(SetMUC(jid, occupant.getRole(), occupant.getAffiliation()));
-	roster_->getGroup(groupName)->setManualSort(roleToSortName(occupant.getRole()));
+	roster_->applyOnItems(SetMUC(jid, role, affiliation));
+	roster_->getGroup(groupName)->setManualSort(roleToSortName(role));
 	if (joined_) {
 		std::string joinString;
-		MUCOccupant::Role role = occupant.getRole();
 		if (role != MUCOccupant::NoRole && role != MUCOccupant::Participant) {
 			joinString = str(format(QT_TRANSLATE_NOOP("", "%1% has entered the %3% as a %2%.")) % occupant.getNick() % roleToFriendlyName(role) % (isImpromptu_ ? QT_TRANSLATE_NOOP("", "chat") : QT_TRANSLATE_NOOP("", "room")));
 		}

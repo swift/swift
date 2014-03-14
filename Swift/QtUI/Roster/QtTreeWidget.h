@@ -1,34 +1,40 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <QTreeView>
-#include <QModelIndex>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QDragMoveEvent>
+#include <QModelIndex>
+#include <QTreeView>
  
-#include <Swift/QtUI/Roster/RosterModel.h>
 #include <Swift/QtUI/Roster/RosterDelegate.h>
+#include <Swift/QtUI/Roster/RosterModel.h>
+
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
 class UIEventStream;
 class SettingsProvider;
 
-class QtTreeWidget : public QTreeView{
+class QtTreeWidget : public QTreeView {
 	Q_OBJECT
 	public:
-		QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent = 0);
+		enum MessageTarget {MessageDefaultJID, MessageDisplayJID};
+
+		QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent = 0);
 		~QtTreeWidget();
 		void show();
 		QtTreeWidgetItem* getRoot();
 		void setRosterModel(Roster* roster);
 		Roster* getRoster() {return roster_;}
 		void refreshTooltip();
+		void setMessageTarget(MessageTarget messageTarget);
+	public:
 		boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
 
 	private slots:
@@ -45,9 +51,8 @@ class QtTreeWidget : public QTreeView{
 		void dropEvent(QDropEvent* event);
 		void dragMoveEvent(QDragMoveEvent* event);
 		bool event(QEvent* event);
-
-	protected:
 		QModelIndexList getSelectedIndexes() const;
+
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 
@@ -63,6 +68,7 @@ class QtTreeWidget : public QTreeView{
 		QtTreeWidgetItem* treeRoot_;
 		SettingsProvider* settings_;
 		bool tooltipShown_;
+		MessageTarget messageTarget_;
 };
 
 }

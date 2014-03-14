@@ -20,7 +20,9 @@ namespace Swift {
 		PresenceIconRole = Qt::UserRole + 2,
 		StatusShowTypeRole = Qt::UserRole + 3,
 		ChildCountRole = Qt::UserRole + 4,
-		IdleRole = Qt::UserRole + 5
+		IdleRole = Qt::UserRole + 5,
+		JIDRole = Qt::UserRole + 6,
+		DisplayJIDRole = Qt::UserRole + 7
 	};
 
 	class QtTreeWidget;
@@ -52,6 +54,8 @@ namespace Swift {
 			QString getToolTip(RosterItem* item) const;
 			QString getAvatar(RosterItem* item) const;
 			QString getStatusText(RosterItem* item) const;
+			QString getJID(RosterItem* item) const;
+			QString getDisplayJID(RosterItem* item) const;
 			QIcon getPresenceIcon(RosterItem* item) const;
 			int getChildCount(RosterItem* item) const;
 			bool getIsIdle(RosterItem* item) const;

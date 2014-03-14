@@ -116,7 +116,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	}
 	logRosterSplitter_->addWidget(messageLog_);
 
-	treeWidget_ = new QtOccupantListWidget(eventStream_, settings_, this);
+	treeWidget_ = new QtOccupantListWidget(eventStream_, settings_, QtTreeWidget::MessageDefaultJID, this);
 	treeWidget_->hide();
 	logRosterSplitter_->addWidget(treeWidget_);
 	logRosterSplitter_->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -396,8 +396,9 @@ void QtChatWindow::closeEvent(QCloseEvent* event) {
 	onClosed();
 }
 
-void QtChatWindow::convertToMUC(bool impromptuMUC) {
-	impromptu_ = impromptuMUC;
+void QtChatWindow::convertToMUC(MUCType mucType) {
+	impromptu_ = (mucType == ImpromptuMUC);
+	treeWidget_->setMessageTarget(impromptu_ ? QtTreeWidget::MessageDisplayJID : QtTreeWidget::MessageDefaultJID);
 	isMUC_ = true;
 	treeWidget_->show();
 	subject_->setVisible(!impromptu_);
