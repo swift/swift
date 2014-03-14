@@ -24,6 +24,33 @@
 #define LUA_COMMANDS "__Lua_Commands"
 #define STORAGE "__Storage"
 
+static const luaL_Reg defaultLibraries[] = {
+	{"", luaopen_base},
+	{LUA_LOADLIBNAME, luaopen_package},
+	{LUA_TABLIBNAME, luaopen_table},
+	{LUA_IOLIBNAME, luaopen_io},
+	{LUA_OSLIBNAME, luaopen_os},
+	{LUA_STRLIBNAME, luaopen_string},
+	{LUA_MATHLIBNAME, luaopen_math},
+	{LUA_DBLIBNAME, luaopen_debug},
+	{NULL, NULL}
+};
+
+static void initialize(lua_State* L) {
+	lua_gc(L, LUA_GCSTOP, 0);
+	for (const luaL_Reg* lib = defaultLibraries; lib->func; lib++) {
+#if LUA_VERSION_NUM >= 502
+		luaL_requiref(L, lib->name, lib->func, 1);
+		lua_pop(L, 1);
+#else
+		lua_pushcfunction(L, lib->func);
+		lua_pushstring(L, lib->name);
+		lua_call(L, 1, 0);
+#endif
+	}
+	lua_gc(L, LUA_GCRESTART, 0);
+}
+
 LuaCommands::LuaCommands(Commands* commands, const std::string& path, Client* client, TimerFactory* timerFactory, MUCs* mucs) : path_(path), scriptsPath_(boost::filesystem::path(path_) / "scripts") {
 	commands_ = commands;
 	client_ = client;
@@ -405,8 +432,8 @@ void LuaCommands::messageOntoStack(Swift::Message::ref message, lua_State* L) {
 
 void LuaCommands::loadScript(boost::filesystem::path filePath) {
 	std::cout << "Trying to load file from " << filePath << std::endl;
-	lua_State* lua = lua_open();
-	luaL_openlibs(lua);
+	lua_State* lua = luaL_newstate();
+	initialize(lua);
 	lua_pushlightuserdata(lua, this);
 	lua_setfield(lua, LUA_REGISTRYINDEX, LUA_COMMANDS);
 #if BOOST_FILESYSTEM_VERSION == 2 // TODO: Delete this when boost 1.44 becomes a minimum requirement, and we no longer need v2
