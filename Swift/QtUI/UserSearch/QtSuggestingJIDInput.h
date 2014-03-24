@@ -8,7 +8,7 @@
 
 #include <QLineEdit>
 #include <QTreeView>
-
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swift/Controllers/Contact.h>
 
 namespace Swift {
@@ -26,6 +26,8 @@ class QtSuggestingJIDInput : public QLineEdit {
 		const Contact* getContact();
 
 		void setSuggestions(const std::vector<Contact>& suggestions);
+
+		boost::signal<void (const JID&)> onUserSelected;
 
 	signals:
 		void editingDone();

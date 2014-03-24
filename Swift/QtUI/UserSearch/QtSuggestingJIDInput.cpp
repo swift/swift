@@ -131,7 +131,8 @@ void QtSuggestingJIDInput::handleSettingsChanged(const std::string& setting) {
 void QtSuggestingJIDInput::handleClicked(const QModelIndex& index) {
 	if (index.isValid()) {
 		currentContact_ = &contactListModel_->getList()[index.row()];
-		setText(P2QSTRING(currentContact_->jid.toString()));
+		setText("");
+		onUserSelected(currentContact_->jid);
 		hidePopup();
 	}
 }

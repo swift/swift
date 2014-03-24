@@ -10,6 +10,7 @@
 #include <QModelIndex>
 #include <QWizardPage>
 #include <QMovie>
+#include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
@@ -444,6 +445,7 @@ void QtUserSearchWindow::setFirstPage(QString title) {
 		firstMultiJIDPage_ = new QtUserSearchFirstMultiJIDPage(type_, title.isEmpty() ? firstMultiJIDPage_->title() : title, settings_);
 		connect(firstMultiJIDPage_->addContactButton_, SIGNAL(clicked()), this, SLOT(addContact()));
 		connect(firstMultiJIDPage_->jid_, SIGNAL(textEdited(QString)), this, SLOT(handleContactSuggestionRequested(QString)));
+		firstMultiJIDPage_->jid_->onUserSelected.connect(boost::bind(&QtUserSearchWindow::addSearchedJIDToList, this, _1));
 		connect(firstMultiJIDPage_->addViaSearchButton_, SIGNAL(clicked()), this, SLOT(handleAddViaSearch()));
 		connect(firstMultiJIDPage_->contactList_, SIGNAL(onListChanged(std::vector<Contact>)), this, SLOT(handleListChanged(std::vector<Contact>)));
 		connect(firstMultiJIDPage_->contactList_, SIGNAL(onJIDsAdded(std::vector<JID>)), this, SLOT(handleJIDsAdded(std::vector<JID>)));
