@@ -58,16 +58,23 @@ QListWidget* QtFormWidget::createList(FormField::ref field) {
 	listWidget->setSortingEnabled(false);
 	listWidget->setSelectionMode(field->getType() == FormField::ListMultiType ? QAbstractItemView::MultiSelection : QAbstractItemView::SingleSelection);
 	std::vector<bool> selected;
-	foreach (FormField::Option option, field->getOptions()) {
-		listWidget->addItem(option.label.c_str());
-		if (field->getType() == FormField::ListSingleType) {
-			selected.push_back(!field->getValues().empty() && option.value == field->getValues()[0]);
+	/* if this is an editable form, use the 'options' list, otherwise use the 'values' list */
+	if (form_->getType() != Form::FormType) {
+		foreach (const std::string& value, field->getValues()) {
+			listWidget->addItem(P2QSTRING(value));
+			selected.push_back(false);
 		}
-		else if (field->getType() == FormField::ListMultiType) {
-			std::string text = option.value;
-			selected.push_back(std::find(field->getValues().begin(), field->getValues().end(), text) != field->getValues().end());
+	} else {
+		foreach (FormField::Option option, field->getOptions()) {
+			listWidget->addItem(option.label.c_str());
+			if (field->getType() == FormField::ListSingleType) {
+				selected.push_back(!field->getValues().empty() && option.value == field->getValues()[0]);
+			}
+			else if (field->getType() == FormField::ListMultiType) {
+				std::string text = option.value;
+				selected.push_back(std::find(field->getValues().begin(), field->getValues().end(), text) != field->getValues().end());
+			}
 		}
-
 	}
 	for (int i = 0; i < listWidget->count(); i++) {
 		QListWidgetItem* item = listWidget->item(i);
