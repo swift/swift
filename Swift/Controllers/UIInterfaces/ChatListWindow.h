@@ -26,8 +26,25 @@ namespace Swift {
 					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), unreadCount(unreadCount), avatarPath(avatarPath) {}
 					/** Assume that nicks and other transient features aren't important for equality */
 					bool operator==(const Chat& other) const {
-						return jid.toBare() == other.jid.toBare()
-								&& isMUC == other.isMUC;
+						if (impromptuJIDs.empty()) {
+							return jid.toBare() == other.jid.toBare()
+									&& isMUC == other.isMUC;
+						} else { /* compare the chat occupant lists */
+							typedef std::map<std::string, JID> JIDMap;
+							foreach (const JIDMap::value_type& jid, impromptuJIDs) {
+								bool found = false;
+								foreach (const JIDMap::value_type& otherJID, other.impromptuJIDs) {
+									if (jid.second.toBare() == otherJID.second.toBare()) {
+										found = true;
+										break;
+									}
+								}
+								if (!found) {
+									return false;
+								}
+							}
+							return true;
+						}
 					}
 					void setUnreadCount(int unread) {
 						unreadCount = unread;
