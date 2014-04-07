@@ -34,6 +34,7 @@ namespace Swift {
 		public:
 			QtUserSearchFirstMultiJIDPage(UserSearchWindow::Type type, const QString& title, SettingsProvider* settings);
 			virtual bool isComplete() const;
+			void reset();
 
 		signals:
 			void onJIDsDropped(std::vector<JID> jid);

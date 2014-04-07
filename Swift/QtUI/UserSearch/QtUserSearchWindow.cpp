@@ -73,6 +73,7 @@ QtUserSearchWindow::~QtUserSearchWindow() {
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
 	searchNext_ = false;
+	firstMultiJIDPage_->reset();
 	resultsPage_->emitCompletenessCheck();
 	if (page == 1 && lastPage_ == 3) {
 		addSearchedJIDToList(getContactJID());

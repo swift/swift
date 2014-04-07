@@ -57,6 +57,10 @@ bool QtUserSearchFirstMultiJIDPage::isComplete() const {
 	return !contactList_->getList().empty();
 }
 
+void QtUserSearchFirstMultiJIDPage::reset() {
+	reason_->clear();
+}
+
 void QtUserSearchFirstMultiJIDPage::emitCompletenessCheck() {
 	emit completeChanged();
 }
