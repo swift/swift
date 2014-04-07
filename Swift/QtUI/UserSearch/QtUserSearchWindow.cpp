@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -377,6 +377,26 @@ void QtUserSearchWindow::updateContacts(const std::vector<Contact>& contacts) {
 	}
 }
 
+void QtUserSearchWindow::addContacts(const std::vector<Contact>& contacts) {
+	if (type_ != AddContact) {
+		/* prevent duplicate JIDs from appearing in the contact list */
+		foreach (const Contact& newContact, contacts) {
+			bool found = false;
+			foreach (const Contact& oldContact, contactVector_) {
+				if (newContact.jid == oldContact.jid) {
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				contactVector_.push_back(newContact);
+			}
+		}
+		firstMultiJIDPage_->contactList_->setList(contactVector_);
+		firstMultiJIDPage_->emitCompletenessCheck();
+	}
+}
+
 void QtUserSearchWindow::handleAddViaSearch() {
 	searchNext_ = true;
 	next();
@@ -390,7 +410,7 @@ void QtUserSearchWindow::handleListChanged(std::vector<Contact> list) {
 }
 
 void QtUserSearchWindow::handleJIDsAdded(std::vector<JID> jids) {
-	onJIDUpdateRequested(jids);
+	onJIDAddRequested(jids);
 }
 
 void QtUserSearchWindow::setResults(const std::vector<UserSearchResult>& results) {
@@ -449,6 +469,7 @@ void QtUserSearchWindow::setFirstPage(QString title) {
 		connect(firstMultiJIDPage_->addViaSearchButton_, SIGNAL(clicked()), this, SLOT(handleAddViaSearch()));
 		connect(firstMultiJIDPage_->contactList_, SIGNAL(onListChanged(std::vector<Contact>)), this, SLOT(handleListChanged(std::vector<Contact>)));
 		connect(firstMultiJIDPage_->contactList_, SIGNAL(onJIDsAdded(std::vector<JID>)), this, SLOT(handleJIDsAdded(std::vector<JID>)));
+		connect(firstMultiJIDPage_, SIGNAL(onJIDsDropped(std::vector<JID>)), this, SLOT(handleJIDsAdded(std::vector<JID>)));
 		setPage(1, firstMultiJIDPage_);
 	}
 }

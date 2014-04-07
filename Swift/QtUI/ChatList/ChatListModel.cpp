@@ -1,14 +1,18 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include <Swift/QtUI/ChatList/ChatListModel.h>
 
+#include <QMimeData>
+#include <QUrl>
+
 #include <Swift/QtUI/ChatList/ChatListMUCItem.h>
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 #include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
@@ -23,6 +27,14 @@ ChatListModel::ChatListModel() : whiteboards_(NULL) {
 
 	root_->addItem(recents_);
 	root_->addItem(mucBookmarks_);
+}
+
+Qt::ItemFlags ChatListModel::flags(const QModelIndex& index) const {
+	Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+	if (dynamic_cast<ChatListRecentItem*>(getItemForIndex(index))) {
+		flags |= Qt::ItemIsDragEnabled;
+	}
+	return flags;
 }
 
 void ChatListModel::clearBookmarks() {
@@ -78,6 +90,34 @@ void ChatListModel::setRecents(const std::list<ChatListWindow::Chat>& recents) {
 //whiteboards_->addItem(new ChatListRecentItem(chat, whiteboards_));
 	}
 	emit layoutChanged();
+}
+
+QMimeData* ChatListModel::mimeData(const QModelIndexList& indexes) const {
+	QMimeData* data = QAbstractItemModel::mimeData(indexes);
+	ChatListRecentItem *item = dynamic_cast<ChatListRecentItem*>(getItemForIndex(indexes.first()));
+	if (item == NULL) {
+		return data;
+	}
+
+	QByteArray itemData;
+	QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+	const ChatListWindow::Chat& chat = item->getChat();
+
+	QString mimeType = "application/vnd.swift.contact-jid-list";
+	if (!chat.impromptuJIDs.size()) {
+		if (chat.isMUC) {
+			mimeType = "application/vnd.swift.contact-jid-muc";
+		}
+		dataStream << P2QSTRING(chat.jid.toString());
+	} else {
+		typedef std::map<std::string, JID> JIDMap;
+		foreach (const JIDMap::value_type& jid, chat.impromptuJIDs) {
+			dataStream << P2QSTRING(jid.second.toString());
+		}
+	}
+
+	data->setData(mimeType, itemData);
+	return data;
 }
 
 int ChatListModel::columnCount(const QModelIndex& /*parent*/) const {

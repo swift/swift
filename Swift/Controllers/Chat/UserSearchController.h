@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -67,6 +67,7 @@ namespace Swift {
 			void handleAvatarChanged(const JID& jid);
 			void handlePresenceChanged(Presence::ref presence);
 			void handleJIDUpdateRequested(const std::vector<JID>& jids);
+			void handleJIDAddRequested(const std::vector<JID>& jids);
 			Contact convertJIDtoContact(const JID& jid);
 			void endDiscoWalker();
 			void initializeUserWindow();

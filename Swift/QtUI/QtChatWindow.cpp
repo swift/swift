@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -31,6 +31,7 @@
 #include <QTime>
 #include <QToolButton>
 #include <QUrl>
+#include <QMimeData>
 
 #include <Swiften/Base/Log.h>
 
@@ -540,7 +541,7 @@ void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 		if (!isMUC_) {
 			event->acceptProposedAction();
 		}
-	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid")) {
+	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
 		if (isMUC_ || supportsImpromptuChat_) {
 			event->acceptProposedAction();
 		}
@@ -557,15 +558,18 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
 			message.append(boost::make_shared<ChatTextMessagePart>(messageText));
 			addSystemMessage(message, DefaultDirection);
 		}
-	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid")) {
-		QByteArray dataBytes = event->mimeData()->data("application/vnd.swift.contact-jid");
+	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
+		QByteArray dataBytes = event->mimeData()->data("application/vnd.swift.contact-jid-list");
 		QDataStream dataStream(&dataBytes, QIODevice::ReadOnly);
-		QString jidString;
-		dataStream >> jidString;
-		onInviteToChat(std::vector<JID>(1, JID(Q2PSTRING(jidString))));
+		std::vector<JID> invites;
+		while (!dataStream.atEnd()) {
+			QString jidString;
+			dataStream >> jidString;
+			invites.push_back(Q2PSTRING(jidString));
+		}
+		onInviteToChat(invites);
 	}
 }
-
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {
 	treeWidget_->setAvailableOccupantActions(actions);

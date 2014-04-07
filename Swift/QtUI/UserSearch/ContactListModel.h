@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <vector>
@@ -36,7 +42,6 @@ namespace Swift {
 			Qt::ItemFlags flags(const QModelIndex& index) const;
 			int columnCount(const QModelIndex& parent = QModelIndex()) const;
 			QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
-			bool dropMimeData(const QMimeData* data, Qt::DropAction action, int row, int column, const QModelIndex& parent);
 			QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
 			QModelIndex parent(const QModelIndex& index) const;
 			int rowCount(const QModelIndex& parent = QModelIndex()) const;

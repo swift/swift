@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -45,6 +45,7 @@ UserSearchController::~UserSearchController() {
 		window_->onFormRequested.disconnect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 		window_->onSearchRequested.disconnect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
 		window_->onJIDUpdateRequested.disconnect(boost::bind(&UserSearchController::handleJIDUpdateRequested, this, _1));
+		window_->onJIDAddRequested.disconnect(boost::bind(&UserSearchController::handleJIDAddRequested, this, _1));
 		delete window_;
 	}
 	presenceOracle_->onPresenceChange.disconnect(boost::bind(&UserSearchController::handlePresenceChanged, this, _1));
@@ -222,6 +223,14 @@ void UserSearchController::handleJIDUpdateRequested(const std::vector<JID>& jids
 	}
 }
 
+void UserSearchController::handleJIDAddRequested(const std::vector<JID>& jids) {
+	std::vector<Contact> contacts;
+	foreach(const JID& jid, jids) {
+		contacts.push_back(convertJIDtoContact(jid));
+	}
+	window_->addContacts(contacts);
+}
+
 Contact UserSearchController::convertJIDtoContact(const JID& jid) {
 	Contact contact;
 	contact.jid = jid;
@@ -278,6 +287,7 @@ void UserSearchController::initializeUserWindow() {
 		window_->onSearchRequested.connect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
 		window_->onContactSuggestionsRequested.connect(boost::bind(&UserSearchController::handleContactSuggestionsRequested, this, _1));
 		window_->onJIDUpdateRequested.connect(boost::bind(&UserSearchController::handleJIDUpdateRequested, this, _1));
+		window_->onJIDAddRequested.connect(boost::bind(&UserSearchController::handleJIDAddRequested, this, _1));
 		window_->setSelectedService(JID(jid_.getDomain()));
 		window_->clear();
 	}

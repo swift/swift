@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/QtUI/UserSearch/QtContactListWidget.h>
 
 #include <Swift/QtUI/UserSearch/ContactListModel.h>
@@ -20,15 +26,11 @@ QtContactListWidget::QtContactListWidget(QWidget* parent, SettingsProvider* sett
 	contactListModel_ = new ContactListModel(true);
 	setModel(contactListModel_);
 
-	connect(contactListModel_, SIGNAL(onListChanged(std::vector<Contact>)), this, SLOT(handleListChanged(std::vector<Contact>)));
 	connect(contactListModel_, SIGNAL(onListChanged(std::vector<Contact>)), this, SIGNAL(onListChanged(std::vector<Contact>)));
 	connect(contactListModel_, SIGNAL(onJIDsDropped(std::vector<JID>)), this, SIGNAL(onJIDsAdded(std::vector<JID>)));
 
 	setSelectionMode(QAbstractItemView::SingleSelection);
 	setSelectionBehavior(QAbstractItemView::SelectRows);
-	setDragEnabled(true);
-	setAcceptDrops(true);
-	setDropIndicatorShown(true);
 	setUniformRowHeights(true);
 
 	setAlternatingRowColors(true);
@@ -69,12 +71,6 @@ std::vector<Contact> QtContactListWidget::getList() const {
 
 void QtContactListWidget::setMaximumNoOfContactsToOne(bool limited) {
 	limited_ = limited;
-	if (limited) {
-		handleListChanged(getList());
-	} else {
-		setAcceptDrops(true);
-		setDropIndicatorShown(true);
-	}
 }
 
 void QtContactListWidget::updateContacts(const std::vector<Contact>& contactUpdates) {
@@ -88,13 +84,6 @@ void QtContactListWidget::updateContacts(const std::vector<Contact>& contactUpda
 		}
 	}
 	contactListModel_->setList(contacts);
-}
-
-void QtContactListWidget::handleListChanged(std::vector<Contact> list) {
-	if (limited_) {
-		setAcceptDrops(list.size() <= 1);
-		setDropIndicatorShown(list.size() <= 1);
-	}
 }
 
 void QtContactListWidget::handleSettingsChanged(const std::string&) {

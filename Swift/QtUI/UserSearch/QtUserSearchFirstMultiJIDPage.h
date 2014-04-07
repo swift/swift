@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <QWizardPage>
@@ -29,9 +35,14 @@ namespace Swift {
 			QtUserSearchFirstMultiJIDPage(UserSearchWindow::Type type, const QString& title, SettingsProvider* settings);
 			virtual bool isComplete() const;
 
+		signals:
+			void onJIDsDropped(std::vector<JID> jid);
+
 		public slots:
 			void emitCompletenessCheck();
 			void handleEditingDone();
+			virtual void dragEnterEvent(QDragEnterEvent *event);
+			virtual void dropEvent(QDropEvent *event);
 
 		public:
 			QtContactListWidget* contactList_;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -39,6 +39,7 @@ namespace Swift {
 			virtual std::vector<JID> getJIDs() const = 0;
 			virtual void setCanStartImpromptuChats(bool supportsImpromptu) = 0;
 			virtual void updateContacts(const std::vector<Contact>& contacts) = 0;
+			virtual void addContacts(const std::vector<Contact>& contacts) = 0;
 
 			virtual void show() = 0;
 
@@ -47,5 +48,6 @@ namespace Swift {
 			boost::signal<void (const JID&)> onNameSuggestionRequested;
 			boost::signal<void (const std::string&)> onContactSuggestionsRequested;
 			boost::signal<void (const std::vector<JID>&)> onJIDUpdateRequested;
+			boost::signal<void (const std::vector<JID>&)> onJIDAddRequested;
 	};
 }

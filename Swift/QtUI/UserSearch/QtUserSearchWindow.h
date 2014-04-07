@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -50,6 +50,7 @@ namespace Swift {
 			virtual std::vector<JID> getJIDs() const;
 			virtual void setCanStartImpromptuChats(bool supportsImpromptu);
 			virtual void updateContacts(const std::vector<Contact> &contacts);
+			virtual void addContacts(const std::vector<Contact>& contacts);
 
 		protected:
 			virtual int nextId() const;

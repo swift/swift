@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/QtUI/UserSearch/ContactListModel.h>
 
 #include <QMimeData>
@@ -80,43 +86,6 @@ QVariant ContactListModel::data(const QModelIndex& index, int role) const {
 	} else {
 		return QVariant();
 	}
-}
-
-bool ContactListModel::dropMimeData(const QMimeData* data, Qt::DropAction /*action*/, int /*row*/, int /*column*/, const QModelIndex& /*parent*/) {
-	if (!data->hasFormat("application/vnd.swift.contact-jid")) {
-		return false;
-	}
-
-	QByteArray dataBytes = data->data("application/vnd.swift.contact-jid");
-	QDataStream dataStream(&dataBytes, QIODevice::ReadOnly);
-	QString jidString;
-	QString displayName;
-	QString statusText;
-	StatusShow::Type statusType;
-	QString avatarPath;
-
-	dataStream >> jidString;
-	dataStream >> displayName;
-	dataStream >> statusText;
-	dataStream >> statusType;
-	dataStream >> avatarPath;
-
-	JID jid = JID(Q2PSTRING(jidString));
-
-	foreach(const Contact& contact, contacts_) {
-		if (contact.jid == jid) {
-			return false;
-		}
-	}
-
-	emit layoutAboutToBeChanged();
-	contacts_.push_back(Contact(Q2PSTRING(displayName), jid, statusType, Q2PSTRING(avatarPath)));
-	emit layoutChanged();
-
-	onJIDsDropped(std::vector<JID>(1, jid));
-	onListChanged(getList());
-
-	return true;
 }
 
 QModelIndex ContactListModel::index(int row, int column, const QModelIndex& parent) const {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,6 +19,7 @@ namespace Swift {
 		Q_OBJECT
 		public:
 			ChatListModel();
+			Qt::ItemFlags flags(const QModelIndex& index) const;
 			void addMUCBookmark(const MUCBookmark& bookmark);
 			void removeMUCBookmark(const MUCBookmark& bookmark);
 			void addWhiteboardSession(const ChatListWindow::Chat& chat);
@@ -31,6 +32,7 @@ namespace Swift {
 			ChatListItem* getItemForIndex(const QModelIndex& index) const;
 			void clearBookmarks();
 			void setRecents(const std::list<ChatListWindow::Chat>& recents);
+			QMimeData* mimeData(const QModelIndexList& indexes) const;
 		private:
 			ChatListGroupItem* mucBookmarks_;
 			ChatListGroupItem* recents_;

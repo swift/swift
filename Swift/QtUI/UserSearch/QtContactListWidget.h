@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <vector>
@@ -40,9 +46,6 @@ public slots:
 signals:
 	void onListChanged(std::vector<Contact> list);
 	void onJIDsAdded(const std::vector<JID>& jids);
-
-private slots:
-	void handleListChanged(std::vector<Contact> list);
 
 private:
 	void handleSettingsChanged(const std::string&);

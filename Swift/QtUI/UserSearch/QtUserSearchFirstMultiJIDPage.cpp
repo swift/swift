@@ -4,11 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include "Swift/QtUI/UserSearch/QtUserSearchFirstMultiJIDPage.h"
 
+#include <QMessageBox>
+#include <QMimeData>
+#include <QUrl>
+
 #include "Swift/QtUI/QtSwiftUtil.h"
-#include <Swift/QtUI/UserSearch/QtContactListWidget.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/QtUI/UserSearch/QtContactListWidget.h>
 #include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
 
 namespace Swift {
@@ -39,6 +49,8 @@ QtUserSearchFirstMultiJIDPage::QtUserSearchFirstMultiJIDPage(UserSearchWindow::T
 
 	connect(contactList_, SIGNAL(onListChanged(std::vector<Contact>)), this, SLOT(emitCompletenessCheck()));
 	connect(jid_, SIGNAL(editingDone()), this, SLOT(handleEditingDone()));
+
+	setAcceptDrops(true);
 }
 
 bool QtUserSearchFirstMultiJIDPage::isComplete() const {
@@ -51,6 +63,32 @@ void QtUserSearchFirstMultiJIDPage::emitCompletenessCheck() {
 
 void QtUserSearchFirstMultiJIDPage::handleEditingDone() {
 	addContactButton_->setFocus();
+}
+
+void QtUserSearchFirstMultiJIDPage::dragEnterEvent(QDragEnterEvent *event) {
+	if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")
+		|| event->mimeData()->hasFormat("application/vnd.swift.contact-jid-muc")) {
+			event->acceptProposedAction();
+	}
+}
+
+void QtUserSearchFirstMultiJIDPage::dropEvent(QDropEvent *event) {
+	if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
+		QByteArray dataBytes = event->mimeData()->data("application/vnd.swift.contact-jid-list");
+		QDataStream dataStream(&dataBytes, QIODevice::ReadOnly);
+		std::vector<JID> jids;
+		while (!dataStream.atEnd()) {
+			QString jidString;
+			dataStream >> jidString;
+			jids.push_back(Q2PSTRING(jidString));
+		}
+		onJIDsDropped(jids);
+	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-muc")) {
+		QMessageBox* messageBox = new QMessageBox(this);
+		messageBox->setText(tr("You can't invite a room to chat."));
+		messageBox->setWindowTitle(tr("Error inviting room to chat"));
+		messageBox->show();
+	}
 }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -263,16 +263,11 @@ QMimeData* RosterModel::mimeData(const QModelIndexList& indexes) const {
 		return data;
 	}
 
+	/* only a single JID in this list */
 	QByteArray itemData;
 	QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-
-	// jid, chatName, activity, statusType, avatarPath
 	dataStream << P2QSTRING(item->getJID().toString());
-	dataStream << P2QSTRING(item->getDisplayName());
-	dataStream << P2QSTRING(item->getStatusText());
-	dataStream << item->getSimplifiedStatusShow();
-	dataStream << P2QSTRING(item->getAvatarPath().string());
-	data->setData("application/vnd.swift.contact-jid", itemData);
+	data->setData("application/vnd.swift.contact-jid-list", itemData);
 	return data;
 }
 

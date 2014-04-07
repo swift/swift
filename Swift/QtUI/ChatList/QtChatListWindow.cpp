@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,23 +8,24 @@
 
 #include <boost/bind.hpp>
 
-#include <QMenu>
 #include <QContextMenuEvent>
+#include <QMenu>
+#include <QMimeData>
+#include <QUrl>
 
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 #include <Swift/QtUI/ChatList/ChatListMUCItem.h>
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 #include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
 #include <Swift/QtUI/QtAddBookmarkWindow.h>
 #include <Swift/QtUI/QtEditBookmarkWindow.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
-#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
-#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-
 
 namespace Swift {
 
@@ -43,6 +44,7 @@ QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, SettingsProvide
 	expandAll();
 	setAnimated(true);
 	setIndentation(0);
+	setDragEnabled(true);
 	setRootIsDecorated(true);
 	setupContextMenus();
 	connect(this, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
@@ -152,6 +154,11 @@ void QtChatListWindow::handleEditBookmark() {
 	window->show();
 }
 
+void QtChatListWindow::dragEnterEvent(QDragEnterEvent *event) {
+	if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
+		event->acceptProposedAction();
+	}
+}
 
 void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
 	QModelIndex index = indexAt(event->pos());
