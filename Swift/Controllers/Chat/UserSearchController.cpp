@@ -194,7 +194,24 @@ void UserSearchController::handleNameSuggestionRequest(const JID &jid) {
 }
 
 void UserSearchController::handleContactSuggestionsRequested(std::string text) {
-	window_->setContactSuggestions(contactSuggester_->getSuggestions(text));
+	const std::vector<JID> existingJIDs = window_->getJIDs();
+	std::vector<Contact::ref> suggestions = contactSuggester_->getSuggestions(text);
+	std::vector<Contact::ref>::iterator i = suggestions.begin();
+	while (i != suggestions.end()) {
+		bool found = false;
+		foreach (const JID& jid, existingJIDs) {
+			if ((*i)->jid == jid) {
+				found = true;
+				break;
+			}
+		}
+		if (found) {
+			i = suggestions.erase(i);
+		} else {
+			i++;
+		}
+	}
+	window_->setContactSuggestions(suggestions);
 }
 
 void UserSearchController::handleVCardChanged(const JID& jid, VCard::ref vcard) {

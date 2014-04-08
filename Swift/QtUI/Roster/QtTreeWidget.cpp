@@ -31,7 +31,7 @@
 
 namespace Swift {
 
-QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent) : QTreeView(parent), messageTarget_(messageTarget), tooltipShown_(false) {
+QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent) : QTreeView(parent), tooltipShown_(false), messageTarget_(messageTarget) {
 	eventStream_ = eventStream;
 	settings_ = settings;
 	model_ = new RosterModel(this, settings_->getSetting(QtUISettingConstants::USE_SCREENREADER));
