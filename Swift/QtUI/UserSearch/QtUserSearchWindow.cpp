@@ -34,7 +34,7 @@
 
 namespace Swift {
 
-QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(NULL), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
+QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(NULL), firstMultiJIDPage_(NULL), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
 	setupUi(this);
 #ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
@@ -73,7 +73,9 @@ QtUserSearchWindow::~QtUserSearchWindow() {
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
 	searchNext_ = false;
-	firstMultiJIDPage_->reset();
+	if (firstMultiJIDPage_) {
+		firstMultiJIDPage_->reset();
+	}
 	resultsPage_->emitCompletenessCheck();
 	if (page == 1 && lastPage_ == 3) {
 		addSearchedJIDToList(getContactJID());
