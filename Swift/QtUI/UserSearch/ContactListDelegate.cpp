@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/QtUI/UserSearch/ContactListDelegate.h>
 #include <Swift/QtUI/UserSearch/ContactListModel.h>
 #include <Swift/Controllers/Contact.h>
@@ -21,7 +27,7 @@ void ContactListDelegate::paint(QPainter* painter, const QStyleOptionViewItem& o
 	if (!index.isValid()) {
 		return;
 	}
-	const Contact* contact = static_cast<Contact*>(index.internalPointer());
+	const Contact::ref contact = static_cast<Contact*>(index.internalPointer())->shared_from_this();
 	QColor nameColor = index.data(Qt::TextColorRole).value<QColor>();
 	QString avatarPath = index.data(ContactListModel::AvatarRole).value<QString>();
 	QIcon presenceIcon =index.data(ChatListRecentItem::PresenceIconRole).isValid() && !index.data(ChatListRecentItem::PresenceIconRole).value<QIcon>().isNull()

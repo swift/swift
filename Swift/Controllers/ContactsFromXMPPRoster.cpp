@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/Controllers/ContactsFromXMPPRoster.h>
 
 #include <Swiften/Base/foreach.h>
@@ -21,13 +27,13 @@ ContactsFromXMPPRoster::ContactsFromXMPPRoster(XMPPRoster* roster, AvatarManager
 ContactsFromXMPPRoster::~ContactsFromXMPPRoster() {
 }
 
-std::vector<Contact> ContactsFromXMPPRoster::getContacts() {
-	std::vector<Contact> results;
+std::vector<Contact::ref> ContactsFromXMPPRoster::getContacts() {
+	std::vector<Contact::ref> results;
 	std::vector<XMPPRosterItem> rosterItems = roster_->getItems();
 	foreach(const XMPPRosterItem& rosterItem, rosterItems) {
-		Contact contact(rosterItem.getName().empty() ? rosterItem.getJID().toString() : rosterItem.getName(), rosterItem.getJID(), StatusShow::None,"");
-		contact.statusType = presenceOracle_->getHighestPriorityPresence(contact.jid) ? presenceOracle_->getHighestPriorityPresence(contact.jid)->getShow() : StatusShow::None;
-		contact.avatarPath = avatarManager_->getAvatarPath(contact.jid);
+		Contact::ref contact = boost::make_shared<Contact>(rosterItem.getName().empty() ? rosterItem.getJID().toString() : rosterItem.getName(), rosterItem.getJID(), StatusShow::None,"");
+		contact->statusType = presenceOracle_->getHighestPriorityPresence(contact->jid) ? presenceOracle_->getHighestPriorityPresence(contact->jid)->getShow() : StatusShow::None;
+		contact->avatarPath = avatarManager_->getAvatarPath(contact->jid);
 		results.push_back(contact);
 	}
 	return results;

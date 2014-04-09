@@ -43,14 +43,14 @@ namespace Swift {
 			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields);
 			virtual void setNameSuggestions(const std::vector<std::string>& suggestions);
 			virtual void prepopulateJIDAndName(const JID& jid, const std::string& name);
-			virtual void setContactSuggestions(const std::vector<Contact>& suggestions);
+			virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions);
 			virtual void setJIDs(const std::vector<JID> &jids);
 			virtual void setRoomJID(const JID &roomJID);
 			virtual std::string getReason() const;
 			virtual std::vector<JID> getJIDs() const;
 			virtual void setCanStartImpromptuChats(bool supportsImpromptu);
-			virtual void updateContacts(const std::vector<Contact> &contacts);
-			virtual void addContacts(const std::vector<Contact>& contacts);
+			virtual void updateContacts(const std::vector<Contact::ref> &contacts);
+			virtual void addContacts(const std::vector<Contact::ref>& contacts);
 
 		protected:
 			virtual int nextId() const;
@@ -62,7 +62,7 @@ namespace Swift {
 			void handleContactSuggestionRequested(const QString& text);
 			void addContact();
 			void handleAddViaSearch();
-			void handleListChanged(std::vector<Contact> list);
+			void handleListChanged(std::vector<Contact::ref> list);
 			void handleJIDsAdded(std::vector<JID> jids);
 
 		private:
@@ -91,7 +91,7 @@ namespace Swift {
 			JID myServer_;
 			JID roomJID_;
 			int lastPage_;
-			std::vector<Contact> contactVector_;
+			std::vector<Contact::ref> contactVector_;
 			SettingsProvider* settings_;
 			bool searchNext_;
 			bool supportsImpromptu_;

@@ -215,7 +215,7 @@ void UserSearchController::handlePresenceChanged(Presence::ref presence) {
 
 void UserSearchController::handleJIDUpdateRequested(const std::vector<JID>& jids) {
 	if (window_) {
-		std::vector<Contact> updates;
+		std::vector<Contact::ref> updates;
 		foreach(const JID& jid, jids) {
 			updates.push_back(convertJIDtoContact(jid));
 		}
@@ -224,40 +224,40 @@ void UserSearchController::handleJIDUpdateRequested(const std::vector<JID>& jids
 }
 
 void UserSearchController::handleJIDAddRequested(const std::vector<JID>& jids) {
-	std::vector<Contact> contacts;
+	std::vector<Contact::ref> contacts;
 	foreach(const JID& jid, jids) {
 		contacts.push_back(convertJIDtoContact(jid));
 	}
 	window_->addContacts(contacts);
 }
 
-Contact UserSearchController::convertJIDtoContact(const JID& jid) {
-	Contact contact;
-	contact.jid = jid;
+Contact::ref UserSearchController::convertJIDtoContact(const JID& jid) {
+	Contact::ref contact = boost::make_shared<Contact>();
+	contact->jid = jid;
 
 	// name lookup
 	boost::optional<XMPPRosterItem> rosterItem = rosterController_->getItem(jid);
 	if (rosterItem && !rosterItem->getName().empty()) {
-		contact.name = rosterItem->getName();
+		contact->name = rosterItem->getName();
 	} else {
 		VCard::ref vcard = vcardManager_->getVCard(jid);
 		if (vcard && !vcard->getFullName().empty()) {
-			contact.name = vcard->getFullName();
+			contact->name = vcard->getFullName();
 		} else {
-			contact.name = jid.toString();
+			contact->name = jid.toString();
 		}
 	}
 
 	// presence lookup
 	Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid);
 	if (presence) {
-		contact.statusType = presence->getShow();
+		contact->statusType = presence->getShow();
 	} else {
-		contact.statusType = StatusShow::None;
+		contact->statusType = StatusShow::None;
 	}
 
 	// avatar lookup
-	contact.avatarPath = avatarManager_->getAvatarPath(jid);
+	contact->avatarPath = avatarManager_->getAvatarPath(jid);
 	return contact;
 }
 

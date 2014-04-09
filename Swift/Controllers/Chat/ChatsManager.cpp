@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -929,11 +929,11 @@ std::vector<ChatListWindow::Chat> ChatsManager::getRecentChats() const {
 	return std::vector<ChatListWindow::Chat>(recentChats_.begin(), recentChats_.end());
 }
 
-std::vector<Contact> Swift::ChatsManager::getContacts() {
-	std::vector<Contact> result;
+std::vector<Contact::ref> Swift::ChatsManager::getContacts() {
+	std::vector<Contact::ref> result;
 	foreach (ChatListWindow::Chat chat, recentChats_) {
 		if (!chat.isMUC) {
-			result.push_back(Contact(chat.chatName.empty() ? chat.jid.toString() : chat.chatName, chat.jid, chat.statusType, chat.avatarPath));
+			result.push_back(boost::make_shared<Contact>(chat.chatName.empty() ? chat.jid.toString() : chat.chatName, chat.jid, chat.statusType, chat.avatarPath));
 		}
 	}
 	return result;

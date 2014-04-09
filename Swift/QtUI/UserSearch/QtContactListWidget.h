@@ -36,15 +36,16 @@ public:
 	QtContactListWidget(QWidget* parent, SettingsProvider* settings);
 	virtual ~QtContactListWidget();
 
-	void setList(const std::vector<Contact>& list);
-	std::vector<Contact> getList() const;
+	void setList(const std::vector<Contact::ref>& list);
+	std::vector<Contact::ref> getList() const;
+	Contact::ref getContact(const size_t i);
 	void setMaximumNoOfContactsToOne(bool limited);
 
 public slots:
-	void updateContacts(const std::vector<Contact>& contactUpdates);
+	void updateContacts(const std::vector<Contact::ref>& contactUpdates);
 
 signals:
-	void onListChanged(std::vector<Contact> list);
+	void onListChanged(std::vector<Contact::ref> list);
 	void onJIDsAdded(const std::vector<JID>& jids);
 
 private:

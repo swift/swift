@@ -7,18 +7,20 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+
 #include <map>
 #include <vector>
-#include <Swiften/Base/boost_bsignals.h>
-
-#include <Swiften/Elements/SearchPayload.h>
 #include <string>
-#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/Contact.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
-#include <Swiften/Elements/VCard.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/SearchPayload.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class UIEventStream;
@@ -32,7 +34,6 @@ namespace Swift {
 	class ContactSuggester;
 	class AvatarManager;
 	class PresenceOracle;
-	class Contact;
 
 	class UserSearchResult {
 		public:
@@ -68,7 +69,7 @@ namespace Swift {
 			void handlePresenceChanged(Presence::ref presence);
 			void handleJIDUpdateRequested(const std::vector<JID>& jids);
 			void handleJIDAddRequested(const std::vector<JID>& jids);
-			Contact convertJIDtoContact(const JID& jid);
+			Contact::ref convertJIDtoContact(const JID& jid);
 			void endDiscoWalker();
 			void initializeUserWindow();
 

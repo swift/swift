@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
 #include <Swift/QtUI/UserSearch/ContactListDelegate.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
@@ -23,7 +29,7 @@
 
 namespace Swift {
 
-QtSuggestingJIDInput::QtSuggestingJIDInput(QWidget* parent, SettingsProvider* settings) : QLineEdit(parent), settings_(settings), currentContact_(NULL) {
+QtSuggestingJIDInput::QtSuggestingJIDInput(QWidget* parent, SettingsProvider* settings) : QLineEdit(parent), settings_(settings) {
 	treeViewPopup_ = new QTreeView();
 	treeViewPopup_->setWindowFlags(Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::X11BypassWindowManagerHint);
 	//treeViewPopup_->setAttribute(Qt::WA_ShowWithoutActivating);
@@ -57,30 +63,31 @@ QtSuggestingJIDInput::~QtSuggestingJIDInput() {
 	delete treeViewPopup_;
 }
 
-const Contact* QtSuggestingJIDInput::getContact() {
-	if (currentContact_ != NULL) {
+Contact::ref QtSuggestingJIDInput::getContact() {
+	if (!!currentContact_) {
 		return currentContact_;
-	} else {
-		if (!text().isEmpty()) {
-			JID jid(Q2PSTRING(text()));
-			if (jid.isValid()) {
-				manualContact_.name = jid.toString();
-				manualContact_.jid = jid;
-				return &manualContact_;
-			}
-		}
-		return NULL;
 	}
+
+	if (!text().isEmpty()) {
+		JID jid(Q2PSTRING(text()));
+		if (jid.isValid()) {
+			Contact::ref manualContact = boost::make_shared<Contact>();
+			manualContact->name = jid.toString();
+			manualContact->jid = jid;
+			return manualContact;
+		}
+	}
+	return boost::shared_ptr<Contact>();
 }
 
-void QtSuggestingJIDInput::setSuggestions(const std::vector<Contact>& suggestions) {
+void QtSuggestingJIDInput::setSuggestions(const std::vector<Contact::ref>& suggestions) {
 	contactListModel_->setList(suggestions);
 	positionPopup();
 	if (!suggestions.empty()) {
 		treeViewPopup_->setCurrentIndex(contactListModel_->index(0, 0));
 		showPopup();
 	} else {
-		currentContact_ = NULL;
+		currentContact_.reset();
 	}
 }
 
@@ -100,12 +107,12 @@ void QtSuggestingJIDInput::keyPressEvent(QKeyEvent* event) {
 	} else if (event->key() == Qt::Key_Return && treeViewPopup_->isVisible()) {
 		QModelIndex index = treeViewPopup_->currentIndex();
 		if (!contactListModel_->getList().empty() && index.isValid()) {
-			currentContact_ = &contactListModel_->getList()[index.row()];
+			currentContact_ = contactListModel_->getContact(index.row());
 			setText(P2QSTRING(currentContact_->jid.toString()));
 			hidePopup();
 			clearFocus();
 		} else {
-			currentContact_ = NULL;
+			currentContact_.reset();
 		}
 		editingDone();
 	} else {
@@ -130,7 +137,7 @@ void QtSuggestingJIDInput::handleSettingsChanged(const std::string& setting) {
 
 void QtSuggestingJIDInput::handleClicked(const QModelIndex& index) {
 	if (index.isValid()) {
-		currentContact_ = &contactListModel_->getList()[index.row()];
+		currentContact_ = contactListModel_->getContact(index.row());
 		setText("");
 		onUserSelected(currentContact_->jid);
 		hidePopup();

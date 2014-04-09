@@ -47,7 +47,7 @@ QtUserSearchFirstMultiJIDPage::QtUserSearchFirstMultiJIDPage(UserSearchWindow::T
 	jid_ = new QtSuggestingJIDInput(this, settings);
 	horizontalLayout_6->insertWidget(0, jid_);
 
-	connect(contactList_, SIGNAL(onListChanged(std::vector<Contact>)), this, SLOT(emitCompletenessCheck()));
+	connect(contactList_, SIGNAL(onListChanged(std::vector<Contact::ref>)), this, SLOT(emitCompletenessCheck()));
 	connect(jid_, SIGNAL(editingDone()), this, SLOT(handleEditingDone()));
 
 	setAcceptDrops(true);

@@ -32,14 +32,14 @@ namespace Swift {
 			virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields) = 0;
 			virtual void setNameSuggestions(const std::vector<std::string>& suggestions) = 0;
 			virtual void prepopulateJIDAndName(const JID& jid, const std::string& name) = 0;
-			virtual void setContactSuggestions(const std::vector<Contact>& suggestions) = 0;
+			virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions) = 0;
 			virtual void setJIDs(const std::vector<JID>&) = 0;
 			virtual void setRoomJID(const JID& roomJID) = 0;
 			virtual std::string getReason() const = 0;
 			virtual std::vector<JID> getJIDs() const = 0;
 			virtual void setCanStartImpromptuChats(bool supportsImpromptu) = 0;
-			virtual void updateContacts(const std::vector<Contact>& contacts) = 0;
-			virtual void addContacts(const std::vector<Contact>& contacts) = 0;
+			virtual void updateContacts(const std::vector<Contact::ref>& contacts) = 0;
+			virtual void addContacts(const std::vector<Contact::ref>& contacts) = 0;
 
 			virtual void show() = 0;
 

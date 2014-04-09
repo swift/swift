@@ -52,14 +52,18 @@ QDataStream& operator >>(QDataStream& in, StatusShow::Type& e){
 ContactListModel::ContactListModel(bool editable) : QAbstractItemModel(), editable_(editable) {
 }
 
-void ContactListModel::setList(const std::vector<Contact>& list) {
+void ContactListModel::setList(const std::vector<Contact::ref>& list) {
 	emit layoutAboutToBeChanged();
 	contacts_ = list;
 	emit layoutChanged();
 }
 
-const std::vector<Contact>& ContactListModel::getList() const {
+const std::vector<Contact::ref>& ContactListModel::getList() const {
 	return contacts_;
+}
+
+Contact::ref ContactListModel::getContact(const size_t i) const {
+	return contacts_[i];
 }
 
 Qt::ItemFlags ContactListModel::flags(const QModelIndex& index) const {
@@ -78,9 +82,9 @@ int ContactListModel::columnCount(const QModelIndex&) const {
 
 QVariant ContactListModel::data(const QModelIndex& index, int role) const {
 	if (boost::numeric_cast<size_t>(index.row()) < contacts_.size()) {
-		const Contact& contact = contacts_[index.row()];
+		const Contact::ref& contact = contacts_[index.row()];
 		if (role == Qt::EditRole) {
-			return P2QSTRING(contact.jid.toString());
+			return P2QSTRING(contact->jid.toString());
 		}
 		return dataForContact(contact, role);
 	} else {
@@ -93,7 +97,7 @@ QModelIndex ContactListModel::index(int row, int column, const QModelIndex& pare
 		return QModelIndex();
 	}
 
-	return boost::numeric_cast<size_t>(row) < contacts_.size() ? createIndex(row, column, (void*)&(contacts_[row])) : QModelIndex();
+	return boost::numeric_cast<size_t>(row) < contacts_.size() ? createIndex(row, column, contacts_[row].get()) : QModelIndex();
 }
 
 QModelIndex ContactListModel::parent(const QModelIndex& index) const {
@@ -118,18 +122,18 @@ bool ContactListModel::removeRows(int row, int /*count*/, const QModelIndex& /*p
 	return false;
 }
 
-QVariant ContactListModel::dataForContact(const Contact& contact, int role) const {
+QVariant ContactListModel::dataForContact(const Contact::ref& contact, int role) const {
 	switch (role) {
-		case Qt::DisplayRole: return P2QSTRING(contact.name);
-		case DetailTextRole: return P2QSTRING(contact.jid.toString());
-		case AvatarRole: return QVariant(P2QSTRING(pathToString(contact.avatarPath)));
+		case Qt::DisplayRole: return P2QSTRING(contact->name);
+		case DetailTextRole: return P2QSTRING(contact->jid.toString());
+		case AvatarRole: return QVariant(P2QSTRING(pathToString(contact->avatarPath)));
 		case PresenceIconRole: return getPresenceIconForContact(contact);
 		default: return QVariant();
 	}
 }
 
-QIcon ContactListModel::getPresenceIconForContact(const Contact& contact) const {
-	return QIcon(statusShowTypeToIconPath(contact.statusType));
+QIcon ContactListModel::getPresenceIconForContact(const Contact::ref& contact) const {
+	return QIcon(statusShowTypeToIconPath(contact->statusType));
 }
 
 }

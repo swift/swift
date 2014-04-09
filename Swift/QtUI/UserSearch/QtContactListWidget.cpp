@@ -26,7 +26,7 @@ QtContactListWidget::QtContactListWidget(QWidget* parent, SettingsProvider* sett
 	contactListModel_ = new ContactListModel(true);
 	setModel(contactListModel_);
 
-	connect(contactListModel_, SIGNAL(onListChanged(std::vector<Contact>)), this, SIGNAL(onListChanged(std::vector<Contact>)));
+	connect(contactListModel_, SIGNAL(onListChanged(std::vector<Contact::ref>)), this, SIGNAL(onListChanged(std::vector<Contact::ref>)));
 	connect(contactListModel_, SIGNAL(onJIDsDropped(std::vector<JID>)), this, SIGNAL(onJIDsAdded(std::vector<JID>)));
 
 	setSelectionMode(QAbstractItemView::SingleSelection);
@@ -61,23 +61,27 @@ QtContactListWidget::~QtContactListWidget() {
 	delete removableItemDelegate_;
 }
 
-void QtContactListWidget::setList(const std::vector<Contact>& list) {
+void QtContactListWidget::setList(const std::vector<Contact::ref>& list) {
 	contactListModel_->setList(list);
 }
 
-std::vector<Contact> QtContactListWidget::getList() const {
+std::vector<Contact::ref> QtContactListWidget::getList() const {
 	return contactListModel_->getList();
+}
+
+Contact::ref QtContactListWidget::getContact(const size_t i) {
+	return contactListModel_->getContact(i);
 }
 
 void QtContactListWidget::setMaximumNoOfContactsToOne(bool limited) {
 	limited_ = limited;
 }
 
-void QtContactListWidget::updateContacts(const std::vector<Contact>& contactUpdates) {
-	std::vector<Contact> contacts = contactListModel_->getList();
-	foreach(const Contact& contactUpdate, contactUpdates) {
+void QtContactListWidget::updateContacts(const std::vector<Contact::ref>& contactUpdates) {
+	std::vector<Contact::ref> contacts = contactListModel_->getList();
+	foreach(const Contact::ref& contactUpdate, contactUpdates) {
 		for(size_t n = 0; n < contacts.size(); n++) {
-			if (contactUpdate.jid == contacts[n].jid) {
+			if (contactUpdate->jid == contacts[n]->jid) {
 				contacts[n] = contactUpdate;
 				break;
 			}

@@ -36,8 +36,9 @@ namespace Swift {
 		public:
 			ContactListModel(bool editable);
 
-			void setList(const std::vector<Contact>& list);
-			const std::vector<Contact>& getList() const;
+			void setList(const std::vector<Contact::ref>& list);
+			const std::vector<Contact::ref>& getList() const;
+			Contact::ref getContact(const size_t i) const;
 
 			Qt::ItemFlags flags(const QModelIndex& index) const;
 			int columnCount(const QModelIndex& parent = QModelIndex()) const;
@@ -48,16 +49,16 @@ namespace Swift {
 			bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
 		private:
-			QVariant dataForContact(const Contact& contact, int role) const;
-			QIcon getPresenceIconForContact(const Contact& contact) const;
+			QVariant dataForContact(const Contact::ref& contact, int role) const;
+			QIcon getPresenceIconForContact(const Contact::ref& contact) const;
 
 		signals:
-			void onListChanged(std::vector<Contact> list);
+			void onListChanged(std::vector<Contact::ref> list);
 			void onJIDsDropped(const std::vector<JID>& contact);
 
 		private:
 			bool editable_;
-			std::vector<Contact> contacts_;
+			std::vector<Contact::ref> contacts_;
 	};
 
 }

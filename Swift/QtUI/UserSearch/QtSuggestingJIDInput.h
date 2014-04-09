@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <QLineEdit>
@@ -23,9 +29,9 @@ class QtSuggestingJIDInput : public QLineEdit {
 		QtSuggestingJIDInput(QWidget* parent, SettingsProvider* settings);
 		virtual ~QtSuggestingJIDInput();
 
-		const Contact* getContact();
+		Contact::ref getContact();
 
-		void setSuggestions(const std::vector<Contact>& suggestions);
+		void setSuggestions(const std::vector<Contact::ref>& suggestions);
 
 		boost::signal<void (const JID&)> onUserSelected;
 
@@ -52,8 +58,7 @@ class QtSuggestingJIDInput : public QLineEdit {
 		ContactListModel* contactListModel_;
 		QTreeView* treeViewPopup_;
 		ContactListDelegate* contactListDelegate_;
-		Contact manualContact_;
-		const Contact* currentContact_;
+		Contact::ref currentContact_;
 };
 
 }
