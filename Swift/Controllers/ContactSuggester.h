@@ -17,6 +17,8 @@
 
 #include <Swift/Controllers/Contact.h>
 
+class ContactSuggesterTest;
+
 namespace Swift {
 	class ContactProvider;
 
@@ -28,15 +30,12 @@ namespace Swift {
 		void addContactProvider(ContactProvider* provider);
 
 		std::vector<Contact::ref> getSuggestions(const std::string& search) const;
-	private:
+	public:
 		static bool matchContact(const std::string& search, const Contact::ref& c);
 		/**
 		 * Performs fuzzy matching on the string text. Matches when each character of match string is present in sequence in text string.
 		 */
 		static bool fuzzyMatch(std::string text, std::string match);
-		static bool contactLexicographicalSortPredicate(const Contact::ref& a, const Contact::ref& b);
-		static bool contactEqualityPredicate(const Contact::ref& a, const Contact::ref& b);
-		static bool contactSmartSortPredicate(const Contact::ref& a, const Contact::ref& b);
 
 	private:
 		std::vector<ContactProvider*> contactProviders_;

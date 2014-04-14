@@ -12,7 +12,9 @@
 
 #include <Swift/Controllers/ContactSuggester.h>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find.hpp>
+#include <boost/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
 
@@ -51,11 +53,11 @@ std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& se
 		append(results, provider->getContacts());
 	}
 
-	std::sort(results.begin(), results.end(), ContactSuggester::contactLexicographicalSortPredicate);
-	results.erase(std::unique(results.begin(), results.end(), ContactSuggester::contactEqualityPredicate), results.end());
-	results.erase(std::remove_if(results.begin(), results.end(), !lambda::bind(&ContactSuggester::matchContact, search, lambda::_1)),
+	std::sort(results.begin(), results.end(), Contact::lexicographicalSortPredicate);
+	results.erase(std::unique(results.begin(), results.end(), Contact::equalityPredicate), results.end());
+	results.erase(std::remove_if(results.begin(), results.end(), !lambda::bind(&matchContact, search, lambda::_1)),
 		results.end());
-	std::sort(results.begin(), results.end(), ContactSuggester::contactSmartSortPredicate);
+	std::sort(results.begin(), results.end(), boost::bind(&Contact::sortPredicate, _1, _2, search));
 
 	return results;
 }
@@ -70,22 +72,6 @@ bool ContactSuggester::fuzzyMatch(std::string text, std::string match) {
 		text.erase(result);
 	}
 	return true;
-}
-
-bool ContactSuggester::contactLexicographicalSortPredicate(const Contact::ref& a, const Contact::ref& b) {
-	return a->jid < b->jid;
-}
-
-bool ContactSuggester::contactEqualityPredicate(const Contact::ref& a, const Contact::ref& b) {
-	return a->jid == b->jid;
-}
-
-bool ContactSuggester::contactSmartSortPredicate(const Contact::ref& a, const Contact::ref& b) {
-	if (a->statusType == b->statusType) {
-		return a->name.compare(b->name) < 0;
-	} else {
-		return a->statusType < b->statusType;
-	}
 }
 
 }

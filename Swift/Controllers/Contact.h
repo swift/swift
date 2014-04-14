@@ -27,6 +27,10 @@ class Contact : public boost::enable_shared_from_this<Contact> {
 		Contact();
 		Contact(const std::string& name, const JID& jid, StatusShow::Type statusType, const boost::filesystem::path& path);
 
+		static bool lexicographicalSortPredicate(const Contact::ref& a, const Contact::ref& b);
+		static bool equalityPredicate(const Contact::ref& a, const Contact::ref& b);
+		static bool sortPredicate(const Contact::ref& a, const Contact::ref& b, const std::string& search);
+
 	public:
 		std::string name;
 		JID jid;
