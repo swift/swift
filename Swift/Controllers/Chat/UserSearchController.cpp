@@ -98,6 +98,7 @@ void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 				window_->prepopulateJIDAndName(jid, name);
 			}
 		} else if (inviteToMUCRequest) {
+			window_->setCanSupplyDescription(!inviteToMUCRequest->isImpromptu());
 			window_->setJIDs(inviteToMUCRequest->getInvites());
 			window_->setRoomJID(inviteToMUCRequest->getRoom());
 		}

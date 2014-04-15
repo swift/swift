@@ -399,6 +399,11 @@ void QtUserSearchWindow::addContacts(const std::vector<Contact::ref>& contacts) 
 	}
 }
 
+void QtUserSearchWindow::setCanSupplyDescription(bool allowed) {
+	firstMultiJIDPage_->label->setVisible(allowed);
+	firstMultiJIDPage_->reason_->setVisible(allowed);
+}
+
 void QtUserSearchWindow::handleAddViaSearch() {
 	searchNext_ = true;
 	next();

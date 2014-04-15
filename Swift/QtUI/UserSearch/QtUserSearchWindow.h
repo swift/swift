@@ -51,6 +51,7 @@ namespace Swift {
 			virtual void setCanStartImpromptuChats(bool supportsImpromptu);
 			virtual void updateContacts(const std::vector<Contact::ref> &contacts);
 			virtual void addContacts(const std::vector<Contact::ref>& contacts);
+			virtual void setCanSupplyDescription(bool allowed);
 
 		protected:
 			virtual int nextId() const;

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
@@ -17,7 +23,13 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<RequestInviteToMUCUIEvent> ref;
 
-			RequestInviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite) : room_(room), invite_(JIDsToInvite) {
+			enum ImpromptuMode {
+				Impromptu,
+				NotImpromptu
+			};
+
+			RequestInviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite, ImpromptuMode impromptu) : room_(room), invite_(JIDsToInvite) {
+				isImpromptu_ = impromptu == Impromptu;
 			}
 
 			const JID& getRoom() const {
@@ -28,8 +40,13 @@ namespace Swift {
 				return invite_;
 			}
 
+			bool isImpromptu() const {
+				return isImpromptu_;
+			}
+
 		private:
 			JID room_;
 			std::vector<JID> invite_;
+			bool isImpromptu_;
 	};
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -296,7 +296,7 @@ void ChatController::handleUnblockUserRequest() {
 }
 
 void ChatController::handleInviteToChat(const std::vector<JID>& droppedJIDs) {
-	boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs));
+	boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs, RequestInviteToMUCUIEvent::Impromptu));
 	eventStream_->send(event);
 }
 
