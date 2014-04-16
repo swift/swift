@@ -335,12 +335,12 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 	joined_ = true;
 	std::string joinMessage;
 	if (isImpromptu_) {
-		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered chat as %1%.")) % nick);
+		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have joined the chat as %1%.")) % nick);
 	} else {
 		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	}
 	setNick(nick);
-	chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(joinMessage), ChatWindow::DefaultDirection);
+	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(joinMessage));
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	addRecentLogs();
@@ -587,7 +587,7 @@ void MUCController::setOnline(bool online) {
 		if (shouldJoinOnReconnect_) {
 			renameCounter_ = 0;
 			if (isImpromptu_) {
-				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to enter chat")), ChatWindow::DefaultDirection);
+				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to join chat")), ChatWindow::DefaultDirection);
 			} else {
 				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
 			}
@@ -631,7 +631,21 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 			case MUC::Disconnect:
 			case MUC::LeavePart: break;
 		}
-		partMessage = str(format(QT_TRANSLATE_NOOP("", "%1% has left the room%2%")) % occupant.getNick() % partType);
+		if (isImpromptu_) {
+			partMessage = str(format(QT_TRANSLATE_NOOP("", "%1% has left the chat%2%")) % occupant.getNick() % partType);
+		} else {
+			partMessage = str(format(QT_TRANSLATE_NOOP("", "%1% has left the room%2%")) % occupant.getNick() % partType);
+		}
+	}
+	else if (isImpromptu_) {
+		switch (type) {
+			case MUC::LeaveKick:
+			case MUC::LeaveBan: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "You have been removed from this chat"); break;
+			case MUC::LeaveNotMember: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "You have been removed from this chat"); break;
+			case MUC::LeaveDestroy: clearPresenceQueue(); clearAfter = true; partMessage = QT_TRANSLATE_NOOP("", "This chat has ended"); break;
+			case MUC::Disconnect:
+			case MUC::LeavePart: partMessage = QT_TRANSLATE_NOOP("", "You have left the chat");
+		}
 	}
 	else {
 		switch (type) {
