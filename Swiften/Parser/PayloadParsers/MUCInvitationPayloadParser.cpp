@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include <Swiften/Parser/PayloadParsers/MUCInvitationPayloadParser.h>
-
-
+#include <Swiften/Parser/Tree/NullParserElement.h>
 
 namespace Swift {
 
@@ -17,7 +16,8 @@ void MUCInvitationPayloadParser::handleTree(ParserElement::ref root) {
 	invite->setPassword(root->getAttributes().getAttribute("password"));
 	invite->setReason(root->getAttributes().getAttribute("reason"));
 	invite->setThread(root->getAttributes().getAttribute("thread"));
-	invite->setIsImpromptu(root->getChild("impromptu", "http://swift.im/impromptu") ? true : false);
+	ParserElement::ref impromptuNode = root->getChild("impromptu", "http://swift.im/impromptu");
+	invite->setIsImpromptu(!boost::dynamic_pointer_cast<NullParserElement>(impromptuNode));
 }
 
 }

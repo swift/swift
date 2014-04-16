@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Roster/XMPPRoster.h>
@@ -18,8 +24,12 @@ namespace Swift {
 			}
 
 			bool isAutoAcceptedInvite(const JID& from, MUCInvitationPayload::ref invite) {
-				if (!invite->getIsImpromptu() && !invite->getIsContinuation()) {
-					return false;
+				if (!invite->getIsImpromptu()) {
+					return false; /* always ask the user for normal MUC invites */
+				}
+
+				if (invite->getIsContinuation()) {
+					return true;
 				}
 
 				std::string auto_accept_mode = settings_->getSetting(SettingConstants::INVITE_AUTO_ACCEPT_MODE);
