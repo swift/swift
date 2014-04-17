@@ -190,7 +190,11 @@ QString RosterModel::getJID(RosterItem* item) const {
 
 QString RosterModel::getDisplayJID(RosterItem* item) const {
 	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	return contact ? P2QSTRING(contact->getDisplayJID().toString()) : QString();
+	QString result = contact ? P2QSTRING(contact->getDisplayJID().toString()) : QString();
+	if (result.isEmpty()) {
+		result = getJID(item);
+	}
+	return result;
 }
 
 QIcon RosterModel::getPresenceIcon(RosterItem* item) const {

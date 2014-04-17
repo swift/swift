@@ -138,23 +138,16 @@ void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex&
 }
 
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
-	switch (messageTarget_) {
-	case MessageDisplayJID: {
-		QString indexJID = index.data(DisplayJIDRole).toString();
-		if (!indexJID.isEmpty()) {
-			JID target = JID(Q2PSTRING(indexJID)).toBare();
-			eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
-			break;
-		}
+	JID target;
+	if (messageTarget_ == MessageDisplayJID) {
+		target = JID(Q2PSTRING(index.data(DisplayJIDRole).toString()));
+		target = target.toBare();
 	}
-	case MessageDefaultJID: {
-		QString indexJID = index.data(JIDRole).toString();
-		if (!indexJID.isEmpty()) {
-			JID target = JID(Q2PSTRING(indexJID));
-			eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
-		}
-		break;
+	if (!target.isValid()) {
+		target = JID(Q2PSTRING(index.data(JIDRole).toString()));
 	}
+	if (target.isValid()) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
 	}
 }
 
