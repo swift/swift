@@ -109,7 +109,7 @@ MUCController::MUCController (
 	muc_->onAffiliationListReceived.connect(boost::bind(&MUCController::handleAffiliationListReceived, this, _1, _2));
 	muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
 	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
-	highlighter_->setMode(Highlighter::MUCMode);
+	highlighter_->setMode(isImpromptu_ ? Highlighter::ChatMode : Highlighter::MUCMode);
 	highlighter_->setNick(nick_);
 	if (timerFactory) {
 		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
@@ -494,12 +494,14 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 	clearPresenceQueue();
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>() && messageEvent->isReadable()
-) {
+	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>() && messageEvent->isReadable()) {
 		chatWindow_->flash();
 	}
 	else {
 		messageEvent->setTargetsMe(false);
+	}
+	if (messageEvent->isReadable() && isImpromptu_) {
+		chatWindow_->flash(); /* behave like a regular char*/
 	}
 	if (joined_) {
 		std::string nick = message->getFrom().getResource();
@@ -529,10 +531,12 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 
 void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction& highlight) {
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>()) {
-		eventController_->handleIncomingEvent(messageEvent);
-		if (!messageEvent->getConcluded()) {
-			highlighter_->handleHighlightAction(highlight);
+	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {
+		if (messageTargetsMe(message) || isImpromptu_) {
+			eventController_->handleIncomingEvent(messageEvent);
+			if (!messageEvent->getConcluded()) {
+				highlighter_->handleHighlightAction(highlight);
+			}
 		}
 	}
 }
