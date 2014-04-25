@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Kevin Smith
+ * Copyright (c) 2013-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,6 +15,11 @@ using namespace Swift;
 class ChatMessageParserTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ChatMessageParserTest);
 	CPPUNIT_TEST(testFullBody);
+	CPPUNIT_TEST(testOneEmoticon);
+	CPPUNIT_TEST(testBareEmoticon);
+	CPPUNIT_TEST(testHiddenEmoticon);
+	CPPUNIT_TEST(testEndlineEmoticon);
+	CPPUNIT_TEST(testBoundedEmoticons);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -38,6 +43,7 @@ public:
 
 	void assertEmoticon(const ChatWindow::ChatMessage& result, size_t index, const std::string& text, const std::string& path) {
 		boost::shared_ptr<ChatWindow::ChatEmoticonMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatEmoticonMessagePart>(result.getParts()[index]);
+		CPPUNIT_ASSERT(!!part);
 		CPPUNIT_ASSERT_EQUAL(text, part->alternativeText);
 		CPPUNIT_ASSERT_EQUAL(path, part->imagePath);
 	}
@@ -61,6 +67,51 @@ public:
 		assertURL(result, 8, "http://denmark.lit");
 		assertText(result, 9, " boom boom");
 	}
+
+	void testOneEmoticon() {
+		ChatMessageParser testling(emoticons_);
+		ChatWindow::ChatMessage result = testling.parseMessageBody(" :) ");
+		assertText(result, 0, " ");
+		assertEmoticon(result, 1, smile1_, smile1Path_);
+		assertText(result, 2, " ");
+	}
+
+
+	void testBareEmoticon() {
+		ChatMessageParser testling(emoticons_);
+		ChatWindow::ChatMessage result = testling.parseMessageBody(":)");
+		assertEmoticon(result, 0, smile1_, smile1Path_);
+	}
+
+	void testHiddenEmoticon() {
+		ChatMessageParser testling(emoticons_);
+		ChatWindow::ChatMessage result = testling.parseMessageBody("b:)a");
+		assertText(result, 0, "b:)a");
+	}
+
+	void testEndlineEmoticon() {
+		ChatMessageParser testling(emoticons_);
+		ChatWindow::ChatMessage result = testling.parseMessageBody("Lazy:)");
+		assertText(result, 0, "Lazy");
+		assertEmoticon(result, 1, smile1_, smile1Path_);
+	}
+
+	void testBoundedEmoticons() {
+		ChatMessageParser testling(emoticons_);
+		ChatWindow::ChatMessage result = testling.parseMessageBody(":)Lazy:(");
+		assertEmoticon(result, 0, smile1_, smile1Path_);
+		assertText(result, 1, "Lazy");
+		assertEmoticon(result, 2, smile2_, smile2Path_);
+	}
+
+	void testEmoticonParenthesis() {
+		ChatMessageParser testling(emoticons_);
+		ChatWindow::ChatMessage result = testling.parseMessageBody("(Like this :))");
+		assertText(result, 0, "(Like this ");
+		assertEmoticon(result, 1, smile1_, smile1Path_);
+		assertText(result, 2, ")");
+	}
+
 
 private:
 	std::map<std::string, std::string> emoticons_;

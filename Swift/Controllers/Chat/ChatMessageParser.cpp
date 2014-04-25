@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Kevin Smith
+ * Copyright (c) 2013-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -57,12 +57,19 @@ namespace Swift {
 		std::string regexString;
 		/* Parse two, emoticons */
 		foreach (StringPair emoticon, emoticons_) {
-			/* Construct a regexp that finds an instance of any of the emoticons inside a group */
-			regexString += regexString.empty() ? "(" : "|";
-			regexString += Regex::escape(emoticon.first);
+			/* Construct a regexp that finds an instance of any of the emoticons inside a group
+			 * at the start or end of the line, or beside whitespace.
+			 */
+			regexString += regexString.empty() ? "" : "|";
+			std::string escaped = "(" + Regex::escape(emoticon.first) + ")";
+			regexString += "^" + escaped + "|";
+			regexString += escaped + "$|";
+			regexString += "\\s" + escaped + "|";
+			regexString += escaped + "\\s";
+
 		}
 		if (!regexString.empty()) {
-			regexString += ")";
+			regexString += "";
 			boost::regex emoticonRegex(regexString);
 
 			ChatWindow::ChatMessage newMessage;
@@ -74,14 +81,22 @@ namespace Swift {
 						const std::string& text = textPart->text;
 						std::string::const_iterator start = text.begin();
 						while (regex_search(start, text.end(), match, emoticonRegex)) {
-							std::string::const_iterator matchStart = match[0].first;
-							std::string::const_iterator matchEnd = match[0].second;
+							int matchIndex = 0;
+							for (matchIndex = 1; matchIndex < static_cast<int>(match.size()); matchIndex++) {
+								if (match[matchIndex].length() > 0) {
+									//This is the matching subgroup
+									break;
+								}
+							}
+							std::string::const_iterator matchStart = match[matchIndex].first;
+							std::string::const_iterator matchEnd = match[matchIndex].second;
 							if (start != matchStart) {
 								/* If we're skipping over plain text since the previous emoticon, record it as plain text */
 								newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
 							}
 							boost::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart = boost::make_shared<ChatWindow::ChatEmoticonMessagePart>();
-							std::map<std::string, std::string>::const_iterator emoticonIterator = emoticons_.find(match.str());
+							std::string matchString = match[matchIndex].str();
+							std::map<std::string, std::string>::const_iterator emoticonIterator = emoticons_.find(matchString);
 							assert (emoticonIterator != emoticons_.end());
 							const StringPair& emoticon = *emoticonIterator;
 							emoticonPart->imagePath = emoticon.second;
