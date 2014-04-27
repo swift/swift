@@ -23,7 +23,10 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<Stanza> ref;
 
+		protected:
 			Stanza();
+
+		public:
 			virtual ~Stanza();
 			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Stanza)
 
