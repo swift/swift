@@ -4,16 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#pragma once
-
-#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class SWIFTEN_API ToplevelElement : public Element {
-		public:
-			ToplevelElement() {}
-			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(ToplevelElement)
-			virtual ~ToplevelElement();
-	};
+
+Element::~Element() {
+}
+
 }

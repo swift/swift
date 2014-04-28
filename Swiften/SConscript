@@ -122,6 +122,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Elements/Form.cpp",
 			"Elements/FormField.cpp",
 			"Elements/StreamFeatures.cpp",
+			"Elements/Element.cpp",
 			"Elements/ToplevelElement.cpp",
 			"Elements/IQ.cpp",
 			"Elements/Payload.cpp",

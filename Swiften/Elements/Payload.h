@@ -9,10 +9,10 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/ToplevelElement.h>
+#include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class SWIFTEN_API Payload : public ToplevelElement {
+	class SWIFTEN_API Payload : public Element {
 		public:
 			typedef boost::shared_ptr<Payload> ref;
 		public:
