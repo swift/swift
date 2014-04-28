@@ -9,10 +9,10 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API Element {
+	class SWIFTEN_API ToplevelElement {
 		public:
-			Element() {}
-			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Element)
-			virtual ~Element();
+			ToplevelElement() {}
+			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(ToplevelElement)
+			virtual ~ToplevelElement();
 	};
 }

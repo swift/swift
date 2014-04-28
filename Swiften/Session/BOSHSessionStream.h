@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -50,7 +50,7 @@ namespace Swift {
 			virtual bool isOpen();
 
 			virtual void writeHeader(const ProtocolHeader& header);
-			virtual void writeElement(boost::shared_ptr<Element>);
+			virtual void writeElement(boost::shared_ptr<ToplevelElement>);
 			virtual void writeFooter();
 			virtual void writeData(const std::string& data);
 
@@ -72,7 +72,7 @@ namespace Swift {
 		private:
 			void handleXMPPError();
 			void handleStreamStartReceived(const ProtocolHeader&);
-			void handleElementReceived(boost::shared_ptr<Element>);
+			void handleElementReceived(boost::shared_ptr<ToplevelElement>);
 			void handlePoolXMPPDataRead(const SafeByteArray& data);
 			void handleXMPPLayerDataWritten(const SafeByteArray& data);
 			void handlePoolSessionStarted();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
@@ -16,7 +16,7 @@ namespace Swift {
 		public:
 			virtual ~ElementSerializer();
 
-			virtual SafeByteArray serialize(boost::shared_ptr<Element> element) const = 0;
-			virtual bool canSerialize(boost::shared_ptr<Element> element) const = 0;
+			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const = 0;
+			virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const = 0;
 	};
 }

@@ -22,11 +22,11 @@ namespace Swift {
 StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers) : tag_(tag), payloadSerializers_(payloadSerializers) {
 }
 
-SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<Element> element) const {
+SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element) const {
 	return serialize(element, "");
 }
 
-SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<Element> element, const std::string& xmlns) const {
+SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const {
 	boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
 
 	XMLElement stanzaElement(tag_, xmlns);

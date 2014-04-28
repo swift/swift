@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -28,7 +28,7 @@ namespace Swift {
 			void handleEndElement(const std::string& element, const std::string& ns);
 			void handleCharacterData(const std::string& data);
 
-			virtual boost::shared_ptr<Element> getElement() const = 0;
+			virtual boost::shared_ptr<ToplevelElement> getElement() const = 0;
 			virtual void handleStanzaAttributes(const AttributeMap&) {}
 
 			virtual boost::shared_ptr<Stanza> getStanza() const {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -49,7 +49,7 @@ void ComponentSession::handleStreamStart(const ProtocolHeader& header) {
 	stream->writeElement(ComponentHandshake::ref(new ComponentHandshake(ComponentHandshakeGenerator::getHandshake(header.getID(), secret, crypto))));
 }
 
-void ComponentSession::handleElement(boost::shared_ptr<Element> element) {
+void ComponentSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
 	if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
 		if (getState() == Initialized) {
 			onStanzaReceived(stanza);

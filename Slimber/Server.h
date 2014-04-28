@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -65,13 +65,13 @@ namespace Swift {
 			void handleNewClientConnection(boost::shared_ptr<Connection> c);
 			void handleSessionStarted();
 			void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>);
-			void handleElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<ServerFromClientSession> session);
+			void handleElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<ServerFromClientSession> session);
 			void handleRosterChanged(boost::shared_ptr<RosterPayload> roster);
 			void handlePresenceChanged(boost::shared_ptr<Presence> presence);
 			void handleServiceRegistered(const DNSSDServiceID& service);
 			void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection);
 			void handleLinkLocalSessionFinished(boost::shared_ptr<Session> session);
-			void handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session);
+			void handleLinkLocalElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<Session> session);
 			void handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connector, bool error);
 			void handleClientConnectionServerStopped(
 					boost::optional<BoostConnectionServer::Error>);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -83,7 +83,7 @@ std::string XMPPSerializer::serializeHeader(const ProtocolHeader& header) const 
 	return result;
 }
 
-SafeByteArray XMPPSerializer::serializeElement(boost::shared_ptr<Element> element) const {
+SafeByteArray XMPPSerializer::serializeElement(boost::shared_ptr<ToplevelElement> element) const {
 	std::vector< boost::shared_ptr<ElementSerializer> >::const_iterator i = std::find_if(serializers_.begin(), serializers_.end(), boost::bind(&ElementSerializer::canSerialize, _1, element));
 	if (i != serializers_.end()) {
 		return (*i)->serialize(element);

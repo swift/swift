@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -13,7 +13,7 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/StreamStack/ConnectionLayer.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -54,7 +54,7 @@ namespace Swift {
 			void startSession();
 			void finishSession();
 
-			void sendElement(boost::shared_ptr<Element>);
+			void sendElement(boost::shared_ptr<ToplevelElement>);
 
 			const JID& getLocalJID() const {
 				return localJID;
@@ -64,7 +64,7 @@ namespace Swift {
 				return remoteJID;
 			}
 
-			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+			boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElementReceived;
 			boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
 			boost::signal<void (const SafeByteArray&)> onDataWritten;
 			boost::signal<void (const SafeByteArray&)> onDataRead;
@@ -82,7 +82,7 @@ namespace Swift {
 
 			virtual void handleSessionStarted() {}
 			virtual void handleSessionFinished(const boost::optional<SessionError>&) {}
-			virtual void handleElement(boost::shared_ptr<Element>) = 0;
+			virtual void handleElement(boost::shared_ptr<ToplevelElement>) = 0;
 			virtual void handleStreamStart(const ProtocolHeader&) = 0;
 
 			void initializeStreamStack();

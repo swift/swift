@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,7 +14,7 @@
 #include "Swiften/LinkLocal/LinkLocalConnector.h"
 #include "Swiften/Network/Connection.h"
 #include "Swiften/Session/SessionTracer.h"
-#include "Swiften/Elements/Element.h"
+#include "Swiften/Elements/ToplevelElement.h"
 #include "Swiften/Elements/Presence.h"
 #include "Swiften/Elements/RosterPayload.h"
 #include "Swiften/Network/BoostConnection.h"
@@ -182,7 +182,7 @@ void Server::unregisterService() {
 	}
 }
 
-void Server::handleElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<ServerFromClientSession> session) {
+void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<ServerFromClientSession> session) {
 	boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
 	if (!stanza) {
 		return;
@@ -292,7 +292,7 @@ void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) 
 			linkLocalSessions.end());
 }
 
-void Server::handleLinkLocalElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<Session> session) {
+void Server::handleLinkLocalElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<Session> session) {
 	if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
 		JID fromJID = session->getRemoteJID();
 		if (!presenceManager->getServiceForJID(fromJID.toBare())) {
@@ -313,7 +313,7 @@ void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connect
 				new OutgoingLinkLocalSession(
 					selfJID, connector->getService().getJID(), connector->getConnection(),
 					&payloadParserFactories, &payloadSerializers, &xmlParserFactory));
-		foreach(const boost::shared_ptr<Element> element, connector->getQueuedElements()) {
+		foreach(const boost::shared_ptr<ToplevelElement> element, connector->getQueuedElements()) {
 			outgoingSession->queueElement(element);
 		}
 		registerLinkLocalSession(outgoingSession);

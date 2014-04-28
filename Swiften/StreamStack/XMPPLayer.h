@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -13,7 +13,7 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/StreamStack/HighLayer.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/Parser/XMPPParserClient.h>
 
@@ -38,7 +38,7 @@ namespace Swift {
 
 			void writeHeader(const ProtocolHeader& header);
 			void writeFooter();
-			void writeElement(boost::shared_ptr<Element>);
+			void writeElement(boost::shared_ptr<ToplevelElement>);
 			void writeData(const std::string& data);
 
 			void resetParser();
@@ -49,14 +49,14 @@ namespace Swift {
 
 		public:
 			boost::signal<void (const ProtocolHeader&)> onStreamStart;
-			boost::signal<void (boost::shared_ptr<Element>)> onElement;
+			boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElement;
 			boost::signal<void (const SafeByteArray&)> onWriteData;
 			boost::signal<void (const SafeByteArray&)> onDataRead;
 			boost::signal<void ()> onError;
 
 		private:
 			void handleStreamStart(const ProtocolHeader&);
-			void handleElement(boost::shared_ptr<Element>);
+			void handleElement(boost::shared_ptr<ToplevelElement>);
 			void handleStreamEnd();
 
 			void doResetParser();

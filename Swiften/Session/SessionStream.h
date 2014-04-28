@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -12,7 +12,7 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ProtocolHeader.h>
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/CertificateWithKey.h>
@@ -46,7 +46,7 @@ namespace Swift {
 
 			virtual void writeHeader(const ProtocolHeader& header) = 0;
 			virtual void writeFooter() = 0;
-			virtual void writeElement(boost::shared_ptr<Element>) = 0;
+			virtual void writeElement(boost::shared_ptr<ToplevelElement>) = 0;
 			virtual void writeData(const std::string& data) = 0;
 
 			virtual bool supportsZLibCompression() = 0;
@@ -74,7 +74,7 @@ namespace Swift {
 			virtual ByteArray getTLSFinishMessage() const = 0;
 
 			boost::signal<void (const ProtocolHeader&)> onStreamStartReceived;
-			boost::signal<void (boost::shared_ptr<Element>)> onElementReceived;
+			boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElementReceived;
 			boost::signal<void (boost::shared_ptr<Error>)> onClosed;
 			boost::signal<void ()> onTLSEncrypted;
 			boost::signal<void (const SafeByteArray&)> onDataRead;

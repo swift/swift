@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -381,11 +381,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
 		class MockSessionStream : public SessionStream {
 			public:
 				struct Event {
-					Event(boost::shared_ptr<Element> element) : element(element), footer(false) {}
+					Event(boost::shared_ptr<ToplevelElement> element) : element(element), footer(false) {}
 					Event(const ProtocolHeader& header) : header(header), footer(false) {}
 					Event() : footer(true) {}
 					
-					boost::shared_ptr<Element> element;
+					boost::shared_ptr<ToplevelElement> element;
 					boost::optional<ProtocolHeader> header;
 					bool footer;
 				};
@@ -409,7 +409,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 					receivedEvents.push_back(Event());
 				}
 
-				virtual void writeElement(boost::shared_ptr<Element> element) {
+				virtual void writeElement(boost::shared_ptr<ToplevelElement> element) {
 					receivedEvents.push_back(Event(element));
 				}
 

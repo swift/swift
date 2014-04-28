@@ -14,9 +14,9 @@ namespace Swift {
 	template<typename T>
 	class GenericElementSerializer : public ElementSerializer {
 		public:
-			virtual SafeByteArray serialize(boost::shared_ptr<Element> element) const = 0;
+			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const = 0;
 
-			virtual bool canSerialize(boost::shared_ptr<Element> element) const {
+			virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const {
 				return !!boost::dynamic_pointer_cast<T>(element);
 			}
 	};

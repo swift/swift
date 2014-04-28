@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -38,7 +38,7 @@ void XMPPLayer::writeFooter() {
 	writeDataInternal(createSafeByteArray(xmppSerializer_->serializeFooter()));
 }
 
-void XMPPLayer::writeElement(boost::shared_ptr<Element> element) {
+void XMPPLayer::writeElement(boost::shared_ptr<ToplevelElement> element) {
 	writeDataInternal(xmppSerializer_->serializeElement(element));
 }
 
@@ -78,7 +78,7 @@ void XMPPLayer::handleStreamStart(const ProtocolHeader& header) {
 	onStreamStart(header);
 }
 
-void XMPPLayer::handleElement(boost::shared_ptr<Element> stanza) {
+void XMPPLayer::handleElement(boost::shared_ptr<ToplevelElement> stanza) {
 	onElement(stanza);
 }
 

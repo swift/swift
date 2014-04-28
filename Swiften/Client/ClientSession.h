@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,7 +15,7 @@
 #include <Swiften/Session/SessionStream.h>
 #include <string>
 #include <Swiften/JID/JID.h>
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/StreamManagement/StanzaAckRequester.h>
 #include <Swiften/StreamManagement/StanzaAckResponder.h>
 
@@ -148,7 +148,7 @@ namespace Swift {
 
 			void sendStreamHeader();
 
-			void handleElement(boost::shared_ptr<Element>);
+			void handleElement(boost::shared_ptr<ToplevelElement>);
 			void handleStreamStart(const ProtocolHeader&);
 			void handleStreamClosed(boost::shared_ptr<Swift::Error>);
 

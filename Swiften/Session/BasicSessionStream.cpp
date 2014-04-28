@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -77,7 +77,7 @@ void BasicSessionStream::writeHeader(const ProtocolHeader& header) {
 	xmppLayer->writeHeader(header);
 }
 
-void BasicSessionStream::writeElement(boost::shared_ptr<Element> element) {
+void BasicSessionStream::writeElement(boost::shared_ptr<ToplevelElement> element) {
 	assert(available);
 	xmppLayer->writeElement(element);
 }
@@ -168,7 +168,7 @@ void BasicSessionStream::handleStreamStartReceived(const ProtocolHeader& header)
 	onStreamStartReceived(header);
 }
 
-void BasicSessionStream::handleElementReceived(boost::shared_ptr<Element> element) {
+void BasicSessionStream::handleElementReceived(boost::shared_ptr<ToplevelElement> element) {
 	onElementReceived(element);
 }
 

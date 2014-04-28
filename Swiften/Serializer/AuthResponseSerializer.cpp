@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,7 +16,7 @@ namespace Swift {
 AuthResponseSerializer::AuthResponseSerializer() {
 }
 
-SafeByteArray AuthResponseSerializer::serialize(boost::shared_ptr<Element> element)	const {
+SafeByteArray AuthResponseSerializer::serialize(boost::shared_ptr<ToplevelElement> element)	const {
 	boost::shared_ptr<AuthResponse> authResponse(boost::dynamic_pointer_cast<AuthResponse>(element));
 	SafeByteArray value;
 	boost::optional<SafeByteArray> message = authResponse->getValue();

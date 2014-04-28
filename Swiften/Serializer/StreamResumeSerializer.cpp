@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,7 +17,7 @@ using namespace Swift;
 StreamResumeSerializer::StreamResumeSerializer() : GenericElementSerializer<StreamResume>() {
 }
 
-SafeByteArray StreamResumeSerializer::serialize(boost::shared_ptr<Element> el) const {
+SafeByteArray StreamResumeSerializer::serialize(boost::shared_ptr<ToplevelElement> el) const {
 	boost::shared_ptr<StreamResume> e(boost::dynamic_pointer_cast<StreamResume>(el));
 	XMLElement element("resume", "urn:xmpp:sm:2");
 	element.setAttribute("previd", e->getResumeID());

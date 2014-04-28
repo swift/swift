@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -21,7 +21,7 @@ class MyXMPPParserClient : public XMPPParserClient {
 		virtual void handleStreamStart(const ProtocolHeader&) {
 			std::cout << "-> Stream start" << std::endl;
 		}
-		virtual void handleElement(boost::shared_ptr<Element> element) {
+		virtual void handleElement(boost::shared_ptr<ToplevelElement> element) {
 			std::cout << "-> Element " << typeid(*element.get()).name() << std::endl;
 		}
 		virtual void handleStreamEnd() {

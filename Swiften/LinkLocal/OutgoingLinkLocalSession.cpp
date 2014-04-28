@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -35,17 +35,17 @@ void OutgoingLinkLocalSession::handleSessionStarted() {
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
-	foreach(const boost::shared_ptr<Element>& stanza, queuedElements_) {
+	foreach(const boost::shared_ptr<ToplevelElement>& stanza, queuedElements_) {
 		sendElement(stanza);
 	}
 	queuedElements_.clear();
 }
 
-void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<Element> element) {
+void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
 	onElementReceived(element);
 }
 
-void OutgoingLinkLocalSession::queueElement(boost::shared_ptr<Element> element) {
+void OutgoingLinkLocalSession::queueElement(boost::shared_ptr<ToplevelElement> element) {
 	queuedElements_.push_back(element);
 }
 

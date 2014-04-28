@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -86,7 +86,7 @@ void BOSHSessionStream::handlePoolXMPPDataRead(const SafeByteArray& data) {
 	xmppLayer->handleDataRead(data);
 }
 
-void BOSHSessionStream::writeElement(boost::shared_ptr<Element> element) {
+void BOSHSessionStream::writeElement(boost::shared_ptr<ToplevelElement> element) {
 	assert(available);
 	xmppLayer->writeElement(element);
 }
@@ -156,7 +156,7 @@ void BOSHSessionStream::handleStreamStartReceived(const ProtocolHeader& header) 
 	onStreamStartReceived(header);
 }
 
-void BOSHSessionStream::handleElementReceived(boost::shared_ptr<Element> element) {
+void BOSHSessionStream::handleElementReceived(boost::shared_ptr<ToplevelElement> element) {
 	onElementReceived(element);
 }
 

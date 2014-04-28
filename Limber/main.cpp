@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -49,7 +49,7 @@ class Server {
 			serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
 		}
 
-		void handleElementReceived(boost::shared_ptr<Element> element, boost::shared_ptr<ServerFromClientSession> session) {
+		void handleElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<ServerFromClientSession> session) {
 			boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
 			if (!stanza) {
 				return;

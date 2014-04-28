@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -94,11 +94,11 @@ class XMPPLayerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("</stream:stream>"), lowLayer_->writtenData);
 		}
 
-		void handleElement(boost::shared_ptr<Element>) {
+		void handleElement(boost::shared_ptr<ToplevelElement>) {
 			++elementsReceived_;
 		}
 
-		void handleElementAndReset(boost::shared_ptr<Element>) {
+		void handleElementAndReset(boost::shared_ptr<ToplevelElement>) {
 			++elementsReceived_;
 			testling_->resetParser();
 		}

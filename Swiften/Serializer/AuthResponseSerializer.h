@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,6 +17,6 @@ namespace Swift {
 		public:
 			AuthResponseSerializer();
 
-			virtual SafeByteArray serialize(boost::shared_ptr<Element> element)  const;
+			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element)  const;
 	};
 }

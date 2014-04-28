@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,7 +16,7 @@
 namespace Swift {
 	class ProtocolHeader;
 	class XMLParserFactory;	
-	class Element;
+	class ToplevelElement;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 
@@ -32,7 +32,7 @@ namespace Swift {
 			boost::signal<void ()> onSessionStarted;
 
 		private:
-			void handleElement(boost::shared_ptr<Element>);
+			void handleElement(boost::shared_ptr<ToplevelElement>);
 			void handleStreamStart(const ProtocolHeader&);
 			void setInitialized();
 			bool isInitialized() const { 

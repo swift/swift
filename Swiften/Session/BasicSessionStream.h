@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -44,7 +44,7 @@ namespace Swift {
 			virtual bool isOpen();
 
 			virtual void writeHeader(const ProtocolHeader& header);
-			virtual void writeElement(boost::shared_ptr<Element>);
+			virtual void writeElement(boost::shared_ptr<ToplevelElement>);
 			virtual void writeFooter();
 			virtual void writeData(const std::string& data);
 
@@ -70,7 +70,7 @@ namespace Swift {
 			void handleTLSConnected();
 			void handleTLSError(boost::shared_ptr<TLSError>);
 			void handleStreamStartReceived(const ProtocolHeader&);
-			void handleElementReceived(boost::shared_ptr<Element>);
+			void handleElementReceived(boost::shared_ptr<ToplevelElement>);
 			void handleDataRead(const SafeByteArray& data);
 			void handleDataWritten(const SafeByteArray& data);
 

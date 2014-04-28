@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,10 +9,10 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class ComponentHandshake : public Element {
+	class ComponentHandshake : public ToplevelElement {
 		public:
 			typedef boost::shared_ptr<ComponentHandshake> ref;
 

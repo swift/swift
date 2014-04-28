@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -16,7 +16,7 @@ using namespace Swift;
 StreamManagementEnabledSerializer::StreamManagementEnabledSerializer() : GenericElementSerializer<StreamManagementEnabled>() {
 }
 
-SafeByteArray StreamManagementEnabledSerializer::serialize(boost::shared_ptr<Element> el) const {
+SafeByteArray StreamManagementEnabledSerializer::serialize(boost::shared_ptr<ToplevelElement> el) const {
 	boost::shared_ptr<StreamManagementEnabled> e(boost::dynamic_pointer_cast<StreamManagementEnabled>(el));
 	XMLElement element("enabled", "urn:xmpp:sm:2");
 	if (!e->getResumeID().empty()) {

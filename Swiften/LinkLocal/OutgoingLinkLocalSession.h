@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,7 +17,7 @@
 namespace Swift {
 	class ConnectionFactory;
 	class XMLParserFactory;	
-	class Element;
+	class ToplevelElement;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 
@@ -31,14 +31,14 @@ namespace Swift {
 					PayloadSerializerCollection* payloadSerializers,
 					XMLParserFactory* xmlParserFactory);
 
-			void queueElement(boost::shared_ptr<Element> element);
+			void queueElement(boost::shared_ptr<ToplevelElement> element);
 
 		private:
 			void handleSessionStarted();
-			void handleElement(boost::shared_ptr<Element>);
+			void handleElement(boost::shared_ptr<ToplevelElement>);
 			void handleStreamStart(const ProtocolHeader&);
 
 		private:
-			std::vector<boost::shared_ptr<Element> > queuedElements_;
+			std::vector<boost::shared_ptr<ToplevelElement> > queuedElements_;
 	};
 }

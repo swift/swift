@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,10 +9,10 @@
 #include <string>
 #include <boost/optional.hpp>
 
-#include <Swiften/Elements/Element.h>
+#include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class StreamResume : public Element {
+	class StreamResume : public ToplevelElement {
 		public:
 			StreamResume();
 			~StreamResume();

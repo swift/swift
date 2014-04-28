@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -18,7 +18,7 @@
 namespace Swift {
 	class ConnectionFactory;
 	class HostAddress;
-	class Element;
+	class ToplevelElement;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class DNSSDQuerier;
@@ -38,9 +38,9 @@ namespace Swift {
 
 			void connect();
 			void cancel();
-			void queueElement(boost::shared_ptr<Element> element);
+			void queueElement(boost::shared_ptr<ToplevelElement> element);
 
-			const std::vector<boost::shared_ptr<Element> >& getQueuedElements() const {
+			const std::vector<boost::shared_ptr<ToplevelElement> >& getQueuedElements() const {
 				return queuedElements;
 			}
 
@@ -61,6 +61,6 @@ namespace Swift {
 			boost::bsignals::connection resolveQueryHostNameResolvedConnection;
 			boost::shared_ptr<Connection> connection;
 			boost::bsignals::connection connectionConnectFinishedConnection;
-			std::vector<boost::shared_ptr<Element> > queuedElements;
+			std::vector<boost::shared_ptr<ToplevelElement> > queuedElements;
 	};
 }

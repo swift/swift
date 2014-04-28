@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
 StreamErrorSerializer::StreamErrorSerializer() : GenericElementSerializer<StreamError>() {
 }
 
-SafeByteArray StreamErrorSerializer::serialize(boost::shared_ptr<Element> element)  const {
+SafeByteArray StreamErrorSerializer::serialize(boost::shared_ptr<ToplevelElement> element)  const {
 	StreamError::ref error = boost::dynamic_pointer_cast<StreamError>(element);
 	XMLElement errorElement("error", "http://etherx.jabber.org/streams");
 

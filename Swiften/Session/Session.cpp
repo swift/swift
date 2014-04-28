@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -76,7 +76,7 @@ void Session::initializeStreamStack() {
 	streamStack = new StreamStack(xmppLayer, connectionLayer);
 }
 
-void Session::sendElement(boost::shared_ptr<Element> stanza) {
+void Session::sendElement(boost::shared_ptr<ToplevelElement> stanza) {
 	xmppLayer->writeElement(stanza);
 }
 

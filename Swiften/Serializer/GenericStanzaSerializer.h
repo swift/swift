@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -14,12 +14,12 @@ namespace Swift {
 		public:
 			GenericStanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers) : StanzaSerializer(tag, payloadSerializers) {}
 
-			virtual bool canSerialize(boost::shared_ptr<Element> element) const {
+			virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const {
 				return dynamic_cast<STANZA_TYPE*>(element.get()) != 0;
 			}
 
 			virtual void setStanzaSpecificAttributes(
-					boost::shared_ptr<Element> stanza, 
+					boost::shared_ptr<ToplevelElement> stanza, 
 					XMLElement& element) const {
 				setStanzaSpecificAttributesGeneric(
 						boost::dynamic_pointer_cast<STANZA_TYPE>(stanza), element);
