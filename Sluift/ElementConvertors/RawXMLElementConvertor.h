@@ -17,8 +17,8 @@ namespace Swift {
 			RawXMLElementConvertor();
 			virtual ~RawXMLElementConvertor();
 
-			virtual boost::shared_ptr<Payload> convertFromLua(lua_State*, int index, const std::string& type) SWIFTEN_OVERRIDE;
-			virtual boost::optional<std::string> convertToLua(lua_State*, boost::shared_ptr<Payload>) SWIFTEN_OVERRIDE;
+			virtual boost::shared_ptr<Element> convertFromLua(lua_State*, int index, const std::string& type) SWIFTEN_OVERRIDE;
+			virtual boost::optional<std::string> convertToLua(lua_State*, boost::shared_ptr<Element>) SWIFTEN_OVERRIDE;
 
 		private:
 			FullPayloadSerializerCollection serializers;

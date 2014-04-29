@@ -44,7 +44,7 @@ boost::shared_ptr<PubSubEventItem> PubSubEventItemConvertor::doConvertFromLua(lu
 			lua_pushnumber(L, i + 1);
 			lua_gettable(L, -2);
 			if (!lua_isnil(L, -1)) {
-				if (boost::shared_ptr<Payload> payload = convertors->convertFromLua(L, -1)) {
+				if (boost::shared_ptr<Payload> payload = boost::dynamic_pointer_cast<Payload>(convertors->convertFromLua(L, -1))) {
 					items.push_back(payload);
 				}
 			}

@@ -63,7 +63,7 @@ static void addPayloadsToTable(lua_State* L, const std::vector<boost::shared_ptr
 
 static boost::shared_ptr<Payload> getPayload(lua_State* L, int index) {
 	if (lua_type(L, index) == LUA_TTABLE) {
-		return Sluift::globals.elementConvertor.convertFromLua(L, index);
+		return boost::dynamic_pointer_cast<Payload>(Sluift::globals.elementConvertor.convertFromLua(L, index));
 	}
 	else if (lua_type(L, index) == LUA_TSTRING) {
 		return boost::make_shared<RawXMLPayload>(Lua::checkString(L, index));

@@ -15,7 +15,7 @@
 struct lua_State;
 
 namespace Swift {
-	class Payload;
+	class Element;
 
 	class LuaElementConvertor {
 		public:
@@ -30,8 +30,8 @@ namespace Swift {
 
 			virtual ~LuaElementConvertor();
 
-			virtual boost::shared_ptr<Payload> convertFromLua(lua_State*, int index, const std::string& type) = 0;
-			virtual boost::optional<std::string> convertToLua(lua_State*, boost::shared_ptr<Payload>) = 0;
+			virtual boost::shared_ptr<Element> convertFromLua(lua_State*, int index, const std::string& type) = 0;
+			virtual boost::optional<std::string> convertToLua(lua_State*, boost::shared_ptr<Element>) = 0;
 
 			virtual boost::optional<Documentation> getDocumentation() const {
 				return boost::optional<Documentation>();

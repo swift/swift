@@ -23,19 +23,19 @@ namespace Swift {
 
 			virtual ~GenericLuaElementConvertor() {}
 
-			virtual boost::shared_ptr<Payload> convertFromLua(lua_State* L, int index, const std::string& payloadType) SWIFTEN_OVERRIDE {
+			virtual boost::shared_ptr<Element> convertFromLua(lua_State* L, int index, const std::string& payloadType) SWIFTEN_OVERRIDE {
 				if (payloadType == type) {
 					Lua::checkType(L, index, LUA_TTABLE);
 					lua_pushvalue(L, index);
-					boost::shared_ptr<Payload> result = doConvertFromLua(L);
+					boost::shared_ptr<Element> result = doConvertFromLua(L);
 					lua_pop(L, 1);
 					return result;
 				}
-				return boost::shared_ptr<Payload>();
+				return boost::shared_ptr<Element>();
 			}
 
 			virtual boost::optional<std::string> convertToLua(
-					lua_State* L, boost::shared_ptr<Payload> payload) SWIFTEN_OVERRIDE {
+					lua_State* L, boost::shared_ptr<Element> payload) SWIFTEN_OVERRIDE {
 				if (boost::shared_ptr<T> actualPayload = boost::dynamic_pointer_cast<T>(payload)) {
 					doConvertToLua(L, actualPayload);
 					assert(lua_type(L, -1) == LUA_TTABLE);

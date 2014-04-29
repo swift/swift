@@ -160,7 +160,7 @@ DOMElementConvertor::DOMElementConvertor() {
 DOMElementConvertor::~DOMElementConvertor() {
 }
 
-boost::shared_ptr<Payload> DOMElementConvertor::convertFromLua(lua_State* L, int index, const std::string& type) {
+boost::shared_ptr<Element> DOMElementConvertor::convertFromLua(lua_State* L, int index, const std::string& type) {
 	if (!lua_istable(L, index) || type != "dom") {
 		return boost::shared_ptr<Payload>();
 	}
@@ -168,8 +168,13 @@ boost::shared_ptr<Payload> DOMElementConvertor::convertFromLua(lua_State* L, int
 }
 
 boost::optional<std::string> DOMElementConvertor::convertToLua(
-		lua_State* L, boost::shared_ptr<Payload> payload) {
+		lua_State* L, boost::shared_ptr<Element> element) {
 	// Serialize payload to XML
+	boost::shared_ptr<Payload> payload = boost::dynamic_pointer_cast<Payload>(element);
+	if (!payload) {
+		return boost::optional<std::string>();
+	}
+
 	PayloadSerializer* serializer = serializers.getPayloadSerializer(payload);
 	assert(serializer);
 	std::string serializedPayload = serializer->serialize(payload);

@@ -54,7 +54,7 @@ LuaElementConvertors::~LuaElementConvertors() {
 
 #include <Sluift/ElementConvertors/ElementConvertors.ipp>
 
-boost::shared_ptr<Payload> LuaElementConvertors::convertFromLua(lua_State* L, int index) {
+boost::shared_ptr<Element> LuaElementConvertors::convertFromLua(lua_State* L, int index) {
 	if (lua_isstring(L, index)) {
 		return convertFromLuaUntyped(L, index, "xml");
 	}
@@ -70,18 +70,18 @@ boost::shared_ptr<Payload> LuaElementConvertors::convertFromLua(lua_State* L, in
 	throw Lua::Exception("Unable to determine type");
 }
 
-boost::shared_ptr<Payload> LuaElementConvertors::convertFromLuaUntyped(lua_State* L, int index, const std::string& type) {
+boost::shared_ptr<Element> LuaElementConvertors::convertFromLuaUntyped(lua_State* L, int index, const std::string& type) {
 	index = Lua::absoluteOffset(L, index);
 	foreach (boost::shared_ptr<LuaElementConvertor> convertor, convertors) {
-		if (boost::shared_ptr<Payload> result = convertor->convertFromLua(L, index, type)) {
+		if (boost::shared_ptr<Element> result = convertor->convertFromLua(L, index, type)) {
 			return result;
 		}
 	}
-	return boost::shared_ptr<Payload>();
+	return boost::shared_ptr<Element>();
 }
 
 
-int LuaElementConvertors::convertToLua(lua_State* L, boost::shared_ptr<Payload> payload) {
+int LuaElementConvertors::convertToLua(lua_State* L, boost::shared_ptr<Element> payload) {
 	if (boost::optional<std::string> type = doConvertToLuaUntyped(L, payload)) {
 		if (lua_istable(L, -1)) {
 			lua_pushstring(L, type->c_str());
@@ -96,7 +96,7 @@ int LuaElementConvertors::convertToLua(lua_State* L, boost::shared_ptr<Payload> 
 	return 0;
 }
 
-int LuaElementConvertors::convertToLuaUntyped(lua_State* L, boost::shared_ptr<Payload> payload) {
+int LuaElementConvertors::convertToLuaUntyped(lua_State* L, boost::shared_ptr<Element> payload) {
 	if (doConvertToLuaUntyped(L, payload)) {
 		return 1;
 	}
@@ -104,7 +104,7 @@ int LuaElementConvertors::convertToLuaUntyped(lua_State* L, boost::shared_ptr<Pa
 }
 
 boost::optional<std::string> LuaElementConvertors::doConvertToLuaUntyped(
-		lua_State* L, boost::shared_ptr<Payload> payload) {
+		lua_State* L, boost::shared_ptr<Element> payload) {
 	if (!payload) {
 		return LuaElementConvertor::NO_RESULT;
 	}

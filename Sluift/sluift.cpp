@@ -148,7 +148,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		""
 ) {
 	static FullPayloadSerializerCollection serializers;
-	boost::shared_ptr<Payload> payload = Sluift::globals.elementConvertor.convertFromLua(L, 1);
+	boost::shared_ptr<Payload> payload = boost::dynamic_pointer_cast<Payload>(Sluift::globals.elementConvertor.convertFromLua(L, 1));
 	if (!payload) {
 		throw Lua::Exception("Unrecognized XML");
 	}
