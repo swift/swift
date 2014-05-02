@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swift/QtUI/QtAdHocCommandWindow.h>
-
 #include <boost/bind.hpp>
 #include <QBoxLayout>
+#include <Swift/QtUI/QtAdHocCommandWindow.h>
 #include <Swift/QtUI/QtFormWidget.h>
-#include <Swiften/Elements/Command.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swiften/Base/format.h>
+#include <Swiften/Elements/Command.h>
 
 const int FormLayoutIndex = 1;
 
@@ -29,6 +29,13 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	label_ = new QLabel(this);
 	label_->setTextFormat(Qt::PlainText);
 	layout_->addWidget(label_);
+
+	errorLabel_ = new QLabel(this);
+	errorLabel_->setText(QString("<b>%1</b>").arg(tr("Unable to complete the command because you have been disconnected")));
+	errorLabel_->setVisible(false);
+	errorLabel_->setFrameStyle(QFrame::Box|QFrame::Sunken);
+	layout_->addWidget(errorLabel_);
+
 	QWidget* buttonsWidget = new QWidget(this);
 	layout_->addWidget(buttonsWidget);
 
@@ -48,6 +55,7 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	nextButton_->setEnabled(false);
 	backButton_->setEnabled(false);
 	completeButton_->setEnabled(false);
+
 	actions_[Command::Next] = nextButton_;
 	actions_[Command::Prev] = backButton_;
 	actions_[Command::Complete] = completeButton_;
@@ -55,7 +63,19 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 }
 
 QtAdHocCommandWindow::~QtAdHocCommandWindow() {
+}
 
+void QtAdHocCommandWindow::setOnline(bool online) {
+	if (!online) {
+		nextButton_->setEnabled(false);
+		backButton_->setEnabled(false);
+		completeButton_->setEnabled(false);
+		errorLabel_->setVisible(true);
+	}
+}
+
+void QtAdHocCommandWindow::closeEvent(QCloseEvent*) {
+	onClosing();
 }
 
 void QtAdHocCommandWindow::handleCancelClicked() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -172,8 +172,8 @@ BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {
 	return new QtBlockListEditorWindow();
 }
 
-void QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {
-	new QtAdHocCommandWindow(command);
+AdHocCommandWindow* QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {
+	return new QtAdHocCommandWindow(command);
 }
 
 }

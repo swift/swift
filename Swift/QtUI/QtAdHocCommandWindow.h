@@ -22,7 +22,9 @@ namespace Swift {
 		public:
 			QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 			virtual ~QtAdHocCommandWindow();
+			virtual void setOnline(bool online);
 		private:
+			void closeEvent(QCloseEvent* event);
 			void handleNextStageReceived(Command::ref command);
 			void handleError(ErrorPayload::ref error);
 			void setForm(Form::ref);
@@ -38,6 +40,7 @@ namespace Swift {
 			QtFormWidget* formWidget_;
 			Form::ref form_;
 			QLabel* label_;
+			QLabel* errorLabel_;
 			QPushButton* backButton_;
 			QPushButton* nextButton_;
 			QPushButton* completeButton_;

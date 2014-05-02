@@ -57,6 +57,7 @@ if env["SCONS_STAGE"] == "build" :
 			"PresenceNotifier.cpp",
 			"EventNotifier.cpp",
 			"AdHocManager.cpp",
+			"AdHocController.cpp",
 			"XMPPEvents/EventController.cpp",
 			"UIEvents/UIEvent.cpp",
 			"UIInterfaces/XMLConsoleWidget.cpp",

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -50,7 +50,7 @@ namespace Swift {
 			virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession);
 			virtual HighlightEditorWidget* createHighlightEditorWidget();
 			virtual BlockListEditorWidget* createBlockListEditorWidget();
-			virtual void createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
+			virtual AdHocCommandWindow* createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 
 		private slots:
 			void handleLoginWindowGeometryChanged();

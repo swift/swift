@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -31,6 +31,14 @@ AdHocManager::AdHocManager(const JID& jid, AdHocCommandWindowFactory* factory, I
 
 AdHocManager::~AdHocManager() {
 	uiEventStream_->onUIEvent.disconnect(boost::bind(&AdHocManager::handleUIEvent, this, _1));
+	for (size_t i = 0; i < controllers_.size(); ++i) {
+		controllers_[i]->onDeleting.disconnect(boost::bind(&AdHocManager::removeController, this, controllers_[i]));
+	}
+}
+
+void AdHocManager::removeController(boost::shared_ptr<AdHocController> controller) {
+	controller->onDeleting.disconnect(boost::bind(&AdHocManager::removeController, this, controller));
+	controllers_.erase(std::find(controllers_.begin(), controllers_.end(), controller));
 }
 
 void AdHocManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
@@ -45,7 +53,12 @@ void AdHocManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 	} else {
 		mainWindow_->setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
 	}
+}
 
+void AdHocManager::setOnline(bool online) {
+	foreach (boost::shared_ptr<AdHocController> controller, controllers_) {
+		controller->setOnline(online);
+	}
 }
 
 void AdHocManager::handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
@@ -63,7 +76,10 @@ void AdHocManager::handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 void AdHocManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestAdHocUIEvent> adHocEvent = boost::dynamic_pointer_cast<RequestAdHocUIEvent>(event);
 	if (adHocEvent) {
-		factory_->createAdHocCommandWindow(boost::make_shared<OutgoingAdHocCommandSession>(adHocEvent->getCommand().getJID(), adHocEvent->getCommand().getNode(), iqRouter_));
+		boost::shared_ptr<OutgoingAdHocCommandSession> command = boost::make_shared<OutgoingAdHocCommandSession>(adHocEvent->getCommand().getJID(), adHocEvent->getCommand().getNode(), iqRouter_);
+		boost::shared_ptr<AdHocController> controller = boost::make_shared<AdHocController>(factory_, command);
+		controller->onDeleting.connect(boost::bind(&AdHocManager::removeController, this, controller));
+		controllers_.push_back(controller);
 	}
 }
 

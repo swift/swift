@@ -422,7 +422,7 @@ void MainController::handleConnected() {
 	/* Enable chats last of all, so rejoining MUCs has the right sent presence */
 	assert(chatsManager_);
 	chatsManager_->setOnline(true);
-
+	adHocManager_->setOnline(true);
 }
 
 void MainController::handleEventQueueLengthChange(int count) {
@@ -601,6 +601,9 @@ void MainController::performLoginFromCachedCredentials() {
 void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
 	if (rosterController_) {
 		rosterController_->getWindow()->setStreamEncryptionStatus(false);
+	}
+	if (adHocManager_) {
+		adHocManager_->setOnline(false);
 	}
 	if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 		purgeCachedCredentials();
