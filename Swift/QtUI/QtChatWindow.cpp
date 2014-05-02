@@ -46,6 +46,7 @@
 #include <SwifTools/TabComplete.h>
 
 #include <Swift/QtUI/Roster/QtOccupantListWidget.h>
+#include <Swift/QtUI/QtAddBookmarkWindow.h>
 #include <Swift/QtUI/QtPlainChatView.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
@@ -627,6 +628,8 @@ void QtChatWindow::handleActionButtonClicked() {
 		}
 	}
 
+	QAction* bookmark = contextMenu.addAction(tr("Add boomark..."));
+
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == NULL) {
 		/* Skip processing. Note that otherwise, because the actions could be null they could match */
@@ -668,6 +671,8 @@ void QtChatWindow::handleActionButtonClicked() {
 	}
 	else if (result == unblock) {
 		onUnblockUserRequest();
+	} else if (result == bookmark) {
+		onBookmarkRequest();
 	}
 }
 
@@ -690,6 +695,11 @@ void QtChatWindow::setBlockingState(BlockingState state) {
 
 void QtChatWindow::setCanInitiateImpromptuChats(bool supportsImpromptu) {
 	supportsImpromptuChat_ = supportsImpromptu;
+}
+
+void QtChatWindow::showBookmarkWindow(const MUCBookmark& bookmark) {
+	QtAddBookmarkWindow* window = new QtAddBookmarkWindow(eventStream_, bookmark);
+	window->show();
 }
 
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -21,6 +21,9 @@ namespace Swift {
 			QtBookmarkDetailWindow(QWidget* parent = NULL);
 			virtual bool commit() = 0;
 			boost::optional<MUCBookmark> createBookmarkFromForm();
+
+		protected:
+			void createFormFromBookmark(const MUCBookmark& bookmark);
 
 		public slots:
 			void accept();

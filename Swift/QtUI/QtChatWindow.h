@@ -128,6 +128,7 @@ namespace Swift {
 			void setAvailableRoomActions(const std::vector<RoomAction>& actions);
 			void setBlockingState(BlockingState state);
 			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu);
+			virtual void showBookmarkWindow(const MUCBookmark& bookmark);
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);

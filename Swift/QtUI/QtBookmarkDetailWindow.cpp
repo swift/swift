@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -47,6 +47,30 @@ boost::optional<MUCBookmark> QtBookmarkDetailWindow::createBookmarkFromForm() {
 		bookmark.setPassword(password);
 	}
 	return bookmark;
+}
+
+void QtBookmarkDetailWindow::createFormFromBookmark(const MUCBookmark& bookmark) {
+	if (bookmark.getRoom().isValid()) {
+		room_->setText(P2QSTRING(bookmark.getRoom().toString()));
+	}
+
+	if (!bookmark.getName().empty()) {
+		name_->setText(P2QSTRING(bookmark.getName()));
+	}
+
+	if (bookmark.getNick()) {
+		nick_->setText(P2QSTRING((*bookmark.getNick())));
+	}
+
+	if (bookmark.getPassword()) {
+		password_->setText(P2QSTRING((*bookmark.getPassword())));
+	}
+
+	if (bookmark.getAutojoin()) {
+		autojoin_->setCheckState(Qt::Checked);
+	} else {
+		autojoin_->setCheckState(Qt::Unchecked);
+	}
 }
 
 }

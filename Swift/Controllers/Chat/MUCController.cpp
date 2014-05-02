@@ -93,6 +93,7 @@ MUCController::MUCController (
 	chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
 	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
+	chatWindow_->onBookmarkRequest.connect(boost::bind(&MUCController::handleBookmarkRequest, this));
 	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
 	chatWindow_->onConfigurationFormCancelled.connect(boost::bind(&MUCController::handleConfigurationCancelled, this));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
@@ -797,6 +798,14 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 
 void MUCController::handleChangeSubjectRequest(const std::string& subject) {
 	muc_->changeSubject(subject);
+}
+
+void MUCController::handleBookmarkRequest() {
+	const JID jid = muc_->getJID();
+	MUCBookmark bookmark(jid, jid.toBare().toString());
+	bookmark.setPassword(password_);
+	bookmark.setNick(nick_);
+	chatWindow_->showBookmarkWindow(bookmark);
 }
 
 void MUCController::handleConfigureRequest(Form::ref form) {

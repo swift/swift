@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,6 +19,7 @@
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/MUC/MUCBookmark.h>
 #include <Swift/Controllers/HighlightManager.h>
 
 
@@ -148,6 +149,7 @@ namespace Swift {
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &actions) = 0;
 			virtual void setBlockingState(BlockingState state) = 0;
 			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu) = 0;
+			virtual void showBookmarkWindow(const MUCBookmark& bookmark) = 0;
 			/**
 			 * Set an alert on the window.
 			 * @param alertText Description of alert (required).
@@ -180,6 +182,7 @@ namespace Swift {
 			boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
 			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
+			boost::signal<void ()> onBookmarkRequest;
 			boost::signal<void (Form::ref)> onConfigureRequest;
 			boost::signal<void ()> onDestroyRequest;
 			boost::signal<void (const std::vector<JID>&)> onInviteToChat;

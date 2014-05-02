@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -71,6 +71,7 @@ namespace Swift {
 
 			virtual void setBlockingState(BlockingState) {}
 			virtual void setCanInitiateImpromptuChats(bool /*supportsImpromptu*/) {}
+			virtual void showBookmarkWindow(const MUCBookmark& /*bookmark*/) {}
 
 			std::string bodyFromMessage(const ChatMessage& message) {
 				boost::shared_ptr<ChatTextMessagePart> text;

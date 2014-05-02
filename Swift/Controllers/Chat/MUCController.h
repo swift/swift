@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -93,6 +93,7 @@ namespace Swift {
 			void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
 			void handleJoinTimeoutTick();
 			void handleChangeSubjectRequest(const std::string&);
+			void handleBookmarkRequest();
 			std::string roleToGroupName(MUCOccupant::Role role);
 			std::string roleToSortName(MUCOccupant::Role role);
 			JID nickToJID(const std::string& nick);
