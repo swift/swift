@@ -62,6 +62,7 @@ namespace Swift {
 			static std::string concatenateListOfNames(const std::vector<NickJoinPart>& joinParts);
 			bool isJoined();
 			const std::string& getNick();
+			const boost::optional<std::string> getPassword() const;
 			bool isImpromptu() const;
 			std::map<std::string, JID> getParticipantJIDs() const;
 			void sendInvites(const std::vector<JID>& jids, const std::string& reason) const;

@@ -243,6 +243,10 @@ const std::string& MUCController::getNick() {
 	return nick_;
 }
 
+const boost::optional<std::string> MUCController::getPassword() const {
+	return password_;
+}
+
 bool MUCController::isImpromptu() const {
 	return isImpromptu_;
 }

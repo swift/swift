@@ -36,8 +36,10 @@ namespace Swift {
 			void handleAddBookmark();
 			void handleEditBookmark();
 			void handleRemoveBookmark();
+			void handleAddBookmarkFromRecents();
 			void handleClicked(const QModelIndex& index);
 			void handleSettingChanged(const std::string& setting);
+			void handleClearRecentsRequested();
 
 		protected:
 			void dragEnterEvent(QDragEnterEvent* event);
@@ -51,6 +53,7 @@ namespace Swift {
 			ChatListDelegate* delegate_;
 			QMenu* mucMenu_;
 			QMenu* emptyMenu_;
+			QMenu* mucRecentsMenu_;
 			ChatListItem* contextMenuItem_;
 			SettingsProvider* settings_;
 	};

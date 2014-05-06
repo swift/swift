@@ -11,6 +11,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/optional.hpp>
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/map.hpp>
 #include <boost/serialization/string.hpp>
@@ -62,6 +63,8 @@
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/Log.h>
 
+BOOST_CLASS_VERSION(Swift::ChatListWindow::Chat, 1)
+
 namespace boost {
 namespace serialization {
 	template<class Archive> void save(Archive& ar, const Swift::JID& jid, const unsigned int /*version*/) {
@@ -79,13 +82,16 @@ namespace serialization {
 		split_free(ar, t, file_version);
 	}
 
-	template<class Archive> void serialize(Archive& ar, Swift::ChatListWindow::Chat& chat, const unsigned int /*version*/) {
+	template<class Archive> void serialize(Archive& ar, Swift::ChatListWindow::Chat& chat, const unsigned int version) {
 		ar & chat.jid;
 		ar & chat.chatName;
 		ar & chat.activity;
 		ar & chat.isMUC;
 		ar & chat.nick;
 		ar & chat.impromptuJIDs;
+		if (version > 0) {
+			ar & chat.password;
+		}
 	}
 }
 }
@@ -369,6 +375,7 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 		MUCController* controller = mucControllers_[jid.toBare()];
 		StatusShow::Type type = StatusShow::None;
 		std::string nick = "";
+		std::string password = "";
 		if (controller) {
 			unreadCount = controller->getUnreadCount();
 			if (controller->isJoined()) {
@@ -376,15 +383,19 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 			}
 			nick = controller->getNick();
 
+			if (controller->getPassword()) {
+				password = *controller->getPassword();
+			}
+
 			if (controller->isImpromptu()) {
-				ChatListWindow::Chat chat = ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick);
+				ChatListWindow::Chat chat = ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick, password);
 				typedef std::pair<std::string, JID> StringJIDPair;
 				std::map<std::string, JID> participants = controller->getParticipantJIDs();
 				chat.impromptuJIDs = participants;
 				return chat;
 			}
 		}
-		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick);
+		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick, password);
 	} else {
 		ChatController* controller = getChatControllerIfExists(jid, false);
 		if (controller) {

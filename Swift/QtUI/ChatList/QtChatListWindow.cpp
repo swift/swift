@@ -68,6 +68,10 @@ void QtChatListWindow::handleSettingChanged(const std::string& setting) {
 	}
 }
 
+void QtChatListWindow::handleClearRecentsRequested() {
+	onClearRecentsRequested();
+}
+
 void QtChatListWindow::setBookmarksEnabled(bool enabled) {
 	bookmarksEnabled_ = enabled;
 }
@@ -84,9 +88,11 @@ void QtChatListWindow::setupContextMenus() {
 	mucMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
 	mucMenu_->addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
 	mucMenu_->addAction(tr("Remove Bookmark"), this, SLOT(handleRemoveBookmark()));
+	mucRecentsMenu_ = new QMenu();
+	mucRecentsMenu_->addAction(tr("Add to Bookmarks"), this, SLOT(handleAddBookmarkFromRecents()));
+	mucRecentsMenu_->addAction(tr("Clear recents"), this, SLOT(handleClearRecentsRequested()));
 	emptyMenu_ = new QMenu();
 	emptyMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
-	
 }
 
 void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
@@ -142,6 +148,17 @@ void QtChatListWindow::handleRemoveBookmark() {
 	eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveMUCBookmarkUIEvent(mucItem->getBookmark())));
 }
 
+void QtChatListWindow::handleAddBookmarkFromRecents() {
+	ChatListRecentItem* item = dynamic_cast<ChatListRecentItem*>(contextMenuItem_);
+	if (item) {
+		const ChatListWindow::Chat& chat = item->getChat();
+		MUCBookmark bookmark(chat.jid, chat.jid.toBare().toString());
+		bookmark.setNick(chat.nick);
+		bookmark.setPassword(chat.password);
+		eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(bookmark)));
+	}
+}
+
 void QtChatListWindow::handleAddBookmark() {
 	(new QtAddBookmarkWindow(eventStream_))->show();
 }
@@ -168,22 +185,28 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
 		emptyMenu_->exec(QCursor::pos());
 		return;
 	}
+
 	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(baseItem);
 	if (mucItem) {
 		if (!bookmarksEnabled_) {
 			return;
 		}
 		mucMenu_->exec(QCursor::pos());
+		return;
 	}
-	else {
-		QMenu menu;
-		QAction* clearRecents = menu.addAction(tr("Clear recents"));
-		menu.addAction(clearRecents);
-		QAction* result = menu.exec(event->globalPos());
-		if (result == clearRecents) {
-			onClearRecentsRequested();
+
+	ChatListRecentItem* recentItem = dynamic_cast<ChatListRecentItem*>(baseItem);
+	if (recentItem) {
+		const ChatListWindow::Chat& chat = recentItem->getChat();
+		if (chat.isMUC) {
+			mucRecentsMenu_->exec(QCursor::pos());
+			return;
 		}
 	}
+
+	QMenu menu;
+	menu.addAction(tr("Clear recents"), this, SLOT(handleClearRecentsRequested()));
+	menu.exec(event->globalPos());
 }
 
 }
