@@ -57,6 +57,8 @@ std::string IQConvertor::convertIQTypeToString(IQ::Type type) {
 		case IQ::Result: return "result";
 		case IQ::Error: return "error";
 	}
+	assert(false);
+	return "";
 }
 
 IQ::Type IQConvertor::convertIQTypeFromString(const std::string& type) {

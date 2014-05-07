@@ -61,6 +61,8 @@ std::string PresenceConvertor::convertPresenceTypeToString(Presence::Type type) 
 		case Presence::Unsubscribe: return "unsubscribe";
 		case Presence::Unsubscribed: return "unsubscribed";
 	}
+	assert(false);
+	return "";
 }
 
 Presence::Type PresenceConvertor::convertPresenceTypeFromString(const std::string& type) {

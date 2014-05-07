@@ -58,6 +58,8 @@ std::string MessageConvertor::convertMessageTypeToString(Message::Type type) {
 		case Message::Groupchat: return "groupchat";
 		case Message::Headline: return "headline";
 	}
+	assert(false);
+	return "";
 }
 
 Message::Type MessageConvertor::convertMessageTypeFromString(const std::string& type) {
