@@ -473,7 +473,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 			if (!lua_isnil(L, -1)) {
 				jid = JID(lua_tostring(L, -1));
 			}
-			router->sendIQ(IQ::createRequest(IQ::Get, jid, IDGenerator().generateID(), mamQuery));
+			router->sendIQ(IQ::createRequest(IQ::Set, jid, IDGenerator().generateID(), mamQuery));
 	}
 	else {
 		throw Lua::Exception("Illegal MAMQuery");

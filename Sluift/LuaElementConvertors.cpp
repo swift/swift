@@ -52,9 +52,6 @@ LuaElementConvertors::LuaElementConvertors() {
 	convertors.push_back(boost::make_shared<SoftwareVersionConvertor>());
 	convertors.push_back(boost::make_shared<DiscoInfoConvertor>());
 	convertors.push_back(boost::make_shared<DiscoItemsConvertor>());
-	convertors.push_back(boost::make_shared<DOMElementConvertor>());
-	convertors.push_back(boost::make_shared<RawXMLElementConvertor>());
-	convertors.push_back(boost::make_shared<DefaultElementConvertor>());
 	convertors.push_back(boost::make_shared<IQConvertor>(this));
 	convertors.push_back(boost::make_shared<PresenceConvertor>(this));
 	convertors.push_back(boost::make_shared<MessageConvertor>(this));
@@ -63,6 +60,9 @@ LuaElementConvertors::LuaElementConvertors() {
 	convertors.push_back(boost::make_shared<MAMResultConvertor>(this));
 	convertors.push_back(boost::make_shared<MAMQueryConvertor>(this));
 	convertors.push_back(boost::make_shared<MAMArchivedConvertor>(this));
+	convertors.push_back(boost::make_shared<DOMElementConvertor>());
+	convertors.push_back(boost::make_shared<RawXMLElementConvertor>());
+	convertors.push_back(boost::make_shared<DefaultElementConvertor>());
 }
 
 LuaElementConvertors::~LuaElementConvertors() {
