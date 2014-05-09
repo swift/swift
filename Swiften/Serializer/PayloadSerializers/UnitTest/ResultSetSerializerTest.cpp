@@ -19,6 +19,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(ResultSetSerializerTest);
 		CPPUNIT_TEST(testSerializeFull);
 		CPPUNIT_TEST(testSerializeMaxItems);
+		CPPUNIT_TEST(testSerializeEmptyBefore);
 		CPPUNIT_TEST(testSerializeFirst);
 		CPPUNIT_TEST(testSerializeFirstWithIndex);
 		CPPUNIT_TEST_SUITE_END();
@@ -35,6 +36,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
 			resultSet->setFirstID(std::string("stpeter@jabber.org"));
 			resultSet->setLastID(std::string("peterpan@neverland.lit"));
 			resultSet->setAfter(std::string("09af3-cc343-b409f"));
+			resultSet->setBefore(std::string("decaf-badba-dbad1"));
 
 			std::string expectedResult = 
 				"<set xmlns=\"http://jabber.org/protocol/rsm\">"
@@ -42,6 +44,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
 					"<count>800</count>"
 					"<first index=\"123\">stpeter@jabber.org</first>"
 					"<last>peterpan@neverland.lit</last>"
+					"<before>decaf-badba-dbad1</before>"
 					"<after>09af3-cc343-b409f</after>"
 				"</set>";
 
@@ -58,6 +61,21 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
 			std::string expectedResult = 
 				"<set xmlns=\"http://jabber.org/protocol/rsm\">"
 					"<max>100</max>"
+				"</set>";
+
+			CPPUNIT_ASSERT_EQUAL(expectedResult, serializer.serialize(resultSet));
+		}
+
+		void testSerializeEmptyBefore() {
+			ResultSetSerializer serializer;
+
+			boost::shared_ptr<ResultSet> resultSet(boost::make_shared<ResultSet>());
+
+			resultSet->setBefore(std::string());
+
+			std::string expectedResult =
+				"<set xmlns=\"http://jabber.org/protocol/rsm\">"
+					"<before/>"
 				"</set>";
 
 			CPPUNIT_ASSERT_EQUAL(expectedResult, serializer.serialize(resultSet));

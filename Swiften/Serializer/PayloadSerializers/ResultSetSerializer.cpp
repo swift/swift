@@ -45,6 +45,10 @@ std::string ResultSetSerializer::serializePayload(boost::shared_ptr<ResultSet> p
 		element.addNode(boost::make_shared<XMLElement>("last", "", *payload->getLastID()));
 	}
 
+	if (payload->getBefore()) {
+		element.addNode(boost::make_shared<XMLElement>("before", "", *payload->getBefore()));
+	}
+
 	if (payload->getAfter()) {
 		element.addNode(boost::make_shared<XMLElement>("after", "", *payload->getAfter()));
 	}

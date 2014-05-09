@@ -47,6 +47,8 @@ void ResultSetParser::handleEndElement(const std::string& element, const std::st
 			getPayloadInternal()->setFirstID(currentText_);
 		} else if (element == "last") {
 			getPayloadInternal()->setLastID(currentText_);
+		} else if (element == "before") {
+			getPayloadInternal()->setBefore(currentText_);
 		} else if (element == "after") {
 			getPayloadInternal()->setAfter(currentText_);
 		}

@@ -30,6 +30,9 @@ namespace Swift {
 			void setLastID(const boost::optional<std::string>& lastID) { lastID_ = lastID; }
 			const boost::optional<std::string>& getLastID() const { return lastID_; }
 
+			void setBefore(const boost::optional<std::string>& before) { before_ = before; }
+			const boost::optional<std::string>& getBefore() const { return before_; }
+
 			void setAfter(const boost::optional<std::string>& after) { after_ = after; }
 			const boost::optional<std::string>& getAfter() const { return after_; }
 
@@ -39,6 +42,7 @@ namespace Swift {
 			boost::optional<int> firstIndex_;
 			boost::optional<std::string> firstID_;
 			boost::optional<std::string> lastID_;
+			boost::optional<std::string> before_;
 			boost::optional<std::string> after_;
 	};
 }

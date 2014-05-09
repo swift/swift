@@ -53,6 +53,11 @@ boost::shared_ptr<ResultSet> ResultSetConvertor::doConvertFromLua(lua_State* L) 
 		result->setAfter(std::string(lua_tostring(L, -1)));
 	}
 	lua_pop(L, 1);
+	lua_getfield(L, -1, "before");
+	if (lua_isstring(L, -1)) {
+		result->setBefore(std::string(lua_tostring(L, -1)));
+	}
+	lua_pop(L, 1);
 	return result;
 }
 
@@ -81,6 +86,10 @@ void ResultSetConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<ResultSe
 	if (payload->getAfter()) {
 		lua_pushstring(L, (*payload->getAfter()).c_str());
 		lua_setfield(L, -2, "after");
+	}
+	if (payload->getBefore()) {
+		lua_pushstring(L, (*payload->getBefore()).c_str());
+		lua_setfield(L, -2, "before");
 	}
 }
 

@@ -28,6 +28,7 @@ class ResultSetParserTest : public CppUnit::TestFixture
 					"<count>800</count>"
 					"<first index=\"123\">stpeter@jabber.org</first>"
 					"<last>peterpan@neverland.lit</last>"
+					"<before>decaf-badba-dbad1</before>"
 					"<after>09af3-cc343-b409f</after>"
 				"</set>"));
 
@@ -43,6 +44,8 @@ class ResultSetParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(123, *payload->getFirstIDIndex());
 			CPPUNIT_ASSERT(payload->getLastID());
 			CPPUNIT_ASSERT_EQUAL(std::string("peterpan@neverland.lit"), *payload->getLastID());
+			CPPUNIT_ASSERT(payload->getBefore());
+			CPPUNIT_ASSERT_EQUAL(std::string("decaf-badba-dbad1"), *payload->getBefore());
 			CPPUNIT_ASSERT(payload->getAfter());
 			CPPUNIT_ASSERT_EQUAL(std::string("09af3-cc343-b409f"), *payload->getAfter());
 		}
