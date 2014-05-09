@@ -391,7 +391,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	// Register convenience functions
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 	std::vector<std::string> coreLibExports = boost::assign::list_of
-		("tprint")("disco")("help")("get_help")("copy")("with")("read_file");
+		("tprint")("disco")("help")("get_help")("copy")("with")("read_file")("create_form");
 	foreach (const std::string& coreLibExport, coreLibExports) {
 		lua_getfield(L, -1, coreLibExport.c_str());
 		lua_setfield(L, -3, coreLibExport.c_str());

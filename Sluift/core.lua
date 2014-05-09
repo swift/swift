@@ -442,6 +442,27 @@ local function read_file(file)
 	return result
 end
 
+_H = {
+	[[ Generate a form table, suitable for PubSubConfiguration and MAMQuery ]],
+	parameters = { {"fields", "The fields that will be converted into a form table"},
+		       {"form_type", "If specified, add a form_type field with this value"},
+		       {"type", "Form type, e.g. 'submit'"} }
+}
+local function create_form(fields, ...)
+	local options = parse_options({}, ...)
+	local result = { fields = {} }
+	for var, value in pairs(fields) do
+		result.fields[#result.fields+1] = { name = var, value = value }
+	end
+	if options.form_type then
+		result.fields[#result.fields+1] = { name = 'form_type', value = form_type }
+	end
+	if options.type then
+		result['type'] = type
+	end
+	return result
+end
+
 --------------------------------------------------------------------------------
 -- Metatables
 --------------------------------------------------------------------------------
@@ -809,14 +830,7 @@ end
 --------------------------------------------------------------------------------
 
 local function pubsub_node_configuration_to_form(configuration)
-	if not configuration then
-		return
-	end
-	local fields = { {name = 'form_type', value = 'http://jabber.org/protocol/pubsub#node_config'} }
-	for var, value in pairs(configuration) do
-		fields[#fields+1] = { name = var, value = value }
-	end
-	return { type = "submit", fields = fields }
+	return create_form{configuration, form_type="http://jabber.org/protocol/pubsub#node_config", type="submit"}
 end
 
 function PubSubNode:list_items (options)
@@ -1018,5 +1032,6 @@ return {
 	help = help,
 	extra_help = extra_help,
 	copy = copy,
-	with = with
+	with = with,
+	create_form = create_form
 }
