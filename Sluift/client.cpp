@@ -463,21 +463,19 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 
 		"See help('MAMQuery') for details."
 ) {
-	if (!lua_istable(L, 2)) {
-		throw Lua::Exception("Missing MAMQuery");
+	Lua::checkType(L, 2, LUA_TTABLE);
+	boost::shared_ptr<MAMQuery> mamQuery = boost::make_shared<MAMQuery>();
+	lua_getfield(L, 2, "mam_query");
+	if (lua_istable(L, -1)) {
+		mamQuery = boost::dynamic_pointer_cast<MAMQuery>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, -1, "mam_query"));
 	}
-	if (boost::shared_ptr<MAMQuery> mamQuery = boost::dynamic_pointer_cast<MAMQuery>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "mam_query"))) {
-			IQRouter *router = getClient(L)->getClient()->getIQRouter();
-			JID jid;
-			lua_getfield(L, 2, "jid");
-			if (!lua_isnil(L, -1)) {
-				jid = JID(lua_tostring(L, -1));
-			}
-			router->sendIQ(IQ::createRequest(IQ::Set, jid, IDGenerator().generateID(), mamQuery));
+	JID jid;
+	lua_getfield(L, 2, "jid");
+	if (!lua_isnil(L, -1)) {
+		jid = JID(lua_tostring(L, -1));
 	}
-	else {
-		throw Lua::Exception("Illegal MAMQuery");
-	}
+	IQRouter *router = getClient(L)->getClient()->getIQRouter();
+	router->sendIQ(IQ::createRequest(IQ::Set, jid, IDGenerator().generateID(), mamQuery));
 	return 0;
 }
 
