@@ -448,18 +448,23 @@ _H = {
 		       {"form_type", "If specified, add a form_type field with this value"},
 		       {"type", "Form type, e.g. 'submit'"} }
 }
-local function create_form(fields, ...)
+local function create_form(...)
 	local options = parse_options({}, ...)
 	local result = { fields = {} }
-	for var, value in pairs(fields) do
-		result.fields[#result.fields+1] = { name = var, value = value }
+	-- FIXME: make nicer when parse_options binds positional arguments to names
+	if options.fields then
+		for var, value in pairs(options.fields) do
+			result.fields[#result.fields+1] = { name = var, value = value }
+		end
+	elseif options[1] then
+		for var, value in pairs(options[1]) do
+			result.fields[#result.fields+1] = { name = var, value = value }
+		end
 	end
 	if options.form_type then
-		result.fields[#result.fields+1] = { name = 'form_type', value = form_type }
+		result.fields[#result.fields+1] = { name = 'FORM_TYPE', value = options.form_type }
 	end
-	if options.type then
-		result['type'] = type
-	end
+	result['type'] = options.type
 	return result
 end
 
