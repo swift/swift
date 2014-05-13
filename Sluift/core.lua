@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2013 Remko Tronçon
+	Copyright (c) 2013-2014 Remko Tronçon
 	Licensed under the GNU General Public License.
 	See the COPYING file for more information.
 --]]
@@ -747,8 +747,8 @@ register_help(Client.process_events)
 --	client:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
 --
 local get_set_shortcuts = {
-	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard'},
-	set = {'command'}
+	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard', 'mam'},
+	set = {'command', 'mam'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
 	for _, query_type in ipairs(query_types) do

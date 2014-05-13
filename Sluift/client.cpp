@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -449,33 +449,6 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		client->getOptions().allowPLAINWithoutTLS = lua_toboolean(L, -1);
 	}
 	lua_pushvalue(L, 1);
-	return 0;
-}
-
-SLUIFT_LUA_FUNCTION_WITH_HELP(
-		Client, send_mam_query,
-
-		"Builds and sends a MAM query.\n",
-
-		"self\n"
-		"mam_query  parameters for the query\n"
-		"jid  optional jid to set in the 'to' field of the IQ stanza",
-
-		"See help('MAMQuery') for details."
-) {
-	Lua::checkType(L, 2, LUA_TTABLE);
-	boost::shared_ptr<MAMQuery> mamQuery = boost::make_shared<MAMQuery>();
-	lua_getfield(L, 2, "mam_query");
-	if (lua_istable(L, -1)) {
-		mamQuery = boost::dynamic_pointer_cast<MAMQuery>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, -1, "mam_query"));
-	}
-	JID jid;
-	lua_getfield(L, 2, "jid");
-	if (!lua_isnil(L, -1)) {
-		jid = JID(lua_tostring(L, -1));
-	}
-	IQRouter *router = getClient(L)->getClient()->getIQRouter();
-	router->sendIQ(IQ::createRequest(IQ::Set, jid, IDGenerator().generateID(), mamQuery));
 	return 0;
 }
 

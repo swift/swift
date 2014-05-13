@@ -17,7 +17,7 @@
 using namespace Swift;
 
 MAMQueryConvertor::MAMQueryConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<MAMQuery>("mam_query"),
+		GenericLuaElementConvertor<MAMQuery>("mam"),
 		convertors(convertors) {
 }
 
