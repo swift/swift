@@ -14,7 +14,7 @@
 using namespace Swift;
 
 MessageConvertor::MessageConvertor(LuaElementConvertors* convertors) : 
-		StanzaConvertor("message"),
+		StanzaConvertor<Message>("message"),
 		convertors(convertors) {
 }
 

@@ -14,7 +14,7 @@
 using namespace Swift;
 
 PresenceConvertor::PresenceConvertor(LuaElementConvertors* convertors) : 
-		StanzaConvertor("presence"),
+		StanzaConvertor<Presence>("presence"),
 		convertors(convertors) {
 }
 

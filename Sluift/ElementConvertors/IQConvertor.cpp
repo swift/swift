@@ -14,7 +14,7 @@
 using namespace Swift;
 
 IQConvertor::IQConvertor(LuaElementConvertors* convertors) : 
-		StanzaConvertor("iq"),
+		StanzaConvertor<IQ>("iq"),
 		convertors(convertors) {
 }
 
