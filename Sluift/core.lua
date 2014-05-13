@@ -919,7 +919,6 @@ end
 
 function PubSubNode:subscribe(...)
 	local options = parse_options({}, ...)
-	tprint(options)
 	local jid = options.jid or sluift.jid.to_bare(self.client:jid())
 	return self.client:query_pubsub(merge_tables(
 		{ type = 'set', to = self.jid, query = { 
