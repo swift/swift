@@ -202,16 +202,12 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
 #ifdef HAVE_SPELLCHECKER
 void QtTextEdit::setUpSpellChecker()
 {
-	SpellCheckerFactory* checkerFactory = new SpellCheckerFactory();
 	delete checker_;
+	checker_ = NULL;
 	if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
 		std::string dictPath = settings_->getSetting(SettingConstants::DICT_PATH);
 		std::string dictFile = settings_->getSetting(SettingConstants::DICT_FILE);
-		checker_ = checkerFactory->createSpellChecker(dictPath + dictFile);
-		delete checkerFactory;
-	}
-	else {
-		checker_ = NULL;
+		checker_ = SpellCheckerFactory().createSpellChecker(dictPath + dictFile);
 	}
 }
 #endif

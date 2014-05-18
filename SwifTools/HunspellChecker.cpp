@@ -26,7 +26,7 @@ bool HunspellChecker::isCorrect(const std::string& word) {
 }
 
 void HunspellChecker::getSuggestions(const std::string& word, std::vector<std::string>& list) {
-	char **suggestList;
+	char **suggestList = NULL;
 	int words_returned;
 	if (!word.empty()) {
 		words_returned = speller_->suggest(&suggestList, word.c_str());
