@@ -239,7 +239,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 					MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 					mucPayload->setPayload(boost::make_shared<Form>(Form::SubmitType));
-					GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+					boost::shared_ptr< GenericRequest<MUCOwnerPayload> > request = boost::make_shared< GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
 					request->onResponse.connect(boost::bind(&MUCImpl::handleCreationConfigResponse, this, _1, _2));
 					request->send();
 				}
@@ -285,7 +285,7 @@ void MUCImpl::changeOccupantRole(const JID& jid, MUCOccupant::Role role) {
 	item.role = role;
 	item.nick = jid.getResource();
 	mucPayload->addItem(item);
-	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr<GenericRequest<MUCAdminPayload> > request = boost::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUCImpl::handleOccupantRoleChangeResponse, this, _1, _2, jid, role));
 	request->send();
 	
@@ -302,7 +302,7 @@ void MUCImpl::requestAffiliationList(MUCOccupant::Affiliation affiliation) {
 	MUCItem item;
 	item.affiliation = affiliation;
 	mucPayload->addItem(item);
-	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Get, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr<GenericRequest<MUCAdminPayload> > request = boost::make_shared< GenericRequest<MUCAdminPayload> >(IQ::Get, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUCImpl::handleAffiliationListResponse, this, _1, _2, affiliation));
 	request->send();
 }
@@ -316,7 +316,7 @@ void MUCImpl::changeAffiliation(const JID& jid, MUCOccupant::Affiliation affilia
 	item.affiliation = affiliation;
 	item.realJID = jid.toBare();
 	mucPayload->addItem(item);
-	GenericRequest<MUCAdminPayload>* request = new GenericRequest<MUCAdminPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr<GenericRequest<MUCAdminPayload> > request = boost::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUCImpl::handleAffiliationChangeResponse, this, _1, _2, jid, affiliation));
 	request->send();
 }
@@ -352,7 +352,7 @@ void MUCImpl::changeSubject(const std::string& subject) {
 
 void MUCImpl::requestConfigurationForm() {
 	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
-	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Get, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr<GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Get, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUCImpl::handleConfigurationFormReceived, this, _1, _2));
 	request->send();
 }
@@ -360,7 +360,7 @@ void MUCImpl::requestConfigurationForm() {
 void MUCImpl::cancelConfigureRoom() {
 	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 	mucPayload->setPayload(boost::make_shared<Form>(Form::CancelType));
-	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr<GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->send();
 }
 
@@ -385,7 +385,7 @@ void MUCImpl::handleConfigurationResultReceived(MUCOwnerPayload::ref /*payload*/
 void MUCImpl::configureRoom(Form::ref form) {
 	MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 	mucPayload->setPayload(form);
-	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr<GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
 	if (unlocking) {
 		request->onResponse.connect(boost::bind(&MUCImpl::handleCreationConfigResponse, this, _1, _2));
 	}
@@ -399,7 +399,7 @@ void MUCImpl::destroyRoom() {
 	MUCOwnerPayload::ref mucPayload = boost::make_shared<MUCOwnerPayload>();
 	MUCDestroyPayload::ref mucDestroyPayload = boost::make_shared<MUCDestroyPayload>();
 	mucPayload->setPayload(mucDestroyPayload);
-	GenericRequest<MUCOwnerPayload>* request = new GenericRequest<MUCOwnerPayload>(IQ::Set, getJID(), mucPayload, iqRouter_);
+	boost::shared_ptr< GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
 	request->onResponse.connect(boost::bind(&MUCImpl::handleConfigurationResultReceived, this, _1, _2));
 	request->send();
 }
