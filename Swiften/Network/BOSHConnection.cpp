@@ -32,6 +32,7 @@ BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XML
 	  parserFactory_(parserFactory),
 	  sid_(),
 	  waitingForStartResponse_(false),
+		rid_(~0ULL),
 	  pending_(false),
 	  connectionReady_(false)
 {

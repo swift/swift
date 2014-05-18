@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -21,6 +21,9 @@ namespace Swift {
 				IQStanza,
 				MessageStanza
 			};
+
+			JingleIBBTransportPayload() : stanzaType(IQStanza) {
+			}
 
 			void setStanzaType(StanzaType stanzaType) {
 				this->stanzaType = stanzaType;

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swiften/Network/SOCKS5ProxiedConnection.h>
 
 #include <iostream>
@@ -24,7 +30,8 @@ SOCKS5ProxiedConnection::SOCKS5ProxiedConnection(
 		TimerFactory* timerFactory, 
 		const std::string& proxyHost, 
 		int proxyPort) :
-			ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort) {
+			ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort),
+			proxyState_(Initial) {
 			}
 
 void SOCKS5ProxiedConnection::initializeProxy() {

@@ -29,7 +29,8 @@ namespace Swift {
 
 		private:
 			enum {
-				ProxyAuthenticating = 0,
+				Initial = 0,
+				ProxyAuthenticating,
 				ProxyConnecting
 			} proxyState_;
 	};

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -23,7 +23,7 @@
 #include "QtScaledAvatarCache.h"
 
 namespace Swift {
-QtRosterHeader::QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent) : QWidget(parent) {
+QtRosterHeader::QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent) : QWidget(parent), statusEdit_(false) {
 	QHBoxLayout* topLayout = new QHBoxLayout();
 	topLayout->setSpacing(3);
 	topLayout->setContentsMargins(4,4,4,4);

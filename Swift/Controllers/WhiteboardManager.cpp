@@ -125,7 +125,9 @@ namespace Swift {
 
 	void WhiteboardManager::handleSessionAccept(const JID& contact) {
 		WhiteboardWindow* window = findWhiteboardWindow(contact);
-		window->show();
+		if (window != NULL) {
+			window->show();
+		}
 		onRequestAccepted(contact);
 	}
 

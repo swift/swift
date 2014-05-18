@@ -124,7 +124,6 @@ namespace Swift {
 			QtChatWindow* window_;
 			UIEventStream* eventStream_;
 			LogTextEdit* log_;
-			QMenu* logMenu_;
 			FileTransferMap fileTransfers_;
 			std::map<std::string, boost::shared_ptr<SecurityLabel> > lastMessageLabel_;
 			int idGenerator_;

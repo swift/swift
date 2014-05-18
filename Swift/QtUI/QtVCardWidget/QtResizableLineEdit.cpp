@@ -4,12 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+
 #include "QtResizableLineEdit.h"
 
 namespace Swift {
 
 QtResizableLineEdit::QtResizableLineEdit(QWidget* parent) :
-	QLineEdit(parent) {
+	QLineEdit(parent), editable(false) {
 	connect(this, SIGNAL(textChanged(QString)), SLOT(textChanged(QString)));
 	setMinimumWidth(30);
 }

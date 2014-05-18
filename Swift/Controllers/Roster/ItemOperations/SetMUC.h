@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Kevin Smith and Remko Tronçon
+ * Copyright (c) 2013-2014 Kevin Smith and Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -31,7 +31,6 @@ class SetMUC : public RosterItemOperation {
 
 	private:
 		JID jid_;
-		bool mucParticipant_;
 		MUCOccupant::Role mucRole_;
 		MUCOccupant::Affiliation mucAffiliation_;
 };

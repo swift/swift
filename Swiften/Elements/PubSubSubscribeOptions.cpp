@@ -8,7 +8,7 @@
 
 using namespace Swift;
 
-PubSubSubscribeOptions::PubSubSubscribeOptions() {
+PubSubSubscribeOptions::PubSubSubscribeOptions() : required(false) {
 }
 
 PubSubSubscribeOptions::~PubSubSubscribeOptions() {

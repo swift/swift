@@ -26,6 +26,9 @@ namespace Swift {
 				ResponderCreator
 			};
 
+			JingleContentPayload() : creator(UnknownCreator) {
+			}
+
 			/*enum Senders {
 				NoSenders,
 				InitiatorSender,

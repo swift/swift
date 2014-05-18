@@ -20,6 +20,8 @@ MemoryStorages::MemoryStorages(CryptoProvider* crypto) {
 	rosterStorage = new RosterMemoryStorage();
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	historyStorage = new SQLiteHistoryStorage(":memory:");
+#else
+	historyStorage = NULL;
 #endif
 }
 
@@ -28,9 +30,7 @@ MemoryStorages::~MemoryStorages() {
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
-#ifdef SWIFT_EXPERIMENTAL_HISTORY
 	delete historyStorage;
-#endif
 }
 
 VCardStorage* MemoryStorages::getVCardStorage() const {

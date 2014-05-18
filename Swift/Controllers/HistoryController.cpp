@@ -4,6 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+
 #include <Swift/Controllers/HistoryController.h>
 #include <Swiften/History/HistoryStorage.h>
 #include <Swiften/History/HistoryMessage.h>
@@ -11,7 +18,7 @@
 
 namespace Swift {
 
-HistoryController::HistoryController(HistoryStorage* localHistoryStorage) : localHistory_(localHistoryStorage) {
+HistoryController::HistoryController(HistoryStorage* localHistoryStorage) : localHistory_(localHistoryStorage), remoteArchiveSupported_(false) {
 }
 
 HistoryController::~HistoryController() {

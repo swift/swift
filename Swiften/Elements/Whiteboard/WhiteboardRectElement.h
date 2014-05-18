@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
@@ -14,7 +20,7 @@ namespace Swift {
 	public:
 		typedef boost::shared_ptr<WhiteboardRectElement> ref;
 	public:
-		WhiteboardRectElement(int x, int y, int width, int height) {
+		WhiteboardRectElement(int x, int y, int width, int height) : penWidth_(1) {
 			x_ = x;
 			y_ = y;
 			width_ = width;

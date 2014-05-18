@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 using namespace Swift;
 
-FileTransfer::FileTransfer() {
+FileTransfer::FileTransfer() : fileSizeInBytes(0) {
 }
 
 FileTransfer::~FileTransfer() {

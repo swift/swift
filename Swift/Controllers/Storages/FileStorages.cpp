@@ -22,6 +22,8 @@ FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& ji
 	rosterStorage = new RosterFileStorage(baseDir / profile / "roster.xml");
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	historyStorage = new SQLiteHistoryStorage(baseDir / "history.db");
+#else
+	historyStorage = NULL;
 #endif
 }
 
@@ -30,9 +32,7 @@ FileStorages::~FileStorages() {
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
-#ifdef SWIFT_EXPERIMENTAL_HISTORY
 	delete historyStorage;
-#endif
 }
 
 VCardStorage* FileStorages::getVCardStorage() const {

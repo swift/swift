@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -19,7 +19,7 @@
 #include <QAction>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), trayMenu_(0), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/connecting.mng"), unreadMessages_(false), connecting_(false) {
+QtSystemTray::QtSystemTray() : QObject(), statusType_(StatusShow::None), trayMenu_(0), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/connecting.mng"), unreadMessages_(false), connecting_(false) {
 	trayIcon_ = new QSystemTrayIcon(offlineIcon_);
 	trayIcon_->setToolTip("Swift");
 	connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));

@@ -8,7 +8,7 @@
 
 using namespace Swift;
 
-PubSubRetract::PubSubRetract() {
+PubSubRetract::PubSubRetract() : notify(false) {
 }
 
 PubSubRetract::~PubSubRetract() {

@@ -1,8 +1,10 @@
 /*
- * Copyright (c) 2011-2013 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
+
+
 
 #include "QtAvatarWidget.h"
 
@@ -23,7 +25,7 @@
 
 namespace Swift {
 
-QtAvatarWidget::QtAvatarWidget(QWidget* parent) : QWidget(parent) {
+QtAvatarWidget::QtAvatarWidget(QWidget* parent) : QWidget(parent), editable(false) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	layout->setContentsMargins(0,0,0,0);
 
