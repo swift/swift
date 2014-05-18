@@ -189,7 +189,8 @@ void CommandConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Command> p
 	Lua::pushValue(L, result);
 
 	if (payload->getForm()) {
-		convertors->convertToLuaUntyped(L, payload->getForm());
+		bool result = convertors->convertToLuaUntyped(L, payload->getForm());
+		assert(result);
 		lua_setfield(L, -2, "form");
 	}
 }

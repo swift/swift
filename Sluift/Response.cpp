@@ -59,13 +59,15 @@ int Response::convertToLuaResult(lua_State* L) {
 	if (error) {
 		lua_pushnil(L);
 		lua_pushstring(L, getErrorString(error).c_str());
-		Sluift::globals.elementConvertor.convertToLuaUntyped(L, error);
+		bool converted = Sluift::globals.elementConvertor.convertToLuaUntyped(L, error);
+		assert(converted);
 		Lua::registerTableToString(L, -1);
 		return 3;
 	}
 	else {
 		if (result) {
-			Sluift::globals.elementConvertor.convertToLuaUntyped(L, result);
+			bool converted = Sluift::globals.elementConvertor.convertToLuaUntyped(L, result);
+			assert(converted);
 			Lua::registerTableToString(L, -1);
 		}
 		else {
