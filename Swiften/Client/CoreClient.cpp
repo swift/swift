@@ -74,7 +74,7 @@ void CoreClient::connect(const ClientOptions& o) {
 		case ClientOptions::SystemConfiguredProxy:
 			SWIFT_LOG(debug) << " with a system configured proxy" << std::endl;
 			if (systemSOCKS5Proxy.isValid()) {
-				SWIFT_LOG(debug) << "Found SOCK5 Proxy: " << systemSOCKS5Proxy.getAddress().toString() << ":" << systemHTTPConnectProxy.getPort() << std::endl;
+				SWIFT_LOG(debug) << "Found SOCK5 Proxy: " << systemSOCKS5Proxy.getAddress().toString() << ":" << systemSOCKS5Proxy.getPort() << std::endl;
 				proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemSOCKS5Proxy.getAddress().toString(), systemSOCKS5Proxy.getPort()));
 			}
 			if (systemHTTPConnectProxy.isValid()) {
