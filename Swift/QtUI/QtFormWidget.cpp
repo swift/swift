@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -37,11 +37,27 @@ QtFormWidget::QtFormWidget(Form::ref form, QWidget* parent) : QWidget(parent), f
 	thisLayout->addWidget(scrollArea);
 	QWidget* scroll = new QWidget(this);
 	QGridLayout* layout = new QGridLayout(scroll);
-	foreach (boost::shared_ptr<FormField> field, form->getFields()) {
-		QWidget* widget = createWidget(field);
-		if (widget) {
-			layout->addWidget(new QLabel(field->getLabel().c_str(), this), row, 0);
-			layout->addWidget(widget, row++, 1);
+	const std::vector<Form::FormItem> items = form->getItems();
+	if (items.empty()) { /* single item forms */
+		foreach (FormField::ref field, form->getFields()) {
+			QWidget* widget = createWidget(field, field->getType(), 0);
+			if (widget) {
+				layout->addWidget(new QLabel(field->getLabel().c_str(), this), row, 0);
+				layout->addWidget(widget, row++, 1);
+			}
+		}
+	} else { /* multi-item forms */
+		const Form::FormItem& headers = form->getFields();
+		for (size_t i = 0; i < items.size(); ++i) {
+			const Form::FormItem& item = items[i];
+			assert(item.size() == headers.size());
+			for (size_t j = 0; j < item.size(); ++j) {
+				QWidget* widget = createWidget(item[j], headers[j]->getType(), i);
+				if (widget) {
+					layout->addWidget(new QLabel(item[j]->getLabel().c_str(), this), row, 0);
+					layout->addWidget(widget, row++, 1);
+				}
+			}
 		}
 	}
 	scrollArea->setWidget(scroll);
@@ -83,50 +99,55 @@ QListWidget* QtFormWidget::createList(FormField::ref field) {
 	return listWidget;
 }
 
-QWidget* QtFormWidget::createWidget(FormField::ref field) {
+QWidget* QtFormWidget::createWidget(FormField::ref field, const FormField::Type type, const size_t index) {
 	QWidget* widget = NULL;
-	if (field->getType() == FormField::BooleanType) {
+	if (type == FormField::BooleanType) {
 		QCheckBox* checkWidget = new QCheckBox(this);
 		checkWidget->setCheckState(field->getBoolValue() ? Qt::Checked : Qt::Unchecked);
 		widget = checkWidget;
 	}
-	if (field->getType() == FormField::FixedType) {
+	if (type == FormField::FixedType) {
 		QString value = field->getFixedValue().c_str();
 		widget = new QLabel(value, this);
 	}
-	if (field->getType() == FormField::ListSingleType) {
+	if (type == FormField::ListSingleType) {
 		widget = createList(field);
 	}
-	if (field->getType() == FormField::TextMultiType) {
+	if (type == FormField::TextMultiType) {
 		QString value = field->getTextMultiValue().c_str();
 		QTextEdit* textWidget = new QTextEdit(this);
 		textWidget->setPlainText(value);
 		widget = textWidget;
 	}
-	if (field->getType() == FormField::TextPrivateType) {
+	if (type == FormField::TextPrivateType) {
 		QString value = field->getTextPrivateValue().c_str();
 		QLineEdit* lineWidget = new QLineEdit(value, this);
 		lineWidget->setEchoMode(QLineEdit::Password);
 		widget = lineWidget;
 	}
-	if (field->getType() == FormField::TextSingleType) {
+	if (type == FormField::TextSingleType) {
 		QString value = field->getTextSingleValue().c_str();
 		widget = new QLineEdit(value, this);
 	}
-	if (field->getType() == FormField::JIDSingleType) {
+	if (type == FormField::JIDSingleType) {
 		QString value = field->getJIDSingleValue().toString().c_str();
 		widget = new QLineEdit(value, this);
 	}
-	if (field->getType() == FormField::JIDMultiType) {
+	if (type == FormField::JIDMultiType) {
 		QString text = boost::join(field->getValues(), "\n").c_str();
 		QTextEdit* textWidget = new QTextEdit(this);
 		textWidget->setPlainText(text);
 		widget = textWidget;
 	}
-	if (field->getType() == FormField::ListMultiType) {
+	if (type == FormField::ListMultiType) {
 		widget = createList(field);
 	}
-	fields_[field->getName()] = widget;
+	std::string indexString;
+	if (index) {
+		/* for multi-item forms we need to distinguish between the different rows */
+		indexString = boost::lexical_cast<std::string>(index);
+	}
+	fields_[field->getName() + indexString] = widget;
 	return widget;
 }
 

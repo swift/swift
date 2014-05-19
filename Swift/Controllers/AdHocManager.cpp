@@ -15,6 +15,7 @@
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 #include <Swift/Controllers/UIInterfaces/MainWindow.h>
 #include <Swift/Controllers/UIInterfaces/AdHocCommandWindowFactory.h>
+#include <Swift/Controllers/UIEvents/RequestAdHocWithJIDUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
 
@@ -77,6 +78,13 @@ void AdHocManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	boost::shared_ptr<RequestAdHocUIEvent> adHocEvent = boost::dynamic_pointer_cast<RequestAdHocUIEvent>(event);
 	if (adHocEvent) {
 		boost::shared_ptr<OutgoingAdHocCommandSession> command = boost::make_shared<OutgoingAdHocCommandSession>(adHocEvent->getCommand().getJID(), adHocEvent->getCommand().getNode(), iqRouter_);
+		boost::shared_ptr<AdHocController> controller = boost::make_shared<AdHocController>(factory_, command);
+		controller->onDeleting.connect(boost::bind(&AdHocManager::removeController, this, controller));
+		controllers_.push_back(controller);
+	}
+	boost::shared_ptr<RequestAdHocWithJIDUIEvent> adHocJIDEvent = boost::dynamic_pointer_cast<RequestAdHocWithJIDUIEvent>(event);
+	if (!!adHocJIDEvent) {
+		boost::shared_ptr<OutgoingAdHocCommandSession> command = boost::make_shared<OutgoingAdHocCommandSession>(adHocJIDEvent->getJID(), adHocJIDEvent->getNode(), iqRouter_);
 		boost::shared_ptr<AdHocController> controller = boost::make_shared<AdHocController>(factory_, command);
 		controller->onDeleting.connect(boost::bind(&AdHocManager::removeController, this, controller));
 		controllers_.push_back(controller);

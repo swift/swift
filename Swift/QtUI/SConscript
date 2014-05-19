@@ -119,6 +119,7 @@ sources = [
     "QtFileTransferListWidget.cpp",
     "QtFileTransferListItemModel.cpp",
     "QtAdHocCommandWindow.cpp",
+    "QtAdHocCommandWithJIDWindow.cpp",
     "QtUtilities.cpp",
     "QtBookmarkDetailWindow.cpp",
     "QtAddBookmarkWindow.cpp",

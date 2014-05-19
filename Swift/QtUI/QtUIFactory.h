@@ -32,7 +32,7 @@ namespace Swift {
 	class QtUIFactory : public QObject, public UIFactory {
 			Q_OBJECT
 		public:
-			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist);
+			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID);
 
 			virtual XMLConsoleWidget* createXMLConsoleWidget();
 			virtual HistoryWindow* createHistoryWindow(UIEventStream*);
@@ -73,5 +73,6 @@ namespace Swift {
 			int chatFontSize;
 			int historyFontSize_;
 			bool emoticonsExist_;
+			bool enableAdHocCommandOnJID_;
 	};
 }

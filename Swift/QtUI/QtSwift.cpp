@@ -89,6 +89,7 @@ po::options_description QtSwift::getOptionsDescription() {
 		("latency-debug", "Use latency debugging (unsupported)")
 		("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
 		("start-minimized", "Don't show the login/roster window at startup")
+		("enable-jid-adhocs", "Enable AdHoc commands to custom JID's.")
 #if QT_VERSION >= 0x040800
 		("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
 #endif
@@ -162,6 +163,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 		Log::setLogLevel(Swift::Log::debug);
 	}
 
+	bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
 	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs(splitter_ != NULL);
 	bool startMinimized = options.count("start-minimized") > 0;
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
@@ -210,7 +212,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 			// Don't add the first tray (see note above)
 			systemTrays_.push_back(new QtSystemTray());
 		}
-		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, startMinimized, !emoticons.empty());
+		QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, startMinimized, !emoticons.empty(), enableAdHocCommandOnJID);
 		uiFactories_.push_back(uiFactory);
 		MainController* mainController = new MainController(
 				&clientMainThreadCaller_,

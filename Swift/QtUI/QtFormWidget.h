@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -23,7 +23,7 @@ class QtFormWidget : public QWidget {
 		Form::ref getCompletedForm();
 		void setEditable(bool editable);
 	private:
-		QWidget* createWidget(FormField::ref field);
+		QWidget* createWidget(FormField::ref field, const FormField::Type type, const size_t index);
 		QListWidget* createList(FormField::ref field);
 		template<class T> void setEnabled(QWidget* rawWidget, bool editable);
 		template<class T> void setEditable(QWidget* rawWidget, bool editable);

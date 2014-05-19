@@ -40,6 +40,7 @@
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Swift/QtUI/Roster/QtRosterWidget.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/QtAdHocCommandWithJIDWindow.h>
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Swift/QtUI/CocoaUIHelpers.h>
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
@@ -50,7 +51,7 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, StatusCache* statusCache, bool emoticonsExist) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
+QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, StatusCache* statusCache, bool emoticonsExist, bool enableAdHocCommandOnJID) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
 	uiEventStream_ = uiEventStream;
 	settings_ = settings;
 	setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
@@ -175,6 +176,11 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	chatUserAction_->setShortcutContext(Qt::ApplicationShortcut);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
+	if (enableAdHocCommandOnJID) {
+		otherAdHocAction_ = new QAction(tr("Run Other Command"), this);
+		connect(otherAdHocAction_, SIGNAL(triggered()), this, SLOT(handleOtherAdHocActionTriggered()));
+		actionsMenu->addAction(otherAdHocAction_);
+	}
 	serverAdHocMenu_ = new QMenu(tr("Run Server Command"), this);
 	actionsMenu->addMenu(serverAdHocMenu_);
 	actionsMenu->addSeparator();
@@ -267,6 +273,10 @@ void QtMainWindow::handleAddUserActionTriggered(bool /*checked*/) {
 void QtMainWindow::handleChatUserActionTriggered(bool /*checked*/) {
 	boost::shared_ptr<UIEvent> event(new RequestChatWithUserDialogUIEvent());
 	uiEventStream_->send(event);
+}
+
+void QtMainWindow::handleOtherAdHocActionTriggered() {
+	new QtAdHocCommandWithJIDWindow(uiEventStream_);
 }
 
 void QtMainWindow::handleSignOutAction() {
