@@ -67,6 +67,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	isCorrection_ = false;
 	labelModel_ = NULL;
 	correctionEnabled_ = Maybe;
+	fileTransferEnabled_ = Maybe;
 	updateTitleWithUnreadCount();
 
 #ifdef SWIFT_EXPERIMENTAL_FT
@@ -386,6 +387,10 @@ void QtChatWindow::setCorrectionEnabled(Tristate enabled) {
 	correctionEnabled_ = enabled;
 }
 
+void QtChatWindow::setFileTransferEnabled(Tristate enabled) {
+	fileTransferEnabled_ = enabled;
+}
+
 SecurityLabelsCatalog::Item QtChatWindow::getSelectedSecurityLabel() {
 	assert(labelsWidget_->isEnabled());
 	assert(labelsWidget_->currentIndex() >= 0 && static_cast<size_t>(labelsWidget_->currentIndex()) < labelModel_->availableLabels_.size());
@@ -550,7 +555,7 @@ void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 }
 
 void QtChatWindow::dropEvent(QDropEvent *event) {
-	if (event->mimeData()->hasUrls()) {
+	if (fileTransferEnabled_ == ChatWindow::Yes && event->mimeData()->hasUrls()) {
 		if (event->mimeData()->urls().size() == 1) {
 			onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
 		} else {

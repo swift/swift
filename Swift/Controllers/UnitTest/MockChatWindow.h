@@ -58,6 +58,7 @@ namespace Swift {
 			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {}
 			virtual void cancelAlert() {}
 			virtual void setCorrectionEnabled(Tristate /*enabled*/) {}
+			virtual void setFileTransferEnabled(Tristate /*enabled*/) {}
 			void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}
 			void setSubject(const std::string& /*subject*/) {}
 			virtual void showRoomConfigurationForm(Form::ref) {}

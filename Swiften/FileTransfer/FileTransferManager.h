@@ -18,6 +18,7 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
@@ -45,6 +46,8 @@ namespace Swift {
 					boost::shared_ptr<ReadBytestream> bytestream,
 					const FileTransferOptions& = FileTransferOptions()) = 0;
 			
+			static bool isSupportedBy(const DiscoInfo::ref info);
+
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 	};
 }

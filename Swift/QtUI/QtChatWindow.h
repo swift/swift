@@ -136,6 +136,7 @@ namespace Swift {
 			void setAlert(const std::string& alertText, const std::string& buttonText = "");
 			void cancelAlert();
 			void setCorrectionEnabled(Tristate enabled);
+			void setFileTransferEnabled(Tristate enabled);
 
 		signals:
 			void geometryChanged();
@@ -203,6 +204,7 @@ namespace Swift {
 			bool inputEnabled_;
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
+			Tristate fileTransferEnabled_;
 			QString alertStyleSheet_;
 			QPointer<QtMUCConfigurationWindow> mucConfigurationWindow_;
 			QPointer<QtAffiliationEditor> affiliationEditor_;

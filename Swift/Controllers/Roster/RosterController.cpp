@@ -356,7 +356,7 @@ void RosterController::handleOnCapsChanged(const JID& jid) {
 	DiscoInfo::ref info = entityCapsManager_->getCaps(jid);
 	if (info) {
 		std::set<ContactRosterItem::Feature> features;
-		if (info->hasFeature(DiscoInfo::JingleFeature) && info->hasFeature(DiscoInfo::JingleFTFeature) && info->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
+		if (FileTransferManager::isSupportedBy(info)) {
 			features.insert(ContactRosterItem::FileTransferFeature);
 		}
 		if (info->hasFeature(DiscoInfo::WhiteboardFeature)) {

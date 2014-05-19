@@ -10,21 +10,22 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <stdio.h>
 
-#include <Swiften/Base/format.h>
-#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/DateTime.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/format.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Chat/ChatStateTracker.h>
-#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/NickResolver.h>
+#include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Base/DateTime.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/Elements/Idle.h>
-#include <Swiften/Base/Log.h>
-#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
 
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
@@ -134,6 +135,11 @@ void ChatController::handleBareJIDCapsChanged(const JID& /*jid*/) {
 			contactSupportsReceipts_ = ChatWindow::Yes;
 		} else {
 			contactSupportsReceipts_ = ChatWindow::No;
+		}
+		if (FileTransferManager::isSupportedBy(disco)) {
+			chatWindow_->setFileTransferEnabled(ChatWindow::Yes);
+		} else {
+			chatWindow_->setFileTransferEnabled(ChatWindow::No);
 		}
 	} else {
 		SWIFT_LOG(debug) << "No disco info :(" << std::endl;
