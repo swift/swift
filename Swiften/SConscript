@@ -480,6 +480,8 @@ if env["SCONS_STAGE"] == "build" :
 			File("Serializer/PayloadSerializers/UnitTest/MAMResultSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/MAMQuerySerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/MAMArchivedSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/PubSubItemSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/PubSubItemsSerializerTest.cpp"),
 			File("Serializer/UnitTest/StreamFeaturesSerializerTest.cpp"),
 			File("Serializer/UnitTest/AuthSuccessSerializerTest.cpp"),
 			File("Serializer/UnitTest/AuthChallengeSerializerTest.cpp"),

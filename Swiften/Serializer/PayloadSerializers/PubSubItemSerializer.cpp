@@ -30,7 +30,9 @@ std::string PubSubItemSerializer::serializePayload(boost::shared_ptr<PubSubItem>
 	foreach(boost::shared_ptr<Payload> item, payload->getData()) {
 		element.addNode(boost::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(item)->serialize(item)));
 	}
-	element.setAttribute("id", payload->getID());
+	if (!payload->getID().empty()) {
+		element.setAttribute("id", payload->getID());
+	}
 	return element.serialize();
 }
 

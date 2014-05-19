@@ -13,6 +13,7 @@
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubItemSerializer.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
@@ -29,6 +30,9 @@ std::string PubSubItemsSerializer::serializePayload(boost::shared_ptr<PubSubItem
 		return "";
 	}
 	XMLElement element("items", "http://jabber.org/protocol/pubsub");
+	if (payload->getNode().empty()) {
+		SWIFT_LOG(warning) << "Serializing PubSubItems with empty node attribute";
+	}
 	element.setAttribute("node", payload->getNode());
 	foreach(boost::shared_ptr<PubSubItem> item, payload->getItems()) {
 		element.addNode(boost::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
