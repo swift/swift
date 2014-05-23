@@ -35,6 +35,7 @@ namespace {
 			virtual void handleStartElement(
 					const std::string& element, const std::string& ns, 
 					const AttributeMap& attributes) SWIFTEN_OVERRIDE {
+				lua_checkstack(L, 6);
 				lua_pushnumber(L, currentIndex);
 				lua_newtable(L);
 				lua_pushstring(L, element.c_str());
@@ -78,6 +79,7 @@ namespace {
 			}
 
 			virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE {
+				lua_checkstack(L, 2);
 				lua_pushnumber(L, currentIndex);
 				lua_pushstring(L, data.c_str());
 				lua_settable(L, -3);
