@@ -344,7 +344,7 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	}
 	setNick(nick);
-	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(joinMessage));
+	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(joinMessage), ChatWindow::UpdateTimestamp);
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	addRecentLogs();
@@ -714,7 +714,7 @@ boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(boo
 }
 
 void MUCController::updateJoinParts() {
-	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(generateJoinPartString(joinParts_, isImpromptu())));
+	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(generateJoinPartString(joinParts_, isImpromptu())), ChatWindow::UpdateTimestamp);
 }
 
 void MUCController::appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent) {

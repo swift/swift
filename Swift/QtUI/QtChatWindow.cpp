@@ -791,8 +791,8 @@ void QtChatWindow::setWhiteboardSessionStatus(std::string id, const ChatWindow::
 	messageLog_->setWhiteboardSessionStatus(id, state);
 }
 
-void QtChatWindow::replaceLastMessage(const ChatMessage& message) {
-	messageLog_->replaceLastMessage(message);
+void QtChatWindow::replaceLastMessage(const ChatMessage& message, const TimestampBehaviour timestampBehaviour) {
+	messageLog_->replaceLastMessage(message, timestampBehaviour);
 }
 
 void QtChatWindow::setAckState(const std::string& id, AckState state) {

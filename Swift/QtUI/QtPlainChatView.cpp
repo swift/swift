@@ -154,7 +154,7 @@ void QtPlainChatView::replaceWithAction(const ChatWindow::ChatMessage& message, 
 	log_->append(text);
 }
 
-void QtPlainChatView::replaceLastMessage(const ChatWindow::ChatMessage& message)
+void QtPlainChatView::replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/)
 {
 	QString text = "<p>The last message was corrected to:<br/>";
 	text += chatMessageToString(message);

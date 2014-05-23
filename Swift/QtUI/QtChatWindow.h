@@ -112,7 +112,7 @@ namespace Swift {
 			void setRosterModel(Roster* roster);
 			void setTabComplete(TabComplete* completer);
 			int getCount();
-			void replaceLastMessage(const ChatMessage& message);
+			void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour timestampBehaviour);
 			void setAckState(const std::string& id, AckState state);
 
 			// message receipts

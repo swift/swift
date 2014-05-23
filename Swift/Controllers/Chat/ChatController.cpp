@@ -478,7 +478,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
 	std::string newStatusChangeString = getStatusChangeString(newPresence);
 	if (newStatusChangeString != lastStatusChangeString_) {
 		if (lastWasPresence_) {
-			chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(newStatusChangeString));
+			chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(newStatusChangeString), ChatWindow::UpdateTimestamp);
 		} else {
 			chatWindow_->addPresenceMessage(chatMessageParser_->parseMessageBody(newStatusChangeString), ChatWindow::DefaultDirection);
 		}

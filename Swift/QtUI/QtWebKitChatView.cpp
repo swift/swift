@@ -214,7 +214,7 @@ void QtWebKitChatView::addLastSeenLine() {
 	newInsertPoint_.prependOutside(lineSeparator_);
 }
 
-void QtWebKitChatView::replaceLastMessage(const QString& newMessage) {
+void QtWebKitChatView::replaceLastMessage(const QString& newMessage, const ChatWindow::TimestampBehaviour timestampBehaviour) {
 	assert(viewReady_);
 	rememberScrolledToBottom();
 	assert(!lastElement_.isNull());
@@ -222,11 +222,16 @@ void QtWebKitChatView::replaceLastMessage(const QString& newMessage) {
 	assert(!replace.isNull());
 	QString old = lastElement_.toOuterXml();
 	replace.setInnerXml(ChatSnippet::escape(newMessage));
+	if (timestampBehaviour == ChatWindow::UpdateTimestamp) {
+		replace = lastElement_.findFirst("span.swift_time");
+		assert(!replace.isNull());
+		replace.setInnerXml(ChatSnippet::timeToEscapedString(QDateTime::currentDateTime()));
+	}
 }
 
 void QtWebKitChatView::replaceLastMessage(const QString& newMessage, const QString& note) {
 	rememberScrolledToBottom();
-	replaceLastMessage(newMessage);
+	replaceLastMessage(newMessage, ChatWindow::KeepTimestamp);
 	QWebElement replace = lastElement_.findFirst("span.swift_time");
 	assert(!replace.isNull());
 	replace.setInnerXml(ChatSnippet::escape(note));
@@ -840,8 +845,8 @@ void QtWebKitChatView::addPresenceMessage(const ChatWindow::ChatMessage& message
 	previousMessageKind_ = PreviousMessageWasPresence;
 }
 
-void QtWebKitChatView::replaceLastMessage(const ChatWindow::ChatMessage& message) {
-	replaceLastMessage(chatMessageToHTML(message));
+void QtWebKitChatView::replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour) {
+	replaceLastMessage(chatMessageToHTML(message), timestampBehaviour);
 }
 
 void QtWebKitChatView::addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) {

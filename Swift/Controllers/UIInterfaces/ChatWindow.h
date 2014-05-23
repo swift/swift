@@ -94,6 +94,7 @@ namespace Swift {
 			enum BlockingState {BlockingUnsupported, IsBlocked, IsUnblocked};
 			enum Direction { UnknownDirection, DefaultDirection };
 			enum MUCType { StandardMUC, ImpromptuMUC };
+			enum TimestampBehaviour { KeepTimestamp, UpdateTimestamp };
 
 			ChatWindow() {}
 			virtual ~ChatWindow() {}
@@ -142,7 +143,7 @@ namespace Swift {
 			virtual void setInputEnabled(bool enabled) = 0;
 			virtual void setRosterModel(Roster* model) = 0;
 			virtual void setTabComplete(TabComplete* completer) = 0;
-			virtual void replaceLastMessage(const ChatMessage& message) = 0;
+			virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour timestampBehaviour) = 0;
 			virtual void setAckState(const std::string& id, AckState state) = 0;
 			virtual void flash() = 0;
 			virtual void setSubject(const std::string& subject) = 0;

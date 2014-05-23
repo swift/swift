@@ -39,7 +39,7 @@ namespace Swift {
 			virtual void addErrorMessage(const ChatWindow::ChatMessage& message) = 0;
 			virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
-			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message) = 0;
+			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/) = 0;
 			virtual void setAckState(const std::string& id, ChatWindow::AckState state) = 0;
 			
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;

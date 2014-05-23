@@ -29,7 +29,7 @@ namespace Swift {
 			virtual void addErrorMessage(const ChatMessage& /*message*/) {}
 			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
 			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
-			virtual void replaceLastMessage(const ChatMessage& /*message*/) {}
+			virtual void replaceLastMessage(const ChatMessage& /*message*/, const TimestampBehaviour /*timestampBehaviour*/) {}
 
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/) { return 0; }
