@@ -16,6 +16,7 @@
 #include "Watchdog.h"
 #include <Sluift/Lua/Check.h>
 #include <Sluift/SluiftClient.h>
+#include <Sluift/SluiftComponent.h>
 #include <Sluift/globals.h>
 #include <Sluift/Lua/Exception.h>
 #include <Sluift/Lua/LuaUtils.h>
@@ -84,6 +85,32 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 
 	*client = new SluiftClient(jid, password, &Sluift::globals.networkFactories, &Sluift::globals.eventLoop);
 	(*client)->setTraceEnabled(getGlobalDebug(L));
+	return 1;
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Sluift, new_component,
+
+		"Creates a new component.\n\nReturns a @{Component} object.\n",
+
+		"jid  The JID to connect as\n"
+		"passphrase  The passphrase to use\n",
+
+		""
+) {
+	Lua::checkString(L, 1);
+	JID jid(std::string(Lua::checkString(L, 1)));
+	std::string password(Lua::checkString(L, 2));
+
+	SluiftComponent** component = reinterpret_cast<SluiftComponent**>(lua_newuserdata(L, sizeof(SluiftComponent*)));
+
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	lua_getfield(L, -1, "Component");
+	lua_setmetatable(L, -3);
+	lua_pop(L, 1);
+
+	*component = new SluiftComponent(jid, password, &Sluift::globals.networkFactories, &Sluift::globals.eventLoop);
+	(*component)->setTraceEnabled(getGlobalDebug(L));
 	return 1;
 }
 
@@ -402,6 +429,16 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
 	std::vector<std::string> tables = boost::assign::list_of("Client");
 	foreach(const std::string& table, tables) {
+		lua_getfield(L, -1, table.c_str());
+		Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, table);
+		lua_pop(L, 1);
+	}
+	lua_pop(L, 1);
+
+	// Load component metatable
+	lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
+	std::vector<std::string> comp_tables = boost::assign::list_of("Component");
+	foreach(const std::string& table, comp_tables) {
 		lua_getfield(L, -1, table.c_str());
 		Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, table);
 		lua_pop(L, 1);

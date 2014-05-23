@@ -1,29 +1,37 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013-2014 Kevin Smith and Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
 
-#include <Sluift/ClientHelpers.h>
+#include <Sluift/Helpers.h>
 
 #include <Swiften/Client/ClientError.h>
+#include <Swiften/Component/ComponentError.h>
 
 using namespace Swift;
 
-std::string Swift::getClientErrorString(const ClientError& error) {
+template<class T> std::string Swift::getCommonErrorString(T& error) {
 	std::string reason = "Disconnected: ";
 	switch(error.getType()) {
-		case ClientError::UnknownError: reason += "Unknown Error"; break;
+		case T::UnknownError: reason += "Unknown Error"; break;
+		case T::ConnectionError: reason += "Error connecting to server"; break;
+		case T::ConnectionReadError: reason += "Error while receiving server data"; break;
+		case T::ConnectionWriteError: reason += "Error while sending data to the server"; break;
+		case T::XMLError: reason += "Error parsing server data"; break;
+		case T::AuthenticationFailedError: reason += "Login/password invalid"; break;
+		case T::UnexpectedElementError: reason += "Unexpected response"; break;
+	}
+	return reason;
+}
+
+std::string Swift::getErrorString(const ClientError& error) {
+	std::string reason = getCommonErrorString(error);
+	switch(error.getType()) {
 		case ClientError::DomainNameResolveError: reason += "Unable to find server"; break;
-		case ClientError::ConnectionError: reason += "Error connecting to server"; break;
-		case ClientError::ConnectionReadError: reason += "Error while receiving server data"; break;
-		case ClientError::ConnectionWriteError: reason += "Error while sending data to the server"; break;
-		case ClientError::XMLError: reason += "Error parsing server data"; break;
-		case ClientError::AuthenticationFailedError: reason += "Login/password invalid"; break;
 		case ClientError::CompressionFailedError: reason += "Error while compressing stream"; break;
 		case ClientError::ServerVerificationFailedError: reason += "Server verification failed"; break;
 		case ClientError::NoSupportedAuthMechanismsError: reason += "Authentication mechanisms not supported"; break;
-		case ClientError::UnexpectedElementError: reason += "Unexpected response"; break;
 		case ClientError::ResourceBindError: reason += "Error binding resource"; break;
 		case ClientError::RevokedError: reason += "Certificate got revoked"; break;
 		case ClientError::RevocationCheckFailedError: reason += "Failed to do revokation check"; break;
@@ -46,5 +54,9 @@ std::string Swift::getClientErrorString(const ClientError& error) {
 		case ClientError::InvalidServerIdentityError: reason += "Certificate does not match the host identity"; break;
 	}
 	return reason;
+}
+
+std::string Swift::getErrorString(const ComponentError& error) {
+	return getCommonErrorString(error);
 }
 

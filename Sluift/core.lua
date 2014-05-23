@@ -144,6 +144,7 @@ end
 
 -- Contains help for native methods that we want access to from here
 local extra_help = {}
+local component_extra_help = {}
 local help_data = {}
 local help_classes = {}
 local help_class_metatables = {}
@@ -481,6 +482,15 @@ local Client = {
 Client.__index = Client
 register_class_table_help(Client, "Client")
 
+_H = {
+	[[ Component interface ]]
+}
+local Component = {
+	_with_prompt = function(component) return component:jid() end
+}
+Component.__index = Component
+register_class_table_help(Component, "Component")
+
 
 _H = {
 	[[ Interface to communicate with a PubSub service ]]
@@ -783,6 +793,196 @@ function Client:pubsub (jid)
 end
 register_help(Client.pubsub)
 
+
+--------------------------------------------------------------------------------
+-- Component
+--------------------------------------------------------------------------------
+
+component_extra_help = {
+	["Component.get_next_event"] = {
+		[[ Returns the next event. ]],
+		parameters = { "self" },
+		options = {
+			type = "The type of event to return (`message`, `presence`). When omitted, all event types are returned.",
+			timeout = "The amount of time to wait for events.",
+			["if"] = "A function to filter events. When this function, called with the event as a parameter, returns true, the event will be returned"
+		}
+	},
+	["Component.get"] = {
+		[[ Sends a `get` query. ]],
+		parameters = { "self" },
+		options = {
+			to = "The JID of the target to send the query to",
+			query = "The query to send",
+			timeout = "The amount of time to wait for the query to finish",
+		}
+	},
+	["Component.set"] = {
+		[[ Sends a `set` query. ]],
+		parameters = { "self" },
+		options = {
+			to = "The JID of the target to send the query to",
+			query = "The query to send.",
+			timeout = "The amount of time to wait for the query to finish.",
+		}
+	},
+	["Component.async_connect"] = {
+		[[ 
+			Connect to the server asynchronously.
+			
+			This method immediately returns.
+		]],
+		parameters = { "self" },
+		options = {
+			host = "The host to connect to.",
+			port = "The port to connect to."
+		}
+	}
+}
+
+_H = {
+	[[
+		Connect to the server.
+
+		This method blocks until the connection has been established.
+	]],
+	parameters = { "self" },
+	options = component_extra_help["Component.async_connect"].options
+}
+function Component:connect (...)
+	local options = parse_options({}, ...)
+	local f = options.f
+	self:async_connect(options)
+	self:wait_connected()
+	if f then
+		return call {function() return f(self) end, finally = function() self:disconnect() end}
+	end
+	return true
+end
+register_help(Component.connect)
+
+
+_H = {
+	[[
+		Returns an iterator over all events.
+
+		This function blocks until `timeout` is reached (or blocks forever if it is omitted).
+	]],
+	parameters = { "self" },
+	options = component_extra_help["Component.get_next_event"].options
+}
+function Component:events (options)
+	local function component_events_iterator(s)
+		return s['component']:get_next_event(s['options'])
+	end
+	return component_events_iterator, {component = self, options = options}
+end
+register_help(Component.events)
+
+
+_H = {
+	[[
+		Calls `f` for each event.
+	]],
+	parameters = { "self" },
+	options = merge_tables(get_help(Component.events).options, {
+		f = "The functor to call with each event. Required."
+	})
+}
+function Component:for_each_event (...)
+	local options = parse_options({}, ...)
+	if not type(options.f) == 'function' then error('Expected function') end
+	for event in self:events(options) do
+		local result = options.f(event)
+		if result then
+			return result
+		end
+	end
+end
+register_help(Component.for_each_event)
+
+for method, event_type in pairs({message = 'message', presence = 'presence'}) do
+	_H = {
+		"Call `f` for all events of type `" .. event_type .. "`.",
+		parameters = { "self" },
+		options = remove_help_parameters("type", get_help(Component.for_each_event).options)
+	}
+	Component['for_each_' .. method] = function (component, ...)
+		local options = parse_options({}, ...)
+		options['type'] = event_type
+		return component:for_each_event (options)
+	end
+	register_help(Component['for_each_' .. method])
+
+	_H = {
+		"Get the next event of type `" .. event_type .. "`.",
+		parameters = { "self" },
+		options = remove_help_parameters("type", component_extra_help["Component.get_next_event"].options)
+	}
+	Component['get_next_' .. method] = function (component, ...)
+		local options = parse_options({}, ...)
+		options['type'] = event_type
+		return component:get_next_event(options)
+	end
+	register_help(Component['get_next_' .. method])
+end
+
+for method, event_type in pairs({messages = 'message'}) do
+	_H = {
+		"Returns an iterator over all events of type `" .. event_type .. "`.",
+		parameters = { "self" },
+		options = remove_help_parameters("type", get_help(Component.for_each_event).options)
+	}
+	Component[method] = function (component, ...)
+		local options = parse_options({}, ...)
+		options['type'] = event_type
+		return component:events (options)
+	end
+	register_help(Component[method])
+end
+
+_H = {
+	[[ 
+		Process all pending events
+	]],
+	parameters = { "self" }
+}
+function Component:process_events ()
+	for event in self:events{timeout=0} do end
+end
+register_help(Component.process_events)
+
+
+--
+-- Register get_* and set_* convenience methods for some type of queries
+--
+-- Example usages:
+--	component:get_software_version{to = 'alice@wonderland.lit'}
+--	component:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
+--
+local get_set_shortcuts = {
+	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard'},
+	set = {'command'}
+}
+for query_action, query_types in pairs(get_set_shortcuts) do
+	for _, query_type in ipairs(query_types) do
+		_H = {
+			"Sends a `" .. query_action .. "` query of type `" .. query_type .. "`.\n" ..
+			"Apart from the options below, all top level elements of `" .. query_type .. "` can be passed.",
+			parameters = { "self" },
+			options = remove_help_parameters({"query", "type"}, component_extra_help["Component.get"].options),
+		}
+		local method = query_action .. '_' .. query_type
+		Component[method] = function (component, options)
+			options = options or {}
+			if type(options) ~= 'table' then error('Invalid options: ' .. options) end 
+			options['query'] = merge_tables({_type = query_type}, options[query_type] or {})
+			return component[query_action](component, options)
+		end
+		register_help(Component[method])
+	end
+end
+
 --------------------------------------------------------------------------------
 -- PubSub
 --------------------------------------------------------------------------------
@@ -1023,6 +1223,7 @@ extra_help['sluift'] = {
 
 return {
 	Client = Client,
+	Component = Component,
 	register_help = register_help,
 	register_class_help = register_class_help,
 	register_table_tostring = register_table_tostring,
@@ -1035,6 +1236,7 @@ return {
 	get_help = get_help,
 	help = help,
 	extra_help = extra_help,
+	component_extra_help = component_extra_help,
 	copy = copy,
 	with = with,
 	create_form = create_form

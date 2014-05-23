@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Remko Tronçon
+ * Copyright (c) 2013-2014 Kevin Smith and Remko Tronçon
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -16,7 +16,7 @@
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/PubSubEvent.h>
 #include <Swiften/Queries/RawRequest.h>
-#include <Sluift/ClientHelpers.h>
+#include <Sluift/Helpers.h>
 #include <Swiften/Elements/Presence.h>
 
 using namespace Swift;
@@ -77,7 +77,7 @@ void SluiftClient::waitConnected(int timeout) {
 		throw Lua::Exception("Timeout while connecting");
 	}
 	if (disconnectedError) {
-		throw Lua::Exception(getClientErrorString(*disconnectedError));
+		throw Lua::Exception(getErrorString(*disconnectedError));
 	}
 }
 

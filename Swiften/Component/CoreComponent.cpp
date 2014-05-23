@@ -161,4 +161,8 @@ void CoreComponent::sendPresence(boost::shared_ptr<Presence> presence) {
 	stanzaChannel_->sendPresence(presence);
 }
 
+void CoreComponent::sendData(const std::string& data) {
+	sessionStream_->writeData(data);
+}
+
 }

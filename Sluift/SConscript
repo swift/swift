@@ -33,11 +33,13 @@ elif env["SCONS_STAGE"] == "build" :
 		"ElementConvertors/StatusConvertor.cpp",
 		"ElementConvertors/StatusShowConvertor.cpp",
 		"ElementConvertors/DelayConvertor.cpp",
-		"ClientHelpers.cpp",
+		"Helpers.cpp",
 		"SluiftClient.cpp",
+		"SluiftComponent.cpp",
 		"Watchdog.cpp",
 		"core.c",
 		"client.cpp",
+		"component.cpp",
 		"sluift.cpp"
 	]
 	sluift_sources += env.SConscript("ElementConvertors/SConscript")

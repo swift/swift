@@ -51,6 +51,7 @@ namespace Swift {
 			
 			void sendMessage(boost::shared_ptr<Message>);
 			void sendPresence(boost::shared_ptr<Presence>);
+			void sendData(const std::string& data);
 
 			IQRouter* getIQRouter() const {
 				return iqRouter_;
