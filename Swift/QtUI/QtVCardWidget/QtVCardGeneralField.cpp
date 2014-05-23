@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Tobias Markmann
+ * Copyright (c) 2012-2014 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -14,7 +14,7 @@ namespace Swift {
 
 QtVCardGeneralField::QtVCardGeneralField(QWidget* parent, QGridLayout* layout, bool editable, int row, QString label, bool preferrable, bool taggable) :
 	QWidget(parent), editable(editable), preferrable(preferrable), taggable(taggable), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
-	tagComboBox(0), closeButton(0) {
+	tagComboBox(0), tagLabel(NULL), closeButton(0) {
 }
 
 QtVCardGeneralField::~QtVCardGeneralField() {

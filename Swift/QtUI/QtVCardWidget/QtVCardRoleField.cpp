@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Tobias Markmann
+ * Copyright (c) 2012-2014 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -14,7 +14,7 @@
 namespace Swift {
 
 QtVCardRoleField::QtVCardRoleField(QWidget* parent, QGridLayout *layout, bool editable) :
-	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Role"), false, false) {
+	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Role"), false, false), roleLineEdit(NULL) {
 	connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Tobias Markmann
+ * Copyright (c) 2012-2014 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -33,6 +33,7 @@ QtVCardPhotoAndNameFields::QtVCardPhotoAndNameFields(QWidget* parent) :
 	ui->lineEditSUFFIX->setPlaceholderText(tr("Suffix"));
 #endif
 
+	setEditable(false);
 }
 
 QtVCardPhotoAndNameFields::~QtVCardPhotoAndNameFields() {

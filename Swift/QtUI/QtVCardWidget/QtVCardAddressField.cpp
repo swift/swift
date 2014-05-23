@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Tobias Markmann
+ * Copyright (c) 2012-2014 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -13,7 +13,7 @@
 namespace Swift {
 
 QtVCardAddressField::QtVCardAddressField(QWidget* parent, QGridLayout *layout, bool editable) :
-	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Address")) {
+	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Address")), streetLineEdit(NULL), poboxLineEdit(NULL), addressextLineEdit(NULL), cityLineEdit(NULL), pocodeLineEdit(NULL), regionLineEdit(NULL), countryLineEdit(NULL), textFieldGridLayout(NULL), textFieldGridLayoutItem(NULL), deliveryTypeLabel(NULL), domesticRadioButton(NULL), internationalRadioButton(NULL), buttonGroup(NULL) {
 	connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

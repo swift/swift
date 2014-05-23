@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Tobias Markmann
+ * Copyright (c) 2012-2014 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -15,7 +15,7 @@
 namespace Swift {
 
 QtVCardDescriptionField::QtVCardDescriptionField(QWidget* parent, QGridLayout *layout, bool editable) :
-	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Description"), false, false) {
+	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Description"), false, false), descriptionPlainTextEdit(NULL) {
 	connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

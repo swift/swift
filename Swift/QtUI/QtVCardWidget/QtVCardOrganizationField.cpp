@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Tobias Markmann
+ * Copyright (c) 2012-2014 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -17,7 +17,7 @@
 namespace Swift {
 
 QtVCardOrganizationField::QtVCardOrganizationField(QWidget* parent, QGridLayout *layout, bool editable) :
-	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Organisation"), false, false) {
+	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Organisation"), false, false), organizationLabel(NULL), organizationLineEdit(NULL), unitsTreeWidget(NULL), itemDelegate(NULL) {
 	connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 
