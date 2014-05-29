@@ -88,7 +88,7 @@ std::string VCardFileStorage::getPhotoHash(const JID& jid) const {
 
 std::string VCardFileStorage::getAndUpdatePhotoHash(const JID& jid, VCard::ref vCard) const {
 	std::string hash;
-	if (vCard && !vCard->getPhoto().empty()) {
+	if (vCard) {
 		hash = Hexify::hexify(crypto->getSHA1Hash(vCard->getPhoto()));
 	}
 	std::pair<PhotoHashMap::iterator, bool> r = photoHashes.insert(std::make_pair(jid, hash));
