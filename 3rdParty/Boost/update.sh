@@ -50,6 +50,7 @@ fi
 	serialization/set.hpp \
 	serialization/version.hpp \
 	serialization/split_member.hpp \
+	serialization/optional.hpp \
 	signals.hpp \
 	thread.hpp \
 	unordered_map.hpp \
