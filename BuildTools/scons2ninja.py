@@ -364,7 +364,7 @@ f = subprocess.Popen(scons_generate_cmd, stdout = subprocess.PIPE, stderr = subp
 stage = 'preamble'
 skip_nth_line = -1
 stack = ['.']
-for line in f.stdout.readlines() :
+for line in f.stdout :
   line = line.rstrip()
 
   # Skip lines if requested from previous command
