@@ -55,24 +55,14 @@
 		<!-- 
 				 VC Redistributable 
 		-->
-		<!-- Disabling CRT merge module, because it's not working
-			<Feature Id='CRT' Title='Visual C++ Runtime' AllowAdvertise='no' Display='hidden' Level='1'>
-				<MergeRef Id="CRT"/>
-			</Feature>
-		-->
-		<Binary Id="CRT.exe" SourceFile="$(var.VCCRTFile)"/>
-		<CustomAction Id="InstallCRT" Impersonate="yes" Return="ignore" Execute="immediate" BinaryKey="CRT.exe" ExeCommand="/qb"/>
-		<Property Id="CRT_INSTALLED" Secure="yes"> 
-			<RegistrySearch Id="VC2008SP1REDIST_X86Value" Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{9A25302D-30C0-39D9-BD6F-21E6EC160475}" Name="Publisher" Type="raw" Win64="no" /> 
-		</Property> 
-		<!-- The following snippet should work for VC 2010
-			<Upgrade Id='{1F4F1D2A-D9DA-32CF-9909-48485DA06DD5}'> 
-				<UpgradeVersion OnlyDetect='yes' Property='CRT_INSTALLED' Minimum='10.0.40219' IncludeMinimum='yes'/> 
-			</Upgrade> 
-		-->
-		<InstallUISequence>
-			<Custom Action="InstallCRT" After="ProgressDlg">Not Installed And Not CRT_INSTALLED</Custom>
-		</InstallUISequence>
+
+		<Binary Id="CRTBinary" SourceFile="$(var.VCCRTFile)"/>
+
+		<CustomAction Id="CRTAction" Impersonate="no" Return="asyncNoWait" Execute="deferred" BinaryKey="CRTBinary" ExeCommand="/passive"/>
+
+		<InstallExecuteSequence>
+			<Custom Action='CRTAction' After='InstallInitialize'/>
+		</InstallExecuteSequence>
 
 	</Product>
 </Wix>
