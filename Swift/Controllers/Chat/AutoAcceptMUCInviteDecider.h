@@ -41,6 +41,7 @@ namespace Swift {
 					return roster_->getSubscriptionStateForJID(from) == RosterItemPayload::From || roster_->getSubscriptionStateForJID(from) == RosterItemPayload::Both || from.getDomain() == domain_;
 				} else {
 					assert(false);
+					return false;
 				}
 			}
 
