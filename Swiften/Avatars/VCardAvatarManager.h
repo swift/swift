@@ -20,7 +20,7 @@ namespace Swift {
 		public:
 			VCardAvatarManager(VCardManager*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
 
-			std::string getAvatarHash(const JID&) const;
+			boost::optional<std::string> getAvatarHash(const JID&) const;
 
 		private:
 			void handleVCardChanged(const JID& from);

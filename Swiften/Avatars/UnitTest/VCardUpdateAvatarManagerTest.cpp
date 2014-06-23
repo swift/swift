@@ -78,7 +78,9 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, testling->getAvatarHash(user1.toBare()));
+			boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
+			CPPUNIT_ASSERT(hash);
+			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
 			CPPUNIT_ASSERT(avatarStorage->hasAvatar(avatar1Hash));
 			CPPUNIT_ASSERT_EQUAL(avatar1, avatarStorage->getAvatar(avatar1Hash));
 		}
@@ -108,7 +110,9 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(user2.toBare(), changes[0]);
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, testling->getAvatarHash(user2.toBare()));
+			boost::optional<std::string> hash = testling->getAvatarHash(user2.toBare());
+			CPPUNIT_ASSERT(hash);
+			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
 		}
 
 		void testVCardWithEmptyPhoto() {
@@ -117,7 +121,9 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 			stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
 			
 			CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(crypto->getSHA1Hash(ByteArray()))));
-			CPPUNIT_ASSERT_EQUAL(std::string(), testling->getAvatarHash(JID("foo@bar.com")));
+			boost::optional<std::string> hash = testling->getAvatarHash(JID("foo@bar.com"));
+			CPPUNIT_ASSERT(hash);
+			CPPUNIT_ASSERT_EQUAL(std::string(), *hash);
 		}
 
 		void testStanzaChannelReset_ClearsHash() {
@@ -132,7 +138,9 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
-			CPPUNIT_ASSERT_EQUAL(std::string(""), testling->getAvatarHash(user1.toBare()));
+			boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
+			CPPUNIT_ASSERT(!hash);
+			//CPPUNIT_ASSERT_EQUAL(std::string(""), *hash);
 		}
 
 		void testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash() {
@@ -148,7 +156,9 @@ class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(changes.size()));
 			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[1]);
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, testling->getAvatarHash(user1.toBare()));
+			boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
+			CPPUNIT_ASSERT(hash);
+			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
 		}
 
 	private:

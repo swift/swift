@@ -18,7 +18,7 @@ OfflineAvatarManager::OfflineAvatarManager(AvatarStorage* avatarStorage) : avata
 OfflineAvatarManager::~OfflineAvatarManager() {
 }
 
-std::string OfflineAvatarManager::getAvatarHash(const JID& jid) const {
+boost::optional<std::string> OfflineAvatarManager::getAvatarHash(const JID& jid) const {
 	return avatarStorage->getAvatarForJID(jid);
 }
 

@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-std::string CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
+boost::optional<std::string> CombinedAvatarProvider::getAvatarHash(const JID& jid) const {
 	return getCombinedAvatarAndCache(jid);
 }
 
@@ -36,21 +36,25 @@ void CombinedAvatarProvider::handleAvatarChanged(const JID& jid) {
 	if (i != avatars.end()) {
 		oldHash = i->second;
 	}
-	std::string newHash = getCombinedAvatarAndCache(jid);
+	boost::optional<std::string> newHash = getCombinedAvatarAndCache(jid);
 	if (newHash != oldHash) {
 		SWIFT_LOG(debug) << "Avatar changed: " << jid << ": " << oldHash << " -> " << newHash << std::endl;
 		onAvatarChanged(jid);
 	}
 }
 
-std::string CombinedAvatarProvider::getCombinedAvatarAndCache(const JID& jid) const {
+boost::optional<std::string> CombinedAvatarProvider::getCombinedAvatarAndCache(const JID& jid) const {
 	SWIFT_LOG(debug) << "JID: " << jid << std::endl;
-	std::string hash;
-	for (size_t i = 0; i < providers.size() && hash.empty(); ++i) {
+	boost::optional<std::string> hash;
+	for (size_t i = 0; i < providers.size() && !hash; ++i) {
 		hash = providers[i]->getAvatarHash(jid);
 		SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << hash << std::endl;
 	}
-	avatars[jid] = hash;
+	if (hash) {
+		avatars[jid] = *hash;
+	} else {
+		avatars[jid] = "";
+	}
 	return hash;
 }
 

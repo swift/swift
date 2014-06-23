@@ -66,27 +66,30 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			storeVCardWithPhoto(user1.toBare(), avatar1);
 			avatarStorage->addAvatar(avatar1Hash, avatar1);
 
-			std::string result = testling->getAvatarHash(user1);
+			boost::optional<std::string> result = testling->getAvatarHash(user1);
 
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, result);
+			CPPUNIT_ASSERT(result);
+			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *result);
 		}
 
 		void testGetAvatarHashEmptyAvatar() {
 			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			storeEmptyVCard(user1.toBare());
 
-			std::string result = testling->getAvatarHash(user1);
+			boost::optional<std::string> result = testling->getAvatarHash(user1);
 
-			CPPUNIT_ASSERT_EQUAL(std::string(), result);
+			CPPUNIT_ASSERT(result);
+			CPPUNIT_ASSERT_EQUAL(std::string(), *result);
 		}
 
 		void testGetAvatarHashUnknownAvatarKnownVCardStoresAvatar() {
 			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 			storeVCardWithPhoto(user1.toBare(), avatar1);
 
-			std::string result = testling->getAvatarHash(user1);
+			boost::optional<std::string> result = testling->getAvatarHash(user1);
 
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, result);
+			CPPUNIT_ASSERT(result);
+			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *result);
 			CPPUNIT_ASSERT(avatarStorage->hasAvatar(avatar1Hash));
 			CPPUNIT_ASSERT_EQUAL(avatar1, avatarStorage->getAvatar(avatar1Hash));
 		}
@@ -94,9 +97,10 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 		void testGetAvatarHashUnknownAvatarUnknownVCard() {
 			boost::shared_ptr<VCardAvatarManager> testling = createManager();
 
-			std::string result = testling->getAvatarHash(user1);
+			boost::optional<std::string> result = testling->getAvatarHash(user1);
 
-			CPPUNIT_ASSERT_EQUAL(std::string(), result);
+			CPPUNIT_ASSERT(result);
+			CPPUNIT_ASSERT_EQUAL(std::string(), *result);
 		}
 
 		void testGetAvatarHashKnownAvatarUnknownVCard() {
@@ -104,9 +108,10 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 			
 			avatarStorage->setAvatarForJID(user1, avatar1Hash);
 
-			std::string result = testling->getAvatarHash(user1);
-			
-			CPPUNIT_ASSERT_EQUAL(std::string(), result);
+			boost::optional<std::string> result = testling->getAvatarHash(user1);
+
+			CPPUNIT_ASSERT(result);
+			CPPUNIT_ASSERT_EQUAL(std::string(), *result);
 		} 
 
 

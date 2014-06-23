@@ -27,7 +27,7 @@ namespace Swift {
 		public:
 			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
 
-			std::string getAvatarHash(const JID&) const;
+			boost::optional<std::string> getAvatarHash(const JID&) const;
 
 		private:
 			void handlePresenceReceived(boost::shared_ptr<Presence>);

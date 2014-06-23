@@ -29,7 +29,7 @@ void VCardAvatarManager::handleVCardChanged(const JID& from) {
 	onAvatarChanged(from);
 }
 
-std::string VCardAvatarManager::getAvatarHash(const JID& jid) const {
+boost::optional<std::string> VCardAvatarManager::getAvatarHash(const JID& jid) const {
 	JID avatarJID = getAvatarJID(jid);
 	std::string hash = vcardManager_->getPhotoHash(avatarJID);
 	if (!hash.empty()) {

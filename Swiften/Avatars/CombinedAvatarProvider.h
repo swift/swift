@@ -16,14 +16,14 @@
 namespace Swift {
 	class SWIFTEN_API CombinedAvatarProvider : public AvatarProvider {
 		public:
-			virtual std::string getAvatarHash(const JID&) const;
+			virtual boost::optional<std::string> getAvatarHash(const JID&) const;
 
 			void addProvider(AvatarProvider*);
 			void removeProvider(AvatarProvider*);
 
 		private:
 			void handleAvatarChanged(const JID&);
-			std::string getCombinedAvatarAndCache(const JID&) const;
+			boost::optional<std::string> getCombinedAvatarAndCache(const JID&) const;
 
 		private:
 			std::vector<AvatarProvider*> providers;

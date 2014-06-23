@@ -16,7 +16,7 @@ namespace Swift {
 			OfflineAvatarManager(AvatarStorage*);
 			~OfflineAvatarManager();
 
-			virtual std::string getAvatarHash(const JID&) const;
+			virtual boost::optional<std::string> getAvatarHash(const JID&) const;
 			void setAvatar(const JID&, const std::string& hash);
 
 		private:

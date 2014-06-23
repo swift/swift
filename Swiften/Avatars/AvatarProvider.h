@@ -18,7 +18,7 @@ namespace Swift {
 		public:
 			virtual ~AvatarProvider();
 
-			virtual std::string getAvatarHash(const JID&) const = 0;
+			virtual boost::optional<std::string> getAvatarHash(const JID&) const = 0;
 
 			boost::signal<void (const JID&)> onAvatarChanged;
 	};

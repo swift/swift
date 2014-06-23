@@ -76,13 +76,13 @@ void VCardUpdateAvatarManager::setAvatar(const JID& jid, const ByteArray& avatar
 }
 */
 
-std::string VCardUpdateAvatarManager::getAvatarHash(const JID& jid) const {
+boost::optional<std::string> VCardUpdateAvatarManager::getAvatarHash(const JID& jid) const {
 	std::map<JID, std::string>::const_iterator i = avatarHashes_.find(getAvatarJID(jid));
 	if (i != avatarHashes_.end()) {
 		return i->second;
 	}
 	else {
-		return "";
+		return boost::optional<std::string>();
 	}
 }
 
