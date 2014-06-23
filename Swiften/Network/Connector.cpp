@@ -31,13 +31,13 @@ void Connector::start() {
 	assert(!serviceQuery);
 	assert(!timer);
 	queriedAllServices = false;
+	if (timeoutMilliseconds > 0) {
+		timer = timerFactory->createTimer(timeoutMilliseconds);
+		timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
+	}
 	if (serviceLookupPrefix) {
 		serviceQuery = resolver->createServiceQuery((*serviceLookupPrefix) + hostname);
 		serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
-		if (timeoutMilliseconds > 0) {
-			timer = timerFactory->createTimer(timeoutMilliseconds);
-			timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
-		}
 		serviceQuery->run();
 	}
 	else {
