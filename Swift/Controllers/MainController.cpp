@@ -468,9 +468,7 @@ void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
 	notifier_->setTemporarilyDisabled(presence->getShow() == StatusShow::DND);
 
 	// Add information and send
-	if (!vCardPhotoHash_.empty()) {
-		presence->updatePayload(boost::make_shared<VCardUpdate>(vCardPhotoHash_));
-	}
+	presence->updatePayload(boost::make_shared<VCardUpdate>(vCardPhotoHash_));
 	client_->getPresenceSender()->sendPresence(presence);
 	if (presence->getType() == Presence::Unavailable) {
 		logout();
@@ -768,10 +766,13 @@ void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> 
 }
 
 void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
-	if (!jid.equals(jid_, JID::WithoutResource) || !vCard || vCard->getPhoto().empty()) {
+	if (!jid.equals(jid_, JID::WithoutResource) || !vCard) {
 		return;
 	}
-	std::string hash = Hexify::hexify(networkFactories_->getCryptoProvider()->getSHA1Hash(vCard->getPhoto()));
+	std::string hash;
+	if (!vCard->getPhoto().empty()) {
+		hash = Hexify::hexify(networkFactories_->getCryptoProvider()->getSHA1Hash(vCard->getPhoto()));
+	}
 	if (hash != vCardPhotoHash_) {
 		vCardPhotoHash_ = hash;
 		if (client_ && client_->isAvailable()) {
