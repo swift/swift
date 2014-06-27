@@ -340,6 +340,10 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
 	meView_->setStatusType(type);
 }
 
+void QtMainWindow::setMyContactRosterItem(boost::shared_ptr<ContactRosterItem> contact) {
+	meView_->setContactRosterItem(contact);
+}
+
 void QtMainWindow::setConnecting() {
 	meView_->setConnecting();
 }

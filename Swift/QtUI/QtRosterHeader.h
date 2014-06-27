@@ -13,7 +13,9 @@
 #include <QToolButton>
 
 #include <string>
-#include "Swiften/Elements/StatusShow.h"
+#include <Swiften/Elements/StatusShow.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 #include "QtTextEdit.h"
 
@@ -34,11 +36,14 @@ namespace Swift {
 
 		void setJID(const QString& jid);
 		void setNick(const QString& nick);
+		void setContactRosterItem(boost::shared_ptr<ContactRosterItem> contact);
 
 		void setStatusText(const QString& statusMessage);
 		void setStatusType(StatusShow::Type type);
 		void setConnecting();
 		void setStreamEncryptionStatus(bool tlsInPlace);
+	private:
+		bool event(QEvent* event);
 	signals:
 		void onChangeStatusRequest(StatusShow::Type showType, const QString &statusMessage);
 		void onEditProfileRequest();
@@ -54,5 +59,6 @@ namespace Swift {
 		QtStatusWidget* statusWidget_;
 		QToolButton* securityInfoButton_;
 		static const int avatarSize_;
+		boost::shared_ptr<ContactRosterItem> contact_;
 	};
 }

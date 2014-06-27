@@ -50,10 +50,13 @@ namespace Swift {
 			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
 			~RosterController();
 			void showRosterWindow();
+			void setJID(const JID& jid) { myJID_ = jid; }
 			MainWindow* getWindow() {return mainWindow_;}
 			boost::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
 			boost::signal<void ()> onSignOutRequest;
+			void handleOwnVCardChanged(VCard::ref vcard);
 			void handleAvatarChanged(const JID& jid);
+			void handlePresenceChanged(Presence::ref presence);
 			void setEnabled(bool enabled);
 
 			boost::optional<XMPPRosterItem> getItem(const JID&) const;
@@ -93,6 +96,7 @@ namespace Swift {
 			MainWindow* mainWindow_;
 			Roster* roster_;
 			OfflineRosterFilter* offlineFilter_;
+			VCardManager* vcardManager_;
 			AvatarManager* avatarManager_;
 			NickManager* nickManager_;
 			NickResolver* nickResolver_;
@@ -107,6 +111,7 @@ namespace Swift {
 			FileTransferOverview* ftOverview_;
 			ClientBlockListManager* clientBlockListManager_;
 			RosterVCardProvider* rosterVCardProvider_;
+			boost::shared_ptr<ContactRosterItem> ownContact_;
 			
 			boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
 			boost::bsignals::scoped_connection blockingOnItemAddedConnection_;

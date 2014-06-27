@@ -6,20 +6,23 @@
 
 #include "QtRosterHeader.h"
 
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QFileInfo>
-#include <QIcon>
-#include <QSizePolicy>
+#include <QBitmap>
 #include <qdebug.h>
+#include <QFileInfo>
+#include <QHBoxLayout>
+#include <QHelpEvent>
+#include <QIcon>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QBitmap>
+#include <QSizePolicy>
+#include <QToolTip>
+#include <QVBoxLayout>
 
 #include "QtStatusWidget.h"
 #include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtClickableLabel.h>
 #include <Swift/QtUI/QtNameWidget.h>
+#include <Swift/QtUI/Roster/RosterTooltip.h>
 #include "QtScaledAvatarCache.h"
 
 namespace Swift {
@@ -89,6 +92,17 @@ void QtRosterHeader::setStreamEncryptionStatus(bool tlsInPlace) {
 	securityInfoButton_->setVisible(tlsInPlace);
 }
 
+bool QtRosterHeader::event(QEvent* event) {
+	if (event->type() == QEvent::ToolTip) {
+		QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
+		QtScaledAvatarCache scaledAvatarCache(avatarSize_);
+		QString text = RosterTooltip::buildDetailedTooltip(contact_.get(), &scaledAvatarCache);
+		QToolTip::showText(helpEvent->globalPos(), text);
+		return true;
+	}
+	return QWidget::event(event);
+}
+
 void QtRosterHeader::setAvatar(const QString& path) {
 	QString scaledAvatarPath = QtScaledAvatarCache(avatarSize_).getScaledAvatarPath(path);
 	QPixmap avatar;
@@ -103,6 +117,10 @@ void QtRosterHeader::setAvatar(const QString& path) {
 
 void QtRosterHeader::setNick(const QString& nick) {
 	nameWidget_->setNick(nick);
+}
+
+void QtRosterHeader::setContactRosterItem(boost::shared_ptr<ContactRosterItem> contact) {
+	contact_ = contact;
 }
 
 void QtRosterHeader::setJID(const QString& jid) {

@@ -15,6 +15,7 @@
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 	class Roster;
@@ -33,6 +34,7 @@ namespace Swift {
 			virtual void setMyAvatarPath(const std::string& path) = 0;
 			virtual void setMyStatusText(const std::string& status) = 0;
 			virtual void setMyStatusType(StatusShow::Type type) = 0;
+			virtual void setMyContactRosterItem(boost::shared_ptr<ContactRosterItem> contact) = 0;
 			/** Must be able to cope with NULL to clear the roster */
 			virtual void setRosterModel(Roster* roster) = 0;
 			virtual void setConnecting() = 0;

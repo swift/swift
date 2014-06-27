@@ -58,10 +58,9 @@ namespace Swift {
  * The controller does not gain ownership of these parameters.
  */
 RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager)
-	: myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), nickManager_(nickManager), nickResolver_(nickResolver), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview), clientBlockListManager_(clientBlockListManager) {
+	: myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), vcardManager_(vcardManager), avatarManager_(avatarManager), nickManager_(nickManager), nickResolver_(nickResolver), presenceOracle_(presenceOracle), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview), clientBlockListManager_(clientBlockListManager) {
 	assert(fileTransferOverview);
 	iqRouter_ = iqRouter;
-	presenceOracle_ = presenceOracle;
 	subscriptionManager_ = subscriptionManager;
 	eventController_ = eventController;
 	settings_ = settings;
@@ -78,9 +77,11 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1));
 	uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
-	avatarManager_ = avatarManager;
+
+	vcardManager_->onOwnVCardChanged.connect(boost::bind(&RosterController::handleOwnVCardChanged, this, _1));
 	avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
-	mainWindow_->setMyAvatarPath(pathToString(avatarManager_->getAvatarPath(myJID_)));
+	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handlePresenceChanged, this, _1));
+	mainWindow_->setMyAvatarPath(pathToString(avatarManager_->getAvatarPath(myJID_.toBare())));
 
 	nickManager_->onOwnNickChanged.connect(boost::bind(&MainWindow::setMyNick, mainWindow_, _1));
 	mainWindow_->setMyJID(jid);
@@ -91,6 +92,11 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	settings_->onSettingChanged.connect(boost::bind(&RosterController::handleSettingChanged, this, _1));
 
 	handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
+
+	ownContact_ = boost::make_shared<ContactRosterItem>(myJID_.toBare(), myJID_.toBare(), nickManager_->getOwnNick(), (GroupRosterItem*)0);
+	ownContact_->setVCard(vcardManager_->getVCard(myJID_.toBare()));
+	ownContact_->setAvatarPath(pathToString(avatarManager_->getAvatarPath(myJID_.toBare())));
+	mainWindow_->setMyContactRosterItem(ownContact_);
 }
 
 
@@ -336,11 +342,25 @@ void RosterController::handleSubscriptionRequestDeclined(SubscriptionRequestEven
 	subscriptionManager_->cancelSubscription(event->getJID());
 }
 
+void RosterController::handleOwnVCardChanged(VCard::ref vcard) {
+	ownContact_->setVCard(vcard);
+	mainWindow_->setMyContactRosterItem(ownContact_);
+}
+
 void RosterController::handleAvatarChanged(const JID& jid) {
 	boost::filesystem::path path = avatarManager_->getAvatarPath(jid);
 	roster_->applyOnItems(SetAvatar(jid, path));
-	if (jid.equals(myJID_, JID::WithoutResource)) {
+	if (jid.equals(myJID_, JID::WithResource)) {
 		mainWindow_->setMyAvatarPath(pathToString(path));
+	}
+	ownContact_->setAvatarPath(pathToString(path));
+	mainWindow_->setMyContactRosterItem(ownContact_);
+}
+
+void RosterController::handlePresenceChanged(Presence::ref presence) {
+	if (presence->getFrom().equals(myJID_, JID::WithResource)) {
+		ownContact_->applyPresence(std::string(), presence);
+		mainWindow_->setMyContactRosterItem(ownContact_);
 	}
 }
 

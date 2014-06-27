@@ -339,7 +339,7 @@ void MainController::handleConnected() {
 		showProfileController_ = new ShowProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
 		ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
 		fileTransferListController_->setFileTransferOverview(ftOverview_);
-		rosterController_ = new RosterController(jid_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_, client_->getClientBlockListManager(), client_->getVCardManager());
+		rosterController_ = new RosterController(boundJID_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_, client_->getClientBlockListManager(), client_->getVCardManager());
 		rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
 		rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
 		rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&MainController::handleShowCertificateRequest, this));
@@ -411,6 +411,7 @@ void MainController::handleConnected() {
 
 	client_->getVCardManager()->requestOwnVCard();
 	
+	rosterController_->setJID(boundJID_);
 	rosterController_->setEnabled(true);
 	rosterController_->getWindow()->setStreamEncryptionStatus(client_->isStreamEncrypted());
 	profileController_->setAvailable(true);

@@ -47,6 +47,7 @@ namespace Swift {
 			void setMyAvatarPath(const std::string& path);
 			void setMyStatusText(const std::string& status);
 			void setMyStatusType(StatusShow::Type type);
+			void setMyContactRosterItem(boost::shared_ptr<ContactRosterItem> contact);
 			void setConnecting();
 			void setStreamEncryptionStatus(bool tlsInPlaceAndValid);
 			void openCertificateDialog(const std::vector<Certificate::ref>& chain);
