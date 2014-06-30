@@ -58,6 +58,7 @@ bool QtUserSearchFirstMultiJIDPage::isComplete() const {
 }
 
 void QtUserSearchFirstMultiJIDPage::reset() {
+	jid_->clear();
 	reason_->clear();
 }
 

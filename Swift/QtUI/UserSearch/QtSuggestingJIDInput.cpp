@@ -91,6 +91,11 @@ void QtSuggestingJIDInput::setSuggestions(const std::vector<Contact::ref>& sugge
 	}
 }
 
+void QtSuggestingJIDInput::clear() {
+	setText("");
+	currentContact_.reset();
+}
+
 void QtSuggestingJIDInput::keyPressEvent(QKeyEvent* event) {
 	if (event->key() == Qt::Key_Up) {
 		if (contactListModel_->rowCount() > 0) {
@@ -138,7 +143,6 @@ void QtSuggestingJIDInput::handleSettingsChanged(const std::string& setting) {
 void QtSuggestingJIDInput::handleClicked(const QModelIndex& index) {
 	if (index.isValid()) {
 		currentContact_ = contactListModel_->getContact(index.row());
-		setText("");
 		onUserSelected(currentContact_->jid);
 		hidePopup();
 	}

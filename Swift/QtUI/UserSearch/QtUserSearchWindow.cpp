@@ -158,6 +158,7 @@ void QtUserSearchWindow::handleContactSuggestionRequested(const QString& text) {
 void QtUserSearchWindow::addContact() {
 	if (!!firstMultiJIDPage_->jid_->getContact()) {
 		contactVector_.push_back(firstMultiJIDPage_->jid_->getContact());
+		firstMultiJIDPage_->jid_->clear();
 	}
 	firstMultiJIDPage_->contactList_->setList(contactVector_);
 	firstMultiJIDPage_->emitCompletenessCheck();
@@ -273,6 +274,7 @@ void QtUserSearchWindow::addSearchedJIDToList(const JID& jid) {
 	std::vector<JID> jids;
 	jids.push_back(jid);
 	handleJIDsAdded(jids);
+	firstMultiJIDPage_->jid_->clear();
 }
 
 void QtUserSearchWindow::show() {

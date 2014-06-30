@@ -33,6 +33,8 @@ class QtSuggestingJIDInput : public QLineEdit {
 
 		void setSuggestions(const std::vector<Contact::ref>& suggestions);
 
+		void clear();
+
 		boost::signal<void (const JID&)> onUserSelected;
 
 	signals:
