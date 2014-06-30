@@ -270,13 +270,9 @@ JID QtUserSearchWindow::getContactJID() const {
 }
 
 void QtUserSearchWindow::addSearchedJIDToList(const JID& jid) {
-	Contact::ref contact = boost::make_shared<Contact>(jid, jid.toString(), StatusShow::None, "");
-	contactVector_.push_back(contact);
-	firstMultiJIDPage_->contactList_->setList(contactVector_);
-	firstMultiJIDPage_->emitCompletenessCheck();
-	if (type_ == ChatToContact) {
-		firstMultiJIDPage_->groupBox->setEnabled(supportsImpromptu_ ? 1 : (contactVector_.size() < 1));
-	}
+	std::vector<JID> jids;
+	jids.push_back(jid);
+	handleJIDsAdded(jids);
 }
 
 void QtUserSearchWindow::show() {
@@ -394,8 +390,14 @@ void QtUserSearchWindow::addContacts(const std::vector<Contact::ref>& contacts) 
 				contactVector_.push_back(newContact);
 			}
 		}
+		if (!supportsImpromptu_ && contactVector_.size() > 1) {
+			contactVector_.resize(1); /* can't chat with more than one user */
+		}
 		firstMultiJIDPage_->contactList_->setList(contactVector_);
 		firstMultiJIDPage_->emitCompletenessCheck();
+		if (type_ == ChatToContact) {
+			firstMultiJIDPage_->groupBox->setEnabled(supportsImpromptu_ ? true : (contactVector_.size() < 1));
+		}
 	}
 }
 

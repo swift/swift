@@ -77,6 +77,10 @@ void QtContactListWidget::setMaximumNoOfContactsToOne(bool limited) {
 	limited_ = limited;
 }
 
+bool QtContactListWidget::isFull() const {
+	return limited_ && (getList().size() == 1);
+}
+
 void QtContactListWidget::updateContacts(const std::vector<Contact::ref>& contactUpdates) {
 	std::vector<Contact::ref> contacts = contactListModel_->getList();
 	foreach(const Contact::ref& contactUpdate, contactUpdates) {

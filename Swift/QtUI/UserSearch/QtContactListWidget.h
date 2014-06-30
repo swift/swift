@@ -40,6 +40,7 @@ public:
 	std::vector<Contact::ref> getList() const;
 	Contact::ref getContact(const size_t i);
 	void setMaximumNoOfContactsToOne(bool limited);
+	bool isFull() const;
 
 public slots:
 	void updateContacts(const std::vector<Contact::ref>& contactUpdates);

@@ -72,7 +72,9 @@ void QtUserSearchFirstMultiJIDPage::handleEditingDone() {
 void QtUserSearchFirstMultiJIDPage::dragEnterEvent(QDragEnterEvent *event) {
 	if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")
 		|| event->mimeData()->hasFormat("application/vnd.swift.contact-jid-muc")) {
-			event->acceptProposedAction();
+			if (!contactList_->isFull()) {
+				event->acceptProposedAction();
+			}
 	}
 }
 
