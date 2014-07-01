@@ -245,7 +245,7 @@ JID QtUserSearchWindow::getContactJID() const {
 			if (userItem) { /* Remember to leave this if we change to dynamic cast */
 				jid = userItem->getJID();
 			}
-		} else {
+		} else if (dynamic_cast<QtFormResultItemModel*>(model_)) {
 			int row = resultsPage_->results_->currentIndex().row();
 
 			Form::FormItem item = dynamic_cast<QtFormResultItemModel*>(model_)->getForm()->getItems().at(row);

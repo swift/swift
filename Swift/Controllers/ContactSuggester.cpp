@@ -63,13 +63,17 @@ std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& se
 }
 
 bool ContactSuggester::fuzzyMatch(std::string text, std::string match) {
-	for (std::string::iterator currentQueryChar = match.begin(); currentQueryChar != match.end(); currentQueryChar++) {
-		//size_t result = text.find(*currentQueryChar);
-		std::string::iterator result = boost::algorithm::ifind_first(text, std::string(currentQueryChar, currentQueryChar+1)).begin();
-		if (result == text.end()) {
+	std::string lowerText = text;
+	boost::algorithm::to_lower(lowerText);
+	std::string lowerMatch = match;
+	boost::algorithm::to_lower(lowerMatch);
+	size_t lastMatch = 0;
+	for (size_t i = 0; i < lowerMatch.length(); ++i) {
+		size_t where = lowerText.find_first_of(lowerMatch[i], lastMatch);
+		if (where == std::string::npos) {
 			return false;
 		}
-		text.erase(result);
+		lastMatch = where + 1;
 	}
 	return true;
 }
