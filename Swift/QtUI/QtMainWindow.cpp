@@ -79,7 +79,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	treeWidget_ = new QtRosterWidget(uiEventStream_, settings_, this);
 
 	contactTabLayout->addWidget(treeWidget_);
-	new QtFilterWidget(this, treeWidget_, contactTabLayout);
+	new QtFilterWidget(this, treeWidget_, uiEventStream_, contactTabLayout);
 
 	tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
 

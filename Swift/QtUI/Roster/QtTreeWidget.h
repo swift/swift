@@ -34,6 +34,8 @@ class QtTreeWidget : public QTreeView {
 		Roster* getRoster() {return roster_;}
 		void refreshTooltip();
 		void setMessageTarget(MessageTarget messageTarget);
+		JID jidFromIndex(const QModelIndex& index) const;
+		JID selectedJID() const;
 	public:
 		boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
 

@@ -19,10 +19,12 @@
 
 namespace Swift {
 
+class UIEventStream;
+
 class QtFilterWidget : public QWidget {
 	Q_OBJECT
 	public:
-		QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, QBoxLayout* layout = 0);
+		QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventStream* eventStream, QBoxLayout* layout = 0);
 		virtual ~QtFilterWidget();
 
 	protected:
@@ -32,11 +34,13 @@ class QtFilterWidget : public QWidget {
 		void popAllFilters();
 		void pushAllFilters();
 
+		void updateRosterFilters();
 		void updateSearchFilter();
 
 	private:
 		QLineEdit* filterLineEdit_;
 		QtTreeWidget* treeView_;
+		UIEventStream* eventStream_;
 		std::vector<RosterFilter*> filters_;
 		QAbstractItemModel* sourceModel_;
 		FuzzyRosterFilter* fuzzyRosterFilter_;

@@ -138,14 +138,7 @@ void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex&
 }
 
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
-	JID target;
-	if (messageTarget_ == MessageDisplayJID) {
-		target = JID(Q2PSTRING(index.data(DisplayJIDRole).toString()));
-		target = target.toBare();
-	}
-	if (!target.isValid()) {
-		target = JID(Q2PSTRING(index.data(JIDRole).toString()));
-	}
+	JID target = jidFromIndex(index);
 	if (target.isValid()) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
 	}
@@ -237,6 +230,26 @@ void QtTreeWidget::show() {
 
 void QtTreeWidget::setMessageTarget(MessageTarget messageTarget) {
 	messageTarget_ = messageTarget;
+}
+
+JID QtTreeWidget::jidFromIndex(const QModelIndex& index) const {
+	JID target;
+	if (messageTarget_ == MessageDisplayJID) {
+		target = JID(Q2PSTRING(index.data(DisplayJIDRole).toString()));
+		target = target.toBare();
+	}
+	if (!target.isValid()) {
+		target = JID(Q2PSTRING(index.data(JIDRole).toString()));
+	}
+	return target;
+}
+
+JID QtTreeWidget::selectedJID() const {
+	QModelIndexList list = selectedIndexes();
+	if (list.size() != 1) {
+		return JID();
+	}
+	return jidFromIndex(list[0]);
 }
 
 }

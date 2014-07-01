@@ -4,20 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <Swift/QtUI/Roster/QtFilterWidget.h>
-
 #include <QLayout>
 #include <QVBoxLayout>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QString>
 #include <QEvent>
-
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/Roster/QtFilterWidget.h>
 
 namespace Swift {
 
-QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, QBoxLayout* layout) : QWidget(parent), treeView_(treeView), fuzzyRosterFilter_(0), isModifierSinglePressed_(false) {
+QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventStream* eventStream, QBoxLayout* layout) : QWidget(parent), treeView_(treeView), eventStream_(eventStream), fuzzyRosterFilter_(0), isModifierSinglePressed_(false) {
 	int targetIndex = layout->indexOf(treeView);
 
 	QVBoxLayout* vboxLayout = new QVBoxLayout(this);
@@ -65,8 +65,12 @@ bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
 				QApplication::postEvent(treeView_, new QContextMenuEvent(QContextMenuEvent::Keyboard, contextMenuPosition, treeView_->mapToGlobal(contextMenuPosition)));
 				return true;
 			} else if (keyEvent->key() == Qt::Key_Return) {
+				JID target = treeView_->selectedJID();
+				if (target.isValid()) {
+					eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
+				}
 				filterLineEdit_->setText("");
-				return false;
+				updateRosterFilters();
 			} else if (keyEvent->key() == Qt::Key_Escape) {
 				filterLineEdit_->setText("");
 			} else {
@@ -77,26 +81,8 @@ bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
 		filterLineEdit_->event(event);
 		filterLineEdit_->setVisible(!filterLineEdit_->text().isEmpty());
 
-		// update roster filters
 		if (event->type() == QEvent::KeyRelease) {
-			if (fuzzyRosterFilter_) {
-				if (filterLineEdit_->text().isEmpty()) {
-					// remove currently installed search filter and put old filters back
-					treeView_->getRoster()->removeFilter(fuzzyRosterFilter_);
-					delete fuzzyRosterFilter_;
-					fuzzyRosterFilter_ = NULL;
-					pushAllFilters();
-				} else {
-					// remove currently intsalled search filter and put new search filter in place
-					updateSearchFilter();
-				}
-			} else {
-				if (!filterLineEdit_->text().isEmpty()) {
-					// remove currently installed filters and put a search filter in place
-					popAllFilters();
-					updateSearchFilter();
-				}
-			}
+			updateRosterFilters();
 		}
 		return true;
 	}
@@ -116,6 +102,27 @@ void QtFilterWidget::pushAllFilters() {
 		treeView_->getRoster()->addFilter(filter);
 	}
 	filters_.clear();
+}
+
+void QtFilterWidget::updateRosterFilters() {
+	if (fuzzyRosterFilter_) {
+		if (filterLineEdit_->text().isEmpty()) {
+			// remove currently installed search filter and put old filters back
+			treeView_->getRoster()->removeFilter(fuzzyRosterFilter_);
+			delete fuzzyRosterFilter_;
+			fuzzyRosterFilter_ = NULL;
+			pushAllFilters();
+		} else {
+			// remove currently intsalled search filter and put new search filter in place
+			updateSearchFilter();
+		}
+	} else {
+		if (!filterLineEdit_->text().isEmpty()) {
+			// remove currently installed filters and put a search filter in place
+			popAllFilters();
+			updateSearchFilter();
+		}
+	}
 }
 
 void QtFilterWidget::updateSearchFilter() {
