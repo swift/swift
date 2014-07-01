@@ -88,6 +88,7 @@ void QtSuggestingJIDInput::setSuggestions(const std::vector<Contact::ref>& sugge
 		showPopup();
 	} else {
 		currentContact_.reset();
+		hidePopup();
 	}
 }
 
