@@ -81,6 +81,7 @@ These projects contain source code from third parties:
 - Expat
 - ZLib
 - LibIDN
+- Trolltech
 
 The licenses under which these contributions and libraries are released are listed below.
 
@@ -756,3 +757,19 @@ necessary.  Here is a sample; alter the names:
   Ty Coon, President of Vice
 
 That's all there is to it!
+
+
+=========
+Trolltech
+=========
+
+Demo code from http://git.forwardbias.in/?p=lineeditclearbutton.git with license:
+
+/****************************************************************************
+**
+** Copyright (c) 2007 Trolltech ASA <info@trolltech.com>
+**
+** Use, modification and distribution is allowed without limitation,
+** warranty, liability or support of any kind.
+**
+****************************************************************************/

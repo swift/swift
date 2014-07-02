@@ -1,17 +1,24 @@
 /*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
+/*
  * Copyright (c) 2013 Tobias Markmann
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <QLayout>
-#include <QVBoxLayout>
+#include <QEvent>
 #include <QKeyEvent>
-#include <QEvent>
+#include <QLayout>
 #include <QString>
-#include <QEvent>
+#include <QVBoxLayout>
+
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/QtUI/QtClosableLineEdit.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/Roster/QtFilterWidget.h>
 
@@ -24,7 +31,7 @@ QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventS
 	vboxLayout->setSpacing(0);
 	vboxLayout->setContentsMargins(0,0,0,0);
 
-	filterLineEdit_ = new QLineEdit(this);
+	filterLineEdit_ = new QtClosableLineEdit(this);
 	filterLineEdit_->hide();
 	vboxLayout->addWidget(filterLineEdit_);
 

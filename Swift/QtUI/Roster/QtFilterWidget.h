@@ -9,7 +9,6 @@
 #include <vector>
 
 #include <QBoxLayout>
-#include <QLineEdit>
 #include <QWidget>
 
 #include <Swift/Controllers/Roster/RosterFilter.h>
@@ -18,9 +17,8 @@
 #include <Swift/QtUI/Roster/QtTreeWidget.h>
 
 namespace Swift {
-
 class UIEventStream;
-
+class QtClosableLineEdit;
 class QtFilterWidget : public QWidget {
 	Q_OBJECT
 	public:
@@ -38,7 +36,7 @@ class QtFilterWidget : public QWidget {
 		void updateSearchFilter();
 
 	private:
-		QLineEdit* filterLineEdit_;
+		QtClosableLineEdit* filterLineEdit_;
 		QtTreeWidget* treeView_;
 		UIEventStream* eventStream_;
 		std::vector<RosterFilter*> filters_;

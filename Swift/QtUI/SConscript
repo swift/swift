@@ -130,6 +130,7 @@ sources = [
     "QtHighlightRulesItemModel.cpp",
     "QtHighlightRuleWidget.cpp",
     "QtColorToolButton.cpp",
+    "QtClosableLineEdit.cpp",
     "ChatSnippet.cpp",
     "MessageSnippet.cpp",
     "SystemMessageSnippet.cpp",
