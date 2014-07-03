@@ -86,7 +86,6 @@ bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
 		}
 
 		filterLineEdit_->event(event);
-		filterLineEdit_->setVisible(!filterLineEdit_->text().isEmpty());
 
 		if (event->type() == QEvent::KeyRelease) {
 			updateRosterFilters();
@@ -102,9 +101,13 @@ void QtFilterWidget::popAllFilters() {
 		filters_.push_back(filter);
 		treeView_->getRoster()->removeFilter(filter);
 	}
+	treeView_->getRoster()->onFilterAdded.connect(boost::bind(&QtFilterWidget::handleFilterAdded, this, _1));
+	treeView_->getRoster()->onFilterRemoved.connect(boost::bind(&QtFilterWidget::handleFilterRemoved, this, _1));
 }
 
 void QtFilterWidget::pushAllFilters() {
+	treeView_->getRoster()->onFilterAdded.disconnect(boost::bind(&QtFilterWidget::handleFilterAdded, this, _1));
+	treeView_->getRoster()->onFilterRemoved.disconnect(boost::bind(&QtFilterWidget::handleFilterRemoved, this, _1));
 	foreach(RosterFilter* filter, filters_) {
 		treeView_->getRoster()->addFilter(filter);
 	}
@@ -130,6 +133,7 @@ void QtFilterWidget::updateRosterFilters() {
 			updateSearchFilter();
 		}
 	}
+	filterLineEdit_->setVisible(!filterLineEdit_->text().isEmpty());
 }
 
 void QtFilterWidget::updateSearchFilter() {
@@ -141,6 +145,22 @@ void QtFilterWidget::updateSearchFilter() {
 	fuzzyRosterFilter_ = new FuzzyRosterFilter(Q2PSTRING(filterLineEdit_->text()));
 	treeView_->getRoster()->addFilter(fuzzyRosterFilter_);
 	treeView_->setCurrentIndex(sourceModel_->index(0, 0, sourceModel_->index(0,0)));
+}
+
+void QtFilterWidget::handleFilterAdded(RosterFilter* filter) {
+	if (filter != fuzzyRosterFilter_) {
+		filterLineEdit_->setText("");
+		updateRosterFilters();
+	}
+}
+
+void QtFilterWidget::handleFilterRemoved(RosterFilter* filter) {
+	/* make sure we don't end up adding this one back in later */
+	filters_.erase(std::remove(filters_.begin(), filters_.end(), filter), filters_.end());
+	if (filter != fuzzyRosterFilter_) {
+		filterLineEdit_->setText("");
+		updateRosterFilters();
+	}
 }
 
 }

@@ -197,7 +197,13 @@ void Roster::applyOnAllItems(const RosterItemOperation& operation) {
 	filterAll();
 }
 
-void Roster::removeFilter(RosterFilter *filter) {
+void Roster::addFilter(RosterFilter* filter) {
+	filters_.push_back(filter);
+	filterAll();
+	onFilterAdded(filter);
+}
+
+void Roster::removeFilter(RosterFilter* filter) {
 	for (unsigned int i = 0; i < filters_.size(); i++) {
 		if (filters_[i] == filter) {
 			filters_.erase(filters_.begin() + i);
@@ -205,6 +211,7 @@ void Roster::removeFilter(RosterFilter *filter) {
 		}
 	}
 	filterAll();
+	onFilterRemoved(filter);
 }
 
 void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {

@@ -35,6 +35,9 @@ class QtFilterWidget : public QWidget {
 		void updateRosterFilters();
 		void updateSearchFilter();
 
+		void handleFilterAdded(RosterFilter* filter);
+		void handleFilterRemoved(RosterFilter* filter);
+
 	private:
 		QtClosableLineEdit* filterLineEdit_;
 		QtTreeWidget* treeView_;

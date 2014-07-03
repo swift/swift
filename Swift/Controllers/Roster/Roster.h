@@ -38,14 +38,16 @@ class Roster {
 		void applyOnItems(const RosterItemOperation& operation);
 		void applyOnAllItems(const RosterItemOperation& operation);
 		void applyOnItem(const RosterItemOperation& operation, const JID& jid);
-		void addFilter(RosterFilter *filter) {filters_.push_back(filter);filterAll();}
-		void removeFilter(RosterFilter *filter);
+		void addFilter(RosterFilter* filter);
+		void removeFilter(RosterFilter* filter);
 		GroupRosterItem* getRoot();
 		std::vector<RosterFilter*> getFilters() {return filters_;}
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;
 		boost::signal<void (RosterItem*)> onDataChanged;
 		boost::signal<void (JID&)> onVCardUpdateRequested;
+		boost::signal<void (RosterFilter* filter)> onFilterAdded;
+		boost::signal<void (RosterFilter* filter)> onFilterRemoved;
 		GroupRosterItem* getGroup(const std::string& groupName);
 		void setBlockingSupported(bool isSupported);
 
