@@ -39,6 +39,7 @@
 #include <Sluift/ElementConvertors/IQConvertor.h>
 #include <Sluift/ElementConvertors/PresenceConvertor.h>
 #include <Sluift/ElementConvertors/MessageConvertor.h>
+#include <Sluift/ElementConvertors/StatusShowConvertor.h>
 
 using namespace Swift;
 namespace lambda = boost::lambda;
@@ -259,6 +260,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		"to  the JID to send the message to\n"
 		"from  the JID to send the message from\n"
 		"status  the text of the presence\n"
+		"show  the availability of the presence (`online`, `ffc`, `away`, `xa`, `dnd`)\n"
 		"priority  the priority of the presence\n"
 		"type  the type of message to send (`available`, `error`, `probe`, `subscribe`, `subscribed`, `unavailable`, `unsubscribe`, `unsubscribed`)\n"
 		"payloads  payloads to add to the presence\n"
@@ -286,6 +288,9 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		}
 		if (boost::optional<std::string> value = Lua::getStringField(L, index, "type")) {
 			presence->setType(PresenceConvertor::convertPresenceTypeFromString(*value));
+		}
+		if (boost::optional<std::string> value = Lua::getStringField(L, index, "show")) {
+			presence->setShow(StatusShowConvertor::convertStatusShowTypeFromString(*value));
 		}
 		std::vector< boost::shared_ptr<Payload> > payloads = getPayloadsFromTable(L, index);
 		presence->addPayloads(payloads.begin(), payloads.end());
