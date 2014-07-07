@@ -352,9 +352,9 @@ void RosterController::handleAvatarChanged(const JID& jid) {
 	roster_->applyOnItems(SetAvatar(jid, path));
 	if (jid.equals(myJID_, JID::WithResource)) {
 		mainWindow_->setMyAvatarPath(pathToString(path));
+		ownContact_->setAvatarPath(pathToString(path));
+		mainWindow_->setMyContactRosterItem(ownContact_);
 	}
-	ownContact_->setAvatarPath(pathToString(path));
-	mainWindow_->setMyContactRosterItem(ownContact_);
 }
 
 void RosterController::handlePresenceChanged(Presence::ref presence) {
