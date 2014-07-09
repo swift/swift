@@ -32,6 +32,7 @@ if env.get("UNBOUND_BUNDLED", False) :
 		myenv.Append(CPPPATH = ["../Ldns/src/ldns", "src/unbound", "."])
 		if env["target"] == "android" :
 			myenv.Append(CPPPATH = ["src/android/compat", "src/android/config"])
+			myenv.Append(CPPPATH = ["src/android/dns"])
 			myenv.Append(CPPPATH = ["../Ldns/src/android"])
 		myenv.UseFlags(env["OPENSSL_FLAGS"])
 
@@ -105,4 +106,5 @@ if env.get("UNBOUND_BUNDLED", False) :
 			]
 		if env["target"] == "android" :
 			unbound_objects.append("src/android/compat/glob.c")
+			unbound_objects.append("src/android/dns/dns_android.cpp")
 		env["UNBOUND_OBJECTS"] = myenv.SwiftenObject(unbound_objects)

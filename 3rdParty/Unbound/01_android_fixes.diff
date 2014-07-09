@@ -1,13 +1,30 @@
---- a/3rdParty/Unbound/src/unbound/libunbound/libunbound.c
-+++ b/3rdParty/Unbound/src/unbound/libunbound/libunbound.c
-@@ -812,6 +812,10 @@ ub_ctx_resolvconf(struct ub_ctx* ctx, char* fname)
- 	char* parse, *addr;
- 	int r;
+diff -rupN ./3rdParty/Unbound/src/unbound/libunbound/libunbound.c ./3rdParty/Unbound/src/unbound/libunbound/libunbound.c
+--- ./3rdParty/Unbound/src/unbound/libunbound/libunbound.c	2012-01-12 13:52:38.000000000 +0000
++++ ./3rdParty/Unbound/src/unbound/libunbound/libunbound.c	2014-07-10 09:21:22.999839053 +0100
+@@ -66,6 +66,10 @@
+ #include <iphlpapi.h>
+ #endif /* UB_ON_WINDOWS */
  
 +#ifdef __ANDROID__
-+	ub_ctx_set_fwd(ctx, "8.8.8.8");
-+	ub_ctx_set_fwd(ctx, "8.8.4.4");
++#include "dns_android.h"
 +#endif
++
+ struct ub_ctx* 
+ ub_ctx_create(void)
+ {
+@@ -811,6 +815,15 @@ ub_ctx_resolvconf(struct ub_ctx* ctx, ch
+ 	char buf[1024];
+ 	char* parse, *addr;
+ 	int r;
++#ifdef __ANDROID__
++	int i;
++	r = dns_android_server_count();
++	for (i = 0; i < r; ++i) {
++		if (dns_android_server_get(i, buf, sizeof(buf)) == DNS_ANDROID_SUCCESS) {
++			ub_ctx_set_fwd(ctx, buf);
++		}
++	}
++#endif
+ 
  	if(fname == NULL) {
  #if !defined(UB_ON_WINDOWS) || !defined(HAVE_WINDOWS_H)
- 		fname = "/etc/resolv.conf";
