@@ -12,6 +12,7 @@
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/assign/list_of.hpp>
+#include <boost/filesystem.hpp>
 
 #include "Watchdog.h"
 #include <Sluift/Lua/Check.h>
@@ -251,6 +252,37 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	return 1;
 }
 
+/*******************************************************************************
+ * Filesystem Functions
+ ******************************************************************************/
+
+SLUIFT_LUA_FUNCTION(FS, list) {
+	boost::filesystem::path dir(std::string(Lua::checkString(L, 1)));
+	if (!boost::filesystem::exists(dir) || !boost::filesystem::is_directory(dir)) {
+		lua_pushnil(L);
+		lua_pushstring(L, "Argument is not an existing directory");
+		return 2;
+	}
+
+	boost::filesystem::directory_iterator i(dir);
+	std::vector<boost::filesystem::path> items(
+			i, boost::filesystem::directory_iterator());
+
+	lua_createtable(L, boost::numeric_cast<int>(items.size()), 0);
+	for (size_t i = 0; i < items.size(); ++i) {
+		lua_pushstring(L, items[i].string().c_str());
+		lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
+	}
+	Lua::registerTableToString(L, -1);
+	return 1;
+}
+
+SLUIFT_LUA_FUNCTION(FS, is_file) {
+	boost::filesystem::path file(std::string(Lua::checkString(L, 1)));
+	lua_pushboolean(L, boost::filesystem::is_regular_file(file));
+	return 1;
+}
+
 
 /*******************************************************************************
  * JID Functions
@@ -410,6 +442,8 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
 	lua_setfield(L, -2, "idn");
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "Crypto");
 	lua_setfield(L, -2, "crypto");
+	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "FS");
+	lua_setfield(L, -2, "fs");
 #ifdef HAVE_ITUNES
 	Lua::FunctionRegistry::getInstance().createFunctionTable(L, "iTunes");
 	lua_setfield(L, -2, "itunes");
