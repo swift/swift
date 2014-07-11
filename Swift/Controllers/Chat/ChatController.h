@@ -79,8 +79,8 @@ namespace Swift {
 			void handleUnblockUserRequest();
 
 			void handleInviteToChat(const std::vector<JID>& droppedJIDs);
-			void handleInviteToMUCWindowDismissed();
-			void handleInviteToMUCWindowCompleted();
+
+			void handleWindowClosed();
 
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
 

@@ -197,6 +197,10 @@ void ChatControllerBase::activateChatWindow() {
 	chatWindow_->activate();
 }
 
+bool ChatControllerBase::hasOpenWindow() const {
+	return chatWindow_ && chatWindow_->isVisible();
+}
+
 std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	if (boost::starts_with(message, "/me ")) {
 		return chatWindow_->addAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);

@@ -89,7 +89,7 @@ namespace Swift {
 			};
 
 		private:
-			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity);
+			ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity, bool privateMessage);
 			void handleChatRequest(const std::string& contact);
 			void finalizeImpromptuJoin(MUC::ref muc, const std::vector<JID>& jidsToInvite, const std::string& reason, const boost::optional<JID>& reuseChatJID = boost::optional<JID>());
 			MUC::ref handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow = 0);
@@ -103,10 +103,12 @@ namespace Swift {
 			void handleUserLeftMUC(MUCController* mucController);
 			void handleBookmarksReady();
 			void handleChatActivity(const JID& jid, const std::string& activity, bool isMUC);
+			void handleChatClosed(const JID& jid);
 			void handleNewFileTransferController(FileTransferController*);
 			void handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf);
 			void handleWhiteboardStateChange(const JID& contact, const ChatWindow::WhiteboardSessionState state);
 			boost::optional<ChatListWindow::Chat> removeExistingChat(const ChatListWindow::Chat& chat);
+			void cleanupPrivateMessageRecents();
 			void appendRecent(const ChatListWindow::Chat& chat);
 			void prependRecent(const ChatListWindow::Chat& chat);
 			void setupBookmarks();

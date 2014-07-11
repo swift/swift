@@ -130,6 +130,7 @@ namespace Swift {
 			virtual void setContactChatState(ChatState::ChatStateType state) = 0;
 			virtual void setName(const std::string& name) = 0;
 			virtual void show() = 0;
+			virtual bool isVisible() const = 0;
 			virtual void activate() = 0;
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) = 0;
 			virtual void setSecurityLabelsEnabled(bool enabled) = 0;

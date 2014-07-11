@@ -224,6 +224,15 @@ void ChatsManager::saveRecents() {
 		}
 	}
 
+	class RemoveRecent {
+	public:
+		static bool ifPrivateMessage(const ChatListWindow::Chat& chat) {
+			return chat.isPrivateMessage;
+		}
+	};
+
+	recentsLimited.erase(std::remove_if(recentsLimited.begin(), recentsLimited.end(), RemoveRecent::ifPrivateMessage), recentsLimited.end());
+
 	oa << recentsLimited;
 	std::string serializedStr = Base64::encode(createByteArray(serializeStream.str()));
 	profileSettings_->storeString(RECENT_CHATS, serializedStr);
@@ -310,7 +319,7 @@ void ChatsManager::loadRecents() {
 			StatusShow::Type type = StatusShow::None;
 			boost::filesystem::path path;
 
-			ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, type, path, isMUC, nick);
+			ChatListWindow::Chat chat(jid, nickResolver_->jidToNick(jid), activity, 0, type, path, isMUC, false, nick);
 			chat = updateChatStatusAndAvatarHelper(chat);
 			prependRecent(chat);
 		}
@@ -368,7 +377,7 @@ void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 	chatListWindow_->removeMUCBookmark(bookmark);
 }
 
-ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const std::string& activity) {
+ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const std::string& activity, bool privateMessage) {
 	int unreadCount = 0;
 	if (mucRegistry_->isMUC(jid)) {
 		MUCController* controller = mucControllers_[jid.toBare()];
@@ -387,14 +396,14 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 			}
 
 			if (controller->isImpromptu()) {
-				ChatListWindow::Chat chat = ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick, password);
+				ChatListWindow::Chat chat = ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, privateMessage, nick, password);
 				typedef std::pair<std::string, JID> StringJIDPair;
 				std::map<std::string, JID> participants = controller->getParticipantJIDs();
 				chat.impromptuJIDs = participants;
 				return chat;
 			}
 		}
-		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, nick, password);
+		return ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, privateMessage, nick, password);
 	} else {
 		ChatController* controller = getChatControllerIfExists(jid, false);
 		if (controller) {
@@ -404,20 +413,22 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(bareishJID);
 		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
 		boost::filesystem::path avatarPath = avatarManager_ ? avatarManager_->getAvatarPath(bareishJID) : boost::filesystem::path();
-		return ChatListWindow::Chat(bareishJID, nickResolver_->jidToNick(bareishJID), activity, unreadCount, type, avatarPath, false);
+		return ChatListWindow::Chat(bareishJID, nickResolver_->jidToNick(bareishJID), activity, unreadCount, type, avatarPath, false, privateMessage);
 	}
 }
 
 void ChatsManager::handleChatActivity(const JID& jid, const std::string& activity, bool isMUC) {
-	if (mucRegistry_->isMUC(jid.toBare()) && !isMUC) {
-		/* Don't include PMs in MUC rooms.*/
-		return;
-	}
-	ChatListWindow::Chat chat = createChatListChatItem(jid, activity);
+	const bool privateMessage = mucRegistry_->isMUC(jid.toBare()) && !isMUC;
+	ChatListWindow::Chat chat = createChatListChatItem(jid, activity, privateMessage);
 	/* FIXME: handle nick changes */
 	appendRecent(chat);
 	handleUnreadCountChanged(NULL);
 	saveRecents();
+}
+
+void ChatsManager::handleChatClosed(const JID& /*jid*/) {
+	cleanupPrivateMessageRecents();
+	chatListWindow_->setRecents(recentChats_);
 }
 
 void ChatsManager::handleUnreadCountChanged(ChatControllerBase* controller) {
@@ -454,6 +465,24 @@ boost::optional<ChatListWindow::Chat> ChatsManager::removeExistingChat(const Cha
 	}
 }
 
+void ChatsManager::cleanupPrivateMessageRecents() {
+	/* if we leave a MUC and close a PM, remove it's recent chat entry */
+	const std::list<ChatListWindow::Chat> chats = recentChats_;
+	foreach (const ChatListWindow::Chat& chat, chats) {
+		if (chat.isPrivateMessage) {
+			typedef std::map<JID, MUCController*> ControllerMap;
+			ControllerMap::iterator muc = mucControllers_.find(chat.jid.toBare());
+			if (muc == mucControllers_.end() || !muc->second->isJoined()) {
+				ChatController* chatController = getChatControllerIfExists(chat.jid);
+				if (!chatController || !chatController->hasOpenWindow()) {
+					removeExistingChat(chat);
+					break;
+				}
+			}
+		}
+	}
+}
+
 void ChatsManager::appendRecent(const ChatListWindow::Chat& chat) {
 	boost::optional<ChatListWindow::Chat> oldChat = removeExistingChat(chat);
 	ChatListWindow::Chat mergedChat = chat;
@@ -479,15 +508,15 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
 			foreach (ChatListWindow::Chat& chat, recentChats_) {
 				if (chat.isMUC && chat.jid == (*it).first) {
 					chat.statusType = StatusShow::None;
-					chatListWindow_->setRecents(recentChats_);
-					break;
 				}
 			}
 			mucControllers_.erase(it);
 			delete mucController;
-			return;
+			break;
 		}
 	}
+	cleanupPrivateMessageRecents();
+	chatListWindow_->setRecents(recentChats_);
 }
 
 void ChatsManager::handleSettingChanged(const std::string& settingPath) {
@@ -701,6 +730,7 @@ ChatController* ChatsManager::createNewChatController(const JID& contact) {
 	chatControllers_[contact] = controller;
 	controller->setAvailableServerFeatures(serverDiscoInfo_);
 	controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));
+	controller->onWindowClosed.connect(boost::bind(&ChatsManager::handleChatClosed, this, contact));
 	controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
 	controller->onConvertToMUC.connect(boost::bind(&ChatsManager::handleTransformChatToMUC, this, controller, _1, _2, _3));
 	updatePresenceReceivingStateOnChatController(contact);

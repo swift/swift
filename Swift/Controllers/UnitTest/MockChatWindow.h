@@ -41,6 +41,7 @@ namespace Swift {
 			virtual void setContactChatState(ChatState::ChatStateType /*state*/) {}
 			virtual void setName(const std::string& name) {name_ = name;}
 			virtual void show() {}
+			virtual bool isVisible() const { return true; }
 			virtual void activate() {}
 			virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {labels_ = labels;}
 			virtual void setSecurityLabelsEnabled(bool enabled) {labelsEnabled_ = enabled;}

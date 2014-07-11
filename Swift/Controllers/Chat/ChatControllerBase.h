@@ -52,6 +52,7 @@ namespace Swift {
 			virtual ~ChatControllerBase();
 			void showChatWindow();
 			void activateChatWindow();
+			bool hasOpenWindow() const;
 			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
 			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
@@ -62,6 +63,7 @@ namespace Swift {
 			/** Used for determining when something is recent.*/
 			boost::signal<void (const std::string& /*activity*/)> onActivity;
 			boost::signal<void ()> onUnreadCountChanged;
+			boost::signal<void ()> onWindowClosed;
 			int getUnreadCount();
 			const JID& getToJID() {return toJID_;}
 			void handleCapsChanged(const JID& jid);

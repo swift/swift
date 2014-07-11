@@ -97,6 +97,7 @@ namespace Swift {
 			void setWhiteboardSessionStatus(std::string id, const ChatWindow::WhiteboardSessionState state);
 
 			void show();
+			bool isVisible() const;
 			void activate();
 			void setUnreadMessageCount(int count);
 			void convertToMUC(MUCType mucType);

@@ -21,9 +21,9 @@ namespace Swift {
 		public:
 			class Chat {
 				public:
-					Chat() : statusType(StatusShow::None), isMUC(false), unreadCount(0) {}
-					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, const boost::filesystem::path& avatarPath, bool isMUC, const std::string& nick = "", const boost::optional<std::string> password = boost::optional<std::string>())
-					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), password(password), unreadCount(unreadCount), avatarPath(avatarPath) {}
+					Chat() : statusType(StatusShow::None), isMUC(false), unreadCount(0), isPrivateMessage(false) {}
+					Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, const boost::filesystem::path& avatarPath, bool isMUC, bool isPrivateMessage = false, const std::string& nick = "", const boost::optional<std::string> password = boost::optional<std::string>())
+					: jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), password(password), unreadCount(unreadCount), avatarPath(avatarPath), isPrivateMessage(isPrivateMessage) {}
 					/** Assume that nicks and other transient features aren't important for equality */
 					bool operator==(const Chat& other) const {
 						if (impromptuJIDs.empty()) {
@@ -77,6 +77,7 @@ namespace Swift {
 					int unreadCount;
 					boost::filesystem::path avatarPath;
 					std::map<std::string, JID> impromptuJIDs;
+					bool isPrivateMessage;
 			};
 			virtual ~ChatListWindow();
 

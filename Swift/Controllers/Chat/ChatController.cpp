@@ -95,6 +95,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 	chatWindow_->onBlockUserRequest.connect(boost::bind(&ChatController::handleBlockUserRequest, this));
 	chatWindow_->onUnblockUserRequest.connect(boost::bind(&ChatController::handleUnblockUserRequest, this));
 	chatWindow_->onInviteToChat.connect(boost::bind(&ChatController::handleInviteToChat, this, _1));
+	chatWindow_->onClosed.connect(boost::bind(&ChatController::handleWindowClosed, this));
 	handleBareJIDCapsChanged(toJID_);
 
 	settings_->onSettingChanged.connect(boost::bind(&ChatController::handleSettingChanged, this, _1));
@@ -304,6 +305,10 @@ void ChatController::handleUnblockUserRequest() {
 void ChatController::handleInviteToChat(const std::vector<JID>& droppedJIDs) {
 	boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs, RequestInviteToMUCUIEvent::Impromptu));
 	eventStream_->send(event);
+}
+
+void ChatController::handleWindowClosed() {
+	onWindowClosed();
 }
 
 void ChatController::handleUIEvent(boost::shared_ptr<UIEvent> event) {

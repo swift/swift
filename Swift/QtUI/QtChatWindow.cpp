@@ -525,6 +525,10 @@ void QtChatWindow::show() {
 	emit windowOpening();
 }
 
+bool QtChatWindow::isVisible() const {
+	return QWidget::isVisible();
+}
+
 void QtChatWindow::activate() {
 	if (isWindow()) {
 		QWidget::show();
