@@ -44,6 +44,7 @@ class QtProfileWindow : public QWidget, public ProfileWindow {
 
 	private:
 		void updateTitle();
+		void updateWindowSize();
 		virtual void closeEvent(QCloseEvent* event);
 
 	private slots:

@@ -27,6 +27,13 @@ QtProfileWindow::QtProfileWindow() :
 	QWidget(),
 	ui(new Ui::QtProfileWindow) {
 	ui->setupUi(this);
+
+	ui->statusLabel->setText(tr("Retrieving profile information for this user."));
+	ui->statusLabel->setVisible(false);
+
+	ui->emptyLabel->setText(tr("No profile information is available for this user."));
+	ui->emptyLabel->setVisible(false);
+
 	new QShortcut(QKeySequence::Close, this, SLOT(close()));
 	ui->throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 	connect(ui->savePushButton, SIGNAL(clicked()), SLOT(handleSave()));
@@ -45,6 +52,15 @@ void QtProfileWindow::setJID(const JID& jid) {
 
 void QtProfileWindow::setVCard(VCard::ref vcard) {
 	ui->vcard->setVCard(vcard);
+	if (vcard->isEmpty()) {
+		ui->vcard->setVisible(false);
+		ui->emptyLabel->setVisible(true);
+	} else {
+		ui->vcard->setVisible(true);
+		ui->emptyLabel->setVisible(false);
+	}
+
+	updateWindowSize();
 }
 
 void QtProfileWindow::setEnabled(bool b) {
@@ -64,11 +80,17 @@ void QtProfileWindow::setProcessing(bool processing) {
 	if (processing) {
 		ui->throbberLabel->movie()->start();
 		ui->throbberLabel->show();
+		ui->statusLabel->setVisible(true);
+		ui->vcard->setVisible(false);
 	}
 	else {
 		ui->throbberLabel->hide();
 		ui->throbberLabel->movie()->stop();
+		ui->statusLabel->setVisible(false);
+		ui->vcard->setVisible(true);
 	}
+
+	updateWindowSize();
 }
 
 void QtProfileWindow::setError(const std::string& error) {
@@ -100,6 +122,25 @@ void QtProfileWindow::updateTitle() {
 	} else {
 		setWindowTitle(tr("Show Profile") + jidString);
 	}
+}
+
+void QtProfileWindow::updateWindowSize() {
+	int width = 0;
+	int height = 0;
+
+	QSize size = ui->statusLabel->size();
+	width = std::max(width, size.width());
+	height = std::max(height, size.height() * 3);
+
+	size = ui->emptyLabel->size();
+	width = std::max(width, size.width());
+	height = std::max(height, size.height() * 3);
+
+	size = ui->vcard->size();
+	width = std::max(width, size.width());
+	height = std::max(height, size.height());
+
+	resize(width, height);
 }
 
 void QtProfileWindow::closeEvent(QCloseEvent* event) {

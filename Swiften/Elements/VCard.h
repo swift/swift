@@ -263,6 +263,16 @@ namespace Swift {
 				urls_.clear();
 			}
 
+			bool isEmpty() const {
+				bool empty = version_.empty() && fullName_.empty() && familyName_.empty() && givenName_.empty() && middleName_.empty() && prefix_.empty() && suffix_.empty();
+				empty &= photo_.empty() && photoType_.empty() && nick_.empty();
+				empty &= birthday_.is_not_a_date_time();
+				empty &= unknownContent_.empty();
+				empty &= emailAddresses_.empty() && telephones_.empty() && addresses_.empty() && addressLabels_.empty() && jids_.empty();
+				empty &= description_.empty() && organizations_.empty() && titles_.empty() && roles_.empty() && urls_.empty();
+				return empty;
+			}
+
 		private:
 			std::string version_;
 			std::string fullName_;
