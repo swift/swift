@@ -80,6 +80,7 @@ namespace Swift {
 			void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
 			void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
+			void handleRosterItemUpdated(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
 			void handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
 			void applyAllPresenceTo(const JID& jid);
 			void handleEditProfileRequest();

@@ -282,7 +282,7 @@ void RosterController::updateItem(const XMPPRosterItem& item) {
 	roster->addItem(itemPayload);
 
 	SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
-	request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
+	request->onResponse.connect(boost::bind(&RosterController::handleRosterItemUpdated, this, _1, roster));
 	request->send();
 }
 
@@ -296,6 +296,20 @@ void RosterController::initBlockingCommand() {
 	if (blockList->getState() == BlockList::Available) {
 		foreach(const JID& jid, blockList->getItems()) {
 			roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsBlocked));
+		}
+	}
+}
+
+void RosterController::handleRosterItemUpdated(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload) {
+	if (!!error) {
+		handleRosterSetError(error, rosterPayload);
+	}
+	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+	std::vector<RosterItemPayload> items = rosterPayload->getItems();
+	if (blockList->getState() == BlockList::Available && items.size() > 0) {
+		std::vector<JID> jids = blockList->getItems();
+		if (std::find(jids.begin(), jids.end(), items[0].getJID()) != jids.end()) {
+			roster_->applyOnItems(SetBlockingState(items[0].getJID(), ContactRosterItem::IsBlocked));
 		}
 	}
 }
