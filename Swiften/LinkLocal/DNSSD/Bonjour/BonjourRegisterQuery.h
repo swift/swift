@@ -1,26 +1,28 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/thread.hpp>
+
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventLoop.h>
-#include <boost/numeric/conversion/cast.hpp>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
 
 namespace Swift {
 	class BonjourQuerier;
 
 	class BonjourRegisterQuery : public DNSSDRegisterQuery, public BonjourQuery {
-		public:	
+		public:
 			BonjourRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, boost::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
 				DNSServiceErrorType result = DNSServiceRegister(
-						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, boost::numeric_cast<unsigned short>(port), 
-						boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 
+						&sdRef, 0, 0, name.c_str(), "_presence._tcp", NULL, NULL, boost::numeric_cast<unsigned short>(port),
+						boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord),
 						&BonjourRegisterQuery::handleServiceRegisteredStatic, this);
 				if (result != kDNSServiceErr_NoError) {
 					sdRef = NULL;

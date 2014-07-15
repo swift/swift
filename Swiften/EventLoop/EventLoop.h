@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/function.hpp>
-#include <boost/thread/mutex.hpp>
+#include <boost/thread.hpp>
 #include <list>
 #include <deque>
 
@@ -21,7 +21,7 @@ namespace Swift {
 		public:
 			EventLoop();
 			virtual ~EventLoop();
-			
+
 			void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = boost::shared_ptr<EventOwner>());
 			void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
 
@@ -31,7 +31,7 @@ namespace Swift {
 			 * the event loop is residing.
 			 */
 			virtual void post(const Event& event) = 0;
-		
+
 			void handleEvent(const Event& event);
 
 		private:

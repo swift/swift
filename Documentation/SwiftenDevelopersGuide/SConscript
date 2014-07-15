@@ -34,9 +34,11 @@ def generateDocBookCode(env, target, source) :
 				line = re.sub("/\*.*\*/", "]]><co id=\"%(cobID)s\" linkends=\"%(coID)s\"/><![CDATA[" % {"cobID" : cobID, "coID" : coID}, line)
 				calloutLines.append("<callout arearefs=\"%(cobID)s\" id=\"%(coID)s\"><para>%(text)s</para></callout>" % {"cobID": cobID, "coID": coID, "text": m.group(1)})
 			newProgramLines.append(line)
-		callouts = "<calloutlist>" + "\n".join(calloutLines) + "</calloutlist>" if len(calloutLines) > 0 else ""
+			callouts = ""
+			if len(calloutLines) > 0 :
+				callouts = "<calloutlist>" + "\n".join(calloutLines) + "</calloutlist>"
 		return ("\n".join(newProgramLines), callouts)
-			
+
 	# Parse program
 	filename = source[0].abspath
 	filenameBase = os.path.basename(filename).replace(".cpp", "")

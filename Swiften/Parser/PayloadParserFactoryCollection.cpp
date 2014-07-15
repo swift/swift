@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -20,7 +20,7 @@ void PayloadParserFactoryCollection::addFactory(PayloadParserFactory* factory) {
 }
 
 void PayloadParserFactoryCollection::removeFactory(PayloadParserFactory* factory) {
-	factories_.erase(remove(factories_.begin(), factories_.end(), factory), factories_.end());
+	factories_.erase(std::remove(factories_.begin(), factories_.end(), factory), factories_.end());
 }
 
 void PayloadParserFactoryCollection::setDefaultFactory(PayloadParserFactory* factory) {
@@ -29,7 +29,7 @@ void PayloadParserFactoryCollection::setDefaultFactory(PayloadParserFactory* fac
 
 PayloadParserFactory* PayloadParserFactoryCollection::getPayloadParserFactory(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	std::vector<PayloadParserFactory*>::reverse_iterator i = std::find_if(
-			factories_.rbegin(), factories_.rend(), 
+			factories_.rbegin(), factories_.rend(),
 			boost::bind(&PayloadParserFactory::canParse, _1, element, ns, attributes));
 	return (i != factories_.rend() ? *i : defaultFactory_);
 }

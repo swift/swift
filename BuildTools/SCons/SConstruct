@@ -11,7 +11,7 @@ def SConscript(*arguments, **keywords) :
 	if not keywords.get("test_only", False) or env["TEST"] :
 		return apply(oldSConscript, arguments, keywords)
 env.SConscript = SConscript
-  
+
 ################################################################################
 # Extend the default build environment (not affecting the configure env)
 #
@@ -111,8 +111,27 @@ if not conf.CheckCXX() or not conf.CheckCC() :
 	Exit(1)
 
 env["HAVE_ZLIB"] = True
-if conf.CheckLib("z") :
-	env["ZLIB_FLAGS"] = {"LIBS": ["z"]}
+zlib_flags = {}
+zlib_okay = False
+if env.get("zlib_libdir", None) :
+	zlib_flags["LIBPATH"] = [env["zlib_libdir"]]
+	zlib_okay = True
+if env.get("zlib_includedir", None) :
+	zlib_flags["CPPPATH"] = [env["zlib_includedir"]]
+	zlib_okay = True
+if env.get("zlib_libfile", None) :
+	zlib_flags["LIBS"] = [File(env["zlib_libfile"])]
+	zlib_okay = True
+elif zlib_okay :
+	zlib_flags["LIBS"] = ["z"]
+if (not zlib_okay) and conf.CheckLib("z") :
+	zlib_flags["LIBS"] = ["z"]
+	zlib_okay = True
+if zlib_okay :
+	env["ZLIB_FLAGS"] = zlib_flags
+elif not env.get("zlib_bundled_enable", True) :
+	print "Error: Zlib not found and zlib_bundled_enable is false"
+	Exit(1)
 else :
 	env["ZLIB_BUNDLED"] = True
 
@@ -132,9 +151,10 @@ if conf.CheckLib("m") :
 if conf.CheckLib("c") :
 	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["c"]
 
-if conf.CheckLib("stdc++") :
-	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
-
+# Even if you find stdc++ on HP-UX, it is the wrong one for aCC
+if env["PLATFORM"] != "hpux" :
+	if conf.CheckLib("stdc++", language='CXX') :
+		env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
 conf.Finish()
 
 # Boost
@@ -143,7 +163,7 @@ boost_flags = {}
 if env.get("boost_libdir", None) :
 	boost_flags["LIBPATH"] = [env["boost_libdir"]]
 if env.get("boost_includedir", None) :
-	if env["PLATFORM"] == "win32" :
+	if env["PLATFORM"] == "win32" or env["PLATFORM"] == "hpux" or env["PLATFORM"] == "sunos" :
 		boost_flags["CPPPATH"] = [env["boost_includedir"]]
 	else :
 		# Using isystem to avoid getting warnings from a system boost
@@ -151,7 +171,7 @@ if env.get("boost_includedir", None) :
 		boost_flags["CPPFLAGS"] = [("-isystem", env["boost_includedir"])]
 boost_conf_env.MergeFlags(boost_flags)
 conf = Configure(boost_conf_env)
-boostLibs = [("signals", None), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("serialization", "archive/text_oarchive.hpp"), ("system", "system/system_error.hpp"), ("date_time", "date_time/date.hpp")]
+boostLibs = [("signals", None), ("system", "system/system_error.hpp"), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("serialization", "archive/text_oarchive.hpp"), ("date_time", "date_time/date.hpp")]
 allLibsPresent = True
 libNames = []
 for (lib, header) in boostLibs :
@@ -164,9 +184,9 @@ for (lib, header) in boostLibs :
 		break
 	if env["PLATFORM"] != "win32" :
 		libName = "boost_" + lib
-		if not conf.CheckLib(libName) :
+		if not conf.CheckLib(libName, language='CXX') :
 			libName += "-mt"
-			if not conf.CheckLib(libName) :
+			if not conf.CheckLib(libName, language='CXX') :
 				allLibsPresent = False
 				break
 		libNames.append(libName)
@@ -177,7 +197,10 @@ if allLibsPresent :
 	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
 		# FIXME: Remove this workaround when UUID is available in most distros
 		env["BOOST_BUNDLED_UUID_ONLY"] = True
-	env["BOOST_FLAGS"]["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
+		env["BOOST_FLAGS"]["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
+elif not env.get("boost_bundled_enable", True) :
+	print "Error: Boost not found and boost_bundled_enable is false"
+	Exit(1)
 else :
 	env["BOOST_BUNDLED"] = True
 conf.Finish()
@@ -200,7 +223,7 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 
 # GConf
 env["HAVE_GCONF"] = 0
-if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
+if env.get("try_gconf", True) and env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 	gconf_env = conf_env.Clone()
 	conf = Configure(gconf_env, custom_tests = {"CheckPKG": CheckPKG})
 	if conf.CheckPKG("gconf-2.0") :
@@ -261,13 +284,13 @@ if env["PLATFORM"] == "win32" :
 
 # LibXML
 conf = Configure(conf_env, custom_tests = {"CheckVersion": CheckVersion})
-if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+if env.get("try_libxml", True) and conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
 #and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623) :
 	env["HAVE_LIBXML"] = 1
 	env["LIBXML_FLAGS"] = { "LIBS": ["xml2"] }
 conf.Finish()
 
-if not env.get("HAVE_LIBXML", 0) :
+if env.get("try_libxml", True) and not env.get("HAVE_LIBXML", 0) :
 	libxml_env = conf_env.Clone()
 	libxml_env.Append(CPPPATH = ["/usr/include/libxml2"])
 	conf = Configure(libxml_env, custom_tests = {"CheckVersion": CheckVersion})
@@ -278,7 +301,7 @@ if not env.get("HAVE_LIBXML", 0) :
 	conf.Finish()
 
 # Expat
-if not env.get("HAVE_LIBXML",0) :
+if env.get("try_expat", True) and not env.get("HAVE_LIBXML",0) :
 	expat_conf_env = conf_env.Clone()
 	expat_flags = {}
 	if env.get("expat_libdir", None) :
@@ -308,7 +331,9 @@ if not env.get("HAVE_EXPAT", 0) and not env.get("HAVE_LIBXML", 0) :
 # ICU
 icu_env = conf_env.Clone()
 use_icu = bool(env["icu"])
-icu_prefix = env["icu"] if isinstance(env["icu"], str) else ""
+icu_prefix = ""
+if isinstance(env["icu"], str) :
+        icu_prefix = env["icu"]
 icu_flags = {}
 if icu_prefix :
 	icu_flags = { "CPPPATH": [os.path.join(icu_prefix, "include")] }
@@ -331,7 +356,7 @@ if env.get("libidn_includedir", None) :
 	libidn_flags["CPPPATH"] = [env["libidn_includedir"]]
 libidn_conf_env.MergeFlags(libidn_flags)
 conf = Configure(libidn_conf_env)
-if not env.get("HAVE_ICU") and conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
+if env.get("try_libidn", True) and not env.get("HAVE_ICU") and conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
 	env["HAVE_LIBIDN"] = 1
 	env["LIBIDN_FLAGS"] = { "LIBS": [env["libidn_libname"]] }
 	env["LIBIDN_FLAGS"].update(libidn_flags)
@@ -339,8 +364,12 @@ conf.Finish()
 
 # Fallback to bundled LibIDN
 if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
-	env["HAVE_LIBIDN"] = 1
-	env["LIBIDN_BUNDLED"] = 1
+	if env.get("libidn_bundled_enable", True)  :
+		env["HAVE_LIBIDN"] = 1
+		env["LIBIDN_BUNDLED"] = 1
+	else :
+		print "Error: ICU and LIBIDN not found, and libidn_bundled_enable is false"
+		Exit(1)
 
 # Unbound
 if env["unbound"] :
@@ -459,7 +488,7 @@ if env.get("avahi_includedir", None) :
 	avahi_flags["CPPPATH"] = [env["avahi_includedir"]]
 avahi_conf_env.MergeFlags(avahi_flags)
 conf = Configure(avahi_conf_env)
-if conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
+if env.get("try_avahi", True) and conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
 	env["HAVE_AVAHI"] = True
 	env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
 	env["AVAHI_FLAGS"].update(avahi_flags)
@@ -476,11 +505,21 @@ if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device",
 	env["HAVE_OPENSSL"] = True
 else :
 	use_openssl = bool(env["openssl"])
-	openssl_prefix = env["openssl"] if isinstance(env["openssl"], str) else ""
+	openssl_prefix = ""
+	if isinstance(env["openssl"], str) :
+		openssl_prefix = env["openssl"]
 	openssl_flags = {}
 	if openssl_prefix :
-		openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
-		if env["PLATFORM"] == "win32" : 
+		openssl_include = env.get("openssl_include", None)
+		openssl_libdir = env.get("openssl_libdir", None)
+		if openssl_include:
+			openssl_flags = {"CPPPATH":[openssl_include]}
+		else:
+			openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
+		if openssl_libdir:
+			openssl_flags["LIBPATH"] = [openssl_libdir]
+			env["OPENSSL_DIR"] = openssl_prefix
+		elif env["PLATFORM"] == "win32" :
 			openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
 			env["OPENSSL_DIR"] = openssl_prefix
 		else :
@@ -491,7 +530,10 @@ else :
 	if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 		env["HAVE_OPENSSL"] = 1
 		env["OPENSSL_FLAGS"] = openssl_flags
-		if env["PLATFORM"] == "win32" : 
+		openssl_libnames = env.get("openssl_libnames", None)
+		if openssl_libnames:
+			env["OPENSSL_FLAGS"]["LIBS"] = openssl_libnames.split(',')
+		elif env["PLATFORM"] == "win32" :
 			env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MD", "ssleay32MD"]
 		else:
 			env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
@@ -500,7 +542,7 @@ else :
 					env["OPENSSL_FLAGS"]["FRAMEWORKS"] = ["Security"]
 	else :
 		env["OPENSSL_FLAGS"] = {}
-		if env["PLATFORM"] == "win32" : 
+		if env["PLATFORM"] == "win32" :
 			env["HAVE_SCHANNEL"] = True
 			# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
 			env.Append(LIBS = ["secur32"])
@@ -530,7 +572,7 @@ elif env.get("bonjour", False) :
 	bonjour_env = conf_env.Clone()
 	bonjour_conf = Configure(bonjour_env)
 	bonjour_flags = {}
-	if env.get("bonjour") != True :		
+	if env.get("bonjour") != True :
 		bonjour_prefix = env["bonjour"]
 		bonjour_flags["CPPPATH"] = [os.path.join(bonjour_prefix, "include")]
 		bonjour_flags["LIBPATH"] = [os.path.join(bonjour_prefix, "lib", "win32")]
@@ -572,7 +614,7 @@ if env.get("docbook_xsl") :
 
 try:
 	if env.Dir("#/.git").exists() :
-		if not env.GetOption("clean") :
+		if not env.GetOption("clean") and env.get("install_git_hooks", True) :
 			env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
 except TypeError:
 	print "You seem to be using Swift in a Git submodule. Not installing hooks."
@@ -666,6 +708,6 @@ print "  Projects: " + ' '.join(env["PROJECTS"])
 print ""
 print "  XML Parsers: " + ' '.join(parsers)
 
-print "  TLS Support: " + ("OpenSSL" if env.get("HAVE_OPENSSL",0) else ("Schannel" if env.get("HAVE_SCHANNEL", 0) else "Disabled"))
-print "  DNSSD Support: " + ("Bonjour" if env.get("HAVE_BONJOUR") else ("Avahi" if env.get("HAVE_AVAHI") else "Disabled"))
+print "  TLS Support: " + (env.get("HAVE_OPENSSL",0) and "OpenSSL" or env.get("HAVE_SCHANNEL", 0) and "Schannel" or "Disabled")
+print "  DNSSD Support: " + (env.get("HAVE_BONJOUR") and "Bonjour" or (env.get("HAVE_AVAHI") and "Avahi" or "Disabled"))
 print

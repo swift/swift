@@ -10,7 +10,7 @@ def getGitBuildVersion(root, project) :
     if m :
       return m.group(1) + "-dev" + m.group(2)
   return None
-    
+
 def git(cmd, root) :
   full_cmd = "git " + cmd
   p = subprocess.Popen(full_cmd, cwd=root, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, close_fds=(os.name != "nt"))
@@ -19,7 +19,9 @@ def git(cmd, root) :
   # if error:
   #   print "Git error: " + error
   p.stdin.close()
-  return gitVersion if p.wait() == 0 else None
+  if p.wait() == 0 :
+    return gitVersion
+  return None
 
 def getBuildVersion(root, project) :
   versionFilename = os.path.join(root, "VERSION." + project)
@@ -29,7 +31,7 @@ def getBuildVersion(root, project) :
     f.close()
     return version
 
-  gitVersion = getGitBuildVersion(root, project) 
+  gitVersion = getGitBuildVersion(root, project)
   if gitVersion :
     return gitVersion
 
@@ -59,9 +61,8 @@ def convertToWindowsVersion(version) :
           build_string = alpha_match.group(1)
 
     if len(build_string) > 0 :
-      build_match = re.match("^-dev(\d+)", build_string) 
+      build_match = re.match("^-dev(\d+)", build_string)
       if build_match :
         patch += int(build_match.group(1))
 
   return (major, minor, patch)
-

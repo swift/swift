@@ -6,6 +6,7 @@
 
 #include <SwifTools/Application/UnixApplicationPathProvider.h>
 
+#include <stdlib.h>
 #include <unistd.h>
 #include <boost/algorithm/string.hpp>
 #include <iostream>
@@ -44,8 +45,8 @@ boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {
 		dataDir = std::string(xdgDataHome);
 	}
 
-	boost::filesystem::path dataPath = (dataDir.empty() ? 
-			getHomeDir() / ".local" / "share" 
+	boost::filesystem::path dataPath = (dataDir.empty() ?
+			getHomeDir() / ".local" / "share"
 			: boost::filesystem::path(dataDir)) / boost::to_lower_copy(getApplicationName());
 
 	try {

@@ -21,6 +21,10 @@ cpp0x_env = example_env.Clone()
 if env["PLATFORM"] == "win32" :
 	if int(env["MSVS_VERSION"].split(".")[0]) >= 10 :
 		cpp0x = True
+elif env["PLATFORM"] == "hpux" :
+	pass
+elif env["PLATFORM"] == "sunos" :
+	pass
 else :
 	if env["CCVERSION"].split(".") >= ["4", "5", "0"] :
 		# Temporarily disabling c++0x mode because of problems with boost::thread

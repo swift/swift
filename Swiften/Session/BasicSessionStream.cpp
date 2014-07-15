@@ -21,17 +21,17 @@
 namespace Swift {
 
 BasicSessionStream::BasicSessionStream(
-		StreamType streamType, 
-		boost::shared_ptr<Connection> connection, 
-		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers, 
-		TLSContextFactory* tlsContextFactory, 
+		StreamType streamType,
+		boost::shared_ptr<Connection> connection,
+		PayloadParserFactoryCollection* payloadParserFactories,
+		PayloadSerializerCollection* payloadSerializers,
+		TLSContextFactory* tlsContextFactory,
 		TimerFactory* timerFactory,
 		XMLParserFactory* xmlParserFactory) :
-			available(false), 
-			connection(connection), 
-			tlsContextFactory(tlsContextFactory), 
-			timerFactory(timerFactory), 
+			available(false),
+			connection(connection),
+			tlsContextFactory(tlsContextFactory),
+			timerFactory(timerFactory),
 			compressionLayer(NULL),
 			tlsLayer(NULL),
 			whitespacePingLayer(NULL) {
@@ -54,7 +54,7 @@ BasicSessionStream::~BasicSessionStream() {
 	delete compressionLayer;
 
 	if (tlsLayer) {
-		tlsLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleTLSError, this));
+		tlsLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleTLSError, this, _1));
 		tlsLayer->onConnected.disconnect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
 		delete tlsLayer;
 	}

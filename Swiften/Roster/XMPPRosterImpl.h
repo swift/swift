@@ -17,7 +17,7 @@ namespace Swift {
 		public:
 			XMPPRosterImpl();
 
-			void addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const RosterItemPayload::Subscription subscription);
+			void addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription);
 			void removeContact(const JID& jid);
 			void clear();
 

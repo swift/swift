@@ -104,7 +104,7 @@ def get_host_target(env):
         # PROCESSOR_ARCHITECTURE.
         if not host_platform:
             host_platform = os.environ.get('PROCESSOR_ARCHITECTURE', '')
-            
+
     # Retain user requested TARGET_ARCH
     req_target_platform = env.get('TARGET_ARCH')
     debug('vc.py:get_host_target() req_target_platform:%s'%req_target_platform)
@@ -114,7 +114,7 @@ def get_host_target(env):
         target_platform = req_target_platform
     else:
         target_platform = host_platform
-        
+
     try:
         host = _ARCH_TO_CANONICAL[host_platform.lower()]
     except KeyError, e:
@@ -128,9 +128,13 @@ def get_host_target(env):
 
     return (host, target,req_target_platform)
 
-_VCVER = ["10.0", "9.0", "9.0Exp","8.0", "8.0Exp","7.1", "7.0", "6.0"]
+_VCVER = ["12.0", "11.0", "10.0", "9.0", "9.0Exp","8.0", "8.0Exp","7.1", "7.0", "6.0"]
 
 _VCVER_TO_PRODUCT_DIR = {
+        '12.0': [
+            r'Microsoft\VisualStudio\12.0\Setup\VC\ProductDir'],
+        '11.0': [
+            r'Microsoft\VisualStudio\11.0\Setup\VC\ProductDir'],
         '10.0': [
             r'Microsoft\VisualStudio\10.0\Setup\VC\ProductDir'],
         '9.0': [
@@ -148,7 +152,7 @@ _VCVER_TO_PRODUCT_DIR = {
         '6.0': [
             r'Microsoft\VisualStudio\6.0\Setup\Microsoft Visual C++\ProductDir']
 }
-        
+
 def msvc_version_to_maj_min(msvc_version):
    msvc_version_numeric = ''.join([x for  x in msvc_version if x in string_digits + '.'])
 
@@ -228,7 +232,7 @@ def find_batch_file(env,msvc_version,host_arch,target_arch):
     pdir = find_vc_pdir(msvc_version)
     if pdir is None:
         raise NoVersionFound("No version of Visual Studio found")
-        
+
     debug('vc.py: find_batch_file() pdir:%s'%pdir)
 
     # filter out e.g. "Exp" from the version name
@@ -246,7 +250,7 @@ def find_batch_file(env,msvc_version,host_arch,target_arch):
     if not os.path.exists(batfilename):
         debug("Not found: %s" % batfilename)
         batfilename = None
-    
+
     installed_sdks=get_installed_sdks()
     for _sdk in installed_sdks:
         sdk_bat_file=_sdk.get_sdk_vc_script(host_arch,target_arch)
@@ -303,7 +307,7 @@ def get_default_version(env):
 
     msvc_version = env.get('MSVC_VERSION')
     msvs_version = env.get('MSVS_VERSION')
-    
+
     debug('get_default_version(): msvc_version:%s msvs_version:%s'%(msvc_version,msvs_version))
 
     if msvs_version and not msvc_version:
@@ -360,7 +364,7 @@ def msvc_find_valid_batch_script(env,version):
     for tp in try_target_archs:
         # Set to current arch.
         env['TARGET_ARCH']=tp
-        
+
         debug("vc.py:msvc_find_valid_batch_script() trying target_platform:%s"%tp)
         host_target = (host_platform, tp)
         if not is_host_target_supported(host_target, version):
@@ -368,7 +372,7 @@ def msvc_find_valid_batch_script(env,version):
                 (host_target, version)
             SCons.Warnings.warn(SCons.Warnings.VisualCMissingWarning, warn_msg)
         arg = _HOST_TARGET_ARCH_TO_BAT_ARCH[host_target]
-        
+
         # Try to locate a batch file for this host/target platform combo
         try:
             (vc_script,sdk_script) = find_batch_file(env,version,host_platform,tp)
@@ -382,7 +386,7 @@ def msvc_find_valid_batch_script(env,version):
             warn_msg = warn_msg % (version, cached_get_installed_vcs())
             SCons.Warnings.warn(SCons.Warnings.VisualCMissingWarning, warn_msg)
             continue
-        
+
         # Try to use the located batch file for this host/target platform combo
         debug('vc.py:msvc_find_valid_batch_script() use_script 2 %s, args:%s\n' % (repr(vc_script), arg))
         if vc_script:
@@ -401,14 +405,14 @@ def msvc_find_valid_batch_script(env,version):
         elif not vc_script and not sdk_script:
             debug('vc.py:msvc_find_valid_batch_script() use_script 6: Neither VC script nor SDK script found')
             continue
-    
+
     # If we cannot find a viable installed compiler, reset the TARGET_ARCH
     # To it's initial value
     if not d:
         env['TARGET_ARCH']=req_target_platform
-    
+
     return d
-    
+
 
 def msvc_setup_env(env):
     debug('msvc_setup_env()')
@@ -427,12 +431,12 @@ def msvc_setup_env(env):
     env['MSVS_VERSION'] = version
     env['MSVS'] = {}
 
-    
+
     use_script = env.get('MSVC_USE_SCRIPT', True)
     if SCons.Util.is_String(use_script):
         debug('vc.py:msvc_setup_env() use_script 1 %s\n' % repr(use_script))
         d = script_env(use_script)
-    elif use_script:      
+    elif use_script:
         d = msvc_find_valid_batch_script(env,version)
         debug('vc.py:msvc_setup_env() use_script 2 %s\n' % d)
         if not d:
@@ -453,4 +457,3 @@ def msvc_exists(version=None):
     if version is None:
         return len(vcs) > 0
     return version in vcs
-    

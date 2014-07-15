@@ -70,6 +70,10 @@ if myenv["PLATFORM"] == "darwin" and myenv["target"] != "android":
 elif myenv["PLATFORM"] == "win32" :
 	sourceList += [ "WindowsProxyProvider.cpp" ]
 	sourceList += [ "WindowsNetworkEnvironment.cpp" ]
+elif myenv["PLATFORM"] == "sunos" :
+	sourceList += [ "UnixProxyProvider.cpp" ]
+	sourceList += [ "SolarisNetworkEnvironment.cpp" ]
+	sourceList += [ "EnvironmentProxyProvider.cpp" ]
 else :
 	sourceList += [ "UnixNetworkEnvironment.cpp" ]
 	sourceList += [ "UnixProxyProvider.cpp" ]
@@ -81,10 +85,10 @@ else :
 
 objects = myenv.SwiftenObject(sourceList)
 
-if myenv["experimental_ft"] :	
+if myenv["experimental_ft"] :
 	# LibNATPMP classes
 	if myenv.get("HAVE_LIBNATPMP", False) :
-		natpmp_env = myenv.Clone()	
+		natpmp_env = myenv.Clone()
 		natpmp_env.Append(CPPDEFINES = natpmp_env["LIBNATPMP_FLAGS"].get("INTERNAL_CPPDEFINES", []))
 		myenv.Append(CPPDEFINES = ["HAVE_LIBNATPMP"])
 		objects += natpmp_env.SwiftenObject([

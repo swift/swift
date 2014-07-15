@@ -12,6 +12,9 @@ vars.Add('ccflags', "Extra C/C++/ObjC compiler flags")
 vars.Add('cxxflags', "Extra C++ compiler flags")
 vars.Add('link', "Linker")
 vars.Add('linkflags', "Extra linker flags")
+vars.Add('ar', "Archiver (ar or lib)")
+if os.name == "nt":
+	vars.Add('mt', "manifest tool")
 vars.Add(BoolVariable("ccache", "Use CCache", "no"))
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
@@ -39,17 +42,30 @@ if os.name == "nt" :
 if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
+vars.Add("openssl_libnames", "Comma-separated openssl library names to override defaults", None)
 vars.Add(BoolVariable("openssl_force_bundled", "Force use of the bundled OpenSSL", "no"))
+vars.Add("openssl_include", "Location of OpenSSL include files (if not under (openssl)/include)", None)
+vars.Add("openssl_libdir", "Location of OpenSSL library files (if not under (openssl)/lib)", None)
 vars.Add(PackageVariable("hunspell", "Hunspell location", False))
 vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariable.PathAccept))
+vars.Add(BoolVariable("boost_bundled_enable", "Allow use of bundled Boost as last resort", "true"))
+vars.Add(PathVariable("zlib_includedir", "Zlib headers location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("zlib_libdir", "Zlib library location", None, PathVariable.PathAccept))
+vars.Add(PathVariable("zlib_libfile", "Zlib library file (full path to file)", None, PathVariable.PathAccept))
+vars.Add(BoolVariable("zlib_bundled_enable", "Allow use of bundled Zlib as last resort", "true"))
+vars.Add(BoolVariable("try_gconf", "Try configuring for GConf?", "true"))
+vars.Add(BoolVariable("try_libxml", "Try configuring for libXML?", "true"))
+vars.Add(BoolVariable("try_expat", "Try configuring for expat?", "true"))
 vars.Add(PathVariable("expat_includedir", "Expat headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("expat_libdir", "Expat library location", None, PathVariable.PathAccept))
-vars.Add("expat_libname", "Expat library name", "libexpat" if os.name == "nt" else "expat")
+vars.Add("expat_libname", "Expat library name", os.name == "nt" and "libexpat" or "expat")
 vars.Add(PackageVariable("icu", "ICU library location", "no"))
+vars.Add(BoolVariable("libidn_bundled_enable", "Allow use of bunded Expat", "true"))
+vars.Add(BoolVariable("try_libidn", "Try configuring for LibIDN?", "true"))
 vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
-vars.Add("libidn_libname", "LibIDN library name", "libidn" if os.name == "nt" else "idn")
+vars.Add("libidn_libname", "LibIDN library name",  os.name == "nt" and "libidn" or "idn")
 vars.Add(PathVariable("libminiupnpc_includedir", "LibMiniUPNPC headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libminiupnpc_libdir", "LibMiniUPNPC library location", None, PathVariable.PathAccept))
 vars.Add("libminiupnpc_libname", "LibMiniUPNPC library name", "libminiupnpc" if os.name == "nt" else "miniupnpc")
@@ -58,7 +74,7 @@ vars.Add(PathVariable("libnatpmp_libdir", "LibNATPMP library location", None, Pa
 vars.Add("libnatpmp_libname", "LibNATPMP library name", "libnatpmp" if os.name == "nt" else "natpmp")
 vars.Add(PathVariable("sqlite_includedir", "SQLite headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("sqlite_libdir", "SQLite library location", None, PathVariable.PathAccept))
-vars.Add("sqlite_libname", "SQLite library name", "libsqlite3" if os.name == "nt" else "sqlite3")
+vars.Add("sqlite_libname", "SQLite library name", os.name == "nt" and "libsqlite3" or "sqlite3")
 vars.Add("sqlite_force_bundled", "Force use of the bundled SQLite", None)
 vars.Add(PathVariable("lua_includedir", "Lua headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("lua_libdir", "Lua library location", None, PathVariable.PathAccept))
@@ -69,6 +85,7 @@ vars.Add(PathVariable("editline_includedir", "Readline headers location", None, 
 vars.Add(PathVariable("editline_libdir", "Readline library location", None, PathVariable.PathAccept))
 vars.Add("editline_libname", "Readline library name", "libedit" if os.name == "nt" else "edit")
 
+vars.Add(BoolVariable("try_avahi", "Try configuring for avahi?", "true"))
 vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
@@ -82,20 +99,22 @@ vars.Add(BoolVariable("experimental", "Build experimental features", "no"))
 vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
 vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for DNS lookup.", "no"))
 
+vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
+
 ################################################################################
 # Set up default build & configure environment
 ################################################################################
 
-
 env_ENV = {
-  'PATH' : os.environ['PATH'], 
+  'PATH' : os.environ['PATH'],
   'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
   'TERM' : os.environ.get("TERM", ""),
 }
+
 if "MSVC_VERSION" in ARGUMENTS :
-  env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"])
+  env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None))
 else :
-  env = Environment(ENV = env_ENV, variables = vars)
+  env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
 
 Help(vars.GenerateHelpText(env))
 
@@ -124,7 +143,7 @@ if env["PLATFORM"] == "win32" :
 	env.Tool("WindowsBundle", toolpath = ["#/BuildTools/SCons/Tools"])
 	#So we don't need to escalate with UAC
 	if "TMP" in os.environ.keys() :
-		env['ENV']['TMP'] = os.environ['TMP'] 
+		env['ENV']['TMP'] = os.environ['TMP']
 env.Tool("SLOCCount", toolpath = ["#/BuildTools/SCons/Tools"])
 
 # Max out the number of jobs
@@ -171,6 +190,9 @@ if "cc" in env :
 	env["CC"] = env["cc"]
 if "cxx" in env :
 	env["CXX"] = env["cxx"]
+if "ar" in env :
+	env["AR"] = env["ar"]
+
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
@@ -213,13 +235,13 @@ elif env["PLATFORM"] == "win32" :
 if env.get("universal", 0) :
 	assert(env["PLATFORM"] == "darwin")
 	env.Append(CCFLAGS = [
-			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk", 
-			"-arch", "i386", 
+			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk",
+			"-arch", "i386",
 			"-arch", "ppc"])
 	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.4", 
-			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk", 
-			"-arch", "i386", 
+			"-mmacosx-version-min=10.4",
+			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk",
+			"-arch", "i386",
 			"-arch", "ppc"])
 
 
@@ -228,20 +250,20 @@ if env.get("universal", 0) :
 if env.get("mac105", 0) :
 	assert(env["PLATFORM"] == "darwin")
 	env.Append(CCFLAGS = [
-			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
+			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk",
 			"-arch", "i386"])
 	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.5", 
-			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk", 
+			"-mmacosx-version-min=10.5",
+			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk",
 			"-arch", "i386"])
 if env.get("mac106", 0) :
 	assert(env["PLATFORM"] == "darwin")
 	env.Append(CCFLAGS = [
-			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk", 
+			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk",
 			"-arch", "i386"])
 	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.6", 
-			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk", 
+			"-mmacosx-version-min=10.6",
+			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk",
 			"-arch", "i386"])
 
 if not env["assertions"] :
@@ -261,6 +283,13 @@ if env["PLATFORM"] == "posix" and platform.machine() == "x86_64" :
 # Warnings
 if env["PLATFORM"] == "win32" :
 	env.Append(CXXFLAGS = ["/wd4068"])
+elif env["PLATFORM"] == "hpux" :
+	# HP-UX gives a flood of minor warnings if this is enabled
+	#env.Append(CXXFLAGS = ["+w"])
+	pass
+elif env["PLATFORM"] == "sunos" :
+	#env.Append(CXXFLAGS = ["-z verbose"])
+	pass
 else :
 	if "clang" in env["CXX"] :
 		env.Append(CXXFLAGS = [
@@ -298,11 +327,21 @@ if env["PLATFORM"] == "win32" :
 	env.Append(CCFLAGS = ["/EHsc", "/nologo", "/Zm256"])
 	env.Append(LINKFLAGS = ["/INCREMENTAL:no", "/NOLOGO"])
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
-		env["LINKCOM"] = [env["LINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1']
-		env["SHLINKCOM"] = [env["SHLINKCOM"], 'mt.exe -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2']
+		mt = env.get('mt')
+		if not mt:
+			mt = 'mt.exe'
+		env["LINKCOM"] = [env["LINKCOM"], '%s  -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1' % mt]
+		env["SHLINKCOM"] = [env["SHLINKCOM"], '%s  -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2' % mt]
 
 if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode", "android"] :
 	env["PLATFORM_FLAGS"]["FRAMEWORKS"] += ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"]
+
+# Required by boost headers on HP-UX
+if env["PLATFORM"] == "hpux" :
+	env.Append(CXXFLAGS = ["+hpxstd98", "-mt", "-AA"])
+	# FIXME: Need -AA for linking C++ but not C
+	#env.Append(LINKFLAGS = ["-AA"])
+
 
 # Testing
 env["TEST_TYPE"] = env["test"]
@@ -367,7 +406,7 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
 	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"] + ["-isysroot", "$XCODE_SDKROOT", "-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
 	# Bit of a hack, because BOOST doesn't know the endianness for ARM
-	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"]) 
+	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"])
 
 ################################################################################
 # Android

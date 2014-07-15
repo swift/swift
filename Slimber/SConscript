@@ -1,4 +1,4 @@
-import datetime 
+import datetime
 
 Import("env")
 
@@ -12,6 +12,10 @@ elif env["PLATFORM"] != "darwin" :
 
 if not "Slimber" in env["PROJECTS"] and env["SCONS_STAGE"] == "flags" :
 		print "Bonjour missing. Not building Slimber."
+
+if not env.get("HAVE_QT", False) and "Slimber" in env["PROJECTS"] :
+	print "Qt missing. Not building Slimber."
+	env["PROJECTS"].remove("Slimber")
 
 if "Slimber" in env["PROJECTS"] :
 
@@ -45,7 +49,7 @@ if "Slimber" in env["PROJECTS"] :
 				"Menulet.cpp"
 			])
 
-	
+
 		env["SLIMBER_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
 
 		env.Append(UNITTEST_SOURCES = [

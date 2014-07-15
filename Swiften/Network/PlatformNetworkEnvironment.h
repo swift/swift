@@ -18,6 +18,12 @@ namespace Swift {
 namespace Swift {
 	typedef WindowsNetworkEnvironment PlatformNetworkEnvironment;
 }
+#elif defined(SWIFTEN_PLATFORM_SOLARIS)
+#include <Swiften/Network/SolarisNetworkEnvironment.h>
+namespace Swift {
+	typedef SolarisNetworkEnvironment PlatformNetworkEnvironment;
+}
+
 #else
 #include <Swiften/Network/UnixNetworkEnvironment.h>
 namespace Swift {

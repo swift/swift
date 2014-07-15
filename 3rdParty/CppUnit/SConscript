@@ -4,6 +4,8 @@ if env["TEST"] :
 
 	if env["PLATFORM"] == "win32" :
 		cppflags = ["/I" + Dir("src/include").abspath]
+	elif env["PLATFORM"] == "sunos" :
+		cppflags = [("-I" + Dir("src/include").abspath)]
 	else :
 		cppflags = [("-isystem", Dir("src/include").abspath)]
 
