@@ -31,9 +31,12 @@ namespace Swift {
 				friend class HighlightManager;
 				size_t getSize() const { return list_.size(); }
 				const HighlightRule& getRule(const size_t index) const { return list_[index]; }
-				void addRule(const HighlightRule &rule) { list_.push_back(rule); }
-				void combineRules(const HighlightRulesList &rhs) {
+				void addRule(const HighlightRule& rule) { list_.push_back(rule); }
+				void combineRules(const HighlightRulesList& rhs) {
 					list_.insert(list_.end(), rhs.list_.begin(), rhs.list_.end());
+				}
+				void setRule(const size_t index, const HighlightRule& rule) {
+					list_[index] = rule;
 				}
 			private:
 				std::vector<HighlightRule> list_;
@@ -49,6 +52,7 @@ namespace Swift {
 			void setRule(int index, const HighlightRule& rule);
 			void insertRule(int index, const HighlightRule& rule);
 			void removeRule(int index);
+			void swapRules(const size_t first, const size_t second);
 			void storeSettings();
 			void loadSettings();
 

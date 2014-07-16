@@ -103,6 +103,14 @@ void HighlightManager::removeRule(int index)
 	rules_->list_.erase(rules_->list_.begin() + index);
 }
 
+void HighlightManager::swapRules(const size_t first, const size_t second) {
+	assert(first < rules_->getSize());
+	assert(second < rules_->getSize());
+	const HighlightRule swap = rules_->getRule(first);
+	rules_->setRule(first, rules_->getRule(second));
+	rules_->setRule(second, swap);
+}
+
 void HighlightManager::storeSettings()
 {
 	storingSettings_ = true;	// don't reload settings while saving

@@ -75,9 +75,9 @@ QtHighlightEditor::QtHighlightEditor(QtSettingsProvider* settings, QWidget* pare
 	/* allow selection of a custom sound file */
 	connect(ui_.soundFileButton, SIGNAL(clicked()), SLOT(selectSoundFile()));
 
-	/* if these are not needed, then they should be removed */
-	ui_.moveUpButton->setVisible(false);
-	ui_.moveDownButton->setVisible(false);
+	/* allowing reordering items */
+	connect(ui_.moveUpButton, SIGNAL(clicked()), this, SLOT(onUpButtonClicked()));
+	connect(ui_.moveDownButton, SIGNAL(clicked()), this, SLOT(onDownButtonClicked()));
 
 	setWindowTitle(tr("Highlight Rules"));
 }
@@ -193,6 +193,22 @@ void QtHighlightEditor::onDeleteButtonClicked()
 			selectRow(selectedRow);
 		}
 	}
+}
+
+void QtHighlightEditor::onUpButtonClicked() {
+	const size_t moveFrom = ui_.listWidget->currentRow();
+	const size_t moveTo = moveFrom - 1;
+	highlightManager_->swapRules(moveFrom, moveTo);
+	populateList();
+	selectRow(moveTo);
+}
+
+void QtHighlightEditor::onDownButtonClicked() {
+	const size_t moveFrom = ui_.listWidget->currentRow();
+	const size_t moveTo = moveFrom + 1;
+	highlightManager_->swapRules(moveFrom, moveTo);
+	populateList();
+	selectRow(moveTo);
 }
 
 void QtHighlightEditor::onCurrentRowChanged(int currentRow)

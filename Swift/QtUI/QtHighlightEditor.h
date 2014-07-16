@@ -40,6 +40,8 @@ namespace Swift {
 			void soundCustomSelect();
 			void onNewButtonClicked();
 			void onDeleteButtonClicked();
+			void onUpButtonClicked();
+			void onDownButtonClicked();
 			void onCurrentRowChanged(int currentRow);
 			void onApplyButtonClick();
 			void onCancelButtonClick();
@@ -53,7 +55,6 @@ namespace Swift {
 		private:
 			void handleOnUserSelected(const JID& jid);
 			void populateList();
-			void updateChatPreview();
 			void selectRow(int row);
 			int getSelectedRow() const;
 			HighlightRule ruleFromDialog();
