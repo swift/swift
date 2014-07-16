@@ -205,7 +205,7 @@ std::string ChatControllerBase::addMessage(const std::string& message, const std
 	if (boost::starts_with(message, "/me ")) {
 		return chatWindow_->addAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	} else {
-		return chatWindow_->addMessage(chatMessageParser_->parseMessageBody(message,senderIsSelf), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
+		return chatWindow_->addMessage(chatMessageParser_->parseMessageBody(message,highlighter_->getNick(),senderIsSelf), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
 	}
 }
 
@@ -213,7 +213,7 @@ void ChatControllerBase::replaceMessage(const std::string& message, const std::s
 	if (boost::starts_with(message, "/me ")) {
 		chatWindow_->replaceWithAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), id, time, highlight);
 	} else {
-		chatWindow_->replaceMessage(chatMessageParser_->parseMessageBody(message,senderIsSelf), id, time, highlight);
+		chatWindow_->replaceMessage(chatMessageParser_->parseMessageBody(message,highlighter_->getNick(),senderIsSelf), id, time, highlight);
 	}
 }
 

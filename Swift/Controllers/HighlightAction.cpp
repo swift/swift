@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-void HighlightAction::setHighlightText(bool highlightText)
+void HighlightAction::setHighlightAllText(bool highlightText)
 {
 	highlightText_ = highlightText;
 	if (!highlightText_) {

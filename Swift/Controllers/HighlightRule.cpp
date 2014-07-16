@@ -102,6 +102,18 @@ void HighlightRule::setKeywords(const std::vector<std::string>& keywords)
 	updateRegex();
 }
 
+std::vector<boost::regex> HighlightRule::getKeywordRegex(const std::string& nick) const {
+	if (nickIsKeyword_) {
+		std::vector<boost::regex> regex;
+		if (!nick.empty()) {
+			regex.push_back(regexFromString(nick));
+		}
+		return regex;
+	} else {
+		return keywordRegex_;
+	}
+}
+
 void HighlightRule::setNickIsKeyword(bool nickIsKeyword)
 {
 	nickIsKeyword_ = nickIsKeyword;

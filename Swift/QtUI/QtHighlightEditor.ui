@@ -277,13 +277,6 @@
              </widget>
             </item>
             <item>
-             <widget class="QRadioButton" name="defaultColorRadio">
-              <property name="text">
-               <string>Default Color</string>
-              </property>
-             </widget>
-            </item>
-            <item>
              <widget class="QRadioButton" name="customColorRadio">
               <property name="text">
                <string>Custom Color</string>

@@ -40,7 +40,6 @@ QtHighlightEditor::QtHighlightEditor(QtSettingsProvider* settings, QWidget* pare
 	connect(ui_.buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(onOkButtonClick()));
 
 	connect(ui_.noColorRadio, SIGNAL(clicked()), SLOT(colorOtherSelect()));
-	connect(ui_.defaultColorRadio, SIGNAL(clicked()), SLOT(colorOtherSelect()));
 	connect(ui_.customColorRadio, SIGNAL(clicked()), SLOT(colorCustomSelect()));
 
 	connect(ui_.noSoundRadio, SIGNAL(clicked()), SLOT(soundOtherSelect()));
@@ -68,7 +67,6 @@ QtHighlightEditor::QtHighlightEditor(QtSettingsProvider* settings, QWidget* pare
 	connect(ui_.matchPartialWords, SIGNAL(clicked()), SLOT(widgetClick()));
 	connect(ui_.matchCase, SIGNAL(clicked()), SLOT(widgetClick()));
 	connect(ui_.noColorRadio, SIGNAL(clicked()), SLOT(widgetClick()));
-	connect(ui_.defaultColorRadio, SIGNAL(clicked()), SLOT(widgetClick()));
 	connect(ui_.customColorRadio, SIGNAL(clicked()), SLOT(widgetClick()));
 	connect(ui_.noSoundRadio, SIGNAL(clicked()), SLOT(widgetClick()));
 	connect(ui_.defaultSoundRadio, SIGNAL(clicked()), SLOT(widgetClick()));
@@ -305,7 +303,6 @@ void QtHighlightEditor::disableDialog()
 	ui_.matchPartialWords->setEnabled(false);
 	ui_.matchCase->setEnabled(false);
 	ui_.noColorRadio->setEnabled(false);
-	ui_.defaultColorRadio->setEnabled(false);
 	ui_.customColorRadio->setEnabled(false);
 	ui_.foregroundColor->setEnabled(false);
 	ui_.backgroundColor->setEnabled(false);
@@ -399,22 +396,21 @@ HighlightRule QtHighlightEditor::ruleFromDialog()
 		}
 	}
 
-	rule.setNickIsKeyword(ui_.nickIsKeyword->isChecked());
-	rule.setMatchWholeWords(!ui_.matchPartialWords->isChecked());
-	rule.setMatchCase(ui_.matchCase->isChecked());
+	if (ui_.nickIsKeyword->isChecked()) {
+		rule.setNickIsKeyword(true);
+		rule.setMatchWholeWords(true);
+		rule.setMatchCase(true);
+	} else {
+		rule.setMatchWholeWords(!ui_.matchPartialWords->isChecked());
+		rule.setMatchCase(ui_.matchCase->isChecked());
+	}
 
 	HighlightAction& action = rule.getAction();
 
 	if (ui_.noColorRadio->isChecked()) {
-		action.setHighlightText(false);
-		action.setTextColor("");
-		action.setTextBackground("");
-	} else if (ui_.defaultColorRadio->isChecked()) {
-		action.setHighlightText(true);
 		action.setTextColor("");
 		action.setTextBackground("");
 	} else {
-		action.setHighlightText(true);
 		action.setTextColor(Q2PSTRING(ui_.foregroundColor->getColor().name()));
 		action.setTextBackground(Q2PSTRING(ui_.backgroundColor->getColor().name()));
 	}
@@ -476,26 +472,19 @@ void QtHighlightEditor::ruleToDialog(const HighlightRule& rule)
 	const HighlightAction& action = rule.getAction();
 
 	ui_.noColorRadio->setEnabled(true);
-	ui_.defaultColorRadio->setEnabled(true);
 	ui_.customColorRadio->setEnabled(true);
-	if (action.highlightText()) {
-		if (action.getTextColor().empty() && action.getTextBackground().empty()) {
-			ui_.defaultColorRadio->setChecked(true);
-			ui_.foregroundColor->setEnabled(false);
-			ui_.backgroundColor->setEnabled(false);
-		} else {
-			ui_.foregroundColor->setEnabled(true);
-			ui_.backgroundColor->setEnabled(true);
-			QColor foregroundColor(P2QSTRING(action.getTextColor()));
-			ui_.foregroundColor->setColor(foregroundColor);
-			QColor backgroundColor(P2QSTRING(action.getTextBackground()));
-			ui_.backgroundColor->setColor(backgroundColor);
-			ui_.customColorRadio->setChecked(true);
-		}
-	} else {
+	if (action.getTextColor().empty() && action.getTextBackground().empty()) {
 		ui_.noColorRadio->setChecked(true);
 		ui_.foregroundColor->setEnabled(false);
 		ui_.backgroundColor->setEnabled(false);
+	} else {
+		ui_.foregroundColor->setEnabled(true);
+		ui_.backgroundColor->setEnabled(true);
+		QColor foregroundColor(P2QSTRING(action.getTextColor()));
+		ui_.foregroundColor->setColor(foregroundColor);
+		QColor backgroundColor(P2QSTRING(action.getTextBackground()));
+		ui_.backgroundColor->setColor(backgroundColor);
+		ui_.customColorRadio->setChecked(true);
 	}
 
 	ui_.noSoundRadio->setEnabled(true);

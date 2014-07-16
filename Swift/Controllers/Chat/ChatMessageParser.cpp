@@ -26,7 +26,7 @@ namespace Swift {
 
 	typedef std::pair<std::string, std::string> StringPair;
 
-	ChatWindow::ChatMessage ChatMessageParser::parseMessageBody(const std::string& body, bool senderIsSelf) {
+	ChatWindow::ChatMessage ChatMessageParser::parseMessageBody(const std::string& body, const std::string& nick, bool senderIsSelf) {
 		ChatWindow::ChatMessage parsedMessage;
 		std::string remaining = body;
 		/* Parse one, URLs */
@@ -57,7 +57,7 @@ namespace Swift {
 
 		if (!senderIsSelf) { /* do not highlight our own messsages */
 			/* do word-based color highlighting */
-			parsedMessage = splitHighlight(parsedMessage);
+			parsedMessage = splitHighlight(parsedMessage, nick);
 		}
 
 		return parsedMessage;
@@ -138,7 +138,7 @@ namespace Swift {
 		return parsedMessage;
 	}
 
-	ChatWindow::ChatMessage ChatMessageParser::splitHighlight(const ChatWindow::ChatMessage& message)
+	ChatWindow::ChatMessage ChatMessageParser::splitHighlight(const ChatWindow::ChatMessage& message, const std::string& nick)
 	{
 		ChatWindow::ChatMessage parsedMessage = message;
 
@@ -149,7 +149,8 @@ namespace Swift {
 			} else if (rule.getMatchChat() && mucMode_) {
 				continue; /* this rule only applies to CHAT's, and this is a MUC */
 			}
-			foreach(const boost::regex &regex, rule.getKeywordRegex()) {
+			const std::vector<boost::regex> keywordRegex = rule.getKeywordRegex(nick);
+			foreach(const boost::regex& regex, keywordRegex) {
 				ChatWindow::ChatMessage newMessage;
 				foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
 					boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;

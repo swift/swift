@@ -25,17 +25,20 @@ namespace Swift {
 		public:
 			HighlightAction() : highlightText_(false), playSound_(false) {}
 
-			bool highlightText() const { return highlightText_; }
-			void setHighlightText(bool highlightText);
+			/**
+			* Gets the flag that indicates the entire message should be highlighted.
+			*/
+			bool highlightAllText() const { return highlightText_; }
+			void setHighlightAllText(bool highlightText);
 
 			/**
-			* Gets the foreground highlight color. If the string is empty, assume a default color.
+			* Gets the foreground highlight color.
 			*/
 			const std::string& getTextColor() const { return textColor_; }
 			void setTextColor(const std::string& textColor) { textColor_ = textColor; }
 
 			/**
-			* Gets the background highlight color. If the string is empty, assume a default color.
+			* Gets the background highlight color.
 			*/
 			const std::string& getTextBackground() const { return textBackground_; }
 			void setTextBackground(const std::string& textBackground) { textBackground_ = textBackground; }

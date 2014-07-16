@@ -22,6 +22,7 @@ namespace Swift {
 			void setMode(Mode mode);
 
 			void setNick(const std::string& nick) { nick_ = nick; }
+			std::string getNick() const { return nick_; }
 
 			HighlightAction findAction(const std::string& body, const std::string& sender) const;
 

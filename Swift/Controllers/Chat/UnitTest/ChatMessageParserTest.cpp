@@ -85,6 +85,18 @@ public:
 		return list;
 	}
 
+	static HighlightRulesListPtr ruleListWithNickHighlight()
+	{
+		HighlightRule rule;
+		rule.setMatchChat(true);
+		rule.setNickIsKeyword(true);
+		rule.setMatchCase(true);
+		rule.setMatchWholeWords(true);
+		boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
+		list->addRule(rule);
+		return list;
+	}
+
 	void testFullBody() {
 		const std::string no_special_message = "a message with no special content";
 		ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
@@ -174,6 +186,30 @@ public:
 		testling = ChatMessageParser(emoticons_, ruleListFromKeywords(ruleFromKeyword("one", false, true), ruleFromKeyword("three", false, true)));
 		result = testling.parseMessageBody("zeroonetwothree");
 		assertText(result, 0, "zeroonetwothree");
+
+		testling = ChatMessageParser(emoticons_, ruleListWithNickHighlight());
+		result = testling.parseMessageBody("Alice", "Alice");
+		assertHighlight(result, 0, "Alice");
+
+		testling = ChatMessageParser(emoticons_, ruleListWithNickHighlight());
+		result = testling.parseMessageBody("TextAliceText", "Alice");
+		assertText(result, 0, "TextAliceText");
+
+		testling = ChatMessageParser(emoticons_, ruleListWithNickHighlight());
+		result = testling.parseMessageBody("Text Alice Text", "Alice");
+		assertText(result, 0, "Text ");
+		assertHighlight(result, 1, "Alice");
+		assertText(result, 2, " Text");
+
+		testling = ChatMessageParser(emoticons_, ruleListWithNickHighlight());
+		result = testling.parseMessageBody("Alice Text", "Alice");
+		assertHighlight(result, 0, "Alice");
+		assertText(result, 1, " Text");
+
+		testling = ChatMessageParser(emoticons_, ruleListWithNickHighlight());
+		result = testling.parseMessageBody("Text Alice", "Alice");
+		assertText(result, 0, "Text ");
+		assertHighlight(result, 1, "Alice");
 	}
 
 	void testOneEmoticon() {

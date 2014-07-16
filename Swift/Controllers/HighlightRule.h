@@ -40,7 +40,7 @@ namespace Swift {
 
 			const std::vector<std::string>& getKeywords() const { return keywords_; }
 			void setKeywords(const std::vector<std::string>&);
-			const std::vector<boost::regex>& getKeywordRegex() const { return keywordRegex_; }
+			std::vector<boost::regex> getKeywordRegex(const std::string& nick) const;
 
 			bool getNickIsKeyword() const { return nickIsKeyword_; }
 			void setNickIsKeyword(bool);
