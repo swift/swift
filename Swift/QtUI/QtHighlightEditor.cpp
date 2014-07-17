@@ -385,6 +385,7 @@ int QtHighlightEditor::getSelectedRow() const
 HighlightRule QtHighlightEditor::ruleFromDialog()
 {
 	HighlightRule rule;
+	HighlightAction& action = rule.getAction();
 
 	if (ui_.chatRadio->isChecked()) {
 		rule.setMatchChat(true);
@@ -400,6 +401,7 @@ HighlightRule QtHighlightEditor::ruleFromDialog()
 			std::vector<std::string> senders;
 			senders.push_back(Q2PSTRING(senderName));
 			rule.setSenders(senders);
+			action.setHighlightAllText(true);
 		}
 	}
 
@@ -420,8 +422,6 @@ HighlightRule QtHighlightEditor::ruleFromDialog()
 		rule.setMatchWholeWords(!ui_.matchPartialWords->isChecked());
 		rule.setMatchCase(ui_.matchCase->isChecked());
 	}
-
-	HighlightAction& action = rule.getAction();
 
 	if (ui_.noColorRadio->isChecked()) {
 		action.setTextColor("");
