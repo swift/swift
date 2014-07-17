@@ -8,12 +8,18 @@ myenv.UseFlags(env["SLIMBER_FLAGS"])
 myenv.UseFlags(env["LIMBER_FLAGS"])
 myenv.UseFlags(env["SWIFTOOLS_FLAGS"])
 myenv.UseFlags(env["SWIFTEN_FLAGS"])
-myenv.UseFlags(env["LIBIDN_FLAGS"])
 myenv.UseFlags(env["BOOST_FLAGS"])
 myenv.UseFlags(env.get("LIBXML_FLAGS", ""))
 myenv.UseFlags(env.get("EXPAT_FLAGS", ""))
 myenv.UseFlags(env.get("AVAHI_FLAGS", ""))
 myenv.UseFlags(myenv["PLATFORM_FLAGS"])
+
+if myenv.get("HAVE_ICU") :
+	myenv.MergeFlags(env["ICU_FLAGS"])
+	myenv.Append(CPPDEFINES = ["HAVE_ICU"])
+if myenv.get("HAVE_LIBIDN") :
+	myenv.MergeFlags(env["LIBIDN_FLAGS"])
+	myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])

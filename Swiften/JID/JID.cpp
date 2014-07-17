@@ -177,7 +177,7 @@ void JID::initializeFromString(const std::string& jid) {
 
 
 void JID::nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource) {
-	if (domain.empty()) {
+	if (domain.empty() || !idnConverter->getIDNAEncoded(domain)) {
 		valid_ = false;
 		return;
 	}

@@ -19,6 +19,7 @@ class IDNConverterTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testStringPrep_Empty);
 		CPPUNIT_TEST(testGetEncoded);
 		CPPUNIT_TEST(testGetEncoded_International);
+		CPPUNIT_TEST(testGetEncoded_Invalid);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -39,15 +40,21 @@ class IDNConverterTest : public CppUnit::TestFixture {
 		}
 
 		void testGetEncoded() {
-			std::string result = testling->getIDNAEncoded("www.swift.im");
-			CPPUNIT_ASSERT_EQUAL(std::string("www.swift.im"), result);
+			boost::optional<std::string> result = testling->getIDNAEncoded("www.swift.im");
+			CPPUNIT_ASSERT(!!result);
+			CPPUNIT_ASSERT_EQUAL(std::string("www.swift.im"), *result);
 		}
 
 		void testGetEncoded_International() {
-			std::string result = testling->getIDNAEncoded("www.tron\xc3\x87on.com");
-			CPPUNIT_ASSERT_EQUAL(std::string("www.xn--tronon-zua.com"), result); 
+			boost::optional<std::string> result = testling->getIDNAEncoded("www.tron\xc3\x87on.com");
+			CPPUNIT_ASSERT(!!result);
+			CPPUNIT_ASSERT_EQUAL(std::string("www.xn--tronon-zua.com"), *result); 
 		}
 
+		void testGetEncoded_Invalid() {
+			boost::optional<std::string> result = testling->getIDNAEncoded("www.foo,bar.com");
+			CPPUNIT_ASSERT(!result);
+		}
 
 	private:
 		boost::shared_ptr<IDNConverter> testling;

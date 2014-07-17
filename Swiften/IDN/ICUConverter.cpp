@@ -135,20 +135,20 @@ SafeByteArray ICUConverter::getStringPrepared(const SafeByteArray& s, StringPrep
 	return createSafeByteArray(reinterpret_cast<const char*>(vecptr(preparedData)));
 }
 
-std::string ICUConverter::getIDNAEncoded(const std::string& domain) {
+boost::optional<std::string> ICUConverter::getIDNAEncoded(const std::string& domain) {
 	UErrorCode status = U_ZERO_ERROR;
 	ICUString icuInput = convertToICUString(domain);
 	ICUString icuResult;
 	icuResult.resize(icuInput.size());
 	UParseError parseError;
-	int32_t icuResultLength = uidna_IDNToASCII(vecptr(icuInput), numeric_cast<int32_t>(icuInput.size()), vecptr(icuResult), numeric_cast<int32_t>(icuResult.size()), UIDNA_DEFAULT, &parseError, &status);
+	int32_t icuResultLength = uidna_IDNToASCII(vecptr(icuInput), numeric_cast<int32_t>(icuInput.size()), vecptr(icuResult), numeric_cast<int32_t>(icuResult.size()), UIDNA_USE_STD3_RULES, &parseError, &status);
 	if (status == U_BUFFER_OVERFLOW_ERROR) {
 		status = U_ZERO_ERROR;
 		icuResult.resize(numeric_cast<size_t>(icuResultLength));
-		icuResultLength = uidna_IDNToASCII(vecptr(icuInput), numeric_cast<int32_t>(icuInput.size()), vecptr(icuResult), numeric_cast<int32_t>(icuResult.size()), UIDNA_DEFAULT, &parseError, &status);
+		icuResultLength = uidna_IDNToASCII(vecptr(icuInput), numeric_cast<int32_t>(icuInput.size()), vecptr(icuResult), numeric_cast<int32_t>(icuResult.size()), UIDNA_USE_STD3_RULES, &parseError, &status);
 	}
 	if (U_FAILURE(status)) {
-		return domain;
+		return boost::optional<std::string>();
 	}
 	icuResult.resize(numeric_cast<size_t>(icuResultLength));
 	return convertToString(icuResult);

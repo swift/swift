@@ -160,7 +160,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		}
 
 		void testResolveService() {
-			boost::shared_ptr<DomainNameServiceQuery> query(createServiceQuery("_xmpp-client._tcp.xmpp-srv.test.swift.im"));
+			boost::shared_ptr<DomainNameServiceQuery> query(createServiceQuery("_xmpp-client._tcp.", "xmpp-srv.test.swift.im"));
 
 			query->run();
 			waitForResults();
@@ -202,8 +202,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 				resultsAvailable = true;
 			}
 
-			boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& domain) {
-				boost::shared_ptr<DomainNameServiceQuery> result = resolver->createServiceQuery(domain);
+			boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+				boost::shared_ptr<DomainNameServiceQuery> result = resolver->createServiceQuery(serviceLookupPrefix, domain);
 				result->onResult.connect(boost::bind(&DomainNameResolverTest::handleServiceQueryResult, this, _1));
 				return result;
 			}

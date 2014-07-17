@@ -38,7 +38,11 @@ using namespace Swift;
 
 namespace Swift {
 
-PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const std::string& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), eventLoop(eventLoop), service(service) {
+PlatformDomainNameServiceQuery::PlatformDomainNameServiceQuery(const boost::optional<std::string>& serviceName, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), eventLoop(eventLoop), serviceValid(false) {
+	if (!!serviceName) {
+		service = *serviceName;
+		serviceValid = true;
+	}
 }
 
 void PlatformDomainNameServiceQuery::run() {
@@ -46,6 +50,11 @@ void PlatformDomainNameServiceQuery::run() {
 }
 
 void PlatformDomainNameServiceQuery::runBlocking() {
+	if (!serviceValid) {
+		emitError();
+		return;
+	}
+
 	SWIFT_LOG(debug) << "Querying " << service << std::endl;
 
 	std::vector<DomainNameServiceQuery::Result> records;

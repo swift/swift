@@ -108,8 +108,8 @@ void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, c
 	addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, port, 0, 0));
 }
 
-boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const std::string& name) {
-	return boost::shared_ptr<DomainNameServiceQuery>(new ServiceQuery(name, this, eventLoop, owner));
+boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+	return boost::shared_ptr<DomainNameServiceQuery>(new ServiceQuery(serviceLookupPrefix + domain, this, eventLoop, owner));
 }
 
 boost::shared_ptr<DomainNameAddressQuery> StaticDomainNameResolver::createAddressQuery(const std::string& name) {

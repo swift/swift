@@ -65,15 +65,15 @@ SafeByteArray LibIDNConverter::getStringPrepared(const SafeByteArray& s, StringP
 	return createSafeByteArray(reinterpret_cast<const char*>(vecptr(preparedData)));
 }
 
-std::string LibIDNConverter::getIDNAEncoded(const std::string& domain) {
+boost::optional<std::string> LibIDNConverter::getIDNAEncoded(const std::string& domain) {
 	char* output;
-	if (idna_to_ascii_8z(domain.c_str(), &output, 0) == IDNA_SUCCESS) {
+	if (idna_to_ascii_8z(domain.c_str(), &output, IDNA_USE_STD3_ASCII_RULES) == IDNA_SUCCESS) {
 		std::string result(output);
 		free(output);
 		return result;
 	}
 	else {
-		return domain;
+		return boost::optional<std::string>();
 	}
 }
 

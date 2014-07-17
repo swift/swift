@@ -48,7 +48,7 @@ namespace Swift {
 				isResponsive = b;
 			}
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& name);
+			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
 		private:
 			EventLoop* eventLoop;

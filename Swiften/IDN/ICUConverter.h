@@ -17,6 +17,6 @@ namespace Swift {
 			virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
 			virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
 
-			virtual std::string getIDNAEncoded(const std::string& s) SWIFTEN_OVERRIDE;
+			virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) SWIFTEN_OVERRIDE;
 	};
 }

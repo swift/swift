@@ -20,7 +20,7 @@ namespace Swift {
 
 	class PlatformDomainNameAddressQuery : public DomainNameAddressQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameAddressQuery>, public EventOwner {
 		public:
-			PlatformDomainNameAddressQuery(const std::string& host, EventLoop* eventLoop, PlatformDomainNameResolver*);
+			PlatformDomainNameAddressQuery(const boost::optional<std::string>& host, EventLoop* eventLoop, PlatformDomainNameResolver*);
 
 			void run();
 
@@ -31,6 +31,7 @@ namespace Swift {
 		private:
 			boost::asio::io_service ioService;
 			std::string hostname;
+			bool hostnameValid;
 			EventLoop* eventLoop;
 	};
 }

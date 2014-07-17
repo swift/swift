@@ -13,9 +13,13 @@
 
 namespace Swift {
 
-ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter) {
+ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter) : domainValid(false) {
 	domain = jid.getDomain();
-	encodedDomain = idnConverter->getIDNAEncoded(domain);
+	boost::optional<std::string> domainResult = idnConverter->getIDNAEncoded(domain);
+	if (!!domainResult) {
+		encodedDomain = *domainResult;
+		domainValid = true;
+	}
 }
 
 bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
@@ -67,6 +71,9 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 }
 
 bool ServerIdentityVerifier::matchesDomain(const std::string& s) const {
+	if (!domainValid) {
+		return false;
+	}
 	if (boost::starts_with(s, "*.")) {
 		std::string matchString(s.substr(2, s.npos));
 		std::string matchDomain = encodedDomain;

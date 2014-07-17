@@ -9,6 +9,7 @@
 #include <string>
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <boost/optional.hpp>
 
 namespace Swift {
 	class SWIFTEN_API IDNConverter {
@@ -26,6 +27,6 @@ namespace Swift {
 			virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) = 0;
 
 			// Thread-safe
-			virtual std::string getIDNAEncoded(const std::string& s) = 0;
+			virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) = 0;
 	};
 }

@@ -20,7 +20,7 @@ namespace Swift {
 		public:
 			virtual ~DomainNameResolver();
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& name) = 0;
+			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) = 0;
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name) = 0;
 	};
 }

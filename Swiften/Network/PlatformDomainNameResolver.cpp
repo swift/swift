@@ -38,8 +38,13 @@ PlatformDomainNameResolver::~PlatformDomainNameResolver() {
 	delete thread;
 }
 
-boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const std::string& name) {
-	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(idnConverter->getIDNAEncoded(name), eventLoop, this));
+boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+	boost::optional<std::string> encodedDomain = idnConverter->getIDNAEncoded(domain);
+	std::string result;
+	if (encodedDomain) {
+		result = serviceLookupPrefix + *encodedDomain;
+	}
+	return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(result, eventLoop, this));
 }
 
 boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const std::string& name) {

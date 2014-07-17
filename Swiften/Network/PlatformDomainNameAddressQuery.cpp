@@ -13,7 +13,11 @@
 
 namespace Swift {
 
-PlatformDomainNameAddressQuery::PlatformDomainNameAddressQuery(const std::string& host, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), hostname(host), eventLoop(eventLoop) {
+PlatformDomainNameAddressQuery::PlatformDomainNameAddressQuery(const boost::optional<std::string>& host, EventLoop* eventLoop, PlatformDomainNameResolver* resolver) : PlatformDomainNameQuery(resolver), hostnameValid(false), eventLoop(eventLoop) {
+	if (!!host) {
+		hostname = *host;
+		hostnameValid = true;
+	}
 }
 
 void PlatformDomainNameAddressQuery::run() {
@@ -21,6 +25,10 @@ void PlatformDomainNameAddressQuery::run() {
 }
 
 void PlatformDomainNameAddressQuery::runBlocking() {
+	if (!hostnameValid) {
+		emitError();
+		return;
+	}
 	//std::cout << "PlatformDomainNameResolver::doRun()" << std::endl;
 	boost::asio::ip::tcp::resolver resolver(ioService);
 	boost::asio::ip::tcp::resolver::query query(hostname, "5222");

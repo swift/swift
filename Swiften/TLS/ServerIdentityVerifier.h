@@ -29,5 +29,6 @@ namespace Swift {
 		private:
 			std::string domain;
 			std::string encodedDomain;
+			bool domainValid;
 	};
 }

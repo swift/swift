@@ -18,7 +18,7 @@ namespace Swift {
 
 	class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
 		public:
-			PlatformDomainNameServiceQuery(const std::string& service, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
+			PlatformDomainNameServiceQuery(const boost::optional<std::string>& serviceName, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
 
 			virtual void run();
 
@@ -29,5 +29,6 @@ namespace Swift {
 		private:
 			EventLoop* eventLoop;
 			std::string service;
+			bool serviceValid;
 	};
 }

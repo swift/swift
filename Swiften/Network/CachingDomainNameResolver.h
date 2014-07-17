@@ -22,7 +22,7 @@ namespace Swift {
 			CachingDomainNameResolver(DomainNameResolver* realResolver, EventLoop* eventLoop);
 			~CachingDomainNameResolver();
 
-			virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& name);
+			virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
 			virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);
 
 		private:

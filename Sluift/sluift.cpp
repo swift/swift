@@ -346,7 +346,13 @@ SLUIFT_LUA_FUNCTION(Base64, decode) {
 
 SLUIFT_LUA_FUNCTION(IDN, encode) {
 	IDNConverter* converter = Sluift::globals.networkFactories.getIDNConverter();
-	lua_pushstring(L, converter->getIDNAEncoded(Lua::checkString(L, 1)).c_str());
+	boost::optional<std::string> encoded = converter->getIDNAEncoded(Lua::checkString(L, 1));
+	if (!encoded) {
+		lua_pushnil(L);
+		lua_pushstring(L, "Error encoding domain name");
+		return 2;
+	}
+	lua_pushstring(L, encoded->c_str());
 	return 1;
 }
 
