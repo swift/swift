@@ -169,8 +169,8 @@ void ChatController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> inf
 		boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
 
 		blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&ChatController::handleBlockingStateChanged, this));
-		blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&ChatController::handleBlockingItemAdded, this, _1));
-		blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&ChatController::handleBlockingItemRemoved, this, _1));
+		blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&ChatController::handleBlockingStateChanged, this));
+		blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&ChatController::handleBlockingStateChanged, this));
 
 		handleBlockingStateChanged();
 	}
@@ -248,11 +248,14 @@ void ChatController::handleSettingChanged(const std::string& settingPath) {
 
 void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 	if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::No)) {
-		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
+		deliveryReceiptAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
 	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::Maybe)) {
-		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
+		deliveryReceiptAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
 	} else {
-		chatWindow_->cancelAlert();
+		if (deliveryReceiptAlert_) {
+			chatWindow_->removeAlert(*deliveryReceiptAlert_);
+			deliveryReceiptAlert_.reset();
+		}
 	}
 }
 
@@ -260,29 +263,17 @@ void ChatController::handleBlockingStateChanged() {
 	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
 	if (blockList->getState() == BlockList::Available) {
 		if (isInMUC_ ? blockList->isBlocked(toJID_) : blockList->isBlocked(toJID_.toBare())) {
-			chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
+			blockedContactAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
 			chatWindow_->setInputEnabled(false);
 			chatWindow_->setBlockingState(ChatWindow::IsBlocked);
 		} else {
+			if (blockedContactAlert_) {
+				chatWindow_->removeAlert(*blockedContactAlert_);
+				blockedContactAlert_.reset();
+			}
+			chatWindow_->setInputEnabled(true);
 			chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
 		}
-	}
-}
-
-void ChatController::handleBlockingItemAdded(const JID& jid) {
-	if (toJID_ == (isInMUC_ ? jid: jid.toBare())) {
-		chatWindow_->setAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
-		chatWindow_->setInputEnabled(false);
-		chatWindow_->setBlockingState(ChatWindow::IsBlocked);
-	}
-}
-
-void ChatController::handleBlockingItemRemoved(const JID& jid) {
-	if (toJID_ == (isInMUC_ ? jid: jid.toBare())) {
-		// FIXME: Support for different types of alerts.
-		chatWindow_->cancelAlert();
-		chatWindow_->setInputEnabled(true);
-		chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
 	}
 }
 

@@ -56,8 +56,8 @@ namespace Swift {
 
 			void setAckState(const std::string& /*id*/, AckState /*state*/) {}
 			virtual void flash() {}
-			virtual void setAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) {}
-			virtual void cancelAlert() {}
+			virtual AlertID addAlert(const std::string& /*alertText*/, const std::string& /*buttonText*/) { return 0; }
+			virtual void removeAlert(const AlertID /*id*/) {}
 			virtual void setCorrectionEnabled(Tristate /*enabled*/) {}
 			virtual void setFileTransferEnabled(Tristate /*enabled*/) {}
 			void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}

@@ -72,9 +72,6 @@ namespace Swift {
 			void checkForDisplayingDisplayReceiptsAlert();
 
 			void handleBlockingStateChanged();
-			void handleBlockingItemAdded(const JID&);
-			void handleBlockingItemRemoved(const JID&);
-
 			void handleBlockUserRequest();
 			void handleUnblockUserRequest();
 
@@ -108,6 +105,9 @@ namespace Swift {
 			boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
 			boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
 			boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
+
+			boost::optional<ChatWindow::AlertID> deliveryReceiptAlert_;
+			boost::optional<ChatWindow::AlertID> blockedContactAlert_;
 	};
 }
 

@@ -153,16 +153,23 @@ namespace Swift {
 			virtual void setBlockingState(BlockingState state) = 0;
 			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu) = 0;
 			virtual void showBookmarkWindow(const MUCBookmark& bookmark) = 0;
+
+			/**
+			 * A handle that uniquely identities an alert message.
+			 */
+			typedef int AlertID;
 			/**
 			 * Set an alert on the window.
 			 * @param alertText Description of alert (required).
 			 * @param buttonText Button text to use (optional, no button is shown if empty).
+			 * @return A handle to the alert message.
 			 */
-			virtual void setAlert(const std::string& alertText, const std::string& buttonText = "") = 0;
+			virtual AlertID addAlert(const std::string& alertText, const std::string& buttonText = "") = 0;
 			/**
 			 * Removes an alert.
+			 * @param id An alert ID previously returned from setAlert
 			 */
-			virtual void cancelAlert() = 0;
+			virtual void removeAlert(const AlertID id) = 0;
 
 			/**
 			 * Actions that can be performed on the selected occupant.

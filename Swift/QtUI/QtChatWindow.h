@@ -134,8 +134,8 @@ namespace Swift {
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
 			void handleFontResized(int fontSizeSteps);
-			void setAlert(const std::string& alertText, const std::string& buttonText = "");
-			void cancelAlert();
+			AlertID addAlert(const std::string& alertText, const std::string& buttonText = "");
+			void removeAlert(const AlertID id);
 			void setCorrectionEnabled(Tristate enabled);
 			void setFileTransferEnabled(Tristate enabled);
 
@@ -193,8 +193,10 @@ namespace Swift {
 			QComboBox* labelsWidget_;
 			QtOccupantListWidget* treeWidget_;
 			QLabel* correctingLabel_;
-			QLabel* alertLabel_;
-			QWidget* alertWidget_;
+			boost::optional<AlertID> correctingAlert_;
+			QVBoxLayout* alertLayout_;
+			std::map<AlertID, QWidget*> alertWidgets_;
+			AlertID nextAlertId_;
 			QPushButton* alertButton_;
 			TabComplete* completer_;
 			QLineEdit* subject_;

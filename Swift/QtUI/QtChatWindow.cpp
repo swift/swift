@@ -57,7 +57,7 @@
 
 namespace Swift {
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	inputEnabled_ = true;
@@ -80,20 +80,8 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
 
-	alertWidget_ = new QWidget(this);
-	QHBoxLayout* alertLayout = new QHBoxLayout(alertWidget_);
-	layout->addWidget(alertWidget_);
-	alertLabel_ = new QLabel(this);
-	alertLayout->addWidget(alertLabel_);
-	alertButton_ = new QPushButton(this);
-	connect (alertButton_, SIGNAL(clicked()), this, SLOT(handleAlertButtonClicked()));
-	alertLayout->addWidget(alertButton_);
-	QPalette palette = alertWidget_->palette();
-	palette.setColor(QPalette::Window, QColor(Qt::yellow));
-	palette.setColor(QPalette::WindowText, QColor(Qt::black));
-	alertWidget_->setStyleSheet(alertStyleSheet_);
-	alertLabel_->setStyleSheet(alertStyleSheet_);
-	alertWidget_->hide();
+	alertLayout_ = new QVBoxLayout(this);
+	layout->addLayout(alertLayout_);
 
 	subjectLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
 	subject_ = new QLineEdit(this);
@@ -214,19 +202,41 @@ void QtChatWindow::handleAlertButtonClicked() {
 	onAlertButtonClicked();
 }
 
-void QtChatWindow::setAlert(const std::string& alertText, const std::string& buttonText) {
-	alertLabel_->setText(alertText.c_str());
+QtChatWindow::AlertID QtChatWindow::addAlert(const std::string& alertText, const std::string& buttonText) {
+	QWidget* alertWidget = new QWidget(this);
+	QHBoxLayout* alertLayout = new QHBoxLayout(alertWidget);
+	alertLayout_->addWidget(alertWidget);
+	QLabel* alertLabel = new QLabel(this);
+	alertLayout->addWidget(alertLabel);
+	alertButton_ = new QPushButton(this);
+	connect (alertButton_, SIGNAL(clicked()), this, SLOT(handleAlertButtonClicked()));
+	alertLayout->addWidget(alertButton_);
+	QPalette palette = alertWidget->palette();
+	palette.setColor(QPalette::Window, QColor(Qt::yellow));
+	palette.setColor(QPalette::WindowText, QColor(Qt::black));
+	alertWidget->setStyleSheet(alertStyleSheet_);
+	alertLabel->setStyleSheet(alertStyleSheet_);
+
+	alertLabel->setText(alertText.c_str());
 	if (buttonText.empty()) {
 		alertButton_->hide();
 	} else {
 		alertButton_->setText(buttonText.c_str());
 		alertButton_->show();
 	}
-	alertWidget_->show();
+
+	AlertID id = nextAlertId_++;
+	alertWidgets_[id] = alertWidget;
+	return id;
 }
 
-void QtChatWindow::cancelAlert() {
-	alertWidget_->hide();
+void QtChatWindow::removeAlert(const AlertID id) {
+	std::map<AlertID, QWidget*>::iterator i = alertWidgets_.find(id);
+	if (i != alertWidgets_.end()) {
+		alertLayout_->removeWidget(i->second);
+		delete i->second;
+		alertWidgets_.erase(i);
+	}
 }
 
 void QtChatWindow::setTabComplete(TabComplete* completer) {
@@ -256,9 +266,9 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 
 void QtChatWindow::beginCorrection() {
 	if (correctionEnabled_ == ChatWindow::Maybe) {
-		setAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
+		correctingAlert_ = addAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
 	} else if (correctionEnabled_ == ChatWindow::No) {
-		setAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
+		correctingAlert_ = addAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
 	}
 	QTextCursor cursor = input_->textCursor();
 	cursor.select(QTextCursor::Document);
@@ -272,7 +282,10 @@ void QtChatWindow::beginCorrection() {
 }
 
 void QtChatWindow::cancelCorrection() {
-	cancelAlert();
+	if (correctingAlert_) {
+		removeAlert(*correctingAlert_);
+		correctingAlert_.reset();
+	}
 	QTextCursor cursor = input_->textCursor();
 	cursor.select(QTextCursor::Document);
 	cursor.removeSelectedText();
