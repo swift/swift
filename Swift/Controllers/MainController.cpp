@@ -262,6 +262,8 @@ void MainController::resetClient() {
 #endif
 	delete ftOverview_;
 	ftOverview_ = NULL;
+	delete blockListController_;
+	blockListController_ = NULL;
 	delete rosterController_;
 	rosterController_ = NULL;
 	delete eventNotifier_;

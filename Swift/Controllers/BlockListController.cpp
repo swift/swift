@@ -21,13 +21,14 @@
 
 namespace Swift {
 
-BlockListController::BlockListController(ClientBlockListManager* blockListManager, UIEventStream* uiEventStream, BlockListEditorWidgetFactory* blockListEditorWidgetFactory, EventController* eventController) : blockListManager_(blockListManager), blockListEditorWidgetFactory_(blockListEditorWidgetFactory), blockListEditorWidget_(0), eventController_(eventController), remainingRequests_(0) {
+BlockListController::BlockListController(ClientBlockListManager* blockListManager, UIEventStream* uiEventStream, BlockListEditorWidgetFactory* blockListEditorWidgetFactory, EventController* eventController) : blockListManager_(blockListManager), blockListEditorWidgetFactory_(blockListEditorWidgetFactory), blockListEditorWidget_(0), eventController_(eventController), remainingRequests_(0), uiEventStream_(uiEventStream) {
 	uiEventStream->onUIEvent.connect(boost::bind(&BlockListController::handleUIEvent, this, _1));
 	blockListManager_->getBlockList()->onItemAdded.connect(boost::bind(&BlockListController::handleBlockListChanged, this));
 	blockListManager_->getBlockList()->onItemRemoved.connect(boost::bind(&BlockListController::handleBlockListChanged, this));
 }
 
 BlockListController::~BlockListController() {
+	uiEventStream_->onUIEvent.disconnect(boost::bind(&BlockListController::handleUIEvent, this, _1));
 	blockListManager_->getBlockList()->onItemAdded.disconnect(boost::bind(&BlockListController::handleBlockListChanged, this));
 	blockListManager_->getBlockList()->onItemRemoved.disconnect(boost::bind(&BlockListController::handleBlockListChanged, this));
 }

@@ -43,6 +43,7 @@ private:
 	EventController* eventController_;
 	std::vector<JID> blockListBeforeEdit;
 	int remainingRequests_;
+	UIEventStream* uiEventStream_;
 };
 
 }
