@@ -29,7 +29,7 @@ namespace Swift {
 
 		void addContactProvider(ContactProvider* provider);
 
-		std::vector<Contact::ref> getSuggestions(const std::string& search) const;
+		std::vector<Contact::ref> getSuggestions(const std::string& search, bool withMUCNicks) const;
 	public:
 		static bool matchContact(const std::string& search, const Contact::ref& c);
 		/**

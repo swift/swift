@@ -78,7 +78,7 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 	}
 	resultsPage_->emitCompletenessCheck();
 	if (page == 1 && lastPage_ == 3) {
-		addSearchedJIDToList(getContactJID());
+		addSearchedJIDToList(getContact());
 		setSecondPage();
 	}
 	else if (page == 2 && lastPage_ == 1) {
@@ -270,9 +270,13 @@ JID QtUserSearchWindow::getContactJID() const {
 	return jid;
 }
 
-void QtUserSearchWindow::addSearchedJIDToList(const JID& jid) {
+Contact::ref QtUserSearchWindow::getContact() const {
+	return boost::make_shared<Contact>("", getContactJID(), StatusShow::None, "");
+}
+
+void QtUserSearchWindow::addSearchedJIDToList(const Contact::ref& contact) {
 	std::vector<JID> jids;
-	jids.push_back(jid);
+	jids.push_back(contact->jid);
 	handleJIDsAdded(jids);
 	firstMultiJIDPage_->jid_->clear();
 }
@@ -343,7 +347,7 @@ void QtUserSearchWindow::setContactSuggestions(const std::vector<Contact::ref>& 
 
 void QtUserSearchWindow::setJIDs(const std::vector<JID> &jids) {
 	foreach(JID jid, jids) {
-		addSearchedJIDToList(jid);
+		addSearchedJIDToList(boost::make_shared<Contact>("", jid, StatusShow::None, ""));
 	}
 	onJIDUpdateRequested(jids);
 }

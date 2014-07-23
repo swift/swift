@@ -43,14 +43,20 @@ void ContactSuggester::addContactProvider(ContactProvider* provider) {
 }
 
 bool ContactSuggester::matchContact(const std::string& search, const Contact::ref& c) {
-	return fuzzyMatch(c->name, search) || fuzzyMatch(c->jid.toString(), search);
+	if (fuzzyMatch(c->name, search)) {
+		return true;
+	}
+	else if (c->jid.isValid()) {
+		return fuzzyMatch(c->jid.toString(), search);
+	}
+	return false;
 }
 
-std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& search) const {
+std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& search, bool withMUCNicks) const {
 	std::vector<Contact::ref> results;
 
 	foreach(ContactProvider* provider, contactProviders_) {
-		append(results, provider->getContacts());
+		append(results, provider->getContacts(withMUCNicks));
 	}
 
 	std::sort(results.begin(), results.end(), Contact::lexicographicalSortPredicate);

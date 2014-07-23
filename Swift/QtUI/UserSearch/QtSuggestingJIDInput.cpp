@@ -114,7 +114,11 @@ void QtSuggestingJIDInput::keyPressEvent(QKeyEvent* event) {
 		QModelIndex index = treeViewPopup_->currentIndex();
 		if (!contactListModel_->getList().empty() && index.isValid()) {
 			currentContact_ = contactListModel_->getContact(index.row());
-			setText(P2QSTRING(currentContact_->jid.toString()));
+			if (currentContact_->jid.isValid()) {
+				setText(P2QSTRING(currentContact_->jid.toString()));
+			} else {
+				setText(P2QSTRING(currentContact_->name));
+			}
 			hidePopup();
 			clearFocus();
 		} else {
@@ -144,7 +148,7 @@ void QtSuggestingJIDInput::handleSettingsChanged(const std::string& setting) {
 void QtSuggestingJIDInput::handleClicked(const QModelIndex& index) {
 	if (index.isValid()) {
 		currentContact_ = contactListModel_->getContact(index.row());
-		onUserSelected(currentContact_->jid);
+		onUserSelected(currentContact_);
 		hidePopup();
 	}
 }

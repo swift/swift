@@ -196,7 +196,8 @@ void UserSearchController::handleNameSuggestionRequest(const JID &jid) {
 
 void UserSearchController::handleContactSuggestionsRequested(std::string text) {
 	const std::vector<JID> existingJIDs = window_->getJIDs();
-	std::vector<Contact::ref> suggestions = contactSuggester_->getSuggestions(text);
+	std::vector<Contact::ref> suggestions = contactSuggester_->getSuggestions(text, false);
+	/* do not suggest contacts that have already been added to the chat list */
 	std::vector<Contact::ref>::iterator i = suggestions.begin();
 	while (i != suggestions.end()) {
 		bool found = false;

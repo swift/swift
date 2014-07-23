@@ -17,11 +17,19 @@ Contact::Contact(const std::string& name, const JID& jid, StatusShow::Type statu
 }
 
 bool Contact::lexicographicalSortPredicate(const Contact::ref& a, const Contact::ref& b) {
-	return a->jid < b->jid;
+	if (a->jid.isValid() && b->jid.isValid()) {
+		return a->jid < b->jid;
+	} else {
+		return a->name < b->name;
+	}
 }
 
 bool Contact::equalityPredicate(const Contact::ref& a, const Contact::ref& b) {
-	return a->jid == b->jid;
+	if (a->jid.isValid() && b->jid.isValid()) {
+		return a->jid == b->jid;
+	} else {
+		return a->name == b->name;
+	}
 }
 
 bool Contact::sortPredicate(const Contact::ref& a, const Contact::ref& b, const std::string& search) {

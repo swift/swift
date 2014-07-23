@@ -25,7 +25,7 @@ class ContactsFromXMPPRoster : public ContactProvider {
 		ContactsFromXMPPRoster(XMPPRoster* roster, AvatarManager* avatarManager, PresenceOracle* presenceOracle);
 		virtual ~ContactsFromXMPPRoster();
 
-		virtual std::vector<Contact::ref> getContacts();
+		virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
 	private:
 		XMPPRoster* roster_;
 		AvatarManager* avatarManager_;

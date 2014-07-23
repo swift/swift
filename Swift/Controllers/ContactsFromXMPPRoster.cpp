@@ -27,7 +27,7 @@ ContactsFromXMPPRoster::ContactsFromXMPPRoster(XMPPRoster* roster, AvatarManager
 ContactsFromXMPPRoster::~ContactsFromXMPPRoster() {
 }
 
-std::vector<Contact::ref> ContactsFromXMPPRoster::getContacts() {
+std::vector<Contact::ref> ContactsFromXMPPRoster::getContacts(bool /*withMUCNicks*/) {
 	std::vector<Contact::ref> results;
 	std::vector<XMPPRosterItem> rosterItems = roster_->getItems();
 	foreach(const XMPPRosterItem& rosterItem, rosterItems) {

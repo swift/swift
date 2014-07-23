@@ -53,7 +53,7 @@ namespace Swift {
 			void selectSoundFile();
 
 		private:
-			void handleOnUserSelected(const JID& jid);
+			void handleOnUserSelected(const Contact::ref& contact);
 			void populateList();
 			void selectRow(int row);
 			int getSelectedRow() const;

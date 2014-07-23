@@ -35,7 +35,7 @@ class QtSuggestingJIDInput : public QLineEdit {
 
 		void clear();
 
-		boost::signal<void (const JID&)> onUserSelected;
+		boost::signal<void (const Contact::ref&)> onUserSelected;
 
 	signals:
 		void editingDone();

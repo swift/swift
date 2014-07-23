@@ -49,7 +49,7 @@ void HighlightEditorController::handleUIEvent(boost::shared_ptr<UIEvent> rawEven
 void HighlightEditorController::handleContactSuggestionsRequested(const std::string& text)
 {
 	if (contactSuggester_) {
-		highlightEditorWindow_->setContactSuggestions(contactSuggester_->getSuggestions(text));
+		highlightEditorWindow_->setContactSuggestions(contactSuggester_->getSuggestions(text, true));
 	}
 }
 

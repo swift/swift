@@ -73,7 +73,7 @@ namespace Swift {
 			void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<Message> message);
 			std::vector<ChatListWindow::Chat> getRecentChats() const;
-			virtual std::vector<Contact::ref> getContacts();
+			virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
 
 			boost::signal<void (bool supportsImpromptu)> onImpromptuMUCServiceDiscovered;
 

@@ -971,11 +971,26 @@ std::vector<ChatListWindow::Chat> ChatsManager::getRecentChats() const {
 	return std::vector<ChatListWindow::Chat>(recentChats_.begin(), recentChats_.end());
 }
 
-std::vector<Contact::ref> Swift::ChatsManager::getContacts() {
+std::vector<Contact::ref> Swift::ChatsManager::getContacts(bool withMUCNicks) {
 	std::vector<Contact::ref> result;
 	foreach (ChatListWindow::Chat chat, recentChats_) {
 		if (!chat.isMUC) {
 			result.push_back(boost::make_shared<Contact>(chat.chatName.empty() ? chat.jid.toString() : chat.chatName, chat.jid, chat.statusType, chat.avatarPath));
+		}
+	}
+	if (withMUCNicks) {
+		/* collect MUC nicks */
+		typedef std::map<JID, MUCController*>::value_type Item;
+		foreach (const Item& item, mucControllers_) {
+			JID mucJID = item.second->getToJID();
+			std::map<std::string, JID> participants = item.second->getParticipantJIDs();
+			typedef std::map<std::string, JID>::value_type ParticipantType;
+			foreach (const ParticipantType& participant, participants) {
+				const JID nickJID = JID(mucJID.getNode(), mucJID.getDomain(), participant.first);
+				Presence::ref presence = presenceOracle_->getLastPresence(nickJID);
+				const boost::filesystem::path avatar = avatarManager_->getAvatarPath(nickJID);
+				result.push_back(boost::make_shared<Contact>(participant.first, JID(), presence->getShow(), avatar));
+			}
 		}
 	}
 	return result;

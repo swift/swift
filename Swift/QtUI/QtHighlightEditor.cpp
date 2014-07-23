@@ -350,9 +350,13 @@ void QtHighlightEditor::selectSoundFile()
 	ui_.soundFile->setText(path);
 }
 
-void QtHighlightEditor::handleOnUserSelected(const JID& jid) {
+void QtHighlightEditor::handleOnUserSelected(const Contact::ref& contact) {
 	/* this might seem like it should be standard behaviour for the suggesting input box, but is not desirable in all cases */
-	jid_->setText(P2QSTRING(jid.toString()));
+	if (contact->jid.isValid()) {
+		jid_->setText(P2QSTRING(contact->jid.toString()));
+	} else {
+		jid_->setText(P2QSTRING(contact->name));
+	}
 }
 
 void QtHighlightEditor::populateList()
