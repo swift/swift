@@ -172,6 +172,9 @@ void QtHighlightEditor::onNewButtonClicked()
 	highlightManager_->insertRule(row, newRule);
 	QListWidgetItem *item = new QListWidgetItem();
 	item->setText(P2QSTRING(formatShortDescription(newRule)));
+	QFont font;
+	font.setItalic(true);
+	item->setFont(font);
 	ui_.listWidget->insertItem(row, item);
 	selectRow(row);
 }
@@ -219,6 +222,9 @@ void QtHighlightEditor::onCurrentRowChanged(int currentRow)
 
 	if (previousRow_ != -1) {
 		if (ui_.listWidget->count() > previousRow_) {
+			QFont font;
+			font.setItalic(false);
+			ui_.listWidget->item(previousRow_)->setFont(font);
 			highlightManager_->setRule(previousRow_, ruleFromDialog());
 		}
 	}
@@ -227,6 +233,9 @@ void QtHighlightEditor::onCurrentRowChanged(int currentRow)
 		HighlightRule rule = highlightManager_->getRule(currentRow);
 		ruleToDialog(rule);
 		if (ui_.listWidget->currentItem()) {
+			QFont font;
+			font.setItalic(true);
+			ui_.listWidget->currentItem()->setFont(font);
 			ui_.listWidget->currentItem()->setText(P2QSTRING(formatShortDescription(rule)));
 		}
 	}
