@@ -281,6 +281,10 @@ void QtUserSearchWindow::addSearchedJIDToList(const Contact::ref& contact) {
 	firstMultiJIDPage_->jid_->clear();
 }
 
+void QtUserSearchWindow::handleOnSearchedJIDSelected(const Contact::ref& contact) {
+	firstPage_->jid_->setText(P2QSTRING(contact->jid.toString()));
+}
+
 void QtUserSearchWindow::show() {
 	clear();
 	QWidget::show();
@@ -468,6 +472,7 @@ void QtUserSearchWindow::setFirstPage(QString title) {
 	if (type_ == AddContact) {
 		firstPage_ = new QtUserSearchFirstPage(type_, title.isEmpty() ? firstPage_->title() : title, settings_);
 		connect(firstPage_->jid_, SIGNAL(textEdited(QString)), this, SLOT(handleContactSuggestionRequested(QString)));
+		firstPage_->jid_->onUserSelected.connect(boost::bind(&QtUserSearchWindow::handleOnSearchedJIDSelected, this, _1));
 		connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 		connect(firstPage_->byLocalSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 		connect(firstPage_->byRemoteSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));

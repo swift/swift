@@ -79,6 +79,7 @@ namespace Swift {
 			JID getContactJID() const;
 			Contact::ref getContact() const;
 			void addSearchedJIDToList(const Contact::ref& contact);
+			void handleOnSearchedJIDSelected(const Contact::ref& contact);
 
 		private:
 			UIEventStream* eventStream_;
