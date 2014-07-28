@@ -170,7 +170,7 @@ void QtHighlightEditor::onNewButtonClicked()
 	int row = getSelectedRow() + 1;
 	populateList();
 	HighlightRule newRule;
-	newRule.setMatchChat(true);
+	newRule.setMatchMUC(true);
 	highlightManager_->insertRule(row, newRule);
 	QListWidgetItem *item = new QListWidgetItem();
 	item->setText(P2QSTRING(formatShortDescription(newRule)));
