@@ -164,7 +164,7 @@ namespace Swift {
 			 * @param buttonText Button text to use (optional, no button is shown if empty).
 			 * @return A handle to the alert message.
 			 */
-			virtual AlertID addAlert(const std::string& alertText, const std::string& buttonText = "") = 0;
+			virtual AlertID addAlert(const std::string& alertText) = 0;
 			/**
 			 * Removes an alert.
 			 * @param id An alert ID previously returned from setAlert

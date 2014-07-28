@@ -199,31 +199,37 @@ void QtChatWindow::handleFontResized(int fontSizeSteps) {
 }
 
 void QtChatWindow::handleAlertButtonClicked() {
-	onAlertButtonClicked();
+	const QObject* alertWidget = QObject::sender()->parent();
+	std::map<AlertID, QWidget*>::const_iterator i = alertWidgets_.begin();
+	for ( ; i != alertWidgets_.end(); ++i) {
+		if (i->second == alertWidget) {
+			removeAlert(i->first);
+			break;
+		}
+	}
 }
 
-QtChatWindow::AlertID QtChatWindow::addAlert(const std::string& alertText, const std::string& buttonText) {
+QtChatWindow::AlertID QtChatWindow::addAlert(const std::string& alertText) {
 	QWidget* alertWidget = new QWidget(this);
 	QHBoxLayout* alertLayout = new QHBoxLayout(alertWidget);
 	alertLayout_->addWidget(alertWidget);
 	QLabel* alertLabel = new QLabel(this);
+	alertLabel->setText(alertText.c_str());
 	alertLayout->addWidget(alertLabel);
-	alertButton_ = new QPushButton(this);
-	connect (alertButton_, SIGNAL(clicked()), this, SLOT(handleAlertButtonClicked()));
-	alertLayout->addWidget(alertButton_);
+
+	QToolButton* closeButton = new QToolButton(alertWidget);
+	closeButton->setIcon(style()->standardIcon(QStyle::SP_TitleBarCloseButton));
+	closeButton->setIconSize(QSize(16,16));
+	closeButton->setCursor(Qt::ArrowCursor);
+	closeButton->setStyleSheet("QToolButton { border: none; padding: 0px; }");
+	connect (closeButton, SIGNAL(clicked()), this, SLOT(handleAlertButtonClicked()));
+
+	alertLayout->addWidget(closeButton);
 	QPalette palette = alertWidget->palette();
 	palette.setColor(QPalette::Window, QColor(Qt::yellow));
 	palette.setColor(QPalette::WindowText, QColor(Qt::black));
 	alertWidget->setStyleSheet(alertStyleSheet_);
 	alertLabel->setStyleSheet(alertStyleSheet_);
-
-	alertLabel->setText(alertText.c_str());
-	if (buttonText.empty()) {
-		alertButton_->hide();
-	} else {
-		alertButton_->setText(buttonText.c_str());
-		alertButton_->show();
-	}
 
 	AlertID id = nextAlertId_++;
 	alertWidgets_[id] = alertWidget;
