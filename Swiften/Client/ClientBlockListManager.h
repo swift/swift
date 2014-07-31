@@ -31,6 +31,11 @@ namespace Swift {
 			 */
 			boost::shared_ptr<BlockList> getBlockList();
 
+			/**
+			 * Get the blocklist from the server.
+			 */
+			boost::shared_ptr<BlockList> requestBlockList();
+
 			GenericRequest<BlockPayload>::ref createBlockJIDRequest(const JID& jid);
 			GenericRequest<BlockPayload>::ref createBlockJIDsRequest(const std::vector<JID>& jids);
 
@@ -43,7 +48,6 @@ namespace Swift {
 
 		private:
 			IQRouter* iqRouter;
-			boost::shared_ptr<GenericRequest<BlockListPayload> > getRequest;
 			boost::shared_ptr<SetResponder<BlockPayload> > blockResponder;
 			boost::shared_ptr<SetResponder<UnblockPayload> > unblockResponder;
 			boost::shared_ptr<BlockListImpl> blockList;

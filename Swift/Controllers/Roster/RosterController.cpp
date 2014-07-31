@@ -287,7 +287,7 @@ void RosterController::updateItem(const XMPPRosterItem& item) {
 }
 
 void RosterController::initBlockingCommand() {
-	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->requestBlockList();
 
 	blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&RosterController::handleBlockingStateChanged, this));
 	blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&RosterController::handleBlockingItemAdded, this, _1));

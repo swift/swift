@@ -74,20 +74,24 @@ ClientBlockListManager::~ClientBlockListManager() {
 		unblockResponder->stop();
 		blockResponder->stop();
 	}
-	if (getRequest) {
-		getRequest->onResponse.disconnect(boost::bind(&ClientBlockListManager::handleBlockListReceived, this, _1, _2));
-	}
 }
 
 boost::shared_ptr<BlockList> ClientBlockListManager::getBlockList() {
 	if (!blockList) {
 		blockList = boost::make_shared<BlockListImpl>();
-		blockList->setState(BlockList::Requesting);
-		assert(!getRequest);
-		getRequest = boost::make_shared< GenericRequest<BlockListPayload> >(IQ::Get, JID(), boost::make_shared<BlockListPayload>(), iqRouter);
-		getRequest->onResponse.connect(boost::bind(&ClientBlockListManager::handleBlockListReceived, this, _1, _2));
-		getRequest->send();
+		blockList->setState(BlockList::Init);
 	}
+	return blockList;
+}
+
+boost::shared_ptr<BlockList> ClientBlockListManager::requestBlockList() {
+	if (!blockList) {
+		blockList = boost::make_shared<BlockListImpl>();
+	}
+	blockList->setState(BlockList::Requesting);
+	boost::shared_ptr<GenericRequest<BlockListPayload> > getRequest = boost::make_shared< GenericRequest<BlockListPayload> >(IQ::Get, JID(), boost::make_shared<BlockListPayload>(), iqRouter);
+	getRequest->onResponse.connect(boost::bind(&ClientBlockListManager::handleBlockListReceived, this, _1, _2));
+	getRequest->send();
 	return blockList;
 }
 

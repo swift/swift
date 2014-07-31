@@ -152,7 +152,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
 
 	private:
 		void helperInitialBlockListFetch(const std::vector<JID>& blockedJids) {
-			boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+			boost::shared_ptr<BlockList> blockList = clientBlockListManager_->requestBlockList();
 			CPPUNIT_ASSERT(blockList);
 
 			// check for IQ request
