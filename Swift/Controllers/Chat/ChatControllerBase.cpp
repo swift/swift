@@ -54,6 +54,7 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 }
 
 ChatControllerBase::~ChatControllerBase() {
+	delete highlighter_;
 	delete chatWindow_;
 }
 

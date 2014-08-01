@@ -101,9 +101,11 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			delete vcardStorage_;
 			delete crypto_;
 			delete clientBlockListManager_;
+			delete ftOverview_;
 			delete ftManager_;
 			delete jingleSessionManager_;
-			
+			delete entityCapsManager_;
+			delete capsProvider_;
 			delete nickManager_;
 			delete nickResolver_;
 			delete mucRegistry_;

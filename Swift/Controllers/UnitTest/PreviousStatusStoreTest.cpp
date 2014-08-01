@@ -30,7 +30,7 @@ public:
 	}
 
 	void tearDown() {
-		
+		delete store_;
 	}
 
 	void testGetAll() {
