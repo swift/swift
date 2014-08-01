@@ -247,15 +247,22 @@ void ChatController::handleSettingChanged(const std::string& settingPath) {
 }
 
 void ChatController::checkForDisplayingDisplayReceiptsAlert() {
+	boost::optional<ChatWindow::AlertID> newDeliverReceiptAlert;
 	if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::No)) {
-		deliveryReceiptAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
+		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
 	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::Maybe)) {
-		deliveryReceiptAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
+		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
 	} else {
 		if (deliveryReceiptAlert_) {
 			chatWindow_->removeAlert(*deliveryReceiptAlert_);
 			deliveryReceiptAlert_.reset();
 		}
+	}
+	if (newDeliverReceiptAlert) {
+		if (deliveryReceiptAlert_) {
+			chatWindow_->removeAlert(*deliveryReceiptAlert_);
+		}
+		deliveryReceiptAlert_ = newDeliverReceiptAlert;
 	}
 }
 
@@ -263,7 +270,9 @@ void ChatController::handleBlockingStateChanged() {
 	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
 	if (blockList->getState() == BlockList::Available) {
 		if (isInMUC_ ? blockList->isBlocked(toJID_) : blockList->isBlocked(toJID_.toBare())) {
-			blockedContactAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
+			if (!blockedContactAlert_) {
+				blockedContactAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
+			}
 			chatWindow_->setInputEnabled(false);
 			chatWindow_->setBlockingState(ChatWindow::IsBlocked);
 

@@ -271,11 +271,20 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 }
 
 void QtChatWindow::beginCorrection() {
+	boost::optional<AlertID> newCorrectingAlert;
 	if (correctionEnabled_ == ChatWindow::Maybe) {
-		correctingAlert_ = addAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
+		newCorrectingAlert = addAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
 	} else if (correctionEnabled_ == ChatWindow::No) {
-		correctingAlert_ = addAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
+		newCorrectingAlert = addAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
 	}
+
+	if (newCorrectingAlert) {
+		if (correctingAlert_) {
+			removeAlert(*correctingAlert_);
+		}
+		correctingAlert_ = newCorrectingAlert;
+	}
+
 	QTextCursor cursor = input_->textCursor();
 	cursor.select(QTextCursor::Document);
 	cursor.beginEditBlock();
