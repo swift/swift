@@ -23,7 +23,8 @@ void setX11Resource(QWidget* widget, const QString& c) {
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
 	char res_class[] = SWIFT_APPLICATION_NAME;
 	XClassHint hint;
-	hint.res_name = (QString(SWIFT_APPLICATION_NAME) + "-" + c).toUtf8().data();
+	QByteArray resName = (QString(SWIFT_APPLICATION_NAME) + "-" + c).toUtf8();
+	hint.res_name = resName.data();
 	hint.res_class = res_class;
 	XSetClassHint(widget->x11Info().display(), widget->winId(), &hint);
 #else
