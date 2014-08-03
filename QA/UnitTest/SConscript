@@ -9,6 +9,7 @@ if env["TEST"] :
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.UseFlags(env.get("CHECKER_FLAGS",""))
+		myenv.UseFlags(env.get("INJECTED_UNITTEST_FLAGS","")) # So things that piggy-back our build system can piggy-back our test system too
 		myenv.UseFlags(env.get("SLIMBER_FLAGS",""))
 		myenv.UseFlags(env.get("SWIFT_CONTROLLERS_FLAGS",""))
 		myenv.UseFlags(env.get("SWIFTOOLS_FLAGS",""))
