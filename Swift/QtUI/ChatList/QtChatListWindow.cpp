@@ -58,6 +58,7 @@ QtChatListWindow::~QtChatListWindow() {
 	delete model_;
 	delete delegate_;
 	delete mucMenu_;
+	delete mucRecentsMenu_;
 	delete emptyMenu_;
 }
 
