@@ -125,10 +125,14 @@ void ClientBlockListManager::handleBlockListReceived(boost::shared_ptr<BlockList
 	else {
 		blockList->setItems(payload->getItems());
 		blockList->setState(BlockList::Available);
-		blockResponder = boost::make_shared<BlockResponder>(blockList, iqRouter);
-		blockResponder->start();
-		unblockResponder = boost::make_shared<UnblockResponder>(blockList, iqRouter);
-		unblockResponder->start();
+		if (!blockResponder) {
+			blockResponder = boost::make_shared<BlockResponder>(blockList, iqRouter);
+			blockResponder->start();
+		}
+		if (!unblockResponder) {
+			unblockResponder = boost::make_shared<UnblockResponder>(blockList, iqRouter);
+			unblockResponder->start();
+		}
 	}
 }
 
