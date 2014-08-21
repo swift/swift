@@ -285,7 +285,7 @@ void BOSHConnection::setSID(const std::string& sid) {
 
 void BOSHConnection::handleDisconnected(const boost::optional<Connection::Error>& error) {
 	cancelConnector();
-	onDisconnected(error);
+	onDisconnected(error ? true : false);
 	sid_ = "";
 	connectionReady_ = false;
 }

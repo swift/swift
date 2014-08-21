@@ -4,12 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+* Copyright (c) 2014 Kevin Smith
+* Licensed under the GNU General Public License v3.
+* See Documentation/Licenses/GPLv3.txt for more information.
+*/
+
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/smart_ptr/intrusive_ptr.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -69,7 +76,7 @@ std::string JingleContentPayloadSerializer::creatorToString(JingleContentPayload
 		case JingleContentPayload::ResponderCreator:
 			return "responder";
 		case JingleContentPayload::UnknownCreator:
-			std::cerr << "Serializing unknown creator value." << std::endl;
+			SWIFT_LOG(error) << "Serializing unknown creator value.";
 			return "ERROR ERROR ERROR";
 	}
 	assert(false);

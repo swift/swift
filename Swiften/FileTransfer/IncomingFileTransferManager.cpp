@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Elements/JingleDescription.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
@@ -49,7 +50,7 @@ bool IncomingFileTransferManager::handleIncomingJingleSession(
 				onIncomingFileTransfer(transfer);
 			} 
 			else {
-				std::cerr << "Received a file-transfer request with no description or more than one file!" << std::endl;
+				SWIFT_LOG(warning) << "Received a file-transfer request with no description or more than one file.";
 				session->sendTerminate(JinglePayload::Reason::FailedApplication);
 			}
 		}

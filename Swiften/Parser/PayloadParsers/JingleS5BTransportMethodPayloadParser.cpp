@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+* Copyright (c) 2014 Kevin Smith
+* Licensed under the GNU General Public License v3.
+* See Documentation/Licenses/GPLv3.txt for more information.
+*/
+
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 
@@ -25,7 +31,7 @@ namespace Swift {
 			} else if(mode == "udp") {
 				getPayloadInternal()->setMode(JingleS5BTransportPayload::UDPMode);
 			} else {
-				std::cerr << "Unknown S5B mode; falling back to defaul!" << std::endl;
+				SWIFT_LOG(warning) << "Unknown S5B mode; falling back to defaul!";
 				getPayloadInternal()->setMode(JingleS5BTransportPayload::TCPMode);
 			}
 		} else if (level == 1) {
@@ -81,7 +87,7 @@ namespace Swift {
 		} else if (str == "proxy") {
 			return JingleS5BTransportPayload::Candidate::ProxyType;
 		} else {
-			std::cerr << "Unknown candidate type; falling back to default!" << std::endl;
+			SWIFT_LOG(warning) << "Unknown candidate type; falling back to default!";
 			return JingleS5BTransportPayload::Candidate::DirectType;
 		}
 	}

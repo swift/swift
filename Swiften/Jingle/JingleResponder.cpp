@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -51,7 +51,7 @@ bool JingleResponder::handleSetRequest(const JID& from, const JID& to, const std
 			sendResponse(from, id, boost::shared_ptr<JinglePayload>());
 		}
 		else {
-			std::cerr << "WARN: Didn't find jingle session!" << std::endl;
+			SWIFT_LOG(warning) << "Didn't find jingle session!";
 			// TODO: Add jingle-specific error
 			sendError(from, id, ErrorPayload::ItemNotFound, ErrorPayload::Cancel);
 		}

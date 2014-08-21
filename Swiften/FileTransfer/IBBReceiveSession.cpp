@@ -33,29 +33,29 @@ class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
 						sendResponse(from, id, IBB::ref());
 						if (receivedSize >= session->size) {
 							if (receivedSize > session->size) {
-								std::cerr << "Warning: Received more data than expected" << std::endl;
+								SWIFT_LOG(warning) << "Received more data than expected";
 							}
 							session->finish(boost::optional<FileTransferError>());
 						}
 					}
 					else {
-						SWIFT_LOG(warning) << "Received data out of order" << std::endl;
+						SWIFT_LOG(warning) << "Received data out of order";
 						sendError(from, id, ErrorPayload::NotAcceptable, ErrorPayload::Cancel);
 						session->finish(FileTransferError(FileTransferError::ClosedError));
 					}
 				}
 				else if (ibb->getAction() == IBB::Open) {
-					SWIFT_LOG(debug) << "IBB open received" << std::endl;
+					SWIFT_LOG(debug) << "IBB open received";
 					sendResponse(from, id, IBB::ref());
 				}
 				else if (ibb->getAction() == IBB::Close) {
-					SWIFT_LOG(debug) << "IBB close received" << std::endl;
+					SWIFT_LOG(debug) << "IBB close received";
 					sendResponse(from, id, IBB::ref());
 					session->finish(FileTransferError(FileTransferError::ClosedError));
 				}
 				return true;
 			}
-			SWIFT_LOG(debug) << "wrong from/sessionID: " << from << " == " << session->from << " / " <<ibb->getStreamID() << " == " << session->id << std::endl;
+			SWIFT_LOG(debug) << "wrong from/sessionID: " << from << " == " << session->from << " / " <<ibb->getStreamID() << " == " << session->id;
 			return false;
 		}
 
@@ -87,19 +87,19 @@ IBBReceiveSession::IBBReceiveSession(
 
 IBBReceiveSession::~IBBReceiveSession() {
 	if (active) {
-		SWIFT_LOG(warning) << "Session still active" << std::endl;
+		SWIFT_LOG(warning) << "Session still active";
 	}
 	delete responder;
 }
 
 void IBBReceiveSession::start() {
-	SWIFT_LOG(debug) << "receive session started" << std::endl;
+	SWIFT_LOG(debug) << "receive session started";
 	active = true;
 	responder->start();
 }
 
 void IBBReceiveSession::stop() {
-	SWIFT_LOG(debug) << "receive session stopped" << std::endl;
+	SWIFT_LOG(debug) << "receive session stopped";
 	responder->stop();
 	if (active) {
 		if (router->isAvailable()) {

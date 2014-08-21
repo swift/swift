@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -43,7 +43,7 @@ void FakeConnection::connect(const HostAddressPort& address) {
 			state = DisconnectedWithError;
 		}
 		eventLoop->postEvent(
-				boost::bind(boost::ref(onConnectFinished), error),
+				boost::bind(boost::ref(onConnectFinished), error ? true : false),
 				shared_from_this());
 	}
 }

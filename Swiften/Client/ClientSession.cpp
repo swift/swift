@@ -44,7 +44,6 @@
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/TLS/CertificateTrustChecker.h>
 #include <Swiften/TLS/ServerIdentityVerifier.h>
-#include <Swiften/Base/Log.h>
 
 #ifdef SWIFTEN_PLATFORM_WIN32
 #include <Swiften/Base/WindowsRegistry.h>
@@ -171,11 +170,11 @@ void ClientSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
 				stanzaAckRequester_->handleAckReceived(ack->getHandledStanzasCount());
 			}
 			else {
-				std::cerr << "Warning: Got invalid ack from server" << std::endl;
+				SWIFT_LOG(warning) << "Got invalid ack from server";
 			}
 		}
 		else {
-			std::cerr << "Warning: Ignoring ack" << std::endl;
+			SWIFT_LOG(warning) << "Ignoring ack";
 		}
 	}
 	else if (StreamError::ref streamError = boost::dynamic_pointer_cast<StreamError>(element)) {

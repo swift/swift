@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+* Copyright (c) 2014 Kevin Smith
+* Licensed under the GNU General Public License v3.
+* See Documentation/Licenses/GPLv3.txt for more information.
+*/
+
 #include <Swiften/Network/NATPMPInterface.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
@@ -32,7 +38,7 @@ NATPMPInterface::~NATPMPInterface() {
 }
 
 bool NATPMPInterface::isAvailable() {
-	return getPublicIP();
+	return getPublicIP() ? true : false;
 }
 
 boost::optional<HostAddress> NATPMPInterface::getPublicIP() {

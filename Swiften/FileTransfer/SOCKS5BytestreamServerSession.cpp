@@ -94,7 +94,7 @@ void SOCKS5BytestreamServerSession::handleDataAvailable() {
 
 void SOCKS5BytestreamServerSession::handleDisconnected(const boost::optional<Connection::Error>& error) {
 	SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error") << std::endl;
-	finish(error);
+	finish(error ? true : false);
 }
 
 void SOCKS5BytestreamServerSession::process() {
