@@ -16,15 +16,16 @@
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Network/Connection.h>
-#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/BOSHConnection.h>
 #include <Swiften/Network/BOSHConnectionPool.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 
 
@@ -322,7 +323,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 	private:
 
 		PoolRef createTestling() {
-			BOSHConnectionPool* a = new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""));
+			BOSHConnectionPool* a = new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""), TLSOptions());
 			PoolRef pool(a);
 			//FIXME: Remko - why does the above work, but the below fail?
 			//PoolRef pool = boost::make_shared<BOSHConnectionPool>(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""));

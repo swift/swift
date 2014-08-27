@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,14 +27,16 @@ BasicSessionStream::BasicSessionStream(
 		PayloadSerializerCollection* payloadSerializers,
 		TLSContextFactory* tlsContextFactory,
 		TimerFactory* timerFactory,
-		XMLParserFactory* xmlParserFactory) :
+		XMLParserFactory* xmlParserFactory,
+		const TLSOptions& tlsOptions) :
 			available(false),
 			connection(connection),
 			tlsContextFactory(tlsContextFactory),
 			timerFactory(timerFactory),
 			compressionLayer(NULL),
 			tlsLayer(NULL),
-			whitespacePingLayer(NULL) {
+			whitespacePingLayer(NULL),
+			tlsOptions_(tlsOptions) {
 	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
 	xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
 	xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
@@ -106,7 +108,7 @@ bool BasicSessionStream::supportsTLSEncryption() {
 
 void BasicSessionStream::addTLSEncryption() {
 	assert(available);
-	tlsLayer = new TLSLayer(tlsContextFactory);
+	tlsLayer = new TLSLayer(tlsContextFactory, tlsOptions_);
 	if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
 		onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::InvalidTLSCertificateError));
 	}

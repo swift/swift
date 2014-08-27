@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
 	class TLSContext;
@@ -17,7 +18,7 @@ namespace Swift {
 
 			virtual bool canCreate() const = 0;
 
-			virtual TLSContext* createTLSContext() = 0;
+			virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions) = 0;
 			virtual void setCheckCertificateRevocation(bool b) = 0;
 	};
 }

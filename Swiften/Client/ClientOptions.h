@@ -11,6 +11,8 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/URL.h>
 #include <Swiften/Base/SafeString.h>
+#include <Swiften/TLS/TLSOptions.h>
+
 
 namespace Swift {
 	class HTTPTrafficFilter;
@@ -145,5 +147,10 @@ namespace Swift {
 		 * proxy initialization to be customized.
 		 */
 		boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter;
+
+		/**
+		 * Options passed to the TLS stack
+		 */
+		TLSOptions tlsOptions;
 	};
 }

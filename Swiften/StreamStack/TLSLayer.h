@@ -15,6 +15,7 @@
 #include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 #include <Swiften/TLS/TLSError.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
 	class TLSContext;
@@ -22,7 +23,7 @@ namespace Swift {
 
 	class SWIFTEN_API TLSLayer : public StreamLayer {
 		public:
-			TLSLayer(TLSContextFactory*);
+			TLSLayer(TLSContextFactory*, const TLSOptions&);
 			~TLSLayer();
 
 			void connect();

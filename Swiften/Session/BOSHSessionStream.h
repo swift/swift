@@ -9,12 +9,14 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Network/BOSHConnectionPool.h>
-#include <Swiften/Session/SessionStream.h>
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/Network/BOSHConnectionPool.h>
+#include <Swiften/Session/SessionStream.h>
+#include <Swiften/TLS/TLSOptions.h>
+
 
 namespace Swift {
 	class TimerFactory;
@@ -43,7 +45,8 @@ namespace Swift {
 					const std::string& to,
 					const URL& boshHTTPConnectProxyURL,
 					const SafeString& boshHTTPConnectProxyAuthID,
-					const SafeString& boshHTTPConnectProxyAuthPassword
+					const SafeString& boshHTTPConnectProxyAuthPassword,
+					const TLSOptions& tlsOptions
 			);
 			~BOSHSessionStream();
 

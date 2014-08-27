@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,8 +21,8 @@ namespace Swift {
 
 //------------------------------------------------------------------------
 
-SchannelContext::SchannelContext() : m_state(Start), m_secContext(0), m_my_cert_store(NULL), m_cert_store_name("MY"), m_cert_name(), m_smartcard_reader(), checkCertificateRevocation(true) {
-	m_ctxtFlags = ISC_REQ_ALLOCATE_MEMORY |
+SchannelContext::SchannelContext(bool tls1_0Workaround) : state_(Start), secContext_(0), myCertStore_(NULL), certStoreName_("MY"), certName_(), smartCardReader_(), checkCertificateRevocation_(true), tls1_0Workaround_(tls1_0Workaround) {
+	contextFlags_ = ISC_REQ_ALLOCATE_MEMORY |
 				ISC_REQ_CONFIDENTIALITY |
 				ISC_REQ_EXTENDED_ERROR |
 				ISC_REQ_INTEGRITY |
@@ -31,19 +31,19 @@ SchannelContext::SchannelContext() : m_state(Start), m_secContext(0), m_my_cert_
 				ISC_REQ_USE_SUPPLIED_CREDS |
 				ISC_REQ_STREAM;
 
-	ZeroMemory(&m_streamSizes, sizeof(m_streamSizes));
+	ZeroMemory(&streamSizes_, sizeof(streamSizes_));
 }
 
 //------------------------------------------------------------------------
 
 SchannelContext::~SchannelContext() {
-	if (m_my_cert_store) CertCloseStore(m_my_cert_store, 0);
+	if (myCertStore_) CertCloseStore(myCertStore_, 0);
 }
 
 //------------------------------------------------------------------------
 
 void SchannelContext::determineStreamSizes() {
-	QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_STREAM_SIZES, &m_streamSizes);
+	QueryContextAttributes(contextHandle_, SECPKG_ATTR_STREAM_SIZES, &streamSizes_);
 }
 
 //------------------------------------------------------------------------
@@ -51,20 +51,20 @@ void SchannelContext::determineStreamSizes() {
 void SchannelContext::connect() {
 	ScopedCertContext pCertContext;
 
-	m_state = Connecting;
+	state_ = Connecting;
 
 	// If a user name is specified, then attempt to find a client
 	// certificate. Otherwise, just create a NULL credential.
-	if (!m_cert_name.empty()) {
-		if (m_my_cert_store == NULL) {
-			m_my_cert_store = CertOpenSystemStore(0, m_cert_store_name.c_str());
-			if (!m_my_cert_store) {
+	if (!certName_.empty()) {
+		if (myCertStore_ == NULL) {
+			myCertStore_ = CertOpenSystemStore(0, certStoreName_.c_str());
+			if (!myCertStore_) {
 				indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
 				return;
 			}
 		}
 
-		pCertContext = findCertificateInStore( m_my_cert_store, m_cert_name );
+		pCertContext = findCertificateInStore( myCertStore_, certName_ );
 		if (pCertContext == NULL) {
 			indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
 			return;
@@ -77,8 +77,13 @@ void SchannelContext::connect() {
 	SCHANNEL_CRED sc = {0};
 	sc.dwVersion = SCHANNEL_CRED_VERSION;
 
-/////SSL3?
-	sc.grbitEnabledProtocols = SP_PROT_SSL3_CLIENT | SP_PROT_TLS1_CLIENT | SP_PROT_TLS1_1_CLIENT | SP_PROT_TLS1_2_CLIENT;
+	if (tls1_0Workaround_) {
+		sc.grbitEnabledProtocols = SP_PROT_TLS1_CLIENT;
+	}
+	else {
+		sc.grbitEnabledProtocols = /*SP_PROT_SSL3_CLIENT | */SP_PROT_TLS1_CLIENT | SP_PROT_TLS1_1_CLIENT | SP_PROT_TLS1_2_CLIENT;
+	}
+
 	sc.dwFlags = SCH_CRED_MANUAL_CRED_VALIDATION;
 
 	if (pCertContext) {
@@ -103,9 +108,9 @@ void SchannelContext::connect() {
 		&sc,
 		NULL,
 		NULL,
-		m_credHandle.Reset(),
+		credHandle_.Reset(),
 		NULL);
-	
+
 	if (status != SEC_E_OK) {
 		// We failed to obtain the credentials handle
 		indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
@@ -135,17 +140,17 @@ void SchannelContext::connect() {
 
 	// Create the initial security context
 	status = InitializeSecurityContext(
-		m_credHandle,
+		credHandle_,
 		NULL,
 		NULL,
-		m_ctxtFlags,
+		contextFlags_,
 		0,
 		0,
 		NULL,
 		0,
-		m_ctxtHandle.Reset(),
+		contextHandle_.Reset(),
 		&outBufferDesc,
-		&m_secContext,
+		&secContext_,
 		NULL);
 
 	if (status != SEC_E_OK && status != SEC_I_CONTINUE_NEEDED) {
@@ -164,7 +169,7 @@ void SchannelContext::connect() {
 			handleCertError(status);
 		}
 
-		m_state = Connected;
+		state_ = Connected;
 		determineStreamSizes();
 
 		onConnected();
@@ -179,7 +184,7 @@ SECURITY_STATUS SchannelContext::validateServerCertificate() {
 		return SEC_E_WRONG_PRINCIPAL;
 	}
 
-	const LPSTR usage[] = 
+	const LPSTR usage[] =
 	{
 		szOID_PKIX_KP_SERVER_AUTH,
 		szOID_SERVER_GATED_CRYPTO,
@@ -193,7 +198,7 @@ SECURITY_STATUS SchannelContext::validateServerCertificate() {
 	chainParams.RequestedUsage.Usage.rgpszUsageIdentifier = const_cast<LPSTR*>(usage);
 
 	DWORD chainFlags = CERT_CHAIN_CACHE_END_CERT;
-	if (checkCertificateRevocation) {
+	if (checkCertificateRevocation_) {
 		chainFlags |= CERT_CHAIN_REVOCATION_CHECK_CHAIN_EXCLUDE_ROOT;
 	}
 
@@ -246,9 +251,9 @@ SECURITY_STATUS SchannelContext::validateServerCertificate() {
 //------------------------------------------------------------------------
 
 void SchannelContext::appendNewData(const SafeByteArray& data) {
-	size_t originalSize = m_receivedData.size();
-	m_receivedData.resize(originalSize + data.size());
-	memcpy(&m_receivedData[0] + originalSize, &data[0], data.size());
+	size_t originalSize = receivedData_.size();
+	receivedData_.resize(originalSize + data.size());
+	memcpy(&receivedData_[0] + originalSize, &data[0], data.size());
 }
 
 //------------------------------------------------------------------------
@@ -256,12 +261,12 @@ void SchannelContext::appendNewData(const SafeByteArray& data) {
 void SchannelContext::continueHandshake(const SafeByteArray& data) {
 	appendNewData(data);
 
-	while (!m_receivedData.empty()) {
+	while (!receivedData_.empty()) {
 		SecBuffer inBuffers[2];
 
 		// Provide Schannel with the remote host's handshake data
-		inBuffers[0].pvBuffer	 = (char*)(&m_receivedData[0]);
-		inBuffers[0].cbBuffer	 = (unsigned long)m_receivedData.size();
+		inBuffers[0].pvBuffer	 = (char*)(&receivedData_[0]);
+		inBuffers[0].cbBuffer	 = (unsigned long)receivedData_.size();
 		inBuffers[0].BufferType  = SECBUFFER_TOKEN;
 
 		inBuffers[1].pvBuffer   = NULL;
@@ -295,17 +300,17 @@ void SchannelContext::continueHandshake(const SafeByteArray& data) {
 		outBufferDesc.ulVersion  = SECBUFFER_VERSION;
 
 		SECURITY_STATUS status = InitializeSecurityContext(
-			m_credHandle,
-			m_ctxtHandle,
+			credHandle_,
+			contextHandle_,
 			NULL,
-			m_ctxtFlags,
+			contextFlags_,
 			0,
 			0,
 			&inBufferDesc,
 			0,
 			NULL,
 			&outBufferDesc,
-			&m_secContext,
+			&secContext_,
 			NULL);
 
 		if (status == SEC_E_INCOMPLETE_MESSAGE)	{
@@ -315,16 +320,16 @@ void SchannelContext::continueHandshake(const SafeByteArray& data) {
 		else if (status == SEC_I_CONTINUE_NEEDED) {
 			SecBuffer* pDataBuffer = &outBuffers[0];
 			SecBuffer* pExtraBuffer = &inBuffers[1];
-			
+
 			if (pDataBuffer && pDataBuffer->cbBuffer > 0 && pDataBuffer->pvBuffer != NULL) {
 				sendDataOnNetwork(pDataBuffer->pvBuffer, pDataBuffer->cbBuffer);
 			}
 
 			if (pExtraBuffer->BufferType == SECBUFFER_EXTRA) {
-				m_receivedData.erase(m_receivedData.begin(), m_receivedData.end() - pExtraBuffer->cbBuffer);
+				receivedData_.erase(receivedData_.begin(), receivedData_.end() - pExtraBuffer->cbBuffer);
 			}
 			else {
-				m_receivedData.clear();
+				receivedData_.clear();
 			}
 
 			break;
@@ -336,19 +341,19 @@ void SchannelContext::continueHandshake(const SafeByteArray& data) {
 			}
 
 			SecBuffer* pExtraBuffer = &inBuffers[1];
-			
+
 			if (pExtraBuffer && pExtraBuffer->cbBuffer > 0) {
-				m_receivedData.erase(m_receivedData.begin(), m_receivedData.end() - pExtraBuffer->cbBuffer);
+				receivedData_.erase(receivedData_.begin(), receivedData_.end() - pExtraBuffer->cbBuffer);
 			}
 			else {
-				m_receivedData.clear();
+				receivedData_.clear();
 			}
 
-			m_state = Connected;
+			state_ = Connected;
 			determineStreamSizes();
 
 			onConnected();
-		} 
+		}
 		else {
 			// We failed to initialize the security context
 			handleCertError(status);
@@ -360,35 +365,35 @@ void SchannelContext::continueHandshake(const SafeByteArray& data) {
 
 //------------------------------------------------------------------------
 
-void SchannelContext::handleCertError(SECURITY_STATUS status) 
+void SchannelContext::handleCertError(SECURITY_STATUS status)
 {
-	if (status == SEC_E_UNTRUSTED_ROOT			|| 
+	if (status == SEC_E_UNTRUSTED_ROOT			||
 		status == CERT_E_UNTRUSTEDROOT			||
-		status == CRYPT_E_ISSUER_SERIALNUMBER	|| 
+		status == CRYPT_E_ISSUER_SERIALNUMBER	||
 		status == CRYPT_E_SIGNER_NOT_FOUND		||
 		status == CRYPT_E_NO_TRUSTED_SIGNER) {
-		m_verificationError = CertificateVerificationError::Untrusted;
+		verificationError_ = CertificateVerificationError::Untrusted;
 	}
-	else if (status == SEC_E_CERT_EXPIRED || 
+	else if (status == SEC_E_CERT_EXPIRED ||
 			 status == CERT_E_EXPIRED) {
-		m_verificationError = CertificateVerificationError::Expired;
+		verificationError_ = CertificateVerificationError::Expired;
 	}
 	else if (status == CRYPT_E_SELF_SIGNED) {
-		m_verificationError = CertificateVerificationError::SelfSigned;
+		verificationError_ = CertificateVerificationError::SelfSigned;
 	}
 	else if (status == CRYPT_E_HASH_VALUE	||
 			 status == TRUST_E_CERT_SIGNATURE) {
-		m_verificationError = CertificateVerificationError::InvalidSignature;
+		verificationError_ = CertificateVerificationError::InvalidSignature;
 	}
 	else if (status == CRYPT_E_REVOKED) {
-		m_verificationError = CertificateVerificationError::Revoked;
+		verificationError_ = CertificateVerificationError::Revoked;
 	}
 	else if (status == CRYPT_E_NO_REVOCATION_CHECK ||
 			 status == CRYPT_E_REVOCATION_OFFLINE) {
-		m_verificationError = CertificateVerificationError::RevocationCheckFailed;
+		verificationError_ = CertificateVerificationError::RevocationCheckFailed;
 	}
 	else {
-		m_verificationError = CertificateVerificationError::UnknownError;
+		verificationError_ = CertificateVerificationError::UnknownError;
 	}
 }
 
@@ -416,7 +421,7 @@ void SchannelContext::forwardDataToApplication(const void* pData, size_t dataSiz
 
 void SchannelContext::handleDataFromApplication(const SafeByteArray& data) {
 	// Don't attempt to send data until we're fully connected
-	if (m_state == Connecting) {
+	if (state_ == Connecting) {
 		return;
 	}
 
@@ -427,7 +432,7 @@ void SchannelContext::handleDataFromApplication(const SafeByteArray& data) {
 //------------------------------------------------------------------------
 
 void SchannelContext::handleDataFromNetwork(const SafeByteArray& data) {
-	switch (m_state) {
+	switch (state_) {
 	case Connecting:
 		{
 			// We're still establishing the connection, so continue the handshake
@@ -450,8 +455,8 @@ void SchannelContext::handleDataFromNetwork(const SafeByteArray& data) {
 //------------------------------------------------------------------------
 
 void SchannelContext::indicateError(boost::shared_ptr<TLSError> error) {
-	m_state = Error;
-	m_receivedData.clear();
+	state_ = Error;
+	receivedData_.clear();
 	onError(error);
 }
 
@@ -461,20 +466,20 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data) {
 	SecBuffer inBuffers[4]	= {0};
 
 	appendNewData(data);
-	
-	while (!m_receivedData.empty()) {
+
+	while (!receivedData_.empty()) {
 		//
-		// MSDN: 
-		//   When using the Schannel SSP with contexts that are not connection oriented, on input, 
-		//   the structure must contain four SecBuffer structures. Exactly one buffer must be of type 
-		//   SECBUFFER_DATA and contain an encrypted message, which is decrypted in place. The remaining 
-		//   buffers are used for output and must be of type SECBUFFER_EMPTY. For connection-oriented 
-		//   contexts, a SECBUFFER_DATA type buffer must be supplied, as noted for nonconnection-oriented 
-		//   contexts. Additionally, a second SECBUFFER_TOKEN type buffer that contains a security token 
+		// MSDN:
+		//   When using the Schannel SSP with contexts that are not connection oriented, on input,
+		//   the structure must contain four SecBuffer structures. Exactly one buffer must be of type
+		//   SECBUFFER_DATA and contain an encrypted message, which is decrypted in place. The remaining
+		//   buffers are used for output and must be of type SECBUFFER_EMPTY. For connection-oriented
+		//   contexts, a SECBUFFER_DATA type buffer must be supplied, as noted for nonconnection-oriented
+		//   contexts. Additionally, a second SECBUFFER_TOKEN type buffer that contains a security token
 		//   must also be supplied.
 		//
-		inBuffers[0].pvBuffer	 = (char*)(&m_receivedData[0]);
-		inBuffers[0].cbBuffer	 = (unsigned long)m_receivedData.size();
+		inBuffers[0].pvBuffer	 = (char*)(&receivedData_[0]);
+		inBuffers[0].cbBuffer	 = (unsigned long)receivedData_.size();
 		inBuffers[0].BufferType  = SECBUFFER_DATA;
 
 		inBuffers[1].BufferType  = SECBUFFER_EMPTY;
@@ -486,22 +491,22 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data) {
 		inBufferDesc.pBuffers      = inBuffers;
 		inBufferDesc.ulVersion     = SECBUFFER_VERSION;
 
-		size_t inData = m_receivedData.size();
-		SECURITY_STATUS status = DecryptMessage(m_ctxtHandle, &inBufferDesc, 0, NULL);
+		size_t inData = receivedData_.size();
+		SECURITY_STATUS status = DecryptMessage(contextHandle_, &inBufferDesc, 0, NULL);
 
 		if (status == SEC_E_INCOMPLETE_MESSAGE) {
 			// Wait for more data to arrive
 			break;
-		} 
+		}
 		else if (status == SEC_I_RENEGOTIATE) {
 			// TODO: Handle renegotiation scenarios
 			indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
 			break;
-		} 
+		}
 		else if (status == SEC_I_CONTEXT_EXPIRED) {
 			indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
 			break;
-		} 
+		}
 		else if (status != SEC_E_OK) {
 			indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
 			break;
@@ -524,11 +529,11 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data) {
 
 		// If there is extra data left over from the decryption operation, we call DecryptMessage() again
 		if (pExtraBuffer) {
-			m_receivedData.erase(m_receivedData.begin(), m_receivedData.end() - pExtraBuffer->cbBuffer);
-		} 
+			receivedData_.erase(receivedData_.begin(), receivedData_.end() - pExtraBuffer->cbBuffer);
+		}
 		else {
 			// We're done
-			m_receivedData.erase(m_receivedData.begin(), m_receivedData.begin() + inData);
+			receivedData_.erase(receivedData_.begin(), receivedData_.begin() + inData);
 		}
 	}
 }
@@ -536,43 +541,43 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data) {
 //------------------------------------------------------------------------
 
 void SchannelContext::encryptAndSendData(const SafeByteArray& data) {
-	if (m_streamSizes.cbMaximumMessage == 0) {
+	if (streamSizes_.cbMaximumMessage == 0) {
 		return;
 	}
 
 	SecBuffer outBuffers[4]	= {0};
 
 	// Calculate the largest required size of the send buffer
-	size_t messageBufferSize = (data.size() > m_streamSizes.cbMaximumMessage) 
-							 ? m_streamSizes.cbMaximumMessage 
+	size_t messageBufferSize = (data.size() > streamSizes_.cbMaximumMessage)
+							 ? streamSizes_.cbMaximumMessage
 							 : data.size();
 
 	// Allocate a packet for the encrypted data
 	SafeByteArray sendBuffer;
-	sendBuffer.resize(m_streamSizes.cbHeader + messageBufferSize + m_streamSizes.cbTrailer);
+	sendBuffer.resize(streamSizes_.cbHeader + messageBufferSize + streamSizes_.cbTrailer);
 
 	size_t bytesSent = 0;
 	do {
 		size_t bytesLeftToSend = data.size() - bytesSent;
 
 		// Calculate how much of the send buffer we'll be using for this chunk
-		size_t bytesToSend = (bytesLeftToSend > m_streamSizes.cbMaximumMessage) 
-						   ? m_streamSizes.cbMaximumMessage 
+		size_t bytesToSend = (bytesLeftToSend > streamSizes_.cbMaximumMessage)
+						   ? streamSizes_.cbMaximumMessage
 						   : bytesLeftToSend;
-		
+
 		// Copy the plain text data into the send buffer
-		memcpy(&sendBuffer[0] + m_streamSizes.cbHeader, &data[0] + bytesSent, bytesToSend);
+		memcpy(&sendBuffer[0] + streamSizes_.cbHeader, &data[0] + bytesSent, bytesToSend);
 
 		outBuffers[0].pvBuffer	 = &sendBuffer[0];
-		outBuffers[0].cbBuffer	 = m_streamSizes.cbHeader;
+		outBuffers[0].cbBuffer	 = streamSizes_.cbHeader;
 		outBuffers[0].BufferType = SECBUFFER_STREAM_HEADER;
 
-		outBuffers[1].pvBuffer	 = &sendBuffer[0] + m_streamSizes.cbHeader;
+		outBuffers[1].pvBuffer	 = &sendBuffer[0] + streamSizes_.cbHeader;
 		outBuffers[1].cbBuffer	 = (unsigned long)bytesToSend;
 		outBuffers[1].BufferType = SECBUFFER_DATA;
 
-		outBuffers[2].pvBuffer	 = &sendBuffer[0] + m_streamSizes.cbHeader + bytesToSend;
-		outBuffers[2].cbBuffer	 = m_streamSizes.cbTrailer;
+		outBuffers[2].pvBuffer	 = &sendBuffer[0] + streamSizes_.cbHeader + bytesToSend;
+		outBuffers[2].cbBuffer	 = streamSizes_.cbTrailer;
 		outBuffers[2].BufferType = SECBUFFER_STREAM_TRAILER;
 
 		outBuffers[3].pvBuffer   = 0;
@@ -584,7 +589,7 @@ void SchannelContext::encryptAndSendData(const SafeByteArray& data) {
 		outBufferDesc.pBuffers   = outBuffers;
 		outBufferDesc.ulVersion  = SECBUFFER_VERSION;
 
-		SECURITY_STATUS status = EncryptMessage(m_ctxtHandle, 0, &outBufferDesc, 0);
+		SECURITY_STATUS status = EncryptMessage(contextHandle_, 0, &outBufferDesc, 0);
 		if (status != SEC_E_OK) {
 			indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
 			return;
@@ -604,14 +609,14 @@ bool SchannelContext::setClientCertificate(CertificateWithKey::ref certificate) 
 		return false;
 	}
 
-	userCertificate = capiCertificate;
+	userCertificate_ = capiCertificate;
 
 	// We assume that the Certificate Store Name/Certificate Name
 	// are valid at this point
-	m_cert_store_name = capiCertificate->getCertStoreName();
-	m_cert_name = capiCertificate->getCertName();
+	certStoreName_ = capiCertificate->getCertStoreName();
+	certName_ = capiCertificate->getCertName();
 ////At the moment this is only useful for logging:
-	m_smartcard_reader = capiCertificate->getSmartCardReaderName();
+	smartCardReader_ = capiCertificate->getSmartCardReaderName();
 
 	capiCertificate->onCertificateCardRemoved.connect(boost::bind(&SchannelContext::handleCertificateCardRemoved, this));
 
@@ -630,7 +635,7 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
 	ScopedCertContext pServerCert;
 	ScopedCertContext pIssuerCert;
 	ScopedCertContext pCurrentCert;
-	SECURITY_STATUS status = QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_REMOTE_CERT_CONTEXT, pServerCert.Reset());
+	SECURITY_STATUS status = QueryContextAttributes(contextHandle_, SECPKG_ATTR_REMOTE_CERT_CONTEXT, pServerCert.Reset());
 
 	if (status != SEC_E_OK) {
 		return certificateChain;
@@ -655,14 +660,14 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
 //------------------------------------------------------------------------
 
 CertificateVerificationError::ref SchannelContext::getPeerCertificateVerificationError() const {
-	return m_verificationError ? boost::make_shared<CertificateVerificationError>(*m_verificationError) : CertificateVerificationError::ref();
+	return verificationError_ ? boost::make_shared<CertificateVerificationError>(*verificationError_) : CertificateVerificationError::ref();
 }
 
 //------------------------------------------------------------------------
 
 ByteArray SchannelContext::getFinishMessage() const {
 	SecPkgContext_Bindings bindings;
-	int ret = QueryContextAttributes(m_ctxtHandle, SECPKG_ATTR_UNIQUE_BINDINGS, &bindings);
+	int ret = QueryContextAttributes(contextHandle_, SECPKG_ATTR_UNIQUE_BINDINGS, &bindings);
 	if (ret == SEC_E_OK) {
 		return createByteArray(((unsigned char*) bindings.Bindings) + bindings.Bindings->dwApplicationDataOffset + 11 /* tls-unique:*/, bindings.Bindings->cbApplicationDataLength - 11);
 	}
@@ -672,7 +677,7 @@ ByteArray SchannelContext::getFinishMessage() const {
 //------------------------------------------------------------------------
 
 void SchannelContext::setCheckCertificateRevocation(bool b) {
-	checkCertificateRevocation = b;
+	checkCertificateRevocation_ = b;
 }
 
 

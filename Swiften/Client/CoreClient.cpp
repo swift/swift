@@ -138,7 +138,8 @@ void CoreClient::connect(const ClientOptions& o) {
 				host,
 				options.boshHTTPConnectProxyURL,
 				options.boshHTTPConnectProxyAuthID,
-				options.boshHTTPConnectProxyAuthPassword));
+				options.boshHTTPConnectProxyAuthPassword,
+				options.tlsOptions));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
 		bindSessionToStream();
@@ -189,7 +190,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory());
+		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), options.tlsOptions);
 		if (certificate_ && !certificate_->isNull()) {
 			sessionStream_->setTLSCertificate(certificate_);
 		}

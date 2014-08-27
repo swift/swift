@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,6 +12,8 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Network/BOSHConnection.h>
+#include <Swiften/TLS/TLSOptions.h>
+
 
 namespace Swift {
 	class HTTPConnectProxiedConnectionFactory;
@@ -21,7 +23,7 @@ namespace Swift {
 
 	class SWIFTEN_API BOSHConnectionPool : public boost::bsignals::trackable {
 		public:
-			BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword);
+			BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions);
 			~BOSHConnectionPool();
 			void write(const SafeByteArray& data);
 			void writeFooter();

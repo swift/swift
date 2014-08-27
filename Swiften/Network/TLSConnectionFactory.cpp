@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-TLSConnectionFactory::TLSConnectionFactory(TLSContextFactory* contextFactory, ConnectionFactory* connectionFactory) : contextFactory(contextFactory), connectionFactory(connectionFactory){
+TLSConnectionFactory::TLSConnectionFactory(TLSContextFactory* contextFactory, ConnectionFactory* connectionFactory, const TLSOptions& o) : contextFactory(contextFactory), connectionFactory(connectionFactory), options_(o) {
 
 }
 
@@ -22,7 +22,7 @@ TLSConnectionFactory::~TLSConnectionFactory() {
 
 
 boost::shared_ptr<Connection> TLSConnectionFactory::createConnection() {
-	return boost::make_shared<TLSConnection>(connectionFactory->createConnection(), contextFactory);
+	return boost::make_shared<TLSConnection>(connectionFactory->createConnection(), contextFactory, options_);
 }
 
 }

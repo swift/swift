@@ -14,8 +14,8 @@
 
 namespace Swift {
 
-TLSConnection::TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory) : connection(connection) {
-	context = tlsFactory->createTLSContext();
+TLSConnection::TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory, const TLSOptions& tlsOptions) : connection(connection) {
+	context = tlsFactory->createTLSContext(tlsOptions);
 	context->onDataForNetwork.connect(boost::bind(&TLSConnection::handleTLSDataForNetwork, this, _1));
 	context->onDataForApplication.connect(boost::bind(&TLSConnection::handleTLSDataForApplication, this, _1));
 	context->onConnected.connect(boost::bind(&TLSConnection::handleTLSConnectFinished, this, false));

@@ -13,6 +13,8 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Network/Connection.h>
+#include <Swiften/TLS/TLSOptions.h>
+
 
 namespace Swift {
 	class HostAddressPort;
@@ -22,7 +24,7 @@ namespace Swift {
 	class SWIFTEN_API TLSConnection : public Connection {
 		public:
 
-			TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory);
+			TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory, const TLSOptions&);
 			virtual ~TLSConnection();
 
 			virtual void listen() {assert(false);}

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "Swiften/TLS/Schannel/SchannelContextFactory.h"
 #include "Swiften/TLS/Schannel/SchannelContext.h"
 
@@ -16,8 +22,8 @@ bool SchannelContextFactory::canCreate() const {
 	return true;
 }
 
-TLSContext* SchannelContextFactory::createTLSContext() {
-	SchannelContext* context = new SchannelContext();
+TLSContext* SchannelContextFactory::createTLSContext(const TLSOptions& tlsOptions) {
+	SchannelContext* context = new SchannelContext(tlsOptions.schannelTLS1_0Workaround);
 	context->setCheckCertificateRevocation(checkCertificateRevocation);
 	return context;
 }

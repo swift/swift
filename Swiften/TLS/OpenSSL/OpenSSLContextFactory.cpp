@@ -14,7 +14,7 @@ bool OpenSSLContextFactory::canCreate() const {
 	return true;
 }
 
-TLSContext* OpenSSLContextFactory::createTLSContext() {
+TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&) {
 	return new OpenSSLContext();
 }
 

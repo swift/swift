@@ -398,7 +398,7 @@ void MainController::handleConnected() {
 		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
 		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithoutRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
 		adHocManager_ = new AdHocManager(JID(boundJID_.getDomain()), uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
-		
+
 		chatsManager_->onImpromptuMUCServiceDiscovered.connect(boost::bind(&UserSearchController::setCanInitiateImpromptuMUC, userSearchControllerChat_, _1));
 	}
 	loginWindow_->setIsLoggingIn(false);
@@ -410,7 +410,7 @@ void MainController::handleConnected() {
 	discoInfoRequest->send();
 
 	client_->getVCardManager()->requestOwnVCard();
-	
+
 	rosterController_->setJID(boundJID_);
 	rosterController_->setEnabled(true);
 	rosterController_->getWindow()->setStreamEncryptionStatus(client_->isStreamEncrypted());
@@ -841,10 +841,11 @@ std::string MainController::serializeClientOptions(const ClientOptions& options)
 	SERIALIZE_URL(boshHTTPConnectProxyURL);
 	SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthID);
 	SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
+	SERIALIZE_BOOL(tlsOptions.schannelTLS1_0Workaround);
 	return result;
 }
 
-#define CHECK_PARSE_LENGTH if (i >= segments.size()) {return result;} 
+#define CHECK_PARSE_LENGTH if (i >= segments.size()) {return result;}
 #define PARSE_INT_RAW(defaultValue) CHECK_PARSE_LENGTH intVal = defaultValue; try {intVal = boost::lexical_cast<int>(segments[i]);} catch(const boost::bad_lexical_cast&) {};i++;
 #define PARSE_STRING_RAW CHECK_PARSE_LENGTH stringVal = byteArrayToString(Base64::decode(segments[i]));i++;
 
@@ -888,6 +889,7 @@ ClientOptions MainController::parseClientOptions(const std::string& optionString
 	PARSE_URL(boshHTTPConnectProxyURL);
 	PARSE_SAFE_STRING(boshHTTPConnectProxyAuthID);
 	PARSE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
+	PARSE_BOOL(tlsOptions.schannelTLS1_0Workaround, false);
 
 	return result;
 }

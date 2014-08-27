@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,14 +9,16 @@
 #include <boost/bind.hpp>
 #include <iostream>
 
+#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Component/ComponentSession.h>
+#include <Swiften/Component/ComponentSessionStanzaChannel.h>
 #include <Swiften/Network/Connector.h>
 #include <Swiften/Network/NetworkFactories.h>
-#include <Swiften/TLS/PKCS12Certificate.h>
-#include <Swiften/Session/BasicSessionStream.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Component/ComponentSessionStanzaChannel.h>
+#include <Swiften/Session/BasicSessionStream.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
+#include <Swiften/TLS/TLSOptions.h>
+
 
 namespace Swift {
 
@@ -63,7 +65,7 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
 		connection_ = connection;
 
 		assert(!sessionStream_);
-		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), NULL, networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory()));
+		sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), NULL, networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), TLSOptions()));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
 

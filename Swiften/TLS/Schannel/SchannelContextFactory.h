@@ -4,9 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include "Swiften/TLS/TLSContextFactory.h"
+#include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
 	class SchannelContextFactory : public TLSContextFactory {
@@ -14,7 +20,7 @@ namespace Swift {
 			SchannelContextFactory();
 
 			bool canCreate() const;
-			virtual TLSContext* createTLSContext();
+			virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
 
 			virtual void setCheckCertificateRevocation(bool b);
 

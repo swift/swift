@@ -14,7 +14,7 @@ namespace Swift {
 	class OpenSSLContextFactory : public TLSContextFactory {
 		public:
 			bool canCreate() const;
-			virtual TLSContext* createTLSContext();
+			virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
 
 			// Not supported
 			virtual void setCheckCertificateRevocation(bool b);

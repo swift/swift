@@ -14,6 +14,7 @@
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/TLS/TLSError.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
 	class TLSContextFactory;
@@ -37,7 +38,8 @@ namespace Swift {
 				PayloadSerializerCollection* payloadSerializers,
 				TLSContextFactory* tlsContextFactory,
 				TimerFactory* whitespacePingLayerFactory,
-				XMLParserFactory* xmlParserFactory
+				XMLParserFactory* xmlParserFactory,
+				const TLSOptions& tlsOptions
 			);
 			~BasicSessionStream();
 
@@ -86,6 +88,7 @@ namespace Swift {
 			TLSLayer* tlsLayer;
 			WhitespacePingLayer* whitespacePingLayer;
 			StreamStack* streamStack;
+			TLSOptions tlsOptions_;
 	};
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@
 #include <Swiften/Network/CachingDomainNameResolver.h>
 
 namespace Swift {
-BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword) :
+BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions) :
 		boshURL(boshURL),
 		connectionFactory(connectionFactoryParameter),
 		xmlParserFactory(parserFactory),
@@ -31,13 +31,13 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 
 	if (!boshHTTPConnectProxyURL.isEmpty()) {
 		if (boshHTTPConnectProxyURL.getScheme() == "https") {
-			connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
+			connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory, tlsOptions);
 			myConnectionFactories.push_back(connectionFactory);
 		}
 		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, boshHTTPConnectProxyURL.getHost(), URL::getPortOrDefaultPort(boshHTTPConnectProxyURL), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
 	}
 	if (boshURL.getScheme() == "https") {
-		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory);
+		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory, tlsOptions);
 		myConnectionFactories.push_back(connectionFactory);
 	}
 	resolver = new CachingDomainNameResolver(realResolver, eventLoop);

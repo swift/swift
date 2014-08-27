@@ -37,7 +37,7 @@ namespace Swift
 		typedef boost::shared_ptr<SchannelContext> sp_t;
 
 	public:
-		SchannelContext();
+		SchannelContext(bool tls1_0Workaround);
 
 		~SchannelContext();
 
@@ -86,23 +86,24 @@ namespace Swift
 
 		};
 
-		SchannelState		m_state;
-		boost::optional<CertificateVerificationError> m_verificationError;
+		SchannelState		state_;
+		boost::optional<CertificateVerificationError> verificationError_;
 
-		ULONG				m_secContext;
-		ScopedCredHandle	m_credHandle;
-		ScopedCtxtHandle	m_ctxtHandle;
-		DWORD				m_ctxtFlags;
-		SecPkgContext_StreamSizes m_streamSizes;
+		ULONG				secContext_;
+		ScopedCredHandle	credHandle_;
+		ScopedCtxtHandle	contextHandle_;
+		DWORD				contextFlags_;
+		SecPkgContext_StreamSizes streamSizes_;
 
-		std::vector<char>	m_receivedData;
+		std::vector<char>	receivedData_;
 
-		HCERTSTORE		m_my_cert_store;
-		std::string		m_cert_store_name;
-		std::string		m_cert_name;
+		HCERTSTORE		myCertStore_;
+		std::string		certStoreName_;
+		std::string		certName_;
 ////Not needed, most likely
-		std::string		m_smartcard_reader;	//Can be empty string for non SmartCard certificates
-		boost::shared_ptr<CAPICertificate> userCertificate;
-		bool checkCertificateRevocation;
+		std::string		smartCardReader_;	//Can be empty string for non SmartCard certificates
+		boost::shared_ptr<CAPICertificate> userCertificate_;
+		bool checkCertificateRevocation_;
+		bool tls1_0Workaround_;
 	};
 }

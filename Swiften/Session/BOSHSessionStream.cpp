@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,8 @@ BOSHSessionStream::BOSHSessionStream(
 		const std::string& to,
 		const URL& boshHTTPConnectProxyURL,
 		const SafeString& boshHTTPConnectProxyAuthID,
-		const SafeString& boshHTTPConnectProxyAuthPassword) :
+		const SafeString& boshHTTPConnectProxyAuthPassword,
+		const TLSOptions& tlsOptions) :
 			available(false), 
 			eventLoop(eventLoop),
 			firstHeader(true) {
@@ -49,7 +50,7 @@ BOSHSessionStream::BOSHSessionStream(
 	random.seed(static_cast<unsigned int>(time(NULL)));
 	unsigned long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long long> >(random, dist)();
 
-	connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
+	connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, tlsOptions);
 	connectionPool->onSessionTerminated.connect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
 	connectionPool->onSessionStarted.connect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
 	connectionPool->onXMPPDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -67,6 +67,7 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 		isDefault &= options.proxyType == defaults.proxyType;
 		isDefault &= options.manualProxyHostname == defaults.manualProxyHostname;
 		isDefault &= options.manualProxyPort == defaults.manualProxyPort;
+		isDefault &= options.tlsOptions.schannelTLS1_0Workaround == defaults.tlsOptions.schannelTLS1_0Workaround;
 		if (isDefault) {
 		    ui.connectionMethod->setCurrentIndex(0);
 		}
@@ -88,6 +89,7 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 				ui.manual_manualProxyHost->setText(P2QSTRING(options.manualProxyHostname));
 				ui.manual_manualProxyPort->setText(P2QSTRING(boost::lexical_cast<std::string>(options.manualProxyPort)));
 			}
+			ui.manual_forceTLS1_0->setChecked(options.tlsOptions.schannelTLS1_0Workaround);
 		}
 	} else {
 		ui.connectionMethod->setCurrentIndex(2);
@@ -100,6 +102,9 @@ QtConnectionSettingsWindow::QtConnectionSettingsWindow(const ClientOptions& opti
 			}
 		}
 	}
+#ifndef HAVE_SCHANNEL
+	ui.manual_forceTLS1_0->hide();
+#endif
 }
 
 void QtConnectionSettingsWindow::handleProxyTypeChanged(int index) {
@@ -129,6 +134,7 @@ ClientOptions QtConnectionSettingsWindow::getOptions() {
 			options.useTLS = static_cast<ClientOptions::UseTLS>(ui.manual_useTLS->currentIndex());
 			options.useStreamCompression = ui.manual_allowCompression->isChecked();
 			options.allowPLAINWithoutTLS = ui.manual_allowPLAINWithoutTLS->isChecked();
+			options.tlsOptions.schannelTLS1_0Workaround = ui.manual_forceTLS1_0->isChecked();
 			if (ui.manual_manualHost->isChecked()) {
 				options.manualHostname = Q2PSTRING(ui.manual_manualHostName->text());
 				try {

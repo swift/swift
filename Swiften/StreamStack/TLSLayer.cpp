@@ -13,8 +13,8 @@
 
 namespace Swift {
 
-TLSLayer::TLSLayer(TLSContextFactory* factory) {
-	context = factory->createTLSContext();
+TLSLayer::TLSLayer(TLSContextFactory* factory, const TLSOptions& tlsOptions) {
+	context = factory->createTLSContext(tlsOptions);
 	context->onDataForNetwork.connect(boost::bind(&TLSLayer::writeDataToChildLayer, this, _1));
 	context->onDataForApplication.connect(boost::bind(&TLSLayer::writeDataToParentLayer, this, _1));
 	context->onConnected.connect(onConnected);
