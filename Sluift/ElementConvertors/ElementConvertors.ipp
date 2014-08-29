@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Remko Tronçon
+ * Copyright (c) 2013-2014 Remko Tronçon and Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -31,6 +31,7 @@
 #include <Sluift/ElementConvertors/PubSubOptionsConvertor.h>
 #include <Sluift/ElementConvertors/PubSubEventItemConvertor.h>
 #include <Sluift/ElementConvertors/PubSubOwnerSubscriptionConvertor.h>
+#include <Sluift/ElementConvertors/IsodeIQDelegationConvertor.h>
 #include <Sluift/ElementConvertors/PubSubOwnerAffiliationConvertor.h>
 #include <Sluift/ElementConvertors/PubSubEventPurgeConvertor.h>
 #include <Sluift/ElementConvertors/PubSubAffiliationConvertor.h>
@@ -71,6 +72,7 @@ void LuaElementConvertors::registerConvertors() {
 	convertors.push_back(boost::make_shared<PubSubOptionsConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventItemConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubOwnerSubscriptionConvertor>(this));
+	convertors.push_back(boost::make_shared<IsodeIQDelegationConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubOwnerAffiliationConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventPurgeConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubAffiliationConvertor>(this));

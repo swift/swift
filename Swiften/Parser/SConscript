@@ -82,6 +82,7 @@ sources = [
 		"PayloadParsers/MAMResultParser.cpp",
 		"PayloadParsers/MAMQueryParser.cpp",
 		"PayloadParsers/MAMArchivedParser.cpp",
+		"PayloadParsers/IsodeIQDelegationParser.cpp",
 		"PlatformXMLParserFactory.cpp",
 		"PresenceParser.cpp",
 		"SerializingParser.cpp",

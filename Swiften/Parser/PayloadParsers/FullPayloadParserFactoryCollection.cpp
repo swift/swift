@@ -5,82 +5,86 @@
  */
 
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+
 #include <Swiften/Base/foreach.h>
+
+#include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/UnblockPayload.h>
-#include <Swiften/Elements/BlockListPayload.h>
+
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/GenericPayloadParserFactory2.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/BlockParser.h>
+#include <Swiften/Parser/PayloadParsers/BodyParser.h>
+#include <Swiften/Parser/PayloadParsers/BytestreamsParser.h>
+#include <Swiften/Parser/PayloadParsers/CapsInfoParser.h>
+#include <Swiften/Parser/PayloadParsers/ChatStateParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/CommandParser.h>
+#include <Swiften/Parser/PayloadParsers/DelayParser.h>
+#include <Swiften/Parser/PayloadParsers/DeliveryReceiptParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/DeliveryReceiptRequestParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
+#include <Swiften/Parser/PayloadParsers/DiscoItemsParser.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParser.h>
 #include <Swiften/Parser/PayloadParsers/ErrorParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/BodyParser.h>
-#include <Swiften/Parser/PayloadParsers/BlockParser.h>
-#include <Swiften/Parser/PayloadParsers/SubjectParser.h>
-#include <Swiften/Parser/PayloadParsers/ChatStateParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/FormParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/ForwardedParser.h>
+#include <Swiften/Parser/PayloadParsers/IBBParser.h>
+#include <Swiften/Parser/PayloadParsers/IdleParser.h>
+#include <Swiften/Parser/PayloadParsers/InBandRegistrationPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/IsodeIQDelegationParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleContentPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferReceivedParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleReasonParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleS5BTransportMethodPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/LastParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMArchivedParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
+#include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/MUCDestroyPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/MUCInvitationPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/MUCOwnerPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/MUCOwnerPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/NicknameParser.h>
 #include <Swiften/Parser/PayloadParsers/PriorityParser.h>
+#include <Swiften/Parser/PayloadParsers/PrivateStorageParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/PubSubErrorParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/PubSubEventParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubOwnerPubSubParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubParser.h>
+#include <Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
 #include <Swiften/Parser/PayloadParsers/ResourceBindParser.h>
+#include <Swiften/Parser/PayloadParsers/ResultSetParser.h>
+#include <Swiften/Parser/PayloadParsers/RosterItemExchangeParser.h>
+#include <Swiften/Parser/PayloadParsers/RosterParser.h>
+#include <Swiften/Parser/PayloadParsers/S5BProxyRequestParser.h>
+#include <Swiften/Parser/PayloadParsers/SearchPayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
+#include <Swiften/Parser/PayloadParsers/SoftwareVersionParser.h>
 #include <Swiften/Parser/PayloadParsers/StartSessionParser.h>
 #include <Swiften/Parser/PayloadParsers/StatusParser.h>
 #include <Swiften/Parser/PayloadParsers/StatusShowParser.h>
-#include <Swiften/Parser/PayloadParsers/RosterItemExchangeParser.h>
-#include <Swiften/Parser/PayloadParsers/RosterParser.h>
-#include <Swiften/Parser/PayloadParsers/SoftwareVersionParser.h>
 #include <Swiften/Parser/PayloadParsers/StorageParser.h>
-#include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
-#include <Swiften/Parser/PayloadParsers/DiscoItemsParser.h>
-#include <Swiften/Parser/PayloadParsers/CapsInfoParser.h>
-#include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
-#include <Swiften/Parser/PayloadParsers/FormParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/CommandParser.h>
-#include <Swiften/Parser/PayloadParsers/InBandRegistrationPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/SearchPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/StreamInitiationParser.h>
-#include <Swiften/Parser/PayloadParsers/BytestreamsParser.h>
-#include <Swiften/Parser/PayloadParsers/IBBParser.h>
-#include <Swiften/Parser/PayloadParsers/VCardUpdateParser.h>
-#include <Swiften/Parser/PayloadParsers/VCardParser.h>
-#include <Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/PrivateStorageParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/DelayParser.h>
-#include <Swiften/Parser/PayloadParsers/MUCUserPayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/MUCOwnerPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/MUCDestroyPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/MUCInvitationPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/MUCOwnerPayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/NicknameParser.h>
-#include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
-#include <Swiften/Parser/PayloadParsers/LastParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/JingleReasonParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleContentPayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleS5BTransportMethodPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferReceivedParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
-#include <Swiften/Parser/PayloadParsers/S5BProxyRequestParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
-#include <Swiften/Parser/PayloadParsers/DeliveryReceiptParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/DeliveryReceiptRequestParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
-#include <Swiften/Parser/PayloadParsers/IdleParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubOwnerPubSubParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubEventParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubErrorParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/StreamInitiationParser.h>
+#include <Swiften/Parser/PayloadParsers/SubjectParser.h>
 #include <Swiften/Parser/PayloadParsers/UserLocationParser.h>
 #include <Swiften/Parser/PayloadParsers/UserTuneParser.h>
-#include <Swiften/Parser/PayloadParsers/ResultSetParser.h>
-#include <Swiften/Parser/PayloadParsers/ForwardedParser.h>
-#include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
-#include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
-#include <Swiften/Parser/PayloadParsers/MAMArchivedParser.h>
+#include <Swiften/Parser/PayloadParsers/VCardParser.h>
+#include <Swiften/Parser/PayloadParsers/VCardUpdateParser.h>
+#include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
 
 using namespace boost;
 
@@ -154,6 +158,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<MAMResultParser> >("result", "urn:xmpp:mam:0", this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMQueryParser> >("query", "urn:xmpp:mam:0"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMArchivedParser> >("archived", "urn:xmpp:mam:0"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<IsodeIQDelegationParser> >("delegate", "http://isode.com/iq_delegation", this));
 
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
