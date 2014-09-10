@@ -47,6 +47,7 @@ convertors = [
 	env.File("ForwardedConvertor.cpp"),
 	env.File("MAMResultConvertor.cpp"),
 	env.File("MAMQueryConvertor.cpp"),
-	env.File("MAMArchivedConvertor.cpp")
+	env.File("MAMArchivedConvertor.cpp"),
+	env.File("SubjectConvertor.cpp")
 ]
 Return('convertors')

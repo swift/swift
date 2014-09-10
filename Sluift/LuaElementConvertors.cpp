@@ -21,6 +21,7 @@
 #include <Sluift/ElementConvertors/VCardUpdateConvertor.h>
 #include <Sluift/ElementConvertors/VCardConvertor.h>
 #include <Sluift/ElementConvertors/BodyConvertor.h>
+#include <Sluift/ElementConvertors/SubjectConvertor.h>
 #include <Sluift/ElementConvertors/CommandConvertor.h>
 #include <Sluift/ElementConvertors/StatusShowConvertor.h>
 #include <Sluift/ElementConvertors/StatusConvertor.h>
@@ -46,6 +47,7 @@ LuaElementConvertors::LuaElementConvertors() {
 	convertors.push_back(boost::make_shared<CommandConvertor>(this));
 	convertors.push_back(boost::make_shared<PubSubEventConvertor>(this));
 	convertors.push_back(boost::make_shared<BodyConvertor>());
+	convertors.push_back(boost::make_shared<SubjectConvertor>());
 	convertors.push_back(boost::make_shared<VCardConvertor>());
 	convertors.push_back(boost::make_shared<VCardUpdateConvertor>());
 	convertors.push_back(boost::make_shared<FormConvertor>());
