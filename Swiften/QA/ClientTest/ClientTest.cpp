@@ -31,7 +31,7 @@ static TestStage stage;
 static ClientOptions options;
 
 static void handleDisconnected(boost::optional<ClientError> e) {
-	std::cout << "Disconnected: " << e << std::endl;
+	std::cout << "Disconnected: " << (e ? e.get().getType() : ClientError::UnknownError) << std::endl;
 	if (stage == FirstConnect) {
 		stage = Reconnect;
 		client->connect(options);

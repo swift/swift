@@ -38,8 +38,8 @@ static void handleGetForwardPortRequestResponse(const boost::optional<NATPortMap
 	eventLoop.stop();
 }
 
-static void handleRemovePortForwardingRequestResponse(bool result) {
-	if (result) {
+static void handleRemovePortForwardingRequestResponse(const boost::optional<bool> result) {
+	if (result && result.get()) {
 		std::cerr << "Result: OK" << std::endl;
 	}
 	else {

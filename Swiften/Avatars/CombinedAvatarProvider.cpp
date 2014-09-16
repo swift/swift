@@ -38,7 +38,7 @@ void CombinedAvatarProvider::handleAvatarChanged(const JID& jid) {
 	}
 	boost::optional<std::string> newHash = getCombinedAvatarAndCache(jid);
 	if (newHash != oldHash) {
-		SWIFT_LOG(debug) << "Avatar changed: " << jid << ": " << oldHash << " -> " << newHash << std::endl;
+		SWIFT_LOG(debug) << "Avatar changed: " << jid << ": " << oldHash << " -> " << (newHash ? newHash.get() : "NULL") << std::endl;
 		onAvatarChanged(jid);
 	}
 }
@@ -48,7 +48,7 @@ boost::optional<std::string> CombinedAvatarProvider::getCombinedAvatarAndCache(c
 	boost::optional<std::string> hash;
 	for (size_t i = 0; i < providers.size() && !hash; ++i) {
 		hash = providers[i]->getAvatarHash(jid);
-		SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << hash << std::endl;
+		SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << (hash ? hash.get() : "NULL") << std::endl;
 	}
 	if (hash) {
 		avatars[jid] = *hash;
