@@ -27,6 +27,18 @@ ChatListModel::ChatListModel() : whiteboards_(NULL) {
 
 	root_->addItem(recents_);
 	root_->addItem(mucBookmarks_);
+
+	QModelIndex idx = index(0, 0, QModelIndex());
+	while (idx.isValid()) {
+		if (idx.internalPointer() == mucBookmarks_) {
+			mucBookmarksIndex_ = idx;
+		} else if (idx.internalPointer() == recents_) {
+			recentsIndex_ = idx;
+		} else if (idx.internalPointer() == whiteboards_) {
+			whiteboardsIndex_ = idx;
+		}
+		idx = index(idx.row() + 1, 0, QModelIndex());
+	}
 }
 
 Qt::ItemFlags ChatListModel::flags(const QModelIndex& index) const {
@@ -38,58 +50,57 @@ Qt::ItemFlags ChatListModel::flags(const QModelIndex& index) const {
 }
 
 void ChatListModel::clearBookmarks() {
-	emit layoutAboutToBeChanged();
+	beginRemoveRows(mucBookmarksIndex_, 0, mucBookmarks_->rowCount());
 	mucBookmarks_->clear();
-	emit layoutChanged();
+	endRemoveRows();
 }
 
 void ChatListModel::addMUCBookmark(const Swift::MUCBookmark& bookmark) {
-	emit layoutAboutToBeChanged();
+	beginInsertRows(mucBookmarksIndex_, 0, mucBookmarks_->rowCount());
 	mucBookmarks_->addItem(new ChatListMUCItem(bookmark, mucBookmarks_));
-	emit layoutChanged();
-	//QModelIndex index = createIndex(mucBookmarks_->rowCount() - 1, 0, mucBookmarks_);
-	//emit dataChanged(index, index);
-	//emit dataChanged(parent(index), parent(index));
+	endInsertRows();
 }
 
 void ChatListModel::removeMUCBookmark(const Swift::MUCBookmark& bookmark) {
 	for (int i = 0; i < mucBookmarks_->rowCount(); i++) {
 		ChatListMUCItem* item = dynamic_cast<ChatListMUCItem*>(mucBookmarks_->item(i));
 		if (item->getBookmark() == bookmark) {
-			emit layoutAboutToBeChanged();
+			beginRemoveRows(mucBookmarksIndex_, i, i+1);
 			mucBookmarks_->remove(i);
-			emit layoutChanged();
+			endRemoveRows();
 			break;
 		}
 	}
 }
 
 void ChatListModel::addWhiteboardSession(const ChatListWindow::Chat& chat) {
-	emit layoutAboutToBeChanged();
+	beginInsertRows(whiteboardsIndex_, 0, whiteboards_->rowCount());
 	whiteboards_->addItem(new ChatListWhiteboardItem(chat, whiteboards_));
-	emit layoutChanged();
+	endInsertRows();
 }
 
 void ChatListModel::removeWhiteboardSession(const JID& jid) {
 	for (int i = 0; i < whiteboards_->rowCount(); i++) {
 		ChatListWhiteboardItem* item = dynamic_cast<ChatListWhiteboardItem*>(whiteboards_->item(i));
 		if (item->getChat().jid == jid) {
-			emit layoutAboutToBeChanged();
+			beginRemoveRows(whiteboardsIndex_, i, i+1);
 			whiteboards_->remove(i);
-			emit layoutChanged();
+			endRemoveRows();
 			break;
 		}
 	}
 }
 
 void ChatListModel::setRecents(const std::list<ChatListWindow::Chat>& recents) {
-	emit layoutAboutToBeChanged();
+	beginRemoveRows(recentsIndex_, 0, recents_->rowCount());
 	recents_->clear();
+	endRemoveRows();
+	beginInsertRows(recentsIndex_, 0, recents.size());
 	foreach (const ChatListWindow::Chat chat, recents) {
 		recents_->addItem(new ChatListRecentItem(chat, recents_));
 //whiteboards_->addItem(new ChatListRecentItem(chat, whiteboards_));
 	}
-	emit layoutChanged();
+	endInsertRows();
 }
 
 QMimeData* ChatListModel::mimeData(const QModelIndexList& indexes) const {

@@ -7,7 +7,7 @@
 #pragma once
 
 #include <QAbstractItemModel>
-#include <QList>
+#include <QPersistentModelIndex>
 
 #include <Swiften/MUC/MUCBookmark.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
@@ -38,6 +38,10 @@ namespace Swift {
 			ChatListGroupItem* recents_;
 			ChatListGroupItem* whiteboards_;
 			ChatListGroupItem* root_;
+
+			QPersistentModelIndex mucBookmarksIndex_;
+			QPersistentModelIndex recentsIndex_;
+			QPersistentModelIndex whiteboardsIndex_;
 	};
 
 }
