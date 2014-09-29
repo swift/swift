@@ -29,7 +29,7 @@
 
 namespace Swift {
 
-QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent) {
+QtChatListWindow::QtChatListWindow(UIEventStream *uiEventStream, SettingsProvider* settings, QWidget* parent) : QTreeView(parent), isOnline_(false) {
 	eventStream_ = uiEventStream;
 	settings_ = settings;
 	bookmarksEnabled_ = false;
@@ -86,14 +86,14 @@ void QtChatListWindow::handleClicked(const QModelIndex& index) {
 
 void QtChatListWindow::setupContextMenus() {
 	mucMenu_ = new QMenu();
-	mucMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
-	mucMenu_->addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
-	mucMenu_->addAction(tr("Remove Bookmark"), this, SLOT(handleRemoveBookmark()));
+	onlineOnlyActions_ << mucMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
+	onlineOnlyActions_ << mucMenu_->addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
+	onlineOnlyActions_ << mucMenu_->addAction(tr("Remove Bookmark"), this, SLOT(handleRemoveBookmark()));
 	mucRecentsMenu_ = new QMenu();
-	mucRecentsMenu_->addAction(tr("Add to Bookmarks"), this, SLOT(handleAddBookmarkFromRecents()));
+	onlineOnlyActions_ << mucRecentsMenu_->addAction(tr("Add to Bookmarks"), this, SLOT(handleAddBookmarkFromRecents()));
 	mucRecentsMenu_->addAction(tr("Clear recents"), this, SLOT(handleClearRecentsRequested()));
 	emptyMenu_ = new QMenu();
-	emptyMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
+	onlineOnlyActions_ << emptyMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
 }
 
 void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
@@ -143,6 +143,10 @@ void QtChatListWindow::setUnreadCount(int unread) {
 	emit onCountUpdated(unread);
 }
 
+void QtChatListWindow::setOnline(bool isOnline) {
+	isOnline_ = isOnline;
+}
+
 void QtChatListWindow::handleRemoveBookmark() {
 	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(contextMenuItem_);
 	if (!mucItem) return;
@@ -182,6 +186,11 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
 	QModelIndex index = indexAt(event->pos());
 	ChatListItem* baseItem = index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : NULL;
 	contextMenuItem_ = baseItem;
+
+	foreach(QAction* action, onlineOnlyActions_) {
+		action->setEnabled(isOnline_);
+	}
+
 	if (!baseItem) {
 		emptyMenu_->exec(QCursor::pos());
 		return;

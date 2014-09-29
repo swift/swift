@@ -82,6 +82,14 @@ void QtRosterHeader::setStatusText(const QString& statusMessage) {
 
 void QtRosterHeader::setStatusType(StatusShow::Type type) {
 	statusWidget_->setStatusType(type);
+	if (type == StatusShow::None) {
+		nameWidget_->setOnline(false);
+		disconnect(avatarLabel_, SIGNAL(clicked()), this, SIGNAL(onEditProfileRequest()));
+	}
+	else {
+		nameWidget_->setOnline(true);
+		connect(avatarLabel_, SIGNAL(clicked()), this, SIGNAL(onEditProfileRequest()), Qt::UniqueConnection);
+	}
 }
 
 void QtRosterHeader::setConnecting() {

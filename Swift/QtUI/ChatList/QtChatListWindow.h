@@ -28,6 +28,7 @@ namespace Swift {
 			void setRecents(const std::list<ChatListWindow::Chat>& recents);
 			void setUnreadCount(int unread);
 			void clearBookmarks();
+			virtual void setOnline(bool isOnline);
 
 		signals:
 			void onCountUpdated(int count);
@@ -56,6 +57,8 @@ namespace Swift {
 			QMenu* mucRecentsMenu_;
 			ChatListItem* contextMenuItem_;
 			SettingsProvider* settings_;
+			QList<QAction*> onlineOnlyActions_;
+			bool isOnline_;
 	};
 
 }

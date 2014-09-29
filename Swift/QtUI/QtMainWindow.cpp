@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -150,9 +150,11 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	QAction* editProfileAction = new QAction(tr("Edit &Profile…"), this);
 	connect(editProfileAction, SIGNAL(triggered()), SLOT(handleEditProfileAction()));
 	actionsMenu->addAction(editProfileAction);
+	onlineOnlyActions_ << editProfileAction;
 	QAction* joinMUCAction = new QAction(tr("Enter &Room…"), this);
 	connect(joinMUCAction, SIGNAL(triggered()), SLOT(handleJoinMUCAction()));
 	actionsMenu->addAction(joinMUCAction);
+	onlineOnlyActions_ << joinMUCAction;
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	QAction* viewLogsAction = new QAction(tr("&View History…"), this);
 	connect(viewLogsAction, SIGNAL(triggered()), SLOT(handleViewLogsAction()));
@@ -161,25 +163,30 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	openBlockingListEditor_ = new QAction(tr("Edit &Blocking List…"), this);
 	connect(openBlockingListEditor_, SIGNAL(triggered()), SLOT(handleEditBlockingList()));
 	actionsMenu->addAction(openBlockingListEditor_);
+	onlineOnlyActions_ << openBlockingListEditor_;
 	openBlockingListEditor_->setVisible(false);
 	addUserAction_ = new QAction(tr("&Add Contact…"), this);
 	addUserAction_->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
 	addUserAction_->setShortcutContext(Qt::ApplicationShortcut);
 	connect(addUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleAddUserActionTriggered(bool)));
 	actionsMenu->addAction(addUserAction_);
+	onlineOnlyActions_ << addUserAction_;
 	editUserAction_ = new QAction(tr("&Edit Selected Contact…"), this);
 	connect(editUserAction_, SIGNAL(triggered(bool)), treeWidget_, SLOT(handleEditUserActionTriggered(bool)));
 	actionsMenu->addAction(editUserAction_);
+	onlineOnlyActions_ << editUserAction_;
 	editUserAction_->setEnabled(false);
 	chatUserAction_ = new QAction(tr("Start &Chat…"), this);
 	chatUserAction_->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
 	chatUserAction_->setShortcutContext(Qt::ApplicationShortcut);
 	connect(chatUserAction_, SIGNAL(triggered(bool)), this, SLOT(handleChatUserActionTriggered(bool)));
 	actionsMenu->addAction(chatUserAction_);
+	onlineOnlyActions_ << chatUserAction_;
 	if (enableAdHocCommandOnJID) {
 		otherAdHocAction_ = new QAction(tr("Run Other Command"), this);
 		connect(otherAdHocAction_, SIGNAL(triggered()), this, SLOT(handleOtherAdHocActionTriggered()));
 		actionsMenu->addAction(otherAdHocAction_);
+		onlineOnlyActions_ << otherAdHocAction_;
 	}
 	serverAdHocMenu_ = new QMenu(tr("Run Server Command"), this);
 	actionsMenu->addMenu(serverAdHocMenu_);
@@ -196,7 +203,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 	QList< QAction* > generalMenuActions = loginMenus_.generalMenu->actions();
 	loginMenus_.generalMenu->insertAction(generalMenuActions.at(generalMenuActions.count()-2),toggleRequestDeliveryReceipts_);
 
-	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QAction::setEnabled, editUserAction_, _1));
+	treeWidget_->onSomethingSelectedChanged.connect(boost::bind(&QtMainWindow::handleSomethingSelectedChanged, this, _1));
 
 	setAvailableAdHocCommands(std::vector<DiscoItems::Item>());
 	QAction* adHocAction = new QAction(tr("Collecting commands..."), this);
@@ -225,6 +232,11 @@ void QtMainWindow::handleShowCertificateInfo() {
 
 void QtMainWindow::handleEditBlockingList() {
 	uiEventStream_->send(boost::make_shared<RequestBlockListDialogUIEvent>());
+}
+
+void QtMainWindow::handleSomethingSelectedChanged(bool itemSelected) {
+	bool isOnline = addUserAction_->isEnabled();
+	editUserAction_->setEnabled(isOnline && itemSelected);
 }
 
 QtEventWindow* QtMainWindow::getEventWindow() {
@@ -348,6 +360,13 @@ void QtMainWindow::setMyStatusText(const std::string& status) {
 
 void QtMainWindow::setMyStatusType(StatusShow::Type type) {
 	meView_->setStatusType(type);
+	const bool online = (type != StatusShow::None);
+	treeWidget_->setOnline(online);
+	chatListWindow_->setOnline(online);
+	foreach (QAction *action, onlineOnlyActions_) {
+		action->setEnabled(online);
+	}
+	serverAdHocMenu_->setEnabled(online);
 }
 
 void QtMainWindow::setMyContactRosterItem(boost::shared_ptr<ContactRosterItem> contact) {

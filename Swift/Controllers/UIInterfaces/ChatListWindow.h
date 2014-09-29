@@ -89,6 +89,7 @@ namespace Swift {
 			virtual void setRecents(const std::list<Chat>& recents) = 0;
 			virtual void setUnreadCount(int unread) = 0;
 			virtual void clearBookmarks() = 0;
+			virtual void setOnline(bool isOnline) = 0;
 
 			boost::signal<void (const MUCBookmark&)> onMUCBookmarkActivated;
 			boost::signal<void (const Chat&)> onRecentActivated;

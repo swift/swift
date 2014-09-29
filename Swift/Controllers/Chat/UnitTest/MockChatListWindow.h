@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -22,6 +22,7 @@ namespace Swift {
 			void setRecents(const std::list<ChatListWindow::Chat>& /*recents*/) {}
 			void setUnreadCount(int /*unread*/) {}
 			void clearBookmarks() {}
+			void setOnline(bool /*isOnline*/) {}
 	};
 
 }

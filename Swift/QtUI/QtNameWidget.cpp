@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-QtNameWidget::QtNameWidget(SettingsProvider* settings, QWidget *parent) : QWidget(parent), settings(settings) {
+QtNameWidget::QtNameWidget(SettingsProvider* settings, QWidget *parent) : QWidget(parent), settings(settings), isOnline_(false) {
 	QHBoxLayout* mainLayout = new QHBoxLayout(this);
 	mainLayout->setSpacing(0);
 	mainLayout->setContentsMargins(0,0,0,0);
@@ -41,6 +41,10 @@ void QtNameWidget::setJID(const QString& jid) {
 	updateText();
 }
 
+void QtNameWidget::setOnline(const bool isOnline) {
+	isOnline_ = isOnline;
+}
+
 void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 	QMenu menu;
 	bool hasNick = !nick.isEmpty();
@@ -62,6 +66,7 @@ void QtNameWidget::mousePressEvent(QMouseEvent* event) {
 
 	QAction* editProfile = new QAction(tr("Edit Profile"), this);
 	menu.addAction(editProfile);
+	editProfile->setEnabled(isOnline_);
 
 	QAction* result = menu.exec(event->globalPos());
 	if (result == showAsJID) {

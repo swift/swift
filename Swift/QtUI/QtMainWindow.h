@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -78,6 +78,7 @@ namespace Swift {
 			void handleToggleRequestDeliveryReceipts(bool enabled);
 			void handleShowCertificateInfo();
 			void handleEditBlockingList();
+			void handleSomethingSelectedChanged(bool itemSelected);
 
 		private:
 			SettingsProvider* settings_;
@@ -104,5 +105,6 @@ namespace Swift {
 			UIEventStream* uiEventStream_;
 			std::vector<DiscoItems::Item> serverAdHocCommands_;
 			QList<QAction*> serverAdHocCommandActions_;
+			QList<QAction*> onlineOnlyActions_;
 	};
 }

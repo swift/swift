@@ -36,6 +36,8 @@ class QtTreeWidget : public QTreeView {
 		void setMessageTarget(MessageTarget messageTarget);
 		JID jidFromIndex(const QModelIndex& index) const;
 		JID selectedJID() const;
+		void setOnline(bool isOnline);
+
 	public:
 		boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
 
@@ -54,6 +56,7 @@ class QtTreeWidget : public QTreeView {
 		void dragMoveEvent(QDragMoveEvent* event);
 		bool event(QEvent* event);
 		QModelIndexList getSelectedIndexes() const;
+		bool isOnline() const;
 
 	private:
 		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
@@ -71,6 +74,7 @@ class QtTreeWidget : public QTreeView {
 		SettingsProvider* settings_;
 		bool tooltipShown_;
 		MessageTarget messageTarget_;
+		bool isOnline_;
 };
 
 }

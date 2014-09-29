@@ -259,13 +259,17 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 	int key = event->key();
 	if (key == Qt::Key_Tab) {
 		tabComplete();
-	} else if ((key == Qt::Key_Up) && input_->toPlainText().isEmpty() && !(lastSentMessage_.isEmpty())) {
+	}
+	else if ((key == Qt::Key_Up) && input_->toPlainText().isEmpty() && !(lastSentMessage_.isEmpty())) {
 		beginCorrection();
-	} else if (key == Qt::Key_Down && isCorrection_ && input_->textCursor().atBlockEnd()) {
+	}
+	else if (key == Qt::Key_Down && isCorrection_ && input_->textCursor().atBlockEnd()) {
 		cancelCorrection();
-	} else if (key == Qt::Key_Down || key == Qt::Key_Up) {
+	}
+	else if (key == Qt::Key_Down || key == Qt::Key_Up) {
 		/* Drop */
-	} else {
+	}
+	else {
 		messageLog_->handleKeyPressEvent(event);
 	}
 }
@@ -274,7 +278,8 @@ void QtChatWindow::beginCorrection() {
 	boost::optional<AlertID> newCorrectingAlert;
 	if (correctionEnabled_ == ChatWindow::Maybe) {
 		newCorrectingAlert = addAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
-	} else if (correctionEnabled_ == ChatWindow::No) {
+	}
+	else if (correctionEnabled_ == ChatWindow::No) {
 		newCorrectingAlert = addAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
 	}
 
@@ -330,7 +335,8 @@ void QtChatWindow::tabComplete() {
 	QTextCursor cursor;
 	if (tabCompleteCursor_.hasSelection()) {
 		cursor = tabCompleteCursor_;
-	} else {
+	}
+	else {
 		cursor = input_->textCursor();
 		while(cursor.movePosition(QTextCursor::Left, QTextCursor::KeepAnchor) && cursor.document()->characterAt(cursor.position() - 1) != ' ') { }
 	}
@@ -406,7 +412,8 @@ void QtChatWindow::setSecurityLabelsEnabled(bool enabled) {
 	if (enabled) {
 		labelsWidget_->setEnabled(true);
 		labelsWidget_->show();
-	} else {
+	}
+	else {
 		labelsWidget_->hide();
 	}
 }
@@ -498,7 +505,8 @@ void QtChatWindow::setName(const std::string& name) {
 void QtChatWindow::updateTitleWithUnreadCount() {
 	if (isWindow()) {
 		setWindowTitle(unreadCount_ > 0 ? QString("(%1) %2").arg(unreadCount_).arg(contact_) : contact_);
-	} else {
+	}
+	else {
 		setWindowTitle(contact_);
 	}
 	emit titleUpdated();
@@ -534,7 +542,8 @@ void QtChatWindow::handleInputChanged() {
 	}
 	if (input_->toPlainText().isEmpty()) {
 		onUserCancelsTyping();
-	} else {
+	}
+	else {
 		onUserTyping();
 	}
 }
@@ -574,14 +583,17 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 }
 
 void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
-	if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
-		// TODO: check whether contact actually supports file transfer
-		if (!isMUC_) {
-			event->acceptProposedAction();
+	if (inputEnabled_) {
+		if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
+			// TODO: check whether contact actually supports file transfer
+			if (!isMUC_) {
+				event->acceptProposedAction();
+			}
 		}
-	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
-		if (isMUC_ || supportsImpromptuChat_) {
-			event->acceptProposedAction();
+		else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
+			if (isMUC_ || supportsImpromptuChat_) {
+				event->acceptProposedAction();
+			}
 		}
 	}
 }
@@ -590,13 +602,15 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
 	if (fileTransferEnabled_ == ChatWindow::Yes && event->mimeData()->hasUrls()) {
 		if (event->mimeData()->urls().size() == 1) {
 			onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
-		} else {
+		}
+		else {
 			std::string messageText(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
 			ChatMessage message;
 			message.append(boost::make_shared<ChatTextMessagePart>(messageText));
 			addSystemMessage(message, DefaultDirection);
 		}
-	} else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
+	}
+	else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
 		QByteArray dataBytes = event->mimeData()->data("application/vnd.swift.contact-jid-list");
 		QDataStream dataStream(&dataBytes, QIODevice::ReadOnly);
 		std::vector<JID> invites;
@@ -634,15 +648,20 @@ void QtChatWindow::handleActionButtonClicked() {
 	if (availableRoomActions_.empty()) {
 		if (blockingState_ == IsBlocked) {
 			unblock = contextMenu.addAction(tr("Unblock"));
-		} else if (blockingState_ == IsUnblocked) {
+			unblock->setEnabled(inputEnabled_);
+		}
+		else if (blockingState_ == IsUnblocked) {
 			block = contextMenu.addAction(tr("Block"));
+			block->setEnabled(inputEnabled_);
 		}
 
 		if (supportsImpromptuChat_) {
 			invite = contextMenu.addAction(tr("Invite person to this chat…"));
+			invite->setEnabled(inputEnabled_);
 		}
 
-	} else {
+	}
+	else {
 		foreach(ChatWindow::RoomAction availableAction, availableRoomActions_)
 		{
 			if (impromptu_) {
@@ -656,16 +675,32 @@ void QtChatWindow::handleActionButtonClicked() {
 			}
 			switch(availableAction)
 			{
-				case ChatWindow::ChangeSubject: changeSubject = contextMenu.addAction(tr("Change subject…")); break;
-				case ChatWindow::Configure: configure = contextMenu.addAction(tr("Configure room…")); break;
-				case ChatWindow::Affiliations: affiliations = contextMenu.addAction(tr("Edit affiliations…")); break;
-				case ChatWindow::Destroy: destroy = contextMenu.addAction(tr("Destroy room")); break;
-				case ChatWindow::Invite: invite = contextMenu.addAction(tr("Invite person to this room…")); break;
+				case ChatWindow::ChangeSubject:
+					changeSubject = contextMenu.addAction(tr("Change subject…"));
+					changeSubject->setEnabled(inputEnabled_);
+					break;
+				case ChatWindow::Configure:
+					configure = contextMenu.addAction(tr("Configure room…"));
+					configure->setEnabled(inputEnabled_);
+					break;
+				case ChatWindow::Affiliations:
+					affiliations = contextMenu.addAction(tr("Edit affiliations…"));
+					affiliations->setEnabled(inputEnabled_);
+					break;
+				case ChatWindow::Destroy:
+					destroy = contextMenu.addAction(tr("Destroy room"));
+					destroy->setEnabled(inputEnabled_);
+					break;
+				case ChatWindow::Invite:
+					invite = contextMenu.addAction(tr("Invite person to this room…"));
+					invite->setEnabled(inputEnabled_);
+					break;
 			}
 		}
 	}
 
 	QAction* bookmark = contextMenu.addAction(tr("Add boomark..."));
+	bookmark->setEnabled(inputEnabled_);
 
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == NULL) {
@@ -708,7 +743,8 @@ void QtChatWindow::handleActionButtonClicked() {
 	}
 	else if (result == unblock) {
 		onUnblockUserRequest();
-	} else if (result == bookmark) {
+	}
+	else if (result == bookmark) {
 		onBookmarkRequest();
 	}
 }

@@ -60,33 +60,38 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 	QMenu contextMenu;
 	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
 		QAction* editContact = contextMenu.addAction(tr("Edit…"));
+		editContact->setEnabled(isOnline());
 		QAction* removeContact = contextMenu.addAction(tr("Remove"));
+		removeContact->setEnabled(isOnline());
 		QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
 
 		QAction* unblockContact = NULL;
 		if (contact->blockState() == ContactRosterItem::IsBlocked ||
 			contact->blockState() == ContactRosterItem::IsDomainBlocked) {
 			unblockContact = contextMenu.addAction(tr("Unblock"));
+			unblockContact->setEnabled(isOnline());
 		}
 
 		QAction* blockContact = NULL;
 		if (contact->blockState() == ContactRosterItem::IsUnblocked) {
 			blockContact = contextMenu.addAction(tr("Block"));
+			blockContact->setEnabled(isOnline());
 		}
 
 #ifdef SWIFT_EXPERIMENTAL_FT
 		QAction* sendFile = NULL;
 		if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
 			sendFile = contextMenu.addAction(tr("Send File"));
+			sendFile->setEnabled(isOnline());
 		}
 #endif
 #ifdef SWIFT_EXPERIMENTAL_WB
 		QAction* startWhiteboardChat = NULL;
 		if (contact->supportsFeature(ContactRosterItem::WhiteboardFeature)) {
 			startWhiteboardChat = contextMenu.addAction(tr("Start Whiteboard Chat"));
+			startWhiteboardChat->setEnabled(isOnline());
 		}
 #endif
-
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == editContact) {
 			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
@@ -134,6 +139,9 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 		QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));
 		if (P2QSTRING(group->getDisplayName()) == tr("Contacts")) {
 			renameGroupAction->setEnabled(false);
+		}
+		else {
+			renameGroupAction->setEnabled(isOnline());
 		}
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == renameGroupAction) {
