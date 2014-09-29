@@ -30,6 +30,7 @@ QtVCardGeneralField::~QtVCardGeneralField() {
 void QtVCardGeneralField::initialize() {
 	if (preferrable) {
 		preferredCheckBox = new QCheckBox(this);
+		preferredCheckBox->setToolTip(tr("Stars can be used to mark preferred contact details."));
 		preferredCheckBox->setStyleSheet(
 					"QCheckBox::indicator { width: 18px; height: 18px; }"
 					"QCheckBox::indicator:checked { image: url(:/icons/star-checked.png); }"
