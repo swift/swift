@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Remko Tronçon
+ * Copyright (c) 2011-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -103,8 +103,9 @@ void QtProfileWindow::setError(const std::string& error) {
 }
 
 void QtProfileWindow::show() {
-	QWidget::show();
+	QWidget::showNormal();
 	QWidget::activateWindow();
+	QWidget::raise();
 }
 
 void QtProfileWindow::hide() {
