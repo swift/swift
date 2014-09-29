@@ -15,6 +15,7 @@ QtBookmarkDetailWindow::QtBookmarkDetailWindow(QWidget* parent) : QDialog(parent
 	setAttribute(Qt::WA_DeleteOnClose, true);
 	//connect(buttons_, SIGNAL(accepted()), SLOT(accept()));
 	//connect(buttons_, SIGNAL(rejected()), SLOT(reject()));
+	setFixedHeight(sizeHint().height());
 }
 
 void QtBookmarkDetailWindow::accept() {
