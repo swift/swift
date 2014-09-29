@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <QCheckBox>
@@ -40,6 +46,9 @@ class QtVCardGeneralField : public QWidget {
 
 		virtual bool isEmpty() const = 0;
 
+		void setStarVisible(const bool isVisible);
+		bool getStarVisible() const;
+
 		void setPreferred(const bool preferred);
 		bool getPreferred() const;
 
@@ -61,8 +70,12 @@ class QtVCardGeneralField : public QWidget {
 		QList<QWidget*> childWidgets;
 
 	private:
+		void updatePreferredStarVisibility();
+
+	private:
 		bool editable;
 		bool preferrable;
+		bool starVisible;
 		bool taggable;
 		QGridLayout* layout;
 		int row;

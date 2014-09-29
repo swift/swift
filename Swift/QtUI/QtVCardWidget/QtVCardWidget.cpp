@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/QtUI/QtVCardWidget/QtVCardWidget.h>
 
 #include <QDebug>
@@ -299,6 +305,19 @@ void QtVCardWidget::addField() {
 }
 
 void QtVCardWidget::removeField(QtVCardGeneralField *field) {
+	int sameFields = 0;
+	QtVCardGeneralField* fieldToChange = NULL;
+	foreach (QtVCardGeneralField* vcardField, fields) {
+		if ((vcardField != field) && (typeid(*vcardField) == typeid(*field))) {
+			sameFields++;
+			fieldToChange = vcardField;
+		}
+	}
+
+	if ((sameFields == 1) && fieldToChange) {
+		fieldToChange->setStarVisible(false);
+	}
+
 	fields.remove(field);
 	delete field;
 }
@@ -364,6 +383,20 @@ void QtVCardWidget::clearEmptyFields() {
 
 void QtVCardWidget::appendField(QtVCardGeneralField *field) {
 	connect(field, SIGNAL(deleteField(QtVCardGeneralField*)), SLOT(removeField(QtVCardGeneralField*)));
+
+	QtVCardGeneralField* fieldToChange = NULL;
+	foreach (QtVCardGeneralField* vcardField, fields) {
+		if (typeid(*vcardField) == typeid(*field)) {
+			fieldToChange = vcardField;
+			break;
+		}
+	}
+
+	if (fieldToChange) {
+		fieldToChange->setStarVisible(true);
+		field->setStarVisible(true);
+	}
+
 	fields.push_back(field);
 }
 

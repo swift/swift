@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
 
 #include <cassert>
@@ -13,7 +19,7 @@
 namespace Swift {
 
 QtVCardGeneralField::QtVCardGeneralField(QWidget* parent, QGridLayout* layout, bool editable, int row, QString label, bool preferrable, bool taggable) :
-	QWidget(parent), editable(editable), preferrable(preferrable), taggable(taggable), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
+	QWidget(parent), editable(editable), preferrable(preferrable), taggable(taggable), starVisible(false), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
 	tagComboBox(0), tagLabel(NULL), closeButton(0) {
 }
 
@@ -75,16 +81,22 @@ void QtVCardGeneralField::setEditable(bool editable) {
 		tagComboBox->hide();
 	}
 	closeButton->setVisible(editable);
-	if (preferrable) {
-		assert(preferredCheckBox);
-		preferredCheckBox->setVisible(editable ? true : preferredCheckBox->isChecked());
-		preferredCheckBox->setEnabled(editable);
-	}
+	updatePreferredStarVisibility();
 	editableChanged(this->editable);
+}
+
+void QtVCardGeneralField::setStarVisible(const bool isVisible) {
+	starVisible = isVisible;
+	updatePreferredStarVisibility();
+}
+
+bool QtVCardGeneralField::getStarVisible() const {
+	return starVisible;
 }
 
 void QtVCardGeneralField::setPreferred(const bool preferred) {
 	if (preferredCheckBox) preferredCheckBox->setChecked(preferred);
+	updatePreferredStarVisibility();
 }
 
 bool QtVCardGeneralField::getPreferred() const {
@@ -109,6 +121,25 @@ void QtVCardGeneralField::handleCloseButtonClicked() {
 		layout->removeWidget(widget);
 	}
 	deleteField(this);
+}
+
+void QtVCardGeneralField::updatePreferredStarVisibility() {
+	if (preferredCheckBox) {
+		bool showStar = false;
+		if (editable) {
+			if (starVisible) {
+				showStar = true;
+			}
+			else {
+				showStar = preferredCheckBox->isChecked();
+			}
+		}
+		else {
+			showStar = preferredCheckBox->isChecked();
+		}
+		preferredCheckBox->setVisible(showStar);
+		preferredCheckBox->setEnabled(editable);
+	}
 }
 
 }
