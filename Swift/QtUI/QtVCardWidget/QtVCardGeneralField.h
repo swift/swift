@@ -65,6 +65,7 @@ class QtVCardGeneralField : public QWidget {
 		
 	public slots:
 		void handleCloseButtonClicked();
+		void handlePreferredStarStateChanged(int statte);
 
 	protected:
 		QList<QWidget*> childWidgets;

@@ -15,6 +15,7 @@
 #include <cassert>
 
 #include <QHBoxLayout>
+#include <QToolTip>
 
 namespace Swift {
 
@@ -38,6 +39,7 @@ void QtVCardGeneralField::initialize() {
 			);
 		layout->addWidget(preferredCheckBox, row, 0, Qt::AlignVCenter);
 		childWidgets << preferredCheckBox;
+		connect(preferredCheckBox, SIGNAL(stateChanged(int)), SLOT(handlePreferredStarStateChanged(int)));
 	}
 	label = new QLabel(this);
 	label->setText(labelText);
@@ -122,6 +124,12 @@ void QtVCardGeneralField::handleCloseButtonClicked() {
 		layout->removeWidget(widget);
 	}
 	deleteField(this);
+}
+
+void QtVCardGeneralField::handlePreferredStarStateChanged(int state) {
+	if (state == Qt::Checked) {
+		QToolTip::showText(QCursor::pos(), tr("Marked as your preferred %1. Click again to undo.").arg(labelText));
+	}
 }
 
 void QtVCardGeneralField::updatePreferredStarVisibility() {
