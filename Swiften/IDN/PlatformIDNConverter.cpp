@@ -19,7 +19,9 @@ IDNConverter* PlatformIDNConverter::create() {
 #elif defined(HAVE_ICU)
 	return new ICUConverter();
 #else
+#if defined(NEED_IDN)
 #error "No IDN implementation"
+#endif
 	return 0;
 #endif
 }

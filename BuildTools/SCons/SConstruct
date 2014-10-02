@@ -328,6 +328,8 @@ if not env.get("HAVE_EXPAT", 0) and not env.get("HAVE_LIBXML", 0) :
 # IDN library
 ################################################################################
 
+env["NEED_IDN"] = env.get("need_idn", True)
+
 # ICU
 icu_env = conf_env.Clone()
 use_icu = bool(env["icu"])
@@ -367,9 +369,11 @@ if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
 	if env.get("libidn_bundled_enable", True)  :
 		env["HAVE_LIBIDN"] = 1
 		env["LIBIDN_BUNDLED"] = 1
-	else :
+	elif env.get("need_idn", True):
 		print "Error: ICU and LIBIDN not found, and libidn_bundled_enable is false"
 		Exit(1)
+	else:
+		print "Proceeding without an IDN library because need_idn was false. This will break all internal binaries"
 
 # Unbound
 if env["unbound"] :

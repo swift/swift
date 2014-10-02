@@ -4,6 +4,8 @@ Import("swiften_env", "env")
 objects = swiften_env.SwiftenObject(["IDNConverter.cpp"])
 
 myenv = swiften_env.Clone()
+if myenv.get("NEED_IDN"):
+	myenv.Append(CPPDEFINES = ["NEED_IDN"])
 if myenv.get("HAVE_ICU") :
 	myenv.MergeFlags(swiften_env["ICU_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_ICU"])
