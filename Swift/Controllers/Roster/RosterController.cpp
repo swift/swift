@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -364,7 +364,7 @@ void RosterController::handleOwnVCardChanged(VCard::ref vcard) {
 void RosterController::handleAvatarChanged(const JID& jid) {
 	boost::filesystem::path path = avatarManager_->getAvatarPath(jid);
 	roster_->applyOnItems(SetAvatar(jid, path));
-	if (jid.equals(myJID_, JID::WithResource)) {
+	if (jid.equals(myJID_, JID::WithoutResource)) {
 		mainWindow_->setMyAvatarPath(pathToString(path));
 		ownContact_->setAvatarPath(pathToString(path));
 		mainWindow_->setMyContactRosterItem(ownContact_);
