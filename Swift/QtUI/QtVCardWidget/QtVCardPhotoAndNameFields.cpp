@@ -67,7 +67,9 @@ void QtVCardPhotoAndNameFields::setEditable(bool editable) {
 	QStringList fullname;
 	fullname << ui->lineEditPREFIX->text() << ui->lineEditGIVEN->text() << ui->lineEditMIDDLE->text();
 	fullname << ui->lineEditFAMILY->text() << ui->lineEditSUFFIX->text();
-	fullname = fullname.filter(".*\\S.*");
+	for (QStringList::iterator i = fullname.begin(); i != fullname.end(); i++) {
+		*i = i->trimmed();
+	}
 	ui->labelFULLNAME->setText(fullname.join(" "));
 }
 
