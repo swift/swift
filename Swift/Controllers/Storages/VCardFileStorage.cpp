@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -58,7 +58,17 @@ boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
 	return result;
 }
 
+boost::posix_time::ptime VCardFileStorage::getVCardWriteTime(const JID& jid) const {
+	if (vcardWriteTimes.find(jid) == vcardWriteTimes.end()) {
+		return boost::posix_time::ptime();
+	}
+	else {
+		return vcardWriteTimes.at(jid);
+	}
+}
+
 void VCardFileStorage::setVCard(const JID& jid, VCard::ref v) {
+	vcardWriteTimes[jid] = boost::posix_time::second_clock::universal_time();
 	VCardPersister().savePayload(v, getVCardPath(jid));
 	getAndUpdatePhotoHash(jid, v);
 }

@@ -4,9 +4,16 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include "ShowProfileController.h"
 
 #include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/VCards/VCardManager.h>
@@ -44,7 +51,7 @@ void ShowProfileController::handleUIEvent(UIEvent::ref event) {
 		newProfileWindow->setJID(showProfileEvent->getJID());
 		newProfileWindow->onWindowAboutToBeClosed.connect(boost::bind(&ShowProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 		openedProfileWindows[showProfileEvent->getJID()] = newProfileWindow;
-		VCard::ref vcard = vcardManager->getVCardAndRequestWhenNeeded(showProfileEvent->getJID());
+		VCard::ref vcard = vcardManager->getVCardAndRequestWhenNeeded(showProfileEvent->getJID(), boost::posix_time::minutes(5));
 		if (vcard) {
 			newProfileWindow->setVCard(vcard);
 		} else {

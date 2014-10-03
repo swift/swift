@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,8 @@
 #pragma once
 
 #include <set>
+
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
@@ -26,7 +28,7 @@ namespace Swift {
 			~VCardManager();
 
 			VCard::ref getVCard(const JID& jid) const;
-			VCard::ref getVCardAndRequestWhenNeeded(const JID& jid);
+			VCard::ref getVCardAndRequestWhenNeeded(const JID& jid, const boost::posix_time::time_duration& allowedAge = boost::posix_time::time_duration(boost::date_time::pos_infin));
 			void requestVCard(const JID& jid);
 			void requestOwnVCard();
 

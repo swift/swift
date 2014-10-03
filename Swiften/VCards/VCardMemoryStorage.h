@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
+
 #include <map>
 
 #include <Swiften/JID/JID.h>
@@ -27,12 +28,24 @@ namespace Swift {
 				}
 			}
 
+			virtual boost::posix_time::ptime getVCardWriteTime(const JID& jid) const {
+				if (vcardWriteTimes.find(jid) == vcardWriteTimes.end()) {
+					return boost::posix_time::ptime();
+				}
+				else {
+					return vcardWriteTimes.at(jid);
+				}
+			}
+
 			virtual void setVCard(const JID& jid, VCard::ref v) {
 				vcards[jid] = v;
+				vcardWriteTimes[jid] = boost::posix_time::second_clock::universal_time();
 			}
 
 		private:
 			typedef std::map<JID, VCard::ref> VCardMap;
+			typedef std::map<JID, boost::posix_time::ptime> VCardWriteTimeMap;
 			VCardMap vcards;
+			VCardWriteTimeMap vcardWriteTimes;
 	};
 }

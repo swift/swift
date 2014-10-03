@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/VCards/VCardStorage.h>
 #include <Swiften/VCards/GetVCardRequest.h>
@@ -25,9 +26,11 @@ VCard::ref VCardManager::getVCard(const JID& jid) const {
 	return storage->getVCard(jid);
 }
 
-VCard::ref VCardManager::getVCardAndRequestWhenNeeded(const JID& jid) {
+VCard::ref VCardManager::getVCardAndRequestWhenNeeded(const JID& jid, const boost::posix_time::time_duration& allowedAge) {
 	VCard::ref vcard = storage->getVCard(jid);
-	if (!vcard) {
+	boost::posix_time::ptime vcardFetchedTime = storage->getVCardWriteTime(jid);
+	bool vcardTooOld = vcard && (vcardFetchedTime.is_special() || ((boost::posix_time::second_clock::universal_time() - vcardFetchedTime) > allowedAge));
+	if (!vcard || vcardTooOld) {
 		requestVCard(jid);
 	}
 	return vcard;
