@@ -266,6 +266,10 @@ void ChatController::handleBlockingStateChanged() {
 			blockedContactAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "You've currently blocked this contact. To continue your conversation you have to unblock the contact first."));
 			chatWindow_->setInputEnabled(false);
 			chatWindow_->setBlockingState(ChatWindow::IsBlocked);
+
+			// disconnect typing events to prevent chat state notifciations to blocked contacts
+			chatWindow_->onUserTyping.disconnect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
+			chatWindow_->onUserCancelsTyping.disconnect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
 		} else {
 			if (blockedContactAlert_) {
 				chatWindow_->removeAlert(*blockedContactAlert_);
@@ -273,6 +277,9 @@ void ChatController::handleBlockingStateChanged() {
 			}
 			chatWindow_->setInputEnabled(true);
 			chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
+
+			chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
+			chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
 		}
 	}
 }
