@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include "QtRemovableItemDelegate.h"
 #include <Swiften/Base/Platform.h>
 #include <QEvent>
@@ -15,7 +21,7 @@ QtRemovableItemDelegate::QtRemovableItemDelegate(const QStyle* style) : style(st
 
 }
 
-void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex&) const {
+void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const {
 	QStyleOption opt;
 	opt.state = option.state;
 	opt.state |= QStyle::State_AutoRaise;
@@ -25,12 +31,14 @@ void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewIte
 	opt.rect = option.rect;
 	painter->save();
 	painter->fillRect(option.rect, option.state & QStyle::State_Selected ? option.palette.highlight() : option.palette.base());
+	if (index.data().toString().isEmpty()) {
 #ifdef SWIFTEN_PLATFORM_MACOSX
-	// workaround for Qt not painting relative to the cell we're in, on OS X
-	int height = style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
-	painter->translate(option.rect.x(), option.rect.y() + (option.rect.height() - height)/2);
+		// workaround for Qt not painting relative to the cell we're in, on OS X
+		int height = style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
+		painter->translate(option.rect.x(), option.rect.y() + (option.rect.height() - height)/2);
 #endif
-	style->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, painter);
+		style->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, painter);
+	}
 	painter->restore();
 }
 
@@ -39,7 +47,7 @@ QWidget* QtRemovableItemDelegate::createEditor(QWidget*, const QStyleOptionViewI
 }
 
 bool QtRemovableItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) {
-	if (event->type() == QEvent::MouseButtonRelease) {
+	if (index.data().toString().isEmpty() && event->type() == QEvent::MouseButtonRelease) {
 		model->removeRow(index.row());
 		return true;
 	} else {

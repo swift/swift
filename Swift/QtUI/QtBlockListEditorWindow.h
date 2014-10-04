@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <Swift/Controllers/UIInterfaces/BlockListEditorWidget.h>
@@ -18,6 +24,8 @@ namespace Ui {
 
 namespace Swift {
 
+class QtJIDValidatedItemDelegate;
+
 class QtBlockListEditorWindow : public QWidget, public BlockListEditorWidget {
 	Q_OBJECT
 
@@ -26,9 +34,12 @@ class QtBlockListEditorWindow : public QWidget, public BlockListEditorWidget {
 		virtual ~QtBlockListEditorWindow();
 
 		virtual void show();
+		virtual void hide();
 		virtual void setCurrentBlockList(const std::vector<JID>& blockedJIDs);
 		virtual void setBusy(bool isBusy);
+		virtual void setError(const std::string& error);
 		virtual std::vector<JID> getCurrentBlockList() const;
+		virtual bool eventFilter(QObject* target, QEvent* event);
 
 	private slots:
 		void handleItemChanged(QTreeWidgetItem*, int);
@@ -36,7 +47,9 @@ class QtBlockListEditorWindow : public QWidget, public BlockListEditorWidget {
 
 	private:
 		Ui::QtBlockListEditorWindow* ui;
-		QtRemovableItemDelegate* itemDelegate;
+		QtRemovableItemDelegate* removeItemDelegate;
+		QtJIDValidatedItemDelegate* editItemDelegate;
+		QString freshBlockListTemplate;
 };
 
 }

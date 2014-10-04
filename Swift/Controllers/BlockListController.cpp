@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #include <Swift/Controllers/BlockListController.h>
 
 #include <boost/bind.hpp>
@@ -57,6 +63,7 @@ void BlockListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
 		}
 		blockListBeforeEdit = blockListManager_->getBlockList()->getItems();
 		blockListEditorWidget_->setCurrentBlockList(blockListBeforeEdit);
+		blockListEditorWidget_->setError("");
 		blockListEditorWidget_->show();
 		return;
 	}
@@ -85,12 +92,19 @@ void BlockListController::handleBlockResponse(GenericRequest<BlockPayload>::ref 
 		if (!error->getText().empty()) {
 			errorMessage = str(format(QT_TRANSLATE_NOOP("", "%1%: %2%.")) % errorMessage % error->getText());
 		}
-		eventController_->handleIncomingEvent(boost::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
+		if (blockListEditorWidget_ && originEditor) {
+			blockListEditorWidget_->setError(errorMessage);
+			blockListEditorWidget_->setBusy(false);
+		}
+		else {
+			eventController_->handleIncomingEvent(boost::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
+		}
 	}
 	if (originEditor) {
 		remainingRequests_--;
-		if (blockListEditorWidget_ && (remainingRequests_ == 0)) {
+		if (blockListEditorWidget_ && (remainingRequests_ == 0) && !error) {
 			blockListEditorWidget_->setBusy(false);
+			blockListEditorWidget_->hide();
 		}
 	}
 }
@@ -103,12 +117,19 @@ void BlockListController::handleUnblockResponse(GenericRequest<UnblockPayload>::
 		if (!error->getText().empty()) {
 			errorMessage = str(format(QT_TRANSLATE_NOOP("", "%1%: %2%.")) % errorMessage % error->getText());
 		}
-		eventController_->handleIncomingEvent(boost::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
+		if (blockListEditorWidget_ && originEditor) {
+			blockListEditorWidget_->setError(errorMessage);
+			blockListEditorWidget_->setBusy(false);
+		}
+		else {
+			eventController_->handleIncomingEvent(boost::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
+		}
 	}
 	if (originEditor) {
 		remainingRequests_--;
-		if (blockListEditorWidget_ && (remainingRequests_ == 0)) {
+		if (blockListEditorWidget_ && (remainingRequests_ == 0) && !error) {
 			blockListEditorWidget_->setBusy(false);
+			blockListEditorWidget_->hide();
 		}
 	}
 }
@@ -131,9 +152,12 @@ void BlockListController::handleSetNewBlockList(const std::vector<JID> &newBlock
 		unblockRequest->onResponse.connect(boost::bind(&BlockListController::handleUnblockResponse, this, unblockRequest, _1, _2, jidsToUnblock, true));
 		unblockRequest->send();
 	}
-	if (!jidsToBlock.empty() || jidsToUnblock.empty()) {
+	if (!jidsToBlock.empty() || !jidsToUnblock.empty()) {
 		assert(blockListEditorWidget_);
 		blockListEditorWidget_->setBusy(true);
+		blockListEditorWidget_->setError("");
+	} else {
+		blockListEditorWidget_->hide();
 	}
 }
 

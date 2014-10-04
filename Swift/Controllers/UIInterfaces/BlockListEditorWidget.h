@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Kevin Smith and Remko Tronçon
+ * Licensed under the GNU General Public License v3.
+ * See Documentation/Licenses/GPLv3.txt for more information.
+ */
+
 #pragma once
 
 #include <vector>
@@ -20,9 +26,11 @@ namespace Swift {
 			virtual ~BlockListEditorWidget() {}
 
 			virtual void show() = 0;
+			virtual void hide() = 0;
 
 			virtual void setCurrentBlockList(const std::vector<JID>& blockedJIDs) = 0;
 			virtual void setBusy(bool isBusy) = 0;
+			virtual void setError(const std::string&) = 0;
 
 			virtual std::vector<JID> getCurrentBlockList() const = 0;
 
