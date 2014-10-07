@@ -80,7 +80,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	layout->setContentsMargins(0,0,0,0);
 	layout->setSpacing(2);
 
-	alertLayout_ = new QVBoxLayout(this);
+	alertLayout_ = new QVBoxLayout();
 	layout->addLayout(alertLayout_);
 
 	subjectLayout_ = new QBoxLayout(QBoxLayout::LeftToRight);
