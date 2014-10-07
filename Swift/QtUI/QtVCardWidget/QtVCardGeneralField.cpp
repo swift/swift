@@ -19,7 +19,7 @@
 namespace Swift {
 
 QtVCardGeneralField::QtVCardGeneralField(QWidget* parent, QGridLayout* layout, bool editable, int row, QString label, bool preferrable, bool taggable) :
-	QWidget(parent), editable(editable), preferrable(preferrable), taggable(taggable), starVisible(false), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
+	QWidget(parent), editable(editable), preferrable(preferrable), starVisible(false), taggable(taggable), layout(layout), row(row), preferredCheckBox(0), label(0), labelText(label),
 	tagComboBox(0), tagLabel(NULL), closeButton(0) {
 }
 
