@@ -55,11 +55,13 @@ namespace Swift {
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
 			boost::signal<void ()> onImpromptuConfigCompleted;
+			boost::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
 			virtual void setOnline(bool online);
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
 			static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu);
 			static std::string concatenateListOfNames(const std::vector<NickJoinPart>& joinParts);
+			static std::string generateNicknameChangeString(const std::string& oldNickname, const std::string& newNickname);
 			bool isJoined();
 			const std::string& getNick();
 			const boost::optional<std::string> getPassword() const;
@@ -86,6 +88,7 @@ namespace Swift {
 			void handleWindowClosed();
 			void handleAvatarChanged(const JID& jid);
 			void handleOccupantJoined(const MUCOccupant& occupant);
+			void handleOccupantNicknameChanged(const std::string& oldNickname, const std::string& newNickname);
 			void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const std::string& reason);
 			void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
 			void handleOccupantRoleChanged(const std::string& nick, const MUCOccupant& occupant,const MUCOccupant::Role& oldRole);

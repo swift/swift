@@ -58,6 +58,7 @@ namespace Swift {
 			/*virtual void queryRoomItems(); */
 			/*virtual std::string getCurrentNick() = 0; */
 			virtual std::map<std::string, MUCOccupant> getOccupants() const { return occupants_; }
+			virtual void changeNickname(const std::string&) { }
 			virtual void part() {}
 			/*virtual void handleIncomingMessage(Message::ref message) = 0; */
 			/** Expose public so it can be called when e.g. user goes offline */

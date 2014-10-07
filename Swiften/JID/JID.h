@@ -134,6 +134,14 @@ namespace Swift {
 				return result;
 			}
 
+			/**
+			 * Get the full JID with the supplied resource.
+			 */
+			JID withResource(const std::string& resource) const {
+				JID result(this->getNode(), this->getDomain(), resource);
+				return result;
+			}
+
 			std::string toString() const;
 
 			bool equals(const JID& o, CompareType compareType) const {

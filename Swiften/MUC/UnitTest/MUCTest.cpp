@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -30,6 +30,7 @@ class MUCTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoinResendsPresenceAfterJoinSuccess);
 		CPPUNIT_TEST(testCreateInstant);
 		CPPUNIT_TEST(testReplicateBug);
+		CPPUNIT_TEST(testNicknameChange);
 		/*CPPUNIT_TEST(testJoin_Success);
 		CPPUNIT_TEST(testJoin_Fail);*/
 		CPPUNIT_TEST_SUITE_END();
@@ -41,6 +42,7 @@ class MUCTest : public CppUnit::TestFixture {
 			mucRegistry = new MUCRegistry();
 			stanzaChannelPresenceSender = new StanzaChannelPresenceSender(channel);
 			presenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
+			nickChanges = 0;
 		}
 
 		void tearDown() {
@@ -141,6 +143,67 @@ class MUCTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(Form::SubmitType, iq->getPayload<MUCOwnerPayload>()->getForm()->getType());
 		}
 
+		void testNicknameChange() {
+			MUC::ref testling = createMUC(JID("foo@bar.com"));
+			// Join as Rabbit
+			testling->joinAs("Rabbit");
+
+			// Rabbit joins
+			Presence::ref rabbitJoins = boost::make_shared<Presence>();
+			rabbitJoins->setTo("test@swift.im/6913d576d55f0b67");
+			rabbitJoins->setFrom(testling->getJID().toString() + "/Rabbit");
+			channel->onPresenceReceived(rabbitJoins);
+			CPPUNIT_ASSERT_EQUAL(true, testling->hasOccupant("Rabbit"));
+
+			// Alice joins
+			Presence::ref aliceJoins = boost::make_shared<Presence>();
+			aliceJoins->setTo("test@swift.im/6913d576d55f0b67");
+			aliceJoins->setFrom(testling->getJID().toString() + "/Alice");
+			channel->onPresenceReceived(aliceJoins);
+			CPPUNIT_ASSERT_EQUAL(true, testling->hasOccupant("Alice"));
+
+			// Change nick to Dodo
+			testling->changeNickname("Dodo");
+			Presence::ref stanza = channel->getStanzaAtIndex<Presence>(1);
+			CPPUNIT_ASSERT(stanza);
+			CPPUNIT_ASSERT_EQUAL(std::string("Dodo"), stanza->getTo().getResource());
+
+			// Alice changes nick to Alice2
+			stanza = boost::make_shared<Presence>();
+			stanza->setFrom(JID("foo@bar.com/Alice"));
+			stanza->setTo(JID(router->getJID()));
+			stanza->setType(Presence::Unavailable);
+			MUCUserPayload::ref mucPayload(new MUCUserPayload());
+			MUCItem myItem;
+			myItem.affiliation = MUCOccupant::Member;
+			myItem.nick = "Alice2";
+			myItem.role = MUCOccupant::Participant;
+			mucPayload->addItem(myItem);
+			mucPayload->addStatusCode(303);
+			stanza->addPayload(mucPayload);
+			channel->onPresenceReceived(stanza);
+			CPPUNIT_ASSERT_EQUAL(1, nickChanges);
+			CPPUNIT_ASSERT_EQUAL(false, testling->hasOccupant("Alice"));
+			CPPUNIT_ASSERT_EQUAL(true, testling->hasOccupant("Alice2"));
+
+			// We (Rabbit) change nick to Robot
+			stanza = boost::make_shared<Presence>();
+			stanza->setFrom(JID("foo@bar.com/Rabbit"));
+			stanza->setTo(JID(router->getJID()));
+			stanza->setType(Presence::Unavailable);
+			mucPayload = MUCUserPayload::ref(new MUCUserPayload());
+			myItem.affiliation = MUCOccupant::Member;
+			myItem.nick = "Robot";
+			myItem.role = MUCOccupant::Participant;
+			mucPayload->addItem(myItem);
+			mucPayload->addStatusCode(303);
+			stanza->addPayload(mucPayload);
+			channel->onPresenceReceived(stanza);
+			CPPUNIT_ASSERT_EQUAL(2, nickChanges);
+			CPPUNIT_ASSERT_EQUAL(false, testling->hasOccupant("Rabbit"));
+			CPPUNIT_ASSERT_EQUAL(true, testling->hasOccupant("Robot"));
+		}
+
 		/*void testJoin_Success() {
 			MUC::ref testling = createMUC(JID("foo@bar.com"));
 			testling->onJoinFinished.connect(boost::bind(&MUCTest::handleJoinFinished, this, _1, _2));
@@ -158,7 +221,9 @@ class MUCTest : public CppUnit::TestFixture {
 
 	private:
 		MUC::ref createMUC(const JID& jid) {
-			return boost::make_shared<MUCImpl>(channel, router, presenceSender, jid, mucRegistry);
+			MUC::ref muc = boost::make_shared<MUCImpl>(channel, router, presenceSender, jid, mucRegistry);
+			muc->onOccupantNicknameChanged.connect(boost::bind(&MUCTest::handleOccupantNicknameChanged, this, _1, _2));
+			return muc;
 		}
 
 		void handleJoinFinished(const std::string& nick, ErrorPayload::ref error) {
@@ -177,6 +242,10 @@ class MUCTest : public CppUnit::TestFixture {
 			channel->onPresenceReceived(p);
 		}
 
+		void handleOccupantNicknameChanged(const std::string&, const std::string&) {
+			nickChanges++;
+		}
+
 	private:
 		DummyStanzaChannel* channel;
 		IQRouter* router;
@@ -188,6 +257,7 @@ class MUCTest : public CppUnit::TestFixture {
 			ErrorPayload::ref error;
 		};
 		std::vector<JoinResult> joinResults;
+		int nickChanges;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCTest);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -55,6 +55,7 @@ namespace Swift {
 			/*virtual void queryRoomItems(); */
 			/*virtual std::string getCurrentNick() = 0; */
 			virtual std::map<std::string, MUCOccupant> getOccupants() const = 0;
+			virtual void changeNickname(const std::string& newNickname) = 0;
 			virtual void part() = 0;
 			/*virtual void handleIncomingMessage(Message::ref message) = 0; */
 			/** Expose public so it can be called when e.g. user goes offline */
@@ -87,6 +88,7 @@ namespace Swift {
 			boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
 			boost::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
 			boost::signal<void (const MUCOccupant&)> onOccupantJoined;
+			boost::signal<void (const std::string& /*oldNickname*/, const std::string& /*newNickname*/ )> onOccupantNicknameChanged;
 			boost::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
 			boost::signal<void (Form::ref)> onConfigurationFormReceived;
 			boost::signal<void (MUCOccupant::Affiliation, const std::vector<JID>&)> onAffiliationListReceived;

@@ -101,6 +101,7 @@ namespace Swift {
 			void handleMUCBookmarkAdded(const MUCBookmark& bookmark);
 			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
 			void handleUserLeftMUC(MUCController* mucController);
+			void handleUserNicknameChanged(MUCController* mucController, const std::string& oldNickname, const std::string& newNickname);
 			void handleBookmarksReady();
 			void handleChatActivity(const JID& jid, const std::string& activity, bool isMUC);
 			void handleChatClosed(const JID& jid);

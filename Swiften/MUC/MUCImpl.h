@@ -58,6 +58,12 @@ namespace Swift {
 			/*virtual void queryRoomItems(); */
 			/*virtual std::string getCurrentNick(); */
 			virtual std::map<std::string, MUCOccupant> getOccupants() const;
+
+			/**
+			 * Send a new presence to the MUC indicating a nickname change. Any custom status the user had in the is cleared.
+			 * @param newNickname The nickname to change to.
+			 */
+			virtual void changeNickname(const std::string& newNickname);
 			virtual void part();
 			/*virtual void handleIncomingMessage(Message::ref message); */
 			/** Expose public so it can be called when e.g. user goes offline */

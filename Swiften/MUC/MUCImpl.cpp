@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -90,6 +90,12 @@ void MUCImpl::internalJoin(const std::string &nick) {
 	presenceSender->sendPresence(joinPresence);
 }
 
+void MUCImpl::changeNickname(const std::string& newNickname) {
+	Presence::ref changeNicknamePresence = boost::make_shared<Presence>();
+	changeNicknamePresence->setTo(ownMUCJID.toBare().toString() + std::string("/") + newNickname);
+	presenceSender->sendPresence(changeNicknamePresence);
+}
+
 void MUCImpl::part() {
 	presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 	mucRegistry->removeMUC(getJID());
@@ -154,6 +160,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 	//TODO: Nick changes
 	if (presence->getType() == Presence::Unavailable) {
 		LeavingType type = LeavePart;
+		boost::optional<std::string> newNickname;
 		if (mucPayload) {
 			if (boost::dynamic_pointer_cast<MUCDestroyPayload>(mucPayload->getPayload())) {
 				type = LeaveDestroy;
@@ -168,20 +175,36 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 				else if (status.code == 321) {
 					type = LeaveNotMember;
 				}
+				else if (status.code == 303) {
+					if (mucPayload->getItems().size() == 1) {
+						newNickname = mucPayload->getItems()[0].nick;
+					}
+				}
 			}
 		}
-
-		if (presence->getFrom() == ownMUCJID) {
-			handleUserLeft(type);
-			return;
-		} 
-		else {
+		if (newNickname) {
 			std::map<std::string,MUCOccupant>::iterator i = occupants.find(nick);
 			if (i != occupants.end()) {
-				//TODO: part type
 				MUCOccupant occupant = i->second;
 				occupants.erase(i);
-				onOccupantLeft(occupant, type, "");
+				occupant.setNick(newNickname.get());
+				occupants.insert(std::make_pair(newNickname.get(), occupant));
+				onOccupantNicknameChanged(nick, newNickname.get());
+			}
+		}
+		else {
+			if (presence->getFrom() == ownMUCJID) {
+				handleUserLeft(type);
+				return;
+			}
+			else {
+				std::map<std::string,MUCOccupant>::iterator i = occupants.find(nick);
+				if (i != occupants.end()) {
+					//TODO: part type
+					MUCOccupant occupant = i->second;
+					occupants.erase(i);
+					onOccupantLeft(occupant, type, "");
+				}
 			}
 		}
 	} 

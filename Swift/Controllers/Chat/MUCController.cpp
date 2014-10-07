@@ -103,6 +103,7 @@ MUCController::MUCController (
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
+	muc_->onOccupantNicknameChanged.connect(boost::bind(&MUCController::handleOccupantNicknameChanged, this, _1, _2));
 	muc_->onOccupantPresenceChange.connect(boost::bind(&MUCController::handleOccupantPresenceChange, this, _1));
 	muc_->onOccupantLeft.connect(boost::bind(&MUCController::handleOccupantLeft, this, _1, _2, _3));
 	muc_->onRoleChangeFailed.connect(boost::bind(&MUCController::handleOccupantRoleChangeFailed, this, _1, _2, _3));
@@ -483,7 +484,7 @@ std::string MUCController::roleToSortName(MUCOccupant::Role role) {
 }
 
 JID MUCController::nickToJID(const std::string& nick) {
-	return JID(toJID_.getNode(), toJID_.getDomain(), nick);
+	return muc_->getJID().withResource(nick);
 }
 
 bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
@@ -691,6 +692,44 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
 	}
 }
 
+void MUCController::handleOccupantNicknameChanged(const std::string& oldNickname, const std::string& newNickname) {
+	addPresenceMessage(generateNicknameChangeString(oldNickname, newNickname));
+	JID oldJID = muc_->getJID().withResource(oldNickname);
+	JID newJID = muc_->getJID().withResource(newNickname);
+
+	// adjust occupants
+	currentOccupants_.erase(oldNickname);
+	currentOccupants_.insert(newNickname);
+
+	// adjust completer
+	completer_->removeWord(oldNickname);
+	completer_->addWord(newNickname);
+
+	// update contact
+	roster_->removeContact(oldJID);
+	MUCOccupant occupant = muc_->getOccupant(newNickname);
+
+	JID realJID;
+	if (occupant.getRealJID()) {
+		realJID = occupant.getRealJID().get();
+	}
+	MUCOccupant::Role role = MUCOccupant::Participant;
+	MUCOccupant::Affiliation affiliation = MUCOccupant::NoAffiliation;
+	if (!isImpromptu_) {
+		role = occupant.getRole();
+		affiliation = occupant.getAffiliation();
+	}
+	std::string groupName(roleToGroupName(role));
+	roster_->addContact(newJID, realJID, newNickname, groupName, avatarManager_->getAvatarPath(newJID));
+	roster_->applyOnItems(SetMUC(newJID, role, affiliation));
+	if (avatarManager_ != NULL) {
+		handleAvatarChanged(newJID);
+	}
+
+	clearPresenceQueue();
+	onUserNicknameChanged(oldNickname, newNickname);
+}
+
 void MUCController::handleOccupantPresenceChange(boost::shared_ptr<Presence> presence) {
 	receivedActivity();
 	roster_->applyOnItems(SetPresence(presence, JID::WithResource));
@@ -816,6 +855,10 @@ std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart
 		result += eventStrings[populatedEvents[i]];
 	}
 	return result;
+}
+
+std::string MUCController::generateNicknameChangeString(const std::string& oldNickname, const std::string& newNickname) {
+	return str(boost::format(QT_TRANSLATE_NOOP("", "%1% is now known as %2%.")) % oldNickname % newNickname);
 }
 
 void MUCController::handleChangeSubjectRequest(const std::string& subject) {

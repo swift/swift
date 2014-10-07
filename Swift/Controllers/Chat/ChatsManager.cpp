@@ -824,6 +824,7 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 		controller->setAvailableServerFeatures(serverDiscoInfo_);
 		controller->onUserLeft.connect(boost::bind(&ChatsManager::handleUserLeftMUC, this, controller));
 		controller->onUserJoined.connect(boost::bind(&ChatsManager::handleChatActivity, this, mucJID.toBare(), "", true));
+		controller->onUserNicknameChanged.connect(boost::bind(&ChatsManager::handleUserNicknameChanged, this, controller, _1, _2));
 		controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, mucJID.toBare(), _1, true));
 		controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
 		handleChatActivity(mucJID.toBare(), "", true);
@@ -835,6 +836,29 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 
 void ChatsManager::handleSearchMUCRequest() {
 	mucSearchController_->openSearchWindow();
+}
+
+void ChatsManager::handleUserNicknameChanged(MUCController* mucController, const std::string& oldNickname, const std::string& newNickname) {
+	JID oldMUCChatJID = mucController->getToJID().withResource(oldNickname);
+	JID newMUCChatJID = mucController->getToJID().withResource(newNickname);
+
+	SWIFT_LOG(debug) << "nickname change in " << mucController->getToJID().toString() << " from " << oldNickname << " to " << newNickname << std::endl;
+
+	// get current chat controller
+	ChatController *chatController = getChatControllerIfExists(oldMUCChatJID);
+	if (chatController) {
+		// adjust chat controller
+		chatController->setToJID(newMUCChatJID);
+		nickResolver_->onNickChanged(newMUCChatJID, oldNickname);
+		chatControllers_.erase(oldMUCChatJID);
+		chatControllers_[newMUCChatJID] = chatController;
+
+		chatController->onActivity.disconnect(boost::bind(&ChatsManager::handleChatActivity, this, oldMUCChatJID, _1, false));
+		chatController->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, newMUCChatJID, _1, false));
+		/*for (std::list<ChatListWindow::Chat>::iterator i = recentChats_.begin(); i != recentChats_.end(); i++) {
+			if (i->jid ==
+		}*/
+	}
 }
 
 void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
