@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Kevin Smith
+ * Copyright (c) 2011-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -132,6 +132,9 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 	}
 	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
 		QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));
+		if (P2QSTRING(group->getDisplayName()) == tr("Contacts")) {
+			renameGroupAction->setEnabled(false);
+		}
 		QAction* result = contextMenu.exec(event->globalPos());
 		if (result == renameGroupAction) {
 			renameGroup(group);
