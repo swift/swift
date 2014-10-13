@@ -212,17 +212,18 @@ void QtUserSearchWindow::handleSearch() {
 	boost::shared_ptr<SearchPayload> search(new SearchPayload());
 	if (fieldsPage_->getFormWidget()) {
 		search->setForm(fieldsPage_->getFormWidget()->getCompletedForm());
+		search->getForm()->clearEmptyTextFields();
 	} else {
-		if (fieldsPage_->nickInput_->isEnabled()) {
+		if (fieldsPage_->nickInput_->isEnabled() && !fieldsPage_->nickInput_->text().isEmpty()) {
 			search->setNick(Q2PSTRING(fieldsPage_->nickInput_->text()));
 		}
-		if (fieldsPage_->firstInput_->isEnabled()) {
+		if (fieldsPage_->firstInput_->isEnabled() && !fieldsPage_->firstInput_->text().isEmpty()) {
 			search->setFirst(Q2PSTRING(fieldsPage_->firstInput_->text()));
 		}
-		if (fieldsPage_->lastInput_->isEnabled()) {
+		if (fieldsPage_->lastInput_->isEnabled() && !fieldsPage_->lastInput_->text().isEmpty()) {
 			search->setLast(Q2PSTRING(fieldsPage_->lastInput_->text()));
 		}
-		if (fieldsPage_->emailInput_->isEnabled()) {
+		if (fieldsPage_->emailInput_->isEnabled() && !fieldsPage_->emailInput_->text().isEmpty()) {
 			search->setEMail(Q2PSTRING(fieldsPage_->emailInput_->text()));
 		}
 	}

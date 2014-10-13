@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -56,6 +56,8 @@ namespace Swift {
 			void addItem(const FormItem& item);
 			const std::vector<FormItem>& getItems() const;
 			void clearItems() { items_.clear(); }
+
+			void clearEmptyTextFields();
 
 		private:
 			std::vector<boost::shared_ptr<FormField> > fields_;
