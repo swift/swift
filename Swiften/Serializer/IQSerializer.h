@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -10,11 +10,14 @@
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
+#include <boost/optional.hpp>
+
 namespace Swift {
 	class IQSerializer : public GenericStanzaSerializer<IQ> {
 		public:
-			IQSerializer(PayloadSerializerCollection* payloadSerializers) : 
-					GenericStanzaSerializer<IQ>("iq", payloadSerializers) {}
+			IQSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>()) :
+					GenericStanzaSerializer<IQ>("iq", payloadSerializers, explicitNS) {
+			}
 
 		private:
 			virtual void setStanzaSpecificAttributesGeneric(

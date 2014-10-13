@@ -33,7 +33,8 @@ namespace Swift {
 					PayloadParserFactoryCollection* payloadParserFactories,
 					PayloadSerializerCollection* payloadSerializers,
 					XMLParserFactory* xmlParserFactory,
-					StreamType streamType);
+					StreamType streamType,
+					bool setExplictNSonTopLevelElements = false);
 			~XMPPLayer();
 
 			void writeHeader(const ProtocolHeader& header);
@@ -67,6 +68,7 @@ namespace Swift {
 			PayloadSerializerCollection* payloadSerializers_;
 			XMLParserFactory* xmlParserFactory_;
 			XMPPSerializer* xmppSerializer_;
+			bool setExplictNSonTopLevelElements_;
 			bool resetParserAfterParse_;
 			bool inParser_;
 	};

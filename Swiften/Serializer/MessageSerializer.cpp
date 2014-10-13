@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -9,8 +9,8 @@
 
 namespace Swift {
 
-MessageSerializer::MessageSerializer(PayloadSerializerCollection* payloadSerializers) : 
-		GenericStanzaSerializer<Message>("message", payloadSerializers) {
+MessageSerializer::MessageSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS) :
+		GenericStanzaSerializer<Message>("message", payloadSerializers, explicitNS) {
 }
 
 void MessageSerializer::setStanzaSpecificAttributesGeneric(

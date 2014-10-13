@@ -56,7 +56,7 @@ BOSHSessionStream::BOSHSessionStream(
 	connectionPool->onBOSHDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
 	connectionPool->onBOSHDataWritten.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
 
-	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType);
+	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType, true);
 	xmppLayer->onStreamStart.connect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
 	xmppLayer->onElement.connect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
 	xmppLayer->onError.connect(boost::bind(&BOSHSessionStream::handleXMPPError, this));

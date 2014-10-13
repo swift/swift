@@ -39,10 +39,10 @@
 
 namespace Swift {
 
-XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers, StreamType type) : type_(type) {
-	serializers_.push_back(boost::make_shared<PresenceSerializer>(payloadSerializers));
-	serializers_.push_back(boost::make_shared<IQSerializer>(payloadSerializers));
-	serializers_.push_back(boost::make_shared<MessageSerializer>(payloadSerializers));
+XMPPSerializer::XMPPSerializer(PayloadSerializerCollection* payloadSerializers, StreamType type, bool setExplictNSonTopLevelElements) : type_(type) {
+	serializers_.push_back(boost::make_shared<PresenceSerializer>(payloadSerializers, setExplictNSonTopLevelElements ? getDefaultNamespace() : boost::optional<std::string>()));
+	serializers_.push_back(boost::make_shared<IQSerializer>(payloadSerializers, setExplictNSonTopLevelElements ? getDefaultNamespace() : boost::optional<std::string>()));
+	serializers_.push_back(boost::make_shared<MessageSerializer>(payloadSerializers, setExplictNSonTopLevelElements ? getDefaultNamespace() : boost::optional<std::string>()));
 	serializers_.push_back(boost::make_shared<CompressRequestSerializer>());
 	serializers_.push_back(boost::make_shared<CompressFailureSerializer>());
 	serializers_.push_back(boost::make_shared<AuthRequestSerializer>());

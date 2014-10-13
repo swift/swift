@@ -19,17 +19,22 @@
 
 namespace Swift {
 
-StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers) : tag_(tag), payloadSerializers_(payloadSerializers) {
+StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS) : tag_(tag), payloadSerializers_(payloadSerializers), explicitDefaultNS_(explicitNS) {
 }
 
 SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element) const {
-	return serialize(element, "");
+	if (explicitDefaultNS_) {
+		return serialize(element, explicitDefaultNS_.get());
+	}
+	else {
+		return serialize(element, "");
+	}
 }
 
 SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const {
 	boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
 
-	XMLElement stanzaElement(tag_, xmlns);
+	XMLElement stanzaElement(tag_, explicitDefaultNS_ ? explicitDefaultNS_.get() : xmlns);
 	if (stanza->getFrom().isValid()) {
 		stanzaElement.setAttribute("from", stanza->getFrom());
 	}

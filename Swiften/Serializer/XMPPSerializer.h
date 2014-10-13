@@ -22,7 +22,7 @@ namespace Swift {
 
 	class SWIFTEN_API XMPPSerializer {
 		public:
-			XMPPSerializer(PayloadSerializerCollection*, StreamType type);
+			XMPPSerializer(PayloadSerializerCollection*, StreamType type, bool setExplictNSonTopLevelElements);
 
 			std::string serializeHeader(const ProtocolHeader&) const;
 			SafeByteArray serializeElement(boost::shared_ptr<ToplevelElement> stanza) const;

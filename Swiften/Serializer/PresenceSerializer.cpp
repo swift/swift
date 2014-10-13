@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #include <Swiften/Serializer/PresenceSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-
+#include <Swiften/Base/Log.h>
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
 
-PresenceSerializer::PresenceSerializer(PayloadSerializerCollection* payloadSerializers) : 
-		GenericStanzaSerializer<Presence>("presence", payloadSerializers) {
+PresenceSerializer::PresenceSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS) :
+		GenericStanzaSerializer<Presence>("presence", payloadSerializers, explicitNS) {
+
 }
 
 void PresenceSerializer::setStanzaSpecificAttributesGeneric(

@@ -15,14 +15,16 @@ XMPPLayer::XMPPLayer(
 		PayloadParserFactoryCollection* payloadParserFactories,
 		PayloadSerializerCollection* payloadSerializers,
 		XMLParserFactory* xmlParserFactory,
-		StreamType streamType) :
+		StreamType streamType,
+		bool setExplictNSonTopLevelElements) :
 			payloadParserFactories_(payloadParserFactories), 
 			payloadSerializers_(payloadSerializers),
 			xmlParserFactory_(xmlParserFactory),
+			setExplictNSonTopLevelElements_(setExplictNSonTopLevelElements),
 			resetParserAfterParse_(false),
 			inParser_(false) {
 	xmppParser_ = new XMPPParser(this, payloadParserFactories_, xmlParserFactory);
-	xmppSerializer_ = new XMPPSerializer(payloadSerializers_, streamType);
+	xmppSerializer_ = new XMPPSerializer(payloadSerializers_, streamType, setExplictNSonTopLevelElements);
 }
 
 XMPPLayer::~XMPPLayer() {
