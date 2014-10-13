@@ -39,8 +39,8 @@ def getBuildVersion(root, project) :
 
 def convertToWindowsVersion(version) :
   version_match = re.match("(\d+)\.(\d+)(.*)", version)
-  major = int(version_match.group(1)) if version_match else 0
-  minor = int(version_match.group(2)) if version_match else 0
+  major = version_match and int(version_match.group(1)) or 0
+  minor = version_match and int(version_match.group(2)) or 0
   if version_match and len(version_match.group(3)) == 0 :
     patch = 60000
   else :

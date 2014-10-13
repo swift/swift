@@ -555,7 +555,7 @@ else :
 
 #Hunspell
 hunspell_env = conf_env.Clone()
-hunspell_prefix = env["hunspell"] if isinstance(env.get("hunspell", False), str) else ""
+hunspell_prefix = isinstance(env.get("hunspell", False), str) and env["hunspell"] or ""
 hunspell_flags = {}
 if hunspell_prefix :
 	hunspell_flags = {"CPPPATH":[os.path.join(hunspell_prefix, "include")], "LIBPATH":[os.path.join(hunspell_prefix, "lib")]}
