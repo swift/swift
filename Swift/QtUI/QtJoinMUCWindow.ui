@@ -120,10 +120,12 @@
  </widget>
  <tabstops>
   <tabstop>room</tabstop>
+  <tabstop>searchButton</tabstop>
   <tabstop>nickName</tabstop>
+  <tabstop>password</tabstop>
+  <tabstop>instantRoom</tabstop>
   <tabstop>joinAutomatically</tabstop>
   <tabstop>joinButton</tabstop>
-  <tabstop>searchButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
