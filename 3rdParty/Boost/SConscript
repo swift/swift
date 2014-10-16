@@ -40,7 +40,7 @@ elif env.get("BOOST_BUNDLED", False) :
 				"LIBS": ["Swiften_Boost"]
 			}
 		if env["PLATFORM"] == "win32" :
-			env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "0x0501")]
+			env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "_WIN32_WINNT_VISTA")]
 			if env["PLATFORM"] == "cygwin" :
 				env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
 

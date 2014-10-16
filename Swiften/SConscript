@@ -76,6 +76,9 @@ if env["SCONS_STAGE"] == "flags" :
 				"FRAMEWORKS": e.get("FRAMEWORKS", []),
 			}
 
+	if env["PLATFORM"] == "win32" :
+		env.Append(CPPDEFINES = [("_WIN32_WINNT","_WIN32_WINNT_VISTA") , ("NTDDI_VERSION","NTDDI_VISTA")])
+
 ################################################################################
 # Build
 ################################################################################
