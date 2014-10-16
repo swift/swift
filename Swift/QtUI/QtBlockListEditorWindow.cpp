@@ -75,7 +75,7 @@ class QtJIDValidatedItemDelegate : public QItemDelegate {
 QtBlockListEditorWindow::QtBlockListEditorWindow() : QWidget(), ui(new Ui::QtBlockListEditorWindow), removeItemDelegate(0), editItemDelegate(0) {
 	ui->setupUi(this);
 
-	freshBlockListTemplate = tr("Click to add contact");
+	freshBlockListTemplate = tr("Double-click to add contact");
 
 	new QShortcut(QKeySequence::Close, this, SLOT(close()));
 	ui->throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
