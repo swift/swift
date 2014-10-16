@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if [ -z "$1" ]; then
 	echo "Please specify the location of the boost source tree"
 	exit -1
