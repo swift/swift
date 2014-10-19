@@ -1,8 +1,8 @@
 /*
  *
  * Copyright (c) 2003 Dr John Maddock
- * Use, modification and distribution is subject to the 
- * Boost Software License, Version 1.0. (See accompanying file 
+ * Use, modification and distribution is subject to the
+ * Boost Software License, Version 1.0. (See accompanying file
  * LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * This file implements the following:
@@ -13,6 +13,7 @@
 #include "bcp_imp.hpp"
 #include "fileview.hpp"
 #include <boost/filesystem/operations.hpp>
+#include <boost/filesystem/fstream.hpp>
 #include <boost/regex.hpp>
 #include <fstream>
 #include <iterator>
@@ -20,7 +21,7 @@
 #include <iostream>
 
 struct get_new_library_name
-{ 
+{
    get_new_library_name(const std::string& n) : m_new_name(n) {}
    template <class I>
    std::string operator()(const boost::match_results<I>& what)
@@ -63,7 +64,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).c_str());
+      boost::filesystem::ifstream is((m_boost_path / p));
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static boost::regex libname_matcher;
@@ -76,11 +77,11 @@ void bcp_implementation::copy_path(const fs::path& p)
       std::swap(v1, v2);
       v2.clear();
 
-      std::ofstream os;
+      boost::filesystem::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).c_str(), std::ios_base::out);
+         os.open((m_dest_path / p), std::ios_base::out);
       os.write(&*v1.begin(), v1.size());
       os.close();
    }
@@ -89,7 +90,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).c_str());
+      boost::filesystem::ifstream is((m_boost_path / p));
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static boost::regex libname_matcher;
@@ -109,11 +110,11 @@ void bcp_implementation::copy_path(const fs::path& p)
       std::swap(v1, v2);
       v2.clear();
 
-      std::ofstream os;
+      boost::filesystem::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).c_str(), std::ios_base::out);
+         os.open((m_dest_path / p), std::ios_base::out);
       os.write(&*v1.begin(), v1.size());
       os.close();
    }
@@ -121,13 +122,13 @@ void bcp_implementation::copy_path(const fs::path& p)
    {
       //
       // v1 hold the current content, v2 is temp buffer.
-      // Each time we do a search and replace the new content 
+      // Each time we do a search and replace the new content
       // ends up in v2: we then swap v1 and v2, and clear v2.
       //
       static std::vector<char> v1, v2;
       v1.clear();
       v2.clear();
-      std::ifstream is((m_boost_path / p).c_str());
+      boost::filesystem::ifstream is((m_boost_path / p));
       std::copy(std::istreambuf_iterator<char>(is), std::istreambuf_iterator<char>(), std::back_inserter(v1));
 
       static const boost::regex namespace_matcher(
@@ -170,7 +171,7 @@ void bcp_implementation::copy_path(const fs::path& p)
       {
          static const boost::regex namespace_alias(
             /*
-            "namespace\\s+" + m_namespace_name + 
+            "namespace\\s+" + m_namespace_name +
             "\\s*"
             "("
                "\\{"
@@ -191,35 +192,35 @@ void bcp_implementation::copy_path(const fs::path& p)
             ")"
             */
             /*
-            "(namespace\\s+" + m_namespace_name + 
+            "(namespace\\s+" + m_namespace_name +
             "\\s*\\{.*"
             "\\})([^\\{\\};]*)\\z"
             */
             "(namespace)(\\s+)(" + m_namespace_name + ")"
             "(adstl|phoenix|rapidxml)?(\\s*\\{)"
             );
-         regex_replace(std::back_inserter(v2), v1.begin(), v1.end(), namespace_alias, 
+         regex_replace(std::back_inserter(v2), v1.begin(), v1.end(), namespace_alias,
             "$1 $3$4 {} $1 (?4$4:boost) = $3$4; $1$2$3$4$5", boost::regex_constants::format_all);
          std::swap(v1, v2);
          v2.clear();
       }
 
-      std::ofstream os;
+      boost::filesystem::ofstream os;
       if(m_unix_lines)
-         os.open((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
+         os.open((m_dest_path / p), std::ios_base::binary | std::ios_base::out);
       else
-         os.open((m_dest_path / p).c_str(), std::ios_base::out);
+         os.open((m_dest_path / p), std::ios_base::out);
       if(v1.size())
          os.write(&*v1.begin(), v1.size());
       os.close();
    }
    else if(m_unix_lines && !is_binary_file(p))
    {
-      std::ifstream is((m_boost_path / p).c_str());
+      boost::filesystem::ifstream is((m_boost_path / p));
       std::istreambuf_iterator<char> isi(is);
       std::istreambuf_iterator<char> end;
 
-      std::ofstream os((m_dest_path / p).c_str(), std::ios_base::binary | std::ios_base::out);
+      boost::filesystem::ofstream os((m_dest_path / p), std::ios_base::binary | std::ios_base::out);
       std::ostreambuf_iterator<char> osi(os);
 
       std::copy(isi, end, osi);

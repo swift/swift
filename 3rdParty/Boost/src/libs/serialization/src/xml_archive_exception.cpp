@@ -31,23 +31,23 @@ xml_archive_exception::xml_archive_exception(
     ) : 
         archive_exception(other_exception, e1, e2)
     {
-        m_msg = "programming error";
         switch(c){
         case xml_archive_parsing_error:
-            m_msg = "unrecognized XML syntax";
+            archive_exception::append(0, "unrecognized XML syntax");
             break;
         case xml_archive_tag_mismatch:
-            m_msg = "XML start/end tag mismatch";
+            archive_exception::append(0, "XML start/end tag mismatch");
             if(NULL != e1){
-                m_msg += " - ";
-                m_msg += e1;
+                archive_exception::append(0, " - ");
+                archive_exception::append(0, e1);
             }    
             break;
         case xml_archive_tag_name_error:
-            m_msg = "Invalid XML tag name";
+            archive_exception::append(0, "Invalid XML tag name");
             break;
         default:
             BOOST_ASSERT(false);
+            archive_exception::append(0, "programming error");
             break;
         }
     }

@@ -1,14 +1,15 @@
 /*
  *
  * Copyright (c) 2003 Dr John Maddock
- * Use, modification and distribution is subject to the 
- * Boost Software License, Version 1.0. (See accompanying file 
+ * Use, modification and distribution is subject to the
+ * Boost Software License, Version 1.0. (See accompanying file
  * LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  *
  * This file implements the fileview class
  */
 
 #include "fileview.hpp"
+#include <boost/filesystem/fstream.hpp>
 #include <vector>
 #include <algorithm>
 #include <string>
@@ -57,7 +58,7 @@ void fileview::close()
 void fileview::open(const boost::filesystem::path& p)
 {
    cow();
-   std::ifstream is(p.c_str());
+   boost::filesystem::ifstream is(p);
    if(!is)
    {
       std::string msg("Bad file name: ");

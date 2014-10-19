@@ -1,0 +1,36 @@
+diff --git a/3rdParty/Boost/src/boost/detail/endian.hpp b/3rdParty/Boost/src/boost/detail/endian.hpp
+index 98c870c..ac77a2e 100644
+--- a/3rdParty/Boost/src/boost/predef/other/endian.h
++++ b/3rdParty/Boost/src/boost/predef/other/endian.h
+@@ -66,8 +66,8 @@
+    || defined(_M_ALPHA) || defined(__amd64) \
+    || defined(__amd64__) || defined(_M_AMD64) \
+    || defined(__x86_64) || defined(__x86_64__) \
+-   || defined(_M_X64) || defined(__bfin__)
+-
++   || defined(_M_X64) || defined(__bfin__) \
++   || defined(ANDROID)
+ # define BOOST_LITTLE_ENDIAN
+ # define BOOST_BYTE_ORDER 1234
+ #else
+diff --git a/3rdParty/Boost/src/libs/filesystem/src/operations.cpp b/3rdParty/Boost/src/libs/filesystem/src/operations.cpp
+index 16a336f..d066e40 100644
+--- a/3rdParty/Boost/src/libs/filesystem/src/operations.cpp
++++ b/3rdParty/Boost/src/libs/filesystem/src/operations.cpp
+@@ -73,10 +73,14 @@ using std::wstring;
+     const fs::path dot_dot_path("..");
+ #   include <sys/types.h>
+ #   include <sys/stat.h>
+-#   if !defined(__APPLE__) && !defined(__OpenBSD__)
++#   if !defined(__APPLE__) && !defined(__OpenBSD__) && !defined(ANDROID)
+ #     include <sys/statvfs.h>
+ #     define BOOST_STATVFS statvfs
+ #     define BOOST_STATVFS_F_FRSIZE vfs.f_frsize
++#   elif defined (ANDROID)
++#     include <sys/vfs.h>
++#     define BOOST_STATVFS statfs
++#     define BOOST_STATVFS_F_FRSIZE static_cast<boost::uintmax_t>(vfs.f_bsize)
+ #   else
+ #     ifdef __OpenBSD__
+ #     include <sys/param.h>
+ --

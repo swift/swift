@@ -53,6 +53,7 @@ elif env.get("BOOST_BUNDLED", False) :
 		myenv.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if not flag.startswith("-W")])
 
 		sources = [
+				"src/libs/atomic/src/lockpool.cpp",
 				"src/libs/date_time/src/gregorian/date_generators.cpp",
 				"src/libs/date_time/src/gregorian/greg_month.cpp",
 				"src/libs/date_time/src/gregorian/greg_weekday.cpp",
@@ -124,7 +125,6 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/serialization/src/extended_type_info_typeid.cpp",
 				"src/libs/serialization/src/polymorphic_iarchive.cpp",
 				"src/libs/serialization/src/polymorphic_oarchive.cpp",
-				"src/libs/serialization/src/shared_ptr_helper.cpp",
 				"src/libs/serialization/src/stl_port.cpp",
 				"src/libs/serialization/src/text_iarchive.cpp",
 				"src/libs/serialization/src/text_oarchive.cpp",
@@ -148,6 +148,7 @@ elif env.get("BOOST_BUNDLED", False) :
 		if env["PLATFORM"] != "win32" :
 			sources += [
 					"src/libs/thread/src/pthread/once.cpp",
+					"src/libs/thread/src/pthread/once_atomic.cpp",
 					"src/libs/thread/src/pthread/thread.cpp"]
 		else :
 			sources += [

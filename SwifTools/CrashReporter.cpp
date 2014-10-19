@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2012-2013 Remko Tronçon
+ * Copyright (c) 2012-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-
+#include <Swiften/Base/Log.h>
 #include <SwifTools/CrashReporter.h>
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Path.h>
@@ -45,7 +45,7 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path) {
 			boost::filesystem::create_directories(path);
 		}
 		catch (const boost::filesystem::filesystem_error& e) {
-			std::cerr << "ERROR: " << e.what() << std::endl;
+			SWIFT_LOG(error) << "ERROR: " << e.what() << std::endl;
 		}
 	}
 

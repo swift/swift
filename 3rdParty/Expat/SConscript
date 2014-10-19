@@ -11,7 +11,10 @@ if env.get("EXPAT_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.Append(CPPDEFINES = ["XML_STATIC", "HAVE_EXPAT_CONFIG_H"])
-		myenv.Append(CPPPATH = [".", "src"])
+		if env.get("BOOST_BUNDLED", False) :
+			myenv.Append(CPPPATH = [".", "src", "../Boost/src"])
+		else :
+			myenv.Append(CPPPATH = [".", "src"])
 
 		conf = Configure(conf_env)
 		if conf.CheckFunc('memmove') :
