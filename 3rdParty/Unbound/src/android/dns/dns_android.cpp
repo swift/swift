@@ -18,6 +18,9 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM* vm, void* /*aReserved*/) {
 
 std::vector<std::string> get_servers() {
   std::vector<std::string> servers;
+  if (javaVM == 0) {
+    return servers;
+  }
 
   JNIEnv* env = 0;
   int result = javaVM->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6);
