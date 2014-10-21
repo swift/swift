@@ -44,7 +44,7 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop) : eventLoop(e
 	idnConverter = PlatformIDNConverter::create();
 #ifdef USE_UNBOUND
 	// TODO: What to do about idnConverter.
-	domainNameResolver = new UnboundDomainNameResolver(ioServiceThread.getIOService(), eventLoop);
+	domainNameResolver = new UnboundDomainNameResolver(idnConverter, ioServiceThread.getIOService(), eventLoop);
 #else
 	domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
 #endif

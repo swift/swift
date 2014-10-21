@@ -14,6 +14,7 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/DomainNameResolveError.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
@@ -173,7 +174,7 @@ class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public Unbo
 		std::string name;
 };
 
-UnboundDomainNameResolver::UnboundDomainNameResolver(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : ioService(ioService), ubDescriptior(*ioService), eventLoop(eventLoop) {
+UnboundDomainNameResolver::UnboundDomainNameResolver(IDNConverter* idnConverter, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : idnConverter(idnConverter), ioService(ioService), ubDescriptior(*ioService), eventLoop(eventLoop) {
 	ubContext = ub_ctx_create();
 	if(!ubContext) {
 		SWIFT_LOG(debug) << "could not create unbound context" << std::endl;
@@ -186,11 +187,11 @@ UnboundDomainNameResolver::UnboundDomainNameResolver(boost::shared_ptr<boost::as
 
 	/* read /etc/resolv.conf for DNS proxy settings (from DHCP) */
 	if( (ret=ub_ctx_resolvconf(ubContext, const_cast<char*>("/etc/resolv.conf"))) != 0) {
-		SWIFT_LOG(debug) << "error reading resolv.conf: " << ub_strerror(ret) << ". errno says: " << strerror(errno) << std::endl;
+		SWIFT_LOG(error) << "error reading resolv.conf: " << ub_strerror(ret) << ". errno says: " << strerror(errno) << std::endl;
 	}
 	/* read /etc/hosts for locally supplied host addresses */
 	if( (ret=ub_ctx_hosts(ubContext, const_cast<char*>("/etc/hosts"))) != 0) {
-		SWIFT_LOG(debug) << "error reading hosts: " << ub_strerror(ret) << ". errno says: " << strerror(errno) << std::endl;
+		SWIFT_LOG(error) << "error reading hosts: " << ub_strerror(ret) << ". errno says: " << strerror(errno) << std::endl;
 	}
 
 	ubDescriptior.assign(ub_fd(ubContext));
@@ -230,12 +231,17 @@ void UnboundDomainNameResolver::processData() {
 	}	
 }
 
-boost::shared_ptr<DomainNameServiceQuery> UnboundDomainNameResolver::createServiceQuery(const std::string& name) {
-	return boost::make_shared<UnboundDomainNameServiceQuery>(this, ubContext, name);
+boost::shared_ptr<DomainNameServiceQuery> UnboundDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+	boost::optional<std::string> encodedDomain = idnConverter->getIDNAEncoded(domain);
+	std::string result;
+	if (encodedDomain) {
+		result = serviceLookupPrefix + *encodedDomain;
+	}
+	return boost::make_shared<UnboundDomainNameServiceQuery>(this, ubContext, result);
 }
 
 boost::shared_ptr<DomainNameAddressQuery> UnboundDomainNameResolver::createAddressQuery(const std::string& name) {
-	return boost::make_shared<UnboundDomainNameAddressQuery>(this, ubContext, name);
+	return boost::make_shared<UnboundDomainNameAddressQuery>(this, ubContext, idnConverter->getIDNAEncoded(name).get_value_or(""));
 }
 
 }

@@ -55,10 +55,10 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		void setUp() {
 			ioServiceThread = new BoostIOServiceThread();
 			eventLoop = new DummyEventLoop();
-#ifdef USE_UNBOUND
-			resolver = new UnboundDomainNameResolver(ioServiceThread->getIOService(), eventLoop);
-#else
 			idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+#ifdef USE_UNBOUND
+			resolver = new UnboundDomainNameResolver(idnConverter.get(), ioServiceThread->getIOService(), eventLoop);
+#else
 			resolver = new PlatformDomainNameResolver(idnConverter.get(), eventLoop);
 #endif
 			resultsAvailable = false;

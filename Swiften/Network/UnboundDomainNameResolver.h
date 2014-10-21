@@ -19,6 +19,7 @@ struct ub_result;
 
 namespace Swift {
 	class EventLoop;
+	class IDNConverter;	
 	class TimerFactory;
 
 	class UnboundDomainNameResolver;
@@ -26,10 +27,10 @@ namespace Swift {
 
 	class UnboundDomainNameResolver : public DomainNameResolver, public EventOwner, public boost::enable_shared_from_this<UnboundDomainNameResolver> {
 		public:
-			UnboundDomainNameResolver(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+			UnboundDomainNameResolver(IDNConverter* idnConverter, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 			virtual ~UnboundDomainNameResolver();
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& name);
+			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
 			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
 
 			static void unbound_callback_wrapper(void* data, int err, ub_result* result);
@@ -41,6 +42,7 @@ namespace Swift {
 			void processData();
 
 		private:
+			IDNConverter* idnConverter;
 			boost::shared_ptr<EventOwner> eventOwner;
 			boost::shared_ptr<boost::asio::io_service> ioService;
 			boost::asio::posix::stream_descriptor ubDescriptior;
