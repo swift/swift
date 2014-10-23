@@ -98,7 +98,6 @@ namespace Swift {
 			SimpleEventLoop* eventLoop;
 			Component* component;
 			ComponentXMLTracer* tracer;
-			bool rosterReceived;
 			std::deque<Event> pendingEvents;
 			boost::optional<ComponentError> disconnectedError;
 			bool requestResponseReceived;

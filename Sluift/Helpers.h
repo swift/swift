@@ -15,7 +15,6 @@ namespace Swift {
 	class ClientError;
 	class ComponentError;
 
-	template<typename T> std::string getCommonErrorString(T& error);
 	std::string getErrorString(const ClientError& error);
 	std::string getErrorString(const ComponentError& error);
 }

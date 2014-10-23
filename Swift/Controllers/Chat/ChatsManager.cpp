@@ -397,7 +397,6 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 
 			if (controller->isImpromptu()) {
 				ChatListWindow::Chat chat = ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, privateMessage, nick, password);
-				typedef std::pair<std::string, JID> StringJIDPair;
 				std::map<std::string, JID> participants = controller->getParticipantJIDs();
 				chat.impromptuJIDs = participants;
 				return chat;

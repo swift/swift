@@ -32,7 +32,7 @@ boost::shared_ptr<StatusShow> StatusShowConvertor::doConvertFromLua(lua_State* L
 
 void StatusShowConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<StatusShow> payload) {
 	lua_createtable(L, 0, 0);
-   	const std::string show = convertStatusShowTypeToString(payload->getType());
+	const std::string show = convertStatusShowTypeToString(payload->getType());
 	if (!show.empty()) {
 		lua_pushstring(L, show.c_str());
 		lua_setfield(L, -2, "type");
@@ -41,12 +41,12 @@ void StatusShowConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<StatusS
 
 std::string StatusShowConvertor::convertStatusShowTypeToString(const StatusShow::Type &show) {
 	switch (show) {
-		case StatusShow::Online: return "online"; break;
-		case StatusShow::FFC: return "ffc"; break;
-		case StatusShow::Away: return "away"; break;
-		case StatusShow::XA: return "xa"; break;
-		case StatusShow::DND: return "dnd"; break;
-		case StatusShow::None: return ""; break;
+		case StatusShow::Online: return "online";
+		case StatusShow::FFC: return "ffc";
+		case StatusShow::Away: return "away";
+		case StatusShow::XA: return "xa";
+		case StatusShow::DND: return "dnd";
+		case StatusShow::None: return "";
 	}
 	assert(false);
 	return "";

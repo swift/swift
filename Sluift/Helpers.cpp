@@ -11,23 +11,16 @@
 
 using namespace Swift;
 
-template<class T> std::string Swift::getCommonErrorString(T& error) {
+std::string Swift::getErrorString(const ClientError& error) {
 	std::string reason = "Disconnected: ";
 	switch(error.getType()) {
-		case T::UnknownError: reason += "Unknown Error"; break;
-		case T::ConnectionError: reason += "Error connecting to server"; break;
-		case T::ConnectionReadError: reason += "Error while receiving server data"; break;
-		case T::ConnectionWriteError: reason += "Error while sending data to the server"; break;
-		case T::XMLError: reason += "Error parsing server data"; break;
-		case T::AuthenticationFailedError: reason += "Login/password invalid"; break;
-		case T::UnexpectedElementError: reason += "Unexpected response"; break;
-	}
-	return reason;
-}
-
-std::string Swift::getErrorString(const ClientError& error) {
-	std::string reason = getCommonErrorString(error);
-	switch(error.getType()) {
+		case ClientError::UnknownError: reason += "Unknown Error"; break;
+		case ClientError::ConnectionError: reason += "Error connecting to server"; break;
+		case ClientError::ConnectionReadError: reason += "Error while receiving server data"; break;
+		case ClientError::ConnectionWriteError: reason += "Error while sending data to the server"; break;
+		case ClientError::XMLError: reason += "Error parsing server data"; break;
+		case ClientError::AuthenticationFailedError: reason += "Login/password invalid"; break;
+		case ClientError::UnexpectedElementError: reason += "Unexpected response"; break;
 		case ClientError::DomainNameResolveError: reason += "Unable to find server"; break;
 		case ClientError::CompressionFailedError: reason += "Error while compressing stream"; break;
 		case ClientError::ServerVerificationFailedError: reason += "Server verification failed"; break;
@@ -57,6 +50,16 @@ std::string Swift::getErrorString(const ClientError& error) {
 }
 
 std::string Swift::getErrorString(const ComponentError& error) {
-	return getCommonErrorString(error);
+	std::string reason = "Disconnected: ";
+	switch(error.getType()) {
+		case ComponentError::UnknownError: reason += "Unknown Error"; break;
+		case ComponentError::ConnectionError: reason += "Error connecting to server"; break;
+		case ComponentError::ConnectionReadError: reason += "Error while receiving server data"; break;
+		case ComponentError::ConnectionWriteError: reason += "Error while sending data to the server"; break;
+		case ComponentError::XMLError: reason += "Error parsing server data"; break;
+		case ComponentError::AuthenticationFailedError: reason += "Login/password invalid"; break;
+		case ComponentError::UnexpectedElementError: reason += "Unexpected response"; break;
+	}
+	return reason;
 }
 

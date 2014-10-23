@@ -79,7 +79,7 @@ void SluiftComponent::disconnect() {
 	}
 }
 
-void SluiftComponent::setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os) {
+void SluiftComponent::setSoftwareVersion(const std::string& name, const std::string& version, const std::string& /* os */) {
 	component->setSoftwareVersion(name, version);
 }
 
