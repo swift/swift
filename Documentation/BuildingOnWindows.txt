@@ -53,3 +53,12 @@ For packaging use:
 		wix_bindir = "c:\\program files\\Windows Installer XML v3.5\\bin"
 - run 
 		scons dist=1
+
+Notes
+-----
+- The settings debug = 1 and optimize = 1 are strictly required if you use 
+  a precompiled Qt release from the Qt Project; otherwise you will get linker 
+  errors
+- On 64-bit Windows it's "Program Files (x86)" instead of "Program Files" in the
+  paths
+- Currently only 32-bit builds of the Swift client are supported
