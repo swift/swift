@@ -10,25 +10,27 @@
 
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/MAMArchived.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
+#include <Swiften/Elements/MAMFin.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
+	class ResultSetParser;
 
-	class SWIFTEN_API MAMArchivedParser : public GenericPayloadParser<MAMArchived> {
+	class SWIFTEN_API MAMFinParser : public GenericPayloadParser<MAMFin> {
 		public:
-			MAMArchivedParser();
+			MAMFinParser();
 
 			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
 			virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;
 			virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE;
 
 			enum Level {
-				TopLevel = 0
+				TopLevel = 0, 
+				PayloadLevel = 1
 			};
 
 		private:
+			boost::shared_ptr<ResultSetParser> resultSetParser_;
 			int level_;
 	};
 }

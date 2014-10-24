@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Override.h>
@@ -14,7 +16,6 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
 	class ResultSetParser;
 	class FormParser;
 

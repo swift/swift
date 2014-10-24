@@ -9,17 +9,17 @@
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/MAMArchived.h>
+#include <Swiften/Elements/MAMFin.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
 	class PayloadSerializerCollection;
 
-	class SWIFTEN_API MAMArchivedSerializer : public GenericPayloadSerializer<MAMArchived> {
+	class SWIFTEN_API MAMFinSerializer : public GenericPayloadSerializer<MAMFin> {
 		public:
-			MAMArchivedSerializer();
-			virtual ~MAMArchivedSerializer();
+			MAMFinSerializer();
+			virtual ~MAMFinSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<MAMArchived>) const SWIFTEN_OVERRIDE;
+			virtual std::string serializePayload(boost::shared_ptr<MAMFin>) const SWIFTEN_OVERRIDE;
 	};
 }

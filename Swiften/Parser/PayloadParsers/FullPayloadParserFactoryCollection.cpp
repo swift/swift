@@ -46,7 +46,7 @@
 #include <Swiften/Parser/PayloadParsers/JingleReasonParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleS5BTransportMethodPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/LastParser.h>
-#include <Swiften/Parser/PayloadParsers/MAMArchivedParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMFinParser.h>
 #include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
@@ -157,7 +157,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<ForwardedParser> >("forwarded", "urn:xmpp:forward:0", this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<MAMResultParser> >("result", "urn:xmpp:mam:0", this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMQueryParser> >("query", "urn:xmpp:mam:0"));
-	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMArchivedParser> >("archived", "urn:xmpp:mam:0"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMFinParser> >("fin", "urn:xmpp:mam:0"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<IsodeIQDelegationParser> >("delegate", "http://isode.com/iq_delegation", this));
 
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {

@@ -17,6 +17,8 @@ class MAMQueryParserTest : public CppUnit::TestFixture
 {
 		CPPUNIT_TEST_SUITE(MAMQueryParserTest);
 		CPPUNIT_TEST(testParse);
+		CPPUNIT_TEST(testParse_XEP0313_Example3);
+		CPPUNIT_TEST(testParse_XEP0313_Example4);
 		CPPUNIT_TEST(testParseEmpty);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -58,6 +60,49 @@ class MAMQueryParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(*resultSet->getMaxItems(), 10);
 		}
 
+		void testParse_XEP0313_Example3() {
+			PayloadsParserTester parser;
+			CPPUNIT_ASSERT(parser.parse(
+				"<query xmlns='urn:xmpp:mam:0'>"
+					"<x xmlns='jabber:x:data'>"
+						"<field var='FORM_TYPE'>"
+							"<value>urn:xmpp:mam:0</value>"
+						"</field>"
+						"<field var='with'>"
+							"<value>juliet@capulet.lit</value>"
+						"</field>"
+					"</x>"
+				"</query>"));
+
+			boost::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
+			CPPUNIT_ASSERT(!!payload && !!payload->getForm() && !!payload->getForm()->getField("FORM_TYPE") && !!payload->getForm()->getField("with"));
+			CPPUNIT_ASSERT_EQUAL(std::string("urn:xmpp:mam:0"), payload->getForm()->getField("FORM_TYPE")->getTextSingleValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("juliet@capulet.lit"), payload->getForm()->getField("with")->getTextSingleValue());
+		}
+
+		void testParse_XEP0313_Example4() {
+			PayloadsParserTester parser;
+			CPPUNIT_ASSERT(parser.parse(
+				"<query xmlns='urn:xmpp:mam:0'>"
+					"<x xmlns='jabber:x:data'>"
+						"<field var='FORM_TYPE'>"
+							"<value>urn:xmpp:mam:0</value>"
+						"</field>"
+						"<field var='start'>"
+							"<value>2010-06-07T00:00:00Z</value>"
+						"</field>"
+						"<field var='end'>"
+							"<value>2010-07-07T13:23:54Z</value>"
+						"</field>"
+					"</x>"
+				"</query>"));
+			boost::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
+			CPPUNIT_ASSERT(!!payload && !!payload->getForm() && !!payload->getForm()->getField("FORM_TYPE") && !!payload->getForm()->getField("start") && !!payload->getForm()->getField("start"));
+			CPPUNIT_ASSERT_EQUAL(std::string("urn:xmpp:mam:0"), payload->getForm()->getField("FORM_TYPE")->getTextSingleValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("2010-06-07T00:00:00Z"), payload->getForm()->getField("start")->getTextSingleValue());
+			CPPUNIT_ASSERT_EQUAL(std::string("2010-07-07T13:23:54Z"), payload->getForm()->getField("end")->getTextSingleValue());
+		}
+
 		void testParseEmpty() {
 			PayloadsParserTester parser;
 			CPPUNIT_ASSERT(parser.parse(
@@ -71,6 +116,8 @@ class MAMQueryParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(!payload->getForm());
 			CPPUNIT_ASSERT(!payload->getResultSet());
 		}
+
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MAMQueryParserTest);

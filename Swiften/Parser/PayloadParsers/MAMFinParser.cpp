@@ -7,31 +7,29 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Parser/PayloadParsers/FormParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParsers/ResultSetParser.h>
-#include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
+#include <Swiften/Parser/PayloadParsers/MAMFinParser.h>
 
 using namespace Swift;
 
-MAMQueryParser::MAMQueryParser() : level_(TopLevel) {
+MAMFinParser::MAMFinParser() : level_(TopLevel) {
 }
 
-void MAMQueryParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
+void MAMFinParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
+		getPayloadInternal()->setComplete(attributes.getBoolAttribute("complete", false));
+		getPayloadInternal()->setStable(attributes.getBoolAttribute("stable", true));
 		boost::optional<std::string> attributeValue;
 		if ((attributeValue = attributes.getAttributeValue("queryid"))) {
 			getPayloadInternal()->setQueryID(*attributeValue);
 		}
-	} else if (level_ == PayloadLevel) {
-		if (element == "x" && ns == "jabber:x:data") {
-			formParser_ = boost::make_shared<FormParser>();
-		} else if (element == "set" && ns == "http://jabber.org/protocol/rsm") {
+	} 
+	else if (level_ == PayloadLevel) {
+		if (element == "set" && ns == "http://jabber.org/protocol/rsm") {
 			resultSetParser_ = boost::make_shared<ResultSetParser>();
 		}
-	}
-
-	if (formParser_) { /* parsing a nested Form */
-		formParser_->handleStartElement(element, ns, attributes);
 	}
 
 	if (resultSetParser_) { /* parsing a nested ResultSet */
@@ -41,17 +39,8 @@ void MAMQueryParser::handleStartElement(const std::string& element, const std::s
 	++level_;
 }
 
-void MAMQueryParser::handleEndElement(const std::string& element, const std::string& ns) {
+void MAMFinParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level_;
-
-	if (formParser_ && level_ >= PayloadLevel) {
-		formParser_->handleEndElement(element, ns);
-	}
-	if (formParser_ && level_ == PayloadLevel) {
-		/* done parsing nested Form */
-		getPayloadInternal()->setForm(boost::dynamic_pointer_cast<Form>(formParser_->getPayload()));
-		formParser_.reset();
-	}
 
 	if (resultSetParser_ && level_ >= PayloadLevel) {
 		resultSetParser_->handleEndElement(element, ns);
@@ -63,10 +52,7 @@ void MAMQueryParser::handleEndElement(const std::string& element, const std::str
 	}
 }
 
-void MAMQueryParser::handleCharacterData(const std::string& data) {
-	if (formParser_) {
-		formParser_->handleCharacterData(data);
-	}
+void MAMFinParser::handleCharacterData(const std::string& data) {
 	if (resultSetParser_) {
 		resultSetParser_->handleCharacterData(data);
 	}

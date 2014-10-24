@@ -6,9 +6,8 @@
 
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
+
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParsers/ForwardedParser.h>
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
 

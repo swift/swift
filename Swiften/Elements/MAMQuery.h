@@ -6,11 +6,13 @@
 
 #pragma once
 
+#include <string>
+
+#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Form.h>
-#include <Swiften/Elements/Forwarded.h>
-#include <Swiften/Elements/MAMResult.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/ResultSet.h>
 

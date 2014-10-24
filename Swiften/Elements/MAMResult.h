@@ -6,7 +6,10 @@
 
 #pragma once
 
+#include <string>
+
 #include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ContainerPayload.h>
 #include <Swiften/Elements/Forwarded.h>

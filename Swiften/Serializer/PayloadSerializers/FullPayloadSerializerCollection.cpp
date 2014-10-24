@@ -36,7 +36,6 @@
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/MAMArchivedSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MAMQuerySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCAdminPayloadSerializer.h>
@@ -147,7 +146,6 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new ForwardedSerializer(this));
 	serializers_.push_back(new MAMResultSerializer(this));
 	serializers_.push_back(new MAMQuerySerializer());
-	serializers_.push_back(new MAMArchivedSerializer());
 	serializers_.push_back(new IsodeIQDelegationSerializer(this));
 	
 	foreach(PayloadSerializer* serializer, serializers_) {

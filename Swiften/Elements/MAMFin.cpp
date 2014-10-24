@@ -4,9 +4,11 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include <Swiften/Elements/MAMArchived.h>
+#include <Swiften/Elements/MAMFin.h>
 
-using namespace Swift;
+namespace Swift {
 
-MAMArchived::~MAMArchived() {
+MAMFin::~MAMFin() {
+}
+
 }
