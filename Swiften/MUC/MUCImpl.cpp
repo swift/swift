@@ -266,7 +266,6 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 					ownMUCJID = presence->getFrom();
 					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
 				}
-				onJoinComplete(getOwnNick());
 			}
 			// MUC status 201: a new room has been created
 			if (status.code == 201) {
@@ -292,6 +291,9 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 					request->send();
 				}
 			}
+		}
+		if (joinComplete_ && !isLocked) {
+			onJoinComplete(getOwnNick());
 		}
 		if (!isLocked && !isUnlocked_ && (presence->getFrom() == ownMUCJID)) {
 			isUnlocked_ = true;
