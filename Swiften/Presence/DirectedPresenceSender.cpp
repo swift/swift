@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -31,10 +31,10 @@ void DirectedPresenceSender::sendPresence(boost::shared_ptr<Presence> presence) 
 }
 
 /**
- * Gets either the last broadcast presence, or an empty stanza if none has been sent.
+ * Gets the last broadcast presence, if none has been send the returned optional is not set.
  */
-boost::shared_ptr<Presence> DirectedPresenceSender::getLastSentUndirectedPresence() {
-	boost::shared_ptr<Presence> presenceCopy(lastSentUndirectedPresence ? new Presence(*lastSentUndirectedPresence) : new Presence());
+boost::optional<Presence::ref> DirectedPresenceSender::getLastSentUndirectedPresence() const {
+	boost::optional<Presence::ref> presenceCopy =  lastSentUndirectedPresence ? boost::optional<Presence::ref>((*lastSentUndirectedPresence)->clone()) : boost::optional<Presence::ref>();
 	return presenceCopy;
 }
 
@@ -46,8 +46,8 @@ boost::shared_ptr<Presence> DirectedPresenceSender::getLastSentUndirectedPresenc
 void DirectedPresenceSender::addDirectedPresenceReceiver(const JID& jid, SendPresence sendPresence) {
 	directedPresenceReceivers.insert(jid);
 	if (sendPresence == AndSendPresence && sender->isAvailable()) {
-		if (lastSentUndirectedPresence && lastSentUndirectedPresence->getType() == Presence::Available) {
-			boost::shared_ptr<Presence> presenceCopy(new Presence(*lastSentUndirectedPresence));
+		if (lastSentUndirectedPresence && (*lastSentUndirectedPresence)->getType() == Presence::Available) {
+			boost::shared_ptr<Presence> presenceCopy((*lastSentUndirectedPresence)->clone());
 			presenceCopy->setTo(jid);
 			sender->sendPresence(presenceCopy);
 		}

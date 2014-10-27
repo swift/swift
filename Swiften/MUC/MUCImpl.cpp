@@ -14,6 +14,7 @@
 #include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/IQ.h>
@@ -66,6 +67,22 @@ std::map<std::string, MUCOccupant> MUCImpl::getOccupants() const {
 	return occupants;
 }
 
+bool MUCImpl::isEqualExceptID(const Presence& lhs, const Presence& rhs) {
+	bool isEqual = false;
+	if (lhs.getFrom() == rhs.getFrom() && lhs.getTo() == rhs.getTo() && lhs.getStatus() == rhs.getStatus() && lhs.getShow() == rhs.getShow()) {
+		CapsInfo::ref lhsCaps = lhs.getPayload<CapsInfo>();
+		CapsInfo::ref rhsCaps = rhs.getPayload<CapsInfo>();
+
+		if (!!lhsCaps && !!rhsCaps) {
+			isEqual = (*lhsCaps == *rhsCaps);
+		}
+		else {
+			isEqual = (!lhsCaps && !rhsCaps);
+		}
+	}
+	return isEqual;
+}
+
 void MUCImpl::internalJoin(const std::string &nick) {
 	//TODO: history request
 	joinComplete_ = false;
@@ -75,7 +92,7 @@ void MUCImpl::internalJoin(const std::string &nick) {
 
 	ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 
-	Presence::ref joinPresence = boost::make_shared<Presence>(*presenceSender->getLastSentUndirectedPresence());
+	Presence::ref joinPresence = presenceSender->getLastSentUndirectedPresence() ? (*presenceSender->getLastSentUndirectedPresence())->clone() : boost::make_shared<Presence>();
 	assert(joinPresence->getType() == Presence::Available);
 	joinPresence->setTo(ownMUCJID);
 	MUCPayload::ref mucPayload = boost::make_shared<MUCPayload>();
@@ -86,7 +103,7 @@ void MUCImpl::internalJoin(const std::string &nick) {
 		mucPayload->setPassword(*password);
 	}
 	joinPresence->addPayload(mucPayload);
-
+	joinRequestPresence_ = joinPresence;
 	presenceSender->sendPresence(joinPresence);
 }
 
@@ -137,7 +154,13 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 		}
 		else {
 			joinSucceeded_ = true;
-			presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
+			presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+			if (presenceSender->getLastSentUndirectedPresence() && !isEqualExceptID(**(presenceSender->getLastSentUndirectedPresence()), *joinRequestPresence_)) {
+				// our presence changed between join request and join complete, send current presence to MUC
+				Presence::ref latestPresence = boost::make_shared<Presence>(**presenceSender->getLastSentUndirectedPresence());
+				latestPresence->setTo(ownMUCJID);
+				presenceSender->sendPresence(latestPresence);
+			}
 		}
 	}
 
@@ -245,6 +268,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 				}
 				onJoinComplete(getOwnNick());
 			}
+			// MUC status 201: a new room has been created
 			if (status.code == 201) {
 				isLocked = true;
 				/* Room is created and locked */
@@ -259,6 +283,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
 					requestConfigurationForm();
 				}
 				else {
+					// Accept default room configuration and create an instant room http://xmpp.org/extensions/xep-0045.html#createroom-instant
 					MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
 					presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
 					mucPayload->setPayload(boost::make_shared<Form>(Form::SubmitType));

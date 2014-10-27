@@ -28,6 +28,7 @@ class MUCTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testJoin);
 		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoinDoesNotSendPresenceBeforeJoinSuccess);
 		CPPUNIT_TEST(testJoin_ChangePresenceDuringJoinResendsPresenceAfterJoinSuccess);
+		CPPUNIT_TEST(testJoin_NoPresenceChangeDuringJoinDoesNotResendAfterJoinSuccess);
 		CPPUNIT_TEST(testCreateInstant);
 		CPPUNIT_TEST(testReplicateBug);
 		CPPUNIT_TEST(testNicknameChange);
@@ -83,6 +84,19 @@ class MUCTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(p);
 			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
 			CPPUNIT_ASSERT_EQUAL(std::string("Test"), p->getStatus());
+		}
+
+		void testJoin_NoPresenceChangeDuringJoinDoesNotResendAfterJoinSuccess() {
+			MUC::ref testling = createMUC(JID("foo@bar.com"));
+			testling->joinAs("Alice");
+
+			receivePresence(JID("foo@bar.com/Rabbit"), "Here");
+
+			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->sentStanzas.size()));
+			Presence::ref p = channel->getStanzaAtIndex<Presence>(0);
+			CPPUNIT_ASSERT(p);
+			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/Alice"), p->getTo());
+			CPPUNIT_ASSERT_EQUAL(std::string(""), p->getStatus());
 		}
 
 		void testCreateInstant() {

@@ -42,5 +42,4 @@ void Presence::setStatus(const std::string& status) {
 	updatePayload(boost::make_shared<Status>(status));
 }
 
-
 }

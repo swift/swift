@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Remko Tronçon
+ * Copyright (c) 2010-2014 Remko Tronçon
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -7,6 +7,8 @@
 #pragma once
 
 #include <set>
+
+#include <boost/optional.hpp>
 
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Presence/PresenceSender.h>
@@ -23,12 +25,12 @@ namespace Swift {
 
 			void sendPresence(Presence::ref);
 
-			Presence::ref getLastSentUndirectedPresence();
+			boost::optional<Presence::ref> getLastSentUndirectedPresence() const;
 
 			bool isAvailable() const;
 
 		private:
-			Presence::ref lastSentUndirectedPresence;
+			boost::optional<Presence::ref> lastSentUndirectedPresence;
 			PresenceSender* sender;
 			std::set<JID> directedPresenceReceivers;
 	};

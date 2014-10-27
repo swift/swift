@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -94,6 +94,12 @@ namespace Swift {
 				return ownMUCJID.getResource();
 			}
 
+			/**
+			 * This function compares two Presence elements for equality based on to, from, status, show and entity capability information.
+			 * @return True if equal; else otherwise.
+			 */
+			static bool isEqualExceptID(const Presence& lhs, const Presence& rhs);
+
 		private:
 			void handleIncomingPresence(Presence::ref presence);
 			void internalJoin(const std::string& nick);
@@ -119,5 +125,6 @@ namespace Swift {
 			bool unlocking;
 			bool isUnlocked_;
 			boost::optional<std::string> password;
+			Presence::ref joinRequestPresence_;
 	};
 }
