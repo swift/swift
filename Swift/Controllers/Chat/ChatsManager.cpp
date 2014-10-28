@@ -889,18 +889,19 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
 	if (invite && autoAcceptMUCInviteDecider_->isAutoAcceptedInvite(message->getFrom(), invite)) {
 		if (invite->getIsContinuation()) {
-				// check for existing chat controller for the from JID
-				ChatController* controller = getChatControllerIfExists(jid);
-				if (controller) {
-					ChatWindow* window = controller->detachChatWindow();
-					chatControllers_.erase(jid);
-					delete controller;
-					handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true, window);
-				}
-			} else {
-				handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true);
+			// check for existing chat controller for the from JID
+			ChatController* controller = getChatControllerIfExists(jid);
+			if (controller) {
+				ChatWindow* window = controller->detachChatWindow();
+				chatControllers_.erase(jid);
+				delete controller;
+				handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true, window);
 				return;
 			}
+		} else {
+			handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true);
+			return;
+		}
 	}
 
 	//if not a mucroom
