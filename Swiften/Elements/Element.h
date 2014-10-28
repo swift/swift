@@ -11,6 +11,10 @@
 namespace Swift {
 	class SWIFTEN_API Element {
 		public:
+			Element() {}
+			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Element)
 			virtual ~Element();
+
+			SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(Element)
 	};
 }
