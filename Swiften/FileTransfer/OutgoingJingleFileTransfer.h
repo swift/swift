@@ -45,8 +45,8 @@ namespace Swift {
 				CryptoProvider*);
 			virtual ~OutgoingJingleFileTransfer();
 			
-			void start();
-			void cancel();
+			virtual void start() SWIFTEN_OVERRIDE;
+			virtual void cancel() SWIFTEN_OVERRIDE;
 
 		private:
 			enum State {
@@ -65,8 +65,8 @@ namespace Swift {
 			virtual void handleSessionAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleDescription>, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
 			virtual void handleSessionTerminateReceived(boost::optional<JinglePayload::Reason> reason) SWIFTEN_OVERRIDE;
 			virtual void handleTransportAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
-			void startTransferViaRemoteCandidate();
-			void startTransferViaLocalCandidate();
+			virtual void startTransferViaRemoteCandidate() SWIFTEN_OVERRIDE;
+			virtual void startTransferViaLocalCandidate() SWIFTEN_OVERRIDE;
 			void startTransferringIfCandidateAcknowledged();
 
 			virtual void handleLocalTransportCandidatesGenerated(const std::string& s5bSessionID, const std::vector<JingleS5BTransportPayload::Candidate>&) SWIFTEN_OVERRIDE;

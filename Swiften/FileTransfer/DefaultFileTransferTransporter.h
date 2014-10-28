@@ -59,8 +59,8 @@ namespace Swift {
 			virtual void startTryingRemoteCandidates() SWIFTEN_OVERRIDE;
 			virtual void stopTryingRemoteCandidates() SWIFTEN_OVERRIDE;
 
-			virtual void startActivatingProxy(const JID& jid);
-			virtual void stopActivatingProxy();
+			virtual void startActivatingProxy(const JID& jid) SWIFTEN_OVERRIDE;
+			virtual void stopActivatingProxy() SWIFTEN_OVERRIDE;
 
 			virtual boost::shared_ptr<TransportSession> createIBBSendSession(
 					const std::string& sessionID, unsigned int blockSize, boost::shared_ptr<ReadBytestream>) SWIFTEN_OVERRIDE;

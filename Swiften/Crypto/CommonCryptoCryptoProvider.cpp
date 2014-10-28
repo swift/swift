@@ -36,7 +36,7 @@ namespace {
 				return updateInternal(data);
 			}
 
-			virtual std::vector<unsigned char> getHash() {
+			virtual std::vector<unsigned char> getHash() SWIFTEN_OVERRIDE {
 				assert(!finalized);
 				std::vector<unsigned char> result(CC_SHA1_DIGEST_LENGTH);
 				CC_SHA1_Final(vecptr(result), &context);
@@ -77,7 +77,7 @@ namespace {
 				return updateInternal(data);
 			}
 
-			virtual std::vector<unsigned char> getHash() {
+			virtual std::vector<unsigned char> getHash() SWIFTEN_OVERRIDE {
 				assert(!finalized);
 				std::vector<unsigned char> result(CC_MD5_DIGEST_LENGTH);
 				CC_MD5_Final(vecptr(result), &context);

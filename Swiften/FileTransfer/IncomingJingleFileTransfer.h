@@ -44,7 +44,7 @@ namespace Swift {
 			~IncomingJingleFileTransfer();
 
 			virtual void accept(boost::shared_ptr<WriteBytestream>, const FileTransferOptions&) SWIFTEN_OVERRIDE;
-			void cancel();
+			virtual void cancel() SWIFTEN_OVERRIDE;
 
 		private:
 			enum State {
@@ -79,8 +79,8 @@ namespace Swift {
 			void handleTransferFinished(boost::optional<FileTransferError>);
 
 		private:
-			void startTransferViaRemoteCandidate();
-			void startTransferViaLocalCandidate();
+			virtual void startTransferViaRemoteCandidate() SWIFTEN_OVERRIDE;
+			virtual void startTransferViaLocalCandidate() SWIFTEN_OVERRIDE;
 			void checkHashAndTerminate();
 			void stopAll();
 			void setState(State state);

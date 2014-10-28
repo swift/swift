@@ -17,6 +17,6 @@ namespace Swift {
 
 			virtual boost::optional<std::string> readLine(const std::string& prompt) SWIFTEN_OVERRIDE;
 			virtual void printError(const std::string& message) SWIFTEN_OVERRIDE;
-			virtual void addToHistory(const std::string& command);
+			virtual void addToHistory(const std::string& command) SWIFTEN_OVERRIDE;
 	};
 }

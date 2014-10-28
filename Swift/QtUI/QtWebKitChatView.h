@@ -61,8 +61,8 @@ namespace Swift {
 			virtual void addErrorMessage(const ChatWindow::ChatMessage& message) SWIFTEN_OVERRIDE;
 			virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
 			virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
-			void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour);
-			void setAckState(const std::string& id, ChatWindow::AckState state);
+			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour) SWIFTEN_OVERRIDE;
+			virtual void setAckState(const std::string& id, ChatWindow::AckState state) SWIFTEN_OVERRIDE;
 			
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) SWIFTEN_OVERRIDE;
 			virtual void setFileTransferProgress(std::string, const int percentageDone) SWIFTEN_OVERRIDE;
@@ -77,7 +77,7 @@ namespace Swift {
 			void addMessageBottom(boost::shared_ptr<ChatSnippet> snippet);
 
 			int getSnippetPositionByDate(const QDate& date); // FIXME : This probably shouldn't have been public
-			void addLastSeenLine();
+			virtual void addLastSeenLine() SWIFTEN_OVERRIDE;
 
 		private: // previously public, now private
 			void replaceLastMessage(const QString& newMessage, const ChatWindow::TimestampBehaviour timestampBehaviour);
@@ -110,9 +110,9 @@ namespace Swift {
 			void resetTopInsertPoint();
 			void increaseFontSize(int numSteps = 1);
 			void decreaseFontSize();
-			void resizeFont(int fontSizeSteps);
-			void scrollToBottom();
-			void handleKeyPressEvent(QKeyEvent* event);
+			virtual void resizeFont(int fontSizeSteps) SWIFTEN_OVERRIDE;
+			virtual void scrollToBottom() SWIFTEN_OVERRIDE;
+			virtual void handleKeyPressEvent(QKeyEvent* event) SWIFTEN_OVERRIDE;
 
 		private slots:
 			void handleViewLoadFinished(bool);
