@@ -28,5 +28,6 @@ namespace Swift {
 			void emitCompletenessCheck();
 		public:
 			QtSuggestingJIDInput* jid_;
+			QLabel* jidWarning_;
 	};
 }

@@ -167,6 +167,20 @@ void QtUserSearchWindow::addContact() {
 	}
 }
 
+void QtUserSearchWindow::setWarning(const boost::optional<std::string>& message) {
+	if (message) {
+		firstPage_->jidWarning_->setToolTip(P2QSTRING((*message)));
+		firstPage_->jidWarning_->setAccessibleDescription(P2QSTRING((*message)));
+		firstPage_->jidWarning_->show();
+	}
+	else {
+		firstPage_->jidWarning_->setToolTip("");
+		firstPage_->jidWarning_->setAccessibleDescription("");
+		firstPage_->jidWarning_->hide();
+	}
+	firstPage_->emitCompletenessCheck();
+}
+
 int QtUserSearchWindow::nextId() const {
 	if (type_ == AddContact) {
 		switch (currentId()) {
@@ -466,6 +480,10 @@ void QtUserSearchWindow::setSelectedService(const JID& jid) {
 	myServer_ = jid;
 }
 
+void QtUserSearchWindow::handleJIDEditingDone() {
+	onJIDEditFieldChanged(JID(Q2PSTRING(firstPage_->jid_->text())));
+}
+
 void QtUserSearchWindow::setFirstPage(QString title) {
 	if (page(1) != 0) {
 		removePage(1);
@@ -473,6 +491,7 @@ void QtUserSearchWindow::setFirstPage(QString title) {
 	if (type_ == AddContact) {
 		firstPage_ = new QtUserSearchFirstPage(type_, title.isEmpty() ? firstPage_->title() : title, settings_);
 		connect(firstPage_->jid_, SIGNAL(textEdited(QString)), this, SLOT(handleContactSuggestionRequested(QString)));
+		connect(firstPage_->jid_, SIGNAL(textEdited(QString)), this, SLOT(handleJIDEditingDone()), Qt::UniqueConnection);
 		firstPage_->jid_->onUserSelected.connect(boost::bind(&QtUserSearchWindow::handleOnSearchedJIDSelected, this, _1));
 		connect(firstPage_->byJID_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));
 		connect(firstPage_->byLocalSearch_, SIGNAL(toggled(bool)), this, SLOT(handleFirstPageRadioChange()));

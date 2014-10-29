@@ -69,6 +69,7 @@ namespace Swift {
 			void handlePresenceChanged(Presence::ref presence);
 			void handleJIDUpdateRequested(const std::vector<JID>& jids);
 			void handleJIDAddRequested(const std::vector<JID>& jids);
+			void handleJIDEditingFinished(const JID& jid);
 			Contact::ref convertJIDtoContact(const JID& jid);
 			void endDiscoWalker();
 			void initializeUserWindow();

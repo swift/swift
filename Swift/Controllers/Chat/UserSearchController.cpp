@@ -18,6 +18,7 @@
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swift/Controllers/ContactEditController.h>
+#include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
@@ -194,6 +195,19 @@ void UserSearchController::handleNameSuggestionRequest(const JID &jid) {
 	}
 }
 
+void UserSearchController::handleJIDEditingFinished(const JID& jid) {
+	if (jid.isValid()) {
+		if (rosterController_->getItem(jid)) {
+			window_->setWarning(QT_TRANSLATE_NOOP("", "This contact is already on your contact list."));
+		} else {
+			window_->setWarning(boost::optional<std::string>());
+		}
+	}
+	else {
+		window_->setWarning(QT_TRANSLATE_NOOP("", "The address you have entered is invalid."));
+	}
+}
+
 void UserSearchController::handleContactSuggestionsRequested(std::string text) {
 	const std::vector<JID> existingJIDs = window_->getJIDs();
 	std::vector<Contact::ref> suggestions = contactSuggester_->getSuggestions(text, false);
@@ -207,6 +221,14 @@ void UserSearchController::handleContactSuggestionsRequested(std::string text) {
 				break;
 			}
 		}
+
+		// remove contact suggestions which are already on the contact list in add-contact-mode
+		if (type_ == AddContact) {
+			if (!found && !!rosterController_->getItem((*i)->jid)) {
+				found = true;
+			}
+		}
+
 		if (found) {
 			i = suggestions.erase(i);
 		} else {
@@ -307,6 +329,7 @@ void UserSearchController::initializeUserWindow() {
 		window_->onContactSuggestionsRequested.connect(boost::bind(&UserSearchController::handleContactSuggestionsRequested, this, _1));
 		window_->onJIDUpdateRequested.connect(boost::bind(&UserSearchController::handleJIDUpdateRequested, this, _1));
 		window_->onJIDAddRequested.connect(boost::bind(&UserSearchController::handleJIDAddRequested, this, _1));
+		window_->onJIDEditFieldChanged.connect(boost::bind(&UserSearchController::handleJIDEditingFinished, this, _1));
 		window_->setSelectedService(JID(jid_.getDomain()));
 		window_->clear();
 	}

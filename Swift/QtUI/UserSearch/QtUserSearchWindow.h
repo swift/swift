@@ -52,6 +52,7 @@ namespace Swift {
 			virtual void updateContacts(const std::vector<Contact::ref> &contacts);
 			virtual void addContacts(const std::vector<Contact::ref>& contacts);
 			virtual void setCanSupplyDescription(bool allowed);
+			virtual void setWarning(const boost::optional<std::string>& message);
 
 		protected:
 			virtual int nextId() const;
@@ -65,6 +66,7 @@ namespace Swift {
 			void handleAddViaSearch();
 			void handleListChanged(std::vector<Contact::ref> list);
 			void handleJIDsAdded(std::vector<JID> jids);
+			void handleJIDEditingDone();
 
 		private:
 			void setFirstPage(QString title = "");

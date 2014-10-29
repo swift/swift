@@ -41,6 +41,7 @@ namespace Swift {
 			virtual void updateContacts(const std::vector<Contact::ref>& contacts) = 0;
 			virtual void addContacts(const std::vector<Contact::ref>& contacts) = 0;
 			virtual void setCanSupplyDescription(bool allowed) = 0;
+			virtual void setWarning(const boost::optional<std::string>& message) = 0;
 
 			virtual void show() = 0;
 
@@ -50,5 +51,6 @@ namespace Swift {
 			boost::signal<void (const std::string&)> onContactSuggestionsRequested;
 			boost::signal<void (const std::vector<JID>&)> onJIDUpdateRequested;
 			boost::signal<void (const std::vector<JID>&)> onJIDAddRequested;
+			boost::signal<void (const JID&)> onJIDEditFieldChanged;
 	};
 }
