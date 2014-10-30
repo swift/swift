@@ -44,11 +44,12 @@ class MAMQuerySerializerTest : public CppUnit::TestFixture {
 
 			boost::shared_ptr<MAMQuery> query(boost::make_shared<MAMQuery>());
 			query->setQueryID(std::string("id0"));
+			query->setNode(std::string("node1"));
 			query->setForm(parameters);
 			query->setResultSet(set);
 
 			std::string expectedResult =
-				"<query queryid=\"id0\" xmlns=\"urn:xmpp:mam:0\">"
+				"<query node=\"node1\" queryid=\"id0\" xmlns=\"urn:xmpp:mam:0\">"
 					"<x type=\"form\" xmlns=\"jabber:x:data\">"
 						"<field type=\"text-single\" var=\"FORM_TYPE\">"
 							"<value>urn:xmpp:mam:0</value>"

@@ -24,6 +24,9 @@ namespace Swift {
 			void setQueryID(const boost::optional<std::string>& queryID) { queryID_ = queryID; }
 			const boost::optional<std::string>& getQueryID() const { return queryID_; }
 
+			void setNode(const boost::optional<std::string>& node) { node_ = node; }
+			const boost::optional<std::string>& getNode() const { return node_; }
+
 			void setForm(boost::shared_ptr<Form> form) { form_ = form; }
 			const boost::shared_ptr<Form>& getForm() const { return form_; }
 
@@ -32,6 +35,7 @@ namespace Swift {
 
 		private:
 			boost::optional<std::string> queryID_;
+			boost::optional<std::string> node_;
 			boost::shared_ptr<Form> form_;
 			boost::shared_ptr<ResultSet> resultSet_;
 	};

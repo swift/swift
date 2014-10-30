@@ -33,6 +33,10 @@ std::string MAMQuerySerializer::serializePayload(boost::shared_ptr<MAMQuery> pay
 		element.setAttribute("queryid", *payload->getQueryID());
 	}
 
+	if (payload->getNode()) {
+		element.setAttribute("node", *payload->getNode());
+	}
+
 	if (payload->getForm()) {
 		element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getForm())));
 	}

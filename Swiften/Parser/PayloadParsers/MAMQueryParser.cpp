@@ -22,6 +22,9 @@ void MAMQueryParser::handleStartElement(const std::string& element, const std::s
 		if ((attributeValue = attributes.getAttributeValue("queryid"))) {
 			getPayloadInternal()->setQueryID(*attributeValue);
 		}
+		if ((attributeValue = attributes.getAttributeValue("node"))) {
+			getPayloadInternal()->setNode(*attributeValue);
+		}
 	} else if (level_ == PayloadLevel) {
 		if (element == "x" && ns == "jabber:x:data") {
 			formParser_ = boost::make_shared<FormParser>();

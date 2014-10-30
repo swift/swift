@@ -26,7 +26,7 @@ class MAMQueryParserTest : public CppUnit::TestFixture
 		void testParse() {
 			PayloadsParserTester parser;
 			CPPUNIT_ASSERT(parser.parse(
-				"<query queryid=\"id0\" xmlns=\"urn:xmpp:mam:0\">"
+				"<query queryid=\"id0\" xmlns=\"urn:xmpp:mam:0\" node=\"node1\">"
 					"<x type=\"form\" xmlns=\"jabber:x:data\">"
 						"<field type=\"text-single\" var=\"FORM_TYPE\">"
 							"<value>urn:xmpp:mam:0</value>"
@@ -45,6 +45,7 @@ class MAMQueryParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT(!!payload);
 			CPPUNIT_ASSERT(payload->getQueryID());
 			CPPUNIT_ASSERT_EQUAL(std::string("id0"), *payload->getQueryID());
+			CPPUNIT_ASSERT_EQUAL(std::string("node1"), *payload->getNode());
 
 			CPPUNIT_ASSERT(payload->getForm());
 			boost::shared_ptr<FormField> fieldType = payload->getForm()->getField("FORM_TYPE");
