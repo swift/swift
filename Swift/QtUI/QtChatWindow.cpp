@@ -60,7 +60,7 @@ namespace Swift {
 QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
 	settings_ = settings;
 	unreadCount_ = 0;
-	inputEnabled_ = true;
+	isOnline_ = true;
 	completer_ = NULL;
 	affiliationEditor_ = NULL;
 	theme_ = theme;
@@ -384,7 +384,7 @@ void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabelsCa
 
 void QtChatWindow::handleCurrentLabelChanged(int index) {
 	if (static_cast<size_t>(index) >= labelModel_->availableLabels_.size()) {
-		qDebug() << "User selected a label that doesn't exist";
+		SWIFT_LOG(debug) << "User selected a label that doesn't exist";
 		return;
 	}
 	const SecurityLabelsCatalog::Item& label = labelModel_->availableLabels_[index];
@@ -457,9 +457,9 @@ void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
 	}
 }
 
-void QtChatWindow::setInputEnabled(bool enabled) {
-	inputEnabled_ = enabled;
-	if (!enabled) {
+void QtChatWindow::setOnline(bool online) {
+	isOnline_ = online;
+	if (!online) {
 		if (mucConfigurationWindow_) {
 			delete mucConfigurationWindow_.data();
 		}
@@ -524,7 +524,7 @@ int QtChatWindow::getCount() {
 
 
 void QtChatWindow::returnPressed() {
-	if (!inputEnabled_) {
+	if (!isOnline_ || (blockingState_ == IsBlocked)) {
 		return;
 	}
 	messageLog_->scrollToBottom();
@@ -583,7 +583,7 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 }
 
 void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
-	if (inputEnabled_) {
+	if (isOnline_ && (blockingState_ != IsBlocked)) {
 		if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
 			// TODO: check whether contact actually supports file transfer
 			if (!isMUC_) {
@@ -648,16 +648,16 @@ void QtChatWindow::handleActionButtonClicked() {
 	if (availableRoomActions_.empty()) {
 		if (blockingState_ == IsBlocked) {
 			unblock = contextMenu.addAction(tr("Unblock"));
-			unblock->setEnabled(inputEnabled_);
+			unblock->setEnabled(isOnline_);
 		}
 		else if (blockingState_ == IsUnblocked) {
 			block = contextMenu.addAction(tr("Block"));
-			block->setEnabled(inputEnabled_);
+			block->setEnabled(isOnline_);
 		}
 
 		if (supportsImpromptuChat_) {
 			invite = contextMenu.addAction(tr("Invite person to this chat…"));
-			invite->setEnabled(inputEnabled_);
+			invite->setEnabled(isOnline_ && (blockingState_ != IsBlocked));
 		}
 
 	}
@@ -677,30 +677,30 @@ void QtChatWindow::handleActionButtonClicked() {
 			{
 				case ChatWindow::ChangeSubject:
 					changeSubject = contextMenu.addAction(tr("Change subject…"));
-					changeSubject->setEnabled(inputEnabled_);
+					changeSubject->setEnabled(isOnline_);
 					break;
 				case ChatWindow::Configure:
 					configure = contextMenu.addAction(tr("Configure room…"));
-					configure->setEnabled(inputEnabled_);
+					configure->setEnabled(isOnline_);
 					break;
 				case ChatWindow::Affiliations:
 					affiliations = contextMenu.addAction(tr("Edit affiliations…"));
-					affiliations->setEnabled(inputEnabled_);
+					affiliations->setEnabled(isOnline_);
 					break;
 				case ChatWindow::Destroy:
 					destroy = contextMenu.addAction(tr("Destroy room"));
-					destroy->setEnabled(inputEnabled_);
+					destroy->setEnabled(isOnline_);
 					break;
 				case ChatWindow::Invite:
 					invite = contextMenu.addAction(tr("Invite person to this room…"));
-					invite->setEnabled(inputEnabled_);
+					invite->setEnabled(isOnline_);
 					break;
 			}
 		}
 	}
 
 	QAction* bookmark = contextMenu.addAction(tr("Add boomark..."));
-	bookmark->setEnabled(inputEnabled_);
+	bookmark->setEnabled(isOnline_);
 
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == NULL) {

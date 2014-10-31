@@ -49,7 +49,7 @@ namespace Swift {
 			virtual void convertToMUC(MUCType /*mucType*/) {}
 			virtual void setSecurityLabelsError() {}
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return label_;}
-			virtual void setInputEnabled(bool /*enabled*/) {}
+			virtual void setOnline(bool /*online*/) {}
 			virtual void setRosterModel(Roster* roster) { roster_ = roster; }
 			Roster* getRosterModel() { return roster_; }
 			virtual void setTabComplete(TabComplete*) {}

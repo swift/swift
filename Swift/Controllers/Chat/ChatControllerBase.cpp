@@ -100,7 +100,7 @@ void ChatControllerBase::handleDayChangeTick() {
 }
 
 void ChatControllerBase::setEnabled(bool enabled) {
-	chatWindow_->setInputEnabled(enabled);
+	chatWindow_->setOnline(enabled);
 }
 
 void ChatControllerBase::setOnline(bool online) {

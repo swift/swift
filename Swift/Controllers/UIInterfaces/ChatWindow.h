@@ -141,7 +141,7 @@ namespace Swift {
 //			virtual TreeWidget *getTreeWidget() = 0;
 			virtual void setSecurityLabelsError() = 0;
 			virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() = 0;
-			virtual void setInputEnabled(bool enabled) = 0;
+			virtual void setOnline(bool online) = 0;
 			virtual void setRosterModel(Roster* model) = 0;
 			virtual void setTabComplete(TabComplete* completer) = 0;
 			virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour timestampBehaviour) = 0;

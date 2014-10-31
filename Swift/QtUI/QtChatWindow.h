@@ -107,7 +107,7 @@ namespace Swift {
 			void setSecurityLabelsError();
 			SecurityLabelsCatalog::Item getSelectedSecurityLabel();
 			void setName(const std::string& name);
-			void setInputEnabled(bool enabled);
+			void setOnline(bool online);
 			QtTabbable::AlertType getWidgetAlertState();
 			void setContactChatState(ChatState::ChatStateType state);
 			void setRosterModel(Roster* roster);
@@ -203,7 +203,7 @@ namespace Swift {
 			bool inputClearing_;
 			bool tabCompletion_;
 			UIEventStream* eventStream_;
-			bool inputEnabled_;
+			bool isOnline_;
 			QSplitter *logRosterSplitter_;
 			Tristate correctionEnabled_;
 			Tristate fileTransferEnabled_;
