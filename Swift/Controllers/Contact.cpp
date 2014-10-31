@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-Contact::Contact() {
+Contact::Contact() : statusType(StatusShow::None) {
 }
 
 Contact::Contact(const std::string& name, const JID& jid, StatusShow::Type statusType, const boost::filesystem::path& path) : name(name), jid(jid), statusType(statusType), avatarPath(path) {
