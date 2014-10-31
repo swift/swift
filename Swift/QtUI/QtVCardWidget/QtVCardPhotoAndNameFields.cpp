@@ -85,7 +85,7 @@ std::string QtVCardPhotoAndNameFields::getAvatarType() const {
 	return ui->avatarWidget->getAvatarType();
 }
 
-void QtVCardPhotoAndNameFields::setFormattedName(const QString formattedName) {
+void QtVCardPhotoAndNameFields::setFormattedName(const QString& formattedName) {
 	ui->lineEditFN->setText(formattedName);
 }
 
@@ -93,7 +93,7 @@ QString QtVCardPhotoAndNameFields::getFormattedName() const {
 	return ui->lineEditFN->text();
 }
 
-void QtVCardPhotoAndNameFields::setNickname(const QString nickname) {
+void QtVCardPhotoAndNameFields::setNickname(const QString& nickname) {
 	ui->lineEditNICKNAME->setText(nickname);
 }
 
@@ -101,7 +101,7 @@ QString QtVCardPhotoAndNameFields::getNickname() const {
 	return ui->lineEditNICKNAME->text();
 }
 
-void QtVCardPhotoAndNameFields::setPrefix(const QString prefix) {
+void QtVCardPhotoAndNameFields::setPrefix(const QString& prefix) {
 	ui->lineEditPREFIX->setText(prefix);
 }
 
@@ -109,7 +109,7 @@ QString QtVCardPhotoAndNameFields::getPrefix() const {
 	return ui->lineEditPREFIX->text();
 }
 
-void QtVCardPhotoAndNameFields::setGivenName(const QString givenName) {
+void QtVCardPhotoAndNameFields::setGivenName(const QString& givenName) {
 	ui->lineEditGIVEN->setText(givenName);
 }
 
@@ -117,7 +117,7 @@ QString QtVCardPhotoAndNameFields::getGivenName() const {
 	return ui->lineEditGIVEN->text();
 }
 
-void QtVCardPhotoAndNameFields::setMiddleName(const QString middleName) {
+void QtVCardPhotoAndNameFields::setMiddleName(const QString& middleName) {
 	ui->lineEditMIDDLE->setText(middleName);
 }
 
@@ -125,7 +125,7 @@ QString QtVCardPhotoAndNameFields::getMiddleName() const {
 	return ui->lineEditMIDDLE->text();
 }
 
-void QtVCardPhotoAndNameFields::setFamilyName(const QString familyName) {
+void QtVCardPhotoAndNameFields::setFamilyName(const QString& familyName) {
 	ui->lineEditFAMILY->setText(familyName);
 }
 
@@ -133,7 +133,7 @@ QString QtVCardPhotoAndNameFields::getFamilyName() const {
 	return ui->lineEditFAMILY->text();
 }
 
-void QtVCardPhotoAndNameFields::setSuffix(const QString suffix) {
+void QtVCardPhotoAndNameFields::setSuffix(const QString& suffix) {
 	ui->lineEditSUFFIX->setText(suffix);
 }
 

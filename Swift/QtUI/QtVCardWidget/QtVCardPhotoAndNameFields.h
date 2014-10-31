@@ -33,25 +33,25 @@ namespace Swift {
 			ByteArray getAvatarData() const;
 			std::string getAvatarType() const;
 
-			void setFormattedName(const QString formattedName);
+			void setFormattedName(const QString& formattedName);
 			QString getFormattedName() const;
 
-			void setNickname(const QString nickname);
+			void setNickname(const QString& nickname);
 			QString getNickname() const;
 
-			void setPrefix(const QString prefix);
+			void setPrefix(const QString& prefix);
 			QString getPrefix() const;
 
-			void setGivenName(const QString givenName);
+			void setGivenName(const QString& givenName);
 			QString getGivenName() const;
 
-			void setMiddleName(const QString middleName);
+			void setMiddleName(const QString& middleName);
 			QString getMiddleName() const;
 
-			void setFamilyName(const QString familyName);
+			void setFamilyName(const QString& familyName);
 			QString getFamilyName() const;
 
-			void setSuffix(const QString suffix);
+			void setSuffix(const QString& suffix);
 			QString getSuffix() const;
 
 		private:
