@@ -40,12 +40,20 @@ namespace Swift {
 		void move(QGraphicsItem* item, int npos);
 		void deselect(QString id);
 
+	signals:
+		void lastItemChanged(QGraphicsItem* item, int pos, GView::Type type);
+		void itemDeleted(QString id, int pos);
+		void lineWidthChanged(int i);
+		void lineColorChanged(QColor color);
+		void brushColorChanged(QColor color);
+
 	public slots:
 		void moveUpSelectedItem();
 		void moveDownSelectedItem();
 
 	private slots:
 		void handleTextItemModified(QGraphicsTextItem*);
+
 	private:
 		void changePenAndBrush(QGraphicsItem* item, QPen pen, QBrush brush);
 		void setActualPenAndBrushFromItem(QGraphicsItem* item);
@@ -64,12 +72,5 @@ namespace Swift {
 		QMap<QString, QGraphicsItem*> itemsMap_;
 		QList<QGraphicsItem*> items_;
 		IDGenerator idGenerator;
-
-	signals:
-		void lastItemChanged(QGraphicsItem* item, int pos, GView::Type type);
-		void itemDeleted(QString id, int pos);
-		void lineWidthChanged(int i);
-		void lineColorChanged(QColor color);
-		void brushColorChanged(QColor color);
 	};
 }
