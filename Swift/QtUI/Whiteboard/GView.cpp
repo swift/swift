@@ -8,10 +8,7 @@
 #include <QtSwiftUtil.h>
 
 namespace Swift {
-	GView::GView(QGraphicsScene* scene, QWidget* parent) : QGraphicsView(scene, parent), brush(QColor(Qt::white)), defaultBrush(QColor(Qt::white)) {
-		selectionRect = 0;
-		lastItem = 0;
-		zValue = 0;
+	GView::GView(QGraphicsScene* scene, QWidget* parent) : QGraphicsView(scene, parent), zValue(0), mousePressed(false), brush(QColor(Qt::white)), defaultBrush(QColor(Qt::white)), mode(GView::Select), lastItem(NULL), selectionRect(NULL), textDialog(NULL) {
 	}
 
 	void GView::setLineWidth(int i) {
