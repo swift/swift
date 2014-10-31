@@ -27,15 +27,17 @@ bool HunspellChecker::isCorrect(const std::string& word) {
 
 void HunspellChecker::getSuggestions(const std::string& word, std::vector<std::string>& list) {
 	char **suggestList = NULL;
-	int words_returned;
+	int words_returned = 0;
 	if (!word.empty()) {
 		words_returned = speller_->suggest(&suggestList, word.c_str());
+		if (suggestList != NULL) {
+			for (int i = 0; i < words_returned; ++i) {
+				list.push_back(suggestList[i]);
+				free(suggestList[i]);
+			}
+			free(suggestList);
+		}
 	}
-	for (int i = 0; i < words_returned; ++i) {
-		list.push_back(suggestList[i]);
-		free(suggestList[i]);
-	}
-	free(suggestList);
 }
 
 void HunspellChecker::checkFragment(const std::string& fragment, PositionPairList& misspelledPositions) {
