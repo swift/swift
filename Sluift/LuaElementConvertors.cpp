@@ -33,6 +33,7 @@
 #include <Sluift/ElementConvertors/ForwardedConvertor.h>
 #include <Sluift/ElementConvertors/MAMResultConvertor.h>
 #include <Sluift/ElementConvertors/MAMQueryConvertor.h>
+#include <Sluift/ElementConvertors/MAMFinConvertor.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/Lua/Exception.h>
 
@@ -60,6 +61,7 @@ LuaElementConvertors::LuaElementConvertors() {
 	convertors.push_back(boost::make_shared<ForwardedConvertor>(this));
 	convertors.push_back(boost::make_shared<MAMResultConvertor>(this));
 	convertors.push_back(boost::make_shared<MAMQueryConvertor>(this));
+	convertors.push_back(boost::make_shared<MAMFinConvertor>(this));
 	convertors.push_back(boost::make_shared<DOMElementConvertor>());
 	convertors.push_back(boost::make_shared<RawXMLElementConvertor>());
 	convertors.push_back(boost::make_shared<DefaultElementConvertor>());
