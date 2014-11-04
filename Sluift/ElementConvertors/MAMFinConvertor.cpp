@@ -9,7 +9,6 @@
 #include <lua.hpp>
 #include <Sluift/ElementConvertors/MAMFinConvertor.h>
 #include <Sluift/LuaElementConvertors.h>
-#include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/ResultSet.h>
 
 #pragma clang diagnostic ignored "-Wunused-private-field"
@@ -72,8 +71,8 @@ boost::optional<LuaElementConvertor::Documentation> MAMFinConvertor::getDocument
 		"MAMFin",
 		"This table has the following fields:\n\n"
 		"- `query_id`: string (Optional)\n"
-		"- `complete`: string (Optional)\n"
-		"- `stable`: string @{Form} (Optional)\n"
+		"- `complete`: boolean (Optional)\n"
+		"- `stable`: boolean (Optional)\n"
 		"- `result_set`: @{ResultSet} (Optional)\n"
 	);
 }
