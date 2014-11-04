@@ -66,7 +66,8 @@ bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
 				return false;
 			} else if (keyEvent->key() == Qt::Key_Alt && event->type() == QEvent::KeyPress) {
 				isModifierSinglePressed_ = true;
-			} else if (keyEvent->key() == Qt::Key_Alt && event->type() == QEvent::KeyRelease && isModifierSinglePressed_) {
+			} else if ((keyEvent->key() == Qt::Key_Alt && event->type() == QEvent::KeyRelease && isModifierSinglePressed_)
+					|| (keyEvent->key() == Qt::Key_Menu)) {
 				QPoint itemOffset(2,2);
 				QPoint contextMenuPosition = treeView_->visualRect(treeView_->currentIndex()).topLeft() + itemOffset;;
 				QApplication::postEvent(treeView_, new QContextMenuEvent(QContextMenuEvent::Keyboard, contextMenuPosition, treeView_->mapToGlobal(contextMenuPosition)));
