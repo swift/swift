@@ -115,6 +115,15 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
 	throbberLabel_->movie()->stop();
 	throbberLabel_->hide();
 
+	// remove old suggestions except for the user input text field
+	QLayoutItem* suggestionItem = NULL;
+	while ((suggestionItem = suggestionsLayout_->itemAt(0)) && suggestionItem->widget() != name_) {
+		QWidget* suggestionWidget = suggestionItem->widget();
+		suggestionsLayout_->removeWidget(suggestionWidget);
+		delete suggestionWidget;
+	}
+
+	// populate new suggestions
 	foreach(const std::string& name, suggestions) {
 		suggestionsLayout_->insertWidget(nameLayout_->count() - 2, new QRadioButton(doubleAmpersand(name), this));
 	}
