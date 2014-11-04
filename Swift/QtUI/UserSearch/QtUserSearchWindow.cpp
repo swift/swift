@@ -569,7 +569,7 @@ void QtUserSearchWindow::clear() {
 		firstMultiJIDPage_->contactList_->setList(contactVector_);
 		firstMultiJIDPage_->errorLabel_->setVisible(false);
 		if (type_ == ChatToContact) {
-			howText = QString(tr("Who would you like to chat to?"));
+			howText = QString(tr("List of participants:"));
 		} else if (type_ == InviteToChat) {
 			howText = QString(tr("Who do you want to invite to the chat?"));
 		}
