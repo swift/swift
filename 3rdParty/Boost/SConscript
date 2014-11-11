@@ -35,7 +35,7 @@ elif env.get("BOOST_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "flags" :
 		env["BOOST_FLAGS"] = {
 				"CPPFLAGS": cppflags,
-				"CPPDEFINES": cppdefines,
+				"CPPDEFINES": cppdefines + ['BOOST_SIGNALS_NO_DEPRECATION_WARNING'],
 				"LIBPATH": [Dir(".")],
 				"LIBS": ["Swiften_Boost"]
 			}
