@@ -43,6 +43,8 @@ elif env.get("BOOST_BUNDLED", False) :
 			env["BOOST_FLAGS"]["CPPDEFINES"] += [("_WIN32_WINNT", "_WIN32_WINNT_VISTA")]
 			if env["PLATFORM"] == "cygwin" :
 				env["BOOST_FLAGS"]["CPPDEFINES"] += ["__USE_W32_SOCKETS"]
+		elif env["PLATFORM"] == "posix" :
+			env["BOOST_FLAGS"]["LIBS"] += ["rt"]
 
 ################################################################################
 # Build
