@@ -15,6 +15,7 @@ if env.get("EXPAT_BUNDLED", False) :
 			myenv.Append(CPPPATH = [".", "src", "../Boost/src"])
 		else :
 			myenv.Append(CPPPATH = [".", "src"])
+			myenv.MergeFlags(env["BOOST_FLAGS"])
 
 		conf = Configure(conf_env)
 		if conf.CheckFunc('memmove') :
