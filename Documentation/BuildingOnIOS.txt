@@ -8,7 +8,7 @@ Prerequisites
 Supported Components
 --------------------
 - Swiften
-  Note: File-transfer support has not been tested on Android. Link-local features are not supported under Android.
+  Note: File-transfer support has not been tested on iOS. Link-local features are not supported under iOS.
 - Swift/Controllers
 
 Preparation of Build Environment
