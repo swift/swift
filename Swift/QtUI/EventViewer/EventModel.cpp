@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "EventModel.h"
+#include <Swift/QtUI/EventViewer/EventModel.h>
 
-#include <QtDebug>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 EventModel::EventModel() {
@@ -23,7 +23,20 @@ EventModel::~EventModel() {
 }
 
 QtEvent* EventModel::getItem(int row) const {
-	return row < activeEvents_.size() ? activeEvents_[row] : inactiveEvents_[row - activeEvents_.size()];
+	QtEvent* event = NULL;
+	if (row < activeEvents_.size()) {
+		event = activeEvents_[row];
+	}
+	else {
+		int inactiveRow = row - activeEvents_.size();
+		if (inactiveRow < inactiveEvents_.size()) {
+			event = inactiveEvents_[inactiveRow];
+		}
+		else {
+			SWIFT_LOG(error) << "Misbehaving EventModel requests row index outside of range";
+		}
+	}
+	return event;
 }
 
 int EventModel::getNewEventCount() {
@@ -57,24 +70,23 @@ int EventModel::rowCount(const QModelIndex& parent) const {
 }
 
 void EventModel::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
+	beginResetModel();
 	if (active) {
 		activeEvents_.push_front(new QtEvent(event, active));
-		emit dataChanged(createIndex(0, 0), createIndex(1, 0));
 	} else {
 		inactiveEvents_.push_front(new QtEvent(event, active));
-		emit dataChanged(createIndex(activeEvents_.size() -1, 0), createIndex(activeEvents_.size(), 0));
 		if (inactiveEvents_.size() > 50) {
 			removeEvent(inactiveEvents_[20]->getEvent());
 		}
 	}
-	emit layoutChanged();
+	endResetModel();
 }
 
 void EventModel::removeEvent(boost::shared_ptr<StanzaEvent> event) {
+	beginResetModel();
 	for (int i = inactiveEvents_.size() - 1; i >= 0; i--) {
 		if (event == inactiveEvents_[i]->getEvent()) {
 			inactiveEvents_.removeAt(i);
-			emit dataChanged(createIndex(activeEvents_.size() + i - 1, 0), createIndex(activeEvents_.size() + i - 1, 0));
 			return;
 		}
 	}
@@ -82,11 +94,10 @@ void EventModel::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	for (int i = 0; i < activeEvents_.size(); i++) {
 		if (event == activeEvents_[i]->getEvent()) {
 			activeEvents_.removeAt(i);
-			emit dataChanged(createIndex(i - 1, 0), createIndex(i - 1, 0));
 			return;
 		}
 	}
-
+	endResetModel();
 }
 
 }
