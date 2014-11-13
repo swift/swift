@@ -12,7 +12,7 @@ sources = [
 objects = swiften_env.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
-if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native":
+if swiften_env["PLATFORM"] == "darwin" and swiften_env["target"] == "native" or swiften_env["target"] == 'xcode':
 	myenv = swiften_env.Clone()
 	myenv.Append(CXXFLAGS = myenv["OBJCCFLAGS"])
 	objects = myenv.SwiftenObject([
