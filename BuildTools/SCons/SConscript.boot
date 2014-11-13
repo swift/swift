@@ -61,7 +61,7 @@ vars.Add(PathVariable("expat_includedir", "Expat headers location", None, PathVa
 vars.Add(PathVariable("expat_libdir", "Expat library location", None, PathVariable.PathAccept))
 vars.Add("expat_libname", "Expat library name", os.name == "nt" and "libexpat" or "expat")
 vars.Add(PackageVariable("icu", "ICU library location", "no"))
-vars.Add(BoolVariable("libidn_bundled_enable", "Allow use of bunded Expat", "true"))
+vars.Add(BoolVariable("libidn_bundled_enable", "Allow use of bundled LibIDN", "true"))
 vars.Add(BoolVariable("try_libidn", "Try configuring for LibIDN?", "true"))
 vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
