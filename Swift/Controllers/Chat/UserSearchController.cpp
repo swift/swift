@@ -65,7 +65,9 @@ void UserSearchController::setCanInitiateImpromptuMUC(bool supportsImpromptu) {
 	if (!window_) {
 		initializeUserWindow();
 	}
-	window_->setCanStartImpromptuChats(supportsImpromptu);
+	if (window_) {
+		window_->setCanStartImpromptuChats(supportsImpromptu);
+	} // Else doesn't support search
 }
 
 void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
@@ -323,6 +325,10 @@ void UserSearchController::initializeUserWindow() {
 		}
 
 		window_ = factory_->createUserSearchWindow(windowType, uiEventStream_, rosterController_->getGroups());
+		if (!window_) {
+			// UI Doesn't support user search
+			return;
+		}
 		window_->onNameSuggestionRequested.connect(boost::bind(&UserSearchController::handleNameSuggestionRequest, this, _1));
 		window_->onFormRequested.connect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 		window_->onSearchRequested.connect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
