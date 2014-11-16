@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma once
+
 #include <map>
 #include <boost/shared_ptr.hpp>
 #include <string>
@@ -39,4 +41,3 @@ namespace Swift {
 			VCardManager* vcardManager_;
 	};
 }
-

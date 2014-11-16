@@ -4,6 +4,8 @@
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
+#pragma once
+
 #include <Swiften/Base/boost_bsignals.h>
 
 #include <Swiften/Base/SafeByteArray.h>
