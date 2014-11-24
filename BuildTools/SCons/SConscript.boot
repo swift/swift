@@ -270,6 +270,10 @@ if env.get("mac106", 0) :
 if not env["assertions"] :
 	env.Append(CPPDEFINES = ["NDEBUG"])
 
+# disable file-transfer support on iOS
+if env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
+	env["experimental_ft"] = False
+
 if env["experimental_ft"] :
 	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT"])
 
