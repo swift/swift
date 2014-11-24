@@ -394,8 +394,8 @@ if target in ["iphone-device", "iphone-simulator", "xcode"] :
 		env["IPHONEOS_DEPLOYMENT_TARGET"] = "4.1"
 
 	# Set the build flags
-	env["CC"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/gcc"
-	env["CXX"] = "$XCODE_PLATFORM_DEVELOPER_BIN_DIR/g++"
+	env["CC"] = os.environ["DEVELOPER_BIN_DIR"] + "/gcc"
+	env["CXX"] = os.environ["DEVELOPER_BIN_DIR"] + "/g++"
 	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
 	env["LD"] = env["CC"]
 	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden", "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"]])
