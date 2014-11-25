@@ -49,6 +49,8 @@ namespace Swift {
 			std::string getSearchBoxText();
 			boost::gregorian::date getLastVisibleDate();
 
+			virtual std::string getID() const;
+
 		signals:
 			void fontResized(int);
 

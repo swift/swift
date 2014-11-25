@@ -16,7 +16,7 @@ namespace Swift {
 	class CocoaApplicationActivateHelper : public QObject {
 		public:
 			CocoaApplicationActivateHelper();
-			~CocoaApplicationActivateHelper();
+			virtual ~CocoaApplicationActivateHelper();
 
 		private:
 			bool eventFilter(QObject* o, QEvent* e);

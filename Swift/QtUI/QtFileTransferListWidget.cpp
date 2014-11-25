@@ -69,6 +69,10 @@ void QtFileTransferListWidget::setFileTransferOverview(FileTransferOverview *ove
 	itemModel->setFileTransferOverview(overview);
 }
 
+std::string QtFileTransferListWidget::getID() const {
+	return "QtFileTransferListWidget";
+}
+
 void QtFileTransferListWidget::closeEvent(QCloseEvent* event) {
 	emit windowClosing();
 	event->accept();

@@ -490,7 +490,9 @@ void QtLoginWindow::morphInto(MainWindow *mainWindow) {
 	stack_->setCurrentWidget(qtMainWindow);
 	setEnabled(true);
 	setInitialMenus();
-	foreach (QMenu* menu, qtMainWindow->getMenus()) {
+	std::vector<QMenu*> mainWindowMenus = qtMainWindow->getMenus();
+	viewMenu_ = mainWindowMenus[0];
+	foreach (QMenu* menu, mainWindowMenus) {
 		menuBar_->addMenu(menu);
 	}
 	setFocus();

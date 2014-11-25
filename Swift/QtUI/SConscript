@@ -193,7 +193,10 @@ sources = [
     "QtUISettingConstants.cpp",
     "QtURLValidator.cpp",
     "QtResourceHelper.cpp",
-    "QtSpellCheckHighlighter.cpp"
+    "QtSpellCheckHighlighter.cpp",
+    "Trellis/QtDynamicGridLayout.cpp",
+    "Trellis/QtDNDTabBar.cpp",
+    "Trellis/QtGridSelectionDialog.cpp"
   ]
 
 # QtVCardWidget

@@ -6,41 +6,41 @@
 
 #include <Swift/QtUI/QtMainWindow.h>
 
-#include <boost/optional.hpp>
 #include <boost/bind.hpp>
+#include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <QAction>
 #include <QBoxLayout>
 #include <QComboBox>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <QPushButton>
 #include <QMenuBar>
-#include <QToolBar>
-#include <QAction>
+#include <QPushButton>
 #include <QTabWidget>
+#include <QToolBar>
 
 #include <Swiften/Base/Platform.h>
 
-#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestHistoryUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
+#include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestBlockListDialogUIEvent.h>
-#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestHistoryUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
 
-#include <Swift/QtUI/Roster/QtFilterWidget.h>
+#include <Swift/QtUI/QtAdHocCommandWithJIDWindow.h>
+#include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabWidget.h>
-#include <Swift/QtUI/QtSettingsProvider.h>
-#include <Swift/QtUI/QtLoginWindow.h>
-#include <Swift/QtUI/Roster/QtRosterWidget.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
-#include <Swift/QtUI/QtAdHocCommandWithJIDWindow.h>
+#include <Swift/QtUI/Roster/QtFilterWidget.h>
+#include <Swift/QtUI/Roster/QtRosterWidget.h>
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Swift/QtUI/CocoaUIHelpers.h>
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
@@ -138,12 +138,6 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 		viewMenu->addAction(showEmoticonsAction_);
 		handleShowEmoticonsToggled(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
 	}
-
-	//QAction* compactRosterAction_ = new QAction(tr("&Compact Roster"), this);
-	//compactRosterAction_->setCheckable(true);
-	//compactRosterAction_->setChecked(false);
-	//connect(compactRosterAction_, SIGNAL(toggled(bool)), uiPreferences_, SLOT(setCompactRosters(bool)));
-	//viewMenu->addAction(compactRosterAction_);
 
 	QMenu* actionsMenu = new QMenu(tr("&Actions"), this);
 	menus_.push_back(actionsMenu);

@@ -31,6 +31,8 @@ public:
 
 	void setFileTransferOverview(FileTransferOverview *);
 
+	virtual std::string getID() const;
+
 private:
 	virtual void closeEvent(QCloseEvent* event);
 	virtual void showEvent(QShowEvent* event);

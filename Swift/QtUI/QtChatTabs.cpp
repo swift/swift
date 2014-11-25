@@ -1,72 +1,141 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
-#include "QtChatTabs.h"
+#include <Swift/QtUI/QtChatTabs.h>
 
 #include <algorithm>
 #include <vector>
 
-#include <Swift/Controllers/ChatMessageSummarizer.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swiften/Base/Log.h>
 
-#include <QCloseEvent>
-#include <QDesktopWidget>
-#include <QtGlobal>
-#include <QTabWidget>
-#include <QLayout>
-#include <QTabBar>
+#include <Swift/Controllers/ChatMessageSummarizer.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtTabWidget.h>
+#include <Swift/QtUI/QtTabbable.h>
+#include <Swift/QtUI/Trellis/QtDynamicGridLayout.h>
+#include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
+
+#include <QAction>
 #include <QApplication>
-#include <qdebug.h>
+#include <QCloseEvent>
+#include <QCursor>
+#include <QDesktopWidget>
+#include <QLayout>
+#include <QMenu>
+#include <QTabBar>
+#include <QTabWidget>
+#include <QtGlobal>
 
 namespace Swift {
-QtChatTabs::QtChatTabs(bool singleWindow) : QWidget(), singleWindow_(singleWindow) {
+QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode) : QWidget(), singleWindow_(singleWindow), settingsProvider_(settingsProvider), trellisMode_(trellisMode), dynamicGrid_(NULL), gridSelectionDialog_(NULL) {
 #ifndef Q_OS_MAC
 	setWindowIcon(QIcon(":/logo-chat-16.png"));
 #else
 	setAttribute(Qt::WA_ShowWithoutActivating);
 #endif
+	dynamicGrid_ = new QtDynamicGridLayout(this, trellisMode);
+	connect(dynamicGrid_, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
 
-	tabs_ = new QtTabWidget(this);
-	tabs_->setUsesScrollButtons(true);
-	tabs_->setElideMode(Qt::ElideRight);
-#if QT_VERSION >= 0x040500
-	/*For Macs, change the tab rendering.*/
-	tabs_->setDocumentMode(true);
-	/*Closable tabs are only in Qt4.5 and later*/
-	tabs_->setTabsClosable(true);
-	tabs_->setMovable(true);
-	connect(tabs_, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
-#else
-#warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.
-#endif
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->setSpacing(0);
-	layout->setContentsMargins(0, 3, 0, 0);
-	layout->addWidget(tabs_);
+	layout->setContentsMargins(0, 0, 0, 0);
+	layout->addWidget(dynamicGrid_);
 	setLayout(layout);
+
+	if (trellisMode) {
+		// restore size
+		std::string gridSizeString = settingsProvider->getSetting(SettingConstants::TRELLIS_GRID_SIZE);
+		if (!gridSizeString.empty()) {
+			QByteArray gridSizeData = QByteArray::fromBase64(P2QSTRING(gridSizeString).toUtf8());
+			QDataStream dataStreamGridSize(&gridSizeData, QIODevice::ReadWrite);
+			QSize gridSize(1,1);
+			dataStreamGridSize >> gridSize;
+			dynamicGrid_->setDimensions(gridSize);
+		}
+
+		// restore positions
+		std::string tabPositionsString = settingsProvider->getSetting(SettingConstants::TRELLIS_GRID_POSITIONS);
+		if (!tabPositionsString.empty()) {
+			QByteArray tabPositionsData = QByteArray::fromBase64(P2QSTRING(tabPositionsString).toUtf8());
+			QDataStream inTabPositions(&tabPositionsData, QIODevice::ReadWrite);
+			QHash<QString, QPoint> tabPositions;
+			inTabPositions >> tabPositions;
+			dynamicGrid_->setTabPositions(tabPositions);
+		}
+	}
+
+	gridSelectionDialog_ = new QtGridSelectionDialog();
+}
+
+QtChatTabs::~QtChatTabs() {
+	if (trellisMode_) {
+		storeTabPositions();
+	}
+	delete gridSelectionDialog_;
 }
 
 void QtChatTabs::closeEvent(QCloseEvent* event) {
 	//Hide first to prevent flickering as each tab is removed.
 	hide();
-	for (int i = tabs_->count() - 1; i >= 0; i--) {
-		tabs_->widget(i)->close();
+	if (trellisMode_) {
+		storeTabPositions();
+	}
+
+	for (int i = dynamicGrid_->count() - 1; i >= 0; i--) {
+		dynamicGrid_->widget(i)->close();
 	}
 	event->accept();
 }
 
 QtTabbable* QtChatTabs::getCurrentTab() {
-	return qobject_cast<QtTabbable*>(tabs_->currentWidget());
+	return qobject_cast<QtTabbable*>(dynamicGrid_->currentWidget());
+}
+
+void QtChatTabs::setViewMenu(QMenu* viewMenu) {
+	if (trellisMode_) {
+		viewMenu->addSeparator();
+		QAction* action = new QAction(tr("Change &layout"), this);
+		action->setShortcutContext(Qt::ApplicationShortcut);
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_L));
+		connect(action, SIGNAL(triggered()), this, SLOT(handleOpenLayoutChangeDialog()));
+		viewMenu->addAction(action);
+
+		action = new QAction(tr("Move Tab right"), this);
+		action->setShortcutContext(Qt::ApplicationShortcut);
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Right));
+		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabRight()));
+		viewMenu->addAction(action);
+
+		action = new QAction(tr("Move Tab left"), this);
+		action->setShortcutContext(Qt::ApplicationShortcut);
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Left));
+		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabLeft()));
+		viewMenu->addAction(action);
+
+		action = new QAction(tr("Move Tab to next group"), this);
+		action->setShortcutContext(Qt::ApplicationShortcut);
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Right));
+		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabToNextGroup()));
+		viewMenu->addAction(action);
+
+		action = new QAction(tr("Move Tab to previous group"), this);
+		action->setShortcutContext(Qt::ApplicationShortcut);
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Left));
+		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabToPreviousGroup()));
+		viewMenu->addAction(action);
+	}
 }
 
 void QtChatTabs::addTab(QtTabbable* tab) {
 	QSizePolicy policy = sizePolicy();
 	/* Chat windows like to grow - don't let them */
 	setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-	tabs_->addTab(tab, tab->windowTitle());
+	dynamicGrid_->addTab(tab, tab->windowTitle());
 	connect(tab, SIGNAL(titleUpdated()), this, SLOT(handleTabTitleUpdated()), Qt::UniqueConnection);
 	connect(tab, SIGNAL(countUpdated()), this, SLOT(handleTabTitleUpdated()), Qt::UniqueConnection);
 	connect(tab, SIGNAL(windowClosing()), this, SLOT(handleTabClosing()), Qt::UniqueConnection);
@@ -85,7 +154,7 @@ void QtChatTabs::handleWidgetShown() {
 		return;
 	}
 	checkForFirstShow();
-	if (tabs_->indexOf(widget) >= 0) {
+	if (dynamicGrid_->indexOf(widget) >= 0) {
 		handleTabTitleUpdated(widget);
 		return;
 	}
@@ -101,7 +170,7 @@ void QtChatTabs::handleWantsToActivate() {
 	setWindowState(windowState() | Qt::WindowActive);
 	show();
 	widget->show();
-	tabs_->setCurrentWidget(widget);
+	dynamicGrid_->setCurrentWidget(widget);
 	handleTabTitleUpdated(widget);
 	widget->setFocus();
 	raise();
@@ -111,9 +180,9 @@ void QtChatTabs::handleWantsToActivate() {
 void QtChatTabs::handleTabClosing() {
 	QWidget* widget = qobject_cast<QWidget*>(sender());
 	int index;
-	if (widget && ((index = tabs_->indexOf(widget)) >= 0)) {
-		tabs_->removeTab(index);
-		if (tabs_->count() == 0) {
+	if (widget && ((index = dynamicGrid_->indexOf(widget)) >= 0)) {
+		dynamicGrid_->removeTab(index);
+		if (dynamicGrid_->count() == 0) {
 			if (!singleWindow_) {
 				hide();
 			}
@@ -123,19 +192,19 @@ void QtChatTabs::handleTabClosing() {
 			}
 		}
 		else {
-			handleTabTitleUpdated(tabs_->currentWidget());
+			handleTabTitleUpdated(dynamicGrid_->currentWidget());
 		}
 	}
 }
 
 void QtChatTabs::handleRequestedPreviousTab() {
-	int newIndex = tabs_->currentIndex() - 1;
-	tabs_->setCurrentIndex(newIndex >= 0 ? newIndex : tabs_->count() - 1);
+	int newIndex = dynamicGrid_->currentIndex() - 1;
+	dynamicGrid_->setCurrentIndex(newIndex >= 0 ? newIndex : dynamicGrid_->count() - 1);
 }
 
 void QtChatTabs::handleRequestedNextTab() {
-	int newIndex = tabs_->currentIndex() + 1;
-	tabs_->setCurrentIndex(newIndex < tabs_->count() ? newIndex : 0);
+	int newIndex = dynamicGrid_->currentIndex() + 1;
+	dynamicGrid_->setCurrentIndex(newIndex < dynamicGrid_->count() ? newIndex : 0);
 }
 
 void QtChatTabs::handleRequestedActiveTab() {
@@ -143,16 +212,16 @@ void QtChatTabs::handleRequestedActiveTab() {
 	bool finished = false;
 	for (int j = 0; j < 2; j++) {
 		bool looped = false;
-		for (int i = tabs_->currentIndex() + 1; !finished && i != tabs_->currentIndex(); i++) {
-			if (i >= tabs_->count()) {
+		for (int i = dynamicGrid_->currentIndex() + 1; !finished && i != dynamicGrid_->currentIndex(); i++) {
+			if (i >= dynamicGrid_->count()) {
 				if (looped) {
 					break;
 				}
 				looped = true;
 				i = 0;
 			}
-			if (qobject_cast<QtTabbable*>(tabs_->widget(i))->getWidgetAlertState() == types[j]) {
-				tabs_->setCurrentIndex(i);
+			if (qobject_cast<QtTabbable*>(dynamicGrid_->widget(i))->getWidgetAlertState() == types[j]) {
+				dynamicGrid_->setCurrentIndex(i);
 				finished = true;
 				break;
 			}
@@ -162,7 +231,13 @@ void QtChatTabs::handleRequestedActiveTab() {
 
 
 void QtChatTabs::handleTabCloseRequested(int index) {
-	QWidget* widget = tabs_->widget(index);
+	if (trellisMode_) {
+		storeTabPositions();
+	}
+
+	assert(index < dynamicGrid_->count());
+	QWidget* widget = dynamicGrid_->widget(index);
+	assert(widget);
 	widget->close();
 }
 
@@ -176,7 +251,7 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 		return;
 	}
 	QtTabbable* tabbable = qobject_cast<QtTabbable*>(widget);
-	int index = tabs_->indexOf(widget);
+	int index = dynamicGrid_->indexOf(widget);
 	if (index < 0) {
 		return;
 	}
@@ -202,11 +277,14 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 		accelsTaken[i] = (i == 0); //A is used for 'switch to active tab'
 		i++;
 	}
-	int other = tabs_->tabBar()->count();
+
+	int other = dynamicGrid_->count();
 	while (other >= 0) {
 		other--;
 		if (other != index) {
-			QString t = tabs_->tabBar()->tabText(other).toLower();
+			int tabIndex = -1;
+			QtTabWidget* tabWidget = dynamicGrid_->indexToTabWidget(other, tabIndex);
+			QString t = tabWidget->tabBar()->tabText(tabIndex).toLower();
 			int r = t.indexOf('&');
 			if (r >= 0 && t[r+1] >= 'a' && t[r+1] <= 'z') {
 				accelsTaken[t[r+1].unicode()-'a'] = true;
@@ -235,24 +313,26 @@ void QtChatTabs::handleTabTitleUpdated(QWidget* widget) {
 	// doesn't work on Arabic/Indic keyboards (where Latin letters
 	// aren't available), but I don't care to deal with those.
 
-	tabs_->setTabText(index, tabbable->getCount() > 0 ? QString("(%1) %2").arg(tabbable->getCount()).arg(tabText) : tabText);
+	int tabIndex = -1;
+	QtTabWidget* tabWidget = dynamicGrid_->indexToTabWidget(index, tabIndex);
+	tabWidget->setTabText(tabIndex, tabbable->getCount() > 0 ? QString("(%1) %2").arg(tabbable->getCount()).arg(tabText) : tabText);
 	QColor tabTextColor;
 	switch (tabbable->getWidgetAlertState()) {
 	case QtTabbable::WaitingActivity : tabTextColor = QColor(217, 20, 43); break;
 	case QtTabbable::ImpendingActivity : tabTextColor = QColor(27, 171, 32); break;
 	case QtTabbable::NoActivity : tabTextColor = QColor(); break;
 	}
-	tabs_->tabBar()->setTabTextColor(index, tabTextColor);
+	tabWidget->tabBar()->setTabTextColor(tabIndex, tabTextColor);
 
 	std::vector<std::pair<std::string, int> > unreads;
-	for (int i = 0; i < tabs_->count(); i++) {
-		QtTabbable* tab = qobject_cast<QtTabbable*>(tabs_->widget(i));
+	for (int i = 0; i < dynamicGrid_->count(); i++) {
+		QtTabbable* tab = qobject_cast<QtTabbable*>(dynamicGrid_->widget(i));
 		if (tab) {
 			unreads.push_back(std::pair<std::string, int>(Q2PSTRING(tab->windowTitle()), tab->getCount()));
 		}
 	}
 
-	std::string current(Q2PSTRING(qobject_cast<QtTabbable*>(tabs_->currentWidget())->windowTitle()));
+	std::string current(Q2PSTRING(qobject_cast<QtTabbable*>(dynamicGrid_->currentWidget())->windowTitle()));
 	ChatMessageSummarizer summary;
 	QString title = summary.getSummary(current, unreads).c_str();
 	setWindowTitle(title);
@@ -263,6 +343,29 @@ void QtChatTabs::flash() {
 #ifndef SWIFTEN_PLATFORM_MACOSX
 	QApplication::alert(this, 0);
 #endif
+}
+
+void QtChatTabs::handleOpenLayoutChangeDialog() {
+	disconnect(gridSelectionDialog_, SIGNAL(currentGridSizeChanged(QSize)), dynamicGrid_, SLOT(setDimensions(QSize)));
+	gridSelectionDialog_->setCurrentGridSize(dynamicGrid_->getDimension());
+	gridSelectionDialog_->move(QCursor::pos());
+	connect(gridSelectionDialog_, SIGNAL(currentGridSizeChanged(QSize)), dynamicGrid_, SLOT(setDimensions(QSize)));
+	gridSelectionDialog_->show();
+}
+
+void QtChatTabs::storeTabPositions() {
+	// save size
+	QByteArray gridSizeData;
+	QDataStream dataStreamGridSize(&gridSizeData, QIODevice::ReadWrite);
+	dataStreamGridSize << dynamicGrid_->getDimension();
+	settingsProvider_->storeSetting(SettingConstants::TRELLIS_GRID_SIZE, Q2PSTRING(QString(gridSizeData.toBase64())));
+
+	// save positions
+	QByteArray tabPositionsData;
+	QDataStream dataStreamTabPositions(&tabPositionsData, QIODevice::ReadWrite);
+	dynamicGrid_->updateTabPositions();
+	dataStreamTabPositions << dynamicGrid_->getTabPositions();
+	settingsProvider_->storeSetting(SettingConstants::TRELLIS_GRID_POSITIONS, Q2PSTRING(QString(tabPositionsData.toBase64())));
 }
 
 void QtChatTabs::resizeEvent(QResizeEvent*) {

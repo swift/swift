@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include <QWidget>
-#include <QShortcut>
-#include <QList>
+#include <string>
 
+#include <QList>
+#include <QWidget>
+
+class QShortcut;
 
 namespace Swift {
 	class QtTabbable : public QWidget {
@@ -20,6 +22,8 @@ namespace Swift {
 			bool isWidgetSelected();
 			virtual AlertType getWidgetAlertState() {return NoActivity;}
 			virtual int getCount() {return 0;}
+			virtual std::string getID() const = 0;
+
 		protected:
 			QtTabbable();
 			bool event(QEvent* event);

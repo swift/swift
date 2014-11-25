@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -90,6 +90,7 @@ po::options_description QtSwift::getOptionsDescription() {
 		("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
 		("start-minimized", "Don't show the login/roster window at startup")
 		("enable-jid-adhocs", "Enable AdHoc commands to custom JID's.")
+		("trellis", "Enable support for trellis layout")
 #if QT_VERSION >= 0x040800
 		("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
 #endif
@@ -164,7 +165,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	}
 
 	bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
-	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs(splitter_ != NULL);
+	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs(splitter_ != NULL, settingsHierachy_, options.count("trellis"));
 	bool startMinimized = options.count("start-minimized") > 0;
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());

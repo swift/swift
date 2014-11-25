@@ -57,7 +57,7 @@
 
 namespace Swift {
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
+QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	isOnline_ = true;
@@ -170,7 +170,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 
 	settings_->onSettingChanged.connect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
 	messageLog_->showEmoticons(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
-
+	setMinimumSize(100, 100);
 }
 
 QtChatWindow::~QtChatWindow() {
@@ -773,6 +773,10 @@ void QtChatWindow::setCanInitiateImpromptuChats(bool supportsImpromptu) {
 void QtChatWindow::showBookmarkWindow(const MUCBookmark& bookmark) {
 	QtAddBookmarkWindow* window = new QtAddBookmarkWindow(eventStream_, bookmark);
 	window->show();
+}
+
+std::string QtChatWindow::getID() const {
+	return id_;
 }
 
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {

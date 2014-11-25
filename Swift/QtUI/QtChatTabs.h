@@ -1,26 +1,36 @@
 /*
- * Copyright (c) 2010 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
 
 #pragma once
 
-#include "QtTabbable.h"
-#include "QtTabWidget.h"
 #include <QWidget>
 #include <QRect>
 
 class QTabWidget;
+class QMenu;
 
 namespace Swift {
+	class SettingsProvider;
+
+	class QtTabbable;
+	class QtTabWidget;
+	class QtDynamicGridLayout;
+	class QtGridSelectionDialog;
+
 	class QtChatTabs : public QWidget {
 		Q_OBJECT
 		public:
-			QtChatTabs(bool singleWindow);
+			QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode);
+			virtual ~QtChatTabs();
+
 			void addTab(QtTabbable* tab);
 			void minimise();
 			QtTabbable* getCurrentTab();
+			void setViewMenu(QMenu* viewMenu);
+
 		signals:
 			void geometryChanged();
 			void onTitleChanged(const QString& title);
@@ -42,10 +52,18 @@ namespace Swift {
 			void handleRequestedActiveTab();
 			void flash();
 
+			void handleOpenLayoutChangeDialog();
+
 		private:
+			void storeTabPositions();
 			void checkForFirstShow();
-			QtTabWidget* tabs_;
+
+		private:
 			bool singleWindow_;
+			SettingsProvider* settingsProvider_;
+			bool trellisMode_;
+			QtDynamicGridLayout* dynamicGrid_;
+			QtGridSelectionDialog* gridSelectionDialog_;
 	};
 }
 

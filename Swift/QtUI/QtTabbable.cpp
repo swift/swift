@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QKeyEvent>
+#include <QShortcut>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Platform.h>
@@ -45,11 +46,15 @@ bool QtTabbable::event(QEvent* event) {
 	if (keyEvent) {
 		// According to Qt's focus documentation, one can only override CTRL+TAB via reimplementing QWidget::event().
 #ifdef SWIFTEN_PLATFORM_LINUX
-		if (keyEvent->modifiers() == QtUtilities::ctrlHardwareKeyModifier && keyEvent->key() == Qt::Key_Tab && event->type() != QEvent::KeyRelease) {
+		if (keyEvent->modifiers().testFlag(QtUtilities::ctrlHardwareKeyModifier) && keyEvent->key() == Qt::Key_Tab && event->type() != QEvent::KeyRelease) {
 #else
-		if (keyEvent->modifiers() == QtUtilities::ctrlHardwareKeyModifier && keyEvent->key() == Qt::Key_Tab) {
+		if (keyEvent->modifiers().testFlag(QtUtilities::ctrlHardwareKeyModifier) && keyEvent->key() == Qt::Key_Tab) {
 #endif
 			emit requestNextTab();
+			return true;
+		}
+		else if (keyEvent->modifiers().testFlag(QtUtilities::ctrlHardwareKeyModifier) && keyEvent->key() == Qt::Key_Backtab) {
+			emit requestPreviousTab();
 			return true;
 		}
 	}

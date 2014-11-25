@@ -89,6 +89,10 @@ void QtXMLConsoleWidget::handleDataWritten(const SafeByteArray& data) {
 	appendTextIfEnabled(tag + "\n" + safeByteArrayToString(data) + "\n", QColor(155,1,0));
 }
 
+std::string QtXMLConsoleWidget::getID() const {
+	return "QtXMLConsoleWidget";
+}
+
 void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QColor& color) {
 	if (enabled->isChecked()) {
 		QScrollBar* scrollBar = textEdit->verticalScrollBar();

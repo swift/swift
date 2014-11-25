@@ -78,7 +78,7 @@ namespace Swift {
 
 		public:
 			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
-			~QtChatWindow();
+			virtual ~QtChatWindow();
 			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 
@@ -130,6 +130,7 @@ namespace Swift {
 			void setBlockingState(BlockingState state);
 			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu);
 			virtual void showBookmarkWindow(const MUCBookmark& bookmark);
+			virtual std::string getID() const;
 
 		public slots:
 			void handleChangeSplitterState(QByteArray state);
@@ -178,10 +179,11 @@ namespace Swift {
 			void handleOccupantSelectionChanged(RosterItem* item);
 			void handleAppendedToLog();
 
-
+		private:
 			int unreadCount_;
 			bool contactIsTyping_;
 			LastLineTracker lastLineTracker_;
+			std::string id_;
 			QString contact_;
 			QString lastSentMessage_;
 			QTextCursor tabCompleteCursor_;

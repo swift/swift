@@ -97,6 +97,7 @@ namespace Swift {
 			QMenuBar* menuBar_;
 			QMenu* swiftMenu_;
 			QMenu* generalMenu_;
+			QMenu* viewMenu_;
 			QAction* toggleSoundsAction_;
 			QAction* toggleNotificationsAction_;
 			UIEventStream* uiEventStream_;

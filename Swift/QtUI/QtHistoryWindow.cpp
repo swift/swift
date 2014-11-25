@@ -261,4 +261,8 @@ boost::gregorian::date QtHistoryWindow::getLastVisibleDate() {
 	return boost::gregorian::date(boost::gregorian::not_a_date_time);
 }
 
+std::string QtHistoryWindow::getID() const {
+	return "QtHistoryWindow";
+}
+
 }
