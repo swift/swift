@@ -17,9 +17,9 @@ Preparation of Build Environment
 
 1.1 OpenSSL
     cd 3rdParty/OpenSSL
-    curl -O http://www.openssl.org/source/openssl-1.0.0a.tar.gz
-    tar -xf openssl-1.0.0a.tar.gz
-    mv openssl-1.0.0a openssl
+    curl -O http://www.openssl.org/source/openssl-1.0.1j.tar.gz
+    tar -xf openssl-1.0.1j.tar.gz
+    mv openssl-1.0.1j openssl
 
 Building
 --------
