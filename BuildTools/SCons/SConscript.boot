@@ -420,6 +420,7 @@ if target in ["android"] :
 	env["ENV"]["PATH"] = env["android_toolchain"] + "/bin:" + env["ENV"]["PATH"]
 	env["CC"] = "arm-linux-androideabi-gcc"
 	env["CXX"] = "arm-linux-androideabi-g++"
+	env["AR"] = "arm-linux-androideabi-ar"
 	env["RANLIB"] = "arm-linux-androideabi-ranlib"
 	env.Append(CPPDEFINES = ["ANDROID"])
 	env.Append(CPPDEFINES = ["_REENTRANT", "_GLIBCXX__PTHREADS"])
