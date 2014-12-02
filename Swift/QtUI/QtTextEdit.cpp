@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Kevin Smith
+ * Copyright (c) 2010-2014 Kevin Smith
  * Licensed under the GNU General Public License v3.
  * See Documentation/Licenses/GPLv3.txt for more information.
  */
@@ -29,9 +29,8 @@
 
 namespace Swift {
 
-QtTextEdit::QtTextEdit(SettingsProvider* settings, QWidget* parent) : QTextEdit(parent) {
+QtTextEdit::QtTextEdit(SettingsProvider* settings, QWidget* parent) : QTextEdit(parent), checker_(NULL), highlighter_(NULL) {
 	connect(this, SIGNAL(textChanged()), this, SLOT(handleTextChanged()));
-	checker_ = NULL;
 	settings_ = settings;
 #ifdef HAVE_SPELLCHECKER
 	setUpSpellChecker();
@@ -73,35 +72,6 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 	}
 	else {
 		QTextEdit::keyPressEvent(event);
-#ifdef HAVE_SPELLCHECKER
-		if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
-			underlineMisspells();
-		}
-#endif
-	}
-}
-
-void QtTextEdit::underlineMisspells() {
-	QTextCursor cursor = textCursor();
-	misspelledPositions_.clear();
-	QTextCharFormat normalFormat;
-	cursor.movePosition(QTextCursor::Start, QTextCursor::MoveAnchor, 1);
-	cursor.movePosition(QTextCursor::End, QTextCursor::KeepAnchor, 1);
-	cursor.setCharFormat(normalFormat);
-	if (checker_ == NULL) {
-		return;
-	}
-	QTextCharFormat spellingErrorFormat;
-	spellingErrorFormat.setUnderlineColor(QColor(Qt::red));
-	spellingErrorFormat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
-	std::string fragment = Q2PSTRING(cursor.selectedText());
-	checker_->checkFragment(fragment, misspelledPositions_);
-	foreach (PositionPair position, misspelledPositions_) {
-		cursor.setPosition(boost::get<0>(position), QTextCursor::MoveAnchor);
-		cursor.setPosition(boost::get<1>(position), QTextCursor::KeepAnchor);
-		cursor.setCharFormat(spellingErrorFormat);
-		cursor.clearSelection();
-		cursor.setCharFormat(normalFormat);
 	}
 }
 
@@ -123,7 +93,8 @@ void QtTextEdit::replaceMisspelledWord(const QString& word, int cursorPosition) 
 }
 
 PositionPair QtTextEdit::getWordFromCursor(int cursorPosition) {
-	for (PositionPairList::iterator it = misspelledPositions_.begin(); it != misspelledPositions_.end(); ++it) {
+	PositionPairList misspelledPositions = highlighter_->getMisspelledPositions();
+	for (PositionPairList::iterator it = misspelledPositions.begin(); it != misspelledPositions.end(); ++it) {
 		if (cursorPosition >= boost::get<0>(*it) && cursorPosition <= boost::get<1>(*it)) {
 			return *it;
 		}
@@ -208,6 +179,9 @@ void QtTextEdit::setUpSpellChecker()
 		std::string dictPath = settings_->getSetting(SettingConstants::DICT_PATH);
 		std::string dictFile = settings_->getSetting(SettingConstants::DICT_FILE);
 		checker_ = SpellCheckerFactory().createSpellChecker(dictPath + dictFile);
+		delete highlighter_;
+		highlighter_ = NULL;
+		highlighter_ = new QtSpellCheckHighlighter(document(), checker_);
 	}
 }
 #endif
@@ -231,7 +205,7 @@ void QtTextEdit::handleSettingChanged(const std::string& settings) {
 		|| settings == SettingConstants::DICT_FILE.getKey()) {
 #ifdef HAVE_SPELLCHECKER
 		setUpSpellChecker();
-		underlineMisspells();
+		highlighter_->rehighlight();
 #endif
 	}
 }

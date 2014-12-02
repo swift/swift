@@ -192,7 +192,8 @@ sources = [
     "QtAffiliationEditor.cpp",
     "QtUISettingConstants.cpp",
     "QtURLValidator.cpp",
-    "QtResourceHelper.cpp"
+    "QtResourceHelper.cpp",
+    "QtSpellCheckHighlighter.cpp"
   ]
 
 # QtVCardWidget
