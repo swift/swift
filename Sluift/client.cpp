@@ -457,6 +457,28 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	return 0;
 }
 
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, get_options,
+		"Returns a table with all the connection options of this client.",
+		"self\n",
+		""
+) {
+	Sluift::globals.eventLoop.runOnce();
+
+	SluiftClient* client = getClient(L);
+	Lua::Table optionsTable = boost::assign::map_list_of
+		("host", boost::make_shared<Lua::Value>(client->getOptions().manualHostname))
+		("port", boost::make_shared<Lua::Value>(client->getOptions().manualPort))
+		("ack", boost::make_shared<Lua::Value>(client->getOptions().useAcks))
+		("compress", boost::make_shared<Lua::Value>(client->getOptions().useStreamCompression))
+		("tls", boost::make_shared<Lua::Value>(client->getOptions().useTLS == ClientOptions::NeverUseTLS ? false : true))
+		("bosh_url", boost::make_shared<Lua::Value>(client->getOptions().boshURL.toString()))
+		("allow_plain_without_tls", boost::make_shared<Lua::Value>(client->getOptions().allowPLAINWithoutTLS));
+	pushValue(L, optionsTable);
+	Lua::registerTableToString(L, -1);
+	return 1;
+}
+
 static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 	switch (event.type) {
 		case SluiftClient::Event::MessageType: {
