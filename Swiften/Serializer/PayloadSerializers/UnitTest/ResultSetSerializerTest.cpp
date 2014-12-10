@@ -32,6 +32,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
 
 			resultSet->setMaxItems(100);
 			resultSet->setCount(800);
+			resultSet->setIndex(0);
 			resultSet->setFirstIDIndex(123);
 			resultSet->setFirstID(std::string("stpeter@jabber.org"));
 			resultSet->setLastID(std::string("peterpan@neverland.lit"));
@@ -42,6 +43,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
 				"<set xmlns=\"http://jabber.org/protocol/rsm\">"
 					"<max>100</max>"
 					"<count>800</count>"
+					"<index>0</index>"
 					"<first index=\"123\">stpeter@jabber.org</first>"
 					"<last>peterpan@neverland.lit</last>"
 					"<before>decaf-badba-dbad1</before>"

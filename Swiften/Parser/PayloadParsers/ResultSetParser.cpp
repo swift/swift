@@ -43,6 +43,11 @@ void ResultSetParser::handleEndElement(const std::string& element, const std::st
 				getPayloadInternal()->setCount(boost::lexical_cast<int>(currentText_));
 			} catch(boost::bad_lexical_cast&) {
 			}
+		} else if (element == "index") {
+			try {
+				getPayloadInternal()->setIndex(boost::lexical_cast<int>(currentText_));
+			} catch(boost::bad_lexical_cast&) {
+			}
 		} else if (element == "first") {
 			getPayloadInternal()->setFirstID(currentText_);
 		} else if (element == "last") {

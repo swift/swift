@@ -26,6 +26,7 @@ class ResultSetParserTest : public CppUnit::TestFixture
 				"<set xmlns=\"http://jabber.org/protocol/rsm\">"
 					"<max>100</max>"
 					"<count>800</count>"
+					"<index>0</index>"
 					"<first index=\"123\">stpeter@jabber.org</first>"
 					"<last>peterpan@neverland.lit</last>"
 					"<before>decaf-badba-dbad1</before>"
@@ -38,6 +39,8 @@ class ResultSetParserTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(100, *payload->getMaxItems());
 			CPPUNIT_ASSERT(payload->getCount());
 			CPPUNIT_ASSERT_EQUAL(800, *payload->getCount());
+			CPPUNIT_ASSERT(payload->getIndex());
+			CPPUNIT_ASSERT_EQUAL(0, *payload->getIndex());
 			CPPUNIT_ASSERT(payload->getFirstID());
 			CPPUNIT_ASSERT_EQUAL(std::string("stpeter@jabber.org"), *payload->getFirstID());
 			CPPUNIT_ASSERT(payload->getFirstIDIndex());

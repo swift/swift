@@ -33,6 +33,10 @@ std::string ResultSetSerializer::serializePayload(boost::shared_ptr<ResultSet> p
 		element.addNode(boost::make_shared<XMLElement>("count", "", boost::lexical_cast<std::string>(*payload->getCount())));
 	}
 
+	if (payload->getIndex()) {
+		element.addNode(boost::make_shared<XMLElement>("index", "", boost::lexical_cast<std::string>(*payload->getIndex())));
+	}
+
 	if (payload->getFirstID()) {
 		boost::shared_ptr<XMLElement> firstElement = boost::make_shared<XMLElement>("first", "", *payload->getFirstID());
 		if (payload->getFirstIDIndex()) {

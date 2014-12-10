@@ -33,6 +33,11 @@ boost::shared_ptr<ResultSet> ResultSetConvertor::doConvertFromLua(lua_State* L) 
 		result->setCount(boost::numeric_cast<int>(lua_tonumber(L, -1)));
 	}
 	lua_pop(L, 1);
+	lua_getfield(L, -1, "index");
+	if (lua_isnumber(L, -1)) {
+		result->setIndex(boost::numeric_cast<int>(lua_tonumber(L, -1)));
+	}
+	lua_pop(L, 1);
 	lua_getfield(L, -1, "first_id_index");
 	if (lua_isstring(L, -1)) {
 		result->setFirstIDIndex(boost::numeric_cast<int>(lua_tonumber(L, -1)));
@@ -70,6 +75,10 @@ void ResultSetConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<ResultSe
 	if (payload->getCount()) {
 		lua_pushnumber(L, *payload->getCount());
 		lua_setfield(L, -2, "count");
+	}
+	if (payload->getIndex()) {
+		lua_pushnumber(L, *payload->getIndex());
+		lua_setfield(L, -2, "index");
 	}
 	if (payload->getFirstIDIndex()) {
 		lua_pushnumber(L, *payload->getFirstIDIndex());

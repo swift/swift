@@ -21,6 +21,9 @@ namespace Swift {
 			void setCount(const boost::optional<int>& count) { count_ = count; }
 			const boost::optional<int>& getCount() const { return count_; }
 
+			void setIndex(const boost::optional<int>& index) { index_ = index; }
+			const boost::optional<int>& getIndex() const { return index_; }
+
 			void setFirstIDIndex(const boost::optional<int>& firstIndex) { firstIndex_ = firstIndex; }
 			const boost::optional<int>& getFirstIDIndex() const { return firstIndex_; }
 
@@ -36,9 +39,11 @@ namespace Swift {
 			void setAfter(const boost::optional<std::string>& after) { after_ = after; }
 			const boost::optional<std::string>& getAfter() const { return after_; }
 
+
 		private:
 			boost::optional<int> maxItems_;
 			boost::optional<int> count_;
+			boost::optional<int> index_;
 			boost::optional<int> firstIndex_;
 			boost::optional<std::string> firstID_;
 			boost::optional<std::string> lastID_;
