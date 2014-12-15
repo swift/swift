@@ -5,9 +5,9 @@
  */
 
 /*
-* Copyright (c) 2013-2014 Remko Tronçon and Kevin Smith
-* Licensed under the GNU General Public License v3.
-* See Documentation/Licenses/GPLv3.txt for more information.
+* Copyright (c) 2013-2014 Isode Limited.
+* All rights reserved.v3.
+* See the COPYING file for more information.
 */
 
 #include <Swiften/Network/SolarisNetworkEnvironment.h>
@@ -37,13 +37,13 @@
  * modification, are permitted provided that the following conditions
  * are met:
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *	notice, this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
+ *	notice, this list of conditions and the following disclaimer in the
+ *	documentation and/or other materials provided with the distribution.
  * 3. Neither the name of the project nor the names of its contributors
- *    may be used to endorse or promote products derived from this software
- *    without specific prior written permission.
+ *	may be used to endorse or promote products derived from this software
+ *	without specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE PROJECT AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -137,7 +137,7 @@ addrcpy(struct sockaddr_storage *addr, char **bufp)
 	size_t len;
 
 	len = addr->ss_family == AF_INET ? sizeof (struct sockaddr_in) :
-	    sizeof (struct sockaddr_in6);
+		sizeof (struct sockaddr_in6);
 	(void) memcpy(buf, addr, len);
 	*bufp = buf + len;
 	return ((struct sockaddr *)buf);
@@ -145,7 +145,7 @@ addrcpy(struct sockaddr_storage *addr, char **bufp)
 
 static int
 populate(struct ifaddrs *ifa, int fd, struct lifreq *lifrp, int nlif, int af,
-    char **bufp)
+	char **bufp)
 {
 	char *buf = *bufp;
 	size_t slen;
@@ -172,13 +172,13 @@ populate(struct ifaddrs *ifa, int fd, struct lifreq *lifrp, int nlif, int af,
 				ifa->ifa_dstaddr = NULL;
 			else
 				ifa->ifa_dstaddr =
-				    addrcpy(&lifrp->lifr_dstaddr, &buf);
+					addrcpy(&lifrp->lifr_dstaddr, &buf);
 		} else if (ifa->ifa_flags & IFF_BROADCAST) {
 			if (ioctl(fd, SIOCGLIFBRDADDR, lifrp) == -1)
 				ifa->ifa_broadaddr = NULL;
 			else
 				ifa->ifa_broadaddr =
-				    addrcpy(&lifrp->lifr_broadaddr, &buf);
+					addrcpy(&lifrp->lifr_broadaddr, &buf);
 		} else {
 			ifa->ifa_dstaddr = NULL;
 		}
@@ -204,13 +204,13 @@ getifaddrs(struct ifaddrs **ifap)
 	if ((fd4 = socket(AF_INET, SOCK_DGRAM, 0)) == -1)
 		return (-1);
 	if ((fd6 = socket(AF_INET6, SOCK_DGRAM, 0)) == -1 &&
-	    errno != EAFNOSUPPORT) {
+		errno != EAFNOSUPPORT) {
 		(void) close(fd4);
 		return (-1);
 	}
 
 	if ((nif4 = get_lifreq(fd4, &ifr4)) == -1 ||
-	    (fd6 != -1 && (nif6 = get_lifreq(fd6, &ifr6)) == -1))
+		(fd6 != -1 && (nif6 = get_lifreq(fd6, &ifr6)) == -1))
 		goto failure;
 
 	if (nif4 == 0 && nif6 == 0) {
@@ -219,7 +219,7 @@ getifaddrs(struct ifaddrs **ifap)
 	}
 
 	ifa = (struct ifaddrs *) malloc(nbytes(ifr4, nif4, sizeof (struct sockaddr_in)) +
-	    nbytes(ifr6, nif6, sizeof (struct sockaddr_in6)));
+		nbytes(ifr6, nif6, sizeof (struct sockaddr_in6)));
 	if (ifa == NULL)
 		goto failure;
 

@@ -5,9 +5,9 @@
  */
 
 /*
-* Copyright (c) 2013-2014 Remko Tronçon and Kevin Smith
-* Licensed under the GNU General Public License v3.
-* See Documentation/Licenses/GPLv3.txt for more information.
+* Copyright (c) 2013-2014 Isode Limited.
+* All rights reserved.v3.
+* See the COPYING file for more information.
 */
 
 #pragma once

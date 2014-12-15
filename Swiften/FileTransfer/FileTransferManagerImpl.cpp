@@ -5,8 +5,8 @@
  */
 
 /*
- * Copyright (c) 2013 Remko Tronçon
- * Licensed under the GNU General Public License.
+ * Copyright (c) 2013 Isode Limited.
+ * All rights reserved.
  * See the COPYING file for more information.
  */
 
@@ -103,7 +103,7 @@ boost::optional<JID> FileTransferManagerImpl::highestPriorityJIDSupportingFileTr
 	JID fullReceipientJID;
 	int priority = INT_MIN;
 	
-	//getAllPresence(bareJID) gives you all presences for the bare JID (i.e. all resources) Remko Tronçon @ 11:11
+	//getAllPresence(bareJID) gives you all presences for the bare JID (i.e. all resources) Isode Limited. @ 11:11
 	std::vector<Presence::ref> presences = presenceOracle->getAllPresence(bareJID);
 
 	//iterate over them

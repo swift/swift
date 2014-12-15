@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2014 Kevin Smith and Remko Tronçon
- * Licensed under the GNU General Public License v3.
- * See Documentation/Licenses/GPLv3.txt for more information.
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
  */
 
 #include <boost/lexical_cast.hpp>
