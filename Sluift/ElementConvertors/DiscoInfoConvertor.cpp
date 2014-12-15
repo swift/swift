@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2013 Remko Tronçon
- * Licensed under the GNU General Public License.
+ * Copyright (c) 2013 Isode Limited.
+ * All rights reserved.
  * See the COPYING file for more information.
  */
 
