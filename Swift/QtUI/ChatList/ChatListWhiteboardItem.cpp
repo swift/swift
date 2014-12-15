@@ -6,7 +6,7 @@
 
 /*
  * Copyright (c) 2013 Isode Limited.
- * Licensed under the GNU General Public License.
+ * All rights reserved.
  * See the COPYING file for more information.
  */
 
