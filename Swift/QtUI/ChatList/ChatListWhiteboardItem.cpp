@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Remko Tronçon
+ * Copyright (c) 2013 Isode Limited.
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
