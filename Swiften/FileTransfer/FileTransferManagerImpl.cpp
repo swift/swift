@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@
 #include <Swiften/Base/Path.h>
 #include "Swiften/Disco/EntityCapsProvider.h"
 #include <Swiften/JID/JID.h>
-#include <Swiften/Elements/StreamInitiationFileInfo.h>
+#include <Swiften/Elements/JingleFileTransferFileInfo.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
 #include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
 #include <Swiften/FileTransfer/IncomingFileTransferManager.h>
@@ -146,7 +146,7 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
 		const boost::posix_time::ptime& lastModified, 
 		boost::shared_ptr<ReadBytestream> bytestream,
 		const FileTransferOptions& config) {
-	StreamInitiationFileInfo fileInfo;
+	JingleFileTransferFileInfo fileInfo;
 	fileInfo.setDate(lastModified);
 	fileInfo.setSize(sizeInBytes);
 	fileInfo.setName(filename);

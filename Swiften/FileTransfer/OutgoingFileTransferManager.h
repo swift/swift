@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ namespace Swift {
 	class JID;
 	class IDGenerator;
 	class ReadBytestream;
-	class StreamInitiationFileInfo;
+	class JingleFileTransferFileInfo;
 	class CryptoProvider;
 	class FileTransferOptions;
 
@@ -39,7 +39,7 @@ namespace Swift {
 					const JID& from, 
 					const JID& to, 
 					boost::shared_ptr<ReadBytestream>, 
-					const StreamInitiationFileInfo&,
+					const JingleFileTransferFileInfo&,
 					const FileTransferOptions&);
 
 		private:

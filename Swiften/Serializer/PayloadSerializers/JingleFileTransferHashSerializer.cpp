@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
 
 #include <string>
@@ -16,7 +22,7 @@
 #include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
-
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
 
 namespace Swift {
 
@@ -27,17 +33,14 @@ std::string JingleFileTransferHashSerializer::serializePayload(boost::shared_ptr
 	// code for version urn:xmpp:jingle:apps:file-transfer:2
 	//XMLElement hash("hash", "urn:xmpp:jingle:apps:file-transfer:info:2", payload->getHash());
 
-	// code for version urn:xmpp:jingle:apps:file-transfer:3
-	XMLElement checksum("checksum", "urn:xmpp:jingle:apps:file-transfer:3");
-	boost::shared_ptr<XMLElement> file = boost::make_shared<XMLElement>("file");
+	// code for version urn:xmpp:jingle:apps:file-transfer:4
+	XMLElement checksum("checksum", "urn:xmpp:jingle:apps:file-transfer:4");
+
+	JingleFileTransferFileInfoSerializer  fileSerializer;
+
+	boost::shared_ptr<XMLRawTextNode> file = boost::make_shared<XMLRawTextNode>(fileSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
+
 	checksum.addNode(file);
-	boost::shared_ptr<XMLElement> hashes = boost::make_shared<XMLElement>("hashes", "urn:xmpp:hashes:0");
-	file->addNode(hashes);
-	foreach(const JingleFileTransferHash::HashesMap::value_type& pair, payload->getHashes()) {
-		boost::shared_ptr<XMLElement> hash = boost::make_shared<XMLElement>("hash", "", pair.second);
-		hash->setAttribute("algo", pair.first);
-		hashes->addNode(hash);
-	}
 
 	return checksum.serialize();
 }

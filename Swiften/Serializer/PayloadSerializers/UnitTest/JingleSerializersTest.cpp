@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -15,13 +21,14 @@
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
-#include <Swiften/Elements/StreamInitiationFileInfo.h>
+#include <Swiften/Elements/JingleFileTransferFileInfo.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/Elements/JingleFileTransferReceived.h>
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 using namespace Swift;
 
@@ -38,7 +45,6 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSerialize_Xep0234_Example3);
 		CPPUNIT_TEST(testSerialize_Xep0234_Example5);
 		CPPUNIT_TEST(testSerialize_Xep0234_Example8);
-		CPPUNIT_TEST(testSerialize_Xep0234_Example10);
 		CPPUNIT_TEST(testSerialize_Xep0234_Example13);
 
 		CPPUNIT_TEST(testSerialize_Xep0260_Example1);
@@ -179,30 +185,27 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 		
 		// http://xmpp.org/extensions/xep-0234.html#example-1
 		void testSerialize_Xep0234_Example1() {
-			std::string expected =	"<description xmlns=\"urn:xmpp:jingle:apps:file-transfer:3\">"
-							"<offer>"
-								"<file"
-									" date=\"1969-07-21T02:56:15Z\""
-									" hash=\"552da749930852c69ae5d2141d3766b1\""
-									" name=\"test.txt\""
-									" size=\"1022\""
-									" xmlns=\"http://jabber.org/protocol/si/profile/file-transfer\">"
-									"<desc>This is a test. If this were a real file...</desc>"
-									"<range/>"
-								"</file>"
-							"</offer>"
-						"</description>";
+			std::string expected =	"<description xmlns=\"urn:xmpp:jingle:apps:file-transfer:4\">"
+					"<file>"
+						"<date>1969-07-21T02:56:15Z</date>"
+						"<desc>This is a test. If this were a real file...</desc>"
+						"<name>test.txt</name>"
+						"<range/>"
+						"<size>1022</size>"
+						"<hash algo=\"sha-1\" xmlns=\"urn:xmpp:hashes:1\">VS2nSZMIUsaa5dIUHTdmsQ==</hash>"
+					"</file>"
+				"</description>";
 			JingleFileTransferDescription::ref desc = boost::make_shared<JingleFileTransferDescription>();
-			StreamInitiationFileInfo fileInfo;
+			JingleFileTransferFileInfo fileInfo;
 			
 			fileInfo.setDate(stringToDateTime("1969-07-21T02:56:15Z"));
-			fileInfo.setHash("552da749930852c69ae5d2141d3766b1");
+			fileInfo.addHash(HashElement("sha-1", Base64::decode("VS2nSZMIUsaa5dIUHTdmsQ==")));
 			fileInfo.setSize(1022);
 			fileInfo.setName("test.txt");
 			fileInfo.setDescription("This is a test. If this were a real file...");
 			fileInfo.setSupportsRangeRequests(true);
 			
-			desc->addOffer(fileInfo);
+			desc->setFileInfo(fileInfo);
 			
 			CPPUNIT_ASSERT_EQUAL(expected, boost::make_shared<JingleFileTransferDescriptionSerializer>()->serialize(desc));
 		}
@@ -215,18 +218,15 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 					" sid=\"851ba2\""
 					" xmlns=\"urn:xmpp:jingle:1\">"
 					"<content creator=\"initiator\" name=\"a-file-offer\">"
-						"<description xmlns=\"urn:xmpp:jingle:apps:file-transfer:3\">"
-							"<offer>"
-								"<file"
-									" date=\"1969-07-21T02:56:15Z\""
-									" hash=\"552da749930852c69ae5d2141d3766b1\""
-									" name=\"test.txt\""
-									" size=\"1022\""
-									" xmlns=\"http://jabber.org/protocol/si/profile/file-transfer\">"
-									"<desc>This is a test. If this were a real file...</desc>"
-									"<range/>"
-								"</file>"
-							"</offer>"
+						"<description xmlns=\"urn:xmpp:jingle:apps:file-transfer:4\">"
+							"<file>"
+								"<date>1969-07-21T02:56:15Z</date>"
+								"<desc>This is a test. If this were a real file...</desc>"
+								"<name>test.txt</name>"
+								"<range/>"
+								"<size>1022</size>"
+								"<hash algo=\"sha-1\" xmlns=\"urn:xmpp:hashes:1\">VS2nSZMIUsaa5dIUHTdmsQ==</hash>"
+							"</file>"
 						"</description>"
 						/*"<transport xmlns=\"urn:xmpp:jingle:transports:s5b:1\""
 							" mode=\"tcp\""
@@ -263,15 +263,15 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 			content->setName("a-file-offer");
 			
 			JingleFileTransferDescription::ref description = boost::make_shared<JingleFileTransferDescription>();
-			StreamInitiationFileInfo fileInfo;
+			JingleFileTransferFileInfo fileInfo;
 			fileInfo.setName("test.txt");
 			fileInfo.setSize(1022);
-			fileInfo.setHash("552da749930852c69ae5d2141d3766b1");
+			fileInfo.addHash(HashElement("sha-1", Base64::decode("VS2nSZMIUsaa5dIUHTdmsQ==")));
 			fileInfo.setDate(stringToDateTime("1969-07-21T02:56:15Z"));
 			fileInfo.setDescription("This is a test. If this were a real file...");
 			fileInfo.setSupportsRangeRequests(true);
 			
-			description->addOffer(fileInfo);
+			description->setFileInfo(fileInfo);
 			content->addDescription(description);
 			payload->addPayload(content);
 			
@@ -316,11 +316,9 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 					" initiator=\"romeo@montague.lit/orchard\""
 					" sid=\"a73sjjvkla37jfea\""
 					" xmlns=\"urn:xmpp:jingle:1\">"
-					"<checksum xmlns=\"urn:xmpp:jingle:apps:file-transfer:3\">"
+					"<checksum xmlns=\"urn:xmpp:jingle:apps:file-transfer:4\">"
 						"<file>"
-							"<hashes xmlns=\"urn:xmpp:hashes:0\">"
-								"<hash algo=\"sha-1\">552da749930852c69ae5d2141d3766b1</hash>"
-							"</hashes>"
+							"<hash algo=\"sha-1\" xmlns=\"urn:xmpp:hashes:1\">VS2nSZMIUsaa5dIUHTdmsQ==</hash>"
 						"</file>"
 					"</checksum>"
 				"</jingle>";
@@ -331,79 +329,9 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 			payload->setSessionID("a73sjjvkla37jfea");
 			
 			JingleFileTransferHash::ref hash = boost::make_shared<JingleFileTransferHash>();
-			hash->setHash("sha-1", "552da749930852c69ae5d2141d3766b1");
+			hash->getFileInfo().addHash(HashElement("sha-1", Base64::decode("VS2nSZMIUsaa5dIUHTdmsQ==")));
 			
 			payload->addPayload(hash);
-			
-			CPPUNIT_ASSERT_EQUAL(expected, createTestling()->serialize(payload));
-		}
-		
-		// http://xmpp.org/extensions/xep-0234.html#example-10
-		void testSerialize_Xep0234_Example10() {
-			std::string expected = 
-				"<jingle"
-					" action=\"session-initiate\""
-					" initiator=\"romeo@montague.lit/orchard\""
-					" sid=\"uj3b2\""
-					" xmlns=\"urn:xmpp:jingle:1\">"
-					"<content creator=\"initiator\" name=\"a-file-request\">"
-						"<description"
-							" xmlns=\"urn:xmpp:jingle:apps:file-transfer:3\">"
-							"<request>"
-								"<file"
-									" hash=\"552da749930852c69ae5d2141d3766b1\""
-									" xmlns=\"http://jabber.org/protocol/si/profile/file-transfer\">"
-									"<range offset=\"270336\"/>"
-								"</file>"
-							"</request>"
-						"</description>"
-						/*"<transport"
-							" mode=\"tcp\""
-							" sid=\"xig361fj\""
-							" xmlns=\"urn:xmpp:jingle:transports:s5b:1\">"
-							"<candidate"
-								" cid=\"ht567dq\""
-								" host=\"192.169.1.10\""
-								" jid=\"juliet@capulet.lit/balcony\""
-								" port=\"6539\""
-								" priority=\"8257636\""
-								" type=\"direct\"/>"
-							"<candidate"
-								" cid=\"hr65dqyd\""
-								" host=\"134.102.201.180\""
-								" jid=\"juliet@capulet.lit/balcony\""
-								" port=\"16453\""
-								" priority=\"7929856\""
-								" type=\"assisted\"/>"
-							"<candidate"
-								" cid=\"grt654q2\""
-								" host=\"2001:638:708:30c9:219:d1ff:fea4:a17d\""
-								" jid=\"juliet@capulet.lit/balcony\""
-								" port=\"6539\""
-								" priority=\"8257606\""
-								" type=\"direct\"/>"
-						"</transport>"*/
-					"</content>"
-				"</jingle>";
-			
-			JinglePayload::ref payload = boost::make_shared<JinglePayload>();
-			payload->setAction(JinglePayload::SessionInitiate);
-			payload->setInitiator(JID("romeo@montague.lit/orchard"));
-			payload->setSessionID("uj3b2");
-			
-			StreamInitiationFileInfo fileInfo;
-			fileInfo.setHash("552da749930852c69ae5d2141d3766b1");
-			fileInfo.setRangeOffset(270336);
-			
-			JingleFileTransferDescription::ref desc = boost::make_shared<JingleFileTransferDescription>();
-			desc->addRequest(fileInfo);
-			
-			JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
-			content->setCreator(JingleContentPayload::InitiatorCreator);
-			content->setName("a-file-request");
-			content->addDescription(desc);
-			
-			payload->addPayload(content);
 			
 			CPPUNIT_ASSERT_EQUAL(expected, createTestling()->serialize(payload));
 		}

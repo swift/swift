@@ -32,6 +32,7 @@
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferReceivedSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
@@ -127,6 +128,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new IdleSerializer());
 	
 	serializers_.push_back(new StreamInitiationFileInfoSerializer());
+	serializers_.push_back(new JingleFileTransferFileInfoSerializer());
 	serializers_.push_back(new JingleContentPayloadSerializer());
 	serializers_.push_back(new JingleFileTransferDescriptionSerializer());
 	serializers_.push_back(new JingleFileTransferHashSerializer());

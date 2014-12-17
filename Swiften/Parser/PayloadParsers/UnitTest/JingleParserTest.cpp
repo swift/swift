@@ -16,7 +16,7 @@
 #include <Swiften/Elements/JingleFileTransferReceived.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Base/DateTime.h>
-
+#include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/Log.h>
 
 using namespace Swift;
@@ -36,8 +36,6 @@ class JingleParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testParse_Xep0234_Example5);
 		CPPUNIT_TEST(testParse_Xep0234_Example8);
 		CPPUNIT_TEST(testParse_Xep0234_Example10);
-		CPPUNIT_TEST(testParse_Xep0234_Example11);
-		CPPUNIT_TEST(testParse_Xep0234_Example12);
 		
 		CPPUNIT_TEST(testParse_Xep0260_Example1);
 		CPPUNIT_TEST(testParse_Xep0260_Example3);
@@ -223,40 +221,39 @@ class JingleParserTest : public CppUnit::TestFixture {
 			PayloadsParserTester parser;
 			CPPUNIT_ASSERT(parser.parse(
 				"<jingle xmlns='urn:xmpp:jingle:1'\n"
-				"          action='session-initiate'\n"
-				"          initiator='romeo@montague.lit/orchard'\n"
-				"          sid='851ba2'>\n"
-				"    <content creator='initiator' name='a-file-offer'>\n"
-				"      <description xmlns='urn:xmpp:jingle:apps:file-transfer:3'>\n"
-				"        <offer>\n"
-				"          <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"                date='1969-07-21T02:56:15Z'\n"
-				"                hash='552da749930852c69ae5d2141d3766b1'\n"
-				"                name='test.txt'\n"
-				"                size='1022'>\n"
-				"            <desc>This is a test. If this were a real file...</desc>\n"
-				"            <range/>\n"
-				"          </file>\n"
-				"        </offer>\n"
-				"      </description>\n"
-				"      <transport xmlns='urn:xmpp:jingle:transports:s5b:1'\n"
-				"                 mode='tcp'\n"
-				"                 sid='vj3hs98y'>\n"
-				"        <candidate cid='hft54dqy'\n"
-				"                   host='192.168.4.1'\n"
-				"                   jid='romeo@montague.lit/orchard'\n"
-				"                   port='5086'\n"
-				"                   priority='8257636'\n"
-				"                   type='direct'/>\n"
-				"        <candidate cid='hutr46fe'\n"
-				"                   host='24.24.24.1'\n"
-				"                   jid='romeo@montague.lit/orchard'\n"
-				"                   port='5087'\n"
-				"                   priority='8258636'\n"
-				"                   type='direct'/>\n"
-				"      </transport>\n"
-				"    </content>\n"
-				"  </jingle>\n"
+					" action='session-initiate'\n"
+					" initiator='romeo@montague.lit/orchard'\n"
+					" sid='851ba2'>\n"
+					"<content creator='initiator' name='a-file-offer'>\n"
+						"<description xmlns='urn:xmpp:jingle:apps:file-transfer:4'>\n"
+							"<file>\n"
+								"<date>1969-07-21T02:56:15Z</date>\n"
+								"<desc>This is a test. If this were a real file...</desc>\n"
+								"<media-type>text/plain</media-type>\n"
+								"<name>test.txt</name>\n"
+								"<range/>\n"
+								"<size>1022</size>\n"
+								"<hash xmlns='urn:xmpp:hashes:1' algo='sha-1'>VS2nSZMIUsaa5dIUHTdmsQ==</hash>\n"
+							"</file>\n"
+						"</description>\n"
+						"<transport xmlns='urn:xmpp:jingle:transports:s5b:1'\n"
+							" mode='tcp'\n"
+							" sid='vj3hs98y'>\n"
+							"<candidate cid='hft54dqy'\n"
+								" host='192.168.4.1'\n"
+								" jid='romeo@montague.lit/orchard'\n"
+								" port='5086'\n"
+								" priority='8257636'\n"
+								" type='direct'/>\n"
+							"<candidate cid='hutr46fe'\n"
+								" host='24.24.24.1'\n"
+								" jid='romeo@montague.lit/orchard'\n"
+								" port='5087'\n"
+								" priority='8258636'\n"
+								" type='direct'/>\n"
+						"</transport>\n"
+					"</content>\n"
+				"</jingle>\n"
 			));
 						
 			JinglePayload::ref jingle = parser.getPayload<JinglePayload>();
@@ -270,16 +267,15 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleFileTransferDescription::ref description = contents[0]->getDescription<JingleFileTransferDescription>();
 			
-			
-			std::vector<StreamInitiationFileInfo> offers = description->getOffers();
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), offers.size());
-			CPPUNIT_ASSERT_EQUAL(std::string("test.txt"), offers[0].getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), offers[0].getHash());
-			CPPUNIT_ASSERT(1022 == offers[0].getSize());
-			CPPUNIT_ASSERT_EQUAL(std::string("This is a test. If this were a real file..."), offers[0].getDescription());
-			CPPUNIT_ASSERT_EQUAL(true, offers[0].getSupportsRangeRequests());
-			CPPUNIT_ASSERT(stringToDateTime("1969-07-21T02:56:15Z") == offers[0].getDate());
-			CPPUNIT_ASSERT_EQUAL(std::string("md5"), offers[0].getAlgo());	
+			CPPUNIT_ASSERT(description);
+			JingleFileTransferFileInfo fileInfo = description->getFileInfo();
+			CPPUNIT_ASSERT_EQUAL(std::string("test.txt"), fileInfo.getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("sha-1"), fileInfo.getHashes().begin()->first);
+			CPPUNIT_ASSERT_EQUAL(std::string("VS2nSZMIUsaa5dIUHTdmsQ=="), Base64::encode(fileInfo.getHashes().begin()->second));
+			CPPUNIT_ASSERT(1022 == fileInfo.getSize());
+			CPPUNIT_ASSERT_EQUAL(std::string("This is a test. If this were a real file..."), fileInfo.getDescription());
+			CPPUNIT_ASSERT_EQUAL(true, fileInfo.getSupportsRangeRequests());
+			CPPUNIT_ASSERT(stringToDateTime("1969-07-21T02:56:15Z") == fileInfo.getDate());
 		}
 		
 		// http://xmpp.org/extensions/xep-0234.html#example-3
@@ -287,22 +283,21 @@ class JingleParserTest : public CppUnit::TestFixture {
 			PayloadsParserTester parser;
 			CPPUNIT_ASSERT(parser.parse(
 				"<jingle xmlns='urn:xmpp:jingle:1'\n"
-				"        action='session-accept'\n"
-				"        initiator='romeo@montague.lit/orchard'\n"
-				"        sid='851ba2'>\n"
-				"  <content creator='initiator' name='a-file-offer'>\n"
-				"    <description xmlns='urn:xmpp:jingle:apps:file-transfer:3'>\n"
-				"      <offer>\n"
-				"        <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"              name='test.txt'\n"
-				"              size='1022'\n"
-				"              hash='552da749930852c69ae5d2141d3766b1'\n"
-				"              date='1969-07-21T02:56:15Z'>\n"
-				"          <desc>This is a test. If this were a real file...</desc>\n"
-				"          <range/>\n"
-				"        </file>\n"
-				"      </offer>\n"
-				"    </description>\n"
+					" action='session-accept'\n"
+					" initiator='romeo@montague.lit/orchard'\n"
+					" sid='851ba2'>\n"
+					"<content creator='initiator' name='a-file-offer'>\n"
+						"<description xmlns='urn:xmpp:jingle:apps:file-transfer:4'>\n"
+							"<file>\n"
+								"<date>1969-07-21T02:56:15Z</date>\n"
+								"<desc>This is a test. If this were a real file...</desc>\n"
+								"<media-type>text/plain</media-type>\n"
+								"<name>test.txt</name>\n"
+								"<range/>\n"
+								"<size>1022</size>\n"
+								"<hash xmlns='urn:xmpp:hashes:1' algo='sha-1'>VS2nSZMIUsaa5dIUHTdmsQ==</hash>\n"
+							"</file>\n"
+						"</description>\n"
 				"    <transport xmlns='urn:xmpp:jingle:transports:s5b:1'\n"
 				"               mode='tcp'\n"
 				"               sid='vj3hs98y'>\n"
@@ -340,16 +335,16 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleFileTransferDescription::ref description = contents[0]->getDescription<JingleFileTransferDescription>();
 			
+			CPPUNIT_ASSERT(description);
 			
-			std::vector<StreamInitiationFileInfo> offers = description->getOffers();
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), offers.size());
-			CPPUNIT_ASSERT_EQUAL(std::string("test.txt"), offers[0].getName());
-			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), offers[0].getHash());
-			CPPUNIT_ASSERT(1022 == offers[0].getSize());
-			CPPUNIT_ASSERT_EQUAL(std::string("This is a test. If this were a real file..."), offers[0].getDescription());
-			CPPUNIT_ASSERT_EQUAL(true, offers[0].getSupportsRangeRequests());
-			CPPUNIT_ASSERT(stringToDateTime("1969-07-21T02:56:15Z") == offers[0].getDate());
-			CPPUNIT_ASSERT_EQUAL(std::string("md5"), offers[0].getAlgo());
+			JingleFileTransferFileInfo fileInfo = description->getFileInfo();
+			CPPUNIT_ASSERT_EQUAL(std::string("test.txt"), fileInfo.getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("sha-1"), fileInfo.getHashes().begin()->first);
+			CPPUNIT_ASSERT_EQUAL(std::string("VS2nSZMIUsaa5dIUHTdmsQ=="), Base64::encode(fileInfo.getHashes().begin()->second));
+			CPPUNIT_ASSERT(1022 == fileInfo.getSize());
+			CPPUNIT_ASSERT_EQUAL(std::string("This is a test. If this were a real file..."), fileInfo.getDescription());
+			CPPUNIT_ASSERT_EQUAL(true, fileInfo.getSupportsRangeRequests());
+			CPPUNIT_ASSERT(stringToDateTime("1969-07-21T02:56:15Z") == fileInfo.getDate());
 		}
 		
 		// http://xmpp.org/extensions/xep-0234.html#example-5
@@ -393,11 +388,9 @@ class JingleParserTest : public CppUnit::TestFixture {
 				"        action='session-info'\n"
 				"        initiator='romeo@montague.lit/orchard'\n"
 				"        sid='a73sjjvkla37jfea'>\n"
-				"	<checksum xmlns='urn:xmpp:jingle:apps:file-transfer:3'>\n"
+				"	<checksum xmlns='urn:xmpp:jingle:apps:file-transfer:4'>\n"
 				"	  <file>\n"
-				"	    <hashes xmlns='urn:xmpp:hashes:0'>\n"
-				"	      <hash algo='sha-1'>552da749930852c69ae5d2141d3766b1</hash>\n"
-				"	    </hashes>\n"
+				"	      <hash xmlns='urn:xmpp:hashes:0' algo='sha-1'>VS2nSZMIUsaa5dIUHTdmsQ==</hash>\n"
 				"	  </file>\n"
 				"	</checksum>\n"
 				"</jingle>\n"
@@ -410,12 +403,12 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			JingleFileTransferHash::ref hash = jingle->getPayload<JingleFileTransferHash>();
 			CPPUNIT_ASSERT(hash);
-			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), hash->getHashes().find("sha-1")->second);
-			
+			CPPUNIT_ASSERT_EQUAL(std::string("VS2nSZMIUsaa5dIUHTdmsQ=="), Base64::encode(hash->getFileInfo().getHash("sha-1").get()));
 		}
 		
 		// http://xmpp.org/extensions/xep-0234.html#example-10
 		void testParse_Xep0234_Example10() {
+			Log::setLogLevel(Log::debug);
 			PayloadsParserTester parser;
 			CPPUNIT_ASSERT(parser.parse(
 				"<jingle xmlns='urn:xmpp:jingle:1'\n"
@@ -423,13 +416,11 @@ class JingleParserTest : public CppUnit::TestFixture {
 				"        initiator='romeo@montague.lit/orchard'\n"
 				"        sid='uj3b2'>\n"
 				"  <content creator='initiator' name='a-file-request'>\n"
-				"    <description xmlns='urn:xmpp:jingle:apps:file-transfer:3'>\n"
-				"      <request>\n"
-				"        <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"              hash='552da749930852c69ae5d2141d3766b1'>\n"
-				"          <range offset='270336'/>\n"
-				"        </file>\n"
-				"      </request>\n"
+				"    <description xmlns='urn:xmpp:jingle:apps:file-transfer:4'>\n"
+				"      <file>\n"
+				"        <hash xmlns='urn:xmpp:hashes:1' algo='sha-1'>VS2nSZMIUsaa5dIUHTdmsQ==</hash>\n"
+				"        <range offset='270336'/>\n"
+				"      </file>\n"
 				"    </description>\n"
 				"    <transport xmlns='urn:xmpp:jingle:transports:s5b:1'\n"
 				"               mode='tcp'\n"
@@ -466,99 +457,11 @@ class JingleParserTest : public CppUnit::TestFixture {
 			JingleContentPayload::ref content = jingle->getPayload<JingleContentPayload>();
 			CPPUNIT_ASSERT(content);
 			
-			StreamInitiationFileInfo file = content->getDescription<JingleFileTransferDescription>()->getRequests()[0];
-			CPPUNIT_ASSERT_EQUAL(std::string("552da749930852c69ae5d2141d3766b1"), file.getHash());
-			CPPUNIT_ASSERT_EQUAL(static_cast<unsigned long long>(270336), file.getRangeOffset());
+			JingleFileTransferFileInfo file = content->getDescription<JingleFileTransferDescription>()->getFileInfo();
+			CPPUNIT_ASSERT_EQUAL(std::string("sha-1"), file.getHashes().begin()->first);
+			CPPUNIT_ASSERT_EQUAL(std::string("VS2nSZMIUsaa5dIUHTdmsQ=="), Base64::encode(file.getHashes().begin()->second));
+			CPPUNIT_ASSERT_EQUAL(static_cast<boost::uintmax_t>(270336), file.getRangeOffset());
 			CPPUNIT_ASSERT_EQUAL(true, file.getSupportsRangeRequests());
-		}
-		
-		// http://xmpp.org/extensions/xep-0234.html#example-11
-		void testParse_Xep0234_Example11() {
-			PayloadsParserTester parser;
-			CPPUNIT_ASSERT(parser.parse(
-				"<jingle xmlns='urn:xmpp:jingle:1'\n"
-				"        action='session-initiate'\n"
-				"        initiator='romeo@montague.lit/orchard'\n"
-				"        sid='h2va419i'>\n"
-				"  <content creator='initiator' name='a-file-offer'>\n"
-				"    <description xmlns='urn:xmpp:jingle:apps:file-transfer:3'>\n"
-				"      <offer>\n"
-				"        <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"              date='2011-06-01T15:58:15Z'\n"
-				"              hash='a749930852c69ae5d2141d3766b1552d'\n"
-				"              name='somefile.txt'\n"
-				"              size='1234'/>\n"
-				"        <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"              date='2011-06-01T15:58:15Z'\n"
-				"              hash='930852c69ae5d2141d3766b1552da749'\n"
-				"              name='anotherfile.txt'\n"
-				"              size='2345'/>\n"
-				"        <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"              date='2011-06-01T15:58:15Z'\n"
-				"              hash='52c69ae5d2141d3766b1552da7499308'\n"
-				"              name='yetanotherfile.txt'\n"
-				"              size='3456'/>\n"
-				"      </offer>\n"
-				"    </description>\n"
-				"    <transport xmlns='urn:xmpp:jingle:transports:s5b:1'\n"
-				"               mode='tcp'\n"
-				"               sid='vj3hs98y'>\n"
-				"      <candidate cid='hft54dqy'\n"
-				"                 host='192.168.4.1'\n"
-				"                 jid='romeo@montague.lit/orchard'\n"
-				"                 port='5086'\n"
-				"                 priority='8257636'\n"
-				"                 type='direct'/>\n"
-				"      <candidate cid='hutr46fe'\n"
-				"                 host='24.24.24.1'\n"
-				"                 jid='romeo@montague.lit/orchard'\n"
-				"                 port='5087'\n"
-				"                 priority='8258636'\n"
-				"                 type='direct'/>\n"
-				"    </transport>\n"
-				"  </content>\n"
-				"</jingle>\n"			
-			));
-			
-			JinglePayload::ref jingle = parser.getPayload<JinglePayload>();
-			CPPUNIT_ASSERT(jingle);
-			CPPUNIT_ASSERT_EQUAL(JinglePayload::SessionInitiate, jingle->getAction());
-			CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.lit/orchard"), jingle->getInitiator());
-			CPPUNIT_ASSERT_EQUAL(std::string("h2va419i"), jingle->getSessionID());
-			
-			JingleContentPayload::ref content = jingle->getPayload<JingleContentPayload>();
-			CPPUNIT_ASSERT(content);
-			CPPUNIT_ASSERT_EQUAL(JingleContentPayload::InitiatorCreator, content->getCreator());
-			CPPUNIT_ASSERT_EQUAL(std::string("a-file-offer"), content->getName());
-			
-			std::vector<StreamInitiationFileInfo> offers = content->getDescription<JingleFileTransferDescription>()->getOffers();
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), offers.size());
-		}
-		
-		// http://xmpp.org/extensions/xep-0234.html#example-12
-		void testParse_Xep0234_Example12() {
-			PayloadsParserTester parser;
-			CPPUNIT_ASSERT(parser.parse(
-				"<jingle xmlns='urn:xmpp:jingle:1'\n"
-				"        action='session-info'\n"
-				"        initiator='romeo@montague.lit/orchard'\n"
-				"        sid='a73sjjvkla37jfea'>\n"
-				"  <received xmlns='urn:xmpp:jingle:apps:file-transfer:3'>\n"
-				"    <file xmlns='http://jabber.org/protocol/si/profile/file-transfer'\n"
-				"          hash='a749930852c69ae5d2141d3766b1552d'/>\n"
-				"  </received>\n"
-				"</jingle>\n"
-			));
-			
-			JinglePayload::ref jingle = parser.getPayload<JinglePayload>();
-			CPPUNIT_ASSERT(jingle);
-			CPPUNIT_ASSERT_EQUAL(JinglePayload::SessionInfo, jingle->getAction());
-			CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.lit/orchard"), jingle->getInitiator());
-			CPPUNIT_ASSERT_EQUAL(std::string("a73sjjvkla37jfea"), jingle->getSessionID());
-			
-			boost::shared_ptr<JingleFileTransferReceived> received = jingle->getPayload<JingleFileTransferReceived>();
-			CPPUNIT_ASSERT(received);
-			CPPUNIT_ASSERT_EQUAL(std::string("a749930852c69ae5d2141d3766b1552d"), received->getFileInfo().getHash());			
 		}
 		
 		// http://xmpp.org/extensions/xep-0260.html#example-1

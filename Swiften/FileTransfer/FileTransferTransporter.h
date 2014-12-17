@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,6 +20,11 @@ namespace Swift {
 	class ReadBytestream;
 	class WriteBytestream;
 
+	/**
+	 * @brief The FileTransferTransporter class is an abstract factory definition
+	 * to generate SOCKS5 bytestream transports or IBB bytestreams for use in file
+	 * transfers.
+	 */
 	class SWIFTEN_API FileTransferTransporter {
 		public:
 			virtual ~FileTransferTransporter();

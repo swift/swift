@@ -4,7 +4,14 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Jingle/FakeJingleSession.h>
+#include <Swiften/Jingle/JingleSessionListener.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -48,6 +55,10 @@ void FakeJingleSession::sendTransportReject(const JingleContentID& id, JingleTra
 
 void FakeJingleSession::sendTransportReplace(const JingleContentID& id, JingleTransportPayload::ref payload) {
 	calledCommands.push_back(ReplaceTransportCall(id, payload));
+}
+
+void FakeJingleSession::handleTransportReplaceReceived(const JingleContentID& contentID, JingleTransportPayload::ref transport) {
+	notifyListeners(&JingleSessionListener::handleTransportReplaceReceived, contentID, transport);
 }
 
 }

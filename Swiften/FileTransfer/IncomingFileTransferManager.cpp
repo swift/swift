@@ -44,13 +44,13 @@ bool IncomingFileTransferManager::handleIncomingJingleSession(
 	if (JingleContentPayload::ref content = Jingle::getContentWithDescription<JingleFileTransferDescription>(contents)) {
 		if (content->getTransport<JingleS5BTransportPayload>()) {
 			JingleFileTransferDescription::ref description = content->getDescription<JingleFileTransferDescription>();
-			if (description && description->getOffers().size() == 1) {
+			if (description) {
 				IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(
 						recipient, session, content, transporterFactory, timerFactory, crypto);
 				onIncomingFileTransfer(transfer);
 			} 
 			else {
-				SWIFT_LOG(warning) << "Received a file-transfer request with no description or more than one file.";
+				SWIFT_LOG(warning) << "Received a file-transfer request with no file description.";
 				session->sendTerminate(JinglePayload::Reason::FailedApplication);
 			}
 		}

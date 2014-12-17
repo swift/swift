@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,7 +43,7 @@ boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgo
 		const JID& from, 
 		const JID& recipient, 
 		boost::shared_ptr<ReadBytestream> readBytestream, 
-		const StreamInitiationFileInfo& fileInfo,
+		const JingleFileTransferFileInfo& fileInfo,
 		const FileTransferOptions& config) {
 	JingleSessionImpl::ref jingleSession = boost::make_shared<JingleSessionImpl>(
 			from, recipient, idGenerator->generateID(), iqRouter);

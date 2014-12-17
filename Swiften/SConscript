@@ -235,6 +235,7 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/MAMResultSerializer.cpp",
 			"Serializer/PayloadSerializers/MAMQuerySerializer.cpp",
 			"Serializer/PayloadSerializers/IsodeIQDelegationSerializer.cpp",
+			"Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.cpp",
 			"Serializer/PresenceSerializer.cpp",
 			"Serializer/StanzaSerializer.cpp",
 			"Serializer/StreamErrorSerializer.cpp",

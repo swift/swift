@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Elements/JingleFileTransferHash.h>
@@ -20,8 +26,8 @@ public:
 	virtual void handleCharacterData(const std::string& data);
 	
 private:
-	std::string algo;
-	std::string hash;
+	int level;
+	boost::shared_ptr<PayloadParser> currentPayloadParser;
 };
 
 }

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
@@ -11,25 +17,24 @@
 #include <string>
 
 #include <Swiften/Elements/JingleDescription.h>
+#include <Swiften/Elements/JingleFileTransferFileInfo.h>
 
 namespace Swift {
 
 class JingleFileTransferHash : public Payload {
 public:
-	typedef std::map<std::string, std::string> HashesMap;
-public:
 	typedef boost::shared_ptr<JingleFileTransferHash> ref;
 
-	void setHash(const std::string& algo, const std::string& hash) {
-		hashes[algo] = hash;
+	void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
+		fileInfo_ = fileInfo;
 	}
 
-	const HashesMap& getHashes() const {
-		return hashes;
+	JingleFileTransferFileInfo& getFileInfo() {
+		return fileInfo_;
 	}
 
 private:
-	HashesMap hashes;
+	JingleFileTransferFileInfo fileInfo_;
 };
 	
 }

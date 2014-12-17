@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -242,8 +242,10 @@ boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBSen
 
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBReceiveSession(
 		const std::string& sessionID, unsigned long long size, boost::shared_ptr<WriteBytestream> stream) {
-	closeLocalSession();
-	closeRemoteSession();
+	if (s5bServerManager->getServer()) {
+		closeLocalSession();
+		closeRemoteSession();
+	}
 	boost::shared_ptr<IBBReceiveSession> ibbSession = boost::make_shared<IBBReceiveSession>(
 			sessionID, initiator, responder, size, stream, router);
 	return boost::make_shared<IBBReceiveTransportSession>(ibbSession);

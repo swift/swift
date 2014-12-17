@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,6 +17,7 @@
 #include <Swiften/FileTransfer/JingleFileTransfer.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
+#include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	class JID;
@@ -29,7 +30,15 @@ namespace Swift {
 	class CryptoProvider;
 	class IncrementalBytestreamHashCalculator;
 	class JingleFileTransferDescription;
+	class HashElement;
 
+	/**
+	 * @brief The IncomingJingleFileTransfer class contains the business logic for managing incoming
+	 *        Jingle file transfers.
+	 *
+	 * Calling IncomingJingleFileTransfer::accept will start to negotiate possible transfer
+	 * methods and after a working method has been decided among peers the trasnfer is started.
+	 */
 	class SWIFTEN_API IncomingJingleFileTransfer : public IncomingFileTransfer, public JingleFileTransfer {
 		public:
 			typedef boost::shared_ptr<IncomingJingleFileTransfer> ref;
@@ -43,7 +52,7 @@ namespace Swift {
 				CryptoProvider*);
 			~IncomingJingleFileTransfer();
 
-			virtual void accept(boost::shared_ptr<WriteBytestream>, const FileTransferOptions&) SWIFTEN_OVERRIDE;
+			virtual void accept(boost::shared_ptr<WriteBytestream>, const FileTransferOptions& = FileTransferOptions()) SWIFTEN_OVERRIDE;
 			virtual void cancel() SWIFTEN_OVERRIDE;
 
 		private:
@@ -108,8 +117,7 @@ namespace Swift {
 			boost::uintmax_t receivedBytes;
 			IncrementalBytestreamHashCalculator* hashCalculator;
 			boost::shared_ptr<Timer> waitOnHashTimer;
-			std::string hashAlgorithm;
-			std::string hash;
+			std::map<std::string, ByteArray> hashes;
 			FileTransferOptions options;
 
 			boost::bsignals::scoped_connection writeStreamDataReceivedConnection;

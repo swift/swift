@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (C) 2013 Isode Limited.
+ * Copyright (C) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(
 		boost::shared_ptr<ReadBytestream> stream,
 		FileTransferTransporterFactory* transporterFactory,
 		IDGenerator* idGenerator,
-		const StreamInitiationFileInfo& fileInfo,
+		const JingleFileTransferFileInfo& fileInfo,
 		const FileTransferOptions& options,
 		CryptoProvider* crypto) :
 			JingleFileTransfer(session, toJID, transporterFactory),
@@ -149,8 +149,8 @@ void OutgoingJingleFileTransfer::sendSessionInfoHash() {
 	SWIFT_LOG(debug) << std::endl;
 
 	JingleFileTransferHash::ref hashElement = boost::make_shared<JingleFileTransferHash>();
-	hashElement->setHash("sha-1", hashCalculator->getSHA1String());
-	hashElement->setHash("md5", hashCalculator->getMD5String());
+	hashElement->getFileInfo().addHash(HashElement("sha-1", hashCalculator->getSHA1Hash()));
+	hashElement->getFileInfo().addHash(HashElement("md5", hashCalculator->getMD5Hash()));
 	session->sendInfo(hashElement);
 }
 
@@ -162,7 +162,9 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 	fillCandidateMap(localCandidates, candidates);
 
 	JingleFileTransferDescription::ref description = boost::make_shared<JingleFileTransferDescription>();
-	description->addOffer(fileInfo);
+	fileInfo.addHash(HashElement("sha-1", ByteArray()));
+	fileInfo.addHash(HashElement("md5", ByteArray()));
+	description->setFileInfo(fileInfo);
 
 	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
 	transport->setSessionID(s5bSessionID);

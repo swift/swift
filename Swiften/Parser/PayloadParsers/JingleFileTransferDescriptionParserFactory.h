@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
@@ -19,7 +25,7 @@ namespace Swift {
 			}
 
 			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-				return element == "description" && ns == "urn:xmpp:jingle:apps:file-transfer:3";
+				return element == "description" && ns == "urn:xmpp:jingle:apps:file-transfer:4";
 			}
 
 			virtual PayloadParser* createPayloadParser() {

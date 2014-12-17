@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,20 +46,30 @@ void IncrementalBytestreamHashCalculator::feedData(const SafeByteArray& data) {
 	}
 }*/
 
-std::string IncrementalBytestreamHashCalculator::getSHA1String() {
+ByteArray IncrementalBytestreamHashCalculator::getSHA1Hash() {
 	assert(sha1Hasher);
 	if (!sha1Hash) {
-		sha1Hash = Hexify::hexify(sha1Hasher->getHash());
+		sha1Hash = sha1Hasher->getHash();
 	}
 	return *sha1Hash;
 }
 
-std::string IncrementalBytestreamHashCalculator::getMD5String() {
+ByteArray IncrementalBytestreamHashCalculator::getMD5Hash() {
 	assert(md5Hasher);
 	if (!md5Hash) {
-		md5Hash = Hexify::hexify(md5Hasher->getHash());
+		md5Hash = md5Hasher->getHash();
 	}
 	return *md5Hash;
+}
+
+std::string IncrementalBytestreamHashCalculator::getSHA1String() {
+	assert(sha1Hasher);
+	return Hexify::hexify(getSHA1Hash());;
+}
+
+std::string IncrementalBytestreamHashCalculator::getMD5String() {
+	assert(md5Hasher);
+	return Hexify::hexify(getMD5Hash());;
 }
 
 }

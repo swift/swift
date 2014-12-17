@@ -4,7 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "StreamInitiationFileInfoParser.h"
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
 
 #include <boost/optional.hpp>
 #include <boost/lexical_cast.hpp>

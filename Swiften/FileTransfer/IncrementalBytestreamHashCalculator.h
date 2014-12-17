@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,14 +30,17 @@ namespace Swift {
 		void feedData(const ByteArray& data);
 		//void feedData(const SafeByteArray& data);
 
+		ByteArray getSHA1Hash();
+		ByteArray getMD5Hash();
+
 		std::string getSHA1String();
 		std::string getMD5String();
 
 	private:
 		Hash* md5Hasher;
 		Hash* sha1Hasher;
-		boost::optional<std::string> md5Hash;
-		boost::optional<std::string> sha1Hash;
+		boost::optional<ByteArray> md5Hash;
+		boost::optional<ByteArray> sha1Hash;
 	};
 
 }

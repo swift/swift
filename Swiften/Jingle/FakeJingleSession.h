@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -95,6 +95,8 @@ namespace Swift {
 			virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 			virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 			virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+
+			void handleTransportReplaceReceived(const JingleContentID&, JingleTransportPayload::ref);
 
 		public:
 			std::vector<Command> calledCommands;

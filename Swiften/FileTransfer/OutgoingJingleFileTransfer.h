@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
 #include <Swiften/Jingle/JingleContentID.h>
-#include <Swiften/Elements/StreamInitiationFileInfo.h>
+#include <Swiften/Elements/JingleFileTransferFileInfo.h>
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/FileTransfer/JingleFileTransfer.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
@@ -40,7 +40,7 @@ namespace Swift {
 				boost::shared_ptr<ReadBytestream>,
 				FileTransferTransporterFactory*,
 				IDGenerator*,
-				const StreamInitiationFileInfo&,
+				const JingleFileTransferFileInfo&,
 				const FileTransferOptions&,
 				CryptoProvider*);
 			virtual ~OutgoingJingleFileTransfer();
@@ -99,7 +99,7 @@ namespace Swift {
 		private:
 			IDGenerator* idGenerator;
 			boost::shared_ptr<ReadBytestream> stream;
-			StreamInitiationFileInfo fileInfo;
+			JingleFileTransferFileInfo fileInfo;
 			FileTransferOptions options;
 			JingleContentID contentID;
 			IncrementalBytestreamHashCalculator* hashCalculator;

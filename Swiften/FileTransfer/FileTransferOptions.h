@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,7 +12,7 @@
 namespace Swift {
 	class SWIFTEN_API FileTransferOptions {
 		public:
-			FileTransferOptions() : allowInBand(false) {
+			FileTransferOptions() : allowInBand(true) {
 			}
 			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(FileTransferOptions)
 			~FileTransferOptions();

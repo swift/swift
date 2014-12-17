@@ -4,72 +4,59 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "JingleFileTransferDescriptionParser.h"
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
+
+#include <boost/optional.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Base/Log.h>
+#include <Swiften/Base/DateTime.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 
-JingleFileTransferDescriptionParser::JingleFileTransferDescriptionParser(PayloadParserFactoryCollection* factories) :   factories(factories), level(0),
-															currentElement(UnknownElement) {
-	
+JingleFileTransferDescriptionParser::JingleFileTransferDescriptionParser(PayloadParserFactoryCollection* factories) :   factories(factories), level(0) {
 }
 
 void JingleFileTransferDescriptionParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level == 0) {
-		
-	}
-	
 	if (level == 1) {
-		if (element == "offer") {
-			currentElement = OfferElement;
-		} else if (element == "request") {
-			currentElement = RequestElement;
-		} else {
-			currentElement = UnknownElement;
-		}
-	}
-
-	if (level == 2) {
 		PayloadParserFactory* payloadParserFactory = factories->getPayloadParserFactory(element, ns, attributes);
 		if (payloadParserFactory) {
 			currentPayloadParser.reset(payloadParserFactory->createPayloadParser());
 		}
 	}
 
-	if (level >= 2 && currentPayloadParser) {
+	if (level >= 1 && currentPayloadParser) {
 		currentPayloadParser->handleStartElement(element, ns, attributes);
 	}
-
 	++level;
 }
 
 void JingleFileTransferDescriptionParser::handleEndElement(const std::string& element, const std::string& ns) {
 	--level;
-	if (currentPayloadParser) { 
-		if (level >= 2) {
-			currentPayloadParser->handleEndElement(element, ns);
-		}
+	if (level >= 1 && currentPayloadParser) {
+		currentPayloadParser->handleEndElement(element, ns);
+	}
 
-		if (level == 2) {
-			boost::shared_ptr<StreamInitiationFileInfo> info = boost::dynamic_pointer_cast<StreamInitiationFileInfo>(currentPayloadParser->getPayload());
-			if (info) {
-				if (currentElement == OfferElement) {
-					getPayloadInternal()->addOffer(*info);
-				} else if (currentElement == RequestElement) {
-					getPayloadInternal()->addRequest(*info);
-				}
-			}
+	if (level == 0) {
+		boost::shared_ptr<JingleFileTransferFileInfo> info = boost::dynamic_pointer_cast<JingleFileTransferFileInfo>(currentPayloadParser->getPayload());
+		if (info) {
+			getPayloadInternal()->setFileInfo(*info);
 		}
 	}
 }
 
 void JingleFileTransferDescriptionParser::handleCharacterData(const std::string& data) {
-	if (level >= 2 && currentPayloadParser) {
+	if (level >= 1 && currentPayloadParser) {
 		currentPayloadParser->handleCharacterData(data);
 	}
 }
-		
+
 }

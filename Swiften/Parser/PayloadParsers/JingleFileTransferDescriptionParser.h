@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2014 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Elements/JingleFileTransferDescription.h>
@@ -20,18 +26,11 @@ class JingleFileTransferDescriptionParser : public GenericPayloadParser<JingleFi
 
 		virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
 		virtual void handleEndElement(const std::string& element, const std::string&);
-		virtual void handleCharacterData(const std::string& data);	
+		virtual void handleCharacterData(const std::string& data);
 
 	private:
-		enum CurrentParseElement {
-			UnknownElement,
-			RequestElement,
-			OfferElement
-		};
-		
 		PayloadParserFactoryCollection* factories;
 		int level;
-		CurrentParseElement currentElement;
 		boost::shared_ptr<PayloadParser> currentPayloadParser;
 };
 

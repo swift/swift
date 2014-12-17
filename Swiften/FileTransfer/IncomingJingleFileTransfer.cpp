@@ -1,15 +1,18 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
 
+#include <set>
+
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
+#include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Jingle/JingleSession.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
@@ -43,11 +46,9 @@ IncomingJingleFileTransfer::IncomingJingleFileTransfer(
 			hashCalculator(NULL) {
 	description = initialContent->getDescription<JingleFileTransferDescription>();
 	assert(description);
-	assert(description->getOffers().size() == 1);
-	StreamInitiationFileInfo fileInfo = description->getOffers().front();
+	JingleFileTransferFileInfo fileInfo = description->getFileInfo();
 	setFileInfo(fileInfo.getName(), fileInfo.getSize());
-	hash = fileInfo.getHash();
-	hashAlgorithm = fileInfo.getAlgo();
+	hashes = fileInfo.getHashes();
 
 	waitOnHashTimer = timerFactory->createTimer(5000);
 	waitOnHashTimerTickedConnection = waitOnHashTimer->onTick.connect(
@@ -68,19 +69,32 @@ void IncomingJingleFileTransfer::accept(
 	this->options = options;
 
 	assert(!hashCalculator);
+
 	hashCalculator = new IncrementalBytestreamHashCalculator(
-			hashAlgorithm == "md5" || hash.empty(), hashAlgorithm == "sha-1" || hash.empty(), crypto);
+			hashes.find("md5") != hashes.end(), hashes.find("sha-1") != hashes.end(), crypto);
 
 	writeStreamDataReceivedConnection = stream->onWrite.connect(
 			boost::bind(&IncomingJingleFileTransfer::handleWriteStreamDataReceived, this, _1));
 
 	if (JingleS5BTransportPayload::ref s5bTransport = initialContent->getTransport<JingleS5BTransportPayload>()) {
-		SWIFT_LOG(debug) << "Got S5B transport payload!" << std::endl;
+		SWIFT_LOG(debug) << "Got S5B transport as initial payload." << std::endl;
 		setTransporter(transporterFactory->createResponderTransporter(
 				getInitiator(), getResponder(), s5bTransport->getSessionID()));
 		transporter->addRemoteCandidates(s5bTransport->getCandidates());
 		setState(GeneratingInitialLocalCandidates);
 		transporter->startGeneratingLocalCandidates();
+	}
+	else if (JingleIBBTransportPayload::ref ibbTransport = initialContent->getTransport<JingleIBBTransportPayload>()) {
+		SWIFT_LOG(debug) << "Got IBB transport as initial payload." << std::endl;
+		setTransporter(transporterFactory->createResponderTransporter(
+				getInitiator(), getResponder(), ibbTransport->getSessionID()));
+
+		startTransferring(transporter->createIBBReceiveSession(
+			ibbTransport->getSessionID(),
+			description->getFileInfo().getSize(),
+			stream));
+
+		session->sendAccept(getContentID(), initialContent->getDescriptions()[0], ibbTransport);
 	}
 	else {
 		// Can't happen, because the transfer would have been rejected automatically
@@ -121,13 +135,11 @@ void IncomingJingleFileTransfer::handleSessionInfoReceived(JinglePayload::ref ji
 	if (transferHash) {
 		SWIFT_LOG(debug) << "Received hash information." << std::endl;
 		waitOnHashTimer->stop();
-		if (transferHash->getHashes().find("sha-1") != transferHash->getHashes().end()) {
-			hashAlgorithm = "sha-1";
-			hash = transferHash->getHashes().find("sha-1")->second;
+		if (transferHash->getFileInfo().getHashes().find("sha-1") != transferHash->getFileInfo().getHashes().end()) {
+			hashes["sha-1"] = transferHash->getFileInfo().getHash("sha-1").get();
 		}
-		else if (transferHash->getHashes().find("md5") != transferHash->getHashes().end()) {
-			hashAlgorithm = "md5";
-			hash = transferHash->getHashes().find("md5")->second;
+		else if (transferHash->getFileInfo().getHashes().find("md5") != transferHash->getFileInfo().getHashes().end()) {
+			hashes["md5"] = transferHash->getFileInfo().getHash("md5").get();
 		}
 		if (state == WaitingForHash) {
 			checkHashAndTerminate();
@@ -172,7 +184,12 @@ void IncomingJingleFileTransfer::checkHashAndTerminate() {
 void IncomingJingleFileTransfer::checkIfAllDataReceived() {
 	if (receivedBytes == getFileSizeInBytes()) {
 		SWIFT_LOG(debug) << "All data received." << std::endl;
-		if (hash.empty()) {
+		bool hashInfoAvailable = true;
+		foreach(const JingleFileTransferFileInfo::HashElementMap::value_type& hashElement, hashes) {
+			hashInfoAvailable &= !hashElement.second.empty();
+		}
+
+		if (!hashInfoAvailable) {
 			SWIFT_LOG(debug) << "No hash information yet. Waiting a while on hash info." << std::endl;
 			setState(WaitingForHash);
 			waitOnHashTimer->start();
@@ -207,7 +224,7 @@ void IncomingJingleFileTransfer::handleTransportReplaceReceived(
 
 		startTransferring(transporter->createIBBReceiveSession(
 			ibbTransport->getSessionID(), 
-			description->getOffers()[0].getSize(),
+			description->getFileInfo().getSize(),
 			stream));
 		session->sendTransportAccept(content, ibbTransport);
 	} 
@@ -222,17 +239,17 @@ JingleContentID IncomingJingleFileTransfer::getContentID() const {
 }
 
 bool IncomingJingleFileTransfer::verifyData() {
-	if (hashAlgorithm.empty() || hash.empty()) {
+	if (hashes.empty()) {
 		SWIFT_LOG(debug) << "no verification possible, skipping" << std::endl;
 		return true;
 	} 
-	if (hashAlgorithm == "sha-1") {
-		SWIFT_LOG(debug) << "Verify SHA-1 hash: " << (hash == hashCalculator->getSHA1String()) << std::endl;
-		return hash == hashCalculator->getSHA1String();
+	if (hashes.find("sha-1") != hashes.end()) {
+		SWIFT_LOG(debug) << "Verify SHA-1 hash: " << (hashes["sha-1"] == hashCalculator->getSHA1Hash()) << std::endl;
+		return hashes["sha-1"] == hashCalculator->getSHA1Hash();
 	}
-	else if (hashAlgorithm == "md5") {
-		SWIFT_LOG(debug) << "Verify MD5 hash: " << (hash == hashCalculator->getMD5String()) << std::endl;
-		return hash == hashCalculator->getMD5String();
+	else if (hashes.find("md5") != hashes.end()) {
+		SWIFT_LOG(debug) << "Verify MD5 hash: " << (hashes["md5"] == hashCalculator->getMD5Hash()) << std::endl;
+		return hashes["md5"] == hashCalculator->getMD5Hash();
 	}
 	else {
 		SWIFT_LOG(debug) << "Unknown hash, skipping" << std::endl;

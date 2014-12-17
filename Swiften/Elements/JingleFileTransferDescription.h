@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2014 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,32 +10,22 @@
 #include <vector>
 
 #include <Swiften/Elements/JingleDescription.h>
-#include <Swiften/Elements/StreamInitiationFileInfo.h>
+#include <Swiften/Elements/JingleFileTransferFileInfo.h>
 
 namespace Swift {
 	class JingleFileTransferDescription : public JingleDescription {
 		public:
 			typedef boost::shared_ptr<JingleFileTransferDescription> ref;
 
-			void addOffer(const StreamInitiationFileInfo& offer) {
-				offers.push_back(offer);
+			void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
+				fileInfo_ = fileInfo;
 			}
-			
 
-			const std::vector<StreamInitiationFileInfo>& getOffers() const {
-				return offers;
-			}
-			
-			void addRequest(const StreamInitiationFileInfo& request) {
-				reqeusts.push_back(request);
-			}
-			
-			const std::vector<StreamInitiationFileInfo>& getRequests() const {
-				return reqeusts;
+			const JingleFileTransferFileInfo& getFileInfo() {
+				return fileInfo_;
 			}
 
 		private:
-			std::vector<StreamInitiationFileInfo> offers;
-			std::vector<StreamInitiationFileInfo> reqeusts;
+			JingleFileTransferFileInfo fileInfo_;
 	};
 }

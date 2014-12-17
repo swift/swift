@@ -78,6 +78,7 @@
 #include <Swiften/Parser/PayloadParsers/StatusShowParser.h>
 #include <Swiften/Parser/PayloadParsers/StorageParser.h>
 #include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 #include <Swiften/Parser/PayloadParsers/StreamInitiationParser.h>
 #include <Swiften/Parser/PayloadParsers/SubjectParser.h>
 #include <Swiften/Parser/PayloadParsers/UserLocationParser.h>
@@ -140,6 +141,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleS5BTransportMethodPayloadParser> >("transport", "urn:xmpp:jingle:transports:s5b:1"));
 	factories_.push_back(boost::make_shared<JingleFileTransferDescriptionParserFactory>(this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<StreamInitiationFileInfoParser> >("file", "http://jabber.org/protocol/si/profile/file-transfer"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferFileInfoParser> >("file", "urn:xmpp:jingle:apps:file-transfer:4"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferReceivedParser> >("received", "urn:xmpp:jingle:apps:file-transfer:3"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferHashParser> >("checksum"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<S5BProxyRequestParser> >("query", "http://jabber.org/protocol/bytestreams"));
