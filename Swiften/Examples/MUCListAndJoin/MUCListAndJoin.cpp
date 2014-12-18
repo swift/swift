@@ -45,12 +45,12 @@ static void handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorP
 		return;
 	}
 
-	int roomNr = 0;
+	int roomCount = 0;
 	cout << "List of rooms at " << mucJID.toString() << endl;
 	foreach (DiscoItems::Item item, items->getItems()) {
-		roomNr++;
-		cout << "\t" << roomNr << ". " << item.getJID().getNode() << " - " << item.getName() << std::endl;
-		if (roomNr == 1) {
+		roomCount++;
+		cout << "\t" << roomCount << ". " << item.getJID().getNode() << " - " << item.getName() << std::endl;
+		if (roomCount == 1) {
 			roomJID = item.getJID();
 		}
 	}
