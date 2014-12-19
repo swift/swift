@@ -55,9 +55,14 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
 	  FD_ZERO(&fds);
 	  FD_SET(p->natpmp.s, &fds);
 	  getnatpmprequesttimeout(&p->natpmp, &timeout);
+
+	  // Limit NAT-PMP timeout to ten seconds.
+	  timeout.tv_sec = 10;
+	  timeout.tv_usec = 0;
+
 	  select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
 	  r = readnatpmpresponseorretry(&p->natpmp, &response);
-	} while (r == NATPMP_TRYAGAIN);
+	} while (false /*r == NATPMP_TRYAGAIN*/);
 
 	if (r == 0) {
 		return boost::optional<HostAddress>(HostAddress(reinterpret_cast<const unsigned char*>(&(response.pnu.publicaddress.addr)), 4));
@@ -88,9 +93,14 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
 		FD_ZERO(&fds);
 		FD_SET(p->natpmp.s, &fds);
 		getnatpmprequesttimeout(&p->natpmp, &timeout);
+
+		// Limit NAT-PMP timeout to ten seconds.
+		timeout.tv_sec = 10;
+		timeout.tv_usec = 0;
+
 		select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
 		r = readnatpmpresponseorretry(&p->natpmp, &response);
-	} while(r == NATPMP_TRYAGAIN);
+	} while(false /*r == NATPMP_TRYAGAIN*/);
 
 	if (r == 0) {
 		NATPortMapping result(response.pnu.newportmapping.privateport, response.pnu.newportmapping.mappedpublicport, NATPortMapping::TCP, boost::numeric_cast<int>(response.pnu.newportmapping.lifetime));

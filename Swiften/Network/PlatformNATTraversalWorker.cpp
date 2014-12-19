@@ -141,6 +141,7 @@ NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() co
 		miniUPnPInterface = new MiniUPnPInterface();
 		miniUPnPSupported = miniUPnPInterface->isAvailable();
 	}
+	SWIFT_LOG(debug) << "UPnP NAT traversal supported: " << miniUPnPSupported << std::endl;
 	if (miniUPnPSupported) {
 		return miniUPnPInterface;
 	}
@@ -151,6 +152,7 @@ NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() co
 		natPMPInterface = new NATPMPInterface();
 		natPMPSupported = natPMPInterface->isAvailable();
 	}
+	SWIFT_LOG(debug) << "NAT-PMP NAT traversal supported: " << natPMPSupported << std::endl;
 	if (natPMPSupported) {
 		return natPMPInterface;
 	}
