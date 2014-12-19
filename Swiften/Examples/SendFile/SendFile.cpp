@@ -39,12 +39,11 @@ static int exitCode = 2;
 
 class FileSender {
 	public:
-	FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file) : jid(jid), password(password), recipient(recipient), file(file) {
-
+	FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file) : jid(jid), password(password), recipient(recipient), file(file), tracer(NULL) {
 			client = new Swift::Client(jid, password, &networkFactories);
 			client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
 			client->onDisconnected.connect(boost::bind(&FileSender::handleDisconnected, this, _1));
-			tracer = new ClientXMLTracer(client);
+			//tracer = new ClientXMLTracer(client);
 			client->getEntityCapsProvider()->onCapsChanged.connect(boost::bind(&FileSender::handleCapsChanged, this, _1));
 		}
 
@@ -61,24 +60,8 @@ class FileSender {
 
 	private:
 		void handleConnected() {
+			std::cout << "Connected. Awaiting presence from receipient." << std::endl;
 			client->sendPresence(Presence::create());
-
-			//ByteArray fileData;
-			//readByteArrayFromFile(fileData, file);
-			
-			// gather file information
-			/*StreamInitiationFileInfo fileInfo;
-			
-			fileInfo.setName(file.filename());
-			fileInfo.setSize(boost::filesystem::file_size(file));
-			fileInfo.setDescription("Some file!");
-			fileInfo.setDate(boost::posix_time::from_time_t(boost::filesystem::last_write_time(file)));*/
-			//fileInfo.setHash(Hexify::hexify(MD5::getHash(fileData)));
-			/*
-			transfer = new OutgoingSIFileTransfer("myid",	client->getJID(), recipient, file.filename(), boost::filesystem::file_size(file), "A file", boost::make_shared<FileReadBytestream>(file)), client->getIQRouter(), socksBytestreamServer);
-			transfer->onFinished.connect(boost::bind(&FileSender::handleFileTransferFinished, this, _1));
-			transfer->start();
-			 */
 		}
 
 		void handleCapsChanged(JID jid) {
@@ -89,27 +72,36 @@ class FileSender {
 				outgoingFileTransfer = client->getFileTransferManager()->createOutgoingFileTransfer(recipient, file, "Some File!", fileStream);
 
 				if (outgoingFileTransfer) {
-					std::cout << "started FT" << std::endl;
+					outgoingFileTransfer->onFinished.connect(boost::bind(&FileSender::handleFileTransferFinished, this, _1));
+					std::cout << "Starting file-transfer to " << recipient.toString() << "." << std::endl;
 					outgoingFileTransfer->start();
 					// TODO: getting notified about FT status and end
 				} else {
-					std::cout << "[ ERROR ] " << recipient << " doesn't support any kind of file transfer!" << std::endl;
-					//client->disconnect();
+					std::cout << recipient << " doesn't support any kind of file transfer!" << std::endl;
+					client->disconnect();
 				}
 			}
 		}
 
-		void handleDisconnected(const boost::optional<ClientError>&) {
-			std::cerr << "Error!" << std::endl;
-			exit(-1);
-		}
-
-		void handleFileTransferFinished(const boost::optional<FileTransferError>& error) {
-			std::cout << "File transfer finished" << std::endl;
-			if (error) {
+		void handleDisconnected(const boost::optional<ClientError>& err) {
+			if (err) {
+				std::cout << "Disconnected due to error ( " << err.get().getType() << " )." << std::endl;
 				exit(-1);
 			}
 			else {
+				std::cout << "Successfully disconnected." << std::endl;
+			}
+		}
+
+		void handleFileTransferFinished(const boost::optional<FileTransferError>& error) {
+			std::cout << "File transfer finished." << std::endl;
+			outgoingFileTransfer.reset();
+			if (error) {
+				client->disconnect();
+				exit(-1);
+			}
+			else {
+				client->disconnect();
 				exit(0);
 			}
 		}
@@ -137,15 +129,16 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 
+	//Log::setLogLevel(Log::debug);
+
 	JID sender(argv[1]);
 	JID recipient(argv[3]);
-	Log::setLogLevel(Log::debug);
 	FileSender fileSender(sender, std::string(argv[2]), recipient, boost::filesystem::path(argv[4]));
 	fileSender.start();
 	{
-		/*BoostTimer::ref timer(BoostTimer::create(30000, &MainBoostIOServiceThread::getInstance().getIOService()));
+		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
 		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
-		timer->start();*/
+		timer->start();
 
 		eventLoop.run();
 	}
