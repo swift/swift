@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
 	class SWIFTEN_API DummyEventLoop : public EventLoop {
 		public:
 			DummyEventLoop();
-			~DummyEventLoop();
+			virtual ~DummyEventLoop();
 
 			void processEvents() {
 				while (!events_.empty()) {
