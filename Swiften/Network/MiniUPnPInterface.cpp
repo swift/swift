@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Network/MiniUPnPInterface.h>
 
 #include <miniupnpc.h>
@@ -78,7 +84,7 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
 			publicPort.c_str(), 
 			localPort.c_str(), 
 			p->localAddress.c_str(), 
-			0, 
+			"Swift",
 			mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", 
 			0, 
 			leaseSeconds.c_str());
