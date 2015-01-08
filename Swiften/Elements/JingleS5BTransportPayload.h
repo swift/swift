@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -82,6 +82,14 @@ namespace Swift {
 				return activatedCID;
 			}
 
+			void setDstAddr(const std::string& addr) {
+				dstAddr = addr;
+			}
+
+			const std::string& getDstAddr() const {
+				return dstAddr;
+			}
+
 			void setCandidateError(bool hasError) {
 				candidateError = hasError;
 			}
@@ -106,6 +114,7 @@ namespace Swift {
 			
 			std::string candidateUsedCID;
 			std::string activatedCID;
+			std::string dstAddr;
 			bool candidateError;
 			bool proxyError;
 	};

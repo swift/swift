@@ -5,7 +5,7 @@
  */
 
 /*
-* Copyright (c) 2014 Isode Limited.
+* Copyright (c) 2014-2015 Isode Limited.
 * All rights reserved.v3.
 * See the COPYING file for more information.
 */
@@ -34,6 +34,7 @@ namespace Swift {
 				SWIFT_LOG(warning) << "Unknown S5B mode; falling back to defaul!";
 				getPayloadInternal()->setMode(JingleS5BTransportPayload::TCPMode);
 			}
+			getPayloadInternal()->setDstAddr(attributes.getAttributeValue("dstaddr").get_value_or(""));
 		} else if (level == 1) {
 			if (element == "candidate") {
 				JingleS5BTransportPayload::Candidate candidate;

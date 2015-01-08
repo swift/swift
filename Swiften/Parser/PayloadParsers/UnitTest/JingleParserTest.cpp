@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -540,6 +546,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 				"  <content creator='initiator' name='ex'>\n"
 				"    <description xmlns='urn:xmpp:example'/>\n"
 				"    <transport xmlns='urn:xmpp:jingle:transports:s5b:1'\n"
+				"               dstaddr='1a12fb7bc625e55f3ed5b29a53dbe0e4aa7d80ba'\n"
 				"               mode='tcp'\n"
 				"               sid='vj3hs98y'>\n"
 				"      <candidate cid='ht567dq'\n"
@@ -579,6 +586,7 @@ class JingleParserTest : public CppUnit::TestFixture {
 			
 			CPPUNIT_ASSERT_EQUAL(std::string("vj3hs98y"), s5bPayload->getSessionID());
 			CPPUNIT_ASSERT_EQUAL(JingleS5BTransportPayload::TCPMode, s5bPayload->getMode());
+			CPPUNIT_ASSERT_EQUAL(std::string("1a12fb7bc625e55f3ed5b29a53dbe0e4aa7d80ba"), s5bPayload->getDstAddr());
 			CPPUNIT_ASSERT_EQUAL(false, s5bPayload->hasCandidateError());
 			CPPUNIT_ASSERT_EQUAL(false, s5bPayload->hasProxyError());
 			CPPUNIT_ASSERT_EQUAL(std::string(), s5bPayload->getActivated());

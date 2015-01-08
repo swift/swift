@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
@@ -25,6 +31,9 @@ std::string JingleS5BTransportPayloadSerializer::serializePayload(boost::shared_
 	XMLElement payloadXML("transport", "urn:xmpp:jingle:transports:s5b:1");
 	payloadXML.setAttribute("sid", payload->getSessionID());
 	payloadXML.setAttribute("mode", modeToString(payload->getMode()));
+	if (!payload->getDstAddr().empty()) {
+		payloadXML.setAttribute("dstaddr", payload->getDstAddr());
+	}
 	
 	foreach(JingleS5BTransportPayload::Candidate candidate, payload->getCandidates()) {
 		boost::shared_ptr<XMLElement> candidateXML = boost::make_shared<XMLElement>("candidate");

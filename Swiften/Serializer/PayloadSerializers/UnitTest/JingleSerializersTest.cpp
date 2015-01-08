@@ -377,6 +377,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 					" xmlns=\"urn:xmpp:jingle:1\">"
 					"<content creator=\"initiator\" name=\"ex\">"
 						"<transport"
+							" dstaddr=\"1a12fb7bc625e55f3ed5b29a53dbe0e4aa7d80ba\""
 							" mode=\"tcp\""
 							" sid=\"vj3hs98y\""
 							" xmlns=\"urn:xmpp:jingle:transports:s5b:1\">"
@@ -407,6 +408,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 
 			JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
 			transport->setMode(JingleS5BTransportPayload::TCPMode);
+			transport->setDstAddr("1a12fb7bc625e55f3ed5b29a53dbe0e4aa7d80ba");
 			transport->setSessionID("vj3hs98y");
 
 			JingleS5BTransportPayload::Candidate candidate1;
