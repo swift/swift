@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,21 +33,22 @@
 namespace Swift {
 	class ConnectionFactory;
 	class ConnectionServerFactory;
-	class SOCKS5BytestreamServerManager;
+	class CryptoProvider;
+	class DomainNameResolver;
 	class EntityCapsProvider;
+	class FileTransferTransporterFactory;
 	class IQRouter;
 	class IncomingFileTransferManager;
 	class JingleSessionManager;
-	class OutgoingFileTransferManager;
 	class NATTraverser;
+	class NetworkEnvironment;
+	class OutgoingFileTransferManager;
 	class PresenceOracle;
 	class ReadBytestream;
-	class FileTransferTransporterFactory;
-	class SOCKS5BytestreamRegistry;
 	class SOCKS5BytestreamProxiesManager;
+	class SOCKS5BytestreamRegistry;
+	class SOCKS5BytestreamServerManager;
 	class TimerFactory;
-	class CryptoProvider;
-	class NetworkEnvironment;
 
 	class SWIFTEN_API FileTransferManagerImpl : public FileTransferManager {
 		public:
@@ -60,6 +61,7 @@ namespace Swift {
 					ConnectionFactory* connectionFactory,
 					ConnectionServerFactory* connectionServerFactory,
 					TimerFactory* timerFactory, 
+					DomainNameResolver* domainNameResolver,
 					NetworkEnvironment* networkEnvironment,
 					NATTraverser* natTraverser,
 					CryptoProvider* crypto);

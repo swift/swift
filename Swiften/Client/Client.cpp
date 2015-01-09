@@ -137,6 +137,7 @@ void Client::handleConnected() {
 			getNetworkFactories()->getConnectionFactory(), 
 			getNetworkFactories()->getConnectionServerFactory(), 
 			getNetworkFactories()->getTimerFactory(), 
+			getNetworkFactories()->getDomainNameResolver(),
 			getNetworkFactories()->getNetworkEnvironment(),
 			getNetworkFactories()->getNATTraverser(),
 			getNetworkFactories()->getCryptoProvider());

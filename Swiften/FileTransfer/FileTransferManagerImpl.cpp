@@ -48,6 +48,7 @@ FileTransferManagerImpl::FileTransferManagerImpl(
 		ConnectionFactory* connectionFactory, 
 		ConnectionServerFactory* connectionServerFactory, 
 		TimerFactory* timerFactory, 
+		DomainNameResolver* domainNameResolver,
 		NetworkEnvironment* networkEnvironment,
 		NATTraverser* natTraverser,
 		CryptoProvider* crypto) : 
@@ -60,7 +61,7 @@ FileTransferManagerImpl::FileTransferManagerImpl(
 	bytestreamRegistry = new SOCKS5BytestreamRegistry();
 	s5bServerManager = new SOCKS5BytestreamServerManager(
 			bytestreamRegistry, connectionServerFactory, networkEnvironment, natTraverser);
-	bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory);
+	bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, domainNameResolver, iqRouter, JID(ownFullJID.getDomain()));
 
 	transporterFactory = new DefaultFileTransferTransporterFactory(
 			bytestreamRegistry,

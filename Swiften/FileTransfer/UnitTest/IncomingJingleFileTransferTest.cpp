@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,6 +28,7 @@
 #include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/Network/PlatformNetworkEnvironment.h>
+#include <Swiften/Network/StaticDomainNameResolver.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
 #include <Swiften/Jingle/FakeJingleSession.h>
@@ -67,6 +68,7 @@ public:
 		void setUp() {
 			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			eventLoop = new DummyEventLoop();
+			resolver = new StaticDomainNameResolver(eventLoop);
 			session = boost::make_shared<FakeJingleSession>("foo@bar.com/baz", "mysession");
 			jingleContentPayload = make_shared<JingleContentPayload>();
 			// fakeRJTCSF = make_shared<FakeRemoteJingleTransportCandidateSelectorFactory>();
@@ -81,7 +83,7 @@ public:
 			bytestreamServerManager = new SOCKS5BytestreamServerManager(bytestreamRegistry, serverConnectionFactory, networkEnvironment, natTraverser);
 			idGenerator = new SimpleIDGenerator();
 			timerFactory = new DummyTimerFactory();
-			bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory);
+			bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, resolver, iqRouter, "bar.com");
 			ftTransporterFactory = new DefaultFileTransferTransporterFactory(bytestreamRegistry, bytestreamServerManager, bytestreamProxy, idGenerator, connectionFactory, timerFactory, crypto.get(), iqRouter);
 		}
 
@@ -94,6 +96,7 @@ public:
 			delete bytestreamRegistry;
 			delete iqRouter;
 			delete stanzaChannel;
+			delete resolver;
 			delete eventLoop;
 			Log::setLogLevel(Log::error);
 		}
@@ -232,6 +235,7 @@ private:
 	NetworkEnvironment* networkEnvironment;
 	NATTraverser* natTraverser;
 	IDGenerator* idGenerator;
+	DomainNameResolver* resolver;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IncomingJingleFileTransferTest);

@@ -4,6 +4,11 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #pragma once
 
@@ -23,8 +28,8 @@ namespace Swift {
 				XMLElement queryElement("query", "http://jabber.org/protocol/bytestreams");
 				if (s5bProxyRequest && s5bProxyRequest->getStreamHost()) {
 					boost::shared_ptr<XMLElement> streamHost = boost::make_shared<XMLElement>("streamhost");
-					streamHost->setAttribute("host", s5bProxyRequest->getStreamHost().get().addressPort.getAddress().toString());
-					streamHost->setAttribute("port", boost::lexical_cast<std::string>(s5bProxyRequest->getStreamHost().get().addressPort.getPort()));
+					streamHost->setAttribute("host", s5bProxyRequest->getStreamHost().get().host);
+					streamHost->setAttribute("port", boost::lexical_cast<std::string>(s5bProxyRequest->getStreamHost().get().port));
 					streamHost->setAttribute("jid", s5bProxyRequest->getStreamHost().get().jid.toString());
 					queryElement.addNode(streamHost);
 				} else if (s5bProxyRequest && s5bProxyRequest->getActivate()) {

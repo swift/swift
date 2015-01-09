@@ -4,6 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
@@ -17,6 +24,10 @@ namespace Swift {
 class JID;
 class IQRouter;
 
+/*
+ * This class is designed to find possible SOCKS5 bytestream proxies which are used for peer-to-peer data transfers in
+ * restrictive environments.
+ */
 class SOCKS5BytestreamProxyFinder {
 	public:
 		SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);

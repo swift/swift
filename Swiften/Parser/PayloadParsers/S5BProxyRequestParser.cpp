@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "S5BProxyRequestParser.h"
 
 #include <boost/lexical_cast.hpp>
@@ -20,7 +26,7 @@ S5BProxyRequestParser::~S5BProxyRequestParser() {
 void S5BProxyRequestParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (element == "streamhost") {
 		if (attributes.getAttributeValue("host") && attributes.getAttributeValue("jid") && attributes.getAttributeValue("port")) {
-			HostAddress address = attributes.getAttributeValue("host").get_value_or("");
+			std::string host = attributes.getAttributeValue("host").get_value_or("");
 			int port = -1;
 			JID jid = attributes.getAttributeValue("jid").get_value_or("");
 
@@ -29,9 +35,10 @@ void S5BProxyRequestParser::handleStartElement(const std::string& element, const
 			} catch (boost::bad_lexical_cast &) {
 				port = -1;
 			}
-			if (address.isValid() && port != -1 && jid.isValid()) {
+			if (!host.empty() && port != -1 && jid.isValid()) {
 				S5BProxyRequest::StreamHost streamHost;
-				streamHost.addressPort = HostAddressPort(address, port);
+				streamHost.host = host;
+				streamHost.port = port;
 				streamHost.jid = jid;
 				getPayloadInternal()->setStreamHost(streamHost);
 			}

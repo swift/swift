@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
@@ -22,7 +28,8 @@ public:
 
 public:
 	struct StreamHost {
-		HostAddressPort addressPort;
+		std::string host;
+		int port;
 		JID jid;
 	};
 
