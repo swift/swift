@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (C) 2013-2014 Isode Limited.
+ * Copyright (C) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -79,7 +79,7 @@ void OutgoingJingleFileTransfer::start() {
 	SWIFT_LOG(debug) << std::endl;
 	if (state != Initial) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
-	setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder()));
+	setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder(), options));
 	setState(GeneratingInitialLocalCandidates);
 	transporter->startGeneratingLocalCandidates();
 }

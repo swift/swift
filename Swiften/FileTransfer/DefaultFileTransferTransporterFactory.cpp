@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@ DefaultFileTransferTransporterFactory::~DefaultFileTransferTransporterFactory() 
 }
 
 FileTransferTransporter* DefaultFileTransferTransporterFactory::createInitiatorTransporter(
-		const JID& initiator, const JID& responder) {
+		const JID& initiator, const JID& responder, const FileTransferOptions& options) {
 	DefaultFileTransferTransporter* transporter = new DefaultFileTransferTransporter(
 		initiator, 
 		responder,
@@ -46,17 +46,18 @@ FileTransferTransporter* DefaultFileTransferTransporterFactory::createInitiatorT
 		connectionFactory,
 		timerFactory,
 		cryptoProvider,
-		iqRouter);
+		iqRouter,
+		options);
 	transporter->initialize();
 	return transporter;
 }
 
 FileTransferTransporter* DefaultFileTransferTransporterFactory::createResponderTransporter(
-		const JID& initiator, const JID& responder, const std::string& s5bSessionID) {
+		const JID& initiator, const JID& responder, const std::string& s5bSessionID, const FileTransferOptions& options) {
 	DefaultFileTransferTransporter* transporter = new DefaultFileTransferTransporter(
 		initiator, 
 		responder,
-		DefaultFileTransferTransporter::Initiator,
+		DefaultFileTransferTransporter::Responder,
 		s5bRegistry,
 		s5bServerManager,
 		s5bProxiesManager,
@@ -64,7 +65,8 @@ FileTransferTransporter* DefaultFileTransferTransporterFactory::createResponderT
 		connectionFactory,
 		timerFactory,
 		cryptoProvider,
-		iqRouter);
+		iqRouter,
+		options);
 	transporter->initialize(s5bSessionID);
 	return transporter;
 }

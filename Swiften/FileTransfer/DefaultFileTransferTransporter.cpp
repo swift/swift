@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -138,7 +138,8 @@ DefaultFileTransferTransporter::DefaultFileTransferTransporter(
 		ConnectionFactory* connectionFactory, 
 		TimerFactory* timerFactory, 
 		CryptoProvider* crypto,
-		IQRouter* router) : 
+		IQRouter* router,
+		const FileTransferOptions& options) :
 			initiator(initiator),
 			responder(responder),
 			role(role),
@@ -151,13 +152,15 @@ DefaultFileTransferTransporter::DefaultFileTransferTransporter(
 			s5bServerManager,
 			s5bProxy,
 			role == Initiator ? initiator : responder,
-			idGenerator);
+			idGenerator,
+			options);
 	localCandidateGenerator->onLocalTransportCandidatesGenerated.connect(
 		boost::bind(&DefaultFileTransferTransporter::handleLocalCandidatesGenerated, this, _1));
 
 	remoteCandidateSelector = new RemoteJingleTransportCandidateSelector(
 			connectionFactory,
-			timerFactory);
+			timerFactory,
+			options);
 	remoteCandidateSelector->onCandidateSelectFinished.connect(
 		boost::bind(&DefaultFileTransferTransporter::handleRemoteCandidateSelectFinished, this, _1, _2));
 }

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,6 +19,8 @@
 #include <Swiften/Base/Override.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxyFinder.h>
 
 namespace Swift {
 	class SOCKS5BytestreamServerManager;
@@ -32,7 +34,8 @@ namespace Swift {
 					SOCKS5BytestreamServerManager* s5bServerManager,
 					SOCKS5BytestreamProxiesManager* s5bProxy, 
 					const JID& ownJID,
-					IDGenerator* idGenerator);
+					IDGenerator* idGenerator,
+					const FileTransferOptions& options);
 			virtual ~LocalJingleTransportCandidateGenerator();
 
 			virtual void start();
@@ -42,7 +45,10 @@ namespace Swift {
 
 		private:
 			void handleS5BServerInitialized(bool success);
+			void handleDiscoveredProxiesChanged();
+
 			void checkS5BCandidatesReady();
+			void emitOnLocalTransportCandidatesGenerated();
 
 		private:
 			SOCKS5BytestreamServerManager* s5bServerManager;
@@ -50,5 +56,6 @@ namespace Swift {
 			JID ownJID;
 			IDGenerator* idGenerator;
 			boost::shared_ptr<SOCKS5BytestreamServerInitializeRequest> s5bServerInitializeRequest;
+			FileTransferOptions options_;
 	};
 }

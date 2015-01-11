@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -151,8 +151,17 @@ std::string JingleSessionImpl::sendTransportInfo(const JingleContentID& id, Jing
 	return sendSetRequest(payload);
 }
 
-void JingleSessionImpl::sendTransportReject(const JingleContentID& /* id */, JingleTransportPayload::ref /* transPayload */) {
-	SWIFT_LOG(debug) << "NOT IMPLEMENTED YET!!!!" << std::endl;
+void JingleSessionImpl::sendTransportReject(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
+	JinglePayload::ref payload = createPayload();
+
+	JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+	content->setCreator(id.getCreator());
+	content->setName(id.getName());
+	content->addTransport(transPayload);
+	payload->setAction(JinglePayload::TransportReject);
+	payload->addPayload(content);
+
+	sendSetRequest(payload);
 }
 
 void JingleSessionImpl::sendTransportReplace(const JingleContentID& id, JingleTransportPayload::ref transPayload) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,9 +34,9 @@ namespace Swift {
 			virtual ~DefaultFileTransferTransporterFactory();
 
 			virtual FileTransferTransporter* createInitiatorTransporter(
-					const JID& initiator, const JID& responder) SWIFTEN_OVERRIDE;
+					const JID& initiator, const JID& responder, const FileTransferOptions&) SWIFTEN_OVERRIDE;
 			virtual FileTransferTransporter* createResponderTransporter(
-					const JID& initiator, const JID& responder, const std::string& s5bSessionID) SWIFTEN_OVERRIDE;
+					const JID& initiator, const JID& responder, const std::string& s5bSessionID, const FileTransferOptions&) SWIFTEN_OVERRIDE;
 
 		private:
 			SOCKS5BytestreamRegistry* s5bRegistry; 

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,6 +23,7 @@
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
 #include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
 
 
 namespace Swift {
@@ -31,7 +32,7 @@ namespace Swift {
 
 	class RemoteJingleTransportCandidateSelector {
 		public:
-			RemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*);
+			RemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*, const FileTransferOptions&);
 			virtual ~RemoteJingleTransportCandidateSelector();
 
 			virtual void addCandidates(const std::vector<JingleS5BTransportPayload::Candidate>&);
@@ -57,5 +58,6 @@ namespace Swift {
 			boost::bsignals::connection sessionReadyConnection;
 			JingleS5BTransportPayload::Candidate lastCandidate;
 			std::string socks5DstAddr;
+			FileTransferOptions options;
 		};
 }

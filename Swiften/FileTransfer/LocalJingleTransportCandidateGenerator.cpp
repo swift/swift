@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,11 +33,13 @@ LocalJingleTransportCandidateGenerator::LocalJingleTransportCandidateGenerator(
 		SOCKS5BytestreamServerManager* s5bServerManager,
 		SOCKS5BytestreamProxiesManager* s5bProxy, 
 		const JID& ownJID,
-		IDGenerator* idGenerator) : 
+		IDGenerator* idGenerator,
+		const FileTransferOptions& options) :
 			s5bServerManager(s5bServerManager),
 			s5bProxy(s5bProxy), 
 			ownJID(ownJID),
-			idGenerator(idGenerator) {
+			idGenerator(idGenerator),
+			options_(options) {
 }
 
 LocalJingleTransportCandidateGenerator::~LocalJingleTransportCandidateGenerator() {
@@ -49,7 +51,6 @@ void LocalJingleTransportCandidateGenerator::start() {
 	s5bServerInitializeRequest = s5bServerManager->createInitializeRequest();
 	s5bServerInitializeRequest->onFinished.connect(
 			boost::bind(&LocalJingleTransportCandidateGenerator::handleS5BServerInitialized, this, _1));
-
 	s5bServerInitializeRequest->start();
 }
 
@@ -58,11 +59,36 @@ void LocalJingleTransportCandidateGenerator::stop() {
 		s5bServerInitializeRequest->stop();
 		s5bServerInitializeRequest.reset();
 	}
+
+	s5bServerManager->stop();
 }
 
 void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool success) {
-	std::vector<JingleS5BTransportPayload::Candidate> candidates;
 	if (success) {
+		if (options_.isProxiedAllowed()) {
+			if (s5bProxy->getOrDiscoverS5BProxies()) {
+				emitOnLocalTransportCandidatesGenerated();
+			} else {
+				s5bProxy->onDiscoveredProxiesChanged.connect(boost::bind(&LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged, this));
+			}
+		}
+		else {
+			emitOnLocalTransportCandidatesGenerated();
+		}
+	}
+	else {
+		SWIFT_LOG(warning) << "Unable to start SOCKS5 server" << std::endl;
+	}
+
+	s5bServerInitializeRequest->stop();
+	s5bServerInitializeRequest.reset();
+
+}
+
+void LocalJingleTransportCandidateGenerator::emitOnLocalTransportCandidatesGenerated() {
+	std::vector<JingleS5BTransportPayload::Candidate> candidates;
+
+	if (options_.isDirectAllowed()) {
 		// get direct candidates
 		std::vector<HostAddressPort> directCandidates = s5bServerManager->getHostAddressPorts();
 		foreach(HostAddressPort addressPort, directCandidates) {
@@ -74,7 +100,9 @@ void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool suc
 			candidate.cid = idGenerator->generateID();
 			candidates.push_back(candidate);
 		}
+	}
 
+	if (options_.isAssistedAllowed()) {
 		// get assissted candidates
 		std::vector<HostAddressPort> assisstedCandidates = s5bServerManager->getAssistedHostAddressPorts();
 		foreach(HostAddressPort addressPort, assisstedCandidates) {
@@ -87,14 +115,29 @@ void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool suc
 			candidates.push_back(candidate);
 		}
 	}
-	else {
-		SWIFT_LOG(warning) << "Unable to start SOCKS5 server" << std::endl;
+
+	if (options_.isProxiedAllowed()) {
+		foreach(S5BProxyRequest::ref proxy, s5bProxy->getOrDiscoverS5BProxies().get()) {
+			if (proxy->getStreamHost()) { // FIXME: Added this test, because there were cases where this wasn't initialized. Investigate this. (Remko)
+				JingleS5BTransportPayload::Candidate candidate;
+				candidate.type = JingleS5BTransportPayload::Candidate::ProxyType;
+				candidate.jid = (*proxy->getStreamHost()).jid;
+				HostAddress address = (*proxy->getStreamHost()).host;
+				assert(address.isValid());
+				candidate.hostPort = HostAddressPort(address, (*proxy->getStreamHost()).port);
+				candidate.priority = 65536 * 10 + LOCAL_PREFERENCE;
+				candidate.cid = idGenerator->generateID();
+				candidates.push_back(candidate);
+			}
+		}
 	}
 
-	s5bServerInitializeRequest->stop();
-	s5bServerInitializeRequest.reset();
-
 	onLocalTransportCandidatesGenerated(candidates);
+}
+
+void LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged() {
+	s5bProxy->onDiscoveredProxiesChanged.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged, this));
+	emitOnLocalTransportCandidatesGenerated();
 }
 
 /*void LocalJingleTransportCandidateGenerator::handleS5BProxiesDiscovered() {

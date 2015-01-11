@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,9 +26,11 @@ using namespace Swift;
 
 RemoteJingleTransportCandidateSelector::RemoteJingleTransportCandidateSelector(
 		ConnectionFactory* connectionFactory, 
-		TimerFactory* timerFactory) :
+		TimerFactory* timerFactory,
+		const FileTransferOptions& options) :
 			connectionFactory(connectionFactory), 
-			timerFactory(timerFactory) {
+			timerFactory(timerFactory),
+			options(options) {
 }
 
 RemoteJingleTransportCandidateSelector::~RemoteJingleTransportCandidateSelector() {
@@ -62,9 +64,9 @@ void RemoteJingleTransportCandidateSelector::tryNextCandidate() {
 		lastCandidate = candidates.top();
 		candidates.pop();
 		SWIFT_LOG(debug) << "Trying candidate " << lastCandidate.cid << std::endl;
-		if (lastCandidate.type == JingleS5BTransportPayload::Candidate::DirectType 
-				|| lastCandidate.type == JingleS5BTransportPayload::Candidate::AssistedType 
-				|| lastCandidate.type == JingleS5BTransportPayload::Candidate::ProxyType ) {
+		if ((lastCandidate.type == JingleS5BTransportPayload::Candidate::DirectType && options.isDirectAllowed()) ||
+			(lastCandidate.type == JingleS5BTransportPayload::Candidate::AssistedType && options.isAssistedAllowed()) ||
+			(lastCandidate.type == JingleS5BTransportPayload::Candidate::ProxyType && options.isProxiedAllowed())) {
 			boost::shared_ptr<Connection> connection = connectionFactory->createConnection();
 			s5bSession = boost::make_shared<SOCKS5BytestreamClientSession>(
 					connection, lastCandidate.hostPort, socks5DstAddr, timerFactory);

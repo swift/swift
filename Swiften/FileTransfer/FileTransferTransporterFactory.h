@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,6 +13,7 @@
 namespace Swift {
 	class JID;
 	class FileTransferTransporter;
+	class FileTransferOptions;
 
 	class SWIFTEN_API FileTransferTransporterFactory {
 		public:
@@ -20,10 +21,12 @@ namespace Swift {
 
 			virtual FileTransferTransporter* createInitiatorTransporter(
 					const JID& initiator, 
-					const JID& responder) = 0;
+					const JID& responder,
+					const FileTransferOptions& options) = 0;
 			virtual FileTransferTransporter* createResponderTransporter(
 					const JID& initiator, 
 					const JID& responder, 
-					const std::string& s5bSessionID) = 0;
+					const std::string& s5bSessionID,
+					const FileTransferOptions& options) = 0;
 	};
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,6 +25,7 @@ namespace Swift {
 	class ConnectionFactory;
 	class TimerFactory;
 	class CryptoProvider;
+	class FileTransferOptions;
 
 	class SWIFTEN_API DefaultFileTransferTransporter : public FileTransferTransporter {
 		public:
@@ -44,7 +45,8 @@ namespace Swift {
 				ConnectionFactory*, 
 				TimerFactory*, 
 				CryptoProvider*,
-				IQRouter*);
+				IQRouter*,
+				const FileTransferOptions&);
 			virtual ~DefaultFileTransferTransporter();
 
 			

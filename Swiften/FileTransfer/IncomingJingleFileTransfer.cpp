@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -79,7 +79,7 @@ void IncomingJingleFileTransfer::accept(
 	if (JingleS5BTransportPayload::ref s5bTransport = initialContent->getTransport<JingleS5BTransportPayload>()) {
 		SWIFT_LOG(debug) << "Got S5B transport as initial payload." << std::endl;
 		setTransporter(transporterFactory->createResponderTransporter(
-				getInitiator(), getResponder(), s5bTransport->getSessionID()));
+				getInitiator(), getResponder(), s5bTransport->getSessionID(), options));
 		transporter->addRemoteCandidates(s5bTransport->getCandidates());
 		setState(GeneratingInitialLocalCandidates);
 		transporter->startGeneratingLocalCandidates();
@@ -87,7 +87,7 @@ void IncomingJingleFileTransfer::accept(
 	else if (JingleIBBTransportPayload::ref ibbTransport = initialContent->getTransport<JingleIBBTransportPayload>()) {
 		SWIFT_LOG(debug) << "Got IBB transport as initial payload." << std::endl;
 		setTransporter(transporterFactory->createResponderTransporter(
-				getInitiator(), getResponder(), ibbTransport->getSessionID()));
+				getInitiator(), getResponder(), ibbTransport->getSessionID(), options));
 
 		startTransferring(transporter->createIBBReceiveSession(
 			ibbTransport->getSessionID(),
