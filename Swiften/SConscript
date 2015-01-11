@@ -101,6 +101,7 @@ if env["SCONS_STAGE"] == "build" :
 
 # TODO: Move all this to a submodule SConscript
 	sources = [
+			"Base/Debug.cpp",
 			"Chat/ChatStateTracker.cpp",
 			"Chat/ChatStateNotifier.cpp",
 			"Client/ClientSessionStanzaChannel.cpp",
