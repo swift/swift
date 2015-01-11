@@ -111,7 +111,7 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
 	if (state != WaitingForAccept) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
 	if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload)) {
-		transporter->addRemoteCandidates(s5bPayload->getCandidates());
+		transporter->addRemoteCandidates(s5bPayload->getCandidates(), s5bPayload->getDstAddr());
 		setState(TryingCandidates);
 		transporter->startTryingRemoteCandidates();
 	}
@@ -123,7 +123,7 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
 
 void OutgoingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<JinglePayload::Reason> reason) {
 	SWIFT_LOG(debug) << std::endl;
-	if (state == Finished) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+	if (state == Finished) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
 
 	stopAll();
 	if (reason && reason->type == JinglePayload::Reason::Cancel) {
@@ -150,6 +150,12 @@ void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleConte
 	}
 }
 
+void OutgoingJingleFileTransfer::handleTransportRejectReceived(const JingleContentID &, boost::shared_ptr<JingleTransportPayload>) {
+	SWIFT_LOG(debug) << std::endl;
+
+	terminate(JinglePayload::Reason::UnsupportedTransports);
+}
+
 void OutgoingJingleFileTransfer::sendSessionInfoHash() {
 	SWIFT_LOG(debug) << std::endl;
 
@@ -160,7 +166,7 @@ void OutgoingJingleFileTransfer::sendSessionInfoHash() {
 }
 
 void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
-		const std::string& s5bSessionID, const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
+		const std::string& s5bSessionID, const std::vector<JingleS5BTransportPayload::Candidate>& candidates, const std::string& dstAddr) {
 	SWIFT_LOG(debug) << std::endl;
 	if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
@@ -174,6 +180,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
 	transport->setSessionID(s5bSessionID);
 	transport->setMode(JingleS5BTransportPayload::TCPMode);
+	transport->setDstAddr(dstAddr);
 	foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
 		transport->addCandidate(candidate);	
 	}
@@ -182,8 +189,8 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 }
 
 void OutgoingJingleFileTransfer::fallback() {
-	SWIFT_LOG(debug) << std::endl;
 	if (options.isInBandAllowed()) {
+		SWIFT_LOG(debug) << "Trying to fallback to IBB transport." << std::endl;
 		JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
 		ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
 		ibbTransport->setSessionID(idGenerator->generateID());
@@ -191,13 +198,14 @@ void OutgoingJingleFileTransfer::fallback() {
 		session->sendTransportReplace(contentID, ibbTransport);
 	}
 	else {
+		SWIFT_LOG(debug) << "Fallback to IBB transport not allowed." << std::endl;
 		terminate(JinglePayload::Reason::ConnectivityError);
 	}
 }
 
 void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTransferError> error) {
 	SWIFT_LOG(debug) << std::endl;
-	if (state != Transferring) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+	if (state != Transferring) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
 
 	if (error) {
 		terminate(JinglePayload::Reason::ConnectivityError);
@@ -347,11 +355,11 @@ bool OutgoingJingleFileTransfer::isTryingCandidates() const {
 }
 
 boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createLocalCandidateSession() {
-	return transporter->createLocalCandidateSession(stream);
+	return transporter->createLocalCandidateSession(stream, theirCandidateChoice.get());
 }
 
 boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createRemoteCandidateSession() {
-	return transporter->createRemoteCandidateSession(stream);
+	return transporter->createRemoteCandidateSession(stream, ourCandidateChoice.get());
 }
 
 void OutgoingJingleFileTransfer::handleWaitForRemoteTerminationTimeout() {

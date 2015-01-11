@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,7 +33,7 @@ namespace Swift {
 			virtual void stopGeneratingLocalCandidates() = 0;
 
 			virtual void addRemoteCandidates(
-					const std::vector<JingleS5BTransportPayload::Candidate>&) = 0;
+					const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string&) = 0;
 			virtual void startTryingRemoteCandidates() = 0;
 			virtual void stopTryingRemoteCandidates() = 0;
 
@@ -45,15 +45,15 @@ namespace Swift {
 			virtual boost::shared_ptr<TransportSession> createIBBReceiveSession(
 					const std::string& sessionID, unsigned long long size, boost::shared_ptr<WriteBytestream>) = 0;
 			virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-					boost::shared_ptr<ReadBytestream>) = 0;
+					boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
 			virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-					boost::shared_ptr<WriteBytestream>) = 0;
+					boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
 			virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-					boost::shared_ptr<ReadBytestream>) = 0;
+					boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
 			virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-					boost::shared_ptr<WriteBytestream>) = 0;
+					boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
 
-			boost::signal<void (const std::string& /* sessionID */, const std::vector<JingleS5BTransportPayload::Candidate>&)> onLocalCandidatesGenerated;
+			boost::signal<void (const std::string& /* sessionID */, const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string& /* dstAddr */)> onLocalCandidatesGenerated;
 			boost::signal<void (const std::string& /* sessionID */, const boost::optional<JingleS5BTransportPayload::Candidate>&)> onRemoteCandidateSelectFinished;
 			boost::signal<void (const std::string& /* sessionID */, boost::shared_ptr<ErrorPayload>)> onProxyActivated;
 	};

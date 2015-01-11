@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -112,9 +112,11 @@ void JingleFileTransfer::decideOnCandidates() {
 		fallback();
 	}
 	else if (ourCandidateChoice && !theirCandidateChoice) {
+		SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << "." << std::endl;
 		startTransferViaRemoteCandidate();
 	}
 	else if (theirCandidateChoice && !ourCandidateChoice) {
+		SWIFT_LOG(debug) << "Start transfer using local candidate: " << theirCandidateChoice.get().cid << "." << std::endl;
 		startTransferViaLocalCandidate();
 	}
 	else {
@@ -122,16 +124,20 @@ void JingleFileTransfer::decideOnCandidates() {
 			<< ourCandidateChoice->cid << "(" << ourCandidateChoice->priority << ")" << " and " 
 			<< theirCandidateChoice->cid << "(" << theirCandidateChoice->priority << ")" << std::endl;
 		if (ourCandidateChoice->priority > theirCandidateChoice->priority) {
+			SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << "." << std::endl;
 			startTransferViaRemoteCandidate();
 		}
 		else if (ourCandidateChoice->priority < theirCandidateChoice->priority) {
+			SWIFT_LOG(debug) << "Start transfer using local candidate:" << theirCandidateChoice.get().cid << "." << std::endl;
 			startTransferViaLocalCandidate();
 		}
 		else {
 			if (hasPriorityOnCandidateTie()) {
+				SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << std::endl;
 				startTransferViaRemoteCandidate();
 			}
 			else {
+				SWIFT_LOG(debug) << "Start transfer using local candidate: " << theirCandidateChoice.get().cid << std::endl;
 				startTransferViaLocalCandidate();
 			}
 		}
@@ -156,7 +162,7 @@ void JingleFileTransfer::handleProxyActivateFinished(
 		proxyActivate->setSessionID(s5bSessionID);
 		proxyActivate->setActivated(theirCandidateChoice->cid);
 		session->sendTransportInfo(getContentID(), proxyActivate);
-		startTransferring(createRemoteCandidateSession());
+		startTransferring(createLocalCandidateSession());
 	}
 }
 
@@ -193,6 +199,10 @@ void JingleFileTransfer::handleTransportInfoReceived(
 				terminate(JinglePayload::Reason::GeneralError);
 			}
 		}
+		else if (s5bPayload->hasProxyError()) {
+			SWIFT_LOG(debug) << "Received proxy error. Trying to fall back to IBB." << std::endl;
+			fallback();
+		}
 		else {
 			SWIFT_LOG(debug) << "Ignoring unknown info" << std::endl;
 		}
@@ -205,7 +215,7 @@ void JingleFileTransfer::handleTransportInfoReceived(
 void JingleFileTransfer::setTransporter(FileTransferTransporter* transporter) {
 	this->transporter = transporter;
 	localTransportCandidatesGeneratedConnection = transporter->onLocalCandidatesGenerated.connect(
-		boost::bind(&JingleFileTransfer::handleLocalTransportCandidatesGenerated, this, _1, _2));
+		boost::bind(&JingleFileTransfer::handleLocalTransportCandidatesGenerated, this, _1, _2, _3));
 	remoteTransportCandidateSelectFinishedConnection = transporter->onRemoteCandidateSelectFinished.connect(
 		boost::bind(&JingleFileTransfer::handleRemoteTransportCandidateSelectFinished, this, _1, _2));
 	proxyActivatedConnection = transporter->onProxyActivated.connect(

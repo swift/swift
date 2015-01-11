@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,8 @@ namespace Swift {
 			virtual void handleTransportInfoReceived(const JingleContentID&, JingleTransportPayload::ref);
 			virtual void handleLocalTransportCandidatesGenerated(
 					const std::string& s5bSessionID, 
-					const std::vector<JingleS5BTransportPayload::Candidate>&) = 0;
+					const std::vector<JingleS5BTransportPayload::Candidate>&,
+					const std::string& dstAddr) = 0;
 			virtual void handleProxyActivateFinished(
 					const std::string& s5bSessionID, 
 					ErrorPayload::ref error);

@@ -11,19 +11,20 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
-#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
-#include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
-#include <Swiften/FileTransfer/IBBSendSession.h>
-#include <Swiften/FileTransfer/IBBReceiveSession.h>
-#include <Swiften/FileTransfer/TransportSession.h>
-#include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
+#include <Swiften/FileTransfer/IBBReceiveSession.h>
+#include <Swiften/FileTransfer/IBBSendSession.h>
+#include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
+#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
+#include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
 
@@ -72,6 +73,7 @@ namespace {
 	class FailingTransportSession : public TransportSession {
 		public:
 			virtual void start() SWIFTEN_OVERRIDE {
+				assert(false);
 				onFinished(FileTransferError(FileTransferError::PeerError));
 			}
 
@@ -145,6 +147,7 @@ DefaultFileTransferTransporter::DefaultFileTransferTransporter(
 			role(role),
 			s5bRegistry(s5bRegistry),
 			s5bServerManager(s5bServerManager),
+			s5bProxy(s5bProxy),
 			crypto(crypto),
 			router(router) {
 
@@ -166,6 +169,7 @@ DefaultFileTransferTransporter::DefaultFileTransferTransporter(
 }
 
 DefaultFileTransferTransporter::~DefaultFileTransferTransporter() {
+	stopGeneratingLocalCandidates();
 	delete remoteCandidateSelector;
 	delete localCandidateGenerator;
 }
@@ -189,7 +193,8 @@ void DefaultFileTransferTransporter::stopGeneratingLocalCandidates() {
 void DefaultFileTransferTransporter::handleLocalCandidatesGenerated(
 		const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
 	s5bRegistry->setHasBytestream(getSOCKS5DstAddr(), true);
-	onLocalCandidatesGenerated(s5bSessionID, candidates);
+	s5bProxy->connectToProxies(getSOCKS5DstAddr());
+	onLocalCandidatesGenerated(s5bSessionID, candidates, getSOCKS5DstAddr());
 }
 
 void DefaultFileTransferTransporter::handleRemoteCandidateSelectFinished(
@@ -201,8 +206,8 @@ void DefaultFileTransferTransporter::handleRemoteCandidateSelectFinished(
 
 
 void DefaultFileTransferTransporter::addRemoteCandidates(
-		const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
-	remoteCandidateSelector->setSOCKS5DstAddr(getSOCKS5DstAddr());
+		const std::vector<JingleS5BTransportPayload::Candidate>& candidates, const std::string& dstAddr) {
+	remoteCandidateSelector->setSOCKS5DstAddr(dstAddr.empty() ? getRemoteCandidateSOCKS5DstAddr() : dstAddr);
 	remoteCandidateSelector->addCandidates(candidates);
 }
 
@@ -214,18 +219,20 @@ void DefaultFileTransferTransporter::stopTryingRemoteCandidates() {
 	remoteCandidateSelector->stopSelectingCandidate();
 }
 
-void DefaultFileTransferTransporter::startActivatingProxy(const JID&) {
-	// TODO
-	assert(false);
-	/*
+void DefaultFileTransferTransporter::handleActivateProxySessionResult(const std::string& sessionID, ErrorPayload::ref error) {
+	onProxyActivated(sessionID, error);
+}
+
+void DefaultFileTransferTransporter::startActivatingProxy(const JID& proxyServiceJID) {
+	// activate proxy
+	SWIFT_LOG(debug) << "Start activating proxy " << proxyServiceJID.toString() << " with sid = " << s5bSessionID << "." << std::endl;
 	S5BProxyRequest::ref proxyRequest = boost::make_shared<S5BProxyRequest>();
 	proxyRequest->setSID(s5bSessionID);
-	proxyRequest->setActivate(getTarget());
+	proxyRequest->setActivate(role == Initiator ? responder : initiator);
 
-	boost::shared_ptr<GenericRequest<S5BProxyRequest> > request = boost::make_shared<GenericRequest<S5BProxyRequest> >(IQ::Set, proxy, proxyRequest, router);
-	request->onResponse.connect(boost::bind(&OutgoingJingleFileTransfer::handleActivateProxySessionResult, this, _1, _2));
+	boost::shared_ptr<GenericRequest<S5BProxyRequest> > request = boost::make_shared<GenericRequest<S5BProxyRequest> >(IQ::Set, proxyServiceJID, proxyRequest, router);
+	request->onResponse.connect(boost::bind(&DefaultFileTransferTransporter::handleActivateProxySessionResult, this, s5bSessionID, _2));
 	request->send();
-	*/
 }
 
 void DefaultFileTransferTransporter::stopActivatingProxy() {
@@ -255,14 +262,14 @@ boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBRec
 }
 
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
-		boost::shared_ptr<ReadBytestream> stream) {
+		boost::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
 	closeLocalSession();
 	return boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
 		remoteS5BClientSession, stream);
 }
 
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
-		boost::shared_ptr<WriteBytestream> stream) {
+		boost::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
 	closeLocalSession();
 	return boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
 		remoteS5BClientSession, stream);
@@ -280,34 +287,89 @@ boost::shared_ptr<SOCKS5BytestreamServerSession> DefaultFileTransferTransporter:
 	return !serverSessions.empty() ? serverSessions.front() : boost::shared_ptr<SOCKS5BytestreamServerSession>();
 }
 
-
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCandidateSession(
-		boost::shared_ptr<ReadBytestream> stream) {
+		boost::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
 	closeRemoteSession();
-	boost::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
-	if (serverSession) {
-		return boost::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
+	boost::shared_ptr<TransportSession> transportSession;
+	if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
+		SOCKS5BytestreamClientSession::ref proxySession = s5bProxy->getProxySessionAndCloseOthers(candidate.jid, getLocalCandidateSOCKS5DstAddr());
+		assert(proxySession);
+		transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
 	}
-	else {
-		return boost::make_shared<FailingTransportSession>();
+
+	if (!transportSession) {
+		boost::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
+		if (serverSession) {
+			transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
+		}
 	}
+
+	if (!transportSession) {
+		transportSession = boost::make_shared<FailingTransportSession>();
+	}
+	return transportSession;
 }
 
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCandidateSession(
-		boost::shared_ptr<WriteBytestream> stream) {
+		boost::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
 	closeRemoteSession();
-	boost::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
-	if (serverSession) {
-		return boost::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
+	boost::shared_ptr<TransportSession> transportSession;
+	if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
+		SOCKS5BytestreamClientSession::ref proxySession = s5bProxy->getProxySessionAndCloseOthers(candidate.jid, getLocalCandidateSOCKS5DstAddr());
+		assert(proxySession);
+		transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
 	}
-	else {
-		return boost::make_shared<FailingTransportSession>();
+
+	if (!transportSession) {
+		boost::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
+		if (serverSession) {
+			transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
+		}
 	}
+
+	if (!transportSession) {
+		transportSession = boost::make_shared<FailingTransportSession>();
+	}
+	return transportSession;
 }
 
 std::string DefaultFileTransferTransporter::getSOCKS5DstAddr() const {
-	return Hexify::hexify(crypto->getSHA1Hash(
-				createSafeByteArray(s5bSessionID + initiator.toString() + initiator.toString())));
+	std::string result;
+	if (role == Initiator) {
+		result = getInitiatorCandidateSOCKS5DstAddr();
+		SWIFT_LOG(debug) << "Initiator S5B DST.ADDR = " << s5bSessionID << " + " << initiator.toString() << " + " << responder.toString() << " : " << result << std::endl;
+	}
+	else {
+		result = getResponderCandidateSOCKS5DstAddr();
+		SWIFT_LOG(debug) << "Responder S5B DST.ADDR = " << s5bSessionID << " + " << responder.toString() << " + " << initiator.toString() << " : " << result << std::endl;
+	}
+	return result;
+}
+
+std::string DefaultFileTransferTransporter::getInitiatorCandidateSOCKS5DstAddr() const {
+	return Hexify::hexify(crypto->getSHA1Hash(createSafeByteArray(s5bSessionID + initiator.toString() + responder.toString())));
+}
+
+std::string DefaultFileTransferTransporter::getResponderCandidateSOCKS5DstAddr() const {
+	return Hexify::hexify(crypto->getSHA1Hash(createSafeByteArray(s5bSessionID + responder.toString() + initiator.toString())));
+}
+
+std::string DefaultFileTransferTransporter::getRemoteCandidateSOCKS5DstAddr() const {
+	if (role == Initiator) {
+		return getResponderCandidateSOCKS5DstAddr();
+	}
+	else {
+		return getInitiatorCandidateSOCKS5DstAddr();
+	}
+}
+
+std::string DefaultFileTransferTransporter::getLocalCandidateSOCKS5DstAddr() const {
+	if (role == Responder) {
+		return getResponderCandidateSOCKS5DstAddr();
+	}
+	else {
+		return getInitiatorCandidateSOCKS5DstAddr();
+	}
 }
 
 void DefaultFileTransferTransporter::closeLocalSession() {

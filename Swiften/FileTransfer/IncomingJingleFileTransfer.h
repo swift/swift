@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -76,7 +76,8 @@ namespace Swift {
 
 			virtual void handleLocalTransportCandidatesGenerated(
 					const std::string& s5bSessionID, 
-					const std::vector<JingleS5BTransportPayload::Candidate>&) SWIFTEN_OVERRIDE;
+					const std::vector<JingleS5BTransportPayload::Candidate>&,
+					const std::string& dstAddr) SWIFTEN_OVERRIDE;
 
 			void handleWriteStreamDataReceived(const std::vector<unsigned char>& data);
 			void stopActiveTransport();

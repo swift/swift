@@ -80,7 +80,7 @@ void IncomingJingleFileTransfer::accept(
 		SWIFT_LOG(debug) << "Got S5B transport as initial payload." << std::endl;
 		setTransporter(transporterFactory->createResponderTransporter(
 				getInitiator(), getResponder(), s5bTransport->getSessionID(), options));
-		transporter->addRemoteCandidates(s5bTransport->getCandidates());
+		transporter->addRemoteCandidates(s5bTransport->getCandidates(), s5bTransport->getDstAddr());
 		setState(GeneratingInitialLocalCandidates);
 		transporter->startGeneratingLocalCandidates();
 	}
@@ -109,7 +109,8 @@ void IncomingJingleFileTransfer::cancel() {
 
 void IncomingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 		const std::string& s5bSessionID, 
-		const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
+		const std::vector<JingleS5BTransportPayload::Candidate>& candidates,
+		const std::string& dstAddr) {
 	SWIFT_LOG(debug) << std::endl;
 	if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
@@ -118,6 +119,7 @@ void IncomingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
 	transport->setSessionID(s5bSessionID);
 	transport->setMode(JingleS5BTransportPayload::TCPMode);
+	transport->setDstAddr(dstAddr);
 	foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
 		transport->addCandidate(candidate);	
 	}
@@ -219,7 +221,8 @@ void IncomingJingleFileTransfer::handleTransportReplaceReceived(
 		return; 
 	}
 
-	if (JingleIBBTransportPayload::ref ibbTransport = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport)) {
+	JingleIBBTransportPayload::ref ibbTransport;
+	if (options.isInBandAllowed() && (ibbTransport = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
 		SWIFT_LOG(debug) << "transport replaced with IBB" << std::endl;
 
 		startTransferring(transporter->createIBBReceiveSession(
@@ -338,12 +341,7 @@ bool IncomingJingleFileTransfer::hasPriorityOnCandidateTie() const {
 }
 
 void IncomingJingleFileTransfer::fallback() {
-	if (options.isInBandAllowed()) {
-		setState(WaitingForFallbackOrTerminate);
-	}
-	else {
-		terminate(JinglePayload::Reason::ConnectivityError);
-	}
+	setState(WaitingForFallbackOrTerminate);
 }
 
 void IncomingJingleFileTransfer::startTransferViaRemoteCandidate() {
@@ -369,7 +367,6 @@ void IncomingJingleFileTransfer::startTransferViaLocalCandidate() {
 	}
 }
 
-
 void IncomingJingleFileTransfer::startTransferring(boost::shared_ptr<TransportSession> transportSession) {
 	SWIFT_LOG(debug) << std::endl;
 
@@ -393,11 +390,11 @@ bool IncomingJingleFileTransfer::isTryingCandidates() const {
 }
 
 boost::shared_ptr<TransportSession> IncomingJingleFileTransfer::createLocalCandidateSession() {
-	return transporter->createLocalCandidateSession(stream);
+	return transporter->createLocalCandidateSession(stream, theirCandidateChoice.get());
 }
 
 boost::shared_ptr<TransportSession> IncomingJingleFileTransfer::createRemoteCandidateSession() {
-	return transporter->createRemoteCandidateSession(stream);
+	return transporter->createRemoteCandidateSession(stream, ourCandidateChoice.get());
 }
 
 void IncomingJingleFileTransfer::terminate(JinglePayload::Reason::Type reason) {

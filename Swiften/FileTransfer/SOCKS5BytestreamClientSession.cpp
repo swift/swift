@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,7 +36,7 @@ SOCKS5BytestreamClientSession::SOCKS5BytestreamClientSession(
 			destination(destination), 
 			state(Initial), 
 			chunkSize(131072) {
-	weFailedTimeout = timerFactory->createTimer(2000);
+	weFailedTimeout = timerFactory->createTimer(3000);
 	weFailedTimeout->onTick.connect(
 			boost::bind(&SOCKS5BytestreamClientSession::handleWeFailedTimeout, this));
 }
@@ -55,6 +55,9 @@ void SOCKS5BytestreamClientSession::start() {
 
 void SOCKS5BytestreamClientSession::stop() {
 	SWIFT_LOG(debug) << std::endl;
+	if (state < Ready) {
+		weFailedTimeout->stop();
+	}
 	if (state == Finished) {
 		return;
 	}
@@ -201,7 +204,9 @@ void SOCKS5BytestreamClientSession::sendData() {
 
 void SOCKS5BytestreamClientSession::finish(bool error) {
 	SWIFT_LOG(debug) << std::endl;
-	weFailedTimeout->stop();
+	if (state < Ready) {
+		weFailedTimeout->stop();
+	}
 	closeConnection();
 	readBytestream.reset();
 	if (state == Initial || state == Hello || state == Authenticating) {
@@ -228,6 +233,7 @@ void SOCKS5BytestreamClientSession::handleConnectFinished(bool error) {
 				boost::bind(&SOCKS5BytestreamClientSession::handleDisconnected, this, _1));
 		dataReadConnection = connection->onDataRead.connect(
 				boost::bind(&SOCKS5BytestreamClientSession::handleDataRead, this, _1));
+		weFailedTimeout->stop();
 		weFailedTimeout->start();
 		process();
 	}
