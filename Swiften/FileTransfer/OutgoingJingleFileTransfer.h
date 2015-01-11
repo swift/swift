@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,6 +22,7 @@
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/FileTransfer/JingleFileTransfer.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
+#include <Swiften/Network/Timer.h>
 
 namespace Swift {
 	class ReadBytestream;
@@ -31,6 +32,7 @@ namespace Swift {
 	class FileTransferTransporter;
 	class FileTransferTransporterFactory;
 	class TransportSession;
+	class TimerFactory;
 
 	class SWIFTEN_API OutgoingJingleFileTransfer : public OutgoingFileTransfer, public JingleFileTransfer {
 		public:
@@ -39,6 +41,7 @@ namespace Swift {
 				boost::shared_ptr<JingleSession>,
 				boost::shared_ptr<ReadBytestream>,
 				FileTransferTransporterFactory*,
+				TimerFactory*,
 				IDGenerator*,
 				const JingleFileTransferFileInfo&,
 				const FileTransferOptions&,
@@ -59,6 +62,7 @@ namespace Swift {
 				WaitingForCandidateAcknowledge,
 				FallbackRequested,
 				Transferring,
+				WaitForTermination,
 				Finished
 			};
 
@@ -90,6 +94,8 @@ namespace Swift {
 			virtual boost::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
 			virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
 
+			void handleWaitForRemoteTerminationTimeout();
+
 			void stopAll();
 			void setState(State state);
 			void setFinishedState(FileTransfer::State::Type, const boost::optional<FileTransferError>& error);
@@ -105,6 +111,8 @@ namespace Swift {
 			IncrementalBytestreamHashCalculator* hashCalculator;
 			State state;
 			bool candidateAcknowledged;
+
+			Timer::ref waitForRemoteTermination;
 
 			boost::bsignals::connection processedBytesConnection;
 			boost::bsignals::connection transferFinishedConnection;

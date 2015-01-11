@@ -76,6 +76,7 @@ FileTransferManagerImpl::FileTransferManagerImpl(
 			jingleSessionManager, 
 			iqRouter, 
 			transporterFactory,
+			timerFactory,
 			crypto);
 	incomingFTManager = new IncomingFileTransferManager(
 			jingleSessionManager, 

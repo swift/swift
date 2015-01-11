@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,6 +25,7 @@ namespace Swift {
 	class JingleFileTransferFileInfo;
 	class CryptoProvider;
 	class FileTransferOptions;
+	class TimerFactory;
 
 	class OutgoingFileTransferManager {
 		public:
@@ -32,6 +33,7 @@ namespace Swift {
 					JingleSessionManager* jingleSessionManager, 
 					IQRouter* router, 
 					FileTransferTransporterFactory* transporterFactory,
+					TimerFactory* timerFactory,
 					CryptoProvider* crypto);
 			~OutgoingFileTransferManager();
 			
@@ -46,6 +48,7 @@ namespace Swift {
 			JingleSessionManager* jingleSessionManager;
 			IQRouter* iqRouter;
 			FileTransferTransporterFactory* transporterFactory;
+			TimerFactory* timerFactory;
 			IDGenerator* idGenerator;
 			CryptoProvider* crypto;
 	};

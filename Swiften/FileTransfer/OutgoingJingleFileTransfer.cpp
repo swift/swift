@@ -36,6 +36,7 @@
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Network/TimerFactory.h>
 
 #include <Swiften/Base/Log.h>
 
@@ -48,6 +49,7 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(
 		JingleSession::ref session,
 		boost::shared_ptr<ReadBytestream> stream,
 		FileTransferTransporterFactory* transporterFactory,
+		TimerFactory* timerFactory,
 		IDGenerator* idGenerator,
 		const JingleFileTransferFileInfo& fileInfo,
 		const FileTransferOptions& options,
@@ -67,6 +69,9 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(
 	hashCalculator = new IncrementalBytestreamHashCalculator(true, true, crypto);
 	stream->onRead.connect(
 			boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
+
+	waitForRemoteTermination = timerFactory->createTimer(5000);
+	waitForRemoteTermination->onTick.connect(boost::bind(&OutgoingJingleFileTransfer::handleWaitForRemoteTerminationTimeout, this));
 }
 
 OutgoingJingleFileTransfer::~OutgoingJingleFileTransfer() {
@@ -199,7 +204,10 @@ void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTran
 	} 
 	else {
 		sendSessionInfoHash();
-		terminate(JinglePayload::Reason::Success);
+
+		// wait for other party to terminate session after they have verified the hash
+		setState(WaitForTermination);
+		waitForRemoteTermination->start();
 	}
 }
 
@@ -241,6 +249,7 @@ FileTransfer::State::Type OutgoingJingleFileTransfer::getExternalState(State sta
 		case WaitingForCandidateAcknowledge: return FileTransfer::State::Negotiating;
 		case FallbackRequested: return FileTransfer::State::Negotiating;
 		case Transferring: return FileTransfer::State::Transferring;
+		case WaitForTermination: return FileTransfer::State::Transferring;
 		case Finished: return FileTransfer::State::Finished;
 	}
 	assert(false);
@@ -264,6 +273,8 @@ void OutgoingJingleFileTransfer::stopAll() {
 			transferFinishedConnection.disconnect();
 			transportSession->stop();
 			transportSession.reset();
+			break;
+		case WaitForTermination:
 			break;
 		case Finished: SWIFT_LOG(warning) << "Already finished" << std::endl; break;
 	}
@@ -341,5 +352,12 @@ boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createLocalCandi
 
 boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createRemoteCandidateSession() {
 	return transporter->createRemoteCandidateSession(stream);
+}
+
+void OutgoingJingleFileTransfer::handleWaitForRemoteTerminationTimeout() {
+	assert(state == WaitForTermination);
+	SWIFT_LOG(warning) << "Other party did not terminate session. Terminate it now." << std::endl;
+	waitForRemoteTermination->stop();
+	terminate(JinglePayload::Reason::MediaError);
 }
 

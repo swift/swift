@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,12 +25,14 @@ namespace Swift {
 
 OutgoingFileTransferManager::OutgoingFileTransferManager(
 		JingleSessionManager* jingleSessionManager, 
-		IQRouter* router, 
+		IQRouter* router,
 		FileTransferTransporterFactory* transporterFactory,
+		TimerFactory* timerFactory,
 		CryptoProvider* crypto) : 
 			jingleSessionManager(jingleSessionManager), 
 			iqRouter(router), 
 			transporterFactory(transporterFactory),
+			timerFactory(timerFactory),
 			crypto(crypto) {
 	idGenerator = new IDGenerator();
 }
@@ -53,6 +55,7 @@ boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgo
 				jingleSession, 
 				readBytestream, 
 				transporterFactory,
+				timerFactory,
 				idGenerator, 
 				fileInfo, 
 				config,
