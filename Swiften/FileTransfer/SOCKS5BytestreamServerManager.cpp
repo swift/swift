@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,6 +25,7 @@
 #include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
 
 using namespace Swift;
 
@@ -49,29 +50,16 @@ SOCKS5BytestreamServerManager::~SOCKS5BytestreamServerManager() {
 	SWIFT_LOG_ASSERT(!getPublicIPRequest, warning) << std::endl;
 	SWIFT_LOG_ASSERT(!forwardPortRequest, warning) << std::endl;
 	SWIFT_LOG_ASSERT(state == Start, warning) << std::endl;
+	if (portMapping && !unforwardPortRequest) {
+		SWIFT_LOG(warning) << "Port forwarding still alive. Trying to remove it now." << std::endl;
+		unforwardPortRequest = natTraverser->createRemovePortForwardingRequest(portMapping.get().getLocalPort(), portMapping.get().getPublicPort());
+		unforwardPortRequest->start();
+	}
 }
 
 
 boost::shared_ptr<SOCKS5BytestreamServerInitializeRequest> SOCKS5BytestreamServerManager::createInitializeRequest() {
 	return boost::make_shared<SOCKS5BytestreamServerInitializeRequest>(this);
-}
-
-void SOCKS5BytestreamServerManager::stop() {
-	if (getPublicIPRequest) {
-		getPublicIPRequest->stop();
-		getPublicIPRequest.reset();
-	}
-	if (forwardPortRequest) {
-		forwardPortRequest->stop();
-		forwardPortRequest.reset();
-	}
-	if (connectionServer) {
-		connectionServer->stop();
-		connectionServer.reset();
-	}
-	// TODO: Remove port forwards
-	
-	state = Start;
 }
 
 std::vector<HostAddressPort> SOCKS5BytestreamServerManager::getHostAddressPorts() const {
@@ -154,6 +142,30 @@ void SOCKS5BytestreamServerManager::initialize() {
 	}
 }
 
+void SOCKS5BytestreamServerManager::stop() {
+	if (getPublicIPRequest) {
+		getPublicIPRequest->stop();
+		getPublicIPRequest.reset();
+	}
+	if (forwardPortRequest) {
+		forwardPortRequest->stop();
+		forwardPortRequest.reset();
+	}
+	if (connectionServer) {
+		connectionServer->stop();
+		connectionServer.reset();
+	}
+
+	// remove port forwards
+	if (portMapping) {
+		unforwardPortRequest = natTraverser->createRemovePortForwardingRequest(portMapping.get().getLocalPort(), portMapping.get().getPublicPort());
+		unforwardPortRequest->onResult.connect(boost::bind(&SOCKS5BytestreamServerManager::handleUnforwardPortResult, this, _1));
+		unforwardPortRequest->start();
+	}
+
+	state = Start;
+}
+
 void SOCKS5BytestreamServerManager::handleGetPublicIPResult(boost::optional<HostAddress> address) {
 	if (address) {
 		SWIFT_LOG(debug) << "Public IP discovered as " << address.get().toString() << "." << std::endl;
@@ -184,6 +196,16 @@ void SOCKS5BytestreamServerManager::handleForwardPortResult(boost::optional<NATP
 	forwardPortRequest.reset();
 
 	checkInitializeFinished();
+}
+
+void SOCKS5BytestreamServerManager::handleUnforwardPortResult(boost::optional<bool> result) {
+	if (result.is_initialized() && result.get()) {
+		portMapping.reset();
+	}
+	else {
+		SWIFT_LOG(warning) << "Failed to remove port forwarding." << std::endl;
+	}
+	unforwardPortRequest.reset();
 }
 
 void SOCKS5BytestreamServerManager::checkInitializeFinished() {

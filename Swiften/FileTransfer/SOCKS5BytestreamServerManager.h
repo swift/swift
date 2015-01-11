@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,6 +18,7 @@ namespace Swift {
 	class NATTraverser;
 	class NATTraversalGetPublicIPRequest;
 	class NATTraversalForwardPortRequest;
+	class NATTraversalRemovePortForwardingRequest;
 	class SOCKS5BytestreamRegistry;
 	class ConnectionServerFactory;
 	class ConnectionServer;
@@ -50,6 +51,7 @@ namespace Swift {
 
 			void handleGetPublicIPResult(boost::optional<HostAddress> address);
 			void handleForwardPortResult(boost::optional<NATPortMapping> mapping);
+			void handleUnforwardPortResult(boost::optional<bool> result);
 
 			boost::signal<void (bool /* success */)> onInitialized;
 
@@ -66,6 +68,7 @@ namespace Swift {
 			int connectionServerPort;
 			boost::shared_ptr<NATTraversalGetPublicIPRequest> getPublicIPRequest;
 			boost::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest;
+			boost::shared_ptr<NATTraversalRemovePortForwardingRequest> unforwardPortRequest;
 			boost::optional<HostAddress> publicAddress;
 			boost::optional<NATPortMapping> portMapping;
 	};
