@@ -82,7 +82,9 @@ FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 
 MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
 	lastMainWindow  = new QtMainWindow(settings, eventStream, loginWindow->getMenus(), statusCache, emoticonsExist_, enableAdHocCommandOnJID_);
-	tabs->setViewMenu(lastMainWindow->getMenus()[0]);
+	if (tabs) {
+		tabs->setViewMenu(lastMainWindow->getMenus()[0]);
+	}
 	return lastMainWindow;
 }
 
