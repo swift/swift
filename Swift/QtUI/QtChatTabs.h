@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <QWidget>
 #include <QRect>
+#include <QShortcut>
 
 class QTabWidget;
 class QMenu;
@@ -54,6 +55,8 @@ namespace Swift {
 
 			void handleOpenLayoutChangeDialog();
 
+			void handleCloseTabShortcut();
+
 		private:
 			void storeTabPositions();
 			void checkForFirstShow();
@@ -64,6 +67,8 @@ namespace Swift {
 			bool trellisMode_;
 			QtDynamicGridLayout* dynamicGrid_;
 			QtGridSelectionDialog* gridSelectionDialog_;
+
+			QList<QShortcut*> shortcuts_;
 	};
 }
 

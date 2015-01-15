@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -70,9 +70,19 @@ QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bo
 	}
 
 	gridSelectionDialog_ = new QtGridSelectionDialog();
+
+	// setup shortcuts
+	shortcuts_ << new QShortcut(QKeySequence(tr("CTRL+W", "Close chat tab.")), window(), SLOT(handleCloseTabShortcut()));
+	shortcuts_ << new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageUp), window(), SLOT(handleRequestedPreviousTab()));
+	shortcuts_ << new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageDown), window(), SLOT(handleRequestedNextTab()));
+	shortcuts_ << new QShortcut(QKeySequence(Qt::ALT + Qt::Key_A), window(), SLOT(handleRequestedActiveTab()));
 }
 
 QtChatTabs::~QtChatTabs() {
+	foreach (QShortcut* shortcut, shortcuts_) {
+		delete shortcut;
+	}
+
 	if (trellisMode_) {
 		storeTabPositions();
 	}
@@ -229,6 +239,13 @@ void QtChatTabs::handleRequestedActiveTab() {
 	}
 }
 
+
+void QtChatTabs::handleCloseTabShortcut() {
+	QWidget* currentWidget = dynamicGrid_->currentWidget();
+	if (currentWidget) {
+		currentWidget->close();
+	}
+}
 
 void QtChatTabs::handleTabCloseRequested(int index) {
 	if (trellisMode_) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,7 @@
 
 #include <string>
 
-#include <QList>
 #include <QWidget>
-
-class QShortcut;
 
 namespace Swift {
 	class QtTabbable : public QWidget {
@@ -38,8 +35,5 @@ namespace Swift {
 			void requestNextTab();
 			void requestActiveTab();
 			void requestFlash();
-
-		private:
-			QList<QShortcut*> shortcuts;
 	};
 }
