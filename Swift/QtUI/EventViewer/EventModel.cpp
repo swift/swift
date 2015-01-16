@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,11 @@
 #include <Swiften/Base/Log.h>
 
 namespace Swift {
+
+namespace {
+	const int inactiveEventsLimit = 50;
+}
+
 EventModel::EventModel() {
 	
 }
@@ -75,8 +80,8 @@ void EventModel::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
 		activeEvents_.push_front(new QtEvent(event, active));
 	} else {
 		inactiveEvents_.push_front(new QtEvent(event, active));
-		if (inactiveEvents_.size() > 50) {
-			removeEvent(inactiveEvents_[20]->getEvent());
+		if (inactiveEvents_.size() > inactiveEventsLimit) {
+			removeEvent(inactiveEvents_[inactiveEventsLimit]->getEvent());
 		}
 	}
 	endResetModel();
@@ -87,6 +92,7 @@ void EventModel::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	for (int i = inactiveEvents_.size() - 1; i >= 0; i--) {
 		if (event == inactiveEvents_[i]->getEvent()) {
 			inactiveEvents_.removeAt(i);
+			endResetModel();
 			return;
 		}
 	}
@@ -94,6 +100,7 @@ void EventModel::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	for (int i = 0; i < activeEvents_.size(); i++) {
 		if (event == activeEvents_[i]->getEvent()) {
 			activeEvents_.removeAt(i);
+			endResetModel();
 			return;
 		}
 	}

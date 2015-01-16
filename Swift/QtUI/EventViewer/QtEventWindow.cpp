@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -51,7 +51,6 @@ QtEventWindow::QtEventWindow(UIEventStream* eventStream) : EventWindow(false) {
 	connect(readButton_, SIGNAL(clicked()), this, SLOT(handleReadClicked()));
 	connect(view_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleItemClicked(const QModelIndex&)));
 	connect(view_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleItemActivated(const QModelIndex&)));
-	
 }
 
 QtEventWindow::~QtEventWindow() {
@@ -106,12 +105,14 @@ void QtEventWindow::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) 
 	view_->clearSelection();
 	model_->addEvent(event, active);
 	emit onNewEventCountUpdated(model_->getNewEventCount());
+	readButton_->setEnabled(model_->rowCount() > 0);
 }
 
 void QtEventWindow::removeEvent(boost::shared_ptr<StanzaEvent> event) {
 	view_->clearSelection();
 	model_->removeEvent(event);
 	emit onNewEventCountUpdated(model_->getNewEventCount());
+	readButton_->setEnabled(model_->rowCount() > 0);
 }
 
 }
