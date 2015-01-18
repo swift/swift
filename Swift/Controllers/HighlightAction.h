@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -65,6 +65,9 @@ namespace Swift {
 			bool playSound_;
 			std::string soundFile_;
 	};
+
+	bool operator ==(HighlightAction const& a, HighlightAction const& b);
+	bool operator !=(HighlightAction const& a, HighlightAction const& b);
 
 	template<class Archive>
 	void HighlightAction::serialize(Archive& ar, const unsigned int /*version*/)

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -51,6 +51,7 @@ namespace Swift {
 			void disableDialog();
 			void handleContactSuggestionRequested(const QString& text);
 			void selectSoundFile();
+			void onResetToDefaultRulesClicked();
 
 		private:
 			void handleOnUserSelected(const Contact::ref& contact);
@@ -59,6 +60,7 @@ namespace Swift {
 			int getSelectedRow() const;
 			HighlightRule ruleFromDialog();
 			void ruleToDialog(const HighlightRule& rule);
+			void updateResetToDefaultRulesVisibility();
 
 			Ui::QtHighlightEditor ui_;
 			QtSettingsProvider* settings_;

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -38,6 +38,7 @@ QtHighlightEditor::QtHighlightEditor(QtSettingsProvider* settings, QWidget* pare
 	connect(ui_.buttonBox->button(QDialogButtonBox::Apply), SIGNAL(clicked()), SLOT(onApplyButtonClick()));
 	connect(ui_.buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(onCancelButtonClick()));
 	connect(ui_.buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(onOkButtonClick()));
+	connect(ui_.buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(onResetToDefaultRulesClicked()));
 
 	connect(ui_.noColorRadio, SIGNAL(clicked()), SLOT(colorOtherSelect()));
 	connect(ui_.customColorRadio, SIGNAL(clicked()), SLOT(colorCustomSelect()));
@@ -121,6 +122,8 @@ void QtHighlightEditor::show()
 	if (ui_.listWidget->count()) {
 		selectRow(0);
 	}
+
+	updateResetToDefaultRulesVisibility();
 
 	/* prepare default states */
 	widgetClick();
@@ -246,6 +249,8 @@ void QtHighlightEditor::onCurrentRowChanged(int currentRow)
 	}
 
 	previousRow_ = currentRow;
+
+	updateResetToDefaultRulesVisibility();
 }
 
 void QtHighlightEditor::onApplyButtonClick()
@@ -348,6 +353,12 @@ void QtHighlightEditor::selectSoundFile()
 {
 	QString path = QFileDialog::getOpenFileName(this, tr("Select sound file..."), QString(), "Sounds (*.wav)");
 	ui_.soundFile->setText(path);
+}
+
+void QtHighlightEditor::onResetToDefaultRulesClicked() {
+	highlightManager_->resetToDefaultRulesList();
+	populateList();
+	updateResetToDefaultRulesVisibility();
 }
 
 void QtHighlightEditor::handleOnUserSelected(const Contact::ref& contact) {
@@ -537,6 +548,10 @@ void QtHighlightEditor::ruleToDialog(const HighlightRule& rule)
 
 	/* set radio button child option states */
 	setChildWidgetStates();
+}
+
+void QtHighlightEditor::updateResetToDefaultRulesVisibility() {
+	ui_.buttonBox->button(QDialogButtonBox::RestoreDefaults)->setVisible(!highlightManager_->isDefaultRulesList());
 }
 
 }

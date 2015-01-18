@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -75,6 +75,7 @@ std::vector<HighlightRule> HighlightManager::getDefaultRules()
 	HighlightRule r;
 	r.setMatchChat(true);
 	r.getAction().setPlaySound(true);
+	r.setMatchWholeWords(true);
 	rules.push_back(r);
 	return rules;
 }
@@ -134,6 +135,14 @@ void HighlightManager::loadSettings()
 Highlighter* HighlightManager::createHighlighter()
 {
 	return new Highlighter(this);
+}
+
+bool HighlightManager::isDefaultRulesList() const {
+	return getDefaultRules() == rules_->list_;
+}
+
+void HighlightManager::resetToDefaultRulesList() {
+	rules_->list_ = getDefaultRules();
 }
 
 }

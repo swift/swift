@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -147,6 +147,42 @@ void HighlightRule::setMatchMUC(bool matchMUC)
 bool HighlightRule::isEmpty() const
 {
 	return senders_.empty() && keywords_.empty() && !nickIsKeyword_ && !matchChat_ && !matchMUC_ && action_.isEmpty();
+}
+
+bool operator ==(HighlightRule const& a, HighlightRule const& b) {
+	if (a.getSenders() != b.getSenders()) {
+		return false;
+	}
+
+	if (a.getKeywords() != b.getKeywords()) {
+		return false;
+	}
+
+	if (a.getNickIsKeyword() != b.getNickIsKeyword()) {
+		return false;
+	}
+
+	if (a.getMatchChat() != b.getMatchChat()) {
+		return false;
+	}
+
+	if (a.getMatchMUC() != b.getMatchMUC()) {
+		return false;
+	}
+
+	if (a.getMatchCase() != b.getMatchCase()) {
+		return false;
+	}
+
+	if (a.getMatchWholeWords() != b.getMatchWholeWords()) {
+		return false;
+	}
+
+	if (a.getAction() != b.getAction()) {
+		return false;
+	}
+
+	return true;
 }
 
 }

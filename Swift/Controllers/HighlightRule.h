@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -83,6 +83,8 @@ namespace Swift {
 
 			HighlightAction action_;
 	};
+
+	bool operator ==(HighlightRule const& a, HighlightRule const& b);
 
 	template<class Archive>
 	void HighlightRule::serialize(Archive& ar, const unsigned int /*version*/)

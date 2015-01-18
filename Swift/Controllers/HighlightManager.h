@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,6 +47,9 @@ namespace Swift {
 			Highlighter* createHighlighter();
 
 			boost::shared_ptr<const HighlightManager::HighlightRulesList> getRules() const { return rules_; }
+
+			bool isDefaultRulesList() const;
+			void resetToDefaultRulesList();
 
 			HighlightRule getRule(int index) const;
 			void setRule(int index, const HighlightRule& rule);

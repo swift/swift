@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/Controllers/HighlightAction.h>
 
 namespace Swift {
@@ -23,6 +29,34 @@ void HighlightAction::setPlaySound(bool playSound)
 	if (!playSound_) {
 		soundFile_.clear();
 	}
+}
+
+bool operator ==(HighlightAction const& a, HighlightAction const& b) {
+	if (a.highlightAllText() != b.highlightAllText()) {
+		return false;
+	}
+
+	if (a.getTextColor() != b.getTextColor()) {
+		return false;
+	}
+
+	if (a.getTextBackground() != b.getTextBackground()) {
+		return false;
+	}
+
+	if (a.playSound() != b.playSound()) {
+		return false;
+	}
+
+	if (a.getSoundFile() != b.getSoundFile()) {
+		return false;
+	}
+
+	return true;
+}
+
+bool operator !=(HighlightAction const& a, HighlightAction const& b) {
+	return !(a == b);
 }
 
 }
