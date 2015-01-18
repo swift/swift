@@ -72,11 +72,21 @@ std::string HighlightManager::rulesToString() const
 std::vector<HighlightRule> HighlightManager::getDefaultRules()
 {
 	std::vector<HighlightRule> rules;
-	HighlightRule r;
-	r.setMatchChat(true);
-	r.getAction().setPlaySound(true);
-	r.setMatchWholeWords(true);
-	rules.push_back(r);
+
+	HighlightRule chatNotificationRule;
+	chatNotificationRule.setMatchChat(true);
+	chatNotificationRule.getAction().setPlaySound(true);
+	chatNotificationRule.setMatchWholeWords(true);
+	rules.push_back(chatNotificationRule);
+
+	HighlightRule selfMentionMUCRule;
+	selfMentionMUCRule.setMatchMUC(true);
+	selfMentionMUCRule.getAction().setPlaySound(true);
+	selfMentionMUCRule.setNickIsKeyword(true);
+	selfMentionMUCRule.setMatchCase(true);
+	selfMentionMUCRule.setMatchWholeWords(true);
+	rules.push_back(selfMentionMUCRule);
+
 	return rules;
 }
 
