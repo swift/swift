@@ -379,6 +379,14 @@ void QtDynamicGridLayout::handleTabCloseRequested(int index) {
 	}
 }
 
+void QtDynamicGridLayout::handleTabCurrentChanged(int index) {
+	if (index >= 0) {
+		QTabWidget *sendingTabWidget = dynamic_cast<QTabWidget*>(sender());
+		assert(sendingTabWidget);
+		sendingTabWidget->widget(index)->setFocus();
+	}
+}
+
 void QtDynamicGridLayout::updateTabPositions() {
 	for (int y = 0; y < gridLayout_->rowCount(); y++) {
 		for (int x = 0; x < gridLayout_->columnCount(); x++) {
@@ -422,6 +430,7 @@ QtTabWidget* QtDynamicGridLayout::createDNDTabWidget(QWidget* parent) {
 	tab->setTabsClosable(true);
 	tab->setMovable(true);
 	connect(tab, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
+	connect(tab, SIGNAL(currentChanged(int)), this, SLOT(handleTabCurrentChanged(int)));
 #else
 #warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.
 #endif

@@ -446,8 +446,8 @@ void QtChatWindow::convertToMUC(MUCType mucType) {
 	subject_->setVisible(!impromptu_);
 }
 
-void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
-	if (isWidgetSelected()) {
+void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* now) {
+	if (now && isWidgetSelected()) {
 		lastLineTracker_.setHasFocus(true);
 		input_->setFocus();
 		onAllMessagesRead();

@@ -61,6 +61,7 @@ namespace Swift {
 
 	private slots:
 		void handleTabCloseRequested(int index);
+		void handleTabCurrentChanged(int index);
 
 	private:
 		void moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex);
