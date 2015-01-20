@@ -67,10 +67,12 @@ namespace Swift {
 			std::string rulesToString() const;
 			static std::vector<HighlightRule> getDefaultRules();
 
+		private:
 			SettingsProvider* settings_;
 			bool storingSettings_;
 
 			boost::shared_ptr<HighlightManager::HighlightRulesList> rules_;
+			boost::bsignals::scoped_connection handleSettingChangedConnection_;
 	};
 
 	typedef boost::shared_ptr<const HighlightManager::HighlightRulesList> HighlightRulesListPtr;

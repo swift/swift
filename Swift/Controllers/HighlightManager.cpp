@@ -51,7 +51,7 @@ HighlightManager::HighlightManager(SettingsProvider* settings)
 {
 	rules_ = boost::make_shared<HighlightRulesList>();
 	loadSettings();
-	settings_->onSettingChanged.connect(boost::bind(&HighlightManager::handleSettingChanged, this, _1));
+	handleSettingChangedConnection_ = settings_->onSettingChanged.connect(boost::bind(&HighlightManager::handleSettingChanged, this, _1));
 }
 
 void HighlightManager::handleSettingChanged(const std::string& settingPath)
