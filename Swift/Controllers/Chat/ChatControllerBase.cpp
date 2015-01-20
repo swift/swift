@@ -275,7 +275,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 
 		// Highlight
 		if (!isIncomingMessageFromMe(message)) {
-			 highlight = highlighter_->findAction(body, senderDisplayNameFromMessage(from));
+			highlight = highlighter_->findAction(body, senderHighlightNameFromMessage(from));
 		}
 
 		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();

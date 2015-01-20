@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -428,6 +428,15 @@ void ChatController::handleWhiteboardSessionCancel() {
 
 void ChatController::handleWhiteboardWindowShow() {
 	eventStream_->send(boost::make_shared<ShowWhiteboardUIEvent>(toJID_));
+}
+
+std::string ChatController::senderHighlightNameFromMessage(const JID& from) {
+	if (isInMUC_) {
+		return nickResolver_->jidToNick(from);
+	}
+	else {
+		return from.toBare().toString();
+	}
 }
 
 std::string ChatController::senderDisplayNameFromMessage(const JID& from) {

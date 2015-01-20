@@ -750,6 +750,10 @@ bool MUCController::isIncomingMessageFromMe(boost::shared_ptr<Message> message) 
 	return nick_ == from.getResource();
 }
 
+std::string MUCController::senderHighlightNameFromMessage(const JID& from) {
+	return from.getResource();
+}
+
 std::string MUCController::senderDisplayNameFromMessage(const JID& from) {
 	return from.getResource();
 }

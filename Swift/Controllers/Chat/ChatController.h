@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -52,6 +52,7 @@ namespace Swift {
 			void preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent);
 			void postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction&);
 			void preSendMessageRequest(boost::shared_ptr<Message>);
+			std::string senderHighlightNameFromMessage(const JID& from);
 			std::string senderDisplayNameFromMessage(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const;
 			void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);

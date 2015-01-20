@@ -79,6 +79,7 @@ namespace Swift {
 			 */
 			virtual void postSendMessage(const std::string&, boost::shared_ptr<Stanza>) {}
 			virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
+			virtual std::string senderHighlightNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
 			virtual void addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight);
