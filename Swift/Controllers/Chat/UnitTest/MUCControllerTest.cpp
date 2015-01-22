@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,37 +7,40 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/algorithm/string.hpp>
+
 #include <hippomocks.h>
 
-#include "Swiften/Base/foreach.h"
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swiften/Presence/DirectedPresenceSender.h"
-#include "Swiften/Presence/StanzaChannelPresenceSender.h"
-#include "Swiften/Avatars/NullAvatarManager.h"
-#include "Swift/Controllers/Chat/MUCController.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
-#include "Swift/Controllers/UIInterfaces/ChatWindowFactory.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swiften/Roster/XMPPRoster.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/Controllers/UnitTest/MockChatWindow.h"
-#include "Swiften/MUC/UnitTest/MockMUC.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/Queries/DummyIQChannel.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Elements/MUCUserPayload.h"
-#include "Swiften/Disco/DummyEntityCapsProvider.h"
-#include <Swiften/VCards/VCardMemoryStorage.h>
-#include <Swiften/Crypto/PlatformCryptoProvider.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swift/Controllers/Settings/DummySettingsProvider.h>
-#include <Swift/Controllers/Chat/ChatMessageParser.h>
-#include <Swift/Controllers/Chat/UserSearchController.h>
-#include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
-#include <Swift/Controllers/Roster/Roster.h>
-#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swiften/Avatars/NullAvatarManager.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Client/NickResolver.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Disco/DummyEntityCapsProvider.h>
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/MUC/UnitTest/MockMUC.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
+
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/Chat/MUCController.h>
+#include <Swift/Controllers/Chat/UserSearchController.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Settings/DummySettingsProvider.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
+#include <Swift/Controllers/UnitTest/MockChatWindow.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 
 using namespace Swift;
 
@@ -84,11 +87,13 @@ public:
 		chatMessageParser_ = boost::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getRules(), true);
 		vcardStorage_ = new VCardMemoryStorage(crypto_.get());
 		vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, chatMessageParser_, false, NULL, vcardManager_);
+		clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, NULL, vcardManager_);
 	}
 
 	void tearDown() {
 		delete controller_;
+		delete clientBlockListManager_;
 		delete vcardManager_;
 		delete vcardStorage_;
 		delete highlightManager_;
@@ -432,6 +437,7 @@ private:
 	boost::shared_ptr<CryptoProvider> crypto_;
 	VCardManager* vcardManager_;
 	VCardMemoryStorage* vcardStorage_;
+	ClientBlockListManager* clientBlockListManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

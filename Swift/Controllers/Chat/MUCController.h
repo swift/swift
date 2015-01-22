@@ -39,6 +39,7 @@ namespace Swift {
 	class UIEvent;
 	class VCardManager;
 	class RosterVCardProvider;
+	class ClientBlockListManager;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -50,13 +51,14 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager);
 			virtual ~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
 			boost::signal<void ()> onImpromptuConfigCompleted;
 			boost::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
 			virtual void setOnline(bool online);
+			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
 			static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu);
@@ -132,6 +134,9 @@ namespace Swift {
 			void configureAsImpromptuRoom(Form::ref form);
 			Form::ref buildImpromptuRoomConfiguration(Form::ref roomConfigurationForm);
 
+			void handleUnblockUserRequest();
+			void handleBlockingStateChanged();
+
 		private:
 			MUC::ref muc_;
 			UIEventStream* events_;
@@ -157,6 +162,13 @@ namespace Swift {
 			bool isImpromptuAlreadyConfigured_;
 			RosterVCardProvider* rosterVCardProvider_;
 			std::string lastJoinMessageUID_;
+
+			ClientBlockListManager* clientBlockListManager_;
+			boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
+			boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
+			boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
+
+			boost::optional<ChatWindow::AlertID> blockedContactAlert_;
 	};
 }
 

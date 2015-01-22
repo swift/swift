@@ -653,7 +653,7 @@ void QtChatWindow::handleActionButtonClicked() {
 			unblock = contextMenu.addAction(tr("Unblock"));
 			unblock->setEnabled(isOnline_);
 		}
-		else if (blockingState_ == IsUnblocked) {
+		else if (!isMUC_ && blockingState_ == IsUnblocked) {
 			block = contextMenu.addAction(tr("Block"));
 			block->setEnabled(isOnline_);
 		}

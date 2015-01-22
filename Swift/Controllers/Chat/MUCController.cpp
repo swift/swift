@@ -11,10 +11,12 @@
 #include <boost/algorithm/string.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
-#include <Swiften/Base/Log.h>
+#include <Swiften/Client/BlockList.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/Delay.h>
@@ -39,6 +41,7 @@
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
@@ -71,11 +74,12 @@ MUCController::MUCController (
 		HistoryController* historyController,
 		MUCRegistry* mucRegistry,
 		HighlightManager* highlightManager,
+		ClientBlockListManager* clientBlockListManager,
 		boost::shared_ptr<ChatMessageParser> chatMessageParser,
 		bool isImpromptu,
 		AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
 		VCardManager* vcardManager) :
-	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false) {
+	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -100,6 +104,7 @@ MUCController::MUCController (
 	chatWindow_->onInviteToChat.connect(boost::bind(&MUCController::handleInvitePersonToThisMUCRequest, this, _1));
 	chatWindow_->onGetAffiliationsRequest.connect(boost::bind(&MUCController::handleGetAffiliationsRequest, this));
 	chatWindow_->onChangeAffiliationsRequest.connect(boost::bind(&MUCController::handleChangeAffiliationsRequest, this, _1));
+	chatWindow_->onUnblockUserRequest.connect(boost::bind(&MUCController::handleUnblockUserRequest, this));
 	muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
 	muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
 	muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -605,16 +610,23 @@ void MUCController::setOnline(bool online) {
 	} else {
 		if (shouldJoinOnReconnect_) {
 			renameCounter_ = 0;
-			if (isImpromptu_) {
-				lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to join chat")), ChatWindow::DefaultDirection);
-			} else {
-				lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+			boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+			if (blockList && blockList->isBlocked(muc_->getJID())) {
+				handleBlockingStateChanged();
+				lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "You've blocked this room. To enter the room, first unblock it using the cog menu and try again")), ChatWindow::DefaultDirection);
 			}
-			if (loginCheckTimer_) {
-				loginCheckTimer_->start();
+			else {
+				if (isImpromptu_) {
+					lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to join chat")), ChatWindow::DefaultDirection);
+				} else {
+					lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+				}
+				if (loginCheckTimer_) {
+					loginCheckTimer_->start();
+				}
+				setNick(desiredNick_);
+				rejoin();
 			}
-			setNick(desiredNick_);
-			rejoin();
 		}
 	}
 }
@@ -970,6 +982,28 @@ void MUCController::handleChangeAffiliationsRequest(const std::vector<std::pair<
 	}
 }
 
+void MUCController::handleUnblockUserRequest() {
+	eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, muc_->getJID()));
+}
+
+void MUCController::handleBlockingStateChanged() {
+	boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+	if (blockList->getState() == BlockList::Available) {
+		if (blockList->isBlocked(toJID_)) {
+			if (!blockedContactAlert_) {
+				blockedContactAlert_ = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "You've blocked this room. To enter the room, first unblock it using the cog menu and try again"));
+			}
+			chatWindow_->setBlockingState(ChatWindow::IsBlocked);
+		} else {
+			if (blockedContactAlert_) {
+				chatWindow_->removeAlert(*blockedContactAlert_);
+				blockedContactAlert_.reset();
+			}
+			chatWindow_->setBlockingState(ChatWindow::IsUnblocked);
+		}
+	}
+}
+
 void MUCController::handleAffiliationListReceived(MUCOccupant::Affiliation affiliation, const std::vector<JID>& jids) {
 	chatWindow_->setAffiliations(affiliation, jids);
 }
@@ -1092,6 +1126,19 @@ void MUCController::handleRoomUnlocked() {
 		} else if (isImpromptu_) {
 			onImpromptuConfigCompleted();
 		}
+	}
+}
+
+void MUCController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
+	ChatControllerBase::setAvailableServerFeatures(info);
+	if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::BlockingCommandFeature)) {
+		boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+
+		blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&MUCController::handleBlockingStateChanged, this));
+		blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&MUCController::handleBlockingStateChanged, this));
+		blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&MUCController::handleBlockingStateChanged, this));
+
+		handleBlockingStateChanged();
 	}
 }
 
