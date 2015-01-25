@@ -1,0 +1,13 @@
+diff --git a/3rdParty/LibNATPMP/src/libnatpmp/getgateway.c b/3rdParty/LibNATPMP/src/libnatpmp/getgateway.c
+index 45c6e6f..3a3f9a6 100644
+--- a/3rdParty/LibNATPMP/src/libnatpmp/getgateway.c
++++ b/3rdParty/LibNATPMP/src/libnatpmp/getgateway.c
+@@ -67,7 +67,7 @@ POSSIBILITY OF SUCH DAMAGE.
+ #undef USE_SYSCTL_NET_ROUTE
+ #endif
+ 
+-#if !defined(USE_PROC_NET_ROUTE) && !defined(USE_SOCKET_ROUTE) && !defined(USE_SYSCTL_NET_ROUTE)
++#if !defined(USE_PROC_NET_ROUTE) && !defined(USE_SOCKET_ROUTE) && !defined(USE_SYSCTL_NET_ROUTE) && !defined(WIN32)
+ int getdefaultgateway(in_addr_t * addr)
+ {
+        return -1;

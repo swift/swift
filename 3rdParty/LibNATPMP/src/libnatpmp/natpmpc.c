@@ -1,19 +1,31 @@
-/* $Id: natpmpc.c,v 1.9 2011/04/18 18:25:21 nanard Exp $ */
+/* $Id: natpmpc.c,v 1.13 2012/08/21 17:23:38 nanard Exp $ */
 /* libnatpmp
- * Copyright (c) 2007-2011, Thomas BERNARD <miniupnp@free.fr>
- * http://miniupnp.free.fr/libnatpmp.html
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE. */
+Copyright (c) 2007-2011, Thomas BERNARD
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    * The name of the author may not be used to endorse or promote products
+	  derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+*/
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>
@@ -67,6 +79,7 @@ int main(int argc, char * * argv)
 	int command = 0;
 	int forcegw = 0;
 	in_addr_t gateway = 0;
+	struct in_addr gateway_in_use;
 
 #ifdef WIN32
 	WSADATA wsaData;
@@ -95,7 +108,7 @@ int main(int argc, char * * argv)
 				break;
 			case 'a':
 				command = 'a';
-				if(argc < i + 3) {
+				if(argc < i + 4) {
 					fprintf(stderr, "Not enough arguments for option -%c\n", argv[i][1]);
 					return 1;
 				}
@@ -118,10 +131,11 @@ int main(int argc, char * * argv)
 					fprintf(stderr, "%s is not a valid protocol\n", argv[i]);
 					return 1;
 				}
-				if(argc >= i) {
-					i++;
-					if(1 != sscanf(argv[i], "%u", &lifetime)) {
+				if(argc > i + 1) {
+					if(1 != sscanf(argv[i+1], "%u", &lifetime)) {
 						fprintf(stderr, "%s is not a correct 32bits unsigned integer\n", argv[i]);
+					} else {
+						i++;
 					}
 				}
 				break;
@@ -143,7 +157,8 @@ int main(int argc, char * * argv)
 	if(r<0)
 		return 1;
 
-	printf("using gateway : %s\n", inet_ntoa(*((struct in_addr *)&natpmp.gateway)));
+	gateway_in_use.s_addr = natpmp.gateway;
+	printf("using gateway : %s\n", inet_ntoa(gateway_in_use));
 
 	/* sendpublicaddressrequest() */
 	r = sendpublicaddressrequest(&natpmp);
@@ -170,7 +185,7 @@ int main(int argc, char * * argv)
 			fprintf(stderr, "readnatpmpresponseorretry() failed : %s\n",
 			        strnatpmperr(r));
 #endif
-			fprintf(stderr, "  errno=%d '%s'\n", 
+			fprintf(stderr, "  errno=%d '%s'\n",
 			        sav_errno, strerror(sav_errno));
 		}
 	} while(r==NATPMP_TRYAGAIN);
@@ -207,7 +222,7 @@ int main(int argc, char * * argv)
 #endif
 			return 1;
 		}
-	
+
 		printf("Mapped public port %hu protocol %s to local port %hu "
 		       "liftime %u\n",
 	    	   response.pnu.newportmapping.mappedpublicport,
