@@ -1,11 +1,11 @@
-/* $Id: upnpcommands.h,v 1.23 2011/04/11 09:14:00 nanard Exp $ */
+/* $Id: upnpcommands.h,v 1.26 2014/01/31 13:18:26 nanard Exp $ */
 /* Miniupnp project : http://miniupnp.free.fr/
  * Author : Thomas Bernard
  * Copyright (c) 2005-2011 Thomas Bernard
  * This software is subject to the conditions detailed in the
  * LICENCE file provided within this distribution */
-#ifndef __UPNPCOMMANDS_H__
-#define __UPNPCOMMANDS_H__
+#ifndef UPNPCOMMANDS_H_INCLUDED
+#define UPNPCOMMANDS_H_INCLUDED
 
 #include "upnpreplyparse.h"
 #include "portlistingparse.h"
@@ -62,12 +62,12 @@ UPNP_GetConnectionTypeInfo(const char * controlURL,
 
 /* UPNP_GetExternalIPAddress() call the corresponding UPNP method.
  * if the third arg is not null the value is copied to it.
- * at least 16 bytes must be available 
+ * at least 16 bytes must be available
  *
  * Return values :
  * 0 : SUCCESS
  * NON ZERO : ERROR Either an UPnP error code or an unknown error.
- * 
+ *
  * possible UPnP Errors :
  * 402 Invalid Args - See UPnP Device Architecture section on Control.
  * 501 Action Failed - See UPnP Device Architecture section on Control. */
@@ -95,7 +95,7 @@ UPNP_GetLinkLayerMaxBitRates(const char* controlURL,
  * Return values :
  * 0 : SUCCESS
  * NON ZERO : ERROR. Either an UPnP error code or an unknown error.
- * 
+ *
  * List of possible UPnP errors for AddPortMapping :
  * errorCode errorDescription (short) - Description (long)
  * 402 Invalid Args - See UPnP Device Architecture section on Control.
@@ -106,7 +106,7 @@ UPNP_GetLinkLayerMaxBitRates(const char* controlURL,
  * 718 ConflictInMappingEntry - The port mapping entry specified conflicts
  *                     with a mapping assigned previously to another client
  * 724 SamePortValuesRequired - Internal and External port values
- *                              must be the same 
+ *                              must be the same
  * 725 OnlyPermanentLeasesSupported - The NAT implementation only supports
  *                  permanent lease times on port mappings
  * 726 RemoteHostOnlySupportsWildcard - RemoteHost must be a wildcard
@@ -150,6 +150,7 @@ UPNP_GetPortMappingNumberOfEntries(const char* controlURL,
  * params :
  *  in   extPort
  *  in   proto
+ *  in   remoteHost
  *  out  intClient (16 bytes)
  *  out  intPort (6 bytes)
  *  out  desc (80 bytes)
@@ -164,6 +165,7 @@ UPNP_GetSpecificPortMappingEntry(const char * controlURL,
                                  const char * servicetype,
                                  const char * extPort,
                                  const char * proto,
+                                 const char * remoteHost,
                                  char * intClient,
                                  char * intPort,
                                  char * desc,
@@ -221,11 +223,11 @@ UPNP_GetListOfPortMappings(const char * controlURL,
                            const char * numberOfPorts,
                            struct PortMappingParserData * data);
 
-/* IGD:2, functions for service WANIPv6FirewallControl:1 */ 
+/* IGD:2, functions for service WANIPv6FirewallControl:1 */
 LIBSPEC int
 UPNP_GetFirewallStatus(const char * controlURL,
 				const char * servicetype,
-				int * firewallEnabled, 
+				int * firewallEnabled,
 				int * inboundPinholeAllowed);
 
 LIBSPEC int

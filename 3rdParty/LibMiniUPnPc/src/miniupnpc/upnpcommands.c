@@ -1,7 +1,7 @@
-/* $Id: upnpcommands.c,v 1.37 2011/06/04 15:56:23 nanard Exp $ */
+/* $Id: upnpcommands.c,v 1.42 2014/01/31 13:18:25 nanard Exp $ */
 /* Project : miniupnp
  * Author : Thomas Bernard
- * Copyright (c) 2005-2011 Thomas Bernard
+ * Copyright (c) 2005-2012 Thomas Bernard
  * This software is subject to the conditions detailed in the
  * LICENCE file provided in this distribution.
  * */
@@ -119,7 +119,7 @@ UPNP_GetTotalPacketsReceived(const char * controlURL,
 LIBSPEC int
 UPNP_GetStatusInfo(const char * controlURL,
 				const char * servicetype,
-				char * status, 
+				char * status,
 				unsigned int * uptime,
 				char * lastconnerror)
 {
@@ -221,8 +221,8 @@ UPNP_GetConnectionTypeInfo(const char * controlURL,
 
 /* UPNP_GetLinkLayerMaxBitRate() call the corresponding UPNP method.
  * Returns 2 values: Downloadlink bandwidth and Uplink bandwidth.
- * One of the values can be null 
- * Note : GetLinkLayerMaxBitRates belongs to WANPPPConnection:1 only 
+ * One of the values can be null
+ * Note : GetLinkLayerMaxBitRates belongs to WANPPPConnection:1 only
  * We can use the GetCommonLinkProperties from WANCommonInterfaceConfig:1 */
 LIBSPEC int
 UPNP_GetLinkLayerMaxBitRates(const char * controlURL,
@@ -285,7 +285,7 @@ UPNP_GetLinkLayerMaxBitRates(const char * controlURL,
 /* UPNP_GetExternalIPAddress() call the corresponding UPNP method.
  * if the third arg is not null the value is copied to it.
  * at least 16 bytes must be available
- * 
+ *
  * Return values :
  * 0 : SUCCESS
  * NON ZERO : ERROR Either an UPnP error code or an unknown error.
@@ -578,7 +578,8 @@ LIBSPEC int
 UPNP_GetSpecificPortMappingEntry(const char * controlURL,
                                  const char * servicetype,
                                  const char * extPort,
-							     const char * proto,
+                                 const char * proto,
+                                 const char * remoteHost,
                                  char * intClient,
                                  char * intPort,
                                  char * desc,
@@ -597,7 +598,7 @@ UPNP_GetSpecificPortMappingEntry(const char * controlURL,
 
 	GetPortMappingArgs = calloc(4, sizeof(struct UPNParg));
 	GetPortMappingArgs[0].elt = "NewRemoteHost";
-	/* TODO : add remote host ? */
+	GetPortMappingArgs[0].val = remoteHost;
 	GetPortMappingArgs[1].elt = "NewExternalPort";
 	GetPortMappingArgs[1].val = extPort;
 	GetPortMappingArgs[2].elt = "NewProtocol";
@@ -741,16 +742,16 @@ UPNP_GetListOfPortMappings(const char * controlURL,
 	}
 	ClearNameValueList(&pdata);
 
-	//printf("%.*s", bufsize, buffer);
+	/*printf("%.*s", bufsize, buffer);*/
 
 	return ret;
 }
 
-/* IGD:2, functions for service WANIPv6FirewallControl:1 */ 
+/* IGD:2, functions for service WANIPv6FirewallControl:1 */
 LIBSPEC int
 UPNP_GetFirewallStatus(const char * controlURL,
 				const char * servicetype,
-				int * firewallEnabled, 
+				int * firewallEnabled,
 				int * inboundPinholeAllowed)
 {
 	struct NameValueParserData pdata;
@@ -759,7 +760,7 @@ UPNP_GetFirewallStatus(const char * controlURL,
 	char * fe, *ipa, *p;
 	int ret = UPNPCOMMAND_UNKNOWN_ERROR;
 
-	if(!firewallEnabled && !inboundPinholeAllowed)
+	if(!firewallEnabled || !inboundPinholeAllowed)
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	buffer = simpleUPnPcommand(-1, controlURL, servicetype,
@@ -868,7 +869,7 @@ UPNP_AddPinhole(const char * controlURL, const char * servicetype,
 		return UPNPCOMMAND_INVALID_ARGS;
 
 	AddPinholeArgs = calloc(7, sizeof(struct UPNParg));
-	// RemoteHost can be wilcarded
+	/* RemoteHost can be wilcarded */
 	if(strncmp(remoteHost, "empty", 5)==0)
 	{
 		AddPinholeArgs[0].elt = "RemoteHost";
@@ -912,7 +913,7 @@ UPNP_AddPinhole(const char * controlURL, const char * servicetype,
 	resVal = GetValueFromNameValueList(&pdata, "errorCode");
 	if(resVal)
 	{
-		//printf("AddPortMapping errorCode = '%s'\n", resVal); 
+		/*printf("AddPortMapping errorCode = '%s'\n", resVal);*/
 		ret = UPNPCOMMAND_UNKNOWN_ERROR;
 		sscanf(resVal, "%d", &ret);
 	}

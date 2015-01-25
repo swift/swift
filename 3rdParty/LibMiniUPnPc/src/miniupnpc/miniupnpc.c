@@ -1,7 +1,8 @@
-/* $Id: miniupnpc.c,v 1.95 2011/05/15 21:42:26 nanard Exp $ */
+/* $Id: miniupnpc.c,v 1.115 2013/12/13 12:02:24 nanard Exp $ */
 /* Project : miniupnp
+ * Web : http://miniupnp.free.fr/
  * Author : Thomas BERNARD
- * copyright (c) 2005-2011 Thomas Bernard
+ * copyright (c) 2005-2013 Thomas Bernard
  * This software is subjet to the conditions detailed in the
  * provided LICENSE file. */
 #define __EXTENSIONS__ 1
@@ -16,16 +17,21 @@
 #endif
 #endif
 
+#if !defined(__DragonFly__) && !defined(__OpenBSD__) && !defined(__NetBSD__) && !defined(MACOSX) && !defined(_WIN32) && !defined(__CYGWIN__) && !defined(__sun)
+#define HAS_IP_MREQN
+#endif
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#ifdef WIN32
+#ifdef _WIN32
 /* Win32 Specific includes and defines */
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <io.h>
 #include <iphlpapi.h>
 #define snprintf _snprintf
+#define strdup _strdup
 #ifndef strncasecmp
 #if defined(_MSC_VER) && (_MSC_VER >= 1400)
 #define strncasecmp _memicmp
@@ -34,7 +40,7 @@
 #endif /* defined(_MSC_VER) && (_MSC_VER >= 1400) */
 #endif /* #ifndef strncasecmp */
 #define MAXHOSTNAMELEN 64
-#else /* #ifdef WIN32 */
+#else /* #ifdef _WIN32 */
 /* Standard POSIX includes */
 #include <unistd.h>
 #if defined(__amigaos__) && !defined(__amigaos4__)
@@ -56,13 +62,24 @@
 #include <strings.h>
 #include <errno.h>
 #define closesocket close
-#endif /* #else WIN32 */
+#endif /* #else _WIN32 */
 #ifdef MINIUPNPC_SET_SOCKET_TIMEOUT
 #include <sys/time.h>
 #endif
 #if defined(__amigaos__) || defined(__amigaos4__)
 /* Amiga OS specific stuff */
 #define TIMEVAL struct timeval
+#endif
+
+
+#if defined(HAS_IP_MREQN) && defined(NEED_STRUCT_IP_MREQN)
+/* Several versions of glibc don't define this structure, define it here and compile with CFLAGS NEED_STRUCT_IP_MREQN */
+struct ip_mreqn
+{
+	struct in_addr	imr_multiaddr;		/* IP multicast address of group */
+	struct in_addr	imr_address;		/* local IP address of interface */
+	int		imr_ifindex;		/* Interface index */
+};
 #endif
 
 #include "miniupnpc.h"
@@ -74,10 +91,14 @@
 #include "connecthostport.h"
 #include "receivedata.h"
 
-#ifdef WIN32
+#ifdef _WIN32
 #define PRINT_SOCKET_ERROR(x)    printf("Socket error: %s, %d\n", x, WSAGetLastError());
 #else
 #define PRINT_SOCKET_ERROR(x) perror(x)
+#endif
+
+#ifndef MAXHOSTNAMELEN
+#define MAXHOSTNAMELEN 64
 #endif
 
 #define SOAPPREFIX "s"
@@ -184,12 +205,11 @@ char * simpleUPnPcommand2(int s, const char * url, const char * service,
 		strncpy(p, "></" SOAPPREFIX ":Body></" SOAPPREFIX ":Envelope>\r\n",
 		        soapbody + sizeof(soapbody) - p);
 	}
-	if(!parseURL(url, hostname, &port, &path)) return NULL;
-	if(s<0)
-	{
-		s = connecthostport(hostname, port);
-		if(s < 0)
-		{
+	if(!parseURL(url, hostname, &port, &path, NULL)) return NULL;
+	if(s < 0) {
+		s = connecthostport(hostname, port, 0);
+		if(s < 0) {
+			/* failed to connect */
 			return NULL;
 		}
 	}
@@ -225,8 +245,9 @@ char * simpleUPnPcommand(int s, const char * url, const char * service,
 {
 	char * buf;
 
+#if 1
 	buf = simpleUPnPcommand2(s, url, service, action, args, bufsize, "1.1");
-/*
+#else
 	buf = simpleUPnPcommand2(s, url, service, action, args, bufsize, "1.0");
 	if (!buf || *bufsize == 0)
 	{
@@ -235,7 +256,7 @@ char * simpleUPnPcommand(int s, const char * url, const char * service,
 #endif
 		buf = simpleUPnPcommand2(s, url, service, action, args, bufsize, "1.1");
 	}
-*/
+#endif
 	return buf;
 }
 
@@ -322,8 +343,9 @@ upnpDiscover(int delay, const char * multicastif,
 {
 	struct UPNPDev * tmp;
 	struct UPNPDev * devlist = 0;
+	unsigned int scope_id = 0;
 	int opt = 1;
-	static const char MSearchMsgFmt[] = 
+	static const char MSearchMsgFmt[] =
 	"M-SEARCH * HTTP/1.1\r\n"
 	"HOST: %s:" XSTR(PORT) "\r\n"
 	"ST: %s\r\n"
@@ -353,14 +375,14 @@ upnpDiscover(int delay, const char * multicastif,
 	int rv;
 	struct addrinfo hints, *servinfo, *p;
 #endif
-#ifdef WIN32
+#ifdef _WIN32
 	MIB_IPFORWARDROW ip_forward;
 #endif
 	int linklocal = 1;
 
 	if(error)
 		*error = UPNPDISCOVER_UNKNOWN_ERROR;
-#if !defined(WIN32) && !defined(__amigaos__) && !defined(__amigaos4__)
+#if !defined(_WIN32) && !defined(__amigaos__) && !defined(__amigaos4__)
 	/* first try to get infos from minissdpd ! */
 	if(!minissdpdsock)
 		minissdpdsock = "/var/run/minissdpd.sock";
@@ -378,7 +400,7 @@ upnpDiscover(int delay, const char * multicastif,
 	deviceIndex = 0;
 #endif
 	/* fallback to direct discovery */
-#ifdef WIN32
+#ifdef _WIN32
 	sudp = socket(ipv6 ? PF_INET6 : PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 #else
 	sudp = socket(ipv6 ? PF_INET6 : PF_INET, SOCK_DGRAM, 0);
@@ -405,8 +427,8 @@ upnpDiscover(int delay, const char * multicastif,
 			p->sin_port = htons(PORT);
 		p->sin_addr.s_addr = INADDR_ANY;
 	}
-#ifdef WIN32
-/* This code could help us to use the right Network interface for 
+#ifdef _WIN32
+/* This code could help us to use the right Network interface for
  * SSDP multicast traffic */
 /* Get IP associated with the index given in the ip_forward struct
  * in order to give this ip to setsockopt(sudp, IPPROTO_IP, IP_MULTICAST_IF) */
@@ -465,7 +487,7 @@ upnpDiscover(int delay, const char * multicastif,
 	}
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 	if (setsockopt(sudp, SOL_SOCKET, SO_REUSEADDR, (const char *)&opt, sizeof (opt)) < 0)
 #else
 	if (setsockopt(sudp, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof (opt)) < 0)
@@ -480,7 +502,7 @@ upnpDiscover(int delay, const char * multicastif,
 	if(multicastif)
 	{
 		if(ipv6) {
-#if !defined(WIN32)
+#if !defined(_WIN32)
 			/* according to MSDN, if_nametoindex() is supported since
 			 * MS Windows Vista and MS Windows Server 2008.
 			 * http://msdn.microsoft.com/en-us/library/bb408409%28v=vs.85%29.aspx */
@@ -497,10 +519,28 @@ upnpDiscover(int delay, const char * multicastif,
 		} else {
 			struct in_addr mc_if;
 			mc_if.s_addr = inet_addr(multicastif); /* ex: 192.168.x.x */
-			((struct sockaddr_in *)&sockudp_r)->sin_addr.s_addr = mc_if.s_addr;
-			if(setsockopt(sudp, IPPROTO_IP, IP_MULTICAST_IF, (const char *)&mc_if, sizeof(mc_if)) < 0)
+			if(mc_if.s_addr != INADDR_NONE)
 			{
-				PRINT_SOCKET_ERROR("setsockopt");
+				((struct sockaddr_in *)&sockudp_r)->sin_addr.s_addr = mc_if.s_addr;
+				if(setsockopt(sudp, IPPROTO_IP, IP_MULTICAST_IF, (const char *)&mc_if, sizeof(mc_if)) < 0)
+				{
+					PRINT_SOCKET_ERROR("setsockopt");
+				}
+			} else {
+#ifdef HAS_IP_MREQN
+				/* was not an ip address, try with an interface name */
+				struct ip_mreqn reqn;	/* only defined with -D_BSD_SOURCE or -D_GNU_SOURCE */
+				memset(&reqn, 0, sizeof(struct ip_mreqn));
+				reqn.imr_ifindex = if_nametoindex(multicastif);
+				if(setsockopt(sudp, IPPROTO_IP, IP_MULTICAST_IF, (const char *)&reqn, sizeof(reqn)) < 0)
+				{
+					PRINT_SOCKET_ERROR("setsockopt");
+				}
+#else
+#ifdef DEBUG
+				printf("Setting of multicast interface not supported with interface name.\n");
+#endif
+#endif
 			}
 		}
 	}
@@ -520,6 +560,10 @@ upnpDiscover(int delay, const char * multicastif,
 		*error = UPNPDISCOVER_SUCCESS;
 	/* Calculating maximum response time in seconds */
 	mx = ((unsigned int)delay) / 1000u;
+	if(mx == 0) {
+		mx = 1;
+		delay = 1000;
+	}
 	/* receiving SSDP response packet */
 	for(n = 0; deviceList[deviceIndex]; deviceIndex++)
 	{
@@ -563,7 +607,7 @@ upnpDiscover(int delay, const char * multicastif,
 		}
 #else /* #ifdef NO_GETADDRINFO */
 		memset(&hints, 0, sizeof(hints));
-		hints.ai_family = AF_UNSPEC; // AF_INET6 or AF_INET
+		hints.ai_family = AF_UNSPEC; /* AF_INET6 or AF_INET */
 		hints.ai_socktype = SOCK_DGRAM;
 		/*hints.ai_flags = */
 		if ((rv = getaddrinfo(ipv6
@@ -572,7 +616,7 @@ upnpDiscover(int delay, const char * multicastif,
 		                      XSTR(PORT), &hints, &servinfo)) != 0) {
 			if(error)
 				*error = UPNPDISCOVER_SOCKET_ERROR;
-#ifdef WIN32
+#ifdef _WIN32
 		    fprintf(stderr, "getaddrinfo() failed: %d\n", rv);
 #else
 		    fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(rv));
@@ -582,6 +626,13 @@ upnpDiscover(int delay, const char * multicastif,
 		for(p = servinfo; p; p = p->ai_next) {
 			n = sendto(sudp, bufr, n, 0, p->ai_addr, p->ai_addrlen);
 			if (n < 0) {
+#ifdef DEBUG
+				char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+				if (getnameinfo(p->ai_addr, p->ai_addrlen, hbuf, sizeof(hbuf), sbuf,
+						sizeof(sbuf), NI_NUMERICHOST | NI_NUMERICSERV) == 0) {
+					fprintf(stderr, "host:%s port:%s\n", hbuf, sbuf);
+				}
+#endif
 				PRINT_SOCKET_ERROR("sendto");
 				continue;
 			}
@@ -595,7 +646,7 @@ upnpDiscover(int delay, const char * multicastif,
 #endif /* #ifdef NO_GETADDRINFO */
 	}
 	/* Waiting for SSDP REPLY packet to M-SEARCH */
-	n = receivedata(sudp, bufr, sizeof(bufr), delay);
+	n = receivedata(sudp, bufr, sizeof(bufr), delay, &scope_id);
 	if (n < 0) {
 		/* error */
 		if(error)
@@ -655,6 +706,7 @@ upnpDiscover(int delay, const char * multicastif,
 			tmp->buffer[urlsize] = '\0';
 			memcpy(tmp->buffer + urlsize + 1, st, stsize);
 			tmp->buffer[urlsize+1+stsize] = '\0';
+			tmp->scope_id = scope_id;
 			devlist = tmp;
 		}
 	}
@@ -701,14 +753,31 @@ url_cpy_or_cat(char * dst, const char * src, int n)
 
 /* Prepare the Urls for usage...
  */
-LIBSPEC void GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
-                 const char * descURL)
+LIBSPEC void
+GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
+            const char * descURL, unsigned int scope_id)
 {
 	char * p;
 	int n1, n2, n3, n4;
+#ifdef IF_NAMESIZE
+	char ifname[IF_NAMESIZE];
+#else
+	char scope_str[8];
+#endif
+
 	n1 = strlen(data->urlbase);
 	if(n1==0)
 		n1 = strlen(descURL);
+	if(scope_id != 0) {
+#ifdef IF_NAMESIZE
+		if(if_indextoname(scope_id, ifname)) {
+			n1 += 3 + strlen(ifname);	/* 3 == strlen(%25) */
+		}
+#else
+	/* under windows, scope is numerical */
+	snprintf(scope_str, sizeof(scope_str), "%u", scope_id);
+#endif
+	}
 	n1 += 2;	/* 1 byte more for Null terminator, 1 byte for '/' if needed */
 	n2 = n1; n3 = n1; n4 = n1;
 	n1 += strlen(data->first.scpdurl);
@@ -716,21 +785,44 @@ LIBSPEC void GetUPNPUrls(struct UPNPUrls * urls, struct IGDdatas * data,
 	n3 += strlen(data->CIF.controlurl);
 	n4 += strlen(data->IPv6FC.controlurl);
 
+	/* allocate memory to store URLs */
 	urls->ipcondescURL = (char *)malloc(n1);
 	urls->controlURL = (char *)malloc(n2);
 	urls->controlURL_CIF = (char *)malloc(n3);
 	urls->controlURL_6FC = (char *)malloc(n4);
-	/* maintenant on chope la desc du WANIPConnection */
+
+	/* strdup descURL */
+	urls->rootdescURL = strdup(descURL);
+
+	/* get description of WANIPConnection */
 	if(data->urlbase[0] != '\0')
 		strncpy(urls->ipcondescURL, data->urlbase, n1);
 	else
 		strncpy(urls->ipcondescURL, descURL, n1);
 	p = strchr(urls->ipcondescURL+7, '/');
 	if(p) p[0] = '\0';
+	if(scope_id != 0) {
+		if(0 == memcmp(urls->ipcondescURL, "http://[fe80:", 13)) {
+			/* this is a linklocal IPv6 address */
+			p = strchr(urls->ipcondescURL, ']');
+			if(p) {
+				/* insert %25<scope> into URL */
+#ifdef IF_NAMESIZE
+				memmove(p + 3 + strlen(ifname), p, strlen(p) + 1);
+				memcpy(p, "%25", 3);
+				memcpy(p + 3, ifname, strlen(ifname));
+#else
+				memmove(p + 3 + strlen(scope_str), p, strlen(p) + 1);
+				memcpy(p, "%25", 3);
+				memcpy(p + 3, scope_str, strlen(scope_str));
+#endif
+			}
+		}
+	}
 	strncpy(urls->controlURL, urls->ipcondescURL, n2);
 	strncpy(urls->controlURL_CIF, urls->ipcondescURL, n3);
 	strncpy(urls->controlURL_6FC, urls->ipcondescURL, n4);
-	
+
 	url_cpy_or_cat(urls->ipcondescURL, data->first.scpdurl, n1);
 
 	url_cpy_or_cat(urls->controlURL, data->first.controlurl, n2);
@@ -764,6 +856,8 @@ FreeUPNPUrls(struct UPNPUrls * urls)
 	urls->controlURL_CIF = 0;
 	free(urls->controlURL_6FC);
 	urls->controlURL_6FC = 0;
+	free(urls->rootdescURL);
+	urls->rootdescURL = 0;
 }
 
 int
@@ -785,13 +879,14 @@ UPNPIGD_IsConnected(struct UPNPUrls * urls, struct IGDdatas * data)
 
 /* UPNP_GetValidIGD() :
  * return values :
+ *    -1 = Internal error
  *     0 = NO IGD found
  *     1 = A valid connected IGD has been found
  *     2 = A valid IGD has been found but it reported as
  *         not connected
  *     3 = an UPnP device has been found but was not recognized as an IGD
  *
- * In any non zero return case, the urls and data structures
+ * In any positive non zero return case, the urls and data structures
  * passed as parameters are set. Donc forget to call FreeUPNPUrls(urls) to
  * free allocated memory.
  */
@@ -801,11 +896,17 @@ UPNP_GetValidIGD(struct UPNPDev * devlist,
 				 struct IGDdatas * data,
 				 char * lanaddr, int lanaddrlen)
 {
-	char * descXML;
-	int descXMLsize = 0;
+	struct xml_desc {
+		char * xml;
+		int size;
+		int is_igd;
+	} * desc = NULL;
 	struct UPNPDev * dev;
 	int ndev = 0;
-	int state; /* state 1 : IGD connected. State 2 : IGD. State 3 : anything */
+	int i;
+	int state = -1; /* state 1 : IGD connected. State 2 : IGD. State 3 : anything */
+	int n_igd = 0;
+	char extIpAddr[16];
 	if(!devlist)
 	{
 #ifdef DEBUG
@@ -813,35 +914,68 @@ UPNP_GetValidIGD(struct UPNPDev * devlist,
 #endif
 		return 0;
 	}
+	/* counting total number of devices in the list */
+	for(dev = devlist; dev; dev = dev->pNext)
+		ndev++;
+	if(ndev > 0)
+	{
+		desc = calloc(ndev, sizeof(struct xml_desc));
+		if(!desc)
+			return -1; /* memory allocation error */
+	}
+	/* Step 1 : downloading descriptions and testing type */
+	for(dev = devlist, i = 0; dev; dev = dev->pNext, i++)
+	{
+		/* we should choose an internet gateway device.
+		 * with st == urn:schemas-upnp-org:device:InternetGatewayDevice:1 */
+		desc[i].xml = miniwget_getaddr(dev->descURL, &(desc[i].size),
+		                               lanaddr, lanaddrlen,
+		                               dev->scope_id);
+#ifdef DEBUG
+		if(!desc[i].xml)
+		{
+			printf("error getting XML description %s\n", dev->descURL);
+		}
+#endif
+		if(desc[i].xml)
+		{
+			memset(data, 0, sizeof(struct IGDdatas));
+			memset(urls, 0, sizeof(struct UPNPUrls));
+			parserootdesc(desc[i].xml, desc[i].size, data);
+			if(0==strcmp(data->CIF.servicetype,
+			   "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1"))
+			{
+				desc[i].is_igd = 1;
+				n_igd++;
+			}
+		}
+	}
+	/* iterate the list to find a device depending on state */
 	for(state = 1; state <= 3; state++)
 	{
-		for(dev = devlist; dev; dev = dev->pNext)
+		for(dev = devlist, i = 0; dev; dev = dev->pNext, i++)
 		{
-			/* we should choose an internet gateway device.
-		 	* with st == urn:schemas-upnp-org:device:InternetGatewayDevice:1 */
-			descXML = miniwget_getaddr(dev->descURL, &descXMLsize,
-			   	                        lanaddr, lanaddrlen);
-			if(descXML)
+			if(desc[i].xml)
 			{
-				ndev++;
 				memset(data, 0, sizeof(struct IGDdatas));
 				memset(urls, 0, sizeof(struct UPNPUrls));
-				parserootdesc(descXML, descXMLsize, data);
-				free(descXML);
-				descXML = NULL;
-				if(0==strcmp(data->CIF.servicetype,
-				   "urn:schemas-upnp-org:service:WANCommonInterfaceConfig:1")
-				   || state >= 3 )
+				parserootdesc(desc[i].xml, desc[i].size, data);
+				if(desc[i].is_igd || state >= 3 )
 				{
-				  GetUPNPUrls(urls, data, dev->descURL);
+				  GetUPNPUrls(urls, data, dev->descURL, dev->scope_id);
 
+				  /* in state 2 and 3 we dont test if device is connected ! */
+				  if(state >= 2)
+				    goto free_and_return;
 #ifdef DEBUG
 				  printf("UPNPIGD_IsConnected(%s) = %d\n",
 				     urls->controlURL,
 			         UPNPIGD_IsConnected(urls, data));
 #endif
-				  if((state >= 2) || UPNPIGD_IsConnected(urls, data))
-					return state;
+				  /* checks that status is connected AND there is a external IP address assigned */
+				  if(UPNPIGD_IsConnected(urls, data)
+				     && (UPNP_GetExternalIPAddress(urls->controlURL,  data->first.servicetype, extIpAddr) == 0))
+					goto free_and_return;
 				  FreeUPNPUrls(urls);
 				  if(data->second.servicetype[0] != '\0') {
 #ifdef DEBUG
@@ -852,28 +986,33 @@ UPNP_GetValidIGD(struct UPNPDev * devlist,
 				    memcpy(&data->tmp, &data->first, sizeof(struct IGDdatas_service));
 				    memcpy(&data->first, &data->second, sizeof(struct IGDdatas_service));
 				    memcpy(&data->second, &data->tmp, sizeof(struct IGDdatas_service));
-				    GetUPNPUrls(urls, data, dev->descURL);
+				    GetUPNPUrls(urls, data, dev->descURL, dev->scope_id);
 #ifdef DEBUG
 				    printf("UPNPIGD_IsConnected(%s) = %d\n",
 				       urls->controlURL,
 			           UPNPIGD_IsConnected(urls, data));
 #endif
-				    if((state >= 2) || UPNPIGD_IsConnected(urls, data))
-					  return state;
+				    if(UPNPIGD_IsConnected(urls, data)
+				       && (UPNP_GetExternalIPAddress(urls->controlURL,  data->first.servicetype, extIpAddr) == 0))
+					  goto free_and_return;
 				    FreeUPNPUrls(urls);
 				  }
 				}
 				memset(data, 0, sizeof(struct IGDdatas));
 			}
-#ifdef DEBUG
-			else
-			{
-				printf("error getting XML description %s\n", dev->descURL);
-			}
-#endif
 		}
 	}
-	return 0;
+	state = 0;
+free_and_return:
+	if(desc) {
+		for(i = 0; i < ndev; i++) {
+			if(desc[i].xml) {
+				free(desc[i].xml);
+			}
+		}
+		free(desc);
+	}
+	return state;
 }
 
 /* UPNP_GetIGDFromUrl()
@@ -890,14 +1029,14 @@ UPNP_GetIGDFromUrl(const char * rootdescurl,
 	char * descXML;
 	int descXMLsize = 0;
 	descXML = miniwget_getaddr(rootdescurl, &descXMLsize,
-	   	                       lanaddr, lanaddrlen);
+	   	                       lanaddr, lanaddrlen, 0);
 	if(descXML) {
 		memset(data, 0, sizeof(struct IGDdatas));
 		memset(urls, 0, sizeof(struct UPNPUrls));
 		parserootdesc(descXML, descXMLsize, data);
 		free(descXML);
 		descXML = NULL;
-		GetUPNPUrls(urls, data, rootdescurl);
+		GetUPNPUrls(urls, data, rootdescurl, 0);
 		return 1;
 	} else {
 		return 0;
