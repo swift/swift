@@ -1,0 +1,6 @@
+Import("env")
+
+if "doc" in ARGUMENTS :
+	myenv = env.Clone()
+	myenv.Tool("DoxyGen", toolpath = ["#/BuildTools/SCons/Tools"])
+	myenv.DoxyGen("Doxyfile")
