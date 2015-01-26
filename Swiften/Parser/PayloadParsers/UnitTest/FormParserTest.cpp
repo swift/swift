@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,6 +15,7 @@ using namespace Swift;
 class FormParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(FormParserTest);
 		CPPUNIT_TEST(testParse_FormInformation);
+		CPPUNIT_TEST(testParse_FormLayout);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST(testParse_FormItems);
 		CPPUNIT_TEST_SUITE_END();
@@ -35,6 +36,49 @@ class FormParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(std::string("Bot Configuration"), payload->getTitle());
 			CPPUNIT_ASSERT_EQUAL(std::string("Hello!\nFill out this form to configure your new bot!"), payload->getInstructions());
 			CPPUNIT_ASSERT_EQUAL(Form::SubmitType, payload->getType());
+		}
+
+		void testParse_FormLayout() {
+			PayloadsParserTester parser;
+
+			// P1 = page one, S1 = section one, F1 = field one, T1 = text one
+			CPPUNIT_ASSERT(parser.parse(
+				"<x type=\"form\" xmlns=\"jabber:x:data\">"
+					"<page label=\"P1\" xmlns=\"http://jabber.org/protocol/xdata-layout\">"
+						"<reportedref/>"
+						"<text>P1T1</text>"
+						"<fieldref var=\"P1F1\"/>"
+						"<section label=\"P1S1\">"
+							"<text>P1S1T1</text>"
+							"<fieldref var=\"P1S1F1\"/>"
+						"</section>"
+					"</page>"
+					"<page label=\"P2\" xmlns=\"http://jabber.org/protocol/xdata-layout\">"
+						"<section label=\"P2S1\">"
+							"<section label=\"P2S2\">"
+								"<section label=\"P2S3\"/>"
+							"</section>"
+						"</section>"
+					"</page>"
+					"<field label=\"field one\" type=\"text-single\" var=\"P1F1\"/>"
+					"<field label=\"field two\" type=\"text-single\" var=\"P1S1F1\"/>"
+				"</x>"));
+
+			Form* payload = dynamic_cast<Form*>(parser.getPayload().get());
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(payload->getFields().size()));
+			// PAGE ONE - parsing of element types
+			CPPUNIT_ASSERT_EQUAL(std::string("P1"), payload->getPages()[0]->getLabel());
+			CPPUNIT_ASSERT(payload->getPages()[0]->getReportedRefs()[0]);
+			CPPUNIT_ASSERT_EQUAL(std::string("P1T1"), payload->getPages()[0]->getTextElements()[0]->getTextString());
+			CPPUNIT_ASSERT_EQUAL(std::string("P1F1"), payload->getPages()[0]->getFields()[0]->getName());
+			CPPUNIT_ASSERT_EQUAL(std::string("P1S1"), payload->getPages()[0]->getChildSections()[0]->getLabel());
+			CPPUNIT_ASSERT_EQUAL(std::string("P1S1T1"), payload->getPages()[0]->getChildSections()[0]->getTextElements()[0]->getTextString());
+			CPPUNIT_ASSERT_EQUAL(std::string("P1S1F1"), payload->getPages()[0]->getChildSections()[0]->getFields()[0]->getName());
+			// PAGE TWO - parsing of nested elements
+			CPPUNIT_ASSERT_EQUAL(std::string("P2"), payload->getPages()[1]->getLabel());
+			CPPUNIT_ASSERT_EQUAL(std::string("P2S1"), payload->getPages()[1]->getChildSections()[0]->getLabel());
+			CPPUNIT_ASSERT_EQUAL(std::string("P2S2"), payload->getPages()[1]->getChildSections()[0]->getChildSections()[0]->getLabel());
+			CPPUNIT_ASSERT_EQUAL(std::string("P2S3"), payload->getPages()[1]->getChildSections()[0]->getChildSections()[0]->getChildSections()[0]->getLabel());
 		}
 
 		void testParse() {

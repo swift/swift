@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,6 +14,7 @@ using namespace Swift;
 class FormSerializerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(FormSerializerTest);
 		CPPUNIT_TEST(testSerializeFormInformation);
+		CPPUNIT_TEST(testSerializeLayout);
 		CPPUNIT_TEST(testSerializeFields);
 		CPPUNIT_TEST(testSerializeFormItems);
 		CPPUNIT_TEST_SUITE_END();
@@ -31,6 +32,71 @@ class FormSerializerTest : public CppUnit::TestFixture {
 						"<instructions>Hello!</instructions>"
 						"<instructions>Fill out this form to configure your new bot!</instructions>"
 					"</x>"), testling.serialize(form));
+		}
+
+		void testSerializeLayout() {
+			FormSerializer testling;
+			boost::shared_ptr<Form> form(new Form(Form::FormType));
+
+			FormPage::page page = boost::make_shared<FormPage>();
+			page->setLabel("P1");
+			FormReportedRef::ref reportedRef = boost::make_shared<FormReportedRef>();
+			page->addReportedRef(reportedRef);
+			FormText::text formText = boost::make_shared<FormText>();
+			formText->setTextString("P1T1");
+			page->addTextElement(formText);
+			FormField::ref field = boost::make_shared<FormField>(FormField::TextSingleType);
+			field->setName("P1F1");
+			field->setLabel("field one");
+			page->addField(field);
+
+			FormSection::section section = boost::make_shared<FormSection>();
+			section->setLabel("P1S1");
+			formText = boost::make_shared<FormText>();
+			formText->setTextString("P1S1T1");
+			section->addTextElement(formText);
+			field = boost::make_shared<FormField>(FormField::TextSingleType);
+			field->setName("P1S1F1");
+			field->setLabel("field two");
+			section->addField(field);
+			page->addChildSection(section);
+			form->addPage(page);
+
+			page = boost::make_shared<FormPage>();
+			page->setLabel("P2");
+			section = boost::make_shared<FormSection>();
+			section->setLabel("P2S1");
+			FormSection::section subSection = boost::make_shared<FormSection>();
+			subSection->setLabel("P2S2");
+			FormSection::section subSection2 = boost::make_shared<FormSection>();
+			subSection2->setLabel("P2S3");
+			subSection->addChildSection(subSection2);
+			section->addChildSection(subSection);
+			page->addChildSection(section);
+			form->addPage(page);
+
+			// P1 = page one, S1 = section one, F1 = field one, T1 = text one
+			CPPUNIT_ASSERT_EQUAL(std::string(
+				"<x type=\"form\" xmlns=\"jabber:x:data\">"
+					"<page label=\"P1\" xmlns=\"http://jabber.org/protocol/xdata-layout\">"
+						"<text>P1T1</text>"
+						"<fieldref var=\"P1F1\"/>"
+						"<reportedref/>"
+						"<section label=\"P1S1\">"
+							"<text>P1S1T1</text>"
+							"<fieldref var=\"P1S1F1\"/>"
+						"</section>"
+					"</page>"
+					"<page label=\"P2\" xmlns=\"http://jabber.org/protocol/xdata-layout\">"
+						"<section label=\"P2S1\">"
+							"<section label=\"P2S2\">"
+								"<section label=\"P2S3\"/>"
+							"</section>"
+						"</section>"
+					"</page>"
+					"<field label=\"field one\" type=\"text-single\" var=\"P1F1\"/>"
+					"<field label=\"field two\" type=\"text-single\" var=\"P1S1F1\"/>"
+				"</x>"), testling.serialize(form));
 		}
 
 		void testSerializeFields() {
@@ -139,7 +205,6 @@ class FormSerializerTest : public CppUnit::TestFixture {
 		void testSerializeFormItems() {
 			FormSerializer testling;
 			boost::shared_ptr<Form> form(new Form(Form::ResultType));
-
 
 			FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:iq:search");
 			field->setName("FORM_TYPE");

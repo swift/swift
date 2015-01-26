@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,11 +30,9 @@ namespace {
 	}
 }
 
-
 namespace Swift {
 
-FormSerializer::FormSerializer() : GenericPayloadSerializer<Form>() {
-}
+FormSerializer::FormSerializer() : GenericPayloadSerializer<Form>() {}
 
 std::string FormSerializer::serializePayload(boost::shared_ptr<Form> form)  const {
 	if (!form) {
@@ -56,6 +54,9 @@ std::string FormSerializer::serializePayload(boost::shared_ptr<Form> form)  cons
 	if (!form->getInstructions().empty()) {
 		multiLineify(form->getInstructions(), "instructions", formElement);
 	}
+	foreach(boost::shared_ptr<FormPage> page, form->getPages()) {
+		formElement->addNode(pageToXML(page));
+	}
 	foreach(boost::shared_ptr<FormField> field, form->getFields()) {
 		formElement->addNode(fieldToXML(field, true));
 	}
@@ -66,6 +67,7 @@ std::string FormSerializer::serializePayload(boost::shared_ptr<Form> form)  cons
 		}
 		formElement->addNode(reportedElement);
 	}
+
 	foreach(Form::FormItem item, form->getItems()) {
 		boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
 		foreach(FormField::ref field, item) {
@@ -74,7 +76,70 @@ std::string FormSerializer::serializePayload(boost::shared_ptr<Form> form)  cons
 		formElement->addNode(itemElement);
 	}
 
+	foreach(const FormText::text text, form->getTextElements()) {
+		formElement->addNode(textToXML(text));
+	}
+
+	foreach (boost::shared_ptr<FormField> field, fields_) {
+		formElement->addNode(fieldToXML(field,true));
+	}
+
 	return formElement->serialize();
+}
+
+boost::shared_ptr<XMLElement> FormSerializer::textToXML(boost::shared_ptr<FormText> text) const {
+	boost::shared_ptr<XMLElement> textElement (new XMLElement("text"));
+	textElement->addNode(boost::make_shared<XMLTextNode>(text->getTextString()));
+	return textElement;
+}
+
+boost::shared_ptr<XMLElement> FormSerializer::fieldRefToXML(const std::string& ref) const {
+	boost::shared_ptr<XMLElement> fieldRefElement(new XMLElement("fieldref"));
+	fieldRefElement->setAttribute("var", ref);
+	return fieldRefElement;
+}
+
+boost::shared_ptr<XMLElement> FormSerializer::pageToXML(boost::shared_ptr<FormPage> page) const {
+	boost::shared_ptr<XMLElement> pageElement(new XMLElement("page"));
+	pageElement->setAttribute("xmlns", page->getXMLNS());
+	if (!page->getLabel().empty()) {
+		pageElement->setAttribute("label", page->getLabel());
+	}
+	foreach(const FormText::text text, page->getTextElements()) {
+		pageElement->addNode(textToXML(text));
+	}
+	foreach (const boost::shared_ptr<FormField> field, page->getFields()) {
+		pageElement->addNode(fieldRefToXML(field->getName()));
+		fields_.push_back(field);
+	}
+	foreach(const FormReportedRef::ref reportedRef, page->getReportedRefs()) {
+		pageElement->addNode(boost::make_shared<XMLElement>("reportedref"));
+	}
+	foreach(const FormSection::section section, page->getChildSections()) {
+		pageElement->addNode(sectionToXML(section));
+	}
+	return pageElement;
+}
+
+boost::shared_ptr<XMLElement> FormSerializer::sectionToXML(boost::shared_ptr<FormSection> section) const {
+	boost::shared_ptr<XMLElement> sectionElement(new XMLElement("section"));
+	if (!section->getLabel().empty()) {
+		sectionElement->setAttribute("label", section->getLabel());
+	}
+	foreach(const FormText::text text, section->getTextElements()) {
+		sectionElement->addNode(textToXML(text));
+	}
+	foreach(const boost::shared_ptr<FormField> field, section->getFields()) {
+		sectionElement->addNode(fieldRefToXML(field->getName()));
+		fields_.push_back(field);
+	}
+	foreach(const FormReportedRef::ref reportedRef, section->getReportedRefs()) {
+		sectionElement->addNode(boost::make_shared<XMLElement>("reportedref"));
+	}
+	foreach(const FormSection::section childSection, section->getChildSections()) {
+		sectionElement->addNode(sectionToXML(childSection));
+	}
+	return sectionElement;
 }
 
 boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormField> field, bool withTypeAttribute) const {
@@ -127,10 +192,8 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldToXML(boost::shared_ptr<FormF
 		boost::shared_ptr<XMLElement> valueElement(new XMLElement("value"));
 		valueElement->addNode(XMLTextNode::create(option.value));
 		optionElement->addNode(valueElement);
-
 		fieldElement->addNode(optionElement);
 	}
-
 	return fieldElement;
 }
 
@@ -144,5 +207,4 @@ void FormSerializer::multiLineify(const std::string& text, const std::string& el
 		element->addNode(lineElement);
 	}
 }
-
 }

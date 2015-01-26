@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
-
+#include <iostream>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
-
+#include <map>
 #include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
-FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false), parsingOption_(false) {
+FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false), parsingOption_(false), parseStarted_(false), hasReportedRef_(false){
 }
 
 void FormParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
+		parseStarted_ = true;
 		std::string type = attributes.getAttribute("type");
 		if (type == "form") {
 			getPayloadInternal()->setType(Form::FormType);
@@ -41,6 +42,10 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
 		}
 		else if (element == "item") {
 			parsingItem_ = true;
+		}
+		else if (element == "page") {
+			currentPage_ = boost::make_shared<FormPage>();
+			currentPage_->setLabel(attributes.getAttribute("label"));
 		}
 	}
 	else if (level_ == FieldLevel && currentField_) {
@@ -94,6 +99,30 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
 			currentText_.clear();
 		}
 	}
+	if (level_ > PayloadLevel) {
+		if (element == "section") {
+			currentSection_ = boost::make_shared<FormSection>();
+			currentSection_->setLabel(attributes.getAttribute("label"));
+			sectionStack_.push_back(currentSection_);
+			currentSections_.push_back(currentSection_);
+		}
+		if (element == "reportedref") {
+			currentReportedRef_ = boost::make_shared<FormReportedRef>();
+		}
+		if (element == "fieldref") {
+			currentText_.clear();
+			currentFieldRef_ = attributes.getAttribute("var");
+			if (sectionStack_.size() > 0) {
+				sectionStack_.at(sectionStack_.size()-1)->addFieldRef(currentFieldRef_);
+			} else if (currentPage_) {
+				currentPage_->addFieldRef(currentFieldRef_);
+			}
+		}
+		if (element == "text") {
+			currentText_.clear();
+			currentTextElement_ = boost::make_shared<FormText>();
+		}
+	}
 	++level_;
 }
 
@@ -126,6 +155,10 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
 			getPayloadInternal()->addItem(currentFields_);
 			currentFields_.clear();
 		}
+		else if (element == "page") {
+			getPayloadInternal()->addPage(currentPage_);
+			currentPages_.push_back(currentPage_);
+		}
 	}
 	else if (currentField_) {
 		if (element == "required") {
@@ -156,9 +189,60 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
 				currentFields_.push_back(currentField_);
 			} 
 			else {
-				getPayloadInternal()->addField(currentField_);
+				if (currentPages_.size() > 0) {
+					foreach (boost::shared_ptr<FormPage> page, currentPages_) {
+						foreach (std::string pRef, page->getFieldRefs()) {
+							if (pRef == currentField_->getName()) {
+								page->addField(currentField_);
+							}
+						}
+					}
+					foreach (boost::shared_ptr<FormSection> section, currentSections_) {
+						foreach (std::string sRef, section->getFieldRefs()) {
+							if (sRef == currentField_->getName()) {
+								section->addField(currentField_);
+							}
+						}
+					}
+				} else {
+					getPayloadInternal()->addField(currentField_);
+				}
 			}
 			currentField_.reset();
+		}
+	}
+	if (level_ > PayloadLevel) {
+		if (element == "section") {
+			if (sectionStack_.size() > 1) {
+				// Add the section at the top of the stack to the level below
+				sectionStack_.at(sectionStack_.size()-2)->addChildSection(sectionStack_.at(sectionStack_.size()-1));
+				sectionStack_.pop_back();
+			}
+			else if (sectionStack_.size() == 1) {
+				// Add the remaining section on the stack to it's parent page
+				currentPage_->addChildSection(sectionStack_.at(sectionStack_.size()-1));
+				sectionStack_.pop_back();
+			}
+		}
+		if (currentReportedRef_ && !hasReportedRef_) {
+			if (sectionStack_.size() > 0) {
+				sectionStack_.at(sectionStack_.size()-1)->addReportedRef(currentReportedRef_);
+			} else if (currentPage_) {
+				currentPage_->addReportedRef(currentReportedRef_);
+			}
+			hasReportedRef_ = true;
+			currentReportedRef_.reset();
+		}
+		if (currentTextElement_) {
+			if (element == "text") {
+				currentTextElement_->setTextString(currentText_);
+			}
+			if (sectionStack_.size() > 0) {
+				sectionStack_.at(sectionStack_.size()-1)->addTextElement(currentTextElement_);
+			} else if (currentPage_) {
+				currentPage_->addTextElement(currentTextElement_);
+			}
+			currentTextElement_.reset();
 		}
 	}
 }
