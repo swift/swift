@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -69,7 +69,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	correctionEnabled_ = Maybe;
 	fileTransferEnabled_ = Maybe;
 	updateTitleWithUnreadCount();
-
+	assert(settings);
 #ifdef SWIFT_EXPERIMENTAL_FT
 	setAcceptDrops(true);
 #endif
@@ -522,6 +522,9 @@ int QtChatWindow::getCount() {
 	return unreadCount_;
 }
 
+void QtChatWindow::replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour timestampBehaviour) {
+	messageLog_->replaceSystemMessage(message, id, timestampBehaviour);
+}
 
 void QtChatWindow::returnPressed() {
 	if (!isOnline_ || (blockingState_ == IsBlocked)) {
@@ -814,9 +817,9 @@ std::string QtChatWindow::addAction(const ChatMessage& message, const std::strin
 }
 
 
-void QtChatWindow::addSystemMessage(const ChatMessage& message, Direction direction) {
+std::string QtChatWindow::addSystemMessage(const ChatMessage& message, Direction direction) {
 	handleAppendedToLog();
-	messageLog_->addSystemMessage(message, direction);
+	return messageLog_->addSystemMessage(message, direction);
 }
 
 void QtChatWindow::addPresenceMessage(const ChatMessage& message, Direction direction) {

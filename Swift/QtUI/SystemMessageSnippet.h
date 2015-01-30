@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ class QDateTime;
 namespace Swift {
 	class SystemMessageSnippet : public ChatSnippet {
 		public:
-			SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme, Direction direction);
+			SystemMessageSnippet(const QString& message, const QDateTime& time, bool appendToPrevious, QtChatTheme* theme, const QString& id, Direction direction);
 			virtual ~SystemMessageSnippet();
 
 			const QString& getContent() const {return content_;}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -108,11 +108,15 @@ namespace Swift {
 			 */
 			virtual std::string addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 
-			virtual void addSystemMessage(const ChatMessage& message, Direction direction) = 0;
+			/** Adds system message to window
+			 * @return id of added message (for replacement)
+			 */
+			virtual std::string addSystemMessage(const ChatMessage& message, Direction direction) = 0;
 			virtual void addPresenceMessage(const ChatMessage& message, Direction direction) = 0;
 
 			virtual void addErrorMessage(const ChatMessage& message) = 0;
 			virtual void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceSystemMessage(const ChatMessage& message, const std::string& id, const TimestampBehaviour timestampBehaviour) = 0;
 			virtual void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			
 			// File transfer related stuff

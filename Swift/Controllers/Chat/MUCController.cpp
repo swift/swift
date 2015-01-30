@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -345,7 +345,8 @@ void MUCController::handleJoinComplete(const std::string& nick) {
 		joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
 	}
 	setNick(nick);
-	chatWindow_->replaceLastMessage(chatMessageParser_->parseMessageBody(joinMessage), ChatWindow::UpdateTimestamp);
+	chatWindow_->replaceSystemMessage(chatMessageParser_->parseMessageBody(joinMessage), lastJoinMessageUID_, ChatWindow::UpdateTimestamp);
+	lastJoinMessageUID_ = "";
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	addRecentLogs();
@@ -519,7 +520,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	joined_ = true;
 
 	if (message->hasSubject() && message->getBody().empty()) {
-		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject())), ChatWindow::DefaultDirection);;
+		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject())), ChatWindow::DefaultDirection);
 		chatWindow_->setSubject(message->getSubject());
 		doneGettingHistory_ = true;
 	}
@@ -596,9 +597,9 @@ void MUCController::setOnline(bool online) {
 		if (shouldJoinOnReconnect_) {
 			renameCounter_ = 0;
 			if (isImpromptu_) {
-				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to join chat")), ChatWindow::DefaultDirection);
+				lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to join chat")), ChatWindow::DefaultDirection);
 			} else {
-				chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+				lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
 			}
 			if (loginCheckTimer_) {
 				loginCheckTimer_->start();

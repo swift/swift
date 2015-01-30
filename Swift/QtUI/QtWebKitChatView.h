@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -55,11 +55,12 @@ namespace Swift {
 			 */
 			virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
 
-			virtual void addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
+			virtual std::string addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
 			virtual void addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
 
 			virtual void addErrorMessage(const ChatWindow::ChatMessage& message) SWIFTEN_OVERRIDE;
 			virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
+			virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, ChatWindow::TimestampBehaviour timestampBehaviour) SWIFTEN_OVERRIDE;
 			virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
 			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour) SWIFTEN_OVERRIDE;
 			virtual void setAckState(const std::string& id, ChatWindow::AckState state) SWIFTEN_OVERRIDE;
@@ -83,6 +84,7 @@ namespace Swift {
 			void replaceLastMessage(const QString& newMessage, const ChatWindow::TimestampBehaviour timestampBehaviour);
 			void replaceLastMessage(const QString& newMessage, const QString& note);
 			void replaceMessage(const QString& newMessage, const QString& id, const QDateTime& time);
+			void replaceSystemMessage(const QString& newMessage, const QString&id, const ChatWindow::TimestampBehaviour timestampBehaviour);
 			void rememberScrolledToBottom();
 			void setAckXML(const QString& id, const QString& xml);
 			void setReceiptXML(const QString& id, const QString& xml);

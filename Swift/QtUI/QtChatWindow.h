@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -82,7 +82,7 @@ namespace Swift {
 			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 
-			void addSystemMessage(const ChatMessage& message, Direction direction);
+			std::string addSystemMessage(const ChatMessage& message, Direction direction);
 			void addPresenceMessage(const ChatMessage& message, Direction direction);
 			void addErrorMessage(const ChatMessage& message);
 
@@ -113,6 +113,7 @@ namespace Swift {
 			void setRosterModel(Roster* roster);
 			void setTabComplete(TabComplete* completer);
 			int getCount();
+			virtual void replaceSystemMessage(const ChatMessage& message, const std::string& id, const TimestampBehaviour timestampBehaviour);
 			void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour timestampBehaviour);
 			void setAckState(const std::string& id, AckState state);
 

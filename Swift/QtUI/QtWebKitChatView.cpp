@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -790,22 +790,24 @@ void QtWebKitChatView::addErrorMessage(const ChatWindow::ChatMessage& errorMessa
 	}
 
 	QString errorMessageHTML(chatMessageToHTML(errorMessage));
-	
-	addMessageBottom(boost::make_shared<SystemMessageSnippet>("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_, ChatSnippet::getDirection(errorMessage)));
+	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+	addMessageBottom(boost::make_shared<SystemMessageSnippet>("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_, P2QSTRING(id), ChatSnippet::getDirection(errorMessage)));
 
 	previousMessageWasSelf_ = false;
 	previousMessageKind_ = PreviousMessageWasSystem;
 }
 
-void QtWebKitChatView::addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) {
+std::string QtWebKitChatView::addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) {
 	if (window_->isWidgetSelected()) {
 		window_->onAllMessagesRead();
 	}
 
 	QString messageHTML = chatMessageToHTML(message);
-	addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
+	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+	addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, P2QSTRING(id), getActualDirection(message, direction)));
 
 	previousMessageKind_ = PreviousMessageWasSystem;
+	return id;
 }
 
 void QtWebKitChatView::replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
@@ -814,6 +816,30 @@ void QtWebKitChatView::replaceWithAction(const ChatWindow::ChatMessage& message,
 
 void QtWebKitChatView::replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
 	replaceMessage(chatMessageToHTML(message), id, time, "", highlight);
+}
+
+void QtWebKitChatView::replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, ChatWindow::TimestampBehaviour timestampBehavior) {
+	replaceSystemMessage(chatMessageToHTML(message), P2QSTRING(id), timestampBehavior);
+}
+
+void QtWebKitChatView::replaceSystemMessage(const QString& newMessage, const QString& id, const ChatWindow::TimestampBehaviour timestampBehaviour) {
+	rememberScrolledToBottom();
+	QWebElement message = document_.findFirst("#" + id);
+	if (!message.isNull()) {
+		QWebElement replaceContent = message.findFirst("span.swift_message");
+		assert(!replaceContent.isNull());
+		QString old = replaceContent.toOuterXml();
+		replaceContent.setInnerXml(ChatSnippet::escape(newMessage));
+
+		if (timestampBehaviour == ChatWindow::UpdateTimestamp) {
+			QWebElement replace = message.findFirst("span.swift_time");
+			assert(!replace.isNull());
+			replace.setInnerXml(ChatSnippet::timeToEscapedString(QDateTime::currentDateTime()));
+		}
+	}
+	else {
+		qWarning() << "Trying to replace element with id " << id << " but it's not there.";
+	}
 }
 
 void QtWebKitChatView::replaceMessage(const QString& message, const std::string& id, const boost::posix_time::ptime& time, const QString& style, const HighlightAction& highlight) {
@@ -843,7 +869,8 @@ void QtWebKitChatView::addPresenceMessage(const ChatWindow::ChatMessage& message
 	}
 
 	QString messageHTML = chatMessageToHTML(message);
-	addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, getActualDirection(message, direction)));
+	std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+	addMessageBottom(boost::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, P2QSTRING(id), getActualDirection(message, direction)));
 
 	previousMessageKind_ = PreviousMessageWasPresence;
 }

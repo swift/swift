@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,11 +33,12 @@ namespace Swift {
 			 */
 			virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 
-			virtual void addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) = 0;
+			virtual std::string addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) = 0;
 			virtual void addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) = 0;
 
 			virtual void addErrorMessage(const ChatWindow::ChatMessage& message) = 0;
 			virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/) = 0;
 			virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
 			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/) = 0;
 			virtual void setAckState(const std::string& id, ChatWindow::AckState state) = 0;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -104,12 +104,13 @@ std::string QtPlainChatView::addAction(const ChatWindow::ChatMessage& message, c
 	return idx;
 }
 
-void QtPlainChatView::addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction /*direction*/)
+std::string QtPlainChatView::addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction /*direction*/)
 {
 	QString text = "<p><i>";
 	text += chatMessageToString(message);
 	text += "</i></p>";
 	log_->append(text);
+	return "";
 }
 
 void QtPlainChatView::addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction /*direction*/)
@@ -159,6 +160,13 @@ void QtPlainChatView::replaceLastMessage(const ChatWindow::ChatMessage& message,
 	QString text = "<p>The last message was corrected to:<br/>";
 	text += chatMessageToString(message);
 	text += "</p>";
+	log_->append(text);
+}
+
+void QtPlainChatView::replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour timestampBehaviour) {
+	QString text = "<p><i>";
+	text += chatMessageToString(message);
+	text += "</i></p>";
 	log_->append(text);
 }
 
