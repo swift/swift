@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -81,6 +81,7 @@ namespace Swift {
 			virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
+			virtual void addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&) {}
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {}
 			virtual bool isFromContact(const JID& from);

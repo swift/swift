@@ -535,6 +535,15 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 }
 
+void MUCController::addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+	if (from.isBare()) {
+		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "%1%")) % message)), ChatWindow::DefaultDirection);
+	}
+	else {
+		ChatControllerBase::addMessageHandleIncomingMessage(from, message, senderIsSelf, label, time, highlight);
+	}
+}
+
 void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction& highlight) {
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -278,7 +278,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			 highlight = highlighter_->findAction(body, senderDisplayNameFromMessage(from));
 		}
 
- 		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
+		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
 		if (replace) {
 			std::string body = message->getBody();
 			// Should check if the user has a previous message
@@ -289,7 +289,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			}
 		}
 		else {
-			lastMessagesUIID_[from] = addMessage(body, senderDisplayNameFromMessage(from), isIncomingMessageFromMe(message), label, avatarManager_->getAvatarPath(from), timeStamp, highlight);
+			addMessageHandleIncomingMessage(from, body, isIncomingMessageFromMe(message), label, timeStamp, highlight);
 		}
 
 		logMessage(body, from, selfJID_, timeStamp, true);
@@ -298,6 +298,10 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
 	onUnreadCountChanged();
 	postHandleIncomingMessage(messageEvent, highlight);
+}
+
+void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp, const HighlightAction& highlight) {
+	lastMessagesUIID_[from] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp, highlight);
 }
 
 std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
