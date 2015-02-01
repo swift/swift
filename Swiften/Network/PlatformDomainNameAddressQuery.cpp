@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,7 @@ void PlatformDomainNameAddressQuery::runBlocking() {
 	}
 	//std::cout << "PlatformDomainNameResolver::doRun()" << std::endl;
 	boost::asio::ip::tcp::resolver resolver(ioService);
-	boost::asio::ip::tcp::resolver::query query(hostname, "5222");
+	boost::asio::ip::tcp::resolver::query query(hostname, "5222", boost::asio::ip::resolver_query_base::passive);
 	try {
 		//std::cout << "PlatformDomainNameResolver::doRun(): Resolving" << std::endl;
 		boost::asio::ip::tcp::resolver::iterator endpointIterator = resolver.resolve(query);
