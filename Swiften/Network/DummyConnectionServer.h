@@ -37,7 +37,7 @@ namespace Swift {
 
 			}
 
-		public:
+		private:
 			EventLoop* eventLoop;
 			HostAddressPort localAddressPort;
 	};
