@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
