@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,6 @@
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferReceivedParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleParserFactory.h>
@@ -142,7 +141,6 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<JingleFileTransferDescriptionParserFactory>(this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<StreamInitiationFileInfoParser> >("file", "http://jabber.org/protocol/si/profile/file-transfer"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferFileInfoParser> >("file", "urn:xmpp:jingle:apps:file-transfer:4"));
-	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferReceivedParser> >("received", "urn:xmpp:jingle:apps:file-transfer:3"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<JingleFileTransferHashParser> >("checksum"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<S5BProxyRequestParser> >("query", "http://jabber.org/protocol/bytestreams"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<WhiteboardParser> >("wb", "http://swift.im/whiteboard"));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,6 @@
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferReceivedSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
@@ -132,7 +131,6 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new JingleContentPayloadSerializer());
 	serializers_.push_back(new JingleFileTransferDescriptionSerializer());
 	serializers_.push_back(new JingleFileTransferHashSerializer());
-	serializers_.push_back(new JingleFileTransferReceivedSerializer());
 	serializers_.push_back(new JingleIBBTransportPayloadSerializer());
 	serializers_.push_back(new JingleS5BTransportPayloadSerializer());
 	serializers_.push_back(new JinglePayloadSerializer(this));

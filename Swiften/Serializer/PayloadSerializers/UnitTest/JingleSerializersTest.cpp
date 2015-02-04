@@ -26,7 +26,6 @@
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Elements/JinglePayload.h>
-#include <Swiften/Elements/JingleFileTransferReceived.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/StringCodecs/Base64.h>
 
@@ -45,7 +44,6 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testSerialize_Xep0234_Example3);
 		CPPUNIT_TEST(testSerialize_Xep0234_Example5);
 		CPPUNIT_TEST(testSerialize_Xep0234_Example8);
-		CPPUNIT_TEST(testSerialize_Xep0234_Example13);
 
 		CPPUNIT_TEST(testSerialize_Xep0260_Example1);
 
@@ -333,37 +331,6 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 			
 			payload->addPayload(hash);
 			
-			CPPUNIT_ASSERT_EQUAL(expected, createTestling()->serialize(payload));
-		}
-
-		// http://xmpp.org/extensions/xep-0234.html#example-10
-		void testSerialize_Xep0234_Example13() {
-			std::string expected =
-				"<jingle"
-					" action=\"session-info\""
-					" initiator=\"romeo@montague.lit/orchard\""
-					" sid=\"a73sjjvkla37jfea\""
-					" xmlns=\"urn:xmpp:jingle:1\">"
-					"<received xmlns=\"urn:xmpp:jingle:apps:file-transfer:3\">"
-						"<file"
-							" hash=\"a749930852c69ae5d2141d3766b1552d\""
-							" xmlns=\"http://jabber.org/protocol/si/profile/file-transfer\"/>"
-					"</received>"
-				"</jingle>";
-
-			JinglePayload::ref payload = boost::make_shared<JinglePayload>();
-			payload->setAction(JinglePayload::SessionInfo);
-			payload->setInitiator(JID("romeo@montague.lit/orchard"));
-			payload->setSessionID("a73sjjvkla37jfea");
-
-			JingleFileTransferReceived::ref received = boost::make_shared<JingleFileTransferReceived>();
-
-			StreamInitiationFileInfo fileInfo;
-			fileInfo.setHash("a749930852c69ae5d2141d3766b1552d");
-
-			received->setFileInfo(fileInfo);
-			payload->addPayload(received);
-
 			CPPUNIT_ASSERT_EQUAL(expected, createTestling()->serialize(payload));
 		}
 

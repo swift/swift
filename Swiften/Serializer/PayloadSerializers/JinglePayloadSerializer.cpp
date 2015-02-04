@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
@@ -17,7 +23,6 @@
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferReceivedSerializer.h>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 
@@ -26,7 +31,6 @@
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
-#include <Swiften/Elements/JingleFileTransferReceived.h>
 
 namespace Swift {
 

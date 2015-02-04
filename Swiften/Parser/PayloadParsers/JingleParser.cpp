@@ -4,10 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Parser/PayloadParsers/JingleParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Elements/JingleContentPayload.h>
-#include <Swiften/Elements/JingleFileTransferReceived.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Base/Log.h>
 
@@ -59,11 +64,6 @@ namespace Swift {
 				boost::shared_ptr<JingleContentPayload> payload = boost::dynamic_pointer_cast<JingleContentPayload>(currentPayloadParser->getPayload());
 				if (payload) {
 					getPayloadInternal()->addContent(payload);
-				}
-				
-				boost::shared_ptr<JingleFileTransferReceived> received = boost::dynamic_pointer_cast<JingleFileTransferReceived>(currentPayloadParser->getPayload());
-				if (received) {
-					getPayloadInternal()->addPayload(received);
 				}
 
 				boost::shared_ptr<JingleFileTransferHash> hash = boost::dynamic_pointer_cast<JingleFileTransferHash>(currentPayloadParser->getPayload());

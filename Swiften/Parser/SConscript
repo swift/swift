@@ -36,7 +36,6 @@ sources = [
 		"PayloadParsers/JingleIBBTransportMethodPayloadParser.cpp",
 		"PayloadParsers/JingleS5BTransportMethodPayloadParser.cpp",
 		"PayloadParsers/JingleFileTransferDescriptionParser.cpp",
-		"PayloadParsers/JingleFileTransferReceivedParser.cpp",
 		"PayloadParsers/JingleFileTransferHashParser.cpp",
 		"PayloadParsers/JingleFileTransferFileInfoParser.cpp",
 		"PayloadParsers/StreamInitiationFileInfoParser.cpp",

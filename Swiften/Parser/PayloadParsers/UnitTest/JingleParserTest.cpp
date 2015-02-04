@@ -19,7 +19,6 @@
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
-#include <Swiften/Elements/JingleFileTransferReceived.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/StringCodecs/Base64.h>

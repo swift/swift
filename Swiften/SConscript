@@ -220,7 +220,6 @@ if env["SCONS_STAGE"] == "build" :
 			"Serializer/PayloadSerializers/JinglePayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/JingleContentPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/JingleFileTransferHashSerializer.cpp",
-			"Serializer/PayloadSerializers/JingleFileTransferReceivedSerializer.cpp",
 			"Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.cpp",
 			"Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.cpp",
