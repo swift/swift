@@ -702,7 +702,7 @@ void QtChatWindow::handleActionButtonClicked() {
 		}
 	}
 
-	QAction* bookmark = contextMenu.addAction(tr("Add boomark..."));
+	QAction* bookmark = contextMenu.addAction(tr("Add bookmark..."));
 	bookmark->setEnabled(isOnline_);
 
 	QAction* result = contextMenu.exec(QCursor::pos());
