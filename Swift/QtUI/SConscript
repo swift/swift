@@ -1,4 +1,4 @@
-import os, shutil, datetime, re, time
+import os, datetime, re, time
 import Version
 
 def generateDefaultTheme(dir) :
@@ -358,7 +358,7 @@ if env["PLATFORM"] == "darwin" :
     myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
     dsym = myenv.Command(["Swift-${SWIFT_VERSION}.dSYM"], ["Swift"], ["dsymutil -o ${TARGET} ${SOURCE}"])
     myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dSYM.zip"], dsym, ["cd ${SOURCE.dir} && zip -r ${TARGET.abspath} ${SOURCE.name}"])
-    
+
 if env.get("SWIFT_INSTALLDIR", "") :
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "bin"), swiftProgram + openURIProgram)
   env.InstallAs(os.path.join(env["SWIFT_INSTALLDIR"], "share", "pixmaps", "swift.xpm"), "#/Swift/resources/logo/logo-icon-32.xpm")
@@ -368,15 +368,15 @@ if env.get("SWIFT_INSTALLDIR", "") :
   for i in ["16", "22", "24", "64", "128"] :
     env.InstallAs(os.path.join(icons_path, i + "x" + i, "apps", "swift.png"), "#/Swift/resources/logo/logo-icon-" + i + ".png")
   env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "applications"), "#/Swift/resources/swift.desktop")
-  for dir, resource in commonResources.items() : 
+  for dir, resource in commonResources.items() :
     env.Install(os.path.join(env["SWIFT_INSTALLDIR"], "share", "swift", dir), resource)
-    
+
 if env["PLATFORM"] == "win32" :
   if env["DIST"] or ARGUMENTS.get("dump_trace") :
     commonResources[""] = commonResources.get("", []) + [
-        #os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),  
+        #os.path.join(env["OPENSSL_DIR"], "bin", "ssleay32.dll"),
         #os.path.join(env["OPENSSL_DIR"], "bin", "libeay32.dll"),
-        "#/Swift/resources/images",  
+        "#/Swift/resources/images",
       ]
     if env["SWIFTEN_DLL"] :
       commonResources[""] = commonResources.get("", []) + ["#/Swiften/${SWIFTEN_LIBRARY_FILE}"]
@@ -392,11 +392,12 @@ if env["PLATFORM"] == "win32" :
       qtlibs += ['icuin51', 'icuuc51', 'icudt51', 'libGLESv2', 'libEGL']
       qtplugins["platforms"] = ['windows']
       qtplugins["accessible"] = ["taccessiblewidgets"]
-    windowsBundleFiles = myenv.WindowsBundle("Swift", 
-      resources = commonResources,
-      qtplugins = qtplugins,
-      qtlibs = qtlibs,
-			qtversion = qt_version)
+
+    windowsBundleFiles = myenv.WindowsBundle("Swift",
+         resources = commonResources,
+         qtplugins = qtplugins,
+         qtlibs = qtlibs,
+         qtversion = qt_version)  
 
   if env["DIST"] :
     #myenv.Append(NSIS_OPTIONS = [
@@ -415,7 +416,7 @@ if env["PLATFORM"] == "win32" :
               # FIXME: This is incorrect, because it only works for latin1.
               # The correct way is \u<decimal utf16 point>? , but this is more
               # work
-              outfile.write("\\'%X" % ord(char)) 
+              outfile.write("\\'%X" % ord(char))
             else :
               outfile.write(char)
           outfile.write('\\par ')
@@ -423,10 +424,9 @@ if env["PLATFORM"] == "win32" :
         outfile.close()
         infile.close()
       copying = env.Command(["Swift/COPYING.rtf"], ["COPYING"], convertToRTF)
-
       wixvariables = {
         'VCCRTFile': env["vcredist"],
-        'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + "." + str(myenv["SWIFT_VERSION_PATCH"])	
+        'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + "." + str(myenv["SWIFT_VERSION_PATCH"])
       }
       wixincludecontent = "<Include>"
       for key in wixvariables:
@@ -438,8 +438,6 @@ if env["PLATFORM"] == "win32" :
       myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs')
       myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
       myenv.WiX_Light('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
-        
+
       if myenv["debug"] :
             myenv.InstallAs('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")
-
-

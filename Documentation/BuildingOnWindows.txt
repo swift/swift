@@ -42,12 +42,13 @@ Running tests
 Packaging Swift
 ---------------
 For packaging use:
-- Microsoft Visual C++ Express 2008
+- Microsoft Visual C++ Express 2008 or Microsoft VS 2013 Express 
 - No OpenSSL
 - WiX
+- Download the C++ redistributable package from Microsoft and put it at C:\Program Files (x86)\Common Files\Merge Modules\
 - config.py should contain:
 		qt = "c:\\qt\\4.7.4"
-		vcredist = "c:\\Program Files\\Common Files\\Merge Modules"
+		vcredist = "C:\\Program Files (x86)\\Common Files\\Merge Modules\\vcredist_x86.exe"
 		debug = 1
 		optimize = 1
 		wix_bindir = "c:\\program files\\Windows Installer XML v3.5\\bin"
