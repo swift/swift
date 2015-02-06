@@ -14,6 +14,7 @@
 #include <boost/logic/tribool.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Atomic.h>
 #include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/NullNATTraversalInterface.h>
@@ -52,7 +53,7 @@ namespace Swift {
 
 		private:
 			EventLoop* eventLoop;
-			bool stopRequested;
+			Atomic<bool> stopRequested;
 			boost::thread* thread;
 			std::deque<boost::shared_ptr<PlatformNATTraversalRequest> > queue;
 			boost::mutex queueMutex;
