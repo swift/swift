@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,18 +24,18 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
-			boostIOServiceThread_ = new BoostIOServiceThread();
 			eventLoop_ = new DummyEventLoop();
+			boostIOServiceThread_ = new BoostIOServiceThread();
 			stopped = false;
 			stoppedError.reset();
 		}
 
 		void tearDown() {
+			delete boostIOServiceThread_;
 			while (eventLoop_->hasEvents()) {
 				eventLoop_->processEvents();
 			}
 			delete eventLoop_;
-			delete boostIOServiceThread_;
 		}
 
 		void testConstructor_TwoServersOnSamePort() {

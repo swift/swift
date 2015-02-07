@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -35,16 +35,19 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			eventLoop_ = new DummyEventLoop();
 			boostIOServiceThread_ = new BoostIOServiceThread();
 			boostIOService = boost::make_shared<boost::asio::io_service>();
-			eventLoop_ = new DummyEventLoop();
 			disconnected = false;
 			connectFinished = false;
 		}
 
 		void tearDown() {
-			delete eventLoop_;
 			delete boostIOServiceThread_;
+			while (eventLoop_->hasEvents()) {
+				eventLoop_->processEvents();
+			}
+			delete eventLoop_;
 		}
 
 		void testDestructor() {

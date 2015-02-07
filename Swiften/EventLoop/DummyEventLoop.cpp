@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,6 +14,7 @@ DummyEventLoop::DummyEventLoop() {
 }
 
 DummyEventLoop::~DummyEventLoop() {
+	boost::lock_guard<boost::mutex> lock(eventsMutex_);
 	if (!events_.empty()) {
 		std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
 	}
