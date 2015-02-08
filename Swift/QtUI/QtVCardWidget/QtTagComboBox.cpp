@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "QtTagComboBox.h"
 
 #include <QAbstractItemView>
@@ -13,11 +19,11 @@ namespace Swift {
 
 QtTagComboBox::QtTagComboBox(QWidget* parent) : QComboBox(parent) {
 	setEditable(false);
-	displayModel = new QStandardItemModel();
+	displayModel = new QStandardItemModel(this);
 	displayItem = new QStandardItem();
 	displayItem->setText("");
 	displayModel->insertRow(0, displayItem);
-	editMenu = new QMenu();
+	editMenu = new QMenu(this);
 	this->setModel(displayModel);
 	editable = true;
 }

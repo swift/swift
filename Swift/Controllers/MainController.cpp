@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -123,6 +123,7 @@ MainController::MainController(
 			emoticons_(emoticons) {
 	storages_ = NULL;
 	certificateStorage_ = NULL;
+	certificateTrustChecker_ = NULL;
 	statusTracker_ = NULL;
 	presenceNotifier_ = NULL;
 	eventNotifier_ = NULL;
@@ -270,6 +271,8 @@ void MainController::resetClient() {
 	eventNotifier_ = NULL;
 	delete presenceNotifier_;
 	presenceNotifier_ = NULL;
+	delete certificateTrustChecker_;
+	certificateTrustChecker_ = NULL;
 	delete certificateStorage_;
 	certificateStorage_ = NULL;
 	delete storages_;

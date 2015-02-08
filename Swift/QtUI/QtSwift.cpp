@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -265,6 +265,7 @@ QtSwift::~QtSwift() {
 	delete chatWindowFactory_;
 	delete certificateStorageFactory_;
 	delete storagesFactory_;
+	delete applicationPathProvider_;
 }
 
 }

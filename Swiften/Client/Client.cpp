@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -86,6 +86,7 @@ Client::~Client() {
 	delete whiteboardSessionManager;
 
 	delete fileTransferManager;
+	delete blockListManager;
 	delete jingleSessionManager;
 	
 	delete blindCertificateTrustChecker;
@@ -125,6 +126,7 @@ void Client::setSoftwareVersion(const std::string& name, const std::string& vers
 }
 
 void Client::handleConnected() {
+	delete fileTransferManager;
 #ifdef SWIFT_EXPERIMENTAL_FT
 	fileTransferManager = new FileTransferManagerImpl(
 			getJID(), 

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -61,6 +61,8 @@ QtSuggestingJIDInput::QtSuggestingJIDInput(QWidget* parent, SettingsProvider* se
 QtSuggestingJIDInput::~QtSuggestingJIDInput() {
 	settings_->onSettingChanged.disconnect(boost::bind(&QtSuggestingJIDInput::handleSettingsChanged, this, _1));
 	delete treeViewPopup_;
+	delete contactListDelegate_;
+	delete contactListModel_;
 }
 
 Contact::ref QtSuggestingJIDInput::getContact() {

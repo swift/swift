@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -59,6 +59,7 @@ QtContactListWidget::QtContactListWidget(QWidget* parent, SettingsProvider* sett
 QtContactListWidget::~QtContactListWidget() {
 	delete contactListDelegate_;
 	delete removableItemDelegate_;
+	delete contactListModel_;
 }
 
 void QtContactListWidget::setList(const std::vector<Contact::ref>& list) {
