@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,8 +11,8 @@
 namespace Swift {
 	class DummySystemTray : public SystemTray {
 	public:
-		void setUnreadMessages(bool some) {}
-		void setStatusType(StatusShow::Type type) {}
+		void setUnreadMessages(bool /*some*/) {}
+		void setStatusType(StatusShow::Type /*type*/) {}
 		void setConnecting() {}
 	};
 }

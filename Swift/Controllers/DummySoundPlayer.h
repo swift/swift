@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,6 @@
 namespace Swift {
 	class DummySoundPlayer : public SoundPlayer {
 		public:
-			void playSound(SoundEffect sound, const std::string& soundResource) {}
+			void playSound(SoundEffect /*sound*/, const std::string& /*soundResource*/) {}
 	};
 }
