@@ -81,7 +81,7 @@ int ContactListModel::columnCount(const QModelIndex&) const {
 }
 
 QVariant ContactListModel::data(const QModelIndex& index, int role) const {
-	if (boost::numeric_cast<size_t>(index.row()) < contacts_.size()) {
+	if ((boost::numeric_cast<size_t>(index.row()) < contacts_.size()) && (index.column() == 0)) {
 		const Contact::ref& contact = contacts_[index.row()];
 		if (role == Qt::EditRole) {
 			return P2QSTRING(contact->jid.toString());
