@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -381,7 +381,7 @@ void QtDynamicGridLayout::handleTabCloseRequested(int index) {
 
 void QtDynamicGridLayout::handleTabCurrentChanged(int index) {
 	if (index >= 0) {
-		QTabWidget *sendingTabWidget = dynamic_cast<QTabWidget*>(sender());
+		QTabWidget* sendingTabWidget = dynamic_cast<QTabWidget*>(sender());
 		assert(sendingTabWidget);
 		sendingTabWidget->widget(index)->setFocus();
 	}
