@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -72,7 +72,7 @@ int main(int, char**) {
 	char* boshPath = getenv("SWIFT_CLIENTTEST_BOSH_PATH");
 
 	if (boshHost && boshPort && boshPath) {
-		std::cout << "Using BOSH with URL: http://" << boshHost << ":" << boshPort << "/" << boshPath << std::endl;
+		std::cout << "Using BOSH with URL: http://" << boshHost << ":" << boshPort << boshPath << std::endl;
 		options.boshURL = URL("http", boshHost, atoi(boshPort), boshPath);
 	}
 
