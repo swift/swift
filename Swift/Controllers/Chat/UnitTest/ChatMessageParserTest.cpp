@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,6 +20,7 @@ class ChatMessageParserTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testHiddenEmoticon);
 	CPPUNIT_TEST(testEndlineEmoticon);
 	CPPUNIT_TEST(testBoundedEmoticons);
+	CPPUNIT_TEST(testNoColourNoHighlight);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -67,6 +68,7 @@ public:
 		rule.setMatchCase(matchCase);
 		rule.setMatchWholeWords(matchWholeWord);
 		rule.setMatchChat(true);
+		rule.getAction().setTextBackground("white");
 		return rule;
 	}
 
@@ -85,13 +87,16 @@ public:
 		return list;
 	}
 
-	static HighlightRulesListPtr ruleListWithNickHighlight()
+	static HighlightRulesListPtr ruleListWithNickHighlight(bool withHighlightColour = true)
 	{
 		HighlightRule rule;
 		rule.setMatchChat(true);
 		rule.setNickIsKeyword(true);
 		rule.setMatchCase(true);
 		rule.setMatchWholeWords(true);
+		if (withHighlightColour) {
+			rule.getAction().setTextBackground("white");
+		}
 		boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
 		list->addRule(rule);
 		return list;
@@ -254,6 +259,12 @@ public:
 		assertText(result, 0, "(Like this ");
 		assertEmoticon(result, 1, smile1_, smile1Path_);
 		assertText(result, 2, ")");
+	}
+
+	void testNoColourNoHighlight() {
+		ChatMessageParser testling(emoticons_, ruleListWithNickHighlight(false));
+		ChatWindow::ChatMessage result = testling.parseMessageBody("Alice", "Alice");
+		assertText(result, 0, "Alice");
 	}
 
 private:

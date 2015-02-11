@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -148,6 +148,8 @@ namespace Swift {
 				continue; /* this rule only applies to MUC's, and this is a CHAT */
 			} else if (rule.getMatchChat() && mucMode_) {
 				continue; /* this rule only applies to CHAT's, and this is a MUC */
+			} else if (rule.getAction().getTextBackground().empty() && rule.getAction().getTextColor().empty()) {
+				continue; /* do not try to highlight text, if no highlight color is specified */
 			}
 			const std::vector<boost::regex> keywordRegex = rule.getKeywordRegex(nick);
 			foreach(const boost::regex& regex, keywordRegex) {
