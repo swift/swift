@@ -758,7 +758,7 @@ register_help(Client.process_events)
 --
 local get_set_shortcuts = {
 	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard', 'mam'},
-	set = {'command', 'mam'}
+	set = {'command', 'vcard', 'mam'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
 	for _, query_type in ipairs(query_types) do
@@ -962,7 +962,7 @@ register_help(Component.process_events)
 --
 local get_set_shortcuts = {
 	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard'},
-	set = {'command'}
+	set = {'command', 'vcard'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
 	for _, query_type in ipairs(query_types) do
