@@ -117,6 +117,7 @@ void SOCKS5BytestreamProxiesManager::handleProxyFound(S5BProxyRequest::ref proxy
 		onDiscoveredProxiesChanged();
 	}
 	proxyFinder_->stop();
+	proxyFinder_.reset();
 }
 
 void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error, S5BProxyRequest::ref proxy) {
