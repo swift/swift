@@ -83,12 +83,12 @@ def generate(env) :
       if qtlib.startswith("Qt5"):
         (src_path, target_path) = next(((src_path, target_path) for (src_path, target_path) in qtmappings if  qt_corelib_regex.match(src_path) and qt_corelib_regex.match(src_path).group(1) == qtlib), (None, None))
         if src_path != None:
-          env.Install(bundle, src_path)
+          all_files += env.Install(bundle, src_path)
 
     # handle core dependencies
     for (src_path, target_path) in qtmappings:
       if qt_corelib_regex.match(src_path) and not qt_corelib_regex.match(src_path).group(1).startswith("Qt5"):
-        env.Install(bundle, src_path)
+        all_files += env.Install(bundle, src_path)
 
     # handle plugins
     qt_plugin_regex = re.compile(ur".*plugins.*\\(.*)\\(.*)\.dll")
@@ -97,7 +97,7 @@ def generate(env) :
         plugin_folder, filename = qt_plugin_regex.match(src_path).groups()
         try:
           if filename[1:] in qtplugins[plugin_folder]:
-            env.Install(os.path.join(bundle, plugin_folder), src_path)
+            all_files += env.Install(os.path.join(bundle, plugin_folder), src_path)
         except:
             pass
     return all_files
