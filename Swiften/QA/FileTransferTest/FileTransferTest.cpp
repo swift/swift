@@ -6,6 +6,7 @@
 
 #include <fstream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/filesystem.hpp>
 
@@ -299,19 +300,46 @@ int main(int argc, char** argv) {
 	std::vector<std::pair<int, int> > failedTestPairs;
 	std::cout << "Swiften File-Transfer Connectivity Test Suite" << std::endl;
 	if (argc == 1) {
-		for (int n = 0; n < (1 << 7); n++) {
-			int senderCandidates = n & 0xF;
-			int receiverCandidates = (n >> 4) & 0xF;
-			std::cout << "Run test " << n + 1 << " of " << (1 << 7) << ", (" << senderCandidates << ", " << receiverCandidates << ")" << std::endl;
-			if (!runTest(senderCandidates, receiverCandidates)) {
-				failedTests++;
-				failedTestPairs.push_back(std::pair<int, int>(senderCandidates, receiverCandidates));
+		if (getenv("SWIFT_FILETRANSFERTEST_CONFIG")) {
+			// test configuration described in SWIFT_FILETRANSFERTEST_CONFIG environment variable, e.g. "1:1|2:2"
+			std::vector<std::string> configurations;
+			std::string configs_env = std::string(getenv("SWIFT_FILETRANSFERTEST_CONFIG"));
+			boost::split(configurations, configs_env, boost::is_any_of("|"));
+			foreach(const std::string& config, configurations) {
+				std::vector<std::string> split_config;
+				boost::split(split_config, config, boost::is_any_of(":"));
+				assert(split_config.size() == 2);
+
+				int senderCandidates = atoi(split_config[0].c_str());
+				int receiverCandidates = atoi(split_config[1].c_str());
+
+				if (!runTest(senderCandidates, receiverCandidates)) {
+					failedTests++;
+					failedTestPairs.push_back(std::pair<int, int>(senderCandidates, receiverCandidates));
+				}
+			}
+
+			typedef std::pair<int, int> IntPair;
+			foreach(IntPair failedTest, failedTestPairs) {
+				std::cout << "Failed test: " << "( " << failedTest.first << ", " << failedTest.second << ") " << std::endl;
 			}
 		}
+		else {
+			// test all configurations
+			for (int n = 0; n < (1 << 7); n++) {
+				int senderCandidates = n & 0xF;
+				int receiverCandidates = (n >> 4) & 0xF;
+				std::cout << "Run test " << n + 1 << " of " << (1 << 7) << ", (" << senderCandidates << ", " << receiverCandidates << ")" << std::endl;
+				if (!runTest(senderCandidates, receiverCandidates)) {
+					failedTests++;
+					failedTestPairs.push_back(std::pair<int, int>(senderCandidates, receiverCandidates));
+				}
+			}
 
-		typedef std::pair<int, int> IntPair;
-		foreach(IntPair failedTest, failedTestPairs) {
-			std::cout << "Failed test: " << "( " << failedTest.first << ", " << failedTest.second << ") " << std::endl;
+			typedef std::pair<int, int> IntPair;
+			foreach(IntPair failedTest, failedTestPairs) {
+				std::cout << "Failed test: " << "( " << failedTest.first << ", " << failedTest.second << ") " << std::endl;
+			}
 		}
 	}
 	else if (argc == 3) {

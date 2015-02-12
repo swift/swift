@@ -13,5 +13,8 @@ if env["TEST"] :
 		elif os.environ.get(i, "") :
 			myenv["ENV"][i] = os.environ[i]
 
+	# test in-band transfers, direct SOCKS5 bytestream transfers and proxied SOCKS5 bytestream transfers
+	myenv["ENV"]["SWIFT_FILETRANSFERTEST_CONFIG"] = "1:1|2:2|4:4"
+
 	tester = myenv.Program("FileTransferTest", ["FileTransferTest.cpp"])
 	myenv.Test(tester, "system")
