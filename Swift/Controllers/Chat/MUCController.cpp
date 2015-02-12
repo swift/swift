@@ -327,7 +327,7 @@ void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
 		default: break;
 		}
 	}
-	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't join room: %1%.")) % errorMessage);
+	errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't enter room: %1%.")) % errorMessage);
 	chatWindow_->addErrorMessage(chatMessageParser_->parseMessageBody(errorMessage));
 	parting_ = true;
 	if (!rejoinNick.empty() && renameCounter_ < 10) {
