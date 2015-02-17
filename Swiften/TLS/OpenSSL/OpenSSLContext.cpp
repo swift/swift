@@ -42,7 +42,7 @@ static void freeX509Stack(STACK_OF(X509)* stack) {
 OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readBIO_(0), writeBIO_(0) {
 	ensureLibraryInitialized();
 	context_ = SSL_CTX_new(SSLv23_client_method());
-	SSL_CTX_set_options(context_, SSL_OP_NO_SSLv2);
+	SSL_CTX_set_options(context_, SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
 
 	// TODO: implement CRL checking
 	// TODO: download CRL (HTTP transport)
