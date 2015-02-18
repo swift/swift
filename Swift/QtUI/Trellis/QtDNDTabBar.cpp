@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -140,7 +140,10 @@ bool QtDNDTabBar::event(QEvent* event) {
 			Qt::DropAction dropAction = drag->exec();
 			if (dropAction == Qt::IgnoreAction) {
 				// aborted drag, put tab back in place
+				// disable event handling during the insert for the tab to prevent infinite recursion (stack overflow)
+				dragWidget->blockSignals(true);
 				dynamic_cast<QTabWidget*>(parent())->insertTab(dragIndex, dragWidget, dragText);
+				dragWidget->blockSignals(false);
 			}
 			return true;
 		}
