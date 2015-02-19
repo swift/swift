@@ -43,6 +43,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 			conf = Configure(conf_env)
 			if conf.CheckTypeSize("ip_mreqn") == 0:
 				myenv.Append(CCFLAGS = ["-DNEED_STRUCT_IP_MREQN"])
+			conf.Finish()
 
 		myenv.WriteVal("src/miniupnpc/miniupnpcstrings.h", myenv.Value(
 """
