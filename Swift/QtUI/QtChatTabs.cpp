@@ -73,8 +73,8 @@ QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bo
 
 	// setup shortcuts
 	shortcuts_ << new QShortcut(QKeySequence(tr("CTRL+W", "Close chat tab.")), window(), SLOT(handleCloseTabShortcut()));
-	shortcuts_ << new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageUp), window(), SLOT(handleRequestedPreviousTab()));
-	shortcuts_ << new QShortcut(QKeySequence(Qt::CTRL, Qt::Key_PageDown), window(), SLOT(handleRequestedNextTab()));
+	shortcuts_ << new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_PageUp), window(), SLOT(handleRequestedPreviousTab()));
+	shortcuts_ << new QShortcut(QKeySequence(Qt::CTRL + Qt::Key_PageDown), window(), SLOT(handleRequestedNextTab()));
 	shortcuts_ << new QShortcut(QKeySequence(Qt::ALT + Qt::Key_A), window(), SLOT(handleRequestedActiveTab()));
 }
 
