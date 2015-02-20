@@ -23,7 +23,9 @@ void SubjectParser::handleEndElement(const std::string&, const std::string&) {
 }
 
 void SubjectParser::handleCharacterData(const std::string& data) {
-	text_ += data;
+	if (level_ == 1) { 
+		text_ += data;
+	}
 }
 
 }

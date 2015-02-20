@@ -70,6 +70,7 @@
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/SubjectSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/ThreadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/UserLocationSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/UserTuneSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/VCardSerializer.h>
@@ -82,6 +83,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new IBBSerializer());
 	serializers_.push_back(new BodySerializer());
 	serializers_.push_back(new SubjectSerializer());
+	serializers_.push_back(new ThreadSerializer());
 	serializers_.push_back(new ChatStateSerializer());
 	serializers_.push_back(new PrioritySerializer());
 	serializers_.push_back(new ErrorSerializer(this));

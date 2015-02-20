@@ -20,6 +20,11 @@
 #include <Swiften/Parser/PayloadParsers/BodyParser.h>
 #include <Swiften/Parser/PayloadParsers/BytestreamsParser.h>
 #include <Swiften/Parser/PayloadParsers/CapsInfoParser.h>
+#include <Swiften/Parser/PayloadParsers/CarbonsDisableParser.h>
+#include <Swiften/Parser/PayloadParsers/CarbonsEnableParser.h>
+#include <Swiften/Parser/PayloadParsers/CarbonsPrivateParser.h>
+#include <Swiften/Parser/PayloadParsers/CarbonsReceivedParser.h>
+#include <Swiften/Parser/PayloadParsers/CarbonsSentParser.h>
 #include <Swiften/Parser/PayloadParsers/ChatStateParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/CommandParser.h>
 #include <Swiften/Parser/PayloadParsers/DelayParser.h>
@@ -38,6 +43,7 @@
 #include <Swiften/Parser/PayloadParsers/JingleContentPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
@@ -77,9 +83,9 @@
 #include <Swiften/Parser/PayloadParsers/StatusShowParser.h>
 #include <Swiften/Parser/PayloadParsers/StorageParser.h>
 #include <Swiften/Parser/PayloadParsers/StreamInitiationFileInfoParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 #include <Swiften/Parser/PayloadParsers/StreamInitiationParser.h>
 #include <Swiften/Parser/PayloadParsers/SubjectParser.h>
+#include <Swiften/Parser/PayloadParsers/ThreadParser.h>
 #include <Swiften/Parser/PayloadParsers/UserLocationParser.h>
 #include <Swiften/Parser/PayloadParsers/UserTuneParser.h>
 #include <Swiften/Parser/PayloadParsers/VCardParser.h>
@@ -99,6 +105,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<LastParser> >("query", "jabber:iq:last"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<BodyParser> >("body"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<SubjectParser> >("subject"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<ThreadParser> >("thread"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<PriorityParser> >("priority"));
 	factories_.push_back(boost::make_shared<ErrorParserFactory>(this));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<DelayParser> >("delay", "urn:xmpp:delay"));
@@ -159,6 +166,11 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMQueryParser> >("query", "urn:xmpp:mam:0"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<MAMFinParser> >("fin", "urn:xmpp:mam:0"));
 	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<IsodeIQDelegationParser> >("delegate", "http://isode.com/iq_delegation", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<CarbonsEnableParser> >("enable", "urn:xmpp:carbons:2"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<CarbonsDisableParser> >("disable", "urn:xmpp:carbons:2"));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<CarbonsReceivedParser> >("received", "urn:xmpp:carbons:2", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory2<CarbonsSentParser> >("sent", "urn:xmpp:carbons:2", this));
+	factories_.push_back(boost::make_shared<GenericPayloadParserFactory<CarbonsPrivateParser> >("private", "urn:xmpp:carbons:2"));
 
 	foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
 		addFactory(factory.get());
