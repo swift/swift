@@ -40,6 +40,7 @@ QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bo
 #endif
 	dynamicGrid_ = new QtDynamicGridLayout(this, trellisMode);
 	connect(dynamicGrid_, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
+	connect(dynamicGrid_, SIGNAL(onCurrentIndexChanged(int)), this, SLOT(handleCurrentTabIndexChanged(int)));
 
 	QVBoxLayout *layout = new QVBoxLayout;
 	layout->setSpacing(0);
@@ -170,6 +171,10 @@ void QtChatTabs::handleWidgetShown() {
 	}
 	addTab(widget);
 	show();
+}
+
+void QtChatTabs::handleCurrentTabIndexChanged(int newIndex) {
+	handleTabTitleUpdated(dynamicGrid_->widget(newIndex));
 }
 
 void QtChatTabs::handleWantsToActivate() {

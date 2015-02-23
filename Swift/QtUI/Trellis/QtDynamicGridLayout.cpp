@@ -8,6 +8,8 @@
 
 #include <cassert>
 
+#include <QApplication>
+#include <QEvent>
 #include <QLayoutItem>
 #include <QGridLayout>
 #include <QtDebug>
@@ -23,6 +25,7 @@ QtDynamicGridLayout::QtDynamicGridLayout(QWidget* parent, bool enableDND) : QWid
 	gridLayout_ = new QGridLayout(this);
 	setContentsMargins(0,0,0,0);
 	setDimensions(QSize(1,1));
+	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*,QWidget*)));
 }
 
 QtDynamicGridLayout::~QtDynamicGridLayout() {
@@ -101,6 +104,17 @@ int QtDynamicGridLayout::indexOf(const QWidget* widget) const {
 		}
 	}
 	return -1;
+}
+
+void QtDynamicGridLayout::handleApplicationFocusChanged(QWidget*, QWidget* newFocus) {
+	if (newFocus) {
+		if (isAncestorOf(newFocus)) {
+			QtTabbable *newTab = dynamic_cast<QtTabbable*>(newFocus->parentWidget());
+			if (newTab) {
+				onCurrentIndexChanged(currentIndex());
+			}
+		}
+	}
 }
 
 int QtDynamicGridLayout::currentIndex() const {

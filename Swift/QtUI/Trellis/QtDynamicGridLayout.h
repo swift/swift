@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,6 +47,7 @@ namespace Swift {
 
 	signals:
 		void tabCloseRequested(int index);
+		void onCurrentIndexChanged(int newIndex);
 
 	public slots:
 		void setDimensions(const QSize& dim);
@@ -62,6 +63,7 @@ namespace Swift {
 	private slots:
 		void handleTabCloseRequested(int index);
 		void handleTabCurrentChanged(int index);
+		void handleApplicationFocusChanged(QWidget* oldFocus, QWidget* newFocus);
 
 	private:
 		void moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex);

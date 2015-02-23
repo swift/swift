@@ -42,6 +42,7 @@ namespace Swift {
 			void moveEvent(QMoveEvent* event);
 
 		private slots:
+			void handleCurrentTabIndexChanged(int newIndex);
 			void handleTabClosing();
 			void handleTabTitleUpdated();
 			void handleTabTitleUpdated(QWidget* widget);
