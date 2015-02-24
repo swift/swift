@@ -71,3 +71,4 @@ cscope.sh
 cscope.out
 cscope.files
 ctags.sh
+compile_commands.json
