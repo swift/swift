@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,120 +17,44 @@
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
-#include <Swiften/Jingle/FakeJingleSession.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
-
-#include <Swiften/Elements/JingleIBBTransportPayload.h>
-#include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Elements/JingleFileTransferDescription.h>
-#include <Swiften/Elements/IBB.h>
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/Network/PlatformNATTraversalWorker.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/Network/DummyConnection.h>
-#include <Swiften/Network/ConnectionFactory.h>
-#include <Swiften/Network/DummyConnectionFactory.h>
+#include <Swiften/Base/Override.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
-
-#include <Swiften/Base/Log.h>
+#include <Swiften/Elements/IBB.h>
+#include <Swiften/Elements/JingleFileTransferDescription.h>
+#include <Swiften/Elements/JingleIBBTransportPayload.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
+#include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>
+#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
+#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
+#include <Swiften/FileTransfer/UnitTest/DummyFileTransferTransporterFactory.h>
+#include <Swiften/Jingle/FakeJingleSession.h>
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DummyConnection.h>
+#include <Swiften/Network/DummyConnectionFactory.h>
+#include <Swiften/Network/DummyConnectionServer.h>
+#include <Swiften/Network/DummyConnectionServerFactory.h>
+#include <Swiften/Network/DummyTimerFactory.h>
+#include <Swiften/Network/PlatformNATTraversalWorker.h>
+#include <Swiften/Network/PlatformNetworkEnvironment.h>
+#include <Swiften/Queries/IQRouter.h>
 
 #include <iostream>
 
-#if 0
 using namespace Swift;
-
-class OFakeRemoteJingleTransportCandidateSelector : public RemoteJingleTransportCandidateSelector {
-		void addRemoteTransportCandidates(JingleTransportPayload::ref cand) {
-			candidate = cand;
-		}
-
-		void selectCandidate() {
-			JingleS5BTransportPayload::ref payload = boost::make_shared<JingleS5BTransportPayload>();
-		    payload->setCandidateError(true);
-		    payload->setSessionID(candidate->getSessionID());
-		    onRemoteTransportCandidateSelectFinished(payload);
-		}
-
-		void setMinimumPriority(int) {
-
-		}
-
-		bool isActualCandidate(JingleTransportPayload::ref) {
-			return false;
-		}
-
-		int getPriority(JingleTransportPayload::ref) {
-			return 0;
-		}
-
-		JingleTransport::ref selectTransport(JingleTransportPayload::ref) {
-			return JingleTransport::ref();
-		}
-
-private:
-	JingleTransportPayload::ref candidate;
-};
-
-class OFakeRemoteJingleTransportCandidateSelectorFactory : public RemoteJingleTransportCandidateSelectorFactory {
-public:
-	virtual ~OFakeRemoteJingleTransportCandidateSelectorFactory() {
-
-	}
-
-	virtual RemoteJingleTransportCandidateSelector* createCandidateSelector() {
-		return new OFakeRemoteJingleTransportCandidateSelector();
-	}
-};
-
-class OFakeLocalJingleTransportCandidateGenerator : public LocalJingleTransportCandidateGenerator {
-public:
-	void emitonLocalTransportCandidatesGenerated(const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
-		onLocalTransportCandidatesGenerated(candidates);
-	}
-
-	virtual bool isActualCandidate(JingleTransportPayload::ref) {
-		return false;
-	}
-
-	virtual int getPriority(JingleTransportPayload::ref) {
-		return 0;
-	}
-
-	virtual JingleTransport::ref selectTransport(JingleTransportPayload::ref) {
-		return JingleTransport::ref();
-	}
-
-	virtual void start() SWIFTEN_OVERRIDE {
-		//JingleTransportPayload::ref payL = make_shared<JingleTransportPayload>();
-		//payL->setSessionID(payload->getSessionID());
-		// JingleS5BTransportPayload::ref payL = boost::make_shared<JingleS5BTransportPayload>();
-
-		onLocalTransportCandidatesGenerated(std::vector<JingleS5BTransportPayload::Candidate>());
-	}
-
-	virtual void stop() SWIFTEN_OVERRIDE {}
-};
-
-class OFakeLocalJingleTransportCandidateGeneratorFactory : public LocalJingleTransportCandidateGeneratorFactory {
-public:
-	virtual LocalJingleTransportCandidateGenerator* createCandidateGenerator() {
-		return new OFakeLocalJingleTransportCandidateGenerator();
-	}
-};
 
 class OutgoingJingleFileTransferTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(OutgoingJingleFileTransferTest);
 		CPPUNIT_TEST(test_SendSessionInitiateOnStart);
-		CPPUNIT_TEST(test_IBBStartsAfterSendingSessionAccept);
+		CPPUNIT_TEST(test_FallbackToIBBAfterFailingS5B);
 		CPPUNIT_TEST(test_ReceiveSessionTerminateAfterSessionInitiate);
 		CPPUNIT_TEST_SUITE_END();
 
@@ -147,12 +71,21 @@ public:
 
 		boost::shared_ptr<OutgoingJingleFileTransfer> createTestling() {
 			JID to("test@foo.com/bla");
-			StreamInitiationFileInfo fileInfo;
+			JingleFileTransferFileInfo fileInfo;
 			fileInfo.setDescription("some file");
 			fileInfo.setName("test.bin");
-			fileInfo.setHash("asdjasdas");
+			fileInfo.addHash(HashElement("sha-1", ByteArray()));
 			fileInfo.setSize(1024 * 1024);
-			return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(boost::shared_ptr<JingleSession>(fakeJingleSession), fakeRJTCSF.get(), fakeLJTCF.get(), iqRouter, idGen, JID(), to, stream, fileInfo, s5bRegistry, s5bProxy, crypto.get()));
+			return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
+				to,
+				boost::shared_ptr<JingleSession>(fakeJingleSession),
+				stream,
+				ftTransportFactory,
+				timerFactory,
+				idGen,
+				fileInfo,
+				FileTransferOptions().withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false),
+				crypto.get()));
 		}
 
 		IQ::ref createIBBRequest(IBB::ref ibb, const JID& from, const std::string& id) {
@@ -165,15 +98,16 @@ public:
 			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			fakeJingleSession = new FakeJingleSession("foo@bar.com/baz", "mysession");
 			jingleContentPayload = boost::make_shared<JingleContentPayload>();
-			fakeRJTCSF = boost::make_shared<OFakeRemoteJingleTransportCandidateSelectorFactory>();
-			fakeLJTCF = boost::make_shared<OFakeLocalJingleTransportCandidateGeneratorFactory>();
 			stanzaChannel = new DummyStanzaChannel();
 			iqRouter = new IQRouter(stanzaChannel);
 			eventLoop = new DummyEventLoop();
 			timerFactory = new DummyTimerFactory();
 			connectionFactory = new DummyConnectionFactory(eventLoop);
+			serverConnectionFactory = new DummyConnectionServerFactory(eventLoop);
 			s5bRegistry = new SOCKS5BytestreamRegistry();
-			s5bProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory);
+			networkEnvironment = new PlatformNetworkEnvironment();
+			natTraverser = new PlatformNATTraversalWorker(eventLoop);
+			bytestreamServerManager = new SOCKS5BytestreamServerManager(s5bRegistry, serverConnectionFactory, networkEnvironment, natTraverser);
 
 			data.clear();
 			for (int n=0; n < 1024 * 1024; ++n) {
@@ -183,9 +117,14 @@ public:
 			stream = boost::make_shared<ByteArrayReadBytestream>(data);
 
 			idGen = new IDGenerator();
+			s5bProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, resolver, iqRouter, "bar.com");
+			ftTransportFactory = new DummyFileTransferTransporterFactory(s5bRegistry, bytestreamServerManager, s5bProxy, idGen, connectionFactory, timerFactory, crypto.get(), iqRouter);
 		}
 
 		void tearDown() {
+			delete ftTransportFactory;
+			delete bytestreamServerManager;
+			delete s5bProxy;
 			delete idGen;
 			delete s5bRegistry;
 			delete connectionFactory;
@@ -199,27 +138,42 @@ public:
 		void test_SendSessionInitiateOnStart() {
 			boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
 			transfer->start();
+			
 			FakeJingleSession::InitiateCall call = getCall<FakeJingleSession::InitiateCall>(0);
 			JingleFileTransferDescription::ref description = boost::dynamic_pointer_cast<JingleFileTransferDescription>(call.description);
 			CPPUNIT_ASSERT(description);
-			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), description->getOffers().size());
-			CPPUNIT_ASSERT(static_cast<size_t>(1048576) == description->getOffers()[0].getSize());
+			CPPUNIT_ASSERT(static_cast<size_t>(1048576) == description->getFileInfo().getSize());
 
 			JingleS5BTransportPayload::ref transport = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(call.payload);
 			CPPUNIT_ASSERT(transport);
 		}
 		
-		void test_IBBStartsAfterSendingSessionAccept() {
+		void test_FallbackToIBBAfterFailingS5B() {
 			boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
 			transfer->start();
 
 			FakeJingleSession::InitiateCall call = getCall<FakeJingleSession::InitiateCall>(0);
-			// FIXME: we initiate with SOCSK5 now and not IBB, needs to be fixed.
-			/*
-			fakeJingleSession->onSessionAcceptReceived(call.id, call.description, call.payload);
+
+			fakeJingleSession->handleSessionAcceptReceived(call.id, call.description, call.payload);
+
+			// send candidate failure
+			JingleS5BTransportPayload::ref candidateFailurePayload = boost::make_shared<JingleS5BTransportPayload>();
+			candidateFailurePayload->setCandidateError(true);
+			candidateFailurePayload->setSessionID(call.payload->getSessionID());
+			fakeJingleSession->handleTransportInfoReceived(call.id, candidateFailurePayload);
+
+			// no S5B candidates -> fallback to IBB
+			// call at position 1 is the candidate our candidate error
+			FakeJingleSession::ReplaceTransportCall replaceCall = getCall<FakeJingleSession::ReplaceTransportCall>(2);
+
+			// accept transport replace
+			fakeJingleSession->handleTransportAcceptReceived(replaceCall.id, replaceCall.payload);
+
 			IQ::ref iqOpenStanza = stanzaChannel->getStanzaAtIndex<IQ>(0);
 			CPPUNIT_ASSERT(iqOpenStanza);
-			*/
+			IBB::ref ibbOpen = iqOpenStanza->getPayload<IBB>();
+			CPPUNIT_ASSERT(ibbOpen);
+			CPPUNIT_ASSERT_EQUAL(IBB::Open, ibbOpen->getAction());
 		}
 		
 		void test_ReceiveSessionTerminateAfterSessionInitiate() {
@@ -231,7 +185,7 @@ public:
 			FTStatusHelper helper;
 			helper.finishedCalled = false;
 			transfer->onFinished.connect(bind(&FTStatusHelper::handleFileTransferFinished, &helper, _1));
-			fakeJingleSession->onSessionTerminateReceived(JinglePayload::Reason(JinglePayload::Reason::Busy));
+			fakeJingleSession->handleSessionTerminateReceived(JinglePayload::Reason(JinglePayload::Reason::Busy));
 			CPPUNIT_ASSERT_EQUAL(true, helper.finishedCalled);
 			CPPUNIT_ASSERT(FileTransferError::PeerError == helper.error);
 		}
@@ -242,7 +196,7 @@ public:
 private:
 	void addFileTransferDescription() {
 		boost::shared_ptr<JingleFileTransferDescription> desc = boost::make_shared<JingleFileTransferDescription>();
-		desc->addOffer(StreamInitiationFileInfo());
+		desc->setFileInfo(JingleFileTransferFileInfo());
 		jingleContentPayload->addDescription(desc);
 	}
 
@@ -277,8 +231,8 @@ private:
 	boost::shared_ptr<ByteArrayReadBytestream> stream;
 	FakeJingleSession* fakeJingleSession;
 	boost::shared_ptr<JingleContentPayload> jingleContentPayload;
-	boost::shared_ptr<OFakeRemoteJingleTransportCandidateSelectorFactory> fakeRJTCSF;
-	boost::shared_ptr<OFakeLocalJingleTransportCandidateGeneratorFactory> fakeLJTCF;
+	FileTransferTransporterFactory* ftTransportFactory;
+	SOCKS5BytestreamServerManager* bytestreamServerManager;
 	DummyStanzaChannel* stanzaChannel;
 	IQRouter* iqRouter;
 	IDGenerator* idGen;
@@ -287,8 +241,11 @@ private:
 	SOCKS5BytestreamProxiesManager* s5bProxy;
 	DummyTimerFactory* timerFactory;
 	DummyConnectionFactory* connectionFactory;
+	DummyConnectionServerFactory* serverConnectionFactory;
 	boost::shared_ptr<CryptoProvider> crypto;
+	NetworkEnvironment* networkEnvironment;
+	NATTraverser* natTraverser;
+	DomainNameResolver* resolver;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(OutgoingJingleFileTransferTest);
-#endif

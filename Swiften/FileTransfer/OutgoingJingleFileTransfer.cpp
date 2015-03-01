@@ -126,6 +126,9 @@ void OutgoingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<
 	if (state == Finished) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
 
 	stopAll();
+	if (state == WaitForTermination) {
+		waitForRemoteTermination->stop();
+	}
 	if (reason && reason->type == JinglePayload::Reason::Cancel) {
 		setFinishedState(FileTransfer::State::Canceled, FileTransferError(FileTransferError::PeerError));
 	}

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -96,7 +96,15 @@ namespace Swift {
 			virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 			virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 
+			void handleSessionTerminateReceived(boost::optional<JinglePayload::Reason>);
+			void handleSessionAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleDescription>, boost::shared_ptr<JingleTransportPayload>);
+			void handleSessionInfoReceived(boost::shared_ptr<JinglePayload>);
+
 			void handleTransportReplaceReceived(const JingleContentID&, JingleTransportPayload::ref);
+			void handleTransportAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>);
+			void handleTransportInfoReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>);
+			void handleTransportRejectReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>);
+			void handleTransportInfoAcknowledged(const std::string& id);
 
 		public:
 			std::vector<Command> calledCommands;

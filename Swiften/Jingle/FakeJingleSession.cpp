@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -59,6 +59,22 @@ void FakeJingleSession::sendTransportReplace(const JingleContentID& id, JingleTr
 
 void FakeJingleSession::handleTransportReplaceReceived(const JingleContentID& contentID, JingleTransportPayload::ref transport) {
 	notifyListeners(&JingleSessionListener::handleTransportReplaceReceived, contentID, transport);
+}
+
+void FakeJingleSession::handleTransportAcceptReceived(const JingleContentID& contentID, JingleTransportPayload::ref transport) {
+	notifyListeners(&JingleSessionListener::handleTransportAcceptReceived, contentID, transport);
+}
+
+void FakeJingleSession::handleTransportInfoReceived(const JingleContentID& contentID, JingleTransportPayload::ref transport) {
+	notifyListeners(&JingleSessionListener::handleTransportInfoReceived, contentID, transport);
+}
+
+void FakeJingleSession::handleSessionTerminateReceived(boost::optional<JinglePayload::Reason> reason) {
+	notifyListeners(&JingleSessionListener::handleSessionTerminateReceived, reason);
+}
+
+void FakeJingleSession::handleSessionAcceptReceived(const JingleContentID& contentID, boost::shared_ptr<JingleDescription> desc, boost::shared_ptr<JingleTransportPayload> payload) {
+	notifyListeners(&JingleSessionListener::handleSessionAcceptReceived, contentID, desc, payload);
 }
 
 }
