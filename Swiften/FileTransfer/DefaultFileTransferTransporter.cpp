@@ -12,11 +12,15 @@
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/FileTransfer/FailingTransportSession.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/IBBReceiveSession.h>
+#include <Swiften/FileTransfer/IBBReceiveTransportSession.h>
 #include <Swiften/FileTransfer/IBBSendSession.h>
+#include <Swiften/FileTransfer/IBBSendTransportSession.h>
 #include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
 #include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
+#include <Swiften/FileTransfer/S5BTransportSession.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
@@ -27,107 +31,6 @@
 #include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
-
-namespace {
-	class IBBSendTransportSession : public TransportSession {
-		public:
-			IBBSendTransportSession(boost::shared_ptr<IBBSendSession> session) : session(session) {
-				finishedConnection = session->onFinished.connect(boost::bind(boost::ref(onFinished), _1));
-				bytesSentConnection = session->onBytesSent.connect(boost::bind(boost::ref(onBytesSent), _1));
-			}
-
-			virtual void start() SWIFTEN_OVERRIDE {
-				session->start();
-			}
-
-			virtual void stop() SWIFTEN_OVERRIDE {
-				session->stop();
-			}
-
-		private:
-			boost::shared_ptr<IBBSendSession> session;
-			boost::bsignals::scoped_connection finishedConnection;
-			boost::bsignals::scoped_connection bytesSentConnection;
-	};
-
-	class IBBReceiveTransportSession : public TransportSession {
-		public:
-			IBBReceiveTransportSession(boost::shared_ptr<IBBReceiveSession> session) : session(session) {
-				finishedConnection = session->onFinished.connect(boost::bind(boost::ref(onFinished), _1));
-			}
-
-			virtual void start() SWIFTEN_OVERRIDE {
-				session->start();
-			}
-
-			virtual void stop() SWIFTEN_OVERRIDE {
-				session->stop();
-			}
-
-		private:
-			boost::shared_ptr<IBBReceiveSession> session;
-			boost::bsignals::scoped_connection finishedConnection;
-			boost::bsignals::scoped_connection bytesSentConnection;
-	};
-
-	class FailingTransportSession : public TransportSession {
-		public:
-			virtual void start() SWIFTEN_OVERRIDE {
-				assert(false);
-				onFinished(FileTransferError(FileTransferError::PeerError));
-			}
-
-			virtual void stop() SWIFTEN_OVERRIDE {
-			}
-	};
-
-	template <typename T>
-	class S5BTransportSession : public TransportSession {
-		public:
-			S5BTransportSession(
-					boost::shared_ptr<T> session,
-					boost::shared_ptr<ReadBytestream> readStream) : 
-						session(session),
-						readStream(readStream) {
-				initialize();
-			}
-
-			S5BTransportSession(
-					boost::shared_ptr<T> session,
-					boost::shared_ptr<WriteBytestream> writeStream) : 
-						session(session),
-						writeStream(writeStream) {
-				initialize();
-			}
-
-			virtual void start() SWIFTEN_OVERRIDE {
-				if (readStream) {
-					session->startSending(readStream);
-				}
-				else {
-					session->startReceiving(writeStream);
-				}
-			}
-
-			virtual void stop() SWIFTEN_OVERRIDE {
-				session->stop();
-			}
-
-		private:
-			void initialize() {
-				finishedConnection = session->onFinished.connect(boost::bind(boost::ref(onFinished), _1));
-				bytesSentConnection = session->onBytesSent.connect(boost::bind(boost::ref(onBytesSent), _1));
-			}
-
-		private:
-			boost::shared_ptr<T> session;
-			boost::shared_ptr<ReadBytestream> readStream;
-			boost::shared_ptr<WriteBytestream> writeStream;
-
-			boost::bsignals::scoped_connection finishedConnection;
-			boost::bsignals::scoped_connection bytesSentConnection;
-	};
-}
 
 DefaultFileTransferTransporter::DefaultFileTransferTransporter(
 		const JID& initiator, 

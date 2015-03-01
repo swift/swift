@@ -23,6 +23,8 @@ sources = [
 		"FileWriteBytestream.cpp",
 		"FileTransfer.cpp",
 		"TransportSession.cpp",
+		"IBBSendTransportSession.cpp",
+		"IBBReceiveTransportSession.cpp",
 		"SOCKS5BytestreamClientSession.cpp",
 		"SOCKS5BytestreamServerInitializeRequest.cpp",
 		"SOCKS5BytestreamServerManager.cpp",
