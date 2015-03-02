@@ -176,12 +176,10 @@ void IncomingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<
 void IncomingJingleFileTransfer::checkHashAndTerminate() {
 	if (verifyData()) {
 		terminate(JinglePayload::Reason::Success);
-		setFinishedState(FileTransfer::State::Finished, FileTransferError());
 	}
 	else {
 		SWIFT_LOG(warning) << "Hash verification failed" << std::endl;
 		terminate(JinglePayload::Reason::MediaError);
-		setFinishedState(FileTransfer::State::Failed, FileTransferError());
 	}
 }
 
