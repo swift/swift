@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,6 +21,7 @@ namespace Swift {
 class IBBReceiveSession::IBBResponder : public SetResponder<IBB> {
 	public:
 		IBBResponder(IBBReceiveSession* session, IQRouter* router) : SetResponder<IBB>(router), session(session), sequenceNumber(0), receivedSize(0) {
+			setFinal(false);
 		}
 
 		virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, IBB::ref ibb) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
 	template<typename PAYLOAD_TYPE>
 	class Responder : public IQHandler {
 		public:
-			Responder(IQRouter* router) : router_(router) {
+			Responder(IQRouter* router) : router_(router), isFinalResonder_(true) {
 			}
 
 			~Responder() {
@@ -98,6 +98,10 @@ namespace Swift {
 				return router_;
 			}
 
+			void setFinal(bool isFinal) {
+				isFinalResonder_ = isFinal;
+			}
+
 		private:
 			virtual bool handleIQ(boost::shared_ptr<IQ> iq) {
 				if (iq->getType() == IQ::Set || iq->getType() == IQ::Get) {
@@ -111,7 +115,12 @@ namespace Swift {
 							result = handleGetRequest(iq->getFrom(), iq->getTo(), iq->getID(), payload);
 						}
 						if (!result) {
-							router_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::NotAllowed, ErrorPayload::Cancel));
+							if (isFinalResonder_) {
+								router_->sendIQ(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::NotAllowed, ErrorPayload::Cancel));
+							}
+							else {
+								return false;
+							}
 						}
 						return true;
 					}
@@ -121,5 +130,6 @@ namespace Swift {
 		
 		private:
 			IQRouter* router_;
+			bool isFinalResonder_;
 	};
 }
