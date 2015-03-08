@@ -26,6 +26,8 @@ namespace Swift {
 	class SOCKS5BytestreamServerManager;
 	class SOCKS5BytestreamProxiesManager;
 	class SOCKS5BytestreamServerInitializeRequest;
+	class SOCKS5BytestreamServerResourceUser;
+	class SOCKS5BytestreamServerPortForwardingUser;
 	class JingleS5BTransportPayload;
 
 	class LocalJingleTransportCandidateGenerator {
@@ -45,6 +47,7 @@ namespace Swift {
 
 		private:
 			void handleS5BServerInitialized(bool success);
+			void handlePortForwardingSetup(bool success);
 			void handleDiscoveredProxiesChanged();
 
 			void checkS5BCandidatesReady();
@@ -56,6 +59,11 @@ namespace Swift {
 			JID ownJID;
 			IDGenerator* idGenerator;
 			boost::shared_ptr<SOCKS5BytestreamServerInitializeRequest> s5bServerInitializeRequest;
+			boost::shared_ptr<SOCKS5BytestreamServerResourceUser> s5bServerResourceUser_;
+			boost::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> s5bServerPortForwardingUser_;
+			bool triedServerInit_;
+			bool triedForwarding_;
+			bool triedProxyDiscovery_;
 			FileTransferOptions options_;
 	};
 }

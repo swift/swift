@@ -26,7 +26,6 @@ sources = [
 		"IBBSendTransportSession.cpp",
 		"IBBReceiveTransportSession.cpp",
 		"SOCKS5BytestreamClientSession.cpp",
-		"SOCKS5BytestreamServerInitializeRequest.cpp",
 		"SOCKS5BytestreamServerManager.cpp",
 		"SOCKS5BytestreamServer.cpp",
 		"SOCKS5BytestreamServerSession.cpp",
@@ -38,6 +37,8 @@ sources = [
 		"FileTransferManager.cpp",
 		"FileTransferManagerImpl.cpp",
 		"IncrementalBytestreamHashCalculator.cpp",
+		"SOCKS5BytestreamServerResourceUser.cpp",
+		"SOCKS5BytestreamServerPortForwardingUser.cpp",
 	]
 
 swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))
