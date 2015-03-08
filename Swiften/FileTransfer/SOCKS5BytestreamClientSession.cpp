@@ -105,7 +105,7 @@ void SOCKS5BytestreamClientSession::process() {
 			}
 			if (unprocessedData[3] != '\x03') {
 				// we expect x'03' = DOMAINNAME here
-				// discconect & signal failure
+				// disconnect & signal failure
 				finish(true);
 				break;
 			}
