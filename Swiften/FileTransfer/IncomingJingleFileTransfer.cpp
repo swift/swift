@@ -140,7 +140,7 @@ void IncomingJingleFileTransfer::handleSessionInfoReceived(JinglePayload::ref ji
 		if (transferHash->getFileInfo().getHashes().find("sha-1") != transferHash->getFileInfo().getHashes().end()) {
 			hashes["sha-1"] = transferHash->getFileInfo().getHash("sha-1").get();
 		}
-		else if (transferHash->getFileInfo().getHashes().find("md5") != transferHash->getFileInfo().getHashes().end()) {
+		if (transferHash->getFileInfo().getHashes().find("md5") != transferHash->getFileInfo().getHashes().end()) {
 			hashes["md5"] = transferHash->getFileInfo().getHash("md5").get();
 		}
 		if (state == WaitingForHash) {
@@ -186,9 +186,9 @@ void IncomingJingleFileTransfer::checkHashAndTerminate() {
 void IncomingJingleFileTransfer::checkIfAllDataReceived() {
 	if (receivedBytes == getFileSizeInBytes()) {
 		SWIFT_LOG(debug) << "All data received." << std::endl;
-		bool hashInfoAvailable = true;
+		bool hashInfoAvailable = false;
 		foreach(const JingleFileTransferFileInfo::HashElementMap::value_type& hashElement, hashes) {
-			hashInfoAvailable &= !hashElement.second.empty();
+			hashInfoAvailable |= !hashElement.second.empty();
 		}
 
 		if (!hashInfoAvailable) {
@@ -314,6 +314,7 @@ void IncomingJingleFileTransfer::stopAll() {
 	if (state != Initial) {
 		writeStreamDataReceivedConnection.disconnect();
 		delete hashCalculator;
+		hashCalculator = NULL;
 	}
 	switch (state) {
 		case Initial: break;
@@ -333,6 +334,7 @@ void IncomingJingleFileTransfer::stopAll() {
 	}
 	if (state != Initial) {
 		delete transporter;
+		transporter = NULL;
 	}
 }
 
