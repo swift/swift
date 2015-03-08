@@ -12,6 +12,7 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
 #include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
@@ -24,7 +25,7 @@
 
 namespace Swift {
 
-class PlatformNATTraversalRequest : public boost::enable_shared_from_this<PlatformNATTraversalRequest> {
+class PlatformNATTraversalRequest : public boost::enable_shared_from_this<PlatformNATTraversalRequest>, public EventOwner {
 	public:
 		typedef boost::shared_ptr<PlatformNATTraversalRequest> ref;
 
@@ -59,16 +60,19 @@ class PlatformNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPReq
 		PlatformNATTraversalGetPublicIPRequest(PlatformNATTraversalWorker* worker) : PlatformNATTraversalRequest(worker) {
 		}
 
+		virtual ~PlatformNATTraversalGetPublicIPRequest() {
+		}
+
 		virtual void start() {
 			doRun();
 		}
 
 		virtual void stop() {
-			// TODO
+			onResult.disconnect_all_slots();
 		}
 
 		virtual void runBlocking() {
-			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->getPublicIP()));
+			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->getPublicIP()), shared_from_this());
 		}
 };
 
@@ -77,16 +81,19 @@ class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortReq
 		PlatformNATTraversalForwardPortRequest(PlatformNATTraversalWorker* worker, unsigned int localIP, unsigned int publicIP) : PlatformNATTraversalRequest(worker), localIP(localIP), publicIP(publicIP) {
 		}
 
+		virtual ~PlatformNATTraversalForwardPortRequest() {
+		}
+
 		virtual void start() {
 			doRun();
 		}
 
 		virtual void stop() {
-			// TODO
+			onResult.disconnect_all_slots();
 		}
 
 		virtual void runBlocking() {
-			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->addPortForward(boost::numeric_cast<int>(localIP), boost::numeric_cast<int>(publicIP))));
+			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->addPortForward(boost::numeric_cast<int>(localIP), boost::numeric_cast<int>(publicIP))), shared_from_this());
 		}
 
 	private:
@@ -99,16 +106,19 @@ class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemov
 		PlatformNATTraversalRemovePortForwardingRequest(PlatformNATTraversalWorker* worker, const NATPortMapping& mapping) : PlatformNATTraversalRequest(worker), mapping(mapping) {
 		}
 
+		virtual ~PlatformNATTraversalRemovePortForwardingRequest() {
+		}
+
 		virtual void start() {
 			doRun();
 		}
 
 		virtual void stop() {
-			// TODO
+			onResult.disconnect_all_slots();
 		}
 
 		virtual void runBlocking() {
-			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->removePortForward(mapping)));
+			getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->removePortForward(mapping)), shared_from_this());
 		}
 
 	private:
