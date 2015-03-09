@@ -21,7 +21,7 @@ const std::string& FormSection::getLabel() const {
 	return label_;
 }
 
-void FormSection::addTextElement(boost::shared_ptr<FormText>& textElement) {
+void FormSection::addTextElement(boost::shared_ptr<FormText> textElement) {
 	textElements_.push_back(textElement);
 }
 
@@ -29,7 +29,7 @@ const std::vector<boost::shared_ptr<FormText> >& FormSection::getTextElements() 
 	return textElements_;
 }
 
-void FormSection::addReportedRef(boost::shared_ptr<FormReportedRef>& reportedRef) {
+void FormSection::addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef) {
 	reportedRefs_.push_back(reportedRef);
 }
 
@@ -37,7 +37,7 @@ const std::vector<boost::shared_ptr<FormReportedRef> >& FormSection::getReported
 	return reportedRefs_;
 }
 
-void FormSection::addChildSection(boost::shared_ptr<FormSection>& childSection) {
+void FormSection::addChildSection(boost::shared_ptr<FormSection> childSection) {
 	childSections_.push_back(childSection);
 }
 
@@ -45,7 +45,7 @@ const std::vector<boost::shared_ptr<FormSection> >& FormSection::getChildSection
 	return childSections_;
 }
 
-void FormSection::addField(boost::shared_ptr<FormField>& field) {
+void FormSection::addField(boost::shared_ptr<FormField> field) {
 	fields_.push_back(field);
 }
 

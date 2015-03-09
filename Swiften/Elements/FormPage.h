@@ -23,20 +23,18 @@ namespace Swift {
 			~FormPage();
 			void setLabel(const std::string& label);
 			const std::string& getLabel() const;
-			const std::string& getXMLNS() const;
-			void addChildSection(boost::shared_ptr<FormSection>& section);
+			void addChildSection(boost::shared_ptr<FormSection> section);
 			const std::vector<boost::shared_ptr<FormSection> >& getChildSections() const;
-			void addTextElement(boost::shared_ptr<FormText>& textElement);
+			void addTextElement(boost::shared_ptr<FormText> textElement);
 			const std::vector<boost::shared_ptr<FormText> >& getTextElements() const;
-			void addReportedRef(boost::shared_ptr<FormReportedRef>& reportedRef);
+			void addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef);
 			const std::vector<boost::shared_ptr<FormReportedRef> >& getReportedRefs() const;
-			void addField(boost::shared_ptr<FormField>& field);
+			void addField(boost::shared_ptr<FormField> field);
 			const std::vector<boost::shared_ptr<FormField> >& getFields() const;
 			void addFieldRef(std::string ref);
 			const std::vector<std::string> getFieldRefs() const;
 
 		private:
-			std::string xmlns_;
 			std::string label_;
 			std::vector<boost::shared_ptr<FormText> > textElements_;
 			std::vector<boost::shared_ptr<FormSection> > childSections_;

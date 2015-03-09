@@ -4,18 +4,17 @@
  * See the COPYING file for more information.
  */
 #include <iostream>
-#include <Swiften/Parser/PayloadParsers/FormParser.h>
 #include <map>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {
 
-FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false), parsingOption_(false), parseStarted_(false), hasReportedRef_(false){
+FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false), parsingOption_(false), hasReportedRef_(false){
 }
 
 void FormParser::handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
 	if (level_ == TopLevel) {
-		parseStarted_ = true;
 		std::string type = attributes.getAttribute("type");
 		if (type == "form") {
 			getPayloadInternal()->setType(Form::FormType);
@@ -191,15 +190,15 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
 			else {
 				if (currentPages_.size() > 0) {
 					foreach (boost::shared_ptr<FormPage> page, currentPages_) {
-						foreach (std::string pRef, page->getFieldRefs()) {
-							if (pRef == currentField_->getName()) {
+						foreach (std::string pageRef, page->getFieldRefs()) {
+							if (pageRef == currentField_->getName()) {
 								page->addField(currentField_);
 							}
 						}
 					}
 					foreach (boost::shared_ptr<FormSection> section, currentSections_) {
-						foreach (std::string sRef, section->getFieldRefs()) {
-							if (sRef == currentField_->getName()) {
+						foreach (std::string sectionRef, section->getFieldRefs()) {
+							if (sectionRef == currentField_->getName()) {
 								section->addField(currentField_);
 							}
 						}
@@ -219,7 +218,7 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
 				sectionStack_.pop_back();
 			}
 			else if (sectionStack_.size() == 1) {
-				// Add the remaining section on the stack to it's parent page
+				// Add the remaining section on the stack to its parent page
 				currentPage_->addChildSection(sectionStack_.at(sectionStack_.size()-1));
 				sectionStack_.pop_back();
 			}

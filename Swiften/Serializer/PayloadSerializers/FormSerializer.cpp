@@ -101,7 +101,7 @@ boost::shared_ptr<XMLElement> FormSerializer::fieldRefToXML(const std::string& r
 
 boost::shared_ptr<XMLElement> FormSerializer::pageToXML(boost::shared_ptr<FormPage> page) const {
 	boost::shared_ptr<XMLElement> pageElement(new XMLElement("page"));
-	pageElement->setAttribute("xmlns", page->getXMLNS());
+	pageElement->setAttribute("xmlns", "http://jabber.org/protocol/xdata-layout");
 	if (!page->getLabel().empty()) {
 		pageElement->setAttribute("label", page->getLabel());
 	}

@@ -7,7 +7,7 @@
 
 namespace Swift {
 
-FormPage::FormPage() : xmlns_("http://jabber.org/protocol/xdata-layout") {
+FormPage::FormPage() {
 }
 
 FormPage::~FormPage() {
@@ -21,11 +21,7 @@ const std::string& FormPage::getLabel() const {
 	return label_;
 }
 
-const std::string& FormPage::getXMLNS() const {
-	return xmlns_;
-}
-
-void FormPage::addChildSection(boost::shared_ptr<FormSection>& section) {
+void FormPage::addChildSection(boost::shared_ptr<FormSection> section) {
 	childSections_.push_back(section);
 }
 
@@ -33,7 +29,7 @@ const std::vector<boost::shared_ptr<FormSection> >& FormPage::getChildSections()
 	return childSections_;
 }
 
-void FormPage::addTextElement(boost::shared_ptr<FormText>& textElement) {
+void FormPage::addTextElement(boost::shared_ptr<FormText> textElement) {
 	textElements_.push_back(textElement);
 }
 
@@ -41,7 +37,7 @@ const std::vector<boost::shared_ptr<FormText> >& FormPage::getTextElements() con
 	return textElements_;
 }
 
-void FormPage::addReportedRef(boost::shared_ptr<FormReportedRef>& reportedRef) {
+void FormPage::addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef) {
 	reportedRefs_.push_back(reportedRef);
 }
 
@@ -49,7 +45,7 @@ const std::vector<boost::shared_ptr<FormReportedRef> >& FormPage::getReportedRef
 	return reportedRefs_;
 }
 
-void FormPage::addField(boost::shared_ptr<FormField>& field) {
+void FormPage::addField(boost::shared_ptr<FormField> field) {
 	fields_.push_back(field);
 }
 

@@ -32,7 +32,6 @@ namespace Swift {
 			bool parsingItem_;
 			bool parsingReported_;
 			bool parsingOption_;
-			bool parseStarted_;
 			bool hasReportedRef_;
 			FormField::ref currentField_;
 			std::vector<FormField::ref> currentFields_;
