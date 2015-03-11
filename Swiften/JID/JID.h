@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -195,4 +195,3 @@ namespace Swift {
 	
 	SWIFTEN_API std::ostream& operator<<(std::ostream& os, const Swift::JID& j);
 }
-
