@@ -159,7 +159,6 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new CarbonsDisableSerializer());
 	serializers_.push_back(new CarbonsEnableSerializer());
 	serializers_.push_back(new CarbonsPrivateSerializer());
-	serializers_.push_back(new CarbonsPrivateSerializer());
 	serializers_.push_back(new CarbonsReceivedSerializer(this));
 	serializers_.push_back(new CarbonsSentSerializer(this));
 
