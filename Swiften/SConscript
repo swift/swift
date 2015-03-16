@@ -477,6 +477,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Serializer/PayloadSerializers/UnitTest/CapsInfoSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/FormSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/DiscoInfoSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/CapsInfoSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/ErrorSerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/PrioritySerializerTest.cpp"),
 			File("Serializer/PayloadSerializers/UnitTest/ResourceBindSerializerTest.cpp"),
