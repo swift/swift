@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,10 +20,12 @@ namespace Swift {
 	class DomainNameResolver;
 	class TimerFactory;
 	class EventLoop;
+	class HTTPTrafficFilter;
+
 	class HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
 		public:
-			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
-			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword);
+			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = boost::shared_ptr<HTTPTrafficFilter>());
+			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword, boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = boost::shared_ptr<HTTPTrafficFilter>());
 
 			virtual boost::shared_ptr<Connection> createConnection();
 
@@ -35,5 +37,6 @@ namespace Swift {
 			int proxyPort_;
 			SafeString authID_;
 			SafeString authPassword_;
+			boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter_;
 	};
 }

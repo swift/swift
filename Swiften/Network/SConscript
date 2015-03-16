@@ -25,9 +25,9 @@ sourceList = [
 			"ConnectionServerFactory.cpp",
 			"DummyConnection.cpp",
 			"FakeConnection.cpp",
- 			"ChainedConnector.cpp",
- 			"Connector.cpp",
- 			"Connection.cpp",
+			"ChainedConnector.cpp",
+			"Connector.cpp",
+			"Connection.cpp",
 			"TimerFactory.cpp",
 			"DummyTimerFactory.cpp",
 			"BoostTimerFactory.cpp",
@@ -53,6 +53,7 @@ sourceList = [
 			"NATTraversalForwardPortRequest.cpp",
 			"NATTraversalRemovePortForwardingRequest.cpp",
 			"NATTraversalInterface.cpp",
+			"HTTPTrafficFilter.cpp",
 	]
 
 if myenv.get("unbound", False) :
