@@ -83,7 +83,7 @@ void HTTPConnectProxiedConnection::parseHTTPHeader(const std::string& data, std:
 	}
 }
 
-void HTTPConnectProxiedConnection::sendHTTPRequest(const std::string& statusLine, std::vector<std::pair<std::string, std::string> >& headerFields) {
+void HTTPConnectProxiedConnection::sendHTTPRequest(const std::string& statusLine, const std::vector<std::pair<std::string, std::string> >& headerFields) {
 	typedef std::pair<std::string, std::string> HTTPHeaderField;
 	std::stringstream request;
 
@@ -98,13 +98,20 @@ void HTTPConnectProxiedConnection::sendHTTPRequest(const std::string& statusLine
 void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data) {
 	std::string dataString = byteArrayToString(ByteArray(data->begin(), data->end()));
 	SWIFT_LOG(debug) << data << std::endl;
+	httpResponseBuffer_.append(dataString);
 
 	std::string statusLine;
 	std::vector<std::pair<std::string, std::string> > headerFields;
 
-	std::string::size_type headerEnd = dataString.find("\r\n\r\n", 0);
+	std::string::size_type headerEnd = httpResponseBuffer_.find("\r\n\r\n", 0);
+	if (headerEnd == std::string::npos) {
+		if ((httpResponseBuffer_.size() > 4) && (httpResponseBuffer_.substr(0, 4) != "HTTP")) {
+			setProxyInitializeFinished(false);
+		}
+		return;
+	}
 
-	parseHTTPHeader(dataString.substr(0, headerEnd), statusLine, headerFields);
+	parseHTTPHeader(httpResponseBuffer_.substr(0, headerEnd), statusLine, headerFields);
 
 	if (trafficFilter_) {
 		std::vector<std::pair<std::string, std::string> > newHeaderFields = trafficFilter_->filterHTTPResponseHeader(headerFields);
@@ -112,7 +119,6 @@ void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<S
 			std::stringstream statusLine;
 			statusLine << "CONNECT " << getServer().getAddress().toString() << ":" << getServer().getPort();
 			sendHTTPRequest(statusLine.str(), newHeaderFields);
-			SWIFT_LOG(debug) << "send HTTP request from traffic filter" << std::endl;
 			return;
 		}
 	}
@@ -126,7 +132,7 @@ void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<S
 				setProxyInitializeFinished(true);
 			}
 			else {
-				SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << byteArrayToString(ByteArray(data->begin(), data->end())) << std::endl;
+				SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << httpResponseBuffer_ << std::endl;
 				setProxyInitializeFinished(false);
 			}
 		}
@@ -138,4 +144,5 @@ void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<S
 	else {
 		setProxyInitializeFinished(false);
 	}
+	httpResponseBuffer_.clear();
 }

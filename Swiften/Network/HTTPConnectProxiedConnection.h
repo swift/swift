@@ -41,12 +41,13 @@ namespace Swift {
 			virtual void initializeProxy();
 			virtual void handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data);
 
-			void sendHTTPRequest(const std::string& statusLine, std::vector<std::pair<std::string, std::string> >& headerFields);
+			void sendHTTPRequest(const std::string& statusLine, const std::vector<std::pair<std::string, std::string> >& headerFields);
 			void parseHTTPHeader(const std::string& data, std::string& statusLine, std::vector<std::pair<std::string, std::string> >& headerFields);
 
 		private:
 			SafeByteArray authID_;
 			SafeByteArray authPassword_;
 			boost::shared_ptr<HTTPTrafficFilter> trafficFilter_;
+			std::string httpResponseBuffer_;
 	};
 }

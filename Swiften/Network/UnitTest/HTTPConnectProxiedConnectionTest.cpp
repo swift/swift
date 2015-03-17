@@ -49,6 +49,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConnect_CreatesConnectionToProxy);
 		CPPUNIT_TEST(testConnect_SendsConnectRequest);
 		CPPUNIT_TEST(testConnect_ReceiveConnectResponse);
+		CPPUNIT_TEST(testConnect_ReceiveConnectChunkedResponse);
 		CPPUNIT_TEST(testConnect_ReceiveMalformedConnectResponse);
 		CPPUNIT_TEST(testConnect_ReceiveErrorConnectResponse);
 		CPPUNIT_TEST(testConnect_ReceiveDataAfterConnect);
@@ -117,6 +118,21 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!connectFinishedWithError);
 			CPPUNIT_ASSERT(dataRead.empty());
 		}
+
+		void testConnect_ReceiveConnectChunkedResponse() {
+			HTTPConnectProxiedConnection::ref testling(createTestling());
+			connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+
+			connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 "));
+			eventLoop->processEvents();
+			connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("200 Connection established\r\n\r\n"));
+			eventLoop->processEvents();
+
+			CPPUNIT_ASSERT(connectFinished);
+			CPPUNIT_ASSERT(!connectFinishedWithError);
+			CPPUNIT_ASSERT(dataRead.empty());
+		}
+
 
 		void testConnect_ReceiveMalformedConnectResponse() {
 			HTTPConnectProxiedConnection::ref testling(createTestling());
@@ -203,11 +219,15 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
 			connectionFactory->connections[0]->dataWritten.clear();
 
+			// test chunked response
 			connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef(
-				"HTTP/1.0 401 Unauthorized\r\n"
+				"HTTP/1.0 401 Unauthorized\r\n"));
+			eventLoop->processEvents();
+			connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef(
 				"WWW-Authenticate: Negotiate\r\n"
 				"\r\n"));
 			eventLoop->processEvents();
+
 
 			// verify that the traffic filter got called and answered with its response
 			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), httpTrafficFilter->filterResponses.size());
