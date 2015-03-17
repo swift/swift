@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -56,6 +56,9 @@ namespace Swift {
 			void handleLoginWindowGeometryChanged();
 			void handleChatWindowFontResized(int);
 			void handleHistoryWindowFontResized(int);
+
+		private:
+			void showTabs();
 
 		private:
 			SettingsProviderHierachy* settings;

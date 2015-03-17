@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -44,9 +44,7 @@ QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider*
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 	QtXMLConsoleWidget* widget = new QtXMLConsoleWidget();
 	tabs->addTab(widget);
-	if (!tabs->isVisible()) {
-		tabs->show();
-	}
+	showTabs();
 	widget->show();
 	return widget;
 }
@@ -54,10 +52,8 @@ XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 HistoryWindow* QtUIFactory::createHistoryWindow(UIEventStream* uiEventStream) {
 	QtHistoryWindow* window = new QtHistoryWindow(settings, uiEventStream);
 	tabs->addTab(window);
-	if (!tabs->isVisible()) {
-		tabs->show();
-	}
 
+	showTabs();
 	connect(window, SIGNAL(fontResized(int)), this, SLOT(handleHistoryWindowFontResized(int)));
 
 	window->handleFontResized(historyFontSize_);
@@ -73,9 +69,7 @@ void QtUIFactory::handleHistoryWindowFontResized(int size) {
 FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 	QtFileTransferListWidget* widget = new QtFileTransferListWidget();
 	tabs->addTab(widget);
-	if (!tabs->isVisible()) {
-		tabs->show();
-	}
+	showTabs();
 	widget->show();
 	return widget;
 }
@@ -177,6 +171,14 @@ BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {
 
 AdHocCommandWindow* QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {
 	return new QtAdHocCommandWindow(command);
+}
+
+void QtUIFactory::showTabs() {
+	if (tabs) {
+		if (!tabs->isVisible()) {
+			tabs->show();
+		}
+	}
 }
 
 }
