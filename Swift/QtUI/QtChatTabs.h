@@ -10,6 +10,8 @@
 #include <QRect>
 #include <QShortcut>
 
+#include <Swift/QtUI/QtChatTabsBase.h>
+
 class QTabWidget;
 class QMenu;
 
@@ -21,13 +23,13 @@ namespace Swift {
 	class QtDynamicGridLayout;
 	class QtGridSelectionDialog;
 
-	class QtChatTabs : public QWidget {
+	class QtChatTabs : public QWidget, public QtChatTabsBase {
 		Q_OBJECT
 		public:
 			QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode);
 			virtual ~QtChatTabs();
 
-			void addTab(QtTabbable* tab);
+			virtual void addTab(QtTabbable* tab);
 			void minimise();
 			QtTabbable* getCurrentTab();
 			void setViewMenu(QMenu* viewMenu);

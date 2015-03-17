@@ -108,6 +108,8 @@ sources = [
     "QtPlainChatView.cpp",
     "QtChatTheme.cpp",
     "QtChatTabs.cpp",
+    "QtChatTabsBase.cpp",
+    "QtChatTabsShortcutOnlySubstitute.cpp",
     "QtSoundPlayer.cpp",
     "QtSystemTray.cpp",
     "QtCachedImageScaler.cpp",

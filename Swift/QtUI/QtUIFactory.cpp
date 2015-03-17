@@ -10,6 +10,7 @@
 
 #include <Swift/QtUI/QtXMLConsoleWidget.h>
 #include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtChatTabsBase.h>
 #include <Swift/QtUI/QtMainWindow.h>
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Swift/QtUI/QtSystemTray.h>
@@ -36,14 +37,15 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabs(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabsBase(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
 	chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
 	historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
+	this->tabs = dynamic_cast<QtChatTabs*>(tabsBase);
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 	QtXMLConsoleWidget* widget = new QtXMLConsoleWidget();
-	tabs->addTab(widget);
+	tabsBase->addTab(widget);
 	showTabs();
 	widget->show();
 	return widget;
@@ -51,8 +53,7 @@ XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 
 HistoryWindow* QtUIFactory::createHistoryWindow(UIEventStream* uiEventStream) {
 	QtHistoryWindow* window = new QtHistoryWindow(settings, uiEventStream);
-	tabs->addTab(window);
-
+	tabsBase->addTab(window);
 	showTabs();
 	connect(window, SIGNAL(fontResized(int)), this, SLOT(handleHistoryWindowFontResized(int)));
 
@@ -68,7 +69,7 @@ void QtUIFactory::handleHistoryWindowFontResized(int size) {
 
 FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
 	QtFileTransferListWidget* widget = new QtFileTransferListWidget();
-	tabs->addTab(widget);
+	tabsBase->addTab(widget);
 	showTabs();
 	widget->show();
 	return widget;

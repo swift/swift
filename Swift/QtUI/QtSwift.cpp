@@ -38,7 +38,9 @@
 #include <Swift/Controllers/StatusCache.h>
 
 #include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtChatTabsBase.h>
 #include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtChatTabsShortcutOnlySubstitute.h>
 #include <Swift/QtUI/QtSystemTray.h>
 #include <Swift/QtUI/QtSoundPlayer.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
@@ -165,7 +167,13 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	}
 
 	bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
-	tabs_ = options.count("no-tabs") && !splitter_ ? NULL : new QtChatTabs(splitter_ != NULL, settingsHierachy_, options.count("trellis"));
+	tabs_ = NULL;
+	if (options.count("no-tabs") && !splitter_) {
+		tabs_ = new QtChatTabsShortcutOnlySubstitute();
+	}
+	else {
+		tabs_ = new QtChatTabs(splitter_ != NULL, settingsHierachy_, options.count("trellis"));
+	}
 	bool startMinimized = options.count("start-minimized") > 0;
 	applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
 	storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());

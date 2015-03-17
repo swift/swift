@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -41,7 +41,7 @@ namespace Swift {
 	class CapsStorage;
 	class MainController;
 	class QtSystemTray;
-	class QtChatTabs;
+	class QtChatTabsBase;
 	class QtChatWindowFactory;
 	class QtSoundPlayer;
 	class QtMUCSearchWindowFactory;
@@ -77,7 +77,7 @@ namespace Swift {
 			QtSoundPlayer* soundPlayer_;
 			Dock* dock_;
 			URIHandler* uriHandler_;
-			QtChatTabs* tabs_;
+			QtChatTabsBase* tabs_;
 			ApplicationPathProvider* applicationPathProvider_;
 			StoragesFactory* storagesFactory_;
 			CertificateStorageFactory* certificateStorageFactory_;
