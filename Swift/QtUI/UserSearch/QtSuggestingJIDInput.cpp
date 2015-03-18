@@ -132,6 +132,11 @@ void QtSuggestingJIDInput::keyPressEvent(QKeyEvent* event) {
 	}
 }
 
+void QtSuggestingJIDInput::hideEvent(QHideEvent* /* event */) {
+	// Hide our popup when we are hidden (can happen when a dialog is closed by the user).
+	treeViewPopup_->hide();
+}
+
 void QtSuggestingJIDInput::handleApplicationFocusChanged(QWidget* /*old*/, QWidget* /*now*/) {
 	/* Using the now argument gives use the wrong widget. This is part of the code needed
 	   to prevent stealing of focus when opening a the suggestion window. */
@@ -196,6 +201,9 @@ void QtSuggestingJIDInput::showPopup() {
 void QtSuggestingJIDInput::hidePopup() {
 	disconnect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(handleApplicationFocusChanged(QWidget*, QWidget*)));
 	treeViewPopup_->hide();
+
+	// Give focus back to input widget because the hide() call passes the focus to the wrong widget.
+	setFocus();
 }
 
 }

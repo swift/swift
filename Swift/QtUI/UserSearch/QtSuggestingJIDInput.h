@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,6 +42,7 @@ class QtSuggestingJIDInput : public QLineEdit {
 
 	protected:
 		virtual void keyPressEvent(QKeyEvent* event);
+		virtual void hideEvent(QHideEvent* event);
 
 	private:
 		void handleSettingsChanged(const std::string& setting);
