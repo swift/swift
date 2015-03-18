@@ -15,7 +15,6 @@ namespace Swift {
 	class UIEventStream {
 		public:
 			boost::signal<void (boost::shared_ptr<UIEvent>)> onUIEvent;
-
 			void send(boost::shared_ptr<UIEvent> event) {
 				onUIEvent(event);
 			}

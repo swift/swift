@@ -14,6 +14,7 @@ namespace Swift {
 		public:
 			virtual ~XMLConsoleWidgetFactory() {}
 
-			virtual XMLConsoleWidget* createXMLConsoleWidget() = 0;
+			virtual XMLConsoleWidget* createXMLConsoleWidget(UIEventStream *) = 0;
+			virtual XMLConsoleWidget* createXMLConsoleMsgWidget() = 0 ;
 	};
 }
