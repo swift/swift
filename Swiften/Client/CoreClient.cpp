@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -96,7 +96,7 @@ void CoreClient::connect(const ClientOptions& o) {
 			std::string proxyHostname = o.manualProxyHostname.empty() ? systemHTTPConnectProxy.getAddress().toString() : o.manualProxyHostname;
 			int proxyPort = o.manualProxyPort == -1 ? systemHTTPConnectProxy.getPort() : o.manualProxyPort;
 			SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
-			proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
+			proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort, o.httpTrafficFilter));
 			useDirectConnection = false;
 			break;
 		}

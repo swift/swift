@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,12 +17,32 @@
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnection.h>
+#include <Swiften/Network/HTTPTrafficFilter.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/Base/Log.h>
 
 using namespace Swift;
+
+namespace {
+	class ExampleHTTPTrafficFilter : public HTTPTrafficFilter {
+		public:
+			ExampleHTTPTrafficFilter() {}
+			virtual ~ExampleHTTPTrafficFilter() {}
+
+			virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::vector<std::pair<std::string, std::string> >& response) {
+				filterResponses.push_back(response);
+				SWIFT_LOG(debug) << std::endl;
+				return filterResponseReturn;
+			}
+
+			std::vector<std::vector<std::pair<std::string, std::string> > > filterResponses;
+
+			std::vector<std::pair<std::string, std::string> > filterResponseReturn;
+	};
+}
 
 class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(HTTPConnectProxiedConnectionTest);
@@ -35,6 +55,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testWrite_AfterConnect);
 		CPPUNIT_TEST(testDisconnect_AfterConnectRequest);
 		CPPUNIT_TEST(testDisconnect_AfterConnect);
+		CPPUNIT_TEST(testTrafficFilter);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -166,6 +187,43 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(connectionFactory->connections[0]->disconnected);
 			CPPUNIT_ASSERT(disconnected);
 			CPPUNIT_ASSERT(!disconnectedError);
+		}
+
+		void testTrafficFilter() {
+			HTTPConnectProxiedConnection::ref testling(createTestling());
+
+			boost::shared_ptr<ExampleHTTPTrafficFilter> httpTrafficFilter = boost::make_shared<ExampleHTTPTrafficFilter>();
+
+			testling->setHTTPTrafficFilter(httpTrafficFilter);
+			connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+
+			// set a default response so the server response is answered by the traffic filter
+			httpTrafficFilter->filterResponseReturn.clear();
+			httpTrafficFilter->filterResponseReturn.push_back(std::pair<std::string, std::string>("Authorization", "Negotiate a87421000492aa874209af8bc028"));
+
+			connectionFactory->connections[0]->dataWritten.clear();
+
+			connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef(
+				"HTTP/1.0 401 Unauthorized\r\n"
+				"WWW-Authenticate: Negotiate\r\n"
+				"\r\n"));
+			eventLoop->processEvents();
+
+			// verify that the traffic filter got called and answered with its response
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), httpTrafficFilter->filterResponses.size());
+			CPPUNIT_ASSERT_EQUAL(std::string("WWW-Authenticate"), httpTrafficFilter->filterResponses[0][0].first);
+
+			// remove the default response from the traffic filter
+			httpTrafficFilter->filterResponseReturn.clear();
+			eventLoop->processEvents();
+
+			// verify that the traffic filter answer is send over the wire
+			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345\r\nAuthorization:Negotiate a87421000492aa874209af8bc028\r\n\r\n"), connectionFactory->connections[0]->dataWritten);
+
+			// verify that after without the default response, the traffic filter is skipped, authentication proceeds and traffic goes right through
+			connectionFactory->connections[0]->dataWritten.clear();
+			testling->write(createSafeByteArray("abcdef"));
+			CPPUNIT_ASSERT_EQUAL(createByteArray("abcdef"), connectionFactory->connections[0]->dataWritten);
 		}
 
 	private:

@@ -14,6 +14,11 @@
 #include <Swiften/Serializer/PayloadSerializers/BodySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/BytestreamsSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/CapsInfoSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/CarbonsDisableSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/CarbonsEnableSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/CarbonsPrivateSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/CarbonsReceivedSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/CarbonsSentSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/CommandSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/DelaySerializer.h>
@@ -30,15 +35,15 @@
 #include <Swiften/Serializer/PayloadSerializers/IsodeIQDelegationSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/LastSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MAMFinSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MAMQuerySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/MAMFinSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCAdminPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCDestroyPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCInvitationPayloadSerializer.h>
@@ -150,6 +155,13 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 	serializers_.push_back(new MAMResultSerializer(this));
 	serializers_.push_back(new MAMQuerySerializer());
 	serializers_.push_back(new MAMFinSerializer());
+
+	serializers_.push_back(new CarbonsDisableSerializer());
+	serializers_.push_back(new CarbonsEnableSerializer());
+	serializers_.push_back(new CarbonsPrivateSerializer());
+	serializers_.push_back(new CarbonsReceivedSerializer(this));
+	serializers_.push_back(new CarbonsSentSerializer(this));
+
 	serializers_.push_back(new IsodeIQDelegationSerializer(this));
 	
 	foreach(PayloadSerializer* serializer, serializers_) {
