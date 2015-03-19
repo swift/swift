@@ -159,6 +159,9 @@ void QtXMLMsgSender::attributesSelector(const int &id) {
 }
 
 void QtXMLMsgSender::sendRawIqStanza() {
+	/**
+	 * Work left on adding an iq stanza
+	*/
 		
 }
 void QtXMLMsgSender::sendRawPresenceStanza() {

@@ -4,6 +4,7 @@
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Queries/IQRouter.h>
 #include "Swift/Controllers/XMLConsoleController.h"
 
 #include "Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h"
@@ -19,7 +20,7 @@ XMLConsoleController::XMLConsoleController(UIEventStream* uiEventStream, XMLCons
 	uiEventStream_->onUIEvent.connect(boost::bind(&XMLConsoleController::handleUIMsgEvent, this, _1));
 }
 
-void XMLConsoleController::setClientStanzaChannel(StanzaChannel* clientStanzaChannel) {
+void XMLConsoleController::setClientStanzaChannel(StanzaChannel* clientStanzaChannel, IQRouter* clientIQRouter) {
 	clientStanzaChannel_ = clientStanzaChannel;	
 	this->sendRawMessagePayload.connect(boost::bind(&StanzaChannel::sendMessage,clientStanzaChannel_,_1));
 	this->sendRawPresencePayload.connect(boost::bind(&StanzaChannel::sendPresence,clientStanzaChannel_,_1));

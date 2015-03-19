@@ -21,6 +21,7 @@ namespace Swift {
 	class IQ;
 	class Message;
 	class Presence;
+	class IQRouter;
 	class XMLConsoleController {
 		public:
 			XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
