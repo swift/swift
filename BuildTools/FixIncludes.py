@@ -7,6 +7,10 @@ from sets import Set
 
 filename = sys.argv[1]
 
+inPlace = False
+if "-i" in sys.argv:
+  inPlace = True
+
 filename_base = os.path.basename(filename)
 (filename_name, filename_ext) = os.path.splitext(filename_base)
 
@@ -20,6 +24,7 @@ class HeaderType:
 def findHeaderBlock(lines):
   start = False
   end = False
+  lastLine = None
 
   for idx, line in enumerate(lines):
     if not start and line.startswith("#"):
@@ -27,6 +32,8 @@ def findHeaderBlock(lines):
     elif start and (not end) and (not line.startswith("#")) and line.strip():
       end = idx-1
       break
+  if not end:
+    end = len(lines)
   return (start, end)
 
 def lineToFileName(line):
@@ -72,30 +79,42 @@ def serializeHeaderGroups(groups):
   headerList = []
   for group in range(0, HeaderType.SWIFT + 1):
     if group in groups:
-      headers = sorted(groups[group])
+      # sorted and without duplicates
+      headers = sorted(list(set(groups[group])))
       headerList.extend(headers)
       headerList.extend(["\n"])
   headerList.pop()
   return headerList
+
+def overwriteFile(filename, content):
+  with open(filename, 'w') as f:
+    for line in content:
+      f.write(line)
 
 def cleanHeaderFile(content, headerStart, headerEnd, headerGroups):
   del content[headerStart:headerEnd]
   newHeaders = serializeHeaderGroups(headerGroups)
   content[headerStart:1] = newHeaders
 
-  for line in content:
-    print line,
+  if inPlace :
+    overwriteFile(filename, content)
+  else :
+    for line in content:
+      print line,
 
 def cleanImplementationFile(content, headerStart, headerEnd, headerGroups):
   del content[headerStart:headerEnd]
   newHeaders = serializeHeaderGroups(headerGroups)
   content[headerStart:1] = newHeaders
 
-  for line in content:
-    print line,
+  if inPlace :
+    overwriteFile(filename, content)
+  else :
+    for line in content:
+      print line,
 
 
-containsIf = False
+containsComplexPreprocessorDirectives = False
 
 with open(filename) as f:
   content = f.readlines()
@@ -106,23 +125,23 @@ headerGroups = {}
 
 for line in content[headerStart:headerEnd]:
   if line.strip():
-    if line.strip().startswith("#if "):
-      containsIf = True
-      break
-
     if line.strip().startswith("#pragma once"):
       headerType = HeaderType.PRAGMA_ONCE
+    elif line.strip().startswith("#if") or line.strip().startswith("#def") or line.strip().startswith("#undef") or line.strip().startswith("#pragma "):
+      containsComplexPreprocessorDirectives = True
+      break
     else:
+      #print line
       headerType = fileNameToHeaderType(lineToFileName(line))
     
-    filename = lineToFileName(line)
+    #filename = lineToFileName(line)
     if headerType in headerGroups:
       headerGroups[headerType].append(line)
     else:
       headerGroups[headerType] = [line]
 
-if containsIf:
-  print "Cannot format headers containing preprocessor if statements"
+if containsComplexPreprocessorDirectives:
+  print "Cannot format headers containing preprocessor #if, #pragma, #define or #undef statements!"
   exit(1)
 
 if filename_base.endswith(".h"):
