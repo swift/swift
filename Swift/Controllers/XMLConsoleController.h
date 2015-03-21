@@ -22,6 +22,8 @@ namespace Swift {
 	class Message;
 	class Presence;
 	class IQRouter;
+	class StanzaChannelPresenceSender;
+	class DirectedPresenceSender;
 	class XMLConsoleController {
 		public:
 			XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory);
@@ -34,6 +36,7 @@ namespace Swift {
 			boost::signal<void (boost::shared_ptr<Message>)> sendRawMessagePayload;
 			boost::signal<void (boost::shared_ptr<IQ>)> sendRawIQPayload;
 			boost::signal<void (boost::shared_ptr<Presence>)> sendRawPresencePayload;
+			boost::signal<void ()> sendStatus; 
 
 		private:
 			void handleUIEvent(boost::shared_ptr<UIEvent> event);
@@ -44,5 +47,8 @@ namespace Swift {
 			XMLConsoleWidget* xmlConsoleWidget;
 			StanzaChannel* clientStanzaChannel_;
 			XMLConsoleWidget* xmlConsoleMsgWidget;
+			StanzaChannelPresenceSender* stanzaChannelPresenceSender_;
+			DirectedPresenceSender* stanzaChannelDirectedPresenceSender_;
+			
 	};
 }

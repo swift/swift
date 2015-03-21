@@ -27,7 +27,7 @@
 
 namespace Swift {
 
-QtXMLMsgSender::QtXMLMsgSender() {
+QtXMLMsgSender::QtXMLMsgSender(XMLConsoleController* consoleController) : consoleController_(consoleController) {
 	QWidget::setWindowTitle(tr("Message Sender"));
 
 	signalMapper = new QSignalMapper(this);
@@ -197,7 +197,7 @@ void QtXMLMsgSender::sendRawPresenceStanza() {
 	}
 		presence->setTo((sendToAddress->text()).toUtf8().constData());
 		presence->setStatus((textEdit->toPlainText()).toUtf8().constData());
-		sendRawPresencePayload(presence);
+		consoleController_->sendRawPresencePayload(presence);
 }
 void QtXMLMsgSender::sendRawMessageStanza() {
 	Message::ref message = boost::make_shared<Message>();
@@ -223,7 +223,7 @@ void QtXMLMsgSender::sendRawMessageStanza() {
 	}
 		message->setTo((sendToAddress->text()).toUtf8().constData());
 		message->updatePayload(boost::make_shared<Body>((textEdit->toPlainText()).toUtf8().constData()));
-		sendRawMessagePayload(message);
+		consoleController_->sendRawMessagePayload(message);
 
 }
 

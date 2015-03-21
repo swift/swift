@@ -23,7 +23,7 @@ namespace Swift {
 			Q_OBJECT
 
 		public:
-			QtXMLMsgSender();
+			QtXMLMsgSender(XMLConsoleController*);
 			~QtXMLMsgSender();
 
 			void show();
@@ -52,5 +52,6 @@ namespace Swift {
 			QVBoxLayout* customAttributes;
 			QComboBox* typeChooser;
 			QLabel* textLabel;
+			XMLConsoleController* consoleController_;
 	};
 }

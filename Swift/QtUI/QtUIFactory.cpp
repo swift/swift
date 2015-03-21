@@ -52,8 +52,8 @@ XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget(UIEventStream* uiEventStre
 	return widget;
 }
 
-XMLConsoleWidget* QtUIFactory::createXMLConsoleMsgWidget() {
-	XMLConsoleWidget* widget = new QtXMLMsgSender();
+XMLConsoleWidget* QtUIFactory::createXMLConsoleMsgWidget(XMLConsoleController *consoleController) {
+	XMLConsoleWidget* widget = new QtXMLMsgSender(consoleController);
 	widget->show();
 	return widget;
 }
