@@ -17,7 +17,7 @@
 namespace Swift {
 
 QtVCardOrganizationField::QtVCardOrganizationField(QWidget* parent, QGridLayout *layout, bool editable) :
-	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Organisation"), false, false), organizationLabel(NULL), organizationLineEdit(NULL), unitsTreeWidget(NULL), itemDelegate(NULL) {
+	QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Organization"), false, false), organizationLabel(NULL), organizationLineEdit(NULL), unitsTreeWidget(NULL), itemDelegate(NULL) {
 	connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 
