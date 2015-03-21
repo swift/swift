@@ -251,7 +251,7 @@ void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 	if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::No)) {
 		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
 	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::Maybe)) {
-		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent."));
+		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you send."));
 	} else {
 		if (deliveryReceiptAlert_) {
 			chatWindow_->removeAlert(*deliveryReceiptAlert_);
