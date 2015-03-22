@@ -51,7 +51,7 @@ QtXMLMsgSender::QtXMLMsgSender(XMLConsoleController* consoleController) : consol
 
 	comboBox = new QComboBox(this);
 	comboBox->addItem("--- SELECT ---",0);
-	comboBox->addItem("Iq Stanze",1);
+	comboBox->addItem("Iq Stanza",1);
 	comboBox->addItem("Presence Stanza",2);
 	comboBox->addItem("Message Stanza",3);
 	
@@ -69,7 +69,7 @@ QtXMLMsgSender::QtXMLMsgSender(XMLConsoleController* consoleController) : consol
 
 	sendButton = NULL;
 	typeChooser = NULL;
-	QWidget::setWindowTitle(tr("XML Message Sender"));
+	QWidget::setWindowTitle(tr("XML Stanza Sender"));
 	emit titleUpdated();
 }
 
@@ -160,7 +160,8 @@ void QtXMLMsgSender::attributesSelector(const int &id) {
 
 void QtXMLMsgSender::sendRawIqStanza() {
 	/**
-	 * Work left on adding an iq stanza
+	 * Work left on adding an iq stanza.Control side is more or less complete though
+	 * Only ned to connect the IQRouter in XMLConsoleController to the signal that is emitted here.
 	*/
 		
 }
@@ -195,8 +196,8 @@ void QtXMLMsgSender::sendRawPresenceStanza() {
 			break;
 
 	}
-		presence->setTo((sendToAddress->text()).toUtf8().constData());
-		presence->setStatus((textEdit->toPlainText()).toUtf8().constData());
+		presence->setTo(Q2PSTRING(sendToAddress->text()));
+		presence->setStatus(Q2PSTRING(textEdit->toPlainText()));
 		consoleController_->sendRawPresencePayload(presence);
 }
 void QtXMLMsgSender::sendRawMessageStanza() {
@@ -221,8 +222,8 @@ void QtXMLMsgSender::sendRawMessageStanza() {
 			break;
 
 	}
-		message->setTo((sendToAddress->text()).toUtf8().constData());
-		message->updatePayload(boost::make_shared<Body>((textEdit->toPlainText()).toUtf8().constData()));
+		message->setTo(Q2PSTRING(sendToAddress->text()));
+		message->updatePayload(boost::make_shared<Body>(Q2PSTRING(textEdit->toPlainText())));
 		consoleController_->sendRawMessagePayload(message);
 
 }
@@ -234,10 +235,6 @@ void QtXMLMsgSender::handleDataWritten(const SafeByteArray& data) {
 }
 std::string QtXMLMsgSender::getID() const {
 	return "QtXMLMsgSender";
-}
-void QtXMLMsgSender::sendXMLMessage( const int &q ) {
-	std::cout<<q<<"\n";
-	
 }
 
 }

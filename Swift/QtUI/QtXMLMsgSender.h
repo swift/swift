@@ -35,7 +35,6 @@ namespace Swift {
 			virtual std::string getID() const;
 
 		private slots:
-			void sendXMLMessage(const int &text);
 			void attributesSelector(const int &);
 			void sendRawIqStanza();
 			void sendRawPresenceStanza();
