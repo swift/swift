@@ -15,6 +15,7 @@
 #include <QBoxLayout>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QInputDialog>
@@ -23,16 +24,15 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
-#include <QPushButton>
+#include <QToolButton>
 #include <QSplitter>
 #include <QString>
 #include <QTextDocument>
 #include <QTextEdit>
 #include <QTime>
-#include <QToolButton>
 #include <QUrl>
 #include <QMimeData>
-
+#include <QWidgetAction>
 #include <Swiften/Base/Log.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
@@ -88,6 +88,10 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	subjectLayout_->addWidget(subject_);
 	setSubject("");
 	subject_->setReadOnly(true);
+	
+	QPushButton* emoticonButton_ = new QPushButton(this);
+	emoticonButton_->setIcon(QIcon(":/emoticons/smile.png"));
+	connect(emoticonButton_, SIGNAL(clicked()), this, SLOT(handleEmoticonButtonClicked()));
 
 	QPushButton* actionButton_ = new QPushButton(this);
 	actionButton_->setIcon(QIcon(":/icons/actions.png"));
@@ -143,7 +147,7 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	// using an extra layout to work around Qt margin glitches on OS X
 	QHBoxLayout* actionLayout = new QHBoxLayout();
 	actionLayout->addWidget(actionButton_);
-
+	actionLayout->addWidget(emoticonButton_);
 	inputBarLayout->addLayout(actionLayout);
 	layout->addLayout(inputBarLayout);
 
@@ -183,6 +187,64 @@ void QtChatWindow::handleSettingChanged(const std::string& setting) {
 	if (setting == QtUISettingConstants::SHOW_EMOTICONS.getKey()) {
 		bool showEmoticons = settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS);
 		messageLog_->showEmoticons(showEmoticons);
+	}
+}
+
+void QtChatWindow::handleEmoticonButtonClicked() {
+	QMenu emoticonMenu;
+	QGridLayout* gridLayout = new QGridLayout();
+	emoticonMenu.setLayout(gridLayout);
+	std::map<std::string, std::string> emoticonsButton;
+	loadEmoticonsFile(":/emoticons/emoticons.txt",emoticonsButton);
+	std::map<std::string, std::string>::iterator emoIterator;
+	QToolButton** arrayButtons =new QToolButton*[emoticonsButton.size()];
+	int index = 0;
+	for(emoIterator = emoticonsButton.begin(); emoIterator != emoticonsButton.end(); ++emoIterator) {
+		QString iconPath = P2QSTRING((emoIterator->first).substr(3));
+		QVariant buttonText(P2QSTRING((" "+emoIterator->second+" ")));
+		arrayButtons[index] = new QToolButton();
+		QAction* buttonAction = new QAction((QObject *)arrayButtons[index]);
+		buttonAction->setData(buttonText);
+		arrayButtons[index]->setDefaultAction(buttonAction);
+		arrayButtons[index]->setIcon(QIcon(iconPath));
+		connect(arrayButtons[index],SIGNAL(triggered(QAction*)),SLOT(handleEmoticonAddition(QAction*)));
+		index++;
+	}
+	int row = 0, col = 0, tempIndex = 0;
+	while(tempIndex < index) {
+		gridLayout->addWidget(arrayButtons[tempIndex],row,col,1,1);
+		col++;
+		if((col)%5 == 0 && col!=0) {
+			col = col % 5;
+			row = row + 1;
+		}
+		tempIndex++;
+	}
+	emoticonMenu.exec(QCursor::pos());
+
+}
+
+void QtChatWindow::handleEmoticonAddition(QAction* emoticonClickedEvent) {
+	QString emoticonText = (emoticonClickedEvent->data()).value<QString>();
+	input_->insertPlainText(emoticonText);
+}
+
+void QtChatWindow::loadEmoticonsFile(const QString& fileName, std::map<std::string, std::string>& emoticons)  {
+	QFile file(fileName);
+	if (file.exists() && file.open(QIODevice::ReadOnly)) {
+		while (!file.atEnd()) {
+			QString line = file.readLine();
+			line.replace("\n", "");
+			line.replace("\r", "");
+			QStringList tokens = line.split(" ");
+			if (tokens.size() == 2) {
+				QString emoticonFile = tokens[1];
+				if (!emoticonFile.startsWith(":/") && !emoticonFile.startsWith("qrc:/")) {
+					emoticonFile = "file://" + emoticonFile;
+				}
+				emoticons[Q2PSTRING(emoticonFile)] = Q2PSTRING(tokens[0]);
+			}
+		}
 	}
 }
 
