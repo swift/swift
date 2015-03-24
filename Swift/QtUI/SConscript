@@ -114,6 +114,7 @@ sources = [
     "QtTabbable.cpp",
     "QtTabWidget.cpp",
     "QtTextEdit.cpp",
+    "QtXMLMsgSender.cpp",
     "QtXMLConsoleWidget.cpp",
     "QtHistoryWindow.cpp",
     "QtFileTransferListWidget.cpp",
