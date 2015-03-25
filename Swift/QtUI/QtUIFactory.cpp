@@ -33,6 +33,7 @@
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 #include <Swift/QtUI/QtSingleWindow.h>
 #include <Swift/QtUI/QtBlockListEditorWindow.h>
+#include <Swift/QtUI/QtXMLMsgSender.h>
 
 namespace Swift {
 
@@ -41,8 +42,8 @@ QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider*
 	historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
 }
 
-XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
-	QtXMLConsoleWidget* widget = new QtXMLConsoleWidget();
+XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget(UIEventStream* uiEventStream) {
+	QtXMLConsoleWidget* widget = new QtXMLConsoleWidget(uiEventStream);
 	tabs->addTab(widget);
 	if (!tabs->isVisible()) {
 		tabs->show();
@@ -51,6 +52,11 @@ XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
 	return widget;
 }
 
+XMLConsoleWidget* QtUIFactory::createXMLConsoleMsgWidget(XMLConsoleController *consoleController) {
+	XMLConsoleWidget* widget = new QtXMLMsgSender(consoleController);
+	widget->show();
+	return widget;
+}
 HistoryWindow* QtUIFactory::createHistoryWindow(UIEventStream* uiEventStream) {
 	QtHistoryWindow* window = new QtHistoryWindow(settings, uiEventStream);
 	tabs->addTab(window);
