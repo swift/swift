@@ -140,6 +140,7 @@ namespace Swift {
 			void removeAlert(const AlertID id);
 			void setCorrectionEnabled(Tristate enabled);
 			void setFileTransferEnabled(Tristate enabled);
+			void handleEmoticonButtonClicked();
 
 		signals:
 			void geometryChanged();
@@ -169,6 +170,7 @@ namespace Swift {
 			void handleActionButtonClicked();
 			void handleAffiliationEditorAccepted();
 			void handleCurrentLabelChanged(int);
+			void handleEmoticonAddition(QAction* );
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -179,6 +181,7 @@ namespace Swift {
 
 			void handleOccupantSelectionChanged(RosterItem* item);
 			void handleAppendedToLog();
+			void loadEmoticonsFile(const QString& fileName, std::map<std::string, std::string>& emoticons);
 
 		private:
 			int unreadCount_;
