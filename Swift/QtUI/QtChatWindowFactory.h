@@ -6,12 +6,16 @@
 
 #pragma once
 
-#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <map>
+#include <string>
 
 #include <QObject>
 #include <QSplitter>
 
 #include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+
 #include <Swift/QtUI/QtSettingsProvider.h>
 
 namespace Swift {
@@ -23,7 +27,7 @@ namespace Swift {
 	class QtChatWindowFactory : public QObject, public ChatWindowFactory {
 		Q_OBJECT
 		public:
-			QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath);
+			QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, const std::map<std::string, std::string>& emoticons);
 			~QtChatWindowFactory();
 			ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
 		signals:
@@ -37,6 +41,7 @@ namespace Swift {
 			QtSettingsProvider* qtOnlySettings_;
 			QtChatTabs* tabs_;
 			QtChatTheme* theme_;
+			std::map<std::string, std::string> emoticons_;
 	};
 }
 

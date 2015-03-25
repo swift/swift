@@ -124,6 +124,8 @@ sources = [
     "QtBookmarkDetailWindow.cpp",
     "QtAddBookmarkWindow.cpp",
     "QtEditBookmarkWindow.cpp",
+    "QtEmoticonsGrid.cpp",
+    "QtEmoticonCell.cpp",
     "QtContactEditWindow.cpp",
     "QtContactEditWidget.cpp",
     "QtSingleWindow.cpp",
