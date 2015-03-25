@@ -8,9 +8,11 @@
 
 #include <map>
 
-#include <QPointer>
-#include <QTextCursor>
 #include <QMap>
+#include <QMenu>
+#include <QPointer>
+#include <QString>
+#include <QTextCursor>
 
 #include <SwifTools/LastLineTracker.h>
 
@@ -18,10 +20,10 @@
 
 #include <Swift/QtUI/ChatSnippet.h>
 #include <Swift/QtUI/QtAffiliationEditor.h>
+#include <Swift/QtUI/QtEmoticonsGrid.h>
 #include <Swift/QtUI/QtMUCConfigurationWindow.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabbable.h>
-
 
 
 class QTextEdit;
@@ -77,7 +79,7 @@ namespace Swift {
 		Q_OBJECT
 
 		public:
-			QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings);
+			QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons);
 			virtual ~QtChatWindow();
 			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
@@ -169,6 +171,8 @@ namespace Swift {
 			void handleActionButtonClicked();
 			void handleAffiliationEditorAccepted();
 			void handleCurrentLabelChanged(int);
+			void handleEmoticonsButtonClicked();
+			void handleEmoticonClicked(QString emoticonAsText);
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -221,5 +225,6 @@ namespace Swift {
 			bool impromptu_;
 			bool isMUC_;
 			bool supportsImpromptuChat_;
+			QMenu* emoticonsMenu_;
 	};
 }

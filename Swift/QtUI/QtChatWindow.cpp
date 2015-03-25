@@ -15,6 +15,7 @@
 #include <QBoxLayout>
 #include <QCloseEvent>
 #include <QComboBox>
+#include <QCursor>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QInputDialog>
@@ -23,7 +24,9 @@
 #include <QMenu>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QPoint>
 #include <QPushButton>
+#include <QSize>
 #include <QSplitter>
 #include <QString>
 #include <QTextDocument>
@@ -57,7 +60,7 @@
 
 namespace Swift {
 
-QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
+QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	isOnline_ = true;
@@ -140,8 +143,17 @@ QtChatWindow::QtChatWindow(const QString &contact, QtChatTheme* theme, UIEventSt
 	inputBarLayout->addWidget(correctingLabel_);
 	correctingLabel_->hide();
 
+	QPushButton* emoticonsButton_ = new QPushButton(this);
+	emoticonsButton_->setIcon(QIcon(":/emoticons/smile.png"));
+	connect(emoticonsButton_, SIGNAL(clicked()), this, SLOT(handleEmoticonsButtonClicked()));
+
+	emoticonsMenu_ = new QMenu(this);
+	QtEmoticonsGrid* emoticonsGrid = new QtEmoticonsGrid(emoticons, emoticonsMenu_);
+	connect(emoticonsGrid, SIGNAL(emoticonClicked(QString)), this, SLOT(handleEmoticonClicked(QString)));
+
 	// using an extra layout to work around Qt margin glitches on OS X
 	QHBoxLayout* actionLayout = new QHBoxLayout();
+	actionLayout->addWidget(emoticonsButton_);
 	actionLayout->addWidget(actionButton_);
 
 	inputBarLayout->addLayout(actionLayout);
@@ -514,6 +526,7 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 
 
 
+
 void QtChatWindow::flash() {
 	emit requestFlash();
 }
@@ -635,6 +648,16 @@ void QtChatWindow::setSubject(const std::string& subject) {
 	subject_->setText(P2QSTRING(subject));
 	subject_->setToolTip(P2QSTRING(subject));
 	subject_->setCursorPosition(0);
+}
+
+void QtChatWindow::handleEmoticonsButtonClicked() {
+	emoticonsMenu_->adjustSize();
+	QSize menuSize = emoticonsMenu_->size();
+	emoticonsMenu_->exec(QPoint(QCursor::pos().x() - menuSize.width(), QCursor::pos().y() - menuSize.height()));
+}
+
+void QtChatWindow::handleEmoticonClicked(QString emoticonAsText) {
+	input_->textCursor().insertText(emoticonAsText);
 }
 
 void QtChatWindow::handleActionButtonClicked() {
