@@ -159,6 +159,7 @@ namespace Swift {
 			LoginWindow* loginWindow_;
 			UIEventStream* uiEventStream_;
 			XMLConsoleController* xmlConsoleController_;
+			XMLConsoleController* xmlConsoleControllerSetupStanza_;
 			HistoryViewController* historyViewController_;
 			HistoryController* historyController_;
 			FileTransferListController* fileTransferListController_;

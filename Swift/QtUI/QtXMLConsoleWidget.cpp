@@ -5,7 +5,7 @@
  */
 
 #include "QtXMLConsoleWidget.h"
-
+#include "QtXMLMsgSender.h"
 #include <string>
 
 #include <QCloseEvent>
@@ -14,14 +14,16 @@
 #include <QPushButton>
 #include <QScrollBar>
 #include <QCheckBox>
-
+#include <QComboBox>
 #include <Swiften/Base/format.h>
+#include <Swift/Controllers/UIEvents/RequestXMLMsgConsoleUIEvent.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
-QtXMLConsoleWidget::QtXMLConsoleWidget() {
+QtXMLConsoleWidget::QtXMLConsoleWidget(UIEventStream* uiEventStream) {
+	uiEventStream_ = uiEventStream;
 	setWindowTitle(tr("Console"));
 
 	QVBoxLayout* layout = new QVBoxLayout(this);
@@ -49,6 +51,11 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 	QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
 	connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
 	buttonLayout->addWidget(clearButton);
+	
+	buttonLayout->addStretch();
+	QPushButton* sendMsgButton = new QPushButton(tr("Send Message"), bottom);
+	connect(sendMsgButton, SIGNAL(clicked()),this, SLOT(launchXMLMsgWindow()));
+	buttonLayout->addWidget(sendMsgButton);
 
 	setWindowTitle(tr("Debug Console"));
 	emit titleUpdated();
@@ -66,6 +73,10 @@ void QtXMLConsoleWidget::showEvent(QShowEvent* event) {
 void QtXMLConsoleWidget::show() {
 	QWidget::show();
 	emit windowOpening();
+}
+
+void QtXMLConsoleWidget::launchXMLMsgWindow() {
+	uiEventStream_->send(boost::make_shared<RequestXMLMsgConsoleUIEvent>());
 }
 
 void QtXMLConsoleWidget::activate() {
@@ -117,4 +128,10 @@ void QtXMLConsoleWidget::appendTextIfEnabled(const std::string& data, const QCol
 	}
 }
 
+
+
+
 }
+
+
+
