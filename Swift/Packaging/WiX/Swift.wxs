@@ -10,7 +10,14 @@
 		<Package Id='*' Keywords='Installer' Description="Swift Installer" Comments="Swift is available under the GPL version 3" Manufacturer="Swift.im" InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252' InstallScope="perMachine"/>
 		<Media Id='1' Cabinet='Swift.cab' EmbedCab='yes'/>
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version is already installed. Remove this version if you wish to downgrade." />
+		<!-- Schedule the upgrade to afterInstallExecute means that MSI will first install the new version
+			 over the existing version and run the uninstall of the old version afterwards. This way shortcuts
+			 are not recreated on every new installation and pinned shortcuts stay alive.
+			 However this requires that the components for installed files with the same filename will always
+			 have the same GUID (do not run heat.exe with -gg flag) or else when MSI removes the components 
+			 of the old version with the same filename as components of the new version it will delete the
+			 files that belong to components of the new version.-->
+		<MajorUpgrade Schedule="afterInstallExecute" DowngradeErrorMessage="A newer version is already installed. Remove this version if you wish to downgrade." />
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<!-- Disabling CRT merge module, because it's not working

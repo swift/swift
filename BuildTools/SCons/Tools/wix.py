@@ -7,7 +7,7 @@ def generate(env) :
 	if len(wixPath) > 0 and wixPath[-1] != "\\":
 		wixPath += "\\"
 	env['WIX_HEAT'] = wixPath + 'heat.exe'
-	env['WIX_HEAT_OPTIONS'] = '-nologo -gg -sfrag -suid -template fragment -dr ProgramFilesFolder'
+	env['WIX_HEAT_OPTIONS'] = '-nologo -ag -sfrag -suid -template fragment -dr ProgramFilesFolder'
 	env['WIX_CANDLE'] = wixPath + 'candle.exe'
 	env['WIX_CANDLE_OPTIONS'] = '-nologo'
 	env['WIX_LIGHT'] = wixPath + 'light.exe'
