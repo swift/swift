@@ -15,6 +15,7 @@
 #include <QCloseEvent>
 #include <QComboBox>
 #include <QCursor>
+#include <QDebug>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QInputDialog>
@@ -33,8 +34,6 @@
 #include <QTime>
 #include <QToolButton>
 #include <QUrl>
-
-#include <qdebug.h>
 
 #include <Swiften/Base/Log.h>
 
@@ -289,10 +288,10 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 
 void QtChatWindow::beginCorrection() {
 	boost::optional<AlertID> newCorrectingAlert;
-	if (correctionEnabled_ == ChatWindow::Maybe) {
+	if (correctionEnabled_ == Maybe) {
 		newCorrectingAlert = addAlert(Q2PSTRING(tr("This chat may not support message correction. If you send a correction anyway, it may appear as a duplicate message")));
 	}
-	else if (correctionEnabled_ == ChatWindow::No) {
+	else if (correctionEnabled_ == No) {
 		newCorrectingAlert = addAlert(Q2PSTRING(tr("This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message")));
 	}
 
@@ -613,7 +612,7 @@ void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 }
 
 void QtChatWindow::dropEvent(QDropEvent *event) {
-	if (fileTransferEnabled_ == ChatWindow::Yes && event->mimeData()->hasUrls()) {
+	if (fileTransferEnabled_ == Yes && event->mimeData()->hasUrls()) {
 		if (event->mimeData()->urls().size() == 1) {
 			onSendFileRequest(Q2PSTRING(event->mimeData()->urls().at(0).toLocalFile()));
 		}

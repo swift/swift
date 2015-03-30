@@ -15,8 +15,8 @@
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Base/Tristate.h>
 #include <Swiften/Client/BlockList.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/StanzaChannel.h>
@@ -230,18 +230,18 @@ void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction a
 }
 
 void MUCController::handleBareJIDCapsChanged(const JID& /*jid*/) {
-	ChatWindow::Tristate support = ChatWindow::Yes;
+	Tristate support = Yes;
 	bool any = false;
 	foreach (const std::string& nick, currentOccupants_) {
 		DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_.toBare().toString() + "/" + nick);
 		if (disco && disco->hasFeature(DiscoInfo::MessageCorrectionFeature)) {
 			any = true;
 		} else {
-			support = ChatWindow::Maybe;
+			support = Maybe;
 		}
 	}
 	if (!any) {
-		support = ChatWindow::No;
+		support = No;
 	}
 	chatWindow_->setCorrectionEnabled(support);
 }

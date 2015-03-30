@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include <Swift/Controllers/Chat/ChatControllerBase.h>
-
 #include <map>
 #include <string>
 
+#include <Swiften/Base/Tristate.h>
+
+#include <Swift/Controllers/Chat/ChatControllerBase.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
@@ -95,7 +96,7 @@ namespace Swift {
 			StatusShow::Type lastShownStatus_;
 			UIEventStream* eventStream_;
 
-			ChatWindow::Tristate contactSupportsReceipts_;
+			Tristate contactSupportsReceipts_;
 			bool receivingPresenceFromUs_;
 			bool userWantsReceipts_;
 			std::map<std::string, FileTransferController*> ftControllers;

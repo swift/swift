@@ -11,5 +11,6 @@ objects = swiften_env.SwiftenObject([
 			"DiscoInfoResponder.cpp",
 			"JIDDiscoInfoResponder.cpp",
 			"DiscoServiceWalker.cpp",
+			"FeatureOracle.cpp",
 		])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

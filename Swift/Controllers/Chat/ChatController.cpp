@@ -6,43 +6,45 @@
 
 #include <Swift/Controllers/Chat/ChatController.h>
 
+#include <stdio.h>
+
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <stdio.h>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
-#include <Swiften/Base/Log.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Chat/ChatStateTracker.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Disco/FeatureOracle.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/Elements/Idle.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 
-#include <Swift/Controllers/Intl.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
+#include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/StatusUtil.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
-#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/Highlighter.h>
-#include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 
 namespace Swift {
 	
@@ -125,28 +127,12 @@ void ChatController::cancelReplaces() {
 }
 
 void ChatController::handleBareJIDCapsChanged(const JID& /*jid*/) {
-	DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_);
-	if (disco) {
-		if (disco->hasFeature(DiscoInfo::MessageCorrectionFeature)) {
-			chatWindow_->setCorrectionEnabled(ChatWindow::Yes);
-		} else {
-			chatWindow_->setCorrectionEnabled(ChatWindow::No);
-		}
-		if (disco->hasFeature(DiscoInfo::MessageDeliveryReceiptsFeature)) {
-			contactSupportsReceipts_ = ChatWindow::Yes;
-		} else {
-			contactSupportsReceipts_ = ChatWindow::No;
-		}
-		if (FileTransferManager::isSupportedBy(disco)) {
-			chatWindow_->setFileTransferEnabled(ChatWindow::Yes);
-		} else {
-			chatWindow_->setFileTransferEnabled(ChatWindow::No);
-		}
-	} else {
-		SWIFT_LOG(debug) << "No disco info :(" << std::endl;
-		chatWindow_->setCorrectionEnabled(ChatWindow::Maybe);
-		contactSupportsReceipts_ = ChatWindow::Maybe;
-	}
+	FeatureOracle featureOracle(entityCapsProvider_, presenceOracle_);
+
+	chatWindow_->setCorrectionEnabled(featureOracle.isMessageCorrectionSupported(toJID_));
+	chatWindow_->setFileTransferEnabled(featureOracle.isFileTransferSupported(toJID_));
+	contactSupportsReceipts_ = featureOracle.isMessageReceiptsSupported(toJID_);
+
 	checkForDisplayingDisplayReceiptsAlert();
 }
 
@@ -230,7 +216,7 @@ void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> m
 
 void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
 	chatStateNotifier_->addChatStateRequest(message);
-	if (userWantsReceipts_ && (contactSupportsReceipts_ != ChatWindow::No) && message) {
+	if (userWantsReceipts_ && (contactSupportsReceipts_ != No) && message) {
 		message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
 	}
 }
@@ -248,9 +234,9 @@ void ChatController::handleSettingChanged(const std::string& settingPath) {
 
 void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 	boost::optional<ChatWindow::AlertID> newDeliverReceiptAlert;
-	if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::No)) {
+	if (userWantsReceipts_ && (contactSupportsReceipts_ == No)) {
 		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat doesn't support delivery receipts."));
-	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == ChatWindow::Maybe)) {
+	} else if (userWantsReceipts_ && (contactSupportsReceipts_ == Maybe)) {
 		newDeliverReceiptAlert = chatWindow_->addAlert(QT_TRANSLATE_NOOP("", "This chat may not support delivery receipts. You might not receive delivery receipts for the messages you send."));
 	} else {
 		if (deliveryReceiptAlert_) {

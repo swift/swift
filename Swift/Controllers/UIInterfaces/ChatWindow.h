@@ -14,6 +14,7 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/Tristate.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/Form.h>
@@ -86,7 +87,6 @@ namespace Swift {
 
 			enum AckState {Pending, Received, Failed};
 			enum ReceiptState {ReceiptRequested, ReceiptReceived, ReceiptFailed};
-			enum Tristate {Yes, No, Maybe};
 			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact, ShowProfile};
 			enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};
 			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
