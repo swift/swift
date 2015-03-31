@@ -169,7 +169,9 @@ void QtChatTabs::handleWidgetShown() {
 		handleTabTitleUpdated(widget);
 		return;
 	}
+	widget->blockSignals(true);
 	addTab(widget);
+	widget->blockSignals(false);
 	show();
 }
 
