@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,10 +15,12 @@
 ****************************************************************************/
 
 #include <Swift/QtUI/QtClosableLineEdit.h>
+
 #include <QApplication>
-#include <QToolButton>
-#include <QStyle>
 #include <QKeyEvent>
+#include <QStyle>
+#include <QToolButton>
+#include <QtGlobal>
 
 namespace Swift {
 
@@ -43,7 +45,12 @@ QtClosableLineEdit::QtClosableLineEdit(QWidget *parent) : QLineEdit(parent) {
 void QtClosableLineEdit::resizeEvent(QResizeEvent *) {
 	QSize size = clearButton->sizeHint();
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
-	clearButton->move(rect().right() - frameWidth - size.width(), (rect().bottom() + 1 - size.height())/2);
+	int verticalAdjustment = 1;
+#if defined(Q_OS_WIN32)
+	// This vertical adjustment is required on Windows so the close button is vertically centered in the line edit.
+	verticalAdjustment += 2;
+#endif 
+	clearButton->move(rect().right() - frameWidth - size.width(), (rect().bottom() + verticalAdjustment - size.height())/2);
 }
 
 void QtClosableLineEdit::updateCloseButton(const QString& text) {
