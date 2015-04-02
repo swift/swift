@@ -24,7 +24,7 @@ QtGridSelectionDialog::QtGridSelectionDialog(QWidget* parent) : QWidget(parent)
 	setWindowFlags(Qt::Popup);
 	horizontalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin);
 	verticalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin);
-
+	setCursor(Qt::SizeAllCursor);
 }
 
 QSize QtGridSelectionDialog::sizeHint() const
