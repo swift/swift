@@ -4,19 +4,27 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#pragma once
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include <Swiften/Elements/VCard.h>
+#pragma once
 
 #include <QButtonGroup>
 #include <QRadioButton>
 
-#include "QtResizableLineEdit.h"
-#include "QtVCardFieldInfo.h"
-#include "QtVCardGeneralField.h"
-#include "QtVCardHomeWork.h"
+#include <Swiften/Elements/VCard.h>
+
+#include <Swift/QtUI/QtVCardWidget/QtResizableLineEdit.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardFieldInfo.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardHomeWork.h>
 
 namespace Swift {
+
+class QtElidingLabel;
 
 class QtVCardAddressField : public QtVCardGeneralField, public QtVCardHomeWork {
 	Q_OBJECT
@@ -51,7 +59,7 @@ class QtVCardAddressField : public QtVCardGeneralField, public QtVCardHomeWork {
 		QGridLayout* textFieldGridLayout;
 		QLayoutItem* textFieldGridLayoutItem;
 
-		QLabel* deliveryTypeLabel;
+		QtElidingLabel* deliveryTypeLabel;
 		QRadioButton* domesticRadioButton;
 		QRadioButton* internationalRadioButton;
 		QButtonGroup* buttonGroup;

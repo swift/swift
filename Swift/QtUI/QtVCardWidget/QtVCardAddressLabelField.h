@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QButtonGroup>
@@ -17,6 +23,8 @@
 #include <Swift/QtUI/QtVCardWidget/QtVCardHomeWork.h>
 
 namespace Swift {
+
+class QtElidingLabel;
 
 class QtVCardAddressLabelField : public QtVCardGeneralField, public QtVCardHomeWork {
 	Q_OBJECT
@@ -41,7 +49,7 @@ class QtVCardAddressLabelField : public QtVCardGeneralField, public QtVCardHomeW
 	private:
 		QPlainTextEdit* addressLabelPlainTextEdit;
 
-		QLabel* deliveryTypeLabel;
+		QtElidingLabel* deliveryTypeLabel;
 		QRadioButton* domesticRadioButton;
 		QRadioButton* internationalRadioButton;
 		QButtonGroup* buttonGroup;

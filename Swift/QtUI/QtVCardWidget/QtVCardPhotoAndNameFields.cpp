@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/QtUI/QtVCardWidget/QtVCardPhotoAndNameFields.h>
 
 #include <Swift/QtUI/QtVCardWidget/ui_QtVCardPhotoAndNameFields.h>
@@ -21,6 +27,8 @@ QtVCardPhotoAndNameFields::QtVCardPhotoAndNameFields(QWidget* parent) :
 	ui->lineEditSUFFIX->hide();
 	ui->lineEditFN->hide();
 	ui->lineEditNICKNAME->hide();
+	ui->labelFN->hide();
+	ui->labelNICKNAME->hide();
 	ui->labelFULLNAME->hide();
 
 #if QT_VERSION >= 0x040700
@@ -48,15 +56,16 @@ void QtVCardPhotoAndNameFields::setEditable(bool editable) {
 	this->editable = editable;
 
 	ui->avatarWidget->setEditable(editable);
-	ui->lineEditFN->setVisible(editable ? true : !ui->lineEditFN->text().isEmpty());
-	ui->lineEditFN->setEditable(editable);
-	ui->lineEditFN->setStyleSheet(editable ? "" : "QLineEdit {border: none; background-color: transparent;}");
+	ui->horizontalLayoutFN->setSpacing(editable ? 2 : 0);
+	ui->lineEditFN->setVisible(editable);
+	ui->labelFN->setVisible(!editable);
 
-	ui->lineEditNICKNAME->setVisible(editable ? true : !ui->lineEditNICKNAME->text().isEmpty());
-	ui->lineEditNICKNAME->setEditable(editable);
-	ui->lineEditNICKNAME->setStyleSheet(editable ? "" : "QLineEdit {border: none; background-color: transparent;}");
+	ui->horizontalLayoutNICKNAME->setSpacing(editable ? 2 : 0);
+	ui->lineEditNICKNAME->setVisible(editable);
+	ui->labelNICKNAME->setVisible(!editable);
 
 	// prefix given middle last suffix
+	ui->horizontalLayoutFULLNAME->setSpacing(editable ? 2 : 0);
 	ui->lineEditPREFIX->setVisible(editable);
 	ui->lineEditGIVEN->setVisible(editable);
 	ui->lineEditMIDDLE->setVisible(editable);
@@ -87,6 +96,7 @@ std::string QtVCardPhotoAndNameFields::getAvatarType() const {
 
 void QtVCardPhotoAndNameFields::setFormattedName(const QString& formattedName) {
 	ui->lineEditFN->setText(formattedName);
+	ui->labelFN->setText(formattedName);
 }
 
 QString QtVCardPhotoAndNameFields::getFormattedName() const {
@@ -95,6 +105,7 @@ QString QtVCardPhotoAndNameFields::getFormattedName() const {
 
 void QtVCardPhotoAndNameFields::setNickname(const QString& nickname) {
 	ui->lineEditNICKNAME->setText(nickname);
+	ui->labelNICKNAME->setText(nickname);
 }
 
 QString QtVCardPhotoAndNameFields::getNickname() const {

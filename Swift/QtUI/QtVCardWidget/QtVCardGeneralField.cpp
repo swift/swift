@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,6 +16,8 @@
 
 #include <QHBoxLayout>
 #include <QToolTip>
+
+#include <Swift/QtUI/QtElidingLabel.h>
 
 namespace Swift {
 
@@ -45,7 +47,7 @@ void QtVCardGeneralField::initialize() {
 	label->setText(labelText);
 	layout->addWidget(label, row, 1, Qt::AlignVCenter | Qt::AlignRight);
 
-	tagLabel = new QLabel(this);
+	tagLabel = new QtElidingLabel(this);
 	tagLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
 
 	tagComboBox = new QtTagComboBox(this);

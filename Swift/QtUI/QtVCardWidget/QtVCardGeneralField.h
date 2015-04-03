@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,15 +17,17 @@
 #include <QLabel>
 #include <QWidget>
 
-#include "QtCloseButton.h"
-#include "QtTagComboBox.h"
+#include <Swift/QtUI/QtVCardWidget/QtCloseButton.h>
+#include <Swift/QtUI/QtVCardWidget/QtTagComboBox.h>
 
 namespace Swift {
+
+class QtElidingLabel;
 
 /*
  *	covers features like:
  *		- preffered (star ceckbox)
- *		- combo check boxh
+ *		- combo check box
  *		- label
  *		- remove button
  */
@@ -84,7 +86,7 @@ class QtVCardGeneralField : public QWidget {
 		QLabel* label;
 		QString labelText;
 		QtTagComboBox* tagComboBox;
-		QLabel* tagLabel;
+		QtElidingLabel* tagLabel;
 		QtCloseButton* closeButton;
 };
 

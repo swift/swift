@@ -4,11 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardAddressLabelField.h"
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include <QGridLayout>
+#include <Swift/QtUI/QtVCardWidget/QtVCardAddressLabelField.h>
+
 #include <boost/algorithm/string.hpp>
 
+#include <QGridLayout>
+
+#include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -27,7 +35,7 @@ void QtVCardAddressLabelField::setupContentWidgets() {
 	addressLabelPlainTextEdit->setTabChangesFocus(true);
 	getGridLayout()->addWidget(addressLabelPlainTextEdit, getGridLayout()->rowCount()-1, 2, 3, 2, Qt::AlignVCenter);
 
-	deliveryTypeLabel = new QLabel(this);
+	deliveryTypeLabel = new QtElidingLabel(this);
 	deliveryTypeLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
 	getGridLayout()->addWidget(deliveryTypeLabel, getGridLayout()->rowCount()-2, 4, Qt::AlignVCenter);
 

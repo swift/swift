@@ -4,10 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardAddressField.h"
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardAddressField.h>
 
 #include <QGridLayout>
 
+#include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -58,7 +65,7 @@ void QtVCardAddressField::setupContentWidgets() {
 	countryLineEdit->setPlaceholderText(tr("Country"));
 #endif
 
-	deliveryTypeLabel = new QLabel(this);
+	deliveryTypeLabel = new QtElidingLabel(this);
 	deliveryTypeLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
 	getGridLayout()->addWidget(deliveryTypeLabel, getGridLayout()->rowCount()-3, 4, Qt::AlignVCenter);
 
