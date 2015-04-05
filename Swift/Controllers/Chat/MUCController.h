@@ -6,20 +6,20 @@
 
 #pragma once
 
+#include <map>
 #include <set>
 #include <string>
-#include <map>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/signals/connection.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Network/Timer.h>
-#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/MUC/MUC.h>
-#include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/Network/Timer.h>
 
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
 #include <Swift/Controllers/Roster/RosterItem.h>
@@ -40,6 +40,8 @@ namespace Swift {
 	class VCardManager;
 	class RosterVCardProvider;
 	class ClientBlockListManager;
+	class MUCBookmarkManager;
+	class MUCBookmark;
 
 	enum JoinPart {Join, Part, JoinThenPart, PartThenJoin};
 
@@ -51,7 +53,7 @@ namespace Swift {
 
 	class MUCController : public ChatControllerBase {
 		public:
-			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager);
+			MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
 			virtual ~MUCController();
 			boost::signal<void ()> onUserLeft;
 			boost::signal<void ()> onUserJoined;
@@ -137,6 +139,10 @@ namespace Swift {
 			void handleUnblockUserRequest();
 			void handleBlockingStateChanged();
 
+			void handleMUCBookmarkAdded(const MUCBookmark& bookmark);
+			void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
+			void updateChatWindowBookmarkStatus(const boost::optional<MUCBookmark>& bookmark);
+
 		private:
 			MUC::ref muc_;
 			UIEventStream* events_;
@@ -169,6 +175,10 @@ namespace Swift {
 			boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
 
 			boost::optional<ChatWindow::AlertID> blockedContactAlert_;
+
+			MUCBookmarkManager* mucBookmarkManager_;
+			boost::bsignals::scoped_connection mucBookmarkManagerBookmarkAddedConnection_;
+			boost::bsignals::scoped_connection mucBookmarkManagerBookmarkRemovedConnection_;
 	};
 }
 

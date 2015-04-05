@@ -1,20 +1,19 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include "QtAddBookmarkWindow.h"
 
-#include <qdebug.h>
-
 namespace Swift {
 QtAddBookmarkWindow::QtAddBookmarkWindow(UIEventStream* eventStream) : eventStream_(eventStream) {
-
+	setWindowTitle(tr("Add Bookmark Details"));
 }
 
 QtAddBookmarkWindow::QtAddBookmarkWindow(UIEventStream* eventStream, const MUCBookmark& bookmark) : eventStream_(eventStream) {
 	createFormFromBookmark(bookmark);
+	setWindowTitle(tr("Add Bookmark Details"));
 }
 
 bool QtAddBookmarkWindow::commit() {

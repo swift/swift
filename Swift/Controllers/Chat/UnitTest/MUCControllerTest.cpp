@@ -4,10 +4,10 @@
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/algorithm/string.hpp>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <hippomocks.h>
 
 #include <Swiften/Avatars/NullAvatarManager.h>
@@ -19,6 +19,7 @@
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
 #include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swiften/MUC/UnitTest/MockMUC.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Presence/DirectedPresenceSender.h>
@@ -88,11 +89,13 @@ public:
 		vcardStorage_ = new VCardMemoryStorage(crypto_.get());
 		vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
 		clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
-		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, NULL, vcardManager_);
+		mucBookmarkManager_ = new MUCBookmarkManager(iqRouter_);
+		controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, NULL, vcardManager_, mucBookmarkManager_);
 	}
 
 	void tearDown() {
 		delete controller_;
+		delete mucBookmarkManager_;
 		delete clientBlockListManager_;
 		delete vcardManager_;
 		delete vcardStorage_;
@@ -438,6 +441,7 @@ private:
 	VCardManager* vcardManager_;
 	VCardMemoryStorage* vcardStorage_;
 	ClientBlockListManager* clientBlockListManager_;
+	MUCBookmarkManager* mucBookmarkManager_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

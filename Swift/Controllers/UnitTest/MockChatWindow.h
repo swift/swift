@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swiften/Base/foreach.h>
 
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
 	class MockChatWindow : public ChatWindow {
@@ -80,6 +80,7 @@ namespace Swift {
 			virtual void setBlockingState(BlockingState) {}
 			virtual void setCanInitiateImpromptuChats(bool /*supportsImpromptu*/) {}
 			virtual void showBookmarkWindow(const MUCBookmark& /*bookmark*/) {}
+			virtual void setBookmarkState(RoomBookmarkState) {}
 
 			std::string bodyFromMessage(const ChatMessage& message) {
 				boost::shared_ptr<ChatTextMessagePart> text;

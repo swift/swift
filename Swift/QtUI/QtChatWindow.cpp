@@ -10,7 +10,6 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <qdebug.h>
 #include <QApplication>
 #include <QBoxLayout>
 #include <QCloseEvent>
@@ -34,7 +33,8 @@
 #include <QTime>
 #include <QToolButton>
 #include <QUrl>
-#include <QMimeData>
+
+#include <qdebug.h>
 
 #include <Swiften/Base/Log.h>
 
@@ -42,25 +42,26 @@
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/RosterItem.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
 #include <SwifTools/TabComplete.h>
 
-#include <Swift/QtUI/Roster/QtOccupantListWidget.h>
 #include <Swift/QtUI/QtAddBookmarkWindow.h>
+#include <Swift/QtUI/QtEditBookmarkWindow.h>
 #include <Swift/QtUI/QtPlainChatView.h>
-#include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtTextEdit.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/QtUI/QtUtilities.h>
 #include <Swift/QtUI/QtWebKitChatView.h>
+#include <Swift/QtUI/Roster/QtOccupantListWidget.h>
 
 namespace Swift {
 
-QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false) {
+QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false), roomBookmarkState_(RoomNotBookmarked) {
 	settings_ = settings;
 	unreadCount_ = 0;
 	isOnline_ = true;
@@ -524,9 +525,6 @@ void QtChatWindow::updateTitleWithUnreadCount() {
 	emit titleUpdated();
 }
 
-
-
-
 void QtChatWindow::flash() {
 	emit requestFlash();
 }
@@ -725,8 +723,16 @@ void QtChatWindow::handleActionButtonClicked() {
 		}
 	}
 
-	QAction* bookmark = contextMenu.addAction(tr("Add bookmark..."));
-	bookmark->setEnabled(isOnline_);
+	QAction* bookmark = NULL;
+	if (isMUC_) {
+		if (roomBookmarkState_ == RoomNotBookmarked) {
+			bookmark = contextMenu.addAction(tr("Bookmark this room..."));
+		}
+		else {
+			bookmark = contextMenu.addAction(tr("Edit bookmark..."));
+		}
+		bookmark->setEnabled(isOnline_);
+	}
 
 	QAction* result = contextMenu.exec(QCursor::pos());
 	if (result == NULL) {
@@ -797,8 +803,14 @@ void QtChatWindow::setCanInitiateImpromptuChats(bool supportsImpromptu) {
 }
 
 void QtChatWindow::showBookmarkWindow(const MUCBookmark& bookmark) {
-	QtAddBookmarkWindow* window = new QtAddBookmarkWindow(eventStream_, bookmark);
-	window->show();
+	if (roomBookmarkState_ == RoomNotBookmarked) {
+		QtAddBookmarkWindow* window = new QtAddBookmarkWindow(eventStream_, bookmark);
+		window->show();
+	}
+	else {
+		QtEditBookmarkWindow* window = new QtEditBookmarkWindow(eventStream_, bookmark);
+		window->show();
+	}
 }
 
 std::string QtChatWindow::getID() const {
@@ -879,7 +891,6 @@ void QtChatWindow::setFileTransferStatus(std::string id, const FileTransferState
 	messageLog_->setFileTransferStatus(id, state, msg);
 }
 
-
 std::string QtChatWindow::addWhiteboardRequest(bool senderIsSelf) {
 	handleAppendedToLog();
 	return messageLog_->addWhiteboardRequest(contact_, senderIsSelf);
@@ -899,6 +910,10 @@ void QtChatWindow::setAckState(const std::string& id, AckState state) {
 
 void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) {
 	messageLog_->setMessageReceiptState(id, state);
+}
+
+void QtChatWindow::setBookmarkState(RoomBookmarkState bookmarkState) {
+	roomBookmarkState_ = bookmarkState;
 }
 
 }

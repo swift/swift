@@ -6,62 +6,61 @@
 
 #include <Swift/Controllers/Chat/ChatsManager.h>
 
-#include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
-#include <boost/serialization/optional.hpp>
-#include <boost/serialization/vector.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/bind.hpp>
 #include <boost/serialization/map.hpp>
-#include <boost/serialization/string.hpp>
+#include <boost/serialization/optional.hpp>
 #include <boost/serialization/split_free.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/NickResolver.h>
-#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swiften/Elements/ChatState.h>
-#include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
-#include <Swiften/MUC/MUCBookmarkManager.h>
-#include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/MUC/MUCBookmarkManager.h>
+#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Presence/PresenceSender.h>
 #include <Swiften/Roster/XMPPRoster.h>
-#include <Swiften/Client/ClientBlockListManager.h>
-#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/VCards/VCardManager.h>
 
+#include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
-#include <Swift/Controllers/Chat/MUCSearchController.h>
-#include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/Chat/MUCController.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
-#include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
-#include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
-#include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
-#include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
-#include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
+#include <Swift/Controllers/Chat/MUCSearchController.h>
+#include <Swift/Controllers/Chat/UserSearchController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/EditMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
+#include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
 #include <Swift/Controllers/WhiteboardManager.h>
-#include <Swift/Controllers/Chat/ChatMessageParser.h>
-#include <Swift/Controllers/Chat/UserSearchController.h>
-#include <Swiften/Disco/DiscoServiceWalker.h>
-#include <Swiften/Client/ClientBlockListManager.h>
-#include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/Base/Log.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 
 BOOST_CLASS_VERSION(Swift::ChatListWindow::Chat, 1)
 
@@ -811,7 +810,7 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 			chatWindowFactoryAdapter = new SingleChatWindowFactoryAdapter(reuseChatwindow);
 		}
 		boost::shared_ptr<ChatMessageParser> chatMessageParser = boost::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), true); /* a message parser that knows this is a room/MUC (not a chat) */
-		controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_);
+		controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_, mucBookmarkManager_);
 		if (chatWindowFactoryAdapter) {
 			/* The adapters are only passed to chat windows, which are deleted in their
 			 * controllers' dtor, which are deleted in ChatManager's dtor. The adapters

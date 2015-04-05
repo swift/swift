@@ -6,6 +6,8 @@
 
 #include <Swift/Controllers/Chat/MUCController.h>
 
+#include <algorithm>
+
 #include <boost/bind.hpp>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
@@ -21,6 +23,8 @@
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/MUC/MUC.h>
+#include <Swiften/MUC/MUCBookmark.h>
+#include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Roster/XMPPRoster.h>
@@ -33,15 +37,15 @@
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
-#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetMUC.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
 #include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/RosterVCardProvider.h>
 #include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
@@ -51,7 +55,18 @@
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
 
 namespace Swift {
-	
+
+class MUCBookmarkPredicate {
+	public:
+		MUCBookmarkPredicate(const JID& mucJID) : roomJID_(mucJID) { }
+		bool operator()(const MUCBookmark& operand) {
+			return operand.getRoom() == roomJID_;
+		}
+
+	private:
+		JID roomJID_;
+};
+
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
@@ -78,8 +93,9 @@ MUCController::MUCController (
 		boost::shared_ptr<ChatMessageParser> chatMessageParser,
 		bool isImpromptu,
 		AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
-		VCardManager* vcardManager) :
-	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager) {
+		VCardManager* vcardManager,
+		MUCBookmarkManager* mucBookmarkManager) :
+	ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
 	parting_ = true;
 	joined_ = false;
 	lastWasPresence_ = false;
@@ -137,6 +153,20 @@ MUCController::MUCController (
 	} 
 	handleBareJIDCapsChanged(muc->getJID());
 	eventStream_->onUIEvent.connect(boost::bind(&MUCController::handleUIEvent, this, _1));
+
+
+	// setup handling of MUC bookmark changes
+	mucBookmarkManagerBookmarkAddedConnection_ = (mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&MUCController::handleMUCBookmarkAdded, this, _1)));
+	mucBookmarkManagerBookmarkRemovedConnection_ = (mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&MUCController::handleMUCBookmarkRemoved, this, _1)));
+
+	std::vector<MUCBookmark> mucBookmarks = mucBookmarkManager_->getBookmarks();
+	std::vector<MUCBookmark>::iterator bookmarkIterator = std::find_if(mucBookmarks.begin(), mucBookmarks.end(), MUCBookmarkPredicate(muc->getJID()));
+	if (bookmarkIterator != mucBookmarks.end()) {
+		updateChatWindowBookmarkStatus(*bookmarkIterator);
+	}
+	else {
+		updateChatWindowBookmarkStatus(boost::optional<MUCBookmark>());
+	}
 }
 
 MUCController::~MUCController() {
@@ -1139,6 +1169,33 @@ void MUCController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info
 		blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&MUCController::handleBlockingStateChanged, this));
 
 		handleBlockingStateChanged();
+	}
+}
+
+void MUCController::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
+	if (bookmark.getRoom() == muc_->getJID()) {
+		updateChatWindowBookmarkStatus(bookmark);
+	}
+}
+
+void MUCController::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
+	if (bookmark.getRoom() == muc_->getJID()) {
+		updateChatWindowBookmarkStatus(boost::optional<MUCBookmark>());
+	}
+}
+
+void MUCController::updateChatWindowBookmarkStatus(const boost::optional<MUCBookmark>& bookmark) {
+	assert(chatWindow_);
+	if (bookmark) {
+		if (bookmark->getAutojoin()) {
+			chatWindow_->setBookmarkState(ChatWindow::RoomAutoJoined);
+		}
+		else {
+			chatWindow_->setBookmarkState(ChatWindow::RoomBookmarked);
+		}
+	}
+	else {
+		chatWindow_->setBookmarkState(ChatWindow::RoomNotBookmarked);
 	}
 }
 
