@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,8 +17,8 @@
 namespace Swift {
 	class SWIFTEN_API DummyConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<DummyConnectionServer> {
 		public:
-			DummyConnectionServer(EventLoop* eventLoop, int port) : eventLoop(eventLoop), localAddressPort(HostAddress(), port) {}
-			DummyConnectionServer(EventLoop* eventLoop, const Swift::HostAddress& hostAddress, int port) : eventLoop(eventLoop), localAddressPort(hostAddress, port) {}
+			DummyConnectionServer(EventLoop* /*eventLoop*/, int port) : localAddressPort(HostAddress(), port) {}
+			DummyConnectionServer(EventLoop* /*eventLoop*/, const Swift::HostAddress& hostAddress, int port) : localAddressPort(hostAddress, port) {}
 			virtual ~DummyConnectionServer() {}
 
 			virtual HostAddressPort getAddressPort() const {
@@ -38,7 +38,6 @@ namespace Swift {
 			}
 
 		private:
-			EventLoop* eventLoop;
 			HostAddressPort localAddressPort;
 	};
 }
