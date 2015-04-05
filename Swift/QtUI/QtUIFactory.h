@@ -34,7 +34,8 @@ namespace Swift {
 		public:
 			QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID);
 
-			virtual XMLConsoleWidget* createXMLConsoleWidget();
+			virtual XMLConsoleWidget* createXMLConsoleWidget(UIEventStream*);
+			virtual XMLConsoleWidget* createXMLConsoleMsgWidget(XMLConsoleController*);
 			virtual HistoryWindow* createHistoryWindow(UIEventStream*);
 			virtual MainWindow* createMainWindow(UIEventStream* eventStream);
 			virtual LoginWindow* createLoginWindow(UIEventStream* eventStream);
@@ -51,7 +52,6 @@ namespace Swift {
 			virtual HighlightEditorWindow* createHighlightEditorWindow();
 			virtual BlockListEditorWidget* createBlockListEditorWidget();
 			virtual AdHocCommandWindow* createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
-
 		private slots:
 			void handleLoginWindowGeometryChanged();
 			void handleChatWindowFontResized(int);
