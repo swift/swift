@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,13 +7,13 @@
 #include <Swiften/Network/Connector.h>
 
 #include <boost/bind.hpp>
-#include <iostream>
 
-#include <Swiften/Network/ConnectionFactory.h>
-#include <Swiften/Network/DomainNameResolver.h>
-#include <Swiften/Network/DomainNameAddressQuery.h>
-#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/DomainNameResolver.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
 
@@ -26,7 +26,6 @@ void Connector::setTimeoutMilliseconds(int milliseconds) {
 
 void Connector::start() {
 	SWIFT_LOG(debug) << "Starting connector for " << hostname << std::endl;
-	//std::cout << "Connector::start()" << std::endl;
 	assert(!currentConnection);
 	assert(!serviceQuery);
 	assert(!timer);
@@ -40,7 +39,12 @@ void Connector::start() {
 		serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
 		serviceQuery->run();
 	}
-	else {
+	else if (HostAddress(hostname).isValid()) {
+		// hostname is already a valid address; skip name lookup.
+		foundSomeDNS = true;
+		addressQueryResults.push_back(HostAddress(hostname));
+		tryNextAddress();
+	} else {
 		queryAddress(hostname);
 	}
 }
