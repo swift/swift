@@ -304,6 +304,7 @@ else :
 			"-Wno-weak-vtables", # Virtually none of our elements have outlined methods. This also seems to affect classes in .cpp files, which in turn affects all our tests, which may need fixing in CLang
 			"-Wno-shadow", # Also warns for shadowing on constructor arguments, which we do a lot
 			"-Wno-documentation", # We don't care about documentation warnings
+			"-Wno-documentation-unknown-command", # We don't care about documentation warnings
 			"-Wno-exit-time-destructors", # Used a lot in e.g. CPPUnit
 			"-Wno-c++98-compat-pedantic", # We do different things that violate this, but they could be fixed
 			"-Wno-global-constructors", # We depend on this for e.g. string constants
