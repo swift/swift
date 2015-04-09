@@ -112,31 +112,31 @@ void QtChatTabs::setViewMenu(QMenu* viewMenu) {
 		viewMenu->addSeparator();
 		QAction* action = new QAction(tr("Change &layout"), this);
 		action->setShortcutContext(Qt::ApplicationShortcut);
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_L));
+		action->setShortcut(QKeySequence(tr("Ctrl+Alt+L")));
 		connect(action, SIGNAL(triggered()), this, SLOT(handleOpenLayoutChangeDialog()));
 		viewMenu->addAction(action);
 
 		action = new QAction(tr("Move Tab right"), this);
 		action->setShortcutContext(Qt::ApplicationShortcut);
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Right));
+		action->setShortcut(QKeySequence(tr("Ctrl+Shift+PgDown")));
 		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabRight()));
 		viewMenu->addAction(action);
 
 		action = new QAction(tr("Move Tab left"), this);
 		action->setShortcutContext(Qt::ApplicationShortcut);
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Left));
+		action->setShortcut(QKeySequence(tr("Ctrl+Shift+PgUp")));
 		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabLeft()));
 		viewMenu->addAction(action);
 
 		action = new QAction(tr("Move Tab to next group"), this);
 		action->setShortcutContext(Qt::ApplicationShortcut);
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Right));
+		action->setShortcut(QKeySequence(tr("Ctrl+Alt+PgDown")));
 		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabToNextGroup()));
 		viewMenu->addAction(action);
 
 		action = new QAction(tr("Move Tab to previous group"), this);
 		action->setShortcutContext(Qt::ApplicationShortcut);
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::ALT + Qt::Key_Left));
+		action->setShortcut(QKeySequence(tr("Ctrl+Alt+PgUp")));
 		connect(action, SIGNAL(triggered()), dynamicGrid_, SLOT(moveCurrentTabToPreviousGroup()));
 		viewMenu->addAction(action);
 	}

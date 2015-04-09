@@ -279,7 +279,7 @@ void QtChatWindow::handleKeyPressEvent(QKeyEvent* event) {
 		cancelCorrection();
 	}
 	else if (key == Qt::Key_Down || key == Qt::Key_Up) {
-		/* Drop */
+		event->ignore();
 	}
 	else {
 		messageLog_->handleKeyPressEvent(event);
