@@ -1,3 +1,23 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-`dirname $0`/3rdParty/SCons/scons.py $@
+# This script checks various names for the Python interpreter for their existance and version. 
+# The latest valid version is used to run the SCons build tool, which requires python2.
+# This is needed because some distributions ship Pyhton3 and others Python2 their 'python'. 
+
+function is_supported_python
+{
+	local exe=$1
+	$exe -c 'import sys; (major, minor, a, b, c) = sys.version_info; python_version = (major, minor); exit(not ((2, 4) <= python_version <= (2, 7)))' 2>/dev/null
+}
+
+declare -a supported_python_versions=(python python2.7 python2.6 python2.5 python2.4)
+
+for exe in ${supported_python_versions[*]}; do
+	if is_supported_python "$exe"; then
+		exec $exe `dirname $0`/3rdParty/SCons/scons.py "$@"
+		exit
+	fi
+done
+
+echo "No suitable Python interpreter found! Swift build system supports Python 2.4 to Python 2.7.!!!" >&2
+exit 1
