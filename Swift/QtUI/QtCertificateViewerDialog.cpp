@@ -4,14 +4,22 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "QtCertificateViewerDialog.h"
 #include "ui_QtCertificateViewerDialog.h"
 
 #include <Swiften/Base/foreach.h>
 
-#include <QTreeWidgetItem>
-#include <QLabel>
 #include <QDateTime>
+#include <QLabel>
+#include <QString>
+#include <QStringList>
+#include <QTreeWidgetItem>
 
 namespace Swift {
 
@@ -48,7 +56,7 @@ void QtCertificateViewerDialog::setCertificateChain(const std::vector<Certificat
 	if (currentChain.size() > 1) {
 		QTreeWidgetItem* parent = root;
 		for (int n = 1; n < currentChain.size(); n++) {
-			QTreeWidgetItem* link = new QTreeWidgetItem(parent, QStringList(QString("↳ ") + currentChain.at(n).subjectInfo(QSslCertificate::CommonName)));
+			QTreeWidgetItem* link = new QTreeWidgetItem(parent, QStringList(QString("↳ ") + (QStringList(currentChain.at(n).subjectInfo(QSslCertificate::CommonName)).join(", "))));
 			link->setExpanded(true);
 			link->setData(0, Qt::UserRole, QVariant(n));
 			parent = link;
@@ -74,7 +82,8 @@ void QtCertificateViewerDialog::currentItemChanged(QTreeWidgetItem* current, QTr
 
 #define ADD_FIELD( TITLE, VALUE) \
 	ui->certGridLayout->addWidget(new QLabel(TITLE), rowCount, 0, 1, 1, Qt::AlignRight); \
-	valueLabel = new QLabel(VALUE); \
+	valueLabel = new QLabel(); \
+	valueLabel->setText(QStringList(VALUE).join(", ")); \
 	valueLabel->setTextFormat(Qt::PlainText); \
 	valueLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard); \
 	ui->certGridLayout->addWidget(valueLabel, rowCount++, 1, 1, 1, Qt::AlignLeft);
@@ -106,10 +115,16 @@ void QtCertificateViewerDialog::setCertificateDetails(const QSslCertificate& cer
 	ADD_FIELD(tr("Country"), cert.subjectInfo(QSslCertificate::CountryName));
 	ADD_FIELD(tr("State"), cert.subjectInfo(QSslCertificate::StateOrProvinceName));
 
-	if (!cert.alternateSubjectNames().empty()) {
+#if QT_VERSION < 0x050000
+	QMultiMap<QSsl::AlternateNameEntryType, QString> altNames = cert.alternateSubjectNames();
+#define SANTYPE QSsl::AlternateNameEntryType
+#else
+	QMultiMap<QSsl::AlternativeNameEntryType, QString> altNames = cert.subjectAlternativeNames();
+#define SANTYPE QSsl::AlternativeNameEntryType
+#endif
+	if (!altNames.empty()) {
 		ADD_SECTION(tr("Alternate Subject Names"));
-		QMultiMap<QSsl::AlternateNameEntryType, QString> altNames = cert.alternateSubjectNames();
-		foreach (const QSsl::AlternateNameEntryType &type, altNames.uniqueKeys()) {
+		foreach (const SANTYPE &type, altNames.uniqueKeys()) {
 			foreach (QString name, altNames.values(type)) {
 				if (type == QSsl::EmailEntry) {
 					ADD_FIELD(tr("E-mail Address"), name);

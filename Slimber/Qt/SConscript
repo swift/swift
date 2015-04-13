@@ -23,7 +23,15 @@ if myenv.get("HAVE_LIBIDN") :
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
-myenv.EnableQt4Modules(['QtCore', 'QtGui'], debug = False)
+
+
+qt4modules = ['QtCore', 'QtGui']
+if myenv["qt5"] :
+  qt_version = '5'
+  qt4modules += ['QtWidgets']
+else :
+  qt_version = '4'
+myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
 myenv.Append(CPPPATH = ["."])
 

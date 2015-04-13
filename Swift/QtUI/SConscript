@@ -61,6 +61,8 @@ qt4modules = ['QtCore', 'QtWebKit', 'QtGui']
 if myenv["qt5"] :
   qt_version = '5'
   qt4modules += ['QtWidgets', 'QtWebKitWidgets', 'QtMultimedia']
+  if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
+    qt4modules += ['QtX11Extras']
 else :
   qt_version = '4'
 if env["PLATFORM"] == "posix" :
