@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -129,6 +129,18 @@ QMimeData* ChatListModel::mimeData(const QModelIndexList& indexes) const {
 
 	data->setData(mimeType, itemData);
 	return data;
+}
+
+const ChatListMUCItem* ChatListModel::getChatListMUCItem(const JID& roomJID) const {
+	const ChatListMUCItem* mucItem = NULL;
+	for (int i = 0; i < mucBookmarks_->rowCount(); i++) {
+		ChatListMUCItem* item = dynamic_cast<ChatListMUCItem*>(mucBookmarks_->item(i));
+		if (item->getBookmark().getRoom() == roomJID) {
+			mucItem = item;
+			break;
+		}
+	}
+	return mucItem;
 }
 
 int ChatListModel::columnCount(const QModelIndex& /*parent*/) const {

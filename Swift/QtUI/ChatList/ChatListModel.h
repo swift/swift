@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,11 +10,14 @@
 #include <QPersistentModelIndex>
 
 #include <Swiften/MUC/MUCBookmark.h>
+
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 
 #include <Swift/QtUI/ChatList/ChatListGroupItem.h>
 
 namespace Swift {
+	class ChatListMUCItem;
+
 	class ChatListModel : public QAbstractItemModel {
 		Q_OBJECT
 		public:
@@ -33,6 +36,9 @@ namespace Swift {
 			void clearBookmarks();
 			void setRecents(const std::list<ChatListWindow::Chat>& recents);
 			QMimeData* mimeData(const QModelIndexList& indexes) const;
+
+			const ChatListMUCItem* getChatListMUCItem(const JID& roomJID) const;
+
 		private:
 			ChatListGroupItem* mucBookmarks_;
 			ChatListGroupItem* recents_;

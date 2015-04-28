@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/ChatList/QtChatListWindow.h"
+#include <Swift/QtUI/ChatList/QtChatListWindow.h>
 
 #include <boost/bind.hpp>
 
@@ -20,6 +20,7 @@
 #include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
+
 #include <Swift/QtUI/ChatList/ChatListMUCItem.h>
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 #include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
@@ -58,7 +59,6 @@ QtChatListWindow::~QtChatListWindow() {
 	delete model_;
 	delete delegate_;
 	delete mucMenu_;
-	delete mucRecentsMenu_;
 	delete emptyMenu_;
 }
 
@@ -89,9 +89,6 @@ void QtChatListWindow::setupContextMenus() {
 	onlineOnlyActions_ << mucMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
 	onlineOnlyActions_ << mucMenu_->addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
 	onlineOnlyActions_ << mucMenu_->addAction(tr("Remove Bookmark"), this, SLOT(handleRemoveBookmark()));
-	mucRecentsMenu_ = new QMenu();
-	onlineOnlyActions_ << mucRecentsMenu_->addAction(tr("Add to Bookmarks"), this, SLOT(handleAddBookmarkFromRecents()));
-	mucRecentsMenu_->addAction(tr("Clear recents"), this, SLOT(handleClearRecentsRequested()));
 	emptyMenu_ = new QMenu();
 	onlineOnlyActions_ << emptyMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
 }
@@ -148,13 +145,13 @@ void QtChatListWindow::setOnline(bool isOnline) {
 }
 
 void QtChatListWindow::handleRemoveBookmark() {
-	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(contextMenuItem_);
+	const ChatListMUCItem* mucItem = dynamic_cast<const ChatListMUCItem*>(contextMenuItem_);
 	if (!mucItem) return;
 	eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveMUCBookmarkUIEvent(mucItem->getBookmark())));
 }
 
 void QtChatListWindow::handleAddBookmarkFromRecents() {
-	ChatListRecentItem* item = dynamic_cast<ChatListRecentItem*>(contextMenuItem_);
+	const ChatListRecentItem* item = dynamic_cast<const ChatListRecentItem*>(contextMenuItem_);
 	if (item) {
 		const ChatListWindow::Chat& chat = item->getChat();
 		MUCBookmark bookmark(chat.jid, chat.jid.toBare().toString());
@@ -170,7 +167,7 @@ void QtChatListWindow::handleAddBookmark() {
 
 
 void QtChatListWindow::handleEditBookmark() {
-	ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(contextMenuItem_);
+	const ChatListMUCItem* mucItem = dynamic_cast<const ChatListMUCItem*>(contextMenuItem_);
 	if (!mucItem) return;
 	QtEditBookmarkWindow* window = new QtEditBookmarkWindow(eventStream_, mucItem->getBookmark());
 	window->show();
@@ -209,7 +206,19 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
 	if (recentItem) {
 		const ChatListWindow::Chat& chat = recentItem->getChat();
 		if (chat.isMUC) {
-			mucRecentsMenu_->exec(QCursor::pos());
+			QMenu mucRecentsMenu;
+			QAction* bookmarkAction = NULL;
+			const ChatListMUCItem* mucItem = model_->getChatListMUCItem(chat.jid);
+			if (mucItem) {
+				contextMenuItem_ = mucItem;
+				bookmarkAction = mucRecentsMenu.addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
+			}
+			else {
+				bookmarkAction = mucRecentsMenu.addAction(tr("Add to Bookmarks"), this, SLOT(handleAddBookmarkFromRecents()));
+			}
+			bookmarkAction->setEnabled(isOnline_);
+			mucRecentsMenu.addAction(tr("Clear recents"), this, SLOT(handleClearRecentsRequested()));
+			mucRecentsMenu.exec(QCursor::pos());
 			return;
 		}
 	}
