@@ -601,6 +601,8 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	RosterItemPayload item;
+	int timeout = getGlobalTimeout(L);
+
 	if (lua_type(L, 2) == LUA_TTABLE) {
 		lua_getfield(L, 2, "jid");
 		const char* rawJID = lua_tostring(L, -1);
@@ -639,7 +641,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		roster->addItem(item);
 
 		Sluift::Response response = client->sendVoidRequest(
-			SetRosterRequest::create(roster, client->getClient()->getIQRouter()), -1);
+			SetRosterRequest::create(roster, client->getClient()->getIQRouter()), timeout);
 		if (response.error) {
 			return response.convertToLuaResult(L);
 		}
@@ -659,12 +661,13 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	Sluift::globals.eventLoop.runOnce();
 	SluiftClient* client = getClient(L);
 	JID jid(Lua::checkString(L, 2));
+	int timeout = getGlobalTimeout(L);
 
 	RosterPayload::ref roster = boost::make_shared<RosterPayload>();
 	roster->addItem(RosterItemPayload(JID(Lua::checkString(L, 2)), "", RosterItemPayload::Remove));
 		
 	return client->sendVoidRequest(
-		SetRosterRequest::create(roster, client->getClient()->getIQRouter()), -1).convertToLuaResult(L);
+		SetRosterRequest::create(roster, client->getClient()->getIQRouter()), timeout).convertToLuaResult(L);
 }
 
 SLUIFT_LUA_FUNCTION_WITH_HELP(
