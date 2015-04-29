@@ -471,6 +471,12 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 		except: pass
 	debugSuffix = ''
 
+
+	include_flag = "-I"
+	if self["CC"] in ("gcc", "clang"):
+		include_flag = "-isystem"
+
+
 	if sys.platform != "win32" and sys.platform != "darwin" and not crosscompiling :
 		if self["qt"]:
 			# The user specified qt path in config.py and we are going to use the
@@ -544,7 +550,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 		if len(self["QTDIR"]) > 0 :
 			self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
 			self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
-			self.AppendUnique(CPPFLAGS="-F$QTDIR/lib")
+			self.AppendUnique(CPPFLAGS="-iframework$QTDIR/lib")
 			self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
 
 		# FIXME: Phonon Hack
@@ -557,9 +563,9 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 				self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
 			else :
 				if len(self["QTDIR"]) > 0 :
-					self.Append(CPPFLAGS = ["-I" + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", version, "Headers")])
+					self.Append(CPPFLAGS = [include_flag + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", version, "Headers")])
 				else :
-					self.Append(CPPFLAGS = ["-I" + os.path.join("/Library/Frameworks", module + ".framework", "Versions", version, "Headers")])
+					self.Append(CPPFLAGS = [include_flag + os.path.join("/Library/Frameworks", module + ".framework", "Versions", version, "Headers")])
 				self.Append(LINKFLAGS=['-framework', module])
 		if 'QtOpenGL' in modules:
 			self.AppendUnique(LINKFLAGS="-F/System/Library/Frameworks")

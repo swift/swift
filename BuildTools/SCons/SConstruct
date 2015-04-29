@@ -297,7 +297,11 @@ if env.get("try_libxml", True) and not env.get("HAVE_LIBXML", 0) :
 	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
 #	and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623):
 		env["HAVE_LIBXML"] = 1
-		env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
+		libxml_env.Append()
+		if env["CC"] in ("clang", "gcc"):
+			env["LIBXML_FLAGS"] = { "CXXFLAGS": ["-isystem/usr/include/libxml2"], "LIBS": ["xml2"] }
+		else:
+			env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
 	conf.Finish()
 
 # Expat

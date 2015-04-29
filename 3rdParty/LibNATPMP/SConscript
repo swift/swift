@@ -9,10 +9,13 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "flags" :
 		env["HAVE_LIBNATPMP"] = True
 		env["LIBNATPMP_FLAGS"] = {
-				"CPPPATH": [Dir("src/libnatpmp")],
 				"LIBPATH": [Dir(".")],
 				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
+		if env["CC"] in ("clang", "gcc") :
+			env["LIBNATPMP_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibNATPMP/src/libnatpmp"]})
+		else :
+			env["LIBNATPMP_FLAGS"].update({"CPPPATH": [Dir("src/libnatpmp")]})
 		#if env["PLATFORM"] == "win32" :
 		#	env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
 		#	if env["MSVC_VERSION"][:3] == "9.0" :
