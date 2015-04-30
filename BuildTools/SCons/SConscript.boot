@@ -314,6 +314,7 @@ else :
 			"-Wno-padded",
 			"-Wno-missing-variable-declarations", # Getting rid of CPPUnit warnings
 			"-Wno-direct-ivar-access", # Obj-C code warning
+			"-Wno-potentially-evaluated-expression", # Caused due to calling shared_ptr::get() inside typeid()
 			])
 	else :
 		env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls", "-Wno-unknown-pragmas"])
