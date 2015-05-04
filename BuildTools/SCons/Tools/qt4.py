@@ -473,7 +473,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 
 
 	include_flag = "-I"
-	if self["CC"] in ("gcc", "clang"):
+	if os.path.basename(self["CC"]) in ("gcc", "clang"):
 		include_flag = "-isystem"
 
 
@@ -489,15 +489,15 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 		if not UsePkgConfig:
 			if debug : debugSuffix = '_debug'
 			if version == '4' :
-				self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include", "phonon")])
+				self.AppendUnique(CPPFLAGS = [include_flag + os.path.join("$QTDIR", "include", "phonon")])
 			for module in modules :
 				module_str = module
 				if not version == '4' :
 					module_str = module_str.replace('Qt', 'Qt5')
 				self.AppendUnique(LIBS=[module_str+debugSuffix])
 				self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
-				self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include")])
-				self.AppendUnique(CPPPATH=[os.path.join("$QTDIR","include",module)])
+				self.AppendUnique(CPPFLAGS = [include_flag + os.path.join("$QTDIR","include")])
+				self.AppendUnique(CPPFLAGS = [include_flag + os.path.join("$QTDIR","include", module)])
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 			return
 		else:
