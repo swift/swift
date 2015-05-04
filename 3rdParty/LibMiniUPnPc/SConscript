@@ -1,5 +1,7 @@
 Import(["env", "conf_env"])
 
+import os
+
 if env.get("LIBMINIUPNPC_BUNDLED", False) :
 
 ################################################################################
@@ -9,10 +11,14 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "flags" :
 		env["HAVE_LIBMINIUPNPC"] = True
 		env["LIBMINIUPNPC_FLAGS"] = {
-				"CPPPATH": [Dir("src/miniupnpc")],
 				"LIBPATH": [Dir(".")],
 				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
+		if os.path.basename(env["CC"]) in ("clang", "gcc") :
+			env["LIBMINIUPNPC_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibMiniUPnPc/src/miniupnpc"]})
+		else :
+			env["LIBMINIUPNPC_FLAGS"].update({"CPPPATH": [Dir("src/miniupnpc")]})
+
 		#if env["PLATFORM"] == "win32" :
 		#	env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
 		#	if env["MSVC_VERSION"][:3] == "9.0" :

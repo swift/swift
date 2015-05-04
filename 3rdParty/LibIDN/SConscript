@@ -1,5 +1,7 @@
 Import(["env", "conf_env"])
 
+import os
+
 if env.get("LIBIDN_BUNDLED", False) :
 
 ################################################################################
@@ -9,8 +11,12 @@ if env.get("LIBIDN_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "flags" :
 		env["LIBIDN_FLAGS"] = {
 				"CPPDEFINES": ["IDNA_STATIC"],
-				"CPPPATH": [Dir("src")],
 			}
+		if os.path.basename(env["CC"]) in ("clang", "gcc") :
+			env["LIBIDN_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibIDN/src"]})
+		else :
+			env["LIBIDN_FLAGS"].update({"CPPPATH": [Dir("src")]})
+
 		if env["PLATFORM"] == "win32" :
 			env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
 			if env["MSVC_VERSION"][:3] == "9.0" :
