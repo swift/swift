@@ -1,5 +1,7 @@
 Import(["env", "conf_env"])
 
+import os
+
 if env.get("LIBNATPMP_BUNDLED", False) :
 
 ################################################################################
@@ -12,7 +14,7 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 				"LIBPATH": [Dir(".")],
 				"INTERNAL_CPPDEFINES": ["STATICLIB"],
 			}
-		if env["CC"] in ("clang", "gcc") :
+		if os.path.basename(env["CC"]) in ("clang", "gcc") :
 			env["LIBNATPMP_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibNATPMP/src/libnatpmp"]})
 		else :
 			env["LIBNATPMP_FLAGS"].update({"CPPPATH": [Dir("src/libnatpmp")]})
