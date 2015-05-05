@@ -120,7 +120,7 @@ def get_built_libs(libs, libpaths, outputs) :
   return result
 
 def parse_tool_command(line) :
-  command = shlex.split(line)
+  command = shlex.split(line, False, False if sys.platform == 'win32' else True)
   flags = command[1:]
   tool = os.path.splitext(os.path.basename(command[0]))[0]
   if tool.startswith('clang++') or tool.startswith('g++') :
