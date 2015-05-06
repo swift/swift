@@ -221,6 +221,9 @@ if env["debug"] :
 	if env["PLATFORM"] == "win32" :
 		env.Append(CCFLAGS = ["/Zi"])
 		env.Append(LINKFLAGS = ["/DEBUG"])
+		if GetOption("num_jobs") > 1 :
+			env["CCPDBFLAGS"] = '/Fd${TARGET}.pdb'
+			env["PDB"] = '${TARGET.base}.pdb'
 		if env["set_iterator_debug_level"] :
 			env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
 		if env["optimize"] :
