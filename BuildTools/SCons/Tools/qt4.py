@@ -439,6 +439,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 		'QtWidgets',
 		'QtMultimedia',
 		'QtWebKitWidgets',
+		'QtWebChannel',
 		]
 	if sys.platform != "win32" and sys.platform != "darwin" and not crosscompiling :
 		validModules += ['QtX11Extras']
@@ -542,6 +543,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 		else :
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 		self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
+		self.PrependUnique(LIBS=["shell32"])
 		return
 
 	if sys.platform=="darwin" :

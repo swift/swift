@@ -16,10 +16,17 @@ def which(program_name):
 def generate(env) :
   def captureWinDeployQtMapping(release = True):
     p = False
+
+    qt_bin_folder = ""
+    if "QTDIR" in env:
+      qt_bin_folder = env["QTDIR"] + "\\bin;"
+
+    environ = {"PATH": qt_bin_folder + os.getenv("PATH"), "TEMP": os.getenv("TEMP"), "TMP": os.getenv("TMP")}
+
     if release:
-      p = subprocess.Popen(['windeployqt', '--release', '--dry-run', '--list', 'mapping', 'Swift.exe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      p = subprocess.Popen(['windeployqt', '--release', '--dry-run', '--list', 'mapping', 'Swift.exe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=environ)
     else:
-      p = subprocess.Popen(['windeployqt', '--debug', '--dry-run', '--list', 'mapping', 'Swift.exe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+      p = subprocess.Popen(['windeployqt', '--debug', '--dry-run', '--list', 'mapping', 'Swift.exe'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=environ)
 
     if p:
       stdout, stderr = p.communicate()

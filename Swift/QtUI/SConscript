@@ -393,7 +393,7 @@ if env["PLATFORM"] == "win32" :
       qtlibs.append("phonon")
       qtlibs = [lib + '4' for lib in qtlibs]
     else :
-      qtlibs += ['QtQuick', 'QtQml', 'QtPositioning', 'QtMultimedia', 'QtSql', 'QtSensors', 'QtWidgets', 'QtWebKitWidgets', 'QtMultimediaWidgets', 'QtOpenGL', 'QtPrintSupport']
+      qtlibs += ['QtQuick', 'QtQml', 'QtPositioning', 'QtMultimedia', 'QtSql', 'QtSensors', 'QtWidgets', 'QtWebChannel', 'QtWebKitWidgets', 'QtMultimediaWidgets', 'QtOpenGL', 'QtPrintSupport']
       qtlibs = [lib.replace('Qt', 'Qt5') for lib in qtlibs]
       qtlibs += ['icuin51', 'icuuc51', 'icudt51', 'libGLESv2', 'libEGL']
       qtplugins["platforms"] = ['windows']
