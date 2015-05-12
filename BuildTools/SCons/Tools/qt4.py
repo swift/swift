@@ -506,6 +506,13 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 			modules_str = " ".join(modules)
 			if not version == '4' :
 				modules_str = modules_str.replace('Qt', 'Qt5')
+
+			# Check if Qt is registed at pkg-config
+			ret = test_env.TryAction('pkg-config --exists \'%s\'' % modules_str)[0]
+			test_env.Result( ret )
+			if not ret:
+				print("Qt not found.")
+				return
 			test_env.ParseConfig("pkg-config --cflags --libs " + modules_str)
 			self.AppendUnique(LIBS=test_env["LIBS"], LIBPATH=test_env["LIBPATH"], CPPPATH=test_env["CPPPATH"])
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
