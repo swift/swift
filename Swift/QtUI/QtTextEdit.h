@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <QPointer>
+#include <QTextEdit>
+
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+
 #include <SwifTools/SpellParser.h>
 
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/Controllers/SettingConstants.h>
-
 #include <Swift/QtUI/QtSpellCheckHighlighter.h>
-
-#include <QTextEdit>
-#include <QPointer>
 
 namespace Swift {
 	class SpellChecker;
@@ -31,12 +31,16 @@ namespace Swift {
 		void wordCorrected(QString& word);
 		void returnPressed();
 		void unhandledKeyPressEvent(QKeyEvent* event);
+		void receivedFocus();
+		void lostFocus();
 
 	public slots:
 		void handleSettingChanged(const std::string& settings);
 
 	protected:
 		virtual void keyPressEvent(QKeyEvent* event);
+		virtual void focusInEvent(QFocusEvent* event);
+		virtual void focusOutEvent(QFocusEvent* event);
 		virtual void contextMenuEvent(QContextMenuEvent* event);
 
 	private slots:

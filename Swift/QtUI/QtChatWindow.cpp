@@ -143,6 +143,8 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 	inputBarLayout->addWidget(correctingLabel_);
 	correctingLabel_->hide();
 
+	connect(input_, SIGNAL(receivedFocus()), this, SLOT(handleTextInputReceivedFocus()));
+	connect(input_, SIGNAL(lostFocus()), this, SLOT(handleTextInputLostFocus()));
 	QPushButton* emoticonsButton_ = new QPushButton(this);
 	emoticonsButton_->setIcon(QIcon(":/emoticons/smile.png"));
 	connect(emoticonsButton_, SIGNAL(clicked()), this, SLOT(handleEmoticonsButtonClicked()));
@@ -171,7 +173,6 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 	logRosterSplitter_->setFocusProxy(input_);
 	midBar_->setFocusProxy(input_);
 	messageLog_->setFocusProxy(input_);
-	connect(qApp, SIGNAL(focusChanged(QWidget*, QWidget*)), this, SLOT(qAppFocusChanged(QWidget*, QWidget*)));
 	connect(messageLog_, SIGNAL(gotFocus()), input_, SLOT(setFocus()));
 	resize(400,300);
 	connect(messageLog_, SIGNAL(fontResized(int)), this, SIGNAL(fontResized(int)));
@@ -458,17 +459,6 @@ void QtChatWindow::convertToMUC(MUCType mucType) {
 	subject_->setVisible(!impromptu_);
 }
 
-void QtChatWindow::qAppFocusChanged(QWidget* /*old*/, QWidget* now) {
-	if (now && isWidgetSelected()) {
-		lastLineTracker_.setHasFocus(true);
-		input_->setFocus();
-		onAllMessagesRead();
-	}
-	else {
-		lastLineTracker_.setHasFocus(false);
-	}
-}
-
 void QtChatWindow::setOnline(bool online) {
 	isOnline_ = online;
 	if (!online) {
@@ -655,6 +645,16 @@ void QtChatWindow::handleEmoticonsButtonClicked() {
 
 void QtChatWindow::handleEmoticonClicked(QString emoticonAsText) {
 	input_->textCursor().insertText(emoticonAsText);
+}
+
+void QtChatWindow::handleTextInputReceivedFocus() {
+	lastLineTracker_.setHasFocus(true);
+	input_->setFocus();
+	onAllMessagesRead();
+}
+
+void QtChatWindow::handleTextInputLostFocus() {
+	lastLineTracker_.setHasFocus(false);
 }
 
 void QtChatWindow::handleActionButtonClicked() {

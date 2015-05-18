@@ -10,18 +10,20 @@
 
 #include <QApplication>
 #include <QEvent>
-#include <QLayoutItem>
 #include <QGridLayout>
+#include <QLayoutItem>
 #include <QtDebug>
 
+#include <Swiften/Base/Log.h>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtTabbable.h>
 #include <Swift/QtUI/QtTabWidget.h>
+#include <Swift/QtUI/QtTabbable.h>
 #include <Swift/QtUI/Trellis/QtDNDTabBar.h>
 
 namespace Swift {
 
-QtDynamicGridLayout::QtDynamicGridLayout(QWidget* parent, bool enableDND) : QWidget(parent), dndEnabled_(enableDND) {
+QtDynamicGridLayout::QtDynamicGridLayout(QWidget* parent, bool enableDND) : QWidget(parent), dndEnabled_(enableDND), movingTab_(NULL) {
 	gridLayout_ = new QGridLayout(this);
 	setContentsMargins(0,0,0,0);
 	setDimensions(QSize(1,1));
@@ -107,6 +109,10 @@ int QtDynamicGridLayout::indexOf(const QWidget* widget) const {
 }
 
 void QtDynamicGridLayout::handleApplicationFocusChanged(QWidget*, QWidget* newFocus) {
+	if (movingTab_) {
+		return;
+	}
+
 	if (newFocus) {
 		if (isAncestorOf(newFocus)) {
 			QtTabbable *newTab = dynamic_cast<QtTabbable*>(newFocus->parentWidget());
@@ -140,6 +146,29 @@ void QtDynamicGridLayout::removeTab(int index) {
 	if (tabWidget) {
 		tabWidget->removeTab(tabIndex);
 	}
+}
+
+/**
+ * This event filter serves the purpose of filtering out all QEvent::Show events targeted at
+ * all widgets excepts the currently moving widget.
+ * It is required because of the way Qt internally implements the QTabBar::moveTab method.
+ * It does not move the actual tab in the underlying structure, but instead removes it from
+ * a stacked layout and later adds it again.
+ * Both the remove and insert produce a lot signal emission and focus changes. Most of which
+ * the application MUST NOT react on because of the QTabBar and the corresponding QTabWidget
+ * being out of sync in an inconsistent state.
+ */
+bool QtDynamicGridLayout::eventFilter(QObject* object, QEvent* event) {
+	QtTabbable* tab = qobject_cast<QtTabbable*>(object);
+	if (!tab) {
+		return false;
+	}
+	if (tab && (tab != movingTab_)) {
+		if (event->type() == QEvent::Show) {
+			return true;
+		}
+	}
+	return false;
 }
 
 QWidget* QtDynamicGridLayout::currentWidget() const {
@@ -394,6 +423,10 @@ void QtDynamicGridLayout::handleTabCloseRequested(int index) {
 }
 
 void QtDynamicGridLayout::handleTabCurrentChanged(int index) {
+	if (movingTab_) {
+		return;
+	}
+
 	if (index >= 0) {
 		QTabWidget* sendingTabWidget = dynamic_cast<QTabWidget*>(sender());
 		assert(sendingTabWidget);
@@ -417,14 +450,25 @@ void QtDynamicGridLayout::updateTabPositions() {
 }
 
 void QtDynamicGridLayout::moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex) {
-	tabWidget->widget(oldIndex)->blockSignals(true);
-	tabWidget->widget(newIndex)->blockSignals(true);
 #if QT_VERSION >= 0x040500
-	tabWidget->tabBar()->moveTab(oldIndex, newIndex);
+	SWIFT_LOG_ASSERT(movingTab_ == NULL, error) << std::endl;
+	movingTab_ = qobject_cast<QtTabbable*>(tabWidget->widget(oldIndex));
+	SWIFT_LOG_ASSERT(movingTab_ != NULL, error) << std::endl;
+
+	if (movingTab_) {
+		// Install event filter that filters out events issued during the internal movement of the
+		// tab but not targeted at the moving tab.
+		qApp->installEventFilter(this);
+
+		tabWidget->tabBar()->moveTab(oldIndex, newIndex);
+
+		qApp->removeEventFilter(this);
+		SWIFT_LOG_ASSERT(movingTab_ == tabWidget->widget(newIndex), error) << std::endl;
+	}
+	movingTab_ = NULL;
+	tabWidget->widget(newIndex)->setFocus();
 #else
 #warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.
-	tabWidget->widget(oldIndex)->blockSignals(false);
-	tabWidget->widget(newIndex)->blockSignals(false);
 #endif
 }
 

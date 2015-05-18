@@ -45,6 +45,8 @@ namespace Swift {
 		QHash<QString, QPoint> getTabPositions() const;
 		void setTabPositions(const QHash<QString, QPoint> positions);
 
+		bool eventFilter(QObject* object, QEvent* event);
+
 	signals:
 		void tabCloseRequested(int index);
 		void onCurrentIndexChanged(int newIndex);
@@ -73,5 +75,6 @@ namespace Swift {
 		QGridLayout *gridLayout_;
 		bool dndEnabled_;
 		QHash<QString, QPoint> tabPositions_;
+		QtTabbable* movingTab_;
 	};
 }

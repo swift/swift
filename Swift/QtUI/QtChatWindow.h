@@ -149,7 +149,6 @@ namespace Swift {
 			void fontResized(int);
 
 		protected slots:
-			void qAppFocusChanged(QWidget* old, QWidget* now);
 			void closeEvent(QCloseEvent* event);
 			void resizeEvent(QResizeEvent* event);
 			void moveEvent(QMoveEvent* event);
@@ -173,6 +172,8 @@ namespace Swift {
 			void handleCurrentLabelChanged(int);
 			void handleEmoticonsButtonClicked();
 			void handleEmoticonClicked(QString emoticonAsText);
+			void handleTextInputReceivedFocus();
+			void handleTextInputLostFocus();
 
 		private:
 			void updateTitleWithUnreadCount();

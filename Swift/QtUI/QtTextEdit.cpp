@@ -1,27 +1,27 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtTextEdit.h>
 
-#include <boost/tuple/tuple.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
+#include <boost/tuple/tuple.hpp>
 
 #include <QApplication>
 #include <QFontMetrics>
 #include <QKeyEvent>
-#include <QDebug>
 #include <QMenu>
+#include <QTime>
 
 #include <Swiften/Base/foreach.h>
 
-#include <SwifTools/SpellCheckerFactory.h>
-#include <SwifTools/SpellChecker.h>
-
 #include <Swift/Controllers/SettingConstants.h>
+
+#include <SwifTools/SpellChecker.h>
+#include <SwifTools/SpellCheckerFactory.h>
 
 #include <Swift/QtUI/QtSpellCheckerWindow.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
@@ -73,6 +73,16 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 	else {
 		QTextEdit::keyPressEvent(event);
 	}
+}
+
+void QtTextEdit::focusInEvent(QFocusEvent* event) {
+	receivedFocus();
+	QTextEdit::focusInEvent(event);
+}
+
+void QtTextEdit::focusOutEvent(QFocusEvent* event) {
+	lostFocus();
+	QTextEdit::focusOutEvent(event);
 }
 
 void QtTextEdit::handleTextChanged() {
