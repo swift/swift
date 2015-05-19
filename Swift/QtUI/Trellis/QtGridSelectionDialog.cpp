@@ -1,34 +1,33 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
 
-#include <QStyle>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QStyle>
 #include <QStyleOptionFrame>
 #include <QStyleOptionMenuItem>
+#include <QStyleOptionSizeGrip>
 
 namespace Swift {
 
-QtGridSelectionDialog::QtGridSelectionDialog(QWidget* parent) : QWidget(parent)
-{
+QtGridSelectionDialog::QtGridSelectionDialog(QWidget* parent) : QWidget(parent) {
 	frameSize = QSize(23,23) * 2;
 	maxGridSize = QSize(7,7);
 	minGridSize = QSize(1,1);
 	currentGridSize = QSize(1,1);
 	padding = 4;
 	setWindowFlags(Qt::Popup);
-	horizontalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin);
-	verticalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin);
 	setCursor(Qt::SizeAllCursor);
+	horizontalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin) * 2;
+	verticalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin) * 2;
 }
 
-QSize QtGridSelectionDialog::sizeHint() const
-{
+QSize QtGridSelectionDialog::sizeHint() const {
 	// PM_MenuVMargin | frameSize | ( padding | frameSize ) * | PM_MenuVMargin
 	int width = horizontalMargin + frameSize.width() + (padding + frameSize.width()) * (currentGridSize.width() - 1) + horizontalMargin;
 	int height = verticalMargin + frameSize.height() + (padding + frameSize.height()) * (currentGridSize.height() - 1) + verticalMargin;
@@ -107,6 +106,11 @@ void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
 			style()->drawControl(QStyle::CE_MenuItem, &option, &painter, 0);
 		}
 	}
+
+	QStyleOptionSizeGrip sizeGripOption;
+	sizeGripOption.init(this);
+	sizeGripOption.corner = Qt::BottomRightCorner;
+	style()->drawControl(QStyle::CE_SizeGrip, &sizeGripOption, &painter, this);
 }
 
 void QtGridSelectionDialog::showEvent(QShowEvent*) {
