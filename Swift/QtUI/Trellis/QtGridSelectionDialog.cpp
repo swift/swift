@@ -21,7 +21,7 @@ QtGridSelectionDialog::QtGridSelectionDialog(QWidget* parent) : QWidget(parent) 
 	minGridSize = QSize(1,1);
 	currentGridSize = QSize(1,1);
 	padding = 4;
-	setWindowFlags(Qt::Popup);
+	setWindowFlags(Qt::FramelessWindowHint);
 	setCursor(Qt::SizeAllCursor);
 	horizontalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin) * 2;
 	verticalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin) * 2;
