@@ -107,15 +107,15 @@ vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
 ################################################################################
 
 env_ENV = {
-  'PATH' : os.environ['PATH'],
-  'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
-  'TERM' : os.environ.get("TERM", ""),
+	'PATH' : os.environ['PATH'],
+	'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
+	'TERM' : os.environ.get("TERM", ""),
 }
 
 if "MSVC_VERSION" in ARGUMENTS :
-  env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None))
+	env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None))
 else :
-  env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
+	env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
 
 Help(vars.GenerateHelpText(env))
 

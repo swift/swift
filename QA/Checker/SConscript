@@ -3,7 +3,7 @@ Import("env")
 if env["TEST"] :
 	if env["SCONS_STAGE"] == "flags" :
 			env["CHECKER_FLAGS"] = {
-          "CPPPATH" : ["#/3rdParty/HippoMocks"],
+					"CPPPATH" : ["#/3rdParty/HippoMocks"],
 					"LIBS": ["Checker"],
 					"LIBPATH": [Dir(".")],
 					"LINKFLAGS": env["PLATFORM"] == "win32" and ["/SUBSYSTEM:CONSOLE"] or []

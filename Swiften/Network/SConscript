@@ -3,8 +3,8 @@ Import("swiften_env")
 myenv = swiften_env.Clone()
 
 if myenv.get("unbound", False) :
-   myenv.MergeFlags(myenv.get("UNBOUND_FLAGS", {}))
-   myenv.MergeFlags(myenv.get("LDNS_FLAGS", {}))
+	myenv.MergeFlags(myenv.get("UNBOUND_FLAGS", {}))
+	myenv.MergeFlags(myenv.get("LDNS_FLAGS", {}))
 
 sourceList = [
 			"ProxiedConnection.cpp",

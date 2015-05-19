@@ -27,10 +27,10 @@ myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
 
 qt4modules = ['QtCore', 'QtGui']
 if myenv["qt5"] :
-  qt_version = '5'
-  qt4modules += ['QtWidgets']
+	qt_version = '5'
+	qt4modules += ['QtWidgets']
 else :
-  qt_version = '4'
+	qt_version = '4'
 myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
 myenv.Append(CPPPATH = ["."])

@@ -73,7 +73,7 @@ def checkObjCHeader(context, header) :
 ################################################################################
 
 if ARGUMENTS.get("force-configure", 0) :
-  SCons.SConf.SetCacheMode("force")
+	SCons.SConf.SetCacheMode("force")
 
 def CheckPKG(context, name):
 	context.Message( 'Checking for package %s... ' % name )
@@ -99,9 +99,9 @@ int main(int argc, char* argv[]) {
 }
 """ % { "header" : header, "define": define }, extension)
 	if ret[0] :
-	  return int(ret[1])
+		return int(ret[1])
 	else :
-	  return -1
+		return -1
 
 
 conf = Configure(conf_env)
@@ -339,7 +339,7 @@ icu_env = conf_env.Clone()
 use_icu = bool(env["icu"])
 icu_prefix = ""
 if isinstance(env["icu"], str) :
-        icu_prefix = env["icu"]
+				icu_prefix = env["icu"]
 icu_flags = {}
 if icu_prefix :
 	icu_flags = { "CPPPATH": [os.path.join(icu_prefix, "include")] }
@@ -381,11 +381,11 @@ if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
 
 # Unbound
 if env["unbound"] :
-    env["LDNS_BUNDLED"] = 1
-    env["UNBOUND_BUNDLED"] = 1
+	env["LDNS_BUNDLED"] = 1
+	env["UNBOUND_BUNDLED"] = 1
 else :
-    env["LDNS_FLAGS"] = {}
-    env["UNBOUND_FLAGS"] = {}
+	env["LDNS_FLAGS"] = {}
+	env["UNBOUND_FLAGS"] = {}
 
 # LibMiniUPnPc
 if env["experimental_ft"] :
@@ -693,8 +693,8 @@ for stage in ["flags", "build"] :
 
 # SLOCCount
 if ARGUMENTS.get("sloccount", False) :
-  for project in env["PROJECTS"] :
-    env.SLOCCount("#/" + project)
+	for project in env["PROJECTS"] :
+		env.SLOCCount("#/" + project)
 
 
 ################################################################################
