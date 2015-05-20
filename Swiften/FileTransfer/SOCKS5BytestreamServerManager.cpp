@@ -192,6 +192,10 @@ void SOCKS5BytestreamServerManager::stop() {
 		forwardPortRequest->stop();
 		forwardPortRequest.reset();
 	}
+	if (server) {
+		server->stop();
+		server = NULL;
+	}
 	if (connectionServer) {
 		connectionServer->stop();
 		connectionServer.reset();
@@ -223,6 +227,7 @@ void SOCKS5BytestreamServerManager::handleForwardPortResult(boost::optional<NATP
 	}
 
 	portMapping = mapping;
+	onPortForwardingSetup(mapping.is_initialized());
 
 	forwardPortRequest->stop();
 	forwardPortRequest.reset();

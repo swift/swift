@@ -14,7 +14,7 @@ namespace Swift {
 
 SOCKS5BytestreamServerResourceUser::SOCKS5BytestreamServerResourceUser(SOCKS5BytestreamServerManager* s5bServerManager) : s5bServerManager_(s5bServerManager) {
 	assert(!s5bServerManager_->isInitialized());
-	s5bServerManager_->onInitialized.connect(boost::bind(&SOCKS5BytestreamServerResourceUser::handleServerManagerInitialized, this, _1));
+	onInitializedConnection_ = s5bServerManager_->onInitialized.connect(boost::bind(&SOCKS5BytestreamServerResourceUser::handleServerManagerInitialized, this, _1));
 	s5bServerManager_->initialize();
 }
 

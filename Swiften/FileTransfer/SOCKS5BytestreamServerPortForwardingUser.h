@@ -26,6 +26,7 @@ class SOCKS5BytestreamServerPortForwardingUser {
 
 	private:
 		SOCKS5BytestreamServerManager* s5bServerManager_;
+		boost::bsignals::scoped_connection onPortForwardingSetupConnection_;
 };
 
 }
