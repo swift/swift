@@ -4,10 +4,11 @@
  * See the COPYING file for more information.
  */
 
-
 #include <Swift/QtUI/QtJoinMUCWindow.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <QToolTip>
 
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
@@ -32,15 +33,16 @@ QtJoinMUCWindow::QtJoinMUCWindow(UIEventStream* uiEventStream) : uiEventStream(u
 #endif
 	ui.instantRoom->setChecked(true);
 	ui.nickName->setValidator(new NickValidator(this));
+	ui.room->setValidator(new RoomJIDValidator(this));
 }
 
 void QtJoinMUCWindow::handleJoin() {
-	if (ui.room->text().isEmpty()) {
-		// TODO: Error
+	if (ui.room->text().isEmpty() || !ui.room->hasAcceptableInput()) {
+		QToolTip::showText(ui.room->mapToGlobal(QPoint()), tr("Please enter a valid room address."), ui.room);
 		return;
 	}
-	if (ui.nickName->text().isEmpty()) {
-		// TODO: Error
+	if (ui.nickName->text().isEmpty() || !ui.nickName->hasAcceptableInput()) {
+		QToolTip::showText(ui.nickName->mapToGlobal(QPoint()), tr("Please enter a valid nickname."), ui.nickName);
 		return;
 	}
 
