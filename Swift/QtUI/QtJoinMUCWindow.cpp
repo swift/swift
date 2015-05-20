@@ -1,14 +1,16 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 
-#include "QtJoinMUCWindow.h"
+#include <Swift/QtUI/QtJoinMUCWindow.h>
+
 #include <boost/smart_ptr/make_shared.hpp>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
 namespace Swift {
 
@@ -21,10 +23,13 @@ QtJoinMUCWindow::QtJoinMUCWindow(UIEventStream* uiEventStream) : uiEventStream(u
 	connect(ui.room, SIGNAL(returnPressed()), this, SLOT(handleJoin()));
 	connect(ui.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));
 	connect(ui.joinButton, SIGNAL(clicked()), this, SLOT(handleJoin()));
+#if QT_VERSION < 0x050200
 	// FIXME: Temporarily set focus on the nickName field first, so that the
 	// placeholder for the room is visible. This is just because Qt hides 
 	// the placeholder when a widget is focused for some reason.
+	// Tracked upstream as QTBUG-33237 and fixed with Qt 5.2.0.
 	ui.nickName->setFocus();
+#endif
 	ui.instantRoom->setChecked(true);
 	ui.nickName->setValidator(new NickValidator(this));
 }
