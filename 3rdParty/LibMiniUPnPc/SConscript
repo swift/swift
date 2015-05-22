@@ -35,19 +35,20 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
 		myenv.Append(CCFLAGS = ["-DNDEBUG", "-DSTATICLIB"])
-		
+
 		if myenv["PLATFORM"] != "win32":
 			myenv.Append(CCFLAGS = ["-DMINIUPNPC_SET_SOCKET_TIMEOUT"])
-		
+			myenv.Append(CCFLAGS = ["-D_BSD_SOURCE"])
+
 		if myenv["PLATFORM"] == "darwin":
 			myenv.Append(CCFLAGS = ["-DMACOSX", "-D_DARWIN_C_SOURCE"])
-		
+
 		if myenv["PLATFORM"] == "win32":
 			myenv.Append(CCFLAGS = ["-DWIN32", "-D_WIN32_WINNT=0x0501"])
 
 		if myenv["PLATFORM"] != "win32" and myenv["PLATFORM"] != "darwin":
 			conf = Configure(conf_env)
-			if conf.CheckTypeSize("ip_mreqn") == 0:
+			if conf.CheckTypeSize("struct ip_mreqn", includes="#include <netinet/in.h>") == 0:
 				myenv.Append(CCFLAGS = ["-DNEED_STRUCT_IP_MREQN"])
 			conf.Finish()
 
