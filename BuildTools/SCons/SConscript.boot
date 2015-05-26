@@ -282,7 +282,7 @@ if env["experimental"] :
 
 # If we build shared libs on AMD64, we need -fPIC.
 # This should have no performance impact om AMD64
-if env["PLATFORM"] == "posix" and platform.machine() == "x86_64" :
+if env["PLATFORM"] == "posix" and platform.machine() in ["x86_64", "amd64"] :
 	env.Append(CCFLAGS = ["-fPIC"])
 
 # Warnings
