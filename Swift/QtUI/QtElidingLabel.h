@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,6 +17,8 @@ namespace Swift {
 		void setText(const QString& text);
 		virtual ~QtElidingLabel();
 		
+		virtual QSize sizeHint() const;
+
 		virtual void paintEvent(QPaintEvent* event);
 
 	private:
@@ -24,5 +26,6 @@ namespace Swift {
 		bool dirty_;
 		QString fullText_;
 		QRect lastRect_;
+		QSize sizeHint_;
 	};
 }

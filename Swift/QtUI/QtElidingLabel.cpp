@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/QtElidingLabel.h"
+#include <Swift/QtUI/QtElidingLabel.h>
 
 namespace Swift {
 QtElidingLabel::QtElidingLabel(QWidget* parent, Qt::WindowFlags f) : QLabel(parent, f) {
@@ -25,6 +25,10 @@ QtElidingLabel::~QtElidingLabel() {
 
 }
 
+QSize QtElidingLabel::sizeHint() const {
+	return sizeHint_;
+}
+
 void QtElidingLabel::setSizes() {
 	setMinimumSize(1, minimumHeight());
 }
@@ -32,6 +36,7 @@ void QtElidingLabel::setSizes() {
 void QtElidingLabel::setText(const QString& text) {
 	fullText_ = text;
 	QLabel::setText(text);
+	sizeHint_ = QLabel::sizeHint();
 	dirty_ = true;
 }
 
