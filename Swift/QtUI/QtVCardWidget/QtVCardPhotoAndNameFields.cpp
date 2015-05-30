@@ -56,16 +56,13 @@ void QtVCardPhotoAndNameFields::setEditable(bool editable) {
 	this->editable = editable;
 
 	ui->avatarWidget->setEditable(editable);
-	ui->horizontalLayoutFN->setSpacing(editable ? 2 : 0);
 	ui->lineEditFN->setVisible(editable);
 	ui->labelFN->setVisible(!editable);
 
-	ui->horizontalLayoutNICKNAME->setSpacing(editable ? 2 : 0);
 	ui->lineEditNICKNAME->setVisible(editable);
 	ui->labelNICKNAME->setVisible(!editable);
 
 	// prefix given middle last suffix
-	ui->horizontalLayoutFULLNAME->setSpacing(editable ? 2 : 0);
 	ui->lineEditPREFIX->setVisible(editable);
 	ui->lineEditGIVEN->setVisible(editable);
 	ui->lineEditMIDDLE->setVisible(editable);
@@ -79,7 +76,7 @@ void QtVCardPhotoAndNameFields::setEditable(bool editable) {
 	for (QStringList::iterator i = fullname.begin(); i != fullname.end(); i++) {
 		*i = i->trimmed();
 	}
-	ui->labelFULLNAME->setText(fullname.join(" "));
+	ui->labelFULLNAME->setText((fullname.filter(QRegExp(".+"))).join(" "));
 }
 
 void QtVCardPhotoAndNameFields::setAvatar(const ByteArray &data, const std::string &type) {
