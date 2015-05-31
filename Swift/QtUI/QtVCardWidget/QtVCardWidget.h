@@ -4,16 +4,24 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <QWidget>
-#include <QToolButton>
-#include <Swiften/Elements/VCard.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include "QtVCardFieldInfo.h"
-#include "QtVCardGeneralField.h"
-#include "QtVCardPhotoAndNameFields.h"
+#include <QToolButton>
+#include <QWidget>
+
+#include <Swiften/Elements/VCard.h>
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardFieldInfo.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardPhotoAndNameFields.h>
 
 namespace Ui {
 	class QtVCardWidget;
@@ -34,6 +42,8 @@ namespace Swift {
 
 			void setVCard(VCard::ref vcard);
 			VCard::ref getVCard();
+
+			virtual QSize sizeHint() const;
 
 		signals:
 			void editableChanged(bool editable);

@@ -5,18 +5,19 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtVCardWidget/QtVCardWidget.h>
+#include <Swift/QtUI/QtVCardWidget/ui_QtVCardWidget.h>
 
 #include <QDebug>
 #include <QLineEdit>
 #include <QMenu>
 
-#include <Swift/QtUI/QtVCardWidget/ui_QtVCardWidget.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardAddressField.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardAddressLabelField.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardBirthdayField.h>
@@ -29,7 +30,6 @@
 #include <Swift/QtUI/QtVCardWidget/QtVCardTelephoneField.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardTitleField.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardURLField.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
@@ -66,10 +66,25 @@ QtVCardWidget::QtVCardWidget(QWidget* parent) :
 	addFieldType(menu, boost::make_shared<QtVCardURLField::FieldInfo>());
 
 	setEditable(false);
+	setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 }
 
 QtVCardWidget::~QtVCardWidget() {
 	delete ui;
+}
+
+QSize QtVCardWidget::sizeHint() const {
+	QSize newSizeHint = ui->photoAndName->sizeHint();
+
+	// use mininmal size that does not require scrolling
+	QSize fieldsWidgetSize = ui->scrollArea->widget()->minimumSize();
+	fieldsWidgetSize.setWidth(ui->scrollArea->widget()->sizeHint().width());
+
+	newSizeHint += QSize(0, ui->line->height());
+
+	newSizeHint = QSize(std::max(newSizeHint.width(), fieldsWidgetSize.width()), newSizeHint.height() + fieldsWidgetSize.height());
+
+	return newSizeHint;
 }
 
 bool QtVCardWidget::isEditable() const {
@@ -182,7 +197,6 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
 
 	relayoutToolButton();
 	setEditable(editable);
-	window()->resize(sizeHint().width(), size().height() < 200 ? 200 : size().height());
 }
 
 VCard::ref QtVCardWidget::getVCard() {
