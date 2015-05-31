@@ -84,6 +84,12 @@ QSize QtVCardWidget::sizeHint() const {
 
 	newSizeHint = QSize(std::max(newSizeHint.width(), fieldsWidgetSize.width()), newSizeHint.height() + fieldsWidgetSize.height());
 
+	// add layout margin
+	newSizeHint += QSize(layout()->contentsMargins().left() + layout()->contentsMargins().right(), layout()->contentsMargins().top() + layout()->contentsMargins().bottom());
+
+	// the spaceing before and after the line between the profile header and its fields
+	newSizeHint += QSize(0, layout()->spacing() * 2);
+
 	return newSizeHint;
 }
 

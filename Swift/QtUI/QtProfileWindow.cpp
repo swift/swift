@@ -116,7 +116,7 @@ void QtProfileWindow::hide() {
 }
 
 QSize QtProfileWindow::sizeHint() const {
-	return QWidget::sizeHint() + QSize(0, 15);
+	return QWidget::sizeHint();
 }
 
 void QtProfileWindow::updateTitle() {
