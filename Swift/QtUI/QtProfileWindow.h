@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,11 +12,12 @@
 
 #pragma once
 
+#include <QTimer>
+#include <QWidget>
+
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/UIInterfaces/ProfileWindow.h>
-
-#include <QWidget>
 
 namespace Ui {
 	class QtProfileWindow;
@@ -42,6 +43,8 @@ class QtProfileWindow : public QWidget, public ProfileWindow {
 		virtual void show();
 		virtual void hide();
 
+		virtual QSize sizeHint() const;
+
 	private:
 		void updateTitle();
 		void updateWindowSize();
@@ -49,10 +52,12 @@ class QtProfileWindow : public QWidget, public ProfileWindow {
 
 	private slots:
 		void handleSave();
+		void handleAdjustSizeTimeout();
 
 	private:
 		Ui::QtProfileWindow* ui;
 		JID jid;
+		QTimer adjustSizeTimer;
 };
 
 }

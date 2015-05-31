@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,13 +10,14 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtProfileWindow.h"
-#include "ui_QtProfileWindow.h"
+#include <Swift/QtUI/QtProfileWindow.h>
+#include <Swift/QtUI/ui_QtProfileWindow.h>
 
 #include <QCloseEvent>
 #include <QMovie>
 #include <QShortcut>
 #include <QTextDocument>
+#include <QTimer>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUtilities.h>
@@ -39,6 +40,10 @@ QtProfileWindow::QtProfileWindow() :
 	connect(ui->savePushButton, SIGNAL(clicked()), SLOT(handleSave()));
 	setEditable(false);
 	setAttribute(Qt::WA_DeleteOnClose);
+	setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
+
+	adjustSizeTimer.setSingleShot(true);
+	connect(&adjustSizeTimer, SIGNAL(timeout()), SLOT(handleAdjustSizeTimeout()));
 }
 
 QtProfileWindow::~QtProfileWindow() {
@@ -59,7 +64,6 @@ void QtProfileWindow::setVCard(VCard::ref vcard) {
 		ui->vcard->setVisible(true);
 		ui->emptyLabel->setVisible(false);
 	}
-
 	updateWindowSize();
 }
 
@@ -74,6 +78,7 @@ void QtProfileWindow::setEditable(bool b) {
 	ui->savePushButton->setVisible(b);
 	ui->vcard->setEditable(b);
 	updateTitle();
+	updateWindowSize();
 }
 
 void QtProfileWindow::setProcessing(bool processing) {
@@ -89,8 +94,6 @@ void QtProfileWindow::setProcessing(bool processing) {
 		ui->statusLabel->setVisible(false);
 		ui->vcard->setVisible(true);
 	}
-
-	updateWindowSize();
 }
 
 void QtProfileWindow::setError(const std::string& error) {
@@ -112,6 +115,10 @@ void QtProfileWindow::hide() {
 	QWidget::hide();
 }
 
+QSize QtProfileWindow::sizeHint() const {
+	return QWidget::sizeHint() + QSize(0, 15);
+}
+
 void QtProfileWindow::updateTitle() {
 	QString jidString;
 	if (jid.isValid()) {
@@ -126,22 +133,14 @@ void QtProfileWindow::updateTitle() {
 }
 
 void QtProfileWindow::updateWindowSize() {
-	int width = 0;
-	int height = 0;
-
-	QSize size = ui->statusLabel->size();
-	width = std::max(width, size.width());
-	height = std::max(height, size.height() * 3);
-
-	size = ui->emptyLabel->size();
-	width = std::max(width, size.width());
-	height = std::max(height, size.height() * 3);
-
-	size = ui->vcard->size();
-	width = std::max(width, size.width());
-	height = std::max(height, size.height());
-
-	resize(width, height);
+	// Delay resizing to the end of the event loop, because Qt calculates the correct layout asynchronously.
+	// Qt will post LayoutRequests for widgets on the event loop on show and widgets will recaluclate their
+	// layout as they process these events.
+	// We use the complete and correct size hint from the freshly calculated layout by delaying execution of
+	// the resize code to the end of Qt's event loop.
+	if (!adjustSizeTimer.isActive()) {
+		adjustSizeTimer.start(0);
+	}
 }
 
 void QtProfileWindow::closeEvent(QCloseEvent* event) {
@@ -151,6 +150,18 @@ void QtProfileWindow::closeEvent(QCloseEvent* event) {
 
 void QtProfileWindow::handleSave() {
 	onVCardChangeRequest(ui->vcard->getVCard());
+}
+
+void QtProfileWindow::handleAdjustSizeTimeout() {
+	// Force recaluclation of all layout geometry in children widgets.
+	// This is required on Windows to have the correct size even on first show.
+	QList<QWidget *> children = findChildren<QWidget*>();
+	foreach(QWidget* child, children) {
+		child->updateGeometry();
+	}
+
+	updateGeometry();
+	adjustSize();
 }
 
 }
