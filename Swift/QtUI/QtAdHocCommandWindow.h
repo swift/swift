@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QWidget>
-#include <QPushButton>
+#include <QDialogButtonBox>
 #include <QLabel>
+#include <QPushButton>
+#include <QWidget>
+
+#include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 
 #include <Swift/Controllers/UIInterfaces/AdHocCommandWindow.h>
-#include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 
 class QBoxLayout;
 
@@ -23,6 +25,7 @@ namespace Swift {
 			QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
 			virtual ~QtAdHocCommandWindow();
 			virtual void setOnline(bool online);
+
 		private:
 			void closeEvent(QCloseEvent* event);
 			void handleNextStageReceived(Command::ref command);
@@ -30,11 +33,13 @@ namespace Swift {
 			void setForm(Form::ref);
 			void setNoForm(bool andHide);
 			void setAvailableActions(Command::ref commandResult);
+
 		private slots:
 			void handleCancelClicked();
 			void handlePrevClicked();
 			void handleNextClicked();
 			void handleCompleteClicked();
+
 		private:
 			boost::shared_ptr<OutgoingAdHocCommandSession> command_;
 			QtFormWidget* formWidget_;
@@ -45,7 +50,9 @@ namespace Swift {
 			QPushButton* nextButton_;
 			QPushButton* completeButton_;
 			QPushButton* cancelButton_;
+			QPushButton* okButton_;
 			std::map<Command::Action, QPushButton*> actions_;
+			QDialogButtonBox* dialogButtons_;
 			QBoxLayout* layout_;
 	};
 }

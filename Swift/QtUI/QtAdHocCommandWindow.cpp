@@ -1,16 +1,20 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/bind.hpp>
-#include <QBoxLayout>
 #include <Swift/QtUI/QtAdHocCommandWindow.h>
-#include <Swift/QtUI/QtFormWidget.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
+
+#include <boost/bind.hpp>
+
+#include <QBoxLayout>
+
 #include <Swiften/Base/format.h>
 #include <Swiften/Elements/Command.h>
+
+#include <Swift/QtUI/QtFormWidget.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 const int FormLayoutIndex = 1;
 
@@ -36,22 +40,25 @@ QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocComman
 	errorLabel_->setFrameStyle(QFrame::Box|QFrame::Sunken);
 	layout_->addWidget(errorLabel_);
 
-	QWidget* buttonsWidget = new QWidget(this);
-	layout_->addWidget(buttonsWidget);
+	dialogButtons_ = new QDialogButtonBox(this);
+	layout_->addWidget(dialogButtons_);
 
-	QBoxLayout* buttonsLayout = new QBoxLayout(QBoxLayout::LeftToRight, buttonsWidget);
-	cancelButton_ = new QPushButton(tr("Cancel"), buttonsWidget);
-	buttonsLayout->addWidget(cancelButton_);
+	dialogButtons_->setStandardButtons(QDialogButtonBox::Cancel | QDialogButtonBox::Ok);
+	okButton_ = dialogButtons_->button(QDialogButtonBox::Ok);
+	connect(okButton_, SIGNAL(clicked()), this, SLOT(close()));
+	cancelButton_ = dialogButtons_->button(QDialogButtonBox::Cancel);
 	connect(cancelButton_, SIGNAL(clicked()), this, SLOT(handleCancelClicked()));
-	backButton_ = new QPushButton(tr("Back"), buttonsWidget);
-	buttonsLayout->addWidget(backButton_);
-	connect(backButton_, SIGNAL(clicked()), this, SLOT(handlePrevClicked()));
-	nextButton_ = new QPushButton(tr("Next"), buttonsWidget);
-	buttonsLayout->addWidget(nextButton_);
-	connect(nextButton_, SIGNAL(clicked()), this, SLOT(handleNextClicked()));
-	completeButton_ = new QPushButton(tr("Complete"), buttonsWidget);
-	buttonsLayout->addWidget(completeButton_);
+	// Buttons appear next to the Ok button, right of Cancel with YesRole
+	completeButton_ = dialogButtons_->addButton(tr("Complete"), QDialogButtonBox::YesRole);
 	connect(completeButton_, SIGNAL(clicked()), this, SLOT(handleCompleteClicked()));
+	nextButton_ = dialogButtons_->addButton(tr("Next"), QDialogButtonBox::YesRole);
+	connect(nextButton_, SIGNAL(clicked()), this, SLOT(handleNextClicked()));
+	backButton_ = dialogButtons_->addButton(tr("Back"), QDialogButtonBox::YesRole);
+	connect(backButton_, SIGNAL(clicked()), this, SLOT(handlePrevClicked()));
+
+	okButton_->setEnabled(false);
+	okButton_->hide();
+
 	nextButton_->setEnabled(false);
 	backButton_->setEnabled(false);
 	completeButton_->setEnabled(false);
@@ -143,9 +150,13 @@ void QtAdHocCommandWindow::setNoForm(bool andHide) {
 typedef std::pair<Command::Action, QPushButton*> ActionButton;
 
 void QtAdHocCommandWindow::setAvailableActions(Command::ref /*commandResult*/) {
+	okButton_->show();
+	okButton_->setEnabled(true);
 	foreach (ActionButton pair, actions_) {
 		OutgoingAdHocCommandSession::ActionState state = command_->getActionState(pair.first);
 		if (state & OutgoingAdHocCommandSession::Present) {
+			okButton_->hide();
+			okButton_->setEnabled(false);
 			pair.second->show();
 		}
 		else {
