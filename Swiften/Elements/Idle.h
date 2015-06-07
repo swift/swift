@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 
-	class Idle : public Payload {
+	class SWIFTEN_API Idle : public Payload {
 	public:
 		typedef boost::shared_ptr<Idle> ref;
 

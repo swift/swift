@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/StreamResumed.h>
 #include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
-	class StreamResumedSerializer : public GenericElementSerializer<StreamResumed> {
+	class SWIFTEN_API StreamResumedSerializer : public GenericElementSerializer<StreamResumed> {
 		public:
 			StreamResumedSerializer();
 

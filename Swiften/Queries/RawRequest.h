@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <typeinfo>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/RawXMLPayload.h>
@@ -18,7 +19,7 @@
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 namespace Swift {
-	class RawRequest : public Request {
+	class SWIFTEN_API RawRequest : public Request {
 		public:
 			typedef boost::shared_ptr<RawRequest> ref;
 

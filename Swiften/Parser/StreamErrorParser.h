@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/StreamError.h>
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class StreamErrorParser : public GenericElementParser<StreamError> {
+	class SWIFTEN_API StreamErrorParser : public GenericElementParser<StreamError> {
 		public:
 			StreamErrorParser();
 

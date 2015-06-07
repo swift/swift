@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/Bytestreams.h>
 
 namespace Swift {
-	class BytestreamsRequest : public GenericRequest<Bytestreams> {
+	class SWIFTEN_API BytestreamsRequest : public GenericRequest<Bytestreams> {
 		public:
 			typedef boost::shared_ptr<BytestreamsRequest> ref;
 

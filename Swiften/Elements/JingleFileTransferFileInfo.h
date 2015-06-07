@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,6 +14,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/HashElement.h>
 #include <Swiften/Elements/Payload.h>
 
@@ -22,7 +23,7 @@ namespace Swift {
 	/**
 	 * @brief This class represents the file info used in XEP-0234.
 	 */
-	class JingleFileTransferFileInfo : public Payload {
+	class SWIFTEN_API JingleFileTransferFileInfo : public Payload {
 		typedef boost::shared_ptr<JingleFileTransferFileInfo> ref;
 
 		public:

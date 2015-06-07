@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013  Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class Hash {
+	class SWIFTEN_API Hash {
 		public:
 			virtual ~Hash();
 

@@ -4,17 +4,24 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/asio/io_service.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ConnectionServerFactory.h>
 #include <Swiften/Network/BoostConnectionServer.h>
 
 namespace Swift {
 	class ConnectionServer;
 
-	class BoostConnectionServerFactory : public ConnectionServerFactory {
+	class SWIFTEN_API BoostConnectionServerFactory : public ConnectionServerFactory {
 		public:
 			BoostConnectionServerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 

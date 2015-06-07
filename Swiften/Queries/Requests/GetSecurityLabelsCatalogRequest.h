@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,12 +8,13 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
 
 
 namespace Swift {
-	class GetSecurityLabelsCatalogRequest : public GenericRequest<SecurityLabelsCatalog> {
+	class SWIFTEN_API GetSecurityLabelsCatalogRequest : public GenericRequest<SecurityLabelsCatalog> {
 		public:
 			typedef boost::shared_ptr<GetSecurityLabelsCatalogRequest> ref;
 

@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Queries/Request.h>
 
@@ -20,7 +21,7 @@ namespace Swift {
 	 * To send the iq, then call send() - onResponse will be called when a reply is received.
 	 */
 	template<typename PAYLOAD_TYPE>
-	class GenericRequest : public Request {
+	class SWIFTEN_API GenericRequest : public Request {
 		public:
 			typedef boost::shared_ptr<GenericRequest<PAYLOAD_TYPE> > ref;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
-	class CompressRequestSerializer : public ElementSerializer {
+	class SWIFTEN_API CompressRequestSerializer : public ElementSerializer {
 		public:
 			CompressRequestSerializer();
 

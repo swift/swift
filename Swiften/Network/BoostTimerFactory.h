@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/asio/io_service.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Network/BoostTimer.h>
 
@@ -15,7 +16,7 @@ namespace Swift {
 	class BoostTimer;
 	class EventLoop;
 
-	class BoostTimerFactory : public TimerFactory {
+	class SWIFTEN_API BoostTimerFactory : public TimerFactory {
 		public:
 			BoostTimerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 

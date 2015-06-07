@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,13 +11,14 @@
 #include <string>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/MUCItem.h>
 
 namespace Swift {
-	class MUCAdminPayload : public Payload {
+	class SWIFTEN_API MUCAdminPayload : public Payload {
 		public:
 			typedef boost::shared_ptr<MUCAdminPayload> ref;
 

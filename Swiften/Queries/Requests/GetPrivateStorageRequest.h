@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,13 +10,14 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/PrivateStorage.h>
 #include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>
-	class GetPrivateStorageRequest : public Request {
+	class SWIFTEN_API GetPrivateStorageRequest : public Request {
 		public:
 			typedef boost::shared_ptr<GetPrivateStorageRequest<PAYLOAD_TYPE> > ref;
 

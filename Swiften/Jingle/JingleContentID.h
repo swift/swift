@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 
 namespace Swift {
-	class JingleContentID {
+	class SWIFTEN_API JingleContentID {
 		public:
 			JingleContentID(const std::string& name, JingleContentPayload::Creator creator) : name(name), creator(creator) {
 			}

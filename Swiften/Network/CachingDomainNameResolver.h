@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
 
@@ -17,7 +18,7 @@
 namespace Swift {
 	class EventLoop;
 
-	class CachingDomainNameResolver : public DomainNameResolver {
+	class SWIFTEN_API CachingDomainNameResolver : public DomainNameResolver {
 		public:
 			CachingDomainNameResolver(DomainNameResolver* realResolver, EventLoop* eventLoop);
 			~CachingDomainNameResolver();

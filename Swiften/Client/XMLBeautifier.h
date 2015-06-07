@@ -5,10 +5,10 @@
  */
 
 /*
-* Copyright (c) 2014 Isode Limited.
-* All rights reserved.
-* See the COPYING file for more information.
-*/
+ * Copyright (c) 2014-2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #pragma once
 
@@ -16,6 +16,7 @@
 #include <string>
 #include <stack>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Parser/XMLParserFactory.h>
 #include <Swiften/Parser/XMLParserClient.h>
@@ -23,7 +24,7 @@
 
 namespace Swift {
 
-class XMLBeautifier : public XMLParserClient {
+class SWIFTEN_API XMLBeautifier : public XMLParserClient {
 public:
 	XMLBeautifier(bool indention, bool coloring);
 	virtual ~XMLBeautifier();

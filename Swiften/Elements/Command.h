@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
 
@@ -16,7 +17,7 @@ namespace Swift {
 	/**
 	 * Ad-Hoc Command (XEP-0050).
 	 */
-	class Command : public Payload {
+	class SWIFTEN_API Command : public Payload {
 		public:
 			typedef boost::shared_ptr<Command> ref;
 

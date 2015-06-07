@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/ElementParser.h>
 
 namespace Swift {
@@ -16,7 +17,7 @@ namespace Swift {
 	class PayloadParserFactoryCollection;
 
 	template<typename ElementType>
-	class GenericElementParser : public ElementParser {
+	class SWIFTEN_API GenericElementParser : public ElementParser {
 		public:
 			GenericElementParser() {
 				stanza_ = boost::make_shared<ElementType>();

@@ -15,6 +15,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
@@ -28,7 +29,7 @@ class IQRouter;
  * This class is designed to find possible SOCKS5 bytestream proxies which are used for peer-to-peer data transfers in
  * restrictive environments.
  */
-class SOCKS5BytestreamProxyFinder {
+class SWIFTEN_API SOCKS5BytestreamProxyFinder {
 	public:
 		SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);
 		~SOCKS5BytestreamProxyFinder();

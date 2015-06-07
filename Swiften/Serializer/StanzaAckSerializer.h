@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,12 +9,13 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/StanzaAck.h>
 #include <Swiften/Serializer/GenericElementSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class StanzaAckSerializer : public GenericElementSerializer<StanzaAck> {
+	class SWIFTEN_API StanzaAckSerializer : public GenericElementSerializer<StanzaAck> {
 		public:
 			StanzaAckSerializer() : GenericElementSerializer<StanzaAck>() {
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,11 @@
 #include <vector>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class RosterItemPayload {
+	class SWIFTEN_API RosterItemPayload {
 		public:
 			enum Subscription { None, To, From, Both, Remove };
 

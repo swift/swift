@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/StreamResumed.h>
 
 namespace Swift {
-	class StreamResumedParser : public GenericElementParser<StreamResumed> {
+	class SWIFTEN_API StreamResumedParser : public GenericElementParser<StreamResumed> {
 		public:
 			StreamResumedParser();
 			~StreamResumedParser();

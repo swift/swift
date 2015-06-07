@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/Listenable.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
@@ -20,7 +21,7 @@ namespace Swift {
 	class JingleSessionListener;
 	class JingleContentID;
 
-	class JingleSession : public Listenable<JingleSessionListener> {
+	class SWIFTEN_API JingleSession : public Listenable<JingleSessionListener> {
 		public:
 			typedef boost::shared_ptr<JingleSession> ref;
 

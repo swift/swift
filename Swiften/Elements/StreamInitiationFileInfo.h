@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <boost/shared_ptr.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
@@ -14,7 +15,7 @@
 
 namespace Swift {
 
-class StreamInitiationFileInfo : public Payload {
+class SWIFTEN_API StreamInitiationFileInfo : public Payload {
 public:
 	typedef boost::shared_ptr<StreamInitiationFileInfo> ref;
 	

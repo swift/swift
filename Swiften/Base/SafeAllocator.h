@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
 	void secureZeroMemory(char* memory, size_t numberOfBytes);
 
 	template<typename T>
-	class SafeAllocator : public std::allocator<T> {
+	class SWIFTEN_API SafeAllocator : public std::allocator<T> {
 		public:
 			template <class U> struct rebind {
 				typedef SafeAllocator<U> other;

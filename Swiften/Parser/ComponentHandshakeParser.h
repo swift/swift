@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/ComponentHandshake.h>
 #include <string>
 
 namespace Swift {
-	class ComponentHandshakeParser : public GenericElementParser<ComponentHandshake> {
+	class SWIFTEN_API ComponentHandshakeParser : public GenericElementParser<ComponentHandshake> {
 		public:
 			ComponentHandshakeParser();
 

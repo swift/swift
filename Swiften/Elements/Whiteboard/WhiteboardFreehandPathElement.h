@@ -4,8 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
 
@@ -13,7 +20,7 @@
 #include <utility>
 
 namespace Swift {
-	class WhiteboardFreehandPathElement : public WhiteboardElement {
+	class SWIFTEN_API WhiteboardFreehandPathElement : public WhiteboardElement {
 		typedef std::pair<int, int> Point;
 	public:
 		typedef boost::shared_ptr<WhiteboardFreehandPathElement> ref;

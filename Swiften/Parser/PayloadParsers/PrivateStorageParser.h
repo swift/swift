@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/PrivateStorage.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class PayloadParserFactoryCollection;
 
-	class PrivateStorageParser : public GenericPayloadParser<PrivateStorage> {
+	class SWIFTEN_API PrivateStorageParser : public GenericPayloadParser<PrivateStorage> {
 		public:
 			PrivateStorageParser(PayloadParserFactoryCollection* factories);
 

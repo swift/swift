@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,11 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
-	class SimpleCertificate : public Certificate {
+	class SWIFTEN_API SimpleCertificate : public Certificate {
 		public:
 			typedef boost::shared_ptr<SimpleCertificate> ref;
 

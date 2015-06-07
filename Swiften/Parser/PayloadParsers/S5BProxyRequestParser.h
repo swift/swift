@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 
-class S5BProxyRequestParser : public GenericPayloadParser<S5BProxyRequest> {
+class SWIFTEN_API S5BProxyRequestParser : public GenericPayloadParser<S5BProxyRequest> {
 public:
 	S5BProxyRequestParser();
 	virtual ~S5BProxyRequestParser();

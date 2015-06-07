@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/NATPortMapping.h>
 
 namespace Swift {
-	class NATTraversalInterface {
+	class SWIFTEN_API NATTraversalInterface {
 		public:
 			virtual ~NATTraversalInterface();
 

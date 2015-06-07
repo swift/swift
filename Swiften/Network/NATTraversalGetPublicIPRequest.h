@@ -4,13 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class NATTraversalGetPublicIPRequest {
+	class SWIFTEN_API NATTraversalGetPublicIPRequest {
 		public:
 			virtual ~NATTraversalGetPublicIPRequest();
 

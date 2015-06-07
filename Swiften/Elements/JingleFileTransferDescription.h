@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,11 +9,12 @@
 #include <boost/shared_ptr.hpp>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleDescription.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
 
 namespace Swift {
-	class JingleFileTransferDescription : public JingleDescription {
+	class SWIFTEN_API JingleFileTransferDescription : public JingleDescription {
 		public:
 			typedef boost::shared_ptr<JingleFileTransferDescription> ref;
 

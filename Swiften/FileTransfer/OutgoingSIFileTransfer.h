@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -23,7 +24,7 @@ namespace Swift {
 	class IQRouter;
 	class SOCKS5BytestreamServer;
 
-	class OutgoingSIFileTransfer : public OutgoingFileTransfer {
+	class SWIFTEN_API OutgoingSIFileTransfer : public OutgoingFileTransfer {
 		public:
 			OutgoingSIFileTransfer(const std::string& id, const JID& from, const JID& to, const std::string& name, unsigned long long size, const std::string& description, boost::shared_ptr<ReadBytestream> bytestream, IQRouter* iqRouter, SOCKS5BytestreamServer* socksServer);
 

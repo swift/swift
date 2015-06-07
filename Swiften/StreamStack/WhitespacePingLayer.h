@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,13 +9,14 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
 	class Timer;
 	class TimerFactory;
 
-	class WhitespacePingLayer : public StreamLayer, boost::noncopyable {
+	class SWIFTEN_API WhitespacePingLayer : public StreamLayer, boost::noncopyable {
 		public:
 			WhitespacePingLayer(TimerFactory* timerFactory);
 

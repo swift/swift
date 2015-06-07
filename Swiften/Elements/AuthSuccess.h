@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,11 @@
 #include <vector>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class AuthSuccess : public ToplevelElement {
+	class SWIFTEN_API AuthSuccess : public ToplevelElement {
 		public:
 			AuthSuccess() {}
 

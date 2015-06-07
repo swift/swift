@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,11 +7,13 @@
 #pragma once
 
 #include <string>
+
+#include <Swiften/Base/API.h> 
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class ResourceBind : public Payload {
+	class SWIFTEN_API ResourceBind : public Payload {
 		public:
 			ResourceBind() {}
 

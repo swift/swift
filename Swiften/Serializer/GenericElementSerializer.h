@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
 	template<typename T>
-	class GenericElementSerializer : public ElementSerializer {
+	class SWIFTEN_API GenericElementSerializer : public ElementSerializer {
 		public:
 			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const = 0;
 

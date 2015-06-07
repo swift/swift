@@ -4,14 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 #include <map>
 
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class ProxyProvider {
+	class SWIFTEN_API ProxyProvider {
 		public:
 			ProxyProvider();
 			virtual ~ProxyProvider();

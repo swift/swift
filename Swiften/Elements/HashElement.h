@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
 	/*
 	 * @brief This class represents a XEP-0300 <hash/> element.
 	 */
-	class HashElement {
+	class SWIFTEN_API HashElement {
 		public:
 			HashElement(const std::string& algorithm, const ByteArray& hash) : algorithm_(algorithm), hash_(hash) {
 			}

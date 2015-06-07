@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 
 namespace Swift {
 	class PayloadSerializerCollection;
 	
-	class JingleContentPayloadSerializer : public GenericPayloadSerializer<JingleContentPayload> {
+	class SWIFTEN_API JingleContentPayloadSerializer : public GenericPayloadSerializer<JingleContentPayload> {
 		public:
 			JingleContentPayloadSerializer();
 			

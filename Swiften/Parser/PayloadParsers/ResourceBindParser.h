@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ResourceBind.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class ResourceBindParser : public GenericPayloadParser<ResourceBind> {
+	class SWIFTEN_API ResourceBindParser : public GenericPayloadParser<ResourceBind> {
 		public:
 			ResourceBindParser();
 

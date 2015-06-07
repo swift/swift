@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/VCard.h>
 
-
 namespace Swift {
-	class SetVCardRequest : public GenericRequest<VCard> {
+	class SWIFTEN_API SetVCardRequest : public GenericRequest<VCard> {
 		public:
 			typedef boost::shared_ptr<SetVCardRequest> ref;
 

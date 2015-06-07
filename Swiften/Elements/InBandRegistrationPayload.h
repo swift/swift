@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,11 +10,12 @@
 #include <boost/optional.hpp>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
 
 namespace Swift {
-	class InBandRegistrationPayload : public Payload {
+	class SWIFTEN_API InBandRegistrationPayload : public Payload {
 		public:
 			typedef boost::shared_ptr<InBandRegistrationPayload> ref;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,11 +9,12 @@
 #include <boost/optional.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Storage.h>
 
 namespace Swift {
-	class MUCBookmark {
+	class SWIFTEN_API MUCBookmark {
 		public:
 			MUCBookmark(const Storage::Room& room) {
 				name_ = room.name;

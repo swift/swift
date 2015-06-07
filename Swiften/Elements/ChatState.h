@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class ChatState : public Payload {
+	class SWIFTEN_API ChatState : public Payload {
 		public:
 			enum ChatStateType {Active, Composing, Paused, Inactive, Gone};
 			ChatState(ChatStateType state = Active) {

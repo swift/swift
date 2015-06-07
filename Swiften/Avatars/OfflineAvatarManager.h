@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,11 +7,12 @@
 #pragma once
 
 #include <Swiften/Avatars/AvatarProvider.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	class AvatarStorage;
 
-	class OfflineAvatarManager : public AvatarProvider {
+	class SWIFTEN_API OfflineAvatarManager : public AvatarProvider {
 		public:
 			OfflineAvatarManager(AvatarStorage*);
 			~OfflineAvatarManager();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,11 +11,12 @@
 #include <boost/shared_ptr.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
 
 namespace Swift {
-	class StreamInitiation : public Payload {
+	class SWIFTEN_API StreamInitiation : public Payload {
 		public:
 			typedef boost::shared_ptr<StreamInitiation> ref;
 

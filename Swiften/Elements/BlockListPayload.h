@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class BlockListPayload : public Payload {
+	class SWIFTEN_API BlockListPayload : public Payload {
 		public:
 			BlockListPayload(const std::vector<JID>& items = std::vector<JID>()) : items(items) {
 			}

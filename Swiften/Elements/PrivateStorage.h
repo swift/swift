@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class PrivateStorage : public Payload {
+	class SWIFTEN_API PrivateStorage : public Payload {
 		public:
 			PrivateStorage(boost::shared_ptr<Payload> payload = boost::shared_ptr<Payload>()) : payload(payload) {
 			}

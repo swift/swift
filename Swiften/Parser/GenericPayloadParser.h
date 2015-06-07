@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
@@ -22,7 +23,7 @@ namespace Swift {
 	 * payload.
 	 */
 	template<typename PAYLOAD_TYPE>
-	class GenericPayloadParser : public PayloadParser {
+	class SWIFTEN_API GenericPayloadParser : public PayloadParser {
 		public:
 			GenericPayloadParser() : PayloadParser() {
 				payload_ = boost::make_shared<PAYLOAD_TYPE>();

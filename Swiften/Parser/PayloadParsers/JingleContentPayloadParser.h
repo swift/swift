@@ -4,8 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
@@ -13,7 +20,7 @@ namespace Swift {
 
 class PayloadParserFactoryCollection;
 
-class JingleContentPayloadParser : public GenericPayloadParser<JingleContentPayload> {
+class SWIFTEN_API JingleContentPayloadParser : public GenericPayloadParser<JingleContentPayload> {
 	public:
 		JingleContentPayloadParser(PayloadParserFactoryCollection* factories);
 

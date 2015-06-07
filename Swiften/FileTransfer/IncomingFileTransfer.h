@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileTransfer.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
@@ -20,7 +21,7 @@ namespace Swift {
 	 * @brief The IncomingFileTransfer abstract class is the general interface in Swiften
 	 * for incoming file transfers.
 	 */
-	class IncomingFileTransfer : public FileTransfer {
+	class SWIFTEN_API IncomingFileTransfer : public FileTransfer {
 		public:
 			typedef boost::shared_ptr<IncomingFileTransfer> ref;
 

@@ -16,13 +16,14 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 
-class S5BProxyRequest : public Payload {
+class SWIFTEN_API S5BProxyRequest : public Payload {
 public:
 	typedef boost::shared_ptr<S5BProxyRequest> ref;
 

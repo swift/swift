@@ -6,13 +6,14 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 
 class SOCKS5BytestreamServerManager;
 
-class SOCKS5BytestreamServerPortForwardingUser {
+class SWIFTEN_API SOCKS5BytestreamServerPortForwardingUser {
 	public:
 		SOCKS5BytestreamServerPortForwardingUser(SOCKS5BytestreamServerManager* s5bServerManager);
 		~SOCKS5BytestreamServerPortForwardingUser();

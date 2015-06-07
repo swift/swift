@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/MUCOwnerPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class PayloadParserFactoryCollection;
 
-	class MUCOwnerPayloadParser : public GenericPayloadParser<MUCOwnerPayload> {
+	class SWIFTEN_API MUCOwnerPayloadParser : public GenericPayloadParser<MUCOwnerPayload> {
 		public:
 		MUCOwnerPayloadParser(PayloadParserFactoryCollection* factories);
 

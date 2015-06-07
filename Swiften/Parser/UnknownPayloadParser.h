@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
-	class UnknownPayloadParser : public PayloadParser {
+	class SWIFTEN_API UnknownPayloadParser : public PayloadParser {
 		public:
 			UnknownPayloadParser() {}
 

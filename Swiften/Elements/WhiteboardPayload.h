@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 
 namespace Swift {
-	class WhiteboardPayload : public Payload {
+	class SWIFTEN_API WhiteboardPayload : public Payload {
 	public:
 		typedef boost::shared_ptr<WhiteboardPayload> ref;
 

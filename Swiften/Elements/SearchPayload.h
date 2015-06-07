@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
 #include <string>
@@ -17,7 +18,7 @@ namespace Swift {
 	/**
 	 * XEP-0055 search payload.
 	 */
-	class SearchPayload : public Payload {
+	class SWIFTEN_API SearchPayload : public Payload {
 		public:
 			typedef boost::shared_ptr<SearchPayload> ref;
 

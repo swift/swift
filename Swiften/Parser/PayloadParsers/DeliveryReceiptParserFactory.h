@@ -4,15 +4,22 @@
  * See http://www.opensource.org/licenses/bsd-license.php for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptParser.h>
 
 namespace Swift {
 	class PayloadParserFactoryCollection;
 
-	class DeliveryReceiptParserFactory : public PayloadParserFactory {
+	class SWIFTEN_API DeliveryReceiptParserFactory : public PayloadParserFactory {
 		public:
 			DeliveryReceiptParserFactory() {
 			}

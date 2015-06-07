@@ -4,8 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/HostNameOrAddress.h>
@@ -14,7 +21,7 @@ namespace Swift {
 	class DomainNameResolver;
 	class TimerFactory;
 
-	class SOCKS5ProxiedConnectionFactory : public ConnectionFactory {
+	class SWIFTEN_API SOCKS5ProxiedConnectionFactory : public ConnectionFactory {
 		public:
 			SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 

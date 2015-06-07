@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/SetResponder.h>
 #include <Swiften/Elements/JinglePayload.h>
 
@@ -13,7 +14,7 @@ namespace Swift {
 	class IQRouter;
 	class JingleSessionManager;
 
-	class JingleResponder : public SetResponder<JinglePayload> {
+	class SWIFTEN_API JingleResponder : public SetResponder<JinglePayload> {
 		public:
 			JingleResponder(JingleSessionManager* sessionManager, IQRouter* router);
 			virtual ~JingleResponder();

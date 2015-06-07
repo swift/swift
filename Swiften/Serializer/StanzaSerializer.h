@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Serializer/ElementSerializer.h>
 
@@ -16,7 +17,7 @@ namespace Swift {
 	class PayloadSerializerCollection;
 	class XMLElement;
 
-	class StanzaSerializer : public ElementSerializer {
+	class SWIFTEN_API StanzaSerializer : public ElementSerializer {
 		public:
 			StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>());
 

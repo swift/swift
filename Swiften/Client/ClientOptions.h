@@ -8,13 +8,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/URL.h>
 #include <Swiften/Base/SafeString.h>
 
 namespace Swift {
 	class HTTPTrafficFilter;
 
-	struct ClientOptions {
+	struct SWIFTEN_API ClientOptions {
 		enum UseTLS {
 			NeverUseTLS,
 			UseTLSWhenAvailable,

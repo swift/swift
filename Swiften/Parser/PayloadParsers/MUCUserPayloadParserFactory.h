@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 
 namespace Swift {
-	class MUCUserPayloadParserFactory : public PayloadParserFactory {
+	class SWIFTEN_API MUCUserPayloadParserFactory : public PayloadParserFactory {
 		public:
 			MUCUserPayloadParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
 			}

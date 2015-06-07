@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/ContainerPayload.h>
@@ -47,7 +48,7 @@ namespace Swift {
 	}
 
 	template<typename T>
-	class PubSubRequest : public Request {
+	class SWIFTEN_API PubSubRequest : public Request {
 			typedef typename Detail::PubSubPayloadTraits<T>::ContainerType ContainerType;
 			typedef typename Detail::PubSubPayloadTraits<T>::ResponseType ResponseType;
 

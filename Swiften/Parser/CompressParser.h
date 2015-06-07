@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,11 +7,12 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/CompressRequest.h>
 
 namespace Swift {
-	class CompressParser : public GenericElementParser<CompressRequest> {
+	class SWIFTEN_API CompressParser : public GenericElementParser<CompressRequest> {
 		public:
 			CompressParser();
 

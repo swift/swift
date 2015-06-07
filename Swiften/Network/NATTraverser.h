@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,12 +8,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class NATTraversalGetPublicIPRequest;
 	class NATTraversalForwardPortRequest;
 	class NATTraversalRemovePortForwardingRequest;
 
-	class NATTraverser {
+	class SWIFTEN_API NATTraverser {
 		public:
 			virtual ~NATTraverser();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,12 +8,13 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/CompressFailure.h>
 #include <Swiften/Serializer/GenericElementSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class CompressFailureSerializer : public GenericElementSerializer<CompressFailure> {
+	class SWIFTEN_API CompressFailureSerializer : public GenericElementSerializer<CompressFailure> {
 		public:
 			CompressFailureSerializer() : GenericElementSerializer<CompressFailure>() {
 			}

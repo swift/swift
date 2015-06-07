@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/JID/JID.h>
 
@@ -16,7 +17,7 @@ namespace Swift {
 	/**
 	 * Service discovery disco#items from XEP-0030.
 	 */
-	class DiscoItems : public Payload {
+	class SWIFTEN_API DiscoItems : public Payload {
 		public:
 			/**
 			 * A single result item.

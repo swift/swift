@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,13 +10,14 @@
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/Timer.h>
 
 namespace Swift {
 	class EventLoop;
 
-	class BoostTimer : public Timer, public EventOwner, public boost::enable_shared_from_this<BoostTimer> {
+	class SWIFTEN_API BoostTimer : public Timer, public EventOwner, public boost::enable_shared_from_this<BoostTimer> {
 		public:
 			typedef boost::shared_ptr<BoostTimer> ref;
 

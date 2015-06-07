@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Status.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class StatusParser : public GenericPayloadParser<Status> {
+	class SWIFTEN_API StatusParser : public GenericPayloadParser<Status> {
 		public:
 			StatusParser();
 

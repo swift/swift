@@ -4,14 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/StreamInitiationFileInfo.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 
-class StreamInitiationFileInfoParser : public GenericPayloadParser<StreamInitiationFileInfo> {
+class SWIFTEN_API StreamInitiationFileInfoParser : public GenericPayloadParser<StreamInitiationFileInfo> {
 	public:
 		StreamInitiationFileInfoParser();
 

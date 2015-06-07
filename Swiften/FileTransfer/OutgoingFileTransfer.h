@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/FileTransfer/FileTransfer.h>
 
 namespace Swift {
-	class OutgoingFileTransfer : public FileTransfer {
+	class SWIFTEN_API OutgoingFileTransfer : public FileTransfer {
 		public:
 			typedef boost::shared_ptr<OutgoingFileTransfer> ref;
 		public:

@@ -15,6 +15,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -22,7 +23,7 @@
 namespace Swift {
 	class PayloadSerializerCollection;
 
-	class S5BProxyRequestSerializer : public GenericPayloadSerializer<S5BProxyRequest> {
+	class SWIFTEN_API S5BProxyRequestSerializer : public GenericPayloadSerializer<S5BProxyRequest> {
 		public:
 			virtual std::string serializePayload(boost::shared_ptr<S5BProxyRequest> s5bProxyRequest) const {
 				XMLElement queryElement("query", "http://jabber.org/protocol/bytestreams");

@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Base/String.h>
 
 namespace Swift {
-	class XMLTextNode : public XMLNode {
+	class SWIFTEN_API XMLTextNode : public XMLNode {
 		public:
 			typedef boost::shared_ptr<XMLTextNode> ref;
 

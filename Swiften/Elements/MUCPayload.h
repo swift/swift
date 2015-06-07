@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,12 +9,13 @@
 #include <boost/optional.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <string>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class MUCPayload : public Payload {
+	class SWIFTEN_API MUCPayload : public Payload {
 		public:
 			typedef boost::shared_ptr<MUCPayload> ref;
 

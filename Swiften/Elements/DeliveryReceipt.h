@@ -4,17 +4,22 @@
  * See http://www.opensource.org/licenses/bsd-license.php for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
 
-#include <string>
-
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 
-class DeliveryReceipt : public Payload {
+class SWIFTEN_API DeliveryReceipt : public Payload {
 	public:
 		typedef boost::shared_ptr<DeliveryReceipt> ref;
 

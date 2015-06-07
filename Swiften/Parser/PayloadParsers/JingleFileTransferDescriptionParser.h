@@ -5,13 +5,14 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/PayloadParser.h>
@@ -20,7 +21,7 @@ namespace Swift {
 
 class PayloadParserFactoryCollection;
 
-class JingleFileTransferDescriptionParser : public GenericPayloadParser<JingleFileTransferDescription> {
+class SWIFTEN_API JingleFileTransferDescriptionParser : public GenericPayloadParser<JingleFileTransferDescription> {
 	public:
 		JingleFileTransferDescriptionParser(PayloadParserFactoryCollection* factories);
 

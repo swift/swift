@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,11 @@
 #pragma once
 
 #include <Swiften/JID/JID.h>
+#include <Swiften/Base/API.h>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace Swift {
-	class HistoryMessage {
+	class SWIFTEN_API HistoryMessage {
 		public:
 			enum Type {
 				Chat = 0,

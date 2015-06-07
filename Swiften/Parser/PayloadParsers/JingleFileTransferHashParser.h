@@ -5,19 +5,20 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 
-class JingleFileTransferHashParser : public GenericPayloadParser<JingleFileTransferHash> {
+class SWIFTEN_API JingleFileTransferHashParser : public GenericPayloadParser<JingleFileTransferHash> {
 public:
 	JingleFileTransferHashParser();
 	

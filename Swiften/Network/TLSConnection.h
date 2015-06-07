@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Network/Connection.h>
 
@@ -18,7 +19,7 @@ namespace Swift {
 	class TLSContextFactory;
 	class TLSContext;
 
-	class TLSConnection : public Connection {
+	class SWIFTEN_API TLSConnection : public Connection {
 		public:
 
 			TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory);

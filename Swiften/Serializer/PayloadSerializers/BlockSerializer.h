@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 	template<typename BLOCK_ELEMENT>
-	class BlockSerializer : public GenericPayloadSerializer<BLOCK_ELEMENT> {
+	class SWIFTEN_API BlockSerializer : public GenericPayloadSerializer<BLOCK_ELEMENT> {
 		public:
 			BlockSerializer(std::string tag) : GenericPayloadSerializer<BLOCK_ELEMENT>(), tag(tag) {
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/History/HistoryMessage.h>
 #include <boost/date_time/gregorian/gregorian_types.hpp>
@@ -16,7 +17,7 @@
 namespace Swift {
 	typedef std::map<JID, std::set<boost::gregorian::date> > ContactsMap;
 
-	class HistoryStorage {
+	class SWIFTEN_API HistoryStorage {
 		/**
 		 * Messages are stored using localtime timestamps.
 		 */

@@ -5,18 +5,19 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
 
 namespace Swift {
-	class WhiteboardRectElement : public WhiteboardElement {
+	class SWIFTEN_API WhiteboardRectElement : public WhiteboardElement {
 	public:
 		typedef boost::shared_ptr<WhiteboardRectElement> ref;
 	public:

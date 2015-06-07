@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/BlockListPayload.h>
@@ -21,7 +22,7 @@
 namespace Swift {
 	class IQRouter;
 
-	class ClientBlockListManager {
+	class SWIFTEN_API ClientBlockListManager {
 		public:
 			ClientBlockListManager(IQRouter *iqRouter);
 			~ClientBlockListManager();

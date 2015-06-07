@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ComponentHandshake.h>
 #include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
-	class ComponentHandshakeSerializer : public GenericElementSerializer<ComponentHandshake> {
+	class SWIFTEN_API ComponentHandshakeSerializer : public GenericElementSerializer<ComponentHandshake> {
 		public:
 			ComponentHandshakeSerializer();
 

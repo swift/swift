@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Client/StanzaChannel.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	/**
 	 * StanzaChannel implementation around a ComponentSession.
 	 */
-	class ComponentSessionStanzaChannel : public StanzaChannel {
+	class SWIFTEN_API ComponentSessionStanzaChannel : public StanzaChannel {
 		public:
 			void setSession(boost::shared_ptr<ComponentSession> session);
 

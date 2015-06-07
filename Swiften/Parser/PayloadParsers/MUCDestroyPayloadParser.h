@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/MUCDestroyPayload.h>
 #include <Swiften/Parser/GenericPayloadTreeParser.h>
 
 namespace Swift {
-	class MUCDestroyPayloadParser : public GenericPayloadTreeParser<MUCDestroyPayload> {
+	class SWIFTEN_API MUCDestroyPayloadParser : public GenericPayloadTreeParser<MUCDestroyPayload> {
 		public:
 			virtual void handleTree(ParserElement::ref root);
 	};

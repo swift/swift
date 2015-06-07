@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/DiscoItems.h>
 
 namespace Swift {
-	class GetDiscoItemsRequest : public GenericRequest<DiscoItems> {
+	class SWIFTEN_API GetDiscoItemsRequest : public GenericRequest<DiscoItems> {
 		public:
 			typedef boost::shared_ptr<GetDiscoItemsRequest> ref;
 

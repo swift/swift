@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/SearchPayload.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
@@ -15,7 +16,7 @@ namespace Swift {
 	class FormParserFactory;
 	class FormParser;
 
-	class SearchPayloadParser : public GenericPayloadParser<SearchPayload> {
+	class SWIFTEN_API SearchPayloadParser : public GenericPayloadParser<SearchPayload> {
 		public:
 			SearchPayloadParser();
 			~SearchPayloadParser();

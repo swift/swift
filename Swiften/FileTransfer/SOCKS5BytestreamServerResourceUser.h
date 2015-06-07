@@ -7,12 +7,13 @@
 #pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 
 class SOCKS5BytestreamServerManager;
 
-class SOCKS5BytestreamServerResourceUser {
+class SWIFTEN_API SOCKS5BytestreamServerResourceUser {
 	public:
 		SOCKS5BytestreamServerResourceUser(SOCKS5BytestreamServerManager* s5bServerManager);
 		~SOCKS5BytestreamServerResourceUser();

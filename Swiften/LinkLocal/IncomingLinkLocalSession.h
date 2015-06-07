@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/shared_ptr.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Session/Session.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
@@ -20,7 +21,7 @@ namespace Swift {
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 
-	class IncomingLinkLocalSession : public Session {
+	class SWIFTEN_API IncomingLinkLocalSession : public Session {
 		public:
 			IncomingLinkLocalSession(
 					const JID& localJID,

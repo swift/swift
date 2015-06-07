@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
 #include <string>
 
 namespace Swift {
-	class StreamError : public ToplevelElement {
+	class SWIFTEN_API StreamError : public ToplevelElement {
 		public:
 			typedef boost::shared_ptr<StreamError> ref;
 

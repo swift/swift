@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Entity/PayloadPersister.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 
 namespace Swift {
 	template<typename PAYLOAD, typename PARSER, typename SERIALIZER>
-	class GenericPayloadPersister : public PayloadPersister {
+	class SWIFTEN_API GenericPayloadPersister : public PayloadPersister {
 		public:
 			GenericPayloadPersister() {
 			}

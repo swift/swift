@@ -10,13 +10,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/Elements/Bytestreams.h>
 #include <Swiften/Network/HostAddressPort.h>
 
 
 namespace Swift {
-	class JingleS5BTransportPayload : public JingleTransportPayload {
+	class SWIFTEN_API JingleS5BTransportPayload : public JingleTransportPayload {
 		public:
 			enum Mode {
 				TCPMode, // default case

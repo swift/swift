@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Nickname.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	template<typename BLOCK_ELEMENT>
-	class BlockParser : public GenericPayloadParser<BLOCK_ELEMENT> {
+	class SWIFTEN_API BlockParser : public GenericPayloadParser<BLOCK_ELEMENT> {
 		public:
 			BlockParser() : GenericPayloadParser<BLOCK_ELEMENT>(), level(0) {
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/StartSession.h>
 
 namespace Swift {
-	class StartSessionSerializer : public GenericPayloadSerializer<StartSession> {
+	class SWIFTEN_API StartSessionSerializer : public GenericPayloadSerializer<StartSession> {
 		public:
 			StartSessionSerializer() : GenericPayloadSerializer<StartSession>() {}
 

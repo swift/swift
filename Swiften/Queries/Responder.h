@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/IQHandler.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -21,7 +22,7 @@ namespace Swift {
 	 *	payload type will be passed to handleGetRequest() and handleSetRequest()
 	 */
 	template<typename PAYLOAD_TYPE>
-	class Responder : public IQHandler {
+	class SWIFTEN_API Responder : public IQHandler {
 		public:
 			Responder(IQRouter* router) : router_(router), isFinalResonder_(true) {
 			}

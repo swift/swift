@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,12 +7,12 @@
 #pragma once
 
 #include <Swiften/Base/boost_bsignals.h>
-
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/SetResponder.h>
 #include <Swiften/Elements/RosterPayload.h>
 
 namespace Swift {
-	class RosterPushResponder : public SetResponder<RosterPayload> {
+	class SWIFTEN_API RosterPushResponder : public SetResponder<RosterPayload> {
 		public:
 			RosterPushResponder(IQRouter* router) : SetResponder<RosterPayload>(router) {}
 

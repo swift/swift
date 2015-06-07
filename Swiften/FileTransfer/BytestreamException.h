@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,10 @@
 
 #include <stdexcept>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
-	class BytestreamException : public std::exception {
+	class SWIFTEN_API BytestreamException : public std::exception {
 		public:
 			BytestreamException() {
 			}

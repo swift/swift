@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Base/SafeString.h>
@@ -22,7 +23,7 @@ namespace Swift {
 	class EventLoop;
 	class HTTPTrafficFilter;
 
-	class HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
+	class SWIFTEN_API HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
 		public:
 			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = boost::shared_ptr<HTTPTrafficFilter>());
 			HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword, boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = boost::shared_ptr<HTTPTrafficFilter>());

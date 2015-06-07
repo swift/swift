@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,10 +10,11 @@
 #include <map>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Disco/CapsStorage.h>
 
 namespace Swift {
-	class CapsMemoryStorage : public CapsStorage {
+	class SWIFTEN_API CapsMemoryStorage : public CapsStorage {
 		public:
 			CapsMemoryStorage() {}
 

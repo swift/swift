@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@
 namespace Swift {
 	class SWIFTEN_API SessionStream {
 		public:
-			class SessionStreamError : public Swift::Error {
+			class SWIFTEN_API SessionStreamError : public Swift::Error {
 				public:
 					enum Type {
 						ParseError,

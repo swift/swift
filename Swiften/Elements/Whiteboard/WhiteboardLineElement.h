@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,11 +13,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
 
 namespace Swift {
-	class WhiteboardLineElement : public WhiteboardElement {
+	class SWIFTEN_API WhiteboardLineElement : public WhiteboardElement {
 	public:
 		typedef boost::shared_ptr<WhiteboardLineElement> ref;
 	public:

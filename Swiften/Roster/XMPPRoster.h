@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,6 +12,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
@@ -23,7 +24,7 @@ namespace Swift {
 	 * Changes to the roster (either due to subscription requests or by going online/offline) are
 	 * emitted through signals.
 	 */
-	class XMPPRoster {
+	class SWIFTEN_API XMPPRoster {
 		public:
 			XMPPRoster();
 			virtual ~XMPPRoster();

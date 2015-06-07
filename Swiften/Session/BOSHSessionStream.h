@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Network/BOSHConnectionPool.h>
@@ -27,7 +28,7 @@ namespace Swift {
 	class TLSContextFactory;
 	class EventLoop;
 
-	class BOSHSessionStream : public SessionStream, public EventOwner, public boost::enable_shared_from_this<BOSHSessionStream> {
+	class SWIFTEN_API BOSHSessionStream : public SessionStream, public EventOwner, public boost::enable_shared_from_this<BOSHSessionStream> {
 		public:
 			BOSHSessionStream(
 					const URL& boshURL,

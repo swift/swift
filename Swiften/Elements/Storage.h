@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,11 +12,12 @@
 
 #include <Swiften/Elements/Payload.h>
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/SafeString.h>
 
 namespace Swift {
-	class Storage : public Payload {
+	class SWIFTEN_API Storage : public Payload {
 		public:
 			struct Room {
 				Room() : autoJoin(false) {}

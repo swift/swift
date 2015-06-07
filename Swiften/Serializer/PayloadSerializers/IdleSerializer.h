@@ -4,14 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/Idle.h>
 #include <Swiften/Base/DateTime.h>
 
 namespace Swift {
-	class IdleSerializer : public GenericPayloadSerializer<Idle> {
+	class SWIFTEN_API IdleSerializer : public GenericPayloadSerializer<Idle> {
 		public:
 			IdleSerializer() : GenericPayloadSerializer<Idle>() {}
 

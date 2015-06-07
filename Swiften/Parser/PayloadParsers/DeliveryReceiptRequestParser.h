@@ -4,13 +4,20 @@
  * See http://www.opensource.org/licenses/bsd-license.php for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class DeliveryReceiptRequestParser : public GenericPayloadParser<DeliveryReceiptRequest> {
+	class SWIFTEN_API DeliveryReceiptRequestParser : public GenericPayloadParser<DeliveryReceiptRequest> {
 		public:
 			DeliveryReceiptRequestParser();
 

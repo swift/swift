@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,11 @@
 #include <string>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class StreamResumed : public ToplevelElement {
+	class SWIFTEN_API StreamResumed : public ToplevelElement {
 		public:
 			StreamResumed();
 			~StreamResumed();

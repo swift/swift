@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,11 +10,12 @@
 
 #include <map>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/VCards/VCardStorage.h>
 
 namespace Swift {
-	class VCardMemoryStorage : public VCardStorage {
+	class SWIFTEN_API VCardMemoryStorage : public VCardStorage {
 		public:
 			VCardMemoryStorage(CryptoProvider* crypto) : VCardStorage(crypto) {}
 

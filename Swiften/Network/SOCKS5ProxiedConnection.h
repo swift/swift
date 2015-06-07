@@ -4,8 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ProxiedConnection.h>
 
 namespace Swift {
@@ -13,7 +20,7 @@ namespace Swift {
 	class DomainNameResolver;
 	class TimerFactory;
 
-	class SOCKS5ProxiedConnection : public ProxiedConnection {
+	class SWIFTEN_API SOCKS5ProxiedConnection : public ProxiedConnection {
 		public:
 			typedef boost::shared_ptr<SOCKS5ProxiedConnection> ref;
 

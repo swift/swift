@@ -4,8 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/WhiteboardPayload.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
@@ -18,7 +25,7 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class WhiteboardElementSerializingVisitor : public WhiteboardElementVisitor {
+	class SWIFTEN_API WhiteboardElementSerializingVisitor : public WhiteboardElementVisitor {
 	public:
 		void visit(WhiteboardLineElement& line);
 		void visit(WhiteboardFreehandPathElement& path);
@@ -34,7 +41,7 @@ namespace Swift {
 		XMLElement::ref element;
 	};
 
-	class WhiteboardSerializer : public GenericPayloadSerializer<WhiteboardPayload> {
+	class SWIFTEN_API WhiteboardSerializer : public GenericPayloadSerializer<WhiteboardPayload> {
 	public:
 		std::string serializePayload(boost::shared_ptr<WhiteboardPayload> payload) const;
 

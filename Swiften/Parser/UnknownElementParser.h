@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericElementParser.h>
 #include <Swiften/Elements/UnknownElement.h>
 
 namespace Swift {
-	class UnknownElementParser : public GenericElementParser<UnknownElement> {
+	class SWIFTEN_API UnknownElementParser : public GenericElementParser<UnknownElement> {
 		public:
 			UnknownElementParser() : GenericElementParser<UnknownElement>() {}
 	};

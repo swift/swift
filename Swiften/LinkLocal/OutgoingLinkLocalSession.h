@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,7 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Session/Session.h>
 #include <Swiften/JID/JID.h>
 
@@ -21,7 +22,7 @@ namespace Swift {
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 
-	class OutgoingLinkLocalSession : public Session {
+	class SWIFTEN_API OutgoingLinkLocalSession : public Session {
 		public:
 			OutgoingLinkLocalSession(
 					const JID& localJID,

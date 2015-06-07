@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 
 #include <boost/enable_shared_from_this.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/Connector.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -24,7 +25,7 @@ namespace boost {
 namespace Swift {
 	class ConnectionFactory;
 
-	class ProxiedConnection : public Connection, public boost::enable_shared_from_this<ProxiedConnection> {
+	class SWIFTEN_API ProxiedConnection : public Connection, public boost::enable_shared_from_this<ProxiedConnection> {
 		public:
 			ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 			~ProxiedConnection();

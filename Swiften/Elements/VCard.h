@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,12 +10,13 @@
 #include <boost/date_time/posix_time/ptime.hpp>
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class VCard : public Payload {
+	class SWIFTEN_API VCard : public Payload {
 		public:
 			typedef boost::shared_ptr<VCard> ref;
 

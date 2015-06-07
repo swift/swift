@@ -10,6 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/weak_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/NATPortMapping.h>
@@ -27,7 +28,7 @@ namespace Swift {
 	class SOCKS5BytestreamServerResourceUser;
 	class SOCKS5BytestreamServerPortForwardingUser;
 
-	class SOCKS5BytestreamServerManager {
+	class SWIFTEN_API SOCKS5BytestreamServerManager {
 		friend class SOCKS5BytestreamServerResourceUser;
 		friend class SOCKS5BytestreamServerPortForwardingUser;
 

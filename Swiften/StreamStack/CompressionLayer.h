@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/noncopyable.hpp>
 #include <Swiften/Base/boost_bsignals.h>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/Compress/ZLibException.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	class ZLibCompressor;
 	class ZLibDecompressor;
 
-	class CompressionLayer : public StreamLayer, boost::noncopyable {
+	class SWIFTEN_API CompressionLayer : public StreamLayer, boost::noncopyable {
 		public:
 			CompressionLayer() {}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
 	class Connection;
 
-	class TLSConnectionFactory : public ConnectionFactory {
+	class SWIFTEN_API TLSConnectionFactory : public ConnectionFactory {
 		public:
 			TLSConnectionFactory(TLSContextFactory* contextFactory, ConnectionFactory* connectionFactory);
 			virtual ~TLSConnectionFactory();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,7 @@
 
 #include <Swiften/Network/ConnectionServer.h>
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	class SOCKS5BytestreamServerSession;
 	class CryptoProvider;
 
-	class SOCKS5BytestreamServer {
+	class SWIFTEN_API SOCKS5BytestreamServer {
 		public:
 			SOCKS5BytestreamServer(
 					boost::shared_ptr<ConnectionServer> connectionServer, 

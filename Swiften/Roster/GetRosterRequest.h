@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/RosterPayload.h>
 
 
 namespace Swift {
-	class GetRosterRequest : public GenericRequest<RosterPayload> {
+	class SWIFTEN_API GetRosterRequest : public GenericRequest<RosterPayload> {
 		public:
 			typedef boost::shared_ptr<GetRosterRequest> ref;
 

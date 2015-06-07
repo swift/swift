@@ -14,6 +14,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class JingleSessionManager;
 	class IQRouter;
@@ -27,7 +29,7 @@ namespace Swift {
 	class FileTransferOptions;
 	class TimerFactory;
 
-	class OutgoingFileTransferManager {
+	class SWIFTEN_API OutgoingFileTransferManager {
 		public:
 			OutgoingFileTransferManager(
 					JingleSessionManager* jingleSessionManager, 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
@@ -19,7 +20,7 @@ namespace Swift {
 	class TimerFactory;
 	class CryptoProvider;
 
-	class IncomingFileTransferManager : public IncomingJingleSessionHandler {
+	class SWIFTEN_API IncomingFileTransferManager : public IncomingJingleSessionHandler {
 		public:
 			IncomingFileTransferManager(
 					JingleSessionManager* jingleSessionManager, 

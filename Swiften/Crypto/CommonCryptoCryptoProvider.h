@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Base/Override.h>
 
 namespace Swift {
-	class CommonCryptoCryptoProvider : public CryptoProvider {
+	class SWIFTEN_API CommonCryptoCryptoProvider : public CryptoProvider {
 		public:
 			CommonCryptoCryptoProvider();
 			~CommonCryptoCryptoProvider();

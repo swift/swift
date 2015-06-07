@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/IBB.h>
 
 
 namespace Swift {
-	class IBBRequest : public GenericRequest<IBB> {
+	class SWIFTEN_API IBBRequest : public GenericRequest<IBB> {
 		public:
 			typedef boost::shared_ptr<IBBRequest> ref;
 

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,12 +16,13 @@
 #include <map>
 #include <string>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleDescription.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
 
 namespace Swift {
 
-class JingleFileTransferHash : public Payload {
+class SWIFTEN_API JingleFileTransferHash : public Payload {
 public:
 	typedef boost::shared_ptr<JingleFileTransferHash> ref;
 

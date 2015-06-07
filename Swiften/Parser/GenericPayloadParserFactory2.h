@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <string>
 
@@ -16,7 +17,7 @@ namespace Swift {
 	 * A generic class for PayloadParserFactories that parse a specific payload (given as the template parameter of the class).
 	 */
 	template<typename PARSER_TYPE>
-	class GenericPayloadParserFactory2 : public PayloadParserFactory {
+	class SWIFTEN_API GenericPayloadParserFactory2 : public PayloadParserFactory {
 		public:
 			/**
 			 * Construct a parser factory that can parse the given top-level tag in the given namespace.

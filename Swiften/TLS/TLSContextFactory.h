@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
+
 namespace Swift {
 	class TLSContext;
 
-	class TLSContextFactory {
+	class SWIFTEN_API TLSContextFactory {
 		public:
 			virtual ~TLSContextFactory();
 

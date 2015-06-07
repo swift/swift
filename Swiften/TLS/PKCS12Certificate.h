@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/CertificateWithKey.h>
 #include <boost/filesystem/path.hpp>
 
 namespace Swift {
-	class PKCS12Certificate : public Swift::CertificateWithKey {
+	class SWIFTEN_API PKCS12Certificate : public Swift::CertificateWithKey {
 		public:
 			PKCS12Certificate() {}
 

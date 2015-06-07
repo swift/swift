@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,9 +10,10 @@
 
 #include <Swiften/JID/JID.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class BlockList {
+	class SWIFTEN_API BlockList {
 		public:
 			enum State {
 				Init,

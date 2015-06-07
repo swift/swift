@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/Priority.h>
 
 namespace Swift {
-	class PrioritySerializer : public GenericPayloadSerializer<Priority> {
+	class SWIFTEN_API PrioritySerializer : public GenericPayloadSerializer<Priority> {
 		public:
 			PrioritySerializer() : GenericPayloadSerializer<Priority>() {}
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class StanzaAck : public ToplevelElement {
+	class SWIFTEN_API StanzaAck : public ToplevelElement {
 		public:
 			typedef boost::shared_ptr<StanzaAck> ref;
 

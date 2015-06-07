@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class FormParser : public GenericPayloadParser<Form> {
+	class SWIFTEN_API FormParser : public GenericPayloadParser<Form> {
 		public:
 			FormParser();
 

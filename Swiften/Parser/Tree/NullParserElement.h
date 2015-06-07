@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,11 @@
 #pragma once
 
 #include <string>
+#include <Swiften/Base/API.h>
 #include <Swiften/Parser/Tree/ParserElement.h>
 
 namespace Swift {
-	class NullParserElement : public ParserElement {
+	class SWIFTEN_API NullParserElement : public ParserElement {
 		public:
 			NullParserElement() : ParserElement("", "", AttributeMap()) {}
 

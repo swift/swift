@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Elements/SoftwareVersion.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
 
 namespace Swift {
-	class GetSoftwareVersionRequest : public GenericRequest<SoftwareVersion> {
+	class SWIFTEN_API GetSoftwareVersionRequest : public GenericRequest<SoftwareVersion> {
 		public:
 			typedef boost::shared_ptr<GetSoftwareVersionRequest> ref;
 

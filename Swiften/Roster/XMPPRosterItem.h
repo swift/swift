@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 
 #include <vector>
-
 #include <string>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 
 namespace Swift {
-	class XMPPRosterItem {
+	class SWIFTEN_API XMPPRosterItem {
 		public:
 			XMPPRosterItem(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription) : jid(jid), name(name), groups(groups), subscription(subscription) {
 			}

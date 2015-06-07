@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class Last : public Payload {
+	class SWIFTEN_API Last : public Payload {
 		public:
 			Last(int seconds = 0) : seconds_(seconds) {}
 

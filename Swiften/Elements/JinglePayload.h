@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@
 #include <Swiften/Elements/JingleContentPayload.h>
 
 namespace Swift {
-	class JinglePayload : public Payload {
+	class SWIFTEN_API JinglePayload : public Payload {
 		public:
 			typedef boost::shared_ptr<JinglePayload> ref;
 			struct Reason : public Payload {

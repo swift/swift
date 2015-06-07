@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,11 +16,12 @@
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
-	class FileTransfer {
+	class SWIFTEN_API FileTransfer {
 		public:
 			struct State {
 				enum Type {

@@ -4,9 +4,16 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 
 #pragma once
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 
@@ -14,7 +21,7 @@ namespace Swift {
 	class PayloadSerializerCollection;
 	class XMLElement;
 	
-	class JingleS5BTransportPayloadSerializer : public GenericPayloadSerializer<JingleS5BTransportPayload> {
+	class SWIFTEN_API JingleS5BTransportPayloadSerializer : public GenericPayloadSerializer<JingleS5BTransportPayload> {
 		public:
 			JingleS5BTransportPayloadSerializer();
 			

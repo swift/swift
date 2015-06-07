@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,9 +12,10 @@
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Avatars/AvatarStorage.h>
 #include <Swiften/JID/JID.h>
+#include <Swiften/Base/API.h>
 
 namespace Swift {
-	class AvatarMemoryStorage : public AvatarStorage {
+	class SWIFTEN_API AvatarMemoryStorage : public AvatarStorage {
 		public:
 			virtual bool hasAvatar(const std::string& hash) const { return avatars.find(hash) != avatars.end(); }
 			virtual void addAvatar(const std::string& hash, const ByteArray& avatar) { avatars[hash] = avatar; }

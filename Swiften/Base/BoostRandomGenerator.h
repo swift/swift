@@ -8,11 +8,12 @@
 
 #include <Swiften/Base/RandomGenerator.h>
 #include <Swiften/Base/Override.h>
+#include <Swiften/Base/API.h>
 
 #include <boost/random/mersenne_twister.hpp>
 
 namespace Swift {
-	class BoostRandomGenerator : public RandomGenerator {
+	class SWIFTEN_API BoostRandomGenerator : public RandomGenerator {
 		public:
 			BoostRandomGenerator();
 
