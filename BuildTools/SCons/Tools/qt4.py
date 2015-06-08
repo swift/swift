@@ -43,8 +43,7 @@ import SCons.Defaults
 import SCons.Scanner
 import SCons.Tool
 import SCons.Util
-
-Import("conf_env")
+import SCons.SConf
 
 class ToolQtWarning(SCons.Warnings.Warning):
 	pass
@@ -504,20 +503,18 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 			return
 		else:
-			test_env = self.Clone()
-			test_conf = Configure(test_env)
+			test_conf = self.Configure()
 			modules_str = " ".join(modules)
 			if not version == '4' :
 				modules_str = modules_str.replace('Qt', 'Qt5')
 
-			# Check if Qt is registed at pkg-config
+			# Check if Qt is registered at pkg-config
 			ret = test_conf.TryAction('pkg-config --exists \'%s\'' % modules_str)[0]
-			test_conf.Result( ret )
-			if not ret:
-				print("Qt not found.")
+			if ret != 1:
+				raise Exception("Qt has not been found using pkg-config.")
 				return
-			test_env.ParseConfig("pkg-config --cflags --libs " + modules_str)
-			self.AppendUnique(LIBS=test_env["LIBS"], LIBPATH=test_env["LIBPATH"], CPPPATH=test_env["CPPPATH"])
+			test_conf.env.ParseConfig("pkg-config --cflags --libs " + modules_str)
+			self.AppendUnique(LIBS=test_conf.env["LIBS"], LIBPATH=test_conf.env["LIBPATH"], CPPPATH=test_conf.env["CPPPATH"])
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
 			return
 
