@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,7 +9,9 @@
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
 #include <Swiften/Disco/CapsMemoryStorage.h>
 #include <Swiften/Roster/RosterMemoryStorage.h>
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
 #include <Swiften/History/SQLiteHistoryStorage.h>
+#endif
 
 namespace Swift {
 

@@ -16,7 +16,7 @@ namespace Swift {
 	 * A generic class for PayloadParserFactories that parse a specific payload (given as the template parameter of the class).
 	 */
 	template<typename PARSER_TYPE>
-	class SWIFTEN_API GenericPayloadParserFactory : public PayloadParserFactory {
+	class GenericPayloadParserFactory : public PayloadParserFactory {
 		public:
 			/**
 			 * Construct a parser factory that can parse the given top-level tag in the given namespace.

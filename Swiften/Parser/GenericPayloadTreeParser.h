@@ -20,7 +20,7 @@ namespace Swift {
 	 * Generic parser offering something a bit like a DOM to work with.
 	 */
 	template<typename PAYLOAD_TYPE>
-	class SWIFTEN_API GenericPayloadTreeParser : public GenericPayloadParser<PAYLOAD_TYPE> {
+	class GenericPayloadTreeParser : public GenericPayloadParser<PAYLOAD_TYPE> {
 		public:
 			virtual void handleStartElement(const std::string& element, const std::string& xmlns, const AttributeMap& attributes) {
 				if (!root_) {

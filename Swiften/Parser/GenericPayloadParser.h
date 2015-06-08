@@ -23,7 +23,7 @@ namespace Swift {
 	 * payload.
 	 */
 	template<typename PAYLOAD_TYPE>
-	class SWIFTEN_API GenericPayloadParser : public PayloadParser {
+	class GenericPayloadParser : public PayloadParser {
 		public:
 			GenericPayloadParser() : PayloadParser() {
 				payload_ = boost::make_shared<PAYLOAD_TYPE>();

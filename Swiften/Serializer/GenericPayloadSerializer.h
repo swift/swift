@@ -13,7 +13,7 @@
 
 namespace Swift {
 	template<typename PAYLOAD_TYPE>
-	class SWIFTEN_API GenericPayloadSerializer : public PayloadSerializer {
+	class GenericPayloadSerializer : public PayloadSerializer {
 		public:
 			virtual std::string serialize(boost::shared_ptr<Payload> element)  const {
 				return serializePayload(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(element));
