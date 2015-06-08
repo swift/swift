@@ -52,7 +52,8 @@ For packaging use:
 		debug = 1
 		optimize = 1
 		wix_bindir = "c:\\program files\\Windows Installer XML v3.5\\bin"
-- run 
+- run the following commands. Two scons runs are required as 'scons dist=1' requires the Swift.exe to be in place.
+		scons
 		scons dist=1
 
 Notes
