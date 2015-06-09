@@ -13,7 +13,6 @@
 #include <Swift/QtUI/QtVCardWidget/QtVCardWidget.h>
 #include <Swift/QtUI/QtVCardWidget/ui_QtVCardWidget.h>
 
-#include <QDebug>
 #include <QLineEdit>
 #include <QMenu>
 
@@ -112,7 +111,7 @@ void QtVCardWidget::setEditable(bool editable) {
 
 void QtVCardWidget::setVCard(VCard::ref vcard) {
 	clearFields();
-	this->vcard = vcard;
+	this->vcard = boost::make_shared<VCard>(*vcard);
 	ui->photoAndName->setFormattedName(P2QSTRING(vcard->getFullName()));
 	ui->photoAndName->setNickname(P2QSTRING(vcard->getNickname()));
 	ui->photoAndName->setPrefix(P2QSTRING(vcard->getPrefix()));

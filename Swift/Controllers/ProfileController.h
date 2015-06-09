@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swift/Controllers/UIEvents/UIEvent.h>
-#include <Swiften/Elements/VCard.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/VCard.h>
 #include <Swiften/VCards/SetVCardRequest.h>
+
+#include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
 	class UIEventStream;
@@ -40,6 +41,7 @@ namespace Swift {
 			SetVCardRequest::ref pendingSetVCardRequest;
 			ProfileWindow* profileWindow;
 			bool gettingVCard;
+			VCard::ref vcardBeforeEdit;
 	};
 }
 

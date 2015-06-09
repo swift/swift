@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,12 +8,12 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/VCards/VCardManager.h>
+
+#include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ProfileWindowFactory.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swift/Controllers/Intl.h>
-
 
 namespace Swift {
 
@@ -61,6 +61,7 @@ void ProfileController::handleSetVCardResponse(ErrorPayload::ref error) {
 	pendingSetVCardRequest.reset();
 	updateDialogStatus();
 	if (error) {
+		profileWindow->setVCard(vcardBeforeEdit);
 		profileWindow->setError(QT_TRANSLATE_NOOP("", "There was an error publishing your profile data"));
 	}
 	else {
@@ -72,6 +73,7 @@ void ProfileController::handleSetVCardResponse(ErrorPayload::ref error) {
 void ProfileController::handleOwnVCardChanged(VCard::ref vcard) {
 	if (profileWindow) {
 		profileWindow->setVCard(vcard);
+		vcardBeforeEdit = vcard;
 		gettingVCard = false;
 		updateDialogStatus();
 	}
