@@ -688,8 +688,6 @@ void ChatsManager::setOnline(bool enabled) {
 		}
 	}
 	if (!enabled) {
-		delete mucBookmarkManager_;
-		mucBookmarkManager_ = NULL;
 		chatListWindow_->setBookmarksEnabled(false);
 		markAllRecentsOffline();
 	} else {
@@ -775,10 +773,6 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
 
 MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& password, const boost::optional<std::string>& nickMaybe, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow) {
 	MUC::ref muc;
-	if (!stanzaChannel_->isAvailable()) {
-		/* This is potentially not the optimal solution, but it will avoid consistency issues.*/
-		return muc;
-	}
 	if (addAutoJoin) {
 		MUCBookmark bookmark(mucJID, mucJID.getNode());
 		bookmark.setAutojoin(true);
@@ -793,7 +787,9 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 
 	std::map<JID, MUCController*>::iterator it = mucControllers_.find(mucJID);
 	if (it != mucControllers_.end()) {
-		it->second->rejoin();
+		if (stanzaChannel_->isAvailable()) {
+			it->second->rejoin();
+		}
 	} else {
 		std::string nick = (nickMaybe && !(*nickMaybe).empty()) ? nickMaybe.get() : nickResolver_->jidToNick(jid_);
 		muc = mucManager->createMUC(mucJID);
@@ -825,6 +821,13 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
 		controller->onUserNicknameChanged.connect(boost::bind(&ChatsManager::handleUserNicknameChanged, this, controller, _1, _2));
 		controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, mucJID.toBare(), _1, true));
 		controller->onUnreadCountChanged.connect(boost::bind(&ChatsManager::handleUnreadCountChanged, this, controller));
+		if (!stanzaChannel_->isAvailable()) {
+			/* When online, the MUC is added to the registry in MUCImpl::internalJoin. This method is not
+			 * called when Swift is offline, so we add it here as only MUCs in the registry are rejoined
+			 * when going back online.
+			 */
+			mucRegistry_->addMUC(mucJID.toBare());
+		}
 		handleChatActivity(mucJID.toBare(), "", true);
 	}
 

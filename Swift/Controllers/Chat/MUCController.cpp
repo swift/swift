@@ -133,10 +133,13 @@ MUCController::MUCController (
 	muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
 	highlighter_->setMode(isImpromptu_ ? Highlighter::ChatMode : Highlighter::MUCMode);
 	highlighter_->setNick(nick_);
-	if (timerFactory) {
+	if (timerFactory && stanzaChannel_->isAvailable()) {
 		loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
 		loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
 		loginCheckTimer_->start();
+	}
+	else {
+		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "You are currently offline. You will enter this room when you are connected.")), ChatWindow::DefaultDirection);
 	}
 	if (isImpromptu) {
 		muc_->onUnlocked.connect(boost::bind(&MUCController::handleRoomUnlocked, this));
@@ -147,7 +150,9 @@ MUCController::MUCController (
 		chatWindow_->convertToMUC(ChatWindow::StandardMUC);
 		chatWindow_->setName(muc->getJID().getNode());
 	}
-	setOnline(true);
+	if (stanzaChannel->isAvailable()) {
+		setOnline(true);
+	}
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
 	} 

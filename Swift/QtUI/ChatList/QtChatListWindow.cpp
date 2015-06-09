@@ -96,14 +96,10 @@ void QtChatListWindow::setupContextMenus() {
 void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
 	ChatListItem* item = model_->getItemForIndex(index);
 	if (ChatListMUCItem* mucItem = dynamic_cast<ChatListMUCItem*>(item)) {
-		if (bookmarksEnabled_) {
-			onMUCBookmarkActivated(mucItem->getBookmark());
-		}
+		onMUCBookmarkActivated(mucItem->getBookmark());
 	}
 	else if (ChatListRecentItem* recentItem = dynamic_cast<ChatListRecentItem*>(item)) {
-		if (!recentItem->getChat().isMUC || bookmarksEnabled_) {
-			onRecentActivated(recentItem->getChat());
-		}
+		onRecentActivated(recentItem->getChat());
 	}
 	else if (ChatListWhiteboardItem* whiteboardItem = dynamic_cast<ChatListWhiteboardItem*>(item)) {
 		if (!whiteboardItem->getChat().isMUC || bookmarksEnabled_) {
