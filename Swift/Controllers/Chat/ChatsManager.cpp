@@ -856,9 +856,6 @@ void ChatsManager::handleUserNicknameChanged(MUCController* mucController, const
 
 		chatController->onActivity.disconnect(boost::bind(&ChatsManager::handleChatActivity, this, oldMUCChatJID, _1, false));
 		chatController->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, newMUCChatJID, _1, false));
-		/*for (std::list<ChatListWindow::Chat>::iterator i = recentChats_.begin(); i != recentChats_.end(); i++) {
-			if (i->jid ==
-		}*/
 	}
 }
 
