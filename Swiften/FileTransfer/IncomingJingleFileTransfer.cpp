@@ -210,6 +210,7 @@ void IncomingJingleFileTransfer::handleWriteStreamDataReceived(
 		const std::vector<unsigned char>& data) {
 	hashCalculator->feedData(data);
 	receivedBytes += data.size();
+	onProcessedBytes(data.size());
 	checkIfAllDataReceived();
 }
 
