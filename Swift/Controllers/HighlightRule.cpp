@@ -10,13 +10,15 @@
  * See the COPYING file for more information.
  */
 
+#include <Swift/Controllers/HighlightRule.h>
+
 #include <algorithm>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/lambda/lambda.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Regex.h>
-#include <Swift/Controllers/HighlightRule.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
@@ -69,9 +71,20 @@ bool HighlightRule::isMatch(const std::string& body, const std::string& sender, 
 		bool matchesKeyword = keywords_.empty() && (nick.empty() || !nickIsKeyword_);
 		bool matchesSender = senders_.empty();
 
-		if (!matchesKeyword && nickIsKeyword_ && !nick.empty()) {
-			if (boost::regex_search(body, regexFromString(nick))) {
+		if (!matchesKeyword) {
+			// check if the nickname matches
+			if (nickIsKeyword_ && !nick.empty() && boost::regex_search(body, regexFromString(nick))) {
 				matchesKeyword = true;
+			}
+
+			// check if a keyword matches
+			if (!matchesKeyword && !keywords_.empty()) {
+				foreach (const boost::regex &keyword, keywordRegex_) {
+					if (boost::regex_search(body, keyword)) {
+						matchesKeyword = true;
+						break;
+					}
+				}
 			}
 		}
 

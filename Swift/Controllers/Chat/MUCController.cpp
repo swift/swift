@@ -584,9 +584,9 @@ void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {
 		if (messageTargetsMe(message) || isImpromptu_) {
 			eventController_->handleIncomingEvent(messageEvent);
-			if (!messageEvent->getConcluded()) {
-				highlighter_->handleHighlightAction(highlight);
-			}
+		}
+		if (!messageEvent->getConcluded()) {
+			highlighter_->handleHighlightAction(highlight);
 		}
 	}
 }

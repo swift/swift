@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -163,20 +163,20 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("body", "from", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("body", "from", "nick", HighlightRule::MUCMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), true);
 			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("keyword1", "from", "nick", HighlightRule::MUCMessage), false);
 			CPPUNIT_ASSERT_EQUAL(keywordRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
 
 			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("body", "sender contains keyword1", "nick", HighlightRule::ChatMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abc keyword1 xyz", "from", "nick", HighlightRule::ChatMessage), false);
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abckeyword1xyz", "from", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abc keyword1 xyz", "from", "nick", HighlightRule::ChatMessage), true);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abckeyword1xyz", "from", "nick", HighlightRule::ChatMessage), true);
 
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("KEYword1", "from", "nick", HighlightRule::ChatMessage), false);
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abc KEYword1 xyz", "from", "nick", HighlightRule::ChatMessage), false);
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abcKEYword1xyz", "from", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("KEYword1", "from", "nick", HighlightRule::ChatMessage), true);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abc KEYword1 xyz", "from", "nick", HighlightRule::ChatMessage), true);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("abcKEYword1xyz", "from", "nick", HighlightRule::ChatMessage), true);
 
-			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("keyword2", "from", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("keyword2", "from", "nick", HighlightRule::ChatMessage), true);
 		}
 
 		void testNickKeyword() {
@@ -184,7 +184,7 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(keywordNickChatRule->isMatch("body contains nick", "from", "nick", HighlightRule::MUCMessage), false);
 			CPPUNIT_ASSERT_EQUAL(keywordChatRule->isMatch("body contains nick", "from", "nick", HighlightRule::ChatMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(keywordNickChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(keywordNickChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), true);
 
 			CPPUNIT_ASSERT_EQUAL(keywordNickChatRule->isMatch("body", "sender contains nick", "nick", HighlightRule::ChatMessage), false);
 
@@ -238,7 +238,7 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(senderKeywordChatRule->isMatch("body", "from", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordChatRule->isMatch("body", "sender1", "nick", HighlightRule::ChatMessage), false);
-			CPPUNIT_ASSERT_EQUAL(senderKeywordChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), true);
 		}
 
 		void testWholeWords() {
@@ -246,14 +246,14 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("body", "sender1", "nick", HighlightRule::ChatMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), true);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("xkeyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("keyword1", "xsender1", "nick", HighlightRule::ChatMessage), false);
 
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("body contains nick", "sender1", "nick", HighlightRule::ChatMessage), true);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("body contains xnick", "sender1", "nick", HighlightRule::ChatMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("KEYword1", "SENDer1", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("KEYword1", "SENDer1", "nick", HighlightRule::ChatMessage), true);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickWordChatRule->isMatch("body contains NiCk", "sender1", "nick", HighlightRule::ChatMessage), true);
 		}
 
@@ -262,8 +262,8 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("body", "sender1", "nick", HighlightRule::ChatMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
-			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("xkeyword1", "xsender1", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), true);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("xkeyword1", "xsender1", "nick", HighlightRule::ChatMessage), true);
 
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("body contains nick", "sender1", "nick", HighlightRule::ChatMessage), true);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseChatRule->isMatch("body contains xnick", "sender1", "nick", HighlightRule::ChatMessage), true);
@@ -279,7 +279,7 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseWordChatRule->isMatch("keyword1", "from", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseWordChatRule->isMatch("body", "sender1", "nick", HighlightRule::ChatMessage), false);
 
-			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseWordChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseWordChatRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), true);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseWordChatRule->isMatch("xkeyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickCaseWordChatRule->isMatch("keyword1", "xsender1", "nick", HighlightRule::ChatMessage), false);
 
@@ -296,7 +296,7 @@ class HighlightRuleTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickMUCRule->isMatch("body", "from", "nick", HighlightRule::ChatMessage), false);
 
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickMUCRule->isMatch("keyword1", "sender1", "nick", HighlightRule::ChatMessage), false);
-			CPPUNIT_ASSERT_EQUAL(senderKeywordNickMUCRule->isMatch("keyword1", "sender1", "nick", HighlightRule::MUCMessage), false);
+			CPPUNIT_ASSERT_EQUAL(senderKeywordNickMUCRule->isMatch("keyword1", "sender1", "nick", HighlightRule::MUCMessage), true);
 			CPPUNIT_ASSERT_EQUAL(senderKeywordNickMUCRule->isMatch("body contains nick", "sender1", "nick", HighlightRule::MUCMessage), true);
 		}
 
