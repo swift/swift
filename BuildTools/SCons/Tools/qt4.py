@@ -36,6 +36,7 @@ __revision__ = "/home/scons/scons/branch.0/branch.96/baseline/src/engine/SCons/T
 
 import os.path
 import re
+import subprocess
 
 import SCons.Action
 import SCons.Builder
@@ -207,14 +208,18 @@ def _detect(env):
 	else :
 		moc = env.WhereIs('moc-qt4') or env.WhereIs('moc4') or env.WhereIs('moc')
 	if moc:
-		import sys
-		if sys.platform == "darwin" :
-			return ""
-		QTDIR = os.path.dirname(os.path.dirname(moc))
-		SCons.Warnings.warn(
-			QtdirNotFound,
-			"QTDIR variable is not defined, using moc executable as a hint (QTDIR=%s)" % QTDIR)
-		return QTDIR
+		# Test whether the moc command we found is real, or whether it is just the qtchooser dummy.
+		p = subprocess.Popen([moc, "-v"], shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+		p.communicate()
+		if p.returncode == 0:
+			import sys
+			if sys.platform == "darwin" :
+				return ""
+			QTDIR = os.path.dirname(os.path.dirname(moc))
+			SCons.Warnings.warn(
+				QtdirNotFound,
+				"QTDIR variable is not defined, using moc executable as a hint (QTDIR=%s)" % QTDIR)
+			return QTDIR
 
 	raise SCons.Errors.StopError(
 		QtdirNotFound,
