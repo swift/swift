@@ -4,18 +4,25 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include <Swiften/JID/JID.h>
-#include <Swiften/FileTransfer/FileTransfer.h>
-#include <Swiften/FileTransfer/IncomingFileTransfer.h>
 #include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/FileTransfer/FileTransfer.h>
 #include <Swiften/FileTransfer/FileWriteBytestream.h>
+#include <Swiften/FileTransfer/IncomingFileTransfer.h>
+#include <Swiften/JID/JID.h>
+
 #include <Swift/Controllers/FileTransfer/FileTransferProgressInfo.h>
 
 namespace Swift {
@@ -49,14 +56,14 @@ public:
 	int getProgress() const;
 	boost::uintmax_t getSize() const;
 
-	boost::signal<void ()> onStateChage;
+	boost::signal<void ()> onStateChanged;
 	boost::signal<void ()> onProgressChange;
 
 private:
 	void handleFileTransferStateChange(FileTransfer::State);
 	void handleProgressPercentageChange(int percentage);
 
-private:	
+private:
 	bool sending;
 	JID otherParty;
 	std::string filename;

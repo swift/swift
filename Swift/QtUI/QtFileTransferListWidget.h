@@ -4,15 +4,22 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/FileTransferListWidget.h"
-
-#include "QtTabbable.h"
-
 #include <QCloseEvent>
+#include <QPushButton>
 #include <QShowEvent>
 #include <QTreeView>
+
+#include <Swift/Controllers/UIInterfaces/FileTransferListWidget.h>
+
+#include <Swift/QtUI/QtTabbable.h>
 
 namespace Swift {
 
@@ -36,12 +43,17 @@ public:
 private:
 	virtual void closeEvent(QCloseEvent* event);
 	virtual void showEvent(QShowEvent* event);
+	void handleFileTransferListChanged();
+
+private slots:
+	void clearInactiveTransfers();
 
 private:
 	QTreeView* treeView;
 
 	QtFileTransferListItemModel* itemModel;
 	FileTransferOverview* fileTransferOverview;
+	QPushButton* clearFinished;
 };
 
 }

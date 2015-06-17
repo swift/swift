@@ -121,7 +121,7 @@ void FileTransferController::cancel() {
 
 void FileTransferController::handleFileTransferStateChange(FileTransfer::State state) {
 	currentState = state;
-	onStateChage();
+	onStateChanged();
 	switch(state.type) {
 		case FileTransfer::State::Initial:
 			assert(false);

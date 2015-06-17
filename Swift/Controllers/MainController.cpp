@@ -13,84 +13,84 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/format.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Client/Storages.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swiften/Client/NickResolver.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/format.h>
 #include <Swiften/Client/Client.h>
-#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Client/Storages.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/VCardUpdate.h>
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Disco/CapsInfoGenerator.h>
-#include <Swiften/Disco/GetDiscoInfoRequest.h>
-#include <Swiften/Disco/ClientDiscoManager.h>
-#include <Swiften/VCards/GetVCardRequest.h>
-#include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
-#include <Swiften/Client/ClientXMLTracer.h>
-#include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Client/ClientBlockListManager.h>
-#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/VCards/GetVCardRequest.h>
+#include <Swiften/VCards/VCardManager.h>
 
 #ifdef SWIFTEN_PLATFORM_WIN32
 #include <Swiften/SASL/WindowsAuthentication.h>
 #endif
 
-#include <SwifTools/Dock/Dock.h>
-#include <SwifTools/Notifier/TogglableNotifier.h>
-#include <SwifTools/Idle/IdleDetector.h>
-
-#include <Swift/Controllers/Intl.h>
-#include <Swift/Controllers/UIInterfaces/UIFactory.h>
+#include <Swift/Controllers/AdHocManager.h>
+#include <Swift/Controllers/BlockListController.h>
 #include <Swift/Controllers/BuildVersion.h>
-#include <Swift/Controllers/Chat/UserSearchController.h>
 #include <Swift/Controllers/Chat/ChatsManager.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
-#include <Swift/Controllers/EventWindowController.h>
-#include <Swift/Controllers/UIInterfaces/LoginWindow.h>
-#include <Swift/Controllers/UIInterfaces/LoginWindowFactory.h>
-#include <Swift/Controllers/UIInterfaces/MainWindow.h>
 #include <Swift/Controllers/Chat/MUCController.h>
+#include <Swift/Controllers/Chat/UserSearchController.h>
+#include <Swift/Controllers/ContactEditController.h>
+#include <Swift/Controllers/ContactSuggester.h>
+#include <Swift/Controllers/ContactsFromXMPPRoster.h>
+#include <Swift/Controllers/EventNotifier.h>
+#include <Swift/Controllers/EventWindowController.h>
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
+#include <Swift/Controllers/FileTransferListController.h>
+#include <Swift/Controllers/HighlightEditorController.h>
+#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/HistoryController.h>
+#include <Swift/Controllers/HistoryViewController.h>
+#include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/PresenceNotifier.h>
+#include <Swift/Controllers/ProfileController.h>
 #include <Swift/Controllers/Roster/RosterController.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/ShowProfileController.h>
 #include <Swift/Controllers/SoundEventController.h>
 #include <Swift/Controllers/SoundPlayer.h>
 #include <Swift/Controllers/StatusTracker.h>
-#include <Swift/Controllers/SystemTray.h>
-#include <Swift/Controllers/SystemTrayController.h>
-#include <Swift/Controllers/XMLConsoleController.h>
-#include <Swift/Controllers/HistoryController.h>
-#include <Swift/Controllers/HistoryViewController.h>
-#include <Swift/Controllers/FileTransferListController.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/PresenceNotifier.h>
-#include <Swift/Controllers/EventNotifier.h>
-#include <Swift/Controllers/Storages/StoragesFactory.h>
-#include <Swift/Controllers/WhiteboardManager.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
-#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/Storages/CertificateStorageFactory.h>
 #include <Swift/Controllers/Storages/CertificateStorageTrustChecker.h>
-#include <Swift/Controllers/ProfileController.h>
-#include <Swift/Controllers/ShowProfileController.h>
-#include <Swift/Controllers/ContactEditController.h>
+#include <Swift/Controllers/Storages/StoragesFactory.h>
+#include <Swift/Controllers/SystemTray.h>
+#include <Swift/Controllers/SystemTrayController.h>
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/LoginWindow.h>
+#include <Swift/Controllers/UIInterfaces/LoginWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
+#include <Swift/Controllers/UIInterfaces/UIFactory.h>
+#include <Swift/Controllers/WhiteboardManager.h>
+#include <Swift/Controllers/XMLConsoleController.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/XMPPURIController.h>
-#include <Swift/Controllers/AdHocManager.h>
-#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/HighlightManager.h>
-#include <Swift/Controllers/HighlightEditorController.h>
-#include <Swift/Controllers/BlockListController.h>
-#include <Swift/Controllers/ContactSuggester.h>
-#include <Swift/Controllers/ContactsFromXMPPRoster.h>
+
+#include <SwifTools/Dock/Dock.h>
+#include <SwifTools/Idle/IdleDetector.h>
+#include <SwifTools/Notifier/TogglableNotifier.h>
 
 namespace Swift {
 
@@ -270,6 +270,7 @@ void MainController::resetClient() {
 	delete historyController_;
 	historyController_ = NULL;
 #endif
+	fileTransferListController_->setFileTransferOverview(NULL);
 	delete ftOverview_;
 	ftOverview_ = NULL;
 	delete blockListController_;

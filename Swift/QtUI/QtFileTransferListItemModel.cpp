@@ -4,33 +4,62 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtFileTransferListItemModel.h"
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/QtFileTransferListItemModel.h>
 
 #include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/FileSize.h>
+#include <Swiften/Base/boost_bsignals.h>
+
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
-#include "QtSwiftUtil.h"
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
 QtFileTransferListItemModel::QtFileTransferListItemModel(QObject *parent) : QAbstractItemModel(parent), fileTransferOverview(0) {
 }
 
+QtFileTransferListItemModel::~QtFileTransferListItemModel() {
+	if (fileTransferOverview) {
+		fileTransferOverview->onNewFileTransferController.disconnect(boost::bind(&QtFileTransferListItemModel::handleNewFileTransferController, this, _1));
+		fileTransferOverview->onFileTransferListChanged.disconnect(boost::bind(&QtFileTransferListItemModel::handleFileTransferListChanged, this));
+	}
+}
+
 void QtFileTransferListItemModel::setFileTransferOverview(FileTransferOverview *overview) {
+	if (fileTransferOverview) {
+		fileTransferOverview->onNewFileTransferController.disconnect(boost::bind(&QtFileTransferListItemModel::handleNewFileTransferController, this, _1));
+		fileTransferOverview->onFileTransferListChanged.disconnect(boost::bind(&QtFileTransferListItemModel::handleFileTransferListChanged, this));
+	}
 	fileTransferOverview = overview;
-	fileTransferOverview->onNewFileTransferController.connect(boost::bind(&QtFileTransferListItemModel::handleNewFileTransferController, this, _1));
+	if (fileTransferOverview) {
+		fileTransferOverview->onNewFileTransferController.connect(boost::bind(&QtFileTransferListItemModel::handleNewFileTransferController, this, _1));
+		fileTransferOverview->onFileTransferListChanged.connect(boost::bind(&QtFileTransferListItemModel::handleFileTransferListChanged, this));
+	}
+	emit layoutAboutToBeChanged();
+	emit layoutChanged();
 }
 
 void QtFileTransferListItemModel::handleNewFileTransferController(FileTransferController* newController) {
 	emit layoutAboutToBeChanged();
 	emit layoutChanged();
 	dataChanged(createIndex(0,0), createIndex(fileTransferOverview->getFileTransfers().size(),4));
-	newController->onStateChage.connect(boost::bind(&QtFileTransferListItemModel::handleStateChange, this, fileTransferOverview->getFileTransfers().size() - 1));
+	newController->onStateChanged.connect(boost::bind(&QtFileTransferListItemModel::handleStateChange, this, fileTransferOverview->getFileTransfers().size() - 1));
 	newController->onProgressChange.connect(boost::bind(&QtFileTransferListItemModel::handleProgressChange, this, fileTransferOverview->getFileTransfers().size() - 1));
+}
+
+void QtFileTransferListItemModel::handleFileTransferListChanged() {
+	emit layoutAboutToBeChanged();
+	emit layoutChanged();
 }
 
 void QtFileTransferListItemModel::handleStateChange(int index) {

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QAbstractItemModel>
@@ -17,6 +23,7 @@ class QtFileTransferListItemModel : public QAbstractItemModel {
 	Q_OBJECT
 public:
 	explicit QtFileTransferListItemModel(QObject *parent = 0);
+	virtual ~QtFileTransferListItemModel();
 
 	void setFileTransferOverview(FileTransferOverview*);
 
@@ -39,6 +46,7 @@ private:
 
 private:
 	void handleNewFileTransferController(FileTransferController*);
+	void handleFileTransferListChanged();
 	void handleStateChange(int index);
 	void handleProgressChange(int index);
 
