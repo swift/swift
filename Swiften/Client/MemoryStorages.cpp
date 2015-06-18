@@ -32,7 +32,9 @@ MemoryStorages::~MemoryStorages() {
 	delete avatarStorage;
 	delete capsStorage;
 	delete vcardStorage;
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
 	delete historyStorage;
+#endif
 }
 
 VCardStorage* MemoryStorages::getVCardStorage() const {
