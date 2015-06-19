@@ -4,16 +4,22 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
-#include <Swiften/FileTransfer/WriteBytestream.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/FileTransfer/WriteBytestream.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -96,10 +102,10 @@ private:
 
 	Timer::ref weFailedTimeout;
 
-	boost::bsignals::connection connectFinishedConnection;
-	boost::bsignals::connection dataWrittenConnection;
-	boost::bsignals::connection dataReadConnection;
-	boost::bsignals::connection disconnectedConnection;
+	boost::bsignals::scoped_connection connectFinishedConnection;
+	boost::bsignals::scoped_connection dataWrittenConnection;
+	boost::bsignals::scoped_connection dataReadConnection;
+	boost::bsignals::scoped_connection disconnectedConnection;
 };
 
 }

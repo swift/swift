@@ -16,13 +16,13 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
 #include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 namespace Swift {
 
@@ -42,6 +42,7 @@ SOCKS5BytestreamClientSession::SOCKS5BytestreamClientSession(
 }
 
 SOCKS5BytestreamClientSession::~SOCKS5BytestreamClientSession() {
+	weFailedTimeout->stop();
 }
 
 void SOCKS5BytestreamClientSession::start() {
