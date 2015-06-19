@@ -40,10 +40,10 @@ LocalJingleTransportCandidateGenerator::LocalJingleTransportCandidateGenerator(
 			s5bProxy(s5bProxy), 
 			ownJID(ownJID),
 			idGenerator(idGenerator),
-			options_(options),
 			triedServerInit_(false),
 			triedForwarding_(false),
-			triedProxyDiscovery_(false) {
+			triedProxyDiscovery_(false),
+			options_(options) {
 }
 
 LocalJingleTransportCandidateGenerator::~LocalJingleTransportCandidateGenerator() {
