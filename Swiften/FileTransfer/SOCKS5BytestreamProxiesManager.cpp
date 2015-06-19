@@ -13,17 +13,17 @@
 
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
-#include <Swiften/Base/Log.h>
-#include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/ConnectionFactory.h>
-#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/DomainNameResolveError.h>
+#include <Swiften/Network/DomainNameResolver.h>
+#include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
 
@@ -44,7 +44,6 @@ void SOCKS5BytestreamProxiesManager::addS5BProxy(S5BProxyRequest::ref proxy) {
 			localS5BProxies_ = std::vector<S5BProxyRequest::ref>();
 		}
 		localS5BProxies_->push_back(proxy);
-		onDiscoveredProxiesChanged();
 	}
 }
 
@@ -106,6 +105,7 @@ void SOCKS5BytestreamProxiesManager::handleProxyFound(S5BProxyRequest::ref proxy
 	if (proxy) {
 		if (HostAddress(proxy->getStreamHost().get().host).isValid()) {
 			addS5BProxy(proxy);
+			onDiscoveredProxiesChanged();
 		}
 		else {
 			DomainNameAddressQuery::ref resolveRequest = resolver_->createAddressQuery(proxy->getStreamHost().get().host);
@@ -120,20 +120,25 @@ void SOCKS5BytestreamProxiesManager::handleProxyFound(S5BProxyRequest::ref proxy
 	proxyFinder_.reset();
 }
 
-void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error, S5BProxyRequest::ref proxy) {
+void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error, S5BProxyRequest::ref proxy) {
 	if (error) {
 		onDiscoveredProxiesChanged();
 	}
 	else {
-		if (address.empty()) {
+		if (addresses.empty()) {
 			SWIFT_LOG(warning) << "S5B proxy hostname does not resolve." << std::endl;
 			onDiscoveredProxiesChanged();
 		}
 		else {
-			S5BProxyRequest::StreamHost streamHost = proxy->getStreamHost().get();
-			streamHost.host = address[0].toString();
-			proxy->setStreamHost(streamHost);
-			addS5BProxy(proxy);
+			// generate proxy per returned address
+			foreach (const HostAddress& address, addresses) {
+				S5BProxyRequest::StreamHost streamHost = proxy->getStreamHost().get();
+				S5BProxyRequest::ref proxyForAddress = boost::make_shared<S5BProxyRequest>(*proxy);
+				streamHost.host = address.toString();
+				proxyForAddress->setStreamHost(streamHost);
+				addS5BProxy(proxyForAddress);
+			}
+			onDiscoveredProxiesChanged();
 		}
 	}
 }
