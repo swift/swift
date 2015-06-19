@@ -14,17 +14,17 @@
 
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerResourceUser.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerPortForwardingUser.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerResourceUser.h>
 
 static const unsigned int LOCAL_PREFERENCE = 0;
 
@@ -73,6 +73,9 @@ void LocalJingleTransportCandidateGenerator::start() {
 }
 
 void LocalJingleTransportCandidateGenerator::stop() {
+	if (s5bServerResourceUser_) {
+		s5bServerResourceUser_->onSuccessfulInitialized.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleS5BServerInitialized, this, _1));
+	}
 	s5bServerResourceUser_.reset();
 }
 
@@ -82,6 +85,7 @@ void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool suc
 		if (options_.isAssistedAllowed()) {
 			// try to setup port forwarding
 			s5bServerPortForwardingUser_ = s5bServerManager->aquirePortForwardingUser();
+			s5bServerPortForwardingUser_->onSetup.connect(boost::bind(&LocalJingleTransportCandidateGenerator::handlePortForwardingSetup, this, _1));
 			if (s5bServerPortForwardingUser_->isForwardingSetup()) {
 				handlePortForwardingSetup(true);
 			}
@@ -89,13 +93,19 @@ void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool suc
 	}
 	else {
 		SWIFT_LOG(warning) << "Unable to start SOCKS5 server" << std::endl;
+		if (s5bServerResourceUser_) {
+			s5bServerResourceUser_->onSuccessfulInitialized.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleS5BServerInitialized, this, _1));
+		}
 		s5bServerResourceUser_.reset();
 		handlePortForwardingSetup(false);
 	}
 	checkS5BCandidatesReady();
 }
 
-void LocalJingleTransportCandidateGenerator::handlePortForwardingSetup(bool success) {
+void LocalJingleTransportCandidateGenerator::handlePortForwardingSetup(bool /* success */) {
+	if (s5bServerPortForwardingUser_) {
+		s5bServerPortForwardingUser_->onSetup.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handlePortForwardingSetup, this, _1));
+	}
 	triedForwarding_ = true;
 	checkS5BCandidatesReady();
 }
@@ -109,7 +119,7 @@ void LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged() {
 void LocalJingleTransportCandidateGenerator::checkS5BCandidatesReady() {
 	if ((!options_.isDirectAllowed()  || (options_.isDirectAllowed()  && triedServerInit_)) &&
 		(!options_.isProxiedAllowed() || (options_.isProxiedAllowed() && triedProxyDiscovery_)) &&
-		(!options_.isDirectAllowed()  || (options_.isDirectAllowed()  && triedServerInit_))) {
+		(!options_.isAssistedAllowed()  || (options_.isAssistedAllowed()  && triedForwarding_))) {
 		emitOnLocalTransportCandidatesGenerated();
 	}
 }
