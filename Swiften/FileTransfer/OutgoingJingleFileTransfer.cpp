@@ -136,9 +136,12 @@ void OutgoingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<
 	if (reason && reason->type == JinglePayload::Reason::Cancel) {
 		setFinishedState(FileTransfer::State::Canceled, FileTransferError(FileTransferError::PeerError));
 	}
+	else if (reason && reason->type == JinglePayload::Reason::Decline) {
+		setFinishedState(FileTransfer::State::Canceled, boost::optional<FileTransferError>());
+	}
 	else if (reason && reason->type == JinglePayload::Reason::Success) {
 		setFinishedState(FileTransfer::State::Finished, boost::optional<FileTransferError>());
-	} 
+	}
 	else {
 		setFinishedState(FileTransfer::State::Failed, FileTransferError(FileTransferError::PeerError));
 	}
@@ -190,6 +193,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 	transport->setDstAddr(dstAddr);
 	foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
 		transport->addCandidate(candidate);	
+		SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString() << std::endl;
 	}
 	setState(WaitingForAccept);
 	session->sendInitiate(contentID, description, transport);

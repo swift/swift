@@ -56,17 +56,29 @@ class OutgoingJingleFileTransferTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(test_SendSessionInitiateOnStart);
 		CPPUNIT_TEST(test_FallbackToIBBAfterFailingS5B);
 		CPPUNIT_TEST(test_ReceiveSessionTerminateAfterSessionInitiate);
+		CPPUNIT_TEST(test_DeclineEmitsFinishedStateCanceled);
 		CPPUNIT_TEST_SUITE_END();
 
 		class FTStatusHelper {
 		public:
-			bool finishedCalled;
-			FileTransferError::Type error;
+			FTStatusHelper() : finishedCalled(false), error(FileTransferError::UnknownError) {
+			}
+
 			void handleFileTransferFinished(boost::optional<FileTransferError> error) {
 				finishedCalled = true;
 				if (error.is_initialized()) this->error = error.get().getType();
 			}
+
+			void handleFileTransferStatusChanged(FileTransfer::State fileTransferSTate) {
+				state = fileTransferSTate;
+			}
+
+		public:
+			bool finishedCalled;
+			FileTransferError::Type error;
+			boost::optional<FileTransfer::State> state;
 		};
+
 public:
 
 		boost::shared_ptr<OutgoingJingleFileTransfer> createTestling() {
@@ -193,6 +205,22 @@ public:
 			CPPUNIT_ASSERT(FileTransferError::PeerError == helper.error);
 		}
 		
+		void test_DeclineEmitsFinishedStateCanceled() {
+			boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
+			transfer->start();
+
+			getCall<FakeJingleSession::InitiateCall>(0);
+
+			FTStatusHelper helper;
+			helper.finishedCalled = false;
+			transfer->onFinished.connect(bind(&FTStatusHelper::handleFileTransferFinished, &helper, _1));
+			transfer->onStateChanged.connect(bind(&FTStatusHelper::handleFileTransferStatusChanged, &helper, _1));
+			fakeJingleSession->handleSessionTerminateReceived(JinglePayload::Reason(JinglePayload::Reason::Decline));
+			CPPUNIT_ASSERT_EQUAL(true, helper.finishedCalled);
+			CPPUNIT_ASSERT(FileTransferError::UnknownError == helper.error);
+			CPPUNIT_ASSERT_EQUAL(true, helper.state.is_initialized());
+			CPPUNIT_ASSERT(FileTransfer::State::Canceled == helper.state.get().type);
+		}
 
 //TODO: some more testcases
 
