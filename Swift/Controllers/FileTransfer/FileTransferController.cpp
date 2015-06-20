@@ -4,18 +4,26 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "FileTransferController.h"
-#include "Swiften/FileTransfer/OutgoingJingleFileTransfer.h"
-#include "Swiften/FileTransfer/FileTransferManager.h"
-#include <Swiften/FileTransfer/FileReadBytestream.h>
-#include <Swiften/Base/boost_bsignals.h>
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/Controllers/FileTransfer/FileTransferController.h>
+
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
-#include "Swift/Controllers/UIInterfaces/ChatWindow.h"
-#include <Swiften/Base/Log.h>
-#include <Swift/Controllers/Intl.h>
-
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/FileReadBytestream.h>
+
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/Intl.h>
 
 namespace Swift {
 
@@ -26,11 +34,12 @@ FileTransferController::FileTransferController(const JID& receipient, const std:
 
 FileTransferController::FileTransferController(IncomingFileTransfer::ref transfer) :
 	sending(false), otherParty(transfer->getSender()), filename(transfer->getFileName()), transfer(transfer), ftManager(0), ftProgressInfo(0), chatWindow(0), currentState(FileTransfer::State::WaitingForStart) {
-
+	transfer->onStateChanged.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
 }
 
 FileTransferController::~FileTransferController() {
 	delete ftProgressInfo;
+	transfer->onStateChanged.disconnect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
 }
 
 const JID &FileTransferController::getOtherParty() const {
@@ -95,7 +104,6 @@ void FileTransferController::accept(std::string& file) {
 
 		ftProgressInfo = new FileTransferProgressInfo(transfer->getFileSizeInBytes());
 		ftProgressInfo->onProgressPercentage.connect(boost::bind(&FileTransferController::handleProgressPercentageChange, this, _1));
-		transfer->onStateChanged.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
 		transfer->onProcessedBytes.connect(boost::bind(&FileTransferProgressInfo::setBytesProcessed, ftProgressInfo, _1));
 		incomingTransfer->accept(fileWriteStream);
 	} else {
