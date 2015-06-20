@@ -4,36 +4,36 @@
  * See the COPYING file for more information.
  */
 
-#include "QtWebKitChatView.h"
+#include <Swift/QtUI/QtWebKitChatView.h>
 
-#include <QtDebug>
+#include <QApplication>
+#include <QDesktopServices>
 #include <QEventLoop>
 #include <QFile>
-#include <QDesktopServices>
-#include <QVBoxLayout>
-#include <QWebFrame>
+#include <QFileDialog>
+#include <QInputDialog>
 #include <QKeyEvent>
+#include <QMessageBox>
 #include <QStackedWidget>
 #include <QTimer>
-#include <QMessageBox>
-#include <QApplication>
-#include <QInputDialog>
-#include <QFileDialog>
+#include <QVBoxLayout>
+#include <QWebFrame>
+#include <QtDebug>
 
-#include <Swiften/Base/Log.h>
 #include <Swiften/Base/FileSize.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/StringCodecs/Base64.h>
 
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
-#include <Swift/QtUI/QtWebView.h>
+#include <Swift/QtUI/MessageSnippet.h>
 #include <Swift/QtUI/QtChatWindow.h>
 #include <Swift/QtUI/QtChatWindowJSBridge.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUtilities.h>
-#include <Swift/QtUI/MessageSnippet.h>
+#include <Swift/QtUI/QtWebView.h>
 #include <Swift/QtUI/SystemMessageSnippet.h>
 
 namespace Swift {
@@ -45,6 +45,7 @@ const QString QtWebKitChatView::ButtonFileTransferCancel = QString("filetransfer
 const QString QtWebKitChatView::ButtonFileTransferSetDescription = QString("filetransfer-setdescription");
 const QString QtWebKitChatView::ButtonFileTransferSendRequest = QString("filetransfer-sendrequest");
 const QString QtWebKitChatView::ButtonFileTransferAcceptRequest = QString("filetransfer-acceptrequest");
+const QString QtWebKitChatView::ButtonFileTransferOpenFile = QString("filetransfer-openfile");
 const QString QtWebKitChatView::ButtonMUCInvite = QString("mucinvite");
 
 QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll) : QtChatView(parent), window_(window), eventStream_(eventStream), fontSizeSteps_(0), disableAutoScroll_(disableAutoScroll), previousMessageKind_(PreviosuMessageWasNone), previousMessageWasSelf_(false), showEmoticons_(false), insertingLastLine_(false), idCounter_(0) {
@@ -462,7 +463,8 @@ void QtWebKitChatView::setFileTransferStatus(QString id, const ChatWindow::FileT
 	}
 	else if (state == ChatWindow::Finished) {
 		// text "Successful transfer"
-		newInnerHTML = tr("Transfer completed successfully.");
+		newInnerHTML = tr("Transfer completed successfully." ) + " " + buildChatWindowButton(tr("Open file"), ButtonFileTransferOpenFile, id, filePaths_[id]);
+		filePaths_.erase(id);
 	}
 	else if (state == ChatWindow::FTFailed) {
 		newInnerHTML = tr("Transfer failed.");
@@ -489,6 +491,13 @@ void QtWebKitChatView::setMUCInvitationJoined(QString id) {
 	QWebElement buttonElement = findElementWithID(divElement, "input", "mucinvite");
 	if (!buttonElement.isNull()) {
 		buttonElement.setAttribute("value", tr("Return to room"));
+	}
+}
+
+void QtWebKitChatView::askDesktopToOpenFile(const QString& filename) {
+	QFileInfo fileInfo(filename);
+	if (fileInfo.exists() && fileInfo.isFile()) {
+		QDesktopServices::openUrl(QUrl::fromLocalFile(filename));
 	}
 }
 
@@ -652,6 +661,7 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, boo
 	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
 	if (senderIsSelf) {
 		// outgoing
+		filePaths_[ft_id] = P2QSTRING(filename);
 		actionText = tr("Send file");
 		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") <br/>" +
 			"<div id='" + ft_id + "'>" +
@@ -719,9 +729,6 @@ void QtWebKitChatView::setWhiteboardSessionStatus(const std::string& id, const C
 	setWhiteboardSessionStatus(P2QSTRING(id), state);
 }
 
-
-
-
 void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3, QString encodedArgument4, QString encodedArgument5) {
 	QString arg1 = decodeButtonArgument(encodedArgument1);
 	QString arg2 = decodeButtonArgument(encodedArgument2);
@@ -753,8 +760,14 @@ void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgume
 
 		QString path = QFileDialog::getSaveFileName(this, tr("Save File"), filename);
 		if (!path.isEmpty()) {
+			filePaths_[ft_id] = path;
 			window_->onFileTransferAccept(Q2PSTRING(ft_id), Q2PSTRING(path));
 		}
+	}
+	else if (id.startsWith(ButtonFileTransferOpenFile)) {
+		QString ft_id = arg1;
+		QString filename = arg2;
+		askDesktopToOpenFile(filename);
 	}
 	else if (id.startsWith(ButtonWhiteboardSessionAcceptRequest)) {
 		QString id = arg1;

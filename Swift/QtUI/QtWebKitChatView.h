@@ -6,12 +6,12 @@
 
 #pragma once
 
-#include <QString>
-#include <QWidget>
-#include <QList>
-#include <QWebElement>
-
 #include <boost/shared_ptr.hpp>
+
+#include <QList>
+#include <QString>
+#include <QWebElement>
+#include <QWidget>
 
 #include <Swiften/Base/Override.h>
 
@@ -41,6 +41,7 @@ namespace Swift {
 			static const QString ButtonFileTransferSetDescription;
 			static const QString ButtonFileTransferSendRequest;
 			static const QString ButtonFileTransferAcceptRequest;
+			static const QString ButtonFileTransferOpenFile;
 			static const QString ButtonMUCInvite;
 		public:
 			QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll = false);
@@ -96,6 +97,7 @@ namespace Swift {
 			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
 			void setWhiteboardSessionStatus(QString id, const ChatWindow::WhiteboardSessionState state);
 			void setMUCInvitationJoined(QString id);
+			void askDesktopToOpenFile(const QString& filename);
 			
 		signals:
 			void gotFocus();
@@ -186,5 +188,6 @@ namespace Swift {
 			int idCounter_;
 			QString previousSenderName_;
 			std::map<QString, QString> descriptions_;
+			std::map<QString, QString> filePaths_;
 	};
 }
