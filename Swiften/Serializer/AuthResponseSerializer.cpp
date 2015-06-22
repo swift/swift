@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ SafeByteArray AuthResponseSerializer::serialize(boost::shared_ptr<ToplevelElemen
 	boost::optional<SafeByteArray> message = authResponse->getValue();
 	if (message) {
 		if ((*message).empty()) {
-			value = createSafeByteArray("=");
+			value = createSafeByteArray("");
 		}
 		else {
 			value = Base64::encode(*message);

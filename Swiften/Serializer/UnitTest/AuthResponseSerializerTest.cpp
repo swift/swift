@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ class AuthResponseSerializerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
 				"<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
-					"="
+					""
 				"</response>"), testling.serialize(authResponse));
 		}
 };
