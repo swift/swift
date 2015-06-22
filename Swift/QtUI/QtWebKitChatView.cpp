@@ -438,18 +438,22 @@ void QtWebKitChatView::setFileTransferStatus(QString id, const ChatWindow::FileT
 	}
 
 	QString newInnerHTML = "";
-	if (state == ChatWindow::WaitingForAccept) {
-		newInnerHTML =	tr("Waiting for other side to accept the transfer.") + "<br/>" +
+	if (state == ChatWindow::Initialisation) {
+		newInnerHTML = tr("Preparing to send.") + "<br/>" +
 			buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, id);
 	}
-	if (state == ChatWindow::Negotiating) {
+	else if (state == ChatWindow::WaitingForAccept) {
+		newInnerHTML = tr("Waiting for other side to accept the transfer.") + "<br/>" +
+			buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, id);
+	}
+	else if (state == ChatWindow::Negotiating) {
 		// replace with text "Negotiaging" + Cancel button
-		newInnerHTML =	tr("Negotiating...") + "<br/>" +
+		newInnerHTML = tr("Negotiating...") + "<br/>" +
 			buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, id);
 	}
 	else if (state == ChatWindow::Transferring) {
 		// progress bar + Cancel Button
-		newInnerHTML =	"<div style=\"position: relative; width: 90%; height: 20px; border: 2px solid grey; -webkit-border-radius: 10px;\">"
+		newInnerHTML = "<div style=\"position: relative; width: 90%; height: 20px; border: 2px solid grey; -webkit-border-radius: 10px;\">"
 							"<div class=\"progressbar\" style=\"width: 0%; height: 100%; background: #AAA; -webkit-border-radius: 6px;\">"
 								"<div class=\"progressbar-value\" style=\"position: absolute; top: 0px; left: 0px; width: 100%; text-align: center; padding-top: 2px;\">"
 									"0%"

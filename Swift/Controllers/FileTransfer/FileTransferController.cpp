@@ -148,6 +148,7 @@ void FileTransferController::handleFileTransferStateChange(FileTransfer::State s
 			chatWindow->setFileTransferStatus(uiID, ChatWindow::WaitingForAccept);
 			return;
 		case FileTransfer::State::WaitingForStart:
+			chatWindow->setFileTransferStatus(uiID, ChatWindow::Initialisation);
 			return;
 	}
 	assert(false);

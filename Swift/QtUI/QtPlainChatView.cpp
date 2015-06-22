@@ -6,22 +6,22 @@
 
 #include <Swift/QtUI/QtPlainChatView.h>
 
-#include <QTextEdit>
-#include <QScrollBar>
-#include <QVBoxLayout>
-#include <QPushButton>
-#include <QLabel>
 #include <QDialog>
-#include <QProgressBar>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QLabel>
 #include <QMenu>
+#include <QProgressBar>
+#include <QPushButton>
+#include <QScrollBar>
+#include <QTextEdit>
+#include <QVBoxLayout>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/FileSize.h>
+#include <Swiften/Base/foreach.h>
 
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
 #include <Swift/QtUI/ChatSnippet.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
@@ -360,6 +360,13 @@ QtPlainChatView::FileTransfer::FileTransfer(QtPlainChatView* parent, bool sender
 	std::string status = msg;
 
 	switch (state) {
+		case ChatWindow::Initialisation: {
+			status = "Preparing to send <i>"+ filename + "</i>...";
+			FileTransfer::Action* cancel = new FileTransfer::Action("Cancel", ftId);
+			parent->connect(cancel, SIGNAL(clicked()), SLOT(fileTransferReject()));
+			layout_->addWidget(cancel);
+			break;
+		}
 		case ChatWindow::WaitingForAccept: {
 			status = "Waiting for user to accept <i>" + filename + "</i>...";
 			FileTransfer::Action* cancel = new FileTransfer::Action("Cancel", ftId);

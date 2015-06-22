@@ -89,7 +89,15 @@ namespace Swift {
 			enum ReceiptState {ReceiptRequested, ReceiptReceived, ReceiptFailed};
 			enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact, ShowProfile};
 			enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};
-			enum FileTransferState {WaitingForAccept, Negotiating, Transferring, Canceled, Finished, FTFailed};
+			enum FileTransferState {
+				Initialisation,     ///< Collecting information required for sending the request out.
+				WaitingForAccept,   ///< The file transfer request was send out.
+				Negotiating,        ///< The other party accepted the file transfer request and a suitable transfer method is negotiated.
+				Transferring,       ///< The negotiation was successful and the file is currently transferred.
+				Canceled,           ///< Someone actively canceled the transfer.
+				Finished,           ///< The file was transferred successfully.
+				FTFailed            ///< The negotiation, the transfer itself or the verification failed.
+			};
 			enum WhiteboardSessionState {WhiteboardAccepted, WhiteboardTerminated, WhiteboardRejected};
 			enum BlockingState {BlockingUnsupported, IsBlocked, IsUnblocked};
 			enum Direction { UnknownDirection, DefaultDirection };
