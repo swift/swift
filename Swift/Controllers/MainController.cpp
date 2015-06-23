@@ -662,6 +662,10 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			}
 		}
 
+		if (!message.empty() && error->getErrorCode()) {
+			message = str(format(QT_TRANSLATE_NOOP("", "%1% (%2%)")) % message % error->getErrorCode()->message());
+		}
+
 		if (forceReconnectAfterCertificateTrust && settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
 			forceReconnectAfterCertificateTrust = false;
 			forceSignout = true;

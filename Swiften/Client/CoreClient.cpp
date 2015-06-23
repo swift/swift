@@ -259,6 +259,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
 					clientError = ClientError(ClientError::StreamError);
 					break;
 			}
+			clientError.setErrorCode(actualError->errorCode);
 		}
 		else if (boost::shared_ptr<TLSError> actualError = boost::dynamic_pointer_cast<TLSError>(error)) {
 			switch(actualError->getType()) {
