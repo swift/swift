@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-StreamFeaturesParser::StreamFeaturesParser() : GenericElementParser<StreamFeatures>(), currentDepth_(0), inMechanisms_(false), inMechanism_(false), inCompression_(false), inCompressionMethod_(false) {
+StreamFeaturesParser::StreamFeaturesParser() : GenericElementParser<StreamFeatures>(), currentDepth_(0), inMechanisms_(false), inMechanism_(false), inAuthenticationHostname_(false), inCompression_(false), inCompressionMethod_(false) {
 }
 
 void StreamFeaturesParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap&) {
@@ -44,6 +44,11 @@ void StreamFeaturesParser::handleStartElement(const std::string& element, const 
 			inMechanism_ = true;
 			currentText_ = "";
 		}
+		else if (inMechanisms_ && element == "hostname" && ns == "urn:xmpp:domain-based-name:1") {
+			inAuthenticationHostname_ = true;
+			currentText_ = "";
+		}
+
 	}
 	++currentDepth_;
 }
@@ -62,6 +67,10 @@ void StreamFeaturesParser::handleEndElement(const std::string&, const std::strin
 		else if (inMechanism_) {
 			getElementGeneric()->addAuthenticationMechanism(currentText_);
 			inMechanism_ = false;
+		}
+		else if (inAuthenticationHostname_) {
+			getElementGeneric()->setAuthenticationHostname(currentText_);
+			inAuthenticationHostname_ = false;
 		}
 	}
 }

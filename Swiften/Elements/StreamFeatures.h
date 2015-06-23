@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <string>
+#include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
@@ -68,6 +69,14 @@ namespace Swift {
 				return !authenticationMechanisms_.empty();
 			}
 
+			const boost::optional<std::string> getAuthenticationHostname() const {
+				return authenticationHostname_;
+			}
+
+			void setAuthenticationHostname(const boost::optional<std::string> authenticationHostname) {
+				authenticationHostname_ = authenticationHostname;
+			}
+
 			bool hasStreamManagement() const {
 				return hasStreamManagement_;
 			}
@@ -92,5 +101,6 @@ namespace Swift {
 			bool hasSession_;
 			bool hasStreamManagement_;
 			bool hasRosterVersioning_;
+			boost::optional<std::string> authenticationHostname_;
 	};
 }

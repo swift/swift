@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,6 +26,7 @@ namespace Swift {
 			std::string currentText_;
 			bool inMechanisms_;
 			bool inMechanism_;
+			bool inAuthenticationHostname_;
 			bool inCompression_;
 			bool inCompressionMethod_;
 	};

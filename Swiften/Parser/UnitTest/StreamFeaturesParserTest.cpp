@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,6 +16,8 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(StreamFeaturesParserTest);
 		CPPUNIT_TEST(testParse);
 		CPPUNIT_TEST(testParse_Empty);
+		CPPUNIT_TEST(testParse_AuthenticationHostname);
+		CPPUNIT_TEST(testParse_AuthenticationHostnameEmpty);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -49,6 +51,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanisms());
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("DIGEST-MD5"));
 			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("PLAIN"));
+			CPPUNIT_ASSERT(!element->getAuthenticationHostname());
 			CPPUNIT_ASSERT(element->hasStreamManagement());
 			CPPUNIT_ASSERT(element->hasRosterVersioning());
 		}
@@ -64,6 +67,41 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
 			CPPUNIT_ASSERT(!element->hasSession());
 			CPPUNIT_ASSERT(!element->hasResourceBind());
 			CPPUNIT_ASSERT(!element->hasAuthenticationMechanisms());
+		}
+
+		void testParse_AuthenticationHostname() {
+			StreamFeaturesParser testling;
+			ElementParserTester parser(&testling);
+			std::string hostname("auth42.us.example.com");
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<stream:features xmlns:stream='http://etherx.jabber.org/streams'>"
+					"<mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
+						"<mechanism>GSSAPI</mechanism>"
+						"<hostname xmlns=\"urn:xmpp:domain-based-name:1\">auth42.us.example.com</hostname>"
+					"</mechanisms>"
+				"</stream:features>"));
+
+			StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
+			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("GSSAPI"));
+			CPPUNIT_ASSERT_EQUAL(*element->getAuthenticationHostname(), hostname);
+		}
+
+		void testParse_AuthenticationHostnameEmpty() {
+			StreamFeaturesParser testling;
+			ElementParserTester parser(&testling);
+
+			CPPUNIT_ASSERT(parser.parse(
+				"<stream:features xmlns:stream='http://etherx.jabber.org/streams'>"
+					"<mechanisms xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
+						"<mechanism>GSSAPI</mechanism>"
+						"<hostname xmlns=\"urn:xmpp:domain-based-name:1\"></hostname>"
+					"</mechanisms>"
+				"</stream:features>"));
+
+			StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
+			CPPUNIT_ASSERT(element->hasAuthenticationMechanism("GSSAPI"));
+			CPPUNIT_ASSERT(element->getAuthenticationHostname()->empty());
 		}
 };
 
