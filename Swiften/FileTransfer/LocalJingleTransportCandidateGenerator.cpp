@@ -73,13 +73,21 @@ void LocalJingleTransportCandidateGenerator::start() {
 }
 
 void LocalJingleTransportCandidateGenerator::stop() {
+	s5bProxy->onDiscoveredProxiesChanged.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged, this));
+	if (s5bServerPortForwardingUser_) {
+		s5bServerPortForwardingUser_->onSetup.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handlePortForwardingSetup, this, _1));
+		s5bServerPortForwardingUser_.reset();
+	}
 	if (s5bServerResourceUser_) {
 		s5bServerResourceUser_->onSuccessfulInitialized.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleS5BServerInitialized, this, _1));
+		s5bServerResourceUser_.reset();
 	}
-	s5bServerResourceUser_.reset();
 }
 
 void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool success) {
+	if (s5bServerResourceUser_) {
+		s5bServerResourceUser_->onSuccessfulInitialized.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleS5BServerInitialized, this, _1));
+	}
 	triedServerInit_ = true;
 	if (success) {
 		if (options_.isAssistedAllowed()) {
@@ -111,7 +119,9 @@ void LocalJingleTransportCandidateGenerator::handlePortForwardingSetup(bool /* s
 }
 
 void LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged() {
-	s5bProxy->onDiscoveredProxiesChanged.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged, this));
+	if (s5bProxy) {
+		s5bProxy->onDiscoveredProxiesChanged.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleDiscoveredProxiesChanged, this));
+	}
 	triedProxyDiscovery_ = true;
 	checkS5BCandidatesReady();
 }
