@@ -11,6 +11,11 @@ objects = myenv.SwiftenObject([
 		"DIGESTMD5Properties.cpp",
 		"DIGESTMD5ClientAuthenticator.cpp",
 	])
+if myenv["PLATFORM"] == "win32" :
+	objects += myenv.SwiftenObject([
+		"WindowsServicePrincipalName.cpp",
+	])
+
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
 env.Append(UNITTEST_SOURCES = [
@@ -20,3 +25,7 @@ env.Append(UNITTEST_SOURCES = [
 			File("UnitTest/DIGESTMD5PropertiesTest.cpp"),
 			File("UnitTest/DIGESTMD5ClientAuthenticatorTest.cpp"),
 	])
+if myenv["PLATFORM"] == "win32" :
+	env.Append(UNITTEST_SOURCES = [
+			File("UnitTest/WindowsServicePrincipalNameTest.cpp"),
+		])

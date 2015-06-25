@@ -333,7 +333,7 @@ if env.get("coverage", 0) :
 	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 
 if env["PLATFORM"] == "win32" :
-	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32"])
+	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32", "ntdsapi"])
 	env.Append(CCFLAGS = ["/EHsc", "/nologo", "/Zm256"])
 	env.Append(LINKFLAGS = ["/INCREMENTAL:no", "/NOLOGO"])
 	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
