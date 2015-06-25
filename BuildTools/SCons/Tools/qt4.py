@@ -209,7 +209,7 @@ def _detect(env):
 		moc = env.WhereIs('moc-qt4') or env.WhereIs('moc4') or env.WhereIs('moc')
 	if moc:
 		# Test whether the moc command we found is real, or whether it is just the qtchooser dummy.
-		p = subprocess.Popen([moc, "-v"], shell=True, stdin=PIPE, stdout=PIPE, stderr=PIPE)
+		p = subprocess.Popen([moc, "-v"], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		p.communicate()
 		if p.returncode == 0:
 			import sys
@@ -516,11 +516,13 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 			# Check if Qt is registered at pkg-config
 			ret = test_conf.TryAction('pkg-config --exists \'%s\'' % modules_str)[0]
 			if ret != 1:
+				test_conf.Finish()
 				raise Exception("Qt has not been found using pkg-config.")
 				return
 			test_conf.env.ParseConfig("pkg-config --cflags --libs " + modules_str)
 			self.AppendUnique(LIBS=test_conf.env["LIBS"], LIBPATH=test_conf.env["LIBPATH"], CPPPATH=test_conf.env["CPPPATH"])
 			self["QT4_MOCCPPPATH"] = self["CPPPATH"]
+			test_conf.Finish()
 			return
 
 	if sys.platform == "win32" or crosscompiling :
