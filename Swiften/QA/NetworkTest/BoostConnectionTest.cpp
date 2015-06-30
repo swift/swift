@@ -4,21 +4,21 @@
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <string>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <string>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/sleep.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Network/BoostIOServiceThread.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-
-static const unsigned char* address = reinterpret_cast<const unsigned char*>("\x4A\x32\x3e\x31");
 
 using namespace Swift;
 
@@ -37,9 +37,9 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		void setUp() {
 			eventLoop_ = new DummyEventLoop();
 			boostIOServiceThread_ = new BoostIOServiceThread();
-			boostIOService = boost::make_shared<boost::asio::io_service>();
-			disconnected = false;
-			connectFinished = false;
+			boostIOService_ = boost::make_shared<boost::asio::io_service>();
+			disconnected_ = false;
+			connectFinished_ = false;
 		}
 
 		void tearDown() {
@@ -53,14 +53,14 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		void testDestructor() {
 			{
 				BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
-				testling->connect(HostAddressPort(HostAddress(address, 4), 5222));
+				testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
 			}
 		}
 
 		void testDestructor_PendingEvents() {
 			{
 				BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
-				testling->connect(HostAddressPort(HostAddress(address, 4), 5222));
+				testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
 				while (!eventLoop_->hasEvents()) {
 					Swift::sleep(10);
 				}
@@ -73,8 +73,8 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-			testling->connect(HostAddressPort(HostAddress("74.50.62.49"), 5222));
-			while (receivedData.empty()) {
+			testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
+			while (receivedData_.empty()) {
 				Swift::sleep(10);
 				eventLoop_->processEvents();
 			}
@@ -86,8 +86,8 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-			testling->connect(HostAddressPort(HostAddress("2001:470:1f0e:852::2"), 80));
-			while (receivedData.empty()) {
+			testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV6")), 80));
+			while (receivedData_.empty()) {
 				Swift::sleep(10);
 				eventLoop_->processEvents();
 			}
@@ -96,13 +96,13 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
 
 		void testWriteMultipleSimultaniouslyQueuesWrites() {
-			BoostConnection::ref testling(BoostConnection::create(boostIOService, eventLoop_));
+			BoostConnection::ref testling(BoostConnection::create(boostIOService_, eventLoop_));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::handleConnectFinished, this));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-			testling->connect(HostAddressPort(HostAddress("74.50.62.49"), 5222));
-			while (!connectFinished) {
-				boostIOService->run_one();
+			testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
+			while (!connectFinished_) {
+				boostIOService_->run_one();
 				eventLoop_->processEvents();
 			}
 
@@ -111,20 +111,20 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 			testling->write(createSafeByteArray(">"));
 
 			 // Check that we only did one write event, the others are queued
-			/*int runHandlers = */boostIOService->poll();
+			/*int runHandlers = */boostIOService_->poll();
 			// Disabling this test, because poll runns all handlers that are added during poll() as well, so
 			// this test doesn't really work any more. We'll have to trust that things are queued.
 			//CPPUNIT_ASSERT_EQUAL(1, runHandlers);
 			// Process the other events
-			while (receivedData.empty()) {
-				boostIOService->run_one();
+			while (receivedData_.empty()) {
+				boostIOService_->run_one();
 				eventLoop_->processEvents();
 			}
 
 			// Disconnect & clean up
 			testling->disconnect();
-			while (!disconnected) {
-				boostIOService->run_one();
+			while (!disconnected_) {
+				boostIOService_->run_one();
 				eventLoop_->processEvents();
 			}
 		}
@@ -135,24 +135,24 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void handleDataRead(boost::shared_ptr<SafeByteArray> data) {
-			append(receivedData, *data);
+			append(receivedData_, *data);
 		}
 
 		void handleDisconnected() {
-			disconnected = true;
+			disconnected_ = true;
 		}
 
 		void handleConnectFinished() {
-			connectFinished = true;
+			connectFinished_ = true;
 		}
 
 	private:
 		BoostIOServiceThread* boostIOServiceThread_;
-		boost::shared_ptr<boost::asio::io_service> boostIOService;
+		boost::shared_ptr<boost::asio::io_service> boostIOService_;
 		DummyEventLoop* eventLoop_;
-		ByteArray receivedData;
-		bool disconnected;
-		bool connectFinished;
+		ByteArray receivedData_;
+		bool disconnected_;
+		bool connectFinished_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BoostConnectionTest);
