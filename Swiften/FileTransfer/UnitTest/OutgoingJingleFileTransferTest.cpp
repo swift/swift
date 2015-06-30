@@ -10,12 +10,14 @@
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <iostream>
 
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/IDGenerator.h>
@@ -46,8 +48,6 @@
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Network/PlatformNetworkEnvironment.h>
 #include <Swiften/Queries/IQRouter.h>
-
-#include <iostream>
 
 using namespace Swift;
 
@@ -123,10 +123,13 @@ public:
 
 		void tearDown() {
 			delete ftTransportFactory;
+			delete networkEnvironment;
+			delete natTraverser;
 			delete bytestreamServerManager;
 			delete s5bProxy;
 			delete idGen;
 			delete s5bRegistry;
+			delete serverConnectionFactory;
 			delete connectionFactory;
 			delete timerFactory;
 			delete eventLoop;

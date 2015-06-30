@@ -8,13 +8,13 @@
 
 #include <boost/typeof/typeof.hpp>
 
-#include <Swiften/Base/foreach.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/Jingle/JingleSession.h>
-#include <Swiften/FileTransfer/FileTransferTransporter.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/FileTransfer/FileTransferTransporter.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Jingle/JingleSession.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
 
@@ -213,6 +213,7 @@ void JingleFileTransfer::handleTransportInfoReceived(
 }
 
 void JingleFileTransfer::setTransporter(FileTransferTransporter* transporter) {
+	SWIFT_LOG_ASSERT(!this->transporter, error);
 	this->transporter = transporter;
 	localTransportCandidatesGeneratedConnection = transporter->onLocalCandidatesGenerated.connect(
 		boost::bind(&JingleFileTransfer::handleLocalTransportCandidatesGenerated, this, _1, _2, _3));
@@ -220,5 +221,15 @@ void JingleFileTransfer::setTransporter(FileTransferTransporter* transporter) {
 		boost::bind(&JingleFileTransfer::handleRemoteTransportCandidateSelectFinished, this, _1, _2));
 	proxyActivatedConnection = transporter->onProxyActivated.connect(
 		boost::bind(&JingleFileTransfer::handleProxyActivateFinished, this, _1, _2));
+}
+
+void JingleFileTransfer::removeTransporter() {
+	if (transporter) {
+		localTransportCandidatesGeneratedConnection.release();
+		remoteTransportCandidateSelectFinishedConnection.release();
+		proxyActivatedConnection.release();
+		delete transporter;
+		transporter = NULL;
+	}
 }
 

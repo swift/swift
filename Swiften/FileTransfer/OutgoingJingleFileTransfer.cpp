@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (C) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,24 +21,23 @@
 #include <boost/smart_ptr/make_shared.hpp>
 #include <boost/typeof/typeof.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Jingle/JingleContentID.h>
-#include <Swiften/Jingle/JingleSession.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
-#include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
+#include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferTransporter.h>
 #include <Swiften/FileTransfer/FileTransferTransporterFactory.h>
+#include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/TransportSession.h>
-#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Jingle/JingleContentID.h>
+#include <Swiften/Jingle/JingleSession.h>
 #include <Swiften/Network/TimerFactory.h>
-
-#include <Swiften/Base/Log.h>
 
 using namespace Swift;
 
@@ -78,11 +77,16 @@ OutgoingJingleFileTransfer::~OutgoingJingleFileTransfer() {
 	stream->onRead.disconnect(
 			boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 	delete hashCalculator;
+	hashCalculator = NULL;
+	removeTransporter();
 }
 	
 void OutgoingJingleFileTransfer::start() {
 	SWIFT_LOG(debug) << std::endl;
-	if (state != Initial) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+	if (state != Initial) {
+		SWIFT_LOG(warning) << "Incorrect state" << std::endl;
+		return;
+	}
 
 	setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder(), options));
 	setState(GeneratingInitialLocalCandidates);
@@ -290,7 +294,7 @@ void OutgoingJingleFileTransfer::stopAll() {
 		case Finished: SWIFT_LOG(warning) << "Already finished" << std::endl; break;
 	}
 	if (state != Initial) {
-		delete transporter;
+		removeTransporter();
 	}
 }
 

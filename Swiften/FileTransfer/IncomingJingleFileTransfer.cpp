@@ -12,20 +12,20 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Jingle/JingleSession.h>
+#include <Swiften/Elements/JingleFileTransferDescription.h>
+#include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Elements/JingleFileTransferHash.h>
-#include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
 #include <Swiften/FileTransfer/FileTransferTransporter.h>
 #include <Swiften/FileTransfer/FileTransferTransporterFactory.h>
+#include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
+#include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
-#include <Swiften/Elements/JingleFileTransferDescription.h>
+#include <Swiften/Jingle/JingleSession.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Queries/GenericRequest.h>
-#include <Swiften/FileTransfer/TransportSession.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 using namespace Swift;
 
@@ -56,6 +56,8 @@ IncomingJingleFileTransfer::IncomingJingleFileTransfer(
 }
 
 IncomingJingleFileTransfer::~IncomingJingleFileTransfer() {
+	delete hashCalculator;
+	hashCalculator = NULL;
 }
 
 void IncomingJingleFileTransfer::accept(
@@ -334,8 +336,7 @@ void IncomingJingleFileTransfer::stopAll() {
 		case Finished: SWIFT_LOG(warning) << "Already finished" << std::endl; break;
 	}
 	if (state != Initial) {
-		delete transporter;
-		transporter = NULL;
+		removeTransporter();
 	}
 }
 

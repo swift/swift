@@ -10,39 +10,39 @@
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <iostream>
 
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/Elements/IBB.h>
-#include <Swiften/Elements/JingleIBBTransportPayload.h>
-#include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Elements/JingleFileTransferDescription.h>
-#include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>
-#include <Swiften/FileTransfer/ByteArrayWriteBytestream.h>
-#include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
-#include <Swiften/Network/PlatformNetworkEnvironment.h>
-#include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
-#include <Swiften/Jingle/FakeJingleSession.h>
-#include <Swiften/Network/NATTraverser.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/Network/DummyConnectionFactory.h>
-#include <Swiften/Network/DummyConnectionServerFactory.h>
-#include <Swiften/Network/PlatformNATTraversalWorker.h>
-#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
-
-#include <iostream>
+#include <Swiften/Elements/IBB.h>
+#include <Swiften/Elements/JingleFileTransferDescription.h>
+#include <Swiften/Elements/JingleIBBTransportPayload.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/FileTransfer/ByteArrayWriteBytestream.h>
+#include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>
+#include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
+#include <Swiften/Jingle/FakeJingleSession.h>
+#include <Swiften/Network/DummyConnectionFactory.h>
+#include <Swiften/Network/DummyConnectionServerFactory.h>
+#include <Swiften/Network/DummyTimerFactory.h>
+#include <Swiften/Network/NATTraverser.h>
+#include <Swiften/Network/PlatformNATTraversalWorker.h>
+#include <Swiften/Network/PlatformNetworkEnvironment.h>
+#include <Swiften/Network/StaticDomainNameResolver.h>
+#include <Swiften/Queries/IQRouter.h>
 
 using namespace Swift;
 using namespace boost;
@@ -89,8 +89,11 @@ public:
 
 		void tearDown() {
 			delete ftTransporterFactory;
+			delete networkEnvironment;
+			delete natTraverser;
 			delete bytestreamServerManager;
 			delete bytestreamProxy;
+			delete serverConnectionFactory;
 			delete connectionFactory;
 			delete timerFactory;
 			delete bytestreamRegistry;

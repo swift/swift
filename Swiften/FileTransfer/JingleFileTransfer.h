@@ -6,10 +6,11 @@
 
 #pragma once
 
-#include <Swiften/Base/API.h>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
-#include <vector>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
@@ -64,6 +65,7 @@ namespace Swift {
 			typedef std::map<std::string, JingleS5BTransportPayload::Candidate> CandidateMap;
 
 			void setTransporter(FileTransferTransporter* transporter);
+			void removeTransporter();
 			void fillCandidateMap(
 					CandidateMap& map, 
 					const std::vector<JingleS5BTransportPayload::Candidate>&);
