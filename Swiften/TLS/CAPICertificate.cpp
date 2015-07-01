@@ -1,7 +1,7 @@
 /*
- * Copyright (c) 2012 Isode Limited, London, England.
- * Licensed under the simplified BSD license.
- * See Documentation/Licenses/BSD-simplified.txt for more information.
+ * Copyright (c) 2012-2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
  */
 
 #pragma once
@@ -17,6 +17,11 @@
 // Size of the SHA1 hash
 #define SHA1_HASH_LEN 20
 
+#define DEBUG_SCARD_STATUS(function, status) \
+{ \
+	boost::shared_ptr<boost::system::error_code> errorCode = boost::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
+	SWIFT_LOG(debug) << std::hex << function << ": status: 0x" << status << ": " << errorCode->message() << std::endl; \
+}
 
 namespace Swift {
 
@@ -48,11 +53,13 @@ CAPICertificate::~CAPICertificate() {
 	}
 
 	if (cardHandle_) {
-		(void) SCardDisconnect(cardHandle_, SCARD_LEAVE_CARD);
+		LONG result = SCardDisconnect(cardHandle_, SCARD_LEAVE_CARD);
+		DEBUG_SCARD_STATUS("SCardDisconnect", result);
 	}
 
 	if (scardContext_) {
-		SCardReleaseContext(scardContext_);
+		LONG result = SCardReleaseContext(scardContext_);
+		DEBUG_SCARD_STATUS("SCardReleaseContext", result);
 	}
 }
 
@@ -191,6 +198,7 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 		smartCardReaderName_ = smartCardReader;
 
 		LONG result = SCardEstablishContext(SCARD_SCOPE_USER, NULL, NULL, &scardContext_);
+		DEBUG_SCARD_STATUS("SCardEstablishContext", result);
 		if (SCARD_S_SUCCESS == result) {
 			// Initiate monitoring for smartcard ejection
 			smartCardTimer_ = timerFactory_->createTimer(SMARTCARD_EJECTION_CHECK_FREQUENCY_MILLISECONDS);
@@ -223,25 +231,16 @@ static void smartcard_check_status (SCARDCONTEXT hContext,
 		SCARDHANDLE hCardHandle, /* Can be 0 on the first call */
 		SCARDHANDLE* newCardHandle, /* The handle returned */
 		DWORD* pdwState) {
+	DWORD shareMode = SCARD_SHARE_SHARED;
+	DWORD preferredProtocols = SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1;
+	DWORD dwAP;
+	LONG result;
+
 	if (hCardHandle == 0) {
-		DWORD dwAP;
-		LONG result = SCardConnect(hContext, pReader, SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1, &hCardHandle, &dwAP);
+		result = SCardConnect(hContext, pReader, shareMode, preferredProtocols, &hCardHandle, &dwAP);
+		DEBUG_SCARD_STATUS("SCardConnect", result);
 		if (SCARD_S_SUCCESS != result) {
 			hCardHandle = 0;
-			if (SCARD_E_NO_SMARTCARD == result || SCARD_W_REMOVED_CARD == result) {
-				*pdwState = SCARD_ABSENT;
-			}
-			else {
-				*pdwState = SCARD_UNKNOWN;
-			}
-
-			if (newCardHandle == NULL) {
-				(void) SCardDisconnect(hCardHandle, SCARD_LEAVE_CARD);
-				hCardHandle = 0;
-			}
-			else {
-				*newCardHandle = hCardHandle;
-			}
 		}
 	}
 
@@ -249,7 +248,26 @@ static void smartcard_check_status (SCARDCONTEXT hContext,
 	DWORD cch = sizeof(szReader);
 	BYTE bAttr[32];
 	DWORD cByte = 32;
-	LONG result = SCardStatus(hCardHandle, /* Unfortunately we can't use NULL here */ szReader, &cch, pdwState, NULL, (LPBYTE)&bAttr, &cByte);
+	size_t countStatusAttempts = 0;
+
+	while (hCardHandle && (countStatusAttempts < 2)) {
+		*pdwState = SCARD_UNKNOWN;
+
+		result = SCardStatus(hCardHandle, /* Unfortunately we can't use NULL here */ szReader, &cch, pdwState, NULL, (LPBYTE)&bAttr, &cByte);
+		DEBUG_SCARD_STATUS("SCardStatus", result);
+		countStatusAttempts++;
+
+		if ((SCARD_W_RESET_CARD == result) && (countStatusAttempts < 2)) {
+			result = SCardReconnect(hCardHandle, shareMode, preferredProtocols, SCARD_RESET_CARD, &dwAP);
+			DEBUG_SCARD_STATUS("SCardReconnect", result);
+			if (SCARD_S_SUCCESS != result) {
+				break;
+			}
+		}
+		else {
+			break;
+		}
+	}
 
 	if (SCARD_S_SUCCESS != result) {
 		if (SCARD_E_NO_SMARTCARD == result || SCARD_W_REMOVED_CARD == result) {
@@ -261,8 +279,8 @@ static void smartcard_check_status (SCARDCONTEXT hContext,
 	}
 
 	if (newCardHandle == NULL) {
-		(void) SCardDisconnect(hCardHandle, SCARD_LEAVE_CARD);
-		hCardHandle = 0;
+		result = SCardDisconnect(hCardHandle, SCARD_LEAVE_CARD);
+		DEBUG_SCARD_STATUS("SCardDisconnect", result);
 	}
 	else {
 		*newCardHandle = hCardHandle;
