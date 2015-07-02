@@ -15,6 +15,7 @@ if myenv["PLATFORM"] == "win32" :
 	objects += myenv.SwiftenObject([
 		"WindowsServicePrincipalName.cpp",
 		"WindowsAuthentication.cpp",
+		"WindowsGSSAPIClientAuthenticator.cpp"
 	])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
