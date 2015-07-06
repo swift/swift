@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -86,5 +86,14 @@ namespace Swift {
 			 * Its value is a Qt serialized representation.
 			 */
 			static const SettingsProvider::Setting<std::string> TRELLIS_GRID_POSITIONS;
+			/**
+			 * The #DISCONNECT_ON_CARD_REMOVAL setting
+			 * specifies whether or not to sign out the user when
+			 * the smartcard is removed.
+			 *
+			 * If set true Swift will sign out the user when the
+			 * smart card is removed; else not.
+			 */
+			static const SettingsProvider::Setting<bool> DISCONNECT_ON_CARD_REMOVAL;
 	};
 }

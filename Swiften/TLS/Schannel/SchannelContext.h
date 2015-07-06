@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -57,6 +57,8 @@ namespace Swift
 
 		virtual void setCheckCertificateRevocation(bool b);
 
+		virtual void setDisconnectOnCardRemoval(bool b);
+
 	private:
 		void			determineStreamSizes();
 		void			continueHandshake(const SafeByteArray& data);
@@ -105,5 +107,6 @@ namespace Swift
 		boost::shared_ptr<CAPICertificate> userCertificate_;
 		bool checkCertificateRevocation_;
 		bool tls1_0Workaround_;
+		bool disconnectOnCardRemoval_;
 	};
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,5 +18,6 @@ namespace Swift {
 
 			// Not supported
 			virtual void setCheckCertificateRevocation(bool b);
+			virtual void setDisconnectOnCardRemoval(bool b);
 	};
 }

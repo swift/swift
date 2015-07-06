@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,4 +27,5 @@ const SettingsProvider::Setting<std::string> SettingConstants::DICT_FILE("dictFi
 const SettingsProvider::Setting<std::string> SettingConstants::INVITE_AUTO_ACCEPT_MODE("inviteAutoAcceptMode", "presence");
 const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_SIZE("trellisGridSize", "");
 const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_POSITIONS("trellisGridPositions", "");
+const SettingsProvider::Setting<bool> SettingConstants::DISCONNECT_ON_CARD_REMOVAL("disconnectOnCardRemoval", true);
 }

@@ -24,7 +24,10 @@ namespace Swift {
 
 			virtual void setCheckCertificateRevocation(bool b);
 
+			virtual void setDisconnectOnCardRemoval(bool b);
+
 		public:
 			bool checkCertificateRevocation;
+			bool disconnectOnCardRemoval;
 	};
 }

@@ -23,6 +23,7 @@
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Base/Paths.h>
+#include <Swiften/TLS/TLSContextFactory.h>
 
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 #include <SwifTools/AutoUpdater/AutoUpdater.h>
@@ -32,6 +33,7 @@
 #include <Swift/Controllers/Storages/FileStoragesFactory.h>
 #include <Swift/Controllers/Settings/XMLSettingsProvider.h>
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
+#include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/MainController.h>
 #include <Swift/Controllers/ApplicationInfo.h>
 #include <Swift/Controllers/BuildVersion.h>
@@ -143,6 +145,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	settingsHierachy_ = new SettingsProviderHierachy();
 	settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
 	settingsHierachy_->addProviderToTopOfStack(qtSettings_);
+
+	networkFactories_.getTLSContextFactory()->setDisconnectOnCardRemoval(settingsHierachy_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
 
 	std::map<std::string, std::string> emoticons;
 	loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);

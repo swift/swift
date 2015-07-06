@@ -21,7 +21,7 @@ namespace Swift {
 
 //------------------------------------------------------------------------
 
-SchannelContext::SchannelContext(bool tls1_0Workaround) : state_(Start), secContext_(0), myCertStore_(NULL), certStoreName_("MY"), certName_(), smartCardReader_(), checkCertificateRevocation_(true), tls1_0Workaround_(tls1_0Workaround) {
+SchannelContext::SchannelContext(bool tls1_0Workaround) : state_(Start), secContext_(0), myCertStore_(NULL), certStoreName_("MY"), certName_(), smartCardReader_(), checkCertificateRevocation_(true), tls1_0Workaround_(tls1_0Workaround), disconnectOnCardRemoval_(true) {
 	contextFlags_ = ISC_REQ_ALLOCATE_MEMORY |
 				ISC_REQ_CONFIDENTIALITY |
 				ISC_REQ_EXTENDED_ERROR |
@@ -625,7 +625,9 @@ bool SchannelContext::setClientCertificate(CertificateWithKey::ref certificate) 
 
 //------------------------------------------------------------------------
 void SchannelContext::handleCertificateCardRemoved() {
-	indicateError(boost::make_shared<TLSError>(TLSError::CertificateCardRemoved));
+	if (disconnectOnCardRemoval_) {
+		indicateError(boost::make_shared<TLSError>(TLSError::CertificateCardRemoved));
+	}
 }
 
 //------------------------------------------------------------------------
@@ -678,6 +680,10 @@ ByteArray SchannelContext::getFinishMessage() const {
 
 void SchannelContext::setCheckCertificateRevocation(bool b) {
 	checkCertificateRevocation_ = b;
+}
+
+void SchannelContext::setDisconnectOnCardRemoval(bool b) {
+	disconnectOnCardRemoval_ = b;
 }
 
 

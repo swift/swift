@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,8 +20,14 @@ TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&) {
 
 void OpenSSLContextFactory::setCheckCertificateRevocation(bool check) {
 	if (check) {
-		assert(false);
 		SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
+		assert(false);
+	}
+}
+
+void OpenSSLContextFactory::setDisconnectOnCardRemoval(bool check) {
+	if (check) {
+		SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL" << std::endl;
 	}
 }
 

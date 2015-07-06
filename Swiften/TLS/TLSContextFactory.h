@@ -20,5 +20,6 @@ namespace Swift {
 
 			virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions) = 0;
 			virtual void setCheckCertificateRevocation(bool b) = 0;
+			virtual void setDisconnectOnCardRemoval(bool b) = 0;
 	};
 }
