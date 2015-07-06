@@ -418,6 +418,7 @@ static QWebElement findElementWithID(QWebElement document, QString elementName, 
 }
 
 void QtWebKitChatView::setFileTransferProgress(QString id, const int percentageDone) {
+	rememberScrolledToBottom();
 	QWebElement ftElement = findElementWithID(document_, "div", id);
 	if (ftElement.isNull()) {
 		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id!" << std::endl;
@@ -431,6 +432,7 @@ void QtWebKitChatView::setFileTransferProgress(QString id, const int percentageD
 }
 
 void QtWebKitChatView::setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& /* msg */) {
+	rememberScrolledToBottom();
 	QWebElement ftElement = findElementWithID(document_, "div", id);
 	if (ftElement.isNull()) {
 		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
