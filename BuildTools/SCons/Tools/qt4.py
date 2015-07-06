@@ -196,11 +196,11 @@ AutomocStatic = _Automoc('StaticObject')
 
 def _detect(env):
 	"""Not really safe, but fast method to detect the QT library"""
-	try: return env['QTDIR']
-	except KeyError: pass
+	if 'QTDIR' in env :
+		return env['QTDIR']
 
-	try: return os.environ['QTDIR']
-	except KeyError: pass
+	if 'QTDIR' in os.environ :
+		return os.environ['QTDIR']
 
 	moc = None
 	if env["qt5"]:

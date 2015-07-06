@@ -13,5 +13,5 @@ if env["SCONS_STAGE"] == "build" :
 		if "Swift" in env["PROJECTS"] :
 			print "Warning: Swift requires Qt. Not building the Swift Qt application."
 			env["PROJECTS"].remove("Swift")
-	elif env["target"] == "native":
+	elif not GetOption("help") and env["target"] == "native":
 		 SConscript("QtUI/SConscript")
