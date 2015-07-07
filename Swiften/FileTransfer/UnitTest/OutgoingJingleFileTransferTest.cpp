@@ -135,11 +135,11 @@ public:
 
 		void tearDown() {
 			delete ftTransportFactory;
-			delete networkEnvironment;
-			delete natTraverser;
-			delete bytestreamServerManager;
 			delete s5bProxy;
 			delete idGen;
+			delete bytestreamServerManager;
+			delete natTraverser;
+			delete networkEnvironment;
 			delete s5bRegistry;
 			delete serverConnectionFactory;
 			delete connectionFactory;

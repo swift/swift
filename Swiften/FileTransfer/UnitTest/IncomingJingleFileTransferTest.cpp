@@ -89,15 +89,16 @@ public:
 
 		void tearDown() {
 			delete ftTransporterFactory;
-			delete networkEnvironment;
-			delete natTraverser;
-			delete bytestreamServerManager;
 			delete bytestreamProxy;
-			delete serverConnectionFactory;
-			delete connectionFactory;
 			delete timerFactory;
+			delete idGenerator;
+			delete bytestreamServerManager;
+			delete natTraverser;
+			delete networkEnvironment;
 			delete bytestreamRegistry;
 			delete iqRouter;
+			delete serverConnectionFactory;
+			delete connectionFactory;
 			delete stanzaChannel;
 			delete resolver;
 			delete eventLoop;
