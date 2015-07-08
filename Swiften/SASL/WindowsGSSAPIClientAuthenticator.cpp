@@ -14,9 +14,12 @@
 
 namespace Swift {
 
-WindowsGSSAPIClientAuthenticator::WindowsGSSAPIClientAuthenticator(const std::string& hostname, const std::string& domainname) : ClientAuthenticator("GSSAPI"), step_(BuildingSecurityContext), error_(false), haveCredentialsHandle_(false), haveContextHandle_(false), haveCompleteContext_(false) {
+WindowsGSSAPIClientAuthenticator::WindowsGSSAPIClientAuthenticator(const std::string& hostname, const std::string& domainname, int port) : ClientAuthenticator("GSSAPI"), step_(BuildingSecurityContext), error_(false), haveCredentialsHandle_(false), haveContextHandle_(false), haveCompleteContext_(false) {
 	WindowsServicePrincipalName servicePrincipalName(domainname);
 	servicePrincipalName.setInstanceName(hostname);
+	if ((port != -1) && (port != 5222)) {
+		servicePrincipalName.setInstancePort(port);
+	}
 	servicePrincipalNameString_ = servicePrincipalName.toString();
 
 	errorCode_ = acquireCredentialsHandle(&credentialsHandle_);

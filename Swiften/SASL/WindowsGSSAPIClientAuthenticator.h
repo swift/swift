@@ -20,7 +20,7 @@
 namespace Swift {
 	class SWIFTEN_API WindowsGSSAPIClientAuthenticator : public ClientAuthenticator {
 		public:
-			WindowsGSSAPIClientAuthenticator(const std::string& hostname, const std::string& domainname);
+			WindowsGSSAPIClientAuthenticator(const std::string& hostname, const std::string& domainname, int port);
 
 			~WindowsGSSAPIClientAuthenticator();
 

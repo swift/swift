@@ -126,6 +126,18 @@ namespace Swift {
 				certificateTrustChecker = checker;
 			}
 
+			void setSingleSignOn(bool b) {
+				singleSignOn = b;
+			}
+
+			/**
+			 * Sets the port number used in Kerberos authentication
+			 * Does not affect network connectivity.
+			 */
+			void setAuthenticationPort(int i) {
+				authenticationPort = i;
+			}
+
 		public:
 			boost::signal<void ()> onNeedCredentials;
 			boost::signal<void ()> onInitialized;
@@ -183,5 +195,7 @@ namespace Swift {
 			boost::shared_ptr<StanzaAckResponder> stanzaAckResponder_;
 			boost::shared_ptr<Swift::Error> error_;
 			CertificateTrustChecker* certificateTrustChecker;
+			bool singleSignOn;
+			int authenticationPort;
 	};
 }

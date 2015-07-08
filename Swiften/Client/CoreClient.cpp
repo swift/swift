@@ -152,6 +152,8 @@ void CoreClient::bindSessionToStream() {
 	session_->setCertificateTrustChecker(certificateTrustChecker);
 	session_->setUseStreamCompression(options.useStreamCompression);
 	session_->setAllowPLAINOverNonTLS(options.allowPLAINWithoutTLS);
+	session_->setSingleSignOn(options.singleSignOn);
+	session_->setAuthenticationPort(options.manualPort);
 	switch(options.useTLS) {
 		case ClientOptions::UseTLSWhenAvailable:
 			session_->setUseTLS(ClientSession::UseTLSWhenAvailable);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,6 +47,7 @@
 
 #ifdef SWIFTEN_PLATFORM_WIN32
 #include <Swiften/Base/WindowsRegistry.h>
+#include <Swiften/SASL/WindowsGSSAPIClientAuthenticator.h>
 #endif
 
 #define CHECK_STATE_OR_RETURN(a) \
@@ -73,7 +74,9 @@ ClientSession::ClientSession(
 			needAcking(false),
 			rosterVersioningSupported(false),
 			authenticator(NULL),
-			certificateTrustChecker(NULL) {
+			certificateTrustChecker(NULL),
+			singleSignOn(false),
+			authenticationPort(-1) {
 #ifdef SWIFTEN_PLATFORM_WIN32
 if (WindowsRegistry::isFIPSEnabled()) {
 	SWIFT_LOG(info) << "Windows is running in FIPS-140 mode. Some authentication methods will be unavailable." << std::endl;
@@ -204,6 +207,32 @@ void ClientSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
 			stream->writeElement(boost::make_shared<CompressRequest>("zlib"));
 		}
 		else if (streamFeatures->hasAuthenticationMechanisms()) {
+#ifdef SWIFTEN_PLATFORM_WIN32
+			if (singleSignOn) {
+				const boost::optional<std::string> authenticationHostname = streamFeatures->getAuthenticationHostname();
+				bool gssapiSupported = streamFeatures->hasAuthenticationMechanism("GSSAPI") && authenticationHostname && !authenticationHostname->empty();
+
+				if (!gssapiSupported) {
+					finishSession(Error::NoSupportedAuthMechanismsError);
+				}
+				else {
+					WindowsGSSAPIClientAuthenticator* gssapiAuthenticator = new WindowsGSSAPIClientAuthenticator(*authenticationHostname, localJID.getDomain(), authenticationPort);
+					boost::shared_ptr<Error> error = boost::make_shared<Error>(Error::AuthenticationFailedError);
+
+					authenticator = gssapiAuthenticator;
+
+					if (!gssapiAuthenticator->isError()) {
+						state = Authenticating;
+						stream->writeElement(boost::make_shared<AuthRequest>(authenticator->getName(), authenticator->getResponse()));
+					}
+					else {
+						error->errorCode = gssapiAuthenticator->getErrorCode();
+						finishSession(error);
+					}
+				}
+			}
+			else
+#endif
 			if (stream->hasTLSCertificate()) {
 				if (streamFeatures->hasAuthenticationMechanism("EXTERNAL")) {
 					authenticator = new EXTERNALClientAuthenticator();
@@ -298,6 +327,14 @@ void ClientSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
 		if (authenticator->setChallenge(challenge->getValue())) {
 			stream->writeElement(boost::make_shared<AuthResponse>(authenticator->getResponse()));
 		}
+#ifdef SWIFTEN_PLATFORM_WIN32
+		else if (WindowsGSSAPIClientAuthenticator* gssapiAuthenticator = dynamic_cast<WindowsGSSAPIClientAuthenticator*>(authenticator)) {
+			boost::shared_ptr<Error> error = boost::make_shared<Error>(Error::AuthenticationFailedError);
+
+			error->errorCode = gssapiAuthenticator->getErrorCode();
+			finishSession(error);
+		}
+#endif
 		else {
 			finishSession(Error::AuthenticationFailedError);
 		}

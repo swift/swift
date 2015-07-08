@@ -38,6 +38,7 @@ namespace Swift {
 				useStreamResumption(false), 
 				forgetPassword(false), 
 				useAcks(true), 
+				singleSignOn(false),
 				manualHostname(""),
 				manualPort(-1),
 				proxyType(SystemConfiguredProxy),
@@ -91,6 +92,12 @@ namespace Swift {
 		 * Default: true
 		 */
 		bool useAcks;
+
+		/**
+		 * Use Single Sign On.
+		 * Default: false
+		 */
+		bool singleSignOn;
 
 		/**
 		 * The hostname to connect to.
