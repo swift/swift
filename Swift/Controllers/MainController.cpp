@@ -40,6 +40,10 @@
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 
+#ifdef SWIFTEN_PLATFORM_WIN32
+#include <Swiften/SASL/WindowsAuthentication.h>
+#endif
+
 #include <SwifTools/Dock/Dock.h>
 #include <SwifTools/Notifier/TogglableNotifier.h>
 #include <SwifTools/Idle/IdleDetector.h>
@@ -181,6 +185,11 @@ MainController::MainController(
 			std::string certificate = profileSettings.getStringSetting("certificate");
 			std::string jid = profileSettings.getStringSetting("jid");
 			ClientOptions clientOptions = parseClientOptions(profileSettings.getStringSetting("options"));
+
+#ifdef SWIFTEN_PLATFORM_WIN32
+			clientOptions.singleSignOn = settings_->getSetting(SettingConstants::SINGLE_SIGN_ON);
+#endif
+
 			loginWindow_->addAvailableAccount(jid, password, certificate, clientOptions);
 			if (jid == selectedLoginJID) {
 				cachedPassword = password;
@@ -511,10 +520,32 @@ void MainController::handleShowCertificateRequest() {
 
 void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, const ClientOptions& options, bool remember, bool loginAutomatically) {
 	jid_ = JID(username);
-	if (!jid_.isValid() || jid_.getNode().empty()) {
+	if (options.singleSignOn && (!jid_.isValid() || !jid_.getNode().empty())) {
+		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "User address invalid. User address should be of the form 'wonderland.lit'"));
+		loginWindow_->setIsLoggingIn(false);
+	} else if (!options.singleSignOn && (!jid_.isValid() || jid_.getNode().empty())) {
 		loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "User address invalid. User address should be of the form 'alice@wonderland.lit'"));
 		loginWindow_->setIsLoggingIn(false);
 	} else {
+#ifdef SWIFTEN_PLATFORM_WIN32
+		if (options.singleSignOn) {
+			std::string userName;
+			std::string clientName;
+			std::string serverName;
+			boost::shared_ptr<boost::system::error_code> errorCode = getUserNameEx(userName, clientName, serverName);
+
+			if (!errorCode) {
+				/* Create JID using the Windows logon name and user provided domain name */
+				jid_ = JID(clientName, username);
+			}
+			else {
+				loginWindow_->setMessage(str(format(QT_TRANSLATE_NOOP("", "Error obtaining Windows user name (%1%)")) % errorCode->message()));
+				loginWindow_->setIsLoggingIn(false);
+				return;
+			}
+		}
+#endif
+
 		loginWindow_->setMessage("");
 		loginWindow_->setIsLoggingIn(true);
 		profileSettings_ = new ProfileSettingsProvider(username, settings_);
