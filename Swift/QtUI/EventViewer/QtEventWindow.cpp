@@ -1,27 +1,27 @@
-
 /*
  * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/EventViewer/QtEventWindow.h"
+#include <Swift/QtUI/EventViewer/QtEventWindow.h>
 
-#include <QtDebug>
 #include <QBoxLayout>
-#include <QPushButton>
 #include <QMessageBox>
+#include <QPushButton>
+#include <QtDebug>
 
-#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
-#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swift/QtUI/QtSubscriptionRequestWindow.h"
-#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
-#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
-#include "Swift/Controllers/UIEvents/RequestChatUIEvent.h"
-#include "Swift/Controllers/UIEvents/JoinMUCUIEvent.h"
+#include <Swiften/Base/Platform.h>
 
+#include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 
-#include "Swiften/Base/Platform.h"
+#include <Swift/QtUI/QtSubscriptionRequestWindow.h>
 
 namespace Swift {
 
@@ -76,6 +76,7 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event->getEvent());
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event->getEvent());
 	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event->getEvent());
+	boost::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event->getEvent());
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event->getEvent());
 
 	if (messageEvent) {
@@ -90,6 +91,9 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 	} else if (mucInviteEvent) {
 		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(mucInviteEvent->getInviter())));
 		mucInviteEvent->conclude();
+	} else if (incomingFTEvent) {
+		eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(incomingFTEvent->getSender())));
+		incomingFTEvent->conclude();
 	} else {
 		if (errorEvent) {
 			errorEvent->conclude();

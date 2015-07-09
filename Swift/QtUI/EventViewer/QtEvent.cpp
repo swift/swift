@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/EventViewer/QtEvent.h"
+#include <Swift/QtUI/EventViewer/QtEvent.h>
 
-#include <QDateTime>
 #include <QColor>
+#include <QDateTime>
 
-#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
-#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
-#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 
 #include "Swift/QtUI/QtSwiftUtil.h"
 
@@ -53,6 +54,10 @@ QString QtEvent::sender() {
 	if (mucInviteEvent) {
 		return P2QSTRING(mucInviteEvent->getInviter().toString());
 	}
+	boost::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event_);
+	if (incomingFTEvent) {
+		return P2QSTRING(incomingFTEvent->getSender().toString());
+	}
 	return "";
 }
 
@@ -80,6 +85,11 @@ QString QtEvent::text() {
 	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event_);
 	if (mucInviteEvent) {
 		QString message = QString(QObject::tr("%1 has invited you to enter the %2 room.")).arg(P2QSTRING(mucInviteEvent->getInviter().toBare().toString())).arg(P2QSTRING(mucInviteEvent->getRoomJID().toString()));
+		return message;
+	}
+	boost::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event_);
+	if (incomingFTEvent) {
+		QString message = QString(QObject::tr("%1 would like to send a file to you.")).arg(P2QSTRING(incomingFTEvent->getSender().toBare().toString()));
 		return message;
 	}
 	return "";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,11 @@
 
 #include <QStyledItemDelegate>
 
-#include "Swift/QtUI/Roster/DelegateCommons.h"
-#include "Swift/QtUI/EventViewer/TwoLineDelegate.h"
+#include <Swift/QtUI/EventViewer/TwoLineDelegate.h>
+#include <Swift/QtUI/Roster/DelegateCommons.h>
 
 namespace Swift {
-	enum EventType {MessageEventType, SubscriptionEventType, ErrorEventType, MUCInviteEventType};
+	enum EventType {MessageEventType, SubscriptionEventType, ErrorEventType, MUCInviteEventType, IncomingFileTransferEventType};
 	class EventDelegate : public QStyledItemDelegate {
 		Q_OBJECT
 		public:
@@ -26,6 +26,7 @@ namespace Swift {
 			TwoLineDelegate subscriptionDelegate_;
 			TwoLineDelegate errorDelegate_;
 			TwoLineDelegate mucInviteDelegate_;
+			TwoLineDelegate incomingFileTransferDelegate_;
 	};
 }
 

@@ -61,6 +61,7 @@
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
 #include <Swift/Controllers/WhiteboardManager.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
 
 BOOST_CLASS_VERSION(Swift::ChatListWindow::Chat, 1)
 
@@ -929,6 +930,9 @@ void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) 
 	ChatController* chatController = getChatControllerOrCreate(ftc->getOtherParty());
 	chatController->handleNewFileTransferController(ftc);
 	chatController->activateChatWindow();
+	if (ftc->isIncoming()) {
+		eventController_->handleIncomingEvent(boost::make_shared<IncomingFileTransferEvent>(ftc->getOtherParty()));
+	}
 }
 
 void ChatsManager::handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf) {

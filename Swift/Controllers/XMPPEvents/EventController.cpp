@@ -1,20 +1,23 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
-#include <boost/bind.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 #include <algorithm>
 
+#include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+
 #include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
-#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
+#include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 
 namespace Swift {
 
@@ -32,6 +35,7 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(sourceEvent);
 	boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(sourceEvent);
 	boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(sourceEvent);
+	boost::shared_ptr<IncomingFileTransferEvent> incomingFileTransferEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(sourceEvent);
 
 	/* If it's a duplicate subscription request, remove the previous request first */
 	if (subscriptionEvent) {
@@ -46,7 +50,7 @@ void EventController::handleIncomingEvent(boost::shared_ptr<StanzaEvent> sourceE
 		}
 	}
 
-	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent || mucInviteEvent) {
+	if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent || mucInviteEvent || incomingFileTransferEvent) {
 		events_.push_back(sourceEvent);
 		sourceEvent->onConclusion.connect(boost::bind(&EventController::handleEventConcluded, this, sourceEvent));
 		onEventQueueLengthChange(boost::numeric_cast<int>(events_.size()));

@@ -1,25 +1,24 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#ifndef SWIFTEN_EventController_H
-#define SWIFTEN_EventController_H
+#pragma once
 
-
-#include "Swiften/Base/boost_bsignals.h"
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
-#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/boost_bsignals.h>
+
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+#include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
 namespace Swift {
 	typedef std::vector<boost::shared_ptr<StanzaEvent> > EventList;
 	class EventController {
 		public:
-
 			EventController();
 			~EventController();
 
@@ -35,6 +34,3 @@ namespace Swift {
 			EventList events_;
 	};
 }
-#endif
-
-
