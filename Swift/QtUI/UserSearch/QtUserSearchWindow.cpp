@@ -1,36 +1,38 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/UserSearch/QtUserSearchWindow.h"
+#include <Swift/QtUI/UserSearch/QtUserSearchWindow.h>
 
-#include <QItemDelegate>
-#include <QModelIndex>
-#include <QWizardPage>
-#include <QMovie>
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <QItemDelegate>
+#include <QModelIndex>
+#include <QMovie>
+#include <QWizardPage>
+
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+
 #include <Swift/Controllers/UIEvents/AddContactUIEvent.h>
 #include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
-#include <Swift/QtUI/UserSearch/UserSearchModel.h>
-#include <Swift/QtUI/UserSearch/UserSearchDelegate.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtFormResultItemModel.h>
-#include <Swift/QtUI/UserSearch/QtUserSearchFirstPage.h>
-#include <Swift/QtUI/UserSearch/QtUserSearchFirstMultiJIDPage.h>
-#include <Swift/QtUI/UserSearch/QtUserSearchFieldsPage.h>
-#include <Swift/QtUI/UserSearch/QtUserSearchResultsPage.h>
-#include <Swift/QtUI/UserSearch/QtUserSearchDetailsPage.h>
-#include <Swift/QtUI/UserSearch/QtContactListWidget.h>
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
-#include <Swiften/Base/Log.h>
+#include <Swift/QtUI/QtFormResultItemModel.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/UserSearch/QtContactListWidget.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchDetailsPage.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchFieldsPage.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchFirstMultiJIDPage.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchFirstPage.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchResultsPage.h>
+#include <Swift/QtUI/UserSearch/UserSearchDelegate.h>
+#include <Swift/QtUI/UserSearch/UserSearchModel.h>
 
 namespace Swift {
 
@@ -53,7 +55,7 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 	}
 	setWindowTitle(title);
 
-	delegate_ = new UserSearchDelegate();
+	delegate_ = new UserSearchDelegate(this);
 
 	setFirstPage(title);
 	setSecondPage();

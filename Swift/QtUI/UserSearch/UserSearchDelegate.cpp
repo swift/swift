@@ -1,24 +1,24 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QPen>
-#include <QPainter>
-#include <QStyleOptionViewItem>
-#include <QModelIndex>
-#include <QFontMetrics>
+#include <Swift/QtUI/UserSearch/UserSearchDelegate.h>
 
-#include "Swift/QtUI/UserSearch/UserSearchDelegate.h"
-//#include "Swift/QtUI/Roster/GroupItemDelegate.h"
+#include <QFontMetrics>
+#include <QModelIndex>
+#include <QPainter>
+#include <QPen>
+#include <QStyleOptionViewItem>
+
 #include <Swift/Controllers/Chat/UserSearchController.h>
+
 #include <Swift/QtUI/UserSearch/UserSearchModel.h>
-//#include "Swift/QtUI/MUCSearch/MUCSearchServiceItem.h"
 
 namespace Swift {
 
-UserSearchDelegate::UserSearchDelegate() {
+UserSearchDelegate::UserSearchDelegate(QObject* parent) : QStyledItemDelegate(parent) {
 
 }
 
