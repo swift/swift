@@ -46,7 +46,7 @@ QtFileTransferListWidget::QtFileTransferListWidget() : fileTransferOverview(0) {
 	buttonLayout->setContentsMargins(10,0,20,0);
 	buttonLayout->setSpacing(0);
 
-	clearFinished = new QPushButton(tr("Clear Inactive Transfers"), bottom);
+	clearFinished = new QPushButton(tr("Clear all"), bottom);
 	clearFinished->setEnabled(false);
 	connect(clearFinished, SIGNAL(clicked()), this, SLOT(clearInactiveTransfers()));
 	buttonLayout->addWidget(clearFinished);
