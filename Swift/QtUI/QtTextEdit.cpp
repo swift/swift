@@ -152,31 +152,33 @@ void QtTextEdit::contextMenuEvent(QContextMenuEvent* event) {
 void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
 {
 	replaceWordActions_.clear();
-	QAction* insertPoint = menu->actions().first();
-	QTextCursor cursor = cursorForPosition(event->pos());
-	PositionPair wordPosition = getWordFromCursor(cursor.position());
-	if (boost::get<0>(wordPosition) < 0) {
-		// The click was executed outside a spellable word so no
-		// suggestions are necessary
-		return;
-	}
-	cursor.setPosition(boost::get<0>(wordPosition), QTextCursor::MoveAnchor);
-	cursor.setPosition(boost::get<1>(wordPosition), QTextCursor::KeepAnchor);
-	std::vector<std::string> wordList;
-	checker_->getSuggestions(Q2PSTRING(cursor.selectedText()), wordList);
-	if (wordList.size() == 0) {
-		QAction* noSuggestions = new QAction(tr("No Suggestions"), menu);
-		noSuggestions->setDisabled(true);
-		menu->insertAction(insertPoint, noSuggestions);
-	}
-	else {
-		for (std::vector<std::string>::iterator it = wordList.begin(); it != wordList.end(); ++it) {
-			QAction* wordAction = new QAction(it->c_str(), menu);
-			menu->insertAction(insertPoint, wordAction);
-			replaceWordActions_.push_back(wordAction);
+	if (checker_ && highlighter_) {
+		QAction* insertPoint = menu->actions().first();
+		QTextCursor cursor = cursorForPosition(event->pos());
+		PositionPair wordPosition = getWordFromCursor(cursor.position());
+		if (boost::get<0>(wordPosition) < 0) {
+			// The click was executed outside a spellable word so no
+			// suggestions are necessary
+			return;
 		}
+		cursor.setPosition(boost::get<0>(wordPosition), QTextCursor::MoveAnchor);
+		cursor.setPosition(boost::get<1>(wordPosition), QTextCursor::KeepAnchor);
+		std::vector<std::string> wordList;
+		checker_->getSuggestions(Q2PSTRING(cursor.selectedText()), wordList);
+		if (wordList.size() == 0) {
+			QAction* noSuggestions = new QAction(tr("No Suggestions"), menu);
+			noSuggestions->setDisabled(true);
+			menu->insertAction(insertPoint, noSuggestions);
+		}
+		else {
+			for (std::vector<std::string>::iterator it = wordList.begin(); it != wordList.end(); ++it) {
+				QAction* wordAction = new QAction(it->c_str(), menu);
+				menu->insertAction(insertPoint, wordAction);
+				replaceWordActions_.push_back(wordAction);
+			}
+		}
+		menu->insertAction(insertPoint, menu->addSeparator());
 	}
-	menu->insertAction(insertPoint, menu->addSeparator());
 }
 
 
