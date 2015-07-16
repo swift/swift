@@ -13,14 +13,16 @@
 
 #pragma once
 
+#include <map>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxyFinder.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class TimerFactory;
@@ -59,6 +61,9 @@ namespace Swift {
 
 			void queryForProxies();
 
+			void handleProxySessionReady(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, bool error);
+			void handleProxySessionFinished(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, boost::optional<FileTransferError> error);
+
 		private:
 			ConnectionFactory* connectionFactory_;
 			TimerFactory* timerFactory_;
@@ -66,8 +71,9 @@ namespace Swift {
 			IQRouter* iqRouter_;
 			JID serviceRoot_;
 
-			typedef std::map<JID, boost::shared_ptr<SOCKS5BytestreamClientSession> > ProxyJIDClientSessionMap;
-			std::map<std::string, ProxyJIDClientSessionMap> proxySessions_;
+			typedef std::vector<std::pair<JID, boost::shared_ptr<SOCKS5BytestreamClientSession> > > ProxyJIDClientSessionVector;
+			typedef std::map<std::string, ProxyJIDClientSessionVector> ProxySessionsMap;
+			ProxySessionsMap proxySessions_;
 
 			boost::shared_ptr<SOCKS5BytestreamProxyFinder> proxyFinder_;
 
