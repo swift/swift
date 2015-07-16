@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/filesystem/fstream.hpp>
-#include <cassert>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-
 #include <Swiften/FileTransfer/FileReadBytestream.h>
+
+#include <cassert>
+
+#include <boost/filesystem/fstream.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
@@ -20,6 +22,7 @@ FileReadBytestream::FileReadBytestream(const boost::filesystem::path& file) : fi
 FileReadBytestream::~FileReadBytestream() {
 	if (stream) {
 		stream->close();
+		delete stream;
 		stream = NULL;
 	}
 }

@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/filesystem/fstream.hpp>
-#include <cassert>
-#include <boost/numeric/conversion/cast.hpp>
-
 #include <Swiften/FileTransfer/FileWriteBytestream.h>
+
+#include <cassert>
+
+#include <boost/filesystem/fstream.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 namespace Swift {
 
@@ -18,6 +19,7 @@ FileWriteBytestream::FileWriteBytestream(const boost::filesystem::path& file) : 
 FileWriteBytestream::~FileWriteBytestream() {
 	if (stream) {
 		stream->close();
+		delete stream;
 		stream = NULL;
 	}
 }
@@ -37,6 +39,7 @@ void FileWriteBytestream::write(const std::vector<unsigned char>& data) {
 void FileWriteBytestream::close() {
 	if (stream) {
 		stream->close();
+		delete stream;
 		stream = NULL;
 	}
 }
