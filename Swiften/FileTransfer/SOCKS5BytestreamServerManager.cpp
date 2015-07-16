@@ -12,21 +12,21 @@
 
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerResourceUser.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerPortForwardingUser.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerPortForwardingUser.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerResourceUser.h>
 #include <Swiften/Network/ConnectionServer.h>
 #include <Swiften/Network/ConnectionServerFactory.h>
-#include <Swiften/Network/NetworkEnvironment.h>
-#include <Swiften/Network/NATTraverser.h>
-#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/NATTraverser.h>
+#include <Swiften/Network/NetworkEnvironment.h>
 
 using namespace Swift;
 
@@ -194,6 +194,7 @@ void SOCKS5BytestreamServerManager::stop() {
 	}
 	if (server) {
 		server->stop();
+		delete server;
 		server = NULL;
 	}
 	if (connectionServer) {
