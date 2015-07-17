@@ -71,7 +71,6 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 	
 	jingleSessionManager = new JingleSessionManager(getIQRouter());
 	blockListManager = new ClientBlockListManager(getIQRouter());
-	fileTransferManager = NULL;
 
 	whiteboardSessionManager = NULL;
 #ifdef SWIFT_EXPERIMENTAL_WB
@@ -79,6 +78,24 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 #endif
 
 	pubsubManager = new PubSubManagerImpl(getStanzaChannel(), getIQRouter());
+
+#ifdef SWIFT_EXPERIMENTAL_FT
+	fileTransferManager = new FileTransferManagerImpl(
+			getJID(),
+			jingleSessionManager,
+			getIQRouter(),
+			getEntityCapsProvider(),
+			presenceOracle,
+			getNetworkFactories()->getConnectionFactory(),
+			getNetworkFactories()->getConnectionServerFactory(),
+			getNetworkFactories()->getTimerFactory(),
+			getNetworkFactories()->getDomainNameResolver(),
+			getNetworkFactories()->getNetworkEnvironment(),
+			getNetworkFactories()->getNATTraverser(),
+			getNetworkFactories()->getCryptoProvider());
+#else
+	fileTransferManager = new DummyFileTransferManager();
+#endif
 }
 
 Client::~Client() {
@@ -126,24 +143,6 @@ void Client::setSoftwareVersion(const std::string& name, const std::string& vers
 }
 
 void Client::handleConnected() {
-	delete fileTransferManager;
-#ifdef SWIFT_EXPERIMENTAL_FT
-	fileTransferManager = new FileTransferManagerImpl(
-			getJID(), 
-			jingleSessionManager, 
-			getIQRouter(), 
-			getEntityCapsProvider(), 
-			presenceOracle, 
-			getNetworkFactories()->getConnectionFactory(), 
-			getNetworkFactories()->getConnectionServerFactory(), 
-			getNetworkFactories()->getTimerFactory(), 
-			getNetworkFactories()->getDomainNameResolver(),
-			getNetworkFactories()->getNetworkEnvironment(),
-			getNetworkFactories()->getNATTraverser(),
-			getNetworkFactories()->getCryptoProvider());
-#else
-	fileTransferManager = new DummyFileTransferManager();
-#endif
 	discoManager->handleConnected();
 }
 

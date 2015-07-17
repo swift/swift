@@ -12,23 +12,22 @@
 
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <boost/filesystem/path.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Override.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
-#include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Base/IDGenerator.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
-#include <Swiften/Elements/S5BProxyRequest.h>
+#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 
 namespace Swift {
 	class ConnectionFactory;
@@ -39,6 +38,7 @@ namespace Swift {
 	class FileTransferTransporterFactory;
 	class IQRouter;
 	class IncomingFileTransferManager;
+	class JID;
 	class JingleSessionManager;
 	class NATTraverser;
 	class NetworkEnvironment;
@@ -89,8 +89,6 @@ namespace Swift {
 			boost::optional<JID> highestPriorityJIDSupportingFileTransfer(const JID& bareJID);
 			
 		private:
-			JID ownJID;
-			
 			OutgoingFileTransferManager* outgoingFTManager;
 			IncomingFileTransferManager* incomingFTManager;
 			FileTransferTransporterFactory* transporterFactory;

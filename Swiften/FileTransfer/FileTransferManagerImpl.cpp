@@ -13,34 +13,34 @@
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 
 #include <boost/bind.hpp>
-#include <boost/filesystem.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/filesystem.hpp>
 
-#include <Swiften/Base/foreach.h>
+#include "Swiften/Disco/EntityCapsProvider.h"
+#include <Swiften/Base/BoostFilesystemVersion.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Path.h>
-#include "Swiften/Disco/EntityCapsProvider.h"
-#include <Swiften/JID/JID.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
-#include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
-#include <Swiften/FileTransfer/IncomingFileTransferManager.h>
-#include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
-#include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>
+#include <Swiften/FileTransfer/IncomingFileTransferManager.h>
+#include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/ConnectionServerFactory.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NATTraverser.h>
-
-#include <Swiften/Base/BoostFilesystemVersion.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 
 FileTransferManagerImpl::FileTransferManagerImpl(
-		const JID& ownFullJID, 
+		const JID& ownJID,
 		JingleSessionManager* jingleSessionManager, 
 		IQRouter* router, 
 		EntityCapsProvider* capsProvider, 
@@ -52,16 +52,13 @@ FileTransferManagerImpl::FileTransferManagerImpl(
 		NetworkEnvironment* networkEnvironment,
 		NATTraverser* natTraverser,
 		CryptoProvider* crypto) : 
-			ownJID(ownFullJID), 
 			iqRouter(router), 
 			capsProvider(capsProvider), 
 			presenceOracle(presOracle) {
-	assert(!ownFullJID.isBare());
-
 	bytestreamRegistry = new SOCKS5BytestreamRegistry();
 	s5bServerManager = new SOCKS5BytestreamServerManager(
 			bytestreamRegistry, connectionServerFactory, networkEnvironment, natTraverser);
-	bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, domainNameResolver, iqRouter, JID(ownFullJID.getDomain()));
+	bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, domainNameResolver, iqRouter, JID(ownJID.getDomain()));
 
 	transporterFactory = new DefaultFileTransferTransporterFactory(
 			bytestreamRegistry,
@@ -166,8 +163,10 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
 			return OutgoingFileTransfer::ref();
 		}
 	}
-	
-	return outgoingFTManager->createOutgoingFileTransfer(ownJID, receipient, bytestream, fileInfo, config);
+
+	assert(!iqRouter->getJID().isBare());
+
+	return outgoingFTManager->createOutgoingFileTransfer(iqRouter->getJID(), receipient, bytestream, fileInfo, config);
 }
 
 }
