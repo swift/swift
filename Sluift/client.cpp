@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,6 +28,7 @@
 #include <Swiften/Roster/XMPPRosterItem.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
 #include <Sluift/Lua/FunctionRegistration.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/IDGenerator.h>
@@ -728,6 +729,29 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 	SluiftClient* client = getClient(L);
 	std::string node(Lua::checkString(L, 2));
 	client->getClient()->getDiscoManager()->setCapsNode(Lua::checkString(L, 2));
+	return 0;
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+		Client, set_certificate,
+		"Sets a client certificate to use for strong authentication with the server.",
+		"self\n"
+		"file  PKCS #12 file\n"
+		"pwd  passphrase for the certificate private key\n",
+		""
+) {
+	std::string file;
+	std::string pwd;
+	int index = 2;
+	if (!lua_isnoneornil(L, index)) {
+		file = Lua::checkString(L, index);
+		++index;
+		if (!lua_isnoneornil(L, index)) {
+			pwd = Lua::checkString(L, index);
+			++index;
+		}
+	}
+	getClient(L)->getClient()->setCertificate(boost::make_shared<PKCS12Certificate>(file, createSafeByteArray(pwd)));
 	return 0;
 }
 
