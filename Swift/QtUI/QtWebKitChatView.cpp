@@ -668,8 +668,8 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, boo
 	if (senderIsSelf) {
 		// outgoing
 		filePaths_[ft_id] = P2QSTRING(filename);
-		actionText = tr("Send file");
-		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize + ") <br/>" +
+		actionText = tr("Send file: %1 (%2)").arg(P2QSTRING(filename)).arg(formattedFileSize);
+		htmlString = actionText + " <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Set Description"), ButtonFileTransferSetDescription, ft_id) +
@@ -677,8 +677,8 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, boo
 			"</div>";
 	} else {
 		// incoming
-		actionText = tr("Receiving file");
-		htmlString = actionText + ": " + P2QSTRING(filename) + " ( " + formattedFileSize  + ") <br/>" +
+		actionText = tr("Receiving file: %1 (%2)").arg(P2QSTRING(filename)).arg(formattedFileSize);
+		htmlString = actionText + " <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
 				buildChatWindowButton(tr("Accept"), ButtonFileTransferAcceptRequest, ft_id, P2QSTRING(filename)) +
