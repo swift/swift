@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/ChainedConnector.h>
 
-#include <boost/bind.hpp>
 #include <typeinfo>
+
+#include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Network/Connector.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/Connector.h>
 
 using namespace Swift;
 
@@ -30,6 +31,14 @@ ChainedConnector::ChainedConnector(
 			connectionFactories(connectionFactories), 
 			timerFactory(timerFactory), 
 			timeoutMilliseconds(0) {
+}
+
+ChainedConnector::~ChainedConnector() {
+	if (currentConnector) {
+		currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
+		currentConnector->stop();
+		currentConnector.reset();
+	}
 }
 
 void ChainedConnector::setTimeoutMilliseconds(int milliseconds) {

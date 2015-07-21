@@ -1,15 +1,26 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
 
-#include <boost/bind.hpp>
 #include <iostream>
 
+#include <boost/bind.hpp>
+
 namespace Swift {
+
+ClientSessionStanzaChannel::~ClientSessionStanzaChannel() {
+	if (session) {
+		session->onFinished.disconnect(boost::bind(&ClientSessionStanzaChannel::handleSessionFinished, this, _1));
+		session->onStanzaReceived.disconnect(boost::bind(&ClientSessionStanzaChannel::handleStanza, this, _1));
+		session->onStanzaAcked.disconnect(boost::bind(&ClientSessionStanzaChannel::handleStanzaAcked, this, _1));
+		session->onInitialized.disconnect(boost::bind(&ClientSessionStanzaChannel::handleSessionInitialized, this));
+		session.reset();
+	}
+}
 
 void ClientSessionStanzaChannel::setSession(boost::shared_ptr<ClientSession> session) {
 	assert(!this->session);

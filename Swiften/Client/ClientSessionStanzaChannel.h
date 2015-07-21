@@ -12,8 +12,8 @@
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
@@ -22,6 +22,8 @@ namespace Swift {
 	 */
 	class SWIFTEN_API ClientSessionStanzaChannel : public StanzaChannel {
 		public:
+			virtual ~ClientSessionStanzaChannel();
+
 			void setSession(boost::shared_ptr<ClientSession> session);
 
 			void sendIQ(boost::shared_ptr<IQ> iq);
