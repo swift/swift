@@ -1,30 +1,44 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/BoostTimer.h>
 
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/asio.hpp>
 #include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 
 BoostTimer::BoostTimer(int milliseconds, boost::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop) :
-		timeout(milliseconds), ioService(service), timer(*service), eventLoop(eventLoop) {
+		timeout(milliseconds), ioService(service), eventLoop(eventLoop) {
+		timer.reset(new boost::asio::deadline_timer(*service));
+}
+
+BoostTimer::~BoostTimer() {
+	{
+		boost::mutex::scoped_lock lockTimer(timerMutex);
+		timer.reset();
+	}
 }
 
 void BoostTimer::start() {
-	timer.expires_from_now(boost::posix_time::milliseconds(timeout));
-	timer.async_wait(boost::bind(&BoostTimer::handleTimerTick, shared_from_this(), boost::asio::placeholders::error));
+	{
+		boost::mutex::scoped_lock lockTimer(timerMutex);
+		timer->expires_from_now(boost::posix_time::milliseconds(timeout));
+		timer->async_wait(boost::bind(&BoostTimer::handleTimerTick, shared_from_this(), boost::asio::placeholders::error));
+	}
 }
 
 void BoostTimer::stop() {
-	timer.cancel();
+	{
+		boost::mutex::scoped_lock lockTimer(timerMutex);
+		timer->cancel();
+	}
 	eventLoop->removeEventsFromOwner(shared_from_this());
 }
 
