@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,6 +33,11 @@ namespace Swift {
 			}
 
 			void setTimeoutMilliseconds(int milliseconds);
+			/**
+			 * Start the connection attempt.
+			 * Note that after calling this method, the caller is responsible for calling #stop()
+			 * if it wants to cancel it. Not doing so can leak references.
+			 */
 			void start();
 			void stop();
 
