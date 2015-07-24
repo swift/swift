@@ -1,4 +1,4 @@
-import os, re, Version, os.path, time
+import os, re, Version, os.path, time, urllib
 
 Import("env")
 
@@ -541,6 +541,7 @@ if env["SCONS_STAGE"] == "build" :
 		return path[i+1:]
 	swiften_header = "#pragma once\n"
 	swiften_includes = []
+	swiften_public_includes = []
 	top_path = env.Dir("..").abspath
 	for root, dirs, files in os.walk(env.Dir(".").abspath) :
 		if root.endswith("UnitTest") :
@@ -568,6 +569,7 @@ if env["SCONS_STAGE"] == "build" :
 			if file == "Swiften.h" or file == "foreach.h" or file == "Log.h" or file == "format.h" :
 				continue
 			swiften_header += "#include <" + include + ">\n"
+			swiften_public_includes.append(include)
 			swiften_includes.append(include)
 	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))
 	swiften_includes.append("Swiften/Swiften.h")
@@ -577,6 +579,18 @@ if env["SCONS_STAGE"] == "build" :
 	version_header += "#define SWIFTEN_VERSION_STRING \"%s\"\n" % swiften_env["SWIFTEN_VERSION"]
 	swiften_env.WriteVal("Version.h", swiften_env.Value(version_header))
 	swiften_includes.append("Swiften/Version.h")
+
+	# Check headers
+	if env["check_headers"] :
+		test_env = swiften_env.Clone()
+		for header in swiften_public_includes:
+			program_text = "#include <%s>\n" % (header)
+			filename = Dir('#/.sconf_temp').abspath + ("/%s.cpp" % (urllib.quote(header, '') ))
+			text_file = open(filename, "w")
+			text_file.write(program_text)
+			text_file.close()
+			test_obj = test_env.Object(File("#/.sconf_temp/%s.cpp" % (urllib.quote(header, '') )))
+			test_env.Default(test_obj)
 
 	# Install swiften
 	if swiften_env.get("SWIFTEN_INSTALLDIR", "") :

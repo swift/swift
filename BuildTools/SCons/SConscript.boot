@@ -99,6 +99,7 @@ vars.Add(BoolVariable("experimental_ft", "Build experimental file transfer", "ye
 vars.Add(BoolVariable("experimental", "Build experimental features", "no"))
 vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
 vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for DNS lookup.", "no"))
+vars.Add(BoolVariable("check_headers", "Independently build compilation units for all Swiften headers for detecting missing dependencies.", "no"))
 
 vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
 
