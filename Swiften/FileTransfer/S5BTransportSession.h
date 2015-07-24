@@ -6,10 +6,12 @@
 
 #pragma once
 
+#include <boost/bind.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
+#include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
 
 namespace Swift {

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
 

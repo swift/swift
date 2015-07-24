@@ -12,9 +12,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 
 namespace Swift {
 	class SWIFTEN_API WhiteboardPolygonElement : public WhiteboardElement {

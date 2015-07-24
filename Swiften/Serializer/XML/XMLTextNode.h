@@ -6,9 +6,11 @@
 
 #pragma once
 
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Base/String.h>
+#include <Swiften/Serializer/XML/XMLNode.h>
 
 namespace Swift {
 	class SWIFTEN_API XMLTextNode : public XMLNode {

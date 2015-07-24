@@ -1,14 +1,17 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/API.h>
-#include <boost/bind.hpp>
 #include <algorithm>
+#include <vector>
+
+#include <boost/bind.hpp>
+
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	template<typename T>
