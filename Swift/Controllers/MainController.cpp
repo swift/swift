@@ -366,7 +366,7 @@ void MainController::handleConnected() {
 		contactSuggesterWithoutRoster_ = new ContactSuggester();
 		contactSuggesterWithRoster_ = new ContactSuggester();
 
-		userSearchControllerInvite_ = new UserSearchController(UserSearchController::InviteToChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
+		userSearchControllerInvite_ = new UserSearchController(UserSearchController::InviteToChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle(), profileSettings_);
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 		historyController_ = new HistoryController(storages_->getHistoryStorage());
 		historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
@@ -405,8 +405,8 @@ void MainController::handleConnected() {
 		client_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 		client_->getDiscoManager()->setDiscoInfo(discoInfo);
 
-		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
-		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithoutRoster_, client_->getAvatarManager(), client_->getPresenceOracle());
+		userSearchControllerChat_ = new UserSearchController(UserSearchController::StartChat, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithRoster_, client_->getAvatarManager(), client_->getPresenceOracle(), profileSettings_);
+		userSearchControllerAdd_ = new UserSearchController(UserSearchController::AddContact, jid_, uiEventStream_, client_->getVCardManager(), uiFactory_, client_->getIQRouter(), rosterController_, contactSuggesterWithoutRoster_, client_->getAvatarManager(), client_->getPresenceOracle(), profileSettings_);
 		adHocManager_ = new AdHocManager(JID(boundJID_.getDomain()), uiFactory_, client_->getIQRouter(), uiEventStream_, rosterController_->getWindow());
 
 		chatsManager_->onImpromptuMUCServiceDiscovered.connect(boost::bind(&UserSearchController::setCanInitiateImpromptuMUC, userSearchControllerChat_, _1));

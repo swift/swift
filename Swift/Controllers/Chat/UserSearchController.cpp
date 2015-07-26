@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,32 +10,39 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
-#include <Swiften/Disco/DiscoServiceWalker.h>
-#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/Presence/PresenceOracle.h>
-#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/VCards/VCardManager.h>
+
 #include <Swift/Controllers/ContactEditController.h>
+#include <Swift/Controllers/ContactSuggester.h>
 #include <Swift/Controllers/Intl.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
+#include <Swift/Controllers/ProfileSettingsProvider.h>
+#include <Swift/Controllers/Roster/RosterController.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChatWithUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestInviteToMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindowFactory.h>
-#include <Swift/Controllers/Roster/RosterController.h>
-#include <Swift/Controllers/ContactSuggester.h>
 
 namespace Swift {
-UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* factory, IQRouter* iqRouter, RosterController* rosterController, ContactSuggester* contactSuggester, AvatarManager* avatarManager, PresenceOracle* presenceOracle) : type_(type), jid_(jid), uiEventStream_(uiEventStream), vcardManager_(vcardManager), factory_(factory), iqRouter_(iqRouter), rosterController_(rosterController), contactSuggester_(contactSuggester), avatarManager_(avatarManager), presenceOracle_(presenceOracle) {
+
+static const std::string SEARCHED_DIRECTORIES = "searchedDirectories";
+
+UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* factory, IQRouter* iqRouter, RosterController* rosterController, ContactSuggester* contactSuggester, AvatarManager* avatarManager, PresenceOracle* presenceOracle, ProfileSettingsProvider* settings) : type_(type), jid_(jid), uiEventStream_(uiEventStream), vcardManager_(vcardManager), factory_(factory), iqRouter_(iqRouter), rosterController_(rosterController), contactSuggester_(contactSuggester), avatarManager_(avatarManager), presenceOracle_(presenceOracle), settings_(settings) {
 	uiEventStream_->onUIEvent.connect(boost::bind(&UserSearchController::handleUIEvent, this, _1));
 	vcardManager_->onVCardChanged.connect(boost::bind(&UserSearchController::handleVCardChanged, this, _1, _2));
 	avatarManager_->onAvatarChanged.connect(boost::bind(&UserSearchController::handleAvatarChanged, this, _1));
 	presenceOracle_->onPresenceChange.connect(boost::bind(&UserSearchController::handlePresenceChanged, this, _1));
 	window_ = NULL;
 	discoWalker_ = NULL;
+	loadSavedDirectories();
 }
 
 UserSearchController::~UserSearchController() {
@@ -94,6 +101,7 @@ void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
 	if (handle) {
 		initializeUserWindow();
 		window_->show();
+		window_->addSavedServices(savedDirectories_);
 		if (addUserRequest) {
 			const std::string& name = addUserRequest->getPredefinedName();
 			const JID& jid = addUserRequest->getPredefinedJID();
@@ -159,6 +167,7 @@ void UserSearchController::handleFormResponse(boost::shared_ptr<SearchPayload> f
 }
 
 void UserSearchController::handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid) {
+	addToSavedDirectories(jid);
 	boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Set, jid, fields, iqRouter_));
 	searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleSearchResponse, this, _1, _2));
 	searchRequest->send();
@@ -339,6 +348,39 @@ void UserSearchController::initializeUserWindow() {
 		window_->setSelectedService(JID(jid_.getDomain()));
 		window_->clear();
 	}
+}
+
+void UserSearchController::loadSavedDirectories() {
+	savedDirectories_.clear();
+	foreach (std::string stringItem, String::split(settings_->getStringSetting(SEARCHED_DIRECTORIES), '\n')) {
+		if(!stringItem.empty()) {
+			savedDirectories_.push_back(JID(stringItem));
+		}
+	}
+}
+
+void UserSearchController::addToSavedDirectories(const JID& jid) {
+	if (!jid.isValid()) {
+		return;
+	}
+
+	savedDirectories_.erase(std::remove(savedDirectories_.begin(), savedDirectories_.end(), jid), savedDirectories_.end());
+	savedDirectories_.insert(savedDirectories_.begin(), jid);
+
+	std::string collapsed;
+	int i = 0;
+	foreach (JID jidItem, savedDirectories_) {
+		if (i >= 15) {
+			break;
+		}
+		if (!collapsed.empty()) {
+			collapsed += "\n";
+		}
+		collapsed += jidItem.toString();
+		++i;
+	}
+	settings_->storeString(SEARCHED_DIRECTORIES, collapsed);
+	window_->addSavedServices(savedDirectories_);
 }
 
 }

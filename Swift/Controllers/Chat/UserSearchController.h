@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <map>
+#include <string>
+#include <vector>
+
 #include <boost/shared_ptr.hpp>
 
-#include <map>
-#include <vector>
-#include <string>
-
-#include <Swift/Controllers/Contact.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
@@ -21,6 +20,8 @@
 #include <Swiften/Elements/SearchPayload.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/Contact.h>
 
 namespace Swift {
 	class UIEventStream;
@@ -34,6 +35,7 @@ namespace Swift {
 	class ContactSuggester;
 	class AvatarManager;
 	class PresenceOracle;
+	class ProfileSettingsProvider;
 
 	class UserSearchResult {
 		public:
@@ -48,7 +50,7 @@ namespace Swift {
 	class UserSearchController {
 		public:
 			enum Type {AddContact, StartChat, InviteToChat};
-			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController, ContactSuggester* contactSuggester, AvatarManager* avatarManager, PresenceOracle* presenceOracle);
+			UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController, ContactSuggester* contactSuggester, AvatarManager* avatarManager, PresenceOracle* presenceOracle, ProfileSettingsProvider* settings);
 			~UserSearchController();
 
 			UserSearchWindow* getUserSearchWindow();
@@ -74,6 +76,9 @@ namespace Swift {
 			void endDiscoWalker();
 			void initializeUserWindow();
 
+			void loadSavedDirectories();
+			void addToSavedDirectories(const JID& jid);
+
 		private:
 			Type type_;
 			JID jid_;
@@ -88,5 +93,7 @@ namespace Swift {
 			ContactSuggester* contactSuggester_;
 			AvatarManager* avatarManager_;
 			PresenceOracle* presenceOracle_;
+			std::vector<JID> savedDirectories_;
+			ProfileSettingsProvider* settings_;
 	};
 }
