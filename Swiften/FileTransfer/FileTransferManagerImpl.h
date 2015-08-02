@@ -65,7 +65,7 @@ namespace Swift {
 					NetworkEnvironment* networkEnvironment,
 					NATTraverser* natTraverser,
 					CryptoProvider* crypto);
-			~FileTransferManagerImpl();
+			virtual ~FileTransferManagerImpl();
 			
 			OutgoingFileTransfer::ref createOutgoingFileTransfer(
 					const JID& to, 
