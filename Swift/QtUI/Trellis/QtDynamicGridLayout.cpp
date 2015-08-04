@@ -315,94 +315,102 @@ void QtDynamicGridLayout::setDimensions(const QSize& dim) {
 
 void QtDynamicGridLayout::moveCurrentTabRight() {
 	int index = currentIndex();
-	int tabIndex = -1;
-	QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
-	assert(tabWidget);
-	int newTabIndex = (tabIndex + 1) % tabWidget->count();
-	moveTab(tabWidget, tabIndex, newTabIndex);
+	if (index >= 0) {
+		int tabIndex = -1;
+		QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
+		assert(tabWidget);
+		int newTabIndex = (tabIndex + 1) % tabWidget->count();
+		moveTab(tabWidget, tabIndex, newTabIndex);
+	}
 }
 
 void QtDynamicGridLayout::moveCurrentTabLeft() {
 	int index = currentIndex();
-	int tabIndex = -1;
-	QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
-	assert(tabWidget);
-	int newTabIndex = (tabWidget->count() + tabIndex - 1) % tabWidget->count();
-	moveTab(tabWidget, tabIndex, newTabIndex);
+	if (index >= 0) {
+		int tabIndex = -1;
+		QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
+		assert(tabWidget);
+		int newTabIndex = (tabWidget->count() + tabIndex - 1) % tabWidget->count();
+		moveTab(tabWidget, tabIndex, newTabIndex);
+	}
 }
 
 void QtDynamicGridLayout::moveCurrentTabToNextGroup() {
 	int index = currentIndex();
-	int tabIndex = -1;
-	QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
+	if (index >= 0) {
+		int tabIndex = -1;
+		QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
 
-	int row = -1;
-	int col = -1;
-	int tmp;
-	gridLayout_->getItemPosition(gridLayout_->indexOf(tabWidget), &row, &col, &tmp, &tmp);
+		int row = -1;
+		int col = -1;
+		int tmp;
+		gridLayout_->getItemPosition(gridLayout_->indexOf(tabWidget), &row, &col, &tmp, &tmp);
 
-	// calculate next cell
-	col++;
-	if (!(col < gridLayout_->columnCount())) {
-		col = 0;
-		row++;
-		if (!(row < gridLayout_->rowCount())) {
-			row = 0;
+		// calculate next cell
+		col++;
+		if (!(col < gridLayout_->columnCount())) {
+			col = 0;
+			row++;
+			if (!(row < gridLayout_->rowCount())) {
+				row = 0;
+			}
 		}
+
+		QtTabWidget* targetTabWidget = dynamic_cast<QtTabWidget*>(gridLayout_->itemAtPosition(row, col)->widget());
+		assert(tabWidget);
+		assert(targetTabWidget);
+
+		// fetch tab information
+		QWidget* tab = tabWidget->widget(tabIndex);
+		QString tabText = tabWidget->tabText(tabIndex);
+
+		// move tab
+		tab->blockSignals(true);
+		targetTabWidget->addTab(tab, tabText);
+		tab->blockSignals(false);
+		tab->setFocus(Qt::TabFocusReason);
+
+		updateTabPositions();
 	}
-
-	QtTabWidget* targetTabWidget = dynamic_cast<QtTabWidget*>(gridLayout_->itemAtPosition(row, col)->widget());
-	assert(tabWidget);
-	assert(targetTabWidget);
-
-	// fetch tab information
-	QWidget* tab = tabWidget->widget(tabIndex);
-	QString tabText = tabWidget->tabText(tabIndex);
-
-	// move tab
-	tab->blockSignals(true);
-	targetTabWidget->addTab(tab, tabText);
-	tab->blockSignals(false);
-	tab->setFocus(Qt::TabFocusReason);
-
-	updateTabPositions();
 }
 
 void QtDynamicGridLayout::moveCurrentTabToPreviousGroup() {
 	int index = currentIndex();
-	int tabIndex = -1;
-	QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
+	if (index >= 0) {
+		int tabIndex = -1;
+		QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
 
-	int row = -1;
-	int col = -1;
-	int tmp;
-	gridLayout_->getItemPosition(gridLayout_->indexOf(tabWidget), &row, &col, &tmp, &tmp);
+		int row = -1;
+		int col = -1;
+		int tmp;
+		gridLayout_->getItemPosition(gridLayout_->indexOf(tabWidget), &row, &col, &tmp, &tmp);
 
-	// calculate next cell
-	col--;
-	if (col < 0) {
-		col = gridLayout_->columnCount() - 1;
-		row--;
-		if (row < 0) {
-			row = gridLayout_->rowCount() - 1;
+		// calculate next cell
+		col--;
+		if (col < 0) {
+			col = gridLayout_->columnCount() - 1;
+			row--;
+			if (row < 0) {
+				row = gridLayout_->rowCount() - 1;
+			}
 		}
+
+		QtTabWidget* targetTabWidget = dynamic_cast<QtTabWidget*>(gridLayout_->itemAtPosition(row, col)->widget());
+		assert(tabWidget);
+		assert(targetTabWidget);
+
+		// fetch tab information
+		QWidget* tab = tabWidget->widget(tabIndex);
+		QString tabText = tabWidget->tabText(tabIndex);
+
+		// move tab
+		tab->blockSignals(true);
+		targetTabWidget->addTab(tab, tabText);
+		tab->blockSignals(false);
+		tab->setFocus(Qt::TabFocusReason);
+
+		updateTabPositions();
 	}
-
-	QtTabWidget* targetTabWidget = dynamic_cast<QtTabWidget*>(gridLayout_->itemAtPosition(row, col)->widget());
-	assert(tabWidget);
-	assert(targetTabWidget);
-
-	// fetch tab information
-	QWidget* tab = tabWidget->widget(tabIndex);
-	QString tabText = tabWidget->tabText(tabIndex);
-
-	// move tab
-	tab->blockSignals(true);
-	targetTabWidget->addTab(tab, tabText);
-	tab->blockSignals(false);
-	tab->setFocus(Qt::TabFocusReason);
-
-	updateTabPositions();
 }
 
 void QtDynamicGridLayout::handleTabCloseRequested(int index) {
