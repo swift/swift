@@ -689,7 +689,6 @@ void ChatsManager::setOnline(bool enabled) {
 		}
 	}
 	if (!enabled) {
-		chatListWindow_->setBookmarksEnabled(false);
 		markAllRecentsOffline();
 	} else {
 		setupBookmarks();
@@ -700,6 +699,9 @@ void ChatsManager::setOnline(bool enabled) {
 		localMUCServiceFinderWalker_->beginWalk();
 	}
 
+	if (chatListWindow_) {
+		chatListWindow_->setBookmarksEnabled(enabled);
+	}
 }
 
 void ChatsManager::handleChatRequest(const std::string &contact) {
