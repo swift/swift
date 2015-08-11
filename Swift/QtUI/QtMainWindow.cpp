@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -264,7 +264,7 @@ void QtMainWindow::handleChatCountUpdated(int count) {
 	QColor chatTabColor = (count == 0) ? QColor() : QColor(255, 0, 0); // invalid resets to default
 	int chatIndex = 1;
 	tabs_->tabBar()->setTabTextColor(chatIndex, chatTabColor);
-	QString text = tr("&Chats");
+	QString text = tr("C&hats");
 	if (count > 0) {
 		text += QString(" (%1)").arg(count);
 	}
