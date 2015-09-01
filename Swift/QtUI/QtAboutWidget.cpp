@@ -1,20 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/QtAboutWidget.h"
+#include <Swift/QtUI/QtAboutWidget.h>
 
 #include <QCoreApplication>
+#include <QFile>
 #include <QIcon>
 #include <QLabel>
-#include <QVBoxLayout>
-#include <QtGlobal>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QFile>
 #include <QTextStream>
+#include <QVBoxLayout>
+#include <QtGlobal>
+
+#include <Swiften/Base/Platform.h>
 
 namespace Swift {
 
@@ -50,11 +52,26 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 		mainLayout->addWidget(new QLabel(QString("<center><font size='-1'>") + QString(tr("Using the English translation by\n%1")).arg(QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR")).replace("\n", "<br/>") + "</font></center>", this));
 	}
 	QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_LICENSE", "This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: 'This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php'");
-
+#if defined(SWIFTEN_PLATFORM_WINDOWS) || defined(SWIFTEN_PLATFORM_MACOSX)
 	QPushButton* licenseButton = new QPushButton(tr("View License"), this);
 	mainLayout->addWidget(licenseButton);
 	connect(licenseButton, SIGNAL(clicked()), this, SLOT(handleLicenseClicked()));
+#else
+	// Some Linux desktops have dialog window decorations without close window buttons.
+	// This code adds a dedicated button to close the about window dialog.
+	QHBoxLayout* buttonLayout = new QHBoxLayout();
+	mainLayout->addLayout(buttonLayout);
 
+	QPushButton* licenseButton = new QPushButton(tr("View License"), this);
+	buttonLayout->addWidget(licenseButton);
+	connect(licenseButton, SIGNAL(clicked()), this, SLOT(handleLicenseClicked()));
+
+	buttonLayout->addItem(new QSpacerItem(20,20));
+
+	QPushButton* closeButton = new QPushButton(tr("Close"), this);
+	buttonLayout->addWidget(closeButton);
+	connect(closeButton, SIGNAL(clicked()), this, SLOT(accept()));
+#endif
 	setFixedSize(minimumSizeHint());
 }
 
