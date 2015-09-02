@@ -4,16 +4,21 @@ IFS='
 '
 
 echo "Checking tabs & copyrights ..."
+for file in $(git diff --cached --diff-filter=A --name-only); do
+	if [ ! -f $file ]; then
+		continue
+	fi
+	if ! BuildTools/Copyrighter.py check-copyright $file; then
+		echo "ERROR: '$file' has a copyright error. Aborting commit."
+		exit -1
+	fi
+done
 for file in $(git diff --cached --name-only); do
 	if [ ! -f $file ]; then
 		continue
 	fi
 	if ! BuildTools/CheckTabs.py $file; then
 		echo "ERROR: '$file' contains expanded tabs. Aborting commit."
-		exit -1
-	fi
-	if ! BuildTools/Copyrighter.py check-copyright $file; then
-		echo "ERROR: '$file' has a copyright error. Aborting commit."
 		exit -1
 	fi
 	if ! BuildTools/CheckHeaders.py $file; then
