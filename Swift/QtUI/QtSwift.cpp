@@ -56,6 +56,8 @@
 #include <SwifTools/Notifier/GrowlNotifier.h>
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 #include <Swift/QtUI/FreeDesktopNotifier.h>
+#elif defined(SWIFTEN_PLATFORM_MACOSX)
+#include <SwifTools/Notifier/NotificationCenterNotifier.h>
 #else
 #include <SwifTools/Notifier/NullNotifier.h>
 #endif
@@ -196,6 +198,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 	notifier_ = new WindowsNotifier(SWIFT_APPLICATION_NAME, applicationPathProvider_->getResourcePath("/images/logo-icon-32.png"), systemTray->getQSystemTrayIcon());
 #elif defined(SWIFTEN_PLATFORM_LINUX)
 	notifier_ = new FreeDesktopNotifier(SWIFT_APPLICATION_NAME);
+#elif defined(SWIFTEN_PLATFORM_MACOSX)
+	notifier_ = new NotificationCenterNotifier();
 #else
 	notifier_ = new NullNotifier();
 #endif

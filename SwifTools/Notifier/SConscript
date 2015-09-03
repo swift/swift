@@ -11,6 +11,12 @@ if swiftools_env.get("HAVE_GROWL", False) :
 			"GrowlNotifier.mm",
 			"GrowlNotifierDelegate.mm",
 		]
+elif myenv["PLATFORM"] == "darwin" :
+	sources += [
+			"NotificationCenterNotifier.mm",
+			"NotificationCenterNotifierDelegate.mm",
+		]
+
 if swiftools_env.get("HAVE_SNARL", False) :
 	myenv.MergeFlags(myenv["SNARL_FLAGS"])
 	sources += [
