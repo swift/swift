@@ -257,35 +257,6 @@
           </widget>
          </item>
          <item>
-          <widget class="Swift::QtResizableLineEdit" name="lineEditSUFFIX">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string>Suffix</string>
-           </property>
-           <property name="readOnly">
-            <bool>false</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="Swift::QtResizableLineEdit" name="lineEditFAMILY">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="toolTip">
-            <string>Last Name</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <widget class="Swift::QtResizableLineEdit" name="lineEditMIDDLE">
            <property name="enabled">
             <bool>true</bool>
@@ -304,6 +275,35 @@
            </property>
            <property name="frame">
             <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Swift::QtResizableLineEdit" name="lineEditFAMILY">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Last Name</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Swift::QtResizableLineEdit" name="lineEditSUFFIX">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Suffix</string>
+           </property>
+           <property name="readOnly">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -349,6 +349,15 @@
    <header>Swift/QtUI/QtElidingLabel.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>lineEditFN</tabstop>
+  <tabstop>lineEditNICKNAME</tabstop>
+  <tabstop>lineEditPREFIX</tabstop>
+  <tabstop>lineEditGIVEN</tabstop>
+  <tabstop>lineEditMIDDLE</tabstop>
+  <tabstop>lineEditFAMILY</tabstop>
+  <tabstop>lineEditSUFFIX</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
