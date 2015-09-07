@@ -21,10 +21,15 @@ mkdir -p $WC_DIR
 hdiutil attach "$WC_DMG" -noautoopen -quiet -mountpoint "$WC_DIR"
 ditto -rsrc "$APP" "$WC_DIR"/`basename $APP`
 $QTDIR/bin/macdeployqt "$WC_DIR"/`basename $APP` -no-strip 
+
 # The bearer plugins of Qt5 cannot be disabled by an application. 
 # They will constantly ask the OS to scan for available wireless networks, unrelated to actual API calls.
 # This results in unnessecary resource load, so we remove the plugins from our packages.
 rm "$WC_DIR"/`basename $APP`/Contents/PlugIns/bearer/*.dylib
+
+# Remove debugging symbols from the application bundle
+rm -rf "$WC_DIR"/`basename $APP`/Contents/MacOS/*.dSYM
+
 hdiutil detach "$WC_DIR" -quiet -force
 rm -f $TARGET
 hdiutil convert "$WC_DMG" -quiet -format UDZO -imagekey zlib-level=9 -o "$TARGET"
