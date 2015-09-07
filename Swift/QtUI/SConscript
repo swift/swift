@@ -205,6 +205,9 @@ sources = [
 	"Trellis/QtGridSelectionDialog.cpp"
 ]
 
+if env["PLATFORM"] == "win32" :
+	sources.extend(["qrc_SwiftWindows.cc"])
+
 # QtVCardWidget
 sources.extend([
 	"QtVCardWidget/QtCloseButton.cpp",
@@ -299,6 +302,9 @@ myenv.Uic4("QtBlockListEditorWindow.ui")
 myenv.Uic4("QtSpellCheckerWindow.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
+
+if env["PLATFORM"] == "win32" :
+	myenv.Qrc("SwiftWindows.qrc")
 
 # Resources
 commonResources = {
