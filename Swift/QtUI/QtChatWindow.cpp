@@ -49,6 +49,7 @@
 
 #include <Swift/QtUI/QtAddBookmarkWindow.h>
 #include <Swift/QtUI/QtEditBookmarkWindow.h>
+#include <Swift/QtUI/QtEmoticonsGrid.h>
 #include <Swift/QtUI/QtPlainChatView.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
@@ -645,6 +646,7 @@ void QtChatWindow::handleEmoticonsButtonClicked() {
 
 void QtChatWindow::handleEmoticonClicked(QString emoticonAsText) {
 	input_->textCursor().insertText(emoticonAsText);
+	input_->setFocus();
 }
 
 void QtChatWindow::handleTextInputReceivedFocus() {

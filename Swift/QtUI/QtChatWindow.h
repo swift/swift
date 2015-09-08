@@ -20,7 +20,6 @@
 
 #include <Swift/QtUI/ChatSnippet.h>
 #include <Swift/QtUI/QtAffiliationEditor.h>
-#include <Swift/QtUI/QtEmoticonsGrid.h>
 #include <Swift/QtUI/QtMUCConfigurationWindow.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabbable.h>
@@ -41,6 +40,7 @@ namespace Swift {
 	class UIEventStream;
 	class QtChatWindowJSBridge;
 	class SettingsProvider;
+	class QtEmoticonsGrid;
 
 	class LabelModel : public QAbstractListModel {
 		Q_OBJECT
