@@ -608,7 +608,7 @@ void MainController::performLoginFromCachedCredentials() {
 		presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
 		eventNotifier_ = new EventNotifier(eventController_, notifier_, client_->getAvatarManager(), client_->getNickResolver());
 		eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
-		if (certificate_ && !certificate_->isNull()) {
+		if (certificate_) {
 			client_->setCertificate(certificate_);
 		}
 		boost::shared_ptr<Presence> presence(new Presence());
@@ -664,7 +664,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
 			case ClientError::SessionStartError: message = QT_TRANSLATE_NOOP("", "Error starting session"); break;
 			case ClientError::StreamError: message = QT_TRANSLATE_NOOP("", "Stream error"); break;
 			case ClientError::TLSError: message = QT_TRANSLATE_NOOP("", "Encryption error"); break;
-			case ClientError::ClientCertificateLoadError: message = QT_TRANSLATE_NOOP("", "Error loading certificate (Invalid password?)"); break;
+			case ClientError::ClientCertificateLoadError: message = QT_TRANSLATE_NOOP("", "Error loading certificate (Invalid file or password?)"); break;
 			case ClientError::ClientCertificateError: message = QT_TRANSLATE_NOOP("", "Certificate not authorized"); break;
 			case ClientError::CertificateCardRemoved: message = QT_TRANSLATE_NOOP("", "Certificate card removed"); forceSignout = true; break;
 

@@ -190,11 +190,18 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 	}
 	else {
 		assert(!connection_);
+		assert(!sessionStream_);
+
+		if (certificate_ && certificate_->isNull()) {
+			//certificate cannot be read so do not initailise session
+			onDisconnected(boost::optional<ClientError>(ClientError::ClientCertificateLoadError));
+			return;
+		}
+
 		connection_ = connection;
 
-		assert(!sessionStream_);
 		sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), options.tlsOptions);
-		if (certificate_ && !certificate_->isNull()) {
+		if (certificate_) {
 			sessionStream_->setTLSCertificate(certificate_);
 		}
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));

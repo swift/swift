@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,7 @@ std::string Swift::getErrorString(const ClientError& error) {
 		case ClientError::SessionStartError: reason += "Error starting session"; break;
 		case ClientError::StreamError: reason += "Stream error"; break;
 		case ClientError::TLSError: reason += "Encryption error"; break;
-		case ClientError::ClientCertificateLoadError: reason += "Error loading certificate (Invalid password?)"; break;
+		case ClientError::ClientCertificateLoadError: reason += "Error loading certificate (Invalid file or password?)"; break;
 		case ClientError::ClientCertificateError: reason += "Certificate not authorized"; break;
 		case ClientError::UnknownCertificateError: reason += "Unknown certificate"; break;
 		case ClientError::CertificateCardRemoved: reason += "Certificate card removed"; break;
