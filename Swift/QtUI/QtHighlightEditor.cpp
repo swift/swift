@@ -10,18 +10,20 @@
  * See the COPYING file for more information.
  */
 
+#include <Swift/QtUI/QtHighlightEditor.h>
+
 #include <cassert>
 
 #include <boost/lexical_cast.hpp>
 
-#include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
-#include <Swift/Controllers/HighlightManager.cpp>
-#include <Swift/QtUI/QtHighlightEditor.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtSettingsProvider.h>
-
-#include <QTreeWidgetItem>
 #include <QFileDialog>
+#include <QTreeWidgetItem>
+
+#include <Swift/Controllers/HighlightManager.cpp>
+
+#include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
 
 namespace Swift {
 
@@ -417,6 +419,10 @@ HighlightRule QtHighlightEditor::ruleFromDialog()
 	} else {
 		rule.setMatchChat(false);
 		rule.setMatchMUC(true);
+	}
+
+	if (ui_.allMsgRadio->isChecked()) {
+		action.setHighlightAllText(true);
 	}
 
 	if (ui_.senderRadio->isChecked()) {
