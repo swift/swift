@@ -17,6 +17,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <QFileDialog>
+#include <QScrollBar>
 #include <QTreeWidgetItem>
 
 #include <Swift/Controllers/HighlightManager.cpp>
@@ -203,20 +204,24 @@ void QtHighlightEditor::onDeleteButtonClicked()
 	}
 }
 
+void QtHighlightEditor::moveRowFromTo(int fromRow, int toRow) {
+	int verticalScrollAreaPosition = ui_.scrollArea->verticalScrollBar()->value();
+	highlightManager_->swapRules(fromRow, toRow);
+	populateList();
+	selectRow(toRow);
+	ui_.scrollArea->verticalScrollBar()->setValue(verticalScrollAreaPosition);
+}
+
 void QtHighlightEditor::onUpButtonClicked() {
 	const size_t moveFrom = ui_.listWidget->currentRow();
 	const size_t moveTo = moveFrom - 1;
-	highlightManager_->swapRules(moveFrom, moveTo);
-	populateList();
-	selectRow(moveTo);
+	moveRowFromTo(moveFrom, moveTo);
 }
 
 void QtHighlightEditor::onDownButtonClicked() {
 	const size_t moveFrom = ui_.listWidget->currentRow();
 	const size_t moveTo = moveFrom + 1;
-	highlightManager_->swapRules(moveFrom, moveTo);
-	populateList();
-	selectRow(moveTo);
+	moveRowFromTo(moveFrom, moveTo);
 }
 
 void QtHighlightEditor::onCurrentRowChanged(int currentRow)

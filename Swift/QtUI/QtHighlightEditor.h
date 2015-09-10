@@ -12,9 +12,10 @@
 
 #pragma once
 
+#include <Swift/QtUI/ui_QtHighlightEditor.h>
+
 #include <Swift/Controllers/HighlightRule.h>
 #include <Swift/Controllers/UIInterfaces/HighlightEditorWindow.h>
-#include <Swift/QtUI/ui_QtHighlightEditor.h>
 
 namespace Swift {
 
@@ -61,6 +62,7 @@ namespace Swift {
 			HighlightRule ruleFromDialog();
 			void ruleToDialog(const HighlightRule& rule);
 			void updateResetToDefaultRulesVisibility();
+			void moveRowFromTo(int fromRow, int toRow);
 
 			Ui::QtHighlightEditor ui_;
 			QtSettingsProvider* settings_;
