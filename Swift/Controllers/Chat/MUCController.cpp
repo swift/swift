@@ -928,10 +928,22 @@ void MUCController::handleChangeSubjectRequest(const std::string& subject) {
 
 void MUCController::handleBookmarkRequest() {
 	const JID jid = muc_->getJID();
-	MUCBookmark bookmark(jid, jid.toBare().toString());
-	bookmark.setPassword(password_);
-	bookmark.setNick(nick_);
-	chatWindow_->showBookmarkWindow(bookmark);
+
+	// Prepare new bookmark for this room.
+	MUCBookmark roomBookmark(jid, jid.toBare().toString());
+	roomBookmark.setPassword(password_);
+	roomBookmark.setNick(nick_);
+
+	// Check for existing bookmark for this room and, if it exists, use it instead.
+	std::vector<MUCBookmark> bookmarks = mucBookmarkManager_->getBookmarks();
+	foreach (const MUCBookmark& bookmark, bookmarks) {
+		if (bookmark.getRoom() == jid.toBare()) {
+			roomBookmark = bookmark;
+			break;
+		}
+	}
+
+	chatWindow_->showBookmarkWindow(roomBookmark);
 }
 
 void MUCController::handleConfigureRequest(Form::ref form) {
