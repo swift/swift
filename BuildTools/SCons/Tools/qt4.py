@@ -517,7 +517,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 			ret = test_conf.TryAction('pkg-config --exists \'%s\'' % modules_str)[0]
 			if ret != 1:
 				test_conf.Finish()
-				raise Exception("Qt has not been found using pkg-config.")
+				raise Exception('Qt installation is missing packages. The following are required: %s' % modules_str)
 				return
 			test_conf.env.ParseConfig("pkg-config --cflags --libs " + modules_str)
 			self.AppendUnique(LIBS=test_conf.env["LIBS"], LIBPATH=test_conf.env["LIBPATH"], CPPPATH=test_conf.env["CPPPATH"])
