@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
 				return items;
 			}
 
-			void setItems(const std::vector<JID>& items);
+			void setItems(const std::vector<JID>& newItems);
 			void addItem(const JID& item);
 			void removeItem(const JID& item);
 			void addItems(const std::vector<JID>& items);

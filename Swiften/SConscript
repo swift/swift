@@ -380,6 +380,7 @@ if env["SCONS_STAGE"] == "build" :
 			File("Client/UnitTest/ClientSessionTest.cpp"),
 			File("Client/UnitTest/NickResolverTest.cpp"),
 			File("Client/UnitTest/ClientBlockListManagerTest.cpp"),
+			File("Client/UnitTest/BlockListImplTest.cpp"),
 			File("Compress/UnitTest/ZLibCompressorTest.cpp"),
 			File("Compress/UnitTest/ZLibDecompressorTest.cpp"),
 			File("Component/UnitTest/ComponentHandshakeGeneratorTest.cpp"),
