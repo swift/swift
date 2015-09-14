@@ -27,6 +27,7 @@
 #include <Swiften/Presence/StanzaChannelPresenceSender.h>
 #include <Swiften/Queries/DummyIQChannel.h>
 #include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
 
@@ -72,7 +73,8 @@ public:
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
 		userSearchWindowFactory_ = mocks_->InterfaceMock<UserSearchWindowFactory>();
-		presenceOracle_ = new PresenceOracle(stanzaChannel_);
+		xmppRoster_ = new XMPPRosterImpl();
+		presenceOracle_ = new PresenceOracle(stanzaChannel_, xmppRoster_);
 		presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
 		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
 		uiEventStream_ = new UIEventStream();
@@ -104,6 +106,7 @@ public:
 		delete entityCapsProvider_;
 		delete eventController_;
 		delete presenceOracle_;
+		delete xmppRoster_;
 		delete mocks_;
 		delete uiEventStream_;
 		delete stanzaChannel_;
@@ -442,6 +445,7 @@ private:
 	VCardMemoryStorage* vcardStorage_;
 	ClientBlockListManager* clientBlockListManager_;
 	MUCBookmarkManager* mucBookmarkManager_;
+	XMPPRoster* xmppRoster_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(MUCControllerTest);

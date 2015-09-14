@@ -1,26 +1,28 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "PresenceOracle.h"
+#include <Swiften/Presence/PresenceOracle.h>
 
 #include <boost/bind.hpp>
 
 #include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Roster/XMPPRoster.h>
 
 namespace Swift {
 
-PresenceOracle::PresenceOracle(StanzaChannel* stanzaChannel) {
-	stanzaChannel_ = stanzaChannel;
+PresenceOracle::PresenceOracle(StanzaChannel* stanzaChannel, XMPPRoster* roster) : stanzaChannel_(stanzaChannel), xmppRoster_(roster) {
 	stanzaChannel_->onPresenceReceived.connect(boost::bind(&PresenceOracle::handleIncomingPresence, this, _1));
 	stanzaChannel_->onAvailableChanged.connect(boost::bind(&PresenceOracle::handleStanzaChannelAvailableChanged, this, _1));
+	xmppRoster_->onJIDRemoved.connect(boost::bind(&PresenceOracle::handleJIDRemoved, this, _1));
 }
 
 PresenceOracle::~PresenceOracle() {
 	stanzaChannel_->onPresenceReceived.disconnect(boost::bind(&PresenceOracle::handleIncomingPresence, this, _1));
 	stanzaChannel_->onAvailableChanged.disconnect(boost::bind(&PresenceOracle::handleStanzaChannelAvailableChanged, this, _1));
+	xmppRoster_->onJIDRemoved.disconnect(boost::bind(&PresenceOracle::handleJIDRemoved, this, _1));
 }
 
 void PresenceOracle::handleStanzaChannelAvailableChanged(bool available) {
@@ -28,7 +30,6 @@ void PresenceOracle::handleStanzaChannelAvailableChanged(bool available) {
 		entries_.clear();
 	}
 }
-
 
 void PresenceOracle::handleIncomingPresence(Presence::ref presence) {
 	JID bareJID(presence->getFrom().toBare());
@@ -43,7 +44,7 @@ void PresenceOracle::handleIncomingPresence(Presence::ref presence) {
 			passedPresence->setFrom(bareJID);
 			passedPresence->setStatus(presence->getStatus());
 		}
-		std::map<JID, boost::shared_ptr<Presence> > jidMap = entries_[bareJID];
+		PresenceMap jidMap = entries_[bareJID];
 		if (passedPresence->getFrom().isBare() && presence->getType() == Presence::Unavailable) {
 			/* Have a bare-JID only presence of offline */
 			jidMap.clear();
@@ -59,6 +60,20 @@ void PresenceOracle::handleIncomingPresence(Presence::ref presence) {
 		entries_[bareJID] = jidMap;
 		onPresenceChange(passedPresence);
 	}
+}
+
+void PresenceOracle::handleJIDRemoved(const JID& removedJID) {
+	/* 3921bis says that we don't follow up with an unavailable, so simulate this ourselves */
+	Presence::ref unavailablePresence = Presence::ref(new Presence());
+	unavailablePresence->setType(Presence::Unavailable);
+	unavailablePresence->setFrom(removedJID);
+
+	if (entries_.find(removedJID) != entries_.end()) {
+		entries_[removedJID].clear();
+		entries_[removedJID][removedJID] = unavailablePresence;
+	}
+
+	onPresenceChange(unavailablePresence);
 }
 
 Presence::ref PresenceOracle::getLastPresence(const JID& jid) const {

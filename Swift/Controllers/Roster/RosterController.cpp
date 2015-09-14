@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,9 +9,10 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
-#include <Swiften/Base/Path.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/NickManager.h>
 #include <Swiften/Client/NickResolver.h>
@@ -27,19 +28,22 @@
 #include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Roster/XMPPRoster.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
+#include <Swiften/VCards/VCardManager.h>
 
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
-#include <Swift/Controllers/Roster/OfflineRosterFilter.h>
-#include <Swift/Controllers/Roster/Roster.h>
-#include <Swift/Controllers/Roster/RosterVCardProvider.h>
 #include <Swift/Controllers/Roster/ItemOperations/AppearOffline.h>
-#include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetAvailableFeatures.h>
+#include <Swift/Controllers/Roster/ItemOperations/SetAvatar.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetBlockingState.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetName.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetPresence.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetVCard.h>
+#include <Swift/Controllers/Roster/OfflineRosterFilter.h>
+#include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/Roster/RosterGroupExpandinessPersister.h>
+#include <Swift/Controllers/Roster/RosterVCardProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/UIEvents/AddContactUIEvent.h>
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>

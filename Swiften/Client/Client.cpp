@@ -49,7 +49,7 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
 
 	subscriptionManager = new SubscriptionManager(getStanzaChannel());
 
-	presenceOracle = new PresenceOracle(getStanzaChannel());
+	presenceOracle = new PresenceOracle(getStanzaChannel(), roster);
 	presenceOracle->onPresenceChange.connect(boost::ref(onPresenceChange));
 
 	stanzaChannelPresenceSender = new StanzaChannelPresenceSender(getStanzaChannel());

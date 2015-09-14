@@ -1,53 +1,55 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <string>
 #include <set>
+#include <string>
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/ErrorPayload.h>
-#include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Avatars/AvatarManager.h>
-#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
 
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/UIEvents/UIEvent.h>
-#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
-#include <Swift/Controllers/Roster/RosterGroupExpandinessPersister.h>
 
 namespace Swift {
+	class AvatarManager;
+	class ClientBlockListManager;
+	class EntityCapsProvider;
+	class EventController;
+	class FileTransferManager;
+	class FileTransferOverview;
 	class IQRouter;
-	class Roster;
-	class XMPPRoster;
-	class XMPPRosterItem;
 	class MainWindow;
 	class MainWindowFactory;
-	class OfflineRosterFilter;
+	class NickManager;
 	class NickResolver;
+	class OfflineRosterFilter;
 	class PresenceOracle;
+	class Roster;
+	class RosterGroupExpandinessPersister;
+	class RosterVCardProvider;
+	class SettingsProvider;
 	class SubscriptionManager;
-	class EventController;
 	class SubscriptionRequestEvent;
 	class UIEventStream;
-	class IQRouter;
-	class SettingsProvider;
-	class NickManager;
-	class EntityCapsProvider;
-	class FileTransferManager;
-	class ClientBlockListManager;
-	class RosterVCardProvider;
+	class VCardManager;
+	class XMPPRoster;
+	class XMPPRosterItem;
 
 	class RosterController {
 		public:
-			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter_, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
+			RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
 			~RosterController();
 			void showRosterWindow();
 			void setJID(const JID& jid) { myJID_ = jid; }

@@ -1,6 +1,5 @@
-
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,11 +27,10 @@
 #include <Swiften/Queries/DummyIQChannel.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Roster/XMPPRosterImpl.h>
+#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
-// #include <Swiften/Elements/Payload.h>
-// #include <Swiften/Elements/RosterItemPayload.h>
-// #include <Swiften/Elements/RosterPayload.h>
 
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/Roster.h>
@@ -62,6 +60,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testHighestPresence);
 		CPPUNIT_TEST(testNotHighestPresence);
 		CPPUNIT_TEST(testUnavailablePresence);
+		CPPUNIT_TEST(testRemoveResultsInUnavailablePresence);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -75,7 +74,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
 			channel_ = new DummyIQChannel();
 			router_ = new IQRouter(channel_);
 			stanzaChannel_ = new DummyStanzaChannel();
-			presenceOracle_ = new PresenceOracle(stanzaChannel_);
+			presenceOracle_ = new PresenceOracle(stanzaChannel_, xmppRoster_);
 			subscriptionManager_ = new SubscriptionManager(stanzaChannel_);
 			eventController_ = new EventController();
 			uiEventStream_ = new UIEventStream();
@@ -317,6 +316,29 @@ class RosterControllerTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(groups.size(), item.getGroups().size());
 			assertVectorsEqual(groups, item.getGroups(), __LINE__);
+		}
+
+		void testRemoveResultsInUnavailablePresence() {
+			std::vector<std::string> groups;
+			groups.push_back("testGroup1");
+			JID from("test@testdomain.com");
+			xmppRoster_->addContact(from, "name", groups, RosterItemPayload::Both);
+			Presence::ref lowPresence(new Presence());
+			lowPresence->setFrom(withResource(from, "bob"));
+			lowPresence->setPriority(2);
+			lowPresence->setStatus("Not here");
+			Presence::ref highPresence(new Presence());
+			highPresence->setFrom(withResource(from, "bert"));
+			highPresence->setPriority(10);
+			highPresence->setStatus("So totally here");
+			stanzaChannel_->onPresenceReceived(highPresence);
+			stanzaChannel_->onPresenceReceived(lowPresence);
+
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), presenceOracle_->getAllPresence("test@testdomain.com").size());
+
+			xmppRoster_->onJIDRemoved(JID("test@testdomain.com"));
+			CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), presenceOracle_->getAllPresence("test@testdomain.com").size());
+			CPPUNIT_ASSERT_EQUAL(Presence::Unavailable, presenceOracle_->getAllPresence("test@testdomain.com")[0]->getType());
 		}
 
 		void assertVectorsEqual(const std::vector<std::string>& v1, const std::vector<std::string>& v2, int line) {

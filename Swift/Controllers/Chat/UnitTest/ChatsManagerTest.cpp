@@ -89,7 +89,7 @@ public:
 		xmppRoster_ = new XMPPRosterImpl();
 		mucRegistry_ = new MUCRegistry();
 		nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
-		presenceOracle_ = new PresenceOracle(stanzaChannel_);
+		presenceOracle_ = new PresenceOracle(stanzaChannel_, xmppRoster_);
 		serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
 		presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
 		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);

@@ -1,23 +1,27 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
+
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/PresenceNotifier.h"
-#include "Swiften/Client/NickResolver.h"
-#include "SwifTools/Notifier/LoggingNotifier.h"
-#include "Swiften/Client/DummyStanzaChannel.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Roster/XMPPRosterImpl.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Avatars/DummyAvatarManager.h"
-#include "Swiften/Network/DummyTimerFactory.h"
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/Avatars/DummyAvatarManager.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Network/DummyTimerFactory.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
+
+#include <Swift/Controllers/PresenceNotifier.h>
+
+#include <SwifTools/Notifier/LoggingNotifier.h>
 
 using namespace Swift;
 
@@ -54,7 +58,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 			avatarManager = new DummyAvatarManager();
 			roster = new XMPPRosterImpl();
 			nickResolver = new NickResolver(JID("foo@bar.com"), roster, NULL, mucRegistry);
-			presenceOracle = new PresenceOracle(stanzaChannel);
+			presenceOracle = new PresenceOracle(stanzaChannel, roster);
 			timerFactory = new DummyTimerFactory();
 		}
 

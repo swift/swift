@@ -1,17 +1,20 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Presence/PresenceOracle.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Presence/SubscriptionManager.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 
 using namespace Swift;
 
@@ -30,7 +33,9 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 	public:
 		void setUp() {
 			stanzaChannel_ = new DummyStanzaChannel();
-			oracle_ = new PresenceOracle(stanzaChannel_);
+			xmppRoster_ = new XMPPRosterImpl();
+
+			oracle_ = new PresenceOracle(stanzaChannel_, xmppRoster_);
 			oracle_->onPresenceChange.connect(boost::bind(&PresenceOracleTest::handlePresenceChange, this, _1));
 			subscriptionManager_ = new SubscriptionManager(stanzaChannel_);
 			subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&PresenceOracleTest::handlePresenceSubscriptionRequest, this, _1, _2));
@@ -42,6 +47,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		void tearDown() {
 			delete subscriptionManager_;
 			delete oracle_;
+			delete xmppRoster_;
 			delete stanzaChannel_;
 		}
 
@@ -186,6 +192,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		PresenceOracle* oracle_;
 		SubscriptionManager* subscriptionManager_;
 		DummyStanzaChannel* stanzaChannel_;
+		XMPPRoster* xmppRoster_;
 		std::vector<Presence::ref> changes;
 		std::vector<SubscriptionRequestInfo> subscriptionRequests;
 		JID user1;

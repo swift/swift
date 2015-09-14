@@ -1,15 +1,20 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Roster/XMPPRosterImpl.h>
+
 #include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
 XMPPRosterImpl::XMPPRosterImpl() {
+}
+
+XMPPRosterImpl::~XMPPRosterImpl() {
+
 }
 
 void XMPPRosterImpl::addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription) {
