@@ -163,7 +163,7 @@ void QtPlainChatView::replaceLastMessage(const ChatWindow::ChatMessage& message,
 	log_->append(text);
 }
 
-void QtPlainChatView::replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour timestampBehaviour) {
+void QtPlainChatView::replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& /*id*/, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/) {
 	QString text = "<p><i>";
 	text += chatMessageToString(message);
 	text += "</i></p>";

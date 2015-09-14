@@ -5,20 +5,23 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 
 #include <Swift/Controllers/HistoryController.h>
-#include <Swiften/History/HistoryStorage.h>
-#include <Swiften/History/HistoryMessage.h>
+
 #include <boost/date_time/c_local_time_adjustor.hpp>
+
+#include <Swiften/History/HistoryMessage.h>
+#include <Swiften/History/HistoryStorage.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 
-HistoryController::HistoryController(HistoryStorage* localHistoryStorage) : localHistory_(localHistoryStorage), remoteArchiveSupported_(false) {
+HistoryController::HistoryController(HistoryStorage* localHistoryStorage) : localHistory_(localHistoryStorage) {
 }
 
 HistoryController::~HistoryController() {

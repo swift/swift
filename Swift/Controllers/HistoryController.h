@@ -4,12 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swiften/JID/JID.h>
-#include <boost/date_time/posix_time/posix_time.hpp>
 #include <vector>
-#include <set>
+
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/History/HistoryMessage.h>
 #include <Swiften/History/HistoryStorage.h>
@@ -35,6 +41,5 @@ namespace Swift {
 
 		private:
 			HistoryStorage* localHistory_;
-			bool remoteArchiveSupported_;
 	};
 }

@@ -1,22 +1,25 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swift/QtUI/QtAdHocCommandWithJIDWindow.h>
+
 #include <boost/bind.hpp>
-#include <QLabel>
-#include <QPushButton>
+
 #include <QBoxLayout>
 #include <QDialogButtonBox>
+#include <QLabel>
+#include <QPushButton>
+
 #include <Swiften/Elements/Command.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
 #include <Swift/Controllers/UIEvents/RequestAdHocWithJIDUIEvent.h>
-#include <Swift/QtUI/QtAdHocCommandWithJIDWindow.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
 #include <Swift/QtUI/QtFormWidget.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
-
-const int FormLayoutIndex = 1;
 
 namespace Swift {
 QtAdHocCommandWithJIDWindow::QtAdHocCommandWithJIDWindow(UIEventStream* uiEventStream) : uiEventStream_(uiEventStream) {
