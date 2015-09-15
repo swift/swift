@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <boost/bind.hpp>
 
-#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/SoundPlayer.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
 
 namespace Swift {
 
@@ -29,11 +30,10 @@ SoundEventController::SoundEventController(EventController* eventController, Sou
 	playSounds_ = settings->getSetting(SettingConstants::PLAY_SOUNDS);
 }
 
-void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> /*event*/) {
-	// message received sound is now played via highlighting
-	//if (playSounds_ && !event->getConcluded()) {
-	//	soundPlayer_->playSound(SoundPlayer::MessageReceived);
-	//}
+void SoundEventController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {
+	if (playSounds_ && boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event)) {
+		soundPlayer_->playSound(SoundPlayer::MessageReceived, "");
+	}
 }
 
 void SoundEventController::handleHighlight(const HighlightAction& action) {
