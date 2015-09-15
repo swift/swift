@@ -210,7 +210,11 @@ void UserSearchController::handleJIDEditingFinished(const JID& jid) {
 	if (jid.isValid()) {
 		if (rosterController_->getItem(jid)) {
 			window_->setWarning(QT_TRANSLATE_NOOP("", "This contact is already on your contact list."));
-		} else {
+		}
+		else if (jid.getNode().empty()) {
+			window_->setWarning(QT_TRANSLATE_NOOP("", "Part of the address you have entered is missing. An address has a structure of 'user@example.com'."));
+		}
+		else {
 			window_->setWarning(boost::optional<std::string>());
 		}
 	}
