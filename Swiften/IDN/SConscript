@@ -14,7 +14,9 @@ if myenv.get("HAVE_LIBIDN") :
 	myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
 	myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
 	objects += myenv.SwiftenObject(["LibIDNConverter.cpp"])
-objects += myenv.SwiftenObject(["PlatformIDNConverter.cpp"])
+objects += myenv.SwiftenObject([
+	"PlatformIDNConverter.cpp"
+	])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
@@ -23,6 +25,7 @@ if env["TEST"] :
 	test_env.UseFlags(swiften_env["CPPUNIT_FLAGS"])
 	env.Append(UNITTEST_OBJECTS = test_env.SwiftenObject([
 				File("UnitTest/IDNConverterTest.cpp"),
+				File("UnitTest/UTF8ValidatorTest.cpp")
 	]))
 
 

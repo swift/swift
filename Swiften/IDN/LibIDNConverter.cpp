@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,12 +11,15 @@ extern "C" {
 	#include <idna.h>
 }
 
-#include <vector>
 #include <cassert>
 #include <cstdlib>
+#include <vector>
+
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeAllocator.h>
-#include <boost/shared_ptr.hpp>
+#include <Swiften/IDN/UTF8Validator.h>
 
 using namespace Swift;
 
@@ -37,6 +40,10 @@ namespace {
 	template<typename StringType, typename ContainerType>
 	ContainerType getStringPreparedInternal(const StringType& s, IDNConverter::StringPrepProfile profile) {
 		ContainerType input(s.begin(), s.end());
+		if (!UTF8IsValid(s.data(), s.size())) {
+			return ContainerType();
+		}
+
 		input.resize(MAX_STRINGPREP_SIZE);
 		if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), getLibIDNProfile(profile)) == 0) {
 			return input;
