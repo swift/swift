@@ -1,11 +1,12 @@
 Import("swiften_env")
 
 sources = [
+		"BoostASIOEventLoop.cpp",
+		"DummyEventLoop.cpp",
+		"Event.cpp",
 		"EventLoop.cpp",
 		"EventOwner.cpp",
-		"Event.cpp",
 		"SimpleEventLoop.cpp",
-		"DummyEventLoop.cpp",
 		"SingleThreadedEventLoop.cpp",
 	]
 

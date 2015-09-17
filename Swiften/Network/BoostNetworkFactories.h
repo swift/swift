@@ -8,8 +8,8 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/NetworkFactories.h>
 
 namespace Swift {
 	class EventLoop;
@@ -18,7 +18,12 @@ namespace Swift {
 
 	class SWIFTEN_API BoostNetworkFactories : public NetworkFactories {
 		public:
-			BoostNetworkFactories(EventLoop* eventLoop);
+			/**
+			 * Construct the network factories, using the provided EventLoop.
+			 * @param ioService If this optional parameter is provided, it will be
+			 * used for the construction of the BoostIOServiceThread.
+			 */
+			BoostNetworkFactories(EventLoop* eventLoop, boost::shared_ptr<boost::asio::io_service> ioService = boost::shared_ptr<boost::asio::io_service>());
 			virtual ~BoostNetworkFactories();
 
 			virtual TimerFactory* getTimerFactory() const SWIFTEN_OVERRIDE {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,18 +10,27 @@
 
 namespace Swift {
 
-BoostIOServiceThread::BoostIOServiceThread() {
-	ioService_ = boost::make_shared<boost::asio::io_service>();
-	thread_ = new boost::thread(boost::bind(&BoostIOServiceThread::doRun, this));
+BoostIOServiceThread::BoostIOServiceThread(boost::shared_ptr<boost::asio::io_service> ioService) {
+	if (!!ioService) {
+		ioService_ = ioService;
+		thread_ = NULL;
+	}
+	else {
+		ioService_ = boost::make_shared<boost::asio::io_service>();
+		thread_ = new boost::thread(boost::bind(&BoostIOServiceThread::doRun, this));
+	}
 }
 
 BoostIOServiceThread::~BoostIOServiceThread() {
-	ioService_->stop();
-	thread_->join();
-	delete thread_;
+	if (thread_) {
+		ioService_->stop();
+		thread_->join();
+		delete thread_;
+	}
 }
 
 void BoostIOServiceThread::doRun() {
+	assert(thread_);
 	boost::asio::io_service::work work(*ioService_);
 	ioService_->run();
 }

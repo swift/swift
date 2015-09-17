@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,15 @@
 namespace Swift {
 	class SWIFTEN_API BoostIOServiceThread {
 		public:
-			BoostIOServiceThread();
+			/**
+			 * Construct the object.
+			 * @param ioService If this optional parameter is provided, the behaviour
+			 * of this class changes completely - it no longer spawns its own thread
+			 * and instead acts as a simple wrapper of the io_service. Use this if
+			 * you are re-using an io_service from elsewhere (particularly if you
+		   * are using the BoostASIOEventLoop).
+			 */
+			BoostIOServiceThread(boost::shared_ptr<boost::asio::io_service> ioService = boost::shared_ptr<boost::asio::io_service>());
 			~BoostIOServiceThread();
 
 			boost::shared_ptr<boost::asio::io_service> getIOService() const {
