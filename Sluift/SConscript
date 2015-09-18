@@ -58,7 +58,7 @@ elif env["SCONS_STAGE"] == "build" :
 	if sluift_env["PLATFORM"] == "darwin" and os.path.isdir("/Applications/iTunes.app") :
 		sluift_env.Append(FRAMEWORKS = ["ScriptingBridge"])
 		sluift_env.Command("iTunes.h", "/Applications/iTunes.app", 
-				"sdef ${SOURCE} | sdp -fh --basename iTunes -o ${TARGET.dir}")
+				"sdef ${SOURCE} | sdp -fh --basename iTunes -V 10.10 -o ${TARGET.dir}")
 		sluift_env.Append(CPPDEFINES = ["HAVE_ITUNES"])
 		sluift_sources += ["ITunesInterface.mm"]
 
