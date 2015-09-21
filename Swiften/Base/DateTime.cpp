@@ -13,6 +13,7 @@
 #include <boost/date_time/c_local_time_adjustor.hpp>
 
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -33,7 +34,14 @@ std::string dateTimeToString(const boost::posix_time::ptime& time) {
 }
 
 std::string dateTimeToLocalString(const boost::posix_time::ptime& time) {
-	return boost::posix_time::to_simple_string(boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local(time));
+	std::string localString;
+	try {
+		localString = boost::posix_time::to_simple_string(boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local(time));
+	}
+	catch(std::out_of_range& exception) {
+		SWIFT_LOG(debug) << exception.what() << std::endl;
+	}
+	return localString;
 }
 
 }
