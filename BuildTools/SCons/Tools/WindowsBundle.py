@@ -103,10 +103,10 @@ def generate(env) :
 			if qt_plugin_regex.match(src_path):
 				plugin_folder, filename = qt_plugin_regex.match(src_path).groups()
 				try:
-					if filename[1:] in qtplugins[plugin_folder]:
+					if plugin_folder in ["audio"] or filename[1:] in qtplugins[plugin_folder]:
 						all_files += env.Install(os.path.join(bundle, plugin_folder), src_path)
 				except:
-						pass
+					pass
 		return all_files
 
 	def createWindowsBundle(env, bundle, resources = {}, qtplugins = {}, qtlibs = [], qtversion = '4'):
