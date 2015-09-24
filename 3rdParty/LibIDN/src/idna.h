@@ -1,34 +1,54 @@
-/* idna.h --- Declarations for Internationalized Domain Name in Applications.
- * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Simon Josefsson
- *
- * This file is part of GNU Libidn.
- *
- * GNU Libidn is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * GNU Libidn is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with GNU Libidn; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- *
- */
+/* idna.h --- Prototypes for Internationalized Domain Name library.
+   Copyright (C) 2002-2015 Simon Josefsson
 
-#ifndef _IDNA_H
-# define _IDNA_H
+   This file is part of GNU Libidn.
+
+   GNU Libidn is free software: you can redistribute it and/or
+   modify it under the terms of either:
+
+     * the GNU Lesser General Public License as published by the Free
+       Software Foundation; either version 3 of the License, or (at
+       your option) any later version.
+
+   or
+
+     * the GNU General Public License as published by the Free
+       Software Foundation; either version 2 of the License, or (at
+       your option) any later version.
+
+   or both in parallel, as here.
+
+   GNU Libidn is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received copies of the GNU General Public License and
+   the GNU Lesser General Public License along with this program.  If
+   not, see <http://www.gnu.org/licenses/>. */
+
+#ifndef IDNA_H
+# define IDNA_H
+
+# ifndef IDNAPI
+#  if defined LIBIDN_BUILDING && defined HAVE_VISIBILITY && HAVE_VISIBILITY
+#   define IDNAPI __attribute__((__visibility__("default")))
+#  elif defined LIBIDN_BUILDING && defined _MSC_VER && ! defined LIBIDN_STATIC
+#   define IDNAPI __declspec(dllexport)
+#  elif defined _MSC_VER && ! defined LIBIDN_STATIC
+#   define IDNAPI __declspec(dllimport)
+#  else
+#   define IDNAPI
+#  endif
+# endif
+
+# include <stddef.h>		/* size_t */
+# include <idn-int.h>		/* uint32_t */
 
 # ifdef __cplusplus
 extern "C"
 {
 # endif
-
-# include <stddef.h>		/* size_t */
-# include <idn-int.h>		/* uint32_t */
 
   /* Error codes. */
   typedef enum
@@ -61,40 +81,43 @@ extern "C"
 #  define IDNA_ACE_PREFIX "xn--"
 # endif
 
-  extern const char *idna_strerror (Idna_rc rc);
+  extern IDNAPI const char *idna_strerror (Idna_rc rc);
 
   /* Core functions */
-  extern int idna_to_ascii_4i (const uint32_t * in, size_t inlen,
-			       char *out, int flags);
-  extern int idna_to_unicode_44i (const uint32_t * in, size_t inlen,
-				  uint32_t * out, size_t * outlen, int flags);
+  extern IDNAPI int idna_to_ascii_4i (const uint32_t * in, size_t inlen,
+				      char *out, int flags);
+  extern IDNAPI int idna_to_unicode_44i (const uint32_t * in, size_t inlen,
+					 uint32_t * out, size_t * outlen,
+					 int flags);
 
   /* Wrappers that handle several labels */
 
-  extern int idna_to_ascii_4z (const uint32_t * input,
-			       char **output, int flags);
+  extern IDNAPI int idna_to_ascii_4z (const uint32_t * input,
+				      char **output, int flags);
 
-  extern int idna_to_ascii_8z (const char *input, char **output, int flags);
+  extern IDNAPI int idna_to_ascii_8z (const char *input, char **output,
+				      int flags);
 
-  extern int idna_to_ascii_lz (const char *input, char **output, int flags);
+  extern IDNAPI int idna_to_ascii_lz (const char *input, char **output,
+				      int flags);
 
+  extern IDNAPI int idna_to_unicode_4z4z (const uint32_t * input,
+					  uint32_t ** output, int flags);
 
-  extern int idna_to_unicode_4z4z (const uint32_t * input,
-				   uint32_t ** output, int flags);
+  extern IDNAPI int idna_to_unicode_8z4z (const char *input,
+					  uint32_t ** output, int flags);
 
-  extern int idna_to_unicode_8z4z (const char *input,
-				   uint32_t ** output, int flags);
+  extern IDNAPI int idna_to_unicode_8z8z (const char *input,
+					  char **output, int flags);
 
-  extern int idna_to_unicode_8z8z (const char *input,
-				   char **output, int flags);
+  extern IDNAPI int idna_to_unicode_8zlz (const char *input,
+					  char **output, int flags);
 
-  extern int idna_to_unicode_8zlz (const char *input,
-				   char **output, int flags);
-
-  extern int idna_to_unicode_lzlz (const char *input,
-				   char **output, int flags);
+  extern IDNAPI int idna_to_unicode_lzlz (const char *input,
+					  char **output, int flags);
 
 # ifdef __cplusplus
 }
 # endif
-#endif				/* _IDNA_H */
+
+#endif				/* IDNA_H */

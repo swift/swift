@@ -10,7 +10,7 @@ if env.get("LIBIDN_BUNDLED", False) :
 
 	if env["SCONS_STAGE"] == "flags" :
 		env["LIBIDN_FLAGS"] = {
-				"CPPDEFINES": ["IDNA_STATIC"],
+				"CPPDEFINES": ["LIBIDN_STATIC"],
 			}
 		if os.path.basename(env["CC"]) in ("clang", "gcc") :
 			env["LIBIDN_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibIDN/src"]})
@@ -48,8 +48,8 @@ if env.get("LIBIDN_BUNDLED", False) :
 				Exit(1)
 		conf.Finish()
 
-		myenv.Append(CPPDEFINES = "IDNA_STATIC")
-		myenv.Append(CPPPATH = ["src", "stubs"])
+		myenv.Append(CPPDEFINES = ["LIBIDN_STATIC", "HAVE_CONFIG_H"])
+		myenv.Append(CPPPATH = ["src", "stubs", "src/gl"])
 		if myenv["PLATFORM"] == "win32" :
 			myenv.Append(CPPPATH = "stubs/win32")
 			if myenv["MSVC_VERSION"][:3] == "9.0" :
@@ -62,5 +62,9 @@ if env.get("LIBIDN_BUNDLED", False) :
 				"src/punycode.c",
 				"src/idna.c",
 				"src/toutf8.c",
-				"src/nfkc.c"
+				"src/nfkc.c",
+				"src/gl/c-ctype.c",
+				"src/gl/c-strcasecmp.c",
+				"src/gl/c-strncasecmp.c",
+				"src/gl/unistr/u8-check.c"
 			])

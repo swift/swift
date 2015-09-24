@@ -1,23 +1,31 @@
-/* idna.c --- Convert to or from IDN strings.
- * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008  Simon Josefsson
- *
- * This file is part of GNU Libidn.
- *
- * GNU Libidn is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * GNU Libidn is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with GNU Libidn; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- *
- */
+/* idna.c --- Prototypes for Internationalized Domain Name library.
+   Copyright (C) 2002-2015 Simon Josefsson
+
+   This file is part of GNU Libidn.
+
+   GNU Libidn is free software: you can redistribute it and/or
+   modify it under the terms of either:
+
+     * the GNU Lesser General Public License as published by the Free
+       Software Foundation; either version 3 of the License, or (at
+       your option) any later version.
+
+   or
+
+     * the GNU General Public License as published by the Free
+       Software Foundation; either version 2 of the License, or (at
+       your option) any later version.
+
+   or both in parallel, as here.
+
+   GNU Libidn is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received copies of the GNU General Public License and
+   the GNU Lesser General Public License along with this program.  If
+   not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"
@@ -30,13 +38,16 @@
 
 #include "idna.h"
 
+/* Get c_strcasecmp. */
+#include <c-strcase.h>
+
 #define DOTP(c) ((c) == 0x002E || (c) == 0x3002 ||	\
 		 (c) == 0xFF0E || (c) == 0xFF61)
 
 /* Core functions */
 
 /**
- * idna_to_ascii_4i - convert Unicode domain name label to text
+ * idna_to_ascii_4i:
  * @in: input array with unicode code points.
  * @inlen: length of input array with unicode code points.
  * @out: output zero terminated string that must have room for at
@@ -109,7 +120,7 @@ idna_to_ascii_4i (const uint32_t * in, size_t inlen, char *out, int flags)
   {
     char *p;
 
-    p = stringprep_ucs4_to_utf8 (in, inlen, NULL, NULL);
+    p = stringprep_ucs4_to_utf8 (in, (ssize_t) inlen, NULL, NULL);
     if (p == NULL)
       return IDNA_MALLOC_ERROR;
 
@@ -143,6 +154,9 @@ idna_to_ascii_4i (const uint32_t * in, size_t inlen, char *out, int flags)
     src = stringprep_utf8_to_ucs4 (p, -1, NULL);
 
     free (p);
+
+    if (!src)
+      return IDNA_MALLOC_ERROR;
   }
 
 step3:
@@ -318,10 +332,12 @@ idna_to_unicode_internal (char *utf8in,
 
   /* 3. Verify that the sequence begins with the ACE prefix, and save a
    * copy of the sequence.
+   * ... The ToASCII and ToUnicode operations MUST recognize the ACE
+   prefix in a case-insensitive manner.
    */
 
 step3:
-  if (memcmp (IDNA_ACE_PREFIX, utf8in, strlen (IDNA_ACE_PREFIX)) != 0)
+  if (c_strncasecmp (utf8in, IDNA_ACE_PREFIX, strlen (IDNA_ACE_PREFIX)) != 0)
     {
       free (utf8in);
       return IDNA_NO_ACE_PREFIX;
@@ -363,7 +379,7 @@ step3:
    * step 3, using a case-insensitive ASCII comparison.
    */
 
-  if (strcasecmp (utf8in, tmpout + strlen (IDNA_ACE_PREFIX)) != 0)
+  if (c_strcasecmp (utf8in, tmpout + strlen (IDNA_ACE_PREFIX)) != 0)
     {
       free (utf8in);
       return IDNA_ROUNDTRIP_VERIFY_ERROR;
@@ -377,7 +393,7 @@ step3:
 }
 
 /**
- * idna_to_unicode_44i - convert domain name label to Unicode
+ * idna_to_unicode_44i:
  * @in: input array with unicode code points.
  * @inlen: length of input array with unicode code points.
  * @out: output array with unicode code points.
@@ -419,7 +435,7 @@ idna_to_unicode_44i (const uint32_t * in, size_t inlen,
   size_t outlensave = *outlen;
   char *p;
 
-  p = stringprep_ucs4_to_utf8 (in, inlen, NULL, NULL);
+  p = stringprep_ucs4_to_utf8 (in, (ssize_t) inlen, NULL, NULL);
   if (p == NULL)
     return IDNA_MALLOC_ERROR;
 
@@ -439,7 +455,7 @@ idna_to_unicode_44i (const uint32_t * in, size_t inlen,
 /* Wrappers that handle several labels */
 
 /**
- * idna_to_ascii_4z - convert Unicode domain name to text
+ * idna_to_ascii_4z:
  * @input: zero terminated input Unicode string.
  * @output: pointer to newly allocated output string.
  * @flags: an #Idna_flags value, e.g., %IDNA_ALLOW_UNASSIGNED or
@@ -455,7 +471,7 @@ int
 idna_to_ascii_4z (const uint32_t * input, char **output, int flags)
 {
   const uint32_t *start = input;
-  const uint32_t *end = input;
+  const uint32_t *end;
   char buf[64];
   char *out = NULL;
   int rc;
@@ -500,14 +516,18 @@ idna_to_ascii_4z (const uint32_t * input, char **output, int flags)
 	}
       else
 	{
-	  rc = idna_to_ascii_4i (start, end - start, buf, flags);
+	  rc = idna_to_ascii_4i (start, (size_t) (end - start), buf, flags);
 	  if (rc != IDNA_SUCCESS)
-	    return rc;
+	    {
+	      free (out);
+	      return rc;
+	    }
 	}
 
       if (out)
 	{
-	  char *newp = realloc (out, strlen (out) + 1 + strlen (buf) + 1);
+	  size_t l = strlen (out) + 1 + strlen (buf) + 1;
+	  char *newp = realloc (out, l);
 	  if (!newp)
 	    {
 	      free (out);
@@ -519,10 +539,9 @@ idna_to_ascii_4z (const uint32_t * input, char **output, int flags)
 	}
       else
 	{
-	  out = (char *) malloc (strlen (buf) + 1);
+	  out = strdup (buf);
 	  if (!out)
 	    return IDNA_MALLOC_ERROR;
-	  strcpy (out, buf);
 	}
 
       start = end + 1;
@@ -535,7 +554,7 @@ idna_to_ascii_4z (const uint32_t * input, char **output, int flags)
 }
 
 /**
- * idna_to_ascii_8z - convert Unicode domain name to text
+ * idna_to_ascii_8z:
  * @input: zero terminated input UTF-8 string.
  * @output: pointer to newly allocated output string.
  * @flags: an #Idna_flags value, e.g., %IDNA_ALLOW_UNASSIGNED or
@@ -567,7 +586,7 @@ idna_to_ascii_8z (const char *input, char **output, int flags)
 }
 
 /**
- * idna_to_ascii_lz - convert Unicode domain name to text
+ * idna_to_ascii_lz:
  * @input: zero terminated input string encoded in the current locale's
  *   character set.
  * @output: pointer to newly allocated output string.
@@ -598,7 +617,7 @@ idna_to_ascii_lz (const char *input, char **output, int flags)
 }
 
 /**
- * idna_to_unicode_4z4z - convert domain name to Unicode
+ * idna_to_unicode_4z4z:
  * @input: zero-terminated Unicode string.
  * @output: pointer to newly allocated output Unicode string.
  * @flags: an #Idna_flags value, e.g., %IDNA_ALLOW_UNASSIGNED or
@@ -615,12 +634,11 @@ int
 idna_to_unicode_4z4z (const uint32_t * input, uint32_t ** output, int flags)
 {
   const uint32_t *start = input;
-  const uint32_t *end = input;
+  const uint32_t *end;
   uint32_t *buf;
   size_t buflen;
   uint32_t *out = NULL;
   size_t outlen = 0;
-  int rc;
 
   *output = NULL;
 
@@ -631,13 +649,14 @@ idna_to_unicode_4z4z (const uint32_t * input, uint32_t ** output, int flags)
       for (; *end && !DOTP (*end); end++)
 	;
 
-      buflen = end - start;
+      buflen = (size_t) (end - start);
       buf = malloc (sizeof (buf[0]) * (buflen + 1));
       if (!buf)
 	return IDNA_MALLOC_ERROR;
 
-      rc = idna_to_unicode_44i (start, end - start, buf, &buflen, flags);
-      /* don't check rc as per specification! */
+      /* don't check return code as per specification! */
+      idna_to_unicode_44i (start, (size_t) (end - start),
+			   buf, &buflen, flags);
 
       if (out)
 	{
@@ -674,7 +693,7 @@ idna_to_unicode_4z4z (const uint32_t * input, uint32_t ** output, int flags)
 }
 
 /**
- * idna_to_unicode_8z4z - convert domain name to Unicode
+ * idna_to_unicode_8z4z:
  * @input: zero-terminated UTF-8 string.
  * @output: pointer to newly allocated output Unicode string.
  * @flags: an #Idna_flags value, e.g., %IDNA_ALLOW_UNASSIGNED or
@@ -705,7 +724,7 @@ idna_to_unicode_8z4z (const char *input, uint32_t ** output, int flags)
 }
 
 /**
- * idna_to_unicode_8z8z - convert domain name to Unicode
+ * idna_to_unicode_8z8z:
  * @input: zero-terminated UTF-8 string.
  * @output: pointer to newly allocated output UTF-8 string.
  * @flags: an #Idna_flags value, e.g., %IDNA_ALLOW_UNASSIGNED or
@@ -725,17 +744,20 @@ idna_to_unicode_8z8z (const char *input, char **output, int flags)
   int rc;
 
   rc = idna_to_unicode_8z4z (input, &ucs4, flags);
+  if (rc != IDNA_SUCCESS)
+    return rc;
+
   *output = stringprep_ucs4_to_utf8 (ucs4, -1, NULL, NULL);
   free (ucs4);
 
   if (!*output)
     return IDNA_ICONV_ERROR;
 
-  return rc;
+  return IDNA_SUCCESS;
 }
 
 /**
- * idna_to_unicode_8zlz - convert domain name to Unicode
+ * idna_to_unicode_8zlz:
  * @input: zero-terminated UTF-8 string.
  * @output: pointer to newly allocated output string encoded in the
  *   current locale's character set.
@@ -756,17 +778,20 @@ idna_to_unicode_8zlz (const char *input, char **output, int flags)
   int rc;
 
   rc = idna_to_unicode_8z8z (input, &utf8, flags);
+  if (rc != IDNA_SUCCESS)
+    return rc;
+
   *output = stringprep_utf8_to_locale (utf8);
   free (utf8);
 
   if (!*output)
     return IDNA_ICONV_ERROR;
 
-  return rc;
+  return IDNA_SUCCESS;
 }
 
 /**
- * idna_to_unicode_lzlz - convert domain name to Unicode
+ * idna_to_unicode_lzlz:
  * @input: zero-terminated string encoded in the current locale's
  *   character set.
  * @output: pointer to newly allocated output string encoded in the
@@ -812,6 +837,8 @@ idna_to_unicode_lzlz (const char *input, char **output, int flags)
  * @IDNA_PUNYCODE_ERROR: Error during punycode operation.
  * @IDNA_CONTAINS_NON_LDH: For IDNA_USE_STD3_ASCII_RULES, indicate that
  *   the string contains non-LDH ASCII characters.
+ * @IDNA_CONTAINS_LDH: Same as @IDNA_CONTAINS_NON_LDH, for compatibility
+ *   with typo in earlier versions.
  * @IDNA_CONTAINS_MINUS: For IDNA_USE_STD3_ASCII_RULES, indicate that
  *   the string contains a leading or trailing hyphen-minus (U+002D).
  * @IDNA_INVALID_LENGTH: The final output string is not within the

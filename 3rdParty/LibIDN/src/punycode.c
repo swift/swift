@@ -1,26 +1,55 @@
 /* punycode.c --- Implementation of punycode used to ASCII encode IDN's.
- * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007  Simon Josefsson
- *
- * This file is part of GNU Libidn.
- *
- * GNU Libidn is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * GNU Libidn is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with GNU Libidn; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- *
- */
+   Copyright (C) 2002-2015 Simon Josefsson
+
+   This file is part of GNU Libidn.
+
+   GNU Libidn is free software: you can redistribute it and/or
+   modify it under the terms of either:
+
+     * the GNU Lesser General Public License as published by the Free
+       Software Foundation; either version 3 of the License, or (at
+       your option) any later version.
+
+   or
+
+     * the GNU General Public License as published by the Free
+       Software Foundation; either version 2 of the License, or (at
+       your option) any later version.
+
+   or both in parallel, as here.
+
+   GNU Libidn is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received copies of the GNU General Public License and
+   the GNU Lesser General Public License along with this program.  If
+   not, see <http://www.gnu.org/licenses/>. */
 
 /*
- * This file is derived from RFC 3492bis written by Adam M. Costello.
+ * This file is derived from RFC 3492bis written by Adam M. Costello,
+ * downloaded from http://www.nicemice.net/idn/punycode-spec.gz on
+ * 2015-03-02 with SHA1 a966a8017f6be579d74a50a226accc7607c40133, a
+ * copy of which is stored in the GNU Libidn version controlled
+ * repository under doc/specification/punycode-spec.gz.
+ *
+ * The changes compared to Adam's file include: re-indentation, adding
+ * the license boilerplate and this comment, #include of config.h and
+ * punycode.h, adding GTK-DOC comments, changing the return code of
+ * punycode_encode and punycode_decode from enum to int, renaming the
+ * input_length_orig function input variable to input_length (and
+ * renaming the internal input_length variable to input_len) in
+ * punycode_encode.
+ *
+ * Adam's file contains the following:
+ *
+ * punycode-sample.c 2.0.0 (2004-Mar-21-Sun)
+ * http://www.nicemice.net/idn/
+ * Adam M. Costello
+ * http://www.nicemice.net/amc/
+ *
+ * This is ANSI C code (C89) implementing Punycode 1.0.x.
  *
  * Disclaimer and license: Regarding this entire document or any
  * portion of it (including the pseudocode and C code), the author
@@ -31,33 +60,12 @@
  * provided that redistributed derivative works do not contain
  * misleading author or version information.  Derivative works need
  * not be licensed under similar terms.
- *
- * Copyright (C) The Internet Society (2003).  All Rights Reserved.
- *
- * This document and translations of it may be copied and furnished to
- * others, and derivative works that comment on or otherwise explain it
- * or assist in its implementation may be prepared, copied, published
- * and distributed, in whole or in part, without restriction of any
- * kind, provided that the above copyright notice and this paragraph are
- * included on all such copies and derivative works.  However, this
- * document itself may not be modified in any way, such as by removing
- * the copyright notice or references to the Internet Society or other
- * Internet organizations, except as needed for the purpose of
- * developing Internet standards in which case the procedures for
- * copyrights defined in the Internet Standards process must be
- * followed, or as required to translate it into languages other than
- * English.
- *
- * The limited permissions granted above are perpetual and will not be
- * revoked by the Internet Society or its successors or assigns.
- *
- * This document and the information contained herein is provided on an
- * "AS IS" basis and THE INTERNET SOCIETY AND THE INTERNET ENGINEERING
- * TASK FORCE DISCLAIMS ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING
- * BUT NOT LIMITED TO ANY WARRANTY THAT THE USE OF THE INFORMATION
- * HEREIN WILL NOT INFRINGE ANY RIGHTS OR ANY IMPLIED WARRANTIES OF
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
  */
+
+#include <config.h>
+
+/**********************************************************/
+/* Implementation (would normally go in its own .c file): */
 
 #include <string.h>
 
@@ -148,7 +156,7 @@ adapt (punycode_uint delta, punycode_uint numpoints, int firsttime)
 /*** Main encode function ***/
 
 /**
- * punycode_encode - encode Unicode to Punycode
+ * punycode_encode:
  * @input_length: The number of code points in the @input array and
  *   the number of flags in the @case_flags array.
  * @input: An array of code points.  They are presumed to be Unicode
@@ -299,7 +307,7 @@ punycode_encode (size_t input_length,
 /*** Main decode function ***/
 
 /**
- * punycode_decode - decode Punycode to Unicode
+ * punycode_decode:
  * @input_length: The number of ASCII code points in the @input array.
  * @input: An array of ASCII code points (0..7F).
  * @output_length: The caller passes in the maximum number of code
@@ -415,7 +423,7 @@ punycode_decode (size_t input_length,
       /* Insert n at position i of the output: */
 
       /* not needed for Punycode: */
-      /* if (basic(n)) return punycode_invalid_input; */
+      /* if (basic(n)) return punycode_bad_input; */
       if (out >= max_out)
 	return punycode_big_output;
 

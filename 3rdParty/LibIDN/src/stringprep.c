@@ -1,23 +1,31 @@
 /* stringprep.c --- Core stringprep implementation.
- * Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007, 2008  Simon Josefsson
- *
- * This file is part of GNU Libidn.
- *
- * GNU Libidn is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * GNU Libidn is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with GNU Libidn; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- *
- */
+   Copyright (C) 2002-2015 Simon Josefsson
+
+   This file is part of GNU Libidn.
+
+   GNU Libidn is free software: you can redistribute it and/or
+   modify it under the terms of either:
+
+     * the GNU Lesser General Public License as published by the Free
+       Software Foundation; either version 3 of the License, or (at
+       your option) any later version.
+
+   or
+
+     * the GNU General Public License as published by the Free
+       Software Foundation; either version 2 of the License, or (at
+       your option) any later version.
+
+   or both in parallel, as here.
+
+   GNU Libidn is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received copies of the GNU General Public License and
+   the GNU Lesser General Public License along with this program.  If
+   not, see <http://www.gnu.org/licenses/>. */
 
 #ifdef HAVE_CONFIG_H
 # include "config.h"
@@ -104,7 +112,7 @@ stringprep_apply_table_to_string (uint32_t * ucs4,
    ( INVERTED(profileflags) && (profileflags & flags)))
 
 /**
- * stringprep_4i - prepare internationalized string
+ * stringprep_4i:
  * @ucs4: input/output array with string to prepare.
  * @len: on input, length of input array with Unicode code points,
  *   on exit, length of output array with Unicode code points.
@@ -292,7 +300,7 @@ stringprep_4zi_1 (uint32_t * ucs4, size_t ucs4len, size_t maxucs4len,
 }
 
 /**
- * stringprep_4zi - prepare internationalized string
+ * stringprep_4zi:
  * @ucs4: input/output array with zero terminated string to prepare.
  * @maxucs4len: maximum length of input/output array.
  * @flags: a #Stringprep_profile_flags value, or 0.
@@ -329,7 +337,7 @@ stringprep_4zi (uint32_t * ucs4, size_t maxucs4len,
 }
 
 /**
- * stringprep - prepare internationalized string
+ * stringprep:
  * @in: input/ouput array with string to prepare.
  * @maxlen: maximum length of input/output array.
  * @flags: a #Stringprep_profile_flags value, or 0.
@@ -370,9 +378,10 @@ stringprep (char *in,
     {
       uint32_t *newp;
 
-      if (ucs4)
-	free (ucs4);
+      free (ucs4);
       ucs4 = stringprep_utf8_to_ucs4 (in, -1, &ucs4len);
+      if (ucs4 == NULL)
+	return STRINGPREP_ICONV_ERROR;
       maxucs4len = ucs4len + adducs4len;
       newp = realloc (ucs4, maxucs4len * sizeof (uint32_t));
       if (!newp)
@@ -395,7 +404,7 @@ stringprep (char *in,
   utf8 = stringprep_ucs4_to_utf8 (ucs4, ucs4len, 0, 0);
   free (ucs4);
   if (!utf8)
-    return STRINGPREP_MALLOC_ERROR;
+    return STRINGPREP_ICONV_ERROR;
 
   if (strlen (utf8) >= maxlen)
     {
@@ -411,7 +420,7 @@ stringprep (char *in,
 }
 
 /**
- * stringprep_profile - prepare internationalized string
+ * stringprep_profile:
  * @in: input array with UTF-8 string to prepare.
  * @out: output variable with pointer to newly allocate string.
  * @profile: name of stringprep profile to use.
@@ -453,8 +462,7 @@ stringprep_profile (const char *in,
 
   do
     {
-      if (str)
-	free (str);
+      free (str);
       str = (char *) malloc (len);
       if (str == NULL)
 	return STRINGPREP_MALLOC_ERROR;
@@ -584,6 +592,7 @@ stringprep_profile (const char *in,
  *   This usually indicate a problem in the calling application.
  * @STRINGPREP_UNKNOWN_PROFILE: The supplied profile name was not
  *   known to the library.
+ * @STRINGPREP_ICONV_ERROR: Could not convert string in locale encoding.
  * @STRINGPREP_NFKC_FAILED: The Unicode NFKC operation failed.  This
  *   usually indicate an internal error in the library.
  * @STRINGPREP_MALLOC_ERROR: The malloc() was out of memory.  This is
@@ -611,6 +620,14 @@ stringprep_profile (const char *in,
 
 /**
  * Stringprep_profile_steps:
+ * @STRINGPREP_NFKC: The NFKC step.
+ * @STRINGPREP_BIDI: The BIDI step.
+ * @STRINGPREP_MAP_TABLE: The MAP step.
+ * @STRINGPREP_UNASSIGNED_TABLE: The Unassigned step.
+ * @STRINGPREP_PROHIBIT_TABLE: The Prohibited step.
+ * @STRINGPREP_BIDI_PROHIBIT_TABLE: The BIDI-Prohibited step.
+ * @STRINGPREP_BIDI_RAL_TABLE: The BIDI-RAL step.
+ * @STRINGPREP_BIDI_L_TABLE: The BIDI-L step.
  *
  * Various steps in the stringprep algorithm.  You really want to
  * study the source code to understand this one.  Only useful if you

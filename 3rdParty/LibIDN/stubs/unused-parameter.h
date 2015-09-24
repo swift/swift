@@ -1,0 +1,3 @@
+#ifndef _GL_UNUSED_PARAMETER
+#define _GL_UNUSED_PARAMETER
+#endif
