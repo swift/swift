@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,9 +10,8 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/VCards/VCardStorage.h>
 #include <Swiften/VCards/GetVCardRequest.h>
-
+#include <Swiften/VCards/VCardStorage.h>
 
 namespace Swift {
 
@@ -53,12 +52,14 @@ void VCardManager::requestOwnVCard() {
 
 
 void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, ErrorPayload::ref error) {
-	if (error || !vcard) {
-		vcard = VCard::ref(new VCard());
-	}
 	requestedVCards.erase(actualJID);
-	JID jid = actualJID.isValid() ? actualJID : ownJID.toBare();
-	setVCard(jid, vcard);
+	if (!error) {
+		if (!vcard) {
+			vcard = VCard::ref(new VCard());
+		}
+		JID jid = actualJID.isValid() ? actualJID : ownJID.toBare();
+		setVCard(jid, vcard);
+	}
 }
 
 SetVCardRequest::ref VCardManager::createSetVCardRequest(VCard::ref vcard) {

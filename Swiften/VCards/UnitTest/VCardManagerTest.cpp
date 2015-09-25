@@ -1,23 +1,24 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
-
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
+
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/VCards/VCardManager.h>
-#include <Swiften/VCards/VCardMemoryStorage.h>
-#include <Swiften/Queries/IQRouter.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
 
 using namespace Swift;
 
@@ -37,6 +38,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
+			changes.clear();
+			ownChanges.clear();
 			ownJID = JID("baz@fum.com/dum");
 			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 			stanzaChannel = new DummyStanzaChannel();
@@ -97,10 +100,8 @@ class VCardManagerTest : public CppUnit::TestFixture {
 			testling->requestVCard(JID("foo@bar.com/baz"));
 			stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
-			CPPUNIT_ASSERT_EQUAL(std::string(""), changes[0].second->getFullName());
-			CPPUNIT_ASSERT_EQUAL(std::string(""), vcardStorage->getVCard(JID("foo@bar.com/baz"))->getFullName());
+			// On error, cached vCards should not be changed.
+			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
 		}
 
 		void testRequest_VCardAlreadyRequested() {
