@@ -10,24 +10,24 @@
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Client/ClientSession.h>
-#include <Swiften/TLS/CertificateVerificationError.h>
-#include <Swiften/TLS/TLSError.h>
+#include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Network/ChainedConnector.h>
+#include <Swiften/Network/DomainNameResolveError.h>
+#include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/ProxyProvider.h>
-#include <Swiften/Network/DomainNameResolveError.h>
-#include <Swiften/TLS/PKCS12Certificate.h>
-#include <Swiften/Session/BasicSessionStream.h>
-#include <Swiften/Session/BOSHSessionStream.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Network/SOCKS5ProxiedConnectionFactory.h>
-#include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Session/BOSHSessionStream.h>
+#include <Swiften/Session/BasicSessionStream.h>
+#include <Swiften/TLS/CertificateVerificationError.h>
+#include <Swiften/TLS/PKCS12Certificate.h>
+#include <Swiften/TLS/TLSError.h>
 
 namespace Swift {
 
@@ -139,7 +139,8 @@ void CoreClient::connect(const ClientOptions& o) {
 				options.boshHTTPConnectProxyURL,
 				options.boshHTTPConnectProxyAuthID,
 				options.boshHTTPConnectProxyAuthPassword,
-				options.tlsOptions));
+				options.tlsOptions,
+				options.httpTrafficFilter));
 		sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
 		sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
 		bindSessionToStream();

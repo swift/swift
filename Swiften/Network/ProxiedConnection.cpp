@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 #include <Swiften/Network/ProxiedConnection.h>
 
 #include <iostream>
+
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 using namespace Swift;
 
@@ -109,4 +110,13 @@ void ProxiedConnection::setProxyInitializeFinished(bool success) {
 		disconnect();
 	}
 	onConnectFinished(!success);
+}
+
+void ProxiedConnection::reconnect() {
+	if (connected_) {
+		connection_->onDataRead.disconnect(boost::bind(&ProxiedConnection::handleDataRead, shared_from_this(), _1));
+		connection_->onDisconnected.disconnect(boost::bind(&ProxiedConnection::handleDisconnected, shared_from_this(), _1));
+		connection_->disconnect();
+	}
+	connect(server_);
 }

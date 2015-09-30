@@ -3,26 +3,30 @@
  * All rights reserved.
  * See the COPYING file for more information.
  */
+
+#include <boost/algorithm/string.hpp>
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/optional.hpp>
-#include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
-
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Network/HTTPConnectProxiedConnection.h>
 #include <Swiften/Network/HTTPTrafficFilter.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/Base/Log.h>
 
 using namespace Swift;
 
@@ -32,7 +36,7 @@ namespace {
 			ExampleHTTPTrafficFilter() {}
 			virtual ~ExampleHTTPTrafficFilter() {}
 
-			virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::vector<std::pair<std::string, std::string> >& response) {
+			virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::string& /* statusLine */, const std::vector<std::pair<std::string, std::string> >& response) {
 				filterResponses.push_back(response);
 				SWIFT_LOG(debug) << std::endl;
 				return filterResponseReturn;
@@ -41,6 +45,46 @@ namespace {
 			std::vector<std::vector<std::pair<std::string, std::string> > > filterResponses;
 
 			std::vector<std::pair<std::string, std::string> > filterResponseReturn;
+	};
+
+	class ProxyAuthenticationHTTPTrafficFilter : public HTTPTrafficFilter {
+			static std::string to_lower(const std::string& str) {
+				std::string lower = str;
+				boost::algorithm::to_lower(lower);
+				return lower;
+			}
+
+		public:
+			ProxyAuthenticationHTTPTrafficFilter() {}
+			virtual ~ProxyAuthenticationHTTPTrafficFilter() {}
+
+			virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::string& statusLine, const std::vector<std::pair<std::string, std::string> >& response) {
+				std::vector<std::pair<std::string, std::string> > filterResponseReturn;
+				std::vector<std::string> statusLineFields;
+				boost::split(statusLineFields, statusLine, boost::is_any_of(" "), boost::token_compress_on);
+
+				int statusCode = boost::lexical_cast<int>(statusLineFields[1]);
+				if (statusCode == 407) {
+					typedef std::pair<std::string, std::string> StrPair;
+					foreach (const StrPair& field, response) {
+						if (to_lower(field.first) == to_lower("Proxy-Authenticate")) {
+							if (field.second.size() >= 6 && field.second.substr(0, 6) == " NTLM ") {
+								filterResponseReturn.push_back(std::pair<std::string, std::string>("Proxy-Authorization", "NTLM TlRMTVNTUAADAAAAGAAYAHIAAAAYABgAigAAABIAEgBIAAAABgAGAFoAAAASABIVNTUAADAAYAAAABAAEACiAAAANYKI4gUBKAoAAAAPTABBAEIAUwBNAE8ASwBFADMAXwBxAGEATABBAEIAUwBNAE8ASwBFADMA0NKq8HYYhj8AAAAAAAAAAAAAAAAAAAAAOIiih3mR+AkyM4r99sy1mdFonCu2ILODro1WTTrJ4b4JcXEzUBA2Ig=="));
+								return filterResponseReturn;
+							}
+							else if (field.second.size() >= 5 && field.second.substr(0, 5) == " NTLM") {
+								filterResponseReturn.push_back(std::pair<std::string, std::string>("Proxy-Authorization", "NTLM TlRMTVNTUAABAAAAt7II4gkACQAxAAAACQAJACgAAAVNTUAADAAFASgKAAAAD0xBQlNNT0tFM1dPUktHUk9VUA=="));
+								return filterResponseReturn;
+							}
+						}
+					}
+
+					return filterResponseReturn;
+				}
+				else {
+					return std::vector<std::pair<std::string, std::string> >();
+				}
+			}
 	};
 }
 
@@ -57,6 +101,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testDisconnect_AfterConnectRequest);
 		CPPUNIT_TEST(testDisconnect_AfterConnect);
 		CPPUNIT_TEST(testTrafficFilter);
+		CPPUNIT_TEST(testTrafficFilterNoConnectionReuse);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -71,6 +116,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			timerFactory = new DummyTimerFactory();
 			connectionFactory = new MockConnectionFactory(eventLoop);
 			connectFinished = false;
+			connectFinishedWithError = false;
 			disconnected = false;
 		}
 
@@ -238,12 +284,69 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			eventLoop->processEvents();
 
 			// verify that the traffic filter answer is send over the wire
-			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345\r\nAuthorization:Negotiate a87421000492aa874209af8bc028\r\n\r\n"), connectionFactory->connections[0]->dataWritten);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\nAuthorization: Negotiate a87421000492aa874209af8bc028\r\n\r\n"), connectionFactory->connections[1]->dataWritten);
 
 			// verify that after without the default response, the traffic filter is skipped, authentication proceeds and traffic goes right through
-			connectionFactory->connections[0]->dataWritten.clear();
+			connectionFactory->connections[1]->dataWritten.clear();
 			testling->write(createSafeByteArray("abcdef"));
-			CPPUNIT_ASSERT_EQUAL(createByteArray("abcdef"), connectionFactory->connections[0]->dataWritten);
+			CPPUNIT_ASSERT_EQUAL(createByteArray("abcdef"), connectionFactory->connections[1]->dataWritten);
+		}
+
+		void testTrafficFilterNoConnectionReuse() {
+			HTTPConnectProxiedConnection::ref testling = createTestling();
+
+			boost::shared_ptr<ProxyAuthenticationHTTPTrafficFilter> httpTrafficFilter = boost::make_shared<ProxyAuthenticationHTTPTrafficFilter>();
+			testling->setHTTPTrafficFilter(httpTrafficFilter);
+
+			connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+
+			// First HTTP CONNECT request assumes the proxy will work.
+			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n"
+												"\r\n"), connectionFactory->connections[0]->dataWritten);
+
+			// First reply presents initiator with authentication options.
+			connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef(
+				"HTTP/1.0 407 ProxyAuthentication Required\r\n"
+				"proxy-Authenticate: Negotiate\r\n"
+				"Proxy-Authenticate: Kerberos\r\n"
+				"proxy-Authenticate: NTLM\r\n"
+				"\r\n"));
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT_EQUAL(false, connectFinished);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError);
+
+			// The HTTP proxy responds with code 407, so the traffic filter should inject the authentication response on a new connection.
+			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n"
+												"Proxy-Authorization: NTLM TlRMTVNTUAABAAAAt7II4gkACQAxAAAACQAJACgAAAVNTUAADAAFASgKAAAAD0xBQlNNT0tFM1dPUktHUk9VUA==\r\n"
+												"\r\n"), connectionFactory->connections[1]->dataWritten);
+
+			// The proxy responds with another authentication step.
+			connectionFactory->connections[1]->onDataRead(createSafeByteArrayRef(
+				"HTTP/1.0 407 ProxyAuthentication Required\r\n"
+				"Proxy-Authenticate: NTLM TlRMTVNTUAACAAAAEAAQADgAAAA1goriluCDYHcYI/sAAAAAAAAAAFQAVABIAAAABQLODgAAAA9TAFAASQBSAEkAVAAxAEIAAgAQAFMAUABJAFIASQBUADEAQgABABAAUwBQAEkAUgBJAFQAMQBCAAQAEABzAHAAaQByAGkAdAAxAGIAAwAQAHMAcABpAHIAaQB0ADEAYgAAAAAA\r\n"
+				"\r\n"));
+			eventLoop->processEvents();
+			CPPUNIT_ASSERT_EQUAL(false, connectFinished);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError);
+
+			// Last HTTP request that should succeed. Further traffic will go over the connection of this request.
+			CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n"
+												"Proxy-Authorization: NTLM TlRMTVNTUAADAAAAGAAYAHIAAAAYABgAigAAABIAEgBIAAAABgAGAFoAAAASABIVNTUAADAAYAAAABAAEACiAAAANYKI4gUBKAoAAAAPTABBAEIAUwBNAE8ASwBFADMAXwBxAGEATABBAEIAUwBNAE8ASwBFADMA0NKq8HYYhj8AAAAAAAAAAAAAAAAAAAAAOIiih3mR+AkyM4r99sy1mdFonCu2ILODro1WTTrJ4b4JcXEzUBA2Ig==\r\n"
+												"\r\n"), connectionFactory->connections[2]->dataWritten);
+
+			connectionFactory->connections[2]->onDataRead(createSafeByteArrayRef(
+				"HTTP/1.0 200 OK\r\n"
+				"\r\n"));
+			eventLoop->processEvents();
+
+			// The HTTP CONNECT proxy initialization finished without error.
+			CPPUNIT_ASSERT_EQUAL(true, connectFinished);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError);
+
+			// Further traffic is written directly, without interception of the filter.
+			connectionFactory->connections[2]->dataWritten.clear();
+			testling->write(createSafeByteArray("This is some basic data traffic."));
+			CPPUNIT_ASSERT_EQUAL(createByteArray("This is some basic data traffic."), connectionFactory->connections[2]->dataWritten);
 		}
 
 	private:
@@ -307,6 +410,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 			boost::shared_ptr<Connection> createConnection() {
 				boost::shared_ptr<MockConnection> connection = boost::make_shared<MockConnection>(failingPorts, eventLoop);
 				connections.push_back(connection);
+				SWIFT_LOG(debug) << "new connection created" << std::endl;
 				return connection;
 			}
 
@@ -324,7 +428,6 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 		StaticDomainNameResolver* resolver;
 		MockConnectionFactory* connectionFactory;
 		TimerFactory* timerFactory;
-		std::vector< boost::shared_ptr<MockConnection> > connections;
 		bool connectFinished;
 		bool connectFinishedWithError;
 		bool disconnected;

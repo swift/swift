@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
+
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/optional.hpp>
-#include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/lexical_cast.hpp>
-
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/Network/BOSHConnection.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
-#include <Swiften/Network/BOSHConnection.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 
 using namespace Swift;
@@ -39,7 +39,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testRead_Fragment);
 	CPPUNIT_TEST(testHTTPRequest);
 	CPPUNIT_TEST(testHTTPRequest_Empty);
-	CPPUNIT_TEST_SUITE_END();	
+	CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void setUp() {

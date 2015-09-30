@@ -14,24 +14,23 @@
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/StreamType.h>
-#include <Swiften/StreamStack/XMPPLayer.h>
-#include <Swiften/StreamStack/StreamStack.h>
-#include <Swiften/StreamStack/ConnectionLayer.h>
-#include <Swiften/StreamStack/WhitespacePingLayer.h>
-#include <Swiften/StreamStack/CompressionLayer.h>
-#include <Swiften/StreamStack/TLSLayer.h>
-#include <Swiften/TLS/TLSContextFactory.h>
-#include <Swiften/TLS/TLSContext.h>
 #include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/StreamStack/CompressionLayer.h>
+#include <Swiften/StreamStack/ConnectionLayer.h>
+#include <Swiften/StreamStack/StreamStack.h>
+#include <Swiften/StreamStack/TLSLayer.h>
+#include <Swiften/StreamStack/WhitespacePingLayer.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
 
-BOSHSessionStream::BOSHSessionStream(
-		const URL& boshURL,
-		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers, 
+BOSHSessionStream::BOSHSessionStream(const URL& boshURL,
+		PayloadParserFactoryCollection* payloadParserFactories,
+		PayloadSerializerCollection* payloadSerializers,
 		ConnectionFactory* connectionFactory,
-		TLSContextFactory* tlsContextFactory, 
+		TLSContextFactory* tlsContextFactory,
 		TimerFactory* timerFactory,
 		XMLParserFactory* xmlParserFactory,
 		EventLoop* eventLoop,
@@ -40,7 +39,8 @@ BOSHSessionStream::BOSHSessionStream(
 		const URL& boshHTTPConnectProxyURL,
 		const SafeString& boshHTTPConnectProxyAuthID,
 		const SafeString& boshHTTPConnectProxyAuthPassword,
-		const TLSOptions& tlsOptions) :
+		const TLSOptions& tlsOptions,
+		boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
 			available(false), 
 			eventLoop(eventLoop),
 			firstHeader(true) {
@@ -50,7 +50,7 @@ BOSHSessionStream::BOSHSessionStream(
 	random.seed(static_cast<unsigned int>(time(NULL)));
 	unsigned long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long long> >(random, dist)();
 
-	connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, tlsOptions);
+	connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, tlsOptions, trafficFilter);
 	connectionPool->onSessionTerminated.connect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
 	connectionPool->onSessionStarted.connect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
 	connectionPool->onXMPPDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));

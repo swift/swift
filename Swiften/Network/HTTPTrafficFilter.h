@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <vector>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <boost/optional.hpp>
 
@@ -25,7 +25,7 @@ class SWIFTEN_API HTTPTrafficFilter {
 		 * @return A vector of HTTP header fields to use in a new request. If an empty vector is returned,
 		 *         no new request will be send and the normal proxy logic continues.
 		 */
-		virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::vector<std::pair<std::string, std::string> >& /* responseHeader */) = 0;
+		virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::string& statusLine, const std::vector<std::pair<std::string, std::string> >& /* responseHeader */) = 0;
 };
 
 }

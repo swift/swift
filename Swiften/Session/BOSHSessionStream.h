@@ -17,18 +17,18 @@
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/TLS/TLSOptions.h>
 
-
 namespace Swift {
-	class TimerFactory;
+	class CompressionLayer;
+	class ConnectionLayer;
+	class EventLoop;
+	class HTTPTrafficFilter;
 	class PayloadParserFactoryCollection;
 	class PayloadSerializerCollection;
 	class StreamStack;
-	class XMPPLayer;
-	class ConnectionLayer;
-	class CompressionLayer;
-	class XMLParserFactory;
 	class TLSContextFactory;
-	class EventLoop;
+	class TimerFactory;
+	class XMLParserFactory;
+	class XMPPLayer;
 
 	class SWIFTEN_API BOSHSessionStream : public SessionStream, public EventOwner, public boost::enable_shared_from_this<BOSHSessionStream> {
 		public:
@@ -46,7 +46,8 @@ namespace Swift {
 					const URL& boshHTTPConnectProxyURL,
 					const SafeString& boshHTTPConnectProxyAuthID,
 					const SafeString& boshHTTPConnectProxyAuthPassword,
-					const TLSOptions& tlsOptions
+					const TLSOptions& tlsOptions,
+					boost::shared_ptr<HTTPTrafficFilter> trafficFilter
 			);
 			~BOSHSessionStream();
 

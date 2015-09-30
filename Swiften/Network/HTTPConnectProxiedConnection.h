@@ -19,15 +19,17 @@
 #include <Swiften/Network/ProxiedConnection.h>
 
 namespace Swift {
-	class DomainNameResolver;
 	class ConnectionFactory;
+	class DomainNameResolver;
 	class EventLoop;
-	class TimerFactory;
 	class HTTPTrafficFilter;
+	class TimerFactory;
 
 	class SWIFTEN_API HTTPConnectProxiedConnection : public ProxiedConnection {
 		public:
 			typedef boost::shared_ptr<HTTPConnectProxiedConnection> ref;
+
+			virtual ~HTTPConnectProxiedConnection();
 
 			static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword) {
 				return ref(new HTTPConnectProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort, authID, authPassword));
@@ -49,5 +51,6 @@ namespace Swift {
 			SafeByteArray authPassword_;
 			boost::shared_ptr<HTTPTrafficFilter> trafficFilter_;
 			std::string httpResponseBuffer_;
+			std::vector<std::pair<std::string, std::string> > nextHTTPRequestHeaders_;
 	};
 }

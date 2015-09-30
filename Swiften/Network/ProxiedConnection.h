@@ -10,10 +10,10 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/Connector.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Base/SafeString.h>
 
 namespace boost {
 	class thread;
@@ -28,7 +28,7 @@ namespace Swift {
 	class SWIFTEN_API ProxiedConnection : public Connection, public boost::enable_shared_from_this<ProxiedConnection> {
 		public:
 			ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
-			~ProxiedConnection();
+			virtual ~ProxiedConnection();
 
 			virtual void listen();
 			virtual void connect(const HostAddressPort& address);
@@ -52,6 +52,8 @@ namespace Swift {
 			const HostAddressPort& getServer() const {
 				return server_;
 			}
+
+			void reconnect();
 
 		private:
 			bool connected_;

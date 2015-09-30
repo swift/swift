@@ -14,16 +14,16 @@
 #include <Swiften/Network/BOSHConnection.h>
 #include <Swiften/TLS/TLSOptions.h>
 
-
 namespace Swift {
-	class HTTPConnectProxiedConnectionFactory;
-	class TLSConnectionFactory;
 	class CachingDomainNameResolver;
 	class EventLoop;
+	class HTTPConnectProxiedConnectionFactory;
+	class HTTPTrafficFilter;
+	class TLSConnectionFactory;
 
 	class SWIFTEN_API BOSHConnectionPool : public boost::bsignals::trackable {
 		public:
-			BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions);
+			BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, boost::shared_ptr<HTTPTrafficFilter> trafficFilter = boost::shared_ptr<HTTPTrafficFilter>());
 			~BOSHConnectionPool();
 			void write(const SafeByteArray& data);
 			void writeFooter();

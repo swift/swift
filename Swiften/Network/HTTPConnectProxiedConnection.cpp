@@ -16,18 +16,18 @@
 #include <iostream>
 #include <utility>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/ByteArray.h>
-#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HTTPTrafficFilter.h>
+#include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/StringCodecs/Base64.h>
 
 using namespace Swift;
@@ -45,11 +45,17 @@ HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(
 			authPassword_(authPassword) {
 }
 
+HTTPConnectProxiedConnection::~HTTPConnectProxiedConnection() {
+
+}
+
 void HTTPConnectProxiedConnection::setHTTPTrafficFilter(boost::shared_ptr<HTTPTrafficFilter> trafficFilter) {
 	trafficFilter_ = trafficFilter;
 }
 
 void HTTPConnectProxiedConnection::initializeProxy() {
+	httpResponseBuffer_.clear();
+
 	std::stringstream connect;
 	connect << "CONNECT " << getServer().getAddress().toString() << ":" << getServer().getPort() << " HTTP/1.1\r\n";
 	SafeByteArray data = createSafeByteArray(connect.str());
@@ -60,6 +66,17 @@ void HTTPConnectProxiedConnection::initializeProxy() {
 		append(credentials, authPassword_);
 		append(data, Base64::encode(credentials));
 		append(data, createSafeByteArray("\r\n"));
+	}
+	else if (!nextHTTPRequestHeaders_.empty()) {
+		typedef std::pair<std::string, std::string> StringPair;
+		foreach(const StringPair& headerField, nextHTTPRequestHeaders_) {
+			append(data, createSafeByteArray(headerField.first));
+			append(data, createSafeByteArray(": "));
+			append(data, createSafeByteArray(headerField.second));
+			append(data, createSafeByteArray("\r\n"));
+		}
+
+		nextHTTPRequestHeaders_.clear();
 	}
 	append(data, createSafeByteArray("\r\n"));
 	SWIFT_LOG(debug) << "HTTP Proxy send headers: " << byteArrayToString(ByteArray(data.begin(), data.end())) << std::endl;
@@ -114,11 +131,11 @@ void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<S
 	parseHTTPHeader(httpResponseBuffer_.substr(0, headerEnd), statusLine, headerFields);
 
 	if (trafficFilter_) {
-		std::vector<std::pair<std::string, std::string> > newHeaderFields = trafficFilter_->filterHTTPResponseHeader(headerFields);
+		std::vector<std::pair<std::string, std::string> > newHeaderFields = trafficFilter_->filterHTTPResponseHeader(statusLine, headerFields);
 		if (!newHeaderFields.empty()) {
 			std::stringstream statusLine;
-			statusLine << "CONNECT " << getServer().getAddress().toString() << ":" << getServer().getPort();
-			sendHTTPRequest(statusLine.str(), newHeaderFields);
+			reconnect();
+			nextHTTPRequestHeaders_ = newHeaderFields;
 			return;
 		}
 	}

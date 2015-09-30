@@ -10,14 +10,14 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/SafeString.h>
-#include <Swiften/Network/TLSConnectionFactory.h>
-#include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/CachingDomainNameResolver.h>
+#include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
+#include <Swiften/Network/TLSConnectionFactory.h>
 
 namespace Swift {
-BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions) :
+BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
 		boshURL(boshURL),
 		connectionFactory(connectionFactoryParameter),
 		xmlParserFactory(parserFactory),
@@ -34,7 +34,7 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 			connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory, tlsOptions);
 			myConnectionFactories.push_back(connectionFactory);
 		}
-		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, boshHTTPConnectProxyURL.getHost(), URL::getPortOrDefaultPort(boshHTTPConnectProxyURL), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword);
+		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, boshHTTPConnectProxyURL.getHost(), URL::getPortOrDefaultPort(boshHTTPConnectProxyURL), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, trafficFilter);
 	}
 	if (boshURL.getScheme() == "https") {
 		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory, tlsOptions);
