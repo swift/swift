@@ -304,7 +304,9 @@ void QtUserSearchWindow::handleOnSearchedJIDSelected(const Contact::ref& contact
 
 void QtUserSearchWindow::show() {
 	clear();
-	setWarning(boost::optional<std::string>());
+	if (type_ == AddContact) {
+		setWarning(boost::optional<std::string>());
+	}
 	QWidget::show();
 }
 
