@@ -597,7 +597,29 @@ void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 		}
 		else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
 			if (isMUC_ || supportsImpromptuChat_) {
-				event->acceptProposedAction();
+				// Prevent invitations or impromptu initializations for contacts that you are already chatting to.
+				std::vector<JID> droppedJIDs =jidListFromQByteArray(event->mimeData()->data("application/vnd.swift.contact-jid-list"));
+				std::set<JID> conversationJIDs;
+				if (isMUC_) {
+					conversationJIDs = treeWidget_->getRoster()->getJIDs();
+				}
+
+				for (std::vector<JID>::iterator i = droppedJIDs.begin(); i != droppedJIDs.end(); ) {
+					const JID& droppedJID = *i;
+					if (conversationJIDs.find(droppedJID) != conversationJIDs.end()) {
+						i = droppedJIDs.erase(i);
+					}
+					else {
+						++i;
+					}
+				}
+
+				if (droppedJIDs.empty()) {
+					event->ignore();
+				}
+				else {
+					event->acceptProposedAction();
+				}
 			}
 		}
 	}
@@ -616,16 +638,20 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
 		}
 	}
 	else if (event->mimeData()->hasFormat("application/vnd.swift.contact-jid-list")) {
-		QByteArray dataBytes = event->mimeData()->data("application/vnd.swift.contact-jid-list");
-		QDataStream dataStream(&dataBytes, QIODevice::ReadOnly);
-		std::vector<JID> invites;
-		while (!dataStream.atEnd()) {
-			QString jidString;
-			dataStream >> jidString;
-			invites.push_back(Q2PSTRING(jidString));
-		}
+		std::vector<JID> invites = jidListFromQByteArray(event->mimeData()->data("application/vnd.swift.contact-jid-list"));
 		onInviteToChat(invites);
 	}
+}
+
+std::vector<JID> QtChatWindow::jidListFromQByteArray(const QByteArray& dataBytes) {
+	QDataStream dataStream(dataBytes);
+	std::vector<JID> invites;
+	while (!dataStream.atEnd()) {
+		QString jidString;
+		dataStream >> jidString;
+		invites.push_back(Q2PSTRING(jidString));
+	}
+	return invites;
 }
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {

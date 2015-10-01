@@ -185,6 +185,8 @@ namespace Swift {
 			void handleOccupantSelectionChanged(RosterItem* item);
 			void handleAppendedToLog();
 
+			static std::vector<JID> jidListFromQByteArray(const QByteArray& dataBytes);
+
 		private:
 			int unreadCount_;
 			bool contactIsTyping_;

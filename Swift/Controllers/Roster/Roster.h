@@ -42,6 +42,8 @@ class Roster {
 		void addFilter(RosterFilter* filter);
 		void removeFilter(RosterFilter* filter);
 		GroupRosterItem* getRoot() const;
+		std::set<JID> getJIDs() const;
+
 		std::vector<RosterFilter*> getFilters() {return filters_;}
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;

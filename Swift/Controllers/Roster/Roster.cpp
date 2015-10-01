@@ -51,6 +51,28 @@ GroupRosterItem* Roster::getRoot() const {
 	return root_;
 }
 
+std::set<JID> Roster::getJIDs() const {
+	std::set<JID> jids;
+
+	std::deque<RosterItem*> queue;
+	queue.push_back(root_);
+	while (!queue.empty()) {
+		RosterItem* item = *queue.begin();
+		queue.pop_front();
+		GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+		ContactRosterItem *contact = dynamic_cast<ContactRosterItem*>(item);
+		if (contact) {
+			jids.insert(contact->getJID());
+			jids.insert(contact->getDisplayJID());
+		}
+		else if (group) {
+			queue.insert(queue.begin(), group->getChildren().begin(), group->getChildren().end());
+		}
+	}
+
+	return jids;
+}
+
 GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 	foreach (RosterItem *item, root_->getChildren()) {
 		GroupRosterItem *group = dynamic_cast<GroupRosterItem*>(item);
