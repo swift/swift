@@ -1,34 +1,34 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/bind.hpp>
-#include <boost/filesystem.hpp>
 #include <iostream>
 
-#include <Swiften/Client/Client.h>
-#include <Swiften/Elements/Presence.h>
+#include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem.hpp>
+
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
+#include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Network/BoostTimer.h>
 #include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Network/BoostNetworkFactories.h>
-#include <Swiften/EventLoop/EventLoop.h>
-#include <Swiften/Client/ClientXMLTracer.h>
-#include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Swiften/FileTransfer/OutgoingSIFileTransfer.h>
-#include <Swiften/FileTransfer/FileReadBytestream.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
-#include <Swiften/Network/BoostConnectionServer.h>
-#include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
-#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/Base/ByteArray.h>
 #include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/FileTransfer/FileTransferManager.h>
 
 using namespace Swift;
 

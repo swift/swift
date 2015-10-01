@@ -3,7 +3,6 @@ Import("swiften_env", "env")
 sources = [
 		"ByteArrayReadBytestream.cpp",
 		"OutgoingFileTransfer.cpp",
-		"OutgoingSIFileTransfer.cpp",
 		"OutgoingJingleFileTransfer.cpp",
 		"OutgoingFileTransferManager.cpp",
 		"IncomingFileTransfer.cpp",
