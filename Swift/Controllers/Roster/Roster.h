@@ -1,23 +1,24 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <map>
+#include <set>
 #include <string>
 #include <vector>
-#include <map>
 
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/RosterFilter.h>
-#include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {
 
@@ -40,7 +41,7 @@ class Roster {
 		void applyOnItem(const RosterItemOperation& operation, const JID& jid);
 		void addFilter(RosterFilter* filter);
 		void removeFilter(RosterFilter* filter);
-		GroupRosterItem* getRoot();
+		GroupRosterItem* getRoot() const;
 		std::vector<RosterFilter*> getFilters() {return filters_;}
 		boost::signal<void (GroupRosterItem*)> onChildrenChanged;
 		boost::signal<void (GroupRosterItem*)> onGroupAdded;

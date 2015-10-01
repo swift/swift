@@ -1,15 +1,14 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Roster/Roster.h>
 
-#include <string>
-#include <iostream>
-#include <set>
 #include <deque>
+#include <set>
+#include <string>
 
 #include <boost/bind.hpp>
 
@@ -17,9 +16,9 @@
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
-#include <Swift/Controllers/Roster/RosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
+#include <Swift/Controllers/Roster/RosterItem.h>
 
 namespace Swift {
 
@@ -48,7 +47,7 @@ Roster::~Roster() {
 	}
 }
 
-GroupRosterItem* Roster::getRoot() {
+GroupRosterItem* Roster::getRoot() const {
 	return root_;
 }
 
