@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,6 +24,7 @@ boost::shared_ptr<DNSSDQuerier> PlatformDNSSDQuerierFactory::createQuerier() {
 #elif defined(HAVE_AVAHI)
 	return boost::shared_ptr<DNSSDQuerier>(new AvahiQuerier(eventLoop));
 #else
+	(void)eventLoop;
 	return boost::shared_ptr<DNSSDQuerier>();
 #endif
 }

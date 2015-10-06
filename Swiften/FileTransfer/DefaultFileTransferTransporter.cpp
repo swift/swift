@@ -172,14 +172,14 @@ boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBRec
 }
 
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
-		boost::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
+		boost::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& /* candidate */) {
 	closeLocalSession();
 	return boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
 		remoteS5BClientSession, stream);
 }
 
 boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
-		boost::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
+		boost::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& /* candidate */) {
 	closeLocalSession();
 	return boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
 		remoteS5BClientSession, stream);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,9 +12,9 @@
 #include <boost/thread/mutex.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Network/Connection.h>
-#include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/Network/Connection.h>
 
 namespace boost {
 	class thread;
@@ -30,7 +30,7 @@ namespace Swift {
 		public:
 			typedef boost::shared_ptr<BoostConnection> ref;
 
-			~BoostConnection();
+			virtual ~BoostConnection();
 
 			static ref create(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
 				return ref(new BoostConnection(ioService, eventLoop));
