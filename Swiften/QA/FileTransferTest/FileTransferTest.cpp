@@ -7,28 +7,28 @@
 #include <fstream>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Base/sleep.h>
-#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/BoostRandomGenerator.h>
+#include <Swiften/Base/Debug.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/sleep.h>
 #include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Elements/Presence.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/FileTransfer/FileWriteBytestream.h>
+#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
+#include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Disco/EntityCapsProvider.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/FileTransfer/ReadBytestream.h>
-#include <Swiften/Base/BoostRandomGenerator.h>
-#include <Swiften/FileTransfer/FileReadBytestream.h>
-#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
-#include <Swiften/FileTransfer/FileTransferManager.h>
-#include <Swiften/Disco/ClientDiscoManager.h>
-#include <Swiften/FileTransfer/FileWriteBytestream.h>
-#include <Swiften/Base/Debug.h>
 
 using namespace Swift;
 
@@ -59,8 +59,8 @@ class FileTransferTest {
 			receiver_->onConnected.connect(boost::bind(&FileTransferTest::handleReceiverConnected, this));
 			receiver_->onDisconnected.connect(boost::bind(&FileTransferTest::handleReceiverDisconnected, this, _1));
 
-			new ClientXMLTracer(sender_.get());
-			new ClientXMLTracer(receiver_.get());
+			senderTracer_ = new ClientXMLTracer(sender_.get());
+			receiverTracer_ = new ClientXMLTracer(receiver_.get());
 
 			ClientOptions options;
 			options.useTLS = ClientOptions::NeverUseTLS;
@@ -91,6 +91,9 @@ class FileTransferTest {
 
 		~FileTransferTest() {
 			timeOut_->stop();
+
+			delete senderTracer_;
+			delete receiverTracer_;
 
 			if(boost::filesystem::exists(sendFilePath_)) {
 				boost::filesystem::remove(sendFilePath_);
@@ -239,6 +242,7 @@ class FileTransferTest {
 	private:
 		int senderCandidates_;
 		boost::shared_ptr<Client> sender_;
+		ClientXMLTracer* senderTracer_;
 		ByteArray sendData_;
 		OutgoingFileTransfer::ref outgoingFileTransfer_;
 		boost::filesystem::path sendFilePath_;
@@ -247,6 +251,7 @@ class FileTransferTest {
 
 		int receiverCandidates_;
 		boost::shared_ptr<Client> receiver_;
+		ClientXMLTracer* receiverTracer_;
 		ByteArray receiveData_;
 		std::vector<IncomingFileTransfer::ref> incomingFileTransfers_;
 		boost::filesystem::path receiveFilePath_;

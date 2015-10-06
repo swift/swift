@@ -42,6 +42,8 @@ SOCKS5BytestreamClientSession::SOCKS5BytestreamClientSession(
 }
 
 SOCKS5BytestreamClientSession::~SOCKS5BytestreamClientSession() {
+	weFailedTimeout->onTick.disconnect(
+			boost::bind(&SOCKS5BytestreamClientSession::handleWeFailedTimeout, this));
 	weFailedTimeout->stop();
 }
 

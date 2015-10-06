@@ -113,6 +113,7 @@ boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager:
 }
 
 void SOCKS5BytestreamProxiesManager::handleProxiesFound(std::vector<S5BProxyRequest::ref> proxyHosts) {
+	proxyFinder_->onProxiesFound.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxiesFound, this, _1));
 	foreach(S5BProxyRequest::ref proxy, proxyHosts) {
 		if (proxy) {
 			if (HostAddress(proxy->getStreamHost().get().host).isValid()) {

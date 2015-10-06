@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Disco/DiscoServiceWalker.h>
 
+#include <boost/bind.hpp>
+
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-
-#include <boost/bind.hpp>
 
 namespace Swift {
 
@@ -57,6 +57,7 @@ void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> in
 
 	SWIFT_LOG(debug) << "Disco info response from " << request->getReceiver() << std::endl;
 
+	request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, request));
 	pendingDiscoInfoRequests_.erase(request);
 	if (error) {
 		handleDiscoError(request->getReceiver(), error);
@@ -91,6 +92,7 @@ void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
 	}
 
 	SWIFT_LOG(debug) << "Received disco items from " << request->getReceiver() << std::endl;
+	request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, request));
 	pendingDiscoItemsRequests_.erase(request);
 	if (error) {
 		handleDiscoError(request->getReceiver(), error);

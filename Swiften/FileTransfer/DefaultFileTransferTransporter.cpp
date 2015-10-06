@@ -73,7 +73,12 @@ DefaultFileTransferTransporter::DefaultFileTransferTransporter(
 
 DefaultFileTransferTransporter::~DefaultFileTransferTransporter() {
 	stopGeneratingLocalCandidates();
+	remoteCandidateSelector->onCandidateSelectFinished.disconnect(
+		boost::bind(&DefaultFileTransferTransporter::handleRemoteCandidateSelectFinished, this, _1, _2));
 	delete remoteCandidateSelector;
+
+	localCandidateGenerator->onLocalTransportCandidatesGenerated.disconnect(
+		boost::bind(&DefaultFileTransferTransporter::handleLocalCandidatesGenerated, this, _1));
 	delete localCandidateGenerator;
 }
 
