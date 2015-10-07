@@ -29,6 +29,7 @@ namespace Swift {
 	class ConnectionFactory;
 	class DomainNameResolver;
 	class DomainNameResolveError;
+	class IQRouter;
 
 	/**
 	 *	- manages list of working S5B proxies
@@ -56,7 +57,7 @@ namespace Swift {
 			boost::signal<void ()> onDiscoveredProxiesChanged;
 
 		private:
-			void handleProxyFound(S5BProxyRequest::ref proxy);
+			void handleProxiesFound(std::vector<S5BProxyRequest::ref> proxyHosts);
 			void handleNameLookupResult(const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>, S5BProxyRequest::ref proxy);
 
 			void queryForProxies();

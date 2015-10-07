@@ -112,20 +112,19 @@ boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager:
 	return connection;
 }
 
-void SOCKS5BytestreamProxiesManager::handleProxyFound(S5BProxyRequest::ref proxy) {
-	if (proxy) {
-		if (HostAddress(proxy->getStreamHost().get().host).isValid()) {
-			addS5BProxy(proxy);
-			onDiscoveredProxiesChanged();
+void SOCKS5BytestreamProxiesManager::handleProxiesFound(std::vector<S5BProxyRequest::ref> proxyHosts) {
+	foreach(S5BProxyRequest::ref proxy, proxyHosts) {
+		if (proxy) {
+			if (HostAddress(proxy->getStreamHost().get().host).isValid()) {
+				addS5BProxy(proxy);
+				onDiscoveredProxiesChanged();
+			}
+			else {
+				DomainNameAddressQuery::ref resolveRequest = resolver_->createAddressQuery(proxy->getStreamHost().get().host);
+				resolveRequest->onResult.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleNameLookupResult, this, _1, _2, proxy));
+				resolveRequest->run();
+			}
 		}
-		else {
-			DomainNameAddressQuery::ref resolveRequest = resolver_->createAddressQuery(proxy->getStreamHost().get().host);
-			resolveRequest->onResult.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleNameLookupResult, this, _1, _2, proxy));
-			resolveRequest->run();
-		}
-	}
-	else {
-		onDiscoveredProxiesChanged();
 	}
 	proxyFinder_->stop();
 	proxyFinder_.reset();
@@ -157,12 +156,12 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
 void SOCKS5BytestreamProxiesManager::queryForProxies() {
 	proxyFinder_ = boost::make_shared<SOCKS5BytestreamProxyFinder>(serviceRoot_, iqRouter_);
 
-	proxyFinder_->onProxyFound.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxyFound, this, _1));
+	proxyFinder_->onProxiesFound.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxiesFound, this, _1));
 	proxyFinder_->start();
 }
 
 void SOCKS5BytestreamProxiesManager::handleProxySessionReady(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, bool error) {
-	session->onSessionReady.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, boost::cref(sessionID), boost::cref(jid), session, _1));
+	session->onSessionReady.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this, boost::cref(sessionID), boost::cref(jid), session, _1));
 	if (!error) {
 		// The SOCKS5 bytestream session to the proxy succeeded; stop and remove other sessions.
 		if (proxySessions_.find(sessionID) != proxySessions_.end()) {
