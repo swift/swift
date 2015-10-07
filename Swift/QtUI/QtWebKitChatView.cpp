@@ -441,7 +441,7 @@ void QtWebKitChatView::setFileTransferStatus(QString id, const ChatWindow::FileT
 
 	QString newInnerHTML = "";
 	if (state == ChatWindow::Initialisation) {
-		newInnerHTML = tr("Preparing to send.") + "<br/>" +
+		newInnerHTML = tr("Preparing to transfer.") + "<br/>" +
 			buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, id);
 	}
 	else if (state == ChatWindow::WaitingForAccept) {
