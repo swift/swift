@@ -175,7 +175,11 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	JID from = message->getFrom();
 	if (!from.equals(toJID_, JID::WithResource)) {
 		if (toJID_.equals(from, JID::WithoutResource)  && toJID_.isBare()){
-			setToJID(from);
+			// Bind controller to a full JID if message contains body text or is a typing chat state.
+			ChatState::ref chatState = message->getPayload<ChatState>();
+			if (!message->getBody().empty() || (chatState && chatState->getChatState() == ChatState::Composing)) {
+				setToJID(from);
+			}
 		}
 	}
 	chatStateTracker_->handleMessageReceived(message);

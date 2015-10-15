@@ -750,7 +750,12 @@ ChatController* ChatsManager::getChatControllerIfExists(const JID &contact, bool
 		//Need to look for an unbound window to bind first
 		JID bare(contact.toBare());
 		if (chatControllers_.find(bare) != chatControllers_.end()) {
-			rebindControllerJID(bare, contact);
+			if (rebindIfNeeded) {
+				rebindControllerJID(bare, contact);
+			}
+			else {
+				return chatControllers_[bare];
+			}
 		} else {
 			foreach (JIDChatControllerPair pair, chatControllers_) {
 				if (pair.first.toBare() == contact.toBare()) {
@@ -909,7 +914,15 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 	//if not a mucroom
 	if (!event->isReadable() && !isInvite && !isMediatedInvite) {
 		/* Only route such messages if a window exists, don't open new windows for them.*/
-		ChatController* controller = getChatControllerIfExists(jid);
+
+		// Do not bind a controller to a full JID, for delivery receipts or chat state notifications.
+		bool bindControllerToJID = false;
+		ChatState::ref chatState = message->getPayload<ChatState>();
+		if (!message->getBody().empty() || (chatState && chatState->getChatState() == ChatState::Composing)) {
+			bindControllerToJID = true;
+		}
+
+		ChatController* controller = getChatControllerIfExists(jid, bindControllerToJID);
 		if (controller) {
 			controller->handleIncomingMessage(event);
 		}

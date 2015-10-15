@@ -14,6 +14,9 @@
 namespace Swift {
 	class SWIFTEN_API ChatState : public Payload {
 		public:
+			typedef boost::shared_ptr<ChatState> ref;
+
+		public:
 			enum ChatStateType {Active, Composing, Paused, Inactive, Gone};
 			ChatState(ChatStateType state = Active) {
 				state_ = state;
