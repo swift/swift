@@ -1,15 +1,14 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-
 #include <hippomocks.h>
-
-#include <boost/bind.hpp>
 
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
 #include <Swiften/Avatars/NullAvatarManager.h>
@@ -20,8 +19,7 @@
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
-#include <Swiften/Disco/CapsProvider.h>
-#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Disco/DummyEntityCapsProvider.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
@@ -33,12 +31,11 @@
 #include <Swiften/Queries/DummyIQChannel.h>
 #include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/VCards/VCardManager.h>
-#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
 
-#include <Swift/Controllers/Chat/ChatsManager.h>
 #include <Swift/Controllers/Chat/ChatController.h>
+#include <Swift/Controllers/Chat/ChatsManager.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/UnitTest/MockChatListWindow.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
@@ -58,12 +55,7 @@
 #include <Swift/Controllers/WhiteboardManager.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
-
 using namespace Swift;
-
-class DummyCapsProvider : public CapsProvider {
-		DiscoInfo::ref getCaps(const std::string&) const {return DiscoInfo::ref(new DiscoInfo());}
-};
 
 class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST_SUITE(ChatsManagerTest);
@@ -79,6 +71,8 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnAddToRoster);
 	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToBoth);
 	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToFrom);
+	CPPUNIT_TEST(testChatControllerFullJIDBindingOnMessageAndNotReceipt);
+	CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -88,7 +82,7 @@ public:
 		stanzaChannel_ = new DummyStanzaChannel();
 		iqChannel_ = new DummyIQChannel();
 		iqRouter_ = new IQRouter(iqChannel_);
-		capsProvider_ = new DummyCapsProvider();
+//		capsProvider_ = new DummyCapsProvider();
 		eventController_ = new EventController();
 		chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
 		joinMUCWindowFactory_ = mocks_->InterfaceMock<JoinMUCWindowFactory>();
@@ -101,7 +95,8 @@ public:
 		directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
 		mucManager_ = new MUCManager(stanzaChannel_, iqRouter_, directedPresenceSender_, mucRegistry_);
 		uiEventStream_ = new UIEventStream();
-		entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
+//		entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
+		entityCapsProvider_ = new DummyEntityCapsProvider();
 		chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
 		mucSearchWindowFactory_ = mocks_->InterfaceMock<MUCSearchWindowFactory>();
 		settings_ = new DummySettingsProvider();
@@ -110,7 +105,7 @@ public:
 		ftManager_ = new DummyFileTransferManager();
 		ftOverview_ = new FileTransferOverview(ftManager_);
 		avatarManager_ = new NullAvatarManager();
-		wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsManager_);
+		wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsProvider_);
 		wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
 		highlightManager_ = new HighlightManager(settings_);
 
@@ -119,7 +114,7 @@ public:
 		vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
 		clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsManager_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, NULL, vcardManager_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, NULL, vcardManager_);
 
 		manager_->setAvatarManager(avatarManager_);
 	}
@@ -150,8 +145,7 @@ public:
 		delete uiEventStream_;
 		delete mucManager_;
 		delete xmppRoster_;
-		delete entityCapsManager_;
-		delete capsProvider_;
+		delete entityCapsProvider_;
 		delete chatListWindow_;
 		delete mocks_;
 		delete settings_;
@@ -429,6 +423,225 @@ public:
 		testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::To, RosterItemPayload::From);
 	}
 
+	void testChatControllerFullJIDBindingOnMessageAndNotReceipt() {
+		JID ownJID("test@test.com/resource");
+		JID sender("foo@test.com");
+		std::vector<JID> senderResource;
+		senderResource.push_back(sender.withResource("resourceA"));
+		senderResource.push_back(sender.withResource("resourceB"));
+
+		// We support delivery receipts.
+		settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
+
+		// Open chat window to a sender.
+		MockChatWindow* window = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(sender, uiEventStream_).Return(window);
+
+		uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(sender));
+
+		foreach(const JID& senderJID, senderResource) {
+			// The sender supports delivery receipts.
+			DiscoInfo::ref disco = boost::make_shared<DiscoInfo>();
+			disco->addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
+			entityCapsProvider_->caps[senderJID] = disco;
+
+			// The sender is online.
+			Presence::ref senderPresence = boost::make_shared<Presence>();
+			senderPresence->setFrom(senderJID);
+			senderPresence->setTo(ownJID);
+			stanzaChannel_->onPresenceReceived(senderPresence);
+
+			entityCapsProvider_->onCapsChanged(senderJID);
+		}
+
+		// Send first message.
+		window->onSendMessageRequest("hello there", false);
+
+		// A bare message is send because no resources is bound.
+		CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(0)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(0)->getPayload<DeliveryReceiptRequest>());
+
+		// Two resources respond with message receipts.
+		foreach(const JID& senderJID, senderResource) {
+			Message::ref receiptReply = boost::make_shared<Message>();
+			receiptReply->setFrom(senderJID);
+			receiptReply->setTo(ownJID);
+
+			boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+			receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(0)->getID());
+			receiptReply->addPayload(receipt);
+			manager_->handleIncomingMessage(receiptReply);
+		}
+
+		// Send second message.
+		window->onSendMessageRequest("how are you?", false);
+
+		// A bare message is send because no resources is bound.
+		CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(1)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
+
+		// Two resources respond with message receipts.
+		foreach(const JID& senderJID, senderResource) {
+			Message::ref receiptReply = boost::make_shared<Message>();
+			receiptReply->setFrom(senderJID);
+			receiptReply->setTo(ownJID);
+
+			boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+			receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(1)->getID());
+			receiptReply->addPayload(receipt);
+			manager_->handleIncomingMessage(receiptReply);
+		}
+
+		// Reply with a message including a body text.
+		Message::ref reply = boost::make_shared<Message>();
+		reply->setFrom(senderResource[0]);
+		reply->setTo(ownJID);
+		reply->setBody("fine.");
+		manager_->handleIncomingMessage(reply);
+
+		// Send third message.
+		window->onSendMessageRequest("great to hear.", false);
+
+		// The chat session is bound to the full JID of the first resource.
+		CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(2)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(2)->getPayload<DeliveryReceiptRequest>());
+
+		// Receive random receipt from second sender resource.
+		reply = boost::make_shared<Message>();
+		reply->setFrom(senderResource[1]);
+		reply->setTo(ownJID);
+
+		boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+		receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(2)->getID());
+		reply->addPayload(receipt);
+		manager_->handleIncomingMessage(reply);
+
+		// Send forth message.
+		window->onSendMessageRequest("what else is new?", false);
+
+		// The chat session is bound to the full JID of the first resource.
+		CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(3)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(3)->getPayload<DeliveryReceiptRequest>());
+
+		// Reply with a message including a body text from second resource.
+		reply = boost::make_shared<Message>();
+		reply->setFrom(senderResource[1]);
+		reply->setTo(ownJID);
+		reply->setBody("nothing.");
+		manager_->handleIncomingMessage(reply);
+
+		// Send fifth message.
+		window->onSendMessageRequest("okay", false);
+
+		// The chat session is now bound to the full JID of the second resource.
+		CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(4)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(4)->getPayload<DeliveryReceiptRequest>());
+	}
+
+	void testChatControllerFullJIDBindingOnTypingAndNotActive() {
+		JID ownJID("test@test.com/resource");
+		JID sender("foo@test.com");
+		std::vector<JID> senderResource;
+		senderResource.push_back(sender.withResource("resourceA"));
+		senderResource.push_back(sender.withResource("resourceB"));
+
+		// We support delivery receipts.
+		settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
+
+		// Open chat window to a sender.
+		MockChatWindow* window = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(sender, uiEventStream_).Return(window);
+
+		uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(sender));
+
+		foreach(const JID& senderJID, senderResource) {
+			// The sender supports delivery receipts.
+			DiscoInfo::ref disco = boost::make_shared<DiscoInfo>();
+			disco->addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
+			entityCapsProvider_->caps[senderJID] = disco;
+
+			// The sender is online.
+			Presence::ref senderPresence = boost::make_shared<Presence>();
+			senderPresence->setFrom(senderJID);
+			senderPresence->setTo(ownJID);
+			stanzaChannel_->onPresenceReceived(senderPresence);
+
+			entityCapsProvider_->onCapsChanged(senderJID);
+		}
+
+		// Send first message.
+		window->onSendMessageRequest("hello there", false);
+
+		// A bare message is send because no resources is bound.
+		CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(0)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(0)->getPayload<DeliveryReceiptRequest>());
+
+		// Two resources respond with message receipts.
+		foreach(const JID& senderJID, senderResource) {
+			Message::ref reply = boost::make_shared<Message>();
+			reply->setFrom(senderJID);
+			reply->setTo(ownJID);
+
+			boost::shared_ptr<ChatState> csn = boost::make_shared<ChatState>();
+			csn->setChatState(ChatState::Active);
+			reply->addPayload(csn);
+			manager_->handleIncomingMessage(reply);
+		}
+
+		// Send second message.
+		window->onSendMessageRequest("how are you?", false);
+
+		// A bare message is send because no resources is bound.
+		CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(1)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
+
+		// Two resources respond with message receipts.
+		foreach(const JID& senderJID, senderResource) {
+			Message::ref receiptReply = boost::make_shared<Message>();
+			receiptReply->setFrom(senderJID);
+			receiptReply->setTo(ownJID);
+
+			boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+			receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(1)->getID());
+			receiptReply->addPayload(receipt);
+			manager_->handleIncomingMessage(receiptReply);
+		}
+
+		// Reply with a message including a CSN.
+		Message::ref reply = boost::make_shared<Message>();
+		reply->setFrom(senderResource[0]);
+		reply->setTo(ownJID);
+
+		boost::shared_ptr<ChatState> csn = boost::make_shared<ChatState>();
+		csn->setChatState(ChatState::Composing);
+		reply->addPayload(csn);
+		manager_->handleIncomingMessage(reply);
+
+		// Send third message.
+		window->onSendMessageRequest("great to hear.", false);
+
+		// The chat session is now bound to the full JID of the first resource due to its recent composing message.
+		CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(2)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(2)->getPayload<DeliveryReceiptRequest>());
+
+		// Reply with a message including a CSN from the other resource.
+		reply = boost::make_shared<Message>();
+		reply->setFrom(senderResource[1]);
+		reply->setTo(ownJID);
+
+		csn = boost::make_shared<ChatState>();
+		csn->setChatState(ChatState::Composing);
+		reply->addPayload(csn);
+		manager_->handleIncomingMessage(reply);
+
+		// Send third message.
+		window->onSendMessageRequest("ping.", false);
+
+		// The chat session is now bound to the full JID of the second resource due to its recent composing message.
+		CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(3)->getTo());
+		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(3)->getPayload<DeliveryReceiptRequest>());
+	}
+
 	void testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::Subscription from, RosterItemPayload::Subscription to) {
 		JID messageJID("testling@test.com/resource1");
 		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), from);
@@ -487,8 +700,7 @@ private:
 	MUCSearchWindowFactory* mucSearchWindowFactory_;
 	MUCRegistry* mucRegistry_;
 	DirectedPresenceSender* directedPresenceSender_;
-	EntityCapsManager* entityCapsManager_;
-	CapsProvider* capsProvider_;
+	DummyEntityCapsProvider* entityCapsProvider_;
 	MUCManager* mucManager_;
 	DummySettingsProvider* settings_;
 	ProfileSettingsProvider* profileSettings_;
