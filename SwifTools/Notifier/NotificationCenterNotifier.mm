@@ -53,6 +53,11 @@ NotificationCenterNotifier::~NotificationCenterNotifier() {
 }
 
 void NotificationCenterNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void ()> callback) {
+	std::vector<Notifier::Type> defaultTypes = getDefaultTypes();
+	if (std::find(defaultTypes.begin(), defaultTypes.end(), type) == defaultTypes.end()) {
+		return;
+	}
+
 	NSUserNotification* notification = [[NSUserNotification alloc] init];
 	notification.title = STD2NSSTRING(typeToString(type));
 	notification.subtitle = STD2NSSTRING(subject);
