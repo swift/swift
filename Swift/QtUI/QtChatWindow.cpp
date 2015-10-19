@@ -188,6 +188,7 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 }
 
 QtChatWindow::~QtChatWindow() {
+	settings_->onSettingChanged.disconnect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
 	if (mucConfigurationWindow_) {
 		delete mucConfigurationWindow_.data();
 	}
