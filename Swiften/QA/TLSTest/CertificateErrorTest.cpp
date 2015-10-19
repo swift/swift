@@ -48,7 +48,6 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 	public:
 		void setUp() {
-			SWIFT_LOG(debug) << std::endl << std::endl;
 			eventLoop_ = new DummyEventLoop();
 			boostIOServiceThread_ = new BoostIOServiceThread();
 			boostIOService_ = boost::make_shared<boost::asio::io_service>();
@@ -96,7 +95,6 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 		}
 
 		void connectToServer(boost::shared_ptr<TLSConnection> connection, const std::string& hostname, int port) {
-			Log::setLogLevel(Log::debug);
 			connection->onConnectFinished.connect(boost::bind(&CertificateErrorTest::handleConnectFinished, this, _1));
 
 			HostAddress address = resolveName(hostname);
@@ -141,7 +139,6 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 		}
 
 		void testTLS_O_MaticCertificateFromUnknownCA() {
-			Log::setLogLevel(Log::debug);
 			boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
 			TLSContext* context = connection->getTLSContext();
 

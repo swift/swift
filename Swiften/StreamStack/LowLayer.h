@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,6 +14,7 @@ namespace Swift {
 
 	class SWIFTEN_API LowLayer {
 			friend class StreamStack;
+			friend class DummyStreamLayer;
 
 		public:
 			LowLayer();

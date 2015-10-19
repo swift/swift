@@ -24,10 +24,14 @@
 #include <Swiften/Base/String.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Parser/BOSHBodyExtractor.h>
+#include <Swiften/StreamStack/DummyStreamLayer.h>
+#include <Swiften/StreamStack/TLSLayer.h>
+#include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
 
-BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory)
+BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory, TLSContextFactory* tlsContextFactory, const TLSOptions& tlsOptions)
 	: boshURL_(boshURL),
 	  connector_(connector),
 	  parserFactory_(parserFactory),
@@ -37,6 +41,12 @@ BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XML
 	  pending_(false),
 	  connectionReady_(false)
 {
+	if (boshURL_.getScheme() == "https") {
+		tlsLayer_ = boost::make_shared<TLSLayer>(tlsContextFactory, tlsOptions);
+		// The following dummyLayer_ is needed as the TLSLayer will pass the decrypted data to its parent layer.
+		// The dummyLayer_ will serve as the parent layer.
+		dummyLayer_ = boost::make_shared<DummyStreamLayer>(tlsLayer_.get());
+	}
 }
 
 BOSHConnection::~BOSHConnection() {
@@ -61,6 +71,39 @@ void BOSHConnection::cancelConnector() {
 	}
 }
 
+void BOSHConnection::handleTLSConnected() {
+	SWIFT_LOG(debug) << std::endl;
+	onConnectFinished(false);
+}
+
+void BOSHConnection::handleTLSApplicationDataRead(const SafeByteArray& data) {
+	SWIFT_LOG(debug) << std::endl;
+	handleDataRead(boost::make_shared<SafeByteArray>(data));
+}
+
+void BOSHConnection::handleTLSNetowrkDataWriteRequest(const SafeByteArray& data) {
+	SWIFT_LOG(debug) << std::endl;
+	connection_->write(data);
+}
+
+void BOSHConnection::handleRawDataRead(boost::shared_ptr<SafeByteArray> data) {
+	SWIFT_LOG(debug) << std::endl;
+	tlsLayer_->handleDataRead(*data.get());
+}
+
+void BOSHConnection::handleTLSError(boost::shared_ptr<TLSError> error) {
+
+}
+
+void BOSHConnection::writeData(const SafeByteArray& data) {
+	if (tlsLayer_) {
+		tlsLayer_->writeData(data);
+	}
+	else {
+		connection_->write(data);
+	}
+}
+
 void BOSHConnection::disconnect() {
 	if (connection_) {
 		connection_->disconnect();
@@ -74,6 +117,40 @@ void BOSHConnection::disconnect() {
 
 void BOSHConnection::restartStream() {
 	write(createSafeByteArray(""), true, false);
+}
+
+bool BOSHConnection::setClientCertificate(CertificateWithKey::ref cert) {
+	if (tlsLayer_) {
+		SWIFT_LOG(debug) << "set client certificate" << std::endl;
+		return tlsLayer_->setClientCertificate(cert);
+	}
+	else {
+		return false;
+	}
+}
+
+Certificate::ref BOSHConnection::getPeerCertificate() const {
+	Certificate::ref peerCertificate;
+	if (tlsLayer_) {
+		peerCertificate = tlsLayer_->getPeerCertificate();
+	}
+	return peerCertificate;
+}
+
+std::vector<Certificate::ref> BOSHConnection::getPeerCertificateChain() const {
+	std::vector<Certificate::ref> peerCertificateChain;
+	if (tlsLayer_) {
+		peerCertificateChain = tlsLayer_->getPeerCertificateChain();
+	}
+	return peerCertificateChain;
+}
+
+CertificateVerificationError::ref BOSHConnection::getPeerCertificateVerificationError() const {
+	CertificateVerificationError::ref verificationError;
+	if (tlsLayer_) {
+		verificationError = tlsLayer_->getPeerCertificateVerificationError();
+	}
+	return verificationError;
 }
 
 void BOSHConnection::terminateStream() {
@@ -129,7 +206,7 @@ void BOSHConnection::write(const SafeByteArray& data, bool streamRestart, bool t
 	SafeByteArray safeHeader = createHTTPRequest(data, streamRestart, terminate, rid_, sid_, boshURL_).first;
 
 	onBOSHDataWritten(safeHeader);
-	connection_->write(safeHeader);
+	writeData(safeHeader);
 	pending_ = true;
 
 	SWIFT_LOG(debug) << "write data: " << safeByteArrayToString(safeHeader) << std::endl;
@@ -140,10 +217,25 @@ void BOSHConnection::handleConnectFinished(Connection::ref connection) {
 	connectionReady_ = !!connection;
 	if (connectionReady_) {
 		connection_ = connection;
-		connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
-		connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+		if (tlsLayer_) {
+			connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleRawDataRead, shared_from_this(), _1));
+			connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+
+			tlsLayer_->getContext()->onDataForNetwork.connect(boost::bind(&BOSHConnection::handleTLSNetowrkDataWriteRequest, shared_from_this(), _1));
+			tlsLayer_->getContext()->onDataForApplication.connect(boost::bind(&BOSHConnection::handleTLSApplicationDataRead, shared_from_this(), _1));
+			tlsLayer_->onConnected.connect(boost::bind(&BOSHConnection::handleTLSConnected, shared_from_this()));
+			tlsLayer_->onError.connect(boost::bind(&BOSHConnection::handleTLSError, shared_from_this(), _1));
+			tlsLayer_->connect();
+		}
+		else {
+			connection_->onDataRead.connect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
+			connection_->onDisconnected.connect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
+		}
 	}
-	onConnectFinished(!connectionReady_);
+
+	if (!connectionReady_ || !tlsLayer_) {
+		onConnectFinished(!connectionReady_);
+	}
 }
 
 void BOSHConnection::startStream(const std::string& to, unsigned long long rid) {
@@ -180,7 +272,7 @@ void BOSHConnection::startStream(const std::string& to, unsigned long long rid) 
 	waitingForStartResponse_ = true;
 	SafeByteArray safeHeader = createSafeByteArray(header.str());
 	onBOSHDataWritten(safeHeader);
-	connection_->write(safeHeader);
+	writeData(safeHeader);
 	SWIFT_LOG(debug) << "write stream header: " << safeByteArrayToString(safeHeader) << std::endl;
 }
 

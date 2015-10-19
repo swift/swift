@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,13 +16,14 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Error.h>
+#include <Swiften/Base/String.h>
+#include <Swiften/Base/URL.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/Connector.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Base/String.h>
-#include <Swiften/Base/URL.h>
-#include <Swiften/Base/Error.h>
 #include <Swiften/Session/SessionStream.h>
+#include <Swiften/TLS/TLSError.h>
 
 namespace boost {
 	class thread;
@@ -36,27 +37,31 @@ class BOSHConnectionTest;
 namespace Swift {
 	class XMLParserFactory;
 	class TLSContextFactory;
+	class TLSLayer;
+	struct TLSOptions;
+	class HighLayer;
 
-		class SWIFTEN_API BOSHError : public SessionStream::SessionStreamError {
-				public:
-					enum Type {BadRequest, HostGone, HostUnknown, ImproperAddressing, 
-						  InternalServerError, ItemNotFound, OtherRequest, PolicyViolation, 
-						  RemoteConnectionFailed, RemoteStreamError, SeeOtherURI, SystemShutdown, UndefinedCondition,
-						  NoError};
-					BOSHError(Type type) : SessionStream::SessionStreamError(SessionStream::SessionStreamError::ConnectionReadError), type(type) {}
-					Type getType() {return type;}
-					typedef boost::shared_ptr<BOSHError> ref;
-				private:
-					Type type;
-					
-			};
+	class SWIFTEN_API BOSHError : public SessionStream::SessionStreamError {
+		public:
+			enum Type {
+				BadRequest, HostGone, HostUnknown, ImproperAddressing,
+				InternalServerError, ItemNotFound, OtherRequest, PolicyViolation,
+				RemoteConnectionFailed, RemoteStreamError, SeeOtherURI, SystemShutdown, UndefinedCondition,
+				NoError};
 
+			BOSHError(Type type) : SessionStream::SessionStreamError(SessionStream::SessionStreamError::ConnectionReadError), type(type) {}
+			Type getType() {return type;}
+			typedef boost::shared_ptr<BOSHError> ref;
+
+		private:
+			Type type;
+	};
 
 	class SWIFTEN_API BOSHConnection : public boost::enable_shared_from_this<BOSHConnection> {
 		public:
 			typedef boost::shared_ptr<BOSHConnection> ref;
-			static ref create(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory) {
-				return ref(new BOSHConnection(boshURL, connector, parserFactory));
+			static ref create(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory, TLSContextFactory* tlsContextFactory, const TLSOptions& tlsOptions) {
+				return ref(new BOSHConnection(boshURL, connector, parserFactory, tlsContextFactory, tlsOptions));
 			}
 			virtual ~BOSHConnection();
 			virtual void connect();
@@ -71,6 +76,10 @@ namespace Swift {
 			bool isReadyToSend();
 			void restartStream();
 
+			bool setClientCertificate(CertificateWithKey::ref cert);
+			Certificate::ref getPeerCertificate() const;
+			std::vector<Certificate::ref> getPeerCertificateChain() const;
+			CertificateVerificationError::ref getPeerCertificateVerificationError() const;
 
 			boost::signal<void (bool /* error */)> onConnectFinished;
 			boost::signal<void (bool /* error */)> onDisconnected;
@@ -84,7 +93,7 @@ namespace Swift {
 		private:
 			friend class ::BOSHConnectionTest;
 
-			BOSHConnection(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory);
+			BOSHConnection(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory, TLSContextFactory* tlsContextFactory, const TLSOptions& tlsOptions);
 
 			static std::pair<SafeByteArray, size_t> createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, unsigned long long rid, const std::string& sid, const URL& boshURL);
 			void handleConnectFinished(Connection::ref);
@@ -94,10 +103,19 @@ namespace Swift {
 			BOSHError::Type parseTerminationCondition(const std::string& text);
 			void cancelConnector();
 
+			void handleTLSConnected();
+			void handleTLSApplicationDataRead(const SafeByteArray& data);
+			void handleTLSNetowrkDataWriteRequest(const SafeByteArray& data);
+			void handleRawDataRead(boost::shared_ptr<SafeByteArray> data);
+			void handleTLSError(boost::shared_ptr<TLSError> error);
+			void writeData(const SafeByteArray& data);
+
 			URL boshURL_;
 			Connector::ref connector_;
 			XMLParserFactory* parserFactory_;
 			boost::shared_ptr<Connection> connection_;
+			boost::shared_ptr<HighLayer> dummyLayer_;
+			boost::shared_ptr<TLSLayer> tlsLayer_;
 			std::string sid_;
 			bool waitingForStartResponse_;
 			unsigned long long rid_;

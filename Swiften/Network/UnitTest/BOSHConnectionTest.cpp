@@ -24,6 +24,7 @@
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 using namespace Swift;
 
@@ -47,6 +48,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 			connectionFactory = new MockConnectionFactory(eventLoop);
 			resolver = new StaticDomainNameResolver(eventLoop);
 			timerFactory = new DummyTimerFactory();
+			tlsContextFactory = NULL;
 			connectFinished = false;
 			disconnected = false;
 			disconnectedError = false;
@@ -193,7 +195,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		BOSHConnection::ref createTestling() {
 			resolver->addAddress("wonderland.lit", HostAddress("127.0.0.1"));
 			Connector::ref connector = Connector::create("wonderland.lit", 5280, boost::optional<std::string>(), resolver, connectionFactory, timerFactory);
-			BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "/http-bind"), connector, &parserFactory);
+			BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "/http-bind"), connector, &parserFactory, tlsContextFactory, TLSOptions());
 			c->onConnectFinished.connect(boost::bind(&BOSHConnectionTest::handleConnectFinished, this, _1));
 			c->onDisconnected.connect(boost::bind(&BOSHConnectionTest::handleDisconnected, this, _1));
 			c->onXMPPDataRead.connect(boost::bind(&BOSHConnectionTest::handleDataRead, this, _1));
@@ -294,6 +296,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 		PlatformXMLParserFactory parserFactory;
 		StaticDomainNameResolver* resolver;
 		TimerFactory* timerFactory;
+		TLSContextFactory* tlsContextFactory;
 		std::string sid;	
 
 };

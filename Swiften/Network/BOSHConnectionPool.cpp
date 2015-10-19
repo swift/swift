@@ -10,11 +10,11 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/SafeString.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Network/CachingDomainNameResolver.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
-#include <Swiften/Network/TLSConnectionFactory.h>
 
 namespace Swift {
 BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
@@ -27,21 +27,14 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 		to(to),
 		requestLimit(2),
 		restartCount(0),
-		pendingRestart(false) {
+		pendingRestart(false),
+		tlsContextFactory_(tlsFactory),
+		tlsOptions_(tlsOptions) {
 
 	if (!boshHTTPConnectProxyURL.isEmpty()) {
-		if (boshHTTPConnectProxyURL.getScheme() == "https") {
-			connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory, tlsOptions);
-			myConnectionFactories.push_back(connectionFactory);
-		}
 		connectionFactory = new HTTPConnectProxiedConnectionFactory(realResolver, connectionFactory, timerFactory, boshHTTPConnectProxyURL.getHost(), URL::getPortOrDefaultPort(boshHTTPConnectProxyURL), boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, trafficFilter);
 	}
-	if (boshURL.getScheme() == "https") {
-		connectionFactory = new TLSConnectionFactory(tlsFactory, connectionFactory, tlsOptions);
-		myConnectionFactories.push_back(connectionFactory);
-	}
 	resolver = new CachingDomainNameResolver(realResolver, eventLoop);
-	createConnection();
 }
 
 BOSHConnectionPool::~BOSHConnectionPool() {
@@ -83,9 +76,37 @@ void BOSHConnectionPool::restartStream() {
 	}
 }
 
+void BOSHConnectionPool::setTLSCertificate(CertificateWithKey::ref certWithKey) {
+	clientCertificate = certWithKey;
+}
+
+bool BOSHConnectionPool::isTLSEncrypted() const {
+	return !pinnedCertificateChain_.empty();
+}
+
+Certificate::ref BOSHConnectionPool::getPeerCertificate() const {
+	Certificate::ref peerCertificate;
+	if (!pinnedCertificateChain_.empty()) {
+		peerCertificate = pinnedCertificateChain_[0];
+	}
+	return peerCertificate;
+}
+
+std::vector<Certificate::ref> BOSHConnectionPool::getPeerCertificateChain() const {
+	return pinnedCertificateChain_;
+}
+
+boost::shared_ptr<CertificateVerificationError> BOSHConnectionPool::getPeerCertificateVerificationError() const {
+	return lastVerificationError_;
+}
+
 void BOSHConnectionPool::writeFooter() {
 	pendingTerminate = true;
 	tryToSendQueuedData();
+}
+
+void BOSHConnectionPool::open() {
+	createConnection();
 }
 
 void BOSHConnectionPool::close() {
@@ -117,6 +138,13 @@ void BOSHConnectionPool::handleConnectFinished(bool error, BOSHConnection::ref c
 		 */
 	}
 	else {
+		if (connection->getPeerCertificate() && pinnedCertificateChain_.empty()) {
+			pinnedCertificateChain_ = connection->getPeerCertificateChain();
+		}
+		if (!pinnedCertificateChain_.empty()) {
+			lastVerificationError_ = connection->getPeerCertificateVerificationError();
+		}
+
 		if (sid.empty()) {
 			connection->startStream(to, rid);
 		}
@@ -226,7 +254,7 @@ void BOSHConnectionPool::handleConnectionDisconnected(bool/* error*/, BOSHConnec
 
 boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
 	Connector::ref connector = Connector::create(boshURL.getHost(), URL::getPortOrDefaultPort(boshURL), boost::optional<std::string>(), resolver, connectionFactory, timerFactory);
-	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connector, xmlParserFactory);
+	BOSHConnection::ref connection = BOSHConnection::create(boshURL, connector, xmlParserFactory, tlsContextFactory_, tlsOptions_);
 	connection->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
 	connection->onSessionStarted.connect(boost::bind(&BOSHConnectionPool::handleSessionStarted, this, _1, _2));
 	connection->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPool::handleBOSHDataRead, this, _1));
@@ -235,6 +263,12 @@ boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
 	connection->onConnectFinished.connect(boost::bind(&BOSHConnectionPool::handleConnectFinished, this, _1, connection));
 	connection->onSessionTerminated.connect(boost::bind(&BOSHConnectionPool::handleSessionTerminated, this, _1));
 	connection->onHTTPError.connect(boost::bind(&BOSHConnectionPool::handleHTTPError, this, _1));
+
+	if (boshURL.getScheme() == "https") {
+		bool success = connection->setClientCertificate(clientCertificate);
+		SWIFT_LOG(debug) << "setClientCertificate, success: " << success << std::endl;
+	}
+
 	connection->connect();
 	connections.push_back(connection);
 	return connection;

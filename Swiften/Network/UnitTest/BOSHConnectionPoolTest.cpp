@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
+
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-
-#include <boost/optional.hpp>
-#include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
@@ -26,8 +26,6 @@
 #include <Swiften/Network/StaticDomainNameResolver.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/TLS/TLSOptions.h>
-
-
 
 using namespace Swift;
 
@@ -323,10 +321,9 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 	private:
 
 		PoolRef createTestling() {
-			BOSHConnectionPool* a = new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""), TLSOptions());
-			PoolRef pool(a);
-			//FIXME: Remko - why does the above work, but the below fail?
-			//PoolRef pool = boost::make_shared<BOSHConnectionPool>(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""));
+			// make_shared is limited to 9 arguments; instead new is used here.
+			PoolRef pool = PoolRef(new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""), TLSOptions()));
+			pool->open();
 			pool->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleXMPPDataRead, this, _1));
 			pool->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataRead, this, _1));
 			pool->onBOSHDataWritten.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataWritten, this, _1));

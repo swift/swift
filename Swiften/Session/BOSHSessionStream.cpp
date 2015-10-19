@@ -83,6 +83,11 @@ BOSHSessionStream::~BOSHSessionStream() {
 	xmppLayer = NULL;
 }
 
+void BOSHSessionStream::open() {
+	connectionPool->setTLSCertificate(getTLSCertificate());
+	connectionPool->open();
+}
+
 void BOSHSessionStream::handlePoolXMPPDataRead(const SafeByteArray& data) {
 	xmppLayer->handleDataRead(data);
 }
@@ -118,19 +123,19 @@ void BOSHSessionStream::addTLSEncryption() {
 }
 
 bool BOSHSessionStream::isTLSEncrypted() {
-	return false;
+	return connectionPool->isTLSEncrypted();
 }
 
 Certificate::ref BOSHSessionStream::getPeerCertificate() const {
-	return Certificate::ref();
+	return connectionPool->getPeerCertificate();
 }
 
 std::vector<Certificate::ref> BOSHSessionStream::getPeerCertificateChain() const {
-	return std::vector<Certificate::ref>();
+	return connectionPool->getPeerCertificateChain();
 }
 
 boost::shared_ptr<CertificateVerificationError> BOSHSessionStream::getPeerCertificateVerificationError() const {
-	return boost::shared_ptr<CertificateVerificationError>();
+	return connectionPool->getPeerCertificateVerificationError();
 }
 
 ByteArray BOSHSessionStream::getTLSFinishMessage() const {

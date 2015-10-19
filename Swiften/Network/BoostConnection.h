@@ -15,6 +15,9 @@
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/Connection.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateVerificationError.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 
 namespace boost {
 	class thread;
@@ -46,6 +49,12 @@ namespace Swift {
 			}
 
 			HostAddressPort getLocalAddress() const;
+
+			bool setClientCertificate(CertificateWithKey::ref cert);
+
+			Certificate::ref getPeerCertificate() const;
+			std::vector<Certificate::ref> getPeerCertificateChain() const;
+			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
 		private:
 			BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);

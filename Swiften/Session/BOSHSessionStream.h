@@ -51,6 +51,7 @@ namespace Swift {
 			);
 			virtual ~BOSHSessionStream();
 
+			void open();
 			virtual void close();
 			virtual bool isOpen();
 
