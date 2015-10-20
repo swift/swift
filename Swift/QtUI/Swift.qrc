@@ -2,6 +2,7 @@
 <RCC version="1.0">
 	<qresource>
 		<file alias="logo-icon-16.png">../resources/logo/logo-icon-16.png</file>
+		<file alias="logo-icon-16-win.png">../resources/logo/logo-icon-16-win.png</file>
 		<file alias="logo-chat-16.png">../resources/logo/logo-chat-16.png</file>
 		<file alias="logo-shaded-text.256.png">../resources/logo/logo-shaded-text.256.png</file>
 		<file alias="icons/online.png">../resources/icons/online.png</file>

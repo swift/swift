@@ -39,7 +39,11 @@ namespace Swift {
 QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(NULL), firstMultiJIDPage_(NULL), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
 	setupUi(this);
 #ifndef Q_OS_MAC
+#ifdef  Q_OS_WIN32
+	setWindowIcon(QIcon(":/logo-icon-16-win.png"));
+#else
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
+#endif
 #endif
 	QString title;
 	switch(type) {

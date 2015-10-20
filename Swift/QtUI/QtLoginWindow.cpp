@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -56,7 +56,11 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 
 	setWindowTitle("Swift");
 #ifndef Q_OS_MAC
+#ifdef  Q_OS_WIN32
+	setWindowIcon(QIcon(":/logo-icon-16-win.png"));
+#else
 	setWindowIcon(QIcon(":/logo-icon-16.png"));
+#endif
 #endif
 	QtUtilities::setX11Resource(this, "Main");
 	setAccessibleName(tr("Swift Login Window"));

@@ -4,30 +4,41 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "QtWhiteboardWindow.h"
 
 #include <iostream>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Whiteboard/WhiteboardSession.h>
-#include <Swiften/Elements/WhiteboardPayload.h>
+#include <QLabel>
+#include <QMessageBox>
+
+#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardRectElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
-#include <Swift/QtUI/Whiteboard/WhiteboardElementDrawingVisitor.h>
+#include <Swiften/Elements/WhiteboardPayload.h>
+#include <Swiften/Whiteboard/WhiteboardSession.h>
 
-#include <QMessageBox>
-#include <QLabel>
+#include <Swift/QtUI/Whiteboard/WhiteboardElementDrawingVisitor.h>
 
 namespace Swift {
 	QtWhiteboardWindow::QtWhiteboardWindow(WhiteboardSession::ref whiteboardSession) : QWidget() {
 #ifndef Q_OS_MAC
-		setWindowIcon(QIcon(":/logo-icon-16.png"));
+#ifdef  Q_OS_WIN32
+	setWindowIcon(QIcon(":/logo-icon-16-win.png"));
+#else
+	setWindowIcon(QIcon(":/logo-icon-16.png"));
+#endif
 #endif
 		layout = new QVBoxLayout(this);
 		hLayout = new QHBoxLayout;
