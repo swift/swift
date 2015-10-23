@@ -12,5 +12,6 @@ if env["TEST"] :
 	
 	tester = myenv.Program("TLSTest", [
 			"CertificateTest.cpp",
+			"CertificateErrorTest.cpp"
 		])
 	myenv.Test(tester, "system")

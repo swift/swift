@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@
 #ifdef HAVE_OPENSSL_CRYPTO_PROVIDER
 #include <Swiften/Crypto/OpenSSLCryptoProvider.h>
 #endif
-#ifdef HAVE_OPENSSL_CRYPTO_PROVIDER
+#ifdef HAVE_COMMONCRYPTO_CRYPTO_PROVIDER
 #include <Swiften/Crypto/CommonCryptoCryptoProvider.h>
 #endif
 #include <Swiften/Crypto/Hash.h>

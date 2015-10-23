@@ -563,7 +563,7 @@ if env["SCONS_STAGE"] == "build" :
 				continue
 
 			# Library-specific files
-			if file.endswith("_Private.h") or file.startswith("Schannel") or file.startswith("CAPI") or file.startswith("MacOSX") or file.startswith("Windows") or file.endswith("_Windows.h") or file.startswith("SQLite") or file == "ICUConverter.h" or file == "UnboundDomainNameResolver.h" :
+			if file.endswith("_Private.h") or file.startswith("Schannel") or file.startswith("CAPI") or file.startswith("MacOSX") or file.startswith("SecureTransport") or file.startswith("Windows") or file.endswith("_Windows.h") or file.startswith("SQLite") or file == "ICUConverter.h" or file == "UnboundDomainNameResolver.h" :
 				continue
 
 			# Specific headers we don't want to globally include

@@ -506,12 +506,18 @@ conf.Finish()
 if env["qt"] :
 	env["QTDIR"] = env["qt"]
 
+# Check for OS X Secure Transport
+if not env.get("openssl_force_bundled", False) and env["PLATFORM"] == "darwin" and env["target"] == "native"  :
+	env["HAVE_SECURETRANSPORT"] = True
+else :
+	env["HAVE_SECURETRANSPORT"] = False
+
 # OpenSSL
 openssl_env = conf_env.Clone()
 if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device", "iphone-simulator", "xcode", "android") :
 	env["OPENSSL_BUNDLED"] = True
 	env["HAVE_OPENSSL"] = True
-else :
+elif not env["HAVE_SECURETRANSPORT"] :
 	use_openssl = bool(env["openssl"])
 	openssl_prefix = ""
 	if isinstance(env["openssl"], str) :
@@ -716,6 +722,6 @@ print "  Projects: " + ' '.join(env["PROJECTS"])
 print ""
 print "  XML Parsers: " + ' '.join(parsers)
 
-print "  TLS Support: " + (env.get("HAVE_OPENSSL",0) and "OpenSSL" or env.get("HAVE_SCHANNEL", 0) and "Schannel" or "Disabled")
+print "  TLS Support: " + (env.get("HAVE_OPENSSL",0) and "OpenSSL" or env.get("HAVE_SECURETRANSPORT",0) and "Secure Transport" or env.get("HAVE_SCHANNEL", 0) and "Schannel" or "Disabled")
 print "  DNSSD Support: " + (env.get("HAVE_BONJOUR") and "Bonjour" or (env.get("HAVE_AVAHI") and "Avahi" or "Disabled"))
 print

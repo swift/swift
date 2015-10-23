@@ -6,15 +6,14 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/TLS/TLSOptions.h>
-
 
 namespace Swift {
 	class HostAddressPort;
@@ -34,6 +33,8 @@ namespace Swift {
 
 			virtual HostAddressPort getLocalAddress() const;
 
+			TLSContext* getTLSContext() const;
+
 		private:
 			void handleRawConnectFinished(bool error);
 			void handleRawDisconnected(const boost::optional<Error>& error);
@@ -42,6 +43,7 @@ namespace Swift {
 			void handleTLSConnectFinished(bool error);
 			void handleTLSDataForNetwork(const SafeByteArray& data);
 			void handleTLSDataForApplication(const SafeByteArray& data);
+
 		private:
 			TLSContext* context;
 			Connection::ref connection;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -64,6 +64,10 @@ void TLSConnection::write(const SafeByteArray& data) {
 
 HostAddressPort TLSConnection::getLocalAddress() const {
 	return connection->getLocalAddress();
+}
+
+TLSContext* TLSConnection::getTLSContext() const {
+	return context;
 }
 
 void TLSConnection::handleRawConnectFinished(bool error) {

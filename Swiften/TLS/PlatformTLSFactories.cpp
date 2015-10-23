@@ -18,6 +18,10 @@
 	#include <Swiften/TLS/Schannel/SchannelContextFactory.h>
 	#include <Swiften/TLS/Schannel/SchannelCertificateFactory.h>
 #endif
+#ifdef HAVE_SECURETRANSPORT
+	#include <Swiften/TLS/SecureTransport/SecureTransportContextFactory.h>
+	#include <Swiften/TLS/SecureTransport/SecureTransportCertificateFactory.h>
+#endif
 
 namespace Swift {
 
@@ -30,6 +34,10 @@ PlatformTLSFactories::PlatformTLSFactories() : contextFactory(NULL), certificate
 	contextFactory = new SchannelContextFactory();
 	certificateFactory = new SchannelCertificateFactory();
 #endif
+#ifdef HAVE_SECURETRANSPORT
+	contextFactory = new SecureTransportContextFactory();
+	certificateFactory = new SecureTransportCertificateFactory();
+#endif	
 }
 
 PlatformTLSFactories::~PlatformTLSFactories() {

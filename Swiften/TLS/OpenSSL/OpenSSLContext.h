@@ -1,25 +1,26 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <openssl/ssl.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <boost/noncopyable.hpp>
 
-#include <Swiften/TLS/TLSContext.h>
+#include <openssl/ssl.h>
+
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/TLS/CertificateWithKey.h>
+#include <Swiften/TLS/TLSContext.h>
 
 namespace Swift {
 
 	class OpenSSLContext : public TLSContext, boost::noncopyable {
 		public:
 			OpenSSLContext();
-			~OpenSSLContext();
+			virtual ~OpenSSLContext();
 
 			void connect();
 			bool setClientCertificate(CertificateWithKey::ref cert);

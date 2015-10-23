@@ -39,7 +39,7 @@ namespace Swift
 	public:
 		SchannelContext(bool tls1_0Workaround);
 
-		~SchannelContext();
+		virtual ~SchannelContext();
 
 		//
 		// TLSContext
