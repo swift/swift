@@ -129,6 +129,9 @@ void SOCKS5BytestreamProxiesManager::handleProxiesFound(std::vector<S5BProxyRequ
 	}
 	proxyFinder_->stop();
 	proxyFinder_.reset();
+	if (proxyHosts.empty()) {
+		onDiscoveredProxiesChanged();
+	}
 }
 
 void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error, S5BProxyRequest::ref proxy) {
@@ -138,7 +141,6 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
 	else {
 		if (addresses.empty()) {
 			SWIFT_LOG(warning) << "S5B proxy hostname does not resolve." << std::endl;
-			onDiscoveredProxiesChanged();
 		}
 		else {
 			// generate proxy per returned address
@@ -149,8 +151,8 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
 				proxyForAddress->setStreamHost(streamHost);
 				addS5BProxy(proxyForAddress);
 			}
-			onDiscoveredProxiesChanged();
 		}
+		onDiscoveredProxiesChanged();
 	}
 }
 
