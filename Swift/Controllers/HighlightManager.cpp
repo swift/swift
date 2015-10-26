@@ -10,21 +10,23 @@
  * See the COPYING file for more information.
  */
 
+#include <Swift/Controllers/HighlightManager.h>
+
 #include <cassert>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/regex.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/regex.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/HighlightManager.h>
+
 #include <Swift/Controllers/Highlighter.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 
 /* How does highlighting work?
  *

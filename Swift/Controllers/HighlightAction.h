@@ -14,8 +14,8 @@
 
 #include <string>
 
-#include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
 
 namespace Swift {
 
@@ -23,13 +23,13 @@ namespace Swift {
 
 	class HighlightAction {
 		public:
-			HighlightAction() : highlightText_(false), playSound_(false) {}
+			HighlightAction() : highlightWholeMessage_(false), playSound_(false) {}
 
 			/**
 			* Gets the flag that indicates the entire message should be highlighted.
 			*/
-			bool highlightAllText() const { return highlightText_; }
-			void setHighlightAllText(bool highlightText);
+			bool highlightWholeMessage() const { return highlightWholeMessage_; }
+			void setHighlightWholeMessage(bool highlightText);
 
 			/**
 			* Gets the foreground highlight color.
@@ -52,13 +52,13 @@ namespace Swift {
 			const std::string& getSoundFile() const { return soundFile_; }
 			void setSoundFile(const std::string& soundFile) { soundFile_ = soundFile; }
 
-			bool isEmpty() const { return !highlightText_ && !playSound_; }
+			bool isEmpty() const { return !highlightWholeMessage_ && !playSound_; }
 
 		private:
 			friend class boost::serialization::access;
 			template<class Archive> void serialize(Archive & ar, const unsigned int version);
 
-			bool highlightText_;
+			bool highlightWholeMessage_;
 			std::string textColor_;
 			std::string textBackground_;
 
@@ -72,7 +72,7 @@ namespace Swift {
 	template<class Archive>
 	void HighlightAction::serialize(Archive& ar, const unsigned int /*version*/)
 	{
-		ar & highlightText_;
+		ar & highlightWholeMessage_;
 		ar & textColor_;
 		ar & textBackground_;
 		ar & playSound_;

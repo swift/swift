@@ -623,8 +623,10 @@ std::string QtWebKitChatView::addMessage(
 
 	QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 	QString styleSpanEnd = style == "" ? "" : "</span>";
-	QString highlightSpanStart = highlight.highlightAllText() ? getHighlightSpanStart(highlight) : "";
-	QString highlightSpanEnd = highlight.highlightAllText() ? "</span>" : "";
+
+	bool highlightWholeMessage = highlight.highlightWholeMessage() && highlight.getTextBackground() != "" && highlight.getTextColor() != "";
+	QString highlightSpanStart = highlightWholeMessage ? getHighlightSpanStart(highlight) : "";
+	QString highlightSpanEnd = highlightWholeMessage ? "</span>" : "";
 	htmlString += "<span class='swift_inner_message'>" + styleSpanStart + highlightSpanStart + message + highlightSpanEnd + styleSpanEnd + "</span>" ;
 
 	bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
@@ -871,8 +873,8 @@ void QtWebKitChatView::replaceMessage(const QString& message, const std::string&
 
 		QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
 		QString styleSpanEnd = style == "" ? "" : "</span>";
-		QString highlightSpanStart = highlight.highlightAllText() ? getHighlightSpanStart(highlight) : "";
-		QString highlightSpanEnd = highlight.highlightAllText() ? "</span>" : "";
+		QString highlightSpanStart = highlight.highlightWholeMessage() ? getHighlightSpanStart(highlight) : "";
+		QString highlightSpanEnd = highlight.highlightWholeMessage() ? "</span>" : "";
 		messageHTML = styleSpanStart + highlightSpanStart + messageHTML + highlightSpanEnd + styleSpanEnd;
 
 		replaceMessage(messageHTML, P2QSTRING(id), B2QDATE(time));

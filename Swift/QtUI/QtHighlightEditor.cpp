@@ -427,7 +427,7 @@ HighlightRule QtHighlightEditor::ruleFromDialog()
 	}
 
 	if (ui_.allMsgRadio->isChecked()) {
-		action.setHighlightAllText(true);
+		action.setHighlightWholeMessage(true);
 	}
 
 	if (ui_.senderRadio->isChecked()) {
@@ -436,7 +436,7 @@ HighlightRule QtHighlightEditor::ruleFromDialog()
 			std::vector<std::string> senders;
 			senders.push_back(Q2PSTRING(senderName));
 			rule.setSenders(senders);
-			action.setHighlightAllText(true);
+			action.setHighlightWholeMessage(true);
 		}
 	}
 

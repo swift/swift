@@ -14,10 +14,10 @@
 
 namespace Swift {
 
-void HighlightAction::setHighlightAllText(bool highlightText)
+void HighlightAction::setHighlightWholeMessage(bool highlightText)
 {
-	highlightText_ = highlightText;
-	if (!highlightText_) {
+	highlightWholeMessage_ = highlightText;
+	if (!highlightWholeMessage_) {
 		textColor_.clear();
 		textBackground_.clear();
 	}
@@ -32,7 +32,7 @@ void HighlightAction::setPlaySound(bool playSound)
 }
 
 bool operator ==(HighlightAction const& a, HighlightAction const& b) {
-	if (a.highlightAllText() != b.highlightAllText()) {
+	if (a.highlightWholeMessage() != b.highlightWholeMessage()) {
 		return false;
 	}
 
