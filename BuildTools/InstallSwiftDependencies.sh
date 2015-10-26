@@ -8,7 +8,10 @@ if [ "$SYSTEM_NAME" == "Linux" ]
 then
 	# handle linux distributions
 	SYSTEM_DISTRO=$(lsb_release -i -s)
-	if [ "$SYSTEM_DISTRO" == "Debian" ] 
+	if [ "$SYSTEM_DISTRO" == "Debian" ]
+	then
+		sudo apt-get install pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools
+	elif [ "$SYSTEM_DISTRO" == "Ubuntu"]
 	then
 		sudo apt-get install pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools
 	elif [ "$SYSTEM_DISTRO" == "Arch" ] 
