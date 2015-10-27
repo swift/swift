@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swiften/Base/foreach.h>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 
 namespace Swift {
 
@@ -19,7 +20,7 @@ class ProfileSettingsProvider {
 		virtual void storeString(const std::string &settingPath, const std::string &settingValue);
 		virtual int getIntSetting(const std::string& settingPath, int defaultValue);
 		virtual void storeInt(const std::string& settingPath, int settingValue);
-		/** See @SettingsProvider::getIsSettingFinal for discussion of what this means.*/
+		/** See \ref SettingsProvider::getIsSettingFinal for discussion of what this means.*/
 		virtual bool getIsSettingFinal(const std::string& settingPath);
 		
 	private:

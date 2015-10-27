@@ -65,7 +65,6 @@ GENERATE_DEPRECATEDLIST= YES
 ENABLED_SECTIONS       = 
 MAX_INITIALIZER_LINES  = 30
 SHOW_USED_FILES        = NO
-SHOW_DIRECTORIES       = NO
 SHOW_FILES             = NO
 SHOW_NAMESPACES        = NO
 FILE_VERSION_FILTER    = 
@@ -155,7 +154,6 @@ HTML_FILE_EXTENSION    = .html
 HTML_HEADER            = 
 HTML_FOOTER            = 
 HTML_STYLESHEET        = 
-HTML_ALIGN_MEMBERS     = YES
 HTML_DYNAMIC_SECTIONS  = YES
 GENERATE_DOCSET        = YES
 DOCSET_FEEDNAME        = "Swift XMPP Client Documentation"
@@ -174,7 +172,6 @@ TOC_EXPAND             = NO
 #QHG_LOCATION           = 
 DISABLE_INDEX          = NO
 ENUM_VALUES_PER_LINE   = 4
-GENERATE_TREEVIEW      = YES
 TREEVIEW_WIDTH         = 250
 FORMULA_FONTSIZE       = 10
 
@@ -217,8 +214,6 @@ MAN_LINKS              = NO
 #---------------------------------------------------------------------------
 GENERATE_XML           = NO
 XML_OUTPUT             = xml
-XML_SCHEMA             = 
-XML_DTD                = 
 XML_PROGRAMLISTING     = YES
 
 #---------------------------------------------------------------------------
@@ -263,7 +258,6 @@ CLASS_DIAGRAMS         = YES
 MSCGEN_PATH            = 
 HIDE_UNDOC_RELATIONS   = YES
 HAVE_DOT               = YES
-DOT_FONTNAME           = 
 DOT_FONTPATH           = 
 CLASS_GRAPH            = YES
 COLLABORATION_GRAPH    = YES
@@ -288,4 +282,4 @@ DOT_CLEANUP            = YES
 #---------------------------------------------------------------------------
 # Configuration::additions related to the search engine   
 #---------------------------------------------------------------------------
-SEARCHENGINE           = YES
+SEARCHENGINE           = NO

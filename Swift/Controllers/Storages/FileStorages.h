@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,9 +30,9 @@ namespace Swift {
 			 * All data will be stored relative to a base directory, and
 			 * for some controllers, in a subdirectory for the given profile.
 			 * The data is stored in the following places:
-			 * - Avatars: <basedir>/avatars
-			 * - VCards: <basedir>/<profile>/vcards
-			 * - Entity capabilities: <basedir>/caps
+			 * - Avatars: $basedir/avatars
+			 * - VCards:  $basedir/$profile/vcards
+			 * - Entity capabilities: $basedir/caps
 			 *
 			 * \param baseDir the base dir to store data relative to
 			 * \param jid the subdir in which profile-specific data will be stored. 
