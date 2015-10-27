@@ -287,7 +287,7 @@ ChatListWindow::Chat ChatsManager::updateChatStatusAndAvatarHelper(const ChatLis
 		if (avatarManager_) {
 			fixedChat.avatarPath = avatarManager_->getAvatarPath(fixedChat.jid);
 		}
-		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(fixedChat.jid.toBare());
+		Presence::ref presence = presenceOracle_->getAccountPresence(fixedChat.jid.toBare());
 		fixedChat.statusType = presence ? presence->getShow() : StatusShow::None;
 	}
 	return fixedChat;
@@ -409,7 +409,7 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
 			unreadCount = controller->getUnreadCount();
 		}
 		JID bareishJID = mucRegistry_->isMUC(jid.toBare()) ? jid : jid.toBare();
-		Presence::ref presence = presenceOracle_->getHighestPriorityPresence(bareishJID);
+		Presence::ref presence = presenceOracle_->getAccountPresence(bareishJID);
 		StatusShow::Type type = presence ? presence->getShow() : StatusShow::None;
 		boost::filesystem::path avatarPath = avatarManager_ ? avatarManager_->getAvatarPath(bareishJID) : boost::filesystem::path();
 		return ChatListWindow::Chat(bareishJID, nickResolver_->jidToNick(bareishJID), activity, unreadCount, type, avatarPath, false, privateMessage);

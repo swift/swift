@@ -28,6 +28,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testHighestPresenceMultiple);
 		CPPUNIT_TEST(testHighestPresenceGlobal);
 		CPPUNIT_TEST(testHighestPresenceChangePriority);
+		CPPUNIT_TEST(testGetActivePresence);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -52,15 +53,15 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 		}
 
 		void testHighestPresenceSingle() {
-					JID bareJID("alice@wonderland.lit");
-					Presence::ref fiveOn = makeOnline("blah", 5);
-					Presence::ref fiveOff = makeOffline("/blah");
-					CPPUNIT_ASSERT_EQUAL(Presence::ref(), oracle_->getHighestPriorityPresence(bareJID));
-					stanzaChannel_->onPresenceReceived(fiveOn);
-					CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
-					stanzaChannel_->onPresenceReceived(fiveOff);
-					CPPUNIT_ASSERT_EQUAL(fiveOff, oracle_->getHighestPriorityPresence(bareJID));
-				}
+			JID bareJID("alice@wonderland.lit");
+			Presence::ref fiveOn = makeOnline("blah", 5);
+			Presence::ref fiveOff = makeOffline("/blah");
+			CPPUNIT_ASSERT_EQUAL(Presence::ref(), oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOn);
+			CPPUNIT_ASSERT_EQUAL(fiveOn, oracle_->getHighestPriorityPresence(bareJID));
+			stanzaChannel_->onPresenceReceived(fiveOff);
+			CPPUNIT_ASSERT_EQUAL(fiveOff, oracle_->getHighestPriorityPresence(bareJID));
+		}
 
 		void testHighestPresenceMultiple() {
 			JID bareJID("alice@wonderland.lit");
@@ -151,8 +152,52 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT(!oracle_->getLastPresence(user1));
 		}
+
+		void testGetActivePresence() {
+			{
+				std::vector<Presence::ref> presenceList;
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceA", 10, Presence::Available, StatusShow::Away));
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceB", 5, Presence::Available, StatusShow::Online));
+
+				CPPUNIT_ASSERT_EQUAL(StatusShow::Online, PresenceOracle::getActivePresence(presenceList)->getShow());
+			}
+
+			{
+				std::vector<Presence::ref> presenceList;
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceA", 10, Presence::Available, StatusShow::Away));
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceB", 5, Presence::Available, StatusShow::DND));
+
+				CPPUNIT_ASSERT_EQUAL(StatusShow::DND, PresenceOracle::getActivePresence(presenceList)->getShow());
+			}
+
+			{
+				std::vector<Presence::ref> presenceList;
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceA", 0, Presence::Available, StatusShow::Online));
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceB", 0, Presence::Available, StatusShow::DND));
+
+				CPPUNIT_ASSERT_EQUAL(StatusShow::Online, PresenceOracle::getActivePresence(presenceList)->getShow());
+			}
+
+			{
+				std::vector<Presence::ref> presenceList;
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceA", 1, Presence::Available, StatusShow::Online));
+				presenceList.push_back(createPresence("alice@wonderland.lit/resourceB", 0, Presence::Available, StatusShow::Online));
+
+				CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit/resourceA"), PresenceOracle::getActivePresence(presenceList)->getFrom());
+			}
+		}
 	
 	private:
+		Presence::ref createPresence(const JID &jid, int priority, Presence::Type type, const StatusShow::Type& statusShow) {
+			Presence::ref presence = boost::make_shared<Presence>();
+			presence->setFrom(jid);
+			presence->setPriority(priority);
+			presence->setType(type);
+			presence->setShow(statusShow);
+			return presence;
+		}
+
+
 		Presence::ref makeOnline(const std::string& resource, int priority) {
 			Presence::ref presence(new Presence());
 			presence->setPriority(priority);

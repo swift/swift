@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <map>
 #include <set>
 #include <string>
+#include <vector>
 
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
@@ -16,9 +16,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/StatusShow.h>
-#include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
 
@@ -56,12 +56,11 @@ class ContactRosterItem : public RosterItem {
 		void setDisplayJID(const JID& jid);
 		const JID& getDisplayJID() const;
 		void applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence);
-		void clearPresence();
-		void calculateShownPresence();
 		const std::vector<std::string>& getGroups() const;
 		/** Only used so a contact can know about the groups it's in*/
 		void addGroup(const std::string& group);
 		void removeGroup(const std::string& group);
+		void clearPresence();
 
 		MUCOccupant::Role getMUCRole() const;
 		void setMUCRole(const MUCOccupant::Role& role);
@@ -85,9 +84,7 @@ class ContactRosterItem : public RosterItem {
 		JID displayJID_;
 		boost::posix_time::ptime lastAvailableTime_;
 		boost::filesystem::path avatarPath_;
-		std::map<std::string, boost::shared_ptr<Presence> > presences_;
-		boost::shared_ptr<Presence> offlinePresence_;
-		boost::shared_ptr<Presence> shownPresence_;
+		boost::shared_ptr<Presence> presence_;
 		std::vector<std::string> groups_;
 		MUCOccupant::Role mucRole_;
 		MUCOccupant::Affiliation mucAffiliation_;

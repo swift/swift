@@ -305,7 +305,7 @@ Contact::ref UserSearchController::convertJIDtoContact(const JID& jid) {
 	}
 
 	// presence lookup
-	Presence::ref presence = presenceOracle_->getHighestPriorityPresence(jid);
+	Presence::ref presence = presenceOracle_->getAccountPresence(jid);
 	if (presence) {
 		contact->statusType = presence->getShow();
 	} else {

@@ -13,16 +13,15 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
-#include <Swiften/Elements/JinglePayload.h>
-#include <Swiften/Elements/JingleIBBTransportPayload.h>
-#include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Elements/JingleFileTransferDescription.h>
-#include <Swiften/Elements/StreamInitiationFileInfo.h>
-#include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/Elements/JingleFileTransferDescription.h>
+#include <Swiften/Elements/JingleFileTransferHash.h>
+#include <Swiften/Elements/JingleIBBTransportPayload.h>
+#include <Swiften/Elements/JinglePayload.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/Elements/StreamInitiationFileInfo.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 #include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/Base/Log.h>
 
 using namespace Swift;
 
@@ -413,7 +412,6 @@ class JingleParserTest : public CppUnit::TestFixture {
 		
 		// http://xmpp.org/extensions/xep-0234.html#example-10
 		void testParse_Xep0234_Example10() {
-			Log::setLogLevel(Log::debug);
 			PayloadsParserTester parser;
 			CPPUNIT_ASSERT(parser.parse(
 				"<jingle xmlns='urn:xmpp:jingle:1'\n"

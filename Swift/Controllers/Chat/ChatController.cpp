@@ -71,7 +71,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 		theirPresence = presenceOracle->getLastPresence(contact);
 	} else {
 		startMessage = str(format(QT_TRANSLATE_NOOP("", "Starting chat with %1% - %2%")) % nick % contact.toBare().toString());
-		theirPresence = contact.isBare() ? presenceOracle->getHighestPriorityPresence(contact.toBare()) : presenceOracle->getLastPresence(contact);
+		theirPresence = contact.isBare() ? presenceOracle->getAccountPresence(contact) : presenceOracle->getLastPresence(contact);
 	}
 	Idle::ref idle;
 	if (theirPresence && (idle = theirPresence->getPayload<Idle>())) {
@@ -143,7 +143,7 @@ void ChatController::setToJID(const JID& jid) {
 	if (isInMUC_) {
 		presence = presenceOracle_->getLastPresence(jid);
 	} else {
-		presence = jid.isBare() ? presenceOracle_->getHighestPriorityPresence(jid.toBare()) : presenceOracle_->getLastPresence(jid);
+		presence = jid.isBare() ? presenceOracle_->getAccountPresence(jid.toBare()) : presenceOracle_->getLastPresence(jid);
 	}
 	chatStateNotifier_->setContactIsOnline(presence && presence->getType() == Presence::Available);
 	handleBareJIDCapsChanged(toJID_);
@@ -464,18 +464,18 @@ std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> pr
 }
 
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
-	bool me = false;
-	if (toJID_.isBare()) {
-		newPresence = presenceOracle_->getHighestPriorityPresence(toJID_);
-		if ((newPresence ? newPresence->getShow() : StatusShow::None) != lastShownStatus_) {
-			me = true;
-		}
-	} else if (toJID_.equals(newPresence->getFrom(), JID::WithResource)) {
-		me = true;
+	bool relevantPresence = false;
+
+	if (toJID_.equals(newPresence->getFrom(), JID::WithoutResource)) {
+		// Presence matches ChatController JID.
+		newPresence = presenceOracle_->getAccountPresence(toJID_);
+		relevantPresence = true;
 	}
-	if (!me) {
+
+	if (!relevantPresence) {
 		return;
 	}
+
 	if (!newPresence) {
 		newPresence = boost::make_shared<Presence>();
 		newPresence->setType(Presence::Unavailable);

@@ -6,9 +6,13 @@
 
 #include <Swiften/Presence/PresenceOracle.h>
 
+#include <queue>
+
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Elements/StatusShow.h>
 #include <Swiften/Roster/XMPPRoster.h>
 
 namespace Swift {
@@ -104,6 +108,91 @@ std::vector<Presence::ref> PresenceOracle::getAllPresence(const JID& bareJID) co
 		results.push_back(current);
 	}
 	return results;
+}
+
+struct PresenceAccountCmp {
+	static int preferenceFromStatusShow(StatusShow::Type showType) {
+		switch (showType) {
+			case StatusShow::FFC:
+				return 5;
+			case StatusShow::Online:
+				return 4;
+			case StatusShow::DND:
+				return 3;
+			case StatusShow::Away:
+				return 2;
+			case StatusShow::XA:
+				return 1;
+			case StatusShow::None:
+				return 0;
+		}
+		assert(false);
+		return -1;
+	}
+
+	bool operator()(const Presence::ref& a, const Presence::ref& b) {
+		int aPreference = preferenceFromStatusShow(a->getShow());
+		int bPreference = preferenceFromStatusShow(b->getShow());
+
+		if (aPreference != bPreference) {
+			return aPreference < bPreference;
+		}
+		if (a->getPriority() != b->getPriority()) {
+			return a->getPriority() < b->getPriority();
+		}
+		return a->getFrom().getResource() < b->getFrom().getResource();
+	}
+};
+
+typedef std::priority_queue<Presence::ref, std::vector<Presence::ref>, PresenceAccountCmp> PresenceAccountPriorityQueue;
+
+Presence::ref PresenceOracle::getActivePresence(const std::vector<Presence::ref> presences) {
+	Presence::ref accountPresence;
+
+	PresenceAccountPriorityQueue online;
+	PresenceAccountPriorityQueue away;
+	PresenceAccountPriorityQueue offline;
+
+	foreach(Presence::ref presence, presences) {
+		switch (presence->getShow()) {
+			case StatusShow::Online:
+				online.push(presence);
+				break;
+			case StatusShow::Away:
+				away.push(presence);
+				break;
+			case StatusShow::FFC:
+				online.push(presence);
+				break;
+			case StatusShow::XA:
+				away.push(presence);
+				break;
+			case StatusShow::DND:
+				away.push(presence);
+				break;
+			case StatusShow::None:
+				offline.push(presence);
+				break;
+		}
+	}
+
+	if (!online.empty()) {
+		accountPresence = online.top();
+	}
+	else if (!away.empty()) {
+		accountPresence = away.top();
+	}
+	else if (!offline.empty()) {
+		accountPresence = offline.top();
+	}
+	return accountPresence;
+}
+
+Presence::ref PresenceOracle::getAccountPresence(const JID& jid) const {
+	Presence::ref accountPresence;
+	std::vector<Presence::ref> allPresences = getAllPresence(jid.toBare());
+	accountPresence = getActivePresence(allPresences);
+	return accountPresence;
 }
 
 Presence::ref PresenceOracle::getHighestPriorityPresence(const JID& bareJID) const {

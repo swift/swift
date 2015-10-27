@@ -79,7 +79,6 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 	xmppRoster_->onJIDRemoved.connect(boost::bind(&RosterController::handleOnJIDRemoved, this, _1));
 	xmppRoster_->onRosterCleared.connect(boost::bind(&RosterController::handleRosterCleared, this));
 	subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
-	presenceOracle_->onPresenceChange.connect(boost::bind(&RosterController::handleIncomingPresence, this, _1));
 	uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
 
 	vcardManager_->onOwnVCardChanged.connect(boost::bind(&RosterController::handleOwnVCardChanged, this, _1));
@@ -334,7 +333,8 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
 	if (newPresence->getType() == Presence::Error) {
 		return;
 	}
-	roster_->applyOnItems(SetPresence(newPresence));
+	Presence::ref accountPresence = presenceOracle_->getAccountPresence(newPresence->getFrom().toBare());
+	roster_->applyOnItems(SetPresence(accountPresence));
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const std::string& message) {
@@ -379,6 +379,9 @@ void RosterController::handlePresenceChanged(Presence::ref presence) {
 	if (presence->getFrom().equals(myJID_, JID::WithResource)) {
 		ownContact_->applyPresence(std::string(), presence);
 		mainWindow_->setMyContactRosterItem(ownContact_);
+	}
+	else {
+		handleIncomingPresence(presence);
 	}
 }
 

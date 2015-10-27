@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,10 @@
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/Idle.h>
+
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 
@@ -26,11 +27,11 @@ ContactRosterItem::~ContactRosterItem() {
 }
 
 StatusShow::Type ContactRosterItem::getStatusShow() const {
-	return shownPresence_ ? shownPresence_->getShow() : StatusShow::None;
+	return presence_ ? presence_->getShow() : StatusShow::None;
 }
 
 StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
-	switch (shownPresence_ ? shownPresence_->getShow() : StatusShow::None) {
+	switch (presence_ ? presence_->getShow() : StatusShow::None) {
 		case StatusShow::Online: return StatusShow::Online;
 		case StatusShow::Away: return StatusShow::Away;
 	 	case StatusShow::XA: return StatusShow::Away;
@@ -43,11 +44,11 @@ StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
 }
 
 std::string ContactRosterItem::getStatusText() const {
-	return shownPresence_ ? shownPresence_->getStatus() : "";
+	return presence_ ? presence_->getStatus() : "";
 }
 
 std::string ContactRosterItem::getIdleText() const {
-	Idle::ref idle = shownPresence_ ? shownPresence_->getPayload<Idle>() : Idle::ref();
+	Idle::ref idle = presence_ ? presence_->getPayload<Idle>() : Idle::ref();
 	if (!idle || idle->getSince().is_not_a_date_time()) {
 		return "";
 	} else {
@@ -56,9 +57,9 @@ std::string ContactRosterItem::getIdleText() const {
 }
 
 std::string ContactRosterItem::getOfflineSinceText() const {
-	if (offlinePresence_) {
-		boost::optional<boost::posix_time::ptime> delay = offlinePresence_->getTimestamp();
-		if (offlinePresence_->getType() == Presence::Unavailable && delay) {
+	if (presence_ && presence_->getType() == Presence::Unavailable) {
+		boost::optional<boost::posix_time::ptime> delay = presence_->getTimestamp();
+		if (delay) {
 			return dateTimeToLocalString(*delay);
 		}
 	}
@@ -88,42 +89,13 @@ const JID& ContactRosterItem::getDisplayJID() const {
 
 typedef std::pair<std::string, boost::shared_ptr<Presence> > StringPresencePair;
 
-void ContactRosterItem::calculateShownPresence() {
-	shownPresence_ = offlinePresence_;
-	foreach (StringPresencePair presencePair, presences_) {
-		boost::shared_ptr<Presence> presence = presencePair.second;
-		if (!shownPresence_ || presence->getPriority() > shownPresence_->getPriority() || presence->getShow() < shownPresence_->getShow()) {
-			shownPresence_ = presence;
-		}
-	}
-}
-
 void ContactRosterItem::clearPresence() {
-	presences_.clear();
-	calculateShownPresence();
+	presence_.reset();
 	onDataChanged();
 }
 
 void ContactRosterItem::applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence) {
-	if (offlinePresence_) {
-		offlinePresence_ = boost::shared_ptr<Presence>();
-	}
-	if (presence->getType() == Presence::Unavailable) {
-		if (resource.empty()) {
-			/* Unavailable from the bare JID means all resources are offline.*/
-			presences_.clear();
-		} else {
-			if (presences_.find(resource) != presences_.end()) {
-				presences_.erase(resource);
-			}
-		}
-		if (presences_.empty()) {
-			offlinePresence_ = presence;
-		}
-	} else {
-		presences_[resource] = presence;
-	}
-	calculateShownPresence();
+	presence_ = presence;
 	onDataChanged();
 }
 
