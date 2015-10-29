@@ -55,7 +55,7 @@ class ContactRosterItem : public RosterItem {
 		const JID& getJID() const;
 		void setDisplayJID(const JID& jid);
 		const JID& getDisplayJID() const;
-		void applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence);
+		void applyPresence(boost::shared_ptr<Presence> presence);
 		const std::vector<std::string>& getGroups() const;
 		/** Only used so a contact can know about the groups it's in*/
 		void addGroup(const std::string& group);

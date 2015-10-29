@@ -94,7 +94,7 @@ void ContactRosterItem::clearPresence() {
 	onDataChanged();
 }
 
-void ContactRosterItem::applyPresence(const std::string& resource, boost::shared_ptr<Presence> presence) {
+void ContactRosterItem::applyPresence(boost::shared_ptr<Presence> presence) {
 	presence_ = presence;
 	onDataChanged();
 }

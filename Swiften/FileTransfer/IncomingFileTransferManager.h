@@ -14,7 +14,6 @@
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
 
 namespace Swift {
-	class IQRouter;
 	class JingleSessionManager;
 	class FileTransferTransporterFactory;
 	class TimerFactory;
@@ -24,11 +23,10 @@ namespace Swift {
 		public:
 			IncomingFileTransferManager(
 					JingleSessionManager* jingleSessionManager, 
-					IQRouter* router, 
 					FileTransferTransporterFactory* transporterFactory,
 					TimerFactory* timerFactory, 
 					CryptoProvider* crypto);
-			~IncomingFileTransferManager();
+			virtual ~IncomingFileTransferManager();
 
 			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 
@@ -40,7 +38,6 @@ namespace Swift {
 
 		private:
 			JingleSessionManager* jingleSessionManager;
-			IQRouter* router;
 			FileTransferTransporterFactory* transporterFactory;
 			TimerFactory* timerFactory;
 			CryptoProvider* crypto;

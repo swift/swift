@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,20 +13,18 @@
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Jingle/Jingle.h>
 #include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
+#include <Swiften/Jingle/Jingle.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
 
 namespace Swift {
 
 IncomingFileTransferManager::IncomingFileTransferManager(
 		JingleSessionManager* jingleSessionManager,
-		IQRouter* router,
 		FileTransferTransporterFactory* transporterFactory,
 		TimerFactory* timerFactory, 
 		CryptoProvider* crypto) : 
 			jingleSessionManager(jingleSessionManager), 
-			router(router), 
 			transporterFactory(transporterFactory),
 			timerFactory(timerFactory), 
 			crypto(crypto) {

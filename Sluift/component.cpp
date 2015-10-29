@@ -1,45 +1,47 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/assign/list_of.hpp>
 #include <iostream>
 
+#include <boost/assign/list_of.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+#include <Sluift/ElementConvertors/IQConvertor.h>
+#include <Sluift/ElementConvertors/MessageConvertor.h>
+#include <Sluift/ElementConvertors/PresenceConvertor.h>
+#include <Sluift/ElementConvertors/StanzaConvertor.h>
+#include <Sluift/ElementConvertors/StatusShowConvertor.h>
+#include <Sluift/Lua/Check.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/FunctionRegistration.h>
+#include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/Lua/Value.h>
 #include <Sluift/SluiftComponent.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/SoftwareVersion.h>
+#include <Sluift/globals.h>
+
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/MAMQuery.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Elements/RosterPayload.h>
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Elements/MAMQuery.h>
-#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/SoftwareVersion.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Presence/PresenceSender.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Presence/SubscriptionManager.h>
-#include <Swiften/Roster/XMPPRosterItem.h>
+#include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
-#include <Sluift/Lua/FunctionRegistration.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Base/IDGenerator.h>
-#include <Sluift/Lua/Check.h>
-#include <Sluift/Lua/Value.h>
-#include <Sluift/Lua/Exception.h>
-#include <Sluift/Lua/LuaUtils.h>
-#include <Sluift/globals.h>
-#include <Sluift/ElementConvertors/StanzaConvertor.h>
-#include <Sluift/ElementConvertors/IQConvertor.h>
-#include <Sluift/ElementConvertors/PresenceConvertor.h>
-#include <Sluift/ElementConvertors/MessageConvertor.h>
-#include <Sluift/ElementConvertors/StatusShowConvertor.h>
+#include <Swiften/Roster/SetRosterRequest.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Roster/XMPPRosterItem.h>
 
 using namespace Swift;
 namespace lambda = boost::lambda;
@@ -327,11 +329,6 @@ static int sendQuery(lua_State* L, IQ::Type type) {
 	return component->sendRequest(
 		boost::make_shared< GenericRequest<Payload> >(type, from, to, payload, component->getComponent()->getIQRouter()), timeout).convertToLuaResult(L);
 }
-
-#define DISPATCH_PUBSUB_PAYLOAD(payloadType, container, response) \
-	else if (boost::shared_ptr<payloadType> p = boost::dynamic_pointer_cast<payloadType>(payload)) { \
-		return component->sendPubSubRequest(type, to, p, timeout).convertToLuaResult(L); \
-	}
 
 SLUIFT_LUA_FUNCTION(Component, get) {
 	return sendQuery(L, IQ::Get);

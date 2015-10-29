@@ -377,7 +377,7 @@ void RosterController::handleAvatarChanged(const JID& jid) {
 
 void RosterController::handlePresenceChanged(Presence::ref presence) {
 	if (presence->getFrom().equals(myJID_, JID::WithResource)) {
-		ownContact_->applyPresence(std::string(), presence);
+		ownContact_->applyPresence(presence);
 		mainWindow_->setMyContactRosterItem(ownContact_);
 	}
 	else {
