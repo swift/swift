@@ -1,22 +1,20 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-// Fix Boost-Cocoa conflict
-#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
 #include <Cocoa/Cocoa.h>
+#include <Slimber/Menulet.h>
 
-#include "Slimber/Menulet.h"
 #include <SwifTools/Cocoa/CocoaAction.h>
 
 class CocoaMenulet : public Menulet {
 	public:
 		CocoaMenulet();
-		~CocoaMenulet();		
+		virtual ~CocoaMenulet();
 	
 	private:
 		virtual void clear();

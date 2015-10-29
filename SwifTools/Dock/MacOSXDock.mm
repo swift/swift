@@ -1,5 +1,8 @@
-// Fix Boost-Cocoa conflict
-#define __ASSERT_MACROS_DEFINE_VERSIONS_WITHOUT_UNDERSCORES 0
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <SwifTools/Dock/MacOSXDock.h>
 

@@ -1,8 +1,14 @@
-#include "Slimber/Cocoa/CocoaController.h"
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include "Slimber/MainController.h"
-#include "Slimber/Cocoa/CocoaMenulet.h"
-#include "Slimber/Cocoa/main.h"
+#include <Slimber/Cocoa/CocoaController.h>
+
+#include <Slimber/MainController.h>
+#include <Slimber/Cocoa/CocoaMenulet.h>
+#include <Slimber/Cocoa/main.h>
 
 @implementation CocoaController {
 	CocoaMenulet* menulet;
