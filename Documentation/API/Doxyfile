@@ -89,17 +89,18 @@ INPUT                  = \
 	Swiften/Base \
 	Swiften/Chat \
 	Swiften/Client/Client.h \
-	Swiften/Client/CoreClient.h \
 	Swiften/Client/ClientError.h \
-	Swiften/Client/StanzaChannel.h \
-	Swiften/Client/NickResolver.h \
-	Swiften/Client/Storages.h \
+	Swiften/Client/CoreClient.h \
 	Swiften/Client/MemoryStorages.h \
+	Swiften/Client/NickResolver.h \
+	Swiften/Client/StanzaChannel.h \
+	Swiften/Client/Storages.h \
 	Swiften/Component/Component.h \
 	Swiften/Component/CoreComponent.h \
 	Swiften/Disco \
 	Swiften/Elements \
 	Swiften/EventLoop \
+	Swiften/FileTransfer \
 	Swiften/JID \
 	Swiften/MUC \
 	Swiften/Presence \

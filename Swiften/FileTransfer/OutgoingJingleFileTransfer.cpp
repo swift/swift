@@ -89,7 +89,7 @@ void OutgoingJingleFileTransfer::start() {
 	}
 
 	setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder(), options));
-	setState(GeneratingInitialLocalCandidates);
+	setInternalState(GeneratingInitialLocalCandidates);
 	transporter->startGeneratingLocalCandidates();
 }
 
@@ -116,7 +116,7 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
 
 	if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload)) {
 		transporter->addRemoteCandidates(s5bPayload->getCandidates(), s5bPayload->getDstAddr());
-		setState(TryingCandidates);
+		setInternalState(TryingCandidates);
 		transporter->startTryingRemoteCandidates();
 	}
 	else {
@@ -178,7 +178,7 @@ void OutgoingJingleFileTransfer::sendSessionInfoHash() {
 void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 		const std::string& s5bSessionID, const std::vector<JingleS5BTransportPayload::Candidate>& candidates, const std::string& dstAddr) {
 	SWIFT_LOG(debug) << std::endl;
-	if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+	if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
 
 	fillCandidateMap(localCandidates, candidates);
 
@@ -195,7 +195,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 		transport->addCandidate(candidate);	
 		SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString() << std::endl;
 	}
-	setState(WaitingForAccept);
+	setInternalState(WaitingForAccept);
 	session->sendInitiate(contentID, description, transport);
 }
 
@@ -205,7 +205,7 @@ void OutgoingJingleFileTransfer::fallback() {
 		JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
 		ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
 		ibbTransport->setSessionID(idGenerator->generateID());
-		setState(FallbackRequested);
+		setInternalState(FallbackRequested);
 		session->sendTransportReplace(contentID, ibbTransport);
 	}
 	else {
@@ -225,7 +225,7 @@ void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTran
 		sendSessionInfoHash();
 
 		// wait for other party to terminate session after they have verified the hash
-		setState(WaitForTermination);
+		setInternalState(WaitForTermination);
 		waitForRemoteTermination->start();
 	}
 }
@@ -238,15 +238,15 @@ void OutgoingJingleFileTransfer::startTransferring(boost::shared_ptr<TransportSe
 			boost::bind(boost::ref(onProcessedBytes), _1));
 	transferFinishedConnection = transportSession->onFinished.connect(
 			boost::bind(&OutgoingJingleFileTransfer::handleTransferFinished, this, _1));
-	setState(Transferring);
+	setInternalState(Transferring);
 	transportSession->start();
 }
 
 
-void OutgoingJingleFileTransfer::setState(State state) {
+void OutgoingJingleFileTransfer::setInternalState(State state) {
 	SWIFT_LOG(debug) <<  state << std::endl;
 	this->state = state;
-	onStateChanged(FileTransfer::State(getExternalState(state)));
+	setState(FileTransfer::State(getExternalState(state)));
 }
 
 void OutgoingJingleFileTransfer::setFinishedState(
@@ -306,7 +306,7 @@ void OutgoingJingleFileTransfer::startTransferViaRemoteCandidate() {
 	SWIFT_LOG(debug) << std::endl;
 
 	if (ourCandidateChoice->type == JingleS5BTransportPayload::Candidate::ProxyType) {
-		setState(WaitingForPeerProxyActivate);
+		setInternalState(WaitingForPeerProxyActivate);
 	} 
 	else {
 		transportSession = createRemoteCandidateSession();
@@ -318,7 +318,7 @@ void OutgoingJingleFileTransfer::startTransferViaLocalCandidate() {
 	SWIFT_LOG(debug) << std::endl;
 
 	if (theirCandidateChoice->type == JingleS5BTransportPayload::Candidate::ProxyType) {
-		setState(WaitingForLocalProxyActivate);
+		setInternalState(WaitingForLocalProxyActivate);
 		transporter->startActivatingProxy(theirCandidateChoice->jid);
 	} 
 	else {
@@ -332,7 +332,7 @@ void OutgoingJingleFileTransfer::startTransferringIfCandidateAcknowledged() {
 		startTransferring(transportSession);
 	}
 	else {
-		setState(WaitingForCandidateAcknowledge);
+		setInternalState(WaitingForCandidateAcknowledge);
 	}
 }
 

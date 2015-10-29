@@ -12,27 +12,27 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <boost/optional/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Jingle/JingleContentID.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
-#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
-#include <Swiften/FileTransfer/JingleFileTransfer.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
+#include <Swiften/FileTransfer/JingleFileTransfer.h>
+#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
+#include <Swiften/Jingle/JingleContentID.h>
 #include <Swiften/Network/Timer.h>
 
 namespace Swift {
-	class ReadBytestream;
-	class IDGenerator;
-	class IncrementalBytestreamHashCalculator;
 	class CryptoProvider;
 	class FileTransferTransporter;
 	class FileTransferTransporterFactory;
-	class TransportSession;
+	class IDGenerator;
+	class IncrementalBytestreamHashCalculator;
+	class ReadBytestream;
 	class TimerFactory;
+	class TransportSession;
 
 	class SWIFTEN_API OutgoingJingleFileTransfer : public OutgoingFileTransfer, public JingleFileTransfer {
 		public:
@@ -98,7 +98,7 @@ namespace Swift {
 			void handleWaitForRemoteTerminationTimeout();
 
 			void stopAll();
-			void setState(State state);
+			void setInternalState(State state);
 			void setFinishedState(FileTransfer::State::Type, const boost::optional<FileTransferError>& error);
 
 			static FileTransfer::State::Type getExternalState(State state);

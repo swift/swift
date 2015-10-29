@@ -21,6 +21,12 @@
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
+	/**
+	 * The FileTransfer class provides a general interface for file-transfer
+	 * implmenetations. Currently, only Jingle File Transfer based on XEP-0234 is
+	 * implementated in the \ref OutgoingJingleFileTransfer and
+	 * \ref IncomingJingleFileTransfer classes.
+	 */
 	class SWIFTEN_API FileTransfer {
 		public:
 			struct State {
@@ -49,11 +55,15 @@ namespace Swift {
 			virtual void cancel() = 0;
 
 			const std::string& getFileName() const {
-				return filename;
+				return filename_;
 			}
 
 			boost::uintmax_t getFileSizeInBytes() const {
-				return fileSizeInBytes;
+				return fileSizeInBytes_;
+			}
+
+			const State& getState() const {
+				return state_;
 			}
 
 		public:
@@ -62,10 +72,12 @@ namespace Swift {
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 
 		protected:
+			void setState(const State& state);
 			void setFileInfo(const std::string& name, boost::uintmax_t size);
 
 		private:
-			boost::uintmax_t fileSizeInBytes;
-			std::string filename;
+			boost::uintmax_t fileSizeInBytes_;
+			std::string filename_;
+			State state_;
 	};
 }
