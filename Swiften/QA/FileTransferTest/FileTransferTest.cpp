@@ -85,7 +85,7 @@ class FileTransferTest {
 			}
 
 			std::ofstream outfile(sendFilePath_.native().c_str(), std::ios::out | std::ios::binary);
-			outfile.write(reinterpret_cast<char *>(&sendData_[0]), sendData_.size());
+			outfile.write(reinterpret_cast<char *>(&sendData_[0]), boost::numeric_cast<ptrdiff_t>(sendData_.size()));
 			outfile.close();
 		}
 
@@ -261,7 +261,7 @@ class FileTransferTest {
 		Timer::ref timeOut_;
 };
 
-bool runTest(int senderCandidates, int receiverCandidates) {
+static bool runTest(int senderCandidates, int receiverCandidates) {
 	bool success = false;
 
 	std::cout << "senderCandidates: " << senderCandidates << ", receiverCandidates: " << receiverCandidates << std::endl;
