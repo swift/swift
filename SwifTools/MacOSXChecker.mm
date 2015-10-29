@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <SwifTools/MacOSXChecker.h>
 
 #include <algorithm>
@@ -14,6 +20,8 @@
 namespace Swift {
 
 MacOSXChecker::MacOSXChecker() {
+	NSSpellChecker* spellChecker = [NSSpellChecker sharedSpellChecker];
+	[spellChecker setAutomaticallyIdentifiesLanguages:YES];
 }
 
 MacOSXChecker::~MacOSXChecker() {
@@ -27,7 +35,7 @@ bool MacOSXChecker::isCorrect(const std::string& /*word*/) {
 void MacOSXChecker::getSuggestions(const std::string& word, std::vector<std::string>& list) {
 	NSSpellChecker* spellChecker = [NSSpellChecker sharedSpellChecker];
 	NSString* wordString = [[NSString alloc] initWithUTF8String: word.c_str()];
-	NSArray* suggestions = [spellChecker guessesForWord: wordString];
+	NSArray* suggestions = [spellChecker guessesForWordRange:NSMakeRange(0, [wordString length]) inString:wordString language:nil inSpellDocumentWithTag:0];
 	for(unsigned int i = 0; i < [suggestions count]; ++i) {
 		list.push_back(std::string([[suggestions objectAtIndex:i] UTF8String]));
 	}
