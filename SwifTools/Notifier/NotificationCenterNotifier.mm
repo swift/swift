@@ -57,23 +57,25 @@ void NotificationCenterNotifier::showMessage(Type type, const std::string& subje
 	if (std::find(defaultTypes.begin(), defaultTypes.end(), type) == defaultTypes.end()) {
 		return;
 	}
-
+	NSImage* image = [[NSImage alloc] initWithContentsOfFile: STD2NSSTRING(picture.string())];
 	NSUserNotification* notification = [[NSUserNotification alloc] init];
-	notification.title = STD2NSSTRING(typeToString(type));
-	notification.subtitle = STD2NSSTRING(subject);
-	notification.informativeText = STD2NSSTRING(description);
-	notification.contentImage = [[NSImage alloc] initWithContentsOfFile: STD2NSSTRING(picture.string())];
+	[notification setTitle:STD2NSSTRING(typeToString(type))];
+	[notification setSubtitle:STD2NSSTRING(subject)];
+	[notification setInformativeText:STD2NSSTRING(description)];
+	[notification setContentImage: image];
+	[image release];
 
 	// The OS X Notification Center API does not allow to attach custom data, like a pointer to a callback function,
 	// to the NSUserNotification object. Therefore we maintain a mapping from a NSUserNotification instance's identification
 	// to their respective callbacks.
-	notification.identifier = [[NSUUID UUID] UUIDString];
+	[notification setIdentifier:[[NSUUID UUID] UUIDString]];
 
 	/// \todo Currently the elements are only removed on application exit. Ideally the notifications not required anymore
 	///       are removed from the map; e.g. when visiting a chat view, all notifications from that view can be removed from
 	///       the map and the NSUserNotificationCenter.
 	p->callbacksForNotifications[NS2STDSTRING(notification.identifier)] = boost::make_shared<Context>(callback);
 	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
+	[notification release];
 }
 
 void NotificationCenterNotifier::purgeCallbacks() {

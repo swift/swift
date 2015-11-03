@@ -38,7 +38,7 @@ namespace Swift {
 namespace {
 
 	
-CFArrayRef getClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key) {
+CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key) {
 	boost::shared_ptr<PKCS12Certificate> pkcs12 = boost::dynamic_pointer_cast<PKCS12Certificate>(key);
 	if (!key) {
 		return NULL;
@@ -64,6 +64,7 @@ CFArrayRef getClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key) {
 	CFArrayRef items = NULL;
 	CFDataRef pkcs12Data = bridge_cast<CFDataRef>([NSData dataWithBytes: static_cast<const void *>(pkcs12->getData().data()) length:pkcs12->getData().size()]);
 	securityError = SecPKCS12Import(pkcs12Data, options, &items);
+	CFRelease(options);
 	NSArray* nsItems = bridge_cast<NSArray*>(items);
 
 	switch(securityError) {
@@ -76,7 +77,6 @@ CFArrayRef getClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key) {
 		default:
 			CFRelease(certChain);
 			CFRelease(items);
-			CFRelease(options);
 			certChain = NULL;
 	}
 
@@ -150,7 +150,7 @@ void SecureTransportContext::setState(State newState) {
 void SecureTransportContext::connect() {
 	SWIFT_LOG_ASSERT(state_ == None, error) << "current state '" << stateToString(state_) << " invalid." << std::endl;
 	if (clientCertificate_) {
-		CFArrayRef certs = getClientCertificateChainAsCFArrayRef(clientCertificate_);
+		CFArrayRef certs = CreateClientCertificateChainAsCFArrayRef(clientCertificate_);
 		if (certs) {
 			boost::shared_ptr<CFArray> certRefs(certs, CFRelease);
 			OSStatus result = SSLSetCertificate(sslContext_.get(), certRefs.get());
@@ -274,7 +274,7 @@ void SecureTransportContext::verifyServerCertificate() {
 #pragma clang diagnostic pop
 
 bool SecureTransportContext::setClientCertificate(CertificateWithKey::ref cert) {
-	CFArrayRef nativeClientChain = getClientCertificateChainAsCFArrayRef(cert);
+	CFArrayRef nativeClientChain = CreateClientCertificateChainAsCFArrayRef(cert);
 	if (nativeClientChain) {
 		clientCertificate_ = cert;
 		CFRelease(nativeClientChain);
