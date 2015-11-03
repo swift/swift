@@ -6,39 +6,39 @@
 
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
 
-#include <sstream>
 #include <map>
+#include <sstream>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/algorithm/string.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/format.h>
+#include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/format.h>
 #include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
-#include <Swiften/Avatars/AvatarManager.h>
 
+#include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
+#include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/Highlighter.h>
 #include <Swift/Controllers/Intl.h>
-#include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
-#include <Swift/Controllers/HighlightManager.h>
-#include <Swift/Controllers/Highlighter.h>
-#include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
-#include <Swift/Controllers/Chat/ChatMessageParser.h>
 
 namespace Swift {
 
@@ -49,7 +49,7 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
 	chatWindow_->onLogCleared.connect(boost::bind(&ChatControllerBase::handleLogCleared, this));
 	entityCapsProvider_->onCapsChanged.connect(boost::bind(&ChatControllerBase::handleCapsChanged, this, _1));
 	highlighter_ = highlightManager->createHighlighter();
-	setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
+	ChatControllerBase::setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
 	createDayChangeTimer();
 }
 

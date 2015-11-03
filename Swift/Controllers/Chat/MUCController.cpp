@@ -151,12 +151,12 @@ MUCController::MUCController (
 		chatWindow_->setName(muc->getJID().getNode());
 	}
 	if (stanzaChannel->isAvailable()) {
-		setOnline(true);
+		MUCController::setOnline(true);
 	}
 	if (avatarManager_ != NULL) {
 		avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
 	} 
-	handleBareJIDCapsChanged(muc->getJID());
+	MUCController::handleBareJIDCapsChanged(muc->getJID());
 	eventStream_->onUIEvent.connect(boost::bind(&MUCController::handleUIEvent, this, _1));
 
 

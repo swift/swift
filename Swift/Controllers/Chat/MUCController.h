@@ -13,6 +13,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/signals/connection.hpp>
 
+#include <Swiften/Base/Override.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/MUCOccupant.h>
@@ -59,8 +60,8 @@ namespace Swift {
 			boost::signal<void ()> onUserJoined;
 			boost::signal<void ()> onImpromptuConfigCompleted;
 			boost::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
-			virtual void setOnline(bool online);
-			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
+			virtual void setOnline(bool online) SWIFTEN_OVERRIDE;
+			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
 			void rejoin();
 			static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
 			static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu);
@@ -74,16 +75,16 @@ namespace Swift {
 			void sendInvites(const std::vector<JID>& jids, const std::string& reason) const;
 		
 		protected:
-			void preSendMessageRequest(boost::shared_ptr<Message> message);
-			bool isIncomingMessageFromMe(boost::shared_ptr<Message> message);
-			std::string senderHighlightNameFromMessage(const JID& from);
-			std::string senderDisplayNameFromMessage(const JID& from);
-			boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const;
-			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>);
-			virtual void addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&);
-			void cancelReplaces();
-			void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming);
+			virtual void preSendMessageRequest(boost::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+			virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
+			virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
+			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const SWIFTEN_OVERRIDE;
+			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) SWIFTEN_OVERRIDE;
+			virtual void addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&) SWIFTEN_OVERRIDE;
+			virtual void cancelReplaces() SWIFTEN_OVERRIDE;
+			virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
 
 		private:
 			void setAvailableRoomActions(const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Role& role);
@@ -112,9 +113,9 @@ namespace Swift {
 			bool messageTargetsMe(boost::shared_ptr<Message> message);
 			void updateJoinParts();
 			bool shouldUpdateJoinParts();
-			void dayTicked() {clearPresenceQueue();}
+			virtual void dayTicked() SWIFTEN_OVERRIDE { clearPresenceQueue(); }
 			void processUserPart();
-			void handleBareJIDCapsChanged(const JID& jid);
+			virtual void handleBareJIDCapsChanged(const JID& jid) SWIFTEN_OVERRIDE;
 			void handleConfigureRequest(Form::ref);
 			void handleConfigurationFailed(ErrorPayload::ref);
 			void handleConfigurationFormReceived(Form::ref);

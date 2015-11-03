@@ -7,32 +7,32 @@
 #pragma once
 
 #include <map>
-#include <vector>
 #include <string>
+#include <vector>
 
-#include <boost/shared_ptr.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include <Swiften/Network/Timer.h>
-#include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/SecurityLabelsCatalog.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/SecurityLabelsCatalog.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Base/IDGenerator.h>
-#include <Swiften/MUC/MUCRegistry.h>
 
-#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
-#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
-#include <Swift/Controllers/HistoryController.h>
 #include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/HistoryController.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 
 namespace Swift {
 	class IQRouter;
