@@ -58,7 +58,7 @@ namespace Swift {
 			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			void replaceMessage(const std::string& message, const std::string& id, bool senderIsSelf, const boost::posix_time::ptime& time, const HighlightAction& highlight);
 			virtual void setOnline(bool online);
-			virtual void setEnabled(bool enabled);
+			void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;}
 			/** Used for determining when something is recent.*/
 			boost::signal<void (const std::string& /*activity*/)> onActivity;

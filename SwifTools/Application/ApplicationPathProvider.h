@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/filesystem.hpp>
-#include <vector>
 #include <string>
+#include <vector>
+
+#include <boost/filesystem.hpp>
 
 namespace Swift {
 	class ApplicationPathProvider {
@@ -18,7 +19,7 @@ namespace Swift {
 
 			virtual boost::filesystem::path getHomeDir() const = 0;
 			virtual boost::filesystem::path getDataDir() const = 0;
-			virtual boost::filesystem::path getExecutableDir() const;
+			boost::filesystem::path getExecutableDir() const;
 			boost::filesystem::path getProfileDir(const std::string& profile) const;
 			boost::filesystem::path getResourcePath(const std::string& resource) const;
 
