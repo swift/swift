@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/optional.hpp>
-
 #include <Swiften/Parser/MessageParser.h>
+
+#include <boost/optional.hpp>
 
 namespace Swift {
 
 MessageParser::MessageParser(PayloadParserFactoryCollection* factories) : 
 		GenericStanzaParser<Message>(factories) {
-	getStanzaGeneric()->setType(Message::Normal);
+	GenericStanzaParser<Message>::getStanzaGeneric()->setType(Message::Normal);
 }
 
 void MessageParser::handleStanzaAttributes(const AttributeMap& attributes) {

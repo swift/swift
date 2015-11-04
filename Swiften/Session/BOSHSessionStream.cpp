@@ -67,7 +67,7 @@ BOSHSessionStream::BOSHSessionStream(const URL& boshURL,
 }
 
 BOSHSessionStream::~BOSHSessionStream() {
-	close();
+	BOSHSessionStream::close();
 	connectionPool->onSessionTerminated.disconnect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
 	connectionPool->onSessionStarted.disconnect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
 	connectionPool->onXMPPDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));

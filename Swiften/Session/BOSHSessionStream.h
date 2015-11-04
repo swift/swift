@@ -49,7 +49,7 @@ namespace Swift {
 					const TLSOptions& tlsOptions,
 					boost::shared_ptr<HTTPTrafficFilter> trafficFilter
 			);
-			~BOSHSessionStream();
+			virtual ~BOSHSessionStream();
 
 			virtual void close();
 			virtual bool isOpen();

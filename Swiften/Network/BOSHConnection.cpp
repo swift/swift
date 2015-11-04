@@ -5,22 +5,23 @@
  */
 
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/BOSHConnection.h>
 
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
-#include <boost/lexical_cast.hpp>
 #include <string>
 
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/thread.hpp>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Concat.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/Concat.h>
-#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Parser/BOSHBodyExtractor.h>
 
@@ -44,7 +45,7 @@ BOSHConnection::~BOSHConnection() {
 		connection_->onDataRead.disconnect(boost::bind(&BOSHConnection::handleDataRead, shared_from_this(), _1));
 		connection_->onDisconnected.disconnect(boost::bind(&BOSHConnection::handleDisconnected, shared_from_this(), _1));
 	}
-	disconnect();
+	BOSHConnection::disconnect();
 }
 
 void BOSHConnection::connect() {
