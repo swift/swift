@@ -11,10 +11,10 @@
 #include <boost/tuple/tuple.hpp>
 
 #include <QApplication>
-#include <QFontMetrics>
 #include <QKeyEvent>
 #include <QMenu>
 #include <QTime>
+#include <QTextDocument>
 
 #include <Swiften/Base/foreach.h>
 
@@ -36,6 +36,9 @@ QtTextEdit::QtTextEdit(SettingsProvider* settings, QWidget* parent) : QTextEdit(
 	setUpSpellChecker();
 #endif
 	handleTextChanged();
+	QTextOption textOption = document()->defaultTextOption();
+	textOption.setWrapMode(QTextOption::WordWrap);
+	document()->setDefaultTextOption(textOption);
 }
 
 QtTextEdit::~QtTextEdit() {
@@ -113,16 +116,9 @@ PositionPair QtTextEdit::getWordFromCursor(int cursorPosition) {
 }
 
 QSize QtTextEdit::sizeHint() const {
-	QFontMetrics inputMetrics(currentFont());
-	QRect horizontalBounds = contentsRect().adjusted(0,0,0,9999);
-	QRect boundingRect = inputMetrics.boundingRect(horizontalBounds, Qt::TextWordWrap, toPlainText() + "A");
-	int left, top, right, bottom;
-	getContentsMargins(&left, &top, &right, &bottom);
-	int height = boundingRect.height() + top + bottom + inputMetrics.height();
-	return QSize(width(), height);
-	//int numberOfLines = 1;
-	//int lineHeight = inputMetrics.lineSpacing();
-	//return QSize(QTextEdit::sizeHint().width(), lineHeight * numberOfLines);
+	QSize hint = document()->size().toSize();
+	QMargins margins = contentsMargins();
+	return hint + QSize(margins.left() + margins.right(), margins.top() + margins.bottom());
 }
 
 void QtTextEdit::contextMenuEvent(QContextMenuEvent* event) {
