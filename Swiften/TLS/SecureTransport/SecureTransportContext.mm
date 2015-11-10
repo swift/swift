@@ -72,12 +72,23 @@ CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key)
 			break;
 		case errSecAuthFailed:
 			// Password did not work for decoding the certificate.
+			SWIFT_LOG(warning) << "Invalid password." << std::endl;
+			break;
 		case errSecDecode:
 			// Other decoding error.
+			SWIFT_LOG(warning) << "PKCS12 decoding error." << std::endl;
+			break;
 		default:
-			CFRelease(certChain);
+			SWIFT_LOG(warning) << "Unknown error." << std::endl;
+	}
+	
+	if (securityError != errSecSuccess) {
+		if (items) {
 			CFRelease(items);
-			certChain = NULL;
+			items = NULL;
+		}
+		CFRelease(certChain);
+		certChain = NULL;
 	}
 
 	if (certChain) {
