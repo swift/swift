@@ -4,44 +4,46 @@
  * See the COPYING file for more information.
  */
 
-#include "QtLoginWindow.h"
+#include <Swift/QtUI/QtLoginWindow.h>
 
-#include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <algorithm>
 #include <cassert>
 
+#include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <QApplication>
 #include <QBoxLayout>
+#include <QCloseEvent>
 #include <QComboBox>
+#include <QCursor>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QFileDialog>
-#include <QStatusBar>
-#include <QToolButton>
+#include <QHBoxLayout>
+#include <QKeyEvent>
 #include <QLabel>
 #include <QMenuBar>
-#include <QHBoxLayout>
-#include <qdebug.h>
-#include <QCloseEvent>
-#include <QCursor>
 #include <QMessageBox>
-#include <QKeyEvent>
- 
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestHighlightEditorUIEvent.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/QtUI/QtUISettingConstants.h>
+#include <QStatusBar>
+#include <QToolButton>
+
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Paths.h>
 
-#include <QtAboutWidget.h>
-#include <QtSwiftUtil.h>
-#include <QtMainWindow.h>
-#include <QtUtilities.h>
-#include <QtConnectionSettingsWindow.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestHighlightEditorUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
+#include <Swift/QtUI/QtAboutWidget.h>
+#include <Swift/QtUI/QtConnectionSettingsWindow.h>
+#include <Swift/QtUI/QtMainWindow.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 #ifdef HAVE_SCHANNEL
 #include "CAPICertificateSelector.h"
@@ -394,15 +396,17 @@ void QtLoginWindow::loginClicked() {
 		}
 		CertificateWithKey::ref certificate;
 		std::string certificateString = Q2PSTRING(certificateFile_);
+		if (!certificateString.empty()) {
 #if defined(HAVE_SCHANNEL)
-		if (isCAPIURI(certificateString)) {
-			certificate = boost::make_shared<CAPICertificate>(certificateString, timerFactory_);
-		} else {
-			certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
-		}
+			if (isCAPIURI(certificateString)) {
+				certificate = boost::make_shared<CAPICertificate>(certificateString, timerFactory_);
+			} else {
+				certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
+			}
 #else
-		certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
+			certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
 #endif
+		}
 
 		onLoginRequest(Q2PSTRING(username_->currentText()), Q2PSTRING(password_->text()), certificateString, certificate, currentOptions_, remember_->isChecked(), loginAutomatically_->isChecked());
 		if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) { /* Mustn't remember logins */
