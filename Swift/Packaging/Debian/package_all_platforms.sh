@@ -10,19 +10,19 @@
 export SWIFT_DEBUILD_FLAGS="-S"
 export SWIFT_FORCE_LUCID="yep"
 
-./package.sh
+#./package.sh
 
-for distro in lucid squeeze; do
-	for arch in i386 amd64; do
-		pbuilder-dist $distro $arch build *.dsc
-	done
-done
+#for distro in lucid squeeze; do
+#	for arch in i386 amd64; do
+#		pbuilder-dist $distro $arch build *.dsc
+#	done
+#done
 
 unset SWIFT_FORCE_LUCID
 ./package.sh
 
-for distro in maverick sid; do
-	for arch in i386 amd64; do
+for distro in trusty wily jessie sid; do
+	for arch in amd64; do
 		pbuilder-dist $distro $arch build *.dsc
 	done
 done
