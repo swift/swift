@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Quit immediately if any part fails
+set -e
+
 ## To get to this stage you need to already have the pbuilder-dist stuff installed, and have already run:
 # for distro in squeeze sid lucid maverick; do
 #  for arch in i386 amd64; do
