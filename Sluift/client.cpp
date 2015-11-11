@@ -751,7 +751,11 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 			++index;
 		}
 	}
-	getClient(L)->getClient()->setCertificate(boost::make_shared<PKCS12Certificate>(file, createSafeByteArray(pwd)));
+	if (file.empty()) {
+		getClient(L)->getClient()->setCertificate(CertificateWithKey::ref());
+	} else {
+		getClient(L)->getClient()->setCertificate(boost::make_shared<PKCS12Certificate>(file, createSafeByteArray(pwd)));
+	}
 	return 0;
 }
 
