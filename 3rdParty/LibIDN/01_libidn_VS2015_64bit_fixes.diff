@@ -1,0 +1,36 @@
+diff --git a/3rdParty/LibIDN/src/stringprep.c b/3rdParty/LibIDN/src/stringprep.c
+old mode 100644
+new mode 100755
+index 8ff28e6..19bf0d9
+--- a/3rdParty/LibIDN/src/stringprep.c
++++ b/3rdParty/LibIDN/src/stringprep.c
+@@ -33,6 +33,7 @@
+ 
+ #include <stdlib.h>
+ #include <string.h>
++#include <assert.h>
+ 
+ #include "stringprep.h"
+ 
+@@ -372,7 +373,7 @@ stringprep (char *in,
+   int rc;
+   char *utf8 = NULL;
+   uint32_t *ucs4 = NULL;
+-  size_t ucs4len, maxucs4len, adducs4len = 50;
++  size_t ucs4len = SIZE_MAX, maxucs4len = SIZE_MAX, adducs4len = 50;
+ 
+   do
+     {
+@@ -380,8 +381,10 @@ stringprep (char *in,
+ 
+       free (ucs4);
+       ucs4 = stringprep_utf8_to_ucs4 (in, -1, &ucs4len);
+-      if (ucs4 == NULL)
+-	return STRINGPREP_ICONV_ERROR;
++	  if (ucs4 == NULL) {
++		  return STRINGPREP_ICONV_ERROR;
++	  }
++	  assert(ucs4len != SIZE_MAX);
+       maxucs4len = ucs4len + adducs4len;
+       newp = realloc (ucs4, maxucs4len * sizeof (uint32_t));
+       if (!newp)

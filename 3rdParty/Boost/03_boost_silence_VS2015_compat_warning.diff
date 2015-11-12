@@ -1,0 +1,13 @@
+diff --git a/3rdParty/Boost/src/boost/config/compiler/visualc.hpp b/3rdParty/Boost/src/boost/config/compiler/visualc.hpp
+index 842f086..3c0fbce 100644
+--- a/3rdParty/Boost/src/boost/config/compiler/visualc.hpp
++++ b/3rdParty/Boost/src/boost/config/compiler/visualc.hpp
+@@ -253,7 +253,7 @@
+ 
+ //
+ // last known and checked version is 18.00.20827.3 (VC12 RC, aka 2013 RC):
+-#if (_MSC_VER > 1800 && _MSC_FULL_VER > 180020827)
++#if (_MSC_VER > 1900)
+ #  if defined(BOOST_ASSERT_CONFIG)
+ #     error "Unknown compiler version - please run the configure tests and report the results"
+ #  else
