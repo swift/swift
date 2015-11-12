@@ -14,7 +14,7 @@ declare -a supported_python_versions=(python python2.7 python2.6 python2.5 pytho
 
 for exe in ${supported_python_versions[*]}; do
 	if is_supported_python "$exe"; then
-		exec $exe `dirname $0`/3rdParty/SCons/scons.py "$@"
+		exec $exe `dirname $0`/3rdParty/SCons/scons-2.4.0/script/scons "$@"
 		exit
 	fi
 done

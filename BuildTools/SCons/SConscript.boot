@@ -100,7 +100,7 @@ vars.Add(BoolVariable("experimental", "Build experimental features", "no"))
 vars.Add(BoolVariable("set_iterator_debug_level", "Set _ITERATOR_DEBUG_LEVEL=0", "yes"))
 vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for DNS lookup.", "no"))
 vars.Add(BoolVariable("check_headers", "Independently build compilation units for all Swiften headers for detecting missing dependencies.", "no"))
-
+vars.Add("win_target_arch", "Target architecture for Windows builds. x86 for 32-bit (default) or x86_64 for 64-bit.", "x86")
 vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
 
 ################################################################################
@@ -115,8 +115,10 @@ env_ENV = {
 
 if "MSVC_VERSION" in ARGUMENTS :
 	env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None))
+	env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
 else :
 	env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
+	env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
 
 Help(vars.GenerateHelpText(env))
 
