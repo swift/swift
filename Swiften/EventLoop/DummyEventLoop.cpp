@@ -10,16 +10,30 @@
 
 namespace Swift {
 
-DummyEventLoop::DummyEventLoop() {
+DummyEventLoop::DummyEventLoop() : hasEvents_(false) {
 }
 
 DummyEventLoop::~DummyEventLoop() {
-	boost::lock_guard<boost::mutex> lock(eventsMutex_);
-	if (!events_.empty()) {
+	if (hasEvents()) {
 		std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
 	}
-	events_.clear();
 }
 
+void DummyEventLoop::processEvents() {
+	while(hasEvents()) {
+		hasEvents_ = false;
+		handleNextEvent();
+	}
+}
+
+bool DummyEventLoop::hasEvents() {
+	boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
+	return hasEvents_;
+}
+
+void DummyEventLoop::eventPosted() {
+	boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
+	hasEvents_ = true;
+}
 
 }

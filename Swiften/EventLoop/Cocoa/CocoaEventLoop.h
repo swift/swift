@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
+
+#include <boost/thread.hpp>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
@@ -12,9 +14,15 @@ namespace Swift {
 	class CocoaEventLoop : public EventLoop {
 		public:
 			CocoaEventLoop();
+			virtual ~CocoaEventLoop();
 
-			virtual void post(const Event& event);
+			void handleNextCocoaEvent();
+			
+		protected:
+			virtual void eventPosted();
 
-			using EventLoop::handleEvent;
+		private:
+			bool isEventInCocoaEventLoop_;
+			boost::recursive_mutex isEventInCocoaEventLoopMutex_;
 	};
 }

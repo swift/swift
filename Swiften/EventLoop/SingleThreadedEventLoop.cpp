@@ -15,20 +15,18 @@
 namespace Swift {
 
 SingleThreadedEventLoop::SingleThreadedEventLoop() 
-: shouldShutDown_(false)
+: shouldShutDown_(false), eventAvailable_(false)
 {
 }
 
 SingleThreadedEventLoop::~SingleThreadedEventLoop() {
-	if (!events_.empty()) {
-		std::cerr << "Warning: Pending events in SingleThreadedEventLoop at destruction time." << std::endl;
-	}
+
 }
 
 void SingleThreadedEventLoop::waitForEvents() {
-	boost::unique_lock<boost::mutex> lock(eventsMutex_);
-	while (events_.empty() && !shouldShutDown_) {
-		eventsAvailable_.wait(lock);
+	boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+	while (!eventAvailable_ && !shouldShutDown_) {
+		eventAvailableCondition_.wait(lock);
 	}
 
 	if (shouldShutDown_)
@@ -36,30 +34,23 @@ void SingleThreadedEventLoop::waitForEvents() {
 }
 
 void SingleThreadedEventLoop::handleEvents() {
-	// Make a copy of the list of events so we don't block any threads that post 
-	// events while we process them.
-	std::vector<Event> events;
 	{
-		boost::unique_lock<boost::mutex> lock(eventsMutex_);
-		events.swap(events_);
+		boost::lock_guard<boost::mutex> lock(eventAvailableMutex_);
+		eventAvailable_ = false;
 	}
-	
-	// Loop through all the events and handle them
-	foreach(const Event& event, events) {
-		handleEvent(event);
-	}
+	handleNextEvent();
 }
 
 void SingleThreadedEventLoop::stop() {
-	boost::unique_lock<boost::mutex> lock(eventsMutex_);
+	boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
 	shouldShutDown_ = true;
-	eventsAvailable_.notify_one();
+	eventAvailableCondition_.notify_one();
 }
 
-void SingleThreadedEventLoop::post(const Event& event) {
-	boost::lock_guard<boost::mutex> lock(eventsMutex_);
-	events_.push_back(event);
-	eventsAvailable_.notify_one();
+void SingleThreadedEventLoop::eventPosted() {
+	boost::lock_guard<boost::mutex> lock(eventAvailableMutex_);
+	eventAvailable_ = true;
+	eventAvailableCondition_.notify_one();
 }
 
 } // namespace Swift

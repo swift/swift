@@ -39,7 +39,7 @@ namespace Swift {
 
 		public:
 			SingleThreadedEventLoop();
-			~SingleThreadedEventLoop();
+			virtual ~SingleThreadedEventLoop();
 
 			// Blocks while waiting for new events and returns when new events are available.
 			// Throws EventLoopCanceledException when the wait is canceled.
@@ -47,12 +47,14 @@ namespace Swift {
 			void handleEvents();
 			void stop();			
 
-			virtual void post(const Event& event);
+		protected:
+			virtual void eventPosted();
 			
 		private:
 			bool shouldShutDown_;
-			std::vector<Event> events_;
-			boost::mutex eventsMutex_;
-			boost::condition_variable eventsAvailable_;
+
+			bool eventAvailable_;
+			boost::mutex eventAvailableMutex_;
+			boost::condition_variable eventAvailableCondition_;
 	};
 }

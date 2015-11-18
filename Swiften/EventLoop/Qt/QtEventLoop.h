@@ -6,28 +6,39 @@
 
 #pragma once
 
-#include <QObject>
-#include <QEvent>
+#include <boost/thread.hpp>
+
 #include <QCoreApplication>
+#include <QEvent>
+#include <QObject>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class QtEventLoop : public QObject, public EventLoop {
 		public:
-			QtEventLoop() {}
+			QtEventLoop() : isEventInQtEventLoop_(false) {}
 			virtual ~QtEventLoop() {
 				QCoreApplication::removePostedEvents(this);
 			}
 
-			virtual void post(const Swift::Event& event) {
-				QCoreApplication::postEvent(this, new Event(event));
+		protected:
+			virtual void eventPosted() {
+				boost::recursive_mutex::scoped_lock lock(isEventInQtEventLoopMutex_);	
+				if (!isEventInQtEventLoop_) {
+					isEventInQtEventLoop_ = true;
+					QCoreApplication::postEvent(this, new Event());
+				}
 			}
 
 			virtual bool event(QEvent* qevent) {
 				Event* event = dynamic_cast<Event*>(qevent);
 				if (event) {
-					handleEvent(event->event_);
+					{
+						boost::recursive_mutex::scoped_lock lock(isEventInQtEventLoopMutex_);	
+						isEventInQtEventLoop_ = false;
+					}
+					handleNextEvent();
 					//event->deleteLater(); FIXME: Leak?
 					return true;
 				}
@@ -37,11 +48,12 @@ namespace Swift {
 		
 		private:
 			struct Event : public QEvent {
-					Event(const Swift::Event& event) :
-							QEvent(QEvent::User), event_(event) {
+					Event() :
+							QEvent(QEvent::User) {
 					}
-
-					Swift::Event event_;
 			};
+
+			bool isEventInQtEventLoop_;
+			boost::recursive_mutex isEventInQtEventLoopMutex_;
 	};
 }

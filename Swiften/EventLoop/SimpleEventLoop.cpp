@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,35 +7,28 @@
 #include <Swiften/EventLoop/SimpleEventLoop.h>
 
 #include <boost/bind.hpp>
-#include <iostream>
 
 #include <Swiften/Base/foreach.h>
 
-
 namespace Swift {
 
-SimpleEventLoop::SimpleEventLoop() : isRunning_(true) {
+SimpleEventLoop::SimpleEventLoop() : isRunning_(true), eventAvailable_(false) {
 }
 
 SimpleEventLoop::~SimpleEventLoop() {
-	if (!events_.empty()) {
-		std::cerr << "Warning: Pending events in SimpleEventLoop at destruction time" << std::endl;
-	}
 }
 
 void SimpleEventLoop::doRun(bool breakAfterEvents) {
 	while (isRunning_) {
-		std::vector<Event> events;
 		{
-			boost::unique_lock<boost::mutex> lock(eventsMutex_);
-			while (events_.empty()) {
-				eventsAvailable_.wait(lock);
+			boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+			while (!eventAvailable_) {
+				eventAvailableCondition_.wait(lock);
 			}
-			events.swap(events_);
+
+			eventAvailable_ = false;
 		}
-		foreach(const Event& event, events) {
-			handleEvent(event);
-		}
+		runOnce();
 		if (breakAfterEvents) {
 			return;
 		}
@@ -43,14 +36,7 @@ void SimpleEventLoop::doRun(bool breakAfterEvents) {
 }
 
 void SimpleEventLoop::runOnce() {
-	std::vector<Event> events;
-	{
-		boost::unique_lock<boost::mutex> lock(eventsMutex_);
-		events.swap(events_);
-	}
-	foreach(const Event& event, events) {
-		handleEvent(event);
-	}
+	handleNextEvent();
 }
 
 void SimpleEventLoop::stop() {
@@ -61,12 +47,12 @@ void SimpleEventLoop::doStop() {
 	isRunning_ = false;
 }
 
-void SimpleEventLoop::post(const Event& event) {
+void SimpleEventLoop::eventPosted() {
 	{
-		boost::lock_guard<boost::mutex> lock(eventsMutex_);
-		events_.push_back(event);
+		boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+		eventAvailable_ = true;
 	}
-	eventsAvailable_.notify_one();
+	eventAvailableCondition_.notify_one();
 }
 
 

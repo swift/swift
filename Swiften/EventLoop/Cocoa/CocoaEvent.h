@@ -9,7 +9,6 @@
 #include <Foundation/Foundation.h>
 
 namespace Swift {
-	class Event;
 	class CocoaEventLoop;
 }
 
@@ -19,14 +18,13 @@ namespace Swift {
 #pragma clang diagnostic ignored "-Wobjc-interface-ivars"
 
 @interface CocoaEvent : NSObject {
-	Swift::Event* event;
 	Swift::CocoaEventLoop* eventLoop;
 }
 
 #pragma clang diagnostic pop
 
 // Takes ownership of event
-- (id) initWithEvent: (Swift::Event*) e eventLoop: (Swift::CocoaEventLoop*) el;
+- (id) init:(Swift::CocoaEventLoop*) el;
 - (void) process;
 - (void) dealloc;
 

@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <list>
+
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
-#include <list>
-#include <deque>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/Event.h>
@@ -17,28 +17,49 @@
 namespace Swift {
 	class EventOwner;
 
+	/**
+	 *	The \ref EventLoop class provides the abstract interface for implementing event loops to use with Swiften.
+	 *  
+	 *  Events are added to the event queue using the \ref postEvent method and can be removed from the queue using
+	 *  the \ref removeEventsFromOwner method.
+	 */
 	class SWIFTEN_API EventLoop {
 		public:
 			EventLoop();
 			virtual ~EventLoop();
 
+			/**
+			 * The \ref postEvent method allows events to be added to the event queue of the \ref EventLoop.
+			 * An optional \ref EventOwner can be passed, allowing later removal of events that have not yet been
+			 * executed using the \ref removeEventsFromOwner method.
+			 */
 			void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = boost::shared_ptr<EventOwner>());
+			
+			/**
+			 * The \ref removeEventsFromOwner method removes all events from the specified \ref owner from the
+			 * event queue.
+			 */
 			void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
 
 		protected:
 			/**
-			 * Reimplement this to call handleEvent(event) from the thread in which
-			 * the event loop is residing.
+			 * The \ref handleNextEvent method is called by an implementation of the abstract \ref EventLoop class
+			 * at any point after the virtual \ref eventPosted method has been called.
+			 * This method does not block, except for short-time synchronization.
 			 */
-			virtual void post(const Event& event) = 0;
+			void handleNextEvent();
 
-			void handleEvent(const Event& event);
+			/**
+			 * The \ref eventPosted virtual method serves as notification for when events are still available in the queue.
+			 * It is called after the first event is posted to an empty queue or after an event has been handled in
+			 * \ref handleNextEvent and there are still remaining events in the queue.
+			 */
+			virtual void eventPosted() = 0;
 
 		private:
-			boost::mutex eventsMutex_;
 			unsigned int nextEventID_;
 			std::list<Event> events_;
-			bool handlingEvents_;
-			std::deque<Event> eventsToHandle_;
+			boost::recursive_mutex eventsMutex_;
+			boost::recursive_mutex removeEventsMutex_;
 	};
 }

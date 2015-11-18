@@ -6,8 +6,6 @@
 
 #pragma once
 
-#include <vector>
-#include <boost/function.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition_variable.hpp>
 
@@ -31,8 +29,9 @@ namespace Swift {
 			void runOnce();
 
 			void stop();
-
-			virtual void post(const Event& event);
+			
+		protected:
+			virtual void eventPosted();
 
 		private:
 			void doRun(bool breakAfterEvents);
@@ -40,8 +39,9 @@ namespace Swift {
 
 		private:
 			bool isRunning_;
-			std::vector<Event> events_;
-			boost::mutex eventsMutex_;
-			boost::condition_variable eventsAvailable_;
+
+			bool eventAvailable_;
+			boost::mutex eventAvailableMutex_;
+			boost::condition_variable eventAvailableCondition_;
 	};
 }
