@@ -8,8 +8,8 @@
 
 #include <boost/asio/ip/tcp.hpp>
 
-#include <Swiften/Network/PlatformDomainNameResolver.h>
 #include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/PlatformDomainNameResolver.h>
 
 namespace Swift {
 
@@ -18,6 +18,10 @@ PlatformDomainNameAddressQuery::PlatformDomainNameAddressQuery(const boost::opti
 		hostname = *host;
 		hostnameValid = true;
 	}
+}
+
+PlatformDomainNameAddressQuery::~PlatformDomainNameAddressQuery() {
+	
 }
 
 void PlatformDomainNameAddressQuery::run() {

@@ -7,16 +7,17 @@
 #pragma once
 
 #include <deque>
-#include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
+
 #include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Atomic.h>
-#include <Swiften/Network/DomainNameResolver.h>
-#include <Swiften/Network/PlatformDomainNameQuery.h>
-#include <Swiften/Network/DomainNameServiceQuery.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/DomainNameResolver.h>
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/Network/PlatformDomainNameQuery.h>
 
 namespace Swift {
 	class IDNConverter;	
@@ -25,7 +26,7 @@ namespace Swift {
 	class SWIFTEN_API PlatformDomainNameResolver : public DomainNameResolver {
 		public:
 			PlatformDomainNameResolver(IDNConverter* idnConverter, EventLoop* eventLoop);
-			~PlatformDomainNameResolver();
+			virtual ~PlatformDomainNameResolver();
 
 			virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
 			virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);

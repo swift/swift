@@ -91,7 +91,7 @@ void BOSHConnection::handleRawDataRead(boost::shared_ptr<SafeByteArray> data) {
 	tlsLayer_->handleDataRead(*data.get());
 }
 
-void BOSHConnection::handleTLSError(boost::shared_ptr<TLSError> error) {
+void BOSHConnection::handleTLSError(boost::shared_ptr<TLSError> /* error */) {
 
 }
 

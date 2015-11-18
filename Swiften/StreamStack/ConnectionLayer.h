@@ -9,14 +9,14 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/StreamStack/LowLayer.h>
 #include <Swiften/Network/Connection.h>
+#include <Swiften/StreamStack/LowLayer.h>
 
 namespace Swift {
 	class SWIFTEN_API ConnectionLayer : public LowLayer {
 		public:
 			ConnectionLayer(boost::shared_ptr<Connection> connection);
-			~ConnectionLayer();
+			virtual ~ConnectionLayer();
 
 			void writeData(const SafeByteArray& data) {
 				connection->write(data);

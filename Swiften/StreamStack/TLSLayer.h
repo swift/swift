@@ -6,14 +6,13 @@
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
-
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/TLS/Certificate.h>
-#include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
+#include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/TLSError.h>
 #include <Swiften/TLS/TLSOptions.h>
 
@@ -24,7 +23,7 @@ namespace Swift {
 	class SWIFTEN_API TLSLayer : public StreamLayer {
 		public:
 			TLSLayer(TLSContextFactory*, const TLSOptions&);
-			~TLSLayer();
+			virtual ~TLSLayer();
 
 			void connect();
 			bool setClientCertificate(CertificateWithKey::ref cert);
