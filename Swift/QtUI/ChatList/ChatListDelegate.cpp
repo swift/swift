@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QPen>
-#include <QPainter>
+#include <Swift/QtUI/ChatList/ChatListDelegate.h>
 
-#include "Swift/QtUI/ChatList/ChatListDelegate.h"
-#include "Swift/QtUI/Roster/GroupItemDelegate.h"
-#include "Swift/QtUI/ChatList/ChatListItem.h"
-#include "Swift/QtUI/ChatList/ChatListMUCItem.h"
-#include "Swift/QtUI/ChatList/ChatListRecentItem.h"
-#include "Swift/QtUI/ChatList/ChatListWhiteboardItem.h"
-#include "Swift/QtUI/ChatList/ChatListGroupItem.h"
+#include <QPainter>
+#include <QPen>
+
+#include <Swift/QtUI/ChatList/ChatListGroupItem.h>
+#include <Swift/QtUI/ChatList/ChatListItem.h>
+#include <Swift/QtUI/ChatList/ChatListMUCItem.h>
+#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
+#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
+#include <Swift/QtUI/Roster/GroupItemDelegate.h>
 
 namespace Swift {
 
@@ -27,6 +28,7 @@ ChatListDelegate::~ChatListDelegate() {
 
 void ChatListDelegate::setCompact(bool compact) {
 	compact_ = compact;
+	emit sizeHintChanged(QModelIndex());
 }
 
 QSize ChatListDelegate::sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const {
