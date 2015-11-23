@@ -15,6 +15,7 @@
 #include <boost/optional.hpp>
 #include <boost/thread/locks.hpp>
 
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
 
 namespace lambda = boost::lambda;
@@ -40,25 +41,27 @@ EventLoop::EventLoop() : nextEventID_(0) {
 EventLoop::~EventLoop() {
 }
 
-void EventLoop::handleNextEvent() {
+void EventLoop::handleNextEvents() {
+	const int eventsBatched = 100;
 	bool callEventPosted = false;
 	{
 		boost::recursive_mutex::scoped_lock lock(removeEventsMutex_);
 		{
-			boost::optional<Event> nextEvent;
+			std::vector<Event> nextEvents;
 			{
-				boost::recursive_mutex::scoped_lock lock(eventsMutex_);	
-				if (!events_.empty()) {
-					nextEvent = events_.front();
+				boost::recursive_mutex::scoped_lock lock(eventsMutex_);
+				for (int n = 0; ((n < eventsBatched) && !events_.empty()); n++) {
+					nextEvents.push_back(events_.front());
 					events_.pop_front();
 				}
+				callEventPosted = !events_.empty();
 			}
-			callEventPosted = !events_.empty();
-			if (nextEvent) {
-				invokeCallback(nextEvent.get());
+			if (!nextEvents.empty()) {
+				foreach (const Event& event, nextEvents) {
+					invokeCallback(event);
+				}
 			}
 		}
-
 	}
 
 	if (callEventPosted) {

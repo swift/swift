@@ -22,7 +22,7 @@ DummyEventLoop::~DummyEventLoop() {
 void DummyEventLoop::processEvents() {
 	while(hasEvents()) {
 		hasEvents_ = false;
-		handleNextEvent();
+		handleNextEvents();
 	}
 }
 

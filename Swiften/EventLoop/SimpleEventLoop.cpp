@@ -36,7 +36,7 @@ void SimpleEventLoop::doRun(bool breakAfterEvents) {
 }
 
 void SimpleEventLoop::runOnce() {
-	handleNextEvent();
+	handleNextEvents();
 }
 
 void SimpleEventLoop::stop() {

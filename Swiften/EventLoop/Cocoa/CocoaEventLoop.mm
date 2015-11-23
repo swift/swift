@@ -23,7 +23,7 @@ void CocoaEventLoop::handleNextCocoaEvent() {
 		boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
 		isEventInCocoaEventLoop_ = false;
 	}
-	handleNextEvent();
+	handleNextEvents();
 }
 
 void CocoaEventLoop::eventPosted() {

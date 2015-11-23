@@ -38,7 +38,7 @@ namespace Swift {
 						boost::recursive_mutex::scoped_lock lock(isEventInQtEventLoopMutex_);	
 						isEventInQtEventLoop_ = false;
 					}
-					handleNextEvent();
+					handleNextEvents();
 					//event->deleteLater(); FIXME: Leak?
 					return true;
 				}

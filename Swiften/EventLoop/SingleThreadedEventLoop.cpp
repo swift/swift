@@ -38,7 +38,7 @@ void SingleThreadedEventLoop::handleEvents() {
 		boost::lock_guard<boost::mutex> lock(eventAvailableMutex_);
 		eventAvailable_ = false;
 	}
-	handleNextEvent();
+	handleNextEvents();
 }
 
 void SingleThreadedEventLoop::stop() {
