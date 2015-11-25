@@ -40,7 +40,9 @@ bool QtTabbable::event(QEvent* event) {
 	if (keyEvent) {
 		// According to Qt's focus documentation, one can only override CTRL+TAB via reimplementing QWidget::event().
 		if (keyEvent->modifiers().testFlag(QtUtilities::ctrlHardwareKeyModifier) && keyEvent->key() == Qt::Key_Tab) {
-			if (keyEvent->type() != QEvent::ShortcutOverride) {
+			// Only handle KeyRelease event as Linux also generate KeyPress event in case of CTRL+TAB being pressed
+			// in the roster of a MUC.
+			if (keyEvent->type() == QEvent::KeyRelease) {
 				emit requestNextTab();
 			}
 			return true;
@@ -50,7 +52,12 @@ bool QtTabbable::event(QEvent* event) {
 #else
 		else if (keyEvent->modifiers().testFlag(QtUtilities::ctrlHardwareKeyModifier) && keyEvent->key() == Qt::Key_Backtab) {
 #endif
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+			// Windows emits both the KeyPress and KeyRelease events.
+			if (keyEvent->type() == QEvent::KeyPress) {
+#else
 			if (keyEvent->type() != QEvent::ShortcutOverride) {
+#endif
 				emit requestPreviousTab();
 			}
 			return true;
