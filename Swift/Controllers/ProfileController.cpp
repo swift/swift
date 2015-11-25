@@ -28,6 +28,7 @@ ProfileController::~ProfileController() {
 		profileWindow->onWindowAboutToBeClosed.disconnect(boost::bind(&ProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 	}
 	uiEventStream->onUIEvent.disconnect(boost::bind(&ProfileController::handleUIEvent, this, _1));
+	delete profileWindow;
 }
 
 void ProfileController::handleUIEvent(UIEvent::ref event) {
