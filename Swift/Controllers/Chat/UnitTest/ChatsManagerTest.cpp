@@ -114,7 +114,7 @@ public:
 		vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
 		mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
 		clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
-		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, NULL, vcardManager_);
+		manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_);
 
 		manager_->setAvatarManager(avatarManager_);
 	}

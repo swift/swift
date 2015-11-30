@@ -52,8 +52,10 @@ UserSearchController::~UserSearchController() {
 		window_->onNameSuggestionRequested.disconnect(boost::bind(&UserSearchController::handleNameSuggestionRequest, this, _1));
 		window_->onFormRequested.disconnect(boost::bind(&UserSearchController::handleFormRequested, this, _1));
 		window_->onSearchRequested.disconnect(boost::bind(&UserSearchController::handleSearch, this, _1, _2));
+		window_->onContactSuggestionsRequested.disconnect(boost::bind(&UserSearchController::handleContactSuggestionsRequested, this, _1));
 		window_->onJIDUpdateRequested.disconnect(boost::bind(&UserSearchController::handleJIDUpdateRequested, this, _1));
 		window_->onJIDAddRequested.disconnect(boost::bind(&UserSearchController::handleJIDAddRequested, this, _1));
+		window_->onJIDEditFieldChanged.disconnect(boost::bind(&UserSearchController::handleJIDEditingFinished, this, _1));
 		delete window_;
 	}
 	presenceOracle_->onPresenceChange.disconnect(boost::bind(&UserSearchController::handlePresenceChanged, this, _1));

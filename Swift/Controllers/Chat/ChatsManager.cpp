@@ -130,7 +130,6 @@ ChatsManager::ChatsManager(
 		HighlightManager* highlightManager,
 		ClientBlockListManager* clientBlockListManager,
 		const std::map<std::string, std::string>& emoticons,
-		UserSearchController* inviteUserSearchController,
 		VCardManager* vcardManager) :
 			jid_(jid), 
 			joinMUCWindowFactory_(joinMUCWindowFactory), 
@@ -147,7 +146,6 @@ ChatsManager::ChatsManager(
 			highlightManager_(highlightManager),
 			emoticons_(emoticons),
 			clientBlockListManager_(clientBlockListManager),
-			inviteUserSearchController_(inviteUserSearchController),
 			vcardManager_(vcardManager) {
 	timerFactory_ = timerFactory;
 	eventController_ = eventController;

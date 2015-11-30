@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,17 +16,15 @@
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/MUC/MUCRegistry.h>
-#include <Swiften/MUC/MUCBookmark.h>
 #include <Swiften/MUC/MUC.h>
-
+#include <Swiften/MUC/MUCBookmark.h>
+#include <Swiften/MUC/MUCRegistry.h>
 
 #include <Swift/Controllers/ContactProvider.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
-
 
 namespace Swift {
 	class EventController;
@@ -61,12 +59,11 @@ namespace Swift {
 	class ChatMessageParser;
 	class DiscoServiceWalker;
 	class AutoAcceptMUCInviteDecider;
-	class UserSearchController;
 	class VCardManager;
 
 	class ChatsManager : public ContactProvider {
 		public:
-			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons, UserSearchController* inviteUserSearchController, VCardManager* vcardManager);
+			ChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons, VCardManager* vcardManager);
 			virtual ~ChatsManager();
 			void setAvatarManager(AvatarManager* avatarManager);
 			void setOnline(bool enabled);
@@ -182,7 +179,6 @@ namespace Swift {
 			JID localMUCServiceJID_;
 			boost::shared_ptr<DiscoServiceWalker> localMUCServiceFinderWalker_;
 			AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
-			UserSearchController* inviteUserSearchController_;
 			IDGenerator idGenerator_;
 			VCardManager* vcardManager_;
 	};
