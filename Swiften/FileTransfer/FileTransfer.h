@@ -66,6 +66,10 @@ namespace Swift {
 				return state_;
 			}
 
+			const std::string& getDescription() const {
+				return description_;
+			}
+
 		public:
 			boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
 			boost::signal<void (const State&)> onStateChanged;
@@ -73,11 +77,12 @@ namespace Swift {
 
 		protected:
 			void setState(const State& state);
-			void setFileInfo(const std::string& name, boost::uintmax_t size);
+			void setFileInfo(const std::string& name, boost::uintmax_t size, const std::string& description);
 
 		private:
 			boost::uintmax_t fileSizeInBytes_;
 			std::string filename_;
+			std::string description_;
 			State state_;
 	};
 }

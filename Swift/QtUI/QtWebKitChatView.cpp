@@ -441,6 +441,11 @@ void QtWebKitChatView::setFileTransferStatus(QString id, const ChatWindow::FileT
 
 	QString newInnerHTML = "";
 	if (state == ChatWindow::Initialisation) {
+		QWebElement filenameSizeDescriptionElement = ftElement.parent().firstChild();
+		QString description = QtUtilities::htmlEscape(descriptions_[id]);
+		if (!description.isEmpty()) {
+			filenameSizeDescriptionElement.prependOutside(QString(" \"%1\"").arg(description));
+		}
 		newInnerHTML = tr("Preparing to transfer.") + "<br/>" +
 			buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, id);
 	}
@@ -660,17 +665,19 @@ QString QtWebKitChatView::buildChatWindowButton(const QString& name, const QStri
 	return html;
 }
 
-std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
+std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
 	SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
 	QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 	
 	QString actionText;
 	QString htmlString;
 	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
+	QString sanitizedFileName = QtUtilities::htmlEscape(P2QSTRING(filename));
+	QString sanitizedDescription = QtUtilities::htmlEscape(P2QSTRING(description));
 	if (senderIsSelf) {
 		// outgoing
-		filePaths_[ft_id] = P2QSTRING(filename);
-		actionText = tr("Send file: %1 (%2)").arg(P2QSTRING(filename)).arg(formattedFileSize);
+		filePaths_[ft_id] = sanitizedFileName;
+		actionText = tr("Send file: %1 (%2)").arg(sanitizedFileName).arg(formattedFileSize);
 		htmlString = actionText + " <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +
@@ -679,7 +686,10 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, boo
 			"</div>";
 	} else {
 		// incoming
-		actionText = tr("Receiving file: %1 (%2)").arg(P2QSTRING(filename)).arg(formattedFileSize);
+		actionText = tr("Receiving file: %1 (%2)").arg(sanitizedFileName).arg(formattedFileSize);
+		if (!sanitizedDescription.isEmpty()) {
+			actionText += QString(" \"%1\"").arg(sanitizedDescription);
+		}
 		htmlString = actionText + " <br/>" +
 			"<div id='" + ft_id + "'>" +
 				buildChatWindowButton(tr("Cancel"), ButtonFileTransferCancel, ft_id) +

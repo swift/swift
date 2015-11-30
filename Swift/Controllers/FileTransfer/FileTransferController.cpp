@@ -16,14 +16,14 @@
 #include <boost/filesystem.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/FileTransfer/FileTransferManager.h>
-#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
 
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/Intl.h>
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 namespace Swift {
 
@@ -49,9 +49,9 @@ const JID &FileTransferController::getOtherParty() const {
 std::string FileTransferController::setChatWindow(ChatWindow* wnd, std::string nickname) {
 	chatWindow = wnd;
 	if (sending) {
-		uiID = wnd->addFileTransfer(QT_TRANSLATE_NOOP("", "me"), true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)));
+		uiID = wnd->addFileTransfer(QT_TRANSLATE_NOOP("", "me"), true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)), "");
 	} else {
-		uiID = wnd->addFileTransfer(nickname, false, filename, transfer->getFileSizeInBytes());
+		uiID = wnd->addFileTransfer(nickname, false, filename, transfer->getFileSizeInBytes(), transfer->getDescription());
 	}
 	return uiID;
 }

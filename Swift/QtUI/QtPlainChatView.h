@@ -7,11 +7,12 @@
 #pragma once
 
 #include <string>
-#include <boost/shared_ptr.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 
-#include <QWidget>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <QTextEdit>
+#include <QWidget>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
@@ -50,7 +51,7 @@ namespace Swift {
 			virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/);
 			virtual void setAckState(const std::string& /*id*/, ChatWindow::AckState /*state*/);
 
-			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/, const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/);
+			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/, const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/);
 			virtual void setFileTransferProgress(std::string, const int /*percentageDone*/);
 			virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState /*state*/, const std::string& /*msg*/ = "");
 			virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool /*direct*/, bool /*isImpromptu*/, bool /*isContinuation*/);

@@ -38,7 +38,7 @@ namespace Swift {
 			virtual void replaceSystemMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const TimestampBehaviour /*timestampBehaviour*/) {}
 
 			// File transfer related stuff
-			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/) { return 0; }
+			virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/) { return 0; }
 			virtual void setFileTransferProgress(std::string /*id*/, const int /*alreadyTransferedBytes*/) { }
 			virtual void setFileTransferStatus(std::string /*id*/, const FileTransferState /*state*/, const std::string& /*msg*/) { }
 			

@@ -7,8 +7,9 @@
 #pragma once
 
 #include <string>
-#include <boost/shared_ptr.hpp>
+
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <QWidget>
 
@@ -43,7 +44,7 @@ namespace Swift {
 			virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/) = 0;
 			virtual void setAckState(const std::string& id, ChatWindow::AckState state) = 0;
 			
-			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) = 0;
+			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) = 0;
 			virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
 			virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState state, const std::string& msg = "") = 0;
 			virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) = 0;

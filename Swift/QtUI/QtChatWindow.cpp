@@ -906,9 +906,9 @@ void QtChatWindow::replaceWithAction(const ChatMessage& message, const std::stri
 	messageLog_->replaceWithAction(message, id, time, highlight);
 }
 
-std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes) {
+std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
 	handleAppendedToLog();
-	return messageLog_->addFileTransfer(senderName, senderIsSelf, filename, sizeInBytes);
+	return messageLog_->addFileTransfer(senderName, senderIsSelf, filename, sizeInBytes, description);
 }
 
 void QtChatWindow::setFileTransferProgress(std::string id, const int percentageDone) {

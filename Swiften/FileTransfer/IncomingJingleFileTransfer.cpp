@@ -47,7 +47,7 @@ IncomingJingleFileTransfer::IncomingJingleFileTransfer(
 	description = initialContent->getDescription<JingleFileTransferDescription>();
 	assert(description);
 	JingleFileTransferFileInfo fileInfo = description->getFileInfo();
-	setFileInfo(fileInfo.getName(), fileInfo.getSize());
+	setFileInfo(fileInfo.getName(), fileInfo.getSize(), fileInfo.getDescription());
 	hashes = fileInfo.getHashes();
 
 	waitOnHashTimer = timerFactory->createTimer(5000);

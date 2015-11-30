@@ -177,7 +177,7 @@ void QtPlainChatView::setAckState(const std::string& /*id*/, ChatWindow::AckStat
 	}
 }
 
-std::string QtPlainChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes)
+std::string QtPlainChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description)
 {
 	const std::string ftId = "ft" + boost::lexical_cast<std::string>(idGenerator_++);
 	const std::string sizeString = formatSize(sizeInBytes);
@@ -187,11 +187,13 @@ std::string QtPlainChatView::addFileTransfer(const std::string& senderName, bool
 		QString description = QInputDialog::getText(this, tr("File transfer description"),
 			tr("Description:"), QLineEdit::Normal, "");
 		/* NOTE: it is not possible to abort if description is not provided, since we must always return a valid transfer id */
-		const std::string message = std::string() + "Confirm file transfer: <i>" + filename + " (" + sizeString + " bytes)</i>";
+		const std::string descriptionMessage = description.isEmpty() ? "" : (" \"" + Q2PSTRING(description) + "\"");
+		const std::string message = std::string() + "Confirm file transfer: <i>" + filename + " (" + sizeString + " bytes)</i>" + descriptionMessage;
 		transfer = new FileTransfer(this, senderIsSelf, ftId, filename, ChatWindow::WaitingForAccept, Q2PSTRING(description), message, true);
 		addSystemMessage(ChatWindow::ChatMessage("Preparing to start file transfer..."), ChatWindow::DefaultDirection);
 	} else { /* incoming transfer */
-		const std::string message = std::string() + "Incoming file transfer: <i>" + filename + " (" + sizeString + " bytes)</i>";
+		const std::string descriptionMessage = description.empty() ? "" : (" \"" + description + "\"");
+		const std::string message = std::string() + "Incoming file transfer: <i>" + filename + " (" + sizeString + " bytes)</i>" + descriptionMessage;
 		transfer = new FileTransfer(this, senderIsSelf, ftId, filename, ChatWindow::WaitingForAccept, "", message, true);
 		addSystemMessage("Incoming file transfer from " + senderName + "...", ChatWindow::DefaultDirection);
 	}
@@ -285,6 +287,8 @@ void QtPlainChatView::fileTransferAccept()
 
 	FileTransfer* transfer = transferIter->second;
 
+	const std::string message = transfer->message_;
+
 	if (transfer->senderIsSelf_) { /* if we are the sender, kick of the transfer */
 		window_->onFileTransferStart(transfer->ftId_, transfer->description_);
 	} else { /* ask the user where to save the file first */
@@ -296,7 +300,7 @@ void QtPlainChatView::fileTransferAccept()
 		window_->onFileTransferAccept(transfer->ftId_, Q2PSTRING(path));
 	}
 
-	setFileTransferStatus(transfer->ftId_, ChatWindow::Negotiating, transfer->message_);
+	setFileTransferStatus(transfer->ftId_, ChatWindow::Negotiating, message);
 }
 
 void QtPlainChatView::fileTransferReject()
