@@ -466,10 +466,22 @@ std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> pr
 void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
 	bool relevantPresence = false;
 
-	if (toJID_.equals(newPresence->getFrom(), JID::WithoutResource)) {
-		// Presence matches ChatController JID.
-		newPresence = presenceOracle_->getAccountPresence(toJID_);
-		relevantPresence = true;
+	if (isInMUC_) {
+		// For MUC participants we only have a single presence to choose one and
+		// even for multi-session nicknames multiple resources are not distinguishable
+		// to other participants.
+		if (toJID_.equals(newPresence->getFrom(), JID::WithResource)) {
+			relevantPresence = true;
+		}
+	}
+	else {
+		// For standard chats we retrieve the account presence from the PresenceOracle,
+		// as there can be multiple presences to choose from.
+		if (toJID_.equals(newPresence->getFrom(), JID::WithoutResource)) {
+			// Presence matches ChatController JID.
+			newPresence = presenceOracle_->getAccountPresence(toJID_);
+			relevantPresence = true;
+		}
 	}
 
 	if (!relevantPresence) {

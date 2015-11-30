@@ -29,12 +29,16 @@ namespace Swift {
 				return "id";
 			}
 
-			virtual void addPresenceMessage(const ChatMessage& /*message*/, Direction /*direction*/) {}
+			virtual void addPresenceMessage(const ChatMessage& message, Direction /*direction*/) {
+				lastAddedPresence_ = message;
+			}
 
 			virtual void addErrorMessage(const ChatMessage& /*message*/) {}
 			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
 			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
-			virtual void replaceLastMessage(const ChatMessage& /*message*/, const TimestampBehaviour /*timestampBehaviour*/) {}
+			virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour /*timestampBehaviour*/) {
+				lastReplacedMessage_ = message;
+			}
 			virtual void replaceSystemMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const TimestampBehaviour /*timestampBehaviour*/) {}
 
 			// File transfer related stuff
@@ -82,7 +86,7 @@ namespace Swift {
 			virtual void showBookmarkWindow(const MUCBookmark& /*bookmark*/) {}
 			virtual void setBookmarkState(RoomBookmarkState) {}
 
-			std::string bodyFromMessage(const ChatMessage& message) {
+			static std::string bodyFromMessage(const ChatMessage& message) {
 				boost::shared_ptr<ChatTextMessagePart> text;
 				foreach (boost::shared_ptr<ChatMessagePart> part, message.getParts()) {
 					if ((text = boost::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
@@ -94,6 +98,8 @@ namespace Swift {
 
 			std::string name_;
 			std::string lastMessageBody_;
+			ChatMessage lastAddedPresence_;
+			ChatMessage lastReplacedMessage_;
 			std::vector<SecurityLabelsCatalog::Item> labels_;
 			bool labelsEnabled_;
 			SecurityLabelsCatalog::Item label_;

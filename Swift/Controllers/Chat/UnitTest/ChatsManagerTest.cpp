@@ -73,6 +73,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToFrom);
 	CPPUNIT_TEST(testChatControllerFullJIDBindingOnMessageAndNotReceipt);
 	CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
+	CPPUNIT_TEST(testChatControllerPMPresenceHandling);
 	CPPUNIT_TEST_SUITE_END();
 	
 public:
@@ -640,6 +641,36 @@ public:
 		// The chat session is now bound to the full JID of the second resource due to its recent composing message.
 		CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(3)->getTo());
 		CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(3)->getPayload<DeliveryReceiptRequest>());
+	}
+
+	void testChatControllerPMPresenceHandling() {
+		JID participantA = JID("test@rooms.test.com/participantA");
+		JID participantB = JID("test@rooms.test.com/participantB");
+
+		mucRegistry_->addMUC("test@rooms.test.com");
+
+		MockChatWindow* window = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(participantA, uiEventStream_).Return(window);
+
+		uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(participantA))));
+
+		Presence::ref presence = Presence::create();
+		presence->setFrom(participantA);
+		presence->setShow(StatusShow::Online);
+		stanzaChannel_->onPresenceReceived(presence);
+		CPPUNIT_ASSERT_EQUAL(std::string("participantA has become available."), MockChatWindow::bodyFromMessage(window->lastAddedPresence_));
+
+		presence = Presence::create();
+		presence->setFrom(participantB);
+		presence->setShow(StatusShow::Away);
+		stanzaChannel_->onPresenceReceived(presence);
+
+		presence = Presence::create();
+		presence->setFrom(participantA);
+		presence->setShow(StatusShow::None);
+		presence->setType(Presence::Unavailable);
+		stanzaChannel_->onPresenceReceived(presence);
+		CPPUNIT_ASSERT_EQUAL(std::string("participantA has gone offline."), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
 	}
 
 	void testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::Subscription from, RosterItemPayload::Subscription to) {
