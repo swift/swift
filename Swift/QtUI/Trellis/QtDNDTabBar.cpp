@@ -8,10 +8,10 @@
 
 #include <cassert>
 
-#include <QMouseEvent>
-#include <QDropEvent>
 #include <QDrag>
+#include <QDropEvent>
 #include <QMimeData>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QTabWidget>
 
@@ -48,6 +48,18 @@ QSize QtDNDTabBar::sizeHint() const {
 		hint = QSize(parentWidget()->width(), defaultTabHeight);
 	}
 	return hint;
+}
+
+QSize QtDNDTabBar::tabSizeHint(int index) const {
+	QSize tabSize = QTabBar::tabSizeHint(index);
+#if defined(Q_OS_MAC)
+	// With multiple tabs having the same label in a QTabBar, the size hint computed by
+	// Qt on OS X is too small and it is elided even though there is enough horizontal
+	// space available. We work around this issue by adding the width of a letter to the
+	// size hint.
+	tabSize += QSize(QFontMetrics(font()).width("I"), 0);
+#endif
+	return tabSize;
 }
 
 void QtDNDTabBar::dragEnterEvent(QDragEnterEvent* dragEnterEvent) {

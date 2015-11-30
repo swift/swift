@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,9 +26,10 @@ class QtDNDTabBar : public QTabBar {
 		void onDropSucceeded();
 
 	protected:
-		void dragEnterEvent(QDragEnterEvent* dragEnterEvent);
-		void dropEvent(QDropEvent* dropEvent);
-		bool event(QEvent* event);
+		virtual void dragEnterEvent(QDragEnterEvent* dragEnterEvent);
+		virtual void dropEvent(QDropEvent* dropEvent);
+		virtual bool event(QEvent* event);
+		virtual QSize tabSizeHint(int index) const;
 
 	private:
 		int defaultTabHeight;
