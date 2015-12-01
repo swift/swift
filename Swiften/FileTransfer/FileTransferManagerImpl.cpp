@@ -165,7 +165,22 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
 
 	assert(!iqRouter->getJID().isBare());
 
-	return outgoingFTManager->createOutgoingFileTransfer(iqRouter->getJID(), receipient, bytestream, fileInfo, config);
+	DiscoInfo::ref capabilities = capsProvider->getCaps(receipient);
+
+	FileTransferOptions options = config;
+	if (capabilities) {
+		if (!capabilities->hasFeature(DiscoInfo::JingleTransportsS5BFeature)) {
+			options = options.withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false);
+		}
+		if (!capabilities->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
+			options = options.withInBandAllowed(false);
+		}
+	}
+	else {
+		SWIFT_LOG(warning) << "No entity capabilities information for " << receipient.toString() << std::endl;
+	}
+
+	return outgoingFTManager->createOutgoingFileTransfer(iqRouter->getJID(), receipient, bytestream, fileInfo, options);
 }
 
 }
