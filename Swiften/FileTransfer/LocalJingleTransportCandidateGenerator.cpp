@@ -142,6 +142,10 @@ void LocalJingleTransportCandidateGenerator::emitOnLocalTransportCandidatesGener
 		// get direct candidates
 		std::vector<HostAddressPort> directCandidates = s5bServerManager->getHostAddressPorts();
 		foreach(HostAddressPort addressPort, directCandidates) {
+			if (addressPort.getAddress().getRawAddress().is_v6() &&
+				addressPort.getAddress().getRawAddress().to_v6().is_link_local()) {
+				continue;
+			}
 			JingleS5BTransportPayload::Candidate candidate;
 			candidate.type = JingleS5BTransportPayload::Candidate::DirectType;
 			candidate.jid = ownJID;
