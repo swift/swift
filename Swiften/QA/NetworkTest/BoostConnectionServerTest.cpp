@@ -26,6 +26,7 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testIPv4Server);
 		CPPUNIT_TEST(testIPv6Server);
 		CPPUNIT_TEST(testIPv4IPv6DualStackServer);
+		CPPUNIT_TEST(testIPv6DualStackServerPeerAddress);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
@@ -36,6 +37,7 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 			stoppedError_.reset();
 			receivedNewConnection_ = false;
 			connectFinished_ = false;
+			remoteAddress_ = boost::optional<HostAddressPort>();
 		}
 
 		void tearDown() {
@@ -147,13 +149,54 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 			testling->stop();
 		}
 
+		void testIPv6DualStackServerPeerAddress() {
+			BoostConnectionServer::ref testling = BoostConnectionServer::create(HostAddress("::"), 9999, boostIOServiceThread_->getIOService(), eventLoop_);
+			testling->onNewConnection.connect(boost::bind(&BoostConnectionServerTest::handleNewConnection, this, _1));
+			testling->start();
+
+			// Test IPv4.
+			BoostConnection::ref clientTestling = BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_);
+			clientTestling->onConnectFinished.connect(boost::bind(&BoostConnectionServerTest::handleConnectFinished, this, _1));
+			clientTestling->connect(HostAddressPort(HostAddress("127.0.0.1"), 9999));
+
+			while (!connectFinished_) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(true, receivedNewConnection_);
+			// The IPv4 localhost mapped to a IPv6 address is expected here.
+			CPPUNIT_ASSERT(HostAddress("::ffff:127.0.0.1") == remoteAddress_.get().getAddress());
+
+			receivedNewConnection_ = false;
+			connectFinished_ = false;
+			remoteAddress_ = boost::optional<HostAddressPort>();
+
+			// Test IPv6.
+			clientTestling = BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_);
+			clientTestling->onConnectFinished.connect(boost::bind(&BoostConnectionServerTest::handleConnectFinished, this, _1));
+			clientTestling->connect(HostAddressPort(HostAddress("::1"), 9999));
+
+			while (!connectFinished_) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(true, receivedNewConnection_);
+			// The IPv6 local host is expected here.
+			CPPUNIT_ASSERT(HostAddress("::1") == remoteAddress_.get().getAddress());
+
+			testling->stop();
+		}
+
 		void handleStopped_(boost::optional<BoostConnectionServer::Error> e) {
 			stopped_ = true;
 			stoppedError_ = e;
 		}
 
-		void handleNewConnection(boost::shared_ptr<Connection> /*connection*/) {
+		void handleNewConnection(boost::shared_ptr<Connection> connection) {
 			receivedNewConnection_ = true;
+			remoteAddress_ = connection->getRemoteAddress();
 		}
 
 		void handleConnectFinished(bool /*error*/) {
@@ -167,6 +210,7 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		bool receivedNewConnection_;
 		bool connectFinished_;
 		boost::optional<BoostConnectionServer::Error> stoppedError_;
+		boost::optional<HostAddressPort> remoteAddress_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BoostConnectionServerTest);

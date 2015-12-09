@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/optional.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <vector>
 
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/EventLoop/EventOwner.h>
-#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class SWIFTEN_API FakeConnection : 
@@ -31,10 +32,13 @@ namespace Swift {
 			};
 
 			FakeConnection(EventLoop* eventLoop);
-			~FakeConnection();
+			virtual ~FakeConnection();
 
 			virtual void listen();
 			virtual HostAddressPort getLocalAddress() const {
+				return HostAddressPort();
+			}
+			virtual HostAddressPort getRemoteAddress() const {
 				return HostAddressPort();
 			}
 

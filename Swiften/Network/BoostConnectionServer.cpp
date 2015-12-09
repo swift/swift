@@ -1,17 +1,20 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/BoostConnectionServer.h>
 
-#include <boost/bind.hpp>
-#include <boost/system/system_error.hpp>
+#include <boost/asio/ip/v6_only.hpp>
 #include <boost/asio/placeholders.hpp>
+#include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/optional.hpp>
+#include <boost/system/error_code.hpp>
+#include <boost/system/system_error.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
@@ -32,15 +35,18 @@ void BoostConnectionServer::start() {
 boost::optional<BoostConnectionServer::Error> BoostConnectionServer::tryStart() {
 	try {
 		assert(!acceptor_);
+		boost::asio::ip::tcp::endpoint endpoint;
 		if (address_.isValid()) {
-			acceptor_ = new boost::asio::ip::tcp::acceptor(
-				*ioService_, 
-				boost::asio::ip::tcp::endpoint(address_.getRawAddress(), boost::numeric_cast<unsigned short>(port_)));
+			endpoint = boost::asio::ip::tcp::endpoint(address_.getRawAddress(), boost::numeric_cast<unsigned short>(port_));
 		}
 		else {
-			acceptor_ = new boost::asio::ip::tcp::acceptor(
-				*ioService_, 
-				boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), boost::numeric_cast<unsigned short>(port_)));
+			endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), boost::numeric_cast<unsigned short>(port_));
+		}
+		acceptor_ = new boost::asio::ip::tcp::acceptor(*ioService_, endpoint);
+		if (endpoint.protocol() ==  boost::asio::ip::tcp::v6()) {
+			boost::system::error_code ec;
+			acceptor_->set_option(boost::asio::ip::v6_only(false), ec);
+			SWIFT_LOG_ASSERT(ec, warning) << "IPv4/IPv6 dual-stack support is not supported on this platform." << std::endl;
 		}
 		acceptNextConnection();
 	}

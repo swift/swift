@@ -104,6 +104,10 @@ HostAddressPort ProxiedConnection::getLocalAddress() const {
 	return connection_->getLocalAddress();
 }
 
+HostAddressPort ProxiedConnection::getRemoteAddress() const {
+	return connection_->getRemoteAddress();
+}
+
 void ProxiedConnection::setProxyInitializeFinished(bool success) {
 	connected_ = success;
 	if (!success) {

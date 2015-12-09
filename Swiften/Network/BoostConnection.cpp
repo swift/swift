@@ -1,28 +1,29 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/BoostConnection.h>
 
+#include <algorithm>
 #include <iostream>
 #include <string>
-#include <algorithm>
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
+
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+#include <boost/thread.hpp>
 
-#include <Swiften/Base/Log.h>
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Base/sleep.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/SafeAllocator.h>
+#include <Swiften/Base/sleep.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 
@@ -167,6 +168,10 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
 
 HostAddressPort BoostConnection::getLocalAddress() const {
 	return HostAddressPort(socket_.local_endpoint());
+}
+
+HostAddressPort BoostConnection::getRemoteAddress() const {
+	return HostAddressPort(socket_.remote_endpoint());
 }
 
 

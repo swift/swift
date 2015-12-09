@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+#include <boost/optional.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/optional.hpp>
-#include <boost/bind.hpp>
-
 #include <Swiften/Component/ComponentConnector.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 
@@ -176,6 +176,7 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
 				void disconnect() { assert(false); }
 				void write(const SafeByteArray&) { assert(false); }
 				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
+				HostAddressPort getRemoteAddress() const { return HostAddressPort(); }				
 
 				EventLoop* eventLoop;
 				boost::optional<HostAddressPort> hostAddressPort;

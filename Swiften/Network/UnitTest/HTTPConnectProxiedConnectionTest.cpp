@@ -386,6 +386,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 				}
 
 				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
+				HostAddressPort getRemoteAddress() const { return HostAddressPort(); }
 
 				void disconnect() { 
 					disconnected = true;

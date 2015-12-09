@@ -4,11 +4,11 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
-#include <QA/Checker/IO.h>
-
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+/*
+ * Copyright (c) 2015 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <boost/bind.hpp>
 #include <boost/random/mersenne_twister.hpp>
@@ -16,11 +16,18 @@
 #include <boost/random/variate_generator.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <QA/Checker/IO.h>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/StartStopper.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
 #include <Swiften/FileTransfer/ByteArrayWriteBytestream.h>
@@ -30,8 +37,6 @@
 #include <Swiften/Network/DummyConnection.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 
@@ -278,6 +283,9 @@ private:
 			}
 
 			HostAddressPort getLocalAddress() const { return HostAddressPort(); }
+			
+			HostAddressPort getRemoteAddress() const { return HostAddressPort(); }
+
 			void disconnect() {
 				disconnectCalled = true;
 			}

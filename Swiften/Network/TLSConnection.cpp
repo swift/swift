@@ -66,6 +66,10 @@ HostAddressPort TLSConnection::getLocalAddress() const {
 	return connection->getLocalAddress();
 }
 
+HostAddressPort TLSConnection::getRemoteAddress() const {
+	return connection->getRemoteAddress();
+}
+
 TLSContext* TLSConnection::getTLSContext() const {
 	return context;
 }

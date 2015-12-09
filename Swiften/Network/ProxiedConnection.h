@@ -36,6 +36,7 @@ namespace Swift {
 			virtual void write(const SafeByteArray& data);
 
 			virtual HostAddressPort getLocalAddress() const;
+			virtual HostAddressPort getRemoteAddress() const;
 
 		private:
 			void handleConnectFinished(Connection::ref connection);

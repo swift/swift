@@ -1,23 +1,23 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/ChainedConnector.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/DomainNameResolveError.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/Network/DomainNameResolveError.h>
 
 using namespace Swift;
 
@@ -151,6 +151,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 				}
 
 				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
+				HostAddressPort getRemoteAddress() const { return HostAddressPort(); }
 				void disconnect() { assert(false); }
 				void write(const SafeByteArray&) { assert(false); }
 

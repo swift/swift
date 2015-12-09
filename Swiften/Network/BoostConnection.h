@@ -48,7 +48,8 @@ namespace Swift {
 				return socket_;
 			}
 
-			HostAddressPort getLocalAddress() const;
+			virtual HostAddressPort getLocalAddress() const;
+			virtual HostAddressPort getRemoteAddress() const;
 
 			bool setClientCertificate(CertificateWithKey::ref cert);
 

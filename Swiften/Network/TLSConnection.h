@@ -32,6 +32,7 @@ namespace Swift {
 			virtual void write(const SafeByteArray& data);
 
 			virtual HostAddressPort getLocalAddress() const;
+			virtual HostAddressPort getRemoteAddress() const;
 
 			TLSContext* getTLSContext() const;
 

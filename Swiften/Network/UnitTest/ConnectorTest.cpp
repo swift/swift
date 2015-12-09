@@ -1,23 +1,23 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+#include <boost/optional.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/optional.hpp>
-#include <boost/bind.hpp>
-
-#include <Swiften/Network/Connector.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
+#include <Swiften/Network/Connector.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/StaticDomainNameResolver.h>
-#include <Swiften/Network/DummyTimerFactory.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/Network/DomainNameAddressQuery.h>
 
 using namespace Swift;
 
@@ -341,6 +341,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 				}
 
 				HostAddressPort getLocalAddress() const { return HostAddressPort(); }
+				HostAddressPort getRemoteAddress() const { return HostAddressPort(); }
 				void disconnect() { assert(false); }
 				void write(const SafeByteArray&) { assert(false); }
 

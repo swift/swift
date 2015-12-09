@@ -117,7 +117,7 @@ void SOCKS5BytestreamServerManager::initialize() {
 		int port;
 		for (port = LISTEN_PORTS_BEGIN; port < LISTEN_PORTS_END; ++port) {
 			SWIFT_LOG(debug) << "Trying to start server on port " << port << std::endl;
-			connectionServer = connectionServerFactory->createConnectionServer(HostAddress("0.0.0.0"), port);
+			connectionServer = connectionServerFactory->createConnectionServer(HostAddress("::"), port);
 			boost::optional<ConnectionServer::Error> error = connectionServer->tryStart();
 			if (!error) {
 				break;
