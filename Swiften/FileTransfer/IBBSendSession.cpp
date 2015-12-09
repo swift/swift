@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2015 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,9 +10,9 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/FileTransfer/IBBRequest.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
+#include <Swiften/FileTransfer/IBBRequest.h>
+#include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 
@@ -44,16 +44,22 @@ void IBBSendSession::start() {
 	request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 	active = true;
 	request->send();
+	currentRequest = request;
 }
 
 void IBBSendSession::stop() {
 	if (active && router->isAvailable()) {
 		IBBRequest::create(from, to, IBB::createIBBClose(id), router)->send();
 	}
+	if (currentRequest) {
+		currentRequest->onResponse.disconnect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
+	}
 	finish(boost::optional<FileTransferError>());
 }
 
 void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
+	currentRequest.reset();
+
 	if (!error && active) {
 		if (!bytestream->isFinished()) {
 			sendMoreData();
@@ -76,6 +82,7 @@ void IBBSendSession::sendMoreData() {
 			sequenceNumber++;
 			request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
 			request->send();
+			currentRequest = request;
 			onBytesSent(data->size());
 		}
 		else {
