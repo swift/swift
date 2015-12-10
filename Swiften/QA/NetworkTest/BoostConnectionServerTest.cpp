@@ -4,14 +4,17 @@
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <string>
+
 #include <boost/shared_ptr.hpp>
 
-#include <string>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/Base/sleep.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/BoostConnectionServer.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
 
 using namespace Swift;
 
@@ -20,14 +23,19 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testConstructor_TwoServersOnSamePort);
 		CPPUNIT_TEST(testStart_Conflict);
 		CPPUNIT_TEST(testStop);
+		CPPUNIT_TEST(testIPv4Server);
+		CPPUNIT_TEST(testIPv6Server);
+		CPPUNIT_TEST(testIPv4IPv6DualStackServer);
 		CPPUNIT_TEST_SUITE_END();
 
 	public:
 		void setUp() {
 			eventLoop_ = new DummyEventLoop();
 			boostIOServiceThread_ = new BoostIOServiceThread();
-			stopped = false;
-			stoppedError.reset();
+			stopped_ = false;
+			stoppedError_.reset();
+			receivedNewConnection_ = false;
+			connectFinished_ = false;
 		}
 
 		void tearDown() {
@@ -49,7 +57,7 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 
 			BoostConnectionServer::ref testling2(BoostConnectionServer::create(9999, boostIOServiceThread_->getIOService(), eventLoop_));
 			testling2->onStopped.connect(
-					boost::bind(&BoostConnectionServerTest::handleStopped, this, _1));
+					boost::bind(&BoostConnectionServerTest::handleStopped_, this, _1));
 
 			testling->stop();
 		}
@@ -66,16 +74,99 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
 			testling2->stop();
 		}
 
-		void handleStopped(boost::optional<BoostConnectionServer::Error> e) {
-			stopped = true;
-			stoppedError = e;
+		void testIPv4Server() {
+			BoostConnectionServer::ref testling = BoostConnectionServer::create(HostAddress("127.0.0.1"), 9999, boostIOServiceThread_->getIOService(), eventLoop_);
+			testling->onNewConnection.connect(boost::bind(&BoostConnectionServerTest::handleNewConnection, this, _1));
+			testling->start();
+
+			BoostConnection::ref clientTestling = BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_);
+			clientTestling->onConnectFinished.connect(boost::bind(&BoostConnectionServerTest::handleConnectFinished, this, _1));
+			clientTestling->connect(HostAddressPort(HostAddress("127.0.0.1"), 9999));
+
+			while (!connectFinished_) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(true, receivedNewConnection_);
+
+			testling->stop();
+		}
+
+		void testIPv6Server() {
+			BoostConnectionServer::ref testling = BoostConnectionServer::create(HostAddress("::1"), 9999, boostIOServiceThread_->getIOService(), eventLoop_);
+			testling->onNewConnection.connect(boost::bind(&BoostConnectionServerTest::handleNewConnection, this, _1));
+			testling->start();
+
+			BoostConnection::ref clientTestling = BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_);
+			clientTestling->onConnectFinished.connect(boost::bind(&BoostConnectionServerTest::handleConnectFinished, this, _1));
+			clientTestling->connect(HostAddressPort(HostAddress("::1"), 9999));
+
+			while (!connectFinished_) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(true, receivedNewConnection_);
+
+			testling->stop();
+		}
+
+		void testIPv4IPv6DualStackServer() {
+			BoostConnectionServer::ref testling = BoostConnectionServer::create(HostAddress("::"), 9999, boostIOServiceThread_->getIOService(), eventLoop_);
+			testling->onNewConnection.connect(boost::bind(&BoostConnectionServerTest::handleNewConnection, this, _1));
+			testling->start();
+
+			// Test IPv4.
+			BoostConnection::ref clientTestling = BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_);
+			clientTestling->onConnectFinished.connect(boost::bind(&BoostConnectionServerTest::handleConnectFinished, this, _1));
+			clientTestling->connect(HostAddressPort(HostAddress("127.0.0.1"), 9999));
+
+			while (!connectFinished_) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(true, receivedNewConnection_);
+
+			receivedNewConnection_ = false;
+			connectFinished_ = false;
+
+			// Test IPv6.
+			clientTestling = BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_);
+			clientTestling->onConnectFinished.connect(boost::bind(&BoostConnectionServerTest::handleConnectFinished, this, _1));
+			clientTestling->connect(HostAddressPort(HostAddress("::1"), 9999));
+
+			while (!connectFinished_) {
+				Swift::sleep(10);
+				eventLoop_->processEvents();
+			}
+
+			CPPUNIT_ASSERT_EQUAL(true, receivedNewConnection_);
+
+			testling->stop();
+		}
+
+		void handleStopped_(boost::optional<BoostConnectionServer::Error> e) {
+			stopped_ = true;
+			stoppedError_ = e;
+		}
+
+		void handleNewConnection(boost::shared_ptr<Connection> /*connection*/) {
+			receivedNewConnection_ = true;
+		}
+
+		void handleConnectFinished(bool /*error*/) {
+			connectFinished_ = true;
 		}
 
 	private:
 		BoostIOServiceThread* boostIOServiceThread_;
 		DummyEventLoop* eventLoop_;
-		bool stopped;
-		boost::optional<BoostConnectionServer::Error> stoppedError;
+		bool stopped_;
+		bool receivedNewConnection_;
+		bool connectFinished_;
+		boost::optional<BoostConnectionServer::Error> stoppedError_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BoostConnectionServerTest);
