@@ -334,6 +334,11 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
 		return;
 	}
 	Presence::ref accountPresence = presenceOracle_->getAccountPresence(newPresence->getFrom().toBare());
+	if (!accountPresence) {
+		accountPresence = Presence::create();
+		accountPresence->setFrom(newPresence->getFrom());
+		accountPresence->setType(Presence::Unavailable);
+	}
 	roster_->applyOnItems(SetPresence(accountPresence));
 }
 
