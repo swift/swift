@@ -23,7 +23,7 @@ void BoostASIOEventLoop::handleASIOEvent() {
 		boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
 		isEventInASIOEventLoop_ = false;
 	}
-	handleNextEvent();
+	handleNextEvents();
 }
 
 void BoostASIOEventLoop::eventPosted() {
