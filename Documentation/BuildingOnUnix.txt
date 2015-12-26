@@ -7,14 +7,13 @@ Prerequisites
 
 Building
 --------
-- Create a file 'config.py' with the following contents, reflecting your local
-  setup:
-		qt = "path/to/qt"
-	(e.g. qt = "/usr/share/qt4")
 - Run 
 		./scons
 - To build only a subdir, add the path as a target to scons. E.g., for Swift:
 		./scons Swift
+
+It is recommended to build using Qt5, so add qt5=1 like this:
+		./scons Swift qt5=1
 
 Running tests
 -------------
