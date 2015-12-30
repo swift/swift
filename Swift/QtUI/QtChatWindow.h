@@ -174,6 +174,7 @@ namespace Swift {
 			void handleEmoticonClicked(QString emoticonAsText);
 			void handleTextInputReceivedFocus();
 			void handleTextInputLostFocus();
+			void onBookmarkStarClicked();
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -230,5 +231,6 @@ namespace Swift {
 			bool supportsImpromptuChat_;
 			RoomBookmarkState roomBookmarkState_;
 			QMenu* emoticonsMenu_;
+			QPushButton* bookmarkStar_;
 	};
 }
