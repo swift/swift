@@ -93,6 +93,11 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 	setSubject("");
 	subject_->setReadOnly(true);
 
+	bookmarkStar_ = new QPushButton(this);
+	connect(bookmarkStar_, SIGNAL(clicked()), this, SLOT(onBookmarkStarClicked()));
+	subjectLayout_->addWidget(bookmarkStar_);
+	bookmarkStar_->hide();
+
 	QPushButton* actionButton_ = new QPushButton(this);
 	actionButton_->setIcon(QIcon(":/icons/actions.png"));
 	connect(actionButton_, SIGNAL(clicked()), this, SLOT(handleActionButtonClicked()));
@@ -459,6 +464,7 @@ void QtChatWindow::convertToMUC(MUCType mucType) {
 	isMUC_ = true;
 	treeWidget_->show();
 	subject_->setVisible(!impromptu_);
+	bookmarkStar_->setVisible(true);
 }
 
 void QtChatWindow::setOnline(bool online) {
@@ -684,6 +690,10 @@ void QtChatWindow::handleTextInputReceivedFocus() {
 
 void QtChatWindow::handleTextInputLostFocus() {
 	lastLineTracker_.setHasFocus(false);
+}
+
+void QtChatWindow::onBookmarkStarClicked() {
+        onBookmarkRequest();
 }
 
 void QtChatWindow::handleActionButtonClicked() {
@@ -942,6 +952,10 @@ void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::Rec
 
 void QtChatWindow::setBookmarkState(RoomBookmarkState bookmarkState) {
 	roomBookmarkState_ = bookmarkState;
-}
-
+	if (roomBookmarkState_ == RoomNotBookmarked) {
+        	bookmarkStar_->setIcon(QIcon("../resources/icons/star-unchecked2.png"));
+        }
+	else {
+        	bookmarkStar_->setIcon(QIcon("../resources/icons/star-checked2.png"));
+        }
 }
