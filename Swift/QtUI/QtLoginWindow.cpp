@@ -222,6 +222,13 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
 	toggleNotificationsAction_->setChecked(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
 	connect(toggleNotificationsAction_, SIGNAL(toggled(bool)), SLOT(handleToggleNotifications(bool)));
 
+	disconnectOnSmartCardRemoval_ = new QAction(tr("&Disconnect On Removing Smart Card"), this);
+	disconnectOnSmartCardRemoval_->setCheckable(true);
+	disconnectOnSmartCardRemoval_->setChecked(false);
+	connect(disconnectOnSmartCardRemoval_, SIGNAL(toggled(bool)), SLOT(handleDisconnectOnSmartCardRemovalToggled(bool)));
+	generalMenu_->addAction(disconnectOnSmartCardRemoval_);
+	handleDisconnectOnSmartCardRemovalToggled(settings_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
+
 #ifndef SWIFTEN_PLATFORM_MACOSX
 	swiftMenu_->addSeparator();
 #endif
@@ -266,6 +273,11 @@ void QtLoginWindow::setShowNotificationToggle(bool toggle) {
 	}
 }
 
+void QtLoginWindow::handleDisconnectOnSmartCardRemovalToggled(bool state) {
+	settings_->storeSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL, state);
+	disconnectOnSmartCardRemoval_->setChecked(settings_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
+}
+
 bool QtLoginWindow::eventFilter(QObject *obj, QEvent *event) {
 	if (obj == username_->view() && event->type() == QEvent::KeyPress) {
 		QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
@@ -296,6 +308,9 @@ void QtLoginWindow::handleSettingChanged(const std::string& settingPath) {
 	}
 	if (settingPath == SettingConstants::SHOW_NOTIFICATIONS.getKey()) {
 		toggleNotificationsAction_->setChecked(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
+	}
+	if (settingPath == SettingConstants::DISCONNECT_ON_CARD_REMOVAL.getKey()) {
+		handleDisconnectOnSmartCardRemovalToggled(settings_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
 	}
 }
 

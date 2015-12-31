@@ -64,6 +64,7 @@ namespace Swift {
 			void handleShowFileTransferOverview();
 			void handleShowHighlightEditor();
 			void handleToggleSounds(bool enabled);
+			void handleDisconnectOnSmartCardRemovalToggled(bool);
 			void handleToggleNotifications(bool enabled);
 			void handleAbout();
 			void bringToFront();
@@ -99,6 +100,7 @@ namespace Swift {
 			QMenu* generalMenu_;
 			QMenu* viewMenu_;
 			QAction* toggleSoundsAction_;
+			QAction* disconnectOnSmartCardRemoval_;
 			QAction* toggleNotificationsAction_;
 			UIEventStream* uiEventStream_;
 			QPointer<QtAboutWidget> aboutDialog_;
