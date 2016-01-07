@@ -174,7 +174,7 @@ namespace Swift {
 			void handleEmoticonClicked(QString emoticonAsText);
 			void handleTextInputReceivedFocus();
 			void handleTextInputLostFocus();
-			void onBookmarkStarClicked();
+			void handleBookmarkStarClicked();
 
 		private:
 			void updateTitleWithUnreadCount();
