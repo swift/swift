@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,7 +30,6 @@ BoostIOServiceThread::~BoostIOServiceThread() {
 }
 
 void BoostIOServiceThread::doRun() {
-	assert(thread_);
 	boost::asio::io_service::work work(*ioService_);
 	ioService_->run();
 }
