@@ -7,10 +7,9 @@ Prerequisites
 
 Building
 --------
-- Create a file 'config.py' with the following contents, reflecting your local
-  setup:
-		qt = "path/to/qt"
-	(e.g. qt = "/usr/share/qt4")
+- Swift uses Qt5 for the UI and on Unix-like platforms it is automatically detected
+  using pkg-config.
+  - The dependencies can be installed by running ./BuildTools/InstallSwiftDependencies.sh
 - Run 
 		./scons
 - To build only a subdir, add the path as a target to scons. E.g., for Swift:

@@ -47,7 +47,7 @@ For packaging use:
 - WiX
 - Download the C++ redistributable package from Microsoft and put it at C:\Program Files (x86)\Common Files\Merge Modules\
 - config.py should contain:
-		qt = "c:\\qt\\4.7.4"
+		qt = "c:\\qt\\5.4.2"
 		vcredist = "C:\\Program Files (x86)\\Common Files\\Merge Modules\\vcredist_x86.exe"
 		debug = 1
 		optimize = 1

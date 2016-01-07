@@ -90,7 +90,7 @@ vars.Add(BoolVariable("try_avahi", "Try configuring for avahi?", "true"))
 vars.Add(PathVariable("avahi_includedir", "Avahi headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("avahi_libdir", "Avahi library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("qt", "Qt location", "", PathVariable.PathAccept))
-vars.Add(BoolVariable("qt5", "Compile in Qt5 mode", "no")) # TODO: auto-detect this
+vars.Add(BoolVariable("qt5", "Compile in Qt5 mode", "yes"))
 vars.Add(PathVariable("docbook_xml", "DocBook XML", None, PathVariable.PathAccept))
 vars.Add(PathVariable("docbook_xsl", "DocBook XSL", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("build_examples", "Build example programs", "yes"))
