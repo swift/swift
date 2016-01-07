@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -37,7 +37,7 @@ void QtVCardGeneralField::initialize() {
 		preferredCheckBox->setStyleSheet(
 					"QCheckBox::indicator { width: 18px; height: 18px; }"
 					"QCheckBox::indicator:checked { image: url(:/icons/star-checked.png); }"
-					"QCheckBox::indicator:unchecked { image: url(:/icons/star-unchecked); }"
+					"QCheckBox::indicator:unchecked { image: url(:/icons/star-unchecked.png); }"
 			);
 		layout->addWidget(preferredCheckBox, row, 0, Qt::AlignVCenter);
 		childWidgets << preferredCheckBox;
