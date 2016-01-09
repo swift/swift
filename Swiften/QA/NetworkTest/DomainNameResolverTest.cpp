@@ -1,30 +1,33 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <algorithm>
+#include <string>
+
 #include <boost/bind.hpp>
 
-#include <algorithm>
-#include <Swiften/Base/sleep.h>
-#include <string>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Base/sleep.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/IDN/PlatformIDNConverter.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/BoostTimerFactory.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/DomainNameServiceQuery.h>
+#include <Swiften/Network/NetworkFactories.h>
 #ifdef USE_UNBOUND
 #include <Swiften/Network/UnboundDomainNameResolver.h>
 #else
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 #endif
-#include <Swiften/Network/BoostTimerFactory.h>
-#include <Swiften/Network/NetworkFactories.h>
-#include <Swiften/Network/BoostIOServiceThread.h>
-#include <Swiften/Network/DomainNameAddressQuery.h>
-#include <Swiften/Network/DomainNameServiceQuery.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/IDN/IDNConverter.h>
-#include <Swiften/IDN/PlatformIDNConverter.h>
 
 using namespace Swift;
 
@@ -39,8 +42,17 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST(testResolveAddress);
 		CPPUNIT_TEST(testResolveAddress_Error);
 #ifndef USE_UNBOUND
+		/**
+		 * The native DNS resolver of Windows behaves oddly if the system has no global IPv6
+		 * routed address and no IPv6 reachability. It will not return IPv6 records from DNS 
+		 * requests for an unspecified protocol (IPv6 or IPv4).
+		 * The following tests are only enabled on Windows if scons is run with the 'test_ipv6=1'
+		 * argument, indicating working IPv6 on the test machine.
+		 */
+#if !defined(SWIFTEN_PLATFORM_WINDOWS) || defined(TEST_IPV6)
 		CPPUNIT_TEST(testResolveAddress_IPv6);
 		CPPUNIT_TEST(testResolveAddress_IPv4and6);
+#endif
 		CPPUNIT_TEST(testResolveAddress_International);
 #endif
 		CPPUNIT_TEST(testResolveAddress_Localhost);

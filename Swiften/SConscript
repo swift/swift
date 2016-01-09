@@ -77,7 +77,8 @@ if env["SCONS_STAGE"] == "flags" :
 			}
 
 	if env["PLATFORM"] == "win32" :
-		env.Append(CPPDEFINES = [("_WIN32_WINNT","_WIN32_WINNT_VISTA") , ("NTDDI_VERSION","NTDDI_VISTA")])
+		# 0x0600 = _WIN32_WINNT_VISTA, 0x06000000 = NTDDI_VISTA
+		env.Append(CPPDEFINES = [("_WIN32_WINNT","0x0600") , ("NTDDI_VERSION","0x06000000")])
 
 ################################################################################
 # Build

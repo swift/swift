@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <string>
 
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -69,28 +70,38 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 		}
 
 		void testWrite() {
+			using namespace boost::posix_time;
+
 			BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
 			testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
-			while (receivedData_.empty()) {
+			
+			boost::posix_time::ptime start = second_clock::local_time();
+			while (receivedData_.empty() && ((second_clock::local_time() - start) < seconds(60)))  {
 				Swift::sleep(10);
 				eventLoop_->processEvents();
 			}
+			CPPUNIT_ASSERT_EQUAL(false, receivedData_.empty());
 			testling->disconnect();
 		}
 
 		void testWrite_IPv6() {
+			using namespace boost::posix_time;
+
 			BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
 			testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
 			testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
 			testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-			testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV6")), 80));
-			while (receivedData_.empty()) {
+			testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV6")), 5222));
+			
+			boost::posix_time::ptime start = second_clock::local_time();
+			while (receivedData_.empty() && ((second_clock::local_time() - start) < seconds(60)))  {
 				Swift::sleep(10);
 				eventLoop_->processEvents();
 			}
+			CPPUNIT_ASSERT_EQUAL(false, receivedData_.empty());
 			testling->disconnect();
 		}
 
