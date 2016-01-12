@@ -172,8 +172,8 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 	}
 	message->setID(lastSentMessageStanzaID_ = idGenerator_.generateID());
 	stanzaChannel_->sendMessage(message);
-	postSendMessage(message->getBody(), boost::dynamic_pointer_cast<Stanza>(message));
-	onActivity(message->getBody());
+	postSendMessage(message->getBody().get(), boost::dynamic_pointer_cast<Stanza>(message));
+	onActivity(message->getBody().get());
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
 	logMessage(body, selfJID_, toJID_, now, false);
@@ -237,7 +237,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		}
 	}
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	std::string body = message->getBody();
+	std::string body = message->getBody().get_value_or("");
 	HighlightAction highlight;
 	if (message->isError()) {
 		if (!message->getTo().getResource().empty()) {
@@ -286,7 +286,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 
 		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
 		if (replace) {
-			std::string body = message->getBody();
+			std::string body = message->getBody().get_value_or("");
 			// Should check if the user has a previous message
 			std::map<JID, std::string>::iterator lastMessage;
 			lastMessage = lastMessagesUIID_.find(from);

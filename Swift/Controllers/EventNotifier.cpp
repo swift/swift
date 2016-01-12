@@ -1,27 +1,29 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/EventNotifier.h"
+#include <Swift/Controllers/EventNotifier.h>
 
-#include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/bind.hpp>
 
-#include <Swift/Controllers/Intl.h>
-#include <Swiften/Base/format.h>
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Base/String.h>
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "SwifTools/Notifier/Notifier.h"
-#include "Swiften/Avatars/AvatarManager.h"
-#include "Swiften/Client/NickResolver.h"
-#include "Swiften/JID/JID.h"
-#include "Swift/Controllers/XMPPEvents/MessageEvent.h"
-#include "Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h"
-#include "Swift/Controllers/XMPPEvents/ErrorEvent.h"
-#include "Swift/Controllers/XMPPEvents/MUCInviteEvent.h"
-#include "Swift/Controllers/Settings/SettingsProvider.h"
+#include <Swiften/Base/format.h>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
+#include <Swift/Controllers/XMPPEvents/MessageEvent.h>
+#include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
+#include <Swift/Controllers/Intl.h>
+
+#include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
 
@@ -41,12 +43,12 @@ void EventNotifier::handleEventAdded(boost::shared_ptr<StanzaEvent> event) {
 	if (boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event)) {
 		JID jid = messageEvent->getStanza()->getFrom();
 		std::string title = nickResolver->jidToNick(jid);
-		if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().empty()) {
+		if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().get_value_or("").empty()) {
 			JID activationJID = jid;
 			if (messageEvent->getStanza()->getType() == Message::Groupchat) {
 				activationJID = jid.toBare();
 			}
-			std::string messageText = messageEvent->getStanza()->getBody();
+			std::string messageText = messageEvent->getStanza()->getBody().get_value_or("");
 			if (boost::starts_with(messageText, "/me ")) {
 				messageText = "*" + String::getSplittedAtFirst(messageText, ' ').second + "*";
 			}

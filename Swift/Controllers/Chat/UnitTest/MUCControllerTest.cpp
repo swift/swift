@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,6 +19,7 @@
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
 #include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/Thread.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swiften/MUC/UnitTest/MockMUC.h>
 #include <Swiften/Network/TimerFactory.h>
@@ -58,6 +59,10 @@ class MUCControllerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testMessageWithLabelItem);
 	CPPUNIT_TEST(testCorrectMessageWithLabelItem);
 	CPPUNIT_TEST(testRoleAffiliationStates);
+	CPPUNIT_TEST(testSubjectChangeCorrect);
+	CPPUNIT_TEST(testSubjectChangeIncorrectA);
+	CPPUNIT_TEST(testSubjectChangeIncorrectB);
+	CPPUNIT_TEST(testSubjectChangeIncorrectC);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -215,7 +220,7 @@ public:
 		CPPUNIT_ASSERT(window_->labelsEnabled_);
 		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
 		CPPUNIT_ASSERT(message);
-		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get());
 		CPPUNIT_ASSERT(!message->getPayload<SecurityLabel>());
 	}
 
@@ -242,7 +247,7 @@ public:
 		CPPUNIT_ASSERT(window_->labelsEnabled_);
 		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
 		CPPUNIT_ASSERT(message);
-		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get());
 		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
 	}
 
@@ -274,13 +279,13 @@ public:
 		CPPUNIT_ASSERT(window_->labelsEnabled_);
 		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
 		CPPUNIT_ASSERT(message);
-		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get());
 		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
 		window_->label_ = labelItem2;
 		window_->onSendMessageRequest(messageBody, true);
 		rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
 		message = boost::dynamic_pointer_cast<Message>(rawStanza);
-		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody());
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get());
 		CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
 	}
 
@@ -395,6 +400,106 @@ public:
 			muc_->changeOccupantRole(jid, alteration.getRole());
 			occupant->second = MUCOccupant(occupant->first, alteration.getRole(), occupant->second.getAffiliation());
 			testRoleAffiliationStatesVerify(occupants);
+		}
+	}
+
+	void testSubjectChangeCorrect() {
+		std::string messageBody("test message");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+
+		{
+			Message::ref message = boost::make_shared<Message>();
+			message->setType(Message::Groupchat);
+			message->setTo(self_);
+			message->setFrom(mucJID_.withResource("SomeNickname"));
+			message->setID(iqChannel_->getNewIQID());
+			message->setSubject("New Room Subject");
+
+			controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
+			CPPUNIT_ASSERT_EQUAL(std::string("The room subject is now: New Room Subject"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+		}
+	}
+
+	/*
+	 * Test that message stanzas with subject element and non-empty body element do not cause a subject change.
+	 */
+	void testSubjectChangeIncorrectA() {
+		std::string messageBody("test message");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+
+		{
+			Message::ref message = boost::make_shared<Message>();
+			message->setType(Message::Groupchat);
+			message->setTo(self_);
+			message->setFrom(mucJID_.withResource("SomeNickname"));
+			message->setID(iqChannel_->getNewIQID());
+			message->setSubject("New Room Subject");
+			message->setBody("Some body text that prevents this stanza from being a subject change.");
+
+			controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
+			CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+		}
+	}
+
+	/*
+	 * Test that message stanzas with subject element and thread element do not cause a subject change.
+	 */
+	void testSubjectChangeIncorrectB() {
+		std::string messageBody("test message");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+
+		{
+			Message::ref message = boost::make_shared<Message>();
+			message->setType(Message::Groupchat);
+			message->setTo(self_);
+			message->setFrom(mucJID_.withResource("SomeNickname"));
+			message->setID(iqChannel_->getNewIQID());
+			message->setSubject("New Room Subject");
+			message->addPayload(boost::make_shared<Thread>("Thread that prevents the subject change."));
+
+			controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
+			CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+		}
+	}
+
+	/*
+	 * Test that message stanzas with subject element and empty body element do not cause a subject change.
+	 */
+	void testSubjectChangeIncorrectC() {
+		std::string messageBody("test message");
+		window_->onSendMessageRequest(messageBody, false);
+		boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+		Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+		CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+		CPPUNIT_ASSERT(message);
+		CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+
+		{
+			Message::ref message = boost::make_shared<Message>();
+			message->setType(Message::Groupchat);
+			message->setTo(self_);
+			message->setFrom(mucJID_.withResource("SomeNickname"));
+			message->setID(iqChannel_->getNewIQID());
+			message->setSubject("New Room Subject");
+			message->setBody("");
+
+			controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
+			CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
 		}
 	}
 

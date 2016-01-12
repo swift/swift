@@ -917,7 +917,7 @@ void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
 		// Do not bind a controller to a full JID, for delivery receipts or chat state notifications.
 		bool bindControllerToJID = false;
 		ChatState::ref chatState = message->getPayload<ChatState>();
-		if (!message->getBody().empty() || (chatState && chatState->getChatState() == ChatState::Composing)) {
+		if (!message->getBody().get_value_or("").empty() || (chatState && chatState->getChatState() == ChatState::Composing)) {
 			bindControllerToJID = true;
 		}
 

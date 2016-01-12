@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiftob/Swiftob.h>
 
-#include <string>
 #include <iostream>
+#include <string>
+
 #include <boost/bind.hpp>
 
-#include <Swiften/JID/JID.h>
 #include <Swiften/Base/String.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Presence/PresenceSender.h>
 
-#include <Swiftob/Users.h>
 #include <Swiftob/Storage.h>
-
+#include <Swiftob/Users.h>
 
 po::options_description Swiftob::getOptionsDescription() {
 	po::options_description result("Options");
@@ -98,7 +98,7 @@ void Swiftob::handleMessageReceived(Swift::Message::ref message) {
 		std::cout << "Ignoring typed message" << std::endl;
 		return;
 	}
-	std::string body = message->getBody();
+	std::string body = message->getBody().get_value_or("");
 	std::cout << "Got message with body " << body << std::endl;
 	if (body.size() == 0) {
 		std::cout << "Not handling empty body" << std::endl;

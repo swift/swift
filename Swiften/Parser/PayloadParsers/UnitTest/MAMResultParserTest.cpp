@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,11 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
-#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
 using namespace Swift;
 
@@ -48,7 +48,7 @@ class MAMResultParserTest : public CppUnit::TestFixture
 			boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(forwarded->getStanza());
 			CPPUNIT_ASSERT(!!message);
 			const std::string expectedBody = "Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.";
-			CPPUNIT_ASSERT_EQUAL(expectedBody, message->getBody());
+			CPPUNIT_ASSERT_EQUAL(expectedBody, message->getBody().get());
 			CPPUNIT_ASSERT_EQUAL(Message::Chat, message->getType());
 			CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.lit/balcony"), message->getTo());
 			CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.lit/orchard"), message->getFrom());

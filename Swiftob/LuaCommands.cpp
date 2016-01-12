@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -380,7 +380,7 @@ int LuaCommands::get_setting(lua_State *L) {
 
 void LuaCommands::handleLuaListener(int callbackIndex, lua_State* L, Swift::Message::ref message) {
 	lua_rawgeti(L, LUA_REGISTRYINDEX, callbackIndex);
-	lua_pushstring(L, message->getBody().c_str());
+	lua_pushstring(L, message->getBody().get_value_or("").c_str());
 	lua_pushstring(L, message->getFrom().toBare().toString().c_str());
 	lua_pushstring(L, message->getFrom().getResource().c_str());
 	messageOntoStack(message, L);
@@ -426,7 +426,7 @@ void LuaCommands::messageOntoStack(Swift::Message::ref message, lua_State* L) {
 	lua_setfield(L, -2, "frombare");
 	lua_pushstring(L, message->getTo().toString().c_str());
 	lua_setfield(L, -2, "to");
-	lua_pushstring(L, message->getBody().c_str());
+	lua_pushstring(L, message->getBody().get_value_or("").c_str());
 	lua_setfield(L, -2, "body");
 }
 

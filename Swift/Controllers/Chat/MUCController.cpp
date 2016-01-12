@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,6 +22,7 @@
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/Delay.h>
+#include <Swiften/Elements/Thread.h>
 #include <Swiften/MUC/MUC.h>
 #include <Swiften/MUC/MUCBookmark.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
@@ -531,7 +532,7 @@ JID MUCController::nickToJID(const std::string& nick) {
 bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
 	std::string stringRegexp(".*\\b" + boost::to_lower_copy(nick_) + "\\b.*");
 	boost::regex myRegexp(stringRegexp);
-	return boost::regex_match(boost::to_lower_copy(message->getBody()), myRegexp);
+	return boost::regex_match(boost::to_lower_copy(message->getBody().get_value_or("")), myRegexp);
 }
 
 void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
@@ -559,7 +560,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	receivedActivity();
 	joined_ = true;
 
-	if (message->hasSubject() && message->getBody().empty()) {
+	if (message->hasSubject() && !message->getPayload<Body>() && !message->getPayload<Thread>()) {
 		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject())), ChatWindow::DefaultDirection);
 		chatWindow_->setSubject(message->getSubject());
 		doneGettingHistory_ = true;
@@ -1078,7 +1079,7 @@ void MUCController::addRecentLogs() {
 }
 
 void MUCController::checkDuplicates(boost::shared_ptr<Message> newMessage) {
-	std::string body = newMessage->getBody();
+	std::string body = newMessage->getBody().get_value_or("");
 	JID jid = newMessage->getFrom();
 	boost::optional<boost::posix_time::ptime> time = newMessage->getTimestamp();
 

@@ -1,22 +1,23 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <string>
+
 #include <boost/optional.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <string>
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Body.h>
-#include <Swiften/Elements/Subject.h>
 #include <Swiften/Elements/ErrorPayload.h>
-#include <Swiften/Elements/Stanza.h>
 #include <Swiften/Elements/Replace.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/Subject.h>
 
 namespace Swift {
 	class SWIFTEN_API Message : public Stanza {
@@ -45,16 +46,26 @@ namespace Swift {
 				return static_cast<bool>(getPayload<Subject>());
 			}
 
-			std::string getBody() const { 
+			boost::optional<std::string> getBody() const {
 				boost::shared_ptr<Body> body(getPayload<Body>());
+				boost::optional<std::string> bodyData;
 				if (body) {
-					return body->getText();
+					bodyData = body->getText();
 				}
-				return "";
+				return bodyData;
 			}
 
-			void setBody(const std::string& body) { 
-				updatePayload(boost::make_shared<Body>(body));
+			void setBody(const std::string& body) {
+				setBody(boost::optional<std::string>(body));
+			}
+
+			void setBody(const boost::optional<std::string>& body) {
+				if (body) {
+					updatePayload(boost::make_shared<Body>(body.get()));
+				}
+				else {
+					removePayloadOfSameType(boost::make_shared<Body>());
+				}
 			}
 
 			bool isError() {

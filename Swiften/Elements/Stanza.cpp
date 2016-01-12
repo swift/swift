@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Elements/Stanza.h>
-#include <Swiften/Elements/Delay.h>
 
 #include <typeinfo>
 
+#include <boost/bind.hpp>
+
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/Delay.h>
 
 namespace Swift {
 
@@ -28,6 +30,16 @@ void Stanza::updatePayload(boost::shared_ptr<Payload> payload) {
 		}
 	}
 	addPayload(payload);
+}
+
+static bool sameType(boost::shared_ptr<Payload> a, boost::shared_ptr<Payload> b) {
+	return typeid(*a.get()) == typeid(*b.get());
+}
+
+void Stanza::removePayloadOfSameType(boost::shared_ptr<Payload> payload) {
+	payloads_.erase(std::remove_if(payloads_.begin(), payloads_.end(),
+		boost::bind<bool>(&sameType, payload, _1)),
+		payloads_.end());
 }
 
 boost::shared_ptr<Payload> Stanza::getPayloadOfSameType(boost::shared_ptr<Payload> payload) const {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -64,7 +64,7 @@ QString QtEvent::sender() {
 QString QtEvent::text() {
 	boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event_);
 	if (messageEvent) {
-		return P2QSTRING(messageEvent->getStanza()->getBody());
+		return P2QSTRING(messageEvent->getStanza()->getBody().get_value_or(""));
 	}
 	boost::shared_ptr<SubscriptionRequestEvent> subscriptionRequestEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event_);
 	if (subscriptionRequestEvent) {

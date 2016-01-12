@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -75,7 +75,7 @@ static void handleDisconnected(const boost::optional<ClientError>&) {
 
 static void handleIncomingMessage(boost::shared_ptr<Message> message) {
 	if (message->getFrom().toBare() == roomJID) {
-		cout << "[ " << roomJID << " ] " << message->getFrom().getResource() << ": " << message->getBody() << endl;
+		cout << "[ " << roomJID << " ] " << message->getFrom().getResource() << ": " << message->getBody().get_value_or("") << endl;
 	}
 }
 

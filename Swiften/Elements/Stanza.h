@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
 #include <string>
-#include <boost/shared_ptr.hpp>
-#include <boost/optional/optional_fwd.hpp>
+#include <vector>
+
 #include <boost/date_time/posix_time/ptime.hpp>
+#include <boost/optional/optional_fwd.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -69,6 +70,7 @@ namespace Swift {
 
 			void updatePayload(boost::shared_ptr<Payload> payload);
 
+			void removePayloadOfSameType(boost::shared_ptr<Payload>);
 			boost::shared_ptr<Payload> getPayloadOfSameType(boost::shared_ptr<Payload>) const;
 
 			const JID& getFrom() const { return from_; }

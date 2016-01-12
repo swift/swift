@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiftob/Commands.h>
 
-#include <Swiften/Base/foreach.h>
 #include <iostream>
-#include <boost/bind.hpp>
-#include <boost/algorithm/string.hpp>
 
+#include <boost/algorithm/string.hpp>
+#include <boost/bind.hpp>
+
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 
 typedef std::pair<std::string, Commands::Command*> NamedCommand;
@@ -211,6 +212,6 @@ void Commands::replyTo(Swift::Message::ref source, std::string replyBody, bool o
 	if (client_->isAvailable()) {
 		client_->sendMessage(reply);
 	} else {
-		std::cout << "Dropping '" + reply->getBody() + "' -> " + reply->getTo().toString() + " on the floor due to missing connection." << std::endl;
+		std::cout << "Dropping '" + reply->getBody().get_value_or("") + "' -> " + reply->getTo().toString() + " on the floor due to missing connection." << std::endl;
 	}
 }
