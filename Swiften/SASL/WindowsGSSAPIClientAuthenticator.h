@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ namespace Swift {
 		public:
 			WindowsGSSAPIClientAuthenticator(const std::string& hostname, const std::string& domainname, int port);
 
-			~WindowsGSSAPIClientAuthenticator();
+			virtual ~WindowsGSSAPIClientAuthenticator();
 
 			virtual boost::optional<SafeByteArray> getResponse() const;
 			virtual bool setChallenge(const boost::optional<std::vector<unsigned char> >&);

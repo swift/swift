@@ -1,21 +1,22 @@
 /*
- * Copyright (c) 2013  Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/Base/Override.h>
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/Override.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 	class WindowsCryptoProvider : public CryptoProvider, public boost::noncopyable {
 		public:
 			WindowsCryptoProvider();
-			~WindowsCryptoProvider();
+			virtual ~WindowsCryptoProvider();
 
 			virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
 			virtual Hash* createMD5() SWIFTEN_OVERRIDE;

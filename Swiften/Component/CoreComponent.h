@@ -1,28 +1,29 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <string>
+
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/Error.h>
+#include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Component/ComponentConnector.h>
-#include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Component/ComponentError.h>
-#include <Swiften/Elements/Presence.h>
+#include <Swiften/Component/ComponentSession.h>
+#include <Swiften/Component/ComponentSessionStanzaChannel.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Entity/Entity.h>
 #include <Swiften/JID/JID.h>
-#include <string>
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
-#include <Swiften/Component/ComponentSessionStanzaChannel.h>
-#include <Swiften/Entity/Entity.h>
-#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class EventLoop;
@@ -44,7 +45,7 @@ namespace Swift {
 	class SWIFTEN_API CoreComponent : public Entity {
 		public:
 			CoreComponent(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
-			~CoreComponent();
+			virtual ~CoreComponent();
 
 			void connect(const std::string& host, int port);
 			void disconnect();

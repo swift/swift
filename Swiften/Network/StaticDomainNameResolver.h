@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Network/HostAddress.h>
-#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/DomainNameAddressQuery.h>
 #include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/DomainNameServiceQuery.h>
-#include <Swiften/Network/DomainNameAddressQuery.h>
-#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 	class SWIFTEN_API StaticDomainNameResolver : public DomainNameResolver {
@@ -25,7 +25,7 @@ namespace Swift {
 
 		public:
 			StaticDomainNameResolver(EventLoop* eventLoop);
-			~StaticDomainNameResolver();
+			virtual ~StaticDomainNameResolver();
 
 			void addAddress(const std::string& domain, const HostAddress& address);
 			void addService(const std::string& service, const DomainNameServiceQuery::Result& result);

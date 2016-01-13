@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,15 +7,16 @@
 #pragma once
 
 #include <string>
+
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Entity/Entity.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
-#include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Entity/Entity.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/TLS/CertificateWithKey.h>
 
 namespace Swift {
@@ -52,7 +53,7 @@ namespace Swift {
 			 * Constructs a client for the given JID with the given password.
 			 */
 			CoreClient(const JID& jid, const SafeByteArray& password, NetworkFactories* networkFactories);
-			~CoreClient();
+			virtual ~CoreClient();
 
 			/**
 			 * Set a client certificate to use for strong authentication with the server.

@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/API.h>
 #include <Swiften/Client/CoreClient.h>
+
+#include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeString.h>
 
 namespace Swift {
@@ -56,7 +57,7 @@ namespace Swift {
 			 *	all data will be stored in memory (and be lost on shutdown)
 			 */
 			Client(const JID& jid, const SafeString& password, NetworkFactories* networkFactories, Storages* storages = NULL);
-			~Client();
+			virtual ~Client();
 
 
 			/**

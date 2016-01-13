@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
 	class LibXMLParser : public XMLParser, public boost::noncopyable {
 		public:
 			LibXMLParser(XMLParserClient* client);
-			~LibXMLParser();
+			virtual ~LibXMLParser();
 
 			bool parse(const std::string& data);
 

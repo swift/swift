@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Network/EnvironmentProxyProvider.h>
@@ -14,7 +20,7 @@ namespace Swift {
 	class UnixProxyProvider : public ProxyProvider {
 		public:
 			UnixProxyProvider();
-			~UnixProxyProvider();
+			virtual ~UnixProxyProvider();
 
 			virtual HostAddressPort getHTTPConnectProxy() const;
 			virtual HostAddressPort getSOCKS5Proxy() const;

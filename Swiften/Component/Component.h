@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/API.h>
 #include <Swiften/Component/CoreComponent.h>
+
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	class SoftwareVersionResponder;
@@ -21,7 +22,7 @@ namespace Swift {
 	class SWIFTEN_API Component : public CoreComponent {
 		public:
 			Component(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
-			~Component();
+			virtual ~Component();
 
 			/**
 			 * Sets the software version of the client.

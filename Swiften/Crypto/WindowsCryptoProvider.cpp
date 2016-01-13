@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,7 @@ namespace {
 				}
 			}
 
-			~WindowsHash() {
+			virtual ~WindowsHash() {
 				CryptDestroyHash(hash);
 			}
 

@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/AttributeMap.h>
+#include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
 	class XMLParser;
@@ -26,7 +26,7 @@ namespace Swift {
 					XMPPParserClient* parserClient, 
 					PayloadParserFactoryCollection* payloadParserFactories,
 					XMLParserFactory* xmlParserFactory);
-			~XMPPParser();
+			virtual ~XMPPParser();
 
 			bool parse(const std::string&);
 

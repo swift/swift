@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,9 +10,9 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Elements/StreamType.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Session/SessionStream.h>
-#include <Swiften/Elements/StreamType.h>
 #include <Swiften/TLS/TLSError.h>
 #include <Swiften/TLS/TLSOptions.h>
 
@@ -41,7 +41,7 @@ namespace Swift {
 				XMLParserFactory* xmlParserFactory,
 				const TLSOptions& tlsOptions
 			);
-			~BasicSessionStream();
+			virtual ~BasicSessionStream();
 
 			virtual void close();
 			virtual bool isOpen();

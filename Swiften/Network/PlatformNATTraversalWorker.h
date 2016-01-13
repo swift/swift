@@ -4,19 +4,26 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <deque>
-#include <boost/optional.hpp>
-#include <boost/thread/thread.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition_variable.hpp>
+
 #include <boost/logic/tribool.hpp>
+#include <boost/optional.hpp>
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Atomic.h>
-#include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/Network/NATTraverser.h>
 #include <Swiften/Network/NullNATTraversalInterface.h>
 
 namespace Swift {
@@ -35,7 +42,7 @@ namespace Swift {
 
 		public:
 			PlatformNATTraversalWorker(EventLoop* eventLoop);
-			~PlatformNATTraversalWorker();
+			virtual ~PlatformNATTraversalWorker();
 
 			boost::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest();
 			boost::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort);

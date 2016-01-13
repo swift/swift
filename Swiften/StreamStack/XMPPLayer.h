@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <Swiften/Base/boost_bsignals.h>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/StreamStack/HighLayer.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Elements/ToplevelElement.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/StreamType.h>
+#include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/Parser/XMPPParserClient.h>
+#include <Swiften/StreamStack/HighLayer.h>
 
 namespace Swift {
 	class ProtocolHeader;
@@ -35,7 +35,7 @@ namespace Swift {
 					XMLParserFactory* xmlParserFactory,
 					StreamType streamType,
 					bool setExplictNSonTopLevelElements = false);
-			~XMPPLayer();
+			virtual ~XMPPLayer();
 
 			void writeHeader(const ProtocolHeader& header);
 			void writeFooter();
