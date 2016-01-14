@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -75,8 +75,8 @@ class FileTransferTest {
 			timeOut_->onTick.connect(boost::bind(&FileTransferTest::handleTimeOut, this));
 
 			// Create randomly sized data to exchange.
-			sendFilePath_ = boost::filesystem::unique_path();
-			receiveFilePath_ = boost::filesystem::unique_path();
+			sendFilePath_ = boost::filesystem::unique_path("ft_send_%%%%%%%%%%%%%%%%.bin");
+			receiveFilePath_ = boost::filesystem::unique_path("ft_receive_%%%%%%%%%%%%%%%%.bin");
 
 			size_t size = 1024 + boost::numeric_cast<size_t>(randGen.generateRandomInteger(1024 * 10));
 			sendData_.resize(size);
@@ -94,6 +94,10 @@ class FileTransferTest {
 
 			delete senderTracer_;
 			delete receiverTracer_;
+
+			// Free file-transfer objects so file handles are closed and files can be removed afterwards.
+			incomingFileTransfers_.clear();
+			outgoingFileTransfer_.reset();
 
 			if(boost::filesystem::exists(sendFilePath_)) {
 				boost::filesystem::remove(sendFilePath_);
