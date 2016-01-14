@@ -216,9 +216,6 @@ def _detect(env):
 			if sys.platform == "darwin" :
 				return ""
 			QTDIR = os.path.dirname(os.path.dirname(moc))
-			SCons.Warnings.warn(
-				QtdirNotFound,
-				"QTDIR variable is not defined, using moc executable as a hint (QTDIR=%s)" % QTDIR)
 			return QTDIR
 
 	raise SCons.Errors.StopError(
