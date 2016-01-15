@@ -22,7 +22,10 @@ if env.get("OPENSSL_BUNDLED", False) :
 				"$OPENSSL_BUNDLE_DIR/crypto/modes", 
 				"$OPENSSL_BUNDLE_DIR/include"
 			])
-		openssl_env.Append(CPPDEFINES = ["OPENSSL_THREADS", "_REENTRANT", "DSO_DLFCN", "HAVE_DLFCN_H", "L_ENDIAN"])
+		if env["PLATFORM"] == "win32" :
+			openssl_env.Append(CPPDEFINES = ["OPENSSL_THREADS", "_REENTRANT", "L_ENDIAN", "OPENSSL_SYSNAME_WIN32", "WIN32_LEAN_AND_MEAN"])
+		else :
+			openssl_env.Append(CPPDEFINES = ["OPENSSL_THREADS", "_REENTRANT", "DSO_DLFCN", "HAVE_DLFCN_H", "L_ENDIAN"])
 
 		# Detect 32/64 bit
 		conf = Configure(conf_env)

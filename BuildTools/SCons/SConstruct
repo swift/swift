@@ -557,11 +557,14 @@ elif not env["HAVE_SECURETRANSPORT"] :
 	else :
 		env["OPENSSL_FLAGS"] = {}
 		if env["PLATFORM"] == "win32" :
-			env["HAVE_SCHANNEL"] = True
 			# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
-			env.Append(LIBS = ["secur32"])
+			env["HAVE_SCHANNEL"] = True
 
 	openssl_conf.Finish()
+
+if env["PLATFORM"] == "win32" :
+	# On Windows link to secur32. It is needed by Swiften/SASL/WindowsAuthentication
+	env.Append(LIBS = ["secur32"])
 
 #Hunspell
 hunspell_env = conf_env.Clone()
