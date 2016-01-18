@@ -35,7 +35,6 @@ QtDynamicGridLayout::~QtDynamicGridLayout() {
 
 int QtDynamicGridLayout::addTab(QtTabbable* tab, const QString& title) {
 	assert(gridLayout_->rowCount() > 0 && gridLayout_->columnCount() > 0);
-	int index = -1;
 
 	QPoint lastPos(0,0);
 	if (tabPositions_.contains(P2QSTRING(tab->getID()))) {
@@ -47,7 +46,7 @@ int QtDynamicGridLayout::addTab(QtTabbable* tab, const QString& title) {
 	QLayoutItem* item = gridLayout_->itemAtPosition(lastPos.y(), lastPos.x());
 	QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(item ? item->widget() : 0);
 	if (tabWidget) {
-		index = tabWidget->addTab(tab, title);
+		tabWidget->addTab(tab, title);
 	}
 	return tabWidget ? indexOf(tab) : -1;
 }
