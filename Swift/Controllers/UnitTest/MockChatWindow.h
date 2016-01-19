@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@
 namespace Swift {
 	class MockChatWindow : public ChatWindow {
 		public:
-			MockChatWindow() : labelsEnabled_(false) {}
+			MockChatWindow() : labelsEnabled_(false), impromptuMUCSupported_(false) {}
 			virtual ~MockChatWindow();
 
 			virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {
@@ -82,7 +82,10 @@ namespace Swift {
 			virtual void setAvailableRoomActions(const std::vector<RoomAction> &) {}
 
 			virtual void setBlockingState(BlockingState) {}
-			virtual void setCanInitiateImpromptuChats(bool /*supportsImpromptu*/) {}
+			virtual void setCanInitiateImpromptuChats(bool supportsImpromptu) {
+				impromptuMUCSupported_ = supportsImpromptu;
+			}
+
 			virtual void showBookmarkWindow(const MUCBookmark& /*bookmark*/) {}
 			virtual void setBookmarkState(RoomBookmarkState) {}
 
@@ -102,6 +105,7 @@ namespace Swift {
 			ChatMessage lastReplacedMessage_;
 			std::vector<SecurityLabelsCatalog::Item> labels_;
 			bool labelsEnabled_;
+			bool impromptuMUCSupported_;
 			SecurityLabelsCatalog::Item label_;
 			Roster* roster_;
 	};

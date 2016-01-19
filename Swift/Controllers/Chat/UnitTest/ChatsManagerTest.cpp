@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,8 +74,9 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testChatControllerFullJIDBindingOnMessageAndNotReceipt);
 	CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
 	CPPUNIT_TEST(testChatControllerPMPresenceHandling);
+	CPPUNIT_TEST(testLocalMUCServiceDiscoveryResetOnDisconnect);
 	CPPUNIT_TEST_SUITE_END();
-	
+
 public:
 	void setUp() { 
 		mocks_ = new MockRepository();
@@ -673,6 +674,34 @@ public:
 		CPPUNIT_ASSERT_EQUAL(std::string("participantA has gone offline."), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
 	}
 
+	void testLocalMUCServiceDiscoveryResetOnDisconnect() {
+		JID ownJID("test@test.com/resource");
+		JID sender("foo@test.com");
+
+		manager_->setOnline(true);
+
+		// Open chat window to a sender.
+		MockChatWindow* window = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(sender, uiEventStream_).Return(window);
+
+		uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(sender));
+
+		CPPUNIT_ASSERT_EQUAL(false, window->impromptuMUCSupported_);
+
+		boost::shared_ptr<IQ> infoRequest= iqChannel_->iqs_[1];
+		boost::shared_ptr<IQ> infoResponse = IQ::createResult(infoRequest->getFrom(), infoRequest->getTo(), infoRequest->getID());
+
+		DiscoInfo info;
+		info.addIdentity(DiscoInfo::Identity("Shakespearean Chat Service", "conference", "text"));
+		info.addFeature("http://jabber.org/protocol/muc");
+		infoResponse->addPayload(boost::make_shared<DiscoInfo>(info));
+		iqChannel_->onIQReceived(infoResponse);
+
+		CPPUNIT_ASSERT_EQUAL(true, window->impromptuMUCSupported_);
+		manager_->setOnline(false);
+		CPPUNIT_ASSERT_EQUAL(false, window->impromptuMUCSupported_);
+	}
+
 	void testhelperChatControllerPresenceAccessUpdatedOnSubscriptionChangeReceiptsAllowed(RosterItemPayload::Subscription from, RosterItemPayload::Subscription to) {
 		JID messageJID("testling@test.com/resource1");
 		xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), from);
@@ -713,7 +742,7 @@ private:
 	JID jid_;
 	ChatsManager* manager_;
 	DummyStanzaChannel* stanzaChannel_;
-	IQChannel* iqChannel_;
+	DummyIQChannel* iqChannel_;
 	IQRouter* iqRouter_;
 	EventController* eventController_;
 	ChatWindowFactory* chatWindowFactory_;

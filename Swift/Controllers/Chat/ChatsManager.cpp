@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -690,6 +690,7 @@ void ChatsManager::setOnline(bool enabled) {
 		markAllRecentsOffline();
 	} else {
 		setupBookmarks();
+		localMUCServiceJID_ = JID();
 		localMUCServiceFinderWalker_ = boost::make_shared<DiscoServiceWalker>(jid_.getDomain(), iqRouter_);
 		localMUCServiceFinderWalker_->onServiceFound.connect(boost::bind(&ChatsManager::handleLocalServiceFound, this, _1, _2));
 		localMUCServiceFinderWalker_->onWalkAborted.connect(boost::bind(&ChatsManager::handleLocalServiceWalkFinished, this));
@@ -1004,7 +1005,14 @@ void ChatsManager::handleLocalServiceFound(const JID& service, boost::shared_ptr
 }
 
 void ChatsManager::handleLocalServiceWalkFinished() {
-	onImpromptuMUCServiceDiscovered(!localMUCServiceJID_.toString().empty());
+	bool impromptuMUCSupported = !localMUCServiceJID_.toString().empty();
+	foreach (JIDChatControllerPair controllerPair, chatControllers_) {
+		controllerPair.second->setCanStartImpromptuChats(impromptuMUCSupported);
+	}
+	foreach (JIDMUCControllerPair controllerPair, mucControllers_) {
+		controllerPair.second->setCanStartImpromptuChats(impromptuMUCSupported);
+	}
+	onImpromptuMUCServiceDiscovered(impromptuMUCSupported);
 }
 
 std::vector<ChatListWindow::Chat> ChatsManager::getRecentChats() const {
