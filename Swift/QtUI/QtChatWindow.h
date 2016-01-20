@@ -13,6 +13,7 @@
 #include <QPointer>
 #include <QString>
 #include <QTextCursor>
+#include <QCheckBox>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
@@ -174,7 +175,7 @@ namespace Swift {
 			void handleEmoticonClicked(QString emoticonAsText);
 			void handleTextInputReceivedFocus();
 			void handleTextInputLostFocus();
-			void handleBookmarkStarClicked();
+			void handleBookmarkStarClicked(int);
 
 		private:
 			void updateTitleWithUnreadCount();
@@ -231,6 +232,6 @@ namespace Swift {
 			bool supportsImpromptuChat_;
 			RoomBookmarkState roomBookmarkState_;
 			QMenu* emoticonsMenu_;
-			QPushButton* bookmarkStar_;
+			QCheckBox* bookmarkStar_;
 	};
 }

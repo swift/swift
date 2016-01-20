@@ -93,8 +93,14 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 	setSubject("");
 	subject_->setReadOnly(true);
 	
-	bookmarkStar_ = new QPushButton(this);
-	connect(bookmarkStar_, SIGNAL(clicked()), this, SLOT(handleBookmarkStarClicked()));
+	bookmarkStar_ = new QCheckBox(this);
+	bookmarkStar_->setToolTip(tr("Stars can be used to bookmark preferred MUC Room."));
+	bookmarkStar_->setStyleSheet(
+					"QCheckBox::indicator { width: 18px; height: 18px; }"
+					"QCheckBox::indicator:checked { image: url(:/icons/star-checked.png); }"
+					"QCheckBox::indicator:unchecked { image: url(:/icons/star-unchecked.png); }"
+	);
+	connect(bookmarkStar_, SIGNAL(stateChanged(int)), this, SLOT(handleBookmarkStarClicked(int)));
 	subjectLayout_->addWidget(bookmarkStar_);
 	bookmarkStar_->hide();
 
@@ -692,8 +698,13 @@ void QtChatWindow::handleTextInputLostFocus() {
 	lastLineTracker_.setHasFocus(false);
 }
 
-void QtChatWindow::handleBookmarkStarClicked() {
-	onBookmarkRequest();
+void QtChatWindow::handleBookmarkStarClicked(int checkState) {
+	if(checkState == Qt::Unchecked) {
+		onQuickBookmarkRequest(false);
+	}
+	else {
+		onQuickBookmarkRequest(true);
+	}
 }
 
 void QtChatWindow::handleActionButtonClicked() {
@@ -953,10 +964,10 @@ void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::Rec
 void QtChatWindow::setBookmarkState(RoomBookmarkState bookmarkState) {
 	roomBookmarkState_ = bookmarkState;
 	if (roomBookmarkState_ == RoomNotBookmarked) {
-		bookmarkStar_->setIcon(QIcon(":/icons/star-unchecked.png"));
+		bookmarkStar_->setChecked(false);
 	}
 	else {
-		bookmarkStar_->setIcon(QIcon(":/icons/star-checked.png"));
+		bookmarkStar_->setChecked(true);
 	}
 }
 
