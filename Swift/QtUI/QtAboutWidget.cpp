@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,14 +39,9 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 	QLabel* appNameLabel = new QLabel("<center><font size='+1'><b>" + QCoreApplication::applicationName() + "</b></font></center>", this);
 	mainLayout->addWidget(appNameLabel);
 	
-	QLabel* versionLabel = new QLabel(QString("<center><font size='-1'>") + tr("Version %1").arg(QCoreApplication::applicationVersion()) + "</font></center>", this);
+	QLabel* versionLabel = new QLabel((QString("<center><font size='-1'>") + tr("Version %1") + "</font></center><center><font size='-1'><br/>" + QString(tr("Built with Qt %2")) + QString("<br/>") + QString(tr("Running with Qt %3")) + "</font></center>").arg(QCoreApplication::applicationVersion()).arg(QT_VERSION_STR).arg(qVersion()));
+	versionLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
 	mainLayout->addWidget(versionLabel);
-
-	QString buildString = QString("<center><font size='-1'>") + QString(tr("Built with Qt %1")).arg(QT_VERSION_STR);
-	buildString += QString("<br/>") + QString(tr("Running with Qt %1")).arg(qVersion());
-	buildString += "</font></center>";
-	QLabel* buildLabel = new QLabel(buildString, this);
-	mainLayout->addWidget(buildLabel);
 
 	if (QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR") != "TRANSLATION_AUTHOR") {
 		mainLayout->addWidget(new QLabel(QString("<center><font size='-1'>") + QString(tr("Using the English translation by\n%1")).arg(QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR")).replace("\n", "<br/>") + "</font></center>", this));
