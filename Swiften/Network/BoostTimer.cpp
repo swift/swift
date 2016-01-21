@@ -15,7 +15,7 @@
 namespace Swift {
 
 BoostTimer::BoostTimer(int milliseconds, boost::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop) :
-		timeout(milliseconds), ioService(service), eventLoop(eventLoop) {
+		timeout(milliseconds), ioService(service), eventLoop(eventLoop), shuttingDown(false) {
 		timer.reset(new boost::asio::deadline_timer(*service));
 }
 
@@ -29,6 +29,7 @@ BoostTimer::~BoostTimer() {
 void BoostTimer::start() {
 	{
 		boost::mutex::scoped_lock lockTimer(timerMutex);
+		shuttingDown = false;
 		timer->expires_from_now(boost::posix_time::milliseconds(timeout));
 		timer->async_wait(boost::bind(&BoostTimer::handleTimerTick, shared_from_this(), boost::asio::placeholders::error));
 	}
@@ -37,9 +38,10 @@ void BoostTimer::start() {
 void BoostTimer::stop() {
 	{
 		boost::mutex::scoped_lock lockTimer(timerMutex);
+		shuttingDown = true;
 		timer->cancel();
+		eventLoop->removeEventsFromOwner(shared_from_this());
 	}
-	eventLoop->removeEventsFromOwner(shared_from_this());
 }
 
 void BoostTimer::handleTimerTick(const boost::system::error_code& error) {
@@ -47,7 +49,13 @@ void BoostTimer::handleTimerTick(const boost::system::error_code& error) {
 		assert(error == boost::asio::error::operation_aborted);
 	}
 	else {
-		eventLoop->postEvent(boost::bind(boost::ref(onTick)), shared_from_this());
+		{
+			boost::mutex::scoped_lock lockTimer(timerMutex);
+			if (shuttingDown) {
+				return;
+			}
+			eventLoop->postEvent(boost::bind(boost::ref(onTick)), shared_from_this());
+		}
 	}
 }
 

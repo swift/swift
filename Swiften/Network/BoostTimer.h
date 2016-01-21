@@ -43,5 +43,6 @@ namespace Swift {
 			boost::scoped_ptr<boost::asio::deadline_timer> timer;
 			boost::mutex timerMutex;
 			EventLoop* eventLoop;
+			bool shuttingDown;
 	};
 }
