@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,6 +19,7 @@ namespace Swift {
 	class SWIFTEN_API WhitespacePingLayer : public StreamLayer, boost::noncopyable {
 		public:
 			WhitespacePingLayer(TimerFactory* timerFactory);
+			virtual ~WhitespacePingLayer();
 
 			void setActive();
 			void setInactive();
