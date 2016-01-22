@@ -957,15 +957,17 @@ void MUCController::handleQuickBookmarkRequest(bool addBookmark) {
 		mucBookmarkManager_->addBookmark(roomBookmark);
 	}
 	else {
-		// Check for existing bookmark for this room and, if it exists, use it instead.
+		// Check for existing bookmark for this room and, if it exists, remove it.
 		std::vector<MUCBookmark> bookmarks = mucBookmarkManager_->getBookmarks();
+		std::vector<MUCBookmark> removedBookmarks;
 		foreach (const MUCBookmark& bookmark, bookmarks) {
 			if (bookmark.getRoom() == jid.toBare()) {
-				roomBookmark = bookmark;
-				break;
+				removedBookmarks.push_back(bookmark);
 			}
 		}
-		mucBookmarkManager_->removeBookmark(roomBookmark);
+		foreach (const MUCBookmark& bookmark, removedBookmarks) {
+			mucBookmarkManager_->removeBookmark(bookmark);
+		}
 	}
 }
 

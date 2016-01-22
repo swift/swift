@@ -963,12 +963,14 @@ void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::Rec
 
 void QtChatWindow::setBookmarkState(RoomBookmarkState bookmarkState) {
 	roomBookmarkState_ = bookmarkState;
+	bookmarkStar_->blockSignals(true);
 	if (roomBookmarkState_ == RoomNotBookmarked) {
 		bookmarkStar_->setChecked(false);
 	}
 	else {
 		bookmarkStar_->setChecked(true);
 	}
+	bookmarkStar_->blockSignals(false);
 }
 
 }
