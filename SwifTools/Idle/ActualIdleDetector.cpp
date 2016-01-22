@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <SwifTools/Idle/ActualIdleDetector.h>
 
-#include <boost/bind.hpp>
-#include <iostream>
 
-#include <SwifTools/Idle/IdleQuerier.h>
+#include <boost/bind.hpp>
+
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
+
+#include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
 
@@ -22,6 +23,7 @@ ActualIdleDetector::ActualIdleDetector(IdleQuerier* querier, TimerFactory* timer
 }
 
 ActualIdleDetector::~ActualIdleDetector() {
+	timer->onTick.disconnect(boost::bind(&ActualIdleDetector::handleTimerTick, this));
 	timer->stop();
 }
 

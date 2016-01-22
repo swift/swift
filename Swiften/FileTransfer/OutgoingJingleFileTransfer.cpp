@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,6 +74,11 @@ OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(
 }
 
 OutgoingJingleFileTransfer::~OutgoingJingleFileTransfer() {
+	if (waitForRemoteTermination) {
+		waitForRemoteTermination->onTick.disconnect(boost::bind(&OutgoingJingleFileTransfer::handleWaitForRemoteTerminationTimeout, this));
+		waitForRemoteTermination->stop();
+	}
+
 	stream->onRead.disconnect(
 			boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
 	delete hashCalculator;
