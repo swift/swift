@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,8 +15,8 @@
 #include <boost/optional.hpp>
 #include <boost/thread/locks.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/foreach.h>
 
 namespace lambda = boost::lambda;
 
@@ -31,11 +31,11 @@ inline void invokeCallback(const Event& event) {
 		SWIFT_LOG(error) << "Uncaught exception in event loop: " << e.what() << std::endl;
 	}
 	catch (...) {
-		SWIFT_LOG(error) << "Uncaught non-exception in event loop" << std::endl;	
+		SWIFT_LOG(error) << "Uncaught non-exception in event loop" << std::endl;
 	}
 }
 
-EventLoop::EventLoop() : nextEventID_(0) {
+EventLoop::EventLoop() : nextEventID_(0), handlingEvents_(false) {
 }
 
 EventLoop::~EventLoop() {
@@ -43,8 +43,12 @@ EventLoop::~EventLoop() {
 
 void EventLoop::handleNextEvents() {
 	const int eventsBatched = 100;
-	bool callEventPosted = false;
-	{
+	// If handleNextEvents is already in progress, e.g. in case of a recursive call due to
+	// the event loop implementation, then do no handle further events. Instead call
+	// eventPosted() to continue event handling later.
+	bool callEventPosted = handlingEvents_;
+	if (!handlingEvents_) {
+		handlingEvents_ = true;
 		boost::recursive_mutex::scoped_lock lock(removeEventsMutex_);
 		{
 			std::vector<Event> nextEvents;
@@ -62,6 +66,7 @@ void EventLoop::handleNextEvents() {
 				}
 			}
 		}
+		handlingEvents_ = false;
 	}
 
 	if (callEventPosted) {
@@ -74,7 +79,7 @@ void EventLoop::postEvent(boost::function<void ()> callback, boost::shared_ptr<E
 	bool callEventPosted = false;
 	{
 		boost::recursive_mutex::scoped_lock lock(eventsMutex_);
-		
+
 		callEventPosted = events_.empty();
 
 		event.id = nextEventID_;

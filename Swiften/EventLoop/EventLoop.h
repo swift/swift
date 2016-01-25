@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
 
 	/**
 	 *	The \ref EventLoop class provides the abstract interface for implementing event loops to use with Swiften.
-	 *  
+	 *
 	 *  Events are added to the event queue using the \ref postEvent method and can be removed from the queue using
 	 *  the \ref removeEventsFromOwner method.
 	 */
@@ -34,7 +34,7 @@ namespace Swift {
 			 * executed using the \ref removeEventsFromOwner method.
 			 */
 			void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = boost::shared_ptr<EventOwner>());
-			
+
 			/**
 			 * The \ref removeEventsFromOwner method removes all events from the specified \ref owner from the
 			 * event queue.
@@ -47,6 +47,10 @@ namespace Swift {
 			 * at any point after the virtual \ref eventPosted method has been called.
 			 * This method does not block, except for short-time synchronization.
 			 * It can process multiple events before it reutrns.
+			 * If called recursively, the event queue is not further processed. Instead, \ref eventPosted
+			 * is called to notify the implementing event loop of the non-empty event queue.
+			 * It is recommended to not call \ref handleNextEvents inside an event posted to the event loop
+			 * as this can lead to an infinite loop.
 			 */
 			void handleNextEvents();
 
@@ -60,6 +64,7 @@ namespace Swift {
 		private:
 			unsigned int nextEventID_;
 			std::list<Event> events_;
+			bool handlingEvents_;
 			boost::recursive_mutex eventsMutex_;
 			boost::recursive_mutex removeEventsMutex_;
 	};
