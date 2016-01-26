@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -106,7 +106,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
 
 void ChatController::handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/) {
 	if (jid.toBare() == toJID_.toBare()) {
-		chatWindow_->setName(nickResolver_->jidToNick(jid));
+		chatWindow_->setName(nickResolver_->jidToNick(toJID_));
 	}
 }
 
