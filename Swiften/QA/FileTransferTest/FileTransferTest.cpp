@@ -96,8 +96,7 @@ class FileTransferTest {
 			delete receiverTracer_;
 
 			// Free file-transfer objects so file handles are closed and files can be removed afterwards.
-			incomingFileTransfers_.clear();
-			outgoingFileTransfer_.reset();
+			assert(!outgoingFileTransfer_ && incomingFileTransfers_.empty());
 
 			if(boost::filesystem::exists(sendFilePath_)) {
 				boost::filesystem::remove(sendFilePath_);
@@ -189,6 +188,11 @@ class FileTransferTest {
 			if (error) {
 				std::cout << this << " " << "handleSenderDisconnected: error: " << error.get() << std::endl;
 			}
+
+			// All file-transfers related to a Client instance need to be freed
+			// *before* freeing the Client instance.
+			outgoingFileTransfer_.reset();
+
 			sender_.reset();
 			if (!sender_ && !receiver_) {
 				eventLoop->stop();
@@ -199,6 +203,11 @@ class FileTransferTest {
 			if (error) {
 				std::cout << this << " " << "handleReceiverDisconnected: error: " << error.get() << std::endl;
 			}
+
+			// All file-transfers related to a Client instance need to be freed
+			// *before* freeing the Client instance.
+			incomingFileTransfers_.clear();
+
 			receiver_.reset();
 			if (!sender_ && !receiver_) {
 				eventLoop->stop();
