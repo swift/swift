@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,7 +11,10 @@
 
 namespace Swift {
 
-SecureTransportContextFactory::SecureTransportContextFactory() : checkCertificateRevocation_(true), disconnectOnCardRemoval_(true) {
+// Default to disabled revocation checking as SecureTransport API is missing
+// methods for detailed revocation checking configuration which are needed for
+// good UX.
+SecureTransportContextFactory::SecureTransportContextFactory() : checkCertificateRevocation_(false), disconnectOnCardRemoval_(true) {
 
 }
 
