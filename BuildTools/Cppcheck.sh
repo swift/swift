@@ -8,7 +8,6 @@ cppcheck $@  \
 	--suppress=noConstructor \
 	--suppress=publicAllocationError:Swift/Controllers/Chat/UnitTest/ChatsManagerTest.cpp \
 	-i 3rdParty -i .git -i .sconf_temp \
-	-i Swiftob/linit.cpp \
 	-i Swift/QtUI/EventViewer/main.cpp \
 	-i Swift/QtUI/ApplicationTest \
 	-i Swift/QtUI/ChatView/main.cpp \

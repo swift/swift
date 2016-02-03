@@ -1,7 +1,7 @@
 #!/bin/sh
 
 ## For a Swiften-only tarball, try
-## EXCLUDE_FOLDERS="Swift Sluift Swiftob Limber Slimber" ./package.sh
+## EXCLUDE_FOLDERS="Swift Sluift Limber Slimber" ./package.sh
 
 export PYTHONPATH=../../../BuildTools/SCons
 VERSION=`../../../BuildTools/GetBuildVersion.py swift`
