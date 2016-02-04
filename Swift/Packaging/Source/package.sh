@@ -12,6 +12,16 @@ if [ -z "$VERSION" ]; then
 	exit -1
 fi
 
+if [ "`uname -s`" = "Darwin" ]; then
+	TAR=gtar
+	if ! $TAR --version >/dev/null 2>&1; then
+		echo "Unable to find GNU tar (coulnd't find $TAR)"
+		exit 1
+	fi
+else
+	TAR=tar
+fi
+
 echo "Cleaning up old sources ..."
 rm -rf swift-*
 
@@ -29,4 +39,4 @@ do
 done
 
 echo "Creating tarball ..."
-tar czf $DIRNAME.tar.gz $DIRNAME
+$TAR -czf $DIRNAME.tar.gz --owner=swift --group=swift $DIRNAME
