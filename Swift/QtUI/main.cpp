@@ -28,8 +28,6 @@
 #include "QtSwiftUtil.h"
 
 int main(int argc, char* argv[]) {
-	QApplication app(argc, argv);
-
 	Swift::PlatformApplicationPathProvider applicationPathProvider(SWIFT_APPLICATION_NAME);
 
 	Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
@@ -84,6 +82,9 @@ int main(int argc, char* argv[]) {
 		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), P2QSTRING(Swift::pathToString(someTranslationPath)));
 #endif
 	}
+
+	QApplication app(argc, argv);
+
 	app.installTranslator(&qtTranslator);
 	QtTranslator swiftTranslator;
 	Swift::Translator::setInstance(&swiftTranslator);
