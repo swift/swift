@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -125,13 +125,21 @@ boost::optional<SluiftClient::Event> SluiftClient::getNextEvent(
 	}
 }
 
-std::vector<XMPPRosterItem> SluiftClient::getRoster() {
+std::vector<XMPPRosterItem> SluiftClient::getRoster(int timeout) {
+	Watchdog watchdog(timeout, networkFactories->getTimerFactory());
 	if (!rosterReceived) {
 		// If we haven't requested it yet, request it for the first time
 		client->requestRoster();
-	}
-	while (!rosterReceived) {
-		eventLoop->runUntilEvents();
+
+		// Wait for new events
+		while (!watchdog.getTimedOut() && !rosterReceived) {
+			eventLoop->runUntilEvents();
+		}
+
+		// Throw an error if we're timed out
+		if (watchdog.getTimedOut()) {
+			throw Lua::Exception("Timeout while requesting roster");
+		}
 	}
 	return client->getRoster()->getItems();
 }

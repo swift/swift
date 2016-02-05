@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -186,7 +186,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 
 	SluiftClient* client = getClient(L);
 	Lua::Table contactsTable;
-	foreach(const XMPPRosterItem& item, client->getRoster()) {
+	foreach(const XMPPRosterItem& item, client->getRoster(getGlobalTimeout(L))) {
 		std::string subscription;
 		switch(item.getSubscription()) {
 			case RosterItemPayload::None: subscription = "none"; break;
@@ -636,7 +636,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 		item.setJID(Lua::checkString(L, 2));
 	}
 
-	client->getRoster();
+	client->getRoster(timeout);
 	if (!client->getClient()->getRoster()->containsJID(item.getJID())) {
 		RosterPayload::ref roster = boost::make_shared<RosterPayload>();
 		roster->addItem(item);

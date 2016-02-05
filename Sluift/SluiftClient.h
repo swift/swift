@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -103,7 +103,7 @@ namespace Swift {
 			void setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os);
 			boost::optional<SluiftClient::Event> getNextEvent(int timeout, 
 					boost::function<bool (const Event&)> condition = 0);
-			std::vector<XMPPRosterItem> getRoster();
+			std::vector<XMPPRosterItem> getRoster(int timeout);
 
 		private:
 			Sluift::Response doSendRequest(boost::shared_ptr<Request> request, int timeout);
