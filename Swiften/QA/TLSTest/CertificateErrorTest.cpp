@@ -124,7 +124,12 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError_);
 			CPPUNIT_ASSERT(context->getPeerCertificateVerificationError());
+#if defined(HAVE_SCHANNEL)
+			// Windows SChannel API does not differentiate between expired and not yet valid.
+			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::Expired, context->getPeerCertificateVerificationError()->getType());
+#else
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::NotYetValid, context->getPeerCertificateVerificationError()->getType());
+#endif
 		}
 
 		void testTLS_O_MaticCertificateFromThePast() {

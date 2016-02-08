@@ -5,17 +5,19 @@
  */
 
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/TLS/Schannel/SchannelContext.h>
+
 #include <boost/bind.hpp>
 
-#include <Swiften/TLS/Schannel/SchannelContext.h>
-#include <Swiften/TLS/Schannel/SchannelCertificate.h>
-#include <Swiften/TLS/CAPICertificate.h>
 #include <WinHTTP.h> /* For SECURITY_FLAG_IGNORE_CERT_CN_INVALID */
+
+#include <Swiften/TLS/CAPICertificate.h>
+#include <Swiften/TLS/Schannel/SchannelCertificate.h>
 
 namespace Swift {
 
@@ -391,6 +393,9 @@ void SchannelContext::handleCertError(SECURITY_STATUS status)
 	else if (status == CRYPT_E_NO_REVOCATION_CHECK ||
 			 status == CRYPT_E_REVOCATION_OFFLINE) {
 		verificationError_ = CertificateVerificationError::RevocationCheckFailed;
+	}
+	else if (status == CERT_E_WRONG_USAGE) {
+		verificationError_ = CertificateVerificationError::InvalidPurpose;
 	}
 	else {
 		verificationError_ = CertificateVerificationError::UnknownError;
