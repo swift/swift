@@ -487,7 +487,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
 			Lua::Table result = boost::assign::map_list_of
 				("type", boost::make_shared<Lua::Value>(std::string("message")))
 				("from", boost::make_shared<Lua::Value>(message->getFrom().toString()))
-				("body", boost::make_shared<Lua::Value>(message->getBody()))
+				("body", boost::make_shared<Lua::Value>(message->getBody().get_value_or("")))
 				("message_type", boost::make_shared<Lua::Value>(MessageConvertor::convertMessageTypeToString(message->getType())));
 			Lua::pushValue(L, result);
 			addPayloadsToTable(L, message->getPayloads());
