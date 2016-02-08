@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,8 +13,8 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/IDN/PlatformIDNConverter.h>
 #include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/IDN/PlatformIDNConverter.h>
 #include <Swiften/Network/BoostConnectionFactory.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -122,7 +122,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 			connectToServer(connection, "test5.tls-o-matic.com", 405);
 
-			CPPUNIT_ASSERT_EQUAL(true, connectFinishedWithError_);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError_);
 			CPPUNIT_ASSERT(context->getPeerCertificateVerificationError());
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::NotYetValid, context->getPeerCertificateVerificationError()->getType());
 		}
@@ -133,7 +133,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 			connectToServer(connection, "test6.tls-o-matic.com", 406);
 
-			CPPUNIT_ASSERT_EQUAL(true, connectFinishedWithError_);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError_);
 			CPPUNIT_ASSERT(context->getPeerCertificateVerificationError());
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::Expired, context->getPeerCertificateVerificationError()->getType());
 		}
@@ -144,7 +144,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 			connectToServer(connection, "test7.tls-o-matic.com", 407);
 
-			CPPUNIT_ASSERT_EQUAL(true, connectFinishedWithError_);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError_);
 			CPPUNIT_ASSERT(context->getPeerCertificateVerificationError());
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::Untrusted, context->getPeerCertificateVerificationError()->getType());
 		}
@@ -156,7 +156,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 			connectToServer(connection, "test14.tls-o-matic.com", 414);
 
-			CPPUNIT_ASSERT_EQUAL(true, connectFinishedWithError_);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError_);
 			CPPUNIT_ASSERT(context->getPeerCertificateVerificationError());
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::InvalidPurpose, context->getPeerCertificateVerificationError()->getType());
 		}
@@ -179,7 +179,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
 			connectToServer(connection, "revoked.grc.com", 443);
 
-			CPPUNIT_ASSERT_EQUAL(true, connectFinishedWithError_);
+			CPPUNIT_ASSERT_EQUAL(false, connectFinishedWithError_);
 			CPPUNIT_ASSERT(context->getPeerCertificateVerificationError());
 			CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::Revoked, context->getPeerCertificateVerificationError()->getType());
 		}

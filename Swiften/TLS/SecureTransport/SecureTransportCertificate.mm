@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,9 +36,9 @@ SecureTransportCertificate::SecureTransportCertificate(SecCertificateRef certifi
 
 
 SecureTransportCertificate::SecureTransportCertificate(const ByteArray& der) {
-	CFDataRef derData = CFDataCreateWithBytesNoCopy(NULL, der.data(), static_cast<CFIndex>(der.size()), NULL); 
+	CFDataRef derData = CFDataCreateWithBytesNoCopy(NULL, der.data(), static_cast<CFIndex>(der.size()), NULL);
+	// certificate will take ownership of derData and free it on its release.
 	SecCertificateRef certificate = SecCertificateCreateWithData(NULL, derData);
-	CFRelease(derData);
 	if (certificate) {
 		certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
 		parse();

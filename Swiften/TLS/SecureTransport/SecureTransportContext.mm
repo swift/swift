@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -270,16 +270,11 @@ void SecureTransportContext::verifyServerCertificate() {
 			break;
 	}
 	
-	if (verificationError_) {
-		setState(Error);
-		SSLClose(sslContext_.get());
-		sslContext_.reset();
-		onError(boost::make_shared<TLSError>());
-	}
-	else {
-		// proceed with handshake
-		processHandshake();
-	}
+	// We proceed with the TLS handshake here to give the application an opportunity
+	// to apply custom validation and trust management. The application is responsible
+	// to call \ref getPeerCertificateVerificationError directly after the \ref onConnected
+	// signal is called and before any application data is send to the context.
+	processHandshake();
 }
 
 #pragma clang diagnostic pop
