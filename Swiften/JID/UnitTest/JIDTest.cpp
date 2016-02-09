@@ -72,6 +72,7 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
 			CPPUNIT_ASSERT(!testling.isBare());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_NoResource() {
@@ -81,6 +82,7 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getResource());
 			CPPUNIT_ASSERT(testling.isBare());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_EmptyResource() {
@@ -97,6 +99,7 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
 			CPPUNIT_ASSERT(!testling.isBare());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_OnlyDomain() {
@@ -106,6 +109,7 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getResource());
 			CPPUNIT_ASSERT(testling.isBare());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_InvalidDomain() {
@@ -117,18 +121,21 @@ class JIDTest : public CppUnit::TestFixture
 
 			CPPUNIT_ASSERT_EQUAL(std::string("fo\xCF\x89"), testling.getNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_UpperCaseDomain() {
 			JID testling("Fo\xCE\xA9");
 
 			CPPUNIT_ASSERT_EQUAL(std::string("fo\xCF\x89"), testling.getDomain());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_UpperCaseResource() {
 			JID testling("bar/Fo\xCE\xA9");
 
 			CPPUNIT_ASSERT_EQUAL(testling.getResource(), std::string("Fo\xCE\xA9"));
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithString_EmptyNode() {
@@ -154,6 +161,7 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
 			CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testConstructorWithStrings_EmptyDomain() {
@@ -184,6 +192,7 @@ class JIDTest : public CppUnit::TestFixture
 			CPPUNIT_ASSERT_EQUAL(std::string(""), testling.toBare().getNode());
 			CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.toBare().getDomain());
 			CPPUNIT_ASSERT(testling.toBare().isBare());
+			CPPUNIT_ASSERT(testling.isValid());
 		}
 
 		void testToBare_EmptyResource() {
