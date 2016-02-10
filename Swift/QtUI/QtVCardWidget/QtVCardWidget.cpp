@@ -343,7 +343,7 @@ void QtVCardWidget::removeField(QtVCardGeneralField *field) {
 
 void QtVCardWidget::addFieldType(QMenu* menu, boost::shared_ptr<QtVCardFieldInfo> fieldType) {
 	if (!fieldType->getMenuName().isEmpty()) {
-		QAction* action = new QAction(tr("Add ") + fieldType->getMenuName(), this);
+		QAction* action = new QAction(tr("Add %1").arg(fieldType->getMenuName()), this);
 		actionFieldInfo[action] = fieldType;
 		connect(action, SIGNAL(triggered()), this, SLOT(addField()));
 		menu->addAction(action);
