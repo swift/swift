@@ -339,10 +339,13 @@ for lang in translation_languages :
 if ARGUMENTS.get("update_translations", False) :
 	myenv.Precious(translation_sources)
 	remove_obsolete_option = ""
+	codecfortr = ""
 	if ARGUMENTS.get("remove_obsolete_translations", False) :
 		remove_obsolete_option = " -no-obsolete"
+	if qt_version == '4':
+		codecfortr = "-codecfortr UTF-8"
 	for translation_source in filter(lambda x: not x.endswith("_en.ts"), translation_sources) :
-		t = myenv.Command([translation_source], [], [myenv.Action("$QT4_LUPDATE -I " + env.Dir("#").abspath + remove_obsolete_option + " -silent -codecfortr utf-8 -recursive Swift -ts " + translation_source, cmdstr = "$QT4_LUPDATECOMSTR")])
+		t = myenv.Command([translation_source], [], [myenv.Action("$QT4_LUPDATE -I " + env.Dir("#").abspath + remove_obsolete_option + " -silent " + codecfortr + " -recursive Swift -ts " + translation_source, cmdstr = "$QT4_LUPDATECOMSTR")])
 		myenv.AlwaysBuild(t)
 
 # NSIS installation script
