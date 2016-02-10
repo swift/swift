@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -166,7 +166,6 @@ void SOCKS5BytestreamClientSession::startReceiving(boost::shared_ptr<WriteBytest
 		state = Reading;
 		writeBytestream = writeStream;
 		writeBytestream->write(unprocessedData);
-		//onBytesReceived(unprocessedData.size());
 		unprocessedData.clear();
 	} else {
 		SWIFT_LOG(debug) << "Session isn't ready for transfer yet!" << std::endl;

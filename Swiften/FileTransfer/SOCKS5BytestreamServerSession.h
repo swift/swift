@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,10 +10,10 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Network/Connection.h>
+#include <Swiften/FileTransfer/FileTransferError.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
-#include <Swiften/FileTransfer/FileTransferError.h>
+#include <Swiften/Network/Connection.h>
 
 namespace Swift {
 	class SOCKS5BytestreamRegistry;
@@ -50,14 +50,13 @@ namespace Swift {
 
 			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 			boost::signal<void (unsigned long long)> onBytesSent;
-			// boost::signal<void (unsigned long long)> onBytesReceived;
 
 			const std::string& getStreamID() const {
 				return streamID;
 			}
 
 		private:
-			void finish(bool error);
+			void finish(const boost::optional<FileTransferError>& error = boost::optional<FileTransferError>());
 			void process();
 			void handleDataRead(boost::shared_ptr<SafeByteArray>);
 			void handleDisconnected(const boost::optional<Connection::Error>&);

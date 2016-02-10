@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,16 +8,15 @@
 
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <iostream>
 
-#include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 
@@ -34,8 +33,8 @@ SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(
 
 SOCKS5BytestreamServerSession::~SOCKS5BytestreamServerSession() {
 	if (state != Finished && state != Initial) {
-		std::cerr << "Warning: SOCKS5BytestreamServerSession unfinished" << std::endl;
-		finish(false);
+		SWIFT_LOG(warning) << "SOCKS5BytestreamServerSession unfinished" << std::endl;
+		finish();
 	}
 }
 
@@ -47,7 +46,7 @@ void SOCKS5BytestreamServerSession::start() {
 }
 
 void SOCKS5BytestreamServerSession::stop() {
-	finish(false);
+	finish();
 }
 
 void SOCKS5BytestreamServerSession::startSending(boost::shared_ptr<ReadBytestream> stream) {
@@ -81,8 +80,9 @@ void SOCKS5BytestreamServerSession::handleDataRead(boost::shared_ptr<SafeByteArr
 		append(unprocessedData, *data);
 		process();
 	} else {
-		writeBytestream->write(createByteArray(vecptr(*data), data->size()));
-		// onBytesReceived(data->size());
+		if (!writeBytestream->write(createByteArray(vecptr(*data), data->size()))) {
+			finish(boost::optional<FileTransferError>(FileTransferError::WriteError));
+		}
 	}
 }
 
@@ -94,7 +94,7 @@ void SOCKS5BytestreamServerSession::handleDataAvailable() {
 
 void SOCKS5BytestreamServerSession::handleDisconnected(const boost::optional<Connection::Error>& error) {
 	SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error") << std::endl;
-	finish(error ? true : false);
+	finish(error ? boost::optional<FileTransferError>(FileTransferError::PeerError) : boost::optional<FileTransferError>());
 }
 
 void SOCKS5BytestreamServerSession::process() {
@@ -143,7 +143,7 @@ void SOCKS5BytestreamServerSession::process() {
 				if (!hasBytestream) {
 					SWIFT_LOG(debug) << "Readstream or Wrtiestream with ID " << streamID << " not found!" << std::endl;
 					connection->write(result);
-					finish(true);
+					finish(boost::optional<FileTransferError>(FileTransferError::PeerError));
 				}
 				else {
 					SWIFT_LOG(debug) << "Found stream. Sent OK." << std::endl;
@@ -169,16 +169,16 @@ void SOCKS5BytestreamServerSession::sendData() {
 			}
 		}
 		catch (const BytestreamException&) {
-			finish(true);
+			finish(boost::optional<FileTransferError>(FileTransferError::PeerError));
 		}
 	}
 	else {
-		finish(false);
+		finish();
 	}
 }
 
-void SOCKS5BytestreamServerSession::finish(bool error) {
-	SWIFT_LOG(debug) << error << " " << state << std::endl;
+void SOCKS5BytestreamServerSession::finish(const boost::optional<FileTransferError>& error) {
+	SWIFT_LOG(debug) << "state: " << state << std::endl;
 	if (state == Finished) {
 		return;
 	}
@@ -189,11 +189,7 @@ void SOCKS5BytestreamServerSession::finish(bool error) {
 	dataAvailableConnection.disconnect();
 	readBytestream.reset();
 	state = Finished;
-	if (error) {
-		onFinished(boost::optional<FileTransferError>(FileTransferError::PeerError));
-	} else {
-		onFinished(boost::optional<FileTransferError>());
-	}
+	onFinished(error);
 }
 
 }

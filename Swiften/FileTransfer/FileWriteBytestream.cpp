@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,16 +24,21 @@ FileWriteBytestream::~FileWriteBytestream() {
 	}
 }
 
-void FileWriteBytestream::write(const std::vector<unsigned char>& data) {
+bool FileWriteBytestream::write(const std::vector<unsigned char>& data) {
 	if (data.empty()) {
-		return;
+		return true;
 	}
 	if (!stream) {
 		stream = new boost::filesystem::ofstream(file, std::ios_base::out|std::ios_base::binary);
 	}
-	assert(stream->good());
-	stream->write(reinterpret_cast<const char*>(&data[0]), boost::numeric_cast<std::streamsize>(data.size()));
-	onWrite(data);
+	if (stream->good()) {
+		stream->write(reinterpret_cast<const char*>(&data[0]), boost::numeric_cast<std::streamsize>(data.size()));
+		if (stream->good()) {
+			onWrite(data);
+			return true;
+		}
+	}
+	return false;
 }
 
 void FileWriteBytestream::close() {

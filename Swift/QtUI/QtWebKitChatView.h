@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -95,6 +95,8 @@ namespace Swift {
 			void addToJSEnvironment(const QString&, QObject*);
 			void setFileTransferProgress(QString id, const int percentageDone);
 			void setFileTransferStatus(QString id, const ChatWindow::FileTransferState state, const QString& msg);
+			void setFileTransferWarning(QString id, QString warningText);
+			void removeFileTransferWarning(QString id);
 			void setWhiteboardSessionStatus(QString id, const ChatWindow::WhiteboardSessionState state);
 			void setMUCInvitationJoined(QString id);
 			void askDesktopToOpenFile(const QString& filename);

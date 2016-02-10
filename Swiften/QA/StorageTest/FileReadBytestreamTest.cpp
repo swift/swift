@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,7 +9,8 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/FileTransfer/FileReadBytestream.h>
-#include "SwifTools/Application/PlatformApplicationPathProvider.h"
+
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 using namespace Swift;
 
@@ -33,18 +34,18 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
 		void testRead() {
 			boost::shared_ptr<FileReadBytestream> testling(createTestling());
 
-			std::vector<unsigned char> result = testling->read(10);
+			boost::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
 
-			CPPUNIT_ASSERT(ByteArray::create("/*\n * Copy") == result);
+			CPPUNIT_ASSERT(createByteArray("/*\n * Copy") == *result.get());
 		}
 
 		void testRead_Twice() {
 			boost::shared_ptr<FileReadBytestream> testling(createTestling());
 
 			testling->read(10);
-			ByteArray result(testling->read(10));
+			boost::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
 
-			CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), result.toString());
+			CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), byteArrayToString(*result));
 		}
 
 		void testIsFinished_NotFinished() {

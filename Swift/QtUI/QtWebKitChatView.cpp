@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,7 @@
 #include <QEventLoop>
 #include <QFile>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QMessageBox>
@@ -747,6 +748,50 @@ void QtWebKitChatView::setWhiteboardSessionStatus(const std::string& id, const C
 	setWhiteboardSessionStatus(P2QSTRING(id), state);
 }
 
+static bool isFilePathWritable(const QString& path) {
+	QFileInfo fileInfo = QFileInfo(path);
+	if (fileInfo.exists()) {
+		return fileInfo.isWritable();
+	}
+	else {
+		bool writable = false;
+		QFile writeTestFile(path);
+		if (writeTestFile.open(QIODevice::ReadWrite)) {
+			writeTestFile.write("test");
+			if (writeTestFile.error() == QFileDevice::NoError) {
+				writable = true;
+			}
+		}
+		writeTestFile.close();
+		writeTestFile.remove();
+		return writable;
+	}
+}
+
+void QtWebKitChatView::setFileTransferWarning(QString id, QString warningText) {
+	QWebElement ftElement = findElementWithID(document_, "div", id);
+	if (ftElement.isNull()) {
+		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
+		return;
+	}
+
+	removeFileTransferWarning(id);
+	ftElement.appendInside(QString("<div class='ft_warning' style='color: red;'><br/>%1</div>").arg(QtUtilities::htmlEscape(warningText)));
+}
+
+void QtWebKitChatView::removeFileTransferWarning(QString id) {
+	QWebElement ftElement = findElementWithID(document_, "div", id);
+	if (ftElement.isNull()) {
+		SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
+		return;
+	}
+
+	QWebElement warningElement = ftElement.findFirst(".ft_warning");
+	if (!warningElement.isNull()) {
+		warningElement.removeFromDocument();
+	}
+}
+
 void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgument1, QString encodedArgument2, QString encodedArgument3, QString encodedArgument4, QString encodedArgument5) {
 	QString arg1 = decodeButtonArgument(encodedArgument1);
 	QString arg2 = decodeButtonArgument(encodedArgument2);
@@ -777,9 +822,13 @@ void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgume
 		QString filename = arg2;
 
 		QString path = QFileDialog::getSaveFileName(this, tr("Save File"), filename);
-		if (!path.isEmpty()) {
+		if (!path.isEmpty() && isFilePathWritable(path)) {
 			filePaths_[ft_id] = path;
 			window_->onFileTransferAccept(Q2PSTRING(ft_id), Q2PSTRING(path));
+			removeFileTransferWarning(ft_id);
+		}
+		else {
+			setFileTransferWarning(ft_id, tr("The chosen save location is not writable! Click the 'Accept' button to select a different save location."));
 		}
 	}
 	else if (id.startsWith(ButtonFileTransferOpenFile)) {

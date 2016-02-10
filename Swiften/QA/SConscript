@@ -5,7 +5,7 @@ SConscript(dirs = [
 #		"ReconnectTest",
 		"ClientTest",
 #		"DNSSDTest",
-#		"StorageTest",
+		"StorageTest",
 		"TLSTest",
 		"ScriptedTests",
 		"ProxyProviderTest",

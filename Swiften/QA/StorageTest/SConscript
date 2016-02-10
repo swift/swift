@@ -15,7 +15,8 @@ if env["TEST"] :
 	myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
 	tester = myenv.Program("StorageTest", [
-			"VCardFileStorageTest.cpp",
+			#"VCardFileStorageTest.cpp",
 			"FileReadBytestreamTest.cpp",
+			"FileWriteBytestreamTest.cpp",
 		])
 	myenv.Test(tester, "system", is_checker = True)
