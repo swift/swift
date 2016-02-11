@@ -613,7 +613,10 @@ try :
 	myenv = env.Clone()
 	myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 	env["HAVE_QT"] = True
-except :
+except SCons.Errors.StopError:
+	env["HAVE_QT"] = False
+except Exception as e:
+	print "Info: %s" % str(e)
 	env["HAVE_QT"] = False
 
 ################################################################################
