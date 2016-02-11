@@ -20,6 +20,10 @@ then
 	elif [ "$SYSTEM_DISTRO" == "openSUSE project" ]
 	then
 		sudo zypper in pkg-config libopenssl-devel libQt5Core-devel libQt5WebKit5-devel libQt5WebKitWidgets-devel libqt5-qtmultimedia-devel libqt5-qtx11extras-devel libqt5-qttools-devel libQt5Gui-devel libQt5Network-devel libQt5DBus-devel
+	elif [ "$SYSTEM_DISTRO" == "Fedora" ]
+	then
+		sudo dnf groups install "C Development Tools and Libraries"
+		sudo dnf install openssl-devel qt5-qtbase-devel qt5-linguist qt5-qtwebkit-devel qt5-qtmultimedia-devel qt5-qtx11extras-devel
 	else
 		echo "Unsupported Linux distribution."
 	fi
