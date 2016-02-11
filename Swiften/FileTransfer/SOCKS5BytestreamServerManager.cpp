@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -191,6 +191,10 @@ void SOCKS5BytestreamServerManager::stop() {
 	if (forwardPortRequest) {
 		forwardPortRequest->stop();
 		forwardPortRequest.reset();
+	}
+	if (unforwardPortRequest) {
+		unforwardPortRequest->stop();
+		unforwardPortRequest.reset();
 	}
 	if (server) {
 		server->stop();

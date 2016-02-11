@@ -49,7 +49,7 @@ enum Candidate {
 
 class FileTransferTest {
 	public:
-		FileTransferTest(int senderCandidates, int receiverCandidates) : senderCandidates_(senderCandidates), senderIsDone_(false), receiverCandidates_(receiverCandidates), receiverIsDone_(false) {
+		FileTransferTest(int senderCandidates, int receiverCandidates) : senderCandidates_(senderCandidates), senderError_(FileTransferError::UnknownError), senderIsDone_(false), receiverCandidates_(receiverCandidates), receiverError_(FileTransferError::UnknownError), receiverIsDone_(false) {
 			sender_ = boost::make_shared<Client>(JID(getenv("SWIFT_FILETRANSFERTEST_JID")), getenv("SWIFT_FILETRANSFERTEST_PASS"), networkFactories.get());
 			sender_->onDisconnected.connect(boost::bind(&FileTransferTest::handleSenderDisconnected, this, _1));
 			sender_->onConnected.connect(boost::bind(&FileTransferTest::handleSenderConnected, this));
@@ -108,6 +108,19 @@ class FileTransferTest {
 		}
 
 		void handleSenderConnected() {
+			DiscoInfo discoInfo;
+			discoInfo.addIdentity(DiscoInfo::Identity(CLIENT_NAME, "client", "pc"));
+			discoInfo.addFeature(DiscoInfo::JingleFeature);
+			discoInfo.addFeature(DiscoInfo::JingleFTFeature);
+			discoInfo.addFeature(DiscoInfo::Bytestream);
+			if (senderCandidates_ & InBandBytestream) {
+				discoInfo.addFeature(DiscoInfo::JingleTransportsIBBFeature);
+			}
+			if (senderCandidates_ & (S5B_Direct | S5B_Assisted | S5B_Proxied)) {
+				discoInfo.addFeature(DiscoInfo::JingleTransportsS5BFeature);
+			}
+			sender_->getDiscoManager()->setCapsNode(CLIENT_NODE);
+			sender_->getDiscoManager()->setDiscoInfo(discoInfo);
 			sender_->sendPresence(Presence::create());
 		}
 
@@ -119,8 +132,12 @@ class FileTransferTest {
 			discoInfo.addFeature(DiscoInfo::JingleFeature);
 			discoInfo.addFeature(DiscoInfo::JingleFTFeature);
 			discoInfo.addFeature(DiscoInfo::Bytestream);
-			discoInfo.addFeature(DiscoInfo::JingleTransportsIBBFeature);
-			discoInfo.addFeature(DiscoInfo::JingleTransportsS5BFeature);
+			if (receiverCandidates_ & InBandBytestream) {
+				discoInfo.addFeature(DiscoInfo::JingleTransportsIBBFeature);
+			}
+			if (receiverCandidates_ & (S5B_Direct | S5B_Assisted | S5B_Proxied)) {
+				discoInfo.addFeature(DiscoInfo::JingleTransportsS5BFeature);
+			}
 			receiver_->getDiscoManager()->setCapsNode(CLIENT_NODE);
 			receiver_->getDiscoManager()->setDiscoInfo(discoInfo);
 			receiver_->getPresenceSender()->sendPresence(Presence::create());
@@ -167,6 +184,8 @@ class FileTransferTest {
 					outgoingFileTransfer_->start();
 				} else {
 					std::cout << "ERROR: No outgoing file transfer returned." << std::endl;
+					receiverIsDone_ = true;
+					senderIsDone_ = true;
 					endTest();
 				}
 			}
@@ -222,6 +241,9 @@ class FileTransferTest {
 				timeOut_ = networkFactories->getTimerFactory()->createTimer(1000);
 				timeOut_->onTick.connect(boost::bind(&FileTransferTest::endTest, this));
 				timeOut_->start();
+			}
+			else if (error) {
+				endTest();
 			}
 		}
 
@@ -287,16 +309,17 @@ static bool runTest(int senderCandidates, int receiverCandidates) {
 
 	testRun->run();
 
-	if (testRun->isDone()) {
-		bool wasSuccessful = testRun->wasSuccessful();
-		if (expectSuccess == wasSuccessful) {
-			success = true;
-		} else {
-			std::cout << "expected success: " << expectSuccess << ", wasSuccessful: " << wasSuccessful << std::endl;
-		}
-	} else {
-		std::cout << "Failed to run test! Sender candidates = " << senderCandidates << ", receiver candidates = " << receiverCandidates << "." << std::endl;
+	bool wasSuccessful = testRun->wasSuccessful();
+	if (expectSuccess == wasSuccessful) {
+		success = true;
 	}
+	else {
+		if (!testRun->isDone()) {
+			std::cout << "Test did not finish transfer. Sender candidates = " << senderCandidates << ", receiver candidates = " << receiverCandidates << "." << std::endl;
+		}
+	}
+	std::cout << "expected success: " << expectSuccess << ", wasSuccessful: " << wasSuccessful << std::endl;
+
 
 	testRun.reset();
 	networkFactories.reset();

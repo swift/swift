@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,7 +40,7 @@ bool IncomingFileTransferManager::handleIncomingJingleSession(
 		const std::vector<JingleContentPayload::ref>& contents, 
 		const JID& recipient) {
 	if (JingleContentPayload::ref content = Jingle::getContentWithDescription<JingleFileTransferDescription>(contents)) {
-		if (content->getTransport<JingleS5BTransportPayload>()) {
+		if (content->getTransport<JingleS5BTransportPayload>() || content->getTransport<JingleIBBTransportPayload>()) {
 			JingleFileTransferDescription::ref description = content->getDescription<JingleFileTransferDescription>();
 			if (description) {
 				IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(

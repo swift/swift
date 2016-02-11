@@ -93,9 +93,15 @@ void OutgoingJingleFileTransfer::start() {
 		return;
 	}
 
-	setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder(), options));
-	setInternalState(GeneratingInitialLocalCandidates);
-	transporter->startGeneratingLocalCandidates();
+	if (!options.isInBandAllowed() && !options.isDirectAllowed() && !options.isAssistedAllowed() && !options.isProxiedAllowed()) {
+		// Started outgoing file transfer while not supporting transport methods.
+		setFinishedState(FileTransfer::State::Failed, FileTransferError(FileTransferError::UnknownError));
+	}
+	else {
+		setTransporter(transporterFactory->createInitiatorTransporter(getInitiator(), getResponder(), options));
+		setInternalState(GeneratingInitialLocalCandidates);
+		transporter->startGeneratingLocalCandidates();
+	}
 }
 
 void OutgoingJingleFileTransfer::cancel() {
@@ -123,6 +129,9 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
 		transporter->addRemoteCandidates(s5bPayload->getCandidates(), s5bPayload->getDstAddr());
 		setInternalState(TryingCandidates);
 		transporter->startTryingRemoteCandidates();
+	}
+	else if (JingleIBBTransportPayload::ref ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transportPayload)) {
+		startTransferring(transporter->createIBBSendSession(ibbPayload->getSessionID(), ibbPayload->getBlockSize().get_value_or(DEFAULT_BLOCK_SIZE), stream));
 	}
 	else {
 		SWIFT_LOG(debug) << "Unknown transport payload. Falling back." << std::endl;
@@ -192,13 +201,24 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 	fileInfo.addHash(HashElement("md5", ByteArray()));
 	description->setFileInfo(fileInfo);
 
-	JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
-	transport->setSessionID(s5bSessionID);
-	transport->setMode(JingleS5BTransportPayload::TCPMode);
-	transport->setDstAddr(dstAddr);
-	foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
-		transport->addCandidate(candidate);	
-		SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString() << std::endl;
+	JingleTransportPayload::ref transport;
+	if (candidates.empty()) {
+		SWIFT_LOG(debug) << "no S5B candidates generated. Send IBB transport candidate." << std::endl;
+		JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
+		ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
+		ibbTransport->setSessionID(idGenerator->generateID());
+		transport = ibbTransport;
+	}
+	else {
+		JingleS5BTransportPayload::ref s5bTransport = boost::make_shared<JingleS5BTransportPayload>();
+		s5bTransport->setSessionID(s5bSessionID);
+		s5bTransport->setMode(JingleS5BTransportPayload::TCPMode);
+		s5bTransport->setDstAddr(dstAddr);
+		foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
+			s5bTransport->addCandidate(candidate);
+			SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString() << std::endl;
+		}
+		transport = s5bTransport;
 	}
 	setInternalState(WaitingForAccept);
 	session->sendInitiate(contentID, description, transport);

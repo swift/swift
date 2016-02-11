@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,19 +9,20 @@
 #include <string>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/FileTransferTransporter.h>
 #include <Swiften/FileTransfer/FileTransferTransporterFactory.h>
 #include <Swiften/FileTransfer/IBBReceiveSession.h>
 #include <Swiften/FileTransfer/IBBReceiveTransportSession.h>
-#include <Swiften/FileTransfer/IBBSendTransportSession.h>
 #include <Swiften/FileTransfer/IBBSendSession.h>
+#include <Swiften/FileTransfer/IBBSendTransportSession.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
 #include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/JID/JID.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 namespace Swift {
 
@@ -45,7 +46,7 @@ public:
 			TimerFactory*,
 			CryptoProvider* cryptoProvider,
 			IQRouter* iqRouter,
-			const FileTransferOptions&) : initiator_(initiator), responder_(responder), role_(role), s5bRegistry_(s5bRegistry), crypto_(cryptoProvider), iqRouter_(iqRouter) {
+			const FileTransferOptions& ftOptions) : initiator_(initiator), responder_(responder), role_(role), s5bRegistry_(s5bRegistry), crypto_(cryptoProvider), iqRouter_(iqRouter), ftOptions_(ftOptions) {
 
 	}
 
@@ -55,6 +56,12 @@ public:
 
 	virtual void startGeneratingLocalCandidates() {
 		std::vector<JingleS5BTransportPayload::Candidate> candidates;
+		if (ftOptions_.isDirectAllowed()) {
+			JingleS5BTransportPayload::Candidate candidate;
+			candidate.cid = "123";
+			candidate.priority = 1235;
+			candidates.push_back(candidate);
+		}
 		onLocalCandidatesGenerated(s5bSessionID_, candidates, getSOCKS5DstAddr());
 	}
 
@@ -139,6 +146,7 @@ private:
 	CryptoProvider* crypto_;
 	std::string s5bSessionID_;
 	IQRouter* iqRouter_;
+	FileTransferOptions ftOptions_;
 };
 
 class DummyFileTransferTransporterFactory : public FileTransferTransporterFactory {

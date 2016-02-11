@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -81,7 +81,7 @@ class OutgoingJingleFileTransferTest : public CppUnit::TestFixture {
 
 public:
 
-		boost::shared_ptr<OutgoingJingleFileTransfer> createTestling() {
+		boost::shared_ptr<OutgoingJingleFileTransfer> createTestling(const FileTransferOptions& options = FileTransferOptions().withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false)) {
 			JID to("test@foo.com/bla");
 			JingleFileTransferFileInfo fileInfo;
 			fileInfo.setDescription("some file");
@@ -96,7 +96,7 @@ public:
 				timerFactory,
 				idGen,
 				fileInfo,
-				FileTransferOptions().withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false),
+				options,
 				crypto.get()));
 		}
 
@@ -159,16 +159,17 @@ public:
 			CPPUNIT_ASSERT(description);
 			CPPUNIT_ASSERT(static_cast<size_t>(1048576) == description->getFileInfo().getSize());
 
-			JingleS5BTransportPayload::ref transport = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(call.payload);
+			JingleIBBTransportPayload::ref transport = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(call.payload);
 			CPPUNIT_ASSERT(transport);
 		}
 		
 		void test_FallbackToIBBAfterFailingS5B() {
-			boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
+			boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling(FileTransferOptions().withAssistedAllowed(true).withDirectAllowed(true).withProxiedAllowed(true));
 			transfer->start();
 
 			FakeJingleSession::InitiateCall call = getCall<FakeJingleSession::InitiateCall>(0);
 
+			CPPUNIT_ASSERT(boost::dynamic_pointer_cast<JingleS5BTransportPayload>(call.payload));
 			fakeJingleSession->handleSessionAcceptReceived(call.id, call.description, call.payload);
 
 			// send candidate failure

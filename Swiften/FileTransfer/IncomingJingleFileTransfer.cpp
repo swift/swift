@@ -17,6 +17,7 @@
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/FileTransferTransporter.h>
 #include <Swiften/FileTransfer/FileTransferTransporterFactory.h>
 #include <Swiften/FileTransfer/IncrementalBytestreamHashCalculator.h>
@@ -82,7 +83,9 @@ void IncomingJingleFileTransfer::accept(
 	writeStreamDataReceivedConnection = stream->onWrite.connect(
 			boost::bind(&IncomingJingleFileTransfer::handleWriteStreamDataReceived, this, _1));
 
-	if (JingleS5BTransportPayload::ref s5bTransport = initialContent->getTransport<JingleS5BTransportPayload>()) {
+	JingleS5BTransportPayload::ref s5bTransport = initialContent->getTransport<JingleS5BTransportPayload>();
+	JingleIBBTransportPayload::ref ibbTransport = initialContent->getTransport<JingleIBBTransportPayload>();
+	if (s5bTransport) {
 		SWIFT_LOG(debug) << "Got S5B transport as initial payload." << std::endl;
 		setTransporter(transporterFactory->createResponderTransporter(
 				getInitiator(), getResponder(), s5bTransport->getSessionID(), options));
@@ -90,7 +93,7 @@ void IncomingJingleFileTransfer::accept(
 		setState(GeneratingInitialLocalCandidates);
 		transporter->startGeneratingLocalCandidates();
 	}
-	else if (JingleIBBTransportPayload::ref ibbTransport = initialContent->getTransport<JingleIBBTransportPayload>()) {
+	else if (ibbTransport && options.isInBandAllowed()) {
 		SWIFT_LOG(debug) << "Got IBB transport as initial payload." << std::endl;
 		setTransporter(transporterFactory->createResponderTransporter(
 				getInitiator(), getResponder(), ibbTransport->getSessionID(), options));
@@ -103,8 +106,9 @@ void IncomingJingleFileTransfer::accept(
 		session->sendAccept(getContentID(), initialContent->getDescriptions()[0], ibbTransport);
 	}
 	else {
-		// Can't happen, because the transfer would have been rejected automatically
-		assert(false);
+		// This might happen on incoming transfer which only list transport methods we are not allowed to use due to file-transfer options.
+		session->sendTerminate(JinglePayload::Reason::UnsupportedTransports);
+		setFinishedState(FileTransfer::State::Failed, FileTransferError(FileTransferError::PeerError));
 	}
 }
 
@@ -223,7 +227,7 @@ void IncomingJingleFileTransfer::handleWriteStreamDataReceived(
 void IncomingJingleFileTransfer::handleTransportReplaceReceived(
 		const JingleContentID& content, JingleTransportPayload::ref transport) {
 	SWIFT_LOG(debug) << std::endl;
-	if (state != WaitingForFallbackOrTerminate) { 
+	if (state != WaitingForFallbackOrTerminate) {
 		SWIFT_LOG(warning) << "Incorrect state" << std::endl; 
 		return; 
 	}
