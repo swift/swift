@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -84,7 +84,9 @@ void NotificationCenterNotifier::purgeCallbacks() {
 
 void NotificationCenterNotifier::handleUserNotificationActivated(const std::string& identifier) {
 	if (p->callbacksForNotifications.find(identifier) != p->callbacksForNotifications.end()) {
-		(*p->callbacksForNotifications[identifier]->callback)();
+		if (!(*p->callbacksForNotifications[identifier]->callback).empty()) {
+			(*p->callbacksForNotifications[identifier]->callback)();
+		}
 	}
 	else {
 		SWIFT_LOG(warning) << "Missing callback entry for activated notification. The activate notification may come from another instance." << std::endl;
