@@ -136,10 +136,6 @@
         <translation>Geen roepnaam gespecifieerd</translation>
     </message>
     <message>
-        <source>A password needed</source>
-        <translation type="obsolete">Wachtwoord vereist</translation>
-    </message>
-    <message>
         <source>You are banned from the room</source>
         <translation>U bent verbannen uit de kamer</translation>
     </message>
@@ -166,14 +162,6 @@
     <message>
         <source>You have entered room %1% as %2%.</source>
         <translation>U heeft de kamer %1% als %2% betreden.</translation>
-    </message>
-    <message>
-        <source>%1% has entered the room as a %2%.</source>
-        <translation type="vanished">%1% heeft de kamer betreden als %2%.</translation>
-    </message>
-    <message>
-        <source>%1% has entered the room.</source>
-        <translation type="vanished">%1% heeft de kamer betreden.</translation>
     </message>
     <message>
         <source>moderator</source>
@@ -316,10 +304,6 @@
         <translation>Beveiligingsfout</translation>
     </message>
     <message>
-        <source>Error loading certificate (Invalid password?)</source>
-        <translation type="vanished">Fout bij het laden van het certificaat (Ongeldig wachtwoord?)</translation>
-    </message>
-    <message>
         <source>Certificate not authorized</source>
         <translation>Certificaat heeft geen toestemming</translation>
     </message>
@@ -424,10 +408,6 @@
         <translation>%1% en %2% anderen (%3%)</translation>
     </message>
     <message>
-        <source>%1%, %2% (%3%)</source>
-        <translation type="vanished">%1%, %2% (%3%)</translation>
-    </message>
-    <message>
         <source>User address invalid. User address should be of the form &apos;alice@wonderland.lit&apos;</source>
         <translation>Gebruikersadres ongeldig. Gebruikersadres moet van de vorm &apos;alice@wonderland.lit&apos; zijn</translation>
     </message>
@@ -436,20 +416,12 @@
         <translation>Deze conversatie ondersteunt geen ontvangstbevestigingen.</translation>
     </message>
     <message>
-        <source>This chat may not support delivery receipts. You might not receive delivery receipts for the messages you sent.</source>
-        <translation type="vanished">Deze conversatie ondersteunt mogelijks geen ontvangstbevestigingen.</translation>
-    </message>
-    <message>
         <source>Couldn&apos;t send message: %1%</source>
         <translation>Kon boodschap niet verzenden: %1%</translation>
     </message>
     <message>
         <source>The correct room password is needed</source>
         <translation>Het correcte wachtwoord voor de kamer is vereist</translation>
-    </message>
-    <message>
-        <source>Couldn&apos;t join room: %1%.</source>
-        <translation type="vanished">Kon kamer niet betreden: %1%.</translation>
     </message>
     <message>
         <source>%1% has left the room%2%</source>
@@ -1203,10 +1175,6 @@
         <translation>Wachtwoord kamer:</translation>
     </message>
     <message>
-        <source>Join automatically</source>
-        <translation type="obsolete">Automatisch betreden</translation>
-    </message>
-    <message>
         <source>Room Address:</source>
         <translation>Adres kamer:</translation>
     </message>
@@ -1485,16 +1453,8 @@
 <context>
     <name>QtJoinMUCWindow</name>
     <message>
-        <source>Room:</source>
-        <translation type="obsolete">Kamer:</translation>
-    </message>
-    <message>
         <source>Search ...</source>
         <translation>Zoek ...</translation>
-    </message>
-    <message>
-        <source>Nickname:</source>
-        <translation type="obsolete">Roepnaam:</translation>
     </message>
     <message>
         <source>Enter Room</source>
@@ -1757,14 +1717,6 @@
         <translation>Versie %1</translation>
     </message>
     <message>
-        <source>Built with Qt %1</source>
-        <translation type="vanished">Gebouwd met Qt %1</translation>
-    </message>
-    <message>
-        <source>Running with Qt %1</source>
-        <translation type="vanished">Actief met Qt %1</translation>
-    </message>
-    <message>
         <source>Using the English translation by
 %1</source>
         <translation>Nederlandse vertaling door
@@ -1789,10 +1741,6 @@
 </context>
 <context>
     <name>Swift::QtAdHocCommandWindow</name>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Annuleren</translation>
-    </message>
     <message>
         <source>Back</source>
         <translation>Terug</translation>
@@ -1858,10 +1806,6 @@ afbeelding</translation>
     <message>
         <source>Select picture</source>
         <translation>Selecteer afbeelding</translation>
-    </message>
-    <message>
-        <source>Image Files (*.png *.jpg *.gif)</source>
-        <translation type="obsolete">Afbeeldingen (*.png *.jpg *.gif)</translation>
     </message>
     <message>
         <source>Error</source>
@@ -2042,82 +1986,7 @@ afbeelding</translation>
     </message>
 </context>
 <context>
-    <name>Swift::QtChatView</name>
-    <message>
-        <source>Clear log</source>
-        <translation type="vanished">Wis inhoud</translation>
-    </message>
-    <message>
-        <source>You are about to clear the contents of your chat log.</source>
-        <translation type="vanished">De inhoud van dit venster zal gewist worden.</translation>
-    </message>
-    <message>
-        <source>Are you sure?</source>
-        <translation type="vanished">Bent u zeker?</translation>
-    </message>
-    <message>
-        <source>%1 edited</source>
-        <translation type="vanished">%1 geëditeerd</translation>
-    </message>
-    <message>
-        <source>Waiting for other side to accept the transfer.</source>
-        <translation type="vanished">Aan het wachten op de andere kant om te aanvaarden.</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Annuleren</translation>
-    </message>
-    <message>
-        <source>Negotiating...</source>
-        <translation type="vanished">Aan het onderhandelen...</translation>
-    </message>
-    <message>
-        <source>Transfer has been canceled!</source>
-        <translation type="vanished">Overdracht geannuleerd!</translation>
-    </message>
-    <message>
-        <source>Transfer completed successfully.</source>
-        <translation type="vanished">Overdracht succesvol beëindigd.</translation>
-    </message>
-    <message>
-        <source>Transfer failed.</source>
-        <translation type="vanished">Overdracht gefaald.</translation>
-    </message>
-    <message>
-        <source>Started whiteboard chat</source>
-        <translation type="vanished">Tekentafel gestart</translation>
-    </message>
-    <message>
-        <source>Show whiteboard</source>
-        <translation type="vanished">Toon tekentafel</translation>
-    </message>
-    <message>
-        <source>Whiteboard chat has been canceled</source>
-        <translation type="vanished">Tekentafel werd geannuleerd</translation>
-    </message>
-    <message>
-        <source>Whiteboard chat request has been rejected</source>
-        <translation type="vanished">Tekentafeverzoekl werd verworpen</translation>
-    </message>
-    <message>
-        <source>Return to room</source>
-        <translation type="vanished">Keer terug naar kamer</translation>
-    </message>
-</context>
-<context>
     <name>Swift::QtChatWindow</name>
-    <message>
-        <source>This message has not been received by your server yet.</source>
-        <translation type="vanished">Deze boodschap werd nog niet door uw server ontvangen.</translation>
-    </message>
-    <message>
-        <source>This message may not have been transmitted.</source>
-        <translation type="vanished">Dit bericht kan mogelijk niet verzonden zijn.</translation>
-    </message>
-    <message>
-        <source>Couldn&apos;t send message: %1</source>
-        <translation type="obsolete">Kon boodschap niet verzenden: %1</translation>
-    </message>
     <message>
         <source>Correcting</source>
         <translation>Corrigeren</translation>
@@ -2129,54 +1998,6 @@ afbeelding</translation>
     <message>
         <source>This chat does not support message correction.  If you send a correction anyway, it will appear as a duplicate message</source>
         <translation>Deze conversatie ondersteunt geen verbeteringen. Verbeteringen zullen als duplicate boodschappen aankomen</translation>
-    </message>
-    <message>
-        <source>The receipt for this message has been received.</source>
-        <translation type="vanished">Bevestiging ontvangen.</translation>
-    </message>
-    <message>
-        <source>The receipt for this message has not yet been received. The recipient(s) might not have received this message.</source>
-        <translation type="vanished">Bevestiging nog niet ontvangen. De ontvanger kan mogelijks dit bericht nog niet ontvangen hebben.</translation>
-    </message>
-    <message>
-        <source>Send file</source>
-        <translation type="vanished">Verzend bestand</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Annuleren</translation>
-    </message>
-    <message>
-        <source>Set Description</source>
-        <translation type="vanished">Verander beschrijving</translation>
-    </message>
-    <message>
-        <source>Send</source>
-        <translation type="vanished">Verzenden</translation>
-    </message>
-    <message>
-        <source>Receiving file</source>
-        <translation type="vanished">Bestand aan het ontvangen</translation>
-    </message>
-    <message>
-        <source>Accept</source>
-        <translation type="vanished">Accepteren</translation>
-    </message>
-    <message>
-        <source>Starting whiteboard chat</source>
-        <translation type="vanished">Tekentafel aan het starten</translation>
-    </message>
-    <message>
-        <source>File transfer description</source>
-        <translation type="vanished">Beschrijving bestand</translation>
-    </message>
-    <message>
-        <source>Description:</source>
-        <translation type="vanished">Beschrijving:</translation>
-    </message>
-    <message>
-        <source>Save File</source>
-        <translation type="vanished">Bestand opslaan</translation>
     </message>
     <message>
         <source>Change subject…</source>
@@ -2217,14 +2038,6 @@ afbeelding</translation>
     <message>
         <source>This will destroy the room.</source>
         <translation>Dit zal de kamer vernietigeng.</translation>
-    </message>
-    <message>
-        <source>Accept Invite</source>
-        <translation type="vanished">Accepteer uitnodiging</translation>
-    </message>
-    <message>
-        <source>%1 would like to start a whiteboard chat</source>
-        <translation type="vanished">%1 wil een tekentafel starten</translation>
     </message>
     <message>
         <source>Sending of multiple files at once isn&apos;t supported at this time.</source>
@@ -2313,10 +2126,6 @@ afbeelding</translation>
 </context>
 <context>
     <name>Swift::QtFileTransferListWidget</name>
-    <message>
-        <source>Clear Finished Transfers</source>
-        <translation type="vanished">Wis voltooide overdrachten</translation>
-    </message>
     <message>
         <source>File Transfer List</source>
         <translation>Lijst Bestandsoverdrachten</translation>
@@ -2439,17 +2248,6 @@ afbeelding</translation>
     </message>
 </context>
 <context>
-    <name>Swift::QtInviteToChatWindow</name>
-    <message>
-        <source>Users to invite to this chat (one per line):</source>
-        <translation type="vanished">Uit te nodigen gebruikers (één per lijn):</translation>
-    </message>
-    <message>
-        <source>If you want to provide a reason for the invitation, enter it here</source>
-        <translation type="vanished">Uitnodigingsreden (Optioneel)</translation>
-    </message>
-</context>
-<context>
     <name>Swift::QtJoinMUCWindow</name>
     <message>
         <source>someroom@rooms.example.com</source>
@@ -2549,14 +2347,6 @@ afbeelding</translation>
     <message>
         <source>Would you like to permanently trust this certificate? This must only be done if you know it is correct.</source>
         <translation>Wilt u dit certificaat permanent vertrouwen? Dit mag enkel gedaan worden als u zeker bent dat het certificaat juist is.</translation>
-    </message>
-    <message>
-        <source>Subject: %1</source>
-        <translation type="obsolete">Onderwerp: %1</translation>
-    </message>
-    <message>
-        <source>SHA-1 Fingerprint: %1</source>
-        <translation type="obsolete">SHA-1 vingerafdruk: %1</translation>
     </message>
     <message>
         <source>Show &amp;File Transfer Overview</source>
@@ -2700,10 +2490,6 @@ afbeelding</translation>
         <translation>Vraag &amp;ontvangstbevestigingen</translation>
     </message>
     <message>
-        <source>&amp;Chats</source>
-        <translation type="vanished">&amp;Conversaties</translation>
-    </message>
-    <message>
         <source>Contacts</source>
         <translation>Contacten</translation>
     </message>
@@ -2822,14 +2608,6 @@ afbeelding</translation>
     <message>
         <source>Edit Profile</source>
         <translation>Bewerk profiel</translation>
-    </message>
-    <message>
-        <source>Nickname:</source>
-        <translation type="vanished">Roepnaam:</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="vanished">Bewaar</translation>
     </message>
     <message>
         <source>Retrieving profile information for this user.</source>
@@ -2953,26 +2731,8 @@ afbeelding</translation>
         <translation>OK</translation>
     </message>
     <message>
-        <source>Yes</source>
-        <translation type="vanished">Ja</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation type="vanished">Neen</translation>
-    </message>
-    <message>
         <source>Defer</source>
         <translation>Uitstellen</translation>
-    </message>
-    <message>
-        <source>%1 would like to add you to their contact list.
- Would you like to add them to your contact list and share your status when you&apos;re online? 
-
-If you choose to defer this choice, you will be asked again when you next login.</source>
-        <translation type="vanished">%1 wil u aan zijn/haar contactenlijst toevoegen.
-Wilt u dit contact toevoegen aan uw contactenlijst, en uw aanwezigheid delen wanneer u aanwezig bent?
-
-Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich opnieuw aanmeldt.</translation>
     </message>
     <message>
         <source>%1 would like to add you to their contact list.</source>
@@ -3004,29 +2764,6 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
     <message>
         <source>No Suggestions</source>
         <translation>Geen voorstellen</translation>
-    </message>
-</context>
-<context>
-    <name>Swift::QtTreeWidget</name>
-    <message>
-        <source>Edit</source>
-        <translation type="obsolete">Bewerk</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation type="obsolete">Verwijder</translation>
-    </message>
-    <message>
-        <source>Rename</source>
-        <translation type="obsolete">Naam wijzigen</translation>
-    </message>
-    <message>
-        <source>Rename group</source>
-        <translation type="obsolete">Groepsnaam wijzigen</translation>
-    </message>
-    <message>
-        <source>Enter a new name for group &apos;%1&apos;:</source>
-        <translation type="obsolete">Geef een nieuwe naam voor groep &apos;%1&apos;:</translation>
     </message>
 </context>
 <context>
@@ -3085,16 +2822,8 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
         <translation>Contact toevoegen</translation>
     </message>
     <message>
-        <source>Chat to User</source>
-        <translation type="vanished">Start conversatie met gebruiker</translation>
-    </message>
-    <message>
         <source>How would you like to find the user to add?</source>
         <translation>Hoe wilt u de gebruiker toevoegen?</translation>
-    </message>
-    <message>
-        <source>How would you like to find the user to chat to?</source>
-        <translation type="vanished">Hoe wilt u de gebruiker contacteren?</translation>
     </message>
     <message>
         <source>Error while searching</source>
@@ -3461,6 +3190,10 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
         <source>Failed to transmit message to the receipient(s).</source>
         <translation>Het versturen van het bericht is mislukt.</translation>
     </message>
+    <message>
+        <source>The chosen save location is not writable! Click the &apos;Accept&apos; button to select a different save location.</source>
+        <translation>Kan het bestand niet opslaan op de gekozen locatie! Klik op &apos;Accepteren&apos; om een andere locatie te kiezen.</translation>
+    </message>
 </context>
 <context>
     <name>Swift::QtWebView</name>
@@ -3501,14 +3234,6 @@ Als u deze keuze uitstelt, zal deze vraag opnieuw gesteld worden wanneer u zich 
     <message>
         <source>Debug Console</source>
         <translation>Debug console</translation>
-    </message>
-    <message>
-        <source>&lt;!-- IN --&gt;</source>
-        <translation type="vanished">&lt;!-- IN --&gt;</translation>
-    </message>
-    <message>
-        <source>&lt;!-- OUT --&gt;</source>
-        <translation type="vanished">&lt;!-- UIT --&gt;</translation>
     </message>
     <message>
         <source>&lt;!-- IN %1 --&gt;</source>
