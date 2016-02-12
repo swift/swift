@@ -6,8 +6,6 @@
 
 #include <Swift/Controllers/Chat/ChatController.h>
 
-#include <stdio.h>
-
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
@@ -364,8 +362,8 @@ void ChatController::setOnline(bool online) {
 void ChatController::handleNewFileTransferController(FileTransferController* ftc) {
 	std::string nick = senderDisplayNameFromMessage(ftc->getOtherParty());
 	std::string ftID = ftc->setChatWindow(chatWindow_, nick);
-	
 	ftControllers[ftID] = ftc;
+	lastWasPresence_ = false;
 }
 
 void ChatController::handleWhiteboardSessionRequest(bool senderIsSelf) {
