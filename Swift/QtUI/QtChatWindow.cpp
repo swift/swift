@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,9 +74,7 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 	fileTransferEnabled_ = Maybe;
 	updateTitleWithUnreadCount();
 	assert(settings);
-#ifdef SWIFT_EXPERIMENTAL_FT
 	setAcceptDrops(true);
-#endif
 
 	alertStyleSheet_ = "background: rgb(255, 255, 153); color: black";
 
@@ -590,8 +588,7 @@ void QtChatWindow::moveEvent(QMoveEvent*) {
 void QtChatWindow::dragEnterEvent(QDragEnterEvent *event) {
 	if (isOnline_ && (blockingState_ != IsBlocked)) {
 		if (event->mimeData()->hasUrls() && event->mimeData()->urls().size() == 1) {
-			// TODO: check whether contact actually supports file transfer
-			if (!isMUC_) {
+			if (!isMUC_ && fileTransferEnabled_ == Yes) {
 				event->acceptProposedAction();
 			}
 		}

@@ -128,7 +128,7 @@ void ChatController::handleBareJIDCapsChanged(const JID& /*jid*/) {
 	FeatureOracle featureOracle(entityCapsProvider_, presenceOracle_);
 
 	chatWindow_->setCorrectionEnabled(featureOracle.isMessageCorrectionSupported(toJID_));
-	chatWindow_->setFileTransferEnabled(featureOracle.isFileTransferSupported(toJID_));
+	chatWindow_->setFileTransferEnabled(isInMUC_ ? No : featureOracle.isFileTransferSupported(toJID_));
 	contactSupportsReceipts_ = featureOracle.isMessageReceiptsSupported(toJID_);
 
 	checkForDisplayingDisplayReceiptsAlert();
