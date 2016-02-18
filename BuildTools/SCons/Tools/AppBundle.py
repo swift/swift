@@ -20,7 +20,7 @@ def generate(env) :
 				"CFBundleVersion" : version,
 				"CFBundleIconFile" : bundle,
 				"NSPrincipalClass" : "NSApplication",
-				"NSHumanReadableCopyright" : unichr(0xA9) + " 2010 Swift Development Team.\nAll Rights Reserved."
+				"NSHumanReadableCopyright" : "(c) 2010 Swift Development Team.\nAll Rights Reserved."
 			}
 		infoDict.update(info)
 
