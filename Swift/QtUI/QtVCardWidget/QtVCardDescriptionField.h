@@ -4,14 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#pragma once
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include <Swiften/Elements/VCard.h>
+#pragma once
 
 #include <QPlainTextEdit>
 
-#include "QtVCardFieldInfo.h"
-#include "QtVCardGeneralField.h"
+#include <Swiften/Elements/VCard.h>
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardFieldInfo.h>
+#include <Swift/QtUI/QtVCardWidget/QtVCardGeneralField.h>
 
 namespace Swift {
 
@@ -19,7 +25,7 @@ class QtVCardDescriptionField : public QtVCardGeneralField {
 	Q_OBJECT
 
 	public:
-		GENERIC_QT_VCARD_FIELD_INFO("Description", 1, QtVCardDescriptionField)
+		GENERIC_QT_VCARD_FIELD_INFO(tr("Description"), 1, QtVCardDescriptionField)
 
 		QtVCardDescriptionField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
 		virtual ~QtVCardDescriptionField();

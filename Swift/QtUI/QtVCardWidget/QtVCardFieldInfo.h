@@ -4,13 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
+
+#include <typeinfo>
 
 #include <QGridLayout>
 #include <QObject>
 #include <QString>
-#include <typeinfo>
-
 #define GENERIC_QT_VCARD_FIELD_INFO(MENU_NAME, ALLOWED_INSTANCES, FIELD_CLASS) \
 	class FieldInfo : public QtVCardFieldInfo { \
 		public: \
@@ -18,7 +24,7 @@
 			} \
 	\
 			virtual QString getMenuName() const { \
-				return QObject::tr(MENU_NAME); \
+				return MENU_NAME; \
 			} \
 	\
 			virtual int getAllowedInstances() const { \

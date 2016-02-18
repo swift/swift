@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QTreeWidget>
@@ -21,7 +27,7 @@ class QtVCardOrganizationField : public QtVCardGeneralField {
 	Q_OBJECT
 
 	public:
-		GENERIC_QT_VCARD_FIELD_INFO("Organization", UNLIMITED_INSTANCES, QtVCardOrganizationField)
+		GENERIC_QT_VCARD_FIELD_INFO(tr("Organization"), UNLIMITED_INSTANCES, QtVCardOrganizationField)
 
 		QtVCardOrganizationField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
 		virtual ~QtVCardOrganizationField();

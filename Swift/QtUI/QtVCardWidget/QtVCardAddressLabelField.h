@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,7 +30,7 @@ class QtVCardAddressLabelField : public QtVCardGeneralField, public QtVCardHomeW
 	Q_OBJECT
 
 	public:
-		GENERIC_QT_VCARD_FIELD_INFO("Address Label", UNLIMITED_INSTANCES, QtVCardAddressLabelField)
+		GENERIC_QT_VCARD_FIELD_INFO(tr("Address Label"), UNLIMITED_INSTANCES, QtVCardAddressLabelField)
 
 		QtVCardAddressLabelField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
 		virtual ~QtVCardAddressLabelField();
