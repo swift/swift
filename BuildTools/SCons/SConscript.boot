@@ -41,9 +41,9 @@ if os.name == "nt" :
 	vars.Add(PathVariable("wix_bindir", "Path to WiX binaries", "", PathVariable.PathAccept))
 if os.name == "nt" :
 	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
+vars.Add(EnumVariable("tls_backend", "Choose the TLS backend", "native", ["native", "openssl", "openssl_bundled"]))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add("openssl_libnames", "Comma-separated openssl library names to override defaults", None)
-vars.Add(BoolVariable("openssl_force_bundled", "Force use of the bundled OpenSSL", "no"))
 vars.Add("openssl_include", "Location of OpenSSL include files (if not under (openssl)/include)", None)
 vars.Add("openssl_libdir", "Location of OpenSSL library files (if not under (openssl)/lib)", None)
 vars.Add(PackageVariable("hunspell_prefix", "Hunspell location", False))

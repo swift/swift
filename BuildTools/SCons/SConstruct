@@ -507,26 +507,34 @@ conf.Finish()
 if env["qt"] :
 	env["QTDIR"] = env["qt"]
 
-# Check for OS X Secure Transport
-if not env.get("openssl_force_bundled", False) and env["PLATFORM"] == "darwin" and env["target"] == "native"  :
-	env["HAVE_SECURETRANSPORT"] = True
-else :
-	env["HAVE_SECURETRANSPORT"] = False
 
+################################################################################
+# TLS backend selection
+################################################################################
+env["OPENSSL_FLAGS"] = {}
+if env.get("tls_backend") == "native" :
+	if env["PLATFORM"] == "win32" :
+		env["HAVE_SCHANNEL"] = True
+	elif env["PLATFORM"] == "darwin" and env["target"] == "native":
+		env["HAVE_SECURETRANSPORT"] = True
+	elif env["target"] in ("iphone-device", "iphone-simulator", "xcode", "android") :
+		env["tls_backend"] = "openssl_bundled"
+	else :
+		env["tls_backend"] = "openssl"
 # OpenSSL
-openssl_env = conf_env.Clone()
-if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device", "iphone-simulator", "xcode", "android") :
+if env.get("tls_backend") == "openssl_bundled" :
 	env["OPENSSL_BUNDLED"] = True
 	env["HAVE_OPENSSL"] = True
-elif not env["HAVE_SECURETRANSPORT"] :
+elif env.get("tls_backend") == "openssl" :
+	openssl_env = conf_env.Clone()
 	use_openssl = bool(env["openssl"])
 	openssl_prefix = ""
 	if isinstance(env["openssl"], str) :
 		openssl_prefix = env["openssl"]
 	openssl_flags = {}
 	if openssl_prefix :
-		openssl_include = env.get("openssl_include", None)
-		openssl_libdir = env.get("openssl_libdir", None)
+		openssl_include = env.get("openssl_include")
+		openssl_libdir = env.get("openssl_libdir")
 		if openssl_include:
 			openssl_flags = {"CPPPATH":[openssl_include]}
 		else:
@@ -545,7 +553,7 @@ elif not env["HAVE_SECURETRANSPORT"] :
 	if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
 		env["HAVE_OPENSSL"] = 1
 		env["OPENSSL_FLAGS"] = openssl_flags
-		openssl_libnames = env.get("openssl_libnames", None)
+		openssl_libnames = env.get("openssl_libnames")
 		if openssl_libnames:
 			env["OPENSSL_FLAGS"]["LIBS"] = openssl_libnames.split(',')
 		elif env["PLATFORM"] == "win32" :
@@ -555,12 +563,6 @@ elif not env["HAVE_SECURETRANSPORT"] :
 			if env["PLATFORM"] == "darwin" :
 				if platform.mac_ver()[0].startswith("10.5") :
 					env["OPENSSL_FLAGS"]["FRAMEWORKS"] = ["Security"]
-	else :
-		env["OPENSSL_FLAGS"] = {}
-		if env["PLATFORM"] == "win32" :
-			# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
-			env["HAVE_SCHANNEL"] = True
-
 	openssl_conf.Finish()
 
 if env["PLATFORM"] == "win32" :
