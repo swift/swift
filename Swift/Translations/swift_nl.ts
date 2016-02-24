@@ -161,7 +161,7 @@
     </message>
     <message>
         <source>You have entered room %1% as %2%.</source>
-        <translation>U heeft de kamer %1% als %2% betreden.</translation>
+        <translation>U heeft de kamer %1% betreden als %2%.</translation>
     </message>
     <message>
         <source>moderator</source>
@@ -205,11 +205,11 @@
     </message>
     <message>
         <source>%1% have left then returned to the room</source>
-        <translation>%1% hebben de kamer verlaten en terug betreden</translation>
+        <translation>%1% hebben de kamer verlaten en weer betreden</translation>
     </message>
     <message>
         <source>%1% has left then returned to the room</source>
-        <translation>%1% heeft de kamer verlaten en terug betreden</translation>
+        <translation>%1% heeft de kamer verlaten en weer betreden</translation>
     </message>
     <message>
         <source>%1% has left the room</source>
@@ -233,11 +233,11 @@
     </message>
     <message>
         <source>%1% have entered then left the room</source>
-        <translation>%1% hebben de kamer betreden en terug verlaten</translation>
+        <translation>%1% hebben de kamer betreden en weer verlaten</translation>
     </message>
     <message>
         <source>%1% has entered then left the room</source>
-        <translation>%1% heeft de kamer betreden en terug verlaten</translation>
+        <translation>%1% heeft de kamer betreden en weer verlaten</translation>
     </message>
     <message>
         <source>%1% have left the room</source>
@@ -357,7 +357,7 @@
     </message>
     <message>
         <source>Reconnect to %1% failed: %2%. Will retry in %3% seconds.</source>
-        <translation>Herverbinding met %1% mislukt: %2%. Zal opnieuw proberen binnen %3% seconden.</translation>
+        <translation>Herverbinden met %1% mislukt: %2%. Zal opnieuw proberen binnen %3% seconden.</translation>
     </message>
     <message>
         <source>Disconnected from %1%: %2%.</source>
@@ -545,7 +545,7 @@
     </message>
     <message>
         <source>You&apos;ve blocked this room. To enter the room, first unblock it using the cog menu and try again</source>
-        <translation>U heeft deze kamer geblokkeerd. Om de kamer te betreden moet u deze eerst deblokkeren met behulp van het tandwielmenu, en het dan opnieuw proberen</translation>
+        <translation>U heeft deze kamer geblokkeerd. Om de kamer te betreden moet u deze eerst deblokkeren met behulp van het tandradmenu, en het dan opnieuw proberen</translation>
     </message>
     <message>
         <source>Trying to join chat</source>
