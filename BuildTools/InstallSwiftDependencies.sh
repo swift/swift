@@ -28,5 +28,5 @@ then
 		echo "Unsupported Linux distribution."
 	fi
 else
-	echo "Unspupported system."
+	echo "Unsupported system."
 fi
