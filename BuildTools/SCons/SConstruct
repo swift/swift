@@ -569,19 +569,20 @@ if env["PLATFORM"] == "win32" :
 
 #Hunspell
 hunspell_env = conf_env.Clone()
-hunspell_prefix = isinstance(env.get("hunspell", False), str) and env["hunspell"] or ""
+hunspell_prefix = isinstance(env.get("hunspell_prefix", False), str) and env["hunspell_prefix"] or ""
 hunspell_flags = {}
 if hunspell_prefix :
 	hunspell_flags = {"CPPPATH":[os.path.join(hunspell_prefix, "include")], "LIBPATH":[os.path.join(hunspell_prefix, "lib")]}
 hunspell_env.MergeFlags(hunspell_flags)
 
 env["HAVE_HUNSPELL"] = 0;
-hunspell_conf = Configure(hunspell_env)
-if hunspell_conf.CheckCXXHeader("hunspell/hunspell.hxx") and hunspell_conf.CheckLib("hunspell") :
-	env["HAVE_HUNSPELL"] = 1
-	hunspell_flags["LIBS"] = ["hunspell"]
-	env["HUNSPELL_FLAGS"] = hunspell_flags
-hunspell_conf.Finish()
+if env.get("hunspell_enable", False) :
+	hunspell_conf = Configure(hunspell_env)
+	if hunspell_conf.CheckCXXHeader("hunspell/hunspell.hxx") and hunspell_conf.CheckLib("hunspell") :
+		env["HAVE_HUNSPELL"] = 1
+		hunspell_flags["LIBS"] = ["hunspell"]
+		env["HUNSPELL_FLAGS"] = hunspell_flags
+	hunspell_conf.Finish()
 
 # Bonjour
 if env["PLATFORM"] == "darwin" and env["target"] == "native" :
