@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,7 +7,6 @@
 #include <Swiften/Network/BoostConnection.h>
 
 #include <algorithm>
-#include <iostream>
 #include <string>
 
 #include <boost/asio/placeholders.hpp>
@@ -86,6 +85,7 @@ void BoostConnection::disconnect() {
 }
 
 void BoostConnection::closeSocket() {
+	boost::lock_guard<boost::mutex> lock(readCloseMutex_);
 	boost::system::error_code errorCode;
 	socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, errorCode);
 	socket_.close();
@@ -120,6 +120,7 @@ void BoostConnection::handleConnectFinished(const boost::system::error_code& err
 
 void BoostConnection::doRead() {
 	readBuffer_ = boost::make_shared<SafeByteArray>(BUFFER_SIZE);
+	boost::lock_guard<boost::mutex> lock(readCloseMutex_);
 	socket_.async_read_some(
 			boost::asio::buffer(*readBuffer_),
 			boost::bind(&BoostConnection::handleSocketRead, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));

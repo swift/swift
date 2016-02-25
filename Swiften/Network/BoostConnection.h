@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -76,5 +76,6 @@ namespace Swift {
 			bool writing_;
 			SafeByteArray writeQueue_;
 			bool closeSocketAfterNextWrite_;
+			boost::mutex readCloseMutex_;
 	};
 }
