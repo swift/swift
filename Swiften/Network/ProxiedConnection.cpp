@@ -1,17 +1,15 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-
 #include <Swiften/Network/ProxiedConnection.h>
-
-#include <iostream>
 
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
 
@@ -39,7 +37,7 @@ ProxiedConnection::~ProxiedConnection() {
 		connection_->onDisconnected.disconnect(boost::bind(&ProxiedConnection::handleDisconnected, shared_from_this(), _1));
 	}
 	if (connected_) {
-		std::cerr << "Warning: Connection was still established." << std::endl;
+		SWIFT_LOG(warning) << "Connection was still established." << std::endl;
 	}
 }
 
@@ -65,8 +63,11 @@ void ProxiedConnection::listen() {
 }
 
 void ProxiedConnection::disconnect() {
+	cancelConnector();
 	connected_ = false;
-	connection_->disconnect();
+	if (connection_) {
+		connection_->disconnect();
+	}
 }
 
 void ProxiedConnection::handleDisconnected(const boost::optional<Error>& error) {

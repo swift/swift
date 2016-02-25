@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -50,6 +50,10 @@ void Connector::start() {
 }
 
 void Connector::stop() {
+	if (currentConnection) {
+		currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
+		currentConnection->disconnect();
+	}
 	finish(boost::shared_ptr<Connection>());
 }
 
