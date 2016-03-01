@@ -53,7 +53,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 			boostIOService_ = boost::make_shared<boost::asio::io_service>();
 			connectionFactory_ = new BoostConnectionFactory(boostIOServiceThread_->getIOService(), eventLoop_);
 			idnConverter_ = PlatformIDNConverter::create();
-			domainNameResolver_ = new PlatformDomainNameResolver(idnConverter_, eventLoop_),
+			domainNameResolver_ = new PlatformDomainNameResolver(idnConverter_, eventLoop_);
 
 			tlsFactories_ = new PlatformTLSFactories();
 			tlsContextFactory_ = tlsFactories_->getTLSContextFactory();
