@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -59,6 +59,9 @@ void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, E
 		}
 		JID jid = actualJID.isValid() ? actualJID : ownJID.toBare();
 		setVCard(jid, vcard);
+	}
+	else {
+		onVCardRetrievalError(actualJID, error);
 	}
 }
 

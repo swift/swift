@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,6 +24,7 @@ ProfileController::ProfileController(VCardManager* vcardManager, ProfileWindowFa
 ProfileController::~ProfileController() {
 	if (profileWindow) {
 		vcardManager->onOwnVCardChanged.disconnect(boost::bind(&ProfileController::handleOwnVCardChanged, this, _1));
+		vcardManager->onVCardRetrievalError.disconnect(boost::bind(&ProfileController::handleVCardRetrievalError, this, _1, _2));
 		profileWindow->onVCardChangeRequest.disconnect(boost::bind(&ProfileController::handleVCardChangeRequest, this, _1));
 		profileWindow->onWindowAboutToBeClosed.disconnect(boost::bind(&ProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 	}
@@ -42,6 +43,7 @@ void ProfileController::handleUIEvent(UIEvent::ref event) {
 		profileWindow->onVCardChangeRequest.connect(boost::bind(&ProfileController::handleVCardChangeRequest, this, _1));
 		profileWindow->onWindowAboutToBeClosed.connect(boost::bind(&ProfileController::handleProfileWindowAboutToBeClosed, this, _1));
 		vcardManager->onOwnVCardChanged.connect(boost::bind(&ProfileController::handleOwnVCardChanged, this, _1));
+		vcardManager->onVCardRetrievalError.connect(boost::bind(&ProfileController::handleVCardRetrievalError, this, _1, _2));
 	}
 	gettingVCard = true;
 	updateDialogStatus();
@@ -68,6 +70,15 @@ void ProfileController::handleSetVCardResponse(ErrorPayload::ref error) {
 	else {
 		profileWindow->setError("");
 		profileWindow->hide();
+	}
+}
+
+void ProfileController::handleVCardRetrievalError(const JID& jid, ErrorPayload::ref /* error */) {
+	if ((jid == JID()) && profileWindow) {
+		profileWindow->setProcessing(false);
+		profileWindow->setEnabled(false);
+		profileWindow->setVCard(boost::make_shared<VCard>());
+		profileWindow->setError(QT_TRANSLATE_NOOP("", "There was an error fetching your current profile data"));
 	}
 }
 

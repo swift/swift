@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,16 +11,16 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/VCard.h>
-#include <Swiften/Elements/ErrorPayload.h>
-#include <Swiften/VCards/SetVCardRequest.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/VCards/SetVCardRequest.h>
 
 namespace Swift {
+	class IQRouter;
 	class JID;
 	class VCardStorage;
-	class IQRouter;
 
 	class SWIFTEN_API VCardManager : public boost::bsignals::trackable {
 		public:
@@ -42,6 +42,11 @@ namespace Swift {
 			 * The JID will always be bare.
 			 */
 			boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
+
+			/**
+			 * Emitted when we received an error on looking up a vCard.
+			 */
+			boost::signal<void (const JID&, ErrorPayload::ref)> onVCardRetrievalError;
 
 			/**
 			 * Emitted when our own vcard changes.

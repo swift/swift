@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,9 +13,9 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class UIEventStream;
-	class ProfileWindowFactory;
 	class ProfileWindow;
+	class ProfileWindowFactory;
+	class UIEventStream;
 	class VCardManager;
 
 	class ProfileController {
@@ -30,6 +30,7 @@ namespace Swift {
 			void handleVCardChangeRequest(VCard::ref vcard);
 			void handleSetVCardResponse(ErrorPayload::ref);
 			void handleOwnVCardChanged(VCard::ref vcard);
+			void handleVCardRetrievalError(const JID& jid, ErrorPayload::ref error);
 			void handleProfileWindowAboutToBeClosed(const JID&);
 			void updateDialogStatus();
 
