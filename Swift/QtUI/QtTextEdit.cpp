@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,9 +13,9 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include <QMenu>
-#include <QTime>
 #include <QTextDocument>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 
 #include <Swift/Controllers/SettingConstants.h>
@@ -181,15 +181,23 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
 #ifdef HAVE_SPELLCHECKER
 void QtTextEdit::setUpSpellChecker()
 {
+	delete highlighter_;
+	highlighter_ = NULL;
 	delete checker_;
 	checker_ = NULL;
 	if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
 		std::string dictPath = settings_->getSetting(SettingConstants::DICT_PATH);
 		std::string dictFile = settings_->getSetting(SettingConstants::DICT_FILE);
 		checker_ = SpellCheckerFactory().createSpellChecker(dictPath + dictFile);
-		delete highlighter_;
-		highlighter_ = NULL;
-		highlighter_ = new QtSpellCheckHighlighter(document(), checker_);
+		if (checker_) {
+			highlighter_ = new QtSpellCheckHighlighter(document(), checker_);
+		}
+		else {
+			// Spellchecking is not working, as we did not get a valid checker from the factory. Disable spellchecking.
+			SWIFT_LOG(warning) << "Spellchecking is currently misconfigured in Swift (e.g. missing dictionary or broken dictionary file). Disable spellchecking." << std::endl;
+			settings_->storeSetting(SettingConstants::SPELL_CHECKER, false);
+		}
+
 	}
 }
 #endif
@@ -213,7 +221,9 @@ void QtTextEdit::handleSettingChanged(const std::string& settings) {
 		|| settings == SettingConstants::DICT_FILE.getKey()) {
 #ifdef HAVE_SPELLCHECKER
 		setUpSpellChecker();
-		highlighter_->rehighlight();
+		if (highlighter_) {
+			highlighter_->rehighlight();
+		}
 #endif
 	}
 }
