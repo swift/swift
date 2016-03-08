@@ -175,8 +175,6 @@ if env["SCONS_STAGE"] == "build" :
 			"Queries/IQHandler.cpp",
 			"Queries/IQRouter.cpp",
 			"Queries/Request.cpp",
-			"Queries/Requests/GetInBandRegistrationFormRequest.cpp",
-			"Queries/Requests/SubmitInBandRegistrationFormRequest.cpp",
 			"Queries/Responders/SoftwareVersionResponder.cpp",
 			"Roster/RosterStorage.cpp",
 			"Roster/RosterMemoryStorage.cpp",
