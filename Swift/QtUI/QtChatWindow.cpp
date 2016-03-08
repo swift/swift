@@ -76,7 +76,7 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 	assert(settings);
 	setAcceptDrops(true);
 
-	alertStyleSheet_ = "background: rgb(255, 255, 153); color: black";
+	alertStyleSheet_ = ".QWidget, QTextEdit { background: rgb(255, 255, 153); color: black }";
 
 	QBoxLayout *layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
 	layout->setContentsMargins(0,0,0,0);
