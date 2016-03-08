@@ -208,19 +208,50 @@ bool ChatControllerBase::hasOpenWindow() const {
 	return chatWindow_ && chatWindow_->isVisible();
 }
 
-std::string ChatControllerBase::addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+ChatWindow::ChatMessage ChatControllerBase::buildChatWindowChatMessage(const std::string& message, bool senderIsSelf, const HighlightAction& fullMessageHighlightAction) {
+	ChatWindow::ChatMessage chatMessage;
 	if (boost::starts_with(message, "/me ")) {
-		return chatWindow_->addAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
-	} else {
-		return chatWindow_->addMessage(chatMessageParser_->parseMessageBody(message,highlighter_->getNick(),senderIsSelf), senderName, senderIsSelf, label, pathToString(avatarPath), time, highlight);
+		chatMessage = chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second);
+	}
+	else {
+		chatMessage = chatMessageParser_->parseMessageBody(message, highlighter_->getNick(), senderIsSelf);
+	}
+	chatMessage.setFullMessageHighlightAction(fullMessageHighlightAction);
+	return chatMessage;
+}
+
+void ChatControllerBase::handleHighlightActions(const ChatWindow::ChatMessage& chatMessage) {
+	std::set<std::string> playedSounds;
+	if (chatMessage.getFullMessageHighlightAction().playSound()) {
+		highlighter_->handleHighlightAction(chatMessage.getFullMessageHighlightAction());
+		playedSounds.insert(chatMessage.getFullMessageHighlightAction().getSoundFile());
+	}
+	foreach(boost::shared_ptr<ChatWindow::ChatMessagePart> part, chatMessage.getParts()) {
+		boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightMessage = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part);
+		if (highlightMessage && highlightMessage->action.playSound()) {
+			if (playedSounds.find(highlightMessage->action.getSoundFile()) == playedSounds.end()) {
+				highlighter_->handleHighlightAction(highlightMessage->action);
+				playedSounds.insert(highlightMessage->action.getSoundFile());
+			}
+		}
 	}
 }
 
-void ChatControllerBase::replaceMessage(const std::string& message, const std::string& id, bool senderIsSelf, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	if (boost::starts_with(message, "/me ")) {
-		chatWindow_->replaceWithAction(chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second), id, time, highlight);
-	} else {
-		chatWindow_->replaceMessage(chatMessageParser_->parseMessageBody(message,highlighter_->getNick(),senderIsSelf), id, time, highlight);
+std::string ChatControllerBase::addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time) {
+	if (chatMessage.isMeCommand()) {
+		return chatWindow_->addAction(chatMessage, senderName, senderIsSelf, label, pathToString(avatarPath), time);
+	}
+	else {
+		return chatWindow_->addMessage(chatMessage, senderName, senderIsSelf, label, pathToString(avatarPath), time);
+	}
+}
+
+void ChatControllerBase::replaceMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& id, const boost::posix_time::ptime& time) {
+	if (chatMessage.isMeCommand()) {
+		chatWindow_->replaceWithAction(chatMessage, id, time);
+	}
+	else {
+		chatWindow_->replaceMessage(chatMessage, id, time);
 	}
 }
 
@@ -236,9 +267,11 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 			targetedUnreadMessages_.push_back(messageEvent);
 		}
 	}
+
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
-	std::string body = message->getBody().get_value_or("");
-	HighlightAction highlight;
+	ChatWindow::ChatMessage chatMessage;
+	boost::optional<std::string> optionalBody = message->getBody();
+	std::string body = optionalBody.get_value_or("");
 	if (message->isError()) {
 		if (!message->getTo().getResource().empty()) {
 			std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
@@ -280,22 +313,25 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 		onActivity(body);
 
 		// Highlight
+		HighlightAction fullMessageHighlight;
 		if (!isIncomingMessageFromMe(message)) {
-			highlight = highlighter_->findAction(body, senderHighlightNameFromMessage(from));
+			fullMessageHighlight = highlighter_->findFirstFullMessageMatchAction(body, senderHighlightNameFromMessage(from));
 		}
 
 		boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
+		bool senderIsSelf = isIncomingMessageFromMe(message);
 		if (replace) {
-			std::string body = message->getBody().get_value_or("");
 			// Should check if the user has a previous message
 			std::map<JID, std::string>::iterator lastMessage;
 			lastMessage = lastMessagesUIID_.find(from);
 			if (lastMessage != lastMessagesUIID_.end()) {
-				replaceMessage(body, lastMessagesUIID_[from], isIncomingMessageFromMe(message), timeStamp, highlight);
+				chatMessage = buildChatWindowChatMessage(body, senderIsSelf, fullMessageHighlight);
+				replaceMessage(chatMessage, lastMessagesUIID_[from], timeStamp);
 			}
 		}
 		else {
-			addMessageHandleIncomingMessage(from, body, isIncomingMessageFromMe(message), label, timeStamp, highlight);
+			chatMessage = buildChatWindowChatMessage(body, senderIsSelf, fullMessageHighlight);
+			addMessageHandleIncomingMessage(from, chatMessage, senderIsSelf, label, timeStamp);
 		}
 
 		logMessage(body, from, selfJID_, timeStamp, true);
@@ -303,11 +339,11 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
 	chatWindow_->show();
 	chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
 	onUnreadCountChanged();
-	postHandleIncomingMessage(messageEvent, highlight);
+	postHandleIncomingMessage(messageEvent, chatMessage);
 }
 
-void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp, const HighlightAction& highlight) {
-	lastMessagesUIID_[from] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp, highlight);
+void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
+	lastMessagesUIID_[from] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp);
 }
 
 std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {

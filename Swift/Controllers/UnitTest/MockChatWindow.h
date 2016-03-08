@@ -18,12 +18,12 @@ namespace Swift {
 			MockChatWindow() : labelsEnabled_(false), impromptuMUCSupported_(false) {}
 			virtual ~MockChatWindow();
 
-			virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {
+			virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
 				lastMessageBody_ = bodyFromMessage(message);
 				return "id";
 			}
 
-			virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {return "id";}
+			virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {return "id";}
 
 			virtual std::string addSystemMessage(const ChatMessage& message, Direction /*direction*/) {
 				lastAddedSystemMessage_ = message;
@@ -35,8 +35,8 @@ namespace Swift {
 			}
 
 			virtual void addErrorMessage(const ChatMessage& /*message*/) {}
-			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
-			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/) {}
+			virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
+			virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
 			virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour /*timestampBehaviour*/) {
 				lastReplacedMessage_ = message;
 			}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,7 +74,7 @@ QString chatMessageToString(const ChatWindow::ChatMessage& message) {
 	return result;
 }
 
-std::string QtPlainChatView::addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time, const HighlightAction& /*highlight*/) {
+std::string QtPlainChatView::addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time) {
 	QString text = "<p>";
 	if (label) {
 		text += P2QSTRING(label->getLabel()) + "<br/>";
@@ -89,7 +89,7 @@ std::string QtPlainChatView::addMessage(const ChatWindow::ChatMessage& message, 
 	return idx;
 }
 
-std::string QtPlainChatView::addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time, const HighlightAction& /*highlight*/) {
+std::string QtPlainChatView::addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time) {
 	QString text = "<p>";
 	if (label) {
 		text += P2QSTRING(label->getLabel()) + "<br/>";
@@ -129,7 +129,7 @@ void QtPlainChatView::addErrorMessage(const ChatWindow::ChatMessage& message)
 	log_->append(text);
 }
 
-void QtPlainChatView::replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& /*highlight*/)
+void QtPlainChatView::replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time)
 {
 	QString text = "<p>";
 	if (lastMessageLabel_[id]) {
@@ -142,7 +142,7 @@ void QtPlainChatView::replaceMessage(const ChatWindow::ChatMessage& message, con
 	log_->append(text);
 }
 
-void QtPlainChatView::replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& /*highlight*/)
+void QtPlainChatView::replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time)
 {
 	QString text = "<p>";
 	if (lastMessageLabel_[id]) {

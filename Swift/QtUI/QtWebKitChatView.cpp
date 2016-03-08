@@ -472,14 +472,13 @@ void QtWebKitChatView::resetTopInsertPoint() {
 }
 
 std::string QtWebKitChatView::addMessage(
-		const ChatWindow::ChatMessage& message,
-		const std::string& senderName,
-		bool senderIsSelf,
-		boost::shared_ptr<SecurityLabel> label,
-		const std::string& avatarPath,
-		const boost::posix_time::ptime& time,
-		const HighlightAction& highlight) {
-	return addMessage(chatMessageToHTML(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
+		const ChatWindow::ChatMessage& message, 
+		const std::string& senderName, 
+		bool senderIsSelf, 
+		boost::shared_ptr<SecurityLabel> label, 
+		const std::string& avatarPath, 
+		const boost::posix_time::ptime& time) {
+	return addMessage(chatMessageToHTML(message), senderName, senderIsSelf, label, avatarPath, "", time, message.getFullMessageHighlightAction(), ChatSnippet::getDirection(message));
 }
 
 QString QtWebKitChatView::getHighlightSpanStart(const std::string& text, const std::string& background) {
@@ -524,7 +523,7 @@ QString QtWebKitChatView::chatMessageToHTML(const ChatWindow::ChatMessage& messa
 			continue;
 		}
 		if ((highlightPart = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part))) {
-			QString spanStart = getHighlightSpanStart(highlightPart->foregroundColor, highlightPart->backgroundColor);
+			QString spanStart = getHighlightSpanStart(highlightPart->action.getTextColor(), highlightPart->action.getTextBackground());
 			result += spanStart + QtUtilities::htmlEscape(P2QSTRING(highlightPart->text)) + "</span>";
 			continue;
 		}
@@ -572,8 +571,8 @@ std::string QtWebKitChatView::addMessage(
 	return id;
 }
 
-std::string QtWebKitChatView::addAction(const ChatWindow::ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	return addMessage(" *" + chatMessageToHTML(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, highlight, ChatSnippet::getDirection(message));
+std::string QtWebKitChatView::addAction(const ChatWindow::ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+	return addMessage(" *" + chatMessageToHTML(message) + "*", senderName, senderIsSelf, label, avatarPath, "font-style:italic ", time, message.getFullMessageHighlightAction(), ChatSnippet::getDirection(message));
 }
 
 static QString encodeButtonArgument(const QString& str) {
@@ -815,12 +814,12 @@ std::string QtWebKitChatView::addSystemMessage(const ChatWindow::ChatMessage& me
 	return id;
 }
 
-void QtWebKitChatView::replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(" *" + chatMessageToHTML(message) + "*", id, time, "font-style:italic ", highlight);
+void QtWebKitChatView::replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) {
+	replaceMessage(" *" + chatMessageToHTML(message) + "*", id, time, "font-style:italic ", message.getFullMessageHighlightAction());
 }
 
-void QtWebKitChatView::replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
-	replaceMessage(chatMessageToHTML(message), id, time, "", highlight);
+void QtWebKitChatView::replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) {
+	replaceMessage(chatMessageToHTML(message), id, time, "", message.getFullMessageHighlightAction());
 }
 
 void QtWebKitChatView::replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, ChatWindow::TimestampBehaviour timestampBehavior) {

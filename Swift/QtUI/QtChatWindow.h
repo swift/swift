@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -80,15 +80,15 @@ namespace Swift {
 		public:
 			QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons);
 			virtual ~QtChatWindow();
-			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+			std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 
 			std::string addSystemMessage(const ChatMessage& message, Direction direction);
 			void addPresenceMessage(const ChatMessage& message, Direction direction);
 			void addErrorMessage(const ChatMessage& message);
 
-			void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time);
+			void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time);
 			// File transfer related stuff
 			std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description);
 			void setFileTransferProgress(std::string id, const int percentageDone);

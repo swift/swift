@@ -4,9 +4,16 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include <Swift/Controllers/HighlightRule.h>
 
@@ -24,7 +31,7 @@ namespace Swift {
 			void setNick(const std::string& nick) { nick_ = nick; }
 			std::string getNick() const { return nick_; }
 
-			HighlightAction findAction(const std::string& body, const std::string& sender) const;
+			HighlightAction findFirstFullMessageMatchAction(const std::string& body, const std::string& sender) const;
 
 			void handleHighlightAction(const HighlightAction& action);
 

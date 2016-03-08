@@ -5,13 +5,15 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/foreach.h>
 #include <Swift/Controllers/Highlighter.h>
+
+#include <Swiften/Base/foreach.h>
+
 #include <Swift/Controllers/HighlightManager.h>
 
 namespace Swift {
@@ -28,17 +30,19 @@ void Highlighter::setMode(Mode mode)
 	messageType_ = mode_ == ChatMode ? HighlightRule::ChatMessage : HighlightRule::MUCMessage;
 }
 
-HighlightAction Highlighter::findAction(const std::string& body, const std::string& sender) const
+HighlightAction Highlighter::findFirstFullMessageMatchAction(const std::string& body, const std::string& sender) const
 {
+	HighlightAction match;
 	HighlightRulesListPtr rules = manager_->getRules();
 	for (size_t i = 0; i < rules->getSize(); ++i) {
 		const HighlightRule& rule = rules->getRule(i);
-		if (rule.isMatch(body, sender, nick_, messageType_)) {
-			return rule.getAction();
+		if (rule.isMatch(body, sender, nick_, messageType_) && rule.getAction().highlightWholeMessage()) {
+			match = rule.getAction();
+			break;
 		}
 	}
 
-	return HighlightAction();
+	return match;
 }
 
 void Highlighter::handleHighlightAction(const HighlightAction& action)

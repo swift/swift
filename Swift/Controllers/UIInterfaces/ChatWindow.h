@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
@@ -55,8 +56,31 @@ namespace Swift {
 					const std::vector<boost::shared_ptr<ChatMessagePart> >& getParts() const {
 						return parts_;
 					}
+
+					void setFullMessageHighlightAction(const HighlightAction& action) {
+						fullMessageHighlightAction_ = action;
+					}
+
+					const HighlightAction& getFullMessageHighlightAction() const {
+						return fullMessageHighlightAction_;
+					}
+
+					bool isMeCommand() const {
+						bool isMeCommand = false;
+						if (!parts_.empty()) {
+							boost::shared_ptr<ChatTextMessagePart> textPart = boost::dynamic_pointer_cast<ChatTextMessagePart>(parts_[0]);
+							if (textPart) {
+								if (boost::starts_with(textPart->text, "/me ")) {
+									isMeCommand = true;
+								}
+							}
+						}
+						return isMeCommand;
+					}
+
 				private:
 					std::vector<boost::shared_ptr<ChatMessagePart> > parts_;
+					HighlightAction fullMessageHighlightAction_;
 			};
 
 			class ChatTextMessagePart : public ChatMessagePart {
@@ -79,8 +103,7 @@ namespace Swift {
 
 			class ChatHighlightingMessagePart : public ChatMessagePart {
 				public:
-					std::string foregroundColor;
-					std::string backgroundColor;
+					HighlightAction action;
 					std::string text;
 			};
 
@@ -111,11 +134,11 @@ namespace Swift {
 			/** Add message to window.
 			 * @return id of added message (for acks).
 			 */
-			virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
 			/** Adds action to window.
 			 * @return id of added message (for acks);
 			 */
-			virtual std::string addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual std::string addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
 
 			/** Adds system message to window
 			 * @return id of added message (for replacement)
@@ -124,9 +147,9 @@ namespace Swift {
 			virtual void addPresenceMessage(const ChatMessage& message, Direction direction) = 0;
 
 			virtual void addErrorMessage(const ChatMessage& message) = 0;
-			virtual void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
 			virtual void replaceSystemMessage(const ChatMessage& message, const std::string& id, const TimestampBehaviour timestampBehaviour) = 0;
-			virtual void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) = 0;
+			virtual void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
 			
 			// File transfer related stuff
 			virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) = 0;

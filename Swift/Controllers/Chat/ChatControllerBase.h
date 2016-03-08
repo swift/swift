@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -55,8 +55,8 @@ namespace Swift {
 			bool hasOpenWindow() const;
 			virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
 			void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-			std::string addMessage(const std::string& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			void replaceMessage(const std::string& message, const std::string& id, bool senderIsSelf, const boost::posix_time::ptime& time, const HighlightAction& highlight);
+			std::string addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time);
+			void replaceMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& id, const boost::posix_time::ptime& time);
 			virtual void setOnline(bool online);
 			void setEnabled(bool enabled);
 			virtual void setToJID(const JID& jid) {toJID_ = jid;}
@@ -82,8 +82,8 @@ namespace Swift {
 			virtual std::string senderHighlightNameFromMessage(const JID& from) = 0;
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
-			virtual void addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight);
-			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&) {}
+			virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time);
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage&) {}
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) {}
 			virtual bool isFromContact(const JID& from);
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
@@ -95,11 +95,14 @@ namespace Swift {
 			/** JID any iq for account should go to - bare except for PMs */
 			virtual JID getBaseJID();
 			virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) = 0;
+			ChatWindow::ChatMessage buildChatWindowChatMessage(const std::string& message, bool senderIsSelf, const HighlightAction& fullMessageHighlightAction);
+			void handleHighlightActions(const ChatWindow::ChatMessage& chatMessage);
 
 		private:
 			IDGenerator idGenerator_;
 			std::string lastSentMessageStanzaID_;
 			void createDayChangeTimer();
+
 			void handleSendMessageRequest(const std::string &body, bool isCorrectionMessage);
 			void handleAllMessagesRead();
 			void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);

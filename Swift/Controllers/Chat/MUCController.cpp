@@ -576,23 +576,23 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
 	}
 }
 
-void MUCController::addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) {
 	if (from.isBare()) {
-		chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "%1%")) % message)), ChatWindow::DefaultDirection);
+		chatWindow_->addSystemMessage(message, ChatWindow::DefaultDirection);
 	}
 	else {
-		ChatControllerBase::addMessageHandleIncomingMessage(from, message, senderIsSelf, label, time, highlight);
+		ChatControllerBase::addMessageHandleIncomingMessage(from, message, senderIsSelf, label, time);
 	}
 }
 
-void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction& highlight) {
+void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
 	boost::shared_ptr<Message> message = messageEvent->getStanza();
 	if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {
 		if (messageTargetsMe(message) || isImpromptu_) {
 			eventController_->handleIncomingEvent(messageEvent);
 		}
 		if (!messageEvent->getConcluded()) {
-			highlighter_->handleHighlightAction(highlight);
+			handleHighlightActions(chatMessage);
 		}
 	}
 }
@@ -1074,7 +1074,7 @@ void MUCController::addRecentLogs() {
 		bool senderIsSelf = nick_ == message.getFromJID().getResource();
 
 		// the chatWindow uses utc timestamps
-		addMessage(message.getMessage(), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), avatarManager_->getAvatarPath(message.getFromJID()), message.getTime() - boost::posix_time::hours(message.getOffset()), HighlightAction());
+		addMessage(chatMessageParser_->parseMessageBody(message.getMessage()), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), avatarManager_->getAvatarPath(message.getFromJID()), message.getTime() - boost::posix_time::hours(message.getOffset()));
 	}
 }
 

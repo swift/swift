@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -35,18 +35,18 @@ namespace Swift {
 			/** Add message to window.
 			 * @return id of added message (for acks).
 			 */
-			virtual std::string addMessage(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/);
+			virtual std::string addMessage(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/);
 			/** Adds action to window.
 			 * @return id of added message (for acks);
 			 */
-			virtual std::string addAction(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/);
+			virtual std::string addAction(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/);
 
 			virtual std::string addSystemMessage(const ChatWindow::ChatMessage& /*message*/, ChatWindow::Direction /*direction*/);
 			virtual void addPresenceMessage(const ChatWindow::ChatMessage& /*message*/, ChatWindow::Direction /*direction*/);
 			virtual void addErrorMessage(const ChatWindow::ChatMessage& /*message*/);
 
-			virtual void replaceMessage(const ChatWindow::ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/);
-			virtual void replaceWithAction(const ChatWindow::ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/, const HighlightAction& /*highlight*/);
+			virtual void replaceMessage(const ChatWindow::ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/);
+			virtual void replaceWithAction(const ChatWindow::ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/);
 			virtual void replaceLastMessage(const ChatWindow::ChatMessage& /*message*/, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/);
 			virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/);
 			virtual void setAckState(const std::string& /*id*/, ChatWindow::AckState /*state*/);

@@ -1,22 +1,21 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 
-#include <vector>
 #include <utility>
+#include <vector>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Regex.h>
 #include <Swiften/Base/foreach.h>
 
 #include <SwifTools/Linkify.h>
-
 
 namespace Swift {
 
@@ -170,8 +169,7 @@ namespace Swift {
 								}
 								boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart = boost::make_shared<ChatWindow::ChatHighlightingMessagePart>();
 								highlightPart->text = match.str();
-								highlightPart->foregroundColor = rule.getAction().getTextColor();
-								highlightPart->backgroundColor = rule.getAction().getTextBackground();
+								highlightPart->action = rule.getAction();
 								newMessage.append(highlightPart);
 								start = matchEnd;
 							}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -81,8 +81,8 @@ namespace Swift {
 			virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
 			virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const SWIFTEN_OVERRIDE;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) SWIFTEN_OVERRIDE;
-			virtual void addMessageHandleIncomingMessage(const JID& from, const std::string& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time, const HighlightAction& highlight) SWIFTEN_OVERRIDE;
-			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const HighlightAction&) SWIFTEN_OVERRIDE;
+			virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
 			virtual void cancelReplaces() SWIFTEN_OVERRIDE;
 			virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
 

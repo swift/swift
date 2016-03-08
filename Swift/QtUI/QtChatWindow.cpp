@@ -866,14 +866,14 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
 	messageLog_->addMUCInvitation(senderName, jid, reason, password, direct, isImpromptu, isContinuation);
 }
 
-std::string QtChatWindow::addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+std::string QtChatWindow::addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
 	handleAppendedToLog();
-	return messageLog_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time, highlight);
+	return messageLog_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
 }
 
-std::string QtChatWindow::addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+std::string QtChatWindow::addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
 	handleAppendedToLog();
-	return messageLog_->addAction(message, senderName, senderIsSelf, label, avatarPath, time, highlight);
+	return messageLog_->addAction(message, senderName, senderIsSelf, label, avatarPath, time);
 }
 
 
@@ -893,14 +893,14 @@ void QtChatWindow::addErrorMessage(const ChatMessage& message) {
 }
 
 
-void QtChatWindow::replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+void QtChatWindow::replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) {
 	handleAppendedToLog();
-	messageLog_->replaceMessage(message, id, time, highlight);
+	messageLog_->replaceMessage(message, id, time);
 }
 
-void QtChatWindow::replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time, const HighlightAction& highlight) {
+void QtChatWindow::replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) {
 	handleAppendedToLog();
-	messageLog_->replaceWithAction(message, id, time, highlight);
+	messageLog_->replaceWithAction(message, id, time);
 }
 
 std::string QtChatWindow::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {

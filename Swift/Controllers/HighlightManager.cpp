@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,30 +49,26 @@ namespace Swift {
 
 HighlightManager::HighlightManager(SettingsProvider* settings)
 	: settings_(settings)
-	, storingSettings_(false)
-{
+	, storingSettings_(false) {
 	rules_ = boost::make_shared<HighlightRulesList>();
 	loadSettings();
 	handleSettingChangedConnection_ = settings_->onSettingChanged.connect(boost::bind(&HighlightManager::handleSettingChanged, this, _1));
 }
 
-void HighlightManager::handleSettingChanged(const std::string& settingPath)
-{
+void HighlightManager::handleSettingChanged(const std::string& settingPath) {
 	if (!storingSettings_ && SettingConstants::HIGHLIGHT_RULES.getKey() == settingPath) {
 		loadSettings();
 	}
 }
 
-std::string HighlightManager::rulesToString() const
-{
+std::string HighlightManager::rulesToString() const {
 	std::stringstream stream;
 	boost::archive::text_oarchive archive(stream);
 	archive << rules_->list_;
 	return stream.str();
 }
 
-std::vector<HighlightRule> HighlightManager::getDefaultRules()
-{
+std::vector<HighlightRule> HighlightManager::getDefaultRules() {
 	std::vector<HighlightRule> rules;
 
 	HighlightRule chatNotificationRule;
@@ -92,26 +88,22 @@ std::vector<HighlightRule> HighlightManager::getDefaultRules()
 	return rules;
 }
 
-HighlightRule HighlightManager::getRule(int index) const
-{
+HighlightRule HighlightManager::getRule(int index) const {
 	assert(index >= 0 && static_cast<size_t>(index) < rules_->getSize());
 	return rules_->getRule(static_cast<size_t>(index));
 }
 
-void HighlightManager::setRule(int index, const HighlightRule& rule)
-{
+void HighlightManager::setRule(int index, const HighlightRule& rule) {
 	assert(index >= 0 && static_cast<size_t>(index) < rules_->getSize());
 	rules_->list_[static_cast<size_t>(index)] = rule;
 }
 
-void HighlightManager::insertRule(int index, const HighlightRule& rule)
-{
+void HighlightManager::insertRule(int index, const HighlightRule& rule) {
 	assert(index >= 0 && boost::numeric_cast<std::vector<std::string>::size_type>(index) <= rules_->getSize());
 	rules_->list_.insert(rules_->list_.begin() + index, rule);
 }
 
-void HighlightManager::removeRule(int index)
-{
+void HighlightManager::removeRule(int index) {
 	assert(index >= 0 && boost::numeric_cast<std::vector<std::string>::size_type>(index) < rules_->getSize());
 	rules_->list_.erase(rules_->list_.begin() + index);
 }
@@ -124,15 +116,13 @@ void HighlightManager::swapRules(const size_t first, const size_t second) {
 	rules_->setRule(second, swap);
 }
 
-void HighlightManager::storeSettings()
-{
+void HighlightManager::storeSettings() {
 	storingSettings_ = true;	// don't reload settings while saving
 	settings_->storeSetting(SettingConstants::HIGHLIGHT_RULES, rulesToString());
 	storingSettings_ = false;
 }
 
-void HighlightManager::loadSettings()
-{
+void HighlightManager::loadSettings() {
 	std::string rulesString = settings_->getSetting(SettingConstants::HIGHLIGHT_RULES);
 	std::stringstream stream;
 	stream << rulesString;
@@ -144,8 +134,7 @@ void HighlightManager::loadSettings()
 	}
 }
 
-Highlighter* HighlightManager::createHighlighter()
-{
+Highlighter* HighlightManager::createHighlighter() {
 	return new Highlighter(this);
 }
 

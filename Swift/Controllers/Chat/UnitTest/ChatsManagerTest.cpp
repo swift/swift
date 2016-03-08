@@ -4,6 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <set>
+#include <map>
+
 #include <boost/bind.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
@@ -75,6 +78,8 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 	CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
 	CPPUNIT_TEST(testChatControllerPMPresenceHandling);
 	CPPUNIT_TEST(testLocalMUCServiceDiscoveryResetOnDisconnect);
+	CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
+	CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
 	CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -110,6 +115,9 @@ public:
 		wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsProvider_);
 		wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
 		highlightManager_ = new HighlightManager(settings_);
+		handledHighlightActions_ = 0;
+		soundsPlayed_.clear();
+		highlightManager_->onHighlight.connect(boost::bind(&ChatsManagerTest::handleHighlightAction, this, _1));
 
 		crypto_ = PlatformCryptoProvider::create();
 		vcardStorage_ = new VCardMemoryStorage(crypto_);
@@ -156,7 +164,7 @@ public:
 	void testFirstOpenWindowIncoming() {
 		JID messageJID("testling@test.com/resource1");
 		
-		MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+		MockChatWindow* window = new MockChatWindow();
 		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
 
 		boost::shared_ptr<Message> message(new Message());
@@ -724,6 +732,77 @@ public:
 		CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
 	}
 
+	void testChatControllerHighlightingNotificationTesting() {
+		HighlightRule keywordRuleA;
+		keywordRuleA.setMatchChat(true);
+		std::vector<std::string> keywordsA;
+		keywordsA.push_back("Romeo");
+		keywordRuleA.setKeywords(keywordsA);
+		keywordRuleA.getAction().setTextColor("yellow");
+		keywordRuleA.getAction().setPlaySound(true);
+		highlightManager_->insertRule(0, keywordRuleA);
+
+		HighlightRule keywordRuleB;
+		keywordRuleB.setMatchChat(true);
+		std::vector<std::string> keywordsB;
+		keywordsB.push_back("Juliet");
+		keywordRuleB.setKeywords(keywordsB);
+		keywordRuleB.getAction().setTextColor("green");
+		keywordRuleB.getAction().setPlaySound(true);
+		keywordRuleB.getAction().setSoundFile("/tmp/someotherfile.wav");
+		highlightManager_->insertRule(0, keywordRuleB);
+
+		JID messageJID = JID("testling@test.com");
+
+		MockChatWindow* window = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+		boost::shared_ptr<Message> message(new Message());
+		message->setFrom(messageJID);
+		std::string body("This message should cause two sounds: Juliet and Romeo.");
+		message->setBody(body);
+		manager_->handleIncomingMessage(message);
+
+		CPPUNIT_ASSERT_EQUAL(2, handledHighlightActions_);
+		CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.getAction().getSoundFile()) != soundsPlayed_.end());
+		CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.getAction().getSoundFile()) != soundsPlayed_.end());
+	}
+
+	void testChatControllerHighlightingNotificationDeduplicateSounds() {
+		HighlightRule keywordRuleA;
+		keywordRuleA.setMatchChat(true);
+		std::vector<std::string> keywordsA;
+		keywordsA.push_back("Romeo");
+		keywordRuleA.setKeywords(keywordsA);
+		keywordRuleA.getAction().setTextColor("yellow");
+		keywordRuleA.getAction().setPlaySound(true);
+		highlightManager_->insertRule(0, keywordRuleA);
+
+		HighlightRule keywordRuleB;
+		keywordRuleB.setMatchChat(true);
+		std::vector<std::string> keywordsB;
+		keywordsB.push_back("Juliet");
+		keywordRuleB.setKeywords(keywordsB);
+		keywordRuleB.getAction().setTextColor("green");
+		keywordRuleB.getAction().setPlaySound(true);
+		highlightManager_->insertRule(0, keywordRuleB);
+
+		JID messageJID = JID("testling@test.com");
+
+		MockChatWindow* window = new MockChatWindow();
+		mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+		boost::shared_ptr<Message> message(new Message());
+		message->setFrom(messageJID);
+		std::string body("This message should cause one sound, because both actions have the same sound: Juliet and Romeo.");
+		message->setBody(body);
+		manager_->handleIncomingMessage(message);
+
+		CPPUNIT_ASSERT_EQUAL(1, handledHighlightActions_);
+		CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.getAction().getSoundFile()) != soundsPlayed_.end());
+		CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.getAction().getSoundFile()) != soundsPlayed_.end());
+	}
+
 private:
 	boost::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {
 		boost::shared_ptr<Message> message = boost::make_shared<Message>();
@@ -736,6 +815,13 @@ private:
 
 	size_t st(int i) {
 		return static_cast<size_t>(i);
+	}
+
+	void handleHighlightAction(const HighlightAction& action) {
+		handledHighlightActions_++;
+		if (action.playSound()) {
+			soundsPlayed_.insert(action.getSoundFile());
+		}
 	}
 
 private:
@@ -775,6 +861,8 @@ private:
 	CryptoProvider* crypto_;
 	VCardStorage* vcardStorage_;
 	std::map<std::string, std::string> emoticons_;
+	int handledHighlightActions_;
+	std::set<std::string> soundsPlayed_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

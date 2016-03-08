@@ -208,10 +208,10 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 	}
 }
 
-void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction& highlight) {
+void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
 	eventController_->handleIncomingEvent(messageEvent);
 	if (!messageEvent->getConcluded()) {
-		highlighter_->handleHighlightAction(highlight);
+		handleHighlightActions(chatMessage);
 	}
 }
 
@@ -316,9 +316,9 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
 	boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
 	if (replace) {
 		eraseIf(unackedStanzas_, PairSecondEquals<boost::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
-		replaceMessage(body, myLastMessageUIID_, true, boost::posix_time::microsec_clock::universal_time(), HighlightAction());
+		replaceMessage(chatMessageParser_->parseMessageBody(body, "", true), myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time());
 	} else {
-		myLastMessageUIID_ = addMessage(body, QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), avatarManager_->getAvatarPath(selfJID_), boost::posix_time::microsec_clock::universal_time(), HighlightAction());
+		myLastMessageUIID_ = addMessage(chatMessageParser_->parseMessageBody(body, "", true), QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), avatarManager_->getAvatarPath(selfJID_), boost::posix_time::microsec_clock::universal_time());
 	}
 
 	if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty() ) {

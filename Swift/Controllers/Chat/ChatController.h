@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -52,7 +52,7 @@ namespace Swift {
 			virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
 			virtual void postSendMessage(const std::string &body, boost::shared_ptr<Stanza> sentStanza) SWIFTEN_OVERRIDE;
 			virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) SWIFTEN_OVERRIDE;
-			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const HighlightAction&) SWIFTEN_OVERRIDE;
+			virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
 			virtual void preSendMessageRequest(boost::shared_ptr<Message>) SWIFTEN_OVERRIDE;
 			virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
 			virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
