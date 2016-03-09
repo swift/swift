@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ using namespace Swift;
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *) center didActivateNotification:(NSUserNotification *)notification {
 	(void)center;
-	std::string identifier = NS2STDSTRING(notification.identifier);
+	std::string identifier = ns2StdString(notification.identifier);
 	notifier->handleUserNotificationActivated(identifier);
 }
 

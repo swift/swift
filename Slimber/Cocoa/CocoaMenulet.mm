@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2012-2013 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/Cocoa/CocoaMenulet.h"
-
-#pragma GCC diagnostic ignored "-Wold-style-cast"
+#include <Slimber/Cocoa/CocoaMenulet.h>
 
 #include <boost/function.hpp>
+
+#include <SwifTools/Cocoa/CocoaUtil.h>
 
 CocoaMenulet::CocoaMenulet() {
 	restartAction = [[CocoaAction alloc] initWithFunction: 
@@ -19,7 +19,7 @@ CocoaMenulet::CocoaMenulet() {
 			statusItemWithLength: NSVariableStatusItemLength] retain];
 	[statusItem setHighlightMode: YES];
 	[statusItem setEnabled: YES];
-	[statusItem setToolTip: @"Slimber"];	
+	[statusItem setToolTip: @"Slimber"];
 	[statusItem setMenu: menu];
 }
 
@@ -30,8 +30,7 @@ CocoaMenulet::~CocoaMenulet() {
 }
 
 void CocoaMenulet::setIcon(const std::string& icon) {
-	NSString* path = [[NSBundle mainBundle] pathForResource: 
-			[NSString stringWithUTF8String: icon.c_str()] ofType:@"png"];
+	NSString* path = [[NSBundle mainBundle] pathForResource: std2NSString(icon) ofType:@"png"];
 	NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];
 	[statusItem setImage: image];
 	[image release];
@@ -44,12 +43,10 @@ void CocoaMenulet::clear() {
 }
 
 void CocoaMenulet::addItem(const std::string& name, const std::string& icon) {
-	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: 
-		[NSString stringWithUTF8String: name.c_str()]
+	NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: std2NSString(name)
 		action: NULL keyEquivalent: @""];
 	if (!icon.empty()) {
-		NSString* path = [[NSBundle mainBundle] pathForResource: 
-				[NSString stringWithUTF8String: icon.c_str()] ofType:@"png"];
+		NSString* path = [[NSBundle mainBundle] pathForResource: std2NSString(icon) ofType:@"png"];
 		NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];
 		[item setImage: image];
 		[image release];

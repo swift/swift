@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,9 +40,9 @@ boost::optional<ITunesInterface::Track> ITunesInterface::getCurrentTrack() const
 		return boost::optional<ITunesInterface::Track>();
 	}
 	ITunesInterface::Track result;
-	result.name = NS2STDSTRING(currentTrack.name);
-	result.artist = NS2STDSTRING(currentTrack.artist);
-	result.album = NS2STDSTRING(currentTrack.album);
+	result.name = ns2StdString(currentTrack.name);
+	result.artist = ns2StdString(currentTrack.artist);
+	result.album = ns2StdString(currentTrack.album);
 	result.trackNumber = currentTrack.trackNumber;
 	result.duration = currentTrack.duration;
 	result.rating = currentTrack.rating;

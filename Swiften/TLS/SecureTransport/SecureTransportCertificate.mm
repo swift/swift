@@ -25,6 +25,19 @@ T bridge_cast(S source) {
 
 }
 
+namespace {
+
+inline std::string ns2StdString(NSString* _Nullable nsString);
+inline std::string ns2StdString(NSString* _Nullable nsString) {
+	std::string stdString;
+	if (nsString != nil) {
+		stdString = std::string([nsString cStringUsingEncoding:NSUTF8StringEncoding]);
+	}
+	return stdString;
+}
+
+}
+
 namespace Swift {
 
 SecureTransportCertificate::SecureTransportCertificate(SecCertificateRef certificate) {
@@ -49,9 +62,6 @@ SecureTransportCertificate::~SecureTransportCertificate() {
 
 }
 
-#define NS2STDSTRING(a) (a == nil ? std::string() : std::string([a cStringUsingEncoding:NSUTF8StringEncoding]))
-
-
 void SecureTransportCertificate::parse() {
 	assert(certificateHandle_);
 	CFErrorRef error = NULL;
@@ -63,7 +73,7 @@ void SecureTransportCertificate::parse() {
 		CFStringRef subject = SecCertificateCopySubjectSummary(certificateHandle_.get());
 		if (subject) {
 			NSString* subjectStr = bridge_cast<NSString*>(subject);
-			subjectName_ = NS2STDSTRING(subjectStr);
+			subjectName_ = ns2StdString(subjectStr);
 			CFRelease(subject);
 		}
 
@@ -72,7 +82,7 @@ void SecureTransportCertificate::parse() {
 		OSStatus error = SecCertificateCopyCommonName(certificateHandle_.get(), &commonName);
 		if (!error && commonName) {
 			NSString* commonNameStr = bridge_cast<NSString*>(commonName);
-			commonNames_.push_back(NS2STDSTRING(commonNameStr));
+			commonNames_.push_back(ns2StdString(commonNameStr));
 		}
 		if (commonName) {
 			CFRelease(commonName);
@@ -83,14 +93,14 @@ void SecureTransportCertificate::parse() {
 		NSDictionary* subjectAltNamesDict = certDict[@"2.5.29.17"][@"value"];
 
 		for (NSDictionary* entry in subjectAltNamesDict) {
-			if ([entry[@"label"] isEqualToString:[NSString stringWithUTF8String:ID_ON_XMPPADDR_OID]]) {
-				xmppAddresses_.push_back(NS2STDSTRING(entry[@"value"]));
+			if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_XMPPADDR_OID])]) {
+				xmppAddresses_.push_back(ns2StdString(entry[@"value"]));
 			}
-			else if ([entry[@"label"] isEqualToString:[NSString stringWithUTF8String:ID_ON_DNSSRV_OID]]) {
-				srvNames_.push_back(NS2STDSTRING(entry[@"value"]));
+			else if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_DNSSRV_OID])]) {
+				srvNames_.push_back(ns2StdString(entry[@"value"]));
 			}
 			else if ([entry[@"label"] isEqualToString:@"DNS Name"]) {
-				dnsNames_.push_back(NS2STDSTRING(entry[@"value"]));
+				dnsNames_.push_back(ns2StdString(entry[@"value"]));
 			}
 		}
 		CFRelease(valueDict);

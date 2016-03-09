@@ -57,11 +57,11 @@ void NotificationCenterNotifier::showMessage(Type type, const std::string& subje
 	if (std::find(defaultTypes.begin(), defaultTypes.end(), type) == defaultTypes.end()) {
 		return;
 	}
-	NSImage* image = [[NSImage alloc] initWithContentsOfFile: STD2NSSTRING(picture.string())];
+	NSImage* image = [[NSImage alloc] initWithContentsOfFile: std2NSString(picture.string())];
 	NSUserNotification* notification = [[NSUserNotification alloc] init];
-	[notification setTitle:STD2NSSTRING(typeToString(type))];
-	[notification setSubtitle:STD2NSSTRING(subject)];
-	[notification setInformativeText:STD2NSSTRING(description)];
+	[notification setTitle:std2NSString(typeToString(type))];
+	[notification setSubtitle:std2NSString(subject)];
+	[notification setInformativeText:std2NSString(description)];
 	[notification setContentImage: image];
 	[image release];
 
@@ -73,7 +73,7 @@ void NotificationCenterNotifier::showMessage(Type type, const std::string& subje
 	/// \todo Currently the elements are only removed on application exit. Ideally the notifications not required anymore
 	///       are removed from the map; e.g. when visiting a chat view, all notifications from that view can be removed from
 	///       the map and the NSUserNotificationCenter.
-	p->callbacksForNotifications[NS2STDSTRING(notification.identifier)] = boost::make_shared<Context>(callback);
+	p->callbacksForNotifications[ns2StdString(notification.identifier)] = boost::make_shared<Context>(callback);
 	[[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
 	[notification release];
 }

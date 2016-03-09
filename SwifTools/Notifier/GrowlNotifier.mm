@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,16 +36,16 @@ GrowlNotifier::GrowlNotifier(const std::string& name) {
 	p = boost::make_shared<Private>();
 	p->delegate = boost::intrusive_ptr<GrowlNotifierDelegate>([[GrowlNotifierDelegate alloc] init], false);
 	p->delegate.get().notifier = this;
-	p->delegate.get().name = STD2NSSTRING(name);
+	p->delegate.get().name = std2NSString(name);
 	
 	NSMutableArray* allNotifications = [[NSMutableArray alloc] init];
 	foreach(Type type, getAllTypes()) {
-		[allNotifications addObject: STD2NSSTRING(typeToString(type))];
+		[allNotifications addObject: std2NSString(typeToString(type))];
 	}
 
 	NSMutableArray* defaultNotifications = [[NSMutableArray alloc] init];
 	foreach(Type type, getDefaultTypes()) {
-		[defaultNotifications addObject: STD2NSSTRING(typeToString(type))];
+		[defaultNotifications addObject: std2NSString(typeToString(type))];
 	}
 
 	p->delegate.get().registrationDictionary = [[[NSDictionary alloc] 
@@ -73,9 +73,9 @@ void GrowlNotifier::showMessage(Type type, const std::string& subject, const std
 	p->pendingNotifications.insert(context);
 	
 	[GrowlApplicationBridge 
-		notifyWithTitle: STD2NSSTRING(subject)
-		description: STD2NSSTRING(description)
-		notificationName: STD2NSSTRING(typeToString(type))
+		notifyWithTitle: std2NSString(subject)
+		description: std2NSString(description)
+		notificationName: std2NSString(typeToString(type))
 		iconData: [NSData dataWithBytes: vecptr(picture) length: picture.size()]
 		priority: 0
 		isSticky: NO
