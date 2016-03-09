@@ -149,5 +149,5 @@ if filename_base.endswith(".h"):
 		print "Missing #pragma once!"
 		exit(2)
 	cleanHeaderFile(content, headerStart, headerEnd, headerGroups)
-elif filename_base.endswith(".cpp"):
+elif filename_base.endswith(".cpp") or filename_base.endswith(".mm"):
 	cleanImplementationFile(content, headerStart, headerEnd, headerGroups)
