@@ -174,11 +174,9 @@ if env["PLATFORM"] == "darwin" and env["target"] == "native" :
 			env["CCFLAGS"] = ["-arch", "x86_64"]
 	if "cxx" not in env :
 		env["CXX"] = "clang++"
-		# Compiling Qt5 in C++0x mode includes headers that we don't have
-		if not env["qt5"] :
-			env["CXXFLAGS"] = ["-std=c++11"]
 	if "link" not in env :
-		env["LINK"] = "clang"
+		# Use clang++ instead of clang, otherwise XCode's clang will cause linking errors due to missing C++ standard lib.
+		env["LINK"] = "clang++"
 		if platform.machine() == "x86_64" :
 			env.Append(LINKFLAGS = ["-arch", "x86_64"])
 
@@ -201,6 +199,8 @@ if "ar" in env :
 if "link" in env :
 	env["SHLINK"] = env["link"]
 	env["LINK"] = env["link"]
+
+# Process user-defined external flags
 for flags_type in ["ccflags", "cxxflags", "linkflags"] :
 	if flags_type in env :
 		if isinstance(env[flags_type], str) :
@@ -211,6 +211,10 @@ for flags_type in ["ccflags", "cxxflags", "linkflags"] :
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
 # where you need it
 env["OBJCCFLAGS"] = []
+
+# Compile code as C++11
+if env["PLATFORM"] != "win32" :
+	env.Append(CXXFLAGS = ["-std=c++11"])
 
 if env["optimize"] :
 	if env["PLATFORM"] == "win32" :
@@ -303,7 +307,7 @@ elif env["PLATFORM"] == "sunos" :
 	#env.Append(CXXFLAGS = ["-z verbose"])
 	pass
 else :
-	if "clang" in env["CXX"] :
+	if os.path.basename(env["CXX"]) in ["clang", "clang++"] :
 		env.Append(CXXFLAGS = [
 			"-Weverything",
 			"-Wno-unknown-warning-option", # To stay compatible between CLang versions
@@ -316,7 +320,6 @@ else :
 			"-Wno-c++98-compat-pedantic", # We do different things that violate this, but they could be fixed
 			"-Wno-global-constructors", # We depend on this for e.g. string constants
 			"-Wno-disabled-macro-expansion", # Caused due to system headers
-			"-Wno-c++11-extensions", # We use C++11; turn this off when we use -std=c++11
 			"-Wno-long-long", # We use long long
 			"-Wno-padded",
 			"-Wno-missing-variable-declarations", # Getting rid of CPPUnit warnings

@@ -1,3 +1,5 @@
+import os
+
 Import("env")
 
 # FIXME: Remove this when Boost UUID is present on most distros
@@ -54,6 +56,10 @@ elif env.get("BOOST_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "build" :
 		myenv = env.Clone()
 		myenv.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if not flag.startswith("-W")])
+		if os.path.basename(env["CXX"]) in ["clang", "clang++"] :
+			myenv.Append(CXXFLAGS = [
+				"-Wno-deprecated-register", # The register keyword will be reserved in C++17, we only use C++11 though.
+			])
 
 		sources = [
 				"src/libs/atomic/src/lockpool.cpp",

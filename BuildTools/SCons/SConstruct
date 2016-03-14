@@ -68,6 +68,35 @@ def checkObjCHeader(context, header) :
 	context.Result(ret)
 	return ret
 
+def checkForCpp11Support(context) :
+	context.Message('Checking whether the C++ compiler supports C++11... ')
+	result = context.TryLink(
+		"""
+#include <memory>
+
+int main(int, char **) {
+	// shared_ptr test
+	std::shared_ptr<int> intPtr = std::make_shared<int>();
+
+	// unique_ptr test
+	std::unique_ptr<int> intPtrUnique = std::unique_ptr<int>(new int(1));
+
+	// auto test
+	auto otherIntPtr = intPtr;
+	std::shared_ptr<int> fooIntPtr = otherIntPtr;
+
+	// lambda test
+	auto someFunction = [](int i){ i = i * i; };
+
+	// nullptr test
+	double* fooDouble = nullptr;
+	return 0;
+}
+""", '.cpp')
+	context.Result(result)
+	return result
+
+
 ################################################################################
 # Platform configuration
 ################################################################################
@@ -103,12 +132,18 @@ int main(int argc, char* argv[]) {
 	else :
 		return -1
 
-
-conf = Configure(conf_env)
+conf = Configure(conf_env, custom_tests = {
+	'CheckCpp11Support' : checkForCpp11Support,
+	})
 
 if not conf.CheckCXX() or not conf.CheckCC() :
 	print "Error: You need a working compiler"
 	Exit(1)
+
+if not conf.CheckCpp11Support() :
+	print "Error: You need a compiler with support for the C++11 standard"
+	Exit(1)
+
 
 env["HAVE_ZLIB"] = True
 zlib_flags = {}
