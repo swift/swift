@@ -1,0 +1,39 @@
+---
+Language:                                       Cpp
+UseTab:                                         Never
+TabWidth:                                       2
+Standard:                                       Cpp11
+ConstructorInitializerIndentWidth:              2
+ContinuationIndentWidth:                        2
+IndentWidth:                                    2
+PointerAlignment:                               Left
+ReflowComments:                                 false
+# clang-format does not correctly detect corresponding header files at the moment.
+# Use BuildTools/FixIncludes.py for now. Enable this when it does.
+SortIncludes:                                   false
+AccessModifierOffset:                           -2
+NamespaceIndentation:                           All
+# A ultra high column limit is required as a column limit of 0 does not work as documented.
+ColumnLimit:                                    900
+AllowShortBlocksOnASingleLine:                  false
+AllowShortFunctionsOnASingleLine:               Empty
+AllowShortLoopsOnASingleLine:                   false
+IndentCaseLabels:                               true
+BreakBeforeBraces:                              Custom
+BraceWrapping:
+  AfterClass:                                   false
+  AfterControlStatement:                        false
+  AfterEnum:                                    false
+  AfterFunction:                                false
+  AfterNamespace:                               false
+  AfterObjCDeclaration:                         false
+  AfterStruct:                                  false
+  AfterUnion:                                   false
+  BeforeCatch:                                  true
+  BeforeElse:                                   true
+  IndentBraces:                                 false
+ForEachMacros:                                  [ foreach, Q_FOREACH, BOOST_FOREACH ]
+BreakConstructorInitializersBeforeComma:        false
+AlignAfterOpenBracket:                          Align
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+AlwaysBreakTemplateDeclarations:                true
