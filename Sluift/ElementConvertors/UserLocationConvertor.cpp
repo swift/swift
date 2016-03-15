@@ -1,24 +1,22 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/UserLocationConvertor.h>
 
-#include <lua.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <lua.hpp>
 
 #include <Swiften/Base/DateTime.h>
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 using namespace Swift;
 
-UserLocationConvertor::UserLocationConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<UserLocation>("user_location"),
-		convertors(convertors) {
+UserLocationConvertor::UserLocationConvertor() :
+		GenericLuaElementConvertor<UserLocation>("user_location") {
 }
 
 UserLocationConvertor::~UserLocationConvertor() {

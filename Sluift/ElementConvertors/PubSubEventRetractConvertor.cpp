@@ -1,24 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/PubSubEventRetractConvertor.h>
 
-#include <lua.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-
-
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <lua.hpp>
 
 using namespace Swift;
 
-PubSubEventRetractConvertor::PubSubEventRetractConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<PubSubEventRetract>("pubsub_event_retract"),
-		convertors(convertors) {
+PubSubEventRetractConvertor::PubSubEventRetractConvertor() :
+		GenericLuaElementConvertor<PubSubEventRetract>("pubsub_event_retract") {
 }
 
 PubSubEventRetractConvertor::~PubSubEventRetractConvertor() {

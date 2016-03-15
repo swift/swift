@@ -1,24 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/PubSubAffiliationConvertor.h>
 
-#include <lua.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-
-
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <lua.hpp>
 
 using namespace Swift;
 
-PubSubAffiliationConvertor::PubSubAffiliationConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<PubSubAffiliation>("pubsub_affiliation"),
-		convertors(convertors) {
+PubSubAffiliationConvertor::PubSubAffiliationConvertor() :
+		GenericLuaElementConvertor<PubSubAffiliation>("pubsub_affiliation") {
 }
 
 PubSubAffiliationConvertor::~PubSubAffiliationConvertor() {

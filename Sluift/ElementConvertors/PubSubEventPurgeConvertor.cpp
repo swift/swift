@@ -1,24 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/PubSubEventPurgeConvertor.h>
 
-#include <lua.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-
-
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <lua.hpp>
 
 using namespace Swift;
 
-PubSubEventPurgeConvertor::PubSubEventPurgeConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<PubSubEventPurge>("pubsub_event_purge"),
-		convertors(convertors) {
+PubSubEventPurgeConvertor::PubSubEventPurgeConvertor() :
+		GenericLuaElementConvertor<PubSubEventPurge>("pubsub_event_purge") {
 }
 
 PubSubEventPurgeConvertor::~PubSubEventPurgeConvertor() {

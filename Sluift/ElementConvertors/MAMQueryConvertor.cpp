@@ -1,18 +1,20 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Sluift/ElementConvertors/MAMQueryConvertor.h>
+
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+
 #include <lua.hpp>
-#include <Sluift/ElementConvertors/MAMQueryConvertor.h>
-#include <Sluift/LuaElementConvertors.h>
+
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/ResultSet.h>
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <Sluift/LuaElementConvertors.h>
 
 using namespace Swift;
 

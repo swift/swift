@@ -1,24 +1,20 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/UserTuneConvertor.h>
 
-#include <lua.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <lua.hpp>
 
 using namespace Swift;
 
-UserTuneConvertor::UserTuneConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<UserTune>("user_tune"),
-		convertors(convertors) {
+UserTuneConvertor::UserTuneConvertor() :
+		GenericLuaElementConvertor<UserTune>("user_tune") {
 }
 
 UserTuneConvertor::~UserTuneConvertor() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,33 +9,34 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Sluift/LuaElementConvertor.h>
-#include <Sluift/ElementConvertors/RawXMLElementConvertor.h>
-#include <Sluift/ElementConvertors/PubSubEventConvertor.h>
+
+#include <Sluift/ElementConvertors/BodyConvertor.h>
+#include <Sluift/ElementConvertors/CommandConvertor.h>
 #include <Sluift/ElementConvertors/DOMElementConvertor.h>
 #include <Sluift/ElementConvertors/DefaultElementConvertor.h>
-#include <Sluift/ElementConvertors/DiscoItemsConvertor.h>
-#include <Sluift/ElementConvertors/DiscoInfoConvertor.h>
-#include <Sluift/ElementConvertors/FormConvertor.h>
-#include <Sluift/ElementConvertors/SoftwareVersionConvertor.h>
-#include <Sluift/ElementConvertors/VCardUpdateConvertor.h>
-#include <Sluift/ElementConvertors/VCardConvertor.h>
-#include <Sluift/ElementConvertors/BodyConvertor.h>
-#include <Sluift/ElementConvertors/SubjectConvertor.h>
-#include <Sluift/ElementConvertors/CommandConvertor.h>
-#include <Sluift/ElementConvertors/StatusShowConvertor.h>
-#include <Sluift/ElementConvertors/StatusConvertor.h>
 #include <Sluift/ElementConvertors/DelayConvertor.h>
-#include <Sluift/ElementConvertors/IQConvertor.h>
-#include <Sluift/ElementConvertors/PresenceConvertor.h>
-#include <Sluift/ElementConvertors/MessageConvertor.h>
-#include <Sluift/ElementConvertors/ResultSetConvertor.h>
+#include <Sluift/ElementConvertors/DiscoInfoConvertor.h>
+#include <Sluift/ElementConvertors/DiscoItemsConvertor.h>
+#include <Sluift/ElementConvertors/FormConvertor.h>
 #include <Sluift/ElementConvertors/ForwardedConvertor.h>
-#include <Sluift/ElementConvertors/MAMResultConvertor.h>
-#include <Sluift/ElementConvertors/MAMQueryConvertor.h>
+#include <Sluift/ElementConvertors/IQConvertor.h>
 #include <Sluift/ElementConvertors/MAMFinConvertor.h>
-#include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/ElementConvertors/MAMQueryConvertor.h>
+#include <Sluift/ElementConvertors/MAMResultConvertor.h>
+#include <Sluift/ElementConvertors/MessageConvertor.h>
+#include <Sluift/ElementConvertors/PresenceConvertor.h>
+#include <Sluift/ElementConvertors/PubSubEventConvertor.h>
+#include <Sluift/ElementConvertors/RawXMLElementConvertor.h>
+#include <Sluift/ElementConvertors/ResultSetConvertor.h>
+#include <Sluift/ElementConvertors/SoftwareVersionConvertor.h>
+#include <Sluift/ElementConvertors/StatusConvertor.h>
+#include <Sluift/ElementConvertors/StatusShowConvertor.h>
+#include <Sluift/ElementConvertors/SubjectConvertor.h>
+#include <Sluift/ElementConvertors/VCardConvertor.h>
+#include <Sluift/ElementConvertors/VCardUpdateConvertor.h>
 #include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/LuaElementConvertor.h>
 
 using namespace Swift;
 
@@ -57,7 +58,7 @@ LuaElementConvertors::LuaElementConvertors() {
 	convertors.push_back(boost::make_shared<IQConvertor>(this));
 	convertors.push_back(boost::make_shared<PresenceConvertor>(this));
 	convertors.push_back(boost::make_shared<MessageConvertor>(this));
-	convertors.push_back(boost::make_shared<ResultSetConvertor>(this));
+	convertors.push_back(boost::make_shared<ResultSetConvertor>());
 	convertors.push_back(boost::make_shared<ForwardedConvertor>(this));
 	convertors.push_back(boost::make_shared<MAMResultConvertor>(this));
 	convertors.push_back(boost::make_shared<MAMQueryConvertor>(this));

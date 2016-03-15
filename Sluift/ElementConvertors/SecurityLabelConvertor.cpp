@@ -1,24 +1,22 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/SecurityLabelConvertor.h>
 
-#include <lua.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <lua.hpp>
 
 #include <Swiften/Base/foreach.h>
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 using namespace Swift;
 
-SecurityLabelConvertor::SecurityLabelConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<SecurityLabel>("security_label"),
-		convertors(convertors) {
+SecurityLabelConvertor::SecurityLabelConvertor() :
+		GenericLuaElementConvertor<SecurityLabel>("security_label") {
 }
 
 SecurityLabelConvertor::~SecurityLabelConvertor() {

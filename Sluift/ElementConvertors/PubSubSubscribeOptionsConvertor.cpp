@@ -1,24 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/PubSubSubscribeOptionsConvertor.h>
 
-#include <lua.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-
-
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <lua.hpp>
 
 using namespace Swift;
 
-PubSubSubscribeOptionsConvertor::PubSubSubscribeOptionsConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<PubSubSubscribeOptions>("pubsub_subscribe_options"),
-		convertors(convertors) {
+PubSubSubscribeOptionsConvertor::PubSubSubscribeOptionsConvertor() :
+		GenericLuaElementConvertor<PubSubSubscribeOptions>("pubsub_subscribe_options") {
 }
 
 PubSubSubscribeOptionsConvertor::~PubSubSubscribeOptionsConvertor() {

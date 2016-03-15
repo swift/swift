@@ -1,18 +1,16 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/IsodeIQDelegationConvertor.h>
 
-#include <lua.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <lua.hpp>
 
 #include <Sluift/LuaElementConvertors.h>
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
 
 using namespace Swift;
 

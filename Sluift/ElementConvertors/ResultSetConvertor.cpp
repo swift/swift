@@ -1,21 +1,20 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <lua.hpp>
 #include <Sluift/ElementConvertors/ResultSetConvertor.h>
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <lua.hpp>
 
 using namespace Swift;
 
-ResultSetConvertor::ResultSetConvertor(LuaElementConvertors* convertors) : 
-		GenericLuaElementConvertor<ResultSet>("result_set"),
-		convertors(convertors) {
+ResultSetConvertor::ResultSetConvertor() :
+		GenericLuaElementConvertor<ResultSet>("result_set") {
 }
 
 ResultSetConvertor::~ResultSetConvertor() {
