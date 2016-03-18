@@ -20,7 +20,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
 elif myenv.get("HAVE_SCHANNEL", 0) :
 	swiften_env.Append(LIBS = ["Winscard"])
-	objects += myenv.StaticObject([
+	objects += myenv.SwiftenObject([
 			"CAPICertificate.cpp",
 			"Schannel/SchannelContext.cpp",
 			"Schannel/SchannelCertificate.cpp",
@@ -29,7 +29,7 @@ elif myenv.get("HAVE_SCHANNEL", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
 elif myenv.get("HAVE_SECURETRANSPORT", 0) :
 	#swiften_env.Append(LIBS = ["Winscard"])
-	objects += myenv.StaticObject([
+	objects += myenv.SwiftenObject([
 			"SecureTransport/SecureTransportContext.mm",
 			"SecureTransport/SecureTransportCertificate.mm",
 			"SecureTransport/SecureTransportContextFactory.cpp",
@@ -37,7 +37,5 @@ elif myenv.get("HAVE_SECURETRANSPORT", 0) :
 	myenv.Append(CPPDEFINES = "HAVE_SECURETRANSPORT")
 
 objects += myenv.SwiftenObject(["PlatformTLSFactories.cpp"])
-
-		
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
