@@ -30,9 +30,10 @@ namespace Swift {
 			QString getTemplate() const {return fileContents_[Template];}
 			QString getMainCSS() const {return fileContents_[MainCSS];}
 			QString getBase() const;
+			QString getUnread() const;
 
 		private:
-			enum files {Header = 0, Footer, Content, Status, Topic, FileTransferRequest, IncomingContent, IncomingNextContent, IncomingContext, IncomingNextContext, OutgoingContent, OutgoingNextContent, OutgoingContext, OutgoingNextContext, Template, MainCSS, TemplateDefault, EndMarker};
+			enum files {Header = 0, Footer, Content, Status, Topic, FileTransferRequest, IncomingContent, IncomingNextContent, IncomingContext, IncomingNextContext, OutgoingContent, OutgoingNextContent, OutgoingContext, OutgoingNextContext, Template, MainCSS, TemplateDefault, Unread, /*Must be last!*/EndMarker};
 			bool qrc_;
 			QList<QString> fileContents_;
 			QString themePath_;

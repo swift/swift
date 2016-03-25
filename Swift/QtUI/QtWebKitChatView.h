@@ -163,7 +163,6 @@ namespace Swift {
 			void headerEncode();
 			void messageEncode();
 			void addToDOM(boost::shared_ptr<ChatSnippet> snippet);
-			QWebElement snippetToDOM(boost::shared_ptr<ChatSnippet> snippet);
 
 			QtChatWindow* window_;
 			UIEventStream* eventStream_;
@@ -175,8 +174,6 @@ namespace Swift {
 			QWebPage* webPage_;
 			int fontSizeSteps_;
 			QtChatTheme* theme_;
-			QWebElement newInsertPoint_;
-			QWebElement topInsertPoint_;
 			QWebElement lineSeparator_;
 			QWebElement lastElement_;
 			QWebElement firstElement_;

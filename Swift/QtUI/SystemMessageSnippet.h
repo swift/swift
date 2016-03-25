@@ -8,7 +8,7 @@
 
 #include <QString>
 
-#include "ChatSnippet.h"
+#include <Swift/QtUI/ChatSnippet.h>
 
 class QDateTime;
 

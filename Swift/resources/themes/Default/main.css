@@ -1,293 +1,221 @@
-* {
-		word-wrap: break-word;
-		word-break:break-word;
-}
-
-#header1 { 
-	position: fixed; 
-	top: 0px; 
-	left: 0px; 
-	right: 0px; 
-	margin: 0; 
-	padding: 10px; 
-	overflow: auto; 
-	color: white; 
-	text-align: center; 
-	font-size: 10px; 
-	font-weight: regular; 
-	background: rgba(0,0,0,.65); 
-	z-index: 999; 
-}
-
-#heading { 
-	position: fixed; 
-	top: 0px; 
-	left: 0px; 
-	margin: 0; 
-	padding: 5px;
-	font-weight: regular; 
-	background-color:#fbfbed;
-	z-index: 999;
-	width:100%;
-	height:45px;
-	border-bottom:2px solid #d5d5d5;
-	background:url("images/steelHeading.jpg") repeat-x top left;
-	
-}
-
-#heading .conversationIncomingIcon {
-	position:absolute;
-	left:5px;
-	top:5px;
-}
-
-#heading .conversationIncomingIcon img {
-	width:48px;
-	height:48px;
-}
-
-#heading .conversationWith {
-	position:relative;
-	left:60px;
-	margin:5px 0 0 0;
-	overflow:hide;
-}
-
-#heading .conversationTime {
-	position:relative;
-	left:60px;
-	color:#6d6d6d;
-}
+/* Chat Window Container */
 
 body {
-	margin-top: 65px;
-	background-color: white;
-	color: black;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 0;
 }
 
-.status_container {
+.container {
+    height: 100%;
+    width:  100%;
+    background-color: #fff;
+    /*border: solid 1px #595959; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
+    /*margin-left: 20%; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
+    /*margin-top: 75px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
+    position: absolute;
 }
 
+/* Left side colour block*/
 
-body {
-	font-family: "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;
+.colour-block {
+    /* This is needed so the grey sidebar stays fixed relative to the view and not the page when scrolling. */
+    /* This also seems to have noticible negative performance side-effects when scrolling. */
+    position: fixed;
+    height: 100%;
+    width: 175px;
+    background-color: #595959;
 }
 
-.followUp {
-	clear:right;
-	height:1px;
-	font-size:1px;
-	line-height:1px;
-	margin:4px 0 4px 0;
+/* Holds all user and message content */
+
+.message-block {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    margin-bottom: 10px;
+    /*margin-top: -2px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
 }
 
-.chatItem {
-	/*Removing opacity, because this causes Qt's WebKit to draw low-quality images */
-	/*opacity:0.96;*/
-}
-
-.tableBubble {
-	width:100%;
-}
-
-.tableBubble .tl {
-	height:8px;
-}
-
-.tableBubble .tr {
-	width:8px;
-	height:8px;
-}
+/* Individual message */
 
 .message {
-	padding:0 1em 0 1.25em;
-	word-wrap: break-word;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.tableBubble .message {
-	font-size:11px;
+.additional {
+    margin-top: -14px;
 }
 
-.tableBubble .message img {
-	vertical-align:middle;
+.unread {
+    height: 15px;
+    border-top: solid 1px #ffd180;
+    margin-top: -6px;
+    margin-bottom: -15px;
+    margin-left: 190px;
+    margin-right: 20px;
+    text-align: right;
 }
 
-.tableBubble .messageRight {
-	width:1px;
+.unread p {
+    margin-top: 0px;
+    font-size: 75%;
+    text-transform: uppercase;
+    color: #ffd180;
+    /* color: #ffd180; */
 }
 
-.tableBubble .bl {
-	height:10px;
+/* Left column content */
+
+.user {
+    height: 32px;
+    width: 175px;
+    text-align: center;
+    float: left;
+    margin-top: 2px;
 }
 
-.tableBubble .br {
-	width:8px;
-	height:10px;
+.time {
+    height: 32px;
+    width: 103px;
+    float: left;
+    text-align: right;
 }
 
-.tableBubble .timeStamp {
-	margin-left:7px;
-	text-align:right;
-	float:right;
+.time p {
+    margin-top: 3px;
+    margin-bottom: 1px;
+    margin-right: 10px;
+    color: #f9f9f9;
+    font-size: 10px;
+    font-weight: 300;
 }
 
-.myBubble .indicator {
-	position:absolute;
-	top:8px;
-	left:0;
-	width:13px;
-	height:11px;
+.time-additional {
+    height: 32px;
+    width: 103px;
+    float: left;
+    text-align: right;
 }
 
-.myBubble {
-	position:relative;
-	padding-left:10px;
-	margin-left:33px;
-	margin-right:10px;
+.time-additional p {
+    margin-top: 0px;
+    margin-bottom: 1px;
+    margin-right: 10px;
+    color: #f9f9f9;
+    font-size: 10px;
+    font-weight: 300;
 }
 
-.chatItem .avatar {
-	max-width:32px;
-	max-height:32px;
-	float:left;
+.time img {
+    margin-right: 10px;
+    height: 10px;
 }
 
-/****** STatus  ******/
-
-.statusMessage {
-	opacity:0.8;
-	color:#676767;
+.time-additional img {
+    margin-right: 10px;
+    height: 10px;
 }
 
-.statusMessage .myBubble .indicator {
-	background:url("images/steelIndicator.png") no-repeat top left;
+.myavatar {
+    height: 32px;
+    width: 32px;
+    display: inline-block;
+    margin:0 auto;
+    background-color: #92c47e;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
 }
 
-.statusMessage .tableBubble .tl {
-	background:url("images/steelCurves.png") no-repeat top left;
+.otheravatar {
+    height: 32px;
+    width: 32px;
+    display: inline-block;
+    margin:0 auto;
+    background-color: #6eb6ce;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
 }
 
-.statusMessage .tableBubble .tr {
-	background:url("images/steelCurves.png") no-repeat top right;
+.myavatar img {
+    border-radius: 50%;
+    height: 32px;
 }
 
-.statusMessage .tableBubble .head {
-	background:url("images/steelCurves.png") no-repeat -10px 0;
+.otheravatar img {
+    border-radius: 50%;
+    height: 32px;
+    margin-left: -1px;
 }
 
-.statusMessage .tableBubble .message {
-	background:url("images/steelBackground.png") repeat-y top left;
+.myright {
+    float:right;
+    width:40px;
+    height: 32px;
+    background: #92c47e;
 }
 
-.statusMessage .tableBubble .messageRight {
-	background:url("images/steelBackground.png") repeat-y top right;
+.otherright {
+    float:right;
+    width:40px;
+    height: 32px;
+    background: #6eb6ce;
 }
 
-.statusMessage .tableBubble .bl {
-	background:url("images/steelCurves.png") no-repeat bottom left;
+.systemavatar {
+    height: 32px;
+    width: 32px;
+    display: inline-block;
+    margin:0 auto;
+    background-color: #595959;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
 }
 
-.statusMessage .tableBubble .br {
-	background:url("images/steelCurves.png") no-repeat bottom right;
+.systemright {
+    float:right;
+    width:40px;
+    height: 32px;
+    background: #595959;
 }
 
-.statusMessage .followUp {
-	background-color:#f4f0a7;
-	border-bottom:1px solid #fff;
+/* Right column content */
+
+.text {
+    min-height: 32px;
+    margin-left: 175px;
+    font-size: 14px;
+    color: #595959;
 }
 
-.statusMessage .timeStamp {
-	color:#676767;
+.myusername {
+    color: #92c47e;
+    margin-left: 20px;
+    font-weight: 700;
 }
 
-
-/*incoming */
-
-.incomingItem .myBubble .indicator {
-	background:url("images/yellowIndicator.png") no-repeat top left;
+.otherusername {
+    color: #6eb6ce;
+    margin-left: 20px;
+    font-weight: 700;
 }
 
-.incomingItem .tableBubble .tl {
-	background:url("images/yellowCurves.png") no-repeat top left;
+.message-content {
+    margin-left: 20px;
+    margin-top: -11px;
+    margin-right: 20px;
+    margin-bottom: 18px;
 }
 
-.incomingItem .tableBubble .tr {
-	background:url("images/yellowCurves.png") no-repeat top right;
-}
-
-.incomingItem .tableBubble .head {
-	background:url("images/yellowCurves.png") no-repeat -10px 0;
-}
-
-.incomingItem .tableBubble .message {
-	background:url("images/yellowBackground.png") repeat-y top left;
-}
-
-.incomingItem .tableBubble .messageRight {
-	background:url("images/yellowBackground.png") repeat-y top right;
-}
-
-.incomingItem .tableBubble .bl {
-	background:url("images/yellowCurves.png") no-repeat bottom left;
-}
-
-.incomingItem .tableBubble .br {
-	background:url("images/yellowCurves.png") no-repeat bottom right;
-}
-
-.incomingItem .followUp {
-	background-color:#f4f0a7;
-	border-bottom:1px solid #fff;
-}
-
-.incomingItem .timeStamp {
-	color:#bdb410;
-}
-
-/* outgoing */
-
-
-.outgoingItem .myBubble .indicator {
-	background:url("images/greenIndicator.png") no-repeat top left;
-}
-
-.outgoingItem .tableBubble .tl {
-	background:url("images/greenCurves.png") no-repeat top left;
-}
-
-.outgoingItem .tableBubble .tr {
-	background:url("images/greenCurves.png") no-repeat top right;
-}
-
-.outgoingItem .tableBubble .head {
-	background:url("images/greenCurves.png") no-repeat -10px 0;
-}
-
-.outgoingItem .tableBubble .message {
-	background:url("images/greenBackground.png") repeat-y top left;
-}
-
-.outgoingItem .tableBubble .messageRight {
-	background:url("images/greenBackground.png") repeat-y top right;
-}
-
-.outgoingItem .tableBubble .bl {
-	background:url("images/greenCurves.png") no-repeat bottom left;
-}
-
-.outgoingItem .tableBubble .br {
-	background:url("images/greenCurves.png") no-repeat bottom right;
-}
-
-.outgoingItem .followUp {
-	background-color:#e2efc4;
-	border-bottom:1px solid #fff;
-}
-
-.outgoingItem .timeStamp {
-	color:#9ecf35;
-}
-
-html {
-	height: 101%;
+.system-message {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 18px;
+    color: #aaa;
+    font-style: italic;
 }

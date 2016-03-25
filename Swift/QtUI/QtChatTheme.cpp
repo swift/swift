@@ -1,20 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited..
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtChatTheme.h"
+#include <Swift/QtUI/QtChatTheme.h>
 
 #include <QFile>
-#include <qdebug.h>
 
 namespace Swift {
 
 /**
  * Load Adium themes, as http://trac.adium.im/wiki/CreatingMessageStyles
  */
-QtChatTheme::QtChatTheme(const QString& themePath) : qrc_(themePath.isEmpty()), themePath_(qrc_ ? ":/themes/Default/" : themePath + "/Contents/Resources/") {
+QtChatTheme::QtChatTheme(const QString& themePath) : qrc_(themePath[0] == ':'), themePath_(qrc_ ? themePath : themePath + "/Contents/Resources/") {
 	QString fileNames[EndMarker];
 	fileNames[Header] = "Header.html";
 	fileNames[Footer] = "Footer.html";
@@ -32,6 +31,7 @@ QtChatTheme::QtChatTheme(const QString& themePath) : qrc_(themePath.isEmpty()), 
 	fileNames[OutgoingNextContext] = "Outgoing/NextContext.html";
 	fileNames[Template] = "Template.html";
 	fileNames[MainCSS] = "main.css";
+	fileNames[Unread] = "Unread.html";
 	fileNames[TemplateDefault] = ":/themes/Template.html";
 	for (int i = 0; i < EndMarker; i++) {
 		QString source;
@@ -62,6 +62,10 @@ QtChatTheme::QtChatTheme(const QString& themePath) : qrc_(themePath.isEmpty()), 
 
 QString QtChatTheme::getBase() const {
 	return qrc_ ? "qrc" + themePath_ : "file://" + themePath_;
+}
+
+QString QtChatTheme::getUnread() const {
+	return fileContents_[Unread].isEmpty() ? "<hr/>" : fileContents_[Unread];
 }
 
 }

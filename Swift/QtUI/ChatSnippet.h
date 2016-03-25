@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
 
 #include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
-#include <Swift/QtUI/QtChatTheme.h>
 
+#include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+
+#include <Swift/QtUI/QtChatTheme.h>
 
 namespace Swift {
 	class ChatSnippet {
@@ -44,6 +45,7 @@ namespace Swift {
 				result.replace("%time%", "%&#37;time&#37;");
 				result.replace("%shortTime%", "%&#37;shortTime&#37;");
 				result.replace("%userIconPath%", "&#37;userIconPath&#37;");
+				result.replace("%id%", "&#37;id&#37;");
 				result.replace("\t", "    ");
 				result.replace("  ", "&nbsp;&nbsp;");
 				return result;

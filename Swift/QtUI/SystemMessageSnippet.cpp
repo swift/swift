@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "SystemMessageSnippet.h"
+#include <Swift/QtUI/SystemMessageSnippet.h>
 
 #include <QDateTime>
 
@@ -20,7 +20,7 @@ SystemMessageSnippet::SystemMessageSnippet(const QString& message, const QDateTi
 	content_.replace("%message%", wrapResizable("<span class='swift_message'>" + escape(message) + "</span>"));
 	content_.replace("%shortTime%", wrapResizable(escape(time.toString("h:mm"))));
 	content_.replace("%time%", wrapResizable("<span class='swift_time'>" + timeToEscapedString(time) + "</span>"));
-	content_ = QString("<div id='%1'>%2</div>").arg(id).arg(content_);
+	content_.replace("%id%", id);
 }
 
 SystemMessageSnippet::~SystemMessageSnippet() {

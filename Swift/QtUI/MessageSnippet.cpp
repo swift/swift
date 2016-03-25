@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "MessageSnippet.h"
+#include <Swift/QtUI/MessageSnippet.h>
 
-#include <QtDebug>
 #include <QDateTime>
 
 namespace Swift {
@@ -33,13 +32,12 @@ MessageSnippet::MessageSnippet(const QString& message, const QString& sender, co
 	}
 
 	content_.replace("%direction%", directionToCSS(direction));
-	content_.replace("%message%", wrapResizable("<span class='swift_message'>" + escape(message) + "</span><span class='swift_ack'></span><span class='swift_receipt'></span>"));
+	content_.replace("%message%", wrapResizable("<span class='swift_message'>" + escape(message) + "</span>"));
 	content_.replace("%wrapped_sender%", wrapResizable(escape(sender)));
 	content_.replace("%sender%", escape(sender));
 	content_.replace("%time%", wrapResizable("<span class='swift_time'>" + timeToEscapedString(time) + "</span>"));
 	content_.replace("%userIconPath%", escape(iconURI));
-	content_ = QString("<div id='%1'>%2</div>").arg(id).arg(content_);
-	content_ = "<span class='date" + time.date().toString(Qt::ISODate) + "'>" + content_ + "</span>";
+	content_.replace("%id%", id);
 }
 
 MessageSnippet::~MessageSnippet() {

@@ -127,107 +127,47 @@ void QtWebKitChatView::addMessageBottom(boost::shared_ptr<ChatSnippet> snippet) 
 	}
 }
 
-void QtWebKitChatView::addMessageTop(boost::shared_ptr<ChatSnippet> snippet) {
-	// save scrollbar maximum value
-	if (!topMessageAdded_) {
-		scrollBarMaximum_ = webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical);
-	}
-	topMessageAdded_ = true;
-
-	QWebElement continuationElement = firstElement_.findFirst("#insert");
-
-	bool insert = snippet->getAppendToPrevious();
-	bool fallback = continuationElement.isNull();
-
-	boost::shared_ptr<ChatSnippet> newSnippet = (insert && fallback) ? snippet->getContinuationFallbackSnippet() : snippet;
-	QWebElement newElement = snippetToDOM(newSnippet);
-
-	if (insert && !fallback) {
-		Q_ASSERT(!continuationElement.isNull());
-		continuationElement.replace(newElement);
-	} else {
-		continuationElement.removeFromDocument();
-		topInsertPoint_.prependOutside(newElement);
-	}
-
-	firstElement_ = newElement;
-
-	if (lastElement_.isNull()) {
-		lastElement_ = firstElement_;
-	}
-
-	if (fontSizeSteps_ != 0) {
-		double size = 1.0 + 0.2 * fontSizeSteps_;
-		QString sizeString(QString().setNum(size, 'g', 3) + "em");
-		const QWebElementCollection spans = firstElement_.findAll("span.swift_resizable");
-		Q_FOREACH (QWebElement span, spans) {
-			span.setStyleProperty("font-size", sizeString);
-		}
-	}
-}
-
-QWebElement QtWebKitChatView::snippetToDOM(boost::shared_ptr<ChatSnippet> snippet) {
-	QWebElement newElement = newInsertPoint_.clone();
-	newElement.setInnerXml(snippet->getContent());
-	Q_ASSERT(!newElement.isNull());
-	return newElement;
+void QtWebKitChatView::addMessageTop(boost::shared_ptr<ChatSnippet> /* snippet */) {
+	// TODO: Implement this in a sensible manner later.
+	assert(false);
 }
 
 void QtWebKitChatView::addToDOM(boost::shared_ptr<ChatSnippet> snippet) {
 	//qDebug() << snippet->getContent();
 	rememberScrolledToBottom();
-	bool insert = snippet->getAppendToPrevious();
-	QWebElement continuationElement = lastElement_.findFirst("#insert");
-	bool fallback = insert && continuationElement.isNull();
-	boost::shared_ptr<ChatSnippet> newSnippet = (insert && fallback) ? snippet->getContinuationFallbackSnippet() : snippet;
-	QWebElement newElement = snippetToDOM(newSnippet);
-	if (insert && !fallback) {
-		Q_ASSERT(!continuationElement.isNull());
-		continuationElement.replace(newElement);
-	} else {
-		continuationElement.removeFromDocument();
-		newInsertPoint_.prependOutside(newElement);
-	}
-	lastElement_ = newElement;
-	if (fontSizeSteps_ != 0) {
-		double size = 1.0 + 0.2 * fontSizeSteps_;
-		QString sizeString(QString().setNum(size, 'g', 3) + "em");
-		const QWebElementCollection spans = lastElement_.findAll("span.swift_resizable");
-		Q_FOREACH (QWebElement span, spans) {
-			span.setStyleProperty("font-size", sizeString);
-		}
-	}
+
+	QWebElement insertElement = webPage_->mainFrame()->findFirstElement("#insert");
+	assert(!insertElement.isNull());
+	insertElement.prependOutside(snippet->getContent());
+
 	//qDebug() << "-----------------";
 	//qDebug() << webPage_->mainFrame()->toHtml();
 }
 
 void QtWebKitChatView::addLastSeenLine() {
-	/* if the line is added we should break the snippet */
-	insertingLastLine_ = true;
-	if (lineSeparator_.isNull()) {
-		lineSeparator_ = newInsertPoint_.clone();
-		lineSeparator_.setInnerXml(QString("<hr/>"));
-		newInsertPoint_.prependOutside(lineSeparator_);
+	// Remove a potentially existing unread bar.
+	QWebElement existingUnreadBar = webPage_->mainFrame()->findFirstElement("div.unread");
+	if (!existingUnreadBar.isNull()) {
+		existingUnreadBar.removeFromDocument();
 	}
-	else {
-		QWebElement lineSeparatorC = lineSeparator_.clone();
-		lineSeparatorC.removeFromDocument();
-	}
-	newInsertPoint_.prependOutside(lineSeparator_);
+
+	QWebElement insertElement = webPage_->mainFrame()->findFirstElement("#insert");
+	insertElement.prependOutside(theme_->getUnread());
 }
 
 void QtWebKitChatView::replaceLastMessage(const QString& newMessage, const ChatWindow::TimestampBehaviour timestampBehaviour) {
-	assert(viewReady_);
 	rememberScrolledToBottom();
-	assert(!lastElement_.isNull());
-	QWebElement replace = lastElement_.findFirst("span.swift_message");
-	assert(!replace.isNull());
-	QString old = lastElement_.toOuterXml();
-	replace.setInnerXml(ChatSnippet::escape(newMessage));
+	QWebElement insertElement = webPage_->mainFrame()->findFirstElement("#insert");
+	assert(!insertElement.isNull());
+
+	QWebElement lastMessageElement = insertElement.previousSibling();
+	QWebElement messageChild = lastMessageElement.findFirst("span.swift_message");
+	assert(!messageChild.isNull());
+	messageChild.setInnerXml(ChatSnippet::escape(newMessage));
 	if (timestampBehaviour == ChatWindow::UpdateTimestamp) {
-		replace = lastElement_.findFirst("span.swift_time");
-		assert(!replace.isNull());
-		replace.setInnerXml(ChatSnippet::timeToEscapedString(QDateTime::currentDateTime()));
+		QWebElement timeChild = lastMessageElement.findFirst("span.swift_time");
+		assert(!timeChild.isNull());
+		timeChild.setInnerXml(ChatSnippet::timeToEscapedString(QDateTime::currentDateTime()));
 	}
 }
 
@@ -362,11 +302,11 @@ void QtWebKitChatView::resizeFont(int fontSizeSteps) {
 	fontSizeSteps_ = fontSizeSteps;
 	double size = 1.0 + 0.2 * fontSizeSteps_;
 	QString sizeString(QString().setNum(size, 'g', 3) + "em");
-	//qDebug() << "Setting to " << sizeString;
-	const QWebElementCollection spans = document_.findAll("span.swift_resizable");
-	Q_FOREACH (QWebElement span, spans) {
-		span.setStyleProperty("font-size", sizeString);
-	}
+
+	// Set the font size in the <style id="text-resize-style"> element in the theme <head> element.
+	QWebElement resizableTextStyle = document_.findFirst("style#text-resize-style");
+	assert(!resizableTextStyle.isNull());
+	resizableTextStyle.setInnerXml(QString("span.swift_resizable { font-size: %1;}").arg(sizeString));
 	webView_->setFontSizeIsMinimal(size == 1.0);
 }
 
@@ -395,13 +335,6 @@ void QtWebKitChatView::resetView() {
 		syncLoop.exec();
 	}
 	document_ = webPage_->mainFrame()->documentElement();
-
-	resetTopInsertPoint();
-	QWebElement chatElement = document_.findFirst("#Chat");
-	newInsertPoint_ = chatElement.clone();
-	newInsertPoint_.setOuterXml("<div id='swift_insert'/>");
-	chatElement.appendInside(newInsertPoint_);
-	Q_ASSERT(!newInsertPoint_.isNull());
 
 	scrollToBottom();
 
@@ -534,25 +467,17 @@ int QtWebKitChatView::getSnippetPositionByDate(const QDate& date) {
 }
 
 void QtWebKitChatView::resetTopInsertPoint() {
-	QWebElement continuationElement = firstElement_.findFirst("#insert");
-	continuationElement.removeFromDocument();
-	firstElement_ = QWebElement();
-
-	topInsertPoint_.removeFromDocument();
-	QWebElement chatElement = document_.findFirst("#Chat");
-	topInsertPoint_ = chatElement.clone();
-	topInsertPoint_.setOuterXml("<div id='swift_insert'/>");
-	chatElement.prependInside(topInsertPoint_);
+	// TODO: Implement or refactor later.
+	assert(false);
 }
 
-
 std::string QtWebKitChatView::addMessage(
-		const ChatWindow::ChatMessage& message, 
-		const std::string& senderName, 
-		bool senderIsSelf, 
-		boost::shared_ptr<SecurityLabel> label, 
-		const std::string& avatarPath, 
-		const boost::posix_time::ptime& time, 
+		const ChatWindow::ChatMessage& message,
+		const std::string& senderName,
+		bool senderIsSelf,
+		boost::shared_ptr<SecurityLabel> label,
+		const std::string& avatarPath,
+		const boost::posix_time::ptime& time,
 		const HighlightAction& highlight) {
 	return addMessage(chatMessageToHTML(message), senderName, senderIsSelf, label, avatarPath, "", time, highlight, ChatSnippet::getDirection(message));
 }
@@ -609,13 +534,13 @@ QString QtWebKitChatView::chatMessageToHTML(const ChatWindow::ChatMessage& messa
 }
 
 std::string QtWebKitChatView::addMessage(
-		const QString& message, 
-		const std::string& senderName, 
-		bool senderIsSelf, 
-		boost::shared_ptr<SecurityLabel> label, 
-		const std::string& avatarPath, 
-		const QString& style, 
-		const boost::posix_time::ptime& time, 
+		const QString& message,
+		const std::string& senderName,
+		bool senderIsSelf,
+		boost::shared_ptr<SecurityLabel> label,
+		const std::string& avatarPath,
+		const QString& style,
+		const boost::posix_time::ptime& time,
 		const HighlightAction& highlight,
 		ChatSnippet::Direction direction) {
 
@@ -669,7 +594,7 @@ QString QtWebKitChatView::buildChatWindowButton(const QString& name, const QStri
 std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
 	SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
 	QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
-	
+
 	QString actionText;
 	QString htmlString;
 	QString formattedFileSize = P2QSTRING(formatSize(sizeInBytes));
@@ -1015,13 +940,13 @@ void QtWebKitChatView::setMessageReceiptState(const std::string& id, ChatWindow:
 	QString xml;
 	switch (state) {
 		case ChatWindow::ReceiptReceived:
-			xml = "<img src='qrc:/icons/check.png' title='" + tr("The receipt for this message has been received.") + "'/>";
+			xml = "<img src='qrc:/icons/delivery-successful.png' title='" + tr("The receipt for this message has been received.") + "'/>";
 			break;
 		case ChatWindow::ReceiptRequested:
 			xml = "<img src='qrc:/icons/warn.png' title='" + tr("The receipt for this message has not yet been received. The recipient(s) might not have received this message.") + "'/>";
 			break;
 		case ChatWindow::ReceiptFailed:
-			xml = "<img src='qrc:/icons/error.png' title='" + tr("Failed to transmit message to the receipient(s).") + "'/>";
+			xml = "<img src='qrc:/icons/delivery-failure.png' title='" + tr("Failed to transmit message to the receipient(s).") + "'/>";
 	}
 	setReceiptXML(P2QSTRING(id), xml);
 }

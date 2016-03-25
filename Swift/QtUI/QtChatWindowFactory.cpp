@@ -49,7 +49,7 @@ ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStre
 		theme_ = new QtChatTheme(themePath_);
 		if (theme_->getIncomingContent().isEmpty()) {
 			delete theme_;
-			theme_ = new QtChatTheme(""); /* Use the inbuilt theme */
+			theme_ = new QtChatTheme(":/themes/Default/"); /* Use the inbuilt theme */
 		}
 	}
 
