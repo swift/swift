@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/PayloadParsers/ErrorParser.h>
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+
 #include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 
 namespace Swift {
 

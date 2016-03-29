@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,16 +13,17 @@
 #pragma once
 
 #include <string>
-#include <boost/filesystem/path.hpp>
+
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
-#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
+#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class ReadBytestream;

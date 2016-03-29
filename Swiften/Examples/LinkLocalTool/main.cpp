@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,10 @@
 #include <iostream>
 
 #include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
 
 using namespace Swift;
 

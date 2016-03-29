@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "ui_QtBookmarkDetailWindow.h"
-
 #include <boost/optional.hpp>
 
 #include <QDialog>
 
-#include "Swiften/MUC/MUCBookmark.h"
+#include <Swiften/MUC/MUCBookmark.h>
+
+#include <Swift/QtUI/ui_QtBookmarkDetailWindow.h>
 
 namespace Swift {
 	class QtBookmarkDetailWindow : public QDialog, protected Ui::QtBookmarkDetailWindow {

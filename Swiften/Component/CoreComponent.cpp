@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Component/CoreComponent.h>
 
-#include <boost/bind.hpp>
 #include <iostream>
+
+#include <boost/bind.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Component/ComponentSession.h>
@@ -18,7 +19,6 @@
 #include <Swiften/Session/BasicSessionStream.h>
 #include <Swiften/TLS/PKCS12Certificate.h>
 #include <Swiften/TLS/TLSOptions.h>
-
 
 namespace Swift {
 

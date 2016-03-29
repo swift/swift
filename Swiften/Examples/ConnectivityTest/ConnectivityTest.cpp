@@ -1,21 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
 #include <iostream>
 
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
 #include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Network/BoostNetworkFactories.h>
-#include <Swiften/EventLoop/EventLoop.h>
-#include <Swiften/Client/ClientXMLTracer.h>
-#include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Swiften/Disco/GetDiscoInfoRequest.h>
 
 using namespace Swift;
 

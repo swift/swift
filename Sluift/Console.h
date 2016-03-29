@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,12 @@
 #pragma once
 
 #include <string>
+
 #include <boost/optional/optional_fwd.hpp>
-#include <Sluift/Completer.h>
+
 #include <Swiften/Base/Override.h>
+
+#include <Sluift/Completer.h>
 
 struct lua_State;
 

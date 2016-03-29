@@ -1,25 +1,25 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtContactEditWindow.h"
+#include <Swift/QtUI/QtContactEditWindow.h>
 
 #include <algorithm>
 
 #include <boost/bind.hpp>
 
-#include <QScrollArea>
 #include <QBoxLayout>
-#include <QLabel>
 #include <QCheckBox>
+#include <QLabel>
 #include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
+#include <QScrollArea>
 
-#include "Swift/QtUI/QtSwiftUtil.h"
-#include "QtContactEditWidget.h"
+#include <Swift/QtUI/QtContactEditWidget.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

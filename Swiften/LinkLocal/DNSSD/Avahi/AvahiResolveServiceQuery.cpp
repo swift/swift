@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveServiceQuery.h>
 
-#include <boost/bind.hpp>
 #include <iostream>
+
+#include <boost/bind.hpp>
 
 #include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuerier.h>
 

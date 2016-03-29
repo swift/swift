@@ -1,33 +1,33 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/Roster/QtTreeWidget.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <QUrl>
+#include <QLabel>
 #include <QMimeData>
 #include <QObject>
-#include <QLabel>
 #include <QTimer>
 #include <QToolTip>
+#include <QUrl>
 
 #include <Swiften/Base/Platform.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
- 
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/QtUI/Roster/RosterModel.h>
-#include <QtSwiftUtil.h>
 
 namespace Swift {
 

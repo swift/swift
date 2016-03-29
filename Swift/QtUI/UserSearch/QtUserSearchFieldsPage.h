@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,7 +9,6 @@
 #include <QWizardPage>
 
 #include <Swift/QtUI/QtFormWidget.h>
-
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchFieldsPage.h>
 
 namespace Swift {

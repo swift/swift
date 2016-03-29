@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
-#include <Swiften/FileTransfer/FileTransferError.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
 	class SWIFTEN_API TransportSession {

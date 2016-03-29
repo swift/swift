@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QWizard>
 #include <set>
 
-#include <Swift/QtUI/UserSearch/ui_QtUserSearchWizard.h>
+#include <QWizard>
+
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
+
+#include <Swift/QtUI/UserSearch/ui_QtUserSearchWizard.h>
 
 namespace Swift {
 	class UserSearchModel;

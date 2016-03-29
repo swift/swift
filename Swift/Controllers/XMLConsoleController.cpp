@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/XMLConsoleController.h"
+#include <Swift/Controllers/XMLConsoleController.h>
 
-#include "Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h"
-#include "Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h"
+#include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h>
 
 namespace Swift {
 

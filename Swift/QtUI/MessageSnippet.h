@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <QString>
 
-#include "ChatSnippet.h"
+#include <Swift/QtUI/ChatSnippet.h>
 
 class QDateTime;
 

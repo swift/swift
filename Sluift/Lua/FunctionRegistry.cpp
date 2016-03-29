@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,9 @@
 #include <Sluift/Lua/FunctionRegistry.h>
 
 #include <Swiften/Base/foreach.h>
-#include <Sluift/Lua/LuaUtils.h>
+
 #include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/globals.h>
 
 using namespace Swift::Lua;

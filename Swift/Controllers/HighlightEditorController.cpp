@@ -5,19 +5,20 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swift/Controllers/HighlightEditorController.h>
+
 #include <boost/bind.hpp>
 
-#include <Swift/Controllers/HighlightEditorController.h>
+#include <Swift/Controllers/ContactSuggester.h>
 #include <Swift/Controllers/UIEvents/RequestHighlightEditorUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIInterfaces/HighlightEditorWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/HighlightEditorWindow.h>
-#include <Swift/Controllers/ContactSuggester.h>
+#include <Swift/Controllers/UIInterfaces/HighlightEditorWindowFactory.h>
 
 namespace Swift {
 

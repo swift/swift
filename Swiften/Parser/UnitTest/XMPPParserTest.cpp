@@ -1,25 +1,26 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <string>
 #include <vector>
 
-#include <Swiften/Elements/ProtocolHeader.h>
-#include <string>
-#include <Swiften/Parser/XMPPParser.h>
-#include <Swiften/Parser/ElementParser.h>
-#include <Swiften/Parser/XMPPParserClient.h>
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Parser/PlatformXMLParserFactory.h>
-#include <Swiften/Elements/Presence.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/UnknownElement.h>
+#include <Swiften/Parser/ElementParser.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Parser/XMPPParser.h>
+#include <Swiften/Parser/XMPPParserClient.h>
 
 using namespace Swift;
 

@@ -1,25 +1,25 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <iostream>
+#include <Swiften/Config/swiften-config.h>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/program_options/options_description.hpp>
-#include <boost/program_options/variables_map.hpp>
-#include <boost/program_options.hpp>
-#include <boost/version.hpp>
-#include <boost/filesystem.hpp>
+#include <iostream>
 #include <string>
 
-#include <Swiften/Base/Platform.h>
-#include <Swiften/Base/Paths.h>
-#include <Swiften/Base/Path.h>
-#include <Swiften/Version.h>
+#include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+#include <boost/version.hpp>
 
-#include "swiften-config.h"
+#include <Swiften/Base/Path.h>
+#include <Swiften/Base/Paths.h>
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Version.h>
 
 using namespace Swift;
 

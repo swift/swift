@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
-#include <Swiften/Base/ByteArray.h>
-#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class BonjourQuerier;

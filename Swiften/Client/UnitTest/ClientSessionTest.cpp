@@ -1,40 +1,42 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <deque>
+
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/Client/ClientSession.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Elements/AuthChallenge.h>
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/Elements/EnableStreamManagement.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/ResourceBind.h>
+#include <Swiften/Elements/StanzaAck.h>
+#include <Swiften/Elements/StartTLSFailure.h>
+#include <Swiften/Elements/StartTLSRequest.h>
+#include <Swiften/Elements/StreamError.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Elements/StreamManagementEnabled.h>
+#include <Swiften/Elements/StreamManagementFailed.h>
+#include <Swiften/Elements/TLSProceed.h>
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/IDN/PlatformIDNConverter.h>
 #include <Swiften/Session/SessionStream.h>
-#include <Swiften/Client/ClientSession.h>
-#include <Swiften/Elements/Message.h>
-#include <Swiften/Elements/AuthChallenge.h>
-#include <Swiften/Elements/StartTLSRequest.h>
-#include <Swiften/Elements/StreamFeatures.h>
-#include <Swiften/Elements/StreamError.h>
-#include <Swiften/Elements/TLSProceed.h>
-#include <Swiften/Elements/StartTLSFailure.h>
-#include <Swiften/Elements/AuthRequest.h>
-#include <Swiften/Elements/AuthSuccess.h>
-#include <Swiften/Elements/AuthFailure.h>
-#include <Swiften/Elements/StreamManagementEnabled.h>
-#include <Swiften/Elements/StreamManagementFailed.h>
-#include <Swiften/Elements/StanzaAck.h>
-#include <Swiften/Elements/EnableStreamManagement.h>
-#include <Swiften/Elements/IQ.h>
-#include <Swiften/Elements/ResourceBind.h>
-#include <Swiften/TLS/SimpleCertificate.h>
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
-#include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/TLS/SimpleCertificate.h>
 
 using namespace Swift;
 

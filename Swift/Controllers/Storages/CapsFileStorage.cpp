@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/Storages/CapsFileStorage.h"
+#include <Swift/Controllers/Storages/CapsFileStorage.h>
 
 #include <Swiften/Entity/GenericPayloadPersister.h>
-#include "Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h"
-#include "Swiften/Parser/PayloadParsers/DiscoInfoParser.h"
-#include "Swiften/StringCodecs/Hexify.h"
-#include "Swiften/StringCodecs/Base64.h"
+#include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
+#include <Swiften/Serializer/PayloadSerializers/DiscoInfoSerializer.h>
+#include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
 

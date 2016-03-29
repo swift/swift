@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QList>
-#include <QIcon>
-
 #include <boost/shared_ptr.hpp>
 
+#include <QIcon>
+#include <QList>
+
 #include <Swiften/MUC/MUCBookmark.h>
+
 #include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 
 #include <Swift/QtUI/ChatList/ChatListItem.h>

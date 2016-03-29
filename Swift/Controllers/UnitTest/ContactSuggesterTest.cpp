@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
-
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Base/foreach.h>
-#include "Swift/Controllers/ContactSuggester.h"
+
+#include <Swift/Controllers/ContactSuggester.h>
 
 using namespace Swift;
 

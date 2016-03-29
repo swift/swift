@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Disco/ClientDiscoManager.h>
 
-#include <Swiften/Disco/DiscoInfoResponder.h>
 #include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Disco/DiscoInfoResponder.h>
 #include <Swiften/Presence/PayloadAddingPresenceSender.h>
 
 namespace Swift {

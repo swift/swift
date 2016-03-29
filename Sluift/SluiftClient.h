@@ -7,23 +7,25 @@
 #pragma once
 
 #include <deque>
-#include <boost/optional.hpp>
+
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/optional.hpp>
 
+#include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/PubSub/PubSubManager.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
-#include <Swiften/Client/ClientError.h>
-#include <Swiften/Network/NetworkFactories.h>
-#include <Swiften/Client/Client.h>
-#include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Sluift/Watchdog.h>
-#include <Swiften/PubSub/PubSubManager.h>
+
 #include <Sluift/Response.h>
+#include <Sluift/Watchdog.h>
 
 namespace Swift {
 	struct SluiftGlobals;

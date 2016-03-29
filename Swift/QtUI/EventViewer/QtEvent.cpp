@@ -15,7 +15,7 @@
 #include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 #include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
 
-#include "Swift/QtUI/QtSwiftUtil.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,14 +7,14 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/Message.h>
-#include <Swiften/Elements/Thread.h>
-#include <Swiften/Elements/CarbonsEnable.h>
 #include <Swiften/Elements/CarbonsDisable.h>
+#include <Swiften/Elements/CarbonsEnable.h>
+#include <Swiften/Elements/CarbonsPrivate.h>
 #include <Swiften/Elements/CarbonsReceived.h>
 #include <Swiften/Elements/CarbonsSent.h>
-#include <Swiften/Elements/CarbonsPrivate.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Thread.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
 using namespace Swift;

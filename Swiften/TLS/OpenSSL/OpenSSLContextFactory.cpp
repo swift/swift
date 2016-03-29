@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/TLS/OpenSSL/OpenSSLContextFactory.h>
-#include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
+
 #include <Swiften/Base/Log.h>
+#include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
 
 namespace Swift {
 

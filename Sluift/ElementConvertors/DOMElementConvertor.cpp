@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,22 +7,25 @@
 #include <Sluift/ElementConvertors/DOMElementConvertor.h>
 
 #include <iostream>
+
 #include <boost/smart_ptr/make_shared.hpp>
+
 #include <lua.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/RawXMLPayload.h>
-#include <Swiften/Serializer/PayloadSerializer.h>
-#include <Sluift/Lua/Check.h>
-#include <Sluift/Lua/LuaUtils.h>
-#include <Swiften/Parser/XMLParserClient.h>
-#include <Swiften/Parser/XMLParser.h>
-#include <Swiften/Parser/AttributeMap.h>
 #include <Swiften/Parser/Attribute.h>
+#include <Swiften/Parser/AttributeMap.h>
+#include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/XMLParserClient.h>
+#include <Swiften/Serializer/PayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+
+#include <Sluift/Lua/Check.h>
 #include <Sluift/Lua/Debug.h>
+#include <Sluift/Lua/LuaUtils.h>
 
 using namespace Swift;
 

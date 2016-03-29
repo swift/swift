@@ -1,22 +1,24 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <map>
 
-#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
-#include <Swiften/LinkLocal/LinkLocalService.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDResolveServiceQuery.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/LinkLocal/LinkLocalService.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
 
 using namespace Swift;
 

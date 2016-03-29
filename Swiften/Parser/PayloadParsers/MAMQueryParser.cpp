@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
+
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 #include <Swiften/Parser/PayloadParsers/ResultSetParser.h>
-#include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
 
 using namespace Swift;
 

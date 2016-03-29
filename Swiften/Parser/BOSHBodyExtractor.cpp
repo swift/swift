@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/BOSHBodyExtractor.h>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/XMLParserFactory.h>
 
 namespace Swift {

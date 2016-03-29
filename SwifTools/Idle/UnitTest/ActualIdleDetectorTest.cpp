@@ -1,18 +1,20 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/bind.hpp>
+
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/Timer.h>
+#include <Swiften/Network/TimerFactory.h>
 
 #include <SwifTools/Idle/ActualIdleDetector.h>
 #include <SwifTools/Idle/IdleQuerier.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Network/Timer.h>
 
 using namespace Swift;
 

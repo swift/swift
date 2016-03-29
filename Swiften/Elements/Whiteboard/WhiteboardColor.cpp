@@ -4,12 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
-#include <Swiften/Base/String.h>
+
 #include <cstdio>
 #include <iomanip>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 	WhiteboardColor::WhiteboardColor() : red_(0), green_(0), blue_(0), alpha_(255) {

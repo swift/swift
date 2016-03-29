@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/LinkLocalPresenceManager.h"
+#include <Slimber/LinkLocalPresenceManager.h>
 
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
-#include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
 
 namespace Swift {
 

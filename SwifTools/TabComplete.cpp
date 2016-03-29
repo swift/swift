@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,7 @@
 #include <SwifTools/TabComplete.h>
 
 #include <algorithm>
+
 #include <boost/algorithm/string.hpp>
 
 #include <Swiften/Base/foreach.h>

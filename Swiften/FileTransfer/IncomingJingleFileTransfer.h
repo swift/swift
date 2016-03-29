@@ -1,23 +1,24 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <boost/cstdint.hpp>
 #include <string>
 
+#include <boost/cstdint.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Jingle/JingleContentID.h>
-#include <Swiften/FileTransfer/IncomingFileTransfer.h>
-#include <Swiften/FileTransfer/JingleFileTransfer.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
-#include <Swiften/Base/ByteArray.h>
+#include <Swiften/FileTransfer/IncomingFileTransfer.h>
+#include <Swiften/FileTransfer/JingleFileTransfer.h>
+#include <Swiften/Jingle/JingleContentID.h>
 
 namespace Swift {
 	class JID;

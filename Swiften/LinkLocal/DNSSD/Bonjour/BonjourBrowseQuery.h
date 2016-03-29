@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <boost/numeric/conversion/cast.hpp>
+
+#include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
-#include <Swiften/EventLoop/EventLoop.h>
-#include <boost/numeric/conversion/cast.hpp>
 
 namespace Swift {
 	class BonjourQuerier;

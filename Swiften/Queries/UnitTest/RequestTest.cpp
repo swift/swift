@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Queries/GenericRequest.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Queries/DummyIQChannel.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/RawXMLPayload.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Queries/IQRouter.h>
 
 using namespace Swift;
 

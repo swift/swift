@@ -1,39 +1,40 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/Server.h"
+#include <Slimber/Server.h>
 
-#include <string>
-#include <boost/bind.hpp>
 #include <iostream>
-
-#include "Swiften/Base/String.h"
-#include "Swiften/LinkLocal/LinkLocalConnector.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/Session/SessionTracer.h"
-#include "Swiften/Elements/ToplevelElement.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Network/BoostConnection.h"
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Swiften/Session/SessionTracer.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/VCard.h"
-#include "Limber/Server/UserRegistry.h"
-#include "Swiften/Session/Session.h"
-#include <Swiften/Base/foreach.h>
 #include <string>
+
+#include <boost/bind.hpp>
+
+#include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Elements/ToplevelElement.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/LinkLocal/IncomingLinkLocalSession.h>
+#include <Swiften/LinkLocal/LinkLocalConnector.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 #include <Swiften/LinkLocal/OutgoingLinkLocalSession.h>
-#include <Swiften/LinkLocal/IncomingLinkLocalSession.h>
-#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionServer.h>
-#include "Slimber/VCardCollection.h"
-#include "Slimber/LinkLocalPresenceManager.h"
-#include "Limber/Server/ServerFromClientSession.h"
+#include <Swiften/Session/Session.h>
+#include <Swiften/Session/SessionTracer.h>
+
+#include <Limber/Server/ServerFromClientSession.h>
+#include <Limber/Server/UserRegistry.h>
+
+#include <Slimber/LinkLocalPresenceManager.h>
+#include <Slimber/VCardCollection.h>
 
 namespace Swift {
 

@@ -5,15 +5,17 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/UserSearch/ContactListDelegate.h>
-#include <Swift/QtUI/UserSearch/ContactListModel.h>
+
 #include <Swift/Controllers/Contact.h>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/UserSearch/ContactListModel.h>
 
 namespace Swift {
 

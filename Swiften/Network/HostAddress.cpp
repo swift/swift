@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/HostAddress.h>
 
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/lexical_cast.hpp>
 #include <cassert>
 #include <stdexcept>
+#include <string>
+
 #include <boost/array.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <string>
 
 static boost::asio::ip::address localhost4 = boost::asio::ip::address(boost::asio::ip::address_v4::loopback());
 static boost::asio::ip::address localhost6 = boost::asio::ip::address(boost::asio::ip::address_v6::loopback());

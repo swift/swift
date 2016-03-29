@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <QApplication>
 #include <QCoreApplication>
-#include <QSystemTrayIcon>
 #include <QMessageBox>
+#include <QSystemTrayIcon>
 
-#include "QtMenulet.h"
-#include "Slimber/MainController.h"
 #include <Swiften/EventLoop/Qt/QtEventLoop.h>
+
+#include <Slimber/MainController.h>
 #include <Slimber/Qt/BuildVersion.h>
+#include <Slimber/Qt/QtMenulet.h>
 
 int main(int argc, char* argv[]) {
 	QApplication app(argc, argv);

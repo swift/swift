@@ -6,10 +6,9 @@
 
 #pragma once
 
-#include <Swiften/Client/CoreClient.h>
-
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeString.h>
+#include <Swiften/Client/CoreClient.h>
 
 namespace Swift {
 	class SoftwareVersionResponder;

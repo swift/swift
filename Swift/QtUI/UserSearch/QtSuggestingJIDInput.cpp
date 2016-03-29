@@ -5,27 +5,28 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
-#include <Swift/QtUI/UserSearch/ContactListDelegate.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/QtUI/QtUISettingConstants.h>
-#include <Swift/QtUI/UserSearch/ContactListModel.h>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <boost/bind.hpp>
-
-#include <Swift/QtUI/QtSwiftUtil.h>
 
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QKeyEvent>
 
+#include <Swiften/Base/boost_bsignals.h>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/UserSearch/ContactListDelegate.h>
+#include <Swift/QtUI/UserSearch/ContactListModel.h>
 
 namespace Swift {
 

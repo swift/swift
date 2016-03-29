@@ -5,22 +5,22 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
-#include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/Network/ConnectionFactory.h>
 
 using namespace Swift;
 

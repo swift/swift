@@ -4,12 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swift/Controllers/FileTransferListController.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/Controllers/FileTransferListController.h>
 
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h"
-#include "Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h"
+#include <Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h>
 
 namespace Swift {
 

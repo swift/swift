@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,14 +8,15 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Sluift/GenericLuaElementConvertor.h>
-#include <Sluift/LuaElementConvertors.h>
-#include <Sluift/Lua/Exception.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/IQ.h>
-#include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/Presence.h>
+
+#include <Sluift/GenericLuaElementConvertor.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/LuaElementConvertors.h>
 
 namespace Swift {
 	template <typename T> class StanzaConvertor : public GenericLuaElementConvertor<T> {

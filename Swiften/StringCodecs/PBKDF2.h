@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/Concat.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {

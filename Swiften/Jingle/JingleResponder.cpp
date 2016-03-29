@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,9 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Jingle/JingleSessionImpl.h>
-
 #include <Swiften/Base/Log.h>
+#include <Swiften/Jingle/JingleSessionImpl.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
 
 namespace Swift {
 

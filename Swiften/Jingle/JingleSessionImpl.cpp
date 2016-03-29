@@ -1,24 +1,23 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Jingle/JingleSessionImpl.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/bind.hpp>
 #include <algorithm>
 
-#include <Swiften/Parser/PayloadParsers/JingleParser.h>
-#include <Swiften/Jingle/JingleContentID.h>
-#include <Swiften/Jingle/JingleSessionListener.h>
-#include <Swiften/Elements/JingleContentPayload.h>
-#include <Swiften/Queries/Request.h>
-#include <Swiften/Queries/GenericRequest.h>
+#include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
-
+#include <Swiften/Elements/JingleContentPayload.h>
+#include <Swiften/Jingle/JingleContentID.h>
+#include <Swiften/Jingle/JingleSessionListener.h>
+#include <Swiften/Parser/PayloadParsers/JingleParser.h>
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Queries/Request.h>
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 
 namespace Swift {

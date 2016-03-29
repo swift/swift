@@ -4,14 +4,22 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Network/GConfProxyProvider.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <iostream>
 
 #include <gconf/gconf-client.h>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Network/GConfProxyProvider.h>
 
 namespace Swift {
 

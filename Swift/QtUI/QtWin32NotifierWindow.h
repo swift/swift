@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <QWidget>
 
-#include "SwifTools/Notifier/Win32NotifierWindow.h"
+#include <SwifTools/Notifier/Win32NotifierWindow.h>
 
 namespace Swift {
 	class QtWin32NotifierWindow : public QWidget, public Win32NotifierWindow {

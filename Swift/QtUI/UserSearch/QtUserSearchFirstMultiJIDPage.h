@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,8 +14,9 @@
 
 #include <QWizardPage>
 
-#include <Swift/QtUI/UserSearch/ui_QtUserSearchFirstMultiJIDPage.h>
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
+
+#include <Swift/QtUI/UserSearch/ui_QtUserSearchFirstMultiJIDPage.h>
 
 namespace Swift {
 	class UserSearchModel;

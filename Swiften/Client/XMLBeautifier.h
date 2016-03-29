@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,14 +13,14 @@
 #pragma once
 
 #include <sstream>
-#include <string>
 #include <stack>
+#include <string>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Parser/XMLParserFactory.h>
-#include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/XMLParserClient.h>
+#include <Swiften/Parser/XMLParserFactory.h>
 
 namespace Swift {
 

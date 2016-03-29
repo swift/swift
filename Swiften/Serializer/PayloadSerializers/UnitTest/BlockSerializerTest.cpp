@@ -4,14 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/PayloadSerializers/BlockSerializer.h>
 #include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/UnblockPayload.h>
 #include <Swiften/JID/JID.h>
+#include <Swiften/Serializer/PayloadSerializers/BlockSerializer.h>
 
 using namespace Swift;
 

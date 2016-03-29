@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,11 +10,12 @@
 
 #include <QTreeView>
 
-#include "Swift/Controllers/UIInterfaces/EventWindow.h"
-#include "Swift/Controllers/UIEvents/UIEventStream.h"
-#include "Swift/QtUI/EventViewer/EventView.h"
-#include "Swift/QtUI/EventViewer/EventModel.h"
-#include "Swift/QtUI/EventViewer/EventDelegate.h"
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/EventWindow.h>
+
+#include <Swift/QtUI/EventViewer/EventDelegate.h>
+#include <Swift/QtUI/EventViewer/EventModel.h>
+#include <Swift/QtUI/EventViewer/EventView.h>
 
 class QPushButton;
 

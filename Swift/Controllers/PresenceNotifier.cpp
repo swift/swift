@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/PresenceNotifier.h"
+#include <Swift/Controllers/PresenceNotifier.h>
 
 #include <boost/bind.hpp>
 
-#include "Swiften/Client/StanzaChannel.h"
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/MUC/MUCRegistry.h"
-#include "Swiften/Roster/XMPPRoster.h"
-#include "Swiften/Presence/PresenceOracle.h"
-#include "Swiften/Network/TimerFactory.h"
-#include "Swiften/Client/NickResolver.h"
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/Presence/PresenceOracle.h>
+#include <Swiften/Roster/XMPPRoster.h>
+
 #include <Swift/Controllers/StatusUtil.h>
 
 namespace Swift {

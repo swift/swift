@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,9 @@
 
 #include <QLineEdit>
 #include <QTreeView>
+
 #include <Swiften/Base/boost_bsignals.h>
+
 #include <Swift/Controllers/Contact.h>
 
 namespace Swift {

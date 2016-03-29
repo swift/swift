@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swift/Controllers/UIEvents/UIEvent.h"
-#include "Swiften/MUC/MUCBookmark.h"
+#include <Swiften/MUC/MUCBookmark.h>
+
+#include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
 	class EditMUCBookmarkUIEvent : public UIEvent {

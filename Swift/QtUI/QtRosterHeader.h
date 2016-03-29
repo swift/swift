@@ -1,23 +1,25 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QWidget>
+#include <string>
+
 #include <QLabel>
 #include <QPixmap>
 #include <QSize>
 #include <QToolButton>
+#include <QWidget>
 
-#include <string>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/Elements/VCard.h>
+
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 
-#include "QtTextEdit.h"
+#include <Swift/QtUI/QtTextEdit.h>
 
 class QHBoxLayout;
 

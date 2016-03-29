@@ -4,10 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include "ColorWidget.h"
-#include <QPainter>
+
+#include <Swift/QtUI/Whiteboard/ColorWidget.h>
+
 #include <QMouseEvent>
+#include <QPainter>
 
 namespace Swift {
 	ColorWidget::ColorWidget(QWidget* parent) : QWidget(parent) {

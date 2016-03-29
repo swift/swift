@@ -1,24 +1,25 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/Chat/MUCSearchController.h"
+#include <Swift/Controllers/Chat/MUCSearchController.h>
 
 #include <iostream>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Disco/DiscoServiceWalker.h>
+#include <Swiften/Disco/GetDiscoItemsRequest.h>
+
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/MUCSearchWindowFactory.h>
-#include <Swiften/Disco/DiscoServiceWalker.h>
-#include <Swiften/Client/NickResolver.h>
 
 namespace Swift {
 

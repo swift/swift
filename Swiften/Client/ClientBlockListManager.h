@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,14 +10,14 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Elements/BlockPayload.h>
-#include <Swiften/Elements/BlockListPayload.h>
-#include <Swiften/Elements/UnblockPayload.h>
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Queries/SetResponder.h>
-#include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Client/BlockList.h>
 #include <Swiften/Client/BlockListImpl.h>
+#include <Swiften/Elements/BlockListPayload.h>
+#include <Swiften/Elements/BlockPayload.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/UnblockPayload.h>
+#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Queries/SetResponder.h>
 
 namespace Swift {
 	class IQRouter;

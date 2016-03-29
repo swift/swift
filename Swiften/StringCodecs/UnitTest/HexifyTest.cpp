@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <string>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/StringCodecs/Hexify.h>
-#include <string>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
 

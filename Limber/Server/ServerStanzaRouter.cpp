@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Limber/Server/ServerStanzaRouter.h"
-#include "Limber/Server/ServerSession.h"
+#include <Limber/Server/ServerStanzaRouter.h>
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
+
 #include <Swiften/Base/Algorithm.h>
+
+#include <Limber/Server/ServerSession.h>
 
 namespace Swift {
 

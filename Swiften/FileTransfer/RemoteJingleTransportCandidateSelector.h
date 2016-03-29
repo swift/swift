@@ -5,12 +5,14 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
+
+#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
 
 #include <queue>
 #include <vector>
@@ -18,13 +20,11 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Override.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Network/Connection.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
-#include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
-
+#include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Network/Connection.h>
 
 namespace Swift {
 	class ConnectionFactory;

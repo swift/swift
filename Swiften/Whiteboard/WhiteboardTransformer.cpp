@@ -4,7 +4,14 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Whiteboard/WhiteboardTransformer.h>
+
 #include <boost/smart_ptr/make_shared.hpp>
 
 namespace Swift {

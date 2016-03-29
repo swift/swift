@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
-#include <Swiften/Parser/XMLParser.h>
-#include <Swiften/Parser/XMLParserClient.h>
-#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Parser/PayloadParser.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
 	class PayloadsParserTester : public XMLParserClient {

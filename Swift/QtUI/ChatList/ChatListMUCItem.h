@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QList>
-
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/MUC/MUCBookmark.h"
+#include <QList>
 
-#include "Swift/QtUI/ChatList/ChatListItem.h"
+#include <Swiften/MUC/MUCBookmark.h>
+
+#include <Swift/QtUI/ChatList/ChatListItem.h>
 
 namespace Swift {
 	class ChatListMUCItem : public ChatListItem {

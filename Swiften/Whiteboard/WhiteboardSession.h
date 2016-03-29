@@ -4,17 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
 	class IQRouter;

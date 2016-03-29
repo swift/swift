@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,9 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/PubSub/PubSubManager.h>
-
 #define SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST(payload, container, response) \
 	virtual boost::shared_ptr< PubSubRequest<payload> >  \
 			createRequest(IQ::Type type, const JID& receiver, boost::shared_ptr<payload> p) SWIFTEN_OVERRIDE { \

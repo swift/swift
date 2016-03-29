@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QStyledItemDelegate>
 #include <QColor>
 #include <QFont>
+#include <QStyledItemDelegate>
 
-#include "GroupItemDelegate.h"
-#include "DelegateCommons.h"
+#include <Swift/QtUI/Roster/DelegateCommons.h>
+#include <Swift/QtUI/Roster/GroupItemDelegate.h>
 
 namespace Swift {
 	class QtTreeWidget;

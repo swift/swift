@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Client/ClientBlockListManager.h>
 
+#include <cassert>
+
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <cassert>
 
 #include <Swiften/Client/BlockListImpl.h>
 

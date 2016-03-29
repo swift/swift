@@ -1,26 +1,29 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <boost/optional.hpp>
 #include <vector>
 
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Limber/Server/UserRegistry.h"
-#include "Swiften/Base/IDGenerator.h"
-#include "Swiften/Parser/PlatformXMLParserFactory.h"
-#include "Limber/Server/ServerFromClientSession.h"
-#include "Swiften/JID/JID.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
-#include "Swiften/LinkLocal/LinkLocalServiceInfo.h"
-#include "Slimber/ServerError.h"
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+
+#include <Limber/Server/ServerFromClientSession.h>
+#include <Limber/Server/UserRegistry.h>
+
+#include <Slimber/ServerError.h>
 
 namespace Swift {
 	class DNSSDServiceID;

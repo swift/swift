@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,7 @@
 #include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
 
 #include <boost/optional.hpp>
+
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {

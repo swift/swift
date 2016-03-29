@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
 	/**

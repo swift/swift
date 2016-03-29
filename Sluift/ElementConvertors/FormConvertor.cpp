@@ -1,19 +1,23 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/FormConvertor.h>
 
-#include <lua.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <sstream>
+
+#include <boost/assign/list_of.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <lua.hpp>
+
+#include <Swiften/Base/foreach.h>
+
 #include <Sluift/Lua/Check.h>
 #include <Sluift/Lua/Value.h>
-#include <Swiften/Base/foreach.h>
-#include <boost/assign/list_of.hpp>
-#include <sstream>
 
 using namespace Swift;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 
 #include <Swiften/JID/JID.h>
 
-#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 
 namespace Swift {
 

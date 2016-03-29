@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/SystemTrayController.h"
+#include <Swift/Controllers/SystemTrayController.h>
 
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/XMPPEvents/EventController.h"
-#include "Swift/Controllers/SystemTray.h"
+#include <Swift/Controllers/SystemTray.h>
+#include <Swift/Controllers/XMPPEvents/EventController.h>
 
 namespace Swift {
 

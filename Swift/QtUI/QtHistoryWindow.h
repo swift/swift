@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,6 @@
 #include <Swift/Controllers/UIInterfaces/HistoryWindow.h>
 
 #include <Swift/QtUI/QtTabbable.h>
-
 #include <Swift/QtUI/ui_QtHistoryWindow.h>
 
 namespace Swift {

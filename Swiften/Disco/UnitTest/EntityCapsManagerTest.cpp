@@ -1,21 +1,23 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <vector>
+
 #include <boost/bind.hpp>
 
-#include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/Disco/CapsProvider.h>
-#include <Swiften/Elements/CapsInfo.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/Disco/CapsInfoGenerator.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Disco/CapsInfoGenerator.h>
+#include <Swiften/Disco/CapsProvider.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Elements/CapsInfo.h>
 
 using namespace Swift;
 

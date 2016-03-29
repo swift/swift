@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/ChatMessageSummarizer.h>
 
-#include <Swiften/Base/format.h>
-#include <Swift/Controllers/Intl.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/format.h>
+
+#include <Swift/Controllers/Intl.h>
 
 using namespace Swift;
 using namespace std;

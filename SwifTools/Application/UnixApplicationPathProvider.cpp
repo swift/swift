@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,12 @@
 #include <SwifTools/Application/UnixApplicationPathProvider.h>
 
 #include <stdlib.h>
-#include <unistd.h>
-#include <boost/algorithm/string.hpp>
+
 #include <iostream>
+
+#include <boost/algorithm/string.hpp>
+
+#include <unistd.h>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>

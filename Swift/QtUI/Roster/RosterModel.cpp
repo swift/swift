@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,19 +11,20 @@
 #include <QColor>
 #include <QIcon>
 #include <QMimeData>
+
 #include <qdebug.h>
 
-#include <Swiften/Elements/StatusShow.h>
 #include <Swiften/Base/Path.h>
+#include <Swiften/Elements/StatusShow.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/StatusUtil.h>
 
-#include <Swift/QtUI/Roster/QtTreeWidget.h>
-#include <Swift/QtUI/Roster/RosterTooltip.h>
 #include <Swift/QtUI/QtResourceHelper.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
+#include <Swift/QtUI/Roster/RosterTooltip.h>
 
 namespace Swift {
 

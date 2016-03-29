@@ -5,17 +5,18 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtFormResultItemModel.h"
+#include <Swift/QtUI/QtFormResultItemModel.h>
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swiften/Base/foreach.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

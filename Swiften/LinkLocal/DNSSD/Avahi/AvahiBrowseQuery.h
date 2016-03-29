@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,9 @@
 
 #include <avahi-client/lookup.h>
 
+#include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
-#include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
 	class AvahiQuerier;

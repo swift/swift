@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,9 @@
 #pragma once
 
 #include <Swiften/Base/Override.h>
+#include <Swiften/Elements/Delay.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
-#include <Swiften/Elements/Delay.h>
 
 namespace Swift {
 	class DelayConvertor : public GenericLuaElementConvertor<Delay> {

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/ChatListWindow.h"
+#include <Swift/Controllers/UIInterfaces/ChatListWindow.h>
 
 namespace Swift {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,17 +8,6 @@
 
 #include <algorithm>
 #include <vector>
-
-#include <Swiften/Base/Log.h>
-
-#include <Swift/Controllers/ChatMessageSummarizer.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtTabWidget.h>
-#include <Swift/QtUI/QtTabbable.h>
-#include <Swift/QtUI/Trellis/QtDynamicGridLayout.h>
-#include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
 
 #include <QAction>
 #include <QApplication>
@@ -30,6 +19,18 @@
 #include <QTabBar>
 #include <QTabWidget>
 #include <QtGlobal>
+
+#include <Swiften/Base/Log.h>
+
+#include <Swift/Controllers/ChatMessageSummarizer.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtTabWidget.h>
+#include <Swift/QtUI/QtTabbable.h>
+#include <Swift/QtUI/Trellis/QtDynamicGridLayout.h>
+#include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
 
 namespace Swift {
 QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode) : QWidget(), singleWindow_(singleWindow), settingsProvider_(settingsProvider), trellisMode_(trellisMode), dynamicGrid_(NULL), gridSelectionDialog_(NULL) {

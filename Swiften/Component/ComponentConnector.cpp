@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Component/ComponentConnector.h>
 
-#include <boost/bind.hpp>
 #include <iostream>
 
+#include <boost/bind.hpp>
+
 #include <Swiften/Network/ConnectionFactory.h>
-#include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {

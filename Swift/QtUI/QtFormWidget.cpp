@@ -1,24 +1,27 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtFormWidget.h>
 
-#include <QGridLayout>
-#include <QLabel>
-#include <QListWidget>
-#include <QLineEdit>
-#include <QTextEdit>
-#include <QCheckBox>
-#include <QScrollArea>
-#include <qdebug.h>
-
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swiften/Base/foreach.h>
 #include <boost/algorithm/string/join.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <QCheckBox>
+#include <QGridLayout>
+#include <QLabel>
+#include <QLineEdit>
+#include <QListWidget>
+#include <QScrollArea>
+#include <QTextEdit>
+
+#include <qdebug.h>
+
+#include <Swiften/Base/foreach.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

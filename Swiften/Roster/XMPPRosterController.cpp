@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Roster/XMPPRosterController.h>
 
-#include <boost/bind.hpp>
 #include <iostream>
+
+#include <boost/bind.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Roster/GetRosterRequest.h>
-#include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/Roster/RosterStorage.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 
 namespace Swift {
 	

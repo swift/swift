@@ -1,14 +1,16 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/API.h>
-#include <boost/filesystem/path.hpp>
 #include <string>
+
+#include <boost/filesystem/path.hpp>
+
+#include <Swiften/Base/API.h>
 
 namespace Swift {
 	/**

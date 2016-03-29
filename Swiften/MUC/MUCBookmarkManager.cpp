@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "MUCBookmarkManager.h"
+#include <Swiften/MUC/MUCBookmarkManager.h>
+
+#include <iostream>
 
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <iostream>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/Requests/GetPrivateStorageRequest.h>
 #include <Swiften/Queries/Requests/SetPrivateStorageRequest.h>
-
 
 namespace Swift {
 

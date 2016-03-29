@@ -4,44 +4,46 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/assign/list_of.hpp>
 #include <iostream>
 
-#include <Sluift/SluiftClient.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/SoftwareVersion.h>
+#include <boost/assign/list_of.hpp>
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/MAMQuery.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Elements/RosterPayload.h>
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Elements/MAMQuery.h>
-#include <Swiften/Disco/ClientDiscoManager.h>
-#include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Elements/SoftwareVersion.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Presence/PresenceSender.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Presence/SubscriptionManager.h>
-#include <Swiften/Roster/XMPPRosterItem.h>
+#include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/Requests/GetSoftwareVersionRequest.h>
+#include <Swiften/Roster/SetRosterRequest.h>
+#include <Swiften/Roster/XMPPRoster.h>
+#include <Swiften/Roster/XMPPRosterItem.h>
 #include <Swiften/TLS/PKCS12Certificate.h>
-#include <Sluift/Lua/FunctionRegistration.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Base/IDGenerator.h>
-#include <Sluift/Lua/Check.h>
-#include <Sluift/Lua/Value.h>
-#include <Sluift/Lua/Exception.h>
-#include <Sluift/Lua/LuaUtils.h>
-#include <Sluift/globals.h>
-#include <Sluift/ElementConvertors/StanzaConvertor.h>
+
 #include <Sluift/ElementConvertors/IQConvertor.h>
-#include <Sluift/ElementConvertors/PresenceConvertor.h>
 #include <Sluift/ElementConvertors/MessageConvertor.h>
+#include <Sluift/ElementConvertors/PresenceConvertor.h>
+#include <Sluift/ElementConvertors/StanzaConvertor.h>
 #include <Sluift/ElementConvertors/StatusShowConvertor.h>
+#include <Sluift/Lua/Check.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/FunctionRegistration.h>
+#include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/Lua/Value.h>
+#include <Sluift/SluiftClient.h>
+#include <Sluift/globals.h>
 
 using namespace Swift;
 namespace lambda = boost::lambda;

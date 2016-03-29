@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/PubSubOwnerDelete.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 

@@ -5,13 +5,12 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QtBlockListEditorWindow.h>
-#include <ui_QtBlockListEditorWindow.h>
+#include <Swift/QtUI/QtBlockListEditorWindow.h>
 
 #include <boost/bind.hpp>
 
@@ -21,11 +20,13 @@
 #include <QStyledItemDelegate>
 #include <QValidator>
 
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtUtilities.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/JID/JID.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
+#include <Swift/QtUI/ui_QtBlockListEditorWindow.h>
 
 namespace Swift {
 

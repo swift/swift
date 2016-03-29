@@ -4,13 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "UnboundDomainNameResolver.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <vector>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <UnboundDomainNameResolver.h>
+#include <arpa/inet.h>
+#include <ldns/ldns.h>
+#include <unbound.h>
+#include <unistd.h>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -20,11 +30,6 @@
 #include <Swiften/Network/DomainNameServiceQuery.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/TimerFactory.h>
-
-#include <arpa/inet.h>
-#include <unbound.h>
-#include <ldns/ldns.h>
-#include <unistd.h>
 
 namespace Swift {
 

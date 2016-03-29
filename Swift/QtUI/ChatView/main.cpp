@@ -1,25 +1,27 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QtDebug>
-#include <QApplication>
 #include <iostream>
-#include <QWidget>
-#include <QFile>
+
+#include <QApplication>
 #include <QDateTime>
+#include <QFile>
 #include <QLineEdit>
-#include <QVBoxLayout>
-#include <QWebView>
-#include <QWebFrame>
-#include <QNetworkRequest>
-#include <QNetworkReply>
 #include <QNetworkAccessManager>
-#include "../QtChatView.h"
-#include "../MessageSnippet.h"
-#include "../SystemMessageSnippet.h"
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QVBoxLayout>
+#include <QWebFrame>
+#include <QWebView>
+#include <QWidget>
+#include <QtDebug>
+
+#include <Swift/QtUI/MessageSnippet.h>
+#include <Swift/QtUI/QtChatView.h>
+#include <Swift/QtUI/SystemMessageSnippet.h>
 
 using namespace Swift;
 

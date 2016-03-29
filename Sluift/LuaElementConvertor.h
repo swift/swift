@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
 #include <string>
-#include <boost/shared_ptr.hpp>
+
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Base/Override.h>
 
 struct lua_State;
 

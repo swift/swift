@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/URL.h>
 #include <Swiften/Base/SafeString.h>
+#include <Swiften/Base/URL.h>
 #include <Swiften/TLS/TLSOptions.h>
-
 
 namespace Swift {
 	class HTTPTrafficFilter;

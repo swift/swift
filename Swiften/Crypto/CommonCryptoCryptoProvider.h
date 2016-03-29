@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Base/Override.h>
+#include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
 	class SWIFTEN_API CommonCryptoCryptoProvider : public CryptoProvider {

@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/optional.hpp>
 #include <string>
 
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubEventPayload.h>
 #include <Swiften/JID/JID.h>
 

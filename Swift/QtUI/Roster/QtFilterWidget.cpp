@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,8 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+#include <Swift/QtUI/Roster/QtFilterWidget.h>
+
 #include <QEvent>
 #include <QKeyEvent>
 #include <QLayout>
@@ -18,9 +20,9 @@
 
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
+
 #include <Swift/QtUI/QtClosableLineEdit.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/Roster/QtFilterWidget.h>
 
 namespace Swift {
 

@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/PayloadParsers/VCardParser.h>
-#include <Swiften/Base/foreach.h>
+
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Parser/SerializingParser.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 

@@ -1,24 +1,27 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/MainController.h"
+#include <Slimber/MainController.h>
+
+#include <iostream>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <iostream>
 
 #include <Swiften/Base/foreach.h>
-#include <SwifTools/Application/PlatformApplicationPathProvider.h>
+#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
 #include <Swiften/LinkLocal/LinkLocalService.h>
 #include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
-#include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
-#include "Slimber/Server.h"
-#include "Slimber/FileVCardCollection.h"
-#include "Slimber/MenuletController.h"
-#include "Slimber/Menulet.h"
+
+#include <Slimber/FileVCardCollection.h>
+#include <Slimber/Menulet.h>
+#include <Slimber/MenuletController.h>
+#include <Slimber/Server.h>
+
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 using namespace Swift;
 

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/bind.hpp>
-
 #include <Swiften/FileTransfer/IBBSendTransportSession.h>
+
+#include <boost/bind.hpp>
 
 namespace Swift {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/BOSHBodyExtractor.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 
 using namespace Swift;
 

@@ -4,20 +4,26 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/PayloadSerializers/IsodeIQDelegationSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
-#include <Swiften/Elements/IsodeIQDelegation.h>
+#include <Swiften/Base/DateTime.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/IsodeIQDelegation.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/Subject.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/Base/DateTime.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/IsodeIQDelegationSerializer.h>
 
 using namespace Swift;
 

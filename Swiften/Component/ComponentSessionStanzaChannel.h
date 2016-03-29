@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,10 +10,10 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Elements/Message.h>
+#include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {

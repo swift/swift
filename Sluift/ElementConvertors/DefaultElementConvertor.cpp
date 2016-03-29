@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #include <Sluift/ElementConvertors/DefaultElementConvertor.h>
 
 #include <iostream>
-#include <typeinfo>
 #include <string>
+#include <typeinfo>
 
 using namespace Swift;
 

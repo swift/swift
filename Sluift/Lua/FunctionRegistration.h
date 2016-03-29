@@ -1,16 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Sluift/Lua/FunctionRegistry.h>
-#include <lua.hpp>
 #include <string>
+
+#include <lua.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
+
+#include <Sluift/Lua/FunctionRegistry.h>
 
 namespace Swift {
 	namespace Lua {

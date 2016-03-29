@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,13 @@
 #include <boost/thread.hpp>
 
 #include <Swiften/Client/Client.h>
-#include <Swiften/Network/BoostTimer.h>
+#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Swiften/Roster/GetRosterRequest.h>
-#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/BoostTimer.h>
 #include <Swiften/Network/MainBoostIOServiceThread.h>
+#include <Swiften/Roster/GetRosterRequest.h>
 
 using namespace Swift;
 

@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/TLS/Certificate.h>
-#include <Swiften/TLS/SimpleCertificate.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/SimpleCertificate.h>
 
 using namespace Swift;
 

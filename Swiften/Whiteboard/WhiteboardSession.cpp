@@ -4,14 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Elements/WhiteboardPayload.h>
-#include <Swiften/Elements/ErrorPayload.h>
-
 #include <iostream>
+
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/WhiteboardPayload.h>
+#include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 	WhiteboardSession::WhiteboardSession(const JID& jid, IQRouter* router) : toJID_(jid), router_(router) {

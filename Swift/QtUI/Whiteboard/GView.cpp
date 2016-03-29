@@ -4,8 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "GView.h"
-#include <QtSwiftUtil.h>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/Whiteboard/GView.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 	GView::GView(QGraphicsScene* scene, QWidget* parent) : QGraphicsView(scene, parent), zValue(0), mousePressed(false), brush(QColor(Qt::white)), defaultBrush(QColor(Qt::white)), mode(GView::Select), lastItem(NULL), selectionRect(NULL), textDialog(NULL) {

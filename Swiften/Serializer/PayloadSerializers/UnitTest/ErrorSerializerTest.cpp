@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/Elements/Delay.h>
 #include <Swiften/Serializer/PayloadSerializers/ErrorSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
-#include <Swiften/Elements/Delay.h>
 
 using namespace Swift;
 

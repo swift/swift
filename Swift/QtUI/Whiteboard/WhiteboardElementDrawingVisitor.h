@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Elements/Whiteboard/WhiteboardElementVisitor.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardPolygonElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardTextElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/Whiteboard/GView.h>
-#include <QtSwiftUtil.h>
 
 namespace Swift {
 	class WhiteboardElementDrawingVisitor : public WhiteboardElementVisitor {

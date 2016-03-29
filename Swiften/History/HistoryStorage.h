@@ -1,18 +1,20 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <set>
 #include <map>
+#include <set>
 #include <vector>
-#include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/History/HistoryMessage.h>
+
 #include <boost/date_time/gregorian/gregorian_types.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/History/HistoryMessage.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	typedef std::map<JID, std::set<boost::gregorian::date> > ContactsMap;

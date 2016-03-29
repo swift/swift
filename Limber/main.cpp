@@ -1,30 +1,32 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <string>
+
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/RosterPayload.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Base/IDGenerator.h"
-#include "Swiften/EventLoop/EventLoop.h"
-#include "Swiften/EventLoop/SimpleEventLoop.h"
-#include "Swiften/EventLoop/EventOwner.h"
-#include "Swiften/Elements/Stanza.h"
-#include "Swiften/Network/ConnectionServer.h"
-#include "Swiften/Network/BoostConnection.h"
-#include "Swiften/Network/BoostIOServiceThread.h"
-#include "Swiften/Network/BoostConnectionServer.h"
-#include "Limber/Server/SimpleUserRegistry.h"
-#include "Limber/Server/ServerFromClientSession.h"
-#include "Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h"
-#include "Swiften/Parser/PlatformXMLParserFactory.h"
-#include "Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h"
+#include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/RosterPayload.h>
+#include <Swiften/Elements/Stanza.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/EventLoop/EventOwner.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Network/BoostConnection.h>
+#include <Swiften/Network/BoostConnectionServer.h>
+#include <Swiften/Network/BoostIOServiceThread.h>
+#include <Swiften/Network/ConnectionServer.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+
+#include <Limber/Server/ServerFromClientSession.h>
+#include <Limber/Server/SimpleUserRegistry.h>
 
 using namespace Swift;
 

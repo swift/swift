@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,15 +7,15 @@
 #include <Swift/QtUI/QtChatWindowFactory.h>
 
 #include <QDesktopWidget>
+
 #include <qdebug.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtChatTabsBase.h>
-#include <Swift/QtUI/QtChatWindow.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtChatTheme.h>
+#include <Swift/QtUI/QtChatWindow.h>
 #include <Swift/QtUI/QtSingleWindow.h>
-
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

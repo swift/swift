@@ -1,26 +1,28 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/MUC/MUC.h>
-#include <Swiften/MUC/MUCRegistry.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/Message.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/MUCOccupant.h>
-#include <Swiften/Elements/MUCOwnerPayload.h>
-#include <Swiften/Elements/MUCAdminPayload.h>
-#include <Swiften/Elements/Form.h>
+#include <map>
+#include <string>
+
+#include <boost/shared_ptr.hpp>
+#include <boost/signals/connection.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <boost/signals/connection.hpp>
-#include <boost/shared_ptr.hpp>
-#include <string>
-#include <map>
+#include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/MUCAdminPayload.h>
+#include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/Elements/MUCOwnerPayload.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/MUC/MUC.h>
+#include <Swiften/MUC/MUCRegistry.h>
 
 namespace Swift {
 	class StanzaChannel;

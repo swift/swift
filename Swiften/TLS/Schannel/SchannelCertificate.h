@@ -4,13 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <boost/shared_ptr.hpp>
 
-#include "Swiften/Base/String.h"
-#include "Swiften/TLS/Certificate.h"
-#include "Swiften/TLS/Schannel/SchannelUtil.h"
+#include <Swiften/Base/String.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/Schannel/SchannelUtil.h>
 
 namespace Swift 
 {

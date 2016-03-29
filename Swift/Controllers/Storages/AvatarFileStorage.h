@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,11 +8,12 @@
 
 #include <map>
 #include <string>
+
 #include <boost/filesystem/path.hpp>
 
+#include <Swiften/Avatars/AvatarStorage.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/JID/JID.h>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Avatars/AvatarStorage.h"
 
 namespace Swift {
 	class CryptoProvider;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,7 +9,6 @@
 #include <Swiften/Base/Platform.h>
 #include <Swiften/TLS/CertificateFactory.h>
 #include <Swiften/TLS/TLSContextFactory.h>
-
 #ifdef HAVE_OPENSSL
 	#include <Swiften/TLS/OpenSSL/OpenSSLContextFactory.h>
 	#include <Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h>

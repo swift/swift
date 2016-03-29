@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Jingle/JingleResponder.h>
-#include <Swiften/Jingle/IncomingJingleSessionHandler.h>
+
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Base/Algorithm.h>
+#include <Swiften/Jingle/IncomingJingleSessionHandler.h>
+#include <Swiften/Jingle/JingleResponder.h>
 
 namespace Swift {
 

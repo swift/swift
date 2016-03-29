@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <string>
 #include <map>
+#include <string>
+
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Command.h>
 #include <Swiften/Elements/ErrorPayload.h>
-#include <boost/signals/connection.hpp>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class IQRouter;

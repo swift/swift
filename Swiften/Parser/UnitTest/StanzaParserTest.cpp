@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,12 +7,12 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Parser/StanzaParser.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/Stanza.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Elements/Stanza.h>
-#include <Swiften/Elements/Payload.h>
+#include <Swiften/Parser/StanzaParser.h>
 
 using namespace Swift;
 

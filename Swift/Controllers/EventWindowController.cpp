@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/EventWindowController.h>
 
+#include <boost/bind.hpp>
+
 #include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 #include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
-#include <boost/bind.hpp>
 
 namespace Swift {
 

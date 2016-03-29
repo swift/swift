@@ -1,21 +1,25 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/Console.h>
-#include <lua.hpp>
-#include <stdexcept>
+
+#include <cctype>
 #include <iostream>
-#include <boost/optional.hpp>
-#include <boost/lexical_cast.hpp>
+#include <stdexcept>
+
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/optional.hpp>
+
+#include <lua.hpp>
+
+#include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/Terminal.h>
 #include <Sluift/tokenize.h>
-#include <Sluift/Lua/LuaUtils.h>
-#include <cctype>
 
 using namespace Swift;
 

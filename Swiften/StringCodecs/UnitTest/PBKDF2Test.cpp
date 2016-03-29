@@ -1,19 +1,18 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
 #include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/StringCodecs/PBKDF2.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/StringCodecs/PBKDF2.h>
 
 using namespace Swift;
 

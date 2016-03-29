@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,13 +7,14 @@
 #include <Swiften/Base/DateTime.h>
 
 #include <locale>
-#include <boost/date_time/time_facet.hpp>
+
+#include <boost/date_time/c_local_time_adjustor.hpp>
 #include <boost/date_time/local_time/local_time.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/date_time/c_local_time_adjustor.hpp>
+#include <boost/date_time/time_facet.hpp>
 
-#include <Swiften/Base/String.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/String.h>
 
 namespace Swift {
 

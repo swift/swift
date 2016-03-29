@@ -4,12 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <SwifTools/HunspellChecker.h>
 
 #include <algorithm>
-#include <hunspell/hunspell.hxx>
+
 #include <boost/algorithm/string.hpp>
 
+#include <hunspell/hunspell.hxx>
 
 namespace Swift {
 

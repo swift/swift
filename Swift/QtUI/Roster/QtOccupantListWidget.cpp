@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,10 @@
 
 #include <Swift/QtUI/Roster/QtOccupantListWidget.h>
 
-#include <QContextMenuEvent>
-#include <QMenu>
 #include <QAction>
+#include <QContextMenuEvent>
 #include <QInputDialog>
+#include <QMenu>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>

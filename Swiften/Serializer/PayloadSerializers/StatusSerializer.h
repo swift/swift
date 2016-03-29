@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,10 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Elements/Status.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
-#include <Swiften/Elements/Status.h>
 
 namespace Swift {
 	class SWIFTEN_API StatusSerializer : public GenericPayloadSerializer<Status> {

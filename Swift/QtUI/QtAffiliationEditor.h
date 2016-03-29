@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
 #include <map>
+#include <vector>
 
 #include <QDialog>
-#include <Swift/QtUI/ui_QtAffiliationEditor.h>
 
-#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/QtUI/ui_QtAffiliationEditor.h>
 
 namespace Swift {
 	class QtAffiliationEditor : public QDialog {

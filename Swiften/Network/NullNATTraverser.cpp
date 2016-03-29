@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/NullNATTraverser.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
-#include <Swiften/Network/NATTraversalForwardPortRequest.h>
-#include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
 #include <Swiften/EventLoop/EventLoop.h>
+#include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
+#include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
 
 namespace Swift {
 

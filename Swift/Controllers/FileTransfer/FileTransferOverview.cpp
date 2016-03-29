@@ -5,12 +5,12 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "FileTransferOverview.h"
+#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>

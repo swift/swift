@@ -5,26 +5,28 @@
  */
 
 /*
-* Copyright (c) 2013-2014 Isode Limited.
-* All rights reserved.v3.
-* See the COPYING file for more information.
-*/
+ * Copyright (c) 2013-2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <Swiften/Network/SolarisNetworkEnvironment.h>
 
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
 #include <boost/optional.hpp>
 
-#include <unistd.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/sockio.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <net/if.h>
+#include <sys/socket.h>
+#include <sys/sockio.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddress.h>

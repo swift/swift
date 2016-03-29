@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,8 +10,8 @@
 #include <QKeyEvent>
 #include <QShortcut>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Platform.h>
+#include <Swiften/Base/foreach.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtUtilities.h>

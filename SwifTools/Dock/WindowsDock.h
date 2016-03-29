@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QSystemTrayIcon>
 #include <boost/lexical_cast.hpp>
+
+#include <QSystemTrayIcon>
 
 #include <SwifTools/Dock/Dock.h>
 #include <SwifTools/Notifier/Notifier.h>

@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Disco/DiscoInfoResponder.h>
+
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Disco/DiscoInfoResponder.h>
-#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 

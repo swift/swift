@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/IBBReceiveSession.h>
 
+#include <cassert>
+
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/FileTransfer/IBBRequest.h>
 #include <Swiften/FileTransfer/BytestreamException.h>
+#include <Swiften/FileTransfer/IBBRequest.h>
+#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/SetResponder.h>
-
-#include <cassert>
 
 namespace Swift {
 

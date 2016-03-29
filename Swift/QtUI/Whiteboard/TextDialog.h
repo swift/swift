@@ -4,17 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <QDialog>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QDialogButtonBox>
-#include <QLineEdit>
-#include <QGraphicsTextItem>
-#include <QSpinBox>
-
 #include <iostream>
+
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QGraphicsTextItem>
+#include <QHBoxLayout>
+#include <QLineEdit>
+#include <QSpinBox>
+#include <QVBoxLayout>
 
 namespace Swift {
 	class TextDialog : public QDialog

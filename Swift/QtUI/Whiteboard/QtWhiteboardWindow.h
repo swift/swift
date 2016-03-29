@@ -4,28 +4,35 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swift/Controllers/UIInterfaces/WhiteboardWindow.h>
-#include <Swiften/Elements/Message.h>
-#include <Swiften/Whiteboard/WhiteboardSession.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
-
-#include <QWidget>
-#include <QGraphicsView>
+#include <QCloseEvent>
+#include <QColorDialog>
 #include <QGraphicsScene>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+#include <QGraphicsView>
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QPainter>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QColorDialog>
 #include <QToolButton>
-#include <QCloseEvent>
+#include <QVBoxLayout>
+#include <QWidget>
 
-#include "GView.h"
-#include "ColorWidget.h"
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
+#include <Swiften/Whiteboard/WhiteboardSession.h>
+
+#include <Swift/Controllers/UIInterfaces/WhiteboardWindow.h>
+
+#include <Swift/QtUI/Whiteboard/ColorWidget.h>
+#include <Swift/QtUI/Whiteboard/GView.h>
 
 namespace Swift {
 	class QtWhiteboardWindow : public QWidget, public WhiteboardWindow

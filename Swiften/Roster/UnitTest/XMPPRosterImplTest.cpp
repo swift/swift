@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
 
 #include <Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h>
 #include <Swiften/Roster/XMPPRosterImpl.h>
-
 
 using namespace Swift;
 

@@ -5,18 +5,19 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/PayloadParsers/JingleParser.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Elements/JingleContentPayload.h>
-#include <Swiften/Elements/JingleFileTransferHash.h>
-#include <Swiften/Base/Log.h>
 
 #include <boost/intrusive_ptr.hpp>
+
+#include <Swiften/Base/Log.h>
+#include <Swiften/Elements/JingleContentPayload.h>
+#include <Swiften/Elements/JingleFileTransferHash.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 namespace Swift {
 

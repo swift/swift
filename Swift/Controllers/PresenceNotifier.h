@@ -1,20 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <set>
 
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swiften/Elements/Presence.h"
-#include "Swiften/JID/JID.h"
-#include "SwifTools/Notifier/Notifier.h"
-#include "Swiften/Avatars/AvatarManager.h"
-#include "Swiften/Network/Timer.h"
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Network/Timer.h>
+
+#include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
 	class TimerFactory;

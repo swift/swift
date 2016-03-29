@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,15 +14,15 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Client/ClientBlockListManager.h>
-
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+
 #include <Swift/Controllers/Intl.h>
-#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestBlockListDialogUIEvent.h>
-#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/BlockListEditorWidget.h>
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
 namespace Swift {

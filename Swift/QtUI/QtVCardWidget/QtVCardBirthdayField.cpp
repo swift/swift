@@ -4,11 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardBirthdayField.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardBirthdayField.h>
+
+#include <boost/algorithm/string.hpp>
 
 #include <QGridLayout>
 #include <QHBoxLayout>
-#include <boost/algorithm/string.hpp>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 

@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Settings/XMLSettingsProvider.h>
 
-#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/XMLParser.h>
-#include <Swiften/Base/Log.h>
 
 namespace Swift {
 

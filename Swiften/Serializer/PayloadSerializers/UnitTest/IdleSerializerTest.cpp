@@ -4,10 +4,16 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <boost/make_shared.hpp>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Serializer/PayloadSerializers/IdleSerializer.h>
 

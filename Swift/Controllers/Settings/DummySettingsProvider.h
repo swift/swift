@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-
 #include <map>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 
 namespace Swift {
 

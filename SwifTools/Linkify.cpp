@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <SwifTools/Linkify.h>
 
-#include <boost/regex.hpp>
-#include <sstream>
 #include <iostream>
+#include <sstream>
+
+#include <boost/regex.hpp>
 
 namespace Swift {
 

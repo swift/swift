@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/StreamStack/XMPPLayer.h>
 #include <Swiften/StreamStack/StreamStack.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
 
 namespace Swift {
 

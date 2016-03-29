@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/MUCSearch/MUCSearchRoomItem.h"
+#include <Swift/QtUI/MUCSearch/MUCSearchRoomItem.h>
 
-#include "Swift/QtUI/MUCSearch/MUCSearchServiceItem.h"
+#include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
 
 namespace Swift {
 MUCSearchRoomItem::MUCSearchRoomItem(const QString& node, MUCSearchServiceItem* parent) : parent_(parent), node_(node) {

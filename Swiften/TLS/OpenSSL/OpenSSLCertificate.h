@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <string>
+
 #include <boost/shared_ptr.hpp>
+
 #include <openssl/ssl.h>
 
-#include <string>
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,7 @@
 #pragma once
 
 #include <stdexcept>
+
 #include <Swiften/Base/API.h>
 
 namespace Swift {

@@ -4,10 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swiften/TLS/Certificate.h>
 #include <QWidget>
+
+#include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
 

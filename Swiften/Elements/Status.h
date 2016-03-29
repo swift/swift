@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <string>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
-#include <string>
 
 namespace Swift {
 	class SWIFTEN_API Status : public Payload {

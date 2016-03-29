@@ -4,12 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <vector>
-#include <boost/algorithm/string.hpp>
-#include <boost/tuple/tuple.hpp>
-#include <SwifTools/SpellChecker.h>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #pragma once
+
+#include <vector>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/tuple/tuple.hpp>
+
+#include <SwifTools/SpellChecker.h>
 
 class Hunspell;
 

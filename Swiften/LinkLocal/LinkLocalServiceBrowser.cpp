@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/bind.hpp>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+
 #include <iostream>
 
-#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <boost/bind.hpp>
+
 #include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
 #include <Swiften/Network/HostAddress.h>
 

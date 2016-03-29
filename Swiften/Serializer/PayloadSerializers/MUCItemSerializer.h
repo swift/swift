@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Serializer/GenericPayloadSerializer.h>
-#include <Swiften/Elements/MUCItem.h>
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Elements/MUCItem.h>
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 

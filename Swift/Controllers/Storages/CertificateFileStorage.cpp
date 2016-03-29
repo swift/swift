@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,13 +7,14 @@
 #include <Swift/Controllers/Storages/CertificateFileStorage.h>
 
 #include <iostream>
+
 #include <boost/filesystem/fstream.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/TLS/CertificateFactory.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/TLS/CertificateFactory.h>
 
 namespace Swift {
 

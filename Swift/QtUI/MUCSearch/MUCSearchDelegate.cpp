@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QPen>
-#include <QPainter>
+#include <Swift/QtUI/MUCSearch/MUCSearchDelegate.h>
 
-#include "Swift/QtUI/MUCSearch/MUCSearchDelegate.h"
-#include "Swift/QtUI/Roster/GroupItemDelegate.h"
-#include "Swift/QtUI/MUCSearch/MUCSearchItem.h"
-#include "Swift/QtUI/MUCSearch/MUCSearchRoomItem.h"
-#include "Swift/QtUI/MUCSearch/MUCSearchServiceItem.h"
+#include <QPainter>
+#include <QPen>
+
+#include <Swift/QtUI/MUCSearch/MUCSearchItem.h>
+#include <Swift/QtUI/MUCSearch/MUCSearchRoomItem.h>
+#include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
+#include <Swift/QtUI/Roster/GroupItemDelegate.h>
 
 namespace Swift {
 

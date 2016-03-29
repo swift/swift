@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
-#include <QA/Checker/IO.h>
-
 #include <boost/date_time/posix_time/posix_time.hpp>
+
+#include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Parser/PayloadParsers/VCardParser.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
+#include <Swiften/Parser/PayloadParsers/VCardParser.h>
 
 using namespace Swift;
 

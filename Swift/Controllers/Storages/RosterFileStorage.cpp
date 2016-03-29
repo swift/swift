@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #include <Swift/Controllers/Storages/RosterFileStorage.h>
 
 #include <Swiften/Entity/GenericPayloadPersister.h>
-#include <Swiften/Serializer/PayloadSerializers/RosterSerializer.h>
 #include <Swiften/Parser/PayloadParsers/RosterParser.h>
+#include <Swiften/Serializer/PayloadSerializers/RosterSerializer.h>
 
 using namespace Swift;
 

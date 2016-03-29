@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QWidget>
 #include <QRect>
 #include <QShortcut>
+#include <QWidget>
 
 #include <Swift/QtUI/QtChatTabsBase.h>
 

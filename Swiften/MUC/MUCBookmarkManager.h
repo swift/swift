@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,14 +8,14 @@
 
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-#include <Swiften/Base/boost_bsignals.h>
 #include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/MUC/MUCBookmark.h>
-#include <Swiften/Elements/Storage.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/Storage.h>
+#include <Swiften/MUC/MUCBookmark.h>
 
 namespace Swift {
 	class IQRouter;

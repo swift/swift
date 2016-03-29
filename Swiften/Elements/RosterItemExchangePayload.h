@@ -4,10 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
+
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>

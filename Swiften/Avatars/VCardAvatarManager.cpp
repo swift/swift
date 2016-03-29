@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,13 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Elements/VCard.h>
-#include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Avatars/AvatarStorage.h>
-#include <Swiften/MUC/MUCRegistry.h>
-#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/VCards/VCardManager.h>
 
 namespace Swift {
 

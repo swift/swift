@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <iostream>
+#include <Swiften/Parser/UnitTest/ParserTester.h>
+
 #include <fstream>
+#include <iostream>
 #include <typeinfo>
 
-#include <Swiften/Parser/UnitTest/ParserTester.h>
+#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/XMPPParser.h>
 #include <Swiften/Parser/XMPPParserClient.h>
-#include <Swiften/Parser/PlatformXMLParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 
 using namespace Swift;
 

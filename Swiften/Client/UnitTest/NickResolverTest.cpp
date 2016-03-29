@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All right reserved.
  * See the COPYING file for more information.
  */
@@ -7,15 +7,15 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Client/NickResolver.h>
+#include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/Crypto/PlatformCryptoProvider.h>
 #include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/Crypto/PlatformCryptoProvider.h>
 
 using namespace Swift;
 

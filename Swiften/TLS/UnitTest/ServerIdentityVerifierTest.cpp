@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
+#include <vector>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <vector>
 
-#include <Swiften/TLS/ServerIdentityVerifier.h>
-#include <Swiften/TLS/SimpleCertificate.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/IDN/PlatformIDNConverter.h>
+#include <Swiften/TLS/ServerIdentityVerifier.h>
+#include <Swiften/TLS/SimpleCertificate.h>
 
 using namespace Swift;
 

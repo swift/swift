@@ -1,33 +1,32 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
 #include <map>
 #include <string>
+#include <vector>
 
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Network/Timer.h>
 #include <Swiften/Client/ClientError.h>
-#include <Swiften/JID/JID.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Elements/VCard.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/CapsInfo.h>
-#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Network/Timer.h>
 
-#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
-#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/UIEvents/UIEvent.h>
-
+#include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
 
 namespace Swift {
 	class IdleDetector;

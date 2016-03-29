@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/StreamManagement/StanzaAckRequester.h>
 
-#include <boost/numeric/conversion/cast.hpp>
 #include <iostream>
+
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Elements/Message.h>
 

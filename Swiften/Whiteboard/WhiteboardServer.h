@@ -4,12 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
+
+#include <list>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
-
-#include <list>
 
 namespace Swift {
 	class SWIFTEN_API WhiteboardServer {

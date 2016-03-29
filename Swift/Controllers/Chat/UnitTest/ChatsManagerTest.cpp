@@ -4,8 +4,8 @@
  * See the COPYING file for more information.
  */
 
-#include <set>
 #include <map>
+#include <set>
 
 #include <boost/bind.hpp>
 

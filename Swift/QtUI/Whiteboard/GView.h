@@ -4,17 +4,25 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <QGraphicsView>
+#include <iostream>
+
 #include <QGraphicsLineItem>
+#include <QGraphicsView>
 #include <QMouseEvent>
 #include <QPen>
-#include <iostream>
+
 #include <Swiften/Base/IDGenerator.h>
 
-#include "TextDialog.h"
-#include "FreehandLineItem.h"
+#include <Swift/QtUI/Whiteboard/FreehandLineItem.h>
+#include <Swift/QtUI/Whiteboard/TextDialog.h>
 
 namespace Swift {
 	class GView : public QGraphicsView {

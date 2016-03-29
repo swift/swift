@@ -5,26 +5,27 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
+
+#include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Base/SimpleIDGenerator.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Base/Override.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/JinglePayload.h>
-#include <Swiften/Jingle/JingleSession.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Jingle/JingleContentID.h>
+#include <Swiften/Jingle/JingleSession.h>
 
 namespace Swift {
 	class JingleContentID;

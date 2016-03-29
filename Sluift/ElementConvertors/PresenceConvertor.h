@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Sluift/ElementConvertors/StanzaConvertor.h>
 #include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Presence.h>
+
+#include <Sluift/ElementConvertors/StanzaConvertor.h>
 
 namespace Swift {
 	class LuaElementConvertors;

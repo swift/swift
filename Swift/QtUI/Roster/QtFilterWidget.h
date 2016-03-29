@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <vector>
@@ -11,8 +17,8 @@
 #include <QBoxLayout>
 #include <QWidget>
 
-#include <Swift/Controllers/Roster/RosterFilter.h>
 #include <Swift/Controllers/Roster/FuzzyRosterFilter.h>
+#include <Swift/Controllers/Roster/RosterFilter.h>
 
 #include <Swift/QtUI/Roster/QtTreeWidget.h>
 

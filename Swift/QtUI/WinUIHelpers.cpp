@@ -4,7 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "WinUIHelpers.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/WinUIHelpers.h>
 
 #include <windows.h>
 #include <Wincrypt.h>

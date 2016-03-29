@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "TwoLineDelegate.h"
+#include <Swift/QtUI/EventViewer/TwoLineDelegate.h>
 
-#include <QPen>
-#include <QPainter>
 #include <QDebug>
+#include <QPainter>
+#include <QPen>
 
 namespace Swift {
 TwoLineDelegate::TwoLineDelegate(int firstRole, int secondRole, bool wrap) {

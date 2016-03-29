@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,10 @@
 #include <Swiften/Parser/AttributeMap.h>
 
 #include <algorithm>
-#include <boost/optional.hpp>
-#include <boost/lambda/lambda.hpp>
+
 #include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/optional.hpp>
 
 using namespace Swift;
 namespace lambda = boost::lambda;

@@ -1,21 +1,22 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/DomainNameServiceQuery.h>
 
-#include <numeric>
 #include <cassert>
 #include <functional>
 #include <iterator>
+#include <numeric>
+
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/typeof/typeof.hpp>
 
 #include <Swiften/Base/RandomGenerator.h>
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/typeof/typeof.hpp>
 
 using namespace Swift;
 namespace lambda = boost::lambda;

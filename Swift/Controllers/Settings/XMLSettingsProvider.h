@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swiften/Parser/XMLParserClient.h>
-
 #include <map>
 #include <set>
+
+#include <Swiften/Parser/XMLParserClient.h>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 
 namespace Swift {
 

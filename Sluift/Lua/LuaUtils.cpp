@@ -1,20 +1,22 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/Lua/LuaUtils.h>
 
+#include <cassert>
+#include <iostream>
+#include <sstream>
+
+#include <boost/algorithm/string/trim.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/scope_exit.hpp>
+
 #include <lua.hpp>
 
-#include <boost/scope_exit.hpp>
 #include <Sluift/Lua/Exception.h>
-#include <iostream>
-#include <cassert>
-#include <sstream>
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/algorithm/string/trim.hpp>
 #include <Sluift/globals.h>
 
 using namespace Swift::Lua;

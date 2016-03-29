@@ -4,21 +4,27 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/QtUI/Roster/RosterTooltip.h>
 
+#include <QApplication>
 #include <QObject>
 #include <QString>
-#include <QApplication>
 
 #include <Swiften/Base/Path.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/StatusUtil.h>
 
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/QtScaledAvatarCache.h>
-#include <Swift/QtUI/QtUtilities.h>
 #include <Swift/QtUI/QtResourceHelper.h>
+#include <Swift/QtUI/QtScaledAvatarCache.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUtilities.h>
 
 using namespace QtUtilities;
 

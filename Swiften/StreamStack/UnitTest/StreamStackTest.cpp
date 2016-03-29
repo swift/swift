@@ -1,27 +1,28 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
-#include <QA/Checker/IO.h>
-
 #include <vector>
+
 #include <boost/bind.hpp>
 #include <boost/smart_ptr.hpp>
+
+#include <QA/Checker/IO.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>
-#include <Swiften/StreamStack/StreamStack.h>
-#include <Swiften/StreamStack/LowLayer.h>
-#include <Swiften/StreamStack/XMPPLayer.h>
-#include <Swiften/StreamStack/StreamLayer.h>
-#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
+#include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/StreamStack/LowLayer.h>
+#include <Swiften/StreamStack/StreamLayer.h>
+#include <Swiften/StreamStack/StreamStack.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
 
 using namespace Swift;
 

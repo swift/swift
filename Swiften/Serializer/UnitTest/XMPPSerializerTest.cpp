@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/XMPPSerializer.h>
 #include <Swiften/Elements/AuthChallenge.h>
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Serializer/XMPPSerializer.h>
 
 using namespace Swift;
 

@@ -1,18 +1,21 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Compress/ZLibCodecompressor.h>
 
-#include <cassert>
 #include <string.h>
-#include <zlib.h>
+
+#include <cassert>
+
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Compress/ZLibException.h>
+#include <zlib.h>
+
 #include <Swiften/Compress/ZLibCodecompressor_Private.h>
+#include <Swiften/Compress/ZLibException.h>
 
 namespace Swift {
 

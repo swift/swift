@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/UserSearch/QtUserSearchDetailsPage.h"
-
-#include <QVBoxLayout>
-#include <QLabel>
+#include <Swift/QtUI/UserSearch/QtUserSearchDetailsPage.h>
 
 #include <boost/bind.hpp>
+
+#include <QLabel>
+#include <QVBoxLayout>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>

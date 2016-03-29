@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubErrorSerializer.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 using namespace Swift;
 

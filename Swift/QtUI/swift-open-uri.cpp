@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <iostream>
+
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusMessage>
-#include <iostream>
 
 int main(int argc, char* argv[]) {
 	QCoreApplication app(argc, argv);

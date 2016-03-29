@@ -1,28 +1,29 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <iostream>
+
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <iostream>
 
-#include <Swiften/Elements/Presence.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Network/BoostNetworkFactories.h>
-#include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Disco/ClientDiscoManager.h>
-#include <Swiften/FileTransfer/IncomingFileTransferManager.h>
-#include <Swiften/FileTransfer/FileWriteBytestream.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/FileTransfer/FileWriteBytestream.h>
+#include <Swiften/FileTransfer/IncomingFileTransferManager.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
 
 using namespace Swift;
 

@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <iostream>
+
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Swiften/Network/PlatformNATTraversalWorker.h>
-#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
+#include <Swiften/Network/NATTraversalGetPublicIPRequest.h>
 #include <Swiften/Network/NATTraversalRemovePortForwardingRequest.h>
+#include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Network/PlatformNetworkEnvironment.h>
 
 using namespace Swift;

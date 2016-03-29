@@ -1,25 +1,26 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Serializer/PayloadSerializers/ForwardedSerializer.h>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/Delay.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/GenericStanzaSerializer.h>
 #include <Swiften/Serializer/IQSerializer.h>
 #include <Swiften/Serializer/MessageSerializer.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/DelaySerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/ForwardedSerializer.h>
 #include <Swiften/Serializer/PresenceSerializer.h>
-
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;
 

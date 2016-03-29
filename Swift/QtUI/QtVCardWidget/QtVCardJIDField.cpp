@@ -4,11 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardJIDField.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardJIDField.h>
+
+#include <boost/algorithm/string.hpp>
 
 #include <QGridLayout>
 #include <QTextDocument>
-#include <boost/algorithm/string.hpp>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUtilities.h>

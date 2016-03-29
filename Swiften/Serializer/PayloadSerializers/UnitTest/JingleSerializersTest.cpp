@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,17 +16,17 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/Base/DateTime.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
-#include <Swiften/Elements/JingleIBBTransportPayload.h>
-#include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
+#include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JinglePayload.h>
-#include <Swiften/Base/DateTime.h>
+#include <Swiften/Elements/JingleS5BTransportPayload.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
 #include <Swiften/StringCodecs/Base64.h>
 
 using namespace Swift;

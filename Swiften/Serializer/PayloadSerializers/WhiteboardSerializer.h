@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,14 +13,14 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/WhiteboardPayload.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardRectElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardPolygonElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardTextElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElementVisitor.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardPolygonElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardRectElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardTextElement.h>
+#include <Swiften/Elements/WhiteboardPayload.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 

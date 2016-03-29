@@ -4,11 +4,17 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include "ui_QtSpellCheckerWindow.h"
-
 #include <QDialog>
+
+#include <Swift/QtUI/ui_QtSpellCheckerWindow.h>
 
 namespace Swift {
 	class SettingsProvider;

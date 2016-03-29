@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,13 +9,13 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Elements/ProtocolHeader.h>
-#include <Swiften/Network/Connection.h>
-#include <Swiften/StreamStack/StreamStack.h>
-#include <Swiften/StreamStack/ConnectionLayer.h>
-#include <Swiften/StreamStack/XMPPLayer.h>
-#include <Swiften/Elements/StreamFeatures.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/StreamStack/ConnectionLayer.h>
+#include <Swiften/StreamStack/StreamStack.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
 
 namespace Swift {
 

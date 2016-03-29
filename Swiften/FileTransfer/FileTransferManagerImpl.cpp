@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,11 +16,11 @@
 #include <boost/cstdint.hpp>
 #include <boost/filesystem.hpp>
 
-#include "Swiften/Disco/EntityCapsProvider.h"
 #include <Swiften/Base/BoostFilesystemVersion.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Path.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>

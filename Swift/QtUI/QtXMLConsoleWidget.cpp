@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtXMLConsoleWidget.h"
+#include <Swift/QtUI/QtXMLConsoleWidget.h>
 
 #include <string>
 
+#include <QCheckBox>
 #include <QCloseEvent>
-#include <QTextEdit>
-#include <QVBoxLayout>
 #include <QPushButton>
 #include <QScrollBar>
-#include <QCheckBox>
+#include <QTextEdit>
+#include <QVBoxLayout>
 
 #include <Swiften/Base/format.h>
 

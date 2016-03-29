@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,11 @@
 #pragma once
 
 #include <string>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {

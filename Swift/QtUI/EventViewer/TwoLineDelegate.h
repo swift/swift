@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 
 #include <QStyledItemDelegate>
 
-#include "Swift/QtUI/Roster/DelegateCommons.h"
-#include "QtEvent.h"
+#include <Swift/QtUI/EventViewer/QtEvent.h>
+#include <Swift/QtUI/Roster/DelegateCommons.h>
 
 namespace Swift {
 	class TwoLineDelegate {

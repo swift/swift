@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,7 @@
 #pragma once
 
 #include <string>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
 #include <Swiften/IDN/IDNConverter.h>

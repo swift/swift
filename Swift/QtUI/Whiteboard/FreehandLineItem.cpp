@@ -4,8 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "FreehandLineItem.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
+#include <Swift/QtUI/Whiteboard/FreehandLineItem.h>
 
 namespace Swift {
 	FreehandLineItem::FreehandLineItem(QGraphicsItem* parent) : QGraphicsItem(parent) {

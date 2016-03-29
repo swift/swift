@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <iostream>
+#include <string>
+
 #include <boost/bind.hpp>
 
-#include <string>
-#include "Swiften/Base/ByteArray.h"
-#include "Swiften/Notifier/GrowlNotifier.h"
 #include <QApplication>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Notifier/GrowlNotifier.h>
 
 using namespace Swift;
 

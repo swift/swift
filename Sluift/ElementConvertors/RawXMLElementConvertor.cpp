@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,11 +7,14 @@
 #include <Sluift/ElementConvertors/RawXMLElementConvertor.h>
 
 #include <iostream>
+
 #include <boost/smart_ptr/make_shared.hpp>
+
 #include <lua.hpp>
 
 #include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
+
 #include <Sluift/Lua/Check.h>
 
 using namespace Swift;

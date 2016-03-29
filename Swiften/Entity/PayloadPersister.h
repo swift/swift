@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 

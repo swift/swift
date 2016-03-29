@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <boost/filesystem/path.hpp>
-#include <string>
 #include <map>
+#include <string>
 
-#include "Swiften/VCards/VCardStorage.h"
+#include <boost/filesystem/path.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/VCards/VCardStorage.h>
 
 namespace Swift {
 	class CryptoProvider;

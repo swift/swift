@@ -4,12 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <utility>
+
+#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
-#include <utility>
 
 namespace Swift {
 	class WhiteboardTransformer {

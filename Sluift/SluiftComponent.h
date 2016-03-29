@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,22 +7,24 @@
 #pragma once
 
 #include <deque>
-#include <boost/optional.hpp>
+
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
+#include <boost/optional.hpp>
 
 #include <Swiften/Client/ClientOptions.h>
+#include <Swiften/Component/Component.h>
+#include <Swiften/Component/ComponentError.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
-#include <Swiften/Component/ComponentError.h>
-#include <Swiften/Network/NetworkFactories.h>
-#include <Swiften/Component/Component.h>
-#include <Swiften/EventLoop/SimpleEventLoop.h>
-#include <Sluift/Watchdog.h>
+
 #include <Sluift/Response.h>
+#include <Sluift/Watchdog.h>
 
 namespace Swift {
 	struct SluiftGlobals;

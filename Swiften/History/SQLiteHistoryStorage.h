@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
+#include <boost/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/History/HistoryStorage.h>
-#include <boost/thread.hpp>
-#include <boost/filesystem/path.hpp>
 
 struct sqlite3;
 

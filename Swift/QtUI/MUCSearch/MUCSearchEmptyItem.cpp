@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/MUCSearch/MUCSearchEmptyItem.h>
 
-#include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
-#include <QFont>
 #include <QColor>
+#include <QFont>
+
+#include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
 
 namespace Swift {
 MUCSearchEmptyItem::MUCSearchEmptyItem(MUCSearchServiceItem* parent) : parent(parent) {

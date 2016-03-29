@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
-
-#include <Swift/QtUI/ui_QtJoinMUCWindow.h>
 
 #include <string>
 
@@ -15,6 +13,7 @@
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/ui_QtJoinMUCWindow.h>
 
 namespace Swift {
 	class UIEventStream;

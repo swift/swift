@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "SwifTools/Notifier/Notifier.h"
-#include "Swiften/Base/boost_bsignals.h"
-#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
-#include "Swiften/JID/JID.h"
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
+
+#include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
 	class EventController;

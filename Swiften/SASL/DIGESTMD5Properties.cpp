@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/SASL/DIGESTMD5Properties.h>
+
 #include <Swiften/Base/Algorithm.h>
 
 namespace Swift {

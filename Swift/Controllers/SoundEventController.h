@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/HighlightAction.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
 namespace Swift {
 	class EventController;

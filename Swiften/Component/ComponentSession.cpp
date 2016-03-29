@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,11 +9,11 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/Component/ComponentHandshakeGenerator.h>
+#include <Swiften/Elements/ComponentHandshake.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
-#include <Swiften/Elements/ComponentHandshake.h>
 #include <Swiften/Session/SessionStream.h>
-#include <Swiften/Component/ComponentHandshakeGenerator.h>
 
 namespace Swift {
 

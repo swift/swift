@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Base/BoostRandomGenerator.h>
 
+#include <ctime>
 #include <numeric>
+
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <ctime>
 
 namespace Swift {
 

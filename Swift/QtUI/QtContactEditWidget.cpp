@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtContactEditWidget.h"
+#include <Swift/QtUI/QtContactEditWidget.h>
 
 #include <algorithm>
 
@@ -13,10 +13,10 @@
 #include <QLabel>
 #include <QLineEdit>
 #include <QMovie>
-#include <QScrollArea>
 #include <QRadioButton>
+#include <QScrollArea>
 
-#include "Swift/QtUI/QtSwiftUtil.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

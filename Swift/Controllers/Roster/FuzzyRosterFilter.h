@@ -4,14 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
 
 #include <Swift/Controllers/ContactSuggester.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
-#include <Swift/Controllers/Roster/RosterItem.h>
 #include <Swift/Controllers/Roster/RosterFilter.h>
+#include <Swift/Controllers/Roster/RosterItem.h>
 
 namespace Swift {
 

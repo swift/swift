@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/AuthResponseSerializer.h>
 
+#include <Swiften/Base/Concat.h>
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Elements/AuthResponse.h>
 #include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/Concat.h>
 
 namespace Swift {
 

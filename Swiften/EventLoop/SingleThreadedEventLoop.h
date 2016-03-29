@@ -4,13 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <vector>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition_variable.hpp>
 
-#include "Swiften/EventLoop/EventLoop.h"
+#include <boost/thread/condition_variable.hpp>
+#include <boost/thread/mutex.hpp>
+
+#include <Swiften/EventLoop/EventLoop.h>
 
 // DESCRIPTION:
 //

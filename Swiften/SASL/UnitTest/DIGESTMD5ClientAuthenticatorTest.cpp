@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,11 +9,10 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
 #include <Swiften/Base/ByteArray.h>
-
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/SASL/DIGESTMD5ClientAuthenticator.h>
 
 using namespace Swift;
 

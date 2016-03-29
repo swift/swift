@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,20 +11,20 @@
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/Form.h>
-#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/IQ.h>
-#include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
-#include <Swiften/Elements/MUCPayload.h>
 #include <Swiften/Elements/MUCDestroyPayload.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
+#include <Swiften/Elements/MUCPayload.h>
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 

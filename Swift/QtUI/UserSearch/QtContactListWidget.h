@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,14 +14,14 @@
 
 #include <vector>
 
-#include <QTreeView>
-
-#include <Swift/Controllers/Contact.h>
-#include <Swiften/Base/Log.h>
-
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
+#include <QTreeView>
+
+#include <Swiften/Base/Log.h>
+
+#include <Swift/Controllers/Contact.h>
 
 namespace Swift {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,27 +10,27 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Queries/Request.h>
 #include <Swiften/Elements/ContainerPayload.h>
-#include <Swiften/PubSub/PubSubUtil.h>
 #include <Swiften/Elements/PubSub.h>
-#include <Swiften/Elements/PubSubOwnerPubSub.h>
-#include <Swiften/Elements/PubSubCreate.h>
-#include <Swiften/Elements/PubSubSubscribe.h>
 #include <Swiften/Elements/PubSubAffiliations.h>
+#include <Swiften/Elements/PubSubCreate.h>
 #include <Swiften/Elements/PubSubDefault.h>
 #include <Swiften/Elements/PubSubItems.h>
-#include <Swiften/Elements/PubSubPublish.h>
-#include <Swiften/Elements/PubSubRetract.h>
-#include <Swiften/Elements/PubSubSubscription.h>
-#include <Swiften/Elements/PubSubSubscriptions.h>
-#include <Swiften/Elements/PubSubUnsubscribe.h>
 #include <Swiften/Elements/PubSubOwnerAffiliations.h>
 #include <Swiften/Elements/PubSubOwnerConfigure.h>
 #include <Swiften/Elements/PubSubOwnerDefault.h>
 #include <Swiften/Elements/PubSubOwnerDelete.h>
+#include <Swiften/Elements/PubSubOwnerPubSub.h>
 #include <Swiften/Elements/PubSubOwnerPurge.h>
 #include <Swiften/Elements/PubSubOwnerSubscriptions.h>
+#include <Swiften/Elements/PubSubPublish.h>
+#include <Swiften/Elements/PubSubRetract.h>
+#include <Swiften/Elements/PubSubSubscribe.h>
+#include <Swiften/Elements/PubSubSubscription.h>
+#include <Swiften/Elements/PubSubSubscriptions.h>
+#include <Swiften/Elements/PubSubUnsubscribe.h>
+#include <Swiften/PubSub/PubSubUtil.h>
+#include <Swiften/Queries/Request.h>
 
 namespace Swift {
 	namespace Detail {

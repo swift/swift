@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,15 +8,16 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Component/ComponentXMLTracer.h>
 #include <Swiften/Component/Component.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Sluift/SluiftGlobals.h>
-#include <Sluift/Lua/Exception.h>
+#include <Swiften/Component/ComponentXMLTracer.h>
 #include <Swiften/Elements/Message.h>
-#include <Swiften/Queries/RawRequest.h>
-#include <Sluift/Helpers.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/Queries/RawRequest.h>
+#include <Swiften/Roster/XMPPRoster.h>
+
+#include <Sluift/Helpers.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/SluiftGlobals.h>
 
 using namespace Swift;
 

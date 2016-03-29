@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
+
 #include <Swiften/Base/Path.h>
 
-#include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 #include <Swift/QtUI/QtResourceHelper.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 

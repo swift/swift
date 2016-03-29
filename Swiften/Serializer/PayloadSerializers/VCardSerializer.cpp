@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,12 +9,12 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Serializer/XML/XMLTextNode.h>
-#include <Swiften/Serializer/XML/XMLRawTextNode.h>
-#include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
 

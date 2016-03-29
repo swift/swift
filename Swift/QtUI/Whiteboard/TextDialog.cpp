@@ -4,7 +4,13 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "TextDialog.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/Whiteboard/TextDialog.h>
 
 namespace Swift {
 	TextDialog::TextDialog(QGraphicsTextItem* item, QWidget* parent) : QDialog(parent)

@@ -4,15 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 
+#include <boost/lexical_cast.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 namespace Swift {

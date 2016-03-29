@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include <string>
 #include <iosfwd>
+#include <string>
+
+#include <boost/optional/optional_fwd.hpp>
 
 #include <Swiften/Base/API.h>
-#include <boost/optional/optional_fwd.hpp>
 
 namespace Swift {
 	class IDNConverter;

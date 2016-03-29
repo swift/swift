@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
 
-#include <Swiften/Elements/Stanza.h>
-#include <Swiften/Elements/Payload.h>
-#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Delay.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/Elements/Stanza.h>
 
 using namespace Swift;
 

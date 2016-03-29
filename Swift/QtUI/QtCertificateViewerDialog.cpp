@@ -5,21 +5,22 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtCertificateViewerDialog.h"
-#include "ui_QtCertificateViewerDialog.h"
-
-#include <Swiften/Base/foreach.h>
+#include <Swift/QtUI/QtCertificateViewerDialog.h>
 
 #include <QDateTime>
 #include <QLabel>
 #include <QString>
 #include <QStringList>
 #include <QTreeWidgetItem>
+
+#include <Swiften/Base/foreach.h>
+
+#include <Swift/QtUI/ui_QtCertificateViewerDialog.h>
 
 namespace Swift {
 

@@ -4,10 +4,16 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <QColorDialog>
-#include <QPainter>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <Swift/QtUI/QtColorToolButton.h>
+
+#include <QColorDialog>
+#include <QPainter>
 
 namespace Swift {
 

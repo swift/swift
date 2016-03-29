@@ -5,15 +5,15 @@
  */
 
 /*
-* Copyright (c) 2014 Isode Limited.
-* All rights reserved.v3.
-* See the COPYING file for more information.
-*/
+ * Copyright (c) 2014-2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <Swiften/Network/NATPMPInterface.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 

@@ -1,16 +1,15 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtAffiliationEditor.h"
+#include <Swift/QtUI/QtAffiliationEditor.h>
 
-#include <QListWidgetItem>
 #include <QInputDialog>
+#include <QListWidgetItem>
 
-#include "QtSwiftUtil.h"
-
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 QtAffiliationEditor::QtAffiliationEditor(QWidget* parent) : QDialog(parent){

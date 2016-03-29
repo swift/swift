@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/TLS/CAPICertificate.h>
-#include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/Base/Log.h>
 
-#include <boost/bind.hpp>
 #include <boost/algorithm/string/predicate.hpp>
+#include <boost/bind.hpp>
+
+#include <Swiften/Base/Log.h>
+#include <Swiften/Network/TimerFactory.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 // Size of the SHA1 hash
 #define SHA1_HASH_LEN 20

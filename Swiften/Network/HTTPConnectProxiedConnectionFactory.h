@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,9 +13,9 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/SafeString.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/Base/SafeString.h>
 
 namespace Swift {
 	class DomainNameResolver;

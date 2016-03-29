@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/bind.hpp>
-
+#include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
 #include <Swiften/LinkLocal/LinkLocalConnector.h>
 #include <Swiften/LinkLocal/LinkLocalService.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
-#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/FakeConnection.h>
 
 using namespace Swift;

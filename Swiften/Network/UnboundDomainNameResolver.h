@@ -4,15 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
+#include <boost/asio.hpp>
+#include <boost/enable_shared_from_this.hpp>
+#include <boost/shared_ptr.hpp>
+
+#include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/DomainNameResolver.h>
 #include <Swiften/Network/Timer.h>
-#include <Swiften/EventLoop/EventOwner.h>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/asio.hpp>
 
 struct ub_ctx;
 struct ub_result;

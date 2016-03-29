@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,10 +10,10 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/Crypto/CryptoProvider.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 namespace Swift {
 

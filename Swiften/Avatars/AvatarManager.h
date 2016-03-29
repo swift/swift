@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,8 +9,8 @@
 #include <boost/filesystem/path.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 	class JID;

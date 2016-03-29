@@ -5,16 +5,16 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtVCardWidget/QtVCardPhotoAndNameFields.h>
 
-#include <Swift/QtUI/QtVCardWidget/ui_QtVCardPhotoAndNameFields.h>
-
 #include <QMenu>
+
+#include <Swift/QtUI/QtVCardWidget/ui_QtVCardPhotoAndNameFields.h>
 
 namespace Swift {
 

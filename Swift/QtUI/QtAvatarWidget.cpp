@@ -1,27 +1,28 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 
 
-#include "QtAvatarWidget.h"
+#include <Swift/QtUI/QtAvatarWidget.h>
 
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QPixmap>
-#include <QMenu>
 #include <QAction>
-#include <QMouseEvent>
+#include <QBuffer>
 #include <QFileDialog>
 #include <QImageReader>
-#include <QBuffer>
+#include <QLabel>
+#include <QMenu>
 #include <QMessageBox>
+#include <QMouseEvent>
 #include <QPainter>
+#include <QPixmap>
+#include <QVBoxLayout>
 
-#include <QtSwiftUtil.h>
 #include <Swiften/Base/Path.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

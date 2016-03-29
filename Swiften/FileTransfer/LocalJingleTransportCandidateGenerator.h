@@ -5,22 +5,22 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/JID/JID.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxyFinder.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class SOCKS5BytestreamServerManager;

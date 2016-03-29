@@ -1,23 +1,23 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/QtConnectionSettingsWindow.h"
+#include <Swift/QtUI/QtConnectionSettingsWindow.h>
 
 #include <boost/lexical_cast.hpp>
 
 #include <QCoreApplication>
+#include <QFile>
 #include <QIcon>
 #include <QLabel>
-#include <QVBoxLayout>
-#include <QtGlobal>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QFile>
 #include <QTextStream>
-#include <QMessageBox>
+#include <QVBoxLayout>
+#include <QtGlobal>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtURLValidator.h>

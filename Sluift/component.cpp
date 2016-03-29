@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,19 +9,6 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
-
-#include <Sluift/ElementConvertors/IQConvertor.h>
-#include <Sluift/ElementConvertors/MessageConvertor.h>
-#include <Sluift/ElementConvertors/PresenceConvertor.h>
-#include <Sluift/ElementConvertors/StanzaConvertor.h>
-#include <Sluift/ElementConvertors/StatusShowConvertor.h>
-#include <Sluift/Lua/Check.h>
-#include <Sluift/Lua/Exception.h>
-#include <Sluift/Lua/FunctionRegistration.h>
-#include <Sluift/Lua/LuaUtils.h>
-#include <Sluift/Lua/Value.h>
-#include <Sluift/SluiftComponent.h>
-#include <Sluift/globals.h>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/foreach.h>
@@ -42,6 +29,19 @@
 #include <Swiften/Roster/SetRosterRequest.h>
 #include <Swiften/Roster/XMPPRoster.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
+
+#include <Sluift/ElementConvertors/IQConvertor.h>
+#include <Sluift/ElementConvertors/MessageConvertor.h>
+#include <Sluift/ElementConvertors/PresenceConvertor.h>
+#include <Sluift/ElementConvertors/StanzaConvertor.h>
+#include <Sluift/ElementConvertors/StatusShowConvertor.h>
+#include <Sluift/Lua/Check.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/FunctionRegistration.h>
+#include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/Lua/Value.h>
+#include <Sluift/SluiftComponent.h>
+#include <Sluift/globals.h>
 
 using namespace Swift;
 namespace lambda = boost::lambda;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,9 +9,10 @@
 #include <map>
 #include <string>
 #include <vector>
-#include <boost/variant.hpp>
+
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+#include <boost/variant.hpp>
 
 struct lua_State;
 

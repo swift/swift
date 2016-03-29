@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
-#include <Swiften/Whiteboard/WhiteboardServer.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
+#include <Swiften/Whiteboard/WhiteboardServer.h>
 
 using namespace Swift;
 

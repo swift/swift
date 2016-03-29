@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,32 +8,33 @@
 
 #include <QSplitter>
 
-#include <Swift/QtUI/QtXMLConsoleWidget.h>
+#include <Swiften/Whiteboard/WhiteboardSession.h>
+
+#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
+
+#include <Swift/QtUI/MUCSearch/QtMUCSearchWindow.h>
+#include <Swift/QtUI/QtAdHocCommandWindow.h>
+#include <Swift/QtUI/QtBlockListEditorWindow.h>
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtChatTabsBase.h>
-#include <Swift/QtUI/QtMainWindow.h>
-#include <Swift/QtUI/QtLoginWindow.h>
-#include <Swift/QtUI/QtSystemTray.h>
-#include <Swift/QtUI/QtSettingsProvider.h>
-#include <Swift/QtUI/QtMainWindow.h>
 #include <Swift/QtUI/QtChatWindow.h>
-#include <Swift/QtUI/QtJoinMUCWindow.h>
 #include <Swift/QtUI/QtChatWindowFactory.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swift/QtUI/MUCSearch/QtMUCSearchWindow.h>
-#include <Swift/QtUI/UserSearch/QtUserSearchWindow.h>
-#include <Swift/QtUI/QtProfileWindow.h>
 #include <Swift/QtUI/QtContactEditWindow.h>
-#include <Swift/QtUI/QtAdHocCommandWindow.h>
 #include <Swift/QtUI/QtFileTransferListWidget.h>
 #include <Swift/QtUI/QtHighlightEditor.h>
-#include <Swift/QtUI/Whiteboard/QtWhiteboardWindow.h>
-#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
-#include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/QtUI/QtHistoryWindow.h>
-#include <Swiften/Whiteboard/WhiteboardSession.h>
+#include <Swift/QtUI/QtJoinMUCWindow.h>
+#include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtMainWindow.h>
+#include <Swift/QtUI/QtProfileWindow.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtSingleWindow.h>
-#include <Swift/QtUI/QtBlockListEditorWindow.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtSystemTray.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/QtXMLConsoleWidget.h>
+#include <Swift/QtUI/UserSearch/QtUserSearchWindow.h>
+#include <Swift/QtUI/Whiteboard/QtWhiteboardWindow.h>
 
 namespace Swift {
 

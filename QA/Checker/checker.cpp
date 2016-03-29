@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <string>
-#include <cppunit/ui/text/TestRunner.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/XmlOutputter.h>
-#include <cppunit/TextTestResult.h>
+
 #include <cppunit/BriefTestProgressListener.h>
-#include <cppunit/TextTestProgressListener.h>
 #include <cppunit/TextOutputter.h>
+#include <cppunit/TextTestProgressListener.h>
+#include <cppunit/TextTestResult.h>
+#include <cppunit/XmlOutputter.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <cppunit/ui/text/TestRunner.h>
 
 #include <Swiften/Base/Log.h>
 

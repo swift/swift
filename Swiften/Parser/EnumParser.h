@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <string>
-#include <map>
 #include <cassert>
+#include <map>
+#include <string>
+
 #include <boost/optional.hpp>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
 
 namespace Swift {
 	template<typename T>

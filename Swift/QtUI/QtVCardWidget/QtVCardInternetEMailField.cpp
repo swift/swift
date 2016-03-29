@@ -4,11 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardInternetEMailField.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardInternetEMailField.h>
 
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QTextDocument>
+
 #include <Swiften/Base/Log.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>

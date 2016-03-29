@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/SafeByteArray.h>
 #include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
+#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Compress/ZLibCompressor.h>
 
 using namespace Swift;

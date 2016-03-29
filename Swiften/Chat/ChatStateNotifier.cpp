@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,10 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Elements/Message.h>
-#include <Swiften/Elements/ChatState.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Elements/ChatState.h>
+#include <Swiften/Elements/Message.h>
 
 namespace Swift {
 

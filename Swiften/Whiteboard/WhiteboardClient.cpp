@@ -4,10 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Whiteboard/WhiteboardClient.h>
-#include <Swiften/Whiteboard/WhiteboardTransformer.h>
-#include <boost/smart_ptr/make_shared.hpp>
+
 #include <iostream>
+
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Whiteboard/WhiteboardTransformer.h>
 
 namespace Swift {
 	WhiteboardOperation::ref WhiteboardClient::handleLocalOperationReceived(WhiteboardOperation::ref operation) {

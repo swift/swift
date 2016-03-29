@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,10 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
-#include <Swiften/Avatars/VCardAvatarManager.h>
 #include <Swiften/Avatars/AvatarStorage.h>
 #include <Swiften/Avatars/OfflineAvatarManager.h>
+#include <Swiften/Avatars/VCardAvatarManager.h>
+#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {

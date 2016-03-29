@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
+
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
 #include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {

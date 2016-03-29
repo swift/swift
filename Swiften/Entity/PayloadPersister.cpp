@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Entity/PayloadPersister.h>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
 #include <iostream>
 
-#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Parser/PayloadParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
 
 using namespace Swift;

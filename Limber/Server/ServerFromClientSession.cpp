@@ -1,26 +1,27 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Limber/Server/ServerFromClientSession.h"
+#include <Limber/Server/ServerFromClientSession.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include "Swiften/Elements/ProtocolHeader.h"
-#include "Limber/Server/UserRegistry.h"
-#include "Swiften/Network/Connection.h"
-#include "Swiften/StreamStack/XMPPLayer.h"
-#include "Swiften/Elements/StreamFeatures.h"
-#include "Swiften/Elements/ResourceBind.h"
-#include "Swiften/Elements/StartSession.h"
-#include "Swiften/Elements/IQ.h"
-#include "Swiften/Elements/AuthSuccess.h"
-#include "Swiften/Elements/AuthFailure.h"
-#include "Swiften/Elements/AuthRequest.h"
-#include "Swiften/SASL/PLAINMessage.h"
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Elements/AuthSuccess.h>
+#include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/ProtocolHeader.h>
+#include <Swiften/Elements/ResourceBind.h>
+#include <Swiften/Elements/StartSession.h>
+#include <Swiften/Elements/StreamFeatures.h>
+#include <Swiften/Network/Connection.h>
+#include <Swiften/SASL/PLAINMessage.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
+
+#include <Limber/Server/UserRegistry.h>
 
 namespace Swift {
 

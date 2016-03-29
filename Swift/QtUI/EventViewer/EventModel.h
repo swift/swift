@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,9 +11,9 @@
 #include <QAbstractListModel>
 #include <QList>
 
-#include "Swift/Controllers/XMPPEvents/StanzaEvent.h"
+#include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
-#include "Swift/QtUI/EventViewer/QtEvent.h"
+#include <Swift/QtUI/EventViewer/QtEvent.h>
 
 namespace Swift {
 class EventModel : public QAbstractListModel {

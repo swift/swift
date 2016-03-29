@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <string>
 
-#include <Swiften/Base/Override.h>
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Parser/GenericPayloadParser.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/UserLocation.h>
+#include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
 	class SWIFTEN_API UserLocationParser : public GenericPayloadParser<UserLocation> {

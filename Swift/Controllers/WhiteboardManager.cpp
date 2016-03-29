@@ -4,18 +4,25 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/Controllers/WhiteboardManager.h>
 
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h>
-#include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
-#include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
-#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
-#include "Swiften/Client/NickResolver.h"
+#include <Swiften/Client/NickResolver.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
+
+#include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
+#include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 
 namespace Swift {
 	typedef std::pair<JID, WhiteboardWindow*> JIDWhiteboardWindowPair;

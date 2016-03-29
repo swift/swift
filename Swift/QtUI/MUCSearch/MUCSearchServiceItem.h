@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,7 +9,7 @@
 #include <QList>
 #include <QString>
 
-#include "Swift/QtUI/MUCSearch/MUCSearchRoomItem.h"
+#include <Swift/QtUI/MUCSearch/MUCSearchRoomItem.h>
 
 namespace Swift {
 	class MUCSearchServiceItem : public MUCSearchItem {

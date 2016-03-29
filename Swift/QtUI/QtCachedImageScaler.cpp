@@ -1,14 +1,17 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtCachedImageScaler.h"
+#include <Swift/QtUI/QtCachedImageScaler.h>
+
+#include <boost/lexical_cast.hpp>
 
 #include <QImage>
-#include <boost/lexical_cast.hpp>
+
 #include <Swiften/Base/Path.h>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {

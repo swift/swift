@@ -1,16 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QApplication>
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QLineEdit>
-#include "../QtSwiftUtil.h"
 #include <string>
-#include "SwifTools/Application/Platform/PlatformApplication.h"
+
+#include <QApplication>
+#include <QLineEdit>
+#include <QVBoxLayout>
+#include <QWidget>
+
+#include <SwifTools/Application/Platform/PlatformApplication.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 using namespace Swift;
 

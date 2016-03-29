@@ -4,13 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/Idle.h>
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/Elements/Idle.h>
+#include <Swiften/Elements/Presence.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
 using namespace Swift;
 

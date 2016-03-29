@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,12 +14,12 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/JID/JID.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Jingle/JingleSessionImpl.h>
-#include <Swiften/Jingle/JingleContentID.h>
-#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
 #include <Swiften/Base/IDGenerator.h>
+#include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Jingle/JingleContentID.h>
+#include <Swiften/Jingle/JingleSessionImpl.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
 
 namespace Swift {
 

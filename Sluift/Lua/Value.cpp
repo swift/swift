@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Value.h"
+#include <Sluift/Lua/Value.h>
+
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/variant/apply_visitor.hpp>
 
 extern "C" {
 	#include <lualib.h>
 }
-#include <boost/variant/apply_visitor.hpp>
-#include <boost/numeric/conversion/cast.hpp>
+
 #include <Swiften/Base/foreach.h>
 
 using namespace Swift;

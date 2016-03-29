@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtURIHandler.h"
+#include <Swift/QtUI/QtURIHandler.h>
 
 #include <QCoreApplication>
 #include <QFileOpenEvent>
 #include <QUrl>
 
-#include "QtSwiftUtil.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 using namespace Swift;
 

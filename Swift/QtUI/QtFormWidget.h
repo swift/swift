@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <map>
+
 #include <QWidget>
 
-#include <map>
 #include <Swiften/Elements/Form.h>
 
 class QListWidget;

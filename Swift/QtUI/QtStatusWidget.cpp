@@ -1,33 +1,36 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtStatusWidget.h"
+#include <Swift/QtUI/QtStatusWidget.h>
 
 #include <algorithm>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
 
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+
+#include <QApplication>
 #include <QBoxLayout>
 #include <QComboBox>
-#include <QLabel>
-#include <QFrame>
-#include <QPoint>
-#include <QStackedWidget>
-#include <QApplication>
 #include <QDesktopWidget>
-#include <qdebug.h>
+#include <QFrame>
+#include <QLabel>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QMovie>
+#include <QPoint>
+#include <QStackedWidget>
 
-#include "Swift/QtUI/QtElidingLabel.h"
-#include "Swift/QtUI/QtLineEdit.h"
-#include "Swift/QtUI/QtSwiftUtil.h"
-#include <Swift/Controllers/StatusUtil.h>
+#include <qdebug.h>
+
 #include <Swift/Controllers/StatusCache.h>
+#include <Swift/Controllers/StatusUtil.h>
+
+#include <Swift/QtUI/QtElidingLabel.h>
+#include <Swift/QtUI/QtLineEdit.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace lambda = boost::lambda;
 

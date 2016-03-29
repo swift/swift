@@ -5,19 +5,20 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/UserSearch/QtUserSearchFirstMultiJIDPage.h"
+#include <Swift/QtUI/UserSearch/QtUserSearchFirstMultiJIDPage.h>
 
 #include <QMessageBox>
 #include <QMimeData>
 #include <QUrl>
 
-#include "Swift/QtUI/QtSwiftUtil.h"
 #include <Swift/Controllers/Settings/SettingsProvider.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/UserSearch/QtContactListWidget.h>
 #include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
 

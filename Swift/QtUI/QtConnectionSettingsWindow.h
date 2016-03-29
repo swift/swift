@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,9 @@
 
 #include <QDialog>
 
-#include "ui_QtConnectionSettings.h"
-
 #include <Swiften/Client/ClientOptions.h>
+
+#include <Swift/QtUI/ui_QtConnectionSettings.h>
 
 namespace Swift {
 	class QtConnectionSettingsWindow : public QDialog {

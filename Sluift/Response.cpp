@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,10 @@
 
 #include <lua.hpp>
 
-#include <Sluift/globals.h>
 #include <Swiften/Elements/ErrorPayload.h>
+
 #include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/globals.h>
 
 using namespace Swift;
 using namespace Swift::Sluift;

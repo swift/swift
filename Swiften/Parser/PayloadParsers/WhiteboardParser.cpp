@@ -4,20 +4,28 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardRectElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardTextElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardPolygonElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
+
+#include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <boost/lexical_cast.hpp>
+
+#include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardPolygonElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardRectElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardTextElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
 
 namespace Swift {
 	WhiteboardParser::WhiteboardParser() : actualIsText(false), level_(0) {

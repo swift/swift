@@ -5,17 +5,18 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Client/XMLBeautifier.h>
+
 #include <sstream>
 #include <stack>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Client/XMLBeautifier.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 
 namespace Swift {

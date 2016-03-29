@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include "Slimber/Menulet.h"
-#include "Slimber/MenuletController.h"
+#include <Slimber/Menulet.h>
+#include <Slimber/MenuletController.h>
 
 class MenuletControllerTest : public CppUnit::TestFixture {
 		CPPUNIT_TEST_SUITE(MenuletControllerTest);

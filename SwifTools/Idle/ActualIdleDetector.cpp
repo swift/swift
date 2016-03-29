@@ -6,7 +6,6 @@
 
 #include <SwifTools/Idle/ActualIdleDetector.h>
 
-
 #include <boost/bind.hpp>
 
 #include <Swiften/Network/Timer.h>

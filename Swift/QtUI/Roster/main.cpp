@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <QtGui>
-#include "QtTreeWidget.h"
-#include "QtTreeWidgetFactory.h"
 
-#include "Swiften/Elements/StatusShow.h"
+#include <Swiften/Elements/StatusShow.h>
+
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
+#include <Swift/QtUI/Roster/QtTreeWidgetFactory.h>
 
 int main(int argc, char *argv[])
 {

@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/optional.hpp>
 #include <string>
 
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubPayload.h>
 #include <Swiften/JID/JID.h>
 

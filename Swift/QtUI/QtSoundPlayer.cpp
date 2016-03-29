@@ -1,17 +1,20 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtSoundPlayer.h"
+#include <Swift/QtUI/QtSoundPlayer.h>
 
-#include <QSound>
 #include <iostream>
 
-#include <SwifTools/Application/ApplicationPathProvider.h>
-#include <QtSwiftUtil.h>
+#include <QSound>
+
 #include <Swiften/Base/Path.h>
+
+#include <SwifTools/Application/ApplicationPathProvider.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 	

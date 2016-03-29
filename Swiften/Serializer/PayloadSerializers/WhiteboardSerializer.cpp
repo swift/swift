@@ -4,15 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
 
 #include <iostream>
-#include <boost/smart_ptr/make_shared.hpp>
+
 #include <boost/lexical_cast.hpp>
-#include <Swiften/Serializer/XML/XMLTextNode.h>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
-#include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
 	void WhiteboardElementSerializingVisitor::visit(WhiteboardLineElement& line) {

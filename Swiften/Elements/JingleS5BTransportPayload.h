@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,10 +11,9 @@
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/Elements/Bytestreams.h>
+#include <Swiften/Elements/JingleTransportPayload.h>
 #include <Swiften/Network/HostAddressPort.h>
-
 
 namespace Swift {
 	class SWIFTEN_API JingleS5BTransportPayload : public JingleTransportPayload {

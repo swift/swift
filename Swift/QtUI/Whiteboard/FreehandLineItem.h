@@ -4,11 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
+
+#include <iostream>
 
 #include <QGraphicsItem>
 #include <QPainter>
-#include <iostream>
 
 namespace Swift {
 	class FreehandLineItem : public QGraphicsItem {

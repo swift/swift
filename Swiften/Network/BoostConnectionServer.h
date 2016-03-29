@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/optional/optional_fwd.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/BoostConnection.h>
 #include <Swiften/Network/ConnectionServer.h>
-#include <Swiften/EventLoop/EventOwner.h>
-#include <boost/optional/optional_fwd.hpp>
 
 namespace Swift {
 	class SWIFTEN_API BoostConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<BoostConnectionServer> {

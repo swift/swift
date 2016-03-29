@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,14 +13,17 @@
 #pragma once
 
 #include <vector>
+
 #include <boost/bind.hpp>
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <QAbstractItemModel>
 
+#include <Swiften/Base/boost_bsignals.h>
+
 #include <Swift/Controllers/Contact.h>
-#include <Swift/QtUI/ChatList/ChatListItem.h>
+
 #include <Swift/QtUI/ChatList/ChatListGroupItem.h>
+#include <Swift/QtUI/ChatList/ChatListItem.h>
 #include <Swift/QtUI/ChatList/ChatListRecentItem.h>
 
 namespace Swift {

@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Disco/CapsManager.h>
 
-#include <boost/bind.hpp>
 #include <iostream>
 
+#include <boost/bind.hpp>
+
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Disco/CapsStorage.h>
 #include <Swiften/Disco/CapsInfoGenerator.h>
-#include <Swiften/Elements/CapsInfo.h>
+#include <Swiften/Disco/CapsStorage.h>
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
+#include <Swiften/Elements/CapsInfo.h>
 
 namespace Swift {
 

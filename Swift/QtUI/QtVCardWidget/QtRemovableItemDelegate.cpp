@@ -5,15 +5,17 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtRemovableItemDelegate.h"
-#include <Swiften/Base/Platform.h>
+#include <Swift/QtUI/QtVCardWidget/QtRemovableItemDelegate.h>
+
 #include <QEvent>
 #include <QPainter>
+
+#include <Swiften/Base/Platform.h>
 
 namespace Swift {
 

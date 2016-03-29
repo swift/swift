@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/NetworkEnvironment.h>
 
-#include <Swiften/Network/NetworkInterface.h>
-#include <Swiften/Network/HostAddress.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/NetworkInterface.h>
 
 namespace Swift {
 

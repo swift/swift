@@ -8,16 +8,17 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Client/Client.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Sluift/SluiftGlobals.h>
-#include <Sluift/Lua/Exception.h>
+#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/PubSubEvent.h>
 #include <Swiften/Queries/RawRequest.h>
+#include <Swiften/Roster/XMPPRoster.h>
+
 #include <Sluift/Helpers.h>
-#include <Swiften/Elements/Presence.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/SluiftGlobals.h>
 
 using namespace Swift;
 

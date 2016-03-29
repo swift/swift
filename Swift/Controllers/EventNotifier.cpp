@@ -10,18 +10,18 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
-#include <Swiften/Client/NickResolver.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/format.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/JID/JID.h>
 
+#include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 #include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 #include <Swift/Controllers/XMPPEvents/SubscriptionRequestEvent.h>
-#include <Swift/Controllers/Intl.h>
 
 #include <SwifTools/Notifier/Notifier.h>
 

@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 
-#include <boost/optional.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/optional.hpp>
 
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/StringCodecs/Base64.h>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,7 +11,6 @@
  */
 
 #include <Swift/QtUI/QtProfileWindow.h>
-#include <Swift/QtUI/ui_QtProfileWindow.h>
 
 #include <QCloseEvent>
 #include <QMovie>
@@ -21,6 +20,7 @@
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUtilities.h>
+#include <Swift/QtUI/ui_QtProfileWindow.h>
 
 namespace Swift {
 

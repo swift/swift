@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/Qt/QtAboutDialog.h"
+#include <Slimber/Qt/QtAboutDialog.h>
 
 #include <QCoreApplication>
-#include <QVBoxLayout>
 #include <QLabel>
 #include <QPixmap>
+#include <QVBoxLayout>
 
 QtAboutDialog::QtAboutDialog() {
 	setAttribute(Qt::WA_DeleteOnClose);

@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/UnblockPayload.h>
-#include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/BlockSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/BodySerializer.h>

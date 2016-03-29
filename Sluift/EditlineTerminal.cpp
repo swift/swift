@@ -1,20 +1,23 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/EditlineTerminal.h>
 
-#include <boost/optional.hpp>
-#include <iostream>
-#include <editline/readline.h>
-#include <boost/numeric/conversion/cast.hpp>
 #include <cassert>
-#include <vector>
 #include <cstring>
+#include <iostream>
+#include <vector>
+
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/optional.hpp>
+
+#include <editline/readline.h>
 
 #include <Swiften/Base/Platform.h>
+
 #include <Sluift/Completer.h>
 
 using namespace Swift;

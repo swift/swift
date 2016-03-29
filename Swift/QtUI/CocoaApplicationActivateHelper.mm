@@ -1,14 +1,16 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Cocoa/Cocoa.h>
-#include "CocoaApplicationActivateHelper.h"
+#include <Swift/QtUI/CocoaApplicationActivateHelper.h>
 
 #include <boost/function.hpp>
+
 #include <QApplication>
+
+#include <Cocoa/Cocoa.h>
 
 @interface CocoaApplicationActivateHelperDelegate : NSObject {
 }

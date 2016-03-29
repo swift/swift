@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtDBUSURIHandler.h"
+#include <Swift/QtUI/QtDBUSURIHandler.h>
 
 #include <QDBusAbstractAdaptor>
 #include <QDBusConnection>
 
-#include "QtSwiftUtil.h"
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 using namespace Swift;
 

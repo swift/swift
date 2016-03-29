@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,24 +13,22 @@
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/smart_ptr/intrusive_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Serializer/XML/XMLNode.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Serializer/XML/XMLRawTextNode.h>
-#include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
-
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
-
-#include <Swiften/Elements/JinglePayload.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleContentPayload.h>
-#include <Swiften/Elements/JingleIBBTransportPayload.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
+#include <Swiften/Elements/JingleIBBTransportPayload.h>
+#include <Swiften/Elements/JinglePayload.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/JingleFileTransferHashSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLNode.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 namespace Swift {
 

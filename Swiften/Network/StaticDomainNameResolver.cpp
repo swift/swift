@@ -1,17 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/StaticDomainNameResolver.h>
 
+#include <string>
+
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Network/DomainNameResolveError.h>
 #include <Swiften/EventLoop/EventOwner.h>
-#include <string>
+#include <Swiften/Network/DomainNameResolveError.h>
 
 using namespace Swift;
 

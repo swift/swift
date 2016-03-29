@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,8 +11,8 @@
 
 #include <Swiften/Elements/PubSubItem.h>
 #include <Swiften/Elements/RawXMLPayload.h>
-#include <Swiften/Serializer/PayloadSerializers/PubSubItemSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/PubSubItemSerializer.h>
 
 using namespace Swift;
 

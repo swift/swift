@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
 

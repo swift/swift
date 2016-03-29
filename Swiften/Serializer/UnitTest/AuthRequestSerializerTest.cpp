@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,9 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/AuthRequestSerializer.h>
-#include <Swiften/Elements/AuthRequest.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Elements/AuthRequest.h>
+#include <Swiften/Serializer/AuthRequestSerializer.h>
 
 using namespace Swift;
 

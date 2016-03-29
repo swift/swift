@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <string>
+
 #include <QWidget>
 
-#include <Swift/Controllers/UIInterfaces/ContactEditWindow.h>
-#include <string>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/UIInterfaces/ContactEditWindow.h>
 
 class QLabel;
 class QVBoxLayout;

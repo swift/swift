@@ -1,26 +1,26 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "RosterDelegate.h"
+#include <Swift/QtUI/Roster/RosterDelegate.h>
 
 #include <QApplication>
-#include <QPainter>
-#include <QColor>
+#include <QBitmap>
 #include <QBrush>
+#include <QColor>
+#include <QDebug>
 #include <QFontMetrics>
+#include <QPainter>
 #include <QPainterPath>
 #include <QPolygon>
-#include <qdebug.h>
-#include <QBitmap>
 
-#include "Swift/Controllers/Roster/ContactRosterItem.h"
-#include "Swift/Controllers/Roster/GroupRosterItem.h"
+#include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/GroupRosterItem.h>
 
-#include "QtTreeWidget.h"
-#include "RosterModel.h"
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
+#include <Swift/QtUI/Roster/RosterModel.h>
 
 namespace Swift {
 

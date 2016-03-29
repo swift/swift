@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,7 +11,6 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Elements/StatusShow.h>
-
 
 namespace Swift {
 	class SWIFTEN_API Presence : public Stanza {

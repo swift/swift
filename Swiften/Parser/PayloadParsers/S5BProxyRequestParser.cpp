@@ -5,12 +5,12 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "S5BProxyRequestParser.h"
+#include <Swiften/Parser/PayloadParsers/S5BProxyRequestParser.h>
 
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>

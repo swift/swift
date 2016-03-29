@@ -1,24 +1,27 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/bind.hpp>
 #include <map>
 
+#include <boost/bind.hpp>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Elements/Presence.h>
-#include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Elements/RosterItemPayload.h>
-#include "Slimber/LinkLocalPresenceManager.h"
-#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
-#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
-#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
+#include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuerier.h>
+#include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
+#include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
+
+#include <Slimber/LinkLocalPresenceManager.h>
 
 using namespace Swift;
 

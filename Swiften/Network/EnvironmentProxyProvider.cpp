@@ -4,12 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Network/EnvironmentProxyProvider.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <iostream>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Network/EnvironmentProxyProvider.h>
 
 namespace Swift {
 

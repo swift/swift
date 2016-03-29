@@ -1,14 +1,16 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Serializer/PayloadSerializers/ResultSetSerializer.h>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
+
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
-#include <Swiften/Serializer/PayloadSerializers/ResultSetSerializer.h>
 
 using namespace Swift;
 

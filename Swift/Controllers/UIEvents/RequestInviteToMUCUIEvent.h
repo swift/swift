@@ -5,18 +5,20 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include <Swift/Controllers/UIEvents/UIEvent.h>
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
 	class RequestInviteToMUCUIEvent : public UIEvent {

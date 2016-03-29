@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,11 +10,12 @@
 
 #include <cassert>
 #include <iostream>
-#include <boost/bind.hpp>
 #include <sstream>
 
-#include <Swiften/Base/foreach.h>
+#include <boost/bind.hpp>
+
 #include <Swiften/Base/Path.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/ConnectionFactory.h>
 
 namespace Swift {

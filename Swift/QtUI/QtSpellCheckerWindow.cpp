@@ -4,18 +4,25 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swift/QtUI/QtSpellCheckerWindow.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/QtUI/QtUISettingConstants.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtSpellCheckerWindow.h>
 
 #include <QCoreApplication>
-#include <QFileDialog>
 #include <QDir>
+#include <QFileDialog>
 #include <QStringList>
 #include <QTimer>
+
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 
 namespace Swift {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,8 +9,8 @@
 
 #include <Swiften/Elements/Storage.h>
 #include <Swiften/Parser/PayloadParsers/PrivateStorageParser.h>
-#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
 using namespace Swift;
 

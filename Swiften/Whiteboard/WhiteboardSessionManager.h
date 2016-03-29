@@ -4,18 +4,24 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <map>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Whiteboard/WhiteboardSession.h>
+#include <Swiften/Client/StanzaChannel.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Whiteboard/IncomingWhiteboardSession.h>
 #include <Swiften/Whiteboard/OutgoingWhiteboardSession.h>
+#include <Swiften/Whiteboard/WhiteboardSession.h>
 
 namespace Swift {
 	class IQRouter;

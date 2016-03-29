@@ -10,7 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include "SOCKS5BytestreamClientSession.h"
+#include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
 
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>

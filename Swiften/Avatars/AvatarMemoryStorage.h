@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,10 +9,10 @@
 #include <map>
 #include <string>
 
-#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Avatars/AvatarStorage.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class SWIFTEN_API AvatarMemoryStorage : public AvatarStorage {

@@ -4,14 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <SwifTools/SpellParser.h>
 
-#include <boost/spirit/include/lex_lexertl.hpp>
-#include <boost/bind.hpp>
-#include <boost/ref.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-
 #include <string>
+
+#include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/ref.hpp>
+#include <boost/spirit/include/lex_lexertl.hpp>
 
 namespace lex = boost::spirit::lex;
 

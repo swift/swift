@@ -5,27 +5,25 @@
  */
 
 /*
-* Copyright (c) 2014 Isode Limited.
-* All rights reserved.v3.
-* See the COPYING file for more information.
-*/
+ * Copyright (c) 2014-2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/smart_ptr/intrusive_ptr.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Serializer/XML/XMLNode.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Serializer/XML/XMLRawTextNode.h>
-
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
-
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
+#include <Swiften/Serializer/XML/XMLNode.h>
+#include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 namespace Swift {
 

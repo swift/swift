@@ -1,12 +1,14 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
+#include <Swiften/Parser/PayloadParsers/FormParser.h>
+
 #include <iostream>
 #include <map>
+
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {
 

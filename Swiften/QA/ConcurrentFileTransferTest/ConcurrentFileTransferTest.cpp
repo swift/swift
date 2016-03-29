@@ -1,35 +1,35 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <fstream>
-#include <string>
 #include <map>
+#include <string>
 
-#include <boost/numeric/conversion/cast.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Base/sleep.h>
-#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/BoostRandomGenerator.h>
+#include <Swiften/Base/Debug.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/sleep.h>
 #include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientXMLTracer.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Elements/Presence.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/FileTransfer/FileReadBytestream.h>
+#include <Swiften/FileTransfer/FileTransferManager.h>
+#include <Swiften/FileTransfer/FileWriteBytestream.h>
+#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
+#include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Disco/EntityCapsProvider.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/FileTransfer/ReadBytestream.h>
-#include <Swiften/Base/BoostRandomGenerator.h>
-#include <Swiften/FileTransfer/FileReadBytestream.h>
-#include <Swiften/FileTransfer/OutgoingFileTransfer.h>
-#include <Swiften/FileTransfer/FileTransferManager.h>
-#include <Swiften/Disco/ClientDiscoManager.h>
-#include <Swiften/FileTransfer/FileWriteBytestream.h>
-#include <Swiften/Base/Debug.h>
 
 using namespace Swift;
 

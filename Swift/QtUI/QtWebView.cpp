@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 
-#include "QtWebView.h"
+#include <Swift/QtUI/QtWebView.h>
 
-#include <QKeyEvent>
-#include <QFocusEvent>
 #include <boost/numeric/conversion/cast.hpp>
+
+#include <QFocusEvent>
+#include <QKeyEvent>
 #include <QMenu>
+
 #include <Swiften/Base/Log.h>
 
 namespace Swift {

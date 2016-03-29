@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
-#include <Swiften/Base/ByteArray.h>
 #include <string>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
 
 namespace Swift {
 	class FakeDNSSDQuerier;

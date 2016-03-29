@@ -1,22 +1,24 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Roster/TableRoster.h>
 
-#include <boost/cast.hpp>
-#include <cassert>
 #include <algorithm>
-#include <boost/numeric/conversion/cast.hpp>
-#include <Swiften/Base/foreach.h>
+#include <cassert>
 
-#include <Swiften/Network/TimerFactory.h>
+#include <boost/cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/Timer.h>
-#include <Swift/Controllers/Roster/Roster.h>
+#include <Swiften/Network/TimerFactory.h>
+
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/LeastCommonSubsequence.h>
+#include <Swift/Controllers/Roster/Roster.h>
 
 namespace Swift {
 	struct SectionNameEquals {

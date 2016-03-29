@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
+#include <boost/bind.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/bind.hpp>
 
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>
-#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
+#include <Swiften/Base/StartStopper.h>
+#include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
+#include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
 #include <Swiften/Network/DummyConnection.h>
-#include <Swiften/EventLoop/DummyEventLoop.h>
-#include <Swiften/Base/StartStopper.h>
 
 using namespace Swift;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,9 +9,9 @@
 #include <map>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Queries/GetResponder.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/JID/JID.h>
+#include <Swiften/Queries/GetResponder.h>
 
 namespace Swift {
 	class IQRouter;

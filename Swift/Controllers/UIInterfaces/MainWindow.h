@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,11 +10,12 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <Swiften/JID/JID.h>
-#include <Swiften/Elements/StatusShow.h>
-#include <Swiften/Elements/DiscoItems.h>
-#include <Swiften/TLS/Certificate.h>
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Elements/DiscoItems.h>
+#include <Swiften/Elements/StatusShow.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/TLS/Certificate.h>
+
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 
 namespace Swift {

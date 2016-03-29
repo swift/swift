@@ -1,27 +1,28 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swiften/Base/ByteArray.h>
+#include <boost/bind.hpp>
+
 #include <QA/Checker/IO.h>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/bind.hpp>
 
-#include <Swiften/Elements/VCard.h>
-#include <Swiften/Avatars/VCardAvatarManager.h>
-#include <Swiften/VCards/VCardMemoryStorage.h>
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swiften/MUC/MUCRegistry.h>
-#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Avatars/VCardAvatarManager.h>
+#include <Swiften/Base/ByteArray.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Queries/IQRouter.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
 
 using namespace Swift;
 

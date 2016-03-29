@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
 #include <string>
+#include <vector>
+
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/SecurityLabel.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class SWIFTEN_API SecurityLabelsCatalog : public Payload {

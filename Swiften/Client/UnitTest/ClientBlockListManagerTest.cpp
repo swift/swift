@@ -4,18 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
 #include <algorithm>
 
-#include <Swiften/Base/foreach.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
-#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Client/DummyStanzaChannel.h>
+#include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Queries/IQRouter.h>
 
 using namespace Swift;
 

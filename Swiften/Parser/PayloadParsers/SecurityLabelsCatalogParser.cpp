@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
+
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
-#include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParser.h>
+#include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
 
 namespace Swift {
 

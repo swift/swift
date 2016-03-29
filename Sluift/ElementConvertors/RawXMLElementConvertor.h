@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,9 @@
 #pragma once
 
 #include <Swiften/Base/Override.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 #include <Sluift/LuaElementConvertor.h>
-#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 namespace Swift {
 	class RawXMLElementConvertor : public LuaElementConvertor {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,16 +8,16 @@
 
 #include <vector>
 
-#include <QWidget>
-#include <QMenu>
 #include <QList>
+#include <QMenu>
+#include <QWidget>
 
 #include <Swift/Controllers/UIInterfaces/MainWindow.h>
 
-#include <Swift/QtUI/QtRosterHeader.h>
-#include <Swift/QtUI/EventViewer/QtEventWindow.h>
 #include <Swift/QtUI/ChatList/QtChatListWindow.h>
+#include <Swift/QtUI/EventViewer/QtEventWindow.h>
 #include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtRosterHeader.h>
 
 class QComboBox;
 class QLineEdit;

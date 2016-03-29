@@ -4,18 +4,27 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Network/WindowsProxyProvider.h>
+
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+
 #include <iostream>
+
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/log.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Network/WindowsProxyProvider.h>
-#include <Swiften/Base/ByteArray.h>
-
 #include <windows.h>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/log.h>
 
 namespace Swift {
 

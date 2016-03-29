@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Presence/DirectedPresenceSender.h>
+
 #include <Swiften/Base/foreach.h>
 
 namespace Swift {

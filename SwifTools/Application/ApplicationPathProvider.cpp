@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/filesystem.hpp>
+#include <SwifTools/Application/ApplicationPathProvider.h>
+
 #include <iostream>
 
-#include <SwifTools/Application/ApplicationPathProvider.h>
-#include <Swiften/Base/foreach.h>
+#include <boost/filesystem.hpp>
+
 #include <Swiften/Base/Paths.h>
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

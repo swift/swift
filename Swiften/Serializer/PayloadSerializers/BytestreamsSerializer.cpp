@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/PayloadSerializers/BytestreamsSerializer.h>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
-
+#include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
 

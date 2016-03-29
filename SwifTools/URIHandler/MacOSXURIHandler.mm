@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <SwifTools/URIHandler/MacOSXURIHandler.h>
 
-#include <Cocoa/Cocoa.h>
 #include <iostream>
+
+#include <Cocoa/Cocoa.h>
 
 using namespace Swift;
 

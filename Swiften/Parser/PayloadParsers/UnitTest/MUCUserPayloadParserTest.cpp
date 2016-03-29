@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 #include <Swiften/Elements/MUCDestroyPayload.h>
+#include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
 
 using namespace Swift;

@@ -1,18 +1,21 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/Lua/Check.h>
 
-#include <boost/numeric/conversion/cast.hpp>
 #include <iostream>
 #include <sstream>
+
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <lua.hpp>
 
-#include <Sluift/Lua/Exception.h>
 #include <Swiften/Base/ByteArray.h>
+
+#include <Sluift/Lua/Exception.h>
 
 using namespace Swift;
 

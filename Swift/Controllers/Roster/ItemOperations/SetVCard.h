@@ -4,13 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
 
-#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
+#include <Swift/Controllers/Roster/ItemOperations/RosterItemOperation.h>
 
 namespace Swift {
 

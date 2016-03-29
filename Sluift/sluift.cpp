@@ -1,43 +1,45 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/sluift.h>
 
+#include <string>
+
+#include <boost/assign/list_of.hpp>
+#include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <lua.hpp>
 
-#include <string>
-#include <boost/bind.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/assign/list_of.hpp>
-#include <boost/filesystem.hpp>
-
-#include "Watchdog.h"
-#include <Sluift/Lua/Check.h>
-#include <Sluift/SluiftClient.h>
-#include <Sluift/SluiftComponent.h>
-#include <Sluift/globals.h>
-#include <Sluift/Lua/Exception.h>
-#include <Sluift/Lua/LuaUtils.h>
-#include <Sluift/Lua/FunctionRegistration.h>
-#include <Swiften/Base/sleep.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
-#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
-#include <Swiften/Serializer/PayloadSerializer.h>
-#include <Swiften/TLS/Certificate.h>
-#include <Swiften/TLS/CertificateFactory.h>
-#include <Sluift/LuaElementConvertor.h>
-#include <Sluift/Lua/Debug.h>
-#include <Swiften/StringCodecs/Base64.h>
-#include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Base/sleep.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
+#include <Swiften/Serializer/PayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/StringCodecs/Base64.h>
+#include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/TLS/Certificate.h>
+#include <Swiften/TLS/CertificateFactory.h>
+
 #include <Sluift/ITunesInterface.h>
+#include <Sluift/Lua/Check.h>
+#include <Sluift/Lua/Debug.h>
+#include <Sluift/Lua/Exception.h>
+#include <Sluift/Lua/FunctionRegistration.h>
+#include <Sluift/Lua/LuaUtils.h>
+#include <Sluift/LuaElementConvertor.h>
+#include <Sluift/SluiftClient.h>
+#include <Sluift/SluiftComponent.h>
+#include <Sluift/Watchdog.h>
+#include <Sluift/globals.h>
 
 using namespace Swift;
 

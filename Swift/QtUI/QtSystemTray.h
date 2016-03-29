@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "Swift/Controllers/SystemTray.h"
-
-#include <QSystemTrayIcon>
 #include <QMovie>
+#include <QSystemTrayIcon>
+
+#include <Swift/Controllers/SystemTray.h>
 
 class QIcon;
 class QMenu;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,14 +9,14 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/StreamStack/XMPPLayer.h>
-#include <Swiften/StreamStack/StreamStack.h>
-#include <Swiften/StreamStack/ConnectionLayer.h>
-#include <Swiften/StreamStack/WhitespacePingLayer.h>
 #include <Swiften/StreamStack/CompressionLayer.h>
+#include <Swiften/StreamStack/ConnectionLayer.h>
+#include <Swiften/StreamStack/StreamStack.h>
 #include <Swiften/StreamStack/TLSLayer.h>
-#include <Swiften/TLS/TLSContextFactory.h>
+#include <Swiften/StreamStack/WhitespacePingLayer.h>
+#include <Swiften/StreamStack/XMPPLayer.h>
 #include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
 

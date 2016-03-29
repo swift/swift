@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,14 +7,14 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/StreamStack/StreamLayer.h>
-#include <Swiften/Compress/ZLibException.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Compress/ZLibCompressor.h>
 #include <Swiften/Compress/ZLibDecompressor.h>
+#include <Swiften/Compress/ZLibException.h>
+#include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
 	class ZLibCompressor;

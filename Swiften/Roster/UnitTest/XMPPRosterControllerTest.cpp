@@ -1,22 +1,23 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h>
-#include <Swiften/Roster/XMPPRosterController.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
+#include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Elements/RosterPayload.h>
-#include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/Roster/RosterMemoryStorage.h>
+#include <Swiften/Roster/UnitTest/XMPPRosterSignalHandler.h>
+#include <Swiften/Roster/XMPPRosterController.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 
 using namespace Swift;
 

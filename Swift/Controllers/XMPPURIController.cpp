@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,11 +9,12 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+
 #include <SwifTools/URIHandler/URIHandler.h>
 #include <SwifTools/URIHandler/XMPPURI.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 
 using namespace Swift;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/Controllers/Settings/DummySettingsProvider.h>
+#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/Controllers/Settings/XMLSettingsProvider.h>
 
 using namespace Swift;

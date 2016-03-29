@@ -1,22 +1,22 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/optional.hpp>
 #include <boost/enable_shared_from_this.hpp>
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
+#include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ToplevelElement.h>
+#include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/StreamStack/ConnectionLayer.h>
-#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class ProtocolHeader;

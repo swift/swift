@@ -1,17 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <QtGui>
-#include "EventView.h"
-#include "EventModel.h"
-#include "QtEventWindow.h"
 
-#include "Swiften/Events/MessageEvent.h"
-#include "Swiften/Events/ErrorEvent.h"
-#include "Swiften/JID/JID.h"
+#include <EventModel.h>
+#include <EventView.h>
+
+#include <Swiften/Events/ErrorEvent.h>
+#include <Swiften/Events/MessageEvent.h>
+#include <Swiften/JID/JID.h>
+
+#include <Swift/QtUI/EventViewer/QtEventWindow.h>
 
 int main(int argc, char *argv[])
 {

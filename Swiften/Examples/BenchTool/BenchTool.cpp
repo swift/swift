@@ -1,21 +1,22 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
 #include <iostream>
 
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
+
+#include <Swiften/Base/sleep.h>
 #include <Swiften/Client/Client.h>
-#include <Swiften/Network/TimerFactory.h>
-#include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Roster/GetRosterRequest.h>
-#include <Swiften/Client/ClientXMLTracer.h>
-#include <Swiften/Base/sleep.h>
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
 
 using namespace Swift;

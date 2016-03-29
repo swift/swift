@@ -1,31 +1,36 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <stdlib.h>
+
+#include <iostream>
+
+#include <boost/program_options.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <boost/program_options.hpp>
 #include <boost/version.hpp>
-#include <iostream>
+
 #include <QApplication>
-#include <QTextCodec>
-#include <QTranslator>
 #include <QLocale>
 #include <QStringList>
+#include <QTextCodec>
+#include <QTranslator>
 
-#include <Swift/Controllers/Translator.h>
-#include <Swift/Controllers/ApplicationInfo.h>
-#include <Swift/Controllers/BuildVersion.h>
-#include <SwifTools/Application/PlatformApplicationPathProvider.h>
-#include <SwifTools/CrashReporter.h>
-#include <stdlib.h>
 #include <Swiften/Base/Path.h>
 
-#include "QtSwift.h"
-#include "QtTranslator.h"
-#include "QtSwiftUtil.h"
+#include <Swift/Controllers/ApplicationInfo.h>
+#include <Swift/Controllers/BuildVersion.h>
+#include <Swift/Controllers/Translator.h>
+
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
+#include <SwifTools/CrashReporter.h>
+
+#include <Swift/QtUI/QtSwift.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtTranslator.h>
 
 int main(int argc, char* argv[]) {
 	Swift::PlatformApplicationPathProvider applicationPathProvider(SWIFT_APPLICATION_NAME);

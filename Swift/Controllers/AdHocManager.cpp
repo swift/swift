@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,14 +10,15 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
+#include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
-#include <Swift/Controllers/UIInterfaces/MainWindow.h>
-#include <Swift/Controllers/UIInterfaces/AdHocCommandWindowFactory.h>
+
+#include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocWithJIDUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/AdHocCommandWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/MainWindow.h>
 
 namespace Swift {
 

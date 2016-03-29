@@ -4,17 +4,25 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <set>
+
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/History/HistoryStorage.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Presence/PresenceOracle.h>
-#include <Swiften/History/HistoryStorage.h>
-#include <set>
+
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 
 namespace Swift {
 	class HistoryWindowFactory;

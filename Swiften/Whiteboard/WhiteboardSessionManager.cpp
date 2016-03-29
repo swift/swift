@@ -4,16 +4,23 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
 
-#include <Swiften/Base/foreach.h>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/bind.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Whiteboard/WhiteboardResponder.h>
-#include <Swiften/Presence/PresenceOracle.h>
-#include "Swiften/Disco/EntityCapsProvider.h"
 
 namespace Swift {
 	WhiteboardSessionManager::WhiteboardSessionManager(IQRouter* router, StanzaChannel* stanzaChannel, PresenceOracle* presenceOracle, EntityCapsProvider* capsProvider) : router_(router), stanzaChannel_(stanzaChannel), presenceOracle_(presenceOracle), capsProvider_(capsProvider) {

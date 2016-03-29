@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/Tree/TreeReparser.h>
 
-#include <boost/lexical_cast.hpp>
-#include <utility>
 #include <deque>
+#include <utility>
 
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParser.h>
+#include <boost/lexical_cast.hpp>
+
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/MUCOccupant.h>
+#include <Swiften/Parser/PayloadParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 
 namespace Swift {
 

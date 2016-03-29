@@ -1,18 +1,20 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Crypto/CommonCryptoCryptoProvider.h>
 
-#include <CommonCrypto/CommonDigest.h>
-#include <CommonCrypto/CommonHMAC.h>
 #include <cassert>
 
-#include <Swiften/Crypto/Hash.h>
-#include <Swiften/Base/ByteArray.h>
 #include <boost/numeric/conversion/cast.hpp>
+
+#include <CommonCrypto/CommonDigest.h>
+#include <CommonCrypto/CommonHMAC.h>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Crypto/Hash.h>
 
 using namespace Swift;
 

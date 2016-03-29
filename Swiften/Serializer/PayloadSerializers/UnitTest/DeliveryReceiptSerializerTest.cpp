@@ -4,14 +4,20 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/PayloadSerializers/DeliveryReceiptSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/DeliveryReceiptRequestSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/DeliveryReceiptSerializer.h>
 
 using namespace Swift;
 

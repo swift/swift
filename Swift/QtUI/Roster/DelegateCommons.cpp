@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "DelegateCommons.h"
+#include <Swift/QtUI/Roster/DelegateCommons.h>
 
-#include <QtScaledAvatarCache.h>
 #include <QFileInfo>
+
+#include <Swift/QtUI/QtScaledAvatarCache.h>
 
 namespace Swift {
 

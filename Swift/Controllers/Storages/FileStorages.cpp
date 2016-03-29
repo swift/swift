@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/Storages/FileStorages.h"
-#include "Swift/Controllers/Storages/VCardFileStorage.h"
-#include "Swift/Controllers/Storages/AvatarFileStorage.h"
-#include "Swift/Controllers/Storages/CapsFileStorage.h"
-#include "Swift/Controllers/Storages/RosterFileStorage.h"
-#include <Swiften/History/SQLiteHistoryStorage.h>
+#include <Swift/Controllers/Storages/FileStorages.h>
+
 #include <Swiften/Base/Path.h>
+#include <Swiften/History/SQLiteHistoryStorage.h>
+
+#include <Swift/Controllers/Storages/AvatarFileStorage.h>
+#include <Swift/Controllers/Storages/CapsFileStorage.h>
+#include <Swift/Controllers/Storages/RosterFileStorage.h>
+#include <Swift/Controllers/Storages/VCardFileStorage.h>
 
 namespace Swift {
 

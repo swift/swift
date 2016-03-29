@@ -72,8 +72,6 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 
 myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
-myenv.Append(CPPPATH = ["."])
-
 if env["PLATFORM"] == "win32" :
 	#myenv.Append(LINKFLAGS = ["/SUBSYSTEM:CONSOLE"])
 	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])

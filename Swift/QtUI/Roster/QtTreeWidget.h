@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,15 +7,15 @@
 #pragma once
 
 #include <QDragEnterEvent>
-#include <QDropEvent>
 #include <QDragMoveEvent>
+#include <QDropEvent>
 #include <QModelIndex>
 #include <QTreeView>
- 
-#include <Swift/QtUI/Roster/RosterDelegate.h>
-#include <Swift/QtUI/Roster/RosterModel.h>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+
+#include <Swift/QtUI/Roster/RosterDelegate.h>
+#include <Swift/QtUI/Roster/RosterModel.h>
 
 namespace Swift {
 class UIEventStream;

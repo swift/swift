@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/bind.hpp>
 
-#include <Swiften/Queries/Requests/GetPrivateStorageRequest.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Queries/DummyIQChannel.h>
 #include <Swiften/Elements/Payload.h>
+#include <Swiften/Queries/DummyIQChannel.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Queries/Requests/GetPrivateStorageRequest.h>
 
 using namespace Swift;
 

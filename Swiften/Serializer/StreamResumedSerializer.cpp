@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/StreamResumedSerializer.h>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Elements/StreamResumed.h>
 #include <Swiften/Serializer/XML/XMLElement.h>

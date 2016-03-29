@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,14 +8,14 @@
 
 #include <QCoreApplication>
 #include <QMenu>
-#include <QString>
-#include <QSystemTrayIcon>
 #include <QObject>
 #include <QPixmap>
 #include <QPointer>
+#include <QString>
+#include <QSystemTrayIcon>
 
-#include "Slimber/Menulet.h"
-#include "Slimber/Qt/QtAboutDialog.h"
+#include <Slimber/Menulet.h>
+#include <Slimber/Qt/QtAboutDialog.h>
 
 class QtMenulet : public QObject, public Menulet {
 		Q_OBJECT

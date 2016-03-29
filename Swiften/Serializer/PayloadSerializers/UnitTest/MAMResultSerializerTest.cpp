@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,8 +13,8 @@
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/MAMResult.h>
 #include <Swiften/Elements/Message.h>
-#include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
+#include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
 
 using namespace Swift;
 

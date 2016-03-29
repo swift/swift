@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,13 +10,13 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h>
-#include <Swift/Controllers/UIEvents/UIEventStream.h>
-#include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
-#include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
-#include <Swift/Controllers/Roster/RosterController.h>
 #include <Swiften/VCards/VCardManager.h>
 
+#include <Swift/Controllers/Roster/RosterController.h>
+#include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
+#include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
 
 namespace Swift {
 

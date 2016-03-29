@@ -5,12 +5,12 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <QtHistoryWindow.h>
+#include <Swift/QtUI/QtHistoryWindow.h>
 
 #include <string>
 
@@ -19,25 +19,25 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <QTime>
-#include <QUrl>
-#include <QMenu>
-#include <QTextDocument>
 #include <QDateTime>
 #include <QLineEdit>
+#include <QMenu>
+#include <QTextDocument>
+#include <QTime>
+#include <QUrl>
 
 #include <Swiften/History/HistoryMessage.h>
 
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 
-#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/ChatSnippet.h>
 #include <Swift/QtUI/MessageSnippet.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
-#include <Swift/QtUI/ChatSnippet.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUtilities.h>
-#include <Swift/QtUI/Roster/QtTreeWidget.h>
 #include <Swift/QtUI/QtWebKitChatView.h>
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
 
 namespace Swift {
 

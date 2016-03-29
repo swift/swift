@@ -1,22 +1,23 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
-#include <boost/shared_ptr.hpp>
-#include <boost/optional.hpp>
 #include <map>
+#include <string>
 #include <vector>
 
-#include <string>
+#include <boost/optional.hpp>
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 #include <Swiften/LinkLocal/LinkLocalService.h>
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>

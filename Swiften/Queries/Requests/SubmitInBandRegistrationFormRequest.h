@@ -1,18 +1,17 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Queries/Request.h>
+#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/InBandRegistrationPayload.h>
-
+#include <Swiften/Queries/Request.h>
 
 namespace Swift {
 	class SWIFTEN_API SetInBandRegistrationRequest : public Request {

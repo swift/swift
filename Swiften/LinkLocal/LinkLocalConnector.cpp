@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,12 +8,12 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
+#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
-#include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
 
 namespace Swift {
 

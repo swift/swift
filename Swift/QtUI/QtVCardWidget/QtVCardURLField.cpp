@@ -4,16 +4,22 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "QtVCardURLField.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/QtUI/QtVCardWidget/QtVCardURLField.h>
+
+#include <boost/algorithm/string.hpp>
 
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QTextDocument>
-#include <boost/algorithm/string.hpp>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUtilities.h>
-
 
 namespace Swift {
 

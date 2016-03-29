@@ -1,21 +1,23 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <SwifTools/URIHandler/XMPPURI.h>
 
-#include <Swiften/Base/URL.h>
-#include <boost/algorithm/string/predicate.hpp>
-#include <boost/algorithm/string/find_format.hpp>
-#include <boost/algorithm/string/formatter.hpp>
-#include <boost/algorithm/string/find_iterator.hpp>
-#include <boost/algorithm/string/split.hpp>
-#include <boost/algorithm/string/classification.hpp>
 #include <sstream>
 #include <stdexcept>
 #include <vector>
+
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/find_format.hpp>
+#include <boost/algorithm/string/find_iterator.hpp>
+#include <boost/algorithm/string/formatter.hpp>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/split.hpp>
+
+#include <Swiften/Base/URL.h>
 
 using namespace Swift;
 

@@ -4,13 +4,19 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swiften/EventLoop/SingleThreadedEventLoop.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
 
-#include <boost/bind.hpp>
+#include <Swiften/EventLoop/SingleThreadedEventLoop.h>
+
 #include <iostream>
 
-#include "Swiften/Base/foreach.h"
+#include <boost/bind.hpp>
 
+#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

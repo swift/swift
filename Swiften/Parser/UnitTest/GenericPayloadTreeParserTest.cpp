@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,9 +8,9 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/Platform.h>
+#include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Parser/GenericPayloadTreeParser.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
-#include <Swiften/Elements/RawXMLPayload.h>
 
 using namespace Swift;
 

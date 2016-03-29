@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/MenuletController.h"
-
-#include <Swiften/Base/foreach.h>
-#include <string>
-#include "Slimber/Menulet.h"
+#include <Slimber/MenuletController.h>
 
 #include <iostream>
+#include <string>
+
+#include <Swiften/Base/foreach.h>
+
+#include <Slimber/Menulet.h>
 
 MenuletController::MenuletController(Menulet* menulet) : 
 		menulet(menulet), xmppStatus(Offline) {

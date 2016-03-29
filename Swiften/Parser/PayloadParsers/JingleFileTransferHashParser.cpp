@@ -5,19 +5,19 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "JingleFileTransferHashParser.h"
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 
 namespace Swift {
 

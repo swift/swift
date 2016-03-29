@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,13 +8,14 @@
 
 #include <cassert>
 #include <map>
+
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/Concat.h>
 #include <Swiften/Crypto/CryptoProvider.h>
+#include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/StringCodecs/PBKDF2.h>
-#include <Swiften/IDN/IDNConverter.h>
-#include <Swiften/Base/Concat.h>
 
 namespace Swift {
 

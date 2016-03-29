@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "Swift/QtUI/Roster/QtTreeWidget.h"
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
 
 namespace Swift {
 class QtUIPreferences;

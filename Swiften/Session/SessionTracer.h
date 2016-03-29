@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,8 +9,8 @@
 #include <string>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Session/Session.h>
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Session/Session.h>
 
 namespace Swift {
 	class SWIFTEN_API SessionTracer {

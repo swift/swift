@@ -5,16 +5,17 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
+
 #include <Swiften/Base/Path.h>
 
-#include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
-#include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtResourceHelper.h>
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 	ChatListWhiteboardItem::ChatListWhiteboardItem(const ChatListWindow::Chat& chat, ChatListGroupItem* parent) : ChatListItem(parent), chat_(chat) {

@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "Swift/QtUI/MUCSearch/ui_QtMUCSearchWindow.h"
+#include <Swift/Controllers/UIInterfaces/MUCSearchWindow.h>
 
-#include "Swift/Controllers/UIInterfaces/MUCSearchWindow.h"
+#include <Swift/QtUI/MUCSearch/ui_QtMUCSearchWindow.h>
 
 namespace Swift {
 	class MUCSearchModel;

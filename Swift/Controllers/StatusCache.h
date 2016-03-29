@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <iostream>
+#include <list>
 #include <string>
 #include <utility>
 #include <vector>
-#include <list>
-#include <iostream>
 
 #include <boost/filesystem/path.hpp>
 

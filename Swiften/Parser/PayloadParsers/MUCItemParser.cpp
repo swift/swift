@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/PayloadParsers/MUCItemParser.h>
 
+#include <cassert>
+#include <iostream>
+
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Elements/MUCOccupant.h>
-
-#include <cassert>
-#include <iostream>
 
 namespace Swift {
 

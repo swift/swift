@@ -33,8 +33,6 @@ else :
 	qt_version = '4'
 myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
-myenv.Append(CPPPATH = ["."])
-
 if env["PLATFORM"] == "win32" :
 	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
 	myenv.Append(LIBS = "qtmain")

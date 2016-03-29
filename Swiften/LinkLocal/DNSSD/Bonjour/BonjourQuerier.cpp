@@ -1,21 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuerier.h>
 
-#include <unistd.h>
-#include <sys/socket.h>
 #include <fcntl.h>
+#include <sys/socket.h>
+#include <unistd.h>
 
+#include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourBrowseQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourRegisterQuery.h>
-#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveServiceQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveHostnameQuery.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Base/Algorithm.h>
+#include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveServiceQuery.h>
 
 namespace Swift {
 

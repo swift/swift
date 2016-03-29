@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,11 +7,9 @@
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 
 #include <Swiften/Base/foreach.h>
-
 #include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/UnblockPayload.h>
-
 #include <Swiften/Parser/GenericPayloadParser.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/GenericPayloadParserFactory2.h>
@@ -45,7 +43,6 @@
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferDescriptionParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferFileInfoParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleFileTransferHashParser.h>
-#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/JingleParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/JingleReasonParser.h>

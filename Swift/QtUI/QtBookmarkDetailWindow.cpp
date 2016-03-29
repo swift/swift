@@ -1,12 +1,14 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtBookmarkDetailWindow.h"
-#include "QtSwiftUtil.h"
+#include <Swift/QtUI/QtBookmarkDetailWindow.h>
+
 #include <QMessageBox>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 

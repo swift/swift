@@ -4,14 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Serializer/PayloadSerializers/UserTuneSerializer.h>
-#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h> 
-#include <Swiften/Elements/UserTune.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Base/DateTime.h>
+#include <Swiften/Elements/UserTune.h>
+#include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h> 
+#include <Swiften/Serializer/PayloadSerializers/UserTuneSerializer.h>
 
 using namespace Swift;
 

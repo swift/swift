@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/optional.hpp>
+#include <string>
+
 #include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
-#include <string>
 #include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class SWIFTEN_API MUCPayload : public Payload {

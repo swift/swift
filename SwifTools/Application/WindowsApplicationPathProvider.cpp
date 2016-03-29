@@ -1,13 +1,15 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <SwifTools/Application/WindowsApplicationPathProvider.h>
 
-#include <windows.h>
 #include <cassert>
+
+#include <windows.h>
+
 #include <Swiften/Base/String.h>
 
 namespace Swift {

@@ -1,19 +1,20 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <typeinfo>
+
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Queries/Request.h>
-#include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/RawXMLPayload.h>
+#include <Swiften/Queries/Request.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ErrorSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>

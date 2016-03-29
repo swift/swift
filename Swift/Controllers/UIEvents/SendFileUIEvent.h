@@ -4,11 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <string>
 
 #include <Swiften/JID/JID.h>
+
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {

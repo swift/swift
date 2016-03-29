@@ -4,13 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <vector>
 
-#include <Swift/Controllers/UIEvents/UIEvent.h>
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/JID/JID.h>
+
+#include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
 	class InviteToMUCUIEvent : public UIEvent {

@@ -5,28 +5,28 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/ContactSuggester.h>
 
+#include <algorithm>
+#include <set>
+#include <vector>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find.hpp>
 #include <boost/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/ContactProvider.h>
-
-#include <algorithm>
-#include <vector>
-#include <set>
 
 namespace lambda = boost::lambda;
 

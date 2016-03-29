@@ -1,30 +1,32 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <string>
+
 #include <boost/bind.hpp>
 
-#include <Swiften/JID/JID.h>
-#include <string>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Avatars/AvatarManagerImpl.h>
+#include <Swiften/Avatars/AvatarMemoryStorage.h>
 #include <Swiften/Avatars/CombinedAvatarProvider.h>
-#include <Swiften/Avatars/VCardAvatarManager.h>
 #include <Swiften/Avatars/OfflineAvatarManager.h>
-#include <Swiften/Elements/VCardUpdate.h>
-#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Avatars/VCardAvatarManager.h>
+#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Elements/VCardUpdate.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Avatars/AvatarMemoryStorage.h>
-#include <Swiften/VCards/VCardMemoryStorage.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swiften/Avatars/VCardUpdateAvatarManager.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardMemoryStorage.h>
 
 using namespace Swift;
 

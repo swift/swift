@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
 
-#include <Swiften/Elements/Payload.h>
-#include <string>
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/Base/SafeString.h>
+#include <Swiften/Elements/Payload.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class SWIFTEN_API Storage : public Payload {

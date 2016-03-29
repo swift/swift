@@ -1,11 +1,10 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
-
 #define SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(action) \
 	action(PubSubCreate, PubSub, PubSubCreate) \
 	action(PubSubAffiliations, PubSub, PubSubAffiliations) \

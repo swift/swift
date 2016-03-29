@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
 #include <map>
+
+#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Jingle/JingleSession.h>
 #include <Swiften/Queries/GenericRequest.h>

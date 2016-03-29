@@ -4,12 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "JingleContentPayloadParser.h"
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Elements/JinglePayload.h>
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swiften/Parser/PayloadParsers/JingleContentPayloadParser.h>
 
 #include <Swiften/Base/Log.h>
+#include <Swiften/Elements/JinglePayload.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 
 namespace Swift {
 	JingleContentPayloadParser::JingleContentPayloadParser(PayloadParserFactoryCollection* factories) : factories(factories), level(0) {

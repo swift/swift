@@ -4,10 +4,16 @@
  * See Documentation/Licenses/BSD.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <iostream>
 
-#include <Swiften/Network/PlatformProxyProvider.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Network/PlatformProxyProvider.h>
 
 using namespace Swift;
 

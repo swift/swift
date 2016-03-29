@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Slimber/FileVCardCollection.h"
+#include <Slimber/FileVCardCollection.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Elements/VCard.h>
-#include <Swiften/Serializer/PayloadSerializers/VCardSerializer.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
 #include <Swiften/Parser/PayloadParsers/VCardParser.h>
+#include <Swiften/Serializer/PayloadSerializers/VCardSerializer.h>
 
 namespace Swift {
 

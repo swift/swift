@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,8 @@
 
 #include <map>
 
-#include <Swiften/JID/JID.h>
 #include <Swiften/Avatars/AvatarManager.h>
+#include <Swiften/JID/JID.h>
 
 namespace Swift {
 	class DummyAvatarManager : public AvatarManager {

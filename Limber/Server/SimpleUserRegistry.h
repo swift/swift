@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,11 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include <Swiften/JID/JID.h>
-#include <string>
-#include "Limber/Server/UserRegistry.h"
+
+#include <Limber/Server/UserRegistry.h>
 
 namespace Swift {
 	

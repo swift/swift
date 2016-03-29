@@ -1,20 +1,21 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtScaledAvatarCache.h"
+#include <Swift/QtUI/QtScaledAvatarCache.h>
 
-#include <QFileInfo>
+#include <QByteArray>
 #include <QDir>
-#include <QPixmap>
+#include <QFileInfo>
 #include <QImage>
 #include <QImageReader>
 #include <QPainter>
-#include <QByteArray>
+#include <QPixmap>
 
 #include <Swiften/Base/Log.h>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {

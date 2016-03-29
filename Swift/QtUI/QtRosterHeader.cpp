@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtRosterHeader.h"
+#include <Swift/QtUI/QtRosterHeader.h>
 
 #include <QBitmap>
-#include <qdebug.h>
 #include <QFileInfo>
 #include <QHBoxLayout>
 #include <QHelpEvent>
@@ -18,12 +17,14 @@
 #include <QToolTip>
 #include <QVBoxLayout>
 
-#include "QtStatusWidget.h"
-#include <Swift/QtUI/QtElidingLabel.h>
+#include <qdebug.h>
+
 #include <Swift/QtUI/QtClickableLabel.h>
+#include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtNameWidget.h>
+#include <Swift/QtUI/QtScaledAvatarCache.h>
+#include <Swift/QtUI/QtStatusWidget.h>
 #include <Swift/QtUI/Roster/RosterTooltip.h>
-#include "QtScaledAvatarCache.h"
 
 namespace Swift {
 QtRosterHeader::QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent) : QWidget(parent), statusEdit_(NULL) {

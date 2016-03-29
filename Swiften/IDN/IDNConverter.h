@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,11 @@
 #pragma once
 
 #include <string>
+
+#include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <boost/optional.hpp>
 
 namespace Swift {
 	class SWIFTEN_API IDNConverter {

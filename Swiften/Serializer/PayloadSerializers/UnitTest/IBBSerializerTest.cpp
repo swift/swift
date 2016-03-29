@@ -4,12 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Serializer/PayloadSerializers/IBBSerializer.h>
-#include <Swiften/Elements/IBB.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Elements/IBB.h>
+#include <Swiften/Serializer/PayloadSerializers/IBBSerializer.h>
 
 using namespace Swift;
 

@@ -5,15 +5,16 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Jingle/FakeJingleSession.h>
-#include <Swiften/Jingle/JingleSessionListener.h>
 
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Jingle/JingleSessionListener.h>
 
 namespace Swift {
 

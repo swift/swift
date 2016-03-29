@@ -1,25 +1,25 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
-#include <boost/bind.hpp>
 
-#include <Swiften/MUC/MUCImpl.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Client/DummyStanzaChannel.h>
-#include <Swiften/Presence/StanzaChannelPresenceSender.h>
-#include <Swiften/Presence/DirectedPresenceSender.h>
-#include <Swiften/Queries/IQRouter.h>
-#include <Swiften/Elements/MUCUserPayload.h>
-#include <Swiften/Elements/MUCOwnerPayload.h>
-#include <Swiften/Elements/VCard.h>
 #include <Swiften/Elements/CapsInfo.h>
-
+#include <Swiften/Elements/MUCOwnerPayload.h>
+#include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/MUC/MUCImpl.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
+#include <Swiften/Queries/IQRouter.h>
 
 using namespace Swift;
 

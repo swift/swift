@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swift/QtUI/Roster/QtTreeWidget.h>
-
 #include <Swiften/Base/boost_bsignals.h>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
+
+#include <Swift/QtUI/Roster/QtTreeWidget.h>
 
 namespace Swift {
 class SettingsProvider;

@@ -5,20 +5,21 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/UserSearch/QtContactListWidget.h>
 
-#include <Swift/QtUI/UserSearch/ContactListModel.h>
-#include <Swift/QtUI/UserSearch/ContactListDelegate.h>
-#include <Swift/QtUI/QtUISettingConstants.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-#include <Swift/QtUI/QtVCardWidget/QtRemovableItemDelegate.h>
-
 #include <QHeaderView>
+
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+
+#include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/QtVCardWidget/QtRemovableItemDelegate.h>
+#include <Swift/QtUI/UserSearch/ContactListDelegate.h>
+#include <Swift/QtUI/UserSearch/ContactListModel.h>
 
 namespace Swift {
 

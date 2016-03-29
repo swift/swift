@@ -1,26 +1,27 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/Controllers/Storages/VCardFileStorage.h"
+#include <Swift/Controllers/Storages/VCardFileStorage.h>
 
-#include <boost/filesystem/fstream.hpp>
-#include <boost/filesystem.hpp>
 #include <iostream>
 
-#include <Swiften/Entity/GenericPayloadPersister.h>
-#include <Swiften/Base/String.h>
-#include <Swiften/StringCodecs/Hexify.h>
-#include <Swiften/Base/foreach.h>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
 #include <Swiften/Base/Path.h>
+#include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
-#include "Swiften/JID/JID.h"
-#include "Swiften/Elements/VCard.h"
-#include "Swiften/Serializer/PayloadSerializers/VCardSerializer.h"
-#include "Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h"
-#include "Swiften/Parser/PayloadParsers/VCardParser.h"
+#include <Swiften/Elements/VCard.h>
+#include <Swiften/Entity/GenericPayloadPersister.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
+#include <Swiften/Parser/PayloadParsers/VCardParser.h>
+#include <Swiften/Serializer/PayloadSerializers/VCardSerializer.h>
+#include <Swiften/StringCodecs/Hexify.h>
 
 using namespace Swift;
 

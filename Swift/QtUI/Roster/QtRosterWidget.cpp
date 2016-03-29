@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,23 +7,24 @@
 #include <Swift/QtUI/Roster/QtRosterWidget.h>
 
 #include <QContextMenuEvent>
+#include <QFileDialog>
+#include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
-#include <QInputDialog>
-#include <QFileDialog>
 #include <QPushButton>
 
-#include <Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h>
-#include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
-#include <Swift/Controllers/UIEvents/RenameGroupUIEvent.h>
-#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h>
-#include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
-#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
-#include <Swift/QtUI/QtContactEditWindow.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
+#include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/RenameGroupUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestChangeBlockStateUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestContactEditorUIEvent.h>
+#include <Swift/Controllers/UIEvents/RequestWhiteboardUIEvent.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
+#include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
+
+#include <Swift/QtUI/QtContactEditWindow.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {

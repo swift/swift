@@ -5,13 +5,12 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtVCardWidget/QtVCardWidget.h>
-#include <Swift/QtUI/QtVCardWidget/ui_QtVCardWidget.h>
 
 #include <QLineEdit>
 #include <QMenu>
@@ -29,6 +28,7 @@
 #include <Swift/QtUI/QtVCardWidget/QtVCardTelephoneField.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardTitleField.h>
 #include <Swift/QtUI/QtVCardWidget/QtVCardURLField.h>
+#include <Swift/QtUI/QtVCardWidget/ui_QtVCardWidget.h>
 
 namespace Swift {
 

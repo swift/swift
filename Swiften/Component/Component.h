@@ -6,9 +6,8 @@
 
 #pragma once
 
-#include <Swiften/Component/CoreComponent.h>
-
 #include <Swiften/Base/API.h>
+#include <Swiften/Component/CoreComponent.h>
 
 namespace Swift {
 	class SoftwareVersionResponder;

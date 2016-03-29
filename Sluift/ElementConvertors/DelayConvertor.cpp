@@ -1,16 +1,19 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Sluift/ElementConvertors/DelayConvertor.h>
 
-#include <lua.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <Sluift/Lua/Check.h>
+#include <boost/smart_ptr/make_shared.hpp>
+
+#include <lua.hpp>
+
 #include <Swiften/Base/DateTime.h>
+
+#include <Sluift/Lua/Check.h>
 
 using namespace Swift;
 

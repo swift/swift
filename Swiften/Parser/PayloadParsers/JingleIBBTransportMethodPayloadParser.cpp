@@ -5,15 +5,15 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Parser/PayloadParsers/JingleIBBTransportMethodPayloadParser.h>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
-
-#include "JingleIBBTransportMethodPayloadParser.h"
 
 #include <Swiften/Base/Log.h>
 

@@ -1,15 +1,18 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/assign/list_of.hpp>
 #include <functional>
 
+#include <boost/assign/list_of.hpp>
+
 #include <QA/Checker/IO.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swift/Controllers/Roster/LeastCommonSubsequence.h>
 
 using namespace Swift;

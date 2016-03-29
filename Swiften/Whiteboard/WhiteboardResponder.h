@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,8 +13,8 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Queries/SetResponder.h>
 #include <Swiften/Elements/WhiteboardPayload.h>
+#include <Swiften/Queries/SetResponder.h>
 
 namespace Swift {
 	class IQRouter;

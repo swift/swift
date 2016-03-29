@@ -4,19 +4,27 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Network/WindowsNetworkEnvironment.h>
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
 #include <boost/optional.hpp>
+
+#include <iphlpapi.h>
+#include <winsock2.h>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NetworkInterface.h>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Base/ByteArray.h>
-
-#include <winsock2.h>
-#include <iphlpapi.h>
 
 namespace Swift {
 

@@ -1,18 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/optional.hpp>
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
 	class SWIFTEN_API ClientAuthenticator {

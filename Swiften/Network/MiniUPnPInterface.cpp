@@ -5,18 +5,19 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/MiniUPnPInterface.h>
 
+#include <boost/lexical_cast.hpp>
+#include <boost/smart_ptr/make_shared.hpp>
+
 #include <miniupnpc.h>
 #include <upnpcommands.h>
 #include <upnperrors.h>
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/Log.h>
 

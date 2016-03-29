@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,14 +7,16 @@
 #pragma once
 
 #include <list>
-#include <set>
 #include <map>
-#include <boost/shared_ptr.hpp>
-#include <Swiften/MUC/MUCBookmark.h>
-#include <Swiften/Elements/StatusShow.h>
+#include <set>
+
 #include <boost/filesystem/path.hpp>
-#include <Swiften/Base/foreach.h>
+#include <boost/shared_ptr.hpp>
+
 #include <Swiften/Base/boost_bsignals.h>
+#include <Swiften/Base/foreach.h>
+#include <Swiften/Elements/StatusShow.h>
+#include <Swiften/MUC/MUCBookmark.h>
 
 namespace Swift {
 	class ChatListWindow {

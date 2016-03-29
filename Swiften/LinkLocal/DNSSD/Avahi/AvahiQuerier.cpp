@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,9 +9,9 @@
 #include <iostream>
 
 #include <Swiften/LinkLocal/DNSSD/Avahi/AvahiBrowseQuery.h>
-#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveServiceQuery.h>
-#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveHostnameQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Avahi/AvahiRegisterQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveHostnameQuery.h>
+#include <Swiften/LinkLocal/DNSSD/Avahi/AvahiResolveServiceQuery.h>
 
 namespace Swift {
 

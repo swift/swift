@@ -1,21 +1,23 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
 #include <deque>
+
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
 
-#include <Swiften/Session/SessionStream.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Component/ComponentSession.h>
-#include <Swiften/Elements/ComponentHandshake.h>
-#include <Swiften/Elements/AuthFailure.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
+#include <Swiften/Elements/AuthFailure.h>
+#include <Swiften/Elements/ComponentHandshake.h>
+#include <Swiften/Session/SessionStream.h>
 
 using namespace Swift;
 

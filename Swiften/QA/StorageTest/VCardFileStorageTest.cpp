@@ -1,18 +1,21 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <boost/algorithm/string.hpp>
 #include <sstream>
 
-#include <Swiften/VCards/VCardFileStorage.h>
-#include <Swiften/JID/JID.h>
-#include "SwifTools/Application/PlatformApplicationPathProvider.h"
+#include <boost/algorithm/string.hpp>
+
+#include <cppunit/extensions/HelperMacros.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+
 #include <Swiften/Elements/VCard.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/VCards/VCardFileStorage.h>
+
+#include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
 using namespace Swift;
 

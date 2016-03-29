@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2013 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,10 +8,11 @@
 
 #include <vector>
 
-#include <Swiften/Base/API.h>
-#include <Swiften/Base/SafeAllocator.h>
-#include <Swiften/Base/ByteArray.h>
 #include <boost/smart_ptr/make_shared.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeAllocator.h>
 
 namespace Swift {
 	typedef std::vector<unsigned char, SafeAllocator<unsigned char> > SafeByteArray;

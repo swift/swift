@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "Swift/QtUI/QtSubscriptionRequestWindow.h"
+#include <Swift/QtUI/QtSubscriptionRequestWindow.h>
 
-#include <QPushButton>
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QLabel>
+#include <QPushButton>
+#include <QVBoxLayout>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 

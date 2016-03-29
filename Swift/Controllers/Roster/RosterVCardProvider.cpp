@@ -4,12 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/Controllers/Roster/RosterVCardProvider.h>
 
 #include <Swiften/VCards/VCardManager.h>
 
-#include <Swift/Controllers/Roster/Roster.h>
 #include <Swift/Controllers/Roster/ItemOperations/SetVCard.h>
+#include <Swift/Controllers/Roster/Roster.h>
 
 namespace Swift {
 

@@ -4,13 +4,18 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
+
+#include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/algorithm/string.hpp>
-
-#include <vector>
 
 namespace Swift {
 	enum token_ids

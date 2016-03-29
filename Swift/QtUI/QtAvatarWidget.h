@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <QWidget>
 #include <QImage>
+#include <QWidget>
+
 #include <Swiften/Base/ByteArray.h>
 
 class QLabel;

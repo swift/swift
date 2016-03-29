@@ -5,12 +5,12 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtTagComboBox.h"
+#include <Swift/QtUI/QtVCardWidget/QtTagComboBox.h>
 
 #include <QAbstractItemView>
 #include <QtGui>

@@ -1,16 +1,19 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <Swiften/History/SQLiteHistoryStorage.h>
+
 #include <iostream>
+
+#include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <sqlite3.h>
-#include <Swiften/History/SQLiteHistoryStorage.h>
-#include <boost/date_time/gregorian/gregorian.hpp>
+
 #include <Swiften/Base/Path.h>
 
 inline std::string getEscapedString(const std::string& s) {

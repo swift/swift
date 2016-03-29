@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,8 +9,8 @@
 #include <boost/bind.hpp>
 #include <boost/smart_ptr/make_shared.hpp>
 
-#include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
 OutgoingAdHocCommandSession::OutgoingAdHocCommandSession(const JID& to, const std::string& commandNode, IQRouter* iqRouter) : to_(to), commandNode_(commandNode), iqRouter_(iqRouter), isMultiStage_(false) {

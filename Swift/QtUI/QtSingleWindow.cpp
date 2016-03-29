@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtSingleWindow.h>
 
-
 #include <Swiften/Base/foreach.h>
-#include <Swift/QtUI/QtSettingsProvider.h>
+
 #include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtSettingsProvider.h>
 
 namespace Swift {
 

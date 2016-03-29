@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,10 @@
 #pragma once
 
 #include <string>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
 
 namespace Swift {

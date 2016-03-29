@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Roster/RosterGroupExpandinessPersister.h>
 
-#include <boost/bind.hpp>
 #include <vector>
 
-#include <Swiften/Base/foreach.h>
+#include <boost/bind.hpp>
+
 #include <Swiften/Base/String.h>
+#include <Swiften/Base/foreach.h>
+
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/SettingConstants.h>
 
