@@ -207,6 +207,7 @@ namespace Swift {
 			boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
 			boost::signal<void (const std::string&)> onChangeSubjectRequest;
 			boost::signal<void ()> onBookmarkRequest;
+			boost::signal<void (bool /* bookmark */)> onQuickBookmarkRequest;
 			boost::signal<void (Form::ref)> onConfigureRequest;
 			boost::signal<void ()> onDestroyRequest;
 			boost::signal<void (const std::vector<JID>&)> onInviteToChat;

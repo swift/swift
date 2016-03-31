@@ -105,6 +105,7 @@ namespace Swift {
 			void handleJoinTimeoutTick();
 			void handleChangeSubjectRequest(const std::string&);
 			void handleBookmarkRequest();
+			void handleQuickBookmarkRequest(bool);
 			std::string roleToGroupName(MUCOccupant::Role role);
 			std::string roleToSortName(MUCOccupant::Role role);
 			JID nickToJID(const std::string& nick);

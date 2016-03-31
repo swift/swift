@@ -115,6 +115,7 @@ MUCController::MUCController (
 	chatWindow_->onOccupantActionSelected.connect(boost::bind(&MUCController::handleActionRequestedOnOccupant, this, _1, _2));
 	chatWindow_->onChangeSubjectRequest.connect(boost::bind(&MUCController::handleChangeSubjectRequest, this, _1));
 	chatWindow_->onBookmarkRequest.connect(boost::bind(&MUCController::handleBookmarkRequest, this));
+	chatWindow_->onQuickBookmarkRequest.connect(boost::bind(&MUCController::handleQuickBookmarkRequest, this, _1));
 	chatWindow_->onConfigureRequest.connect(boost::bind(&MUCController::handleConfigureRequest, this, _1));
 	chatWindow_->onConfigurationFormCancelled.connect(boost::bind(&MUCController::handleConfigurationCancelled, this));
 	chatWindow_->onDestroyRequest.connect(boost::bind(&MUCController::handleDestroyRoomRequest, this));
@@ -945,6 +946,30 @@ void MUCController::handleBookmarkRequest() {
 	}
 
 	chatWindow_->showBookmarkWindow(roomBookmark);
+}
+
+void MUCController::handleQuickBookmarkRequest(bool addBookmark) {
+	const JID jid = muc_->getJID();
+	MUCBookmark roomBookmark(jid, jid.toBare().toString());
+	if(addBookmark == true) {
+		// Prepare new bookmark for this room.
+		roomBookmark.setPassword(password_);
+		roomBookmark.setNick(nick_);
+		mucBookmarkManager_->addBookmark(roomBookmark);
+	}
+	else {
+		// Check for existing bookmark for this room and, if it exists, remove it.
+		std::vector<MUCBookmark> bookmarks = mucBookmarkManager_->getBookmarks();
+		std::vector<MUCBookmark> removedBookmarks;
+		foreach (const MUCBookmark& bookmark, bookmarks) {
+			if (bookmark.getRoom() == jid.toBare()) {
+				removedBookmarks.push_back(bookmark);
+			}
+		}
+		foreach (const MUCBookmark& bookmark, removedBookmarks) {
+			mucBookmarkManager_->removeBookmark(bookmark);
+		}
+	}
 }
 
 void MUCController::handleConfigureRequest(Form::ref form) {
