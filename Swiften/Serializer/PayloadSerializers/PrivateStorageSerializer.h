@@ -11,15 +11,15 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PrivateStorageSerializer : public GenericPayloadSerializer<PrivateStorage> {
-		public:
-			PrivateStorageSerializer(PayloadSerializerCollection* serializers);
+    class SWIFTEN_API PrivateStorageSerializer : public GenericPayloadSerializer<PrivateStorage> {
+        public:
+            PrivateStorageSerializer(PayloadSerializerCollection* serializers);
 
-			virtual std::string serializePayload(boost::shared_ptr<PrivateStorage>)  const;
+            virtual std::string serializePayload(boost::shared_ptr<PrivateStorage>)  const;
 
-		private:
-			PayloadSerializerCollection* serializers;
-	};
+        private:
+            PayloadSerializerCollection* serializers;
+    };
 }

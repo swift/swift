@@ -13,12 +13,12 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API LastSerializer : public GenericPayloadSerializer<Last> {
-		public:
-			LastSerializer() : GenericPayloadSerializer<Last>() {}
+    class SWIFTEN_API LastSerializer : public GenericPayloadSerializer<Last> {
+        public:
+            LastSerializer() : GenericPayloadSerializer<Last>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<Last> last)  const {
-				return "<query xmlns='jabber:iq:last' seconds='" + boost::lexical_cast<std::string>(last->getSeconds()) + "'/>";
-			}
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Last> last)  const {
+                return "<query xmlns='jabber:iq:last' seconds='" + boost::lexical_cast<std::string>(last->getSeconds()) + "'/>";
+            }
+    };
 }

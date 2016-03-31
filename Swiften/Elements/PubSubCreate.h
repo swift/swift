@@ -17,32 +17,32 @@
 #include <Swiften/Elements/PubSubPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubCreate : public PubSubPayload {
-		public:
-			
-			PubSubCreate();
-			PubSubCreate(const std::string& node) : node(node) {}
-			virtual ~PubSubCreate();
+    class SWIFTEN_API PubSubCreate : public PubSubPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubCreate();
+            PubSubCreate(const std::string& node) : node(node) {}
+            virtual ~PubSubCreate();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			boost::shared_ptr<PubSubConfigure> getConfigure() const {
-				return configure;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void setConfigure(boost::shared_ptr<PubSubConfigure> value) {
-				this->configure = value ;
-			}
+            boost::shared_ptr<PubSubConfigure> getConfigure() const {
+                return configure;
+            }
+
+            void setConfigure(boost::shared_ptr<PubSubConfigure> value) {
+                this->configure = value ;
+            }
 
 
-		private:
-			std::string node;
-			boost::shared_ptr<PubSubConfigure> configure;
-	};
+        private:
+            std::string node;
+            boost::shared_ptr<PubSubConfigure> configure;
+    };
 }

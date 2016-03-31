@@ -18,11 +18,11 @@
 namespace Swift {
 
 class SWIFTEN_API DeliveryReceiptRequest : public Payload {
-	public:
-		typedef boost::shared_ptr<DeliveryReceiptRequest> ref;
+    public:
+        typedef boost::shared_ptr<DeliveryReceiptRequest> ref;
 
-	public:
-		DeliveryReceiptRequest() {}
+    public:
+        DeliveryReceiptRequest() {}
 };
 
 }

@@ -11,15 +11,15 @@
 #include <Swift/QtUI/QtCachedImageScaler.h>
 
 namespace Swift {
-	class FreeDesktopNotifier : public Notifier {
-		public:
-			FreeDesktopNotifier(const std::string& name);
+    class FreeDesktopNotifier : public Notifier {
+        public:
+            FreeDesktopNotifier(const std::string& name);
 
-			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
-			virtual void purgeCallbacks() {}
+            virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+            virtual void purgeCallbacks() {}
 
-		private:
-			std::string applicationName;
-			QtCachedImageScaler imageScaler;
-	};
+        private:
+            std::string applicationName;
+            QtCachedImageScaler imageScaler;
+    };
 }

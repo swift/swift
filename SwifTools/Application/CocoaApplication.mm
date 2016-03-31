@@ -6,19 +6,19 @@
 namespace Swift {
 
 class CocoaApplication::Private {
-	public:
-		NSAutoreleasePool* autoReleasePool_;
+    public:
+        NSAutoreleasePool* autoReleasePool_;
 };
 
 CocoaApplication::CocoaApplication() {
-	d = new CocoaApplication::Private();
-	NSApplicationLoad();
-	d->autoReleasePool_ = [[NSAutoreleasePool alloc] init];
+    d = new CocoaApplication::Private();
+    NSApplicationLoad();
+    d->autoReleasePool_ = [[NSAutoreleasePool alloc] init];
 }
 
 CocoaApplication::~CocoaApplication() {
-	[d->autoReleasePool_ release];
-	delete d;
+    [d->autoReleasePool_ release];
+    delete d;
 }
 
 }

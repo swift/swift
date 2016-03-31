@@ -18,9 +18,9 @@ NicknameSerializer::NicknameSerializer() : GenericPayloadSerializer<Nickname>() 
 }
 
 std::string NicknameSerializer::serializePayload(boost::shared_ptr<Nickname> nick)  const {
-	XMLElement nickElement("nick", "http://jabber.org/protocol/nick");
-	nickElement.addNode(boost::make_shared<XMLTextNode>(nick->getNickname()));
-	return nickElement.serialize();
+    XMLElement nickElement("nick", "http://jabber.org/protocol/nick");
+    nickElement.addNode(boost::make_shared<XMLTextNode>(nick->getNickname()));
+    return nickElement.serialize();
 }
 
 }

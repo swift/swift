@@ -23,44 +23,44 @@ StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerColl
 }
 
 SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element) const {
-	if (explicitDefaultNS_) {
-		return serialize(element, explicitDefaultNS_.get());
-	}
-	else {
-		return serialize(element, "");
-	}
+    if (explicitDefaultNS_) {
+        return serialize(element, explicitDefaultNS_.get());
+    }
+    else {
+        return serialize(element, "");
+    }
 }
 
 SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const {
-	boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
+    boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
 
-	XMLElement stanzaElement(tag_, explicitDefaultNS_ ? explicitDefaultNS_.get() : xmlns);
-	if (stanza->getFrom().isValid()) {
-		stanzaElement.setAttribute("from", stanza->getFrom());
-	}
-	if (stanza->getTo().isValid()) {
-		stanzaElement.setAttribute("to", stanza->getTo());
-	}
-	if (!stanza->getID().empty()) {
-		stanzaElement.setAttribute("id", stanza->getID());
-	}
-	setStanzaSpecificAttributes(stanza, stanzaElement);
+    XMLElement stanzaElement(tag_, explicitDefaultNS_ ? explicitDefaultNS_.get() : xmlns);
+    if (stanza->getFrom().isValid()) {
+        stanzaElement.setAttribute("from", stanza->getFrom());
+    }
+    if (stanza->getTo().isValid()) {
+        stanzaElement.setAttribute("to", stanza->getTo());
+    }
+    if (!stanza->getID().empty()) {
+        stanzaElement.setAttribute("id", stanza->getID());
+    }
+    setStanzaSpecificAttributes(stanza, stanzaElement);
 
-	std::string serializedPayloads;
-	foreach (const boost::shared_ptr<Payload>& payload, stanza->getPayloads()) {
-		PayloadSerializer* serializer = payloadSerializers_->getPayloadSerializer(payload);
-		if (serializer) {
-			serializedPayloads += serializer->serialize(payload);
-		}
-		else {
-			std::cerr << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
-		}
-	}
-	if (!serializedPayloads.empty()) {
-		stanzaElement.addNode(boost::shared_ptr<XMLNode>(new XMLRawTextNode(serializedPayloads)));
-	}
+    std::string serializedPayloads;
+    foreach (const boost::shared_ptr<Payload>& payload, stanza->getPayloads()) {
+        PayloadSerializer* serializer = payloadSerializers_->getPayloadSerializer(payload);
+        if (serializer) {
+            serializedPayloads += serializer->serialize(payload);
+        }
+        else {
+            std::cerr << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
+        }
+    }
+    if (!serializedPayloads.empty()) {
+        stanzaElement.addNode(boost::shared_ptr<XMLNode>(new XMLRawTextNode(serializedPayloads)));
+    }
 
-	return createSafeByteArray(stanzaElement.serialize());
+    return createSafeByteArray(stanzaElement.serialize());
 }
 
 }

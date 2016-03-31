@@ -13,22 +13,22 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class FakeDNSSDQuerier;
+    class FakeDNSSDQuerier;
 
-	class FakeDNSSDResolveHostnameQuery : public DNSSDResolveHostnameQuery, public FakeDNSSDQuery {
-		public:	
-			FakeDNSSDResolveHostnameQuery(const std::string& hostname, int interfaceIndex, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), hostname(hostname), interfaceIndex(interfaceIndex) {
-			}
+    class FakeDNSSDResolveHostnameQuery : public DNSSDResolveHostnameQuery, public FakeDNSSDQuery {
+        public:
+            FakeDNSSDResolveHostnameQuery(const std::string& hostname, int interfaceIndex, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), hostname(hostname), interfaceIndex(interfaceIndex) {
+            }
 
-			void run() {
-				FakeDNSSDQuery::run();
-			}
+            void run() {
+                FakeDNSSDQuery::run();
+            }
 
-			void finish() {
-				FakeDNSSDQuery::finish();
-			}
+            void finish() {
+                FakeDNSSDQuery::finish();
+            }
 
-			std::string hostname;
-			int interfaceIndex;
-	};
+            std::string hostname;
+            int interfaceIndex;
+    };
 }

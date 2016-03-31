@@ -33,59 +33,59 @@
 #include <Swiften/Queries/Request.h>
 
 namespace Swift {
-	namespace Detail {
-		template<typename T> 
-		struct PubSubPayloadTraits;
+    namespace Detail {
+        template<typename T>
+        struct PubSubPayloadTraits;
 
 #define SWIFTEN_PUBSUB_DECLARE_PAYLOAD_TRAITS(PAYLOAD, CONTAINER, RESPONSE) \
-		template<> struct PubSubPayloadTraits< PAYLOAD > { \
-			typedef CONTAINER ContainerType; \
-			typedef RESPONSE ResponseType; \
-		};
+        template<> struct PubSubPayloadTraits< PAYLOAD > { \
+            typedef CONTAINER ContainerType; \
+            typedef RESPONSE ResponseType; \
+        };
 
-		SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
-				SWIFTEN_PUBSUB_DECLARE_PAYLOAD_TRAITS)
-	}
+        SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
+                SWIFTEN_PUBSUB_DECLARE_PAYLOAD_TRAITS)
+    }
 
-	template<typename T>
-	class SWIFTEN_API PubSubRequest : public Request {
-			typedef typename Detail::PubSubPayloadTraits<T>::ContainerType ContainerType;
-			typedef typename Detail::PubSubPayloadTraits<T>::ResponseType ResponseType;
+    template<typename T>
+    class SWIFTEN_API PubSubRequest : public Request {
+            typedef typename Detail::PubSubPayloadTraits<T>::ContainerType ContainerType;
+            typedef typename Detail::PubSubPayloadTraits<T>::ResponseType ResponseType;
 
-		public:
-			PubSubRequest(
-					IQ::Type type, 
-					const JID& receiver, 
-					boost::shared_ptr<T> payload, 
-					IQRouter* router) :
-						Request(type, receiver, router) {
-				boost::shared_ptr<ContainerType> wrapper = boost::make_shared<ContainerType>();
-				wrapper->setPayload(payload);
-				setPayload(wrapper);
-			}
+        public:
+            PubSubRequest(
+                    IQ::Type type,
+                    const JID& receiver,
+                    boost::shared_ptr<T> payload,
+                    IQRouter* router) :
+                        Request(type, receiver, router) {
+                boost::shared_ptr<ContainerType> wrapper = boost::make_shared<ContainerType>();
+                wrapper->setPayload(payload);
+                setPayload(wrapper);
+            }
 
-			PubSubRequest(
-					IQ::Type type,
-					const JID& sender,
-					const JID& receiver,
-					boost::shared_ptr<T> payload, 
-					IQRouter* router) :
-						Request(type, sender, receiver, router) {
-				boost::shared_ptr<ContainerType> wrapper = boost::make_shared<ContainerType>();
-				wrapper->setPayload(payload);
-				setPayload(wrapper);
-			}
+            PubSubRequest(
+                    IQ::Type type,
+                    const JID& sender,
+                    const JID& receiver,
+                    boost::shared_ptr<T> payload,
+                    IQRouter* router) :
+                        Request(type, sender, receiver, router) {
+                boost::shared_ptr<ContainerType> wrapper = boost::make_shared<ContainerType>();
+                wrapper->setPayload(payload);
+                setPayload(wrapper);
+            }
 
-			virtual void handleResponse(
-					boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
-				boost::shared_ptr<ResponseType> result;
-				if (boost::shared_ptr<ContainerType> container = boost::dynamic_pointer_cast<ContainerType>(payload)) {
-					result = boost::dynamic_pointer_cast<ResponseType>(container->getPayload());
-				}
-				onResponse(result, error);
-			}
+            virtual void handleResponse(
+                    boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+                boost::shared_ptr<ResponseType> result;
+                if (boost::shared_ptr<ContainerType> container = boost::dynamic_pointer_cast<ContainerType>(payload)) {
+                    result = boost::dynamic_pointer_cast<ResponseType>(container->getPayload());
+                }
+                onResponse(result, error);
+            }
 
-		public:
-			boost::signal<void (boost::shared_ptr<ResponseType>, ErrorPayload::ref)> onResponse;
-	};
+        public:
+            boost::signal<void (boost::shared_ptr<ResponseType>, ErrorPayload::ref)> onResponse;
+    };
 }

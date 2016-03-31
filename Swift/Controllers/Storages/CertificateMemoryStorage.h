@@ -11,15 +11,15 @@
 #include <Swift/Controllers/Storages/CertificateStorage.h>
 
 namespace Swift {
-	class CertificateMemoryStorage : public CertificateStorage {
-		public:
-			CertificateMemoryStorage();
+    class CertificateMemoryStorage : public CertificateStorage {
+        public:
+            CertificateMemoryStorage();
 
-			virtual bool hasCertificate(Certificate::ref certificate) const;
-			virtual void addCertificate(Certificate::ref certificate);
+            virtual bool hasCertificate(Certificate::ref certificate) const;
+            virtual void addCertificate(Certificate::ref certificate);
 
-		private:
-			std::vector<Certificate::ref> certificates;
-	};
+        private:
+            std::vector<Certificate::ref> certificates;
+    };
 
 }

@@ -15,34 +15,34 @@
 #include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
-	class XMPPLayer;
-	class LowLayer;
-	class StreamLayer;
+    class XMPPLayer;
+    class LowLayer;
+    class StreamLayer;
 
-	class SWIFTEN_API StreamStack {
-		public:
-			StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer);
-			~StreamStack();
+    class SWIFTEN_API StreamStack {
+        public:
+            StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer);
+            ~StreamStack();
 
-			void addLayer(StreamLayer*);
+            void addLayer(StreamLayer*);
 
-			XMPPLayer* getXMPPLayer() const {
-				return xmppLayer_;
-			}
+            XMPPLayer* getXMPPLayer() const {
+                return xmppLayer_;
+            }
 
-			template<typename T> T* getLayer() {
-				for (size_t i = 0; i < layers_.size(); ++i) {
-					T* layer = dynamic_cast<T*>(layers_[i]);
-					if (layer) {
-						return layer;
-					}
-				}
-				return NULL;
-			}
+            template<typename T> T* getLayer() {
+                for (size_t i = 0; i < layers_.size(); ++i) {
+                    T* layer = dynamic_cast<T*>(layers_[i]);
+                    if (layer) {
+                        return layer;
+                    }
+                }
+                return NULL;
+            }
 
-		private:
-			XMPPLayer* xmppLayer_;
-			LowLayer* physicalLayer_;
-			std::vector<StreamLayer*> layers_;
-	};
+        private:
+            XMPPLayer* xmppLayer_;
+            LowLayer* physicalLayer_;
+            std::vector<StreamLayer*> layers_;
+    };
 }

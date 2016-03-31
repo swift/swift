@@ -17,15 +17,15 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API IdleParser : public GenericPayloadParser<Idle> {
-		public:
-			IdleParser();
+    class SWIFTEN_API IdleParser : public GenericPayloadParser<Idle> {
+        public:
+            IdleParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			int level_;
-	};
+        private:
+            int level_;
+    };
 }

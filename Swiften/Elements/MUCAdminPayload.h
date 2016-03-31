@@ -19,19 +19,19 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCAdminPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<MUCAdminPayload> ref;
+    class SWIFTEN_API MUCAdminPayload : public Payload {
+        public:
+            typedef boost::shared_ptr<MUCAdminPayload> ref;
 
 
-			MUCAdminPayload() {
-			}
+            MUCAdminPayload() {
+            }
 
-			void addItem(const MUCItem& item) {items_.push_back(item);}
+            void addItem(const MUCItem& item) {items_.push_back(item);}
 
-			const std::vector<MUCItem>& getItems() const {return items_;}
+            const std::vector<MUCItem>& getItems() const {return items_;}
 
-		private:
-			std::vector<MUCItem> items_;
-	};
+        private:
+            std::vector<MUCItem> items_;
+    };
 }

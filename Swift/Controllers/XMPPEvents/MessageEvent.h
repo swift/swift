@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#pragma once 
+#pragma once
 
 #include <cassert>
 
@@ -15,34 +15,34 @@
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
 namespace Swift {
-	class MessageEvent : public StanzaEvent {
-		public:
-			typedef boost::shared_ptr<MessageEvent> ref;
+    class MessageEvent : public StanzaEvent {
+        public:
+            typedef boost::shared_ptr<MessageEvent> ref;
 
-			MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
+            MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
 
-			boost::shared_ptr<Message> getStanza() {return stanza_;}
+            boost::shared_ptr<Message> getStanza() {return stanza_;}
 
-			bool isReadable() {
-				return getStanza()->isError() || !getStanza()->getBody().get_value_or("").empty();
-			}
+            bool isReadable() {
+                return getStanza()->isError() || !getStanza()->getBody().get_value_or("").empty();
+            }
 
-			void read() {
-				assert (isReadable());
-				conclude();
-			}
+            void read() {
+                assert (isReadable());
+                conclude();
+            }
 
-			void setTargetsMe(bool targetsMe) {
-				targetsMe_ = targetsMe;
-			}
+            void setTargetsMe(bool targetsMe) {
+                targetsMe_ = targetsMe;
+            }
 
-			bool targetsMe() const {
-				return targetsMe_;
-			}
+            bool targetsMe() const {
+                return targetsMe_;
+            }
 
-		private:
-			boost::shared_ptr<Message> stanza_;
-			bool targetsMe_;
-	};
+        private:
+            boost::shared_ptr<Message> stanza_;
+            bool targetsMe_;
+    };
 }
 

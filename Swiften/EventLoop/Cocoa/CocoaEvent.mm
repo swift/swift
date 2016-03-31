@@ -11,19 +11,19 @@
 @implementation CocoaEvent
 
 - (id) init:(Swift::CocoaEventLoop*) el {
-	self = [super init]; 
-	if (self != nil) { 
-		eventLoop = el;
-	}
-	return self; 
+    self = [super init];
+    if (self != nil) {
+        eventLoop = el;
+    }
+    return self;
 }
 
 - (void) process {
-	eventLoop->handleNextCocoaEvent();
+    eventLoop->handleNextCocoaEvent();
 }
 
 - (void) dealloc {
-	[super dealloc];
+    [super dealloc];
 }
 
 @end

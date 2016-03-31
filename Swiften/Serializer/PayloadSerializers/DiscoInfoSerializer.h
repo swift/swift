@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API DiscoInfoSerializer : public GenericPayloadSerializer<DiscoInfo> {
-		public:
-			DiscoInfoSerializer();
+    class SWIFTEN_API DiscoInfoSerializer : public GenericPayloadSerializer<DiscoInfo> {
+        public:
+            DiscoInfoSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<DiscoInfo>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<DiscoInfo>)  const;
+    };
 }

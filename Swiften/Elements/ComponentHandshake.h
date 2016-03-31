@@ -14,22 +14,22 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API ComponentHandshake : public ToplevelElement {
-		public:
-			typedef boost::shared_ptr<ComponentHandshake> ref;
+    class SWIFTEN_API ComponentHandshake : public ToplevelElement {
+        public:
+            typedef boost::shared_ptr<ComponentHandshake> ref;
 
-			ComponentHandshake(const std::string& data = "") : data(data) {
-			}
+            ComponentHandshake(const std::string& data = "") : data(data) {
+            }
 
-			void setData(const std::string& d) {
-				data = d;
-			}
+            void setData(const std::string& d) {
+                data = d;
+            }
 
-			const std::string& getData() const {
-				return data;
-			}
+            const std::string& getData() const {
+                return data;
+            }
 
-		private:
-			std::string data;
-	};
+        private:
+            std::string data;
+    };
 }

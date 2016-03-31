@@ -17,55 +17,55 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardTextElement : public WhiteboardElement {
-	public:
-		typedef boost::shared_ptr<WhiteboardTextElement> ref;
-	public:
-		WhiteboardTextElement(int x, int y) {
-			x_ = x;
-			y_ = y;
-		}
+    class SWIFTEN_API WhiteboardTextElement : public WhiteboardElement {
+    public:
+        typedef boost::shared_ptr<WhiteboardTextElement> ref;
+    public:
+        WhiteboardTextElement(int x, int y) {
+            x_ = x;
+            y_ = y;
+        }
 
-		void setText(const std::string text) {
-			text_ = text;
-		}
+        void setText(const std::string text) {
+            text_ = text;
+        }
 
-		const std::string& getText() const {
-			return text_;
-		}
+        const std::string& getText() const {
+            return text_;
+        }
 
-		int getX() const {
-			return x_;
-		}
+        int getX() const {
+            return x_;
+        }
 
-		int getY() const {
-			return y_;
-		}
+        int getY() const {
+            return y_;
+        }
 
-		const WhiteboardColor& getColor() const {
-			return color_;
-		}
+        const WhiteboardColor& getColor() const {
+            return color_;
+        }
 
-		void setColor(const WhiteboardColor& color) {
-			color_ = color;
-		}
+        void setColor(const WhiteboardColor& color) {
+            color_ = color;
+        }
 
-		int getSize() const {
-			return size_;
-		}
+        int getSize() const {
+            return size_;
+        }
 
-		void setSize(const int size) {
-			size_ = size;
-		}
+        void setSize(const int size) {
+            size_ = size;
+        }
 
-		void accept(WhiteboardElementVisitor& visitor) {
-			visitor.visit(*this);
-		}
+        void accept(WhiteboardElementVisitor& visitor) {
+            visitor.visit(*this);
+        }
 
-	private:
-		int x_, y_;
-		int size_;
-		std::string text_;
-		WhiteboardColor color_;
-	};
+    private:
+        int x_, y_;
+        int size_;
+        std::string text_;
+        WhiteboardColor color_;
+    };
 }

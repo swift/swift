@@ -12,8 +12,8 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API JingleDescription : public Payload {
-		public:
-			typedef boost::shared_ptr<JingleDescription> ref;
-	};
+    class SWIFTEN_API JingleDescription : public Payload {
+        public:
+            typedef boost::shared_ptr<JingleDescription> ref;
+    };
 }

@@ -13,15 +13,15 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class DomainNameServiceQuery;
-	class DomainNameAddressQuery;
-	
+    class DomainNameServiceQuery;
+    class DomainNameAddressQuery;
 
-	class SWIFTEN_API DomainNameResolver {
-		public:
-			virtual ~DomainNameResolver();
 
-			virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) = 0;
-			virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name) = 0;
-	};
+    class SWIFTEN_API DomainNameResolver {
+        public:
+            virtual ~DomainNameResolver();
+
+            virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) = 0;
+            virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name) = 0;
+    };
 }

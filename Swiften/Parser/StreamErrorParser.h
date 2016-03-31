@@ -11,20 +11,20 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamErrorParser : public GenericElementParser<StreamError> {
-		public:
-			StreamErrorParser();
+    class SWIFTEN_API StreamErrorParser : public GenericElementParser<StreamError> {
+        public:
+            StreamErrorParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			enum Level { 
-				TopLevel = 0, 
-				ElementLevel = 1
-			};
-			int level;
-			std::string currentText;
-	};
+        private:
+            enum Level {
+                TopLevel = 0,
+                ElementLevel = 1
+            };
+            int level;
+            std::string currentText;
+    };
 }

@@ -11,15 +11,15 @@
 #include <Swiften/Elements/JingleContentPayload.h>
 
 namespace Swift {
-	namespace Jingle {
-		template<typename T>
-		JingleContentPayload::ref getContentWithDescription(const std::vector<JingleContentPayload::ref>& contents) {
-			for (size_t i = 0; i < contents.size(); ++i) {
-				if (contents[i]->getDescription<T>()) {
-					return contents[i];
-				}
-			}
-			return JingleContentPayload::ref();
-		}
-	}
+    namespace Jingle {
+        template<typename T>
+        JingleContentPayload::ref getContentWithDescription(const std::vector<JingleContentPayload::ref>& contents) {
+            for (size_t i = 0; i < contents.size(); ++i) {
+                if (contents[i]->getDescription<T>()) {
+                    return contents[i];
+                }
+            }
+            return JingleContentPayload::ref();
+        }
+    }
 }

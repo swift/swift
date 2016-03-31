@@ -15,37 +15,37 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class StanzaChannel;
-	class EntityCapsProvider;
+    class StanzaChannel;
+    class EntityCapsProvider;
 
-	class SWIFTEN_API ChatStateNotifier {
-		public:
-			ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager);
-			~ChatStateNotifier();
+    class SWIFTEN_API ChatStateNotifier {
+        public:
+            ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager);
+            ~ChatStateNotifier();
 
-			void setContact(const JID& contact);
+            void setContact(const JID& contact);
 
-			void addChatStateRequest(Message::ref message);
+            void addChatStateRequest(Message::ref message);
 
-			void setUserIsTyping();
-			void userSentMessage();
-			void userCancelledNewMessage();
+            void setUserIsTyping();
+            void userSentMessage();
+            void userCancelledNewMessage();
 
-			void receivedMessageFromContact(bool hasActiveElement);
-			void setContactIsOnline(bool online);
+            void receivedMessageFromContact(bool hasActiveElement);
+            void setContactIsOnline(bool online);
 
-		private:
-			bool contactShouldReceiveStates();
-			void changeState(ChatState::ChatStateType type);
-			void handleCapsChanged(const JID& contact);
+        private:
+            bool contactShouldReceiveStates();
+            void changeState(ChatState::ChatStateType type);
+            void handleCapsChanged(const JID& contact);
 
-		private:
-			StanzaChannel* stanzaChannel_;
-			EntityCapsProvider* entityCapsManager_;
-			JID contact_;
-			bool contactHas85Caps_;
-			bool contactHasSentActive_;
-			bool userIsTyping_;
-			bool contactIsOnline_;
-	};
+        private:
+            StanzaChannel* stanzaChannel_;
+            EntityCapsProvider* entityCapsManager_;
+            JID contact_;
+            bool contactHas85Caps_;
+            bool contactHasSentActive_;
+            bool userIsTyping_;
+            bool contactIsOnline_;
+    };
 }

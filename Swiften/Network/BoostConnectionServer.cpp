@@ -26,84 +26,84 @@ BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int por
 }
 
 void BoostConnectionServer::start() {
-	boost::optional<Error> error = tryStart();
-	if (error) {
-		eventLoop->postEvent(boost::bind(boost::ref(onStopped), *error), shared_from_this());
-	}
+    boost::optional<Error> error = tryStart();
+    if (error) {
+        eventLoop->postEvent(boost::bind(boost::ref(onStopped), *error), shared_from_this());
+    }
 }
 
 boost::optional<BoostConnectionServer::Error> BoostConnectionServer::tryStart() {
-	try {
-		assert(!acceptor_);
-		boost::asio::ip::tcp::endpoint endpoint;
-		if (address_.isValid()) {
-			endpoint = boost::asio::ip::tcp::endpoint(address_.getRawAddress(), boost::numeric_cast<unsigned short>(port_));
-		}
-		else {
-			endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), boost::numeric_cast<unsigned short>(port_));
-		}
-		acceptor_ = new boost::asio::ip::tcp::acceptor(*ioService_, endpoint);
-		if (endpoint.protocol() ==  boost::asio::ip::tcp::v6()) {
-			boost::system::error_code ec;
-			acceptor_->set_option(boost::asio::ip::v6_only(false), ec);
-			SWIFT_LOG_ASSERT(ec, warning) << "IPv4/IPv6 dual-stack support is not supported on this platform." << std::endl;
-		}
-		acceptNextConnection();
-	}
-	catch (const boost::system::system_error& e) {
-		if (e.code() == boost::asio::error::address_in_use) {
-			return Conflict;
-		}
-		else {
-			return UnknownError;
-		}
-	}
-	return boost::optional<Error>();
+    try {
+        assert(!acceptor_);
+        boost::asio::ip::tcp::endpoint endpoint;
+        if (address_.isValid()) {
+            endpoint = boost::asio::ip::tcp::endpoint(address_.getRawAddress(), boost::numeric_cast<unsigned short>(port_));
+        }
+        else {
+            endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), boost::numeric_cast<unsigned short>(port_));
+        }
+        acceptor_ = new boost::asio::ip::tcp::acceptor(*ioService_, endpoint);
+        if (endpoint.protocol() ==  boost::asio::ip::tcp::v6()) {
+            boost::system::error_code ec;
+            acceptor_->set_option(boost::asio::ip::v6_only(false), ec);
+            SWIFT_LOG_ASSERT(ec, warning) << "IPv4/IPv6 dual-stack support is not supported on this platform." << std::endl;
+        }
+        acceptNextConnection();
+    }
+    catch (const boost::system::system_error& e) {
+        if (e.code() == boost::asio::error::address_in_use) {
+            return Conflict;
+        }
+        else {
+            return UnknownError;
+        }
+    }
+    return boost::optional<Error>();
 }
 
 
 void BoostConnectionServer::stop() {
-	stop(boost::optional<Error>());
+    stop(boost::optional<Error>());
 }
 
 void BoostConnectionServer::stop(boost::optional<Error> e) {
-	if (acceptor_) {
-		acceptor_->close();
-		delete acceptor_;
-		acceptor_ = NULL;
-	}
-	eventLoop->postEvent(boost::bind(boost::ref(onStopped), e), shared_from_this());
+    if (acceptor_) {
+        acceptor_->close();
+        delete acceptor_;
+        acceptor_ = NULL;
+    }
+    eventLoop->postEvent(boost::bind(boost::ref(onStopped), e), shared_from_this());
 }
 
 void BoostConnectionServer::acceptNextConnection() {
-	BoostConnection::ref newConnection(BoostConnection::create(ioService_, eventLoop));
-	acceptor_->async_accept(newConnection->getSocket(), 
-		boost::bind(&BoostConnectionServer::handleAccept, shared_from_this(), newConnection, boost::asio::placeholders::error));
+    BoostConnection::ref newConnection(BoostConnection::create(ioService_, eventLoop));
+    acceptor_->async_accept(newConnection->getSocket(),
+        boost::bind(&BoostConnectionServer::handleAccept, shared_from_this(), newConnection, boost::asio::placeholders::error));
 }
 
 void BoostConnectionServer::handleAccept(boost::shared_ptr<BoostConnection> newConnection, const boost::system::error_code& error) {
-	if (error) {
-		eventLoop->postEvent(
-				boost::bind(
-						&BoostConnectionServer::stop, shared_from_this(), UnknownError), 
-				shared_from_this());
-	}
-	else {
-		eventLoop->postEvent(
-				boost::bind(boost::ref(onNewConnection), newConnection), 
-				shared_from_this());
-		newConnection->listen();
-		acceptNextConnection();
-	}
+    if (error) {
+        eventLoop->postEvent(
+                boost::bind(
+                        &BoostConnectionServer::stop, shared_from_this(), UnknownError),
+                shared_from_this());
+    }
+    else {
+        eventLoop->postEvent(
+                boost::bind(boost::ref(onNewConnection), newConnection),
+                shared_from_this());
+        newConnection->listen();
+        acceptNextConnection();
+    }
 }
 
 HostAddressPort BoostConnectionServer::getAddressPort() const {
-	if (acceptor_) {
-		return HostAddressPort(acceptor_->local_endpoint());
-	}
-	else {
-		return HostAddressPort();
-	}
+    if (acceptor_) {
+        return HostAddressPort(acceptor_->local_endpoint());
+    }
+    else {
+        return HostAddressPort();
+    }
 }
 
 }

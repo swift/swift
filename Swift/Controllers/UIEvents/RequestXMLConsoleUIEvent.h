@@ -9,6 +9,6 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class RequestXMLConsoleUIEvent : public UIEvent {
-	};
+    class RequestXMLConsoleUIEvent : public UIEvent {
+    };
 }

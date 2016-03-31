@@ -12,34 +12,34 @@
 #include <Slimber/ServerError.h>
 
 namespace Swift {
-	class DNSSDQuerier;
-	class LinkLocalServiceBrowser;
-	class VCardCollection;
-	class Server;
-	class EventLoop;
+    class DNSSDQuerier;
+    class LinkLocalServiceBrowser;
+    class VCardCollection;
+    class Server;
+    class EventLoop;
 }
 
 class MenuletController;
 class Menulet;
 
 class MainController {
-	public:
-		MainController(Menulet* menulet, Swift::EventLoop* eventLoop);
-		virtual ~MainController();
+    public:
+        MainController(Menulet* menulet, Swift::EventLoop* eventLoop);
+        virtual ~MainController();
 
-	private:
-		void handleSelfConnected(bool b);
-		void handleServicesChanged();
-		void handleServerStopped(boost::optional<Swift::ServerError> error);
-		void handleRestartRequested();
+    private:
+        void handleSelfConnected(bool b);
+        void handleServicesChanged();
+        void handleServerStopped(boost::optional<Swift::ServerError> error);
+        void handleRestartRequested();
 
-		void start();
-		void stop();
+        void start();
+        void stop();
 
-	private:
-		boost::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;
-		Swift::LinkLocalServiceBrowser* linkLocalServiceBrowser;
-		Swift::VCardCollection* vCardCollection;
-		Swift::Server* server;
-		MenuletController* menuletController;
+    private:
+        boost::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;
+        Swift::LinkLocalServiceBrowser* linkLocalServiceBrowser;
+        Swift::VCardCollection* vCardCollection;
+        Swift::Server* server;
+        MenuletController* menuletController;
 };

@@ -17,28 +17,28 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardUpdateOperation : public WhiteboardOperation {
-	public:
-		typedef boost::shared_ptr<WhiteboardUpdateOperation> ref;
-	public:
-		WhiteboardElement::ref getElement() const {
-			return element_;
-		}
+    class SWIFTEN_API WhiteboardUpdateOperation : public WhiteboardOperation {
+    public:
+        typedef boost::shared_ptr<WhiteboardUpdateOperation> ref;
+    public:
+        WhiteboardElement::ref getElement() const {
+            return element_;
+        }
 
-		void setElement(WhiteboardElement::ref element) {
-			element_ = element;
-		}
+        void setElement(WhiteboardElement::ref element) {
+            element_ = element;
+        }
 
-		int getNewPos() const {
-			return newPos_;
-		}
+        int getNewPos() const {
+            return newPos_;
+        }
 
-		void setNewPos(int newPos) {
-			newPos_ = newPos;
-		}
+        void setNewPos(int newPos) {
+            newPos_ = newPos;
+        }
 
-	private:
-		WhiteboardElement::ref element_;
-		int newPos_;
-	};
+    private:
+        WhiteboardElement::ref element_;
+        int newPos_;
+    };
 }

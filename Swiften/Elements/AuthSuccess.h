@@ -14,19 +14,19 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API AuthSuccess : public ToplevelElement {
-		public:
-			AuthSuccess() {}
+    class SWIFTEN_API AuthSuccess : public ToplevelElement {
+        public:
+            AuthSuccess() {}
 
-			const boost::optional<std::vector<unsigned char> >& getValue() const {
-				return value;
-			}
+            const boost::optional<std::vector<unsigned char> >& getValue() const {
+                return value;
+            }
 
-			void setValue(const std::vector<unsigned char>& value) {
-				this->value = boost::optional<std::vector<unsigned char> >(value);
-			}
+            void setValue(const std::vector<unsigned char>& value) {
+                this->value = boost::optional<std::vector<unsigned char> >(value);
+            }
 
-		private:
-			boost::optional<std::vector<unsigned char> > value;
-	};
+        private:
+            boost::optional<std::vector<unsigned char> > value;
+    };
 }

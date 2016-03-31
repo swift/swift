@@ -12,12 +12,12 @@
 #include <Swiften/Parser/Tree/ParserElement.h>
 
 namespace Swift {
-	class SWIFTEN_API NullParserElement : public ParserElement {
-		public:
-			NullParserElement() : ParserElement("", "", AttributeMap()) {}
+    class SWIFTEN_API NullParserElement : public ParserElement {
+        public:
+            NullParserElement() : ParserElement("", "", AttributeMap()) {}
 
-			virtual operator bool() { return false; }
+            virtual operator bool() { return false; }
 
-			static boost::shared_ptr<NullParserElement> element;
-	};
+            static boost::shared_ptr<NullParserElement> element;
+    };
 }

@@ -11,18 +11,18 @@
 #include <Swiften/Queries/SetResponder.h>
 
 namespace Swift {
-	class IQRouter;
-	class JingleSessionManager;
+    class IQRouter;
+    class JingleSessionManager;
 
-	class SWIFTEN_API JingleResponder : public SetResponder<JinglePayload> {
-		public:
-			JingleResponder(JingleSessionManager* sessionManager, IQRouter* router);
-			virtual ~JingleResponder();
-		private:
-			virtual bool handleSetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<JinglePayload> payload);
+    class SWIFTEN_API JingleResponder : public SetResponder<JinglePayload> {
+        public:
+            JingleResponder(JingleSessionManager* sessionManager, IQRouter* router);
+            virtual ~JingleResponder();
+        private:
+            virtual bool handleSetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<JinglePayload> payload);
 
-		private:
-			JingleSessionManager* sessionManager;
-			IQRouter* router;
-	};
+        private:
+            JingleSessionManager* sessionManager;
+            IQRouter* router;
+    };
 }

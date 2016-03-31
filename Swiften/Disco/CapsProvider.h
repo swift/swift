@@ -12,14 +12,14 @@
 #include <Swiften/Elements/DiscoInfo.h>
 
 namespace Swift {
-	
 
-	class SWIFTEN_API CapsProvider { 
-		public:
-			virtual ~CapsProvider() {}
 
-			virtual DiscoInfo::ref getCaps(const std::string&) const = 0;
+    class SWIFTEN_API CapsProvider {
+        public:
+            virtual ~CapsProvider() {}
 
-			boost::signal<void (const std::string&)> onCapsAvailable;
-	};
+            virtual DiscoInfo::ref getCaps(const std::string&) const = 0;
+
+            boost::signal<void (const std::string&)> onCapsAvailable;
+    };
 }

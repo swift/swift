@@ -14,27 +14,27 @@
 using namespace Swift;
 
 class PLAINClientAuthenticatorTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(PLAINClientAuthenticatorTest);
-		CPPUNIT_TEST(testGetResponse_WithoutAuthzID);
-		CPPUNIT_TEST(testGetResponse_WithAuthzID);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(PLAINClientAuthenticatorTest);
+        CPPUNIT_TEST(testGetResponse_WithoutAuthzID);
+        CPPUNIT_TEST(testGetResponse_WithAuthzID);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void testGetResponse_WithoutAuthzID() {
-			PLAINClientAuthenticator testling;
+    public:
+        void testGetResponse_WithoutAuthzID() {
+            PLAINClientAuthenticator testling;
 
-			testling.setCredentials("user", createSafeByteArray("pass"));
+            testling.setCredentials("user", createSafeByteArray("pass"));
 
-			CPPUNIT_ASSERT_EQUAL(*testling.getResponse(), createSafeByteArray("\0user\0pass", 10));
-		}
+            CPPUNIT_ASSERT_EQUAL(*testling.getResponse(), createSafeByteArray("\0user\0pass", 10));
+        }
 
-		void testGetResponse_WithAuthzID() {
-			PLAINClientAuthenticator testling;
+        void testGetResponse_WithAuthzID() {
+            PLAINClientAuthenticator testling;
 
-			testling.setCredentials("user", createSafeByteArray("pass"), "authz");
+            testling.setCredentials("user", createSafeByteArray("pass"), "authz");
 
-			CPPUNIT_ASSERT_EQUAL(*testling.getResponse(), createSafeByteArray("authz\0user\0pass", 15));
-		}
+            CPPUNIT_ASSERT_EQUAL(*testling.getResponse(), createSafeByteArray("authz\0user\0pass", 15));
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PLAINClientAuthenticatorTest);

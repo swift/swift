@@ -9,11 +9,11 @@
 #include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class NullProxyProvider : public ProxyProvider {
-		public:
-			NullProxyProvider();
+    class NullProxyProvider : public ProxyProvider {
+        public:
+            NullProxyProvider();
 
-			virtual HostAddressPort getHTTPConnectProxy() const;
-			virtual HostAddressPort getSOCKS5Proxy() const;
-	};
+            virtual HostAddressPort getHTTPConnectProxy() const;
+            virtual HostAddressPort getSOCKS5Proxy() const;
+    };
 }

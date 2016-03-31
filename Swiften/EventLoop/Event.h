@@ -12,19 +12,19 @@
 #include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
-	class Event {
-		public:
-			Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) : id(~0U), owner(owner), callback(callback) {
-			}
+    class Event {
+        public:
+            Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) : id(~0U), owner(owner), callback(callback) {
+            }
 
-			bool operator==(const Event& o) const {
-				return o.id == id;
-			}
+            bool operator==(const Event& o) const {
+                return o.id == id;
+            }
 
-			unsigned int id;
-			boost::shared_ptr<EventOwner> owner;
-			boost::function<void()> callback;
-	};
+            unsigned int id;
+            boost::shared_ptr<EventOwner> owner;
+            boost::function<void()> callback;
+    };
 }
 
 std::ostream& operator<<(std::ostream& os, const Swift::Event& e);

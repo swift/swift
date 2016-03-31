@@ -24,15 +24,15 @@ PubSubOwnerAffiliationsSerializer::~PubSubOwnerAffiliationsSerializer() {
 }
 
 std::string PubSubOwnerAffiliationsSerializer::serializePayload(boost::shared_ptr<PubSubOwnerAffiliations> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("affiliations", "http://jabber.org/protocol/pubsub#owner");
-	element.setAttribute("node", payload->getNode());
-	foreach(boost::shared_ptr<PubSubOwnerAffiliation> item, payload->getAffiliations()) {
-		element.addNode(boost::make_shared<XMLRawTextNode>(PubSubOwnerAffiliationSerializer(serializers).serialize(item)));
-	}
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("affiliations", "http://jabber.org/protocol/pubsub#owner");
+    element.setAttribute("node", payload->getNode());
+    foreach(boost::shared_ptr<PubSubOwnerAffiliation> item, payload->getAffiliations()) {
+        element.addNode(boost::make_shared<XMLRawTextNode>(PubSubOwnerAffiliationSerializer(serializers).serialize(item)));
+    }
+    return element.serialize();
 }
 
 

@@ -13,36 +13,36 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class ProfileWindow;
-	class ProfileWindowFactory;
-	class UIEventStream;
-	class VCardManager;
+    class ProfileWindow;
+    class ProfileWindowFactory;
+    class UIEventStream;
+    class VCardManager;
 
-	class ProfileController {
-		public:
-			ProfileController(VCardManager* vcardManager, ProfileWindowFactory* profileWindowFactory, UIEventStream* uiEventStream);
-			~ProfileController();
+    class ProfileController {
+        public:
+            ProfileController(VCardManager* vcardManager, ProfileWindowFactory* profileWindowFactory, UIEventStream* uiEventStream);
+            ~ProfileController();
 
-			void setAvailable(bool b);
+            void setAvailable(bool b);
 
-		private:
-			void handleUIEvent(UIEvent::ref event);
-			void handleVCardChangeRequest(VCard::ref vcard);
-			void handleSetVCardResponse(ErrorPayload::ref);
-			void handleOwnVCardChanged(VCard::ref vcard);
-			void handleVCardRetrievalError(const JID& jid, ErrorPayload::ref error);
-			void handleProfileWindowAboutToBeClosed(const JID&);
-			void updateDialogStatus();
+        private:
+            void handleUIEvent(UIEvent::ref event);
+            void handleVCardChangeRequest(VCard::ref vcard);
+            void handleSetVCardResponse(ErrorPayload::ref);
+            void handleOwnVCardChanged(VCard::ref vcard);
+            void handleVCardRetrievalError(const JID& jid, ErrorPayload::ref error);
+            void handleProfileWindowAboutToBeClosed(const JID&);
+            void updateDialogStatus();
 
-		private:
-			VCardManager* vcardManager;
-			ProfileWindowFactory* profileWindowFactory;
-			UIEventStream* uiEventStream;
-			bool available;
-			SetVCardRequest::ref pendingSetVCardRequest;
-			ProfileWindow* profileWindow;
-			bool gettingVCard;
-			VCard::ref vcardBeforeEdit;
-	};
+        private:
+            VCardManager* vcardManager;
+            ProfileWindowFactory* profileWindowFactory;
+            UIEventStream* uiEventStream;
+            bool available;
+            SetVCardRequest::ref pendingSetVCardRequest;
+            ProfileWindow* profileWindow;
+            bool gettingVCard;
+            VCard::ref vcardBeforeEdit;
+    };
 }
 

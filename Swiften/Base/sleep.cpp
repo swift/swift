@@ -12,14 +12,14 @@
 namespace Swift {
 
 void sleep(unsigned int msecs) {
-	boost::xtime xt;
+    boost::xtime xt;
 #if BOOST_VERSION >= 105000
-	boost::xtime_get(&xt, boost::TIME_UTC_);
+    boost::xtime_get(&xt, boost::TIME_UTC_);
 #else
-	boost::xtime_get(&xt, boost::TIME_UTC);
+    boost::xtime_get(&xt, boost::TIME_UTC);
 #endif
-	xt.nsec += msecs*1000000;
-	boost::thread::sleep(xt);
+    xt.nsec += msecs*1000000;
+    boost::thread::sleep(xt);
 }
 
 }

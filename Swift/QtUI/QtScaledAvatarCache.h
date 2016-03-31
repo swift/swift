@@ -11,13 +11,13 @@
 #include <QString>
 
 namespace Swift {
-	class QtScaledAvatarCache {
-		public:
-			QtScaledAvatarCache(int size);
+    class QtScaledAvatarCache {
+        public:
+            QtScaledAvatarCache(int size);
 
-			QString getScaledAvatarPath(const QString& path);
+            QString getScaledAvatarPath(const QString& path);
 
-		private:
-			int size;
-	};
+        private:
+            int size;
+    };
 }

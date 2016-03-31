@@ -11,18 +11,18 @@
 namespace Swift {
 
 IBBReceiveTransportSession::IBBReceiveTransportSession(boost::shared_ptr<IBBReceiveSession> session) : session(session) {
-	finishedConnection = session->onFinished.connect(boost::bind(boost::ref(onFinished), _1));
+    finishedConnection = session->onFinished.connect(boost::bind(boost::ref(onFinished), _1));
 }
 
 IBBReceiveTransportSession::~IBBReceiveTransportSession() {
 }
 
 void IBBReceiveTransportSession::start() {
-	session->start();
+    session->start();
 }
 
 void IBBReceiveTransportSession::stop() {
-	session->stop();
+    session->stop();
 }
 
 }

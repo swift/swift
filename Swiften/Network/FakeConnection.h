@@ -18,47 +18,47 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-	class SWIFTEN_API FakeConnection : 
-			public Connection, 
-			public EventOwner,
-			public boost::enable_shared_from_this<FakeConnection> {
-		public:
-			enum State {
-				Initial,
-				Connecting,
-				Connected,
-				Disconnected,
-				DisconnectedWithError
-			};
+    class SWIFTEN_API FakeConnection :
+            public Connection,
+            public EventOwner,
+            public boost::enable_shared_from_this<FakeConnection> {
+        public:
+            enum State {
+                Initial,
+                Connecting,
+                Connected,
+                Disconnected,
+                DisconnectedWithError
+            };
 
-			FakeConnection(EventLoop* eventLoop);
-			virtual ~FakeConnection();
+            FakeConnection(EventLoop* eventLoop);
+            virtual ~FakeConnection();
 
-			virtual void listen();
-			virtual HostAddressPort getLocalAddress() const {
-				return HostAddressPort();
-			}
-			virtual HostAddressPort getRemoteAddress() const {
-				return HostAddressPort();
-			}
+            virtual void listen();
+            virtual HostAddressPort getLocalAddress() const {
+                return HostAddressPort();
+            }
+            virtual HostAddressPort getRemoteAddress() const {
+                return HostAddressPort();
+            }
 
-			void setError(const Error& e);
-			virtual void connect(const HostAddressPort& address);
-			virtual void disconnect();
+            void setError(const Error& e);
+            virtual void connect(const HostAddressPort& address);
+            virtual void disconnect();
 
-			virtual void write(const SafeByteArray& data) {
-				dataWritten.push_back(data);
-			}
+            virtual void write(const SafeByteArray& data) {
+                dataWritten.push_back(data);
+            }
 
-			void setDelayConnect() {
-				delayConnect = true;
-			}
+            void setDelayConnect() {
+                delayConnect = true;
+            }
 
-			EventLoop* eventLoop;
-			boost::optional<HostAddressPort> connectedTo;
-			std::vector<SafeByteArray> dataWritten;
-			boost::optional<Error> error;
-			State state;
-			bool delayConnect;
-	};
+            EventLoop* eventLoop;
+            boost::optional<HostAddressPort> connectedTo;
+            std::vector<SafeByteArray> dataWritten;
+            boost::optional<Error> error;
+            State state;
+            bool delayConnect;
+    };
 }

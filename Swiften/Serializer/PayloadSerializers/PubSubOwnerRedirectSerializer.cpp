@@ -22,12 +22,12 @@ PubSubOwnerRedirectSerializer::~PubSubOwnerRedirectSerializer() {
 }
 
 std::string PubSubOwnerRedirectSerializer::serializePayload(boost::shared_ptr<PubSubOwnerRedirect> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("redirect", "http://jabber.org/protocol/pubsub#owner");
-	element.setAttribute("uri", payload->getURI());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("redirect", "http://jabber.org/protocol/pubsub#owner");
+    element.setAttribute("uri", payload->getURI());
+    return element.serialize();
 }
 
 

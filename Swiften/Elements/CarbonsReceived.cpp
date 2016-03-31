@@ -7,15 +7,15 @@
 #include <Swiften/Elements/CarbonsReceived.h>
 
 namespace Swift {
-	CarbonsReceived::~CarbonsReceived() {
+    CarbonsReceived::~CarbonsReceived() {
 
-	}
+    }
 
-	void CarbonsReceived::setForwarded(boost::shared_ptr<Forwarded> forwarded) {
-		forwarded_ = forwarded;
-	}
+    void CarbonsReceived::setForwarded(boost::shared_ptr<Forwarded> forwarded) {
+        forwarded_ = forwarded;
+    }
 
-	boost::shared_ptr<Forwarded> CarbonsReceived::getForwarded() const {
-		return forwarded_;
-	}
+    boost::shared_ptr<Forwarded> CarbonsReceived::getForwarded() const {
+        return forwarded_;
+    }
 }

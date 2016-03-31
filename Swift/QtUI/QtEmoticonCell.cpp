@@ -15,11 +15,11 @@
 namespace Swift {
 
 QtEmoticonCell::QtEmoticonCell(const QString emoticonAsText, QString filePath, QWidget* parent) :  QLabel(parent), emoticonAsText_(emoticonAsText) {
-	if (filePath.startsWith("qrc:/")) {
-		filePath.remove(0, 3);
-	}
-	setPixmap(QPixmap(filePath));
-	setToolTip(emoticonAsText_);
+    if (filePath.startsWith("qrc:/")) {
+        filePath.remove(0, 3);
+    }
+    setPixmap(QPixmap(filePath));
+    setToolTip(emoticonAsText_);
 }
 
 QtEmoticonCell::~QtEmoticonCell() {
@@ -27,8 +27,8 @@ QtEmoticonCell::~QtEmoticonCell() {
 }
 
 void QtEmoticonCell::mousePressEvent (QMouseEvent* event) {
-	emit emoticonClicked(emoticonAsText_);
-	QLabel::mousePressEvent(event);
+    emit emoticonClicked(emoticonAsText_);
+    QLabel::mousePressEvent(event);
 }
 
 }

@@ -15,22 +15,22 @@
 using namespace Swift;
 
 LastLineTracker::LastLineTracker() {
-	lastFocus = true;
-	shouldMove = false;
+    lastFocus = true;
+    shouldMove = false;
 }
 
 void LastLineTracker::setHasFocus(bool focus) {
-	if (!focus && lastFocus) {
-			shouldMove = true;
-			lastFocus = focus;
-			return;
-	}
-	shouldMove = false;
-	lastFocus = focus;
+    if (!focus && lastFocus) {
+            shouldMove = true;
+            lastFocus = focus;
+            return;
+    }
+    shouldMove = false;
+    lastFocus = focus;
 }
 
 bool LastLineTracker::getShouldMoveLastLine() {
-	bool ret = shouldMove;
-	shouldMove = false;
-	return ret;
+    bool ret = shouldMove;
+    shouldMove = false;
+    return ret;
 }

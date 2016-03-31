@@ -19,14 +19,14 @@
 namespace Swift {
 
 class ShowProfileForRosterItemUIEvent : public UIEvent {
-	public:
-		typedef boost::shared_ptr<ShowProfileForRosterItemUIEvent> ref;
-	public:
-		ShowProfileForRosterItemUIEvent(const JID& jid) : jid_(jid) {}
-		virtual ~ShowProfileForRosterItemUIEvent() {}
-		JID getJID() const {return jid_;}
-	private:
-		JID jid_;
+    public:
+        typedef boost::shared_ptr<ShowProfileForRosterItemUIEvent> ref;
+    public:
+        ShowProfileForRosterItemUIEvent(const JID& jid) : jid_(jid) {}
+        virtual ~ShowProfileForRosterItemUIEvent() {}
+        JID getJID() const {return jid_;}
+    private:
+        JID jid_;
 };
 
 }

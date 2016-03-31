@@ -18,30 +18,30 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class MUCRegistry;
-	class AvatarStorage;
-	class StanzaChannel;
-	class VCardManager;
-	class CryptoProvider;
+    class MUCRegistry;
+    class AvatarStorage;
+    class StanzaChannel;
+    class VCardManager;
+    class CryptoProvider;
 
-	class SWIFTEN_API VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
-		public:
-			VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
+    class SWIFTEN_API VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
+        public:
+            VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
 
-			boost::optional<std::string> getAvatarHash(const JID&) const;
+            boost::optional<std::string> getAvatarHash(const JID&) const;
 
-		private:
-			void handlePresenceReceived(boost::shared_ptr<Presence>);
-			void handleStanzaChannelAvailableChanged(bool);
-			void handleVCardChanged(const JID& from, VCard::ref);
-			void setAvatarHash(const JID& from, const std::string& hash);
-			JID getAvatarJID(const JID& o) const;
+        private:
+            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handleStanzaChannelAvailableChanged(bool);
+            void handleVCardChanged(const JID& from, VCard::ref);
+            void setAvatarHash(const JID& from, const std::string& hash);
+            JID getAvatarJID(const JID& o) const;
 
-		private:
-			VCardManager* vcardManager_;
-			AvatarStorage* avatarStorage_;
-			CryptoProvider* crypto_;
-			MUCRegistry* mucRegistry_;
-			std::map<JID, std::string> avatarHashes_;
-	};
+        private:
+            VCardManager* vcardManager_;
+            AvatarStorage* avatarStorage_;
+            CryptoProvider* crypto_;
+            MUCRegistry* mucRegistry_;
+            std::map<JID, std::string> avatarHashes_;
+    };
 }

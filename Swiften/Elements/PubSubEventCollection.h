@@ -19,41 +19,41 @@
 #include <Swiften/Elements/PubSubEventPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventCollection : public PubSubEventPayload {
-		public:
-			
-			PubSubEventCollection();
-			
-			virtual ~PubSubEventCollection();
+    class SWIFTEN_API PubSubEventCollection : public PubSubEventPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubEventCollection();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubEventCollection();
 
-			boost::shared_ptr<PubSubEventDisassociate> getDisassociate() const {
-				return disassociate;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			void setDisassociate(boost::shared_ptr<PubSubEventDisassociate> value) {
-				this->disassociate = value ;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			boost::shared_ptr<PubSubEventAssociate> getAssociate() const {
-				return associate;
-			}
+            boost::shared_ptr<PubSubEventDisassociate> getDisassociate() const {
+                return disassociate;
+            }
 
-			void setAssociate(boost::shared_ptr<PubSubEventAssociate> value) {
-				this->associate = value ;
-			}
+            void setDisassociate(boost::shared_ptr<PubSubEventDisassociate> value) {
+                this->disassociate = value ;
+            }
+
+            boost::shared_ptr<PubSubEventAssociate> getAssociate() const {
+                return associate;
+            }
+
+            void setAssociate(boost::shared_ptr<PubSubEventAssociate> value) {
+                this->associate = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			boost::shared_ptr<PubSubEventDisassociate> disassociate;
-			boost::shared_ptr<PubSubEventAssociate> associate;
-	};
+        private:
+            boost::optional< std::string > node;
+            boost::shared_ptr<PubSubEventDisassociate> disassociate;
+            boost::shared_ptr<PubSubEventAssociate> associate;
+    };
 }

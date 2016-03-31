@@ -9,10 +9,10 @@
 #include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
-	class WindowsIdleQuerier : public IdleQuerier {
-		public:
-			WindowsIdleQuerier();
+    class WindowsIdleQuerier : public IdleQuerier {
+        public:
+            WindowsIdleQuerier();
 
-			virtual int getIdleTimeSeconds();
-	};
+            virtual int getIdleTimeSeconds();
+    };
 }

@@ -18,20 +18,20 @@ SOCKS5BytestreamRegistry::SOCKS5BytestreamRegistry() {
 }
 
 void SOCKS5BytestreamRegistry::setHasBytestream(const std::string& destination, bool b) {
-	if (b) {
-		availableBytestreams.insert(destination);
-	}
-	else {
-		availableBytestreams.erase(destination);
-	}
+    if (b) {
+        availableBytestreams.insert(destination);
+    }
+    else {
+        availableBytestreams.erase(destination);
+    }
 }
 
 bool SOCKS5BytestreamRegistry::hasBytestream(const std::string& destination) const {
-	return availableBytestreams.find(destination) != availableBytestreams.end();
+    return availableBytestreams.find(destination) != availableBytestreams.end();
 }
 
 std::string SOCKS5BytestreamRegistry::generateSessionID() {
-	return idGenerator.generateID();
+    return idGenerator.generateID();
 }
 
 }

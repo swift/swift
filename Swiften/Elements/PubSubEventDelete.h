@@ -17,32 +17,32 @@
 #include <Swiften/Elements/PubSubEventRedirect.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventDelete : public PubSubEventPayload {
-		public:
-			
-			PubSubEventDelete();
-			
-			virtual ~PubSubEventDelete();
+    class SWIFTEN_API PubSubEventDelete : public PubSubEventPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubEventDelete();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubEventDelete();
 
-			boost::shared_ptr<PubSubEventRedirect> getRedirects() const {
-				return redirects;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setRedirects(boost::shared_ptr<PubSubEventRedirect> value) {
-				this->redirects = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
+
+            boost::shared_ptr<PubSubEventRedirect> getRedirects() const {
+                return redirects;
+            }
+
+            void setRedirects(boost::shared_ptr<PubSubEventRedirect> value) {
+                this->redirects = value ;
+            }
 
 
-		private:
-			std::string node;
-			boost::shared_ptr<PubSubEventRedirect> redirects;
-	};
+        private:
+            std::string node;
+            boost::shared_ptr<PubSubEventRedirect> redirects;
+    };
 }

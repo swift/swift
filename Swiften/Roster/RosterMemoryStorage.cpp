@@ -14,10 +14,10 @@ RosterMemoryStorage::RosterMemoryStorage() {
 }
 
 void RosterMemoryStorage::setRoster(boost::shared_ptr<RosterPayload> r) {
-	roster.reset();
-	if (r) {
-		roster = boost::make_shared<RosterPayload>(*r);
-	}
+    roster.reset();
+    if (r) {
+        roster = boost::make_shared<RosterPayload>(*r);
+    }
 }
 
 }

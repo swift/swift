@@ -9,11 +9,11 @@
 #include <SwifTools/Dock/Dock.h>
 
 namespace Swift {
-	class NullDock : public Dock {
-		public:
-			NullDock() {}
+    class NullDock : public Dock {
+        public:
+            NullDock() {}
 
-			virtual void setNumberOfPendingMessages(int) {
-			}
-	};
+            virtual void setNumberOfPendingMessages(int) {
+            }
+    };
 }

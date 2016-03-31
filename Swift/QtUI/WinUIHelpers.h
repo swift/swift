@@ -20,7 +20,7 @@ namespace Swift {
 
 class WinUIHelpers {
 public:
-	static void displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain);
+    static void displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain);
 };
 
 }

@@ -11,11 +11,11 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsDisableSerializer : public GenericPayloadSerializer<CarbonsDisable> {
-		public:
-			CarbonsDisableSerializer();
-			virtual ~CarbonsDisableSerializer();
+    class SWIFTEN_API CarbonsDisableSerializer : public GenericPayloadSerializer<CarbonsDisable> {
+        public:
+            CarbonsDisableSerializer();
+            virtual ~CarbonsDisableSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<CarbonsDisable>)	const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<CarbonsDisable>)    const;
+    };
 }

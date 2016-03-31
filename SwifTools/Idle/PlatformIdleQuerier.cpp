@@ -24,21 +24,21 @@ namespace Swift {
 PlatformIdleQuerier::PlatformIdleQuerier() : querier(NULL) {
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #if defined(HAVE_IOKIT) && !defined(SWIFTEN_PLATFORM_IPHONE)
-	querier = new MacOSXIdleQuerier();
+    querier = new MacOSXIdleQuerier();
 #else
-	querier = new DummyIdleQuerier();
+    querier = new DummyIdleQuerier();
 #endif
 #elif defined(SWIFTEN_PLATFORM_WINDOWS)
-	querier = new WindowsIdleQuerier();
+    querier = new WindowsIdleQuerier();
 #elif defined(HAVE_XSS)
-	querier = new XSSIdleQuerier();
+    querier = new XSSIdleQuerier();
 #else
-	querier = new DummyIdleQuerier();
+    querier = new DummyIdleQuerier();
 #endif
 }
 
 PlatformIdleQuerier::~PlatformIdleQuerier() {
-	delete querier;
+    delete querier;
 }
 
 }

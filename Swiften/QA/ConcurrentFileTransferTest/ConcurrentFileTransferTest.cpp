@@ -42,40 +42,40 @@ static boost::shared_ptr<BoostNetworkFactories> networkFactories;
 BoostRandomGenerator randGen;
 
 enum Candidate {
-	InBandBytestream = 1,
-	S5B_Direct = 2,
-	S5B_Proxied = 4,
-	S5B_Assisted = 8,
+    InBandBytestream = 1,
+    S5B_Direct = 2,
+    S5B_Proxied = 4,
+    S5B_Assisted = 8,
 };
 
 class ConcurrentFileTransferTest {
-	public:
-		ConcurrentFileTransferTest(int clientACandidates, int clientBCandidates) : clientACandidates_(clientACandidates), clientBCandidates_(clientBCandidates) {
+    public:
+        ConcurrentFileTransferTest(int clientACandidates, int clientBCandidates) : clientACandidates_(clientACandidates), clientBCandidates_(clientBCandidates) {
 
-		}
+        }
 
-	private:
-		int clientACandidates_;
-		boost::shared_ptr<Client> clientA_;
-		std::map<std::string, ByteArray> clientASendFiles_;
+    private:
+        int clientACandidates_;
+        boost::shared_ptr<Client> clientA_;
+        std::map<std::string, ByteArray> clientASendFiles_;
 
 
-		int clientBCandidates_;
-		boost::shared_ptr<Client> clientB_;
+        int clientBCandidates_;
+        boost::shared_ptr<Client> clientB_;
 };
 
 /**
- *	This program tests the concurrent transfer of multiple file-transfers.
- *  
+ *    This program tests the concurrent transfer of multiple file-transfers.
+ *
  */
 int main(int argc, char** argv) {
-	int failedTests = 0;
+    int failedTests = 0;
 
-	if (!env("SWIFT_FILETRANSFERTEST_JID") && !env("SWIFT_FILETRANSFERTEST_PASS") && !env("SWIFT_FILETRANSFERTEST2_JID") && !env("SWIFT_FILETRANSFERTEST2_PASS")) {
+    if (!env("SWIFT_FILETRANSFERTEST_JID") && !env("SWIFT_FILETRANSFERTEST_PASS") && !env("SWIFT_FILETRANSFERTEST2_JID") && !env("SWIFT_FILETRANSFERTEST2_PASS")) {
 
-		return -1;
-	}
+        return -1;
+    }
 
 
-	return failedTests;
+    return failedTests;
 }

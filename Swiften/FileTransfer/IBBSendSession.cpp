@@ -17,92 +17,92 @@
 namespace Swift {
 
 IBBSendSession::IBBSendSession(
-		const std::string& id, 
-		const JID& from, 
-		const JID& to, 
-		boost::shared_ptr<ReadBytestream> bytestream, 
-		IQRouter* router) : 
-			id(id), 
-			from(from), 
-			to(to), 
-			bytestream(bytestream), 
-			router(router), 
-			blockSize(4096), 
-			sequenceNumber(0), 
-			active(false), 
-			waitingForData(false) {
-	bytestream->onDataAvailable.connect(boost::bind(&IBBSendSession::handleDataAvailable, this));
+        const std::string& id,
+        const JID& from,
+        const JID& to,
+        boost::shared_ptr<ReadBytestream> bytestream,
+        IQRouter* router) :
+            id(id),
+            from(from),
+            to(to),
+            bytestream(bytestream),
+            router(router),
+            blockSize(4096),
+            sequenceNumber(0),
+            active(false),
+            waitingForData(false) {
+    bytestream->onDataAvailable.connect(boost::bind(&IBBSendSession::handleDataAvailable, this));
 }
 
 IBBSendSession::~IBBSendSession() {
-	bytestream->onDataAvailable.disconnect(boost::bind(&IBBSendSession::handleDataAvailable, this));
+    bytestream->onDataAvailable.disconnect(boost::bind(&IBBSendSession::handleDataAvailable, this));
 }
 
 void IBBSendSession::start() {
-	IBBRequest::ref request = IBBRequest::create(
-			from, to, IBB::createIBBOpen(id, boost::numeric_cast<int>(blockSize)), router);
-	request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
-	active = true;
-	request->send();
-	currentRequest = request;
+    IBBRequest::ref request = IBBRequest::create(
+            from, to, IBB::createIBBOpen(id, boost::numeric_cast<int>(blockSize)), router);
+    request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
+    active = true;
+    request->send();
+    currentRequest = request;
 }
 
 void IBBSendSession::stop() {
-	if (active && router->isAvailable()) {
-		IBBRequest::create(from, to, IBB::createIBBClose(id), router)->send();
-	}
-	if (currentRequest) {
-		currentRequest->onResponse.disconnect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
-	}
-	finish(boost::optional<FileTransferError>());
+    if (active && router->isAvailable()) {
+        IBBRequest::create(from, to, IBB::createIBBClose(id), router)->send();
+    }
+    if (currentRequest) {
+        currentRequest->onResponse.disconnect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
+    }
+    finish(boost::optional<FileTransferError>());
 }
 
 void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
-	currentRequest.reset();
+    currentRequest.reset();
 
-	if (!error && active) {
-		if (!bytestream->isFinished()) {
-			sendMoreData();
-		}
-		else {
-			finish(boost::optional<FileTransferError>());
-		}
-	}
-	else {
-		finish(FileTransferError(FileTransferError::PeerError));
-	}
+    if (!error && active) {
+        if (!bytestream->isFinished()) {
+            sendMoreData();
+        }
+        else {
+            finish(boost::optional<FileTransferError>());
+        }
+    }
+    else {
+        finish(FileTransferError(FileTransferError::PeerError));
+    }
 }
 
 void IBBSendSession::sendMoreData() {
-	try {
-		boost::shared_ptr<ByteArray> data = bytestream->read(blockSize);
-		if (!data->empty()) {
-			waitingForData = false;
-			IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, *data), router);
-			sequenceNumber++;
-			request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
-			request->send();
-			currentRequest = request;
-			onBytesSent(data->size());
-		}
-		else {
-			waitingForData = true;
-		}
-	}
-	catch (const BytestreamException&) {
-		finish(FileTransferError(FileTransferError::ReadError));
-	}
+    try {
+        boost::shared_ptr<ByteArray> data = bytestream->read(blockSize);
+        if (!data->empty()) {
+            waitingForData = false;
+            IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, *data), router);
+            sequenceNumber++;
+            request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
+            request->send();
+            currentRequest = request;
+            onBytesSent(data->size());
+        }
+        else {
+            waitingForData = true;
+        }
+    }
+    catch (const BytestreamException&) {
+        finish(FileTransferError(FileTransferError::ReadError));
+    }
 }
 
 void IBBSendSession::finish(boost::optional<FileTransferError> error) {
-	active = false;
-	onFinished(error);
+    active = false;
+    onFinished(error);
 }
 
 void IBBSendSession::handleDataAvailable() {
-	if (waitingForData) {
-		sendMoreData();
-	}
+    if (waitingForData) {
+        sendMoreData();
+    }
 }
 
 }

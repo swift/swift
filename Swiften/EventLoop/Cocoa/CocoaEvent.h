@@ -13,7 +13,7 @@
 #undef check
 
 namespace Swift {
-	class CocoaEventLoop;
+    class CocoaEventLoop;
 }
 
 // Using deprecated declaration of instance vars in interface, because this
@@ -22,7 +22,7 @@ namespace Swift {
 #pragma clang diagnostic ignored "-Wobjc-interface-ivars"
 
 @interface CocoaEvent : NSObject {
-	Swift::CocoaEventLoop* eventLoop;
+    Swift::CocoaEventLoop* eventLoop;
 }
 
 #pragma clang diagnostic pop

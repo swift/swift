@@ -12,10 +12,10 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API AuthFailure : public ToplevelElement {
-		public:
-			typedef boost::shared_ptr<AuthFailure> ref;
+    class SWIFTEN_API AuthFailure : public ToplevelElement {
+        public:
+            typedef boost::shared_ptr<AuthFailure> ref;
 
-			AuthFailure() {}
-	};
+            AuthFailure() {}
+    };
 }

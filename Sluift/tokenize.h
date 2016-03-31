@@ -10,7 +10,7 @@
 #include <vector>
 
 namespace Swift {
-	namespace Lua {
-		std::vector<std::string> tokenize(const std::string&);
-	}
+    namespace Lua {
+        std::vector<std::string> tokenize(const std::string&);
+    }
 }

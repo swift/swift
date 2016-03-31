@@ -12,19 +12,19 @@
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchFieldsPage.h>
 
 namespace Swift {
-	class QtUserSearchFieldsPage : public QWizardPage, public Ui::QtUserSearchFieldsPage {
-		Q_OBJECT
-		public:
-			QtUserSearchFieldsPage();
-			virtual bool isComplete() const;
+    class QtUserSearchFieldsPage : public QWizardPage, public Ui::QtUserSearchFieldsPage {
+        Q_OBJECT
+        public:
+            QtUserSearchFieldsPage();
+            virtual bool isComplete() const;
 
-			QtFormWidget* getFormWidget();
-			void setFormWidget(QtFormWidget *widget);
+            QtFormWidget* getFormWidget();
+            void setFormWidget(QtFormWidget *widget);
 
-		public slots:
-			void emitCompletenessCheck();
+        public slots:
+            void emitCompletenessCheck();
 
-		private:
-			QtFormWidget *formWidget_;
-	};
+        private:
+            QtFormWidget *formWidget_;
+    };
 }

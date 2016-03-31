@@ -14,16 +14,16 @@
 #include <Limber/Server/UserRegistry.h>
 
 namespace Swift {
-	
 
-	class SimpleUserRegistry : public UserRegistry {
-		public:
-			SimpleUserRegistry();
 
-			virtual bool isValidUserPassword(const JID& user, const SafeByteArray& password) const;
-			void addUser(const JID& user, const std::string& password);
+    class SimpleUserRegistry : public UserRegistry {
+        public:
+            SimpleUserRegistry();
 
-		private:
-			std::map<JID, SafeByteArray> users;
-	};
+            virtual bool isValidUserPassword(const JID& user, const SafeByteArray& password) const;
+            void addUser(const JID& user, const std::string& password);
+
+        private:
+            std::map<JID, SafeByteArray> users;
+    };
 }

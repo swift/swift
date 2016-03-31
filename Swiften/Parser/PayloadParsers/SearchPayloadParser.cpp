@@ -14,100 +14,100 @@
 namespace Swift {
 
 SearchPayloadParser::SearchPayloadParser() : level(TopLevel), formParser(NULL)  {
-	formParserFactory = new FormParserFactory();
+    formParserFactory = new FormParserFactory();
 }
 
 SearchPayloadParser::~SearchPayloadParser() {
-	delete formParserFactory;
+    delete formParserFactory;
 }
 
 void SearchPayloadParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level == TopLevel) {
-	}
-	else if (level == PayloadLevel) {
-		if (element == "x" && ns == "jabber:x:data") {
-			assert(!formParser);
-			formParser = boost::polymorphic_downcast<FormParser*>(formParserFactory->createPayloadParser());
-		}
-		else if (element == "item") {
-			assert(!currentItem);
-			currentItem.reset(SearchPayload::Item());
-			currentItem->jid = JID(attributes.getAttribute("jid"));
-		}
-		else {
-			currentText.clear();
-		}
-	}
-	else if (level == ItemLevel && currentItem) {
-		currentText.clear();
-	}
+    if (level == TopLevel) {
+    }
+    else if (level == PayloadLevel) {
+        if (element == "x" && ns == "jabber:x:data") {
+            assert(!formParser);
+            formParser = boost::polymorphic_downcast<FormParser*>(formParserFactory->createPayloadParser());
+        }
+        else if (element == "item") {
+            assert(!currentItem);
+            currentItem.reset(SearchPayload::Item());
+            currentItem->jid = JID(attributes.getAttribute("jid"));
+        }
+        else {
+            currentText.clear();
+        }
+    }
+    else if (level == ItemLevel && currentItem) {
+        currentText.clear();
+    }
 
-	if (formParser) {
-		formParser->handleStartElement(element, ns, attributes);
-	}
+    if (formParser) {
+        formParser->handleStartElement(element, ns, attributes);
+    }
 
-	++level;
+    ++level;
 }
 
 void SearchPayloadParser::handleEndElement(const std::string& element, const std::string& ns) {
-	--level;
+    --level;
 
-	if (formParser) {
-		formParser->handleEndElement(element, ns);
-	}
+    if (formParser) {
+        formParser->handleEndElement(element, ns);
+    }
 
-	if (level == TopLevel) {
-	}
-	else if (level == PayloadLevel) {
-		if (formParser) {
-			getPayloadInternal()->setForm(formParser->getPayloadInternal());
-			delete formParser;
-			formParser = NULL;
-		}
-		else if (element == "item") {
-			assert(currentItem);
-			getPayloadInternal()->addItem(*currentItem);
-			currentItem.reset();
-		}
-		else if (element == "instructions") {
-			getPayloadInternal()->setInstructions(currentText);
-		}
-		else if (element == "nick") {
-			getPayloadInternal()->setNick(currentText);
-		}
-		else if (element == "first") {
-			getPayloadInternal()->setFirst(currentText);
-		}
-		else if (element == "last") {
-			getPayloadInternal()->setLast(currentText);
-		}
-		else if (element == "email") {
-			getPayloadInternal()->setEMail(currentText);
-		}
-	}
-	else if (level == ItemLevel && currentItem) {
-		if (element == "nick") {
-			currentItem->nick = currentText;
-		}
-		else if (element == "first") {
-			currentItem->first = currentText;
-		}
-		else if (element == "last") {
-			currentItem->last = currentText;
-		}
-		else if (element == "email") {
-			currentItem->email = currentText;
-		}
-	}
+    if (level == TopLevel) {
+    }
+    else if (level == PayloadLevel) {
+        if (formParser) {
+            getPayloadInternal()->setForm(formParser->getPayloadInternal());
+            delete formParser;
+            formParser = NULL;
+        }
+        else if (element == "item") {
+            assert(currentItem);
+            getPayloadInternal()->addItem(*currentItem);
+            currentItem.reset();
+        }
+        else if (element == "instructions") {
+            getPayloadInternal()->setInstructions(currentText);
+        }
+        else if (element == "nick") {
+            getPayloadInternal()->setNick(currentText);
+        }
+        else if (element == "first") {
+            getPayloadInternal()->setFirst(currentText);
+        }
+        else if (element == "last") {
+            getPayloadInternal()->setLast(currentText);
+        }
+        else if (element == "email") {
+            getPayloadInternal()->setEMail(currentText);
+        }
+    }
+    else if (level == ItemLevel && currentItem) {
+        if (element == "nick") {
+            currentItem->nick = currentText;
+        }
+        else if (element == "first") {
+            currentItem->first = currentText;
+        }
+        else if (element == "last") {
+            currentItem->last = currentText;
+        }
+        else if (element == "email") {
+            currentItem->email = currentText;
+        }
+    }
 }
 
 void SearchPayloadParser::handleCharacterData(const std::string& data) {
-	if (formParser) {
-		formParser->handleCharacterData(data);
-	}
-	else {
-		currentText += data;
-	}
+    if (formParser) {
+        formParser->handleCharacterData(data);
+    }
+    else {
+        currentText += data;
+    }
 }
 
 }

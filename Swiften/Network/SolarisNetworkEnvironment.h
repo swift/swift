@@ -20,9 +20,9 @@
 
 namespace Swift {
 
-	class SolarisNetworkEnvironment : public NetworkEnvironment {
-		public:
-			std::vector<NetworkInterface> getNetworkInterfaces() const;
-	};
+    class SolarisNetworkEnvironment : public NetworkEnvironment {
+        public:
+            std::vector<NetworkInterface> getNetworkInterfaces() const;
+    };
 
 }

@@ -13,23 +13,23 @@
 using namespace Swift;
 
 class PathTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(PathTest);
-		CPPUNIT_TEST(testStringToPath);
-		CPPUNIT_TEST(testPathToString);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(PathTest);
+        CPPUNIT_TEST(testStringToPath);
+        CPPUNIT_TEST(testPathToString);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void testStringToPath() {
+    public:
+        void testStringToPath() {
 #ifdef SWIFTEN_PLATFORM_WINDOWS
-			CPPUNIT_ASSERT(std::wstring(L"tron\xe7on") == stringToPath("tron\xc3\xa7on").native());
+            CPPUNIT_ASSERT(std::wstring(L"tron\xe7on") == stringToPath("tron\xc3\xa7on").native());
 #else
-			CPPUNIT_ASSERT_EQUAL(std::string("tron\xc3\xa7on"), stringToPath("tron\xc3\xa7on").native());
+            CPPUNIT_ASSERT_EQUAL(std::string("tron\xc3\xa7on"), stringToPath("tron\xc3\xa7on").native());
 #endif
-		}
+        }
 
-		void testPathToString() {
-			CPPUNIT_ASSERT_EQUAL(std::string("tron\xc3\xa7on"), pathToString(stringToPath("tron\xc3\xa7on")));
-		}
+        void testPathToString() {
+            CPPUNIT_ASSERT_EQUAL(std::string("tron\xc3\xa7on"), pathToString(stringToPath("tron\xc3\xa7on")));
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PathTest);

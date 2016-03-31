@@ -14,11 +14,11 @@ StanzaChannelPresenceSender::StanzaChannelPresenceSender(StanzaChannel* channel)
 }
 
 void StanzaChannelPresenceSender::sendPresence(Presence::ref presence) {
-	channel->sendPresence(presence);
+    channel->sendPresence(presence);
 }
 
 bool StanzaChannelPresenceSender::isAvailable() const {
-	return channel->isAvailable();
+    return channel->isAvailable();
 }
 
 }

@@ -15,25 +15,25 @@
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
-	class AvahiQuerier;
+    class AvahiQuerier;
 
-	class AvahiResolveServiceQuery : public DNSSDResolveServiceQuery, public AvahiQuery {
-		public:	
-			AvahiResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), service(service), resolver(NULL) {
-			}
+    class AvahiResolveServiceQuery : public DNSSDResolveServiceQuery, public AvahiQuery {
+        public:
+            AvahiResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), service(service), resolver(NULL) {
+            }
 
-			void start();
-			void stop();
+            void start();
+            void stop();
 
-		private:
-			static void handleServiceResolvedStatic(AvahiServiceResolver* resolver, AvahiIfIndex interfaceIndex, AvahiProtocol protocol, AvahiResolverEvent event, const char *name, const char *type, const char *domain, const char *host_name, const AvahiAddress *address, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags, void* context) {
-				static_cast<AvahiResolveServiceQuery*>(context)->handleServiceResolved(resolver, interfaceIndex, protocol, event, name, type, domain, host_name, address, port, txt, flags);
-			}
+        private:
+            static void handleServiceResolvedStatic(AvahiServiceResolver* resolver, AvahiIfIndex interfaceIndex, AvahiProtocol protocol, AvahiResolverEvent event, const char *name, const char *type, const char *domain, const char *host_name, const AvahiAddress *address, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags flags, void* context) {
+                static_cast<AvahiResolveServiceQuery*>(context)->handleServiceResolved(resolver, interfaceIndex, protocol, event, name, type, domain, host_name, address, port, txt, flags);
+            }
 
-			void handleServiceResolved(AvahiServiceResolver* resolver, AvahiIfIndex, AvahiProtocol, AvahiResolverEvent event, const char *name, const char * type, const char* domain, const char * /*host_name*/, const AvahiAddress *address, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags);
+            void handleServiceResolved(AvahiServiceResolver* resolver, AvahiIfIndex, AvahiProtocol, AvahiResolverEvent event, const char *name, const char * type, const char* domain, const char * /*host_name*/, const AvahiAddress *address, uint16_t port, AvahiStringList *txt, AvahiLookupResultFlags);
 
-		private:
-			DNSSDServiceID service;
-			AvahiServiceResolver* resolver;
-	};
+        private:
+            DNSSDServiceID service;
+            AvahiServiceResolver* resolver;
+    };
 }

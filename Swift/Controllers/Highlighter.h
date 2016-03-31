@@ -19,27 +19,27 @@
 
 namespace Swift {
 
-	class HighlightManager;
+    class HighlightManager;
 
-	class Highlighter {
-		public:
-			Highlighter(HighlightManager* manager);
+    class Highlighter {
+        public:
+            Highlighter(HighlightManager* manager);
 
-			enum Mode { ChatMode, MUCMode };
-			void setMode(Mode mode);
+            enum Mode { ChatMode, MUCMode };
+            void setMode(Mode mode);
 
-			void setNick(const std::string& nick) { nick_ = nick; }
-			std::string getNick() const { return nick_; }
+            void setNick(const std::string& nick) { nick_ = nick; }
+            std::string getNick() const { return nick_; }
 
-			HighlightAction findFirstFullMessageMatchAction(const std::string& body, const std::string& sender) const;
+            HighlightAction findFirstFullMessageMatchAction(const std::string& body, const std::string& sender) const;
 
-			void handleHighlightAction(const HighlightAction& action);
+            void handleHighlightAction(const HighlightAction& action);
 
-		private:
-			HighlightManager* manager_;
-			Mode mode_;
-			HighlightRule::MessageType messageType_;
-			std::string nick_;
-	};
+        private:
+            HighlightManager* manager_;
+            Mode mode_;
+            HighlightRule::MessageType messageType_;
+            std::string nick_;
+    };
 
 }

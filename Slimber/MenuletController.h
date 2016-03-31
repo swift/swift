@@ -14,26 +14,26 @@
 class Menulet;
 
 class MenuletController {
-	public:
-		enum Status {
-			Online,
-			Offline
-		};
+    public:
+        enum Status {
+            Online,
+            Offline
+        };
 
-		MenuletController(Menulet*);
-		virtual ~MenuletController();
+        MenuletController(Menulet*);
+        virtual ~MenuletController();
 
-		void setXMPPStatus(const std::string& message, Status status);
-		void setUserNames(const std::vector<std::string>&);
-	
-		boost::signal<void ()> onRestartRequested;
+        void setXMPPStatus(const std::string& message, Status status);
+        void setUserNames(const std::vector<std::string>&);
 
-	private:
-		void update();
-	
-	private:
-		Menulet* menulet;
-		Status xmppStatus;
-		std::string xmppStatusMessage;
-		std::vector<std::string> linkLocalUsers;
+        boost::signal<void ()> onRestartRequested;
+
+    private:
+        void update();
+
+    private:
+        Menulet* menulet;
+        Status xmppStatus;
+        std::string xmppStatusMessage;
+        std::vector<std::string> linkLocalUsers;
 };

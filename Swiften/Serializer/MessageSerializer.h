@@ -13,15 +13,15 @@
 #include <Swiften/Serializer/GenericStanzaSerializer.h>
 
 namespace Swift {
-	class XMLElement;
+    class XMLElement;
 
-	class SWIFTEN_API MessageSerializer : public GenericStanzaSerializer<Message> {
-		public:
-			MessageSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explitNS = boost::optional<std::string>());
+    class SWIFTEN_API MessageSerializer : public GenericStanzaSerializer<Message> {
+        public:
+            MessageSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explitNS = boost::optional<std::string>());
 
-		private:
-			void setStanzaSpecificAttributesGeneric(
-					boost::shared_ptr<Message> message, 
-					XMLElement& element) const;
-	};
+        private:
+            void setStanzaSpecificAttributesGeneric(
+                    boost::shared_ptr<Message> message,
+                    XMLElement& element) const;
+    };
 }

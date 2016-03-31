@@ -14,16 +14,16 @@ LastParser::LastParser() : level_(0) {
 }
 
 void LastParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
-	if (level_ == 0) {
-		int seconds = 0;
-		try {
-			seconds = boost::lexical_cast<int>(attributes.getAttribute("seconds"));
-		}
-		catch (boost::bad_lexical_cast&) {
-		}
-		getPayloadInternal()->setSeconds(seconds);
-	}
-	++level_;
+    if (level_ == 0) {
+        int seconds = 0;
+        try {
+            seconds = boost::lexical_cast<int>(attributes.getAttribute("seconds"));
+        }
+        catch (boost::bad_lexical_cast&) {
+        }
+        getPayloadInternal()->setSeconds(seconds);
+    }
+    ++level_;
 
 }
 

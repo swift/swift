@@ -20,21 +20,21 @@ class QWidget;
 
 namespace Swift {
 
-	class QtEmoticonsGrid : public QGridLayout {
-		Q_OBJECT
-		public:
-			explicit QtEmoticonsGrid(const std::map<std::string, std::string>& emoticons, QWidget* parent = 0);
-			virtual ~QtEmoticonsGrid();
+    class QtEmoticonsGrid : public QGridLayout {
+        Q_OBJECT
+        public:
+            explicit QtEmoticonsGrid(const std::map<std::string, std::string>& emoticons, QWidget* parent = 0);
+            virtual ~QtEmoticonsGrid();
 
-		signals:
-			void emoticonClicked(QString emoticonAsText);
+        signals:
+            void emoticonClicked(QString emoticonAsText);
 
-		public slots:
-			void emoticonClickedSlot(QString emoticonAsText);
+        public slots:
+            void emoticonClickedSlot(QString emoticonAsText);
 
-		private:
-			void makeUniqueEmoticonsMap(const std::map<std::string, std::string>& emoticons);
+        private:
+            void makeUniqueEmoticonsMap(const std::map<std::string, std::string>& emoticons);
 
-			std::map<std::string, std::string> uniqueEmoticons_;
-	};
+            std::map<std::string, std::string> uniqueEmoticons_;
+    };
 }

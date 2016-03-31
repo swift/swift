@@ -15,18 +15,18 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class RequestJoinMUCUIEvent : public UIEvent {
-		public:
-			typedef boost::shared_ptr<RequestJoinMUCUIEvent> ref;
+    class RequestJoinMUCUIEvent : public UIEvent {
+        public:
+            typedef boost::shared_ptr<RequestJoinMUCUIEvent> ref;
 
-			RequestJoinMUCUIEvent(const JID& room = JID()) : room(room) {
-			}
+            RequestJoinMUCUIEvent(const JID& room = JID()) : room(room) {
+            }
 
-			const JID& getRoom() const {
-				return room;
-			}
+            const JID& getRoom() const {
+                return room;
+            }
 
-		private:
-			JID room;
-	};
+        private:
+            JID room;
+    };
 }

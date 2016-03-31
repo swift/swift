@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API SoftwareVersionSerializer : public GenericPayloadSerializer<SoftwareVersion> {
-		public:
-			SoftwareVersionSerializer();
+    class SWIFTEN_API SoftwareVersionSerializer : public GenericPayloadSerializer<SoftwareVersion> {
+        public:
+            SoftwareVersionSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<SoftwareVersion> version)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<SoftwareVersion> version)  const;
+    };
 }

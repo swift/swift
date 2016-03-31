@@ -13,25 +13,25 @@
 #include <Swiften/LinkLocal/DNSSD/DNSSDBrowseQuery.h>
 
 namespace Swift {
-	class AvahiQuerier;
+    class AvahiQuerier;
 
-	class AvahiBrowseQuery : public DNSSDBrowseQuery, public AvahiQuery {
-		public:	
-			AvahiBrowseQuery(boost::shared_ptr<AvahiQuerier> q, EventLoop* eventLoop) : AvahiQuery(q, eventLoop), browser(NULL) {
-			}
+    class AvahiBrowseQuery : public DNSSDBrowseQuery, public AvahiQuery {
+        public:
+            AvahiBrowseQuery(boost::shared_ptr<AvahiQuerier> q, EventLoop* eventLoop) : AvahiQuery(q, eventLoop), browser(NULL) {
+            }
 
-			void startBrowsing();
-			void stopBrowsing();
+            void startBrowsing();
+            void stopBrowsing();
 
-		private:
-			static void handleServiceDiscoveredStatic(AvahiServiceBrowser *b, AvahiIfIndex interfaceIndex, AvahiProtocol protocol, AvahiBrowserEvent event, const char *name, const char *type, const char *domain, AvahiLookupResultFlags flags, void* context) {
-				static_cast<AvahiBrowseQuery*>(context)->handleServiceDiscovered(b, interfaceIndex, protocol, event, name, type, domain, flags);
-			}
+        private:
+            static void handleServiceDiscoveredStatic(AvahiServiceBrowser *b, AvahiIfIndex interfaceIndex, AvahiProtocol protocol, AvahiBrowserEvent event, const char *name, const char *type, const char *domain, AvahiLookupResultFlags flags, void* context) {
+                static_cast<AvahiBrowseQuery*>(context)->handleServiceDiscovered(b, interfaceIndex, protocol, event, name, type, domain, flags);
+            }
 
-			void handleServiceDiscovered(AvahiServiceBrowser *, AvahiIfIndex interfaceIndex, AvahiProtocol, AvahiBrowserEvent event, const char *name, const char *type, const char *domain, AvahiLookupResultFlags);
+            void handleServiceDiscovered(AvahiServiceBrowser *, AvahiIfIndex interfaceIndex, AvahiProtocol, AvahiBrowserEvent event, const char *name, const char *type, const char *domain, AvahiLookupResultFlags);
 
-		private:
-			AvahiServiceBrowser* browser;
-			
-	};
+        private:
+            AvahiServiceBrowser* browser;
+
+    };
 }

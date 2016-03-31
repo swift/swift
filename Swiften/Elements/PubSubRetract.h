@@ -18,45 +18,45 @@
 #include <Swiften/Elements/PubSubPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubRetract : public PubSubPayload {
-		public:
-			
-			PubSubRetract();
-			
-			virtual ~PubSubRetract();
+    class SWIFTEN_API PubSubRetract : public PubSubPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubRetract();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubRetract();
 
-			const std::vector< boost::shared_ptr<PubSubItem> >& getItems() const {
-				return items;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setItems(const std::vector< boost::shared_ptr<PubSubItem> >& value) {
-				this->items = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void addItem(boost::shared_ptr<PubSubItem> value) {
-				this->items.push_back(value);
-			}
+            const std::vector< boost::shared_ptr<PubSubItem> >& getItems() const {
+                return items;
+            }
 
-			bool isNotify() const {
-				return notify;
-			}
+            void setItems(const std::vector< boost::shared_ptr<PubSubItem> >& value) {
+                this->items = value ;
+            }
 
-			void setNotify(bool value) {
-				this->notify = value ;
-			}
+            void addItem(boost::shared_ptr<PubSubItem> value) {
+                this->items.push_back(value);
+            }
+
+            bool isNotify() const {
+                return notify;
+            }
+
+            void setNotify(bool value) {
+                this->notify = value ;
+            }
 
 
-		private:
-			std::string node;
-			std::vector< boost::shared_ptr<PubSubItem> > items;
-			bool notify;
-	};
+        private:
+            std::string node;
+            std::vector< boost::shared_ptr<PubSubItem> > items;
+            bool notify;
+    };
 }

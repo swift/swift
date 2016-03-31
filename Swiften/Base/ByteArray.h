@@ -14,35 +14,35 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	typedef std::vector<unsigned char> ByteArray;
+    typedef std::vector<unsigned char> ByteArray;
 
-	SWIFTEN_API ByteArray createByteArray(const std::string& s);
-	SWIFTEN_API ByteArray createByteArray(const char* c);
+    SWIFTEN_API ByteArray createByteArray(const std::string& s);
+    SWIFTEN_API ByteArray createByteArray(const char* c);
 
-	inline ByteArray createByteArray(const unsigned char* c, size_t n) {
-		return ByteArray(c, c  + n);
-	}
+    inline ByteArray createByteArray(const unsigned char* c, size_t n) {
+        return ByteArray(c, c  + n);
+    }
 
-	inline ByteArray createByteArray(const char* c, size_t n) {
-		return ByteArray(c, c  + n);
-	}
+    inline ByteArray createByteArray(const char* c, size_t n) {
+        return ByteArray(c, c  + n);
+    }
 
-	inline ByteArray createByteArray(char c) {
-		return std::vector<unsigned char>(1, static_cast<unsigned char>(c));
-	}
+    inline ByteArray createByteArray(char c) {
+        return std::vector<unsigned char>(1, static_cast<unsigned char>(c));
+    }
 
-	template<typename T, typename A>
-	static const T* vecptr(const std::vector<T, A>& v) {
-		return v.empty() ? NULL : &v[0];
-	}
+    template<typename T, typename A>
+    static const T* vecptr(const std::vector<T, A>& v) {
+        return v.empty() ? NULL : &v[0];
+    }
 
-	template<typename T, typename A>
-	static T* vecptr(std::vector<T, A>& v) {
-		return v.empty() ? NULL : &v[0];
-	}
-			
-	SWIFTEN_API std::string byteArrayToString(const ByteArray& b);
+    template<typename T, typename A>
+    static T* vecptr(std::vector<T, A>& v) {
+        return v.empty() ? NULL : &v[0];
+    }
 
-	SWIFTEN_API void readByteArrayFromFile(ByteArray&, const boost::filesystem::path& file);
+    SWIFTEN_API std::string byteArrayToString(const ByteArray& b);
+
+    SWIFTEN_API void readByteArrayFromFile(ByteArray&, const boost::filesystem::path& file);
 }
 

@@ -13,23 +13,23 @@
 #include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
-	class XMLParserFactory;
+    class XMLParserFactory;
 
-	class SWIFTEN_API BOSHBodyExtractor {
-			friend class BOSHBodyParserClient;
-		public:
-			struct BOSHBody {
-				AttributeMap attributes;
-				std::string content;
-			};
+    class SWIFTEN_API BOSHBodyExtractor {
+            friend class BOSHBodyParserClient;
+        public:
+            struct BOSHBody {
+                AttributeMap attributes;
+                std::string content;
+            };
 
-			BOSHBodyExtractor(XMLParserFactory* parserFactory, const ByteArray& data);
-			
-			const boost::optional<BOSHBody>& getBody() const {
-				return body;
-			}
+            BOSHBodyExtractor(XMLParserFactory* parserFactory, const ByteArray& data);
 
-		private:
-			boost::optional<BOSHBody> body;
-	};
+            const boost::optional<BOSHBody>& getBody() const {
+                return body;
+            }
+
+        private:
+            boost::optional<BOSHBody> body;
+    };
 }

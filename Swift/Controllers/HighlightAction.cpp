@@ -16,47 +16,47 @@ namespace Swift {
 
 void HighlightAction::setHighlightWholeMessage(bool highlightText)
 {
-	highlightWholeMessage_ = highlightText;
-	if (!highlightWholeMessage_) {
-		textColor_.clear();
-		textBackground_.clear();
-	}
+    highlightWholeMessage_ = highlightText;
+    if (!highlightWholeMessage_) {
+        textColor_.clear();
+        textBackground_.clear();
+    }
 }
 
 void HighlightAction::setPlaySound(bool playSound)
 {
-	playSound_ = playSound;
-	if (!playSound_) {
-		soundFile_.clear();
-	}
+    playSound_ = playSound;
+    if (!playSound_) {
+        soundFile_.clear();
+    }
 }
 
 bool operator ==(HighlightAction const& a, HighlightAction const& b) {
-	if (a.highlightWholeMessage() != b.highlightWholeMessage()) {
-		return false;
-	}
+    if (a.highlightWholeMessage() != b.highlightWholeMessage()) {
+        return false;
+    }
 
-	if (a.getTextColor() != b.getTextColor()) {
-		return false;
-	}
+    if (a.getTextColor() != b.getTextColor()) {
+        return false;
+    }
 
-	if (a.getTextBackground() != b.getTextBackground()) {
-		return false;
-	}
+    if (a.getTextBackground() != b.getTextBackground()) {
+        return false;
+    }
 
-	if (a.playSound() != b.playSound()) {
-		return false;
-	}
+    if (a.playSound() != b.playSound()) {
+        return false;
+    }
 
-	if (a.getSoundFile() != b.getSoundFile()) {
-		return false;
-	}
+    if (a.getSoundFile() != b.getSoundFile()) {
+        return false;
+    }
 
-	return true;
+    return true;
 }
 
 bool operator !=(HighlightAction const& a, HighlightAction const& b) {
-	return !(a == b);
+    return !(a == b);
 }
 
 }

@@ -24,20 +24,20 @@ namespace Swift {
 
 class QtClosableLineEdit : public QLineEdit
 {
-	Q_OBJECT
-	public:
-		QtClosableLineEdit(QWidget *parent = 0);
+    Q_OBJECT
+    public:
+        QtClosableLineEdit(QWidget *parent = 0);
 
-	protected:
-		void resizeEvent(QResizeEvent *);
+    protected:
+        void resizeEvent(QResizeEvent *);
 
-	private slots:
-		void updateCloseButton(const QString &text);
-		void handleCloseButtonClicked();
+    private slots:
+        void updateCloseButton(const QString &text);
+        void handleCloseButtonClicked();
 
-	private:
-		static const int clearButtonPadding;
-		QToolButton *clearButton;
+    private:
+        static const int clearButtonPadding;
+        QToolButton *clearButton;
 };
 
 }

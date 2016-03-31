@@ -13,19 +13,19 @@
 #include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
-	class SWIFTEN_API StanzaAckResponder {
-		public:
-			StanzaAckResponder();
+    class SWIFTEN_API StanzaAckResponder {
+        public:
+            StanzaAckResponder();
 
-			void handleStanzaReceived();
-			void handleAckRequestReceived();
+            void handleStanzaReceived();
+            void handleAckRequestReceived();
 
-		public:
-			boost::signal<void (unsigned int /* handledStanzaCount */)> onAck;
+        public:
+            boost::signal<void (unsigned int /* handledStanzaCount */)> onAck;
 
-		private:
-			friend class StanzaAckResponderTest;
-			unsigned int handledStanzasCount;
-	};
+        private:
+            friend class StanzaAckResponderTest;
+            unsigned int handledStanzasCount;
+    };
 
 }

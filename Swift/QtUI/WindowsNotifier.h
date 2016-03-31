@@ -16,23 +16,23 @@
 class QSystemTrayIcon;
 
 namespace Swift {
-	class WindowsNotifier : public QObject, public Notifier {
-			Q_OBJECT
+    class WindowsNotifier : public QObject, public Notifier {
+            Q_OBJECT
 
-		public:
-			WindowsNotifier(const std::string& name, const boost::filesystem::path& icon, QSystemTrayIcon* tray);
-			~WindowsNotifier();
+        public:
+            WindowsNotifier(const std::string& name, const boost::filesystem::path& icon, QSystemTrayIcon* tray);
+            ~WindowsNotifier();
 
-			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
-			virtual void purgeCallbacks();
+            virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+            virtual void purgeCallbacks();
 
-		private slots:
-			void handleMessageClicked();
+        private slots:
+            void handleMessageClicked();
 
-		private:
-			QSystemTrayIcon* tray;
-			Win32NotifierWindow* notifierWindow;
-			SnarlNotifier* snarlNotifier;
-			boost::function<void()> lastCallback;
-	};
+        private:
+            QSystemTrayIcon* tray;
+            Win32NotifierWindow* notifierWindow;
+            SnarlNotifier* snarlNotifier;
+            boost::function<void()> lastCallback;
+    };
 }

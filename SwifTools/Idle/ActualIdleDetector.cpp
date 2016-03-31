@@ -16,20 +16,20 @@
 namespace Swift {
 
 ActualIdleDetector::ActualIdleDetector(IdleQuerier* querier, TimerFactory* timerFactory, int refreshRateMilliseconds) : querier(querier) {
-	timer = timerFactory->createTimer(refreshRateMilliseconds);
-	timer->onTick.connect(boost::bind(&ActualIdleDetector::handleTimerTick, this));
-	timer->start();
+    timer = timerFactory->createTimer(refreshRateMilliseconds);
+    timer->onTick.connect(boost::bind(&ActualIdleDetector::handleTimerTick, this));
+    timer->start();
 }
 
 ActualIdleDetector::~ActualIdleDetector() {
-	timer->onTick.disconnect(boost::bind(&ActualIdleDetector::handleTimerTick, this));
-	timer->stop();
+    timer->onTick.disconnect(boost::bind(&ActualIdleDetector::handleTimerTick, this));
+    timer->stop();
 }
 
 void ActualIdleDetector::handleTimerTick() {
-	timer->stop();
-	setIdle(querier->getIdleTimeSeconds() >= getIdleTimeSeconds());
-	timer->start();
+    timer->stop();
+    setIdle(querier->getIdleTimeSeconds() >= getIdleTimeSeconds());
+    timer->start();
 }
 
 }

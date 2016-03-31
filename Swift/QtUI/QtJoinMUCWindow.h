@@ -16,60 +16,60 @@
 #include <Swift/QtUI/ui_QtJoinMUCWindow.h>
 
 namespace Swift {
-	class UIEventStream;
-	class NickValidator : public QValidator {
-		Q_OBJECT
-		public:
-			NickValidator(QObject* parent) : QValidator(parent) {
-			}
+    class UIEventStream;
+    class NickValidator : public QValidator {
+        Q_OBJECT
+        public:
+            NickValidator(QObject* parent) : QValidator(parent) {
+            }
 
-			virtual QValidator::State validate(QString& input, int& /*pos*/) const {
-				if (input.isEmpty()) {
-					return QValidator::Intermediate;
-				}
-				JID test("alice", "wonderland.lit", Q2PSTRING(input));
+            virtual QValidator::State validate(QString& input, int& /*pos*/) const {
+                if (input.isEmpty()) {
+                    return QValidator::Intermediate;
+                }
+                JID test("alice", "wonderland.lit", Q2PSTRING(input));
 
-				return test.isValid() ? QValidator::Acceptable : QValidator::Invalid;
-			}
-	};
+                return test.isValid() ? QValidator::Acceptable : QValidator::Invalid;
+            }
+    };
 
-	class RoomJIDValidator : public QValidator {
-		Q_OBJECT
-		public:
-			RoomJIDValidator(QObject* parent) : QValidator(parent) {
-			}
+    class RoomJIDValidator : public QValidator {
+        Q_OBJECT
+        public:
+            RoomJIDValidator(QObject* parent) : QValidator(parent) {
+            }
 
-			virtual QValidator::State validate(QString& input, int& /*pos*/) const {
-				if (input.isEmpty()) {
-					return QValidator::Intermediate;
-				}
-				JID roomJID(Q2PSTRING(input));
+            virtual QValidator::State validate(QString& input, int& /*pos*/) const {
+                if (input.isEmpty()) {
+                    return QValidator::Intermediate;
+                }
+                JID roomJID(Q2PSTRING(input));
 
-				if (roomJID.getNode().empty() || roomJID.getDomain().empty()) {
-					return QValidator::Intermediate;
-				}
+                if (roomJID.getNode().empty() || roomJID.getDomain().empty()) {
+                    return QValidator::Intermediate;
+                }
 
-				return (roomJID.getResource().empty() && !roomJID.getNode().empty() && !roomJID.getDomain().empty() &&  roomJID.isValid()) ? QValidator::Acceptable : QValidator::Invalid;
-			}
-	};
+                return (roomJID.getResource().empty() && !roomJID.getNode().empty() && !roomJID.getDomain().empty() &&  roomJID.isValid()) ? QValidator::Acceptable : QValidator::Invalid;
+            }
+    };
 
-	class QtJoinMUCWindow : public QWidget, public JoinMUCWindow {
-			Q_OBJECT
-		public:
-			QtJoinMUCWindow(UIEventStream* uiEventStream);
+    class QtJoinMUCWindow : public QWidget, public JoinMUCWindow {
+            Q_OBJECT
+        public:
+            QtJoinMUCWindow(UIEventStream* uiEventStream);
 
-			virtual void setNick(const std::string& nick);
-			virtual void setMUC(const std::string& nick);
+            virtual void setNick(const std::string& nick);
+            virtual void setMUC(const std::string& nick);
 
-			virtual void show();
+            virtual void show();
 
-		private slots:
-			void handleJoin();
-			void handleSearch();
+        private slots:
+            void handleJoin();
+            void handleSearch();
 
-		private:
-			Ui::QtJoinMUCWindow ui;
-			std::string lastSetNick;
-			UIEventStream* uiEventStream;
-	};
+        private:
+            Ui::QtJoinMUCWindow ui;
+            std::string lastSetNick;
+            UIEventStream* uiEventStream;
+    };
 }

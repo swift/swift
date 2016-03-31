@@ -16,25 +16,25 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class ResultSetParser;
-	class FormParser;
+    class ResultSetParser;
+    class FormParser;
 
-	class SWIFTEN_API MAMQueryParser : public GenericPayloadParser<MAMQuery> {
-		public:
-			MAMQueryParser();
+    class SWIFTEN_API MAMQueryParser : public GenericPayloadParser<MAMQuery> {
+        public:
+            MAMQueryParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
-			virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;
-			virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE;
+            virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
+            virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;
+            virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE;
 
-			enum Level {
-				TopLevel = 0, 
-				PayloadLevel = 1
-			};
+            enum Level {
+                TopLevel = 0,
+                PayloadLevel = 1
+            };
 
-		private:
-			boost::shared_ptr<FormParser> formParser_;
-			boost::shared_ptr<ResultSetParser> resultSetParser_;
-			int level_;
-	};
+        private:
+            boost::shared_ptr<FormParser> formParser_;
+            boost::shared_ptr<ResultSetParser> resultSetParser_;
+            int level_;
+    };
 }

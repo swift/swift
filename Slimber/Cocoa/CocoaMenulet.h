@@ -13,21 +13,21 @@
 #include <SwifTools/Cocoa/CocoaAction.h>
 
 class CocoaMenulet : public Menulet {
-	public:
-		CocoaMenulet();
-		virtual ~CocoaMenulet();
-	
-	private:
-		virtual void clear();
-		virtual void addItem(const std::string& name, const std::string& icon);
-		virtual void addSeparator();
-		void setIcon(const std::string& icon);
-		virtual void addAboutItem();
-		virtual void addRestartItem();
-		virtual void addExitItem();
-	
-	private:
-		NSStatusItem* statusItem;
-		NSMenu* menu;
-		CocoaAction* restartAction;
+    public:
+        CocoaMenulet();
+        virtual ~CocoaMenulet();
+
+    private:
+        virtual void clear();
+        virtual void addItem(const std::string& name, const std::string& icon);
+        virtual void addSeparator();
+        void setIcon(const std::string& icon);
+        virtual void addAboutItem();
+        virtual void addRestartItem();
+        virtual void addExitItem();
+
+    private:
+        NSStatusItem* statusItem;
+        NSMenu* menu;
+        CocoaAction* restartAction;
 };

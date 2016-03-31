@@ -17,10 +17,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API DeliveryReceiptSerializer : public GenericPayloadSerializer<DeliveryReceipt> {
-		public:
-			DeliveryReceiptSerializer();
+    class SWIFTEN_API DeliveryReceiptSerializer : public GenericPayloadSerializer<DeliveryReceipt> {
+        public:
+            DeliveryReceiptSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<DeliveryReceipt> receipt) const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<DeliveryReceipt> receipt) const;
+    };
 }

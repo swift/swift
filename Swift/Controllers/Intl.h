@@ -8,4 +8,4 @@
 
 #include <Swift/Controllers/Translator.h>
 #define QT_TRANSLATE_NOOP(context, text) \
-	Swift::Translator::getInstance()->translate(text, context)
+    Swift::Translator::getInstance()->translate(text, context)

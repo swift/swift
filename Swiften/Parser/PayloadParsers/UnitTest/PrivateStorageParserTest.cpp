@@ -15,81 +15,81 @@
 using namespace Swift;
 
 class PrivateStorageParserTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(PrivateStorageParserTest);
-		CPPUNIT_TEST(testParse);
-		CPPUNIT_TEST(testParse_NoPayload);
-		CPPUNIT_TEST(testParse_MultiplePayloads);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(PrivateStorageParserTest);
+        CPPUNIT_TEST(testParse);
+        CPPUNIT_TEST(testParse_NoPayload);
+        CPPUNIT_TEST(testParse_MultiplePayloads);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		PrivateStorageParserTest() {}
+    public:
+        PrivateStorageParserTest() {}
 
-		void testParse() {
-			PayloadsParserTester parser;
+        void testParse() {
+            PayloadsParserTester parser;
 
-			CPPUNIT_ASSERT(parser.parse(
-				"<query xmlns='jabber:iq:private'>"
-					"<storage xmlns='storage:bookmarks'>"
-						"<conference name='Swift' jid='swift@rooms.swift.im'>"
-							"<nick>Alice</nick>"
-						"</conference>"
-					"</storage>"
-				"</query>"));
+            CPPUNIT_ASSERT(parser.parse(
+                "<query xmlns='jabber:iq:private'>"
+                    "<storage xmlns='storage:bookmarks'>"
+                        "<conference name='Swift' jid='swift@rooms.swift.im'>"
+                            "<nick>Alice</nick>"
+                        "</conference>"
+                    "</storage>"
+                "</query>"));
 
-			boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
-			CPPUNIT_ASSERT(payload);
-			boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
-			CPPUNIT_ASSERT(storage);
-			CPPUNIT_ASSERT_EQUAL(std::string("Alice"), storage->getRooms()[0].nick);
-			CPPUNIT_ASSERT_EQUAL(JID("swift@rooms.swift.im"), storage->getRooms()[0].jid);
-		}
+            boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
+            CPPUNIT_ASSERT(payload);
+            boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
+            CPPUNIT_ASSERT(storage);
+            CPPUNIT_ASSERT_EQUAL(std::string("Alice"), storage->getRooms()[0].nick);
+            CPPUNIT_ASSERT_EQUAL(JID("swift@rooms.swift.im"), storage->getRooms()[0].jid);
+        }
 
-		void testParse_NoPayload() {
-			PayloadsParserTester parser;
+        void testParse_NoPayload() {
+            PayloadsParserTester parser;
 
-			CPPUNIT_ASSERT(parser.parse("<query xmlns='jabber:iq:private'/>"));
+            CPPUNIT_ASSERT(parser.parse("<query xmlns='jabber:iq:private'/>"));
 
-			boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
-			CPPUNIT_ASSERT(payload);
-			CPPUNIT_ASSERT(!payload->getPayload());
-		}
+            boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
+            CPPUNIT_ASSERT(payload);
+            CPPUNIT_ASSERT(!payload->getPayload());
+        }
 
-		void testParse_MultiplePayloads() {
-			PayloadsParserTester parser;
+        void testParse_MultiplePayloads() {
+            PayloadsParserTester parser;
 
-			CPPUNIT_ASSERT(parser.parse(
-				"<query xmlns='jabber:iq:private'>"
-					"<storage xmlns='storage:bookmarks'>"
-						"<conference name='Swift' jid='swift@rooms.swift.im'>"
-							"<nick>Alice</nick>"
-						"</conference>"
-					"</storage>"
-					"<storage xmlns='storage:bookmarks'>"
-						"<conference name='Swift' jid='swift@rooms.swift.im'>"
-							"<nick>Rabbit</nick>"
-						"</conference>"
-					"</storage>"
-				"</query>"));
+            CPPUNIT_ASSERT(parser.parse(
+                "<query xmlns='jabber:iq:private'>"
+                    "<storage xmlns='storage:bookmarks'>"
+                        "<conference name='Swift' jid='swift@rooms.swift.im'>"
+                            "<nick>Alice</nick>"
+                        "</conference>"
+                    "</storage>"
+                    "<storage xmlns='storage:bookmarks'>"
+                        "<conference name='Swift' jid='swift@rooms.swift.im'>"
+                            "<nick>Rabbit</nick>"
+                        "</conference>"
+                    "</storage>"
+                "</query>"));
 
-			boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
-			CPPUNIT_ASSERT(payload);
-			boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
-			CPPUNIT_ASSERT(storage);
-			CPPUNIT_ASSERT_EQUAL(std::string("Rabbit"), storage->getRooms()[0].nick);
-		}
+            boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
+            CPPUNIT_ASSERT(payload);
+            boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
+            CPPUNIT_ASSERT(storage);
+            CPPUNIT_ASSERT_EQUAL(std::string("Rabbit"), storage->getRooms()[0].nick);
+        }
 
-		void testParse_UnsupportedPayload() {
-			PayloadParserFactoryCollection factories;
-			PrivateStorageParser testling(&factories);
-			PayloadParserTester parser(&testling);
+        void testParse_UnsupportedPayload() {
+            PayloadParserFactoryCollection factories;
+            PrivateStorageParser testling(&factories);
+            PayloadParserTester parser(&testling);
 
-			CPPUNIT_ASSERT(parser.parse(
-				"<query xmlns='jabber:iq:private'>"
-					"<foo>Bar</foo>"
-				"</query>"));
+            CPPUNIT_ASSERT(parser.parse(
+                "<query xmlns='jabber:iq:private'>"
+                    "<foo>Bar</foo>"
+                "</query>"));
 
-			CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<PrivateStorage>(testling.getPayload())->getPayload());
-		}
+            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<PrivateStorage>(testling.getPayload())->getPayload());
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PrivateStorageParserTest);

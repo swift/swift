@@ -12,11 +12,11 @@
 #include <Swiften/Elements/RosterPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API RosterStorage {
-		public:
-			virtual ~RosterStorage();
+    class SWIFTEN_API RosterStorage {
+        public:
+            virtual ~RosterStorage();
 
-			virtual boost::shared_ptr<RosterPayload> getRoster() const = 0;
-			virtual void setRoster(boost::shared_ptr<RosterPayload>) = 0;
-	};
+            virtual boost::shared_ptr<RosterPayload> getRoster() const = 0;
+            virtual void setRoster(boost::shared_ptr<RosterPayload>) = 0;
+    };
 }

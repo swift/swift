@@ -14,33 +14,33 @@
 namespace Swift {
 
 class QtTagComboBox : public QComboBox {
-	Q_OBJECT
-	Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
+    Q_OBJECT
+    Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
-	public:
-		explicit QtTagComboBox(QWidget* parent = 0);
-		~QtTagComboBox();
+    public:
+        explicit QtTagComboBox(QWidget* parent = 0);
+        ~QtTagComboBox();
 
-		bool isEditable() const;
-		void setEditable(const bool);
+        bool isEditable() const;
+        void setEditable(const bool);
 
-		void addTag(const QString& id, const QString& label);
-		void setTag(const QString& id, bool value);
-		bool isTagSet(const QString& id) const;
+        void addTag(const QString& id, const QString& label);
+        void setTag(const QString& id, bool value);
+        bool isTagSet(const QString& id) const;
 
-		virtual void showPopup();
-		virtual void hidePopup();
+        virtual void showPopup();
+        virtual void hidePopup();
 
-		virtual bool event(QEvent* event);
+        virtual bool event(QEvent* event);
 
-	private:
-		void updateDisplayItem();
+    private:
+        void updateDisplayItem();
 
-	private:
-		bool editable;
-		QStandardItemModel* displayModel;
-		QStandardItem* displayItem;
-		QMenu* editMenu;
+    private:
+        bool editable;
+        QStandardItemModel* displayModel;
+        QStandardItem* displayItem;
+        QMenu* editMenu;
 };
 
 }

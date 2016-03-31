@@ -13,22 +13,22 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamFeaturesParser : public GenericElementParser<StreamFeatures> {
-		public:
-			StreamFeaturesParser();
+    class SWIFTEN_API StreamFeaturesParser : public GenericElementParser<StreamFeatures> {
+        public:
+            StreamFeaturesParser();
 
-		private:
-			void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
-			void handleEndElement(const std::string& element, const std::string& ns);
-			void handleCharacterData(const std::string& data);
+        private:
+            void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
+            void handleEndElement(const std::string& element, const std::string& ns);
+            void handleCharacterData(const std::string& data);
 
-		private:
-			int currentDepth_;
-			std::string currentText_;
-			bool inMechanisms_;
-			bool inMechanism_;
-			bool inAuthenticationHostname_;
-			bool inCompression_;
-			bool inCompressionMethod_;
-	};
+        private:
+            int currentDepth_;
+            std::string currentText_;
+            bool inMechanisms_;
+            bool inMechanism_;
+            bool inAuthenticationHostname_;
+            bool inCompression_;
+            bool inCompressionMethod_;
+    };
 }

@@ -10,24 +10,24 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API SafeString {
-		public:
-			SafeString(const SafeByteArray& data) : data(data) {
-			}
+    class SWIFTEN_API SafeString {
+        public:
+            SafeString(const SafeByteArray& data) : data(data) {
+            }
 
-			SafeString(const std::string& s) {
-				data = createSafeByteArray(s);
-			}
+            SafeString(const std::string& s) {
+                data = createSafeByteArray(s);
+            }
 
-			SafeString(const char* s) {
-				data = createSafeByteArray(s);
-			}
+            SafeString(const char* s) {
+                data = createSafeByteArray(s);
+            }
 
-			operator SafeByteArray () const {
-				return data;
-			}
+            operator SafeByteArray () const {
+                return data;
+            }
 
-		private:
-			SafeByteArray data;
-	};
+        private:
+            SafeByteArray data;
+    };
 }

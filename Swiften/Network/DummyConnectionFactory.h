@@ -17,13 +17,13 @@ class EventLoop;
 
 class DummyConnectionFactory : public ConnectionFactory {
 public:
-	DummyConnectionFactory(EventLoop *eventLoop) : eventLoop(eventLoop) {}
-	virtual ~DummyConnectionFactory() {}
-	virtual boost::shared_ptr<Connection> createConnection() {
-		return boost::make_shared<DummyConnection>(eventLoop);
-	}
+    DummyConnectionFactory(EventLoop *eventLoop) : eventLoop(eventLoop) {}
+    virtual ~DummyConnectionFactory() {}
+    virtual boost::shared_ptr<Connection> createConnection() {
+        return boost::make_shared<DummyConnection>(eventLoop);
+    }
 private:
-	EventLoop* eventLoop;
+    EventLoop* eventLoop;
 };
 
 }

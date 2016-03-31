@@ -17,23 +17,23 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardElementVisitor.h>
 
 namespace Swift {
-	class WhiteboardElement {
-	public:
-		typedef boost::shared_ptr<WhiteboardElement> ref;
+    class WhiteboardElement {
+    public:
+        typedef boost::shared_ptr<WhiteboardElement> ref;
 
-	public:
-		virtual ~WhiteboardElement() {}
-		virtual void accept(WhiteboardElementVisitor& visitor) = 0;
+    public:
+        virtual ~WhiteboardElement() {}
+        virtual void accept(WhiteboardElementVisitor& visitor) = 0;
 
-		const std::string& getID() const {
-			return id_;
-		}
+        const std::string& getID() const {
+            return id_;
+        }
 
-		void setID(const std::string& id) {
-			id_ = id;
-		}
+        void setID(const std::string& id) {
+            id_ = id;
+        }
 
-	private:
-		std::string id_;
-	};
+    private:
+        std::string id_;
+    };
 }

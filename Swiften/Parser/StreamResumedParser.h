@@ -11,18 +11,18 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamResumedParser : public GenericElementParser<StreamResumed> {
-		public:
-			StreamResumedParser();
-			~StreamResumedParser();
+    class SWIFTEN_API StreamResumedParser : public GenericElementParser<StreamResumed> {
+        public:
+            StreamResumedParser();
+            ~StreamResumedParser();
 
-			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&);
-			virtual void handleEndElement(const std::string&, const std::string&);
+            virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&);
+            virtual void handleEndElement(const std::string&, const std::string&);
 
-		private:
-			enum Level { 
-				TopLevel = 0
-			};
-			int level;
-	};
+        private:
+            enum Level {
+                TopLevel = 0
+            };
+            int level;
+    };
 }

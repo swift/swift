@@ -12,34 +12,34 @@
 namespace Swift {
 
 XMLConsoleController::XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory) : xmlConsoleWidgetFactory(xmlConsoleWidgetFactory), xmlConsoleWidget(NULL) {
-	uiEventStream->onUIEvent.connect(boost::bind(&XMLConsoleController::handleUIEvent, this, _1));
+    uiEventStream->onUIEvent.connect(boost::bind(&XMLConsoleController::handleUIEvent, this, _1));
 }
 
 XMLConsoleController::~XMLConsoleController() {
-	delete xmlConsoleWidget;
+    delete xmlConsoleWidget;
 }
 
 void XMLConsoleController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
-	boost::shared_ptr<RequestXMLConsoleUIEvent> event = boost::dynamic_pointer_cast<RequestXMLConsoleUIEvent>(rawEvent);
-	if (event != NULL) {
-		if (xmlConsoleWidget == NULL) {
-			xmlConsoleWidget = xmlConsoleWidgetFactory->createXMLConsoleWidget();
-		}
-		xmlConsoleWidget->show();
-		xmlConsoleWidget->activate();
-	}
+    boost::shared_ptr<RequestXMLConsoleUIEvent> event = boost::dynamic_pointer_cast<RequestXMLConsoleUIEvent>(rawEvent);
+    if (event != NULL) {
+        if (xmlConsoleWidget == NULL) {
+            xmlConsoleWidget = xmlConsoleWidgetFactory->createXMLConsoleWidget();
+        }
+        xmlConsoleWidget->show();
+        xmlConsoleWidget->activate();
+    }
 }
 
 void XMLConsoleController::handleDataRead(const SafeByteArray& data) {
-	if (xmlConsoleWidget) {
-		xmlConsoleWidget->handleDataRead(data);
-	}
+    if (xmlConsoleWidget) {
+        xmlConsoleWidget->handleDataRead(data);
+    }
 }
 
 void XMLConsoleController::handleDataWritten(const SafeByteArray& data) {
-	if (xmlConsoleWidget) {
-		xmlConsoleWidget->handleDataWritten(data);
-	}
+    if (xmlConsoleWidget) {
+        xmlConsoleWidget->handleDataWritten(data);
+    }
 }
 
 }

@@ -20,20 +20,20 @@ PlatformDNSSDQuerierFactory::PlatformDNSSDQuerierFactory(EventLoop* eventLoop) :
 
 boost::shared_ptr<DNSSDQuerier> PlatformDNSSDQuerierFactory::createQuerier() {
 #if defined(HAVE_BONJOUR)
-	return boost::shared_ptr<DNSSDQuerier>(new BonjourQuerier(eventLoop));
+    return boost::shared_ptr<DNSSDQuerier>(new BonjourQuerier(eventLoop));
 #elif defined(HAVE_AVAHI)
-	return boost::shared_ptr<DNSSDQuerier>(new AvahiQuerier(eventLoop));
+    return boost::shared_ptr<DNSSDQuerier>(new AvahiQuerier(eventLoop));
 #else
-	(void)eventLoop;
-	return boost::shared_ptr<DNSSDQuerier>();
+    (void)eventLoop;
+    return boost::shared_ptr<DNSSDQuerier>();
 #endif
 }
 
 bool PlatformDNSSDQuerierFactory::canCreate() {
 #if defined(HAVE_BONJOUR) || defined(HAVE_AVAHI)
-	return true;
+    return true;
 #else
-	return false;
+    return false;
 #endif
 }
 

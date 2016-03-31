@@ -24,42 +24,42 @@ PubSubPublishParser::~PubSubPublishParser() {
 }
 
 void PubSubPublishParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level == 0) {
-		if (boost::optional<std::string> attributeValue = attributes.getAttributeValue("node")) {
-			getPayloadInternal()->setNode(*attributeValue);
-		}
-	}
+    if (level == 0) {
+        if (boost::optional<std::string> attributeValue = attributes.getAttributeValue("node")) {
+            getPayloadInternal()->setNode(*attributeValue);
+        }
+    }
 
-	if (level == 1) {
-		if (element == "item" && ns == "http://jabber.org/protocol/pubsub") {
-			currentPayloadParser = boost::make_shared<PubSubItemParser>(parsers);
-		}
-	}
+    if (level == 1) {
+        if (element == "item" && ns == "http://jabber.org/protocol/pubsub") {
+            currentPayloadParser = boost::make_shared<PubSubItemParser>(parsers);
+        }
+    }
 
-	if (level >= 1 && currentPayloadParser) {
-		currentPayloadParser->handleStartElement(element, ns, attributes);
-	}
-	++level;
+    if (level >= 1 && currentPayloadParser) {
+        currentPayloadParser->handleStartElement(element, ns, attributes);
+    }
+    ++level;
 }
 
 void PubSubPublishParser::handleEndElement(const std::string& element, const std::string& ns) {
-	--level;
-	if (currentPayloadParser) {
-		if (level >= 1) {
-			currentPayloadParser->handleEndElement(element, ns);
-		}
+    --level;
+    if (currentPayloadParser) {
+        if (level >= 1) {
+            currentPayloadParser->handleEndElement(element, ns);
+        }
 
-		if (level == 1) {
-			if (element == "item" && ns == "http://jabber.org/protocol/pubsub") {
-				getPayloadInternal()->addItem(boost::dynamic_pointer_cast<PubSubItem>(currentPayloadParser->getPayload()));
-			}
-			currentPayloadParser.reset();
-		}
-	}
+        if (level == 1) {
+            if (element == "item" && ns == "http://jabber.org/protocol/pubsub") {
+                getPayloadInternal()->addItem(boost::dynamic_pointer_cast<PubSubItem>(currentPayloadParser->getPayload()));
+            }
+            currentPayloadParser.reset();
+        }
+    }
 }
 
 void PubSubPublishParser::handleCharacterData(const std::string& data) {
-	if (level > 1 && currentPayloadParser) {
-		currentPayloadParser->handleCharacterData(data);
-	}
+    if (level > 1 && currentPayloadParser) {
+        currentPayloadParser->handleCharacterData(data);
+    }
 }

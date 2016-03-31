@@ -13,22 +13,22 @@
 #include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 
 namespace Swift {
-	class DNSSDResolveServiceQuery {
-		public:
-			struct Result {
-				Result(const std::string& fullName, const std::string& host, int port, const ByteArray& info) : 
-							fullName(fullName), host(host), port(port), info(info) {}
-				std::string fullName;
-				std::string host;
-				int port;
-				ByteArray info;
-			};
+    class DNSSDResolveServiceQuery {
+        public:
+            struct Result {
+                Result(const std::string& fullName, const std::string& host, int port, const ByteArray& info) :
+                            fullName(fullName), host(host), port(port), info(info) {}
+                std::string fullName;
+                std::string host;
+                int port;
+                ByteArray info;
+            };
 
-			virtual ~DNSSDResolveServiceQuery();
+            virtual ~DNSSDResolveServiceQuery();
 
-			virtual void start() = 0;
-			virtual void stop() = 0;
+            virtual void start() = 0;
+            virtual void stop() = 0;
 
-			boost::signal<void (const boost::optional<Result>&)> onServiceResolved;
-	};
+            boost::signal<void (const boost::optional<Result>&)> onServiceResolved;
+    };
 }

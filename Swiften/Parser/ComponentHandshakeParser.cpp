@@ -14,18 +14,18 @@ ComponentHandshakeParser::ComponentHandshakeParser() : GenericElementParser<Comp
 }
 
 void ComponentHandshakeParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
-	++depth;
+    ++depth;
 }
 
 void ComponentHandshakeParser::handleEndElement(const std::string&, const std::string&) {
-	--depth;
-	if (depth == 0) {
-		getElementGeneric()->setData(text);
-	}
+    --depth;
+    if (depth == 0) {
+        getElementGeneric()->setData(text);
+    }
 }
 
 void ComponentHandshakeParser::handleCharacterData(const std::string& text) {
-	this->text += text;
+    this->text += text;
 }
 
 }

@@ -7,12 +7,12 @@
 #include <iosfwd>
 
 namespace Swift {
-	class ClientError;
-	class Element;
+    class ClientError;
+    class Element;
 }
 
 namespace boost {
-	template<class T> class shared_ptr;
+    template<class T> class shared_ptr;
 }
 
 std::ostream& operator<<(std::ostream& os, const Swift::ClientError& error);

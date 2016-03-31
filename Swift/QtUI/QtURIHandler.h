@@ -13,11 +13,11 @@
 class QUrl;
 
 namespace Swift {
-	class QtURIHandler : public QObject, public URIHandler {
-		public:
-			QtURIHandler();
+    class QtURIHandler : public QObject, public URIHandler {
+        public:
+            QtURIHandler();
 
-		private:
-			bool eventFilter(QObject* obj, QEvent* event);
-	};
+        private:
+            bool eventFilter(QObject* obj, QEvent* event);
+    };
 }

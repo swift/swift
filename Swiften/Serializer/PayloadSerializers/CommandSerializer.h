@@ -11,13 +11,13 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API CommandSerializer : public GenericPayloadSerializer<Command> {
-		public:
-			CommandSerializer();
+    class SWIFTEN_API CommandSerializer : public GenericPayloadSerializer<Command> {
+        public:
+            CommandSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<Command>)  const;
+            virtual std::string serializePayload(boost::shared_ptr<Command>)  const;
 
-		private:
-			std::string actionToString(Command::Action action) const;
-	};
+        private:
+            std::string actionToString(Command::Action action) const;
+    };
 }

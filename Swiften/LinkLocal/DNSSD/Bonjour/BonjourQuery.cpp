@@ -14,25 +14,25 @@ BonjourQuery::BonjourQuery(boost::shared_ptr<BonjourQuerier> q, EventLoop* event
 }
 
 BonjourQuery::~BonjourQuery() {
-	DNSServiceRefDeallocate(sdRef);
+    DNSServiceRefDeallocate(sdRef);
 }
 
 void BonjourQuery::processResult() {
-	boost::lock_guard<boost::mutex> lock(sdRefMutex);
-	DNSServiceProcessResult(sdRef);
+    boost::lock_guard<boost::mutex> lock(sdRefMutex);
+    DNSServiceProcessResult(sdRef);
 }
 
 int BonjourQuery::getSocketID() const {
-	boost::lock_guard<boost::mutex> lock(sdRefMutex);
-	return DNSServiceRefSockFD(sdRef);
+    boost::lock_guard<boost::mutex> lock(sdRefMutex);
+    return DNSServiceRefSockFD(sdRef);
 }
 
 void BonjourQuery::run() {
-	querier->addRunningQuery(shared_from_this());
+    querier->addRunningQuery(shared_from_this());
 }
 
 void BonjourQuery::finish() {
-	querier->removeRunningQuery(shared_from_this());
+    querier->removeRunningQuery(shared_from_this());
 }
 
 }

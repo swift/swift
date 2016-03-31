@@ -11,12 +11,12 @@ using namespace Swift;
 namespace Swift {
 
 SafeByteArray createSafeByteArray(const char* c) {
-	SafeByteArray data;
-	while (*c) {
-		data.push_back(static_cast<unsigned char>(*c));
-		++c;
-	}
-	return data;
+    SafeByteArray data;
+    while (*c) {
+        data.push_back(static_cast<unsigned char>(*c));
+        ++c;
+    }
+    return data;
 }
 
 }

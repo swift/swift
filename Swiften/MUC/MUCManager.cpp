@@ -14,7 +14,7 @@ MUCManager::MUCManager(StanzaChannel* stanzaChannel, IQRouter* iqRouter, Directe
 }
 
 MUC::ref MUCManager::createMUC(const JID& jid) {
-	return boost::make_shared<MUCImpl>(stanzaChannel, iqRouter, presenceSender, jid, mucRegistry);
+    return boost::make_shared<MUCImpl>(stanzaChannel, iqRouter, presenceSender, jid, mucRegistry);
 }
 
 }

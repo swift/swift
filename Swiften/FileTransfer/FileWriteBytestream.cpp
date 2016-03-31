@@ -17,36 +17,36 @@ FileWriteBytestream::FileWriteBytestream(const boost::filesystem::path& file) : 
 }
 
 FileWriteBytestream::~FileWriteBytestream() {
-	if (stream) {
-		stream->close();
-		delete stream;
-		stream = NULL;
-	}
+    if (stream) {
+        stream->close();
+        delete stream;
+        stream = NULL;
+    }
 }
 
 bool FileWriteBytestream::write(const std::vector<unsigned char>& data) {
-	if (data.empty()) {
-		return true;
-	}
-	if (!stream) {
-		stream = new boost::filesystem::ofstream(file, std::ios_base::out|std::ios_base::binary);
-	}
-	if (stream->good()) {
-		stream->write(reinterpret_cast<const char*>(&data[0]), boost::numeric_cast<std::streamsize>(data.size()));
-		if (stream->good()) {
-			onWrite(data);
-			return true;
-		}
-	}
-	return false;
+    if (data.empty()) {
+        return true;
+    }
+    if (!stream) {
+        stream = new boost::filesystem::ofstream(file, std::ios_base::out|std::ios_base::binary);
+    }
+    if (stream->good()) {
+        stream->write(reinterpret_cast<const char*>(&data[0]), boost::numeric_cast<std::streamsize>(data.size()));
+        if (stream->good()) {
+            onWrite(data);
+            return true;
+        }
+    }
+    return false;
 }
 
 void FileWriteBytestream::close() {
-	if (stream) {
-		stream->close();
-		delete stream;
-		stream = NULL;
-	}
+    if (stream) {
+        stream->close();
+        delete stream;
+        stream = NULL;
+    }
 }
 
 }

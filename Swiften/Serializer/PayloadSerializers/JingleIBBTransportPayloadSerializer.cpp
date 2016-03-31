@@ -27,13 +27,13 @@ JingleIBBTransportPayloadSerializer::JingleIBBTransportPayloadSerializer() {
 }
 
 std::string JingleIBBTransportPayloadSerializer::serializePayload(boost::shared_ptr<JingleIBBTransportPayload> payload) const {
-	XMLElement payloadXML("transport", "urn:xmpp:jingle:transports:ibb:1");
-	if (payload->getBlockSize()) {
-		payloadXML.setAttribute("block-size", boost::lexical_cast<std::string>(*payload->getBlockSize()));
-	}
-	payloadXML.setAttribute("sid", payload->getSessionID());
+    XMLElement payloadXML("transport", "urn:xmpp:jingle:transports:ibb:1");
+    if (payload->getBlockSize()) {
+        payloadXML.setAttribute("block-size", boost::lexical_cast<std::string>(*payload->getBlockSize()));
+    }
+    payloadXML.setAttribute("sid", payload->getSessionID());
 
-	return payloadXML.serialize();
+    return payloadXML.serialize();
 }
 
 }

@@ -16,26 +16,26 @@
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 
 namespace Swift {
-	class PlatformDomainNameResolver;
-	class EventLoop;
+    class PlatformDomainNameResolver;
+    class EventLoop;
 
-	class PlatformDomainNameAddressQuery : public DomainNameAddressQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameAddressQuery>, public EventOwner {
-		public:
-			PlatformDomainNameAddressQuery(const boost::optional<std::string>& host, EventLoop* eventLoop, PlatformDomainNameResolver*);
-			virtual ~PlatformDomainNameAddressQuery();
+    class PlatformDomainNameAddressQuery : public DomainNameAddressQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameAddressQuery>, public EventOwner {
+        public:
+            PlatformDomainNameAddressQuery(const boost::optional<std::string>& host, EventLoop* eventLoop, PlatformDomainNameResolver*);
+            virtual ~PlatformDomainNameAddressQuery();
 
-			void run();
+            void run();
 
-		private:
-			void runBlocking();
-			void emitError();
+        private:
+            void runBlocking();
+            void emitError();
 
-		private:
-			boost::asio::io_service ioService;
-			std::string hostname;
-			bool hostnameValid;
-			EventLoop* eventLoop;
-	};
+        private:
+            boost::asio::io_service ioService;
+            std::string hostname;
+            bool hostnameValid;
+            EventLoop* eventLoop;
+    };
 }
 
 

@@ -12,10 +12,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API InBandRegistrationPayloadSerializer : public GenericPayloadSerializer<InBandRegistrationPayload> {
-		public:
-			InBandRegistrationPayloadSerializer();
+    class SWIFTEN_API InBandRegistrationPayloadSerializer : public GenericPayloadSerializer<InBandRegistrationPayload> {
+        public:
+            InBandRegistrationPayloadSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<InBandRegistrationPayload>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<InBandRegistrationPayload>)  const;
+    };
 }

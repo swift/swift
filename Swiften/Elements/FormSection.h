@@ -17,30 +17,30 @@
 
 namespace Swift {
 
-	class SWIFTEN_API FormSection {
-		public:
-			typedef boost::shared_ptr<FormSection> section;
-			FormSection();
-			~FormSection();
-			void setLabel(const std::string& label);
-			const std::string& getLabel() const;
-			void addTextElement(boost::shared_ptr<FormText> textElement);
-			const std::vector<boost::shared_ptr<FormText> >& getTextElements() const;
-			void addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef);
-			const std::vector<boost::shared_ptr<FormReportedRef> >& getReportedRefs() const;
-			void addChildSection(boost::shared_ptr<FormSection> childSection);
-			const std::vector<boost::shared_ptr<FormSection> >& getChildSections() const;
-			void addField(boost::shared_ptr<FormField> field);
-			const std::vector<boost::shared_ptr<FormField> >& getFields() const;
-			void addFieldRef(std::string ref);
-			const std::vector<std::string> getFieldRefs() const;
+    class SWIFTEN_API FormSection {
+        public:
+            typedef boost::shared_ptr<FormSection> section;
+            FormSection();
+            ~FormSection();
+            void setLabel(const std::string& label);
+            const std::string& getLabel() const;
+            void addTextElement(boost::shared_ptr<FormText> textElement);
+            const std::vector<boost::shared_ptr<FormText> >& getTextElements() const;
+            void addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef);
+            const std::vector<boost::shared_ptr<FormReportedRef> >& getReportedRefs() const;
+            void addChildSection(boost::shared_ptr<FormSection> childSection);
+            const std::vector<boost::shared_ptr<FormSection> >& getChildSections() const;
+            void addField(boost::shared_ptr<FormField> field);
+            const std::vector<boost::shared_ptr<FormField> >& getFields() const;
+            void addFieldRef(std::string ref);
+            const std::vector<std::string> getFieldRefs() const;
 
-		private:
-			std::string label_;
-			std::vector<boost::shared_ptr<FormText> > textElements_;
-			std::vector<boost::shared_ptr<FormReportedRef> > reportedRefs_;
-			std::vector<boost::shared_ptr<FormSection> > childSections_;
-			std::vector<boost::shared_ptr<FormField> > fields_;
-			std::vector<std::string> fieldRefs_;
-	};
+        private:
+            std::string label_;
+            std::vector<boost::shared_ptr<FormText> > textElements_;
+            std::vector<boost::shared_ptr<FormReportedRef> > reportedRefs_;
+            std::vector<boost::shared_ptr<FormSection> > childSections_;
+            std::vector<boost::shared_ptr<FormField> > fields_;
+            std::vector<std::string> fieldRefs_;
+    };
 }

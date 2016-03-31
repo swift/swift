@@ -26,28 +26,28 @@ RosterItemExchangeSerializer::RosterItemExchangeSerializer() : GenericPayloadSer
 }
 
 std::string RosterItemExchangeSerializer::serializePayload(boost::shared_ptr<RosterItemExchangePayload> roster)  const {
-	XMLElement queryElement("x", "http://jabber.org/protocol/rosterx");
-	foreach(const RosterItemExchangePayload::Item& item, roster->getItems()) {
-		boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
-		itemElement->setAttribute("jid", item.getJID());
-		itemElement->setAttribute("name", item.getName());
+    XMLElement queryElement("x", "http://jabber.org/protocol/rosterx");
+    foreach(const RosterItemExchangePayload::Item& item, roster->getItems()) {
+        boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+        itemElement->setAttribute("jid", item.getJID());
+        itemElement->setAttribute("name", item.getName());
 
-		switch (item.getAction()) {
-			case RosterItemExchangePayload::Item::Add: itemElement->setAttribute("action", "add"); break;
-			case RosterItemExchangePayload::Item::Modify: itemElement->setAttribute("action", "modify"); break;
-			case RosterItemExchangePayload::Item::Delete: itemElement->setAttribute("action", "delete"); break;
-		}
+        switch (item.getAction()) {
+            case RosterItemExchangePayload::Item::Add: itemElement->setAttribute("action", "add"); break;
+            case RosterItemExchangePayload::Item::Modify: itemElement->setAttribute("action", "modify"); break;
+            case RosterItemExchangePayload::Item::Delete: itemElement->setAttribute("action", "delete"); break;
+        }
 
-		foreach(const std::string& group, item.getGroups()) {
-			boost::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
-			groupElement->addNode(boost::make_shared<XMLTextNode>(group));
-			itemElement->addNode(groupElement);
-		}
+        foreach(const std::string& group, item.getGroups()) {
+            boost::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
+            groupElement->addNode(boost::make_shared<XMLTextNode>(group));
+            itemElement->addNode(groupElement);
+        }
 
-		queryElement.addNode(itemElement);
-	}
+        queryElement.addNode(itemElement);
+    }
 
-	return queryElement.serialize();
+    return queryElement.serialize();
 }
 
 }

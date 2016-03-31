@@ -12,14 +12,14 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class JID;
+    class JID;
 
-	class SWIFTEN_API AvatarProvider {
-		public:
-			virtual ~AvatarProvider();
+    class SWIFTEN_API AvatarProvider {
+        public:
+            virtual ~AvatarProvider();
 
-			virtual boost::optional<std::string> getAvatarHash(const JID&) const = 0;
+            virtual boost::optional<std::string> getAvatarHash(const JID&) const = 0;
 
-			boost::signal<void (const JID&)> onAvatarChanged;
-	};
+            boost::signal<void (const JID&)> onAvatarChanged;
+    };
 }

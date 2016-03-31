@@ -11,11 +11,11 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class URIHandler {
-		public:
-			URIHandler();
-			virtual ~URIHandler();
+    class URIHandler {
+        public:
+            URIHandler();
+            virtual ~URIHandler();
 
-			boost::signal<void (const std::string&)> onURI;
-	};
+            boost::signal<void (const std::string&)> onURI;
+    };
 }

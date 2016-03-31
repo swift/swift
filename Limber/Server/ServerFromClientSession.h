@@ -18,46 +18,46 @@
 #include <Swiften/Session/Session.h>
 
 namespace Swift {
-	class ProtocolHeader;
-	class ToplevelElement;
-	class Stanza;
-	class PayloadParserFactoryCollection;
-	class PayloadSerializerCollection;
-	class StreamStack;
-	class UserRegistry;
-	class XMPPLayer;
-	class ConnectionLayer;
-	class Connection;
-	class XMLParserFactory;
+    class ProtocolHeader;
+    class ToplevelElement;
+    class Stanza;
+    class PayloadParserFactoryCollection;
+    class PayloadSerializerCollection;
+    class StreamStack;
+    class UserRegistry;
+    class XMPPLayer;
+    class ConnectionLayer;
+    class Connection;
+    class XMLParserFactory;
 
-	class ServerFromClientSession : public Session {
-		public:
-			ServerFromClientSession(
-					const std::string& id,
-					boost::shared_ptr<Connection> connection, 
-					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers,
-					XMLParserFactory* xmlParserFactory,
-					UserRegistry* userRegistry);
+    class ServerFromClientSession : public Session {
+        public:
+            ServerFromClientSession(
+                    const std::string& id,
+                    boost::shared_ptr<Connection> connection,
+                    PayloadParserFactoryCollection* payloadParserFactories,
+                    PayloadSerializerCollection* payloadSerializers,
+                    XMLParserFactory* xmlParserFactory,
+                    UserRegistry* userRegistry);
 
-			boost::signal<void ()> onSessionStarted;
-			void setAllowSASLEXTERNAL();
+            boost::signal<void ()> onSessionStarted;
+            void setAllowSASLEXTERNAL();
 
-		private:
-			void handleElement(boost::shared_ptr<ToplevelElement>);
-			void handleStreamStart(const ProtocolHeader& header);
+        private:
+            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleStreamStart(const ProtocolHeader& header);
 
-			void setInitialized();
-			bool isInitialized() const { 
-				return initialized; 
-			}
+            void setInitialized();
+            bool isInitialized() const {
+                return initialized;
+            }
 
-		private:
-			std::string id_;
-			UserRegistry* userRegistry_;
-			bool authenticated_;
-			bool initialized;
-			bool allowSASLEXTERNAL;
-			std::string user_;
-	};
+        private:
+            std::string id_;
+            UserRegistry* userRegistry_;
+            bool authenticated_;
+            bool initialized;
+            bool allowSASLEXTERNAL;
+            std::string user_;
+    };
 }

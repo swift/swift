@@ -7,13 +7,13 @@
 #pragma once
 
 namespace Swift {
-	class CocoaApplication {
-		public:
-			CocoaApplication();
-			~CocoaApplication();
+    class CocoaApplication {
+        public:
+            CocoaApplication();
+            ~CocoaApplication();
 
-		private:
-			class Private;
-			Private* d;
-	};
+        private:
+            class Private;
+            Private* d;
+    };
 }

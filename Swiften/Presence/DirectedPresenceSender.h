@@ -15,23 +15,23 @@
 #include <Swiften/Presence/PresenceSender.h>
 
 namespace Swift {
-	class SWIFTEN_API DirectedPresenceSender : public PresenceSender {
-		public:
-			enum SendPresence {AndSendPresence, DontSendPresence};
-			DirectedPresenceSender(PresenceSender*);
+    class SWIFTEN_API DirectedPresenceSender : public PresenceSender {
+        public:
+            enum SendPresence {AndSendPresence, DontSendPresence};
+            DirectedPresenceSender(PresenceSender*);
 
-			void addDirectedPresenceReceiver(const JID&, SendPresence);
-			void removeDirectedPresenceReceiver(const JID&, SendPresence);
+            void addDirectedPresenceReceiver(const JID&, SendPresence);
+            void removeDirectedPresenceReceiver(const JID&, SendPresence);
 
-			void sendPresence(Presence::ref);
+            void sendPresence(Presence::ref);
 
-			boost::optional<Presence::ref> getLastSentUndirectedPresence() const;
+            boost::optional<Presence::ref> getLastSentUndirectedPresence() const;
 
-			bool isAvailable() const;
+            bool isAvailable() const;
 
-		private:
-			boost::optional<Presence::ref> lastSentUndirectedPresence;
-			PresenceSender* sender;
-			std::set<JID> directedPresenceReceivers;
-	};
+        private:
+            boost::optional<Presence::ref> lastSentUndirectedPresence;
+            PresenceSender* sender;
+            std::set<JID> directedPresenceReceivers;
+    };
 }

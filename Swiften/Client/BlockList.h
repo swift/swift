@@ -13,25 +13,25 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API BlockList {
-		public:
-			enum State {
-				Init,
-				Requesting,
-				Available,
-				Error
-			};
-			virtual ~BlockList();
+    class SWIFTEN_API BlockList {
+        public:
+            enum State {
+                Init,
+                Requesting,
+                Available,
+                Error
+            };
+            virtual ~BlockList();
 
-			virtual State getState() const = 0;
+            virtual State getState() const = 0;
 
-			virtual const std::vector<JID>& getItems() const = 0;
+            virtual const std::vector<JID>& getItems() const = 0;
 
-			bool isBlocked(const JID& jid) const;
+            bool isBlocked(const JID& jid) const;
 
-		public:
-			boost::signal<void ()> onStateChanged;
-			boost::signal<void (const JID&)> onItemAdded;
-			boost::signal<void (const JID&)> onItemRemoved;
-	};
+        public:
+            boost::signal<void ()> onStateChanged;
+            boost::signal<void (const JID&)> onItemAdded;
+            boost::signal<void (const JID&)> onItemRemoved;
+    };
 }

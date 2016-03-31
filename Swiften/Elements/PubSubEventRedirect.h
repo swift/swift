@@ -13,23 +13,23 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventRedirect : public Payload {
-		public:
-			
-			PubSubEventRedirect();
-			
-			virtual ~PubSubEventRedirect();
+    class SWIFTEN_API PubSubEventRedirect : public Payload {
+        public:
 
-			const std::string& getURI() const {
-				return uri;
-			}
+            PubSubEventRedirect();
 
-			void setURI(const std::string& value) {
-				this->uri = value ;
-			}
+            virtual ~PubSubEventRedirect();
+
+            const std::string& getURI() const {
+                return uri;
+            }
+
+            void setURI(const std::string& value) {
+                this->uri = value ;
+            }
 
 
-		private:
-			std::string uri;
-	};
+        private:
+            std::string uri;
+    };
 }

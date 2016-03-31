@@ -17,16 +17,16 @@
 #include <Swiften/Queries/SetResponder.h>
 
 namespace Swift {
-	class IQRouter;
-	class WhiteboardSessionManager;
+    class IQRouter;
+    class WhiteboardSessionManager;
 
-	class SWIFTEN_API WhiteboardResponder : public SetResponder<WhiteboardPayload> {
-	public:
-		WhiteboardResponder(WhiteboardSessionManager* sessionManager, IQRouter* router);
-		bool handleSetRequest(const JID& from, const JID& /*to*/, const std::string& id, boost::shared_ptr<WhiteboardPayload> payload);
+    class SWIFTEN_API WhiteboardResponder : public SetResponder<WhiteboardPayload> {
+    public:
+        WhiteboardResponder(WhiteboardSessionManager* sessionManager, IQRouter* router);
+        bool handleSetRequest(const JID& from, const JID& /*to*/, const std::string& id, boost::shared_ptr<WhiteboardPayload> payload);
 
-	private:
-		WhiteboardSessionManager* sessionManager_;
-		IQRouter* router_;
-	};
+    private:
+        WhiteboardSessionManager* sessionManager_;
+        IQRouter* router_;
+    };
 }

@@ -11,19 +11,19 @@
 namespace Swift {
 
 class SecureTransportContextFactory : public TLSContextFactory {
-	public:
-		SecureTransportContextFactory();
-		virtual ~SecureTransportContextFactory();
+    public:
+        SecureTransportContextFactory();
+        virtual ~SecureTransportContextFactory();
 
-		virtual bool canCreate() const;
+        virtual bool canCreate() const;
 
-		virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
-		virtual void setCheckCertificateRevocation(bool b);
-		virtual void setDisconnectOnCardRemoval(bool b);
+        virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
+        virtual void setCheckCertificateRevocation(bool b);
+        virtual void setDisconnectOnCardRemoval(bool b);
 
-	private:
-		bool checkCertificateRevocation_;
-		bool disconnectOnCardRemoval_;
+    private:
+        bool checkCertificateRevocation_;
+        bool disconnectOnCardRemoval_;
 };
 
 }

@@ -19,48 +19,48 @@
 #include <Swiften/Network/Timer.h>
 
 namespace Swift {
-	class DomainNameAddressQuery;
-	class DomainNameResolver;
-	class ConnectionFactory;
-	class TimerFactory;
+    class DomainNameAddressQuery;
+    class DomainNameResolver;
+    class ConnectionFactory;
+    class TimerFactory;
 
-	class SWIFTEN_API ComponentConnector : public boost::bsignals::trackable, public boost::enable_shared_from_this<ComponentConnector> {
-		public:
-			typedef boost::shared_ptr<ComponentConnector> ref;
+    class SWIFTEN_API ComponentConnector : public boost::bsignals::trackable, public boost::enable_shared_from_this<ComponentConnector> {
+        public:
+            typedef boost::shared_ptr<ComponentConnector> ref;
 
-			static ComponentConnector::ref create(const std::string& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
-				return ref(new ComponentConnector(hostname, port, resolver, connectionFactory, timerFactory));
-			}
+            static ComponentConnector::ref create(const std::string& hostname, int port, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+                return ref(new ComponentConnector(hostname, port, resolver, connectionFactory, timerFactory));
+            }
 
-			void setTimeoutMilliseconds(int milliseconds);
+            void setTimeoutMilliseconds(int milliseconds);
 
-			void start();
-			void stop();
+            void start();
+            void stop();
 
-			boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
+            boost::signal<void (boost::shared_ptr<Connection>)> onConnectFinished;
 
-		private:
-			ComponentConnector(const std::string& hostname, int port, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+        private:
+            ComponentConnector(const std::string& hostname, int port, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
 
-			void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
-			void tryNextAddress();
-			void tryConnect(const HostAddressPort& target);
+            void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
+            void tryNextAddress();
+            void tryConnect(const HostAddressPort& target);
 
-			void handleConnectionConnectFinished(bool error);
-			void finish(boost::shared_ptr<Connection>);
-			void handleTimeout();
+            void handleConnectionConnectFinished(bool error);
+            void finish(boost::shared_ptr<Connection>);
+            void handleTimeout();
 
 
-		private:
-			std::string hostname;
-			int port;
-			DomainNameResolver* resolver;
-			ConnectionFactory* connectionFactory;
-			TimerFactory* timerFactory;
-			int timeoutMilliseconds;
-			boost::shared_ptr<Timer> timer;
-			boost::shared_ptr<DomainNameAddressQuery> addressQuery;
-			std::deque<HostAddress> addressQueryResults;
-			boost::shared_ptr<Connection> currentConnection;
-	};
+        private:
+            std::string hostname;
+            int port;
+            DomainNameResolver* resolver;
+            ConnectionFactory* connectionFactory;
+            TimerFactory* timerFactory;
+            int timeoutMilliseconds;
+            boost::shared_ptr<Timer> timer;
+            boost::shared_ptr<DomainNameAddressQuery> addressQuery;
+            std::deque<HostAddress> addressQueryResults;
+            boost::shared_ptr<Connection> currentConnection;
+    };
 }

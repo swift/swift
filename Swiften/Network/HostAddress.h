@@ -12,24 +12,24 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API HostAddress {
-		public:
-			HostAddress();
-			HostAddress(const std::string&);
-			HostAddress(const unsigned char* address, size_t length);
-			HostAddress(const boost::asio::ip::address& address);
+    class SWIFTEN_API HostAddress {
+        public:
+            HostAddress();
+            HostAddress(const std::string&);
+            HostAddress(const unsigned char* address, size_t length);
+            HostAddress(const boost::asio::ip::address& address);
 
-			std::string toString() const;
-			boost::asio::ip::address getRawAddress() const;
+            std::string toString() const;
+            boost::asio::ip::address getRawAddress() const;
 
-			bool operator==(const HostAddress& o) const {
-				return address_ == o.address_;
-			}
+            bool operator==(const HostAddress& o) const {
+                return address_ == o.address_;
+            }
 
-			bool isValid() const;
-			bool isLocalhost() const;
+            bool isValid() const;
+            bool isLocalhost() const;
 
-		private:
-			boost::asio::ip::address address_;
-	};
+        private:
+            boost::asio::ip::address address_;
+    };
 }

@@ -21,34 +21,34 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class RequestInviteToMUCUIEvent : public UIEvent {
-		public:
-			typedef boost::shared_ptr<RequestInviteToMUCUIEvent> ref;
+    class RequestInviteToMUCUIEvent : public UIEvent {
+        public:
+            typedef boost::shared_ptr<RequestInviteToMUCUIEvent> ref;
 
-			enum ImpromptuMode {
-				Impromptu,
-				NotImpromptu
-			};
+            enum ImpromptuMode {
+                Impromptu,
+                NotImpromptu
+            };
 
-			RequestInviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite, ImpromptuMode impromptu) : room_(room), invite_(JIDsToInvite) {
-				isImpromptu_ = impromptu == Impromptu;
-			}
+            RequestInviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite, ImpromptuMode impromptu) : room_(room), invite_(JIDsToInvite) {
+                isImpromptu_ = impromptu == Impromptu;
+            }
 
-			const JID& getRoom() const {
-				return room_;
-			}
+            const JID& getRoom() const {
+                return room_;
+            }
 
-			const std::vector<JID> getInvites() const {
-				return invite_;
-			}
+            const std::vector<JID> getInvites() const {
+                return invite_;
+            }
 
-			bool isImpromptu() const {
-				return isImpromptu_;
-			}
+            bool isImpromptu() const {
+                return isImpromptu_;
+            }
 
-		private:
-			JID room_;
-			std::vector<JID> invite_;
-			bool isImpromptu_;
-	};
+        private:
+            JID room_;
+            std::vector<JID> invite_;
+            bool isImpromptu_;
+    };
 }

@@ -11,26 +11,26 @@
 #include <boost/optional/optional_fwd.hpp>
 
 namespace Swift {
-	class Completer;
+    class Completer;
 
-	class Terminal {
-		public:
-			Terminal();
-			virtual ~Terminal();
+    class Terminal {
+        public:
+            Terminal();
+            virtual ~Terminal();
 
-			Completer* getCompleter() const {
-				return completer;
-			}
+            Completer* getCompleter() const {
+                return completer;
+            }
 
-			void setCompleter(Completer* completer) {
-				this->completer = completer;
-			}
+            void setCompleter(Completer* completer) {
+                this->completer = completer;
+            }
 
-			virtual boost::optional<std::string> readLine(const std::string& prompt) = 0;
-			virtual void addToHistory(const std::string& command) = 0;
-			virtual void printError(const std::string& message) = 0;
+            virtual boost::optional<std::string> readLine(const std::string& prompt) = 0;
+            virtual void addToHistory(const std::string& command) = 0;
+            virtual void printError(const std::string& message) = 0;
 
-		private:
-			Completer* completer;
-	};
+        private:
+            Completer* completer;
+    };
 }

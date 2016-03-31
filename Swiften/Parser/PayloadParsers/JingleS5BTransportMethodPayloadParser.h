@@ -19,18 +19,18 @@
 namespace Swift {
 
 class SWIFTEN_API JingleS5BTransportMethodPayloadParser : public GenericPayloadParser<JingleS5BTransportPayload> {
-	public:
-		JingleS5BTransportMethodPayloadParser();
+    public:
+        JingleS5BTransportMethodPayloadParser();
 
-		virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-		virtual void handleEndElement(const std::string& element, const std::string&);
-		virtual void handleCharacterData(const std::string& data);	
+        virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+        virtual void handleEndElement(const std::string& element, const std::string&);
+        virtual void handleCharacterData(const std::string& data);
 
-	private:
-		JingleS5BTransportPayload::Candidate::Type stringToType(const std::string &str) const;
+    private:
+        JingleS5BTransportPayload::Candidate::Type stringToType(const std::string &str) const;
 
-	private:
-		int level;
+    private:
+        int level;
 };
 
 }

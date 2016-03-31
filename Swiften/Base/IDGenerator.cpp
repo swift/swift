@@ -17,8 +17,8 @@ IDGenerator::IDGenerator() {
 }
 
 std::string IDGenerator::generateID() {
-	static boost::uuids::random_generator generator;
-	return boost::lexical_cast<std::string>(generator());
+    static boost::uuids::random_generator generator;
+    return boost::lexical_cast<std::string>(generator());
 }
 
 }

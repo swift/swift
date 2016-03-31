@@ -16,19 +16,19 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class AvahiQuerier;
+    class AvahiQuerier;
 
-	class AvahiResolveHostnameQuery : public DNSSDResolveHostnameQuery, public AvahiQuery {
-		public: 
-			AvahiResolveHostnameQuery(const std::string& hostname, int, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop);
+    class AvahiResolveHostnameQuery : public DNSSDResolveHostnameQuery, public AvahiQuery {
+        public:
+            AvahiResolveHostnameQuery(const std::string& hostname, int, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop);
 
-			void run();
+            void run();
 
-			void finish() {
-			}
+            void finish() {
+            }
 
-		private:
-			HostAddress hostAddress;
-			std::string hostname;
-	};
+        private:
+            HostAddress hostAddress;
+            std::string hostname;
+    };
 }

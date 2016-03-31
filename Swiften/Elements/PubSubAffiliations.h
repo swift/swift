@@ -19,36 +19,36 @@
 #include <Swiften/Elements/PubSubPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubAffiliations : public PubSubPayload {
-		public:
-			
-			PubSubAffiliations();
-			
-			virtual ~PubSubAffiliations();
+    class SWIFTEN_API PubSubAffiliations : public PubSubPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubAffiliations();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubAffiliations();
 
-			const std::vector< boost::shared_ptr<PubSubAffiliation> >& getAffiliations() const {
-				return affiliations;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			void setAffiliations(const std::vector< boost::shared_ptr<PubSubAffiliation> >& value) {
-				this->affiliations = value ;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			void addAffiliation(boost::shared_ptr<PubSubAffiliation> value) {
-				this->affiliations.push_back(value);
-			}
+            const std::vector< boost::shared_ptr<PubSubAffiliation> >& getAffiliations() const {
+                return affiliations;
+            }
+
+            void setAffiliations(const std::vector< boost::shared_ptr<PubSubAffiliation> >& value) {
+                this->affiliations = value ;
+            }
+
+            void addAffiliation(boost::shared_ptr<PubSubAffiliation> value) {
+                this->affiliations.push_back(value);
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			std::vector< boost::shared_ptr<PubSubAffiliation> > affiliations;
-	};
+        private:
+            boost::optional< std::string > node;
+            std::vector< boost::shared_ptr<PubSubAffiliation> > affiliations;
+    };
 }

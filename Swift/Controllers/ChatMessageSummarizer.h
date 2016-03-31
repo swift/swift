@@ -13,8 +13,8 @@
 namespace Swift {
 typedef std::pair<std::string, int> UnreadPair;
 
-	class ChatMessageSummarizer {
-		public:
-			std::string getSummary(const std::string& current, const std::vector<UnreadPair>& unreads);
-	};
+    class ChatMessageSummarizer {
+        public:
+            std::string getSummary(const std::string& current, const std::vector<UnreadPair>& unreads);
+    };
 }

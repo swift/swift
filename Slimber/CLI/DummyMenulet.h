@@ -9,28 +9,28 @@
 #include <Slimber/Menulet.h>
 
 class DummyMenulet : public Menulet {
-	public:
-		DummyMenulet() {
-		}
+    public:
+        DummyMenulet() {
+        }
 
-		void clear() {
-		}
+        void clear() {
+        }
 
-		void addItem(const std::string&, const std::string&) {
-		}
+        void addItem(const std::string&, const std::string&) {
+        }
 
-		void addAboutItem() {
-		}
+        void addAboutItem() {
+        }
 
-		void addRestartItem() {
-		}
+        void addRestartItem() {
+        }
 
-		void addExitItem() {
-		}
+        void addExitItem() {
+        }
 
-		void addSeparator() {
-		}
+        void addSeparator() {
+        }
 
-		void setIcon(const std::string&) {
-		}
+        void setIcon(const std::string&) {
+        }
 };

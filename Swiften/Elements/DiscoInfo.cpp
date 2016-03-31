@@ -26,26 +26,26 @@ const std::string DiscoInfo::WhiteboardFeature = std::string("http://swift.im/wh
 const std::string DiscoInfo::BlockingCommandFeature = std::string("urn:xmpp:blocking");
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {
-	if (category_ == other.category_) {
-		if (type_ == other.type_) {
-			if (lang_ == other.lang_) {
-				return name_ < other.name_;
-			}
-			else {
-				return lang_ < other.lang_;
-			}
-		}
-		else {
-			return type_ < other.type_;
-		}
-	}
-	else {
-		return category_ < other.category_;
-	}
+    if (category_ == other.category_) {
+        if (type_ == other.type_) {
+            if (lang_ == other.lang_) {
+                return name_ < other.name_;
+            }
+            else {
+                return lang_ < other.lang_;
+            }
+        }
+        else {
+            return type_ < other.type_;
+        }
+    }
+    else {
+        return category_ < other.category_;
+    }
 }
 
 bool DiscoInfo::hasFeature(const std::string& feature) const {
-	return std::find(features_.begin(), features_.end(), feature) != features_.end();
+    return std::find(features_.begin(), features_.end(), feature) != features_.end();
 }
 
 }

@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StanzaAckRequestParser : public GenericElementParser<StanzaAckRequest> {
-		public:
-			StanzaAckRequestParser() : GenericElementParser<StanzaAckRequest>() {}
-	};
+    class SWIFTEN_API StanzaAckRequestParser : public GenericElementParser<StanzaAckRequest> {
+        public:
+            StanzaAckRequestParser() : GenericElementParser<StanzaAckRequest>() {}
+    };
 }

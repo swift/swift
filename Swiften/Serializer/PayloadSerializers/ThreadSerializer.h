@@ -12,11 +12,11 @@
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
-	class SWIFTEN_API ThreadSerializer : public GenericPayloadSerializer<Thread> {
-		public:
-			ThreadSerializer();
-			virtual ~ThreadSerializer();
+    class SWIFTEN_API ThreadSerializer : public GenericPayloadSerializer<Thread> {
+        public:
+            ThreadSerializer();
+            virtual ~ThreadSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<Thread> thread) const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Thread> thread) const;
+    };
 }

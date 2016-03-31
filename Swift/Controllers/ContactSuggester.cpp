@@ -39,49 +39,49 @@ ContactSuggester::~ContactSuggester() {
 }
 
 void ContactSuggester::addContactProvider(ContactProvider* provider) {
-	contactProviders_.push_back(provider);
+    contactProviders_.push_back(provider);
 }
 
 bool ContactSuggester::matchContact(const std::string& search, const Contact::ref& c) {
-	if (fuzzyMatch(c->name, search)) {
-		return true;
-	}
-	else if (c->jid.isValid()) {
-		return fuzzyMatch(c->jid.toString(), search);
-	}
-	return false;
+    if (fuzzyMatch(c->name, search)) {
+        return true;
+    }
+    else if (c->jid.isValid()) {
+        return fuzzyMatch(c->jid.toString(), search);
+    }
+    return false;
 }
 
 std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& search, bool withMUCNicks) const {
-	std::vector<Contact::ref> results;
+    std::vector<Contact::ref> results;
 
-	foreach(ContactProvider* provider, contactProviders_) {
-		append(results, provider->getContacts(withMUCNicks));
-	}
+    foreach(ContactProvider* provider, contactProviders_) {
+        append(results, provider->getContacts(withMUCNicks));
+    }
 
-	std::sort(results.begin(), results.end(), Contact::lexicographicalSortPredicate);
-	results.erase(std::unique(results.begin(), results.end(), Contact::equalityPredicate), results.end());
-	results.erase(std::remove_if(results.begin(), results.end(), !lambda::bind(&matchContact, search, lambda::_1)),
-		results.end());
-	std::sort(results.begin(), results.end(), boost::bind(&Contact::sortPredicate, _1, _2, search));
+    std::sort(results.begin(), results.end(), Contact::lexicographicalSortPredicate);
+    results.erase(std::unique(results.begin(), results.end(), Contact::equalityPredicate), results.end());
+    results.erase(std::remove_if(results.begin(), results.end(), !lambda::bind(&matchContact, search, lambda::_1)),
+        results.end());
+    std::sort(results.begin(), results.end(), boost::bind(&Contact::sortPredicate, _1, _2, search));
 
-	return results;
+    return results;
 }
 
 bool ContactSuggester::fuzzyMatch(std::string text, std::string match) {
-	std::string lowerText = text;
-	boost::algorithm::to_lower(lowerText);
-	std::string lowerMatch = match;
-	boost::algorithm::to_lower(lowerMatch);
-	size_t lastMatch = 0;
-	for (size_t i = 0; i < lowerMatch.length(); ++i) {
-		size_t where = lowerText.find_first_of(lowerMatch[i], lastMatch);
-		if (where == std::string::npos) {
-			return false;
-		}
-		lastMatch = where + 1;
-	}
-	return true;
+    std::string lowerText = text;
+    boost::algorithm::to_lower(lowerText);
+    std::string lowerMatch = match;
+    boost::algorithm::to_lower(lowerMatch);
+    size_t lastMatch = 0;
+    for (size_t i = 0; i < lowerMatch.length(); ++i) {
+        size_t where = lowerText.find_first_of(lowerMatch[i], lastMatch);
+        if (where == std::string::npos) {
+            return false;
+        }
+        lastMatch = where + 1;
+    }
+    return true;
 }
 
 }

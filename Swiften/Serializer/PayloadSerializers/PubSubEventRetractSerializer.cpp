@@ -22,12 +22,12 @@ PubSubEventRetractSerializer::~PubSubEventRetractSerializer() {
 }
 
 std::string PubSubEventRetractSerializer::serializePayload(boost::shared_ptr<PubSubEventRetract> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("retract", "http://jabber.org/protocol/pubsub#event");
-	element.setAttribute("id", payload->getID());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("retract", "http://jabber.org/protocol/pubsub#event");
+    element.setAttribute("id", payload->getID());
+    return element.serialize();
 }
 
 

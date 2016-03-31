@@ -12,11 +12,11 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsEnableSerializer : public GenericPayloadSerializer<CarbonsEnable> {
-		public:
-			CarbonsEnableSerializer();
-			virtual ~CarbonsEnableSerializer();
+    class SWIFTEN_API CarbonsEnableSerializer : public GenericPayloadSerializer<CarbonsEnable> {
+        public:
+            CarbonsEnableSerializer();
+            virtual ~CarbonsEnableSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<CarbonsEnable>)	const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<CarbonsEnable>)    const;
+    };
 }

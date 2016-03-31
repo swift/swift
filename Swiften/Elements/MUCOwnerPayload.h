@@ -13,26 +13,26 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCOwnerPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<MUCOwnerPayload> ref;
+    class SWIFTEN_API MUCOwnerPayload : public Payload {
+        public:
+            typedef boost::shared_ptr<MUCOwnerPayload> ref;
 
-			MUCOwnerPayload() {
-			}
+            MUCOwnerPayload() {
+            }
 
-			boost::shared_ptr<Payload> getPayload() const {
-				return payload;
-			}
+            boost::shared_ptr<Payload> getPayload() const {
+                return payload;
+            }
 
-			void setPayload(boost::shared_ptr<Payload> p) {
-				payload = p;
-			}
+            void setPayload(boost::shared_ptr<Payload> p) {
+                payload = p;
+            }
 
-			Form::ref getForm() {
-				return boost::dynamic_pointer_cast<Form>(payload);
-			}
+            Form::ref getForm() {
+                return boost::dynamic_pointer_cast<Form>(payload);
+            }
 
-		private:
-			boost::shared_ptr<Payload> payload;
-	};
+        private:
+            boost::shared_ptr<Payload> payload;
+    };
 }

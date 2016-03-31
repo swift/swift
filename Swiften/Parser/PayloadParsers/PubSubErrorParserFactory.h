@@ -11,20 +11,20 @@
 #include <Swiften/Parser/PayloadParsers/PubSubErrorParser.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubErrorParserFactory : public PayloadParserFactory {
-		public:
-			PubSubErrorParserFactory() {
-			}
-			~PubSubErrorParserFactory();
+    class SWIFTEN_API PubSubErrorParserFactory : public PayloadParserFactory {
+        public:
+            PubSubErrorParserFactory() {
+            }
+            ~PubSubErrorParserFactory();
 
-			virtual bool canParse(const std::string&, const std::string& ns, const AttributeMap&) const {
-				return ns == "http://jabber.org/protocol/pubsub#errors";
-			}
+            virtual bool canParse(const std::string&, const std::string& ns, const AttributeMap&) const {
+                return ns == "http://jabber.org/protocol/pubsub#errors";
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new PubSubErrorParser();
-			}
-	};
+            virtual PayloadParser* createPayloadParser() {
+                return new PubSubErrorParser();
+            }
+    };
 }
 
 

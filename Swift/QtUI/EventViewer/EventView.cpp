@@ -8,7 +8,7 @@
 
 namespace Swift {
 EventView::EventView(QWidget* parent) : QListView(parent) {
-	
+
 }
 
 }

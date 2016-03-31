@@ -19,45 +19,45 @@ namespace Swift {
 SearchPayloadSerializer::SearchPayloadSerializer() {
 }
 
-std::string SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPayload> searchPayload)	const {
-	XMLElement searchElement("query", "jabber:iq:search");
+std::string SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPayload> searchPayload)    const {
+    XMLElement searchElement("query", "jabber:iq:search");
 
-	if (searchPayload->getInstructions()) {
-		searchElement.addNode(XMLElement::ref(new XMLElement("instructions", "", *searchPayload->getInstructions())));
-	}
+    if (searchPayload->getInstructions()) {
+        searchElement.addNode(XMLElement::ref(new XMLElement("instructions", "", *searchPayload->getInstructions())));
+    }
 
-	if (searchPayload->getNick()) {
-		searchElement.addNode(XMLElement::ref(new XMLElement("nick", "", *searchPayload->getNick())));
-	}
+    if (searchPayload->getNick()) {
+        searchElement.addNode(XMLElement::ref(new XMLElement("nick", "", *searchPayload->getNick())));
+    }
 
-	if (searchPayload->getFirst()) {
-		searchElement.addNode(XMLElement::ref(new XMLElement("first", "", *searchPayload->getFirst())));
-	}
+    if (searchPayload->getFirst()) {
+        searchElement.addNode(XMLElement::ref(new XMLElement("first", "", *searchPayload->getFirst())));
+    }
 
-	if (searchPayload->getLast()) {
-		searchElement.addNode(XMLElement::ref(new XMLElement("last", "", *searchPayload->getLast())));
-	}
+    if (searchPayload->getLast()) {
+        searchElement.addNode(XMLElement::ref(new XMLElement("last", "", *searchPayload->getLast())));
+    }
 
-	if (searchPayload->getEMail()) {
-		searchElement.addNode(XMLElement::ref(new XMLElement("email", "", *searchPayload->getEMail())));
-	}
+    if (searchPayload->getEMail()) {
+        searchElement.addNode(XMLElement::ref(new XMLElement("email", "", *searchPayload->getEMail())));
+    }
 
-	foreach(const SearchPayload::Item& item, searchPayload->getItems()) {
-		XMLElement::ref itemElement(new XMLElement("item"));
-		itemElement->setAttribute("jid", item.jid);
-		itemElement->addNode(XMLElement::ref(new XMLElement("first", "", item.first)));
-		itemElement->addNode(XMLElement::ref(new XMLElement("last", "", item.last)));
-		itemElement->addNode(XMLElement::ref(new XMLElement("nick", "", item.nick)));
-		itemElement->addNode(XMLElement::ref(new XMLElement("email", "", item.email)));
+    foreach(const SearchPayload::Item& item, searchPayload->getItems()) {
+        XMLElement::ref itemElement(new XMLElement("item"));
+        itemElement->setAttribute("jid", item.jid);
+        itemElement->addNode(XMLElement::ref(new XMLElement("first", "", item.first)));
+        itemElement->addNode(XMLElement::ref(new XMLElement("last", "", item.last)));
+        itemElement->addNode(XMLElement::ref(new XMLElement("nick", "", item.nick)));
+        itemElement->addNode(XMLElement::ref(new XMLElement("email", "", item.email)));
 
-		searchElement.addNode(itemElement);
-	}
+        searchElement.addNode(itemElement);
+    }
 
-	if (Form::ref form = searchPayload->getForm()) {
-		searchElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
-	}
+    if (Form::ref form = searchPayload->getForm()) {
+        searchElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
+    }
 
-	return searchElement.serialize();
+    return searchElement.serialize();
 }
 
 }

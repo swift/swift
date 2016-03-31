@@ -20,49 +20,49 @@
 namespace Swift {
 
 IncomingLinkLocalSession::IncomingLinkLocalSession(
-		const JID& localJID,
-		boost::shared_ptr<Connection> connection, 
-		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers,
-		XMLParserFactory* xmlParserFactory) :
-			Session(connection, payloadParserFactories, payloadSerializers, xmlParserFactory),
-			initialized(false) {
-	setLocalJID(localJID);
+        const JID& localJID,
+        boost::shared_ptr<Connection> connection,
+        PayloadParserFactoryCollection* payloadParserFactories,
+        PayloadSerializerCollection* payloadSerializers,
+        XMLParserFactory* xmlParserFactory) :
+            Session(connection, payloadParserFactories, payloadSerializers, xmlParserFactory),
+            initialized(false) {
+    setLocalJID(localJID);
 }
 
 void IncomingLinkLocalSession::handleStreamStart(const ProtocolHeader& incomingHeader) {
-	setRemoteJID(JID(incomingHeader.getFrom()));
-	if (!getRemoteJID().isValid()) {
-		finishSession();
-		return;
-	}
+    setRemoteJID(JID(incomingHeader.getFrom()));
+    if (!getRemoteJID().isValid()) {
+        finishSession();
+        return;
+    }
 
-	ProtocolHeader header;
-	header.setFrom(getLocalJID());
-	getXMPPLayer()->writeHeader(header);
+    ProtocolHeader header;
+    header.setFrom(getLocalJID());
+    getXMPPLayer()->writeHeader(header);
 
-	if (incomingHeader.getVersion() == "1.0") {
-		getXMPPLayer()->writeElement(boost::make_shared<StreamFeatures>());
-	}
-	else {
-		setInitialized();
-	}
+    if (incomingHeader.getVersion() == "1.0") {
+        getXMPPLayer()->writeElement(boost::make_shared<StreamFeatures>());
+    }
+    else {
+        setInitialized();
+    }
 }
 
 void IncomingLinkLocalSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
-	boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
-	// If we get our first stanza before streamfeatures, our session is implicitly
-	// initialized
-	if (stanza && !isInitialized()) {
-		setInitialized();
-	}
-	
-	onElementReceived(element);
+    boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
+    // If we get our first stanza before streamfeatures, our session is implicitly
+    // initialized
+    if (stanza && !isInitialized()) {
+        setInitialized();
+    }
+
+    onElementReceived(element);
 }
 
 void IncomingLinkLocalSession::setInitialized() {
-	initialized = true;
-	onSessionStarted();
+    initialized = true;
+    onSessionStarted();
 }
 
 

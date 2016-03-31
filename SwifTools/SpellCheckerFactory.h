@@ -15,10 +15,10 @@
 #endif
 
 namespace Swift {
-	class SpellChecker;
-	class SpellCheckerFactory {
-		public:
-			SpellCheckerFactory();
-			SpellChecker* createSpellChecker(const std::string& dictFile);
-	};
+    class SpellChecker;
+    class SpellCheckerFactory {
+        public:
+            SpellCheckerFactory();
+            SpellChecker* createSpellChecker(const std::string& dictFile);
+    };
 }

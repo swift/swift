@@ -16,21 +16,21 @@
 #include <Slimber/Qt/QtMenulet.h>
 
 int main(int argc, char* argv[]) {
-	QApplication app(argc, argv);
-	Swift::QtEventLoop eventLoop;
+    QApplication app(argc, argv);
+    Swift::QtEventLoop eventLoop;
 
-	QCoreApplication::setApplicationName("Slimber");
-	QCoreApplication::setApplicationVersion(QString(buildVersion));
+    QCoreApplication::setApplicationName("Slimber");
+    QCoreApplication::setApplicationVersion(QString(buildVersion));
 
-	if (!QSystemTrayIcon::isSystemTrayAvailable()) {
+    if (!QSystemTrayIcon::isSystemTrayAvailable()) {
 QMessageBox::critical(0, QObject::tr("Systray"), QObject::tr("No system tray"));
-		return 1;
-	}
+        return 1;
+    }
 
-	app.setQuitOnLastWindowClosed(false);
+    app.setQuitOnLastWindowClosed(false);
 
-	QtMenulet menulet;
-	MainController controller(&menulet, &eventLoop);
+    QtMenulet menulet;
+    MainController controller(&menulet, &eventLoop);
 
-	return app.exec();
+    return app.exec();
 }

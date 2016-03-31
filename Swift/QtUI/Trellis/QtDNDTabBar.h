@@ -11,31 +11,31 @@
 namespace Swift {
 
 class QtDNDTabBar : public QTabBar {
-	Q_OBJECT
-	public:
-		explicit QtDNDTabBar(QWidget* parent = 0);
-		virtual ~QtDNDTabBar();
+    Q_OBJECT
+    public:
+        explicit QtDNDTabBar(QWidget* parent = 0);
+        virtual ~QtDNDTabBar();
 
-		int getDragIndex() const;
-		QString getDragText() const;
-		QWidget* getDragWidget() const;
+        int getDragIndex() const;
+        QString getDragText() const;
+        QWidget* getDragWidget() const;
 
-		virtual QSize sizeHint() const;
+        virtual QSize sizeHint() const;
 
-	signals:
-		void onDropSucceeded();
+    signals:
+        void onDropSucceeded();
 
-	protected:
-		virtual void dragEnterEvent(QDragEnterEvent* dragEnterEvent);
-		virtual void dropEvent(QDropEvent* dropEvent);
-		virtual bool event(QEvent* event);
-		virtual QSize tabSizeHint(int index) const;
+    protected:
+        virtual void dragEnterEvent(QDragEnterEvent* dragEnterEvent);
+        virtual void dropEvent(QDropEvent* dropEvent);
+        virtual bool event(QEvent* event);
+        virtual QSize tabSizeHint(int index) const;
 
-	private:
-		int defaultTabHeight;
-		int dragIndex;
-		QString dragText;
-		QWidget* dragWidget;
+    private:
+        int defaultTabHeight;
+        int dragIndex;
+        QString dragText;
+        QWidget* dragWidget;
 };
 
 }

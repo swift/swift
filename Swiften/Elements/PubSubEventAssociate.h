@@ -13,23 +13,23 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventAssociate : public Payload {
-		public:
-			
-			PubSubEventAssociate();
-			
-			virtual ~PubSubEventAssociate();
+    class SWIFTEN_API PubSubEventAssociate : public Payload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubEventAssociate();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubEventAssociate();
+
+            const std::string& getNode() const {
+                return node;
+            }
+
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
 
-		private:
-			std::string node;
-	};
+        private:
+            std::string node;
+    };
 }

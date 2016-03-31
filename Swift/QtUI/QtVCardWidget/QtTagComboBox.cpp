@@ -18,14 +18,14 @@
 namespace Swift {
 
 QtTagComboBox::QtTagComboBox(QWidget* parent) : QComboBox(parent) {
-	setEditable(false);
-	displayModel = new QStandardItemModel(this);
-	displayItem = new QStandardItem();
-	displayItem->setText("");
-	displayModel->insertRow(0, displayItem);
-	editMenu = new QMenu(this);
-	this->setModel(displayModel);
-	editable = true;
+    setEditable(false);
+    displayModel = new QStandardItemModel(this);
+    displayItem = new QStandardItem();
+    displayItem->setText("");
+    displayModel->insertRow(0, displayItem);
+    editMenu = new QMenu(this);
+    this->setModel(displayModel);
+    editable = true;
 }
 
 QtTagComboBox::~QtTagComboBox() {
@@ -33,40 +33,40 @@ QtTagComboBox::~QtTagComboBox() {
 }
 
 bool QtTagComboBox::isEditable() const {
-	return editable;
+    return editable;
 }
 
 void QtTagComboBox::setEditable(const bool editable) {
-	this->editable = editable;
+    this->editable = editable;
 }
 
 void QtTagComboBox::addTag(const QString &id, const QString &label) {
-	QAction* tagAction = new QAction(editMenu);
-	tagAction->setText(label);
-	tagAction->setCheckable(true);
-	tagAction->setData(QString(id));
-	editMenu->addAction(tagAction);
+    QAction* tagAction = new QAction(editMenu);
+    tagAction->setText(label);
+    tagAction->setCheckable(true);
+    tagAction->setData(QString(id));
+    editMenu->addAction(tagAction);
 }
 
 void QtTagComboBox::setTag(const QString &id, bool value) {
-	QList<QAction*> tagActions = editMenu->actions();
-	foreach(QAction* action, tagActions) {
-		if (action->data() == id) {
-			action->setChecked(value);
-			updateDisplayItem();
-			return;
-		}
-	}
+    QList<QAction*> tagActions = editMenu->actions();
+    foreach(QAction* action, tagActions) {
+        if (action->data() == id) {
+            action->setChecked(value);
+            updateDisplayItem();
+            return;
+        }
+    }
 }
 
 bool QtTagComboBox::isTagSet(const QString &id) const {
-	QList<QAction*> tagActions = editMenu->actions();
-	foreach(QAction* action, tagActions) {
-		if (action->data() == id) {
-			return action->isChecked();
-		}
-	}
-	return false;
+    QList<QAction*> tagActions = editMenu->actions();
+    foreach(QAction* action, tagActions) {
+        if (action->data() == id) {
+            return action->isChecked();
+        }
+    }
+    return false;
 }
 
 void QtTagComboBox::showPopup() {
@@ -78,31 +78,31 @@ void QtTagComboBox::hidePopup() {
 }
 
 bool QtTagComboBox::event(QEvent* event) {
-	if (event->type() == QEvent::MouseButtonPress ||
-		event->type() == QEvent::KeyRelease) {
-		if (!editable) return true;
+    if (event->type() == QEvent::MouseButtonPress ||
+        event->type() == QEvent::KeyRelease) {
+        if (!editable) return true;
 
-		QPoint p = mapToGlobal(QPoint(0,0));
-		p += QPoint(0, height());
-		editMenu->exec(p);
-		updateDisplayItem();
-		return true;
-	}
-	return QComboBox::event(event);
+        QPoint p = mapToGlobal(QPoint(0,0));
+        p += QPoint(0, height());
+        editMenu->exec(p);
+        updateDisplayItem();
+        return true;
+    }
+    return QComboBox::event(event);
 }
 
 void QtTagComboBox::updateDisplayItem() {
-	QList<QAction*> tagActions = editMenu->actions();
-	QString text = "";
-	foreach(QAction* action, tagActions) {
-		if (action->isChecked()) {
-			if (text != "") {
-				text += ", ";
-			}
-			text += action->text();
-		}
-	}
-	setItemText(0, text);
+    QList<QAction*> tagActions = editMenu->actions();
+    QString text = "";
+    foreach(QAction* action, tagActions) {
+        if (action->isChecked()) {
+            if (text != "") {
+                text += ", ";
+            }
+            text += action->text();
+        }
+    }
+    setItemText(0, text);
 }
 
 }

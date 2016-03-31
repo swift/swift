@@ -14,7 +14,7 @@ SOCKS5ProxiedConnectionFactory::SOCKS5ProxiedConnectionFactory(DomainNameResolve
 }
 
 boost::shared_ptr<Connection> SOCKS5ProxiedConnectionFactory::createConnection() {
-	return SOCKS5ProxiedConnection::create(resolver_, connectionFactory_, timerFactory_, proxyHost_, proxyPort_);
+    return SOCKS5ProxiedConnection::create(resolver_, connectionFactory_, timerFactory_, proxyHost_, proxyPort_);
 }
 
 }

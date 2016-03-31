@@ -17,41 +17,41 @@
 #include <Swiften/Whiteboard/WhiteboardTransformer.h>
 
 namespace Swift {
-	void WhiteboardServer::handleLocalOperationReceived(WhiteboardOperation::ref operation) {
-		operations_.push_back(operation);
-	}
+    void WhiteboardServer::handleLocalOperationReceived(WhiteboardOperation::ref operation) {
+        operations_.push_back(operation);
+    }
 
-	WhiteboardOperation::ref WhiteboardServer::handleClientOperationReceived(WhiteboardOperation::ref newOperation) {
-		std::list<WhiteboardOperation::ref>::reverse_iterator it;
-		if (operations_.empty() || newOperation->getParentID() == operations_.back()->getID()) {
-			operations_.push_back(newOperation);
-			return newOperation;
-		}
-		for (it = operations_.rbegin(); it != operations_.rend(); ++it) {
-			WhiteboardOperation::ref operation = *it;
-			while (newOperation->getParentID() == operation->getParentID()) {
-				std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> tResult = WhiteboardTransformer::transform(newOperation, operation);
+    WhiteboardOperation::ref WhiteboardServer::handleClientOperationReceived(WhiteboardOperation::ref newOperation) {
+        std::list<WhiteboardOperation::ref>::reverse_iterator it;
+        if (operations_.empty() || newOperation->getParentID() == operations_.back()->getID()) {
+            operations_.push_back(newOperation);
+            return newOperation;
+        }
+        for (it = operations_.rbegin(); it != operations_.rend(); ++it) {
+            WhiteboardOperation::ref operation = *it;
+            while (newOperation->getParentID() == operation->getParentID()) {
+                std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> tResult = WhiteboardTransformer::transform(newOperation, operation);
 
-				if (it == operations_.rbegin()) {
-					operations_.push_back(tResult.second);
-					return tResult.second;
-				} else {
-					newOperation = tResult.second;
-					--it;
-					operation = *it;
-				}
+                if (it == operations_.rbegin()) {
+                    operations_.push_back(tResult.second);
+                    return tResult.second;
+                } else {
+                    newOperation = tResult.second;
+                    --it;
+                    operation = *it;
+                }
 
-			}
-		}
-		return WhiteboardOperation::ref();
-	}
+            }
+        }
+        return WhiteboardOperation::ref();
+    }
 
-	void WhiteboardServer::print() {
-		std::list<WhiteboardOperation::ref>::iterator it;
-		std::cout << "Server:" << std::endl;
-		for(it = operations_.begin(); it != operations_.end(); ++it) {
-			std::cout << (*it)->getID() << " " << (*it)->getPos() << std::endl;
-		}
-	}
+    void WhiteboardServer::print() {
+        std::list<WhiteboardOperation::ref>::iterator it;
+        std::cout << "Server:" << std::endl;
+        for(it = operations_.begin(); it != operations_.end(); ++it) {
+            std::cout << (*it)->getID() << " " << (*it)->getPos() << std::endl;
+        }
+    }
 
 }

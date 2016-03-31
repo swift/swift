@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API CompressedParser : public GenericElementParser<Compressed> {
-		public:
-			CompressedParser() : GenericElementParser<Compressed>() {}
-	};
+    class SWIFTEN_API CompressedParser : public GenericElementParser<Compressed> {
+        public:
+            CompressedParser() : GenericElementParser<Compressed>() {}
+    };
 }

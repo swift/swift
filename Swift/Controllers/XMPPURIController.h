@@ -11,23 +11,23 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class URIHandler;
-	class JID;
-	class UIEventStream;
+    class URIHandler;
+    class JID;
+    class UIEventStream;
 
-	class XMPPURIController {
-		public:
-			XMPPURIController(URIHandler* uriHandler, UIEventStream* uiEventStream);
-			~XMPPURIController();
+    class XMPPURIController {
+        public:
+            XMPPURIController(URIHandler* uriHandler, UIEventStream* uiEventStream);
+            ~XMPPURIController();
 
-			boost::signal<void (const JID&)> onStartChat;
-			boost::signal<void (const JID&)> onJoinMUC;
+            boost::signal<void (const JID&)> onStartChat;
+            boost::signal<void (const JID&)> onJoinMUC;
 
-		private:
-			void handleURI(const std::string&);
+        private:
+            void handleURI(const std::string&);
 
-		private:
-			URIHandler* uriHandler;
-			UIEventStream* uiEventStream;
-	};
+        private:
+            URIHandler* uriHandler;
+            UIEventStream* uiEventStream;
+    };
 }

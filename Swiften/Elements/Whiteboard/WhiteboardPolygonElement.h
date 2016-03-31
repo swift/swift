@@ -19,54 +19,54 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardPolygonElement : public WhiteboardElement {
-		typedef std::pair<int, int> Point;
-	public:
-		typedef boost::shared_ptr<WhiteboardPolygonElement> ref;
-	public:
-		WhiteboardPolygonElement() {
-		}
+    class SWIFTEN_API WhiteboardPolygonElement : public WhiteboardElement {
+        typedef std::pair<int, int> Point;
+    public:
+        typedef boost::shared_ptr<WhiteboardPolygonElement> ref;
+    public:
+        WhiteboardPolygonElement() {
+        }
 
-		const std::vector<Point>& getPoints() const {
-			return points_;
-		}
+        const std::vector<Point>& getPoints() const {
+            return points_;
+        }
 
-		void setPoints(const std::vector<Point>& points) {
-			points_ = points;
-		}
+        void setPoints(const std::vector<Point>& points) {
+            points_ = points;
+        }
 
-		const WhiteboardColor& getPenColor() const {
-			return penColor_;
-		}
+        const WhiteboardColor& getPenColor() const {
+            return penColor_;
+        }
 
-		void setPenColor(const WhiteboardColor& color) {
-			penColor_ = color;
-		}
+        void setPenColor(const WhiteboardColor& color) {
+            penColor_ = color;
+        }
 
-		const WhiteboardColor& getBrushColor() const {
-			return brushColor_;
-		}
+        const WhiteboardColor& getBrushColor() const {
+            return brushColor_;
+        }
 
-		void setBrushColor(const WhiteboardColor& color) {
-			brushColor_ = color;
-		}
+        void setBrushColor(const WhiteboardColor& color) {
+            brushColor_ = color;
+        }
 
-		int getPenWidth() const {
-			return penWidth_;
-		}
+        int getPenWidth() const {
+            return penWidth_;
+        }
 
-		void setPenWidth(const int penWidth) {
-			penWidth_ = penWidth;
-		}
+        void setPenWidth(const int penWidth) {
+            penWidth_ = penWidth;
+        }
 
-		void accept(WhiteboardElementVisitor& visitor) {
-			visitor.visit(*this);
-		}
+        void accept(WhiteboardElementVisitor& visitor) {
+            visitor.visit(*this);
+        }
 
-	private:
-		std::vector<Point> points_;
-		WhiteboardColor penColor_;
-		WhiteboardColor brushColor_;
-		int penWidth_;
-	};
+    private:
+        std::vector<Point> points_;
+        WhiteboardColor penColor_;
+        WhiteboardColor brushColor_;
+        int penWidth_;
+    };
 }

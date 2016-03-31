@@ -12,12 +12,12 @@
 #include <boost/shared_ptr.hpp>
 
 namespace Swift {
-	class CrashReporter {
-		public:
-			CrashReporter(const boost::filesystem::path& path);
+    class CrashReporter {
+        public:
+            CrashReporter(const boost::filesystem::path& path);
 
-		private:
-			struct Private;
-			boost::shared_ptr<Private> p;
-	};
+        private:
+            struct Private;
+            boost::shared_ptr<Private> p;
+    };
 }

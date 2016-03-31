@@ -12,13 +12,13 @@
 #include <Swift/QtUI/QtBookmarkDetailWindow.h>
 
 namespace Swift {
-	class QtAddBookmarkWindow : public QtBookmarkDetailWindow {
-		Q_OBJECT
-		public:
-			QtAddBookmarkWindow(UIEventStream* eventStream);
-			QtAddBookmarkWindow(UIEventStream* eventStream, const MUCBookmark& bookmark);
-			bool commit();
-		private:
-			UIEventStream* eventStream_;
-	};
+    class QtAddBookmarkWindow : public QtBookmarkDetailWindow {
+        Q_OBJECT
+        public:
+            QtAddBookmarkWindow(UIEventStream* eventStream);
+            QtAddBookmarkWindow(UIEventStream* eventStream, const MUCBookmark& bookmark);
+            bool commit();
+        private:
+            UIEventStream* eventStream_;
+    };
 }

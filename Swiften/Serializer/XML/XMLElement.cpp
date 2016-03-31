@@ -12,49 +12,49 @@
 namespace Swift {
 
 XMLElement::XMLElement(const std::string& tag, const std::string& xmlns, const std::string& text) : tag_(tag) {
-	if (!xmlns.empty()) {
-		setAttribute("xmlns", xmlns);
-	}
-	if (!text.empty()) {
-		addNode(XMLTextNode::ref(new XMLTextNode(text)));
-	}
+    if (!xmlns.empty()) {
+        setAttribute("xmlns", xmlns);
+    }
+    if (!text.empty()) {
+        addNode(XMLTextNode::ref(new XMLTextNode(text)));
+    }
 }
 
 std::string XMLElement::serialize() {
-	std::string result;
-	result += "<" + tag_;
-	typedef std::pair<std::string,std::string> Pair;
-	foreach(const Pair& p, attributes_) {
-		result += " " + p.first + "=\"" + p.second + "\"";
-	}
+    std::string result;
+    result += "<" + tag_;
+    typedef std::pair<std::string,std::string> Pair;
+    foreach(const Pair& p, attributes_) {
+        result += " " + p.first + "=\"" + p.second + "\"";
+    }
 
-	if (!childNodes_.empty()) {
-		result += ">";
-		foreach (boost::shared_ptr<XMLNode> node, childNodes_) {
-			result += node->serialize();
-		}
-		result += "</" + tag_ + ">";
-	}
-	else {
-		result += "/>";
-	}
-	return result;
+    if (!childNodes_.empty()) {
+        result += ">";
+        foreach (boost::shared_ptr<XMLNode> node, childNodes_) {
+            result += node->serialize();
+        }
+        result += "</" + tag_ + ">";
+    }
+    else {
+        result += "/>";
+    }
+    return result;
 }
 
 void XMLElement::setAttribute(const std::string& attribute, const std::string& value) {
-	std::string escapedValue(value);
-	String::replaceAll(escapedValue, '&', "&amp;");
-	String::replaceAll(escapedValue, '<', "&lt;");
-	String::replaceAll(escapedValue, '>', "&gt;");
-	String::replaceAll(escapedValue, '\'', "&apos;");
-	String::replaceAll(escapedValue, '"', "&quot;");
-	attributes_[attribute] = escapedValue;
+    std::string escapedValue(value);
+    String::replaceAll(escapedValue, '&', "&amp;");
+    String::replaceAll(escapedValue, '<', "&lt;");
+    String::replaceAll(escapedValue, '>', "&gt;");
+    String::replaceAll(escapedValue, '\'', "&apos;");
+    String::replaceAll(escapedValue, '"', "&quot;");
+    attributes_[attribute] = escapedValue;
 }
 
 void XMLElement::addNode(boost::shared_ptr<XMLNode> node) {
-	if (node) {
-		childNodes_.push_back(node);
-	}
+    if (node) {
+        childNodes_.push_back(node);
+    }
 }
 
 }

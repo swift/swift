@@ -12,7 +12,7 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	typedef boost::variant<std::string, HostAddress> HostNameOrAddress;
+    typedef boost::variant<std::string, HostAddress> HostNameOrAddress;
 
-	std::string toString(const HostNameOrAddress& address);
+    std::string toString(const HostNameOrAddress& address);
 }

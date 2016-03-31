@@ -27,15 +27,15 @@ ContactsFromXMPPRoster::~ContactsFromXMPPRoster() {
 }
 
 std::vector<Contact::ref> ContactsFromXMPPRoster::getContacts(bool /*withMUCNicks*/) {
-	std::vector<Contact::ref> results;
-	std::vector<XMPPRosterItem> rosterItems = roster_->getItems();
-	foreach(const XMPPRosterItem& rosterItem, rosterItems) {
-		Contact::ref contact = boost::make_shared<Contact>(rosterItem.getName().empty() ? rosterItem.getJID().toString() : rosterItem.getName(), rosterItem.getJID(), StatusShow::None,"");
-		contact->statusType = presenceOracle_->getAccountPresence(contact->jid) ? presenceOracle_->getAccountPresence(contact->jid)->getShow() : StatusShow::None;
-		contact->avatarPath = avatarManager_->getAvatarPath(contact->jid);
-		results.push_back(contact);
-	}
-	return results;
+    std::vector<Contact::ref> results;
+    std::vector<XMPPRosterItem> rosterItems = roster_->getItems();
+    foreach(const XMPPRosterItem& rosterItem, rosterItems) {
+        Contact::ref contact = boost::make_shared<Contact>(rosterItem.getName().empty() ? rosterItem.getJID().toString() : rosterItem.getName(), rosterItem.getJID(), StatusShow::None,"");
+        contact->statusType = presenceOracle_->getAccountPresence(contact->jid) ? presenceOracle_->getAccountPresence(contact->jid)->getShow() : StatusShow::None;
+        contact->avatarPath = avatarManager_->getAvatarPath(contact->jid);
+        results.push_back(contact);
+    }
+    return results;
 }
 
 }

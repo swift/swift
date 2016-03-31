@@ -21,12 +21,12 @@ using namespace Swift;
 
 CryptoProvider* PlatformCryptoProvider::create() {
 #if defined(SWIFTEN_PLATFORM_WIN32)
-	return new WindowsCryptoProvider();
+    return new WindowsCryptoProvider();
 #elif defined(HAVE_COMMONCRYPTO_CRYPTO_PROVIDER)
-	return new CommonCryptoCryptoProvider();
+    return new CommonCryptoCryptoProvider();
 #elif defined(HAVE_OPENSSL_CRYPTO_PROVIDER)
-	return new OpenSSLCryptoProvider();
+    return new OpenSSLCryptoProvider();
 #endif
-	assert(false);
-	return NULL;
+    assert(false);
+    return NULL;
 }

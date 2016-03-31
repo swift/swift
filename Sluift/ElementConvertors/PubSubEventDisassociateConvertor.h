@@ -12,15 +12,15 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class PubSubEventDisassociateConvertor : public GenericLuaElementConvertor<PubSubEventDisassociate> {
-		public:
-			PubSubEventDisassociateConvertor();
-			virtual ~PubSubEventDisassociateConvertor();
+    class PubSubEventDisassociateConvertor : public GenericLuaElementConvertor<PubSubEventDisassociate> {
+        public:
+            PubSubEventDisassociateConvertor();
+            virtual ~PubSubEventDisassociateConvertor();
 
-			virtual boost::shared_ptr<PubSubEventDisassociate> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubEventDisassociate>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-	};
+            virtual boost::shared_ptr<PubSubEventDisassociate> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubEventDisassociate>) SWIFTEN_OVERRIDE;
+            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+    };
 }

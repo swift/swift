@@ -17,10 +17,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API RosterItemExchangeSerializer : public GenericPayloadSerializer<RosterItemExchangePayload> {
-		public:
-			RosterItemExchangeSerializer();
+    class SWIFTEN_API RosterItemExchangeSerializer : public GenericPayloadSerializer<RosterItemExchangePayload> {
+        public:
+            RosterItemExchangeSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<RosterItemExchangePayload>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<RosterItemExchangePayload>)  const;
+    };
 }

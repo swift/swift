@@ -19,40 +19,40 @@ SimpleEventLoop::~SimpleEventLoop() {
 }
 
 void SimpleEventLoop::doRun(bool breakAfterEvents) {
-	while (isRunning_) {
-		{
-			boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
-			while (!eventAvailable_) {
-				eventAvailableCondition_.wait(lock);
-			}
+    while (isRunning_) {
+        {
+            boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+            while (!eventAvailable_) {
+                eventAvailableCondition_.wait(lock);
+            }
 
-			eventAvailable_ = false;
-		}
-		runOnce();
-		if (breakAfterEvents) {
-			return;
-		}
-	}
+            eventAvailable_ = false;
+        }
+        runOnce();
+        if (breakAfterEvents) {
+            return;
+        }
+    }
 }
 
 void SimpleEventLoop::runOnce() {
-	handleNextEvents();
+    handleNextEvents();
 }
 
 void SimpleEventLoop::stop() {
-	postEvent(boost::bind(&SimpleEventLoop::doStop, this));
+    postEvent(boost::bind(&SimpleEventLoop::doStop, this));
 }
 
 void SimpleEventLoop::doStop() {
-	isRunning_ = false;
+    isRunning_ = false;
 }
 
 void SimpleEventLoop::eventPosted() {
-	{
-		boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
-		eventAvailable_ = true;
-	}
-	eventAvailableCondition_.notify_one();
+    {
+        boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+        eventAvailable_ = true;
+    }
+    eventAvailableCondition_.notify_one();
 }
 
 

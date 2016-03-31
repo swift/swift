@@ -11,14 +11,14 @@
 #include <Swiften/Roster/RosterStorage.h>
 
 namespace Swift {
-	class RosterFileStorage : public RosterStorage {
-		public:
-			RosterFileStorage(const boost::filesystem::path& path);
+    class RosterFileStorage : public RosterStorage {
+        public:
+            RosterFileStorage(const boost::filesystem::path& path);
 
-			virtual boost::shared_ptr<RosterPayload> getRoster() const;
-			virtual void setRoster(boost::shared_ptr<RosterPayload>);
+            virtual boost::shared_ptr<RosterPayload> getRoster() const;
+            virtual void setRoster(boost::shared_ptr<RosterPayload>);
 
-		private:
-			boost::filesystem::path path;
-	};
+        private:
+            boost::filesystem::path path;
+    };
 }

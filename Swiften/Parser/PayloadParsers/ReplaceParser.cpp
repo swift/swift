@@ -16,22 +16,22 @@
 
 namespace Swift {
 
-	ReplaceParser::ReplaceParser() : level_(0) {
-	}
+    ReplaceParser::ReplaceParser() : level_(0) {
+    }
 
-	void ReplaceParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
-		if (level_ == 0) {
-			std::string id = attributes.getAttribute("id");
-			getPayloadInternal()->setID(id);
-		}
-		level_++;
-	}
+    void ReplaceParser::handleStartElement(const std::string&, const std::string&, const AttributeMap& attributes) {
+        if (level_ == 0) {
+            std::string id = attributes.getAttribute("id");
+            getPayloadInternal()->setID(id);
+        }
+        level_++;
+    }
 
-	void ReplaceParser::handleEndElement(const std::string&, const std::string&) {
-		--level_;
-	}
+    void ReplaceParser::handleEndElement(const std::string&, const std::string&) {
+        --level_;
+    }
 
-	void ReplaceParser::handleCharacterData(const std::string&) {
-	}
+    void ReplaceParser::handleCharacterData(const std::string&) {
+    }
 
 }

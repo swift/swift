@@ -22,9 +22,9 @@ PlatformXMLParserFactory::PlatformXMLParserFactory() {
 
 XMLParser* PlatformXMLParserFactory::createXMLParser(XMLParserClient* client) {
 #ifdef HAVE_LIBXML
-	return new LibXMLParser(client);
+    return new LibXMLParser(client);
 #else
-	return new ExpatParser(client);
+    return new ExpatParser(client);
 #endif
 }
 

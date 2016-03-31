@@ -10,5 +10,5 @@
 #include <Swiften/Parser/UnitTest/ParserTester.h>
 
 namespace Swift {
-	typedef ParserTester<PayloadParser> PayloadParserTester;
+    typedef ParserTester<PayloadParser> PayloadParserTester;
 }

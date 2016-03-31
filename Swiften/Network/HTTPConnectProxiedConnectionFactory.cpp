@@ -24,9 +24,9 @@ HTTPConnectProxiedConnectionFactory::HTTPConnectProxiedConnectionFactory(DomainN
 }
 
 boost::shared_ptr<Connection> HTTPConnectProxiedConnectionFactory::createConnection() {
-	HTTPConnectProxiedConnection::ref proxyConnection = HTTPConnectProxiedConnection::create(resolver_, connectionFactory_, timerFactory_, proxyHost_, proxyPort_, authID_, authPassword_);
-	proxyConnection->setHTTPTrafficFilter(httpTrafficFilter_);
-	return proxyConnection;
+    HTTPConnectProxiedConnection::ref proxyConnection = HTTPConnectProxiedConnection::create(resolver_, connectionFactory_, timerFactory_, proxyHost_, proxyPort_, authID_, authPassword_);
+    proxyConnection->setHTTPTrafficFilter(httpTrafficFilter_);
+    return proxyConnection;
 }
 
 }

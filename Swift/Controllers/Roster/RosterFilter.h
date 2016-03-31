@@ -11,9 +11,9 @@
 namespace Swift {
 
 class RosterFilter {
-	public:
-		virtual ~RosterFilter() {}
-		virtual bool operator() (RosterItem* item) const = 0;
+    public:
+        virtual ~RosterFilter() {}
+        virtual bool operator() (RosterItem* item) const = 0;
 };
 
 }

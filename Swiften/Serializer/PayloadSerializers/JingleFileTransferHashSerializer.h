@@ -18,13 +18,13 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-	class XMLElement;
-	
-	class SWIFTEN_API JingleFileTransferHashSerializer : public GenericPayloadSerializer<JingleFileTransferHash> {
-		public:
-			JingleFileTransferHashSerializer();
-			
-			virtual std::string serializePayload(boost::shared_ptr<JingleFileTransferHash>)  const;
-	};
+    class PayloadSerializerCollection;
+    class XMLElement;
+
+    class SWIFTEN_API JingleFileTransferHashSerializer : public GenericPayloadSerializer<JingleFileTransferHash> {
+        public:
+            JingleFileTransferHashSerializer();
+
+            virtual std::string serializePayload(boost::shared_ptr<JingleFileTransferHash>)  const;
+    };
 }

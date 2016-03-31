@@ -19,12 +19,12 @@
 #include <SwifTools/SpellChecker.h>
 
 namespace Swift {
-	class MacOSXChecker : public SpellChecker {
-		public:
-			MacOSXChecker();
-			virtual ~MacOSXChecker();
-			virtual bool isCorrect(const std::string& word);
-			virtual void getSuggestions(const std::string& word, std::vector<std::string>& list);
-			virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions);
-	};
+    class MacOSXChecker : public SpellChecker {
+        public:
+            MacOSXChecker();
+            virtual ~MacOSXChecker();
+            virtual bool isCorrect(const std::string& word);
+            virtual void getSuggestions(const std::string& word, std::vector<std::string>& list);
+            virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions);
+    };
 }

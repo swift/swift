@@ -10,10 +10,10 @@
 #include <Swiften/Parser/XMLParserFactory.h>
 
 namespace Swift {
-	class SWIFTEN_API PlatformXMLParserFactory : public XMLParserFactory {
-		public:
-			PlatformXMLParserFactory();
+    class SWIFTEN_API PlatformXMLParserFactory : public XMLParserFactory {
+        public:
+            PlatformXMLParserFactory();
 
-			virtual XMLParser* createXMLParser(XMLParserClient*);
-	};
+            virtual XMLParser* createXMLParser(XMLParserClient*);
+    };
 }

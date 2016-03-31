@@ -14,22 +14,22 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API IQSerializer : public GenericStanzaSerializer<IQ> {
-		public:
-			IQSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>()) :
-					GenericStanzaSerializer<IQ>("iq", payloadSerializers, explicitNS) {
-			}
+    class SWIFTEN_API IQSerializer : public GenericStanzaSerializer<IQ> {
+        public:
+            IQSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>()) :
+                    GenericStanzaSerializer<IQ>("iq", payloadSerializers, explicitNS) {
+            }
 
-		private:
-			virtual void setStanzaSpecificAttributesGeneric(
-					boost::shared_ptr<IQ> iq, 
-					XMLElement& element) const {
-				switch (iq->getType()) {
-					case IQ::Get: element.setAttribute("type","get"); break;
-					case IQ::Set: element.setAttribute("type","set"); break;
-					case IQ::Result: element.setAttribute("type","result"); break;
-					case IQ::Error: element.setAttribute("type","error"); break;
-				}
-			}
-	};
+        private:
+            virtual void setStanzaSpecificAttributesGeneric(
+                    boost::shared_ptr<IQ> iq,
+                    XMLElement& element) const {
+                switch (iq->getType()) {
+                    case IQ::Get: element.setAttribute("type","get"); break;
+                    case IQ::Set: element.setAttribute("type","set"); break;
+                    case IQ::Result: element.setAttribute("type","result"); break;
+                    case IQ::Error: element.setAttribute("type","error"); break;
+                }
+            }
+    };
 }

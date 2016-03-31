@@ -10,15 +10,15 @@
 #include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
-	class OpenSSLCryptoProvider : public CryptoProvider {
-		public:
-			OpenSSLCryptoProvider();
-			~OpenSSLCryptoProvider();
+    class OpenSSLCryptoProvider : public CryptoProvider {
+        public:
+            OpenSSLCryptoProvider();
+            ~OpenSSLCryptoProvider();
 
-			virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
-			virtual Hash* createMD5() SWIFTEN_OVERRIDE;
-			virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
-			virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
-			virtual bool isMD5AllowedForCrypto() const SWIFTEN_OVERRIDE;
-	};
+            virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
+            virtual Hash* createMD5() SWIFTEN_OVERRIDE;
+            virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
+            virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
+            virtual bool isMD5AllowedForCrypto() const SWIFTEN_OVERRIDE;
+    };
 }

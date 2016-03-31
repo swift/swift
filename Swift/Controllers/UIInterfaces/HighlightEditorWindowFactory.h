@@ -13,12 +13,12 @@
 #pragma once
 
 namespace Swift {
-	class HighlightEditorWindow;
+    class HighlightEditorWindow;
 
-	class HighlightEditorWindowFactory {
-	public :
-		virtual ~HighlightEditorWindowFactory() {}
+    class HighlightEditorWindowFactory {
+    public :
+        virtual ~HighlightEditorWindowFactory() {}
 
-		virtual HighlightEditorWindow* createHighlightEditorWindow() = 0;
-	};
+        virtual HighlightEditorWindow* createHighlightEditorWindow() = 0;
+    };
 }

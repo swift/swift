@@ -18,18 +18,18 @@ ResourceBindSerializer::ResourceBindSerializer() : GenericPayloadSerializer<Reso
 }
 
 std::string ResourceBindSerializer::serializePayload(boost::shared_ptr<ResourceBind> resourceBind)  const {
-	XMLElement bindElement("bind", "urn:ietf:params:xml:ns:xmpp-bind");
-	if (resourceBind->getJID().isValid()) {
-		boost::shared_ptr<XMLElement> jidNode(new XMLElement("jid"));
-		jidNode->addNode(boost::make_shared<XMLTextNode>(resourceBind->getJID().toString()));
-		bindElement.addNode(jidNode);
-	}
-	else if (!resourceBind->getResource().empty()) {
-		boost::shared_ptr<XMLElement> resourceNode(new XMLElement("resource"));
-		resourceNode->addNode(boost::make_shared<XMLTextNode>(resourceBind->getResource()));
-		bindElement.addNode(resourceNode);
-	}
-	return bindElement.serialize();
+    XMLElement bindElement("bind", "urn:ietf:params:xml:ns:xmpp-bind");
+    if (resourceBind->getJID().isValid()) {
+        boost::shared_ptr<XMLElement> jidNode(new XMLElement("jid"));
+        jidNode->addNode(boost::make_shared<XMLTextNode>(resourceBind->getJID().toString()));
+        bindElement.addNode(jidNode);
+    }
+    else if (!resourceBind->getResource().empty()) {
+        boost::shared_ptr<XMLElement> resourceNode(new XMLElement("resource"));
+        resourceNode->addNode(boost::make_shared<XMLTextNode>(resourceBind->getResource()));
+        bindElement.addNode(resourceNode);
+    }
+    return bindElement.serialize();
 }
 
 }

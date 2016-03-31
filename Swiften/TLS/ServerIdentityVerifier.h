@@ -15,21 +15,21 @@
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
-	class IDNConverter;
+    class IDNConverter;
 
-	class SWIFTEN_API ServerIdentityVerifier {
-		public:
-			ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter);
+    class SWIFTEN_API ServerIdentityVerifier {
+        public:
+            ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter);
 
-			bool certificateVerifies(Certificate::ref);
+            bool certificateVerifies(Certificate::ref);
 
-		private:
-			bool matchesDomain(const std::string&) const ;
-			bool matchesAddress(const std::string&) const;
+        private:
+            bool matchesDomain(const std::string&) const ;
+            bool matchesAddress(const std::string&) const;
 
-		private:
-			std::string domain;
-			std::string encodedDomain;
-			bool domainValid;
-	};
+        private:
+            std::string domain;
+            std::string encodedDomain;
+            bool domainValid;
+    };
 }

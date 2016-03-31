@@ -13,14 +13,14 @@
 namespace Swift {
 
 std::string PayloadsSerializer::serialize(boost::shared_ptr<Payload> payload) {
-	PayloadSerializer* serializer = serializers.getPayloadSerializer(payload);
-	if (serializer) {
-		return serializer->serialize(payload);
-	}
-	else {
-		CPPUNIT_ASSERT(false);
-		return "";
-	}
+    PayloadSerializer* serializer = serializers.getPayloadSerializer(payload);
+    if (serializer) {
+        return serializer->serialize(payload);
+    }
+    else {
+        CPPUNIT_ASSERT(false);
+        return "";
+    }
 }
 
 

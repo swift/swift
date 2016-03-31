@@ -16,17 +16,17 @@ NetworkEnvironment::~NetworkEnvironment() {
 }
 
 HostAddress NetworkEnvironment::getLocalAddress() const {
-	std::vector<NetworkInterface> networkInterfaces = getNetworkInterfaces();
-	foreach (const NetworkInterface& iface, networkInterfaces) {
-		if (!iface.isLoopback()) {
-			foreach (const HostAddress& address, iface.getAddresses()) {
-				if (address.getRawAddress().is_v4()) {
-					return address;
-				}
-			}
-		}
-	}
-	return HostAddress();
+    std::vector<NetworkInterface> networkInterfaces = getNetworkInterfaces();
+    foreach (const NetworkInterface& iface, networkInterfaces) {
+        if (!iface.isLoopback()) {
+            foreach (const HostAddress& address, iface.getAddresses()) {
+                if (address.getRawAddress().is_v4()) {
+                    return address;
+                }
+            }
+        }
+    }
+    return HostAddress();
 }
 
 }

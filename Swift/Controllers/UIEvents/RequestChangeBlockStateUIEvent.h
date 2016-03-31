@@ -19,25 +19,25 @@
 namespace Swift {
 
 class RequestChangeBlockStateUIEvent : public UIEvent {
-	public:
-		enum BlockState {
-			Blocked,
-			Unblocked
-		};
+    public:
+        enum BlockState {
+            Blocked,
+            Unblocked
+        };
 
-	public:
-		RequestChangeBlockStateUIEvent(BlockState newState, const JID& contact) : state_(newState), contact_(contact) {}
+    public:
+        RequestChangeBlockStateUIEvent(BlockState newState, const JID& contact) : state_(newState), contact_(contact) {}
 
-		BlockState getBlockState() const {
-			return state_;
-		}
+        BlockState getBlockState() const {
+            return state_;
+        }
 
-		JID getContact() const {
-			return contact_;
-		}
-	private:
-		BlockState state_;
-		JID contact_;
+        JID getContact() const {
+            return contact_;
+        }
+    private:
+        BlockState state_;
+        JID contact_;
 };
 
 }

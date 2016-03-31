@@ -15,29 +15,29 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<DummyConnectionServer> {
-		public:
-			DummyConnectionServer(EventLoop* /*eventLoop*/, int port) : localAddressPort(HostAddress(), port) {}
-			DummyConnectionServer(EventLoop* /*eventLoop*/, const Swift::HostAddress& hostAddress, int port) : localAddressPort(hostAddress, port) {}
-			virtual ~DummyConnectionServer() {}
+    class SWIFTEN_API DummyConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<DummyConnectionServer> {
+        public:
+            DummyConnectionServer(EventLoop* /*eventLoop*/, int port) : localAddressPort(HostAddress(), port) {}
+            DummyConnectionServer(EventLoop* /*eventLoop*/, const Swift::HostAddress& hostAddress, int port) : localAddressPort(hostAddress, port) {}
+            virtual ~DummyConnectionServer() {}
 
-			virtual HostAddressPort getAddressPort() const {
-				return localAddressPort;
-			}
+            virtual HostAddressPort getAddressPort() const {
+                return localAddressPort;
+            }
 
-			virtual boost::optional<Error> tryStart() {
-				return boost::optional<Error>();
-			}
+            virtual boost::optional<Error> tryStart() {
+                return boost::optional<Error>();
+            }
 
-			virtual void start() {
+            virtual void start() {
 
-			}
+            }
 
-			virtual void stop() {
+            virtual void stop() {
 
-			}
+            }
 
-		private:
-			HostAddressPort localAddressPort;
-	};
+        private:
+            HostAddressPort localAddressPort;
+    };
 }

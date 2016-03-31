@@ -17,26 +17,26 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class SWIFTEN_API NATTraversalRemovePortForwardingRequest {
-		public:
-			struct PortMapping {
-				enum Protocol {
-					TCP,
-					UDP
-				};
+    class SWIFTEN_API NATTraversalRemovePortForwardingRequest {
+        public:
+            struct PortMapping {
+                enum Protocol {
+                    TCP,
+                    UDP
+                };
 
-				unsigned int publicPort;
-				unsigned int localPort;
-				Protocol protocol;
-				unsigned long leaseInSeconds;
-			};
+                unsigned int publicPort;
+                unsigned int localPort;
+                Protocol protocol;
+                unsigned long leaseInSeconds;
+            };
 
-		public:
-			virtual ~NATTraversalRemovePortForwardingRequest();
+        public:
+            virtual ~NATTraversalRemovePortForwardingRequest();
 
-			virtual void start() = 0;
-			virtual void stop() = 0;
+            virtual void start() = 0;
+            virtual void stop() = 0;
 
-			boost::signal<void (boost::optional<bool> /* failure */)> onResult;
-	};
+            boost::signal<void (boost::optional<bool> /* failure */)> onResult;
+    };
 }

@@ -13,12 +13,12 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class CancelWhiteboardSessionUIEvent : public UIEvent {
-		typedef boost::shared_ptr<CancelWhiteboardSessionUIEvent> ref;
-	public:
-		CancelWhiteboardSessionUIEvent(const JID& jid) : jid_(jid) {}
-		const JID& getContact() const {return jid_;}
-	private:
-		JID jid_;
-	};
+    class CancelWhiteboardSessionUIEvent : public UIEvent {
+        typedef boost::shared_ptr<CancelWhiteboardSessionUIEvent> ref;
+    public:
+        CancelWhiteboardSessionUIEvent(const JID& jid) : jid_(jid) {}
+        const JID& getContact() const {return jid_;}
+    private:
+        JID jid_;
+    };
 }

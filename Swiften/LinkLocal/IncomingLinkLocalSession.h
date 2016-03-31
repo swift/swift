@@ -15,31 +15,31 @@
 #include <Swiften/Session/Session.h>
 
 namespace Swift {
-	class ProtocolHeader;
-	class XMLParserFactory;	
-	class ToplevelElement;
-	class PayloadParserFactoryCollection;
-	class PayloadSerializerCollection;
+    class ProtocolHeader;
+    class XMLParserFactory;
+    class ToplevelElement;
+    class PayloadParserFactoryCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API IncomingLinkLocalSession : public Session {
-		public:
-			IncomingLinkLocalSession(
-					const JID& localJID,
-					boost::shared_ptr<Connection> connection, 
-					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers,
-					XMLParserFactory* xmlParserFactory);
+    class SWIFTEN_API IncomingLinkLocalSession : public Session {
+        public:
+            IncomingLinkLocalSession(
+                    const JID& localJID,
+                    boost::shared_ptr<Connection> connection,
+                    PayloadParserFactoryCollection* payloadParserFactories,
+                    PayloadSerializerCollection* payloadSerializers,
+                    XMLParserFactory* xmlParserFactory);
 
-			boost::signal<void ()> onSessionStarted;
+            boost::signal<void ()> onSessionStarted;
 
-		private:
-			void handleElement(boost::shared_ptr<ToplevelElement>);
-			void handleStreamStart(const ProtocolHeader&);
-			void setInitialized();
-			bool isInitialized() const { 
-				return initialized; 
-			}
+        private:
+            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleStreamStart(const ProtocolHeader&);
+            void setInitialized();
+            bool isInitialized() const {
+                return initialized;
+            }
 
-			bool initialized;
-	};
+            bool initialized;
+    };
 }

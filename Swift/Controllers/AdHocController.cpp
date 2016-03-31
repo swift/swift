@@ -13,21 +13,21 @@
 namespace Swift {
 
 AdHocController::AdHocController(AdHocCommandWindowFactory* factory, boost::shared_ptr<OutgoingAdHocCommandSession> command) {
-	window_ = factory->createAdHocCommandWindow(command);
-	window_->onClosing.connect(boost::bind(&AdHocController::handleWindowClosed, this));
+    window_ = factory->createAdHocCommandWindow(command);
+    window_->onClosing.connect(boost::bind(&AdHocController::handleWindowClosed, this));
 }
 
 AdHocController::~AdHocController() {
-	window_->onClosing.disconnect(boost::bind(&AdHocController::handleWindowClosed, this));
-	delete window_;
+    window_->onClosing.disconnect(boost::bind(&AdHocController::handleWindowClosed, this));
+    delete window_;
 }
 
 void AdHocController::setOnline(bool online) {
-	window_->setOnline(online);
+    window_->setOnline(online);
 }
 
 void AdHocController::handleWindowClosed() {
-	onDeleting();
+    onDeleting();
 }
 
 }

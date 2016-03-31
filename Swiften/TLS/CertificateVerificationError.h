@@ -12,33 +12,33 @@
 #include <Swiften/Base/Error.h>
 
 namespace Swift {
-	class SWIFTEN_API CertificateVerificationError : public Error {
-		public:
-			typedef boost::shared_ptr<CertificateVerificationError> ref;
+    class SWIFTEN_API CertificateVerificationError : public Error {
+        public:
+            typedef boost::shared_ptr<CertificateVerificationError> ref;
 
-			enum Type {
-				UnknownError,
-				Expired,
-				NotYetValid,
-				SelfSigned,
-				Rejected,
-				Untrusted,
-				InvalidPurpose,
-				PathLengthExceeded,
-				InvalidSignature,
-				InvalidCA,
-				InvalidServerIdentity,
-				Revoked,
-				RevocationCheckFailed
-			};
+            enum Type {
+                UnknownError,
+                Expired,
+                NotYetValid,
+                SelfSigned,
+                Rejected,
+                Untrusted,
+                InvalidPurpose,
+                PathLengthExceeded,
+                InvalidSignature,
+                InvalidCA,
+                InvalidServerIdentity,
+                Revoked,
+                RevocationCheckFailed
+            };
 
-			CertificateVerificationError(Type type = UnknownError) : type(type) {}
+            CertificateVerificationError(Type type = UnknownError) : type(type) {}
 
-			Type getType() const { 
-				return type; 
-			}
+            Type getType() const {
+                return type;
+            }
 
-		private:
-			Type type;
-	};
+        private:
+            Type type;
+    };
 }

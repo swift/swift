@@ -15,27 +15,27 @@
 #include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
-	class BonjourQuerier;
-	class EventLoop;
+    class BonjourQuerier;
+    class EventLoop;
 
-	class BonjourQuery : 
-			public EventOwner,
-			public boost::enable_shared_from_this<BonjourQuery> {
-		public:
-			BonjourQuery(boost::shared_ptr<BonjourQuerier>, EventLoop* eventLoop);
-			virtual ~BonjourQuery();
-			
-			void processResult();
-			int getSocketID() const;
+    class BonjourQuery :
+            public EventOwner,
+            public boost::enable_shared_from_this<BonjourQuery> {
+        public:
+            BonjourQuery(boost::shared_ptr<BonjourQuerier>, EventLoop* eventLoop);
+            virtual ~BonjourQuery();
 
-		protected:
-			void run();
-			void finish();
-		
-		protected:
-			EventLoop* eventLoop;
-			boost::shared_ptr<BonjourQuerier> querier;
-			mutable boost::mutex sdRefMutex;
-			DNSServiceRef sdRef;
-	};
+            void processResult();
+            int getSocketID() const;
+
+        protected:
+            void run();
+            void finish();
+
+        protected:
+            EventLoop* eventLoop;
+            boost::shared_ptr<BonjourQuerier> querier;
+            mutable boost::mutex sdRefMutex;
+            DNSServiceRef sdRef;
+    };
 }

@@ -11,10 +11,10 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API IDGenerator {
-		public:
-			IDGenerator();
+    class SWIFTEN_API IDGenerator {
+        public:
+            IDGenerator();
 
-			std::string generateID();
-	};
+            std::string generateID();
+    };
 }

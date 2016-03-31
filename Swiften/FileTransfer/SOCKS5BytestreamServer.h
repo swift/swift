@@ -18,32 +18,32 @@
 #include <Swiften/Network/ConnectionServer.h>
 
 namespace Swift {
-	class SOCKS5BytestreamServerSession;
-	class CryptoProvider;
+    class SOCKS5BytestreamServerSession;
+    class CryptoProvider;
 
-	class SWIFTEN_API SOCKS5BytestreamServer {
-		public:
-			SOCKS5BytestreamServer(
-					boost::shared_ptr<ConnectionServer> connectionServer, 
-					SOCKS5BytestreamRegistry* registry);
+    class SWIFTEN_API SOCKS5BytestreamServer {
+        public:
+            SOCKS5BytestreamServer(
+                    boost::shared_ptr<ConnectionServer> connectionServer,
+                    SOCKS5BytestreamRegistry* registry);
 
-			HostAddressPort getAddressPort() const;
+            HostAddressPort getAddressPort() const;
 
-			void start();
-			void stop();
+            void start();
+            void stop();
 
-			std::vector< boost::shared_ptr<SOCKS5BytestreamServerSession> > getSessions(const std::string& id) const;
+            std::vector< boost::shared_ptr<SOCKS5BytestreamServerSession> > getSessions(const std::string& id) const;
 
-		private:
-			void handleNewConnection(boost::shared_ptr<Connection> connection);
-			void handleSessionFinished(boost::shared_ptr<SOCKS5BytestreamServerSession>);
+        private:
+            void handleNewConnection(boost::shared_ptr<Connection> connection);
+            void handleSessionFinished(boost::shared_ptr<SOCKS5BytestreamServerSession>);
 
-		private:
-			friend class SOCKS5BytestreamServerSession;
+        private:
+            friend class SOCKS5BytestreamServerSession;
 
-			boost::shared_ptr<ConnectionServer> connectionServer;
-			SOCKS5BytestreamRegistry* registry;
-			std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > sessions;
-	};
+            boost::shared_ptr<ConnectionServer> connectionServer;
+            SOCKS5BytestreamRegistry* registry;
+            std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > sessions;
+    };
 }
 

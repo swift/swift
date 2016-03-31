@@ -22,16 +22,16 @@ namespace Swift {
 
 class SWIFTEN_API S5BProxyRequestParser : public GenericPayloadParser<S5BProxyRequest> {
 public:
-	S5BProxyRequestParser();
-	virtual ~S5BProxyRequestParser();
+    S5BProxyRequestParser();
+    virtual ~S5BProxyRequestParser();
 
-	virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-	virtual void handleEndElement(const std::string& element, const std::string&);
-	virtual void handleCharacterData(const std::string& data);
+    virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+    virtual void handleEndElement(const std::string& element, const std::string&);
+    virtual void handleCharacterData(const std::string& data);
 
 private:
-	bool parseActivate;
-	std::string activateJID;
+    bool parseActivate;
+    std::string activateJID;
 };
 
 }

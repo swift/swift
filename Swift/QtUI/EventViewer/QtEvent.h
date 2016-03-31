@@ -13,20 +13,20 @@
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
 namespace Swift {
-	class QtEvent {
-		public:
-			QtEvent(boost::shared_ptr<StanzaEvent> event, bool active);
-			QVariant data(int role);
-			boost::shared_ptr<StanzaEvent> getEvent() { return event_; }
-			enum EventRoles {
-				SenderRole = Qt::UserRole
+    class QtEvent {
+        public:
+            QtEvent(boost::shared_ptr<StanzaEvent> event, bool active);
+            QVariant data(int role);
+            boost::shared_ptr<StanzaEvent> getEvent() { return event_; }
+            enum EventRoles {
+                SenderRole = Qt::UserRole
 
-			};
+            };
 
-		private:
-			QString text();
-			QString sender();
-			boost::shared_ptr<StanzaEvent> event_;
-			bool active_;
-	};
+        private:
+            QString text();
+            QString sender();
+            boost::shared_ptr<StanzaEvent> event_;
+            bool active_;
+    };
 }

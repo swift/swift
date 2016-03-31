@@ -12,67 +12,67 @@
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
-	class SWIFTEN_API SimpleCertificate : public Certificate {
-		public:
-			typedef boost::shared_ptr<SimpleCertificate> ref;
+    class SWIFTEN_API SimpleCertificate : public Certificate {
+        public:
+            typedef boost::shared_ptr<SimpleCertificate> ref;
 
-			void setSubjectName(const std::string& name) {
-				subjectName = name;
-			}
+            void setSubjectName(const std::string& name) {
+                subjectName = name;
+            }
 
-			std::string getSubjectName() const {
-				return subjectName;
-			}
+            std::string getSubjectName() const {
+                return subjectName;
+            }
 
-			std::vector<std::string> getCommonNames() const {
-				return commonNames;
-			}
+            std::vector<std::string> getCommonNames() const {
+                return commonNames;
+            }
 
-			void addCommonName(const std::string& name) {
-				commonNames.push_back(name);
-			}
+            void addCommonName(const std::string& name) {
+                commonNames.push_back(name);
+            }
 
-			void addSRVName(const std::string& name) {
-				srvNames.push_back(name);
-			}
+            void addSRVName(const std::string& name) {
+                srvNames.push_back(name);
+            }
 
-			void addDNSName(const std::string& name) {
-				dnsNames.push_back(name);
-			}
+            void addDNSName(const std::string& name) {
+                dnsNames.push_back(name);
+            }
 
-			void addXMPPAddress(const std::string& addr) {
-				xmppAddresses.push_back(addr);
-			}
+            void addXMPPAddress(const std::string& addr) {
+                xmppAddresses.push_back(addr);
+            }
 
-			std::vector<std::string> getSRVNames() const {
-				return srvNames;
-			}
+            std::vector<std::string> getSRVNames() const {
+                return srvNames;
+            }
 
-			std::vector<std::string> getDNSNames() const {
-				return dnsNames;
-			}
+            std::vector<std::string> getDNSNames() const {
+                return dnsNames;
+            }
 
-			std::vector<std::string> getXMPPAddresses() const {
-				return xmppAddresses;
-			}
+            std::vector<std::string> getXMPPAddresses() const {
+                return xmppAddresses;
+            }
 
-			ByteArray toDER() const {
-				return der;
-			}
+            ByteArray toDER() const {
+                return der;
+            }
 
-			void setDER(const ByteArray& der) {
-				this->der = der;
-			}
+            void setDER(const ByteArray& der) {
+                this->der = der;
+            }
 
-		private:
-			void parse();
+        private:
+            void parse();
 
-		private:
-			std::string subjectName;
-			ByteArray der;
-			std::vector<std::string> commonNames;
-			std::vector<std::string> dnsNames;
-			std::vector<std::string> xmppAddresses;
-			std::vector<std::string> srvNames;
-	};
+        private:
+            std::string subjectName;
+            ByteArray der;
+            std::vector<std::string> commonNames;
+            std::vector<std::string> dnsNames;
+            std::vector<std::string> xmppAddresses;
+            std::vector<std::string> srvNames;
+    };
 }

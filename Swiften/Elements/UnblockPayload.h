@@ -13,20 +13,20 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API UnblockPayload : public Payload {
-		public:
-			UnblockPayload(const std::vector<JID>& jids = std::vector<JID>()) : items(jids) {
-			}
+    class SWIFTEN_API UnblockPayload : public Payload {
+        public:
+            UnblockPayload(const std::vector<JID>& jids = std::vector<JID>()) : items(jids) {
+            }
 
-			void addItem(const JID& item) {
-				items.push_back(item);
-			}
+            void addItem(const JID& item) {
+                items.push_back(item);
+            }
 
-			const std::vector<JID>& getItems() const {
-				return items;
-			}
+            const std::vector<JID>& getItems() const {
+                return items;
+            }
 
-		private:
-			std::vector<JID> items;
-	};
+        private:
+            std::vector<JID> items;
+    };
 }

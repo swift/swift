@@ -14,20 +14,20 @@ namespace Swift {
 class SOCKS5BytestreamServerManager;
 
 class SWIFTEN_API SOCKS5BytestreamServerPortForwardingUser {
-	public:
-		SOCKS5BytestreamServerPortForwardingUser(SOCKS5BytestreamServerManager* s5bServerManager);
-		~SOCKS5BytestreamServerPortForwardingUser();
+    public:
+        SOCKS5BytestreamServerPortForwardingUser(SOCKS5BytestreamServerManager* s5bServerManager);
+        ~SOCKS5BytestreamServerPortForwardingUser();
 
-		bool isForwardingSetup() const;
+        bool isForwardingSetup() const;
 
-		boost::signal<void (bool /* success */)> onSetup;
+        boost::signal<void (bool /* success */)> onSetup;
 
-	private:
-		void handleServerManagerPortForwardingSetup(bool successful);
+    private:
+        void handleServerManagerPortForwardingSetup(bool successful);
 
-	private:
-		SOCKS5BytestreamServerManager* s5bServerManager_;
-		boost::bsignals::scoped_connection onPortForwardingSetupConnection_;
+    private:
+        SOCKS5BytestreamServerManager* s5bServerManager_;
+        boost::bsignals::scoped_connection onPortForwardingSetupConnection_;
 };
 
 }

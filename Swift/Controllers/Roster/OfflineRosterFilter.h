@@ -15,12 +15,12 @@
 namespace Swift {
 
 class OfflineRosterFilter : public RosterFilter {
-	public:
-		virtual ~OfflineRosterFilter() {}
-		virtual bool operator() (RosterItem *item) const {
-			ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(item);
-			return contactItem && contactItem->getStatusShow() == StatusShow::None;
-		}
+    public:
+        virtual ~OfflineRosterFilter() {}
+        virtual bool operator() (RosterItem *item) const {
+            ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(item);
+            return contactItem && contactItem->getStatusShow() == StatusShow::None;
+        }
 };
 
 }

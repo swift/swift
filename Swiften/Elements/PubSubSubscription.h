@@ -19,65 +19,65 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubSubscription : public PubSubPayload {
-		public:
-			enum SubscriptionType {
-				None,
-				Pending,
-				Subscribed,
-				Unconfigured
-			};
+    class SWIFTEN_API PubSubSubscription : public PubSubPayload {
+        public:
+            enum SubscriptionType {
+                None,
+                Pending,
+                Subscribed,
+                Unconfigured
+            };
 
-			PubSubSubscription();
-			
-			virtual ~PubSubSubscription();
+            PubSubSubscription();
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            virtual ~PubSubSubscription();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			const boost::optional< std::string >& getSubscriptionID() const {
-				return subscriptionID;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			void setSubscriptionID(const boost::optional< std::string >& value) {
-				this->subscriptionID = value ;
-			}
+            const boost::optional< std::string >& getSubscriptionID() const {
+                return subscriptionID;
+            }
 
-			const JID& getJID() const {
-				return jid;
-			}
+            void setSubscriptionID(const boost::optional< std::string >& value) {
+                this->subscriptionID = value ;
+            }
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			boost::shared_ptr<PubSubSubscribeOptions> getOptions() const {
-				return options;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
 
-			void setOptions(boost::shared_ptr<PubSubSubscribeOptions> value) {
-				this->options = value ;
-			}
+            boost::shared_ptr<PubSubSubscribeOptions> getOptions() const {
+                return options;
+            }
 
-			SubscriptionType getSubscription() const {
-				return subscription;
-			}
+            void setOptions(boost::shared_ptr<PubSubSubscribeOptions> value) {
+                this->options = value ;
+            }
 
-			void setSubscription(SubscriptionType value) {
-				this->subscription = value ;
-			}
+            SubscriptionType getSubscription() const {
+                return subscription;
+            }
+
+            void setSubscription(SubscriptionType value) {
+                this->subscription = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			boost::optional< std::string > subscriptionID;
-			JID jid;
-			boost::shared_ptr<PubSubSubscribeOptions> options;
-			SubscriptionType subscription;
-	};
+        private:
+            boost::optional< std::string > node;
+            boost::optional< std::string > subscriptionID;
+            JID jid;
+            boost::shared_ptr<PubSubSubscribeOptions> options;
+            SubscriptionType subscription;
+    };
 }

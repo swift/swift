@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API UnknownElementParser : public GenericElementParser<UnknownElement> {
-		public:
-			UnknownElementParser() : GenericElementParser<UnknownElement>() {}
-	};
+    class SWIFTEN_API UnknownElementParser : public GenericElementParser<UnknownElement> {
+        public:
+            UnknownElementParser() : GenericElementParser<UnknownElement>() {}
+    };
 }

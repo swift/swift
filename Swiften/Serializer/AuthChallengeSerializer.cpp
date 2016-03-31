@@ -16,18 +16,18 @@ AuthChallengeSerializer::AuthChallengeSerializer() {
 }
 
 SafeByteArray AuthChallengeSerializer::serialize(boost::shared_ptr<ToplevelElement> element)  const {
-	boost::shared_ptr<AuthChallenge> authChallenge(boost::dynamic_pointer_cast<AuthChallenge>(element));
-	std::string value;
-	boost::optional<std::vector<unsigned char> > message = authChallenge->getValue();
-	if (message) {
-		if ((*message).empty()) {
-			value = "=";
-		}
-		else {
-			value = Base64::encode(ByteArray(*message));
-		}
-	}
-	return createSafeByteArray("<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</challenge>");
+    boost::shared_ptr<AuthChallenge> authChallenge(boost::dynamic_pointer_cast<AuthChallenge>(element));
+    std::string value;
+    boost::optional<std::vector<unsigned char> > message = authChallenge->getValue();
+    if (message) {
+        if ((*message).empty()) {
+            value = "=";
+        }
+        else {
+            value = Base64::encode(ByteArray(*message));
+        }
+    }
+    return createSafeByteArray("<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">" + value + "</challenge>");
 }
 
 }

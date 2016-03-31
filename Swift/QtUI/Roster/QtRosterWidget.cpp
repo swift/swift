@@ -38,125 +38,125 @@ QtRosterWidget::~QtRosterWidget() {
 }
 
 void QtRosterWidget::handleEditUserActionTriggered(bool /*checked*/) {
-	QModelIndexList selectedIndexList = getSelectedIndexes();
-	if (selectedIndexList.empty()) {
-		return;
-	}
-	QModelIndex index = selectedIndexList[0];
-	if (!index.isValid()) {
-		return;
-	}
-	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
-	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
-		eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
-	}
+    QModelIndexList selectedIndexList = getSelectedIndexes();
+    if (selectedIndexList.empty()) {
+        return;
+    }
+    QModelIndex index = selectedIndexList[0];
+    if (!index.isValid()) {
+        return;
+    }
+    RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+    if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
+        eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
+    }
 }
 
 void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
-	QModelIndex index = indexAt(event->pos());
-	if (!index.isValid()) {
-		return;
-	}
-	RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
-	QMenu contextMenu;
-	if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
-		QAction* editContact = contextMenu.addAction(tr("Edit…"));
-		editContact->setEnabled(isOnline());
-		QAction* removeContact = contextMenu.addAction(tr("Remove"));
-		removeContact->setEnabled(isOnline());
-		QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
+    QModelIndex index = indexAt(event->pos());
+    if (!index.isValid()) {
+        return;
+    }
+    RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
+    QMenu contextMenu;
+    if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
+        QAction* editContact = contextMenu.addAction(tr("Edit…"));
+        editContact->setEnabled(isOnline());
+        QAction* removeContact = contextMenu.addAction(tr("Remove"));
+        removeContact->setEnabled(isOnline());
+        QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
 
-		QAction* unblockContact = NULL;
-		if (contact->blockState() == ContactRosterItem::IsBlocked ||
-			contact->blockState() == ContactRosterItem::IsDomainBlocked) {
-			unblockContact = contextMenu.addAction(tr("Unblock"));
-			unblockContact->setEnabled(isOnline());
-		}
+        QAction* unblockContact = NULL;
+        if (contact->blockState() == ContactRosterItem::IsBlocked ||
+            contact->blockState() == ContactRosterItem::IsDomainBlocked) {
+            unblockContact = contextMenu.addAction(tr("Unblock"));
+            unblockContact->setEnabled(isOnline());
+        }
 
-		QAction* blockContact = NULL;
-		if (contact->blockState() == ContactRosterItem::IsUnblocked) {
-			blockContact = contextMenu.addAction(tr("Block"));
-			blockContact->setEnabled(isOnline());
-		}
+        QAction* blockContact = NULL;
+        if (contact->blockState() == ContactRosterItem::IsUnblocked) {
+            blockContact = contextMenu.addAction(tr("Block"));
+            blockContact->setEnabled(isOnline());
+        }
 
 #ifdef SWIFT_EXPERIMENTAL_FT
-		QAction* sendFile = NULL;
-		if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
-			sendFile = contextMenu.addAction(tr("Send File"));
-			sendFile->setEnabled(isOnline());
-		}
+        QAction* sendFile = NULL;
+        if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
+            sendFile = contextMenu.addAction(tr("Send File"));
+            sendFile->setEnabled(isOnline());
+        }
 #endif
 #ifdef SWIFT_EXPERIMENTAL_WB
-		QAction* startWhiteboardChat = NULL;
-		if (contact->supportsFeature(ContactRosterItem::WhiteboardFeature)) {
-			startWhiteboardChat = contextMenu.addAction(tr("Start Whiteboard Chat"));
-			startWhiteboardChat->setEnabled(isOnline());
-		}
+        QAction* startWhiteboardChat = NULL;
+        if (contact->supportsFeature(ContactRosterItem::WhiteboardFeature)) {
+            startWhiteboardChat = contextMenu.addAction(tr("Start Whiteboard Chat"));
+            startWhiteboardChat->setEnabled(isOnline());
+        }
 #endif
-		QAction* result = contextMenu.exec(event->globalPos());
-		if (result == editContact) {
-			eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
-		}
-		else if (result == removeContact) {
-			if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
-				eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
-			}
-		}
-		else if (result == showProfileForContact) {
-			eventStream_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
-		}
-		else if (unblockContact && result == unblockContact) {
-			if (contact->blockState() == ContactRosterItem::IsDomainBlocked) {
-				QMessageBox messageBox(QMessageBox::Question, tr("Swift"), tr("%2 is currently blocked because of a block on all users of the %1 service.\n %2 cannot be unblocked individually; do you want to unblock all %1 users?").arg(P2QSTRING(contact->getJID().getDomain()), P2QSTRING(contact->getJID().toString())), QMessageBox::NoButton, this);
-				QPushButton* unblockDomainButton = messageBox.addButton(tr("Unblock %1 domain").arg(P2QSTRING(contact->getJID().getDomain())), QMessageBox::AcceptRole);
-				messageBox.addButton(QMessageBox::Abort);
+        QAction* result = contextMenu.exec(event->globalPos());
+        if (result == editContact) {
+            eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
+        }
+        else if (result == removeContact) {
+            if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
+                eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
+            }
+        }
+        else if (result == showProfileForContact) {
+            eventStream_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
+        }
+        else if (unblockContact && result == unblockContact) {
+            if (contact->blockState() == ContactRosterItem::IsDomainBlocked) {
+                QMessageBox messageBox(QMessageBox::Question, tr("Swift"), tr("%2 is currently blocked because of a block on all users of the %1 service.\n %2 cannot be unblocked individually; do you want to unblock all %1 users?").arg(P2QSTRING(contact->getJID().getDomain()), P2QSTRING(contact->getJID().toString())), QMessageBox::NoButton, this);
+                QPushButton* unblockDomainButton = messageBox.addButton(tr("Unblock %1 domain").arg(P2QSTRING(contact->getJID().getDomain())), QMessageBox::AcceptRole);
+                messageBox.addButton(QMessageBox::Abort);
 
-				messageBox.exec();
-				if (messageBox.clickedButton() == unblockDomainButton)  {
-					eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID().getDomain()));
-				}
-			} else {
-				eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
-			}
-		}
-		else if (blockContact && result == blockContact) {
-			eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, contact->getJID()));
-		}
+                messageBox.exec();
+                if (messageBox.clickedButton() == unblockDomainButton)  {
+                    eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID().getDomain()));
+                }
+            } else {
+                eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
+            }
+        }
+        else if (blockContact && result == blockContact) {
+            eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, contact->getJID()));
+        }
 #ifdef SWIFT_EXPERIMENTAL_FT
-		else if (sendFile && result == sendFile) {
-			QString fileName = QFileDialog::getOpenFileName(this, tr("Send File"), "", tr("All Files (*);;"));
-			if (!fileName.isEmpty()) {
-				eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(fileName)));
-			}
-		}
+        else if (sendFile && result == sendFile) {
+            QString fileName = QFileDialog::getOpenFileName(this, tr("Send File"), "", tr("All Files (*);;"));
+            if (!fileName.isEmpty()) {
+                eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(fileName)));
+            }
+        }
 #endif
 #ifdef SWIFT_EXPERIMENTAL_WB
-		else if (startWhiteboardChat && result == startWhiteboardChat) {
-			eventStream_->send(boost::make_shared<RequestWhiteboardUIEvent>(contact->getJID()));
-		}
+        else if (startWhiteboardChat && result == startWhiteboardChat) {
+            eventStream_->send(boost::make_shared<RequestWhiteboardUIEvent>(contact->getJID()));
+        }
 #endif
-	}
-	else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
-		QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));
-		if (P2QSTRING(group->getDisplayName()) == tr("Contacts")) {
-			renameGroupAction->setEnabled(false);
-		}
-		else {
-			renameGroupAction->setEnabled(isOnline());
-		}
-		QAction* result = contextMenu.exec(event->globalPos());
-		if (result == renameGroupAction) {
-			renameGroup(group);
-		}
-	}
+    }
+    else if (GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item)) {
+        QAction* renameGroupAction = contextMenu.addAction(tr("Rename"));
+        if (P2QSTRING(group->getDisplayName()) == tr("Contacts")) {
+            renameGroupAction->setEnabled(false);
+        }
+        else {
+            renameGroupAction->setEnabled(isOnline());
+        }
+        QAction* result = contextMenu.exec(event->globalPos());
+        if (result == renameGroupAction) {
+            renameGroup(group);
+        }
+    }
 }
 
 void QtRosterWidget::renameGroup(GroupRosterItem* group) {
-	bool ok;
-	QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("Enter a new name for group '%1':").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
-	if (ok) {
-		eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
-	}
+    bool ok;
+    QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("Enter a new name for group '%1':").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
+    if (ok) {
+        eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
+    }
 }
 
 }

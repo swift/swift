@@ -21,25 +21,25 @@ QtVCardHomeWork::~QtVCardHomeWork() {
 }
 
 void QtVCardHomeWork::setTagComboBox(QtTagComboBox* tagBox) {
-	tagComboBox = tagBox;
-	tagComboBox->addTag("home", QObject::tr("Home"));
-	tagComboBox->addTag("work", QObject::tr("Work"));
+    tagComboBox = tagBox;
+    tagComboBox->addTag("home", QObject::tr("Home"));
+    tagComboBox->addTag("work", QObject::tr("Work"));
 }
 
 void QtVCardHomeWork::setHome(const bool home) {
-	tagComboBox->setTag("home", home);
+    tagComboBox->setTag("home", home);
 }
 
 bool QtVCardHomeWork::getHome() const {
-	return tagComboBox->isTagSet("home");
+    return tagComboBox->isTagSet("home");
 }
 
 void QtVCardHomeWork::setWork(const bool work) {
-	tagComboBox->setTag("work", work);
+    tagComboBox->setTag("work", work);
 }
 
 bool QtVCardHomeWork::getWork() const {
-	return tagComboBox->isTagSet("work");
+    return tagComboBox->isTagSet("work");
 }
 
 }

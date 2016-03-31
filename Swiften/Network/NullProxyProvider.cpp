@@ -12,9 +12,9 @@ NullProxyProvider::NullProxyProvider() {
 }
 
 HostAddressPort NullProxyProvider::getHTTPConnectProxy() const {
-	return HostAddressPort();
+    return HostAddressPort();
 }
 
 HostAddressPort NullProxyProvider::getSOCKS5Proxy() const {
-	return HostAddressPort();
+    return HostAddressPort();
 }

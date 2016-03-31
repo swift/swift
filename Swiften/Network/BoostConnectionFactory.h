@@ -13,16 +13,16 @@
 #include <Swiften/Network/ConnectionFactory.h>
 
 namespace Swift {
-	class BoostConnection;
+    class BoostConnection;
 
-	class SWIFTEN_API BoostConnectionFactory : public ConnectionFactory {
-		public:
-			BoostConnectionFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
+    class SWIFTEN_API BoostConnectionFactory : public ConnectionFactory {
+        public:
+            BoostConnectionFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 
-			virtual boost::shared_ptr<Connection> createConnection();
+            virtual boost::shared_ptr<Connection> createConnection();
 
-		private:
-			boost::shared_ptr<boost::asio::io_service> ioService;
-			EventLoop* eventLoop;
-	};
+        private:
+            boost::shared_ptr<boost::asio::io_service> ioService;
+            EventLoop* eventLoop;
+    };
 }

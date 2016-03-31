@@ -17,13 +17,13 @@
 #include <Swiften/Network/NATPortMapping.h>
 
 namespace Swift {
-	class SWIFTEN_API NATTraversalForwardPortRequest {
-		public:
-			virtual ~NATTraversalForwardPortRequest();
+    class SWIFTEN_API NATTraversalForwardPortRequest {
+        public:
+            virtual ~NATTraversalForwardPortRequest();
 
-			virtual void start() = 0;
-			virtual void stop() = 0;
+            virtual void start() = 0;
+            virtual void stop() = 0;
 
-			boost::signal<void (boost::optional<NATPortMapping>)> onResult;
-	};
+            boost::signal<void (boost::optional<NATPortMapping>)> onResult;
+    };
 }

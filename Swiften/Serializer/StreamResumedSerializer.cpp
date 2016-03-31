@@ -18,11 +18,11 @@ StreamResumedSerializer::StreamResumedSerializer() : GenericElementSerializer<St
 }
 
 SafeByteArray StreamResumedSerializer::serialize(boost::shared_ptr<ToplevelElement> el) const {
-	boost::shared_ptr<StreamResumed> e(boost::dynamic_pointer_cast<StreamResumed>(el));
-	XMLElement element("resumed", "urn:xmpp:sm:2");
-	element.setAttribute("previd", e->getResumeID());
-	if (e->getHandledStanzasCount()) {
-		element.setAttribute("h", boost::lexical_cast<std::string>(e->getHandledStanzasCount().get()));
-	}
-	return createSafeByteArray(element.serialize());
+    boost::shared_ptr<StreamResumed> e(boost::dynamic_pointer_cast<StreamResumed>(el));
+    XMLElement element("resumed", "urn:xmpp:sm:2");
+    element.setAttribute("previd", e->getResumeID());
+    if (e->getHandledStanzasCount()) {
+        element.setAttribute("h", boost::lexical_cast<std::string>(e->getHandledStanzasCount().get()));
+    }
+    return createSafeByteArray(element.serialize());
 }

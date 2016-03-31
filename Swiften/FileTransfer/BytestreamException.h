@@ -11,9 +11,9 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API BytestreamException : public std::exception {
-		public:
-			BytestreamException() {
-			}
-	};
+    class SWIFTEN_API BytestreamException : public std::exception {
+        public:
+            BytestreamException() {
+            }
+    };
 }

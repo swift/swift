@@ -16,16 +16,16 @@ namespace Swift {
 class SettingsProvider;
 
 class QtOccupantListWidget : public QtTreeWidget {
-	Q_OBJECT
-	public:
-		QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent = NULL);
-		virtual ~QtOccupantListWidget();
-		void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
-		boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
-	protected:
-		void contextMenuEvent(QContextMenuEvent* event);
-	private:
-		std::vector<ChatWindow::OccupantAction> availableOccupantActions_;
+    Q_OBJECT
+    public:
+        QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent = NULL);
+        virtual ~QtOccupantListWidget();
+        void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
+        boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
+    protected:
+        void contextMenuEvent(QContextMenuEvent* event);
+    private:
+        std::vector<ChatWindow::OccupantAction> availableOccupantActions_;
 };
 
 }

@@ -14,23 +14,23 @@
 #include <Swiften/Queries/Request.h>
 
 namespace Swift {
-	class SWIFTEN_API SetInBandRegistrationRequest : public Request {
-		public:
-			typedef boost::shared_ptr<SetInBandRegistrationRequest> ref;
+    class SWIFTEN_API SetInBandRegistrationRequest : public Request {
+        public:
+            typedef boost::shared_ptr<SetInBandRegistrationRequest> ref;
 
-			static ref create(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) {
-				return ref(new SetInBandRegistrationRequest(to, payload, router));
-			}
+            static ref create(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) {
+                return ref(new SetInBandRegistrationRequest(to, payload, router));
+            }
 
-		private:
-			SetInBandRegistrationRequest(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) : Request(IQ::Set, to, InBandRegistrationPayload::ref(payload), router) {
-			}
+        private:
+            SetInBandRegistrationRequest(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) : Request(IQ::Set, to, InBandRegistrationPayload::ref(payload), router) {
+            }
 
-			virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
-				onResponse(payload, error);
-			}
+            virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+                onResponse(payload, error);
+            }
 
-		public:
-			boost::signal<void (boost::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
-	};
+        public:
+            boost::signal<void (boost::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
+    };
 }

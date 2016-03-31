@@ -12,15 +12,15 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class SecurityLabelConvertor : public GenericLuaElementConvertor<SecurityLabel> {
-		public:
-			SecurityLabelConvertor();
-			virtual ~SecurityLabelConvertor();
+    class SecurityLabelConvertor : public GenericLuaElementConvertor<SecurityLabel> {
+        public:
+            SecurityLabelConvertor();
+            virtual ~SecurityLabelConvertor();
 
-			virtual boost::shared_ptr<SecurityLabel> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<SecurityLabel>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-	};
+            virtual boost::shared_ptr<SecurityLabel> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<SecurityLabel>) SWIFTEN_OVERRIDE;
+            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+    };
 }

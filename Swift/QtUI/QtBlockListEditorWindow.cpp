@@ -31,197 +31,197 @@
 namespace Swift {
 
 class QtJIDValidator : public QValidator {
-	public:
-		QtJIDValidator(QObject* parent) : QValidator(parent) {}
-		virtual ~QtJIDValidator() {}
-		virtual QValidator::State validate(QString& input, int&) const {
-			return JID(Q2PSTRING(input)).isValid() ? Acceptable : Intermediate;
-		}
+    public:
+        QtJIDValidator(QObject* parent) : QValidator(parent) {}
+        virtual ~QtJIDValidator() {}
+        virtual QValidator::State validate(QString& input, int&) const {
+            return JID(Q2PSTRING(input)).isValid() ? Acceptable : Intermediate;
+        }
 };
 
 class QtJIDValidatedItemDelegate : public QItemDelegate {
-	public:
-		QtJIDValidatedItemDelegate(QObject* parent) : QItemDelegate(parent) {}
-		virtual ~QtJIDValidatedItemDelegate() {}
+    public:
+        QtJIDValidatedItemDelegate(QObject* parent) : QItemDelegate(parent) {}
+        virtual ~QtJIDValidatedItemDelegate() {}
 
-		virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const {
-			QLineEdit *editor = new QLineEdit(parent);
-			editor->setValidator(new QtJIDValidator(editor));
-			return editor;
-		}
+        virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem&, const QModelIndex&) const {
+            QLineEdit *editor = new QLineEdit(parent);
+            editor->setValidator(new QtJIDValidator(editor));
+            return editor;
+        }
 
-		void setEditorData(QWidget *editor, const QModelIndex &index) const {
-			QString value = index.model()->data(index, Qt::EditRole).toString();
+        void setEditorData(QWidget *editor, const QModelIndex &index) const {
+            QString value = index.model()->data(index, Qt::EditRole).toString();
 
-			QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
-			lineEdit->setText(value);
-		}
+            QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+            lineEdit->setText(value);
+        }
 
-		void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
-			QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
-			QString currentValue = lineEdit->text();
-			int pos = 0;
-			if (lineEdit->validator()->validate(currentValue, pos) == QValidator::Acceptable) {
-				model->setData(index, lineEdit->text(), Qt::EditRole);
-			} else {
-				model->setData(index, QString(), Qt::EditRole);
-			}
-		}
+        void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const {
+            QLineEdit *lineEdit = static_cast<QLineEdit*>(editor);
+            QString currentValue = lineEdit->text();
+            int pos = 0;
+            if (lineEdit->validator()->validate(currentValue, pos) == QValidator::Acceptable) {
+                model->setData(index, lineEdit->text(), Qt::EditRole);
+            } else {
+                model->setData(index, QString(), Qt::EditRole);
+            }
+        }
 
-		void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &/* index */) const {
-			editor->setGeometry(option.rect);
-		}
+        void updateEditorGeometry(QWidget *editor, const QStyleOptionViewItem &option, const QModelIndex &/* index */) const {
+            editor->setGeometry(option.rect);
+        }
 };
 
 QtBlockListEditorWindow::QtBlockListEditorWindow() : QWidget(), ui(new Ui::QtBlockListEditorWindow), removeItemDelegate(0), editItemDelegate(0) {
-	ui->setupUi(this);
+    ui->setupUi(this);
 
-	freshBlockListTemplate = tr("Double-click to add contact");
+    freshBlockListTemplate = tr("Double-click to add contact");
 
-	new QShortcut(QKeySequence::Close, this, SLOT(close()));
-	ui->throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
+    new QShortcut(QKeySequence::Close, this, SLOT(close()));
+    ui->throbberLabel->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), this));
 
-	removeItemDelegate = new QtRemovableItemDelegate(style());
-	editItemDelegate = new QtJIDValidatedItemDelegate(this);
+    removeItemDelegate = new QtRemovableItemDelegate(style());
+    editItemDelegate = new QtJIDValidatedItemDelegate(this);
 
-	connect(ui->savePushButton, SIGNAL(clicked()), SLOT(applyChanges()));
+    connect(ui->savePushButton, SIGNAL(clicked()), SLOT(applyChanges()));
 
-	ui->blockListTreeWidget->setColumnCount(2);
-	ui->blockListTreeWidget->header()->setStretchLastSection(false);
-	ui->blockListTreeWidget->header()->resizeSection(1, removeItemDelegate->sizeHint(QStyleOptionViewItem(), QModelIndex()).width());
+    ui->blockListTreeWidget->setColumnCount(2);
+    ui->blockListTreeWidget->header()->setStretchLastSection(false);
+    ui->blockListTreeWidget->header()->resizeSection(1, removeItemDelegate->sizeHint(QStyleOptionViewItem(), QModelIndex()).width());
 
 #if QT_VERSION >= 0x050000
-	ui->blockListTreeWidget->header()->setSectionResizeMode(0, QHeaderView::Stretch);
+    ui->blockListTreeWidget->header()->setSectionResizeMode(0, QHeaderView::Stretch);
 #else
-	ui->blockListTreeWidget->header()->setResizeMode(0, QHeaderView::Stretch);
+    ui->blockListTreeWidget->header()->setResizeMode(0, QHeaderView::Stretch);
 #endif
 
-	ui->blockListTreeWidget->setHeaderHidden(true);
-	ui->blockListTreeWidget->setRootIsDecorated(false);
-	ui->blockListTreeWidget->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
-	ui->blockListTreeWidget->setItemDelegateForColumn(0, editItemDelegate);
-	ui->blockListTreeWidget->setItemDelegateForColumn(1, removeItemDelegate);
-	connect(ui->blockListTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(handleItemChanged(QTreeWidgetItem*,int)));
-	ui->blockListTreeWidget->installEventFilter(this);
+    ui->blockListTreeWidget->setHeaderHidden(true);
+    ui->blockListTreeWidget->setRootIsDecorated(false);
+    ui->blockListTreeWidget->setEditTriggers(QAbstractItemView::DoubleClicked | QAbstractItemView::SelectedClicked | QAbstractItemView::EditKeyPressed);
+    ui->blockListTreeWidget->setItemDelegateForColumn(0, editItemDelegate);
+    ui->blockListTreeWidget->setItemDelegateForColumn(1, removeItemDelegate);
+    connect(ui->blockListTreeWidget, SIGNAL(itemChanged(QTreeWidgetItem*,int)), SLOT(handleItemChanged(QTreeWidgetItem*,int)));
+    ui->blockListTreeWidget->installEventFilter(this);
 
-	QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(freshBlockListTemplate) << "x");
-	item->setFlags(item->flags() | Qt::ItemIsEditable);
-	ui->blockListTreeWidget->addTopLevelItem(item);
+    QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(freshBlockListTemplate) << "x");
+    item->setFlags(item->flags() | Qt::ItemIsEditable);
+    ui->blockListTreeWidget->addTopLevelItem(item);
 }
 
 QtBlockListEditorWindow::~QtBlockListEditorWindow() {
 }
 
 void QtBlockListEditorWindow::show() {
-	QWidget::showNormal();
-	QWidget::activateWindow();
-	QWidget::raise();
+    QWidget::showNormal();
+    QWidget::activateWindow();
+    QWidget::raise();
 }
 
 void QtBlockListEditorWindow::hide() {
-	QWidget::hide();
+    QWidget::hide();
 }
 
 void QtBlockListEditorWindow::handleItemChanged(QTreeWidgetItem *item, int) {
-	// check whether changed item contains a valid JID and make it removable
-	if (item && item->text(0) != freshBlockListTemplate) {
-		item->setText(1, "");
-	}
+    // check whether changed item contains a valid JID and make it removable
+    if (item && item->text(0) != freshBlockListTemplate) {
+        item->setText(1, "");
+    }
 
-	// check for empty rows and add an empty one so the user can add items
-	bool hasEmptyRow = false;
-	for( int i = 0; i < ui->blockListTreeWidget->topLevelItemCount(); ++i ) {
-		QTreeWidgetItem* row = ui->blockListTreeWidget->topLevelItem(i);
-		if (row->text(0) == freshBlockListTemplate) {
-			hasEmptyRow = true;
-		}
-		else if (row->text(0).isEmpty()) {
-			ui->blockListTreeWidget->removeItemWidget(row, 0);
-		}
-	}
+    // check for empty rows and add an empty one so the user can add items
+    bool hasEmptyRow = false;
+    for( int i = 0; i < ui->blockListTreeWidget->topLevelItemCount(); ++i ) {
+        QTreeWidgetItem* row = ui->blockListTreeWidget->topLevelItem(i);
+        if (row->text(0) == freshBlockListTemplate) {
+            hasEmptyRow = true;
+        }
+        else if (row->text(0).isEmpty()) {
+            ui->blockListTreeWidget->removeItemWidget(row, 0);
+        }
+    }
 
-	if (!hasEmptyRow) {
-		QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(freshBlockListTemplate) << "x");
-		item->setFlags(item->flags() | Qt::ItemIsEditable);
-		ui->blockListTreeWidget->addTopLevelItem(item);
-	}
+    if (!hasEmptyRow) {
+        QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(freshBlockListTemplate) << "x");
+        item->setFlags(item->flags() | Qt::ItemIsEditable);
+        ui->blockListTreeWidget->addTopLevelItem(item);
+    }
 
-	if (!item) {
-		ui->blockListTreeWidget->setCurrentItem(ui->blockListTreeWidget->topLevelItem(0));
-	}
+    if (!item) {
+        ui->blockListTreeWidget->setCurrentItem(ui->blockListTreeWidget->topLevelItem(0));
+    }
 }
 
 void QtBlockListEditorWindow::applyChanges() {
-	onSetNewBlockList(getCurrentBlockList());
+    onSetNewBlockList(getCurrentBlockList());
 }
 
 void QtBlockListEditorWindow::setCurrentBlockList(const std::vector<JID> &blockedJIDs) {
-	ui->blockListTreeWidget->clear();
+    ui->blockListTreeWidget->clear();
 
-	foreach(const JID& jid, blockedJIDs) {
-		QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(P2QSTRING(jid.toString())) << "");
-		item->setFlags(item->flags() | Qt::ItemIsEditable);
-		ui->blockListTreeWidget->addTopLevelItem(item);
-	}
-	handleItemChanged(0,0);
+    foreach(const JID& jid, blockedJIDs) {
+        QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(P2QSTRING(jid.toString())) << "");
+        item->setFlags(item->flags() | Qt::ItemIsEditable);
+        ui->blockListTreeWidget->addTopLevelItem(item);
+    }
+    handleItemChanged(0,0);
 }
 
 void QtBlockListEditorWindow::setBusy(bool isBusy) {
-	if (isBusy) {
-		ui->throbberLabel->movie()->start();
-		ui->throbberLabel->show();
-		ui->blockListTreeWidget->setEnabled(false);
-		ui->savePushButton->setEnabled(false);
-	} else {
-		ui->throbberLabel->movie()->stop();
-		ui->throbberLabel->hide();
-		ui->blockListTreeWidget->setEnabled(true);
-		ui->savePushButton->setEnabled(true);
-	}
+    if (isBusy) {
+        ui->throbberLabel->movie()->start();
+        ui->throbberLabel->show();
+        ui->blockListTreeWidget->setEnabled(false);
+        ui->savePushButton->setEnabled(false);
+    } else {
+        ui->throbberLabel->movie()->stop();
+        ui->throbberLabel->hide();
+        ui->blockListTreeWidget->setEnabled(true);
+        ui->savePushButton->setEnabled(true);
+    }
 }
 
 void QtBlockListEditorWindow::setError(const std::string& error) {
-	if (!error.empty()) {
-		ui->errorLabel->setText("<font color='red'>" + QtUtilities::htmlEscape(P2QSTRING(error)) + "</font>");
-	}
-	else {
-		ui->errorLabel->setText("");
-	}
+    if (!error.empty()) {
+        ui->errorLabel->setText("<font color='red'>" + QtUtilities::htmlEscape(P2QSTRING(error)) + "</font>");
+    }
+    else {
+        ui->errorLabel->setText("");
+    }
 }
 
 std::vector<JID> Swift::QtBlockListEditorWindow::getCurrentBlockList() const {
-	std::vector<JID> futureBlockedJIDs;
+    std::vector<JID> futureBlockedJIDs;
 
-	for(int i=0; i < ui->blockListTreeWidget->topLevelItemCount(); ++i) {
-		QTreeWidgetItem* row = ui->blockListTreeWidget->topLevelItem(i);
-		JID jid = JID(Q2PSTRING(row->text(0)));
-		if (!jid.toString().empty() && jid.isValid()) {
-			futureBlockedJIDs.push_back(jid);
-		}
-	}
-	return futureBlockedJIDs;
+    for(int i=0; i < ui->blockListTreeWidget->topLevelItemCount(); ++i) {
+        QTreeWidgetItem* row = ui->blockListTreeWidget->topLevelItem(i);
+        JID jid = JID(Q2PSTRING(row->text(0)));
+        if (!jid.toString().empty() && jid.isValid()) {
+            futureBlockedJIDs.push_back(jid);
+        }
+    }
+    return futureBlockedJIDs;
 }
 
 bool QtBlockListEditorWindow::eventFilter(QObject* target, QEvent* event) {
-	if (target == ui->blockListTreeWidget) {
-		if (event->type() == QEvent::KeyPress) {
-			QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
-			if (keyEvent->key() == Qt::Key_Backspace) {
-				// remove currently selected item
-				QTreeWidgetItem* currentItem = ui->blockListTreeWidget->currentItem();
-				if (currentItem->text(0) != freshBlockListTemplate) {
-					ui->blockListTreeWidget->takeTopLevelItem(ui->blockListTreeWidget->indexOfTopLevelItem(currentItem));
-					return true;
-				}
-			}
-			else if (keyEvent->key() == Qt::Key_Return) {
-				// open editor for return key d
-				ui->blockListTreeWidget->editItem(ui->blockListTreeWidget->currentItem(), 0);
-				return true;
-			}
-		}
-	}
-	return QWidget::eventFilter(target, event);
+    if (target == ui->blockListTreeWidget) {
+        if (event->type() == QEvent::KeyPress) {
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+            if (keyEvent->key() == Qt::Key_Backspace) {
+                // remove currently selected item
+                QTreeWidgetItem* currentItem = ui->blockListTreeWidget->currentItem();
+                if (currentItem->text(0) != freshBlockListTemplate) {
+                    ui->blockListTreeWidget->takeTopLevelItem(ui->blockListTreeWidget->indexOfTopLevelItem(currentItem));
+                    return true;
+                }
+            }
+            else if (keyEvent->key() == Qt::Key_Return) {
+                // open editor for return key d
+                ui->blockListTreeWidget->editItem(ui->blockListTreeWidget->currentItem(), 0);
+                return true;
+            }
+        }
+    }
+    return QWidget::eventFilter(target, event);
 }
 
 }

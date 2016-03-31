@@ -8,13 +8,13 @@
 
 namespace Swift {
 
-	class HighlightEditorWidget;
+    class HighlightEditorWidget;
 
-	class HighlightEditorWidgetFactory {
-		public:
-			virtual ~HighlightEditorWidgetFactory() {}
+    class HighlightEditorWidgetFactory {
+        public:
+            virtual ~HighlightEditorWidgetFactory() {}
 
-			virtual HighlightEditorWidget* createHighlightEditorWidget() = 0;
-	};
+            virtual HighlightEditorWidget* createHighlightEditorWidget() = 0;
+    };
 
 }

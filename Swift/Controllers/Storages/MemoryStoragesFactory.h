@@ -11,17 +11,17 @@
 #include <Swift/Controllers/Storages/StoragesFactory.h>
 
 namespace Swift {
-	class JID;
-	class CryptoProvider;
+    class JID;
+    class CryptoProvider;
 
-	class MemoryStoragesFactory : public StoragesFactory {
-		public:
-			MemoryStoragesFactory(CryptoProvider* cryptoProvider) : cryptoProvider_(cryptoProvider) {}
+    class MemoryStoragesFactory : public StoragesFactory {
+        public:
+            MemoryStoragesFactory(CryptoProvider* cryptoProvider) : cryptoProvider_(cryptoProvider) {}
 
-			virtual Storages* createStorages(const JID& /*profile*/) const {
-				return new MemoryStorages(cryptoProvider_);
-			}
-		private:
-			CryptoProvider* cryptoProvider_;
-	};
+            virtual Storages* createStorages(const JID& /*profile*/) const {
+                return new MemoryStorages(cryptoProvider_);
+            }
+        private:
+            CryptoProvider* cryptoProvider_;
+    };
 }

@@ -22,12 +22,12 @@ PubSubEventAssociateSerializer::~PubSubEventAssociateSerializer() {
 }
 
 std::string PubSubEventAssociateSerializer::serializePayload(boost::shared_ptr<PubSubEventAssociate> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("associate", "http://jabber.org/protocol/pubsub#event");
-	element.setAttribute("node", payload->getNode());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("associate", "http://jabber.org/protocol/pubsub#event");
+    element.setAttribute("node", payload->getNode());
+    return element.serialize();
 }
 
 

@@ -11,22 +11,22 @@
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Swiften/Network/UnixNetworkEnvironment.h>
 namespace Swift {
-	typedef UnixNetworkEnvironment PlatformNetworkEnvironment;
+    typedef UnixNetworkEnvironment PlatformNetworkEnvironment;
 }
 #elif defined(SWIFTEN_PLATFORM_WIN32)
 #include <Swiften/Network/WindowsNetworkEnvironment.h>
 namespace Swift {
-	typedef WindowsNetworkEnvironment PlatformNetworkEnvironment;
+    typedef WindowsNetworkEnvironment PlatformNetworkEnvironment;
 }
 #elif defined(SWIFTEN_PLATFORM_SOLARIS)
 #include <Swiften/Network/SolarisNetworkEnvironment.h>
 namespace Swift {
-	typedef SolarisNetworkEnvironment PlatformNetworkEnvironment;
+    typedef SolarisNetworkEnvironment PlatformNetworkEnvironment;
 }
 
 #else
 #include <Swiften/Network/UnixNetworkEnvironment.h>
 namespace Swift {
-	typedef UnixNetworkEnvironment PlatformNetworkEnvironment;
+    typedef UnixNetworkEnvironment PlatformNetworkEnvironment;
 }
 #endif

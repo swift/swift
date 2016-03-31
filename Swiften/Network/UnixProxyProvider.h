@@ -15,18 +15,18 @@
 #include <Swiften/Network/EnvironmentProxyProvider.h>
 
 namespace Swift {
-	class GConfProxyProvider;
+    class GConfProxyProvider;
 
-	class UnixProxyProvider : public ProxyProvider {
-		public:
-			UnixProxyProvider();
-			virtual ~UnixProxyProvider();
+    class UnixProxyProvider : public ProxyProvider {
+        public:
+            UnixProxyProvider();
+            virtual ~UnixProxyProvider();
 
-			virtual HostAddressPort getHTTPConnectProxy() const;
-			virtual HostAddressPort getSOCKS5Proxy() const;
+            virtual HostAddressPort getHTTPConnectProxy() const;
+            virtual HostAddressPort getSOCKS5Proxy() const;
 
-		private:
-			GConfProxyProvider* gconfProxyProvider;
-			EnvironmentProxyProvider environmentProxyProvider;
-	};
+        private:
+            GConfProxyProvider* gconfProxyProvider;
+            EnvironmentProxyProvider environmentProxyProvider;
+    };
 }

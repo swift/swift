@@ -12,19 +12,19 @@
 #include <Swiften/Client/XMLBeautifier.h>
 
 namespace Swift {
-	class SWIFTEN_API ClientXMLTracer {
-		public:
-			ClientXMLTracer(CoreClient* client, bool bosh = false);
-			~ClientXMLTracer();
+    class SWIFTEN_API ClientXMLTracer {
+        public:
+            ClientXMLTracer(CoreClient* client, bool bosh = false);
+            ~ClientXMLTracer();
 
-		private:
-			void printData(char direction, const SafeByteArray& data);
-			void printLine(char c);
+        private:
+            void printData(char direction, const SafeByteArray& data);
+            void printLine(char c);
 
-		private:
-			XMLBeautifier *beautifier;
-			bool bosh;
-			boost::bsignals::scoped_connection onDataReadConnection;
-			boost::bsignals::scoped_connection onDataWrittenConnection;
-	};
+        private:
+            XMLBeautifier *beautifier;
+            bool bosh;
+            boost::bsignals::scoped_connection onDataReadConnection;
+            boost::bsignals::scoped_connection onDataWrittenConnection;
+    };
 }

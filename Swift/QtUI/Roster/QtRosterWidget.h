@@ -12,16 +12,16 @@ namespace Swift {
 class QtUIPreferences;
 
 class QtRosterWidget : public QtTreeWidget {
-	Q_OBJECT
-	public:
-		QtRosterWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent = 0);
-		virtual ~QtRosterWidget();
-	public slots:
-		void handleEditUserActionTriggered(bool checked);
-	protected:
-		void contextMenuEvent(QContextMenuEvent* event);
-	private:
-		void renameGroup(GroupRosterItem* group);
+    Q_OBJECT
+    public:
+        QtRosterWidget(UIEventStream* eventStream, SettingsProvider* settings, QWidget* parent = 0);
+        virtual ~QtRosterWidget();
+    public slots:
+        void handleEditUserActionTriggered(bool checked);
+    protected:
+        void contextMenuEvent(QContextMenuEvent* event);
+    private:
+        void renameGroup(GroupRosterItem* group);
 };
 
 }

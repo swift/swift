@@ -26,37 +26,37 @@ JingleFileTransferDescriptionParser::JingleFileTransferDescriptionParser(Payload
 }
 
 void JingleFileTransferDescriptionParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level == 1) {
-		PayloadParserFactory* payloadParserFactory = factories->getPayloadParserFactory(element, ns, attributes);
-		if (payloadParserFactory) {
-			currentPayloadParser.reset(payloadParserFactory->createPayloadParser());
-		}
-	}
+    if (level == 1) {
+        PayloadParserFactory* payloadParserFactory = factories->getPayloadParserFactory(element, ns, attributes);
+        if (payloadParserFactory) {
+            currentPayloadParser.reset(payloadParserFactory->createPayloadParser());
+        }
+    }
 
-	if (level >= 1 && currentPayloadParser) {
-		currentPayloadParser->handleStartElement(element, ns, attributes);
-	}
-	++level;
+    if (level >= 1 && currentPayloadParser) {
+        currentPayloadParser->handleStartElement(element, ns, attributes);
+    }
+    ++level;
 }
 
 void JingleFileTransferDescriptionParser::handleEndElement(const std::string& element, const std::string& ns) {
-	--level;
-	if (level >= 1 && currentPayloadParser) {
-		currentPayloadParser->handleEndElement(element, ns);
-	}
+    --level;
+    if (level >= 1 && currentPayloadParser) {
+        currentPayloadParser->handleEndElement(element, ns);
+    }
 
-	if (level == 0) {
-		boost::shared_ptr<JingleFileTransferFileInfo> info = boost::dynamic_pointer_cast<JingleFileTransferFileInfo>(currentPayloadParser->getPayload());
-		if (info) {
-			getPayloadInternal()->setFileInfo(*info);
-		}
-	}
+    if (level == 0) {
+        boost::shared_ptr<JingleFileTransferFileInfo> info = boost::dynamic_pointer_cast<JingleFileTransferFileInfo>(currentPayloadParser->getPayload());
+        if (info) {
+            getPayloadInternal()->setFileInfo(*info);
+        }
+    }
 }
 
 void JingleFileTransferDescriptionParser::handleCharacterData(const std::string& data) {
-	if (level >= 1 && currentPayloadParser) {
-		currentPayloadParser->handleCharacterData(data);
-	}
+    if (level >= 1 && currentPayloadParser) {
+        currentPayloadParser->handleCharacterData(data);
+    }
 }
 
 }

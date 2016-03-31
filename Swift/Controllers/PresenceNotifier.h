@@ -19,44 +19,44 @@
 #include <SwifTools/Notifier/Notifier.h>
 
 namespace Swift {
-	class TimerFactory;
-	class StanzaChannel;
-	class MUCRegistry;
-	class NickResolver;
-	class PresenceOracle;
+    class TimerFactory;
+    class StanzaChannel;
+    class MUCRegistry;
+    class NickResolver;
+    class PresenceOracle;
 
-	class PresenceNotifier {
-		public:
-			PresenceNotifier(StanzaChannel* stanzaChannel, Notifier* notifier, const MUCRegistry* mucRegistry, AvatarManager* avatarManager, NickResolver* nickResolver, const PresenceOracle* presenceOracle, TimerFactory* timerFactory);
-			~PresenceNotifier();
+    class PresenceNotifier {
+        public:
+            PresenceNotifier(StanzaChannel* stanzaChannel, Notifier* notifier, const MUCRegistry* mucRegistry, AvatarManager* avatarManager, NickResolver* nickResolver, const PresenceOracle* presenceOracle, TimerFactory* timerFactory);
+            ~PresenceNotifier();
 
-			void setInitialQuietPeriodMS(int ms);
+            void setInitialQuietPeriodMS(int ms);
 
-			boost::signal<void (const JID&)> onNotificationActivated;
+            boost::signal<void (const JID&)> onNotificationActivated;
 
-		private:
-			void handlePresenceReceived(boost::shared_ptr<Presence>);
-			void handleStanzaChannelAvailableChanged(bool);
-			void handleNotificationActivated(JID jid);
-			void handleTimerTick();
-			std::string getStatusType(const JID&) const;
-			std::string getStatusMessage(const JID&) const;
+        private:
+            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handleStanzaChannelAvailableChanged(bool);
+            void handleNotificationActivated(JID jid);
+            void handleTimerTick();
+            std::string getStatusType(const JID&) const;
+            std::string getStatusMessage(const JID&) const;
 
-		private:
-			void showNotification(const JID& jid, Notifier::Type type);
+        private:
+            void showNotification(const JID& jid, Notifier::Type type);
 
-		private:
-			StanzaChannel* stanzaChannel;
-			Notifier* notifier;
-			const MUCRegistry* mucRegistry;
-			AvatarManager* avatarManager;
-			NickResolver* nickResolver;
-			const PresenceOracle* presenceOracle;
-			TimerFactory* timerFactory;
-			boost::shared_ptr<Timer> timer;
-			bool justInitialized;
-			bool inQuietPeriod;
-			std::set<JID> availableUsers;
-	};
+        private:
+            StanzaChannel* stanzaChannel;
+            Notifier* notifier;
+            const MUCRegistry* mucRegistry;
+            AvatarManager* avatarManager;
+            NickResolver* nickResolver;
+            const PresenceOracle* presenceOracle;
+            TimerFactory* timerFactory;
+            boost::shared_ptr<Timer> timer;
+            bool justInitialized;
+            bool inQuietPeriod;
+            std::set<JID> availableUsers;
+    };
 }
 

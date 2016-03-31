@@ -18,53 +18,53 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class IQRouter;
-	class IBBRequest;
+    class IQRouter;
+    class IBBRequest;
 
-	class SWIFTEN_API IBBSendSession {
-		public:
-			IBBSendSession(
-					const std::string& id, 
-					const JID& from, 
-					const JID& to, 
-					boost::shared_ptr<ReadBytestream> bytestream, 
-					IQRouter* router);
-			~IBBSendSession();
+    class SWIFTEN_API IBBSendSession {
+        public:
+            IBBSendSession(
+                    const std::string& id,
+                    const JID& from,
+                    const JID& to,
+                    boost::shared_ptr<ReadBytestream> bytestream,
+                    IQRouter* router);
+            ~IBBSendSession();
 
-			void start();
-			void stop();
+            void start();
+            void stop();
 
-			const JID& getSender() const {
-				return from;
-			}
+            const JID& getSender() const {
+                return from;
+            }
 
-			const JID& getReceiver() const {
-				return to;
-			}
+            const JID& getReceiver() const {
+                return to;
+            }
 
-			void setBlockSize(unsigned int blockSize) {
-				this->blockSize = blockSize;
-			}
+            void setBlockSize(unsigned int blockSize) {
+                this->blockSize = blockSize;
+            }
 
-			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-			boost::signal<void (size_t)> onBytesSent;
+            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+            boost::signal<void (size_t)> onBytesSent;
 
-		private:
-			void handleIBBResponse(IBB::ref, ErrorPayload::ref);
-			void finish(boost::optional<FileTransferError>);
-			void sendMoreData();
-			void handleDataAvailable();
+        private:
+            void handleIBBResponse(IBB::ref, ErrorPayload::ref);
+            void finish(boost::optional<FileTransferError>);
+            void sendMoreData();
+            void handleDataAvailable();
 
-		private:
-			std::string id;
-			JID from;
-			JID to;
-			boost::shared_ptr<ReadBytestream> bytestream;
-			IQRouter* router;
-			unsigned int blockSize;
-			int sequenceNumber;
-			bool active;
-			bool waitingForData;
-			boost::shared_ptr<IBBRequest> currentRequest;
-	};
+        private:
+            std::string id;
+            JID from;
+            JID to;
+            boost::shared_ptr<ReadBytestream> bytestream;
+            IQRouter* router;
+            unsigned int blockSize;
+            int sequenceNumber;
+            bool active;
+            bool waitingForData;
+            boost::shared_ptr<IBBRequest> currentRequest;
+    };
 }

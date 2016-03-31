@@ -11,14 +11,14 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StanzaAckParser : public GenericElementParser<StanzaAck> {
-		public:
-			StanzaAckParser();
+    class SWIFTEN_API StanzaAckParser : public GenericElementParser<StanzaAck> {
+        public:
+            StanzaAckParser();
 
-			virtual void handleStartElement(const std::string&, const std::string& ns, const AttributeMap&);
-			virtual void handleEndElement(const std::string&, const std::string& ns);
+            virtual void handleStartElement(const std::string&, const std::string& ns, const AttributeMap&);
+            virtual void handleEndElement(const std::string&, const std::string& ns);
 
-		private:
-			int depth;
-	};
+        private:
+            int depth;
+    };
 }

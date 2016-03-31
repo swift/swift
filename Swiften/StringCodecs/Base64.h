@@ -14,11 +14,11 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API Base64 {
-		public:
-			static std::string encode(const ByteArray& s);
-			static SafeByteArray encode(const SafeByteArray& s);
+    class SWIFTEN_API Base64 {
+        public:
+            static std::string encode(const ByteArray& s);
+            static SafeByteArray encode(const SafeByteArray& s);
 
-			static ByteArray decode(const std::string &s);
-	};
+            static ByteArray decode(const std::string &s);
+    };
 }

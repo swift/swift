@@ -16,94 +16,94 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API IBB : public Payload {
-		public:
-			typedef boost::shared_ptr<IBB> ref;
+    class SWIFTEN_API IBB : public Payload {
+        public:
+            typedef boost::shared_ptr<IBB> ref;
 
-			enum Action {
-				Open,
-				Close,
-				Data
-			};
-			enum StanzaType {
-				IQStanza,
-				MessageStanza
-			};
+            enum Action {
+                Open,
+                Close,
+                Data
+            };
+            enum StanzaType {
+                IQStanza,
+                MessageStanza
+            };
 
-			IBB(Action action = Open, const std::string& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(-1), sequenceNumber(-1) {
-			}
+            IBB(Action action = Open, const std::string& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(-1), sequenceNumber(-1) {
+            }
 
-			static IBB::ref createIBBOpen(const std::string& streamID, int blockSize) {
-				IBB::ref result = boost::make_shared<IBB>(Open, streamID);
-				result->setBlockSize(blockSize);
-				return result;
-			}
+            static IBB::ref createIBBOpen(const std::string& streamID, int blockSize) {
+                IBB::ref result = boost::make_shared<IBB>(Open, streamID);
+                result->setBlockSize(blockSize);
+                return result;
+            }
 
-			static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const std::vector<unsigned char>& data) {
-				IBB::ref result = boost::make_shared<IBB>(Data, streamID);
-				result->setSequenceNumber(sequenceNumber);
-				result->setData(data);
-				return result;
-			}
+            static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const std::vector<unsigned char>& data) {
+                IBB::ref result = boost::make_shared<IBB>(Data, streamID);
+                result->setSequenceNumber(sequenceNumber);
+                result->setData(data);
+                return result;
+            }
 
-			static IBB::ref createIBBClose(const std::string& streamID) {
-				return boost::make_shared<IBB>(Close, streamID);
-			}
+            static IBB::ref createIBBClose(const std::string& streamID) {
+                return boost::make_shared<IBB>(Close, streamID);
+            }
 
-			void setAction(Action action) {
-				this->action = action;
-			}
+            void setAction(Action action) {
+                this->action = action;
+            }
 
-			Action getAction() const {
-				return action;
-			}
+            Action getAction() const {
+                return action;
+            }
 
-			void setStanzaType(StanzaType stanzaType) {
-				this->stanzaType = stanzaType;
-			}
+            void setStanzaType(StanzaType stanzaType) {
+                this->stanzaType = stanzaType;
+            }
 
-			StanzaType getStanzaType() const {
-				return stanzaType;
-			}
+            StanzaType getStanzaType() const {
+                return stanzaType;
+            }
 
-			void setStreamID(const std::string& id) {
-				streamID = id;
-			}
+            void setStreamID(const std::string& id) {
+                streamID = id;
+            }
 
-			const std::string& getStreamID() const {
-				return streamID;
-			}
+            const std::string& getStreamID() const {
+                return streamID;
+            }
 
-			const std::vector<unsigned char>& getData() const {
-				return data;
-			}
+            const std::vector<unsigned char>& getData() const {
+                return data;
+            }
 
-			void setData(const std::vector<unsigned char>& data) {
-				this->data = data;
-			}
+            void setData(const std::vector<unsigned char>& data) {
+                this->data = data;
+            }
 
-			int getBlockSize() const {
-				return blockSize;
-			}
+            int getBlockSize() const {
+                return blockSize;
+            }
 
-			void setBlockSize(int blockSize) {
-				this->blockSize = blockSize;
-			}
+            void setBlockSize(int blockSize) {
+                this->blockSize = blockSize;
+            }
 
-			int getSequenceNumber() const {
-				return sequenceNumber;
-			}
+            int getSequenceNumber() const {
+                return sequenceNumber;
+            }
 
-			void setSequenceNumber(int i) {
-				sequenceNumber = i;
-			}
+            void setSequenceNumber(int i) {
+                sequenceNumber = i;
+            }
 
-		private:
-			Action action;
-			std::string streamID;
-			std::vector<unsigned char> data;
-			StanzaType stanzaType;
-			int blockSize;
-			int sequenceNumber;
-	};
+        private:
+            Action action;
+            std::string streamID;
+            std::vector<unsigned char> data;
+            StanzaType stanzaType;
+            int blockSize;
+            int sequenceNumber;
+    };
 }

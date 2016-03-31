@@ -16,22 +16,22 @@
 #include <signal.h>
 
 namespace Swift {
-	struct SluiftGlobals {
-		SluiftGlobals() : 
-			networkFactories(&eventLoop), 
-			coreLibIndex(-1),
-			moduleLibIndex(-1),
-			interruptRequested(0) {}
+    struct SluiftGlobals {
+        SluiftGlobals() :
+            networkFactories(&eventLoop),
+            coreLibIndex(-1),
+            moduleLibIndex(-1),
+            interruptRequested(0) {}
 
-		LuaElementConvertors elementConvertor;
-		SimpleEventLoop eventLoop;
-		BoostNetworkFactories networkFactories;
-		PlatformTLSFactories tlsFactories;
-		int coreLibIndex;
-		int moduleLibIndex;
-		sig_atomic_t interruptRequested;
+        LuaElementConvertors elementConvertor;
+        SimpleEventLoop eventLoop;
+        BoostNetworkFactories networkFactories;
+        PlatformTLSFactories tlsFactories;
+        int coreLibIndex;
+        int moduleLibIndex;
+        sig_atomic_t interruptRequested;
 #ifdef HAVE_ITUNES
-		ITunesInterface iTunes;
+        ITunesInterface iTunes;
 #endif
-	};
+    };
 }

@@ -13,15 +13,15 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class JID;
+    class JID;
 
-	class SWIFTEN_API AvatarManager {
-		public:
-			virtual ~AvatarManager();
+    class SWIFTEN_API AvatarManager {
+        public:
+            virtual ~AvatarManager();
 
-			virtual ByteArray getAvatar(const JID&) const = 0;
-			virtual boost::filesystem::path getAvatarPath(const JID&) const = 0;
+            virtual ByteArray getAvatar(const JID&) const = 0;
+            virtual boost::filesystem::path getAvatarPath(const JID&) const = 0;
 
-			boost::signal<void (const JID&)> onAvatarChanged;
-	};
+            boost::signal<void (const JID&)> onAvatarChanged;
+    };
 }

@@ -12,9 +12,9 @@
 #include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerPubSub : public ContainerPayload<PubSubOwnerPayload> {
-		public:
-			PubSubOwnerPubSub();
-			virtual ~PubSubOwnerPubSub();
-	};
+    class SWIFTEN_API PubSubOwnerPubSub : public ContainerPayload<PubSubOwnerPayload> {
+        public:
+            PubSubOwnerPubSub();
+            virtual ~PubSubOwnerPubSub();
+    };
 }

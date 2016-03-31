@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamManagementFailedParser : public GenericElementParser<StreamManagementFailed> {
-		public:
-			StreamManagementFailedParser() : GenericElementParser<StreamManagementFailed>() {}
-	};
+    class SWIFTEN_API StreamManagementFailedParser : public GenericElementParser<StreamManagementFailed> {
+        public:
+            StreamManagementFailedParser() : GenericElementParser<StreamManagementFailed>() {}
+    };
 }

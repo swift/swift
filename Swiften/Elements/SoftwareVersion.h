@@ -14,43 +14,43 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API SoftwareVersion : public Payload {
-		public:
-			typedef boost::shared_ptr<SoftwareVersion> ref;
+    class SWIFTEN_API SoftwareVersion : public Payload {
+        public:
+            typedef boost::shared_ptr<SoftwareVersion> ref;
 
-			SoftwareVersion(
-					const std::string& name = "", 
-					const std::string& version = "",
-					const std::string& os = "") : 
-						name_(name), version_(version), os_(os) {}
-			
-			const std::string& getName() const {
-				return name_;
-			}
+            SoftwareVersion(
+                    const std::string& name = "",
+                    const std::string& version = "",
+                    const std::string& os = "") :
+                        name_(name), version_(version), os_(os) {}
 
-			void setName(const std::string& name) {
-				name_ = name;
-			}
+            const std::string& getName() const {
+                return name_;
+            }
 
-			const std::string& getVersion() const {
-				return version_;
-			}
+            void setName(const std::string& name) {
+                name_ = name;
+            }
 
-			void setVersion(const std::string& version) {
-				version_ = version;
-			}
+            const std::string& getVersion() const {
+                return version_;
+            }
 
-			const std::string& getOS() const {
-				return os_;
-			}
+            void setVersion(const std::string& version) {
+                version_ = version;
+            }
 
-			void setOS(const std::string& os) {
-				os_ = os;
-			}
+            const std::string& getOS() const {
+                return os_;
+            }
 
-		private:
-			std::string name_;
-			std::string version_;
-			std::string os_;
-	};
+            void setOS(const std::string& os) {
+                os_ = os;
+            }
+
+        private:
+            std::string name_;
+            std::string version_;
+            std::string os_;
+    };
 }

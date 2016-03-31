@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API ChatStateSerializer : public GenericPayloadSerializer<ChatState> {
-		public:
-			ChatStateSerializer();
+    class SWIFTEN_API ChatStateSerializer : public GenericPayloadSerializer<ChatState> {
+        public:
+            ChatStateSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<ChatState> error)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<ChatState> error)  const;
+    };
 }

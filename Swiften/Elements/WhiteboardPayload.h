@@ -20,52 +20,52 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardPayload : public Payload {
-	public:
-		typedef boost::shared_ptr<WhiteboardPayload> ref;
+    class SWIFTEN_API WhiteboardPayload : public Payload {
+    public:
+        typedef boost::shared_ptr<WhiteboardPayload> ref;
 
-	public:
-		enum Type {UnknownType, Data, SessionRequest, SessionAccept, SessionTerminate};
+    public:
+        enum Type {UnknownType, Data, SessionRequest, SessionAccept, SessionTerminate};
 
-		WhiteboardPayload(Type type = WhiteboardPayload::Data) : type_(type) {
-		}
+        WhiteboardPayload(Type type = WhiteboardPayload::Data) : type_(type) {
+        }
 
-		void setData(const std::string &data) {
-			data_ = data;
-		}
+        void setData(const std::string &data) {
+            data_ = data;
+        }
 
-		std::string getData() const {
-			return data_;
-		}
+        std::string getData() const {
+            return data_;
+        }
 
-		Type getType() const {
-			return type_;
-		}
+        Type getType() const {
+            return type_;
+        }
 
-		void setType(Type type) {
-			type_ = type;
-		}
+        void setType(Type type) {
+            type_ = type;
+        }
 
-		WhiteboardElement::ref getElement() const {
-			return element_;
-		}
+        WhiteboardElement::ref getElement() const {
+            return element_;
+        }
 
-		void setElement(WhiteboardElement::ref element) {
-			element_ = element;
-		}
+        void setElement(WhiteboardElement::ref element) {
+            element_ = element;
+        }
 
-		WhiteboardOperation::ref getOperation() const {
-			return operation_;
-		}
+        WhiteboardOperation::ref getOperation() const {
+            return operation_;
+        }
 
-		void setOperation(WhiteboardOperation::ref operation) {
-			operation_ = operation;
-		}
+        void setOperation(WhiteboardOperation::ref operation) {
+            operation_ = operation;
+        }
 
-	private:
-		std::string data_;
-		Type type_;
-		WhiteboardElement::ref element_;
-		WhiteboardOperation::ref operation_;
-	};
+    private:
+        std::string data_;
+        Type type_;
+        WhiteboardElement::ref element_;
+        WhiteboardOperation::ref operation_;
+    };
 }

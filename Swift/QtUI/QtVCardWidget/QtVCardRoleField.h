@@ -21,27 +21,27 @@
 namespace Swift {
 
 class QtVCardRoleField : public QtVCardGeneralField {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO(tr("Role"), UNLIMITED_INSTANCES, QtVCardRoleField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Role"), UNLIMITED_INSTANCES, QtVCardRoleField)
 
-		QtVCardRoleField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardRoleField();
+        QtVCardRoleField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        virtual ~QtVCardRoleField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setRole(const std::string& role);
-		std::string getRole() const;
+        void setRole(const std::string& role);
+        std::string getRole() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QtResizableLineEdit* roleLineEdit;
+    private:
+        QtResizableLineEdit* roleLineEdit;
 };
 
 }

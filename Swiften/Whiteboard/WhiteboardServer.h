@@ -18,13 +18,13 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardServer {
-	public:
-		void handleLocalOperationReceived(WhiteboardOperation::ref operation);
-		WhiteboardOperation::ref handleClientOperationReceived(WhiteboardOperation::ref operation);
-		void print();
+    class SWIFTEN_API WhiteboardServer {
+    public:
+        void handleLocalOperationReceived(WhiteboardOperation::ref operation);
+        WhiteboardOperation::ref handleClientOperationReceived(WhiteboardOperation::ref operation);
+        void print();
 
-	private:
-		std::list<WhiteboardOperation::ref> operations_;
-	};
+    private:
+        std::list<WhiteboardOperation::ref> operations_;
+    };
 }

@@ -14,23 +14,23 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API AuthChallenge : public ToplevelElement {
-		public:
-			AuthChallenge() {
-			}
+    class SWIFTEN_API AuthChallenge : public ToplevelElement {
+        public:
+            AuthChallenge() {
+            }
 
-			AuthChallenge(const std::vector<unsigned char>& value) : value(value) {
-			}
+            AuthChallenge(const std::vector<unsigned char>& value) : value(value) {
+            }
 
-			const boost::optional< std::vector<unsigned char> >& getValue() const {
-				return value;
-			}
+            const boost::optional< std::vector<unsigned char> >& getValue() const {
+                return value;
+            }
 
-			void setValue(const std::vector<unsigned char>& value) {
-				this->value = boost::optional<std::vector<unsigned char> >(value);
-			}
+            void setValue(const std::vector<unsigned char>& value) {
+                this->value = boost::optional<std::vector<unsigned char> >(value);
+            }
 
-		private:
-			boost::optional< std::vector<unsigned char> > value;
-	};
+        private:
+            boost::optional< std::vector<unsigned char> > value;
+    };
 }

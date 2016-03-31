@@ -14,8 +14,8 @@
 #include <Swiften/Parser/PayloadParsers/MUCItemParser.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCAdminPayloadParser : public GenericPayloadTreeParser<MUCAdminPayload> {
-		public:
-			virtual void handleTree(ParserElement::ref root);
-	};
+    class SWIFTEN_API MUCAdminPayloadParser : public GenericPayloadTreeParser<MUCAdminPayload> {
+        public:
+            virtual void handleTree(ParserElement::ref root);
+    };
 }

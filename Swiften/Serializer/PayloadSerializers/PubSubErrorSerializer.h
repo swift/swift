@@ -12,17 +12,17 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PubSubErrorSerializer : public GenericPayloadSerializer<PubSubError> {
-		public:
-			PubSubErrorSerializer();
-			virtual ~PubSubErrorSerializer();
+    class SWIFTEN_API PubSubErrorSerializer : public GenericPayloadSerializer<PubSubError> {
+        public:
+            PubSubErrorSerializer();
+            virtual ~PubSubErrorSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<PubSubError>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(boost::shared_ptr<PubSubError>) const SWIFTEN_OVERRIDE;
 
-		private:
-			static std::string serializeType(PubSubError::Type);
-			static std::string serializeUnsupportedFeatureType(PubSubError::UnsupportedFeatureType);
-	};
+        private:
+            static std::string serializeType(PubSubError::Type);
+            static std::string serializeUnsupportedFeatureType(PubSubError::UnsupportedFeatureType);
+    };
 }

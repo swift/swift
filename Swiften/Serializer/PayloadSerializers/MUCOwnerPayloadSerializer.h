@@ -11,13 +11,13 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-	class SWIFTEN_API MUCOwnerPayloadSerializer : public GenericPayloadSerializer<MUCOwnerPayload> {
-		public:
-			MUCOwnerPayloadSerializer(PayloadSerializerCollection* serializers);
-			virtual std::string serializePayload(boost::shared_ptr<MUCOwnerPayload> version)  const;
-		private:
-			PayloadSerializerCollection* serializers;
-	};
+    class PayloadSerializerCollection;
+    class SWIFTEN_API MUCOwnerPayloadSerializer : public GenericPayloadSerializer<MUCOwnerPayload> {
+        public:
+            MUCOwnerPayloadSerializer(PayloadSerializerCollection* serializers);
+            virtual std::string serializePayload(boost::shared_ptr<MUCOwnerPayload> version)  const;
+        private:
+            PayloadSerializerCollection* serializers;
+    };
 }
 

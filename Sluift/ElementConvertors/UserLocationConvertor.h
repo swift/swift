@@ -12,15 +12,15 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class LuaElementConvertors;
+    class LuaElementConvertors;
 
-	class UserLocationConvertor : public GenericLuaElementConvertor<UserLocation> {
-		public:
-			UserLocationConvertor();
-			virtual ~UserLocationConvertor();
+    class UserLocationConvertor : public GenericLuaElementConvertor<UserLocation> {
+        public:
+            UserLocationConvertor();
+            virtual ~UserLocationConvertor();
 
-			virtual boost::shared_ptr<UserLocation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<UserLocation>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-	};
+            virtual boost::shared_ptr<UserLocation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<UserLocation>) SWIFTEN_OVERRIDE;
+            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+    };
 }

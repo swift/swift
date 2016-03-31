@@ -7,6 +7,6 @@
 #include <Swiften/Elements/CarbonsDisable.h>
 
 namespace Swift {
-	CarbonsDisable::~CarbonsDisable() { 
-	}
+    CarbonsDisable::~CarbonsDisable() {
+    }
 }

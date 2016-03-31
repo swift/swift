@@ -20,18 +20,18 @@ namespace Swift {
 
 class FileTransferProgressInfo {
 public:
-	FileTransferProgressInfo(boost::uintmax_t completeBytes);
+    FileTransferProgressInfo(boost::uintmax_t completeBytes);
 
 public:
-	void setBytesProcessed(int processedBytes);
+    void setBytesProcessed(int processedBytes);
 
-	int getPercentage() const;
-	boost::signal<void (int)> onProgressPercentage;
+    int getPercentage() const;
+    boost::signal<void (int)> onProgressPercentage;
 
 private:
-	boost::uintmax_t completeBytes;
-	boost::uintmax_t completedBytes;
-	int percentage;
+    boost::uintmax_t completeBytes;
+    boost::uintmax_t completedBytes;
+    int percentage;
 };
 
 }

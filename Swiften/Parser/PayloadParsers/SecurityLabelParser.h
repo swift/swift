@@ -11,25 +11,25 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SerializingParser;
+    class SerializingParser;
 
-	class SWIFTEN_API SecurityLabelParser : public GenericPayloadParser<SecurityLabel> {
-		public:
-			SecurityLabelParser();
+    class SWIFTEN_API SecurityLabelParser : public GenericPayloadParser<SecurityLabel> {
+        public:
+            SecurityLabelParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
-			boost::shared_ptr<SecurityLabel> getLabelPayload() const;
-		private:
-			enum Level { 
-				TopLevel = 0, 
-				PayloadLevel = 1,
-				DisplayMarkingOrLabelLevel = 2,
-				SecurityLabelLevel = 3
-			};
-			int level_;
-			SerializingParser* labelParser_;
-			std::string currentText_;
-	};
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
+            boost::shared_ptr<SecurityLabel> getLabelPayload() const;
+        private:
+            enum Level {
+                TopLevel = 0,
+                PayloadLevel = 1,
+                DisplayMarkingOrLabelLevel = 2,
+                SecurityLabelLevel = 3
+            };
+            int level_;
+            SerializingParser* labelParser_;
+            std::string currentText_;
+    };
 }

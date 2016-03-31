@@ -23,54 +23,54 @@
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
-	class SWIFTEN_API LinkLocalServiceBrowser {
-		public:
-			LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier);
-			~LinkLocalServiceBrowser();
+    class SWIFTEN_API LinkLocalServiceBrowser {
+        public:
+            LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier);
+            ~LinkLocalServiceBrowser();
 
-			void start();
-			void stop();
-			bool isRunning() const;
-			bool hasError() const;
+            void start();
+            void stop();
+            bool isRunning() const;
+            bool hasError() const;
 
-			void registerService(
-					const std::string& name, 
-					int port, 
-					const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
-			void updateService(
-					const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
-			void unregisterService();
-			bool isRegistered() const;
+            void registerService(
+                    const std::string& name,
+                    int port,
+                    const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
+            void updateService(
+                    const LinkLocalServiceInfo& info = LinkLocalServiceInfo());
+            void unregisterService();
+            bool isRegistered() const;
 
-			std::vector<LinkLocalService> getServices() const;
+            std::vector<LinkLocalService> getServices() const;
 
-			// FIXME: Ugly that we need this
-			boost::shared_ptr<DNSSDQuerier> getQuerier() const {
-				return querier;
-			}
+            // FIXME: Ugly that we need this
+            boost::shared_ptr<DNSSDQuerier> getQuerier() const {
+                return querier;
+            }
 
-			boost::signal<void (const LinkLocalService&)> onServiceAdded;
-			boost::signal<void (const LinkLocalService&)> onServiceChanged;
-			boost::signal<void (const LinkLocalService&)> onServiceRemoved;
-			boost::signal<void (const DNSSDServiceID&)> onServiceRegistered;
-			boost::signal<void (bool)> onStopped;
+            boost::signal<void (const LinkLocalService&)> onServiceAdded;
+            boost::signal<void (const LinkLocalService&)> onServiceChanged;
+            boost::signal<void (const LinkLocalService&)> onServiceRemoved;
+            boost::signal<void (const DNSSDServiceID&)> onServiceRegistered;
+            boost::signal<void (bool)> onStopped;
 
-		private:
-			void handleServiceAdded(const DNSSDServiceID&);
-			void handleServiceRemoved(const DNSSDServiceID&);
-			void handleServiceResolved(const DNSSDServiceID& service, const boost::optional<DNSSDResolveServiceQuery::Result>& result);
-			void handleRegisterFinished(const boost::optional<DNSSDServiceID>&);
-			void handleBrowseError();
+        private:
+            void handleServiceAdded(const DNSSDServiceID&);
+            void handleServiceRemoved(const DNSSDServiceID&);
+            void handleServiceResolved(const DNSSDServiceID& service, const boost::optional<DNSSDResolveServiceQuery::Result>& result);
+            void handleRegisterFinished(const boost::optional<DNSSDServiceID>&);
+            void handleBrowseError();
 
-		private:
-			boost::shared_ptr<DNSSDQuerier> querier;
-			boost::optional<DNSSDServiceID> selfService;
-			boost::shared_ptr<DNSSDBrowseQuery> browseQuery;
-			boost::shared_ptr<DNSSDRegisterQuery> registerQuery;
-			typedef std::map<DNSSDServiceID, boost::shared_ptr<DNSSDResolveServiceQuery> > ResolveQueryMap;
-			ResolveQueryMap resolveQueries;
-			typedef std::map<DNSSDServiceID, DNSSDResolveServiceQuery::Result> ServiceMap;
-			ServiceMap services;
-			bool haveError;
-	};
+        private:
+            boost::shared_ptr<DNSSDQuerier> querier;
+            boost::optional<DNSSDServiceID> selfService;
+            boost::shared_ptr<DNSSDBrowseQuery> browseQuery;
+            boost::shared_ptr<DNSSDRegisterQuery> registerQuery;
+            typedef std::map<DNSSDServiceID, boost::shared_ptr<DNSSDResolveServiceQuery> > ResolveQueryMap;
+            ResolveQueryMap resolveQueries;
+            typedef std::map<DNSSDServiceID, DNSSDResolveServiceQuery::Result> ServiceMap;
+            ServiceMap services;
+            bool haveError;
+    };
 }

@@ -18,20 +18,20 @@ namespace Swift {
 class SpellChecker;
 
 class QtSpellCheckHighlighter : public QSyntaxHighlighter {
-	Q_OBJECT
+    Q_OBJECT
 
 public:
-	QtSpellCheckHighlighter(QTextDocument* parent, SpellChecker* spellChecker);
-	virtual ~QtSpellCheckHighlighter();
+    QtSpellCheckHighlighter(QTextDocument* parent, SpellChecker* spellChecker);
+    virtual ~QtSpellCheckHighlighter();
 
-	PositionPairList getMisspelledPositions() const;
+    PositionPairList getMisspelledPositions() const;
 
 protected:
-	virtual void highlightBlock(const QString& text);
+    virtual void highlightBlock(const QString& text);
 
 private:
-	SpellChecker* checker_;
-	PositionPairList misspelledPositions_;
+    SpellChecker* checker_;
+    PositionPairList misspelledPositions_;
 };
 
 

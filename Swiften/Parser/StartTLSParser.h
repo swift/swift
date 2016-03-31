@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StartTLSParser : public GenericElementParser<StartTLSRequest> {
-		public:
-			StartTLSParser() : GenericElementParser<StartTLSRequest>() {}
-	};
+    class SWIFTEN_API StartTLSParser : public GenericElementParser<StartTLSRequest> {
+        public:
+            StartTLSParser() : GenericElementParser<StartTLSRequest>() {}
+    };
 }

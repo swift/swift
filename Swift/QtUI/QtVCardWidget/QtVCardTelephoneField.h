@@ -22,27 +22,27 @@
 namespace Swift {
 
 class QtVCardTelephoneField : public QtVCardGeneralField, public QtVCardHomeWork {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO(tr("Telephone"), UNLIMITED_INSTANCES, QtVCardTelephoneField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Telephone"), UNLIMITED_INSTANCES, QtVCardTelephoneField)
 
-		QtVCardTelephoneField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardTelephoneField();
+        QtVCardTelephoneField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        virtual ~QtVCardTelephoneField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setTelephone(const VCard::Telephone& telephone);
-		VCard::Telephone getTelephone() const;
+        void setTelephone(const VCard::Telephone& telephone);
+        VCard::Telephone getTelephone() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QtResizableLineEdit* telephoneLineEdit;
+    private:
+        QtResizableLineEdit* telephoneLineEdit;
 };
 
 }

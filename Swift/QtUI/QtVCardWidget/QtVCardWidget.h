@@ -24,50 +24,50 @@
 #include <Swift/QtUI/QtVCardWidget/QtVCardPhotoAndNameFields.h>
 
 namespace Ui {
-	class QtVCardWidget;
+    class QtVCardWidget;
 }
 
 namespace Swift {
 
-	class QtVCardWidget : public QWidget {
-		Q_OBJECT
-		Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
+    class QtVCardWidget : public QWidget {
+        Q_OBJECT
+        Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
-		public :
-			explicit QtVCardWidget(QWidget* parent = 0);
-			~QtVCardWidget();
+        public :
+            explicit QtVCardWidget(QWidget* parent = 0);
+            ~QtVCardWidget();
 
-			bool isEditable() const;
-			void setEditable(bool);
+            bool isEditable() const;
+            void setEditable(bool);
 
-			void setVCard(VCard::ref vcard);
-			VCard::ref getVCard();
+            void setVCard(VCard::ref vcard);
+            VCard::ref getVCard();
 
-			virtual QSize sizeHint() const;
+            virtual QSize sizeHint() const;
 
-		signals:
-			void editableChanged(bool editable);
+        signals:
+            void editableChanged(bool editable);
 
-		private slots:
-			void addField();
-			void removeField(QtVCardGeneralField* field);
+        private slots:
+            void addField();
+            void removeField(QtVCardGeneralField* field);
 
-		private:
-			void addFieldType(QMenu*, boost::shared_ptr<QtVCardFieldInfo>);
-			int fieldTypeInstances(boost::shared_ptr<QtVCardFieldInfo>);
-			void clearFields();
-			void clearEmptyFields();
-			void appendField(QtVCardGeneralField* field);
-			void relayoutToolButton();
+        private:
+            void addFieldType(QMenu*, boost::shared_ptr<QtVCardFieldInfo>);
+            int fieldTypeInstances(boost::shared_ptr<QtVCardFieldInfo>);
+            void clearFields();
+            void clearEmptyFields();
+            void appendField(QtVCardGeneralField* field);
+            void relayoutToolButton();
 
-		private:
-			VCard::ref vcard;
-			Ui::QtVCardWidget* ui;
-			QToolButton* toolButton;
-			bool editable;
-			QMenu* menu;
-			std::list<QtVCardGeneralField*> fields;
-			std::map<QAction*, boost::shared_ptr<QtVCardFieldInfo> > actionFieldInfo;
-	};
+        private:
+            VCard::ref vcard;
+            Ui::QtVCardWidget* ui;
+            QToolButton* toolButton;
+            bool editable;
+            QMenu* menu;
+            std::list<QtVCardGeneralField*> fields;
+            std::map<QAction*, boost::shared_ptr<QtVCardFieldInfo> > actionFieldInfo;
+    };
 
 }

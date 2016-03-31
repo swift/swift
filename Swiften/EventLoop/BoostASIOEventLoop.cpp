@@ -19,19 +19,19 @@ BoostASIOEventLoop::~BoostASIOEventLoop() {
 }
 
 void BoostASIOEventLoop::handleASIOEvent() {
-	{
-		boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
-		isEventInASIOEventLoop_ = false;
-	}
-	handleNextEvents();
+    {
+        boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
+        isEventInASIOEventLoop_ = false;
+    }
+    handleNextEvents();
 }
 
 void BoostASIOEventLoop::eventPosted() {
-	boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
-	if (!isEventInASIOEventLoop_) {
-		isEventInASIOEventLoop_ = true;
-		ioService_->post(boost::bind(&BoostASIOEventLoop::handleASIOEvent, this));
-	}
+    boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
+    if (!isEventInASIOEventLoop_) {
+        isEventInASIOEventLoop_ = true;
+        ioService_->post(boost::bind(&BoostASIOEventLoop::handleASIOEvent, this));
+    }
 }
 
 }

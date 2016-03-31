@@ -19,16 +19,16 @@ MUCDestroyPayloadSerializer::MUCDestroyPayloadSerializer() : GenericPayloadSeria
 }
 
 std::string MUCDestroyPayloadSerializer::serializePayload(boost::shared_ptr<MUCDestroyPayload> payload)  const {
-	XMLElement mucElement("destroy", "");
-	if (!payload->getReason().empty()) {
-		XMLElement::ref reason = boost::make_shared<XMLElement>("reason", "");
-		reason->addNode(boost::make_shared<XMLTextNode>(payload->getReason()));
-		mucElement.addNode(reason);
-	}
-	if (payload->getNewVenue().isValid()) {
-		mucElement.setAttribute("jid", payload->getNewVenue().toString());
-	}
-	return mucElement.serialize();
+    XMLElement mucElement("destroy", "");
+    if (!payload->getReason().empty()) {
+        XMLElement::ref reason = boost::make_shared<XMLElement>("reason", "");
+        reason->addNode(boost::make_shared<XMLTextNode>(payload->getReason()));
+        mucElement.addNode(reason);
+    }
+    if (payload->getNewVenue().isValid()) {
+        mucElement.setAttribute("jid", payload->getNewVenue().toString());
+    }
+    return mucElement.serialize();
 }
 
 

@@ -14,11 +14,11 @@
 using namespace Swift;
 
 int main() {
-	PlatformIdleQuerier querier;
-	while (true) {
-		std::cout << "Idle time: " << querier.getIdleTimeSeconds() << std::endl;
-		Swift::sleep(1000);
-	}
-	assert(false);
-	return 0;
+    PlatformIdleQuerier querier;
+    while (true) {
+        std::cout << "Idle time: " << querier.getIdleTimeSeconds() << std::endl;
+        Swift::sleep(1000);
+    }
+    assert(false);
+    return 0;
 }

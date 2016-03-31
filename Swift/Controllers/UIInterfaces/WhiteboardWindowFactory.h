@@ -7,13 +7,13 @@
 #pragma once
 
 namespace Swift {
-	class WhiteboardSession;
-	class WhiteboardWindow;
+    class WhiteboardSession;
+    class WhiteboardWindow;
 
-	class WhiteboardWindowFactory {
-	public :
-		virtual ~WhiteboardWindowFactory() {}
+    class WhiteboardWindowFactory {
+    public :
+        virtual ~WhiteboardWindowFactory() {}
 
-		virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) = 0;
-	};
+        virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) = 0;
+    };
 }

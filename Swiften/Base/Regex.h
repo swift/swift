@@ -12,8 +12,8 @@
 
 namespace Swift {
 
-	namespace Regex {
-		SWIFTEN_API std::string escape(const std::string& source);
-	}
+    namespace Regex {
+        SWIFTEN_API std::string escape(const std::string& source);
+    }
 
 }

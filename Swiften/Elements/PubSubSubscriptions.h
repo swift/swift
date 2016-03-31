@@ -19,36 +19,36 @@
 #include <Swiften/Elements/PubSubSubscription.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubSubscriptions : public PubSubPayload {
-		public:
-			
-			PubSubSubscriptions();
-			PubSubSubscriptions(const std::string& node) : node(node) {}
-			virtual ~PubSubSubscriptions();
+    class SWIFTEN_API PubSubSubscriptions : public PubSubPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubSubscriptions();
+            PubSubSubscriptions(const std::string& node) : node(node) {}
+            virtual ~PubSubSubscriptions();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			const std::vector< boost::shared_ptr<PubSubSubscription> >& getSubscriptions() const {
-				return subscriptions;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			void setSubscriptions(const std::vector< boost::shared_ptr<PubSubSubscription> >& value) {
-				this->subscriptions = value ;
-			}
+            const std::vector< boost::shared_ptr<PubSubSubscription> >& getSubscriptions() const {
+                return subscriptions;
+            }
 
-			void addSubscription(boost::shared_ptr<PubSubSubscription> value) {
-				this->subscriptions.push_back(value);
-			}
+            void setSubscriptions(const std::vector< boost::shared_ptr<PubSubSubscription> >& value) {
+                this->subscriptions = value ;
+            }
+
+            void addSubscription(boost::shared_ptr<PubSubSubscription> value) {
+                this->subscriptions.push_back(value);
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			std::vector< boost::shared_ptr<PubSubSubscription> > subscriptions;
-	};
+        private:
+            boost::optional< std::string > node;
+            std::vector< boost::shared_ptr<PubSubSubscription> > subscriptions;
+    };
 }

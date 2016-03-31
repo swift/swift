@@ -29,251 +29,251 @@
 namespace Swift {
 
 RosterModel::RosterModel(QtTreeWidget* view, bool screenReaderMode) : roster_(NULL), view_(view), screenReader_(screenReaderMode) {
-	const int tooltipAvatarSize = 96; // maximal suggested size according to XEP-0153
-	cachedImageScaler_ = new QtScaledAvatarCache(tooltipAvatarSize);
+    const int tooltipAvatarSize = 96; // maximal suggested size according to XEP-0153
+    cachedImageScaler_ = new QtScaledAvatarCache(tooltipAvatarSize);
 }
 
 RosterModel::~RosterModel() {
-	delete cachedImageScaler_;
+    delete cachedImageScaler_;
 }
 
 void RosterModel::setRoster(Roster* roster) {
-	roster_ = roster;
-	if (roster_) {
-		roster->onChildrenChanged.connect(boost::bind(&RosterModel::handleChildrenChanged, this, _1));
-		roster->onDataChanged.connect(boost::bind(&RosterModel::handleDataChanged, this, _1));
-	}
-	reLayout();
+    roster_ = roster;
+    if (roster_) {
+        roster->onChildrenChanged.connect(boost::bind(&RosterModel::handleChildrenChanged, this, _1));
+        roster->onDataChanged.connect(boost::bind(&RosterModel::handleDataChanged, this, _1));
+    }
+    reLayout();
 }
 
 void RosterModel::reLayout() {
-	//emit layoutChanged();
-	beginResetModel();
-	endResetModel(); // TODO: Not sure if this isn't too early?
-	if (!roster_) {
-		return;
-	}
-	foreach (RosterItem* item, roster_->getRoot()->getDisplayedChildren()) {
-		GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
-		if (!child) continue;
-		emit itemExpanded(index(child), child->isExpanded());
-	}
+    //emit layoutChanged();
+    beginResetModel();
+    endResetModel(); // TODO: Not sure if this isn't too early?
+    if (!roster_) {
+        return;
+    }
+    foreach (RosterItem* item, roster_->getRoot()->getDisplayedChildren()) {
+        GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
+        if (!child) continue;
+        emit itemExpanded(index(child), child->isExpanded());
+    }
 }
 
 void RosterModel::handleChildrenChanged(GroupRosterItem* /*group*/) {
-	reLayout();
+    reLayout();
 }
 
 void RosterModel::handleDataChanged(RosterItem* item) {
-	Q_ASSERT(item);
-	QModelIndex modelIndex = index(item);
-	if (modelIndex.isValid()) {
-		emit dataChanged(modelIndex, modelIndex);
-		view_->refreshTooltip();
-	}
+    Q_ASSERT(item);
+    QModelIndex modelIndex = index(item);
+    if (modelIndex.isValid()) {
+        emit dataChanged(modelIndex, modelIndex);
+        view_->refreshTooltip();
+    }
 }
 
 Qt::ItemFlags RosterModel::flags(const QModelIndex& index) const {
-	Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-	if (dynamic_cast<GroupRosterItem*>(getItem(index)) == NULL) {
-		flags |= Qt::ItemIsDragEnabled;
-	}
-	return flags;
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if (dynamic_cast<GroupRosterItem*>(getItem(index)) == NULL) {
+        flags |= Qt::ItemIsDragEnabled;
+    }
+    return flags;
 }
 
 int RosterModel::columnCount(const QModelIndex& /*parent*/) const {
-	return 1;
+    return 1;
 }
 
 RosterItem* RosterModel::getItem(const QModelIndex& index) const {
-	return index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : NULL;
+    return index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : NULL;
 }
 
 QVariant RosterModel::data(const QModelIndex& index, int role) const {
-	RosterItem* item = getItem(index);
-	if (!item) return QVariant();
+    RosterItem* item = getItem(index);
+    if (!item) return QVariant();
 
-	switch (role) {
-		case Qt::DisplayRole: return getScreenReaderTextOr(item, P2QSTRING(item->getDisplayName()));
-		case Qt::TextColorRole: return getTextColor(item);
-		case Qt::BackgroundColorRole: return getBackgroundColor(item);
-		case Qt::ToolTipRole: return getToolTip(item);
-		case StatusTextRole: return getStatusText(item);
-		case AvatarRole: return getAvatar(item);
-		case PresenceIconRole: return getPresenceIcon(item);
-		case ChildCountRole: return getChildCount(item);
-		case IdleRole: return getIsIdle(item);
-		case JIDRole: return getJID(item);
-		case DisplayJIDRole: return getDisplayJID(item);
-		default: return QVariant();
-	}
+    switch (role) {
+        case Qt::DisplayRole: return getScreenReaderTextOr(item, P2QSTRING(item->getDisplayName()));
+        case Qt::TextColorRole: return getTextColor(item);
+        case Qt::BackgroundColorRole: return getBackgroundColor(item);
+        case Qt::ToolTipRole: return getToolTip(item);
+        case StatusTextRole: return getStatusText(item);
+        case AvatarRole: return getAvatar(item);
+        case PresenceIconRole: return getPresenceIcon(item);
+        case ChildCountRole: return getChildCount(item);
+        case IdleRole: return getIsIdle(item);
+        case JIDRole: return getJID(item);
+        case DisplayJIDRole: return getDisplayJID(item);
+        default: return QVariant();
+    }
 }
 
 QString RosterModel::getScreenReaderTextOr(RosterItem* item, const QString& alternative) const {
-	QString name = P2QSTRING(item->getDisplayName());
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (contact && screenReader_) {
-		name += ": " + P2QSTRING(statusShowTypeToFriendlyName(contact->getStatusShow()));
-		if (!contact->getStatusText().empty()) {
-			name += " (" + P2QSTRING(contact->getStatusText()) + ")";
-		}
-		return name;
-	}
-	else {
-		return alternative;
-	}
+    QString name = P2QSTRING(item->getDisplayName());
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    if (contact && screenReader_) {
+        name += ": " + P2QSTRING(statusShowTypeToFriendlyName(contact->getStatusShow()));
+        if (!contact->getStatusText().empty()) {
+            name += " (" + P2QSTRING(contact->getStatusText()) + ")";
+        }
+        return name;
+    }
+    else {
+        return alternative;
+    }
 }
 
 int RosterModel::getChildCount(RosterItem* item) const {
-	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
-	return group ? group->getDisplayedChildren().size() : 0; 
+    GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+    return group ? group->getDisplayedChildren().size() : 0;
 }
 
 bool RosterModel::getIsIdle(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	return contact ? !contact->getIdleText().empty() : false;
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    return contact ? !contact->getIdleText().empty() : false;
 }
 
 QColor RosterModel::intToColor(int color) const {
-	return QColor(
-		((color & 0xFF0000)>>16),
-		((color & 0xFF00)>>8), 
-		(color & 0xFF));
+    return QColor(
+        ((color & 0xFF0000)>>16),
+        ((color & 0xFF00)>>8),
+        (color & 0xFF));
 }
 
 QColor RosterModel::getTextColor(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	int color = 0;
-	if (contact) {
-		switch (contact->getStatusShow()) {
-			case StatusShow::Online: color = 0x000000; break;
-			case StatusShow::Away: color = 0x336699; break;
-			case StatusShow::XA: color = 0x336699; break;
-			case StatusShow::FFC: color = 0x000000; break;
-			case StatusShow::DND: color = 0x990000; break;
-			case StatusShow::None: color = 0x7F7F7F;break;
-		}
-	}
-	return intToColor(color);
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    int color = 0;
+    if (contact) {
+        switch (contact->getStatusShow()) {
+            case StatusShow::Online: color = 0x000000; break;
+            case StatusShow::Away: color = 0x336699; break;
+            case StatusShow::XA: color = 0x336699; break;
+            case StatusShow::FFC: color = 0x000000; break;
+            case StatusShow::DND: color = 0x990000; break;
+            case StatusShow::None: color = 0x7F7F7F;break;
+        }
+    }
+    return intToColor(color);
 }
 
 QColor RosterModel::getBackgroundColor(RosterItem* item) const {
-	return dynamic_cast<ContactRosterItem*>(item) ? intToColor(0xFFFFFF) : intToColor(0x969696);
+    return dynamic_cast<ContactRosterItem*>(item) ? intToColor(0xFFFFFF) : intToColor(0x969696);
 }
 
 QString RosterModel::getToolTip(RosterItem* item) const {
-	QString tip(P2QSTRING(item->getDisplayName()));
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (contact) {
-		return RosterTooltip::buildDetailedTooltip(contact, cachedImageScaler_);
-	}
-	return tip;
+    QString tip(P2QSTRING(item->getDisplayName()));
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    if (contact) {
+        return RosterTooltip::buildDetailedTooltip(contact, cachedImageScaler_);
+    }
+    return tip;
 }
 
 QString RosterModel::getAvatar(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (!contact) {
-		return "";
-	}
-	return P2QSTRING(pathToString(contact->getAvatarPath()));
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    if (!contact) {
+        return "";
+    }
+    return P2QSTRING(pathToString(contact->getAvatarPath()));
 }
 
 QString RosterModel::getStatusText(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (!contact) return "";
-	return P2QSTRING(contact->getStatusText());
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    if (!contact) return "";
+    return P2QSTRING(contact->getStatusText());
 }
 
 QString RosterModel::getJID(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	return contact ? P2QSTRING(contact->getJID().toString()) : QString();
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    return contact ? P2QSTRING(contact->getJID().toString()) : QString();
 }
 
 QString RosterModel::getDisplayJID(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	QString result = contact ? P2QSTRING(contact->getDisplayJID().toString()) : QString();
-	if (result.isEmpty()) {
-		result = getJID(item);
-	}
-	return result;
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    QString result = contact ? P2QSTRING(contact->getDisplayJID().toString()) : QString();
+    if (result.isEmpty()) {
+        result = getJID(item);
+    }
+    return result;
 }
 
 QIcon RosterModel::getPresenceIcon(RosterItem* item) const {
-	ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
-	if (!contact) return QIcon();
-	if (contact->blockState() == ContactRosterItem::IsBlocked ||
-		contact->blockState() == ContactRosterItem::IsDomainBlocked) {
-		return QIcon(":/icons/stop.png");
-	}
+    ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item);
+    if (!contact) return QIcon();
+    if (contact->blockState() == ContactRosterItem::IsBlocked ||
+        contact->blockState() == ContactRosterItem::IsDomainBlocked) {
+        return QIcon(":/icons/stop.png");
+    }
 
-	return QIcon(statusShowTypeToIconPath(contact->getStatusShow()));
+    return QIcon(statusShowTypeToIconPath(contact->getStatusShow()));
 }
 
 
 QModelIndex RosterModel::index(int row, int column, const QModelIndex& parent) const {
-	if (!roster_) {
-		return QModelIndex();
-	}
-	GroupRosterItem* parentItem;
-	if (!parent.isValid()) {
-		//top level
-		parentItem = roster_->getRoot();
-	} else {
-		parentItem = dynamic_cast<GroupRosterItem*>(getItem(parent));
-		if (!parentItem) return QModelIndex();
-	}
-	return static_cast<size_t>(row) < parentItem->getDisplayedChildren().size() ? createIndex(row, column, parentItem->getDisplayedChildren()[row]) : QModelIndex();
+    if (!roster_) {
+        return QModelIndex();
+    }
+    GroupRosterItem* parentItem;
+    if (!parent.isValid()) {
+        //top level
+        parentItem = roster_->getRoot();
+    } else {
+        parentItem = dynamic_cast<GroupRosterItem*>(getItem(parent));
+        if (!parentItem) return QModelIndex();
+    }
+    return static_cast<size_t>(row) < parentItem->getDisplayedChildren().size() ? createIndex(row, column, parentItem->getDisplayedChildren()[row]) : QModelIndex();
 }
 
 QModelIndex RosterModel::index(RosterItem* item) const {
-	GroupRosterItem* parent = item->getParent();
-	/* Recursive check that it's ok to create such an item 
-		Assuming there are more contacts in a group than groups in a 
-		group, this could save a decent chunk of search time at startup.*/
-	if (parent == NULL || roster_ == NULL || (parent != roster_->getRoot() && !index(parent).isValid())) {
-		return QModelIndex();
-	}
-	for (size_t i = 0; i < parent->getDisplayedChildren().size(); i++) {
-		if (parent->getDisplayedChildren()[i] == item) {
-			return createIndex(i, 0, item);
-		}
-	}
-	return QModelIndex();
+    GroupRosterItem* parent = item->getParent();
+    /* Recursive check that it's ok to create such an item
+        Assuming there are more contacts in a group than groups in a
+        group, this could save a decent chunk of search time at startup.*/
+    if (parent == NULL || roster_ == NULL || (parent != roster_->getRoot() && !index(parent).isValid())) {
+        return QModelIndex();
+    }
+    for (size_t i = 0; i < parent->getDisplayedChildren().size(); i++) {
+        if (parent->getDisplayedChildren()[i] == item) {
+            return createIndex(i, 0, item);
+        }
+    }
+    return QModelIndex();
 }
 
 QModelIndex RosterModel::parent(const QModelIndex& child) const {
-	if (!roster_ || !child.isValid()) {
-		return QModelIndex();
-	}
-	
-	GroupRosterItem* parent = getItem(child)->getParent();
-	return (parent != roster_->getRoot()) ? index(parent) : QModelIndex();
+    if (!roster_ || !child.isValid()) {
+        return QModelIndex();
+    }
+
+    GroupRosterItem* parent = getItem(child)->getParent();
+    return (parent != roster_->getRoot()) ? index(parent) : QModelIndex();
 }
 
 int RosterModel::rowCount(const QModelIndex& parent) const {
-	if (!roster_) return 0;
-	RosterItem* item = parent.isValid() ? static_cast<RosterItem*>(parent.internalPointer()) : roster_->getRoot();
-	Q_ASSERT(item);
-	GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
-	int count = group ? group->getDisplayedChildren().size() : 0;
-//	qDebug() << "rowCount = " << count << " where parent.isValid() == " << parent.isValid() << ", group == " << (group ? P2QSTRING(group->getDisplayName()) : "*contact*");
-	return count;
+    if (!roster_) return 0;
+    RosterItem* item = parent.isValid() ? static_cast<RosterItem*>(parent.internalPointer()) : roster_->getRoot();
+    Q_ASSERT(item);
+    GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(item);
+    int count = group ? group->getDisplayedChildren().size() : 0;
+//    qDebug() << "rowCount = " << count << " where parent.isValid() == " << parent.isValid() << ", group == " << (group ? P2QSTRING(group->getDisplayName()) : "*contact*");
+    return count;
 }
 
 QMimeData* RosterModel::mimeData(const QModelIndexList& indexes) const {
-	QMimeData* data = QAbstractItemModel::mimeData(indexes);
+    QMimeData* data = QAbstractItemModel::mimeData(indexes);
 
-	ContactRosterItem *item = dynamic_cast<ContactRosterItem*>(getItem(indexes.first()));
-	if (item == NULL) {
-		return data;
-	}
+    ContactRosterItem *item = dynamic_cast<ContactRosterItem*>(getItem(indexes.first()));
+    if (item == NULL) {
+        return data;
+    }
 
-	/* only a single JID in this list */
-	QByteArray itemData;
-	QDataStream dataStream(&itemData, QIODevice::WriteOnly);
-	dataStream << P2QSTRING(item->getJID().toString());
-	data->setData("application/vnd.swift.contact-jid-list", itemData);
-	return data;
+    /* only a single JID in this list */
+    QByteArray itemData;
+    QDataStream dataStream(&itemData, QIODevice::WriteOnly);
+    dataStream << P2QSTRING(item->getJID().toString());
+    data->setData("application/vnd.swift.contact-jid-list", itemData);
+    return data;
 }
 
 }

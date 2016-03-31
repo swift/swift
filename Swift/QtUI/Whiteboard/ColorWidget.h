@@ -9,25 +9,25 @@
 #include <QWidget>
 
 namespace Swift {
-	class ColorWidget : public QWidget {
-		Q_OBJECT
-	public:
-		ColorWidget(QWidget* parent = 0);
-		QSize sizeHint() const;
+    class ColorWidget : public QWidget {
+        Q_OBJECT
+    public:
+        ColorWidget(QWidget* parent = 0);
+        QSize sizeHint() const;
 
-	public slots:
-		void setColor(QColor color);
+    public slots:
+        void setColor(QColor color);
 
-	private:
-		QColor color;
+    private:
+        QColor color;
 
-	protected:
-		void paintEvent(QPaintEvent* /*event*/);
-		void mouseReleaseEvent(QMouseEvent* event);
+    protected:
+        void paintEvent(QPaintEvent* /*event*/);
+        void mouseReleaseEvent(QMouseEvent* event);
 
-	signals:
-		void clicked();
+    signals:
+        void clicked();
 
-	};
+    };
 }
 

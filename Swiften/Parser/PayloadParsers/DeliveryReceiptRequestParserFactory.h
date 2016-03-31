@@ -17,20 +17,20 @@
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptRequestParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
+    class PayloadParserFactoryCollection;
 
-	class SWIFTEN_API DeliveryReceiptRequestParserFactory : public PayloadParserFactory {
-		public:
-			DeliveryReceiptRequestParserFactory() {
-			}
+    class SWIFTEN_API DeliveryReceiptRequestParserFactory : public PayloadParserFactory {
+        public:
+            DeliveryReceiptRequestParserFactory() {
+            }
 
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-				return ns == "urn:xmpp:receipts" && element == "request";
-			}
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+                return ns == "urn:xmpp:receipts" && element == "request";
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new DeliveryReceiptRequestParser();
-			}
+            virtual PayloadParser* createPayloadParser() {
+                return new DeliveryReceiptRequestParser();
+            }
 
-	};
+    };
 }

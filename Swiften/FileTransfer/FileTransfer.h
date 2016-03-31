@@ -21,68 +21,68 @@
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
-	/**
-	 * The FileTransfer class provides a general interface for file-transfer
-	 * implmenetations. Currently, only Jingle File Transfer based on XEP-0234 is
-	 * implementated in the \ref OutgoingJingleFileTransfer and
-	 * \ref IncomingJingleFileTransfer classes.
-	 */
-	class SWIFTEN_API FileTransfer {
-		public:
-			struct State {
-				enum Type {
-					Initial,
-					WaitingForStart,
-					Negotiating,
-					WaitingForAccept,
-					Transferring,
-					Canceled,
-					Failed,
-					Finished
-				};
+    /**
+     * The FileTransfer class provides a general interface for file-transfer
+     * implmenetations. Currently, only Jingle File Transfer based on XEP-0234 is
+     * implementated in the \ref OutgoingJingleFileTransfer and
+     * \ref IncomingJingleFileTransfer classes.
+     */
+    class SWIFTEN_API FileTransfer {
+        public:
+            struct State {
+                enum Type {
+                    Initial,
+                    WaitingForStart,
+                    Negotiating,
+                    WaitingForAccept,
+                    Transferring,
+                    Canceled,
+                    Failed,
+                    Finished
+                };
 
-				State(Type type, const std::string& message = "") : type(type), message(message) {}
+                State(Type type, const std::string& message = "") : type(type), message(message) {}
 
-				Type type;
-				std::string message;
-			};
-			typedef boost::shared_ptr<FileTransfer> ref;
+                Type type;
+                std::string message;
+            };
+            typedef boost::shared_ptr<FileTransfer> ref;
 
-		public:
-			FileTransfer();
-			virtual ~FileTransfer();
+        public:
+            FileTransfer();
+            virtual ~FileTransfer();
 
-			virtual void cancel() = 0;
+            virtual void cancel() = 0;
 
-			const std::string& getFileName() const {
-				return filename_;
-			}
+            const std::string& getFileName() const {
+                return filename_;
+            }
 
-			boost::uintmax_t getFileSizeInBytes() const {
-				return fileSizeInBytes_;
-			}
+            boost::uintmax_t getFileSizeInBytes() const {
+                return fileSizeInBytes_;
+            }
 
-			const State& getState() const {
-				return state_;
-			}
+            const State& getState() const {
+                return state_;
+            }
 
-			const std::string& getDescription() const {
-				return description_;
-			}
+            const std::string& getDescription() const {
+                return description_;
+            }
 
-		public:
-			boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
-			boost::signal<void (const State&)> onStateChanged;
-			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+        public:
+            boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
+            boost::signal<void (const State&)> onStateChanged;
+            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
 
-		protected:
-			void setState(const State& state);
-			void setFileInfo(const std::string& name, boost::uintmax_t size, const std::string& description);
+        protected:
+            void setState(const State& state);
+            void setFileInfo(const std::string& name, boost::uintmax_t size, const std::string& description);
 
-		private:
-			boost::uintmax_t fileSizeInBytes_;
-			std::string filename_;
-			std::string description_;
-			State state_;
-	};
+        private:
+            boost::uintmax_t fileSizeInBytes_;
+            std::string filename_;
+            std::string description_;
+            State state_;
+    };
 }

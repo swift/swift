@@ -8,33 +8,33 @@
 
 #include <string>
 
-#include <Swiften/Base/API.h> 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API ResourceBind : public Payload {
-		public:
-			ResourceBind() {}
+    class SWIFTEN_API ResourceBind : public Payload {
+        public:
+            ResourceBind() {}
 
-			void setJID(const JID& jid) {
-				jid_ = jid;
-			}
+            void setJID(const JID& jid) {
+                jid_ = jid;
+            }
 
-			const JID& getJID() const { 
-				return jid_; 
-			}
+            const JID& getJID() const {
+                return jid_;
+            }
 
-			void setResource(const std::string& resource) {
-				resource_ = resource;
-			}
+            void setResource(const std::string& resource) {
+                resource_ = resource;
+            }
 
-			const std::string& getResource() const {
-				return resource_; 
-			}
+            const std::string& getResource() const {
+                return resource_;
+            }
 
-		private:
-			JID jid_;
-			std::string resource_;
-	};
+        private:
+            JID jid_;
+            std::string resource_;
+    };
 }

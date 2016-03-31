@@ -10,15 +10,15 @@
 
 namespace Swift {
 
-	class QtCloseButton : public QAbstractButton {
-			Q_OBJECT
-		public:
-			explicit QtCloseButton(QWidget *parent = 0);
-			virtual QSize sizeHint() const;
+    class QtCloseButton : public QAbstractButton {
+            Q_OBJECT
+        public:
+            explicit QtCloseButton(QWidget *parent = 0);
+            virtual QSize sizeHint() const;
 
-		protected:
-			virtual bool event(QEvent *e);
-			virtual void paintEvent(QPaintEvent* );
-	};
+        protected:
+            virtual bool event(QEvent *e);
+            virtual void paintEvent(QPaintEvent* );
+    };
 
 }

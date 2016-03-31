@@ -37,75 +37,75 @@ class TimerFactory;
  */
 class SWIFTEN_API SOCKS5BytestreamClientSession {
 public:
-	enum State {
-		Initial,
-		Hello,
-		Authenticating,
-		Ready,
-		Writing,
-		Reading,
-		Finished
-	};
+    enum State {
+        Initial,
+        Hello,
+        Authenticating,
+        Ready,
+        Writing,
+        Reading,
+        Finished
+    };
 
 public:
-	typedef boost::shared_ptr<SOCKS5BytestreamClientSession> ref;
+    typedef boost::shared_ptr<SOCKS5BytestreamClientSession> ref;
 
 public:
-	SOCKS5BytestreamClientSession(
-			boost::shared_ptr<Connection> connection, 
-			const HostAddressPort&, 
-			const std::string&, 
-			TimerFactory*);
-	~SOCKS5BytestreamClientSession();
+    SOCKS5BytestreamClientSession(
+            boost::shared_ptr<Connection> connection,
+            const HostAddressPort&,
+            const std::string&,
+            TimerFactory*);
+    ~SOCKS5BytestreamClientSession();
 
-	void start();
-	void stop();
+    void start();
+    void stop();
 
-	void startReceiving(boost::shared_ptr<WriteBytestream>);
-	void startSending(boost::shared_ptr<ReadBytestream>);
+    void startReceiving(boost::shared_ptr<WriteBytestream>);
+    void startSending(boost::shared_ptr<ReadBytestream>);
 
-	HostAddressPort getAddressPort() const;
+    HostAddressPort getAddressPort() const;
 
-	boost::signal<void (bool /*error*/)> onSessionReady;
+    boost::signal<void (bool /*error*/)> onSessionReady;
 
-	boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-	boost::signal<void (size_t)> onBytesSent;
-	// boost::signal<void (size_t)> onBytesReceived;
-
-private:
-	void process();
-	void hello();
-	void authenticate();
-
-	void handleConnectFinished(bool error);
-	void handleDataRead(boost::shared_ptr<SafeByteArray>);
-	void handleDisconnected(const boost::optional<Connection::Error>&);
-	void handleWeFailedTimeout();
-
-	void finish(bool error);
-	void sendData();
-	void closeConnection();
+    boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+    boost::signal<void (size_t)> onBytesSent;
+    // boost::signal<void (size_t)> onBytesReceived;
 
 private:
-	boost::shared_ptr<Connection> connection;
-	HostAddressPort addressPort;
-	std::string destination; // hexify(SHA1(sessionID + requester + target))
+    void process();
+    void hello();
+    void authenticate();
 
-	State state;
+    void handleConnectFinished(bool error);
+    void handleDataRead(boost::shared_ptr<SafeByteArray>);
+    void handleDisconnected(const boost::optional<Connection::Error>&);
+    void handleWeFailedTimeout();
 
-	ByteArray unprocessedData;
-	ByteArray authenticateAddress;
+    void finish(bool error);
+    void sendData();
+    void closeConnection();
 
-	int chunkSize;
-	boost::shared_ptr<WriteBytestream> writeBytestream;
-	boost::shared_ptr<ReadBytestream> readBytestream;
+private:
+    boost::shared_ptr<Connection> connection;
+    HostAddressPort addressPort;
+    std::string destination; // hexify(SHA1(sessionID + requester + target))
 
-	Timer::ref weFailedTimeout;
+    State state;
 
-	boost::bsignals::scoped_connection connectFinishedConnection;
-	boost::bsignals::scoped_connection dataWrittenConnection;
-	boost::bsignals::scoped_connection dataReadConnection;
-	boost::bsignals::scoped_connection disconnectedConnection;
+    ByteArray unprocessedData;
+    ByteArray authenticateAddress;
+
+    int chunkSize;
+    boost::shared_ptr<WriteBytestream> writeBytestream;
+    boost::shared_ptr<ReadBytestream> readBytestream;
+
+    Timer::ref weFailedTimeout;
+
+    boost::bsignals::scoped_connection connectFinishedConnection;
+    boost::bsignals::scoped_connection dataWrittenConnection;
+    boost::bsignals::scoped_connection dataReadConnection;
+    boost::bsignals::scoped_connection disconnectedConnection;
 };
 
 }

@@ -22,12 +22,12 @@ PubSubOwnerPurgeSerializer::~PubSubOwnerPurgeSerializer() {
 }
 
 std::string PubSubOwnerPurgeSerializer::serializePayload(boost::shared_ptr<PubSubOwnerPurge> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("purge", "http://jabber.org/protocol/pubsub#owner");
-	element.setAttribute("node", payload->getNode());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("purge", "http://jabber.org/protocol/pubsub#owner");
+    element.setAttribute("node", payload->getNode());
+    return element.serialize();
 }
 
 

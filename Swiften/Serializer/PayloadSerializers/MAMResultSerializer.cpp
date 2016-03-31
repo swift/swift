@@ -23,19 +23,19 @@ MAMResultSerializer::~MAMResultSerializer() {
 }
 
 std::string MAMResultSerializer::serializePayload(boost::shared_ptr<MAMResult> payload) const {
-	if (!payload) {
-		return "";
-	}
+    if (!payload) {
+        return "";
+    }
 
-	XMLElement element("result", "urn:xmpp:mam:0");
+    XMLElement element("result", "urn:xmpp:mam:0");
 
-	element.setAttribute("id", payload->getID());
+    element.setAttribute("id", payload->getID());
 
-	if (payload->getQueryID()) {
-		element.setAttribute("queryid", *payload->getQueryID());
-	}
+    if (payload->getQueryID()) {
+        element.setAttribute("queryid", *payload->getQueryID());
+    }
 
-	element.addNode(boost::make_shared<XMLRawTextNode>(ForwardedSerializer(serializers_).serialize(payload->getPayload())));
+    element.addNode(boost::make_shared<XMLRawTextNode>(ForwardedSerializer(serializers_).serialize(payload->getPayload())));
 
-	return element.serialize();
+    return element.serialize();
 }

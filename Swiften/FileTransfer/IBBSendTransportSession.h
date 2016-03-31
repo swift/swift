@@ -14,17 +14,17 @@
 namespace Swift {
 
 class SWIFTEN_API IBBSendTransportSession : public TransportSession {
-	public:
-		IBBSendTransportSession(boost::shared_ptr<IBBSendSession> session);
-		virtual ~IBBSendTransportSession();
+    public:
+        IBBSendTransportSession(boost::shared_ptr<IBBSendSession> session);
+        virtual ~IBBSendTransportSession();
 
-		virtual void start() SWIFTEN_OVERRIDE;
-		virtual void stop() SWIFTEN_OVERRIDE;
+        virtual void start() SWIFTEN_OVERRIDE;
+        virtual void stop() SWIFTEN_OVERRIDE;
 
-	private:
-		boost::shared_ptr<IBBSendSession> session;
-		boost::bsignals::scoped_connection finishedConnection;
-		boost::bsignals::scoped_connection bytesSentConnection;
+    private:
+        boost::shared_ptr<IBBSendSession> session;
+        boost::bsignals::scoped_connection finishedConnection;
+        boost::bsignals::scoped_connection bytesSentConnection;
 };
 
 }

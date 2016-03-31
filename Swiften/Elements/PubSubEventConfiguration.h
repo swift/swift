@@ -17,32 +17,32 @@
 #include <Swiften/Elements/PubSubEventPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventConfiguration : public PubSubEventPayload {
-		public:
-			
-			PubSubEventConfiguration();
-			
-			virtual ~PubSubEventConfiguration();
+    class SWIFTEN_API PubSubEventConfiguration : public PubSubEventPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubEventConfiguration();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubEventConfiguration();
 
-			boost::shared_ptr<Form> getData() const {
-				return data;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setData(boost::shared_ptr<Form> value) {
-				this->data = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
+
+            boost::shared_ptr<Form> getData() const {
+                return data;
+            }
+
+            void setData(boost::shared_ptr<Form> value) {
+                this->data = value ;
+            }
 
 
-		private:
-			std::string node;
-			boost::shared_ptr<Form> data;
-	};
+        private:
+            std::string node;
+            boost::shared_ptr<Form> data;
+    };
 }

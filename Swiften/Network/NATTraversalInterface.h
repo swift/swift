@@ -12,14 +12,14 @@
 #include <Swiften/Network/NATPortMapping.h>
 
 namespace Swift {
-	class SWIFTEN_API NATTraversalInterface {
-		public:
-			virtual ~NATTraversalInterface();
+    class SWIFTEN_API NATTraversalInterface {
+        public:
+            virtual ~NATTraversalInterface();
 
-			virtual bool isAvailable() = 0;
+            virtual bool isAvailable() = 0;
 
-			virtual boost::optional<HostAddress> getPublicIP() = 0;
-			virtual boost::optional<NATPortMapping> addPortForward(int localPort, int publicPort) = 0;
-			virtual bool removePortForward(const NATPortMapping&) = 0;
-	};
+            virtual boost::optional<HostAddress> getPublicIP() = 0;
+            virtual boost::optional<NATPortMapping> addPortForward(int localPort, int publicPort) = 0;
+            virtual bool removePortForward(const NATPortMapping&) = 0;
+    };
 }

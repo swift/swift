@@ -24,16 +24,16 @@ PubSubEventCollectionSerializer::~PubSubEventCollectionSerializer() {
 }
 
 std::string PubSubEventCollectionSerializer::serializePayload(boost::shared_ptr<PubSubEventCollection> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("collection", "http://jabber.org/protocol/pubsub#event");
-	if (payload->getNode()) {
-		element.setAttribute("node", *payload->getNode());
-	}
-	element.addNode(boost::make_shared<XMLRawTextNode>(PubSubEventDisassociateSerializer(serializers).serialize(payload->getDisassociate())));
-	element.addNode(boost::make_shared<XMLRawTextNode>(PubSubEventAssociateSerializer(serializers).serialize(payload->getAssociate())));
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("collection", "http://jabber.org/protocol/pubsub#event");
+    if (payload->getNode()) {
+        element.setAttribute("node", *payload->getNode());
+    }
+    element.addNode(boost::make_shared<XMLRawTextNode>(PubSubEventDisassociateSerializer(serializers).serialize(payload->getDisassociate())));
+    element.addNode(boost::make_shared<XMLRawTextNode>(PubSubEventAssociateSerializer(serializers).serialize(payload->getAssociate())));
+    return element.serialize();
 }
 
 

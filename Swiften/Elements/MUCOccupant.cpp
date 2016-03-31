@@ -19,28 +19,28 @@ MUCOccupant::MUCOccupant(const MUCOccupant& other) : nick_(other.getNick()), rol
 }
 
 std::string MUCOccupant::getNick() const {
-	return nick_;
+    return nick_;
 }
 
 MUCOccupant::Role MUCOccupant::getRole() const {
-	return role_;
+    return role_;
 }
 
 MUCOccupant::Affiliation MUCOccupant::getAffiliation() const {
-	return affiliation_;
+    return affiliation_;
 }
 
 void MUCOccupant::setRealJID(const JID& realJID) {
-	realJID_ = realJID;
+    realJID_ = realJID;
 }
 
 void MUCOccupant::setNick(const std::string& nick) {
-	nick_ = nick;
+    nick_ = nick;
 }
 
 
 boost::optional<JID> MUCOccupant::getRealJID() const {
-	return realJID_;
+    return realJID_;
 }
 
 }

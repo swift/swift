@@ -23,13 +23,13 @@ PubSubOwnerDeleteSerializer::~PubSubOwnerDeleteSerializer() {
 }
 
 std::string PubSubOwnerDeleteSerializer::serializePayload(boost::shared_ptr<PubSubOwnerDelete> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("delete", "http://jabber.org/protocol/pubsub#owner");
-	element.setAttribute("node", payload->getNode());
-	element.addNode(boost::make_shared<XMLRawTextNode>(PubSubOwnerRedirectSerializer(serializers).serialize(payload->getRedirect())));
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("delete", "http://jabber.org/protocol/pubsub#owner");
+    element.setAttribute("node", payload->getNode());
+    element.addNode(boost::make_shared<XMLRawTextNode>(PubSubOwnerRedirectSerializer(serializers).serialize(payload->getRedirect())));
+    return element.serialize();
 }
 
 

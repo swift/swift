@@ -11,11 +11,11 @@ namespace Swift {
 class QtTabbable;
 
 class QtChatTabsBase {
-	public:
-		QtChatTabsBase();
-		virtual ~QtChatTabsBase();
+    public:
+        QtChatTabsBase();
+        virtual ~QtChatTabsBase();
 
-		virtual void addTab(QtTabbable* tab) = 0;
+        virtual void addTab(QtTabbable* tab) = 0;
 };
 
 }

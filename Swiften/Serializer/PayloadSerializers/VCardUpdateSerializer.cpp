@@ -17,12 +17,12 @@ namespace Swift {
 VCardUpdateSerializer::VCardUpdateSerializer() : GenericPayloadSerializer<VCardUpdate>() {
 }
 
-std::string VCardUpdateSerializer::serializePayload(boost::shared_ptr<VCardUpdate> vcardUpdate)	const {
-	XMLElement updateElement("x", "vcard-temp:x:update");
-	boost::shared_ptr<XMLElement> photoElement(new XMLElement("photo"));
-	photoElement->addNode(boost::make_shared<XMLTextNode>(vcardUpdate->getPhotoHash()));
-	updateElement.addNode(photoElement);
-	return updateElement.serialize();
+std::string VCardUpdateSerializer::serializePayload(boost::shared_ptr<VCardUpdate> vcardUpdate)    const {
+    XMLElement updateElement("x", "vcard-temp:x:update");
+    boost::shared_ptr<XMLElement> photoElement(new XMLElement("photo"));
+    photoElement->addNode(boost::make_shared<XMLTextNode>(vcardUpdate->getPhotoHash()));
+    updateElement.addNode(photoElement);
+    return updateElement.serialize();
 }
 
 }

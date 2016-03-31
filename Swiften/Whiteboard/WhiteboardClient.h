@@ -19,26 +19,26 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardClient {
-	public:
-		struct Result {
-			WhiteboardOperation::ref client;
-			WhiteboardOperation::ref server;
-		};
-		/*!
-		 * @return Operation to send
-		 */   	
-		WhiteboardOperation::ref handleLocalOperationReceived(WhiteboardOperation::ref operation);
-		/*!
-		 * @return pair.first-element to handle locally, pair.second-element to send to server
-		 */
-		Result handleServerOperationReceived(WhiteboardOperation::ref operation);
-		void print();
+    class SWIFTEN_API WhiteboardClient {
+    public:
+        struct Result {
+            WhiteboardOperation::ref client;
+            WhiteboardOperation::ref server;
+        };
+        /*!
+         * @return Operation to send
+         */
+        WhiteboardOperation::ref handleLocalOperationReceived(WhiteboardOperation::ref operation);
+        /*!
+         * @return pair.first-element to handle locally, pair.second-element to send to server
+         */
+        Result handleServerOperationReceived(WhiteboardOperation::ref operation);
+        void print();
 
-	private:
-		std::list<WhiteboardOperation::ref> localOperations_;
-		std::list<WhiteboardOperation::ref> serverOperations_;
-		std::list<WhiteboardOperation::ref> bridge_;
-		std::string lastSentOperationID_;
-	};
+    private:
+        std::list<WhiteboardOperation::ref> localOperations_;
+        std::list<WhiteboardOperation::ref> serverOperations_;
+        std::list<WhiteboardOperation::ref> bridge_;
+        std::string lastSentOperationID_;
+    };
 }

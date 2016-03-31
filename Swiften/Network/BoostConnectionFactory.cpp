@@ -14,7 +14,7 @@ BoostConnectionFactory::BoostConnectionFactory(boost::shared_ptr<boost::asio::io
 }
 
 boost::shared_ptr<Connection> BoostConnectionFactory::createConnection() {
-	return BoostConnection::create(ioService, eventLoop);
+    return BoostConnection::create(ioService, eventLoop);
 }
 
 }

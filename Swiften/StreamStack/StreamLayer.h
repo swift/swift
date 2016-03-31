@@ -11,8 +11,8 @@
 #include <Swiften/StreamStack/LowLayer.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamLayer : public LowLayer, public HighLayer {
-		public:
-			StreamLayer() {}
-	};
+    class SWIFTEN_API StreamLayer : public LowLayer, public HighLayer {
+        public:
+            StreamLayer() {}
+    };
 }

@@ -9,16 +9,16 @@
 #include <SwifTools/URIHandler/URIHandler.h>
 
 namespace Swift {
-	class MacOSXURIHandler : public URIHandler {
-		public:
-			MacOSXURIHandler();
-			virtual ~MacOSXURIHandler();
+    class MacOSXURIHandler : public URIHandler {
+        public:
+            MacOSXURIHandler();
+            virtual ~MacOSXURIHandler();
 
-			virtual void start();
-			virtual void stop();
+            virtual void start();
+            virtual void stop();
 
-		private:
-			class Private;
-			Private* p;
-	};
+        private:
+            class Private;
+            Private* p;
+    };
 }

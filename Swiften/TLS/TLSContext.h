@@ -18,27 +18,27 @@
 
 namespace Swift {
 
-	class SWIFTEN_API TLSContext {
-		public:
-			virtual ~TLSContext();
+    class SWIFTEN_API TLSContext {
+        public:
+            virtual ~TLSContext();
 
-			virtual void connect() = 0;
+            virtual void connect() = 0;
 
-			virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;
+            virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;
 
-			virtual void handleDataFromNetwork(const SafeByteArray&) = 0;
-			virtual void handleDataFromApplication(const SafeByteArray&) = 0;
+            virtual void handleDataFromNetwork(const SafeByteArray&) = 0;
+            virtual void handleDataFromApplication(const SafeByteArray&) = 0;
 
-			Certificate::ref getPeerCertificate() const;
-			virtual std::vector<Certificate::ref> getPeerCertificateChain() const = 0;
-			virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
+            Certificate::ref getPeerCertificate() const;
+            virtual std::vector<Certificate::ref> getPeerCertificateChain() const = 0;
+            virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
 
-			virtual ByteArray getFinishMessage() const = 0;
+            virtual ByteArray getFinishMessage() const = 0;
 
-		public:
-			boost::signal<void (const SafeByteArray&)> onDataForNetwork;
-			boost::signal<void (const SafeByteArray&)> onDataForApplication;
-			boost::signal<void (boost::shared_ptr<TLSError>)> onError;
-			boost::signal<void ()> onConnected;
-	};
+        public:
+            boost::signal<void (const SafeByteArray&)> onDataForNetwork;
+            boost::signal<void (const SafeByteArray&)> onDataForApplication;
+            boost::signal<void (boost::shared_ptr<TLSError>)> onError;
+            boost::signal<void ()> onConnected;
+    };
 }

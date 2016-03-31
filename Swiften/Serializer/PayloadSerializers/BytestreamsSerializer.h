@@ -11,12 +11,12 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API BytestreamsSerializer : public GenericPayloadSerializer<Bytestreams> {
-		public:
-			BytestreamsSerializer();
+    class SWIFTEN_API BytestreamsSerializer : public GenericPayloadSerializer<Bytestreams> {
+        public:
+            BytestreamsSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<Bytestreams>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Bytestreams>)  const;
+    };
 }

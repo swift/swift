@@ -17,11 +17,11 @@ FakeDNSSDQuery::~FakeDNSSDQuery() {
 }
 
 void FakeDNSSDQuery::run() {
-	querier->addRunningQuery(shared_from_this());
+    querier->addRunningQuery(shared_from_this());
 }
 
 void FakeDNSSDQuery::finish() {
-	querier->removeRunningQuery(shared_from_this());
+    querier->removeRunningQuery(shared_from_this());
 }
 
 }

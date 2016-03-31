@@ -16,23 +16,23 @@
 #include <Swiften/Base/Override.h>
 
 namespace Swift {
-	template<typename T>
-	class SWIFTEN_API EnumParser {
-		public:
-			EnumParser() {
-			}
+    template<typename T>
+    class SWIFTEN_API EnumParser {
+        public:
+            EnumParser() {
+            }
 
-			EnumParser& operator()(T value, const std::string& text) {
-				values[text] = value;
-				return *this;
-			}
+            EnumParser& operator()(T value, const std::string& text) {
+                values[text] = value;
+                return *this;
+            }
 
-			boost::optional<T> parse(const std::string& value) {
-				typename std::map<std::string, T>::const_iterator i = values.find(value);
-				return i == values.end() ? boost::optional<T>() : i->second;
-			}
+            boost::optional<T> parse(const std::string& value) {
+                typename std::map<std::string, T>::const_iterator i = values.find(value);
+                return i == values.end() ? boost::optional<T>() : i->second;
+            }
 
-		private:
-			std::map<std::string, T> values;
-	};
+        private:
+            std::map<std::string, T> values;
+    };
 }

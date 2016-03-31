@@ -25,25 +25,25 @@
 #include <Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h>
 
 namespace Swift {
-	class UIFactory : 
-			public ChatListWindowFactory, 
-			public ChatWindowFactory, 
-			public HistoryWindowFactory,
-			public EventWindowFactory, 
-			public LoginWindowFactory, 
-			public MainWindowFactory, 
-			public MUCSearchWindowFactory, 
-			public XMLConsoleWidgetFactory,
-			public UserSearchWindowFactory, 
-			public JoinMUCWindowFactory,
-			public ProfileWindowFactory,
-			public ContactEditWindowFactory,
-			public AdHocCommandWindowFactory,
-			public FileTransferListWidgetFactory,
-			public WhiteboardWindowFactory,
-			public HighlightEditorWindowFactory,
-			public BlockListEditorWidgetFactory {
-		public:
-			virtual ~UIFactory() {}
-	};
+    class UIFactory :
+            public ChatListWindowFactory,
+            public ChatWindowFactory,
+            public HistoryWindowFactory,
+            public EventWindowFactory,
+            public LoginWindowFactory,
+            public MainWindowFactory,
+            public MUCSearchWindowFactory,
+            public XMLConsoleWidgetFactory,
+            public UserSearchWindowFactory,
+            public JoinMUCWindowFactory,
+            public ProfileWindowFactory,
+            public ContactEditWindowFactory,
+            public AdHocCommandWindowFactory,
+            public FileTransferListWidgetFactory,
+            public WhiteboardWindowFactory,
+            public HighlightEditorWindowFactory,
+            public BlockListEditorWidgetFactory {
+        public:
+            virtual ~UIFactory() {}
+    };
 }

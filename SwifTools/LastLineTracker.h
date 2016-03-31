@@ -7,13 +7,13 @@
 #pragma once
 
 namespace Swift {
-	class LastLineTracker {
-		public:
-			LastLineTracker();
-			void setHasFocus(bool focus);
-			bool getShouldMoveLastLine();
-		private:
-			bool lastFocus;
-			bool shouldMove;
-	};
+    class LastLineTracker {
+        public:
+            LastLineTracker();
+            void setHasFocus(bool focus);
+            bool getShouldMoveLastLine();
+        private:
+            bool lastFocus;
+            bool shouldMove;
+    };
 }

@@ -21,12 +21,12 @@ namespace Swift {
 class FileTransferController;
 
 class QtChatWindowJSBridge : public QObject {
-	 Q_OBJECT
+     Q_OBJECT
 public:
-	QtChatWindowJSBridge();
-	virtual ~QtChatWindowJSBridge();
+    QtChatWindowJSBridge();
+    virtual ~QtChatWindowJSBridge();
 signals:
-	void buttonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
+    void buttonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
 };
 
 }

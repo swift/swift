@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamInitiationSerializer : public GenericPayloadSerializer<StreamInitiation> {
-		public:
-			StreamInitiationSerializer();
+    class SWIFTEN_API StreamInitiationSerializer : public GenericPayloadSerializer<StreamInitiation> {
+        public:
+            StreamInitiationSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<StreamInitiation>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<StreamInitiation>)  const;
+    };
 }

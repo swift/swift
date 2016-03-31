@@ -11,11 +11,11 @@
 #include <Swiften/Parser/GenericStanzaParser.h>
 
 namespace Swift {
-	class SWIFTEN_API IQParser : public GenericStanzaParser<IQ> {
-		public:
-			IQParser(PayloadParserFactoryCollection* factories);
+    class SWIFTEN_API IQParser : public GenericStanzaParser<IQ> {
+        public:
+            IQParser(PayloadParserFactoryCollection* factories);
 
-		private:
-			virtual void handleStanzaAttributes(const AttributeMap&);
-	};
+        private:
+            virtual void handleStanzaAttributes(const AttributeMap&);
+    };
 }

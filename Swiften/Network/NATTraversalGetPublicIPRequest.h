@@ -17,13 +17,13 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class SWIFTEN_API NATTraversalGetPublicIPRequest {
-		public:
-			virtual ~NATTraversalGetPublicIPRequest();
+    class SWIFTEN_API NATTraversalGetPublicIPRequest {
+        public:
+            virtual ~NATTraversalGetPublicIPRequest();
 
-			virtual void start() = 0;
-			virtual void stop() = 0;
+            virtual void start() = 0;
+            virtual void stop() = 0;
 
-			boost::signal<void (boost::optional<HostAddress>)> onResult;
-	};
+            boost::signal<void (boost::optional<HostAddress>)> onResult;
+    };
 }

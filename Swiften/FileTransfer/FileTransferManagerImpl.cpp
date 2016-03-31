@@ -40,147 +40,147 @@
 namespace Swift {
 
 FileTransferManagerImpl::FileTransferManagerImpl(
-		const JID& ownJID,
-		JingleSessionManager* jingleSessionManager, 
-		IQRouter* router, 
-		EntityCapsProvider* capsProvider, 
-		PresenceOracle* presOracle, 
-		ConnectionFactory* connectionFactory, 
-		ConnectionServerFactory* connectionServerFactory, 
-		TimerFactory* timerFactory, 
-		DomainNameResolver* domainNameResolver,
-		NetworkEnvironment* networkEnvironment,
-		NATTraverser* natTraverser,
-		CryptoProvider* crypto) : 
-			iqRouter(router), 
-			capsProvider(capsProvider), 
-			presenceOracle(presOracle) {
-	bytestreamRegistry = new SOCKS5BytestreamRegistry();
-	s5bServerManager = new SOCKS5BytestreamServerManager(
-			bytestreamRegistry, connectionServerFactory, networkEnvironment, natTraverser);
-	bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, domainNameResolver, iqRouter, JID(ownJID.getDomain()));
+        const JID& ownJID,
+        JingleSessionManager* jingleSessionManager,
+        IQRouter* router,
+        EntityCapsProvider* capsProvider,
+        PresenceOracle* presOracle,
+        ConnectionFactory* connectionFactory,
+        ConnectionServerFactory* connectionServerFactory,
+        TimerFactory* timerFactory,
+        DomainNameResolver* domainNameResolver,
+        NetworkEnvironment* networkEnvironment,
+        NATTraverser* natTraverser,
+        CryptoProvider* crypto) :
+            iqRouter(router),
+            capsProvider(capsProvider),
+            presenceOracle(presOracle) {
+    bytestreamRegistry = new SOCKS5BytestreamRegistry();
+    s5bServerManager = new SOCKS5BytestreamServerManager(
+            bytestreamRegistry, connectionServerFactory, networkEnvironment, natTraverser);
+    bytestreamProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, domainNameResolver, iqRouter, JID(ownJID.getDomain()));
 
-	transporterFactory = new DefaultFileTransferTransporterFactory(
-			bytestreamRegistry,
-			s5bServerManager,
-			bytestreamProxy,
-			&idGenerator,
-			connectionFactory, 
-			timerFactory, 
-			crypto,
-			iqRouter);
-	outgoingFTManager = new OutgoingFileTransferManager(
-			jingleSessionManager, 
-			iqRouter, 
-			transporterFactory,
-			timerFactory,
-			crypto);
-	incomingFTManager = new IncomingFileTransferManager(
-			jingleSessionManager, 
-			transporterFactory,
-			timerFactory,
-			crypto);
-	incomingFTManager->onIncomingFileTransfer.connect(onIncomingFileTransfer);
+    transporterFactory = new DefaultFileTransferTransporterFactory(
+            bytestreamRegistry,
+            s5bServerManager,
+            bytestreamProxy,
+            &idGenerator,
+            connectionFactory,
+            timerFactory,
+            crypto,
+            iqRouter);
+    outgoingFTManager = new OutgoingFileTransferManager(
+            jingleSessionManager,
+            iqRouter,
+            transporterFactory,
+            timerFactory,
+            crypto);
+    incomingFTManager = new IncomingFileTransferManager(
+            jingleSessionManager,
+            transporterFactory,
+            timerFactory,
+            crypto);
+    incomingFTManager->onIncomingFileTransfer.connect(onIncomingFileTransfer);
 }
 
 FileTransferManagerImpl::~FileTransferManagerImpl() {
-	delete incomingFTManager;
-	delete outgoingFTManager;
-	delete transporterFactory;
-	delete bytestreamProxy;
-	delete s5bServerManager;
-	delete bytestreamRegistry;
+    delete incomingFTManager;
+    delete outgoingFTManager;
+    delete transporterFactory;
+    delete bytestreamProxy;
+    delete s5bServerManager;
+    delete bytestreamRegistry;
 }
 
 void FileTransferManagerImpl::start() {
 }
 
 void FileTransferManagerImpl::stop() {
-	s5bServerManager->stop();
+    s5bServerManager->stop();
 }
 
 boost::optional<JID> FileTransferManagerImpl::highestPriorityJIDSupportingFileTransfer(const JID& bareJID) {
-	JID fullReceipientJID;
-	int priority = INT_MIN;
-	
-	//getAllPresence(bareJID) gives you all presences for the bare JID (i.e. all resources) Isode Limited. @ 11:11
-	std::vector<Presence::ref> presences = presenceOracle->getAllPresence(bareJID);
+    JID fullReceipientJID;
+    int priority = INT_MIN;
 
-	//iterate over them
-	foreach(Presence::ref pres, presences) {
-		if (pres->getPriority() > priority) {
-			// look up caps from the jid
-			DiscoInfo::ref info = capsProvider->getCaps(pres->getFrom());
-			if (isSupportedBy(info)) {
-				priority = pres->getPriority();
-				fullReceipientJID = pres->getFrom();
-			}
-		}
-	}
-	
-	return fullReceipientJID.isValid() ? boost::optional<JID>(fullReceipientJID) : boost::optional<JID>();
+    //getAllPresence(bareJID) gives you all presences for the bare JID (i.e. all resources) Isode Limited. @ 11:11
+    std::vector<Presence::ref> presences = presenceOracle->getAllPresence(bareJID);
+
+    //iterate over them
+    foreach(Presence::ref pres, presences) {
+        if (pres->getPriority() > priority) {
+            // look up caps from the jid
+            DiscoInfo::ref info = capsProvider->getCaps(pres->getFrom());
+            if (isSupportedBy(info)) {
+                priority = pres->getPriority();
+                fullReceipientJID = pres->getFrom();
+            }
+        }
+    }
+
+    return fullReceipientJID.isValid() ? boost::optional<JID>(fullReceipientJID) : boost::optional<JID>();
 }
 
 OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
-		const JID& to, 
-		const boost::filesystem::path& filepath, 
-		const std::string& description, 
-		boost::shared_ptr<ReadBytestream> bytestream,
-		const FileTransferOptions& config) {
+        const JID& to,
+        const boost::filesystem::path& filepath,
+        const std::string& description,
+        boost::shared_ptr<ReadBytestream> bytestream,
+        const FileTransferOptions& config) {
 #if BOOST_FILESYSTEM_VERSION == 2 // TODO: Delete this when boost 1.44 becomes a minimum requirement, and we no longer need v2
-	std::string filename = filepath.filename();
+    std::string filename = filepath.filename();
 #else
-	std::string filename = pathToString(filepath.filename());
+    std::string filename = pathToString(filepath.filename());
 #endif
 
-	boost::uintmax_t sizeInBytes = boost::filesystem::file_size(filepath);
-	boost::posix_time::ptime lastModified = boost::posix_time::from_time_t(boost::filesystem::last_write_time(filepath));
-	return createOutgoingFileTransfer(to, filename, description, sizeInBytes, lastModified, bytestream, config);
+    boost::uintmax_t sizeInBytes = boost::filesystem::file_size(filepath);
+    boost::posix_time::ptime lastModified = boost::posix_time::from_time_t(boost::filesystem::last_write_time(filepath));
+    return createOutgoingFileTransfer(to, filename, description, sizeInBytes, lastModified, bytestream, config);
 }
 
 OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
-		const JID& to, 
-		const std::string& filename, 
-		const std::string& description, 
-		const boost::uintmax_t sizeInBytes, 
-		const boost::posix_time::ptime& lastModified, 
-		boost::shared_ptr<ReadBytestream> bytestream,
-		const FileTransferOptions& config) {
-	JingleFileTransferFileInfo fileInfo;
-	fileInfo.setDate(lastModified);
-	fileInfo.setSize(sizeInBytes);
-	fileInfo.setName(filename);
-	fileInfo.setDescription(description);
-	
-	JID receipient = to;
-	
-	if(receipient.isBare()) {
-		boost::optional<JID> fullJID = highestPriorityJIDSupportingFileTransfer(receipient);
-		if (fullJID.is_initialized()) {
-			receipient = fullJID.get();
-		} else {
-			return OutgoingFileTransfer::ref();
-		}
-	}
+        const JID& to,
+        const std::string& filename,
+        const std::string& description,
+        const boost::uintmax_t sizeInBytes,
+        const boost::posix_time::ptime& lastModified,
+        boost::shared_ptr<ReadBytestream> bytestream,
+        const FileTransferOptions& config) {
+    JingleFileTransferFileInfo fileInfo;
+    fileInfo.setDate(lastModified);
+    fileInfo.setSize(sizeInBytes);
+    fileInfo.setName(filename);
+    fileInfo.setDescription(description);
 
-	assert(!iqRouter->getJID().isBare());
+    JID receipient = to;
 
-	DiscoInfo::ref capabilities = capsProvider->getCaps(receipient);
+    if(receipient.isBare()) {
+        boost::optional<JID> fullJID = highestPriorityJIDSupportingFileTransfer(receipient);
+        if (fullJID.is_initialized()) {
+            receipient = fullJID.get();
+        } else {
+            return OutgoingFileTransfer::ref();
+        }
+    }
 
-	FileTransferOptions options = config;
-	if (capabilities) {
-		if (!capabilities->hasFeature(DiscoInfo::JingleTransportsS5BFeature)) {
-			options = options.withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false);
-		}
-		if (!capabilities->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
-			options = options.withInBandAllowed(false);
-		}
-	}
-	else {
-		SWIFT_LOG(warning) << "No entity capabilities information for " << receipient.toString() << std::endl;
-	}
+    assert(!iqRouter->getJID().isBare());
 
-	return outgoingFTManager->createOutgoingFileTransfer(iqRouter->getJID(), receipient, bytestream, fileInfo, options);
+    DiscoInfo::ref capabilities = capsProvider->getCaps(receipient);
+
+    FileTransferOptions options = config;
+    if (capabilities) {
+        if (!capabilities->hasFeature(DiscoInfo::JingleTransportsS5BFeature)) {
+            options = options.withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false);
+        }
+        if (!capabilities->hasFeature(DiscoInfo::JingleTransportsIBBFeature)) {
+            options = options.withInBandAllowed(false);
+        }
+    }
+    else {
+        SWIFT_LOG(warning) << "No entity capabilities information for " << receipient.toString() << std::endl;
+    }
+
+    return outgoingFTManager->createOutgoingFileTransfer(iqRouter->getJID(), receipient, bytestream, fileInfo, options);
 }
 
 }

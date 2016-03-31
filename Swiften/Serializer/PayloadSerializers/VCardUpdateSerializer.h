@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API VCardUpdateSerializer : public GenericPayloadSerializer<VCardUpdate> {
-		public:
-			VCardUpdateSerializer();
+    class SWIFTEN_API VCardUpdateSerializer : public GenericPayloadSerializer<VCardUpdate> {
+        public:
+            VCardUpdateSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<VCardUpdate>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<VCardUpdate>)  const;
+    };
 }

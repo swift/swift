@@ -15,12 +15,12 @@ namespace Swift {
 
 void secureZeroMemory(char* memory, size_t numberOfBytes) {
 #ifdef SWIFTEN_PLATFORM_WINDOWS
-	SecureZeroMemory(memory, numberOfBytes);
+    SecureZeroMemory(memory, numberOfBytes);
 #else
-	volatile char* p = memory;
-	for (size_t i = 0; i < numberOfBytes; ++i) {
-		*(p++) = 0;
-	}
+    volatile char* p = memory;
+    for (size_t i = 0; i < numberOfBytes; ++i) {
+        *(p++) = 0;
+    }
 #endif
 }
 

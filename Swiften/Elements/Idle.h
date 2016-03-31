@@ -20,25 +20,25 @@
 
 namespace Swift {
 
-	class SWIFTEN_API Idle : public Payload {
-	public:
-		typedef boost::shared_ptr<Idle> ref;
+    class SWIFTEN_API Idle : public Payload {
+    public:
+        typedef boost::shared_ptr<Idle> ref;
 
-	public:
-		Idle() {}
-		Idle(boost::posix_time::ptime since) : since_(since) {
-		}
+    public:
+        Idle() {}
+        Idle(boost::posix_time::ptime since) : since_(since) {
+        }
 
-		void setSince(boost::posix_time::ptime since) {
-			since_ = since;
-		}
+        void setSince(boost::posix_time::ptime since) {
+            since_ = since;
+        }
 
-		boost::posix_time::ptime getSince() const {
-			return since_;
-		}
+        boost::posix_time::ptime getSince() const {
+            return since_;
+        }
 
-	private:
-		boost::posix_time::ptime since_;
-	};
+    private:
+        boost::posix_time::ptime since_;
+    };
 
 }

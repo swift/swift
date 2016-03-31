@@ -11,15 +11,15 @@
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchResultsPage.h>
 
 namespace Swift {
-	class QtUserSearchResultsPage : public QWizardPage, public Ui::QtUserSearchResultsPage {
-		Q_OBJECT
-		public:
-			QtUserSearchResultsPage();
-			virtual bool isComplete() const;
-			void setNoResults(bool noResults);
-		signals:
-		  void onUserTriggersContinue();
-		public slots:
-			void emitCompletenessCheck();
-	};
+    class QtUserSearchResultsPage : public QWizardPage, public Ui::QtUserSearchResultsPage {
+        Q_OBJECT
+        public:
+            QtUserSearchResultsPage();
+            virtual bool isComplete() const;
+            void setNoResults(bool noResults);
+        signals:
+          void onUserTriggersContinue();
+        public slots:
+            void emitCompletenessCheck();
+    };
 }

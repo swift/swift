@@ -15,20 +15,20 @@
 #include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-	class XMLElement;
+    class PayloadSerializerCollection;
+    class XMLElement;
 
-	class SWIFTEN_API StanzaSerializer : public ElementSerializer {
-		public:
-			StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>());
+    class SWIFTEN_API StanzaSerializer : public ElementSerializer {
+        public:
+            StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>());
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const;
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const;
-			virtual void setStanzaSpecificAttributes(boost::shared_ptr<ToplevelElement>, XMLElement&) const = 0;
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const;
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const;
+            virtual void setStanzaSpecificAttributes(boost::shared_ptr<ToplevelElement>, XMLElement&) const = 0;
 
-		private:
-			std::string tag_;
-			PayloadSerializerCollection* payloadSerializers_;
-			boost::optional<std::string> explicitDefaultNS_;
-	};
+        private:
+            std::string tag_;
+            PayloadSerializerCollection* payloadSerializers_;
+            boost::optional<std::string> explicitDefaultNS_;
+    };
 }

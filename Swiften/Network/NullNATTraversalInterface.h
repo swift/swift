@@ -11,22 +11,22 @@
 #include <Swiften/Network/NATTraversalInterface.h>
 
 namespace Swift {
-	class NullNATTraversalInterface : public NATTraversalInterface {
-		public:
-			virtual bool isAvailable() {
-				return true;
-			}
+    class NullNATTraversalInterface : public NATTraversalInterface {
+        public:
+            virtual bool isAvailable() {
+                return true;
+            }
 
-			virtual boost::optional<HostAddress> getPublicIP() {
-				return boost::optional<HostAddress>();
-			}
+            virtual boost::optional<HostAddress> getPublicIP() {
+                return boost::optional<HostAddress>();
+            }
 
-			virtual boost::optional<NATPortMapping> addPortForward(int, int) {
-				return boost::optional<NATPortMapping>();
-			}
+            virtual boost::optional<NATPortMapping> addPortForward(int, int) {
+                return boost::optional<NATPortMapping>();
+            }
 
-			virtual bool removePortForward(const NATPortMapping&) {
-				return false;
-			}
-	};
+            virtual bool removePortForward(const NATPortMapping&) {
+                return false;
+            }
+    };
 }

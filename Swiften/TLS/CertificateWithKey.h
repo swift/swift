@@ -10,14 +10,14 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API CertificateWithKey {
-		public:
-			typedef boost::shared_ptr<CertificateWithKey> ref;
-			CertificateWithKey() {}
+    class SWIFTEN_API CertificateWithKey {
+        public:
+            typedef boost::shared_ptr<CertificateWithKey> ref;
+            CertificateWithKey() {}
 
-			virtual ~CertificateWithKey() {}
+            virtual ~CertificateWithKey() {}
 
-			virtual bool isNull() const = 0;
+            virtual bool isNull() const = 0;
 
-	};
+    };
 }

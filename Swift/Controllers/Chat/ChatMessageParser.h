@@ -12,15 +12,15 @@
 
 namespace Swift {
 
-	class ChatMessageParser {
-		public:
-			ChatMessageParser(const std::map<std::string, std::string>& emoticons, HighlightRulesListPtr highlightRules, bool mucMode = false);
-			ChatWindow::ChatMessage parseMessageBody(const std::string& body, const std::string& nick = "", bool senderIsSelf = false);
-		private:
-			ChatWindow::ChatMessage emoticonHighlight(const ChatWindow::ChatMessage& parsedMessage);
-			ChatWindow::ChatMessage splitHighlight(const ChatWindow::ChatMessage& parsedMessage, const std::string& nick);
-			std::map<std::string, std::string> emoticons_;
-			HighlightRulesListPtr highlightRules_;
-			bool mucMode_;
-	};
+    class ChatMessageParser {
+        public:
+            ChatMessageParser(const std::map<std::string, std::string>& emoticons, HighlightRulesListPtr highlightRules, bool mucMode = false);
+            ChatWindow::ChatMessage parseMessageBody(const std::string& body, const std::string& nick = "", bool senderIsSelf = false);
+        private:
+            ChatWindow::ChatMessage emoticonHighlight(const ChatWindow::ChatMessage& parsedMessage);
+            ChatWindow::ChatMessage splitHighlight(const ChatWindow::ChatMessage& parsedMessage, const std::string& nick);
+            std::map<std::string, std::string> emoticons_;
+            HighlightRulesListPtr highlightRules_;
+            bool mucMode_;
+    };
 }

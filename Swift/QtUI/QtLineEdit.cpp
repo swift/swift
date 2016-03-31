@@ -14,10 +14,10 @@ QtLineEdit::QtLineEdit(QWidget* parent) : QLineEdit(parent) {
 }
 
 void QtLineEdit::keyPressEvent(QKeyEvent* event) {
-	if (event->key() == Qt::Key_Escape) {
-		emit escapePressed();
-	}
-	QLineEdit::keyPressEvent(event);
+    if (event->key() == Qt::Key_Escape) {
+        emit escapePressed();
+    }
+    QLineEdit::keyPressEvent(event);
 }
 
 }

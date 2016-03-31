@@ -13,26 +13,26 @@
 #include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
-	class SWIFTEN_API GetDiscoInfoRequest : public GenericRequest<DiscoInfo> {
-		public:
-			typedef boost::shared_ptr<GetDiscoInfoRequest> ref;
+    class SWIFTEN_API GetDiscoInfoRequest : public GenericRequest<DiscoInfo> {
+        public:
+            typedef boost::shared_ptr<GetDiscoInfoRequest> ref;
 
-			static ref create(const JID& jid, IQRouter* router) {
-				return ref(new GetDiscoInfoRequest(jid, router));
-			}
+            static ref create(const JID& jid, IQRouter* router) {
+                return ref(new GetDiscoInfoRequest(jid, router));
+            }
 
-			static ref create(const JID& jid, const std::string& node, IQRouter* router) {
-				return ref(new GetDiscoInfoRequest(jid, node, router));
-			}
+            static ref create(const JID& jid, const std::string& node, IQRouter* router) {
+                return ref(new GetDiscoInfoRequest(jid, node, router));
+            }
 
-		private:
-			GetDiscoInfoRequest(const JID& jid, IQRouter* router) :
-					GenericRequest<DiscoInfo>(IQ::Get, jid, boost::make_shared<DiscoInfo>(), router) {
-			}
+        private:
+            GetDiscoInfoRequest(const JID& jid, IQRouter* router) :
+                    GenericRequest<DiscoInfo>(IQ::Get, jid, boost::make_shared<DiscoInfo>(), router) {
+            }
 
-			GetDiscoInfoRequest(const JID& jid, const std::string& node, IQRouter* router) :
-					GenericRequest<DiscoInfo>(IQ::Get, jid, boost::make_shared<DiscoInfo>(), router) {
-				getPayloadGeneric()->setNode(node);
-			}
-	};
+            GetDiscoInfoRequest(const JID& jid, const std::string& node, IQRouter* router) :
+                    GenericRequest<DiscoInfo>(IQ::Get, jid, boost::make_shared<DiscoInfo>(), router) {
+                getPayloadGeneric()->setNode(node);
+            }
+    };
 }

@@ -10,19 +10,19 @@
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDQuery.h>
 
 namespace Swift {
-	class FakeDNSSDQuerier;
+    class FakeDNSSDQuerier;
 
-	class FakeDNSSDBrowseQuery : public DNSSDBrowseQuery, public FakeDNSSDQuery {
-		public:	
-			FakeDNSSDBrowseQuery(boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier) {
-			}
+    class FakeDNSSDBrowseQuery : public DNSSDBrowseQuery, public FakeDNSSDQuery {
+        public:
+            FakeDNSSDBrowseQuery(boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier) {
+            }
 
-			void startBrowsing() {
-				run();
-			}
+            void startBrowsing() {
+                run();
+            }
 
-			void stopBrowsing() {
-				finish();
-			}
-	};
+            void stopBrowsing() {
+                finish();
+            }
+    };
 }

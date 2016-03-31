@@ -12,13 +12,13 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class DiscoInfoConvertor : public GenericLuaElementConvertor<DiscoInfo> {
-		public:
-			DiscoInfoConvertor();
-			virtual ~DiscoInfoConvertor();
+    class DiscoInfoConvertor : public GenericLuaElementConvertor<DiscoInfo> {
+        public:
+            DiscoInfoConvertor();
+            virtual ~DiscoInfoConvertor();
 
-			virtual boost::shared_ptr<DiscoInfo> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<DiscoInfo>) SWIFTEN_OVERRIDE;
-			virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
-	};
+            virtual boost::shared_ptr<DiscoInfo> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<DiscoInfo>) SWIFTEN_OVERRIDE;
+            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+    };
 }

@@ -12,13 +12,13 @@
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
-	class SWIFTEN_API BodySerializer : public GenericPayloadSerializer<Body> {
-		public:
-			BodySerializer() : GenericPayloadSerializer<Body>() {}
+    class SWIFTEN_API BodySerializer : public GenericPayloadSerializer<Body> {
+        public:
+            BodySerializer() : GenericPayloadSerializer<Body>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<Body> body)  const {
-				XMLTextNode textNode(body->getText());
-				return "<body>" + textNode.serialize() + "</body>";
-			}
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Body> body)  const {
+                XMLTextNode textNode(body->getText());
+                return "<body>" + textNode.serialize() + "</body>";
+            }
+    };
 }

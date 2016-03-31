@@ -13,14 +13,14 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class JoinMUCWindow {
-		public:
-			virtual ~JoinMUCWindow() {}
+    class JoinMUCWindow {
+        public:
+            virtual ~JoinMUCWindow() {}
 
-			virtual void setNick(const std::string& nick) = 0;
-			virtual void setMUC(const std::string& nick) = 0;
-			virtual void show() = 0;
+            virtual void setNick(const std::string& nick) = 0;
+            virtual void setMUC(const std::string& nick) = 0;
+            virtual void show() = 0;
 
-			boost::signal<void ()> onSearchMUC;
-	};
+            boost::signal<void ()> onSearchMUC;
+    };
 }

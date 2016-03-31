@@ -16,40 +16,40 @@
 #include <Swiften/Parser/Attribute.h>
 
 namespace Swift {
-	class SWIFTEN_API AttributeMap {
-		public:
-			class Entry {
-				public:
-					Entry(const Attribute& attribute, const std::string& value) : attribute(attribute), value(value) {
-					}
+    class SWIFTEN_API AttributeMap {
+        public:
+            class Entry {
+                public:
+                    Entry(const Attribute& attribute, const std::string& value) : attribute(attribute), value(value) {
+                    }
 
-					const Attribute& getAttribute() const {
-						return attribute;
-					}
+                    const Attribute& getAttribute() const {
+                        return attribute;
+                    }
 
-					const std::string& getValue() const {
-						return value;
-					}
+                    const std::string& getValue() const {
+                        return value;
+                    }
 
-				private:
-					Attribute attribute;
-					std::string value;
-			};
+                private:
+                    Attribute attribute;
+                    std::string value;
+            };
 
-			AttributeMap();
+            AttributeMap();
 
-			std::string getAttribute(const std::string& attribute, const std::string& ns = "") const;
-			bool getBoolAttribute(const std::string& attribute, bool defaultValue = false) const;
-			boost::optional<std::string> getAttributeValue(const std::string&) const;
+            std::string getAttribute(const std::string& attribute, const std::string& ns = "") const;
+            bool getBoolAttribute(const std::string& attribute, bool defaultValue = false) const;
+            boost::optional<std::string> getAttributeValue(const std::string&) const;
 
-			void addAttribute(const std::string& name, const std::string& ns, const std::string& value);
+            void addAttribute(const std::string& name, const std::string& ns, const std::string& value);
 
-			const std::vector<Entry>& getEntries() const {
-				return attributes;
-			}
+            const std::vector<Entry>& getEntries() const {
+                return attributes;
+            }
 
-		private:
-			typedef std::vector<Entry> AttributeValueMap;
-			AttributeValueMap attributes;
-	};
+        private:
+            typedef std::vector<Entry> AttributeValueMap;
+            AttributeValueMap attributes;
+    };
 }

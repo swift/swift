@@ -12,13 +12,13 @@
 #include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyEntityCapsProvider : public EntityCapsProvider {
-		public:
-			DummyEntityCapsProvider() {
-			}
+    class SWIFTEN_API DummyEntityCapsProvider : public EntityCapsProvider {
+        public:
+            DummyEntityCapsProvider() {
+            }
 
-			DiscoInfo::ref getCaps(const JID& jid) const;
+            DiscoInfo::ref getCaps(const JID& jid) const;
 
-			std::map<JID, DiscoInfo::ref> caps;
-	};
+            std::map<JID, DiscoInfo::ref> caps;
+    };
 }

@@ -34,19 +34,19 @@
 #include <Swiften/PubSub/PubSubUtil.h>
 #include <Swiften/Queries/PubSubRequest.h>
 #define SWIFTEN_PUBSUBMANAGER_DECLARE_CREATE_REQUEST(payload, container, response) \
-	virtual boost::shared_ptr< PubSubRequest<payload> >  \
-		createRequest(IQ::Type, const JID&, boost::shared_ptr<payload>) = 0;
+    virtual boost::shared_ptr< PubSubRequest<payload> >  \
+        createRequest(IQ::Type, const JID&, boost::shared_ptr<payload>) = 0;
 
 namespace Swift {
-	class JID;
+    class JID;
 
-	class SWIFTEN_API PubSubManager {
-		public:
-			virtual ~PubSubManager();
-			
-			SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
-					SWIFTEN_PUBSUBMANAGER_DECLARE_CREATE_REQUEST)
+    class SWIFTEN_API PubSubManager {
+        public:
+            virtual ~PubSubManager();
 
-			boost::signal<void (const JID&, const boost::shared_ptr<PubSubEventPayload>)> onEvent;
-	};
+            SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
+                    SWIFTEN_PUBSUBMANAGER_DECLARE_CREATE_REQUEST)
+
+            boost::signal<void (const JID&, const boost::shared_ptr<PubSubEventPayload>)> onEvent;
+    };
 }

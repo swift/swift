@@ -18,20 +18,20 @@ class Roster;
 class VCardManager;
 
 class RosterVCardProvider {
-	public:
-		RosterVCardProvider(Roster* roster, VCardManager* vcardManager, JID::CompareType compareType);
-		~RosterVCardProvider();
+    public:
+        RosterVCardProvider(Roster* roster, VCardManager* vcardManager, JID::CompareType compareType);
+        ~RosterVCardProvider();
 
-	private:
-		void handleVCardUpdateRequested(const JID& jid);
-		void handleVCardChanged(const JID& jid, VCard::ref vcard);
+    private:
+        void handleVCardUpdateRequested(const JID& jid);
+        void handleVCardChanged(const JID& jid, VCard::ref vcard);
 
-	private:
-		Roster* roster_;
-		VCardManager* vcardManager_;
-		JID::CompareType compareType_;
-		boost::bsignals::scoped_connection vcardUpdateRequestedConnection;
-		boost::bsignals::scoped_connection vcardChangedConnection;
+    private:
+        Roster* roster_;
+        VCardManager* vcardManager_;
+        JID::CompareType compareType_;
+        boost::bsignals::scoped_connection vcardUpdateRequestedConnection;
+        boost::bsignals::scoped_connection vcardChangedConnection;
 };
 
 }

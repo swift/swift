@@ -17,32 +17,32 @@
 #include <Swiften/Elements/PubSubOwnerRedirect.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerDelete : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerDelete();
-			PubSubOwnerDelete(const std::string& node) : node(node) {}
-			virtual ~PubSubOwnerDelete();
+    class SWIFTEN_API PubSubOwnerDelete : public PubSubOwnerPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubOwnerDelete();
+            PubSubOwnerDelete(const std::string& node) : node(node) {}
+            virtual ~PubSubOwnerDelete();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			boost::shared_ptr<PubSubOwnerRedirect> getRedirect() const {
-				return redirect;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void setRedirect(boost::shared_ptr<PubSubOwnerRedirect> value) {
-				this->redirect = value ;
-			}
+            boost::shared_ptr<PubSubOwnerRedirect> getRedirect() const {
+                return redirect;
+            }
+
+            void setRedirect(boost::shared_ptr<PubSubOwnerRedirect> value) {
+                this->redirect = value ;
+            }
 
 
-		private:
-			std::string node;
-			boost::shared_ptr<PubSubOwnerRedirect> redirect;
-	};
+        private:
+            std::string node;
+            boost::shared_ptr<PubSubOwnerRedirect> redirect;
+    };
 }

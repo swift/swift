@@ -9,7 +9,7 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class RequestChatWithUserDialogUIEvent : public UIEvent {
+    class RequestChatWithUserDialogUIEvent : public UIEvent {
 
-	};
+    };
 }

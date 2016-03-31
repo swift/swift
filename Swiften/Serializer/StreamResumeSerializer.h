@@ -13,10 +13,10 @@
 #include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamResumeSerializer : public GenericElementSerializer<StreamResume> {
-		public:
-			StreamResumeSerializer();
+    class SWIFTEN_API StreamResumeSerializer : public GenericElementSerializer<StreamResume> {
+        public:
+            StreamResumeSerializer();
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const;
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const;
+    };
 }

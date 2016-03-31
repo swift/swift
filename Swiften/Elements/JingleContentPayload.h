@@ -18,85 +18,85 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API JingleContentPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<JingleContentPayload> ref;
+    class SWIFTEN_API JingleContentPayload : public Payload {
+        public:
+            typedef boost::shared_ptr<JingleContentPayload> ref;
 
-			enum Creator {
-				UnknownCreator,
-				InitiatorCreator,
-				ResponderCreator
-			};
+            enum Creator {
+                UnknownCreator,
+                InitiatorCreator,
+                ResponderCreator
+            };
 
-			JingleContentPayload() : creator(UnknownCreator) {
-			}
+            JingleContentPayload() : creator(UnknownCreator) {
+            }
 
-			/*enum Senders {
-				NoSenders,
-				InitiatorSender,
-				ResponderSender,
-				BothSenders,
-			};*/
+            /*enum Senders {
+                NoSenders,
+                InitiatorSender,
+                ResponderSender,
+                BothSenders,
+            };*/
 
-			Creator getCreator() const {
-				return creator;
-			}
+            Creator getCreator() const {
+                return creator;
+            }
 
-			void setCreator(Creator creator) {
-				this->creator = creator;
-			}
+            void setCreator(Creator creator) {
+                this->creator = creator;
+            }
 
-			const std::string& getName() const {
-				return name;
-			}
+            const std::string& getName() const {
+                return name;
+            }
 
-			void setName(const std::string& name) {
-				this->name = name;
-			}
+            void setName(const std::string& name) {
+                this->name = name;
+            }
 
-			const std::vector<JingleDescription::ref>& getDescriptions() const {
-				return descriptions;
-			}
+            const std::vector<JingleDescription::ref>& getDescriptions() const {
+                return descriptions;
+            }
 
-			void addDescription(JingleDescription::ref description) {
-				descriptions.push_back(description);
-			}
+            void addDescription(JingleDescription::ref description) {
+                descriptions.push_back(description);
+            }
 
-			const std::vector<boost::shared_ptr<JingleTransportPayload> >& getTransports() const {
-				return transports;
-			}
+            const std::vector<boost::shared_ptr<JingleTransportPayload> >& getTransports() const {
+                return transports;
+            }
 
-			void addTransport(boost::shared_ptr<JingleTransportPayload>  transport) {
-				transports.push_back(transport);
-			}
+            void addTransport(boost::shared_ptr<JingleTransportPayload>  transport) {
+                transports.push_back(transport);
+            }
 
-			template<typename T>
-			boost::shared_ptr<T> getDescription() const {
-				for (size_t i = 0; i < descriptions.size(); ++i) {
-					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(descriptions[i]));
-					if (result) {
-						return result;
-					}
-				}
-				return boost::shared_ptr<T>();
-			}
+            template<typename T>
+            boost::shared_ptr<T> getDescription() const {
+                for (size_t i = 0; i < descriptions.size(); ++i) {
+                    boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(descriptions[i]));
+                    if (result) {
+                        return result;
+                    }
+                }
+                return boost::shared_ptr<T>();
+            }
 
-			template<typename T>
-			boost::shared_ptr<T> getTransport() const {
-				for (size_t i = 0; i < transports.size(); ++i) {
-					boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(transports[i]));
-					if (result) {
-						return result;
-					}
-				}
-				return boost::shared_ptr<T>();
-			}
+            template<typename T>
+            boost::shared_ptr<T> getTransport() const {
+                for (size_t i = 0; i < transports.size(); ++i) {
+                    boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(transports[i]));
+                    if (result) {
+                        return result;
+                    }
+                }
+                return boost::shared_ptr<T>();
+            }
 
-		private:
-			Creator creator;
-			std::string name;
-			//Senders senders;
-			std::vector<JingleDescription::ref> descriptions;
-			std::vector<boost::shared_ptr<JingleTransportPayload> > transports;
-	};
+        private:
+            Creator creator;
+            std::string name;
+            //Senders senders;
+            std::vector<JingleDescription::ref> descriptions;
+            std::vector<boost::shared_ptr<JingleTransportPayload> > transports;
+    };
 }

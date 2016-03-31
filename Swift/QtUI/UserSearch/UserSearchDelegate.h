@@ -13,18 +13,18 @@
 #include <Swift/QtUI/Roster/DelegateCommons.h>
 
 namespace Swift {
-	class UserSearchDelegate : public QStyledItemDelegate {
-		Q_OBJECT
+    class UserSearchDelegate : public QStyledItemDelegate {
+        Q_OBJECT
 
-		public:
-			UserSearchDelegate(QObject* parent = 0);
-			virtual ~UserSearchDelegate();
+        public:
+            UserSearchDelegate(QObject* parent = 0);
+            virtual ~UserSearchDelegate();
 
-			void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-			QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-		private:
-			DelegateCommons common_;
-	};
+            void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+            QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+        private:
+            DelegateCommons common_;
+    };
 
 }
 

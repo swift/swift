@@ -13,35 +13,35 @@
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class SWIFTEN_API SimpleEventLoop : public EventLoop {
-		public:
-			SimpleEventLoop();
-			virtual ~SimpleEventLoop();
+    class SWIFTEN_API SimpleEventLoop : public EventLoop {
+        public:
+            SimpleEventLoop();
+            virtual ~SimpleEventLoop();
 
-			void run() {
-				doRun(false);
-			}
+            void run() {
+                doRun(false);
+            }
 
-			void runUntilEvents() {
-				doRun(true);
-			}
+            void runUntilEvents() {
+                doRun(true);
+            }
 
-			void runOnce();
+            void runOnce();
 
-			void stop();
-			
-		protected:
-			virtual void eventPosted();
+            void stop();
 
-		private:
-			void doRun(bool breakAfterEvents);
-			void doStop();
+        protected:
+            virtual void eventPosted();
 
-		private:
-			bool isRunning_;
+        private:
+            void doRun(bool breakAfterEvents);
+            void doStop();
 
-			bool eventAvailable_;
-			boost::mutex eventAvailableMutex_;
-			boost::condition_variable eventAvailableCondition_;
-	};
+        private:
+            bool isRunning_;
+
+            bool eventAvailable_;
+            boost::mutex eventAvailableMutex_;
+            boost::condition_variable eventAvailableCondition_;
+    };
 }

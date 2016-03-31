@@ -11,16 +11,16 @@
 namespace Swift {
 
 class CreateImpromptuMUCUIEvent : public UIEvent {
-	public:
-		CreateImpromptuMUCUIEvent(const std::vector<JID>& jids, const JID& roomJID = JID(), const std::string reason = "") : jids_(jids), roomJID_(roomJID), reason_(reason) { }
+    public:
+        CreateImpromptuMUCUIEvent(const std::vector<JID>& jids, const JID& roomJID = JID(), const std::string reason = "") : jids_(jids), roomJID_(roomJID), reason_(reason) { }
 
-		std::vector<JID> getJIDs() const { return jids_; }
-		JID getRoomJID() const { return roomJID_; }
-		std::string getReason() const { return reason_; }
-	private:
-		std::vector<JID> jids_;
-		JID roomJID_;
-		std::string reason_;
+        std::vector<JID> getJIDs() const { return jids_; }
+        JID getRoomJID() const { return roomJID_; }
+        std::string getReason() const { return reason_; }
+    private:
+        std::vector<JID> jids_;
+        JID roomJID_;
+        std::string reason_;
 };
 
 }

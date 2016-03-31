@@ -20,28 +20,28 @@ FileReadBytestream::FileReadBytestream(const boost::filesystem::path& file) : fi
 }
 
 FileReadBytestream::~FileReadBytestream() {
-	if (stream) {
-		stream->close();
-		delete stream;
-		stream = NULL;
-	}
+    if (stream) {
+        stream->close();
+        delete stream;
+        stream = NULL;
+    }
 }
 
 boost::shared_ptr<ByteArray> FileReadBytestream::read(size_t size)  {
-	if (!stream) {
-		stream = new boost::filesystem::ifstream(file, std::ios_base::in|std::ios_base::binary);
-	}
-	boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>();
-	result->resize(size);
-	assert(stream->good());
-	stream->read(reinterpret_cast<char*>(vecptr(*result)), boost::numeric_cast<std::streamsize>(size));
-	result->resize(boost::numeric_cast<size_t>(stream->gcount()));
-	onRead(*result);
-	return result;
+    if (!stream) {
+        stream = new boost::filesystem::ifstream(file, std::ios_base::in|std::ios_base::binary);
+    }
+    boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>();
+    result->resize(size);
+    assert(stream->good());
+    stream->read(reinterpret_cast<char*>(vecptr(*result)), boost::numeric_cast<std::streamsize>(size));
+    result->resize(boost::numeric_cast<size_t>(stream->gcount()));
+    onRead(*result);
+    return result;
 }
 
 bool FileReadBytestream::isFinished() const {
-	return stream && !stream->good();
+    return stream && !stream->good();
 }
 
 }

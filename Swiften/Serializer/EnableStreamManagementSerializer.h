@@ -14,13 +14,13 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API EnableStreamManagementSerializer : public GenericElementSerializer<EnableStreamManagement> {
-		public:
-			EnableStreamManagementSerializer() : GenericElementSerializer<EnableStreamManagement>() {
-			}
+    class SWIFTEN_API EnableStreamManagementSerializer : public GenericElementSerializer<EnableStreamManagement> {
+        public:
+            EnableStreamManagementSerializer() : GenericElementSerializer<EnableStreamManagement>() {
+            }
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
-				return createSafeByteArray(XMLElement("enable", "urn:xmpp:sm:2").serialize());
-			}
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
+                return createSafeByteArray(XMLElement("enable", "urn:xmpp:sm:2").serialize());
+            }
+    };
 }

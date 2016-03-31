@@ -21,28 +21,28 @@
 namespace Swift {
 
 class QtVCardJIDField : public QtVCardGeneralField {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO(tr("JID"), UNLIMITED_INSTANCES, QtVCardJIDField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("JID"), UNLIMITED_INSTANCES, QtVCardJIDField)
 
-		QtVCardJIDField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardJIDField();
+        QtVCardJIDField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        virtual ~QtVCardJIDField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setJID(const JID& jid);
-		JID getJID() const;
+        void setJID(const JID& jid);
+        JID getJID() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QLabel* jidLabel;
-		QtResizableLineEdit* jidLineEdit;
+    private:
+        QLabel* jidLabel;
+        QtResizableLineEdit* jidLineEdit;
 };
 
 }

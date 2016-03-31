@@ -17,51 +17,51 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API Storage : public Payload {
-		public:
-			struct Room {
-				Room() : autoJoin(false) {}
+    class SWIFTEN_API Storage : public Payload {
+        public:
+            struct Room {
+                Room() : autoJoin(false) {}
 
-				std::string name;
-				JID jid;
-				bool autoJoin;
-				std::string nick;
-				boost::optional<std::string> password;
-			};
+                std::string name;
+                JID jid;
+                bool autoJoin;
+                std::string nick;
+                boost::optional<std::string> password;
+            };
 
-			struct URL {
-				URL() {}
+            struct URL {
+                URL() {}
 
-				std::string name;
-				std::string url;
-			};
+                std::string name;
+                std::string url;
+            };
 
-			Storage() {
-			}
+            Storage() {
+            }
 
-			
-			void clearRooms() {
-				rooms.clear();
-			}
 
-			const std::vector<Room>& getRooms() const {
-				return rooms;
-			}
+            void clearRooms() {
+                rooms.clear();
+            }
 
-			void addRoom(const Room& room) {
-				rooms.push_back(room);
-			}
+            const std::vector<Room>& getRooms() const {
+                return rooms;
+            }
 
-			const std::vector<URL>& getURLs() const {
-				return urls;
-			}
+            void addRoom(const Room& room) {
+                rooms.push_back(room);
+            }
 
-			void addURL(const URL& url) {
-				urls.push_back(url);
-			}
+            const std::vector<URL>& getURLs() const {
+                return urls;
+            }
 
-		private:
-			std::vector<Room> rooms;
-			std::vector<URL> urls;
-	};
+            void addURL(const URL& url) {
+                urls.push_back(url);
+            }
+
+        private:
+            std::vector<Room> rooms;
+            std::vector<URL> urls;
+    };
 }

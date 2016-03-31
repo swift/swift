@@ -13,109 +13,109 @@ using namespace Swift;
 using namespace std;
 
 class ChatMessageSummarizerTest : public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(ChatMessageSummarizerTest);
-	CPPUNIT_TEST(testEmpty);
-	CPPUNIT_TEST(testCurrentNone);
-	CPPUNIT_TEST(testCurrentCount);
-	CPPUNIT_TEST(testCurrentCountOthersNone);
-	CPPUNIT_TEST(testCurrentCountOtherCount);
-	CPPUNIT_TEST(testCurrentNoneOtherCount);
-	CPPUNIT_TEST(testCurrentCountOthersCount);
-	CPPUNIT_TEST(testCurrentNoneOthersCount);
-	CPPUNIT_TEST(testCurrentCountSomeOthersCount);
-	CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(ChatMessageSummarizerTest);
+    CPPUNIT_TEST(testEmpty);
+    CPPUNIT_TEST(testCurrentNone);
+    CPPUNIT_TEST(testCurrentCount);
+    CPPUNIT_TEST(testCurrentCountOthersNone);
+    CPPUNIT_TEST(testCurrentCountOtherCount);
+    CPPUNIT_TEST(testCurrentNoneOtherCount);
+    CPPUNIT_TEST(testCurrentCountOthersCount);
+    CPPUNIT_TEST(testCurrentNoneOthersCount);
+    CPPUNIT_TEST(testCurrentCountSomeOthersCount);
+    CPPUNIT_TEST_SUITE_END();
 
 public:
-	ChatMessageSummarizerTest() {}
+    ChatMessageSummarizerTest() {}
 
-	void setUp() {
+    void setUp() {
 
-	}
+    }
 
-	void testEmpty() {
-		string current("");
-		vector<UnreadPair> unreads;
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(current, summary.getSummary(current, unreads));
-	}
+    void testEmpty() {
+        string current("");
+        vector<UnreadPair> unreads;
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(current, summary.getSummary(current, unreads));
+    }
 
-	void testCurrentNone() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bob", 0));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(current, summary.getSummary(current, unreads));
-	}
+    void testCurrentNone() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bob", 0));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(current, summary.getSummary(current, unreads));
+    }
 
-	void testCurrentCount() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bob", 3));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob (3)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentCount() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bob", 3));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob (3)"), summary.getSummary(current, unreads));
+    }
 
-	void testCurrentCountOthersNone() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bert", 0));
-		unreads.push_back(UnreadPair("Bob", 3));
-		unreads.push_back(UnreadPair("Betty", 0));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob (3)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentCountOthersNone() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bert", 0));
+        unreads.push_back(UnreadPair("Bob", 3));
+        unreads.push_back(UnreadPair("Betty", 0));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob (3)"), summary.getSummary(current, unreads));
+    }
 
-	void testCurrentCountOtherCount() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bert", 0));
-		unreads.push_back(UnreadPair("Bob", 3));
-		unreads.push_back(UnreadPair("Betty", 7));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob (3); Betty (7)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentCountOtherCount() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bert", 0));
+        unreads.push_back(UnreadPair("Bob", 3));
+        unreads.push_back(UnreadPair("Betty", 7));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob (3); Betty (7)"), summary.getSummary(current, unreads));
+    }
 
-	void testCurrentNoneOtherCount() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bert", 0));
-		unreads.push_back(UnreadPair("Bob", 0));
-		unreads.push_back(UnreadPair("Betty", 7));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob; Betty (7)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentNoneOtherCount() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bert", 0));
+        unreads.push_back(UnreadPair("Bob", 0));
+        unreads.push_back(UnreadPair("Betty", 7));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob; Betty (7)"), summary.getSummary(current, unreads));
+    }
 
-	void testCurrentNoneOthersCount() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bert", 2));
-		unreads.push_back(UnreadPair("Bob", 0));
-		unreads.push_back(UnreadPair("Betty", 7));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob and 2 others (9)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentNoneOthersCount() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bert", 2));
+        unreads.push_back(UnreadPair("Bob", 0));
+        unreads.push_back(UnreadPair("Betty", 7));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob and 2 others (9)"), summary.getSummary(current, unreads));
+    }
 
-	void testCurrentCountOthersCount() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bert", 2));
-		unreads.push_back(UnreadPair("Bob", 11));
-		unreads.push_back(UnreadPair("Betty", 7));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob (11) and 2 others (9)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentCountOthersCount() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bert", 2));
+        unreads.push_back(UnreadPair("Bob", 11));
+        unreads.push_back(UnreadPair("Betty", 7));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob (11) and 2 others (9)"), summary.getSummary(current, unreads));
+    }
 
-	void testCurrentCountSomeOthersCount() {
-		string current("Bob");
-		vector<UnreadPair> unreads;
-		unreads.push_back(UnreadPair("Bert", 2));
-		unreads.push_back(UnreadPair("Beverly", 0));
-		unreads.push_back(UnreadPair("Bob", 11));
-		unreads.push_back(UnreadPair("Beatrice", 0));
-		unreads.push_back(UnreadPair("Betty", 7));
-		ChatMessageSummarizer summary;
-		CPPUNIT_ASSERT_EQUAL(string("Bob (11) and 2 others (9)"), summary.getSummary(current, unreads));
-	}
+    void testCurrentCountSomeOthersCount() {
+        string current("Bob");
+        vector<UnreadPair> unreads;
+        unreads.push_back(UnreadPair("Bert", 2));
+        unreads.push_back(UnreadPair("Beverly", 0));
+        unreads.push_back(UnreadPair("Bob", 11));
+        unreads.push_back(UnreadPair("Beatrice", 0));
+        unreads.push_back(UnreadPair("Betty", 7));
+        ChatMessageSummarizer summary;
+        CPPUNIT_ASSERT_EQUAL(string("Bob (11) and 2 others (9)"), summary.getSummary(current, unreads));
+    }
 
 };
 

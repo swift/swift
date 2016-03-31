@@ -18,13 +18,13 @@ VCardStorage::~VCardStorage() {
 }
 
 std::string VCardStorage::getPhotoHash(const JID& jid) const {
-	VCard::ref vCard = getVCard(jid);
-	if (vCard && !vCard->getPhoto().empty()) {
-		return Hexify::hexify(crypto->getSHA1Hash(vCard->getPhoto()));
-	}
-	else {
-		return "";
-	}
+    VCard::ref vCard = getVCard(jid);
+    if (vCard && !vCard->getPhoto().empty()) {
+        return Hexify::hexify(crypto->getSHA1Hash(vCard->getPhoto()));
+    }
+    else {
+        return "";
+    }
 }
 
 }

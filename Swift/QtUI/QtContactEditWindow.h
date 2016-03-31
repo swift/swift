@@ -19,33 +19,33 @@ class QLabel;
 class QVBoxLayout;
 
 namespace Swift {
-	class QtContactEditWidget;
+    class QtContactEditWidget;
 
-	class QtContactEditWindow : public QWidget, public ContactEditWindow {
-			Q_OBJECT
+    class QtContactEditWindow : public QWidget, public ContactEditWindow {
+            Q_OBJECT
 
-		public:
-			QtContactEditWindow();
-			virtual ~QtContactEditWindow();
+        public:
+            QtContactEditWindow();
+            virtual ~QtContactEditWindow();
 
-			virtual void setNameSuggestions(const std::vector<std::string>& nameSuggestions);
-			virtual void setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups);
+            virtual void setNameSuggestions(const std::vector<std::string>& nameSuggestions);
+            virtual void setContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, const std::set<std::string>& allGroups);
 
-			void setEnabled(bool);
-			void show();
-			void hide();
+            void setEnabled(bool);
+            void show();
+            void hide();
 
-			static bool confirmContactDeletion(const JID& jid);
+            static bool confirmContactDeletion(const JID& jid);
 
-		private slots:
-			void handleRemoveContact();
-			void handleUpdateContact();
+        private slots:
+            void handleRemoveContact();
+            void handleUpdateContact();
 
-		private:
-			JID jid_;
-			QVBoxLayout* groupsLayout_;
-			QLabel* jidLabel_;
-			QtContactEditWidget* contactEditWidget_;
-	};
+        private:
+            JID jid_;
+            QVBoxLayout* groupsLayout_;
+            QLabel* jidLabel_;
+            QtContactEditWidget* contactEditWidget_;
+    };
 }
 

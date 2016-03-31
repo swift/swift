@@ -18,17 +18,17 @@ class QMouseEvent;
 
 namespace Swift {
 
-	class QtEmoticonCell : public QLabel {
-		Q_OBJECT
-		public:
-			QtEmoticonCell(const QString emoticonAsText, QString filePath, QWidget* parent = 0);
-			~QtEmoticonCell();
-			virtual void mousePressEvent(QMouseEvent* event);
+    class QtEmoticonCell : public QLabel {
+        Q_OBJECT
+        public:
+            QtEmoticonCell(const QString emoticonAsText, QString filePath, QWidget* parent = 0);
+            ~QtEmoticonCell();
+            virtual void mousePressEvent(QMouseEvent* event);
 
-		signals:
-			void emoticonClicked(QString emoticonAsText);
+        signals:
+            void emoticonClicked(QString emoticonAsText);
 
-		private:
-			QString emoticonAsText_;
-	};
+        private:
+            QString emoticonAsText_;
+    };
 }

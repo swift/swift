@@ -16,37 +16,37 @@
 #include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
-	class HostAddressPort;
-	class TLSContextFactory;
-	class TLSContext;
+    class HostAddressPort;
+    class TLSContextFactory;
+    class TLSContext;
 
-	class SWIFTEN_API TLSConnection : public Connection {
-		public:
+    class SWIFTEN_API TLSConnection : public Connection {
+        public:
 
-			TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory, const TLSOptions&);
-			virtual ~TLSConnection();
+            TLSConnection(Connection::ref connection, TLSContextFactory* tlsFactory, const TLSOptions&);
+            virtual ~TLSConnection();
 
-			virtual void listen() {assert(false);}
-			virtual void connect(const HostAddressPort& address);
-			virtual void disconnect();
-			virtual void write(const SafeByteArray& data);
+            virtual void listen() {assert(false);}
+            virtual void connect(const HostAddressPort& address);
+            virtual void disconnect();
+            virtual void write(const SafeByteArray& data);
 
-			virtual HostAddressPort getLocalAddress() const;
-			virtual HostAddressPort getRemoteAddress() const;
+            virtual HostAddressPort getLocalAddress() const;
+            virtual HostAddressPort getRemoteAddress() const;
 
-			TLSContext* getTLSContext() const;
+            TLSContext* getTLSContext() const;
 
-		private:
-			void handleRawConnectFinished(bool error);
-			void handleRawDisconnected(const boost::optional<Error>& error);
-			void handleRawDataRead(boost::shared_ptr<SafeByteArray> data);
-			void handleRawDataWritten();
-			void handleTLSConnectFinished(bool error);
-			void handleTLSDataForNetwork(const SafeByteArray& data);
-			void handleTLSDataForApplication(const SafeByteArray& data);
+        private:
+            void handleRawConnectFinished(bool error);
+            void handleRawDisconnected(const boost::optional<Error>& error);
+            void handleRawDataRead(boost::shared_ptr<SafeByteArray> data);
+            void handleRawDataWritten();
+            void handleTLSConnectFinished(bool error);
+            void handleTLSDataForNetwork(const SafeByteArray& data);
+            void handleTLSDataForApplication(const SafeByteArray& data);
 
-		private:
-			TLSContext* context;
-			Connection::ref connection;
-	};
+        private:
+            TLSContext* context;
+            Connection::ref connection;
+    };
 }

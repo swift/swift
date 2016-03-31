@@ -22,17 +22,17 @@ namespace Swift {
 class PayloadParserFactoryCollection;
 
 class SWIFTEN_API JingleFileTransferDescriptionParser : public GenericPayloadParser<JingleFileTransferDescription> {
-	public:
-		JingleFileTransferDescriptionParser(PayloadParserFactoryCollection* factories);
+    public:
+        JingleFileTransferDescriptionParser(PayloadParserFactoryCollection* factories);
 
-		virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-		virtual void handleEndElement(const std::string& element, const std::string&);
-		virtual void handleCharacterData(const std::string& data);
+        virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+        virtual void handleEndElement(const std::string& element, const std::string&);
+        virtual void handleCharacterData(const std::string& data);
 
-	private:
-		PayloadParserFactoryCollection* factories;
-		int level;
-		boost::shared_ptr<PayloadParser> currentPayloadParser;
+    private:
+        PayloadParserFactoryCollection* factories;
+        int level;
+        boost::shared_ptr<PayloadParser> currentPayloadParser;
 };
 
 }

@@ -26,32 +26,32 @@ PayloadPersister::~PayloadPersister() {
 }
 
 void PayloadPersister::savePayload(boost::shared_ptr<Payload> payload, const boost::filesystem::path& path) {
-	try {
-		if (!boost::filesystem::exists(path.parent_path())) {
-			boost::filesystem::create_directories(path.parent_path());
-		}
-		boost::filesystem::ofstream file(path);
-		file << getSerializer()->serialize(payload);
-		file.close();
-	}
-	catch (const boost::filesystem::filesystem_error& e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
-	}
+    try {
+        if (!boost::filesystem::exists(path.parent_path())) {
+            boost::filesystem::create_directories(path.parent_path());
+        }
+        boost::filesystem::ofstream file(path);
+        file << getSerializer()->serialize(payload);
+        file.close();
+    }
+    catch (const boost::filesystem::filesystem_error& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+    }
 }
 
 boost::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem::path& path) {
-	try {
-		if (boost::filesystem::exists(path)) {
-			ByteArray data;
-			readByteArrayFromFile(data, path);
-			boost::shared_ptr<PayloadParser> parser(createParser());
-			PayloadParserTester tester(parser.get());
-			tester.parse(byteArrayToString(data));
-			return parser->getPayload();
-		}
-	}
-	catch (const boost::filesystem::filesystem_error& e) {
-		std::cerr << "ERROR: " << e.what() << std::endl;
-	}
-	return boost::shared_ptr<Payload>();
+    try {
+        if (boost::filesystem::exists(path)) {
+            ByteArray data;
+            readByteArrayFromFile(data, path);
+            boost::shared_ptr<PayloadParser> parser(createParser());
+            PayloadParserTester tester(parser.get());
+            tester.parse(byteArrayToString(data));
+            return parser->getPayload();
+        }
+    }
+    catch (const boost::filesystem::filesystem_error& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
+    }
+    return boost::shared_ptr<Payload>();
 }

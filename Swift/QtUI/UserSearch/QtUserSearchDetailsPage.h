@@ -18,28 +18,28 @@
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchFieldsPage.h>
 
 namespace Swift {
-	class QtContactEditWidget;
+    class QtContactEditWidget;
 
-	class QtUserSearchDetailsPage : public QWizardPage {
-			Q_OBJECT
-		public:
-			QtUserSearchDetailsPage(const std::set<std::string>& availableGroups);
-			virtual ~QtUserSearchDetailsPage();
+    class QtUserSearchDetailsPage : public QWizardPage {
+            Q_OBJECT
+        public:
+            QtUserSearchDetailsPage(const std::set<std::string>& availableGroups);
+            virtual ~QtUserSearchDetailsPage();
 
-			void setJID(const JID& jid);
-			void setNameSuggestions(const std::vector<std::string>& nameSuggestions);
-			void setName(const std::string& name);
+            void setJID(const JID& jid);
+            void setNameSuggestions(const std::vector<std::string>& nameSuggestions);
+            void setName(const std::string& name);
 
-			std::set<std::string> getSelectedGroups();
-			std::string getName();
+            std::set<std::string> getSelectedGroups();
+            std::string getName();
 
-			void clear();
+            void clear();
 
-		signals:
-			void onUserTriggersFinish();
+        signals:
+            void onUserTriggersFinish();
 
-		private:
-			QtContactEditWidget* editWidget;
-			JID contactJID;
-	};
+        private:
+            QtContactEditWidget* editWidget;
+            JID contactJID;
+    };
 }

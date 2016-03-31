@@ -9,13 +9,13 @@
 #include <QDialog>
 
 namespace Swift {
-	class QtAboutWidget : public QDialog {
-			Q_OBJECT
+    class QtAboutWidget : public QDialog {
+            Q_OBJECT
 
-		public:
-			QtAboutWidget();
+        public:
+            QtAboutWidget();
 
-		private slots:
-			void handleLicenseClicked();
-	};
+        private slots:
+            void handleLicenseClicked();
+    };
 }

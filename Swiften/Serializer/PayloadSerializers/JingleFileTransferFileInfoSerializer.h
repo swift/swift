@@ -12,12 +12,12 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API JingleFileTransferFileInfoSerializer : public GenericPayloadSerializer<JingleFileTransferFileInfo> {
-		public:
-			JingleFileTransferFileInfoSerializer();
+    class SWIFTEN_API JingleFileTransferFileInfoSerializer : public GenericPayloadSerializer<JingleFileTransferFileInfo> {
+        public:
+            JingleFileTransferFileInfoSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<JingleFileTransferFileInfo>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<JingleFileTransferFileInfo>)  const;
+    };
 }

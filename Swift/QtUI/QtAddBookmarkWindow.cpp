@@ -8,23 +8,23 @@
 
 namespace Swift {
 QtAddBookmarkWindow::QtAddBookmarkWindow(UIEventStream* eventStream) : eventStream_(eventStream) {
-	setWindowTitle(tr("Add Bookmark Details"));
+    setWindowTitle(tr("Add Bookmark Details"));
 }
 
 QtAddBookmarkWindow::QtAddBookmarkWindow(UIEventStream* eventStream, const MUCBookmark& bookmark) : eventStream_(eventStream) {
-	createFormFromBookmark(bookmark);
-	setWindowTitle(tr("Add Bookmark Details"));
+    createFormFromBookmark(bookmark);
+    setWindowTitle(tr("Add Bookmark Details"));
 }
 
 bool QtAddBookmarkWindow::commit() {
-	boost::optional<MUCBookmark> bookmark = createBookmarkFromForm();
-	if (bookmark) {
-		eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(*bookmark)));
-		return true;
-	}
-	else {
-		return false;
-	}
+    boost::optional<MUCBookmark> bookmark = createBookmarkFromForm();
+    if (bookmark) {
+        eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(*bookmark)));
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 }

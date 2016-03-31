@@ -12,40 +12,40 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerAffiliation : public Payload {
-		public:
-			enum Type {
-				None,
-				Member,
-				Outcast,
-				Owner,
-				Publisher,
-				PublishOnly
-			};
+    class SWIFTEN_API PubSubOwnerAffiliation : public Payload {
+        public:
+            enum Type {
+                None,
+                Member,
+                Outcast,
+                Owner,
+                Publisher,
+                PublishOnly
+            };
 
-			PubSubOwnerAffiliation();
-			
-			virtual ~PubSubOwnerAffiliation();
+            PubSubOwnerAffiliation();
 
-			const JID& getJID() const {
-				return jid;
-			}
+            virtual ~PubSubOwnerAffiliation();
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			Type getType() const {
-				return type;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
 
-			void setType(Type value) {
-				this->type = value ;
-			}
+            Type getType() const {
+                return type;
+            }
+
+            void setType(Type value) {
+                this->type = value ;
+            }
 
 
-		private:
-			JID jid;
-			Type type;
-	};
+        private:
+            JID jid;
+            Type type;
+    };
 }

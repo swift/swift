@@ -14,10 +14,10 @@ HostAddressPort::HostAddressPort(const HostAddress& address, int port) : address
 }
 
 HostAddressPort::HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint) {
-	address_ = HostAddress(endpoint.address());
-	port_ = endpoint.port();
+    address_ = HostAddress(endpoint.address());
+    port_ = endpoint.port();
 }
 
 std::string HostAddressPort::toString() const {
-	return getAddress().toString() + ":" + boost::lexical_cast<std::string>(getPort());
+    return getAddress().toString() + ":" + boost::lexical_cast<std::string>(getPort());
 }

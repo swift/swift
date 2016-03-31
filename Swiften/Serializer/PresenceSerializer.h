@@ -13,14 +13,14 @@
 #include <Swiften/Serializer/GenericStanzaSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API PresenceSerializer : public GenericStanzaSerializer<Presence> {
-		public:
-			PresenceSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>());
-			~PresenceSerializer() {}
+    class SWIFTEN_API PresenceSerializer : public GenericStanzaSerializer<Presence> {
+        public:
+            PresenceSerializer(PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>());
+            ~PresenceSerializer() {}
 
-		private:
-			virtual void setStanzaSpecificAttributesGeneric(
-					boost::shared_ptr<Presence> presence, 
-					XMLElement& element) const;
-	};
+        private:
+            virtual void setStanzaSpecificAttributesGeneric(
+                    boost::shared_ptr<Presence> presence,
+                    XMLElement& element) const;
+    };
 }

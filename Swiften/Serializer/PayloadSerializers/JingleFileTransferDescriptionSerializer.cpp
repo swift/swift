@@ -30,12 +30,12 @@ JingleFileTransferDescriptionSerializer::JingleFileTransferDescriptionSerializer
 }
 
 std::string JingleFileTransferDescriptionSerializer::serializePayload(boost::shared_ptr<JingleFileTransferDescription> payload) const {
-	XMLElement description("description", "urn:xmpp:jingle:apps:file-transfer:4");
+    XMLElement description("description", "urn:xmpp:jingle:apps:file-transfer:4");
 
-	JingleFileTransferFileInfoSerializer fileInfoSerializer;
-	boost::shared_ptr<XMLRawTextNode> fileInfoXML = boost::make_shared<XMLRawTextNode>(fileInfoSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
-	description.addNode(fileInfoXML);
-	return description.serialize();
+    JingleFileTransferFileInfoSerializer fileInfoSerializer;
+    boost::shared_ptr<XMLRawTextNode> fileInfoXML = boost::make_shared<XMLRawTextNode>(fileInfoSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
+    description.addNode(fileInfoXML);
+    return description.serialize();
 }
 
 }

@@ -12,16 +12,16 @@
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 
 namespace Swift {
-	class RosterGroupExpandinessPersister {
-		public:
-			RosterGroupExpandinessPersister(Roster* roster, SettingsProvider* settings);
-		private:
-			void handleExpandedChanged(GroupRosterItem* group, bool expanded);
-			void handleGroupAdded(GroupRosterItem* group);
-			void load();
-			void save();
-			std::set<std::string> collapsed_;
-			Roster* roster_;
-			SettingsProvider* settings_;
-	};
+    class RosterGroupExpandinessPersister {
+        public:
+            RosterGroupExpandinessPersister(Roster* roster, SettingsProvider* settings);
+        private:
+            void handleExpandedChanged(GroupRosterItem* group, bool expanded);
+            void handleGroupAdded(GroupRosterItem* group);
+            void load();
+            void save();
+            std::set<std::string> collapsed_;
+            Roster* roster_;
+            SettingsProvider* settings_;
+    };
 }

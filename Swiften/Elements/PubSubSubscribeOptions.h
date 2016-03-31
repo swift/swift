@@ -11,23 +11,23 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubSubscribeOptions : public Payload {
-		public:
-			
-			PubSubSubscribeOptions();
-			
-			virtual ~PubSubSubscribeOptions();
+    class SWIFTEN_API PubSubSubscribeOptions : public Payload {
+        public:
 
-			bool isRequired() const {
-				return required;
-			}
+            PubSubSubscribeOptions();
 
-			void setRequired(bool value) {
-				this->required = value ;
-			}
+            virtual ~PubSubSubscribeOptions();
+
+            bool isRequired() const {
+                return required;
+            }
+
+            void setRequired(bool value) {
+                this->required = value ;
+            }
 
 
-		private:
-			bool required;
-	};
+        private:
+            bool required;
+    };
 }

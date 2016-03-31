@@ -12,12 +12,12 @@
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 
 namespace Swift {
-	class SWIFTEN_API FullPayloadSerializerCollection : public PayloadSerializerCollection {
-		public:
-			FullPayloadSerializerCollection();
-			virtual ~FullPayloadSerializerCollection();
+    class SWIFTEN_API FullPayloadSerializerCollection : public PayloadSerializerCollection {
+        public:
+            FullPayloadSerializerCollection();
+            virtual ~FullPayloadSerializerCollection();
 
-		private:
-			std::vector<PayloadSerializer*> serializers_;
-	};
+        private:
+            std::vector<PayloadSerializer*> serializers_;
+    };
 }

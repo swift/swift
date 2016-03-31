@@ -13,12 +13,12 @@
 #include <Swiften/Network/NetworkInterface.h>
 
 namespace Swift {
-	class SWIFTEN_API NetworkEnvironment {
-	public:
-		virtual ~NetworkEnvironment();
+    class SWIFTEN_API NetworkEnvironment {
+    public:
+        virtual ~NetworkEnvironment();
 
-		virtual std::vector<NetworkInterface> getNetworkInterfaces() const = 0;
+        virtual std::vector<NetworkInterface> getNetworkInterfaces() const = 0;
 
-		HostAddress getLocalAddress() const;
-	};
+        HostAddress getLocalAddress() const;
+    };
 }

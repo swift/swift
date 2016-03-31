@@ -20,30 +20,30 @@
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 
 namespace Swift {
-	class IDNConverter;	
-	class EventLoop;
+    class IDNConverter;
+    class EventLoop;
 
-	class SWIFTEN_API PlatformDomainNameResolver : public DomainNameResolver {
-		public:
-			PlatformDomainNameResolver(IDNConverter* idnConverter, EventLoop* eventLoop);
-			virtual ~PlatformDomainNameResolver();
+    class SWIFTEN_API PlatformDomainNameResolver : public DomainNameResolver {
+        public:
+            PlatformDomainNameResolver(IDNConverter* idnConverter, EventLoop* eventLoop);
+            virtual ~PlatformDomainNameResolver();
 
-			virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
-			virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);
+            virtual DomainNameServiceQuery::ref createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
+            virtual DomainNameAddressQuery::ref createAddressQuery(const std::string& name);
 
-		private:
-			void run();
-			void addQueryToQueue(PlatformDomainNameQuery::ref);
+        private:
+            void run();
+            void addQueryToQueue(PlatformDomainNameQuery::ref);
 
-		private:
-			friend class PlatformDomainNameServiceQuery;
-			friend class PlatformDomainNameAddressQuery;
-			IDNConverter* idnConverter;
-			EventLoop* eventLoop;
-			Atomic<bool> stopRequested;
-			boost::thread* thread;
-			std::deque<PlatformDomainNameQuery::ref> queue;
-			boost::mutex queueMutex;
-			boost::condition_variable queueNonEmpty;
-	};
+        private:
+            friend class PlatformDomainNameServiceQuery;
+            friend class PlatformDomainNameAddressQuery;
+            IDNConverter* idnConverter;
+            EventLoop* eventLoop;
+            Atomic<bool> stopRequested;
+            boost::thread* thread;
+            std::deque<PlatformDomainNameQuery::ref> queue;
+            boost::mutex queueMutex;
+            boost::condition_variable queueNonEmpty;
+    };
 }

@@ -14,23 +14,23 @@
 #include <Swiften/Elements/PubSubEventPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEventPurge : public PubSubEventPayload {
-		public:
-			
-			PubSubEventPurge();
-			
-			virtual ~PubSubEventPurge();
+    class SWIFTEN_API PubSubEventPurge : public PubSubEventPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubEventPurge();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubEventPurge();
+
+            const std::string& getNode() const {
+                return node;
+            }
+
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
 
-		private:
-			std::string node;
-	};
+        private:
+            std::string node;
+    };
 }

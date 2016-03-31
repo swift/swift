@@ -10,12 +10,12 @@
 #include <Swiften/JID/JID.h>
 namespace Swift {
 struct MUCItem {
-	MUCItem() {}
-	boost::optional<JID> realJID;
-	boost::optional<std::string> nick;
-	boost::optional<MUCOccupant::Affiliation> affiliation;
-	boost::optional<MUCOccupant::Role> role;
-	boost::optional<JID> actor;
-	boost::optional<std::string> reason;
+    MUCItem() {}
+    boost::optional<JID> realJID;
+    boost::optional<std::string> nick;
+    boost::optional<MUCOccupant::Affiliation> affiliation;
+    boost::optional<MUCOccupant::Role> role;
+    boost::optional<JID> actor;
+    boost::optional<std::string> reason;
 };
 }

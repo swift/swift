@@ -12,17 +12,17 @@
 namespace Swift {
 
 class SWIFTEN_API FailingTransportSession : public TransportSession {
-	public:
-		virtual ~FailingTransportSession() {
-		}
+    public:
+        virtual ~FailingTransportSession() {
+        }
 
-		virtual void start() SWIFTEN_OVERRIDE {
-			assert(false);
-			onFinished(FileTransferError(FileTransferError::PeerError));
-		}
+        virtual void start() SWIFTEN_OVERRIDE {
+            assert(false);
+            onFinished(FileTransferError(FileTransferError::PeerError));
+        }
 
-		virtual void stop() SWIFTEN_OVERRIDE {
-		}
+        virtual void stop() SWIFTEN_OVERRIDE {
+        }
 };
 
 }

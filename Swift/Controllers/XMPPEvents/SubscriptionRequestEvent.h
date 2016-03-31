@@ -17,31 +17,31 @@
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
 namespace Swift {
-	class SubscriptionRequestEvent : public StanzaEvent {
-		public:
-			SubscriptionRequestEvent(const JID& jid, const std::string& reason) : jid_(jid), reason_(reason){}
-			virtual ~SubscriptionRequestEvent(){}
-			const JID& getJID() const {return jid_;}
-			const std::string& getReason() const {return reason_;}
-			boost::signal<void()> onAccept;
-			boost::signal<void()> onDecline;
-			void accept() {
-				onAccept();
-				conclude();
-			}
+    class SubscriptionRequestEvent : public StanzaEvent {
+        public:
+            SubscriptionRequestEvent(const JID& jid, const std::string& reason) : jid_(jid), reason_(reason){}
+            virtual ~SubscriptionRequestEvent(){}
+            const JID& getJID() const {return jid_;}
+            const std::string& getReason() const {return reason_;}
+            boost::signal<void()> onAccept;
+            boost::signal<void()> onDecline;
+            void accept() {
+                onAccept();
+                conclude();
+            }
 
-			void decline() {
-				onDecline();
-				conclude();
-			}
+            void decline() {
+                onDecline();
+                conclude();
+            }
 
-			void defer() {
-				conclude();
-			}
+            void defer() {
+                conclude();
+            }
 
-		private:
-			JID jid_;
-			std::string reason_;
-	};
+        private:
+            JID jid_;
+            std::string reason_;
+    };
 }
 

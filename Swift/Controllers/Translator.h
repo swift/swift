@@ -9,19 +9,19 @@
 #include <string>
 
 namespace Swift {
-	class Translator {
-		public:
-			virtual ~Translator();
+    class Translator {
+        public:
+            virtual ~Translator();
 
-			virtual std::string translate(const std::string& text, const std::string& context) = 0;
+            virtual std::string translate(const std::string& text, const std::string& context) = 0;
 
-			static void setInstance(Translator* translator);
+            static void setInstance(Translator* translator);
 
-			static Translator* getInstance() {
-				return translator;
-			}
+            static Translator* getInstance() {
+                return translator;
+            }
 
-		private:
-			static Translator* translator;
-	};
+        private:
+            static Translator* translator;
+    };
 }

@@ -23,12 +23,12 @@ PubSubOwnerDefaultSerializer::~PubSubOwnerDefaultSerializer() {
 }
 
 std::string PubSubOwnerDefaultSerializer::serializePayload(boost::shared_ptr<PubSubOwnerDefault> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("default", "http://jabber.org/protocol/pubsub#owner");
-	element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("default", "http://jabber.org/protocol/pubsub#owner");
+    element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
+    return element.serialize();
 }
 
 

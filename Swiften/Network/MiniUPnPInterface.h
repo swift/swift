@@ -14,19 +14,19 @@
 #include <Swiften/Network/NATTraversalInterface.h>
 
 namespace Swift {
-	class MiniUPnPInterface : public NATTraversalInterface, boost::noncopyable {
-		public:
-			MiniUPnPInterface();
-			virtual ~MiniUPnPInterface();
+    class MiniUPnPInterface : public NATTraversalInterface, boost::noncopyable {
+        public:
+            MiniUPnPInterface();
+            virtual ~MiniUPnPInterface();
 
-			virtual bool isAvailable();
+            virtual bool isAvailable();
 
-			boost::optional<HostAddress> getPublicIP();
-			boost::optional<NATPortMapping> addPortForward(int localPort, int publicPort);
-			bool removePortForward(const NATPortMapping&);
+            boost::optional<HostAddress> getPublicIP();
+            boost::optional<NATPortMapping> addPortForward(int localPort, int publicPort);
+            bool removePortForward(const NATPortMapping&);
 
-		private:
-			struct Private;
-			boost::shared_ptr<Private> p;
-	};
+        private:
+            struct Private;
+            boost::shared_ptr<Private> p;
+    };
 }

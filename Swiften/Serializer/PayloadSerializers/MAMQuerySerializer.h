@@ -14,13 +14,13 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API MAMQuerySerializer : public GenericPayloadSerializer<MAMQuery> {
-		public:
-			MAMQuerySerializer();
-			virtual ~MAMQuerySerializer();
+    class SWIFTEN_API MAMQuerySerializer : public GenericPayloadSerializer<MAMQuery> {
+        public:
+            MAMQuerySerializer();
+            virtual ~MAMQuerySerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<MAMQuery>) const SWIFTEN_OVERRIDE;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<MAMQuery>) const SWIFTEN_OVERRIDE;
+    };
 }

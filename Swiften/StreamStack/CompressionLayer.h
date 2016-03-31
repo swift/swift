@@ -17,36 +17,36 @@
 #include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
-	class ZLibCompressor;
-	class ZLibDecompressor;
+    class ZLibCompressor;
+    class ZLibDecompressor;
 
-	class SWIFTEN_API CompressionLayer : public StreamLayer, boost::noncopyable {
-		public:
-			CompressionLayer() {}
+    class SWIFTEN_API CompressionLayer : public StreamLayer, boost::noncopyable {
+        public:
+            CompressionLayer() {}
 
-			virtual void writeData(const SafeByteArray& data) {
-				try {
-					writeDataToChildLayer(compressor_.process(data));
-				}
-				catch (const ZLibException&) {
-					onError();
-				}
-			}
+            virtual void writeData(const SafeByteArray& data) {
+                try {
+                    writeDataToChildLayer(compressor_.process(data));
+                }
+                catch (const ZLibException&) {
+                    onError();
+                }
+            }
 
-			virtual void handleDataRead(const SafeByteArray& data) {
-				try {
-					writeDataToParentLayer(decompressor_.process(data));
-				}
-				catch (const ZLibException&) {
-					onError();
-				}
-			}
+            virtual void handleDataRead(const SafeByteArray& data) {
+                try {
+                    writeDataToParentLayer(decompressor_.process(data));
+                }
+                catch (const ZLibException&) {
+                    onError();
+                }
+            }
 
-		public:
-			boost::signal<void ()> onError;
+        public:
+            boost::signal<void ()> onError;
 
-		private:
-			ZLibCompressor compressor_;
-			ZLibDecompressor decompressor_;
-	};
+        private:
+            ZLibCompressor compressor_;
+            ZLibDecompressor decompressor_;
+    };
 }

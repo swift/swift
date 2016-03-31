@@ -12,14 +12,14 @@
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
-	class SWIFTEN_API TransportSession {
-		public:
-			virtual ~TransportSession();
+    class SWIFTEN_API TransportSession {
+        public:
+            virtual ~TransportSession();
 
-			virtual void start() = 0;
-			virtual void stop() = 0;
+            virtual void start() = 0;
+            virtual void stop() = 0;
 
-			boost::signal<void (size_t)> onBytesSent;
-			boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-	};
+            boost::signal<void (size_t)> onBytesSent;
+            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+    };
 }

@@ -9,13 +9,13 @@
 #include <QLineEdit>
 
 namespace Swift {
-	class QtLineEdit : public QLineEdit {
-		Q_OBJECT
-		public:
-			QtLineEdit(QWidget* parent = NULL);
-		signals:
-			void escapePressed();
-		protected:
-			virtual void keyPressEvent(QKeyEvent* event);
-	};
+    class QtLineEdit : public QLineEdit {
+        Q_OBJECT
+        public:
+            QtLineEdit(QWidget* parent = NULL);
+        signals:
+            void escapePressed();
+        protected:
+            virtual void keyPressEvent(QKeyEvent* event);
+    };
 }

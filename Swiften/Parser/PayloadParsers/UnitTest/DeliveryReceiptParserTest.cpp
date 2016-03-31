@@ -15,29 +15,29 @@
 using namespace Swift;
 
 class DeliveryReceiptParserTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(DeliveryReceiptParserTest);
-		CPPUNIT_TEST(testParseXEP0184Example3);
-		CPPUNIT_TEST(testParseXEP0184Example4);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(DeliveryReceiptParserTest);
+        CPPUNIT_TEST(testParseXEP0184Example3);
+        CPPUNIT_TEST(testParseXEP0184Example4);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void testParseXEP0184Example3() {
-			PayloadsParserTester parser;
-			CPPUNIT_ASSERT(parser.parse("<request xmlns='urn:xmpp:receipts'/>"));
+    public:
+        void testParseXEP0184Example3() {
+            PayloadsParserTester parser;
+            CPPUNIT_ASSERT(parser.parse("<request xmlns='urn:xmpp:receipts'/>"));
 
-			DeliveryReceiptRequest::ref request = boost::dynamic_pointer_cast<DeliveryReceiptRequest>(parser.getPayload());
+            DeliveryReceiptRequest::ref request = boost::dynamic_pointer_cast<DeliveryReceiptRequest>(parser.getPayload());
 
-			CPPUNIT_ASSERT(request);
-		}
+            CPPUNIT_ASSERT(request);
+        }
 
-		void testParseXEP0184Example4() {
-			PayloadsParserTester parser;
-			CPPUNIT_ASSERT(parser.parse("<received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>"));
+        void testParseXEP0184Example4() {
+            PayloadsParserTester parser;
+            CPPUNIT_ASSERT(parser.parse("<received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>"));
 
-			DeliveryReceipt::ref receipt = boost::dynamic_pointer_cast<DeliveryReceipt>(parser.getPayload());
+            DeliveryReceipt::ref receipt = boost::dynamic_pointer_cast<DeliveryReceipt>(parser.getPayload());
 
-			CPPUNIT_ASSERT_EQUAL(std::string("richard2-4.1.247"), receipt->getReceivedID());
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string("richard2-4.1.247"), receipt->getReceivedID());
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DeliveryReceiptParserTest);

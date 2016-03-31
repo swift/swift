@@ -9,9 +9,9 @@
 #include <QVariant>
 
 namespace Swift {
-	class MUCSearchItem {
-		public:
-			virtual ~MUCSearchItem() {}
-			virtual QVariant data(int role) = 0;
-	};
+    class MUCSearchItem {
+        public:
+            virtual ~MUCSearchItem() {}
+            virtual QVariant data(int role) = 0;
+    };
 }

@@ -19,37 +19,37 @@
 
 @implementation CocoaApplicationActivateHelperDelegate
 - (void) handleActivate: (NSAppleEventDescriptor*) event withReply: (NSAppleEventDescriptor*) reply {
-	(void) event; (void) reply;
-	QApplication::postEvent(qApp, new QEvent(QEvent::ApplicationActivate));
+    (void) event; (void) reply;
+    QApplication::postEvent(qApp, new QEvent(QEvent::ApplicationActivate));
 }
 @end
 
 namespace Swift {
 
 struct CocoaApplicationActivateHelper::Private {
-	CocoaApplicationActivateHelperDelegate* delegate;
-	bool initialized;
+    CocoaApplicationActivateHelperDelegate* delegate;
+    bool initialized;
 };
 
 CocoaApplicationActivateHelper::CocoaApplicationActivateHelper() {
-	p = new Private();
-	p->delegate = [[CocoaApplicationActivateHelperDelegate alloc] init];
-	p->initialized = false;
-	qApp->installEventFilter(this);
+    p = new Private();
+    p->delegate = [[CocoaApplicationActivateHelperDelegate alloc] init];
+    p->initialized = false;
+    qApp->installEventFilter(this);
 }
 
 CocoaApplicationActivateHelper::~CocoaApplicationActivateHelper() {
-	[[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kCoreEventClass andEventID:kAEReopenApplication];
-	[p->delegate release];
-	delete p;
+    [[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kCoreEventClass andEventID:kAEReopenApplication];
+    [p->delegate release];
+    delete p;
 }
 
 bool CocoaApplicationActivateHelper::eventFilter(QObject* object, QEvent* event) {
-	if (object == qApp && event->type() == QEvent::ApplicationActivate && !p->initialized) {
-		[[NSAppleEventManager sharedAppleEventManager] setEventHandler:p->delegate andSelector:@selector(handleActivate:withReply:) forEventClass:kCoreEventClass andEventID:kAEReopenApplication];
-		p->initialized = true;
-	}
-	return QObject::eventFilter(object, event);
+    if (object == qApp && event->type() == QEvent::ApplicationActivate && !p->initialized) {
+        [[NSAppleEventManager sharedAppleEventManager] setEventHandler:p->delegate andSelector:@selector(handleActivate:withReply:) forEventClass:kCoreEventClass andEventID:kAEReopenApplication];
+        p->initialized = true;
+    }
+    return QObject::eventFilter(object, event);
 }
 
 

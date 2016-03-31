@@ -20,22 +20,22 @@
 namespace Swift {
 
 RosterVCardProvider::RosterVCardProvider(Roster* roster, VCardManager* vcardManager, JID::CompareType compareType) : roster_(roster), vcardManager_(vcardManager), compareType_(compareType) {
-	vcardUpdateRequestedConnection = roster_->onVCardUpdateRequested.connect(boost::bind(&RosterVCardProvider::handleVCardUpdateRequested, this, _1));
-	vcardChangedConnection = vcardManager_->onVCardChanged.connect(boost::bind(&RosterVCardProvider::handleVCardChanged, this, _1, _2));
+    vcardUpdateRequestedConnection = roster_->onVCardUpdateRequested.connect(boost::bind(&RosterVCardProvider::handleVCardUpdateRequested, this, _1));
+    vcardChangedConnection = vcardManager_->onVCardChanged.connect(boost::bind(&RosterVCardProvider::handleVCardChanged, this, _1, _2));
 }
 
 RosterVCardProvider::~RosterVCardProvider() {
 }
 
 void RosterVCardProvider::handleVCardUpdateRequested(const JID& jid) {
-	VCard::ref vcard = vcardManager_->getVCardAndRequestWhenNeeded(jid);
-	if (vcard) {
-		handleVCardChanged(jid, vcard);
-	}
+    VCard::ref vcard = vcardManager_->getVCardAndRequestWhenNeeded(jid);
+    if (vcard) {
+        handleVCardChanged(jid, vcard);
+    }
 }
 
 void RosterVCardProvider::handleVCardChanged(const JID& jid, VCard::ref vcard) {
-	roster_->applyOnItem(SetVCard(jid, vcard, compareType_), jid);
+    roster_->applyOnItem(SetVCard(jid, vcard, compareType_), jid);
 }
 
 

@@ -27,123 +27,123 @@
 namespace Swift {
 
 BOSHSessionStream::BOSHSessionStream(const URL& boshURL,
-		PayloadParserFactoryCollection* payloadParserFactories,
-		PayloadSerializerCollection* payloadSerializers,
-		ConnectionFactory* connectionFactory,
-		TLSContextFactory* tlsContextFactory,
-		TimerFactory* timerFactory,
-		XMLParserFactory* xmlParserFactory,
-		EventLoop* eventLoop,
-		DomainNameResolver* resolver,
-		const std::string& to,
-		const URL& boshHTTPConnectProxyURL,
-		const SafeString& boshHTTPConnectProxyAuthID,
-		const SafeString& boshHTTPConnectProxyAuthPassword,
-		const TLSOptions& tlsOptions,
-		boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
-			available(false), 
-			eventLoop(eventLoop),
-			firstHeader(true) {
+        PayloadParserFactoryCollection* payloadParserFactories,
+        PayloadSerializerCollection* payloadSerializers,
+        ConnectionFactory* connectionFactory,
+        TLSContextFactory* tlsContextFactory,
+        TimerFactory* timerFactory,
+        XMLParserFactory* xmlParserFactory,
+        EventLoop* eventLoop,
+        DomainNameResolver* resolver,
+        const std::string& to,
+        const URL& boshHTTPConnectProxyURL,
+        const SafeString& boshHTTPConnectProxyAuthID,
+        const SafeString& boshHTTPConnectProxyAuthPassword,
+        const TLSOptions& tlsOptions,
+        boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
+            available(false),
+            eventLoop(eventLoop),
+            firstHeader(true) {
 
-	boost::mt19937 random;
-	boost::uniform_int<unsigned long long> dist(0, (1LL<<53) - 1);
-	random.seed(static_cast<unsigned int>(time(NULL)));
-	unsigned long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long long> >(random, dist)();
+    boost::mt19937 random;
+    boost::uniform_int<unsigned long long> dist(0, (1LL<<53) - 1);
+    random.seed(static_cast<unsigned int>(time(NULL)));
+    unsigned long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long long> >(random, dist)();
 
-	connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, tlsOptions, trafficFilter);
-	connectionPool->onSessionTerminated.connect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
-	connectionPool->onSessionStarted.connect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
-	connectionPool->onXMPPDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));
-	connectionPool->onBOSHDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
-	connectionPool->onBOSHDataWritten.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
+    connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, tlsOptions, trafficFilter);
+    connectionPool->onSessionTerminated.connect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
+    connectionPool->onSessionStarted.connect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
+    connectionPool->onXMPPDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));
+    connectionPool->onBOSHDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
+    connectionPool->onBOSHDataWritten.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
 
-	xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType, true);
-	xmppLayer->onStreamStart.connect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
-	xmppLayer->onElement.connect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
-	xmppLayer->onError.connect(boost::bind(&BOSHSessionStream::handleXMPPError, this));
-	xmppLayer->onWriteData.connect(boost::bind(&BOSHSessionStream::handleXMPPLayerDataWritten, this, _1));
+    xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType, true);
+    xmppLayer->onStreamStart.connect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
+    xmppLayer->onElement.connect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
+    xmppLayer->onError.connect(boost::bind(&BOSHSessionStream::handleXMPPError, this));
+    xmppLayer->onWriteData.connect(boost::bind(&BOSHSessionStream::handleXMPPLayerDataWritten, this, _1));
 
-	available = true;
+    available = true;
 }
 
 BOSHSessionStream::~BOSHSessionStream() {
-	BOSHSessionStream::close();
-	connectionPool->onSessionTerminated.disconnect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
-	connectionPool->onSessionStarted.disconnect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
-	connectionPool->onXMPPDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));
-	connectionPool->onBOSHDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
-	connectionPool->onBOSHDataWritten.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
-	delete connectionPool;
-	connectionPool = NULL;
-	xmppLayer->onStreamStart.disconnect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
-	xmppLayer->onElement.disconnect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
-	xmppLayer->onError.disconnect(boost::bind(&BOSHSessionStream::handleXMPPError, this));
-	xmppLayer->onWriteData.disconnect(boost::bind(&BOSHSessionStream::handleXMPPLayerDataWritten, this, _1));
-	delete xmppLayer;
-	xmppLayer = NULL;
+    BOSHSessionStream::close();
+    connectionPool->onSessionTerminated.disconnect(boost::bind(&BOSHSessionStream::handlePoolSessionTerminated, this, _1));
+    connectionPool->onSessionStarted.disconnect(boost::bind(&BOSHSessionStream::handlePoolSessionStarted, this));
+    connectionPool->onXMPPDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));
+    connectionPool->onBOSHDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
+    connectionPool->onBOSHDataWritten.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
+    delete connectionPool;
+    connectionPool = NULL;
+    xmppLayer->onStreamStart.disconnect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
+    xmppLayer->onElement.disconnect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
+    xmppLayer->onError.disconnect(boost::bind(&BOSHSessionStream::handleXMPPError, this));
+    xmppLayer->onWriteData.disconnect(boost::bind(&BOSHSessionStream::handleXMPPLayerDataWritten, this, _1));
+    delete xmppLayer;
+    xmppLayer = NULL;
 }
 
 void BOSHSessionStream::open() {
-	connectionPool->setTLSCertificate(getTLSCertificate());
-	connectionPool->open();
+    connectionPool->setTLSCertificate(getTLSCertificate());
+    connectionPool->open();
 }
 
 void BOSHSessionStream::handlePoolXMPPDataRead(const SafeByteArray& data) {
-	xmppLayer->handleDataRead(data);
+    xmppLayer->handleDataRead(data);
 }
 
 void BOSHSessionStream::writeElement(boost::shared_ptr<ToplevelElement> element) {
-	assert(available);
-	xmppLayer->writeElement(element);
+    assert(available);
+    xmppLayer->writeElement(element);
 }
 
 void BOSHSessionStream::writeFooter() {
-	connectionPool->writeFooter();
+    connectionPool->writeFooter();
 }
 
 void BOSHSessionStream::writeData(const std::string& data) {
-	assert(available);
-	xmppLayer->writeData(data);
+    assert(available);
+    xmppLayer->writeData(data);
 }
 
 void BOSHSessionStream::close() {
-	connectionPool->close();
+    connectionPool->close();
 }
 
 bool BOSHSessionStream::isOpen() {
-	return available;
+    return available;
 }
 
 bool BOSHSessionStream::supportsTLSEncryption() {
-	return false;
+    return false;
 }
 
 void BOSHSessionStream::addTLSEncryption() {
-	assert(available);
+    assert(available);
 }
 
 bool BOSHSessionStream::isTLSEncrypted() {
-	return connectionPool->isTLSEncrypted();
+    return connectionPool->isTLSEncrypted();
 }
 
 Certificate::ref BOSHSessionStream::getPeerCertificate() const {
-	return connectionPool->getPeerCertificate();
+    return connectionPool->getPeerCertificate();
 }
 
 std::vector<Certificate::ref> BOSHSessionStream::getPeerCertificateChain() const {
-	return connectionPool->getPeerCertificateChain();
+    return connectionPool->getPeerCertificateChain();
 }
 
 boost::shared_ptr<CertificateVerificationError> BOSHSessionStream::getPeerCertificateVerificationError() const {
-	return connectionPool->getPeerCertificateVerificationError();
+    return connectionPool->getPeerCertificateVerificationError();
 }
 
 ByteArray BOSHSessionStream::getTLSFinishMessage() const {
-	return ByteArray();
+    return ByteArray();
 }
 
 bool BOSHSessionStream::supportsZLibCompression() {
-	return false;
+    return false;
 }
 
 void BOSHSessionStream::addZLibCompression() {
@@ -151,71 +151,71 @@ void BOSHSessionStream::addZLibCompression() {
 }
 
 void BOSHSessionStream::setWhitespacePingEnabled(bool /*enabled*/) {
-	return;
+    return;
 }
 
 void BOSHSessionStream::resetXMPPParser() {
-	xmppLayer->resetParser();
+    xmppLayer->resetParser();
 }
 
 void BOSHSessionStream::handleStreamStartReceived(const ProtocolHeader& header) {
-	onStreamStartReceived(header);
+    onStreamStartReceived(header);
 }
 
 void BOSHSessionStream::handleElementReceived(boost::shared_ptr<ToplevelElement> element) {
-	onElementReceived(element);
+    onElementReceived(element);
 }
 
 void BOSHSessionStream::handleXMPPError() {
-	available = false;
-	onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ParseError));
+    available = false;
+    onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ParseError));
 }
 
 void BOSHSessionStream::handlePoolSessionStarted() {
-	fakeStreamHeaderReceipt();
+    fakeStreamHeaderReceipt();
 }
 
 void BOSHSessionStream::handlePoolSessionTerminated(BOSHError::ref error) {
-	eventLoop->postEvent(boost::bind(&BOSHSessionStream::fakeStreamFooterReceipt, this, error), shared_from_this());
+    eventLoop->postEvent(boost::bind(&BOSHSessionStream::fakeStreamFooterReceipt, this, error), shared_from_this());
 }
 
 void BOSHSessionStream::writeHeader(const ProtocolHeader& header) {
-	streamHeader = header;
-	/*First time we're told to do this, don't (the sending of the initial header is handled on connect)
-	  On subsequent requests we should restart the stream the BOSH way.
-	*/
-	if (!firstHeader) {
-		eventLoop->postEvent(boost::bind(&BOSHSessionStream::fakeStreamHeaderReceipt, this), shared_from_this());
-		eventLoop->postEvent(boost::bind(&BOSHConnectionPool::restartStream, connectionPool), shared_from_this());
-	}
-	firstHeader = false;
+    streamHeader = header;
+    /*First time we're told to do this, don't (the sending of the initial header is handled on connect)
+      On subsequent requests we should restart the stream the BOSH way.
+    */
+    if (!firstHeader) {
+        eventLoop->postEvent(boost::bind(&BOSHSessionStream::fakeStreamHeaderReceipt, this), shared_from_this());
+        eventLoop->postEvent(boost::bind(&BOSHConnectionPool::restartStream, connectionPool), shared_from_this());
+    }
+    firstHeader = false;
 }
 
 
 void BOSHSessionStream::fakeStreamHeaderReceipt() {
-	std::stringstream header;
-	header << "<stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' from='";
-	header << streamHeader.getTo() << "' id='dummy' version='1.0'>";
+    std::stringstream header;
+    header << "<stream:stream xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams' from='";
+    header << streamHeader.getTo() << "' id='dummy' version='1.0'>";
 
-	xmppLayer->handleDataRead(createSafeByteArray(header.str()));
+    xmppLayer->handleDataRead(createSafeByteArray(header.str()));
 }
 
 void BOSHSessionStream::fakeStreamFooterReceipt(BOSHError::ref error) {
-	std::string footer("</stream:stream>");
-	xmppLayer->handleDataRead(createSafeByteArray(footer));
-	onClosed(error);
+    std::string footer("</stream:stream>");
+    xmppLayer->handleDataRead(createSafeByteArray(footer));
+    onClosed(error);
 }
 
 void BOSHSessionStream::handleXMPPLayerDataWritten(const SafeByteArray& data) {
-	eventLoop->postEvent(boost::bind(&BOSHConnectionPool::write, connectionPool, data), shared_from_this());
+    eventLoop->postEvent(boost::bind(&BOSHConnectionPool::write, connectionPool, data), shared_from_this());
 }
 
 void BOSHSessionStream::handlePoolBOSHDataRead(const SafeByteArray& data) {
-	onDataRead(data);
+    onDataRead(data);
 }
 
 void BOSHSessionStream::handlePoolBOSHDataWritten(const SafeByteArray& data) {
-	onDataWritten(data);
+    onDataWritten(data);
 }
 
 }

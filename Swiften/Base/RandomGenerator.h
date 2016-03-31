@@ -11,14 +11,14 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API RandomGenerator {
-		public:
-			virtual ~RandomGenerator();
+    class SWIFTEN_API RandomGenerator {
+        public:
+            virtual ~RandomGenerator();
 
-			/**
-			 * Generates a random integer between 0 and 'max',
-			 * 'max' inclusive.
-			 */
-			virtual int generateRandomInteger(int max) = 0;
-	};
+            /**
+             * Generates a random integer between 0 and 'max',
+             * 'max' inclusive.
+             */
+            virtual int generateRandomInteger(int max) = 0;
+    };
 }

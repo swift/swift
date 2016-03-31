@@ -16,34 +16,34 @@
 #include <Swiften/Elements/RosterItemPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API RosterPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<RosterPayload> ref;
-			typedef std::vector<RosterItemPayload> RosterItemPayloads;
+    class SWIFTEN_API RosterPayload : public Payload {
+        public:
+            typedef boost::shared_ptr<RosterPayload> ref;
+            typedef std::vector<RosterItemPayload> RosterItemPayloads;
 
-		public:
-			RosterPayload() {}
+        public:
+            RosterPayload() {}
 
-			boost::optional<RosterItemPayload> getItem(const JID& jid) const;
+            boost::optional<RosterItemPayload> getItem(const JID& jid) const;
 
-			void addItem(const RosterItemPayload& item) {
-				items_.push_back(item);
-			}
+            void addItem(const RosterItemPayload& item) {
+                items_.push_back(item);
+            }
 
-			const RosterItemPayloads& getItems() const {
-				return items_;
-			}
+            const RosterItemPayloads& getItems() const {
+                return items_;
+            }
 
-			const boost::optional<std::string>& getVersion() const {
-				return version_;
-			}
+            const boost::optional<std::string>& getVersion() const {
+                return version_;
+            }
 
-			void setVersion(const std::string& version) {
-				version_ = version;
-			}
+            void setVersion(const std::string& version) {
+                version_ = version;
+            }
 
-		private:
-			RosterItemPayloads items_;
-			boost::optional<std::string> version_;
-	};
+        private:
+            RosterItemPayloads items_;
+            boost::optional<std::string> version_;
+    };
 }

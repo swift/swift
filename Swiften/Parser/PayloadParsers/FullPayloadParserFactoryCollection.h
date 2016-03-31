@@ -15,13 +15,13 @@
 #include <Swiften/Parser/PayloadParserFactoryCollection.h>
 
 namespace Swift {
-	class SWIFTEN_API FullPayloadParserFactoryCollection : public PayloadParserFactoryCollection {
-		public:
-			FullPayloadParserFactoryCollection();
-			~FullPayloadParserFactoryCollection();
+    class SWIFTEN_API FullPayloadParserFactoryCollection : public PayloadParserFactoryCollection {
+        public:
+            FullPayloadParserFactoryCollection();
+            ~FullPayloadParserFactoryCollection();
 
-		private:
-			std::vector< boost::shared_ptr<PayloadParserFactory> > factories_;
-			PayloadParserFactory* defaultFactory_;
-	};
+        private:
+            std::vector< boost::shared_ptr<PayloadParserFactory> > factories_;
+            PayloadParserFactory* defaultFactory_;
+    };
 }

@@ -12,11 +12,11 @@
 #include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API CompressRequestSerializer : public ElementSerializer {
-		public:
-			CompressRequestSerializer();
+    class SWIFTEN_API CompressRequestSerializer : public ElementSerializer {
+        public:
+            CompressRequestSerializer();
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element)  const;
-			virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const;
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element)  const;
+            virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const;
+    };
 }

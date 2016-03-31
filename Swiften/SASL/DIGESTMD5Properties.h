@@ -15,23 +15,23 @@
 #include <Swiften/Base/ByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API DIGESTMD5Properties {
-		public:
-			DIGESTMD5Properties();
-			
-			boost::optional<std::string> getValue(const std::string& key) const;
+    class SWIFTEN_API DIGESTMD5Properties {
+        public:
+            DIGESTMD5Properties();
 
-			void setValue(const std::string& key, const std::string& value);
+            boost::optional<std::string> getValue(const std::string& key) const;
 
-			ByteArray serialize() const;
+            void setValue(const std::string& key, const std::string& value);
 
-			static DIGESTMD5Properties parse(const ByteArray&);
+            ByteArray serialize() const;
 
-		private:
-			static bool isQuoted(const std::string& property);
+            static DIGESTMD5Properties parse(const ByteArray&);
 
-		private:
-			typedef std::multimap<std::string, ByteArray> DIGESTMD5PropertiesMap;
-			DIGESTMD5PropertiesMap properties;
-	};
+        private:
+            static bool isQuoted(const std::string& property);
+
+        private:
+            typedef std::multimap<std::string, ByteArray> DIGESTMD5PropertiesMap;
+            DIGESTMD5PropertiesMap properties;
+    };
 }

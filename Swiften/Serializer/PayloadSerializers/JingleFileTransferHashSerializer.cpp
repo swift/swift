@@ -30,19 +30,19 @@ JingleFileTransferHashSerializer::JingleFileTransferHashSerializer() {
 }
 
 std::string JingleFileTransferHashSerializer::serializePayload(boost::shared_ptr<JingleFileTransferHash> payload) const {
-	// code for version urn:xmpp:jingle:apps:file-transfer:2
-	//XMLElement hash("hash", "urn:xmpp:jingle:apps:file-transfer:info:2", payload->getHash());
+    // code for version urn:xmpp:jingle:apps:file-transfer:2
+    //XMLElement hash("hash", "urn:xmpp:jingle:apps:file-transfer:info:2", payload->getHash());
 
-	// code for version urn:xmpp:jingle:apps:file-transfer:4
-	XMLElement checksum("checksum", "urn:xmpp:jingle:apps:file-transfer:4");
+    // code for version urn:xmpp:jingle:apps:file-transfer:4
+    XMLElement checksum("checksum", "urn:xmpp:jingle:apps:file-transfer:4");
 
-	JingleFileTransferFileInfoSerializer  fileSerializer;
+    JingleFileTransferFileInfoSerializer  fileSerializer;
 
-	boost::shared_ptr<XMLRawTextNode> file = boost::make_shared<XMLRawTextNode>(fileSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
+    boost::shared_ptr<XMLRawTextNode> file = boost::make_shared<XMLRawTextNode>(fileSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
 
-	checksum.addNode(file);
+    checksum.addNode(file);
 
-	return checksum.serialize();
+    return checksum.serialize();
 }
 
 }

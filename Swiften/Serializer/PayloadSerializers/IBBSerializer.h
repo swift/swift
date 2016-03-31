@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API IBBSerializer : public GenericPayloadSerializer<IBB> {
-		public:
-			IBBSerializer();
+    class SWIFTEN_API IBBSerializer : public GenericPayloadSerializer<IBB> {
+        public:
+            IBBSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<IBB>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<IBB>)  const;
+    };
 }

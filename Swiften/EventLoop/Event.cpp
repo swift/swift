@@ -10,13 +10,13 @@
 #include <typeinfo>
 
 std::ostream& operator<<(std::ostream& os, const Swift::Event& e) {
-	os << "Event(" << e.id << ",";
-	if (e.owner) {
-		os << typeid(*e.owner.get()).name();
-	}
-	else {
-		os << "null";
-	}
-	os << ")";
-	return os;
+    os << "Event(" << e.id << ",";
+    if (e.owner) {
+        os << typeid(*e.owner.get()).name();
+    }
+    else {
+        os << "null";
+    }
+    os << ")";
+    return os;
 }

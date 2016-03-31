@@ -14,14 +14,14 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class DomainNameAddressQuery {
-		public:
-			typedef boost::shared_ptr<DomainNameAddressQuery> ref;
+    class DomainNameAddressQuery {
+        public:
+            typedef boost::shared_ptr<DomainNameAddressQuery> ref;
 
-			virtual ~DomainNameAddressQuery();
+            virtual ~DomainNameAddressQuery();
 
-			virtual void run() = 0;
+            virtual void run() = 0;
 
-			boost::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
-	};
+            boost::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
+    };
 }

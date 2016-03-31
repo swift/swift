@@ -20,62 +20,62 @@
 #include <Swiften/TLS/CertificateWithKey.h>
 
 namespace boost {
-	class thread;
-	namespace system {
-		class error_code;
-	}
+    class thread;
+    namespace system {
+        class error_code;
+    }
 }
 
 namespace Swift {
-	class EventLoop;
+    class EventLoop;
 
-	class SWIFTEN_API BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
-		public:
-			typedef boost::shared_ptr<BoostConnection> ref;
+    class SWIFTEN_API BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
+        public:
+            typedef boost::shared_ptr<BoostConnection> ref;
 
-			virtual ~BoostConnection();
+            virtual ~BoostConnection();
 
-			static ref create(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
-				return ref(new BoostConnection(ioService, eventLoop));
-			}
+            static ref create(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
+                return ref(new BoostConnection(ioService, eventLoop));
+            }
 
-			virtual void listen();
-			virtual void connect(const HostAddressPort& address);
-			virtual void disconnect();
-			virtual void write(const SafeByteArray& data);
+            virtual void listen();
+            virtual void connect(const HostAddressPort& address);
+            virtual void disconnect();
+            virtual void write(const SafeByteArray& data);
 
-			boost::asio::ip::tcp::socket& getSocket() {
-				return socket_;
-			}
+            boost::asio::ip::tcp::socket& getSocket() {
+                return socket_;
+            }
 
-			virtual HostAddressPort getLocalAddress() const;
-			virtual HostAddressPort getRemoteAddress() const;
+            virtual HostAddressPort getLocalAddress() const;
+            virtual HostAddressPort getRemoteAddress() const;
 
-			bool setClientCertificate(CertificateWithKey::ref cert);
+            bool setClientCertificate(CertificateWithKey::ref cert);
 
-			Certificate::ref getPeerCertificate() const;
-			std::vector<Certificate::ref> getPeerCertificateChain() const;
-			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            Certificate::ref getPeerCertificate() const;
+            std::vector<Certificate::ref> getPeerCertificateChain() const;
+            boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
-		private:
-			BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+        private:
+            BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 
-			void handleConnectFinished(const boost::system::error_code& error);
-			void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
-			void handleDataWritten(const boost::system::error_code& error);
-			void doRead();
-			void doWrite(const SafeByteArray& data);
-			void closeSocket();
+            void handleConnectFinished(const boost::system::error_code& error);
+            void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
+            void handleDataWritten(const boost::system::error_code& error);
+            void doRead();
+            void doWrite(const SafeByteArray& data);
+            void closeSocket();
 
-		private:
-			EventLoop* eventLoop;
-			boost::shared_ptr<boost::asio::io_service> ioService;
-			boost::asio::ip::tcp::socket socket_;
-			boost::shared_ptr<SafeByteArray> readBuffer_;
-			boost::mutex writeMutex_;
-			bool writing_;
-			SafeByteArray writeQueue_;
-			bool closeSocketAfterNextWrite_;
-			boost::mutex readCloseMutex_;
-	};
+        private:
+            EventLoop* eventLoop;
+            boost::shared_ptr<boost::asio::io_service> ioService;
+            boost::asio::ip::tcp::socket socket_;
+            boost::shared_ptr<SafeByteArray> readBuffer_;
+            boost::mutex writeMutex_;
+            bool writing_;
+            SafeByteArray writeQueue_;
+            bool closeSocketAfterNextWrite_;
+            boost::mutex readCloseMutex_;
+    };
 }

@@ -17,41 +17,41 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubUnsubscribe : public PubSubPayload {
-		public:
-			
-			PubSubUnsubscribe();
-			
-			virtual ~PubSubUnsubscribe();
+    class SWIFTEN_API PubSubUnsubscribe : public PubSubPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubUnsubscribe();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubUnsubscribe();
 
-			const JID& getJID() const {
-				return jid;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			const boost::optional< std::string >& getSubscriptionID() const {
-				return subscriptionID;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			void setSubscriptionID(const boost::optional< std::string >& value) {
-				this->subscriptionID = value ;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
+
+            const boost::optional< std::string >& getSubscriptionID() const {
+                return subscriptionID;
+            }
+
+            void setSubscriptionID(const boost::optional< std::string >& value) {
+                this->subscriptionID = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			JID jid;
-			boost::optional< std::string > subscriptionID;
-	};
+        private:
+            boost::optional< std::string > node;
+            JID jid;
+            boost::optional< std::string > subscriptionID;
+    };
 }

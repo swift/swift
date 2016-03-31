@@ -13,55 +13,55 @@
 
 int main(int argc, char *argv[])
 {
-		QApplication app(argc, argv);
+        QApplication app(argc, argv);
 
-		//Swift::RosterModel model;
+        //Swift::RosterModel model;
 
-		//QTreeView view;
-		//view.setModel(&model);
-		//view.setWindowTitle("A roster");
-		//view.show();
+        //QTreeView view;
+        //view.setModel(&model);
+        //view.setWindowTitle("A roster");
+        //view.show();
 
-	Swift::QtTreeWidgetFactory treeWidgetFactory;
-	Swift::QtTreeWidget* tree = dynamic_cast<Swift::QtTreeWidget*>(treeWidgetFactory.createTreeWidget());
-	tree->show();
-	QList<Swift::QtTreeWidgetItem*> item3s;
-	for (int i = 0; i < 500; i++) {
-		Swift::QtTreeWidgetItem* group = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(tree));
-		group->setText("People");
-		group->setBackgroundColor(0xBBBBBB);
-		Swift::QtTreeWidgetItem* item1 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
-		Swift::QtTreeWidgetItem* item2 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
-		Swift::QtTreeWidgetItem* item3 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
-		Swift::QtTreeWidgetItem* item4 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
-		item1->setText("Remko");
-		item2->setText("Kevin");
-		item3->setText("Cath");
-		item4->setText("KimTypo");
-		item4->setText("Kim");
-		item3s.push_back(item3);
-	}
-	
-	Swift::QtTreeWidgetItem* group = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(tree));
-	group->setText("Many People");
-	
-	Swift::QtTreeWidgetItem* person350;
-	Swift::QtTreeWidgetItem* person1200;
+    Swift::QtTreeWidgetFactory treeWidgetFactory;
+    Swift::QtTreeWidget* tree = dynamic_cast<Swift::QtTreeWidget*>(treeWidgetFactory.createTreeWidget());
+    tree->show();
+    QList<Swift::QtTreeWidgetItem*> item3s;
+    for (int i = 0; i < 500; i++) {
+        Swift::QtTreeWidgetItem* group = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(tree));
+        group->setText("People");
+        group->setBackgroundColor(0xBBBBBB);
+        Swift::QtTreeWidgetItem* item1 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
+        Swift::QtTreeWidgetItem* item2 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
+        Swift::QtTreeWidgetItem* item3 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
+        Swift::QtTreeWidgetItem* item4 = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
+        item1->setText("Remko");
+        item2->setText("Kevin");
+        item3->setText("Cath");
+        item4->setText("KimTypo");
+        item4->setText("Kim");
+        item3s.push_back(item3);
+    }
 
-	for (int i = 0; i < 1500; i++) {
-		Swift::QtTreeWidgetItem* item = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
-		item->setText(Q2PSTRING(QString("Some person %1").arg(i)));
-		item->setStatusShow(Swift::StatusShow::Away);
-		if (i == 350) person350 = item;
-		if (i == 1200) person1200 = item;
-	}	
+    Swift::QtTreeWidgetItem* group = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(tree));
+    group->setText("Many People");
 
-	for (int i = 0; i < item3s.size(); i++) {
-		item3s[i]->setStatusShow(Swift::StatusShow::XA);
-	}
+    Swift::QtTreeWidgetItem* person350;
+    Swift::QtTreeWidgetItem* person1200;
 
-	person350->setStatusShow(Swift::StatusShow::DND);
-	person1200->setStatusShow(Swift::StatusShow::Online);
+    for (int i = 0; i < 1500; i++) {
+        Swift::QtTreeWidgetItem* item = dynamic_cast<Swift::QtTreeWidgetItem*>(treeWidgetFactory.createTreeWidgetItem(group));
+        item->setText(Q2PSTRING(QString("Some person %1").arg(i)));
+        item->setStatusShow(Swift::StatusShow::Away);
+        if (i == 350) person350 = item;
+        if (i == 1200) person1200 = item;
+    }
 
-	return app.exec();
+    for (int i = 0; i < item3s.size(); i++) {
+        item3s[i]->setStatusShow(Swift::StatusShow::XA);
+    }
+
+    person350->setStatusShow(Swift::StatusShow::DND);
+    person1200->setStatusShow(Swift::StatusShow::Online);
+
+    return app.exec();
 }

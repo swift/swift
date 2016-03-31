@@ -28,69 +28,69 @@ namespace Swift {
 
 class GroupRosterItem;
 class ContactRosterItem : public RosterItem {
-	public:
-		enum Feature {
-			FileTransferFeature,
-			WhiteboardFeature
-		};
+    public:
+        enum Feature {
+            FileTransferFeature,
+            WhiteboardFeature
+        };
 
-		enum BlockState {
-			BlockingNotSupported,
-			IsBlocked,
-			IsUnblocked,
-			IsDomainBlocked
-		};
-		
-	public:
-		ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent);
-		virtual ~ContactRosterItem();
+        enum BlockState {
+            BlockingNotSupported,
+            IsBlocked,
+            IsUnblocked,
+            IsDomainBlocked
+        };
 
-		StatusShow::Type getStatusShow() const;
-		StatusShow::Type getSimplifiedStatusShow() const;
-		std::string getStatusText() const;
-		std::string getIdleText() const;
-		std::string getOfflineSinceText() const;
-		void setAvatarPath(const boost::filesystem::path& path);
-		const boost::filesystem::path& getAvatarPath() const;
-		const JID& getJID() const;
-		void setDisplayJID(const JID& jid);
-		const JID& getDisplayJID() const;
-		void applyPresence(boost::shared_ptr<Presence> presence);
-		const std::vector<std::string>& getGroups() const;
-		/** Only used so a contact can know about the groups it's in*/
-		void addGroup(const std::string& group);
-		void removeGroup(const std::string& group);
-		void clearPresence();
+    public:
+        ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent);
+        virtual ~ContactRosterItem();
 
-		MUCOccupant::Role getMUCRole() const;
-		void setMUCRole(const MUCOccupant::Role& role);
-		MUCOccupant::Affiliation getMUCAffiliation() const;
-		void setMUCAffiliation(const MUCOccupant::Affiliation& affiliation);
-		std::string getMUCAffiliationText() const;
+        StatusShow::Type getStatusShow() const;
+        StatusShow::Type getSimplifiedStatusShow() const;
+        std::string getStatusText() const;
+        std::string getIdleText() const;
+        std::string getOfflineSinceText() const;
+        void setAvatarPath(const boost::filesystem::path& path);
+        const boost::filesystem::path& getAvatarPath() const;
+        const JID& getJID() const;
+        void setDisplayJID(const JID& jid);
+        const JID& getDisplayJID() const;
+        void applyPresence(boost::shared_ptr<Presence> presence);
+        const std::vector<std::string>& getGroups() const;
+        /** Only used so a contact can know about the groups it's in*/
+        void addGroup(const std::string& group);
+        void removeGroup(const std::string& group);
+        void clearPresence();
 
-		void setSupportedFeatures(const std::set<Feature>& features);
-		bool supportsFeature(Feature feature) const;
+        MUCOccupant::Role getMUCRole() const;
+        void setMUCRole(const MUCOccupant::Role& role);
+        MUCOccupant::Affiliation getMUCAffiliation() const;
+        void setMUCAffiliation(const MUCOccupant::Affiliation& affiliation);
+        std::string getMUCAffiliationText() const;
 
-		void setBlockState(BlockState state);
-		BlockState blockState() const;
+        void setSupportedFeatures(const std::set<Feature>& features);
+        bool supportsFeature(Feature feature) const;
 
-		VCard::ref getVCard() const;
-		void setVCard(VCard::ref vcard);
+        void setBlockState(BlockState state);
+        BlockState blockState() const;
 
-		boost::signal<void ()> onVCardRequested;
+        VCard::ref getVCard() const;
+        void setVCard(VCard::ref vcard);
 
-	private:
-		JID jid_;
-		JID displayJID_;
-		boost::posix_time::ptime lastAvailableTime_;
-		boost::filesystem::path avatarPath_;
-		boost::shared_ptr<Presence> presence_;
-		std::vector<std::string> groups_;
-		MUCOccupant::Role mucRole_;
-		MUCOccupant::Affiliation mucAffiliation_;
-		std::set<Feature> features_;
-		BlockState blockState_;
-		VCard::ref vcard_;
+        boost::signal<void ()> onVCardRequested;
+
+    private:
+        JID jid_;
+        JID displayJID_;
+        boost::posix_time::ptime lastAvailableTime_;
+        boost::filesystem::path avatarPath_;
+        boost::shared_ptr<Presence> presence_;
+        std::vector<std::string> groups_;
+        MUCOccupant::Role mucRole_;
+        MUCOccupant::Affiliation mucAffiliation_;
+        std::set<Feature> features_;
+        BlockState blockState_;
+        VCard::ref vcard_;
 };
 
 }

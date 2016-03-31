@@ -17,47 +17,47 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API Bytestreams : public Payload {
-		public:
-			typedef boost::shared_ptr<Bytestreams> ref;
+    class SWIFTEN_API Bytestreams : public Payload {
+        public:
+            typedef boost::shared_ptr<Bytestreams> ref;
 
-			struct StreamHost {
-				StreamHost(const std::string& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}
+            struct StreamHost {
+                StreamHost(const std::string& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}
 
-				std::string host;
-				JID jid;
-				int port;
-			};
+                std::string host;
+                JID jid;
+                int port;
+            };
 
-			Bytestreams() {}
+            Bytestreams() {}
 
-			const std::string& getStreamID() const {
-				return id;
-			}
+            const std::string& getStreamID() const {
+                return id;
+            }
 
-			void setStreamID(const std::string& id) {
-				this->id = id;
-			}
+            void setStreamID(const std::string& id) {
+                this->id = id;
+            }
 
-			const boost::optional<JID>& getUsedStreamHost() const {
-				return usedStreamHost;
-			}
+            const boost::optional<JID>& getUsedStreamHost() const {
+                return usedStreamHost;
+            }
 
-			void setUsedStreamHost(const JID& host) {
-				usedStreamHost = host;
-			}
+            void setUsedStreamHost(const JID& host) {
+                usedStreamHost = host;
+            }
 
-			const std::vector<StreamHost>& getStreamHosts() const {
-				return streamHosts;
-			}
+            const std::vector<StreamHost>& getStreamHosts() const {
+                return streamHosts;
+            }
 
-			void addStreamHost(const StreamHost& streamHost) {
-				streamHosts.push_back(streamHost);
-			}
+            void addStreamHost(const StreamHost& streamHost) {
+                streamHosts.push_back(streamHost);
+            }
 
-		private:
-			std::string id;
-			boost::optional<JID> usedStreamHost;
-			std::vector<StreamHost> streamHosts;
-	};
+        private:
+            std::string id;
+            boost::optional<JID> usedStreamHost;
+            std::vector<StreamHost> streamHosts;
+    };
 }

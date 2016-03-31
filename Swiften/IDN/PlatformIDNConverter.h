@@ -9,9 +9,9 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class IDNConverter;
+    class IDNConverter;
 
-	namespace PlatformIDNConverter {
-		SWIFTEN_API IDNConverter* create();
-	}
+    namespace PlatformIDNConverter {
+        SWIFTEN_API IDNConverter* create();
+    }
 }

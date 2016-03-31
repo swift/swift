@@ -22,21 +22,21 @@
 namespace Swift {
 
 class FuzzyRosterFilter : public RosterFilter {
-	public:
-		FuzzyRosterFilter(const std::string& query) : query_(query) { }
-		virtual ~FuzzyRosterFilter() {}
-		virtual bool operator() (RosterItem* item) const {
-			ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(item);
-			if (contactItem) {
-				const bool itemMatched = ContactSuggester::fuzzyMatch(contactItem->getDisplayName(), query_) || ContactSuggester::fuzzyMatch(contactItem->getDisplayJID(), query_);
-				return !itemMatched;
-			} else {
-				return false;
-			}
-		}
+    public:
+        FuzzyRosterFilter(const std::string& query) : query_(query) { }
+        virtual ~FuzzyRosterFilter() {}
+        virtual bool operator() (RosterItem* item) const {
+            ContactRosterItem *contactItem = dynamic_cast<ContactRosterItem*>(item);
+            if (contactItem) {
+                const bool itemMatched = ContactSuggester::fuzzyMatch(contactItem->getDisplayName(), query_) || ContactSuggester::fuzzyMatch(contactItem->getDisplayJID(), query_);
+                return !itemMatched;
+            } else {
+                return false;
+            }
+        }
 
-	private:
-		std::string query_;
+    private:
+        std::string query_;
 };
 
 }

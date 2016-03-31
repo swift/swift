@@ -11,12 +11,12 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class Win32NotifierWindow {
-		public:
-			virtual ~Win32NotifierWindow() {}
+    class Win32NotifierWindow {
+        public:
+            virtual ~Win32NotifierWindow() {}
 
-			virtual HWND getID() const = 0;
+            virtual HWND getID() const = 0;
 
-			boost::signal<void (MSG*)> onMessageReceived;
-	};
+            boost::signal<void (MSG*)> onMessageReceived;
+    };
 }

@@ -23,22 +23,22 @@ class UIEventStream;
 class AdHocCommandWindowFactory;
 class AdHocManager {
 public:
-	AdHocManager(const JID& jid, AdHocCommandWindowFactory* factory, IQRouter* iqRouter, UIEventStream* uiEventStream, MainWindow* mainWindow);
-	~AdHocManager();
-	void removeController(boost::shared_ptr<AdHocController> contoller);
-	void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
-	void setOnline(bool online);
+    AdHocManager(const JID& jid, AdHocCommandWindowFactory* factory, IQRouter* iqRouter, UIEventStream* uiEventStream, MainWindow* mainWindow);
+    ~AdHocManager();
+    void removeController(boost::shared_ptr<AdHocController> contoller);
+    void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
+    void setOnline(bool online);
 private:
-	void handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems>, ErrorPayload::ref error);
-	void handleUIEvent(boost::shared_ptr<UIEvent> event);
-	boost::signal<void (const AdHocController&)> onControllerComplete;
-	JID jid_;
-	IQRouter* iqRouter_;
-	UIEventStream* uiEventStream_;
-	MainWindow* mainWindow_;
-	AdHocCommandWindowFactory* factory_;
-	GetDiscoItemsRequest::ref discoItemsRequest_;
-	std::vector<boost::shared_ptr<AdHocController> > controllers_;
+    void handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems>, ErrorPayload::ref error);
+    void handleUIEvent(boost::shared_ptr<UIEvent> event);
+    boost::signal<void (const AdHocController&)> onControllerComplete;
+    JID jid_;
+    IQRouter* iqRouter_;
+    UIEventStream* uiEventStream_;
+    MainWindow* mainWindow_;
+    AdHocCommandWindowFactory* factory_;
+    GetDiscoItemsRequest::ref discoItemsRequest_;
+    std::vector<boost::shared_ptr<AdHocController> > controllers_;
 };
 
 }

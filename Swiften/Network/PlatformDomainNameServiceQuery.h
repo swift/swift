@@ -15,22 +15,22 @@
 #include <Swiften/Network/PlatformDomainNameQuery.h>
 
 namespace Swift {
-	class EventLoop;
+    class EventLoop;
 
-	class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
-		public:
-			PlatformDomainNameServiceQuery(const boost::optional<std::string>& serviceName, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
-			virtual ~PlatformDomainNameServiceQuery();
+    class PlatformDomainNameServiceQuery : public DomainNameServiceQuery, public PlatformDomainNameQuery, public boost::enable_shared_from_this<PlatformDomainNameServiceQuery>, public EventOwner {
+        public:
+            PlatformDomainNameServiceQuery(const boost::optional<std::string>& serviceName, EventLoop* eventLoop, PlatformDomainNameResolver* resolver);
+            virtual ~PlatformDomainNameServiceQuery();
 
-			virtual void run();
+            virtual void run();
 
-		private:
-			void runBlocking();
-			void emitError();
+        private:
+            void runBlocking();
+            void emitError();
 
-		private:
-			EventLoop* eventLoop;
-			std::string service;
-			bool serviceValid;
-	};
+        private:
+            EventLoop* eventLoop;
+            std::string service;
+            bool serviceValid;
+    };
 }

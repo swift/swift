@@ -30,62 +30,62 @@ static boost::bsignals::connection errorConnection;
 
 
 static void handleConnected() {
-	boost::shared_ptr<Message> message(new Message());
-	message->setBody(messageBody);
-	message->setTo(recipient);
-	client->sendMessage(message);
-	exitCode = 0;
-	errorConnection.disconnect();
-	client->disconnect();
-	eventLoop.stop();
+    boost::shared_ptr<Message> message(new Message());
+    message->setBody(messageBody);
+    message->setTo(recipient);
+    client->sendMessage(message);
+    exitCode = 0;
+    errorConnection.disconnect();
+    client->disconnect();
+    eventLoop.stop();
 }
 
 static void handleDisconnected(const boost::optional<ClientError>&) {
-	std::cerr << "Error!" << std::endl;
-	exitCode = 1;
-	eventLoop.stop();
+    std::cerr << "Error!" << std::endl;
+    exitCode = 1;
+    eventLoop.stop();
 }
 
 int main(int argc, char* argv[]) {
-	if (argc < 5 || argc > 6) {
-		std::cerr << "Usage: " << argv[0] << " <jid> [<connect_host>]<password> <recipient> <message>" << std::endl;
-		return -1;
-	}
+    if (argc < 5 || argc > 6) {
+        std::cerr << "Usage: " << argv[0] << " <jid> [<connect_host>]<password> <recipient> <message>" << std::endl;
+        return -1;
+    }
 
-	int argi = 1;
-	
-	std::string jid = argv[argi++];
-	std::string connectHost = "";
-	if (argc == 6) {
-		connectHost = argv[argi++];
-	}
+    int argi = 1;
 
-	client = new Swift::Client(JID(jid), std::string(argv[argi++]), &networkFactories);
-	client->setAlwaysTrustCertificates();
+    std::string jid = argv[argi++];
+    std::string connectHost = "";
+    if (argc == 6) {
+        connectHost = argv[argi++];
+    }
 
-	recipient = JID(argv[argi++]);
-	messageBody = std::string(argv[argi++]);
+    client = new Swift::Client(JID(jid), std::string(argv[argi++]), &networkFactories);
+    client->setAlwaysTrustCertificates();
 
-	ClientXMLTracer* tracer = new ClientXMLTracer(client);
-	client->onConnected.connect(&handleConnected);
-	errorConnection = client->onDisconnected.connect(&handleDisconnected);
-	if (!connectHost.empty()) {
-		ClientOptions options;
-		options.manualHostname = connectHost;
-		client->connect(options);
-	} else {
-		client->connect();
-	}
+    recipient = JID(argv[argi++]);
+    messageBody = std::string(argv[argi++]);
 
-	{
-		Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
-		timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
-		timer->start();
+    ClientXMLTracer* tracer = new ClientXMLTracer(client);
+    client->onConnected.connect(&handleConnected);
+    errorConnection = client->onDisconnected.connect(&handleDisconnected);
+    if (!connectHost.empty()) {
+        ClientOptions options;
+        options.manualHostname = connectHost;
+        client->connect(options);
+    } else {
+        client->connect();
+    }
 
-		eventLoop.run();
-	}
+    {
+        Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
+        timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
+        timer->start();
 
-	delete tracer;
-	delete client;
-	return exitCode;
+        eventLoop.run();
+    }
+
+    delete tracer;
+    delete client;
+    return exitCode;
 }

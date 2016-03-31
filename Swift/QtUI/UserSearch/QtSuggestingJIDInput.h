@@ -26,44 +26,44 @@ class SettingsProvider;
 class ContactListModel;
 
 class QtSuggestingJIDInput : public QLineEdit {
-	Q_OBJECT
-	public:
-		QtSuggestingJIDInput(QWidget* parent, SettingsProvider* settings);
-		virtual ~QtSuggestingJIDInput();
+    Q_OBJECT
+    public:
+        QtSuggestingJIDInput(QWidget* parent, SettingsProvider* settings);
+        virtual ~QtSuggestingJIDInput();
 
-		Contact::ref getContact();
+        Contact::ref getContact();
 
-		void setSuggestions(const std::vector<Contact::ref>& suggestions);
+        void setSuggestions(const std::vector<Contact::ref>& suggestions);
 
-		void clear();
+        void clear();
 
-		boost::signal<void (const Contact::ref&)> onUserSelected;
+        boost::signal<void (const Contact::ref&)> onUserSelected;
 
-	signals:
-		void editingDone();
+    signals:
+        void editingDone();
 
-	protected:
-		virtual void keyPressEvent(QKeyEvent* event);
-		virtual void hideEvent(QHideEvent* event);
+    protected:
+        virtual void keyPressEvent(QKeyEvent* event);
+        virtual void hideEvent(QHideEvent* event);
 
-	private:
-		void handleSettingsChanged(const std::string& setting);
+    private:
+        void handleSettingsChanged(const std::string& setting);
 
-	private slots:
-		void handleClicked(const QModelIndex& index);
-		void handleApplicationFocusChanged(QWidget* old, QWidget* now);
+    private slots:
+        void handleClicked(const QModelIndex& index);
+        void handleApplicationFocusChanged(QWidget* old, QWidget* now);
 
-	private:
-		void positionPopup();
-		void showPopup();
-		void hidePopup();
+    private:
+        void positionPopup();
+        void showPopup();
+        void hidePopup();
 
-	private:
-		SettingsProvider* settings_;
-		ContactListModel* contactListModel_;
-		QTreeView* treeViewPopup_;
-		ContactListDelegate* contactListDelegate_;
-		Contact::ref currentContact_;
+    private:
+        SettingsProvider* settings_;
+        ContactListModel* contactListModel_;
+        QTreeView* treeViewPopup_;
+        ContactListDelegate* contactListDelegate_;
+        Contact::ref currentContact_;
 };
 
 }

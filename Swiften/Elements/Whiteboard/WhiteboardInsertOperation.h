@@ -17,19 +17,19 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardInsertOperation : public WhiteboardOperation {
-	public:
-		typedef boost::shared_ptr<WhiteboardInsertOperation> ref;
-	public:
-		WhiteboardElement::ref getElement() const {
-			return element_;
-		}
+    class SWIFTEN_API WhiteboardInsertOperation : public WhiteboardOperation {
+    public:
+        typedef boost::shared_ptr<WhiteboardInsertOperation> ref;
+    public:
+        WhiteboardElement::ref getElement() const {
+            return element_;
+        }
 
-		void setElement(WhiteboardElement::ref element) {
-			element_ = element;
-		}
+        void setElement(WhiteboardElement::ref element) {
+            element_ = element;
+        }
 
-	private:
-		WhiteboardElement::ref element_;
-	};
+    private:
+        WhiteboardElement::ref element_;
+    };
 }

@@ -17,25 +17,25 @@
 #include <Swiften/Network/DomainNameResolveError.h>
 
 namespace Swift {
-	class RandomGenerator;
+    class RandomGenerator;
 
-	class SWIFTEN_API DomainNameServiceQuery {
-		public:
-			typedef boost::shared_ptr<DomainNameServiceQuery> ref;
+    class SWIFTEN_API DomainNameServiceQuery {
+        public:
+            typedef boost::shared_ptr<DomainNameServiceQuery> ref;
 
-			struct Result {
-				Result(const std::string& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
-				std::string hostname;
-				int port;
-				int priority;
-				int weight;
-			};
+            struct Result {
+                Result(const std::string& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
+                std::string hostname;
+                int port;
+                int priority;
+                int weight;
+            };
 
-			virtual ~DomainNameServiceQuery();
+            virtual ~DomainNameServiceQuery();
 
-			virtual void run() = 0;
-			static void sortResults(std::vector<DomainNameServiceQuery::Result>& queries, RandomGenerator& generator);
+            virtual void run() = 0;
+            static void sortResults(std::vector<DomainNameServiceQuery::Result>& queries, RandomGenerator& generator);
 
-			boost::signal<void (const std::vector<Result>&)> onResult;
-	};
+            boost::signal<void (const std::vector<Result>&)> onResult;
+    };
 }

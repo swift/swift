@@ -23,51 +23,51 @@ ForwardedParser::ForwardedParser(PayloadParserFactoryCollection* factories) : fa
 }
 
 void ForwardedParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-	if (level_ == PayloadLevel) {
-		if (element == "iq" && ns == "jabber:client") { /* begin parsing a nested stanza? */
-			childParser_ = boost::dynamic_pointer_cast<StanzaParser>(boost::make_shared<IQParser>(factories_));
-		} else if (element == "message" && ns == "jabber:client") {
-			childParser_ = boost::dynamic_pointer_cast<StanzaParser>(boost::make_shared<MessageParser>(factories_));
-		} else if (element == "presence" && ns == "jabber:client") {
-			childParser_ = boost::dynamic_pointer_cast<StanzaParser>(boost::make_shared<PresenceParser>(factories_));
-		} else if (element == "delay" && ns == "urn:xmpp:delay") { /* nested delay payload */
-			delayParser_ = boost::make_shared<DelayParser>();
-		}
-	}
-	if (childParser_) { /* parsing a nested stanza? */
-		childParser_->handleStartElement(element, ns, attributes);
-	}
-	if (delayParser_) { /* parsing a nested delay payload? */
-		delayParser_->handleStartElement(element, ns, attributes);
-	}
-	++level_;
+    if (level_ == PayloadLevel) {
+        if (element == "iq" && ns == "jabber:client") { /* begin parsing a nested stanza? */
+            childParser_ = boost::dynamic_pointer_cast<StanzaParser>(boost::make_shared<IQParser>(factories_));
+        } else if (element == "message" && ns == "jabber:client") {
+            childParser_ = boost::dynamic_pointer_cast<StanzaParser>(boost::make_shared<MessageParser>(factories_));
+        } else if (element == "presence" && ns == "jabber:client") {
+            childParser_ = boost::dynamic_pointer_cast<StanzaParser>(boost::make_shared<PresenceParser>(factories_));
+        } else if (element == "delay" && ns == "urn:xmpp:delay") { /* nested delay payload */
+            delayParser_ = boost::make_shared<DelayParser>();
+        }
+    }
+    if (childParser_) { /* parsing a nested stanza? */
+        childParser_->handleStartElement(element, ns, attributes);
+    }
+    if (delayParser_) { /* parsing a nested delay payload? */
+        delayParser_->handleStartElement(element, ns, attributes);
+    }
+    ++level_;
 }
 
 void ForwardedParser::handleEndElement(const std::string& element, const std::string& ns) {
-	--level_;
-	if (childParser_ && level_ >= PayloadLevel) {
-		childParser_->handleEndElement(element, ns);
-	}
-	if (childParser_ && level_ == PayloadLevel) {
-		/* done parsing nested stanza */
-		getPayloadInternal()->setStanza(childParser_->getStanza());
-		childParser_.reset();
-	}
-	if (delayParser_ && level_ >= PayloadLevel) {
-		delayParser_->handleEndElement(element, ns);
-	}
-	if (delayParser_ && level_ == PayloadLevel) {
-		/* done parsing nested delay payload */
-		getPayloadInternal()->setDelay(boost::dynamic_pointer_cast<Delay>(delayParser_->getPayload()));
-		delayParser_.reset();
-	}
+    --level_;
+    if (childParser_ && level_ >= PayloadLevel) {
+        childParser_->handleEndElement(element, ns);
+    }
+    if (childParser_ && level_ == PayloadLevel) {
+        /* done parsing nested stanza */
+        getPayloadInternal()->setStanza(childParser_->getStanza());
+        childParser_.reset();
+    }
+    if (delayParser_ && level_ >= PayloadLevel) {
+        delayParser_->handleEndElement(element, ns);
+    }
+    if (delayParser_ && level_ == PayloadLevel) {
+        /* done parsing nested delay payload */
+        getPayloadInternal()->setDelay(boost::dynamic_pointer_cast<Delay>(delayParser_->getPayload()));
+        delayParser_.reset();
+    }
 }
 
 void ForwardedParser::handleCharacterData(const std::string& data) {
-	if (childParser_) {
-		childParser_->handleCharacterData(data);
-	}
-	if (delayParser_) {
-		delayParser_->handleCharacterData(data);
-	}
+    if (childParser_) {
+        childParser_->handleCharacterData(data);
+    }
+    if (delayParser_) {
+        delayParser_->handleCharacterData(data);
+    }
 }

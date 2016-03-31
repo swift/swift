@@ -17,66 +17,66 @@
 namespace Swift {
 
 class NullNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPRequest {
-	public:
-		NullNATTraversalGetPublicIPRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
-		}
+    public:
+        NullNATTraversalGetPublicIPRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
+        }
 
-		virtual void start() {
-			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<HostAddress>()));
-		}
+        virtual void start() {
+            eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<HostAddress>()));
+        }
 
-		virtual void stop() {
-		}
+        virtual void stop() {
+        }
 
-	private:
-		EventLoop* eventLoop;
+    private:
+        EventLoop* eventLoop;
 };
 
 class NullNATTraversalForwardPortRequest : public NATTraversalForwardPortRequest {
-	public:
-		NullNATTraversalForwardPortRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
-		}
+    public:
+        NullNATTraversalForwardPortRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
+        }
 
-		virtual void start() {
-			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<NATPortMapping>()));
-		}
+        virtual void start() {
+            eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<NATPortMapping>()));
+        }
 
-		virtual void stop() {
-		}
+        virtual void stop() {
+        }
 
-	private:
-		EventLoop* eventLoop;
+    private:
+        EventLoop* eventLoop;
 };
 
 class NullNATTraversalRemovePortForwardingRequest : public NATTraversalRemovePortForwardingRequest {
-	public:
-		NullNATTraversalRemovePortForwardingRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
-		}
+    public:
+        NullNATTraversalRemovePortForwardingRequest(EventLoop* eventLoop) : eventLoop(eventLoop) {
+        }
 
-		virtual void start() {
-			eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<bool>(true)));
-		}
+        virtual void start() {
+            eventLoop->postEvent(boost::bind(boost::ref(onResult), boost::optional<bool>(true)));
+        }
 
-		virtual void stop() {
-		}
+        virtual void stop() {
+        }
 
-	private:
-		EventLoop* eventLoop;
+    private:
+        EventLoop* eventLoop;
 };
 
 NullNATTraverser::NullNATTraverser(EventLoop* eventLoop) : eventLoop(eventLoop) {
 }
 
 boost::shared_ptr<NATTraversalGetPublicIPRequest> NullNATTraverser::createGetPublicIPRequest() {
-	return boost::make_shared<NullNATTraversalGetPublicIPRequest>(eventLoop);
+    return boost::make_shared<NullNATTraversalGetPublicIPRequest>(eventLoop);
 }
 
 boost::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(int, int) {
-	return boost::make_shared<NullNATTraversalForwardPortRequest>(eventLoop);
+    return boost::make_shared<NullNATTraversalForwardPortRequest>(eventLoop);
 }
 
 boost::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(int, int) {
-	return boost::make_shared<NullNATTraversalRemovePortForwardingRequest>(eventLoop);
+    return boost::make_shared<NullNATTraversalRemovePortForwardingRequest>(eventLoop);
 }
 
 }

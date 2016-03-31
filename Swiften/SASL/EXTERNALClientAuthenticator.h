@@ -11,14 +11,14 @@
 #include <Swiften/SASL/ClientAuthenticator.h>
 
 namespace Swift {
-	class SWIFTEN_API EXTERNALClientAuthenticator : public ClientAuthenticator {
-		public:
-			EXTERNALClientAuthenticator();
+    class SWIFTEN_API EXTERNALClientAuthenticator : public ClientAuthenticator {
+        public:
+            EXTERNALClientAuthenticator();
 
-			virtual boost::optional<SafeByteArray> getResponse() const;
-			virtual bool setChallenge(const boost::optional<ByteArray>&);
+            virtual boost::optional<SafeByteArray> getResponse() const;
+            virtual bool setChallenge(const boost::optional<ByteArray>&);
 
-		private:
-			bool finished;
-	};
+        private:
+            bool finished;
+    };
 }

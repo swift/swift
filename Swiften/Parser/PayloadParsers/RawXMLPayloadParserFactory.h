@@ -13,16 +13,16 @@
 #include <Swiften/Parser/PayloadParsers/RawXMLPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API RawXMLPayloadParserFactory : public PayloadParserFactory {
-		public:
-			RawXMLPayloadParserFactory() {}
+    class SWIFTEN_API RawXMLPayloadParserFactory : public PayloadParserFactory {
+        public:
+            RawXMLPayloadParserFactory() {}
 
-			virtual bool canParse(const std::string&, const std::string&, const AttributeMap&) const {
-				return true;
-			}
+            virtual bool canParse(const std::string&, const std::string&, const AttributeMap&) const {
+                return true;
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new RawXMLPayloadParser();
-			}
-	};
+            virtual PayloadParser* createPayloadParser() {
+                return new RawXMLPayloadParser();
+            }
+    };
 }

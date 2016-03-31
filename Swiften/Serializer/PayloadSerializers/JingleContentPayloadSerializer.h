@@ -18,15 +18,15 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-	
-	class SWIFTEN_API JingleContentPayloadSerializer : public GenericPayloadSerializer<JingleContentPayload> {
-		public:
-			JingleContentPayloadSerializer();
-			
-			virtual std::string serializePayload(boost::shared_ptr<JingleContentPayload>)  const;
-			
-		private:
-			std::string creatorToString(JingleContentPayload::Creator creator) const;
-	};
+    class PayloadSerializerCollection;
+
+    class SWIFTEN_API JingleContentPayloadSerializer : public GenericPayloadSerializer<JingleContentPayload> {
+        public:
+            JingleContentPayloadSerializer();
+
+            virtual std::string serializePayload(boost::shared_ptr<JingleContentPayload>)  const;
+
+        private:
+            std::string creatorToString(JingleContentPayload::Creator creator) const;
+    };
 }

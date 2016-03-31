@@ -25,18 +25,18 @@ namespace Swift {
 
 class SWIFTEN_API JingleFileTransferHash : public Payload {
 public:
-	typedef boost::shared_ptr<JingleFileTransferHash> ref;
+    typedef boost::shared_ptr<JingleFileTransferHash> ref;
 
-	void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
-		fileInfo_ = fileInfo;
-	}
+    void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
+        fileInfo_ = fileInfo;
+    }
 
-	JingleFileTransferFileInfo& getFileInfo() {
-		return fileInfo_;
-	}
+    JingleFileTransferFileInfo& getFileInfo() {
+        return fileInfo_;
+    }
 
 private:
-	JingleFileTransferFileInfo fileInfo_;
+    JingleFileTransferFileInfo fileInfo_;
 };
-	
+
 }

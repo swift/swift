@@ -13,8 +13,8 @@
 #include <Swiften/Network/NetworkEnvironment.h>
 
 namespace Swift {
-	class SWIFTEN_API WindowsNetworkEnvironment : public NetworkEnvironment {
-		public:
-			std::vector<NetworkInterface> getNetworkInterfaces() const;
-	};
+    class SWIFTEN_API WindowsNetworkEnvironment : public NetworkEnvironment {
+        public:
+            std::vector<NetworkInterface> getNetworkInterfaces() const;
+    };
 }

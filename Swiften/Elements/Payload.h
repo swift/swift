@@ -12,14 +12,14 @@
 #include <Swiften/Elements/Element.h>
 
 namespace Swift {
-	class SWIFTEN_API Payload : public Element {
-		public:
-			typedef boost::shared_ptr<Payload> ref;
-		public:
-			Payload() {}
-			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Payload)
-			virtual ~Payload();
+    class SWIFTEN_API Payload : public Element {
+        public:
+            typedef boost::shared_ptr<Payload> ref;
+        public:
+            Payload() {}
+            SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Payload)
+            virtual ~Payload();
 
-			SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(Payload)
-	};
+            SWIFTEN_DEFAULT_COPY_ASSIGMNENT_OPERATOR(Payload)
+    };
 }

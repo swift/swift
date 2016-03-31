@@ -14,23 +14,23 @@
 #include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerPurge : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerPurge();
-			
-			virtual ~PubSubOwnerPurge();
+    class SWIFTEN_API PubSubOwnerPurge : public PubSubOwnerPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubOwnerPurge();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubOwnerPurge();
+
+            const std::string& getNode() const {
+                return node;
+            }
+
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
 
-		private:
-			std::string node;
-	};
+        private:
+            std::string node;
+    };
 }

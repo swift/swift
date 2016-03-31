@@ -11,21 +11,21 @@
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
-	class FakeDNSSDQuerier;
+    class FakeDNSSDQuerier;
 
-	class FakeDNSSDResolveServiceQuery : public DNSSDResolveServiceQuery, public FakeDNSSDQuery {
-		public:	
-			FakeDNSSDResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), service(service) {
-			}
+    class FakeDNSSDResolveServiceQuery : public DNSSDResolveServiceQuery, public FakeDNSSDQuery {
+        public:
+            FakeDNSSDResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), service(service) {
+            }
 
-			void start() {
-				run();
-			}
+            void start() {
+                run();
+            }
 
-			void stop() {
-				finish();
-			}
+            void stop() {
+                finish();
+            }
 
-			DNSSDServiceID service;
-	};
+            DNSSDServiceID service;
+    };
 }

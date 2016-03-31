@@ -18,36 +18,36 @@
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
-	class StanzaChannel;
-	class IQRouter;
-	class JID;
-	class CapsStorage;
-	class CryptoProvider;
+    class StanzaChannel;
+    class IQRouter;
+    class JID;
+    class CapsStorage;
+    class CryptoProvider;
 
-	class SWIFTEN_API CapsManager : public CapsProvider, public boost::bsignals::trackable { 
-		public:
-			CapsManager(CapsStorage*, StanzaChannel*, IQRouter*, CryptoProvider*);
+    class SWIFTEN_API CapsManager : public CapsProvider, public boost::bsignals::trackable {
+        public:
+            CapsManager(CapsStorage*, StanzaChannel*, IQRouter*, CryptoProvider*);
 
-			DiscoInfo::ref getCaps(const std::string&) const;
+            DiscoInfo::ref getCaps(const std::string&) const;
 
-			// Mainly for testing purposes
-			void setWarnOnInvalidHash(bool b) {
-				warnOnInvalidHash = b;
-			}
+            // Mainly for testing purposes
+            void setWarnOnInvalidHash(bool b) {
+                warnOnInvalidHash = b;
+            }
 
-		private:
-			void handlePresenceReceived(boost::shared_ptr<Presence>);
-			void handleStanzaChannelAvailableChanged(bool);
-			void handleDiscoInfoReceived(const JID&, const std::string& hash, DiscoInfo::ref, ErrorPayload::ref);
-			void requestDiscoInfo(const JID& jid, const std::string& node, const std::string& hash);
+        private:
+            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handleStanzaChannelAvailableChanged(bool);
+            void handleDiscoInfoReceived(const JID&, const std::string& hash, DiscoInfo::ref, ErrorPayload::ref);
+            void requestDiscoInfo(const JID& jid, const std::string& node, const std::string& hash);
 
-		private:
-			IQRouter* iqRouter;
-			CryptoProvider* crypto;
-			CapsStorage* capsStorage;
-			bool warnOnInvalidHash;
-			std::set<std::string> requestedDiscoInfos;
-			std::set< std::pair<JID, std::string> > failingCaps;
-			std::map<std::string, std::set< std::pair<JID, std::string> > > fallbacks;
-	};
+        private:
+            IQRouter* iqRouter;
+            CryptoProvider* crypto;
+            CapsStorage* capsStorage;
+            bool warnOnInvalidHash;
+            std::set<std::string> requestedDiscoInfos;
+            std::set< std::pair<JID, std::string> > failingCaps;
+            std::map<std::string, std::set< std::pair<JID, std::string> > > fallbacks;
+    };
 }

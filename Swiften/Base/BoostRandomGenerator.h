@@ -13,13 +13,13 @@
 #include <Swiften/Base/RandomGenerator.h>
 
 namespace Swift {
-	class SWIFTEN_API BoostRandomGenerator : public RandomGenerator {
-		public:
-			BoostRandomGenerator();
+    class SWIFTEN_API BoostRandomGenerator : public RandomGenerator {
+        public:
+            BoostRandomGenerator();
 
-			int generateRandomInteger(int max) SWIFTEN_OVERRIDE;
+            int generateRandomInteger(int max) SWIFTEN_OVERRIDE;
 
-		private:
-			boost::mt19937 generator;
-	};
+        private:
+            boost::mt19937 generator;
+    };
 }

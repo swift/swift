@@ -15,14 +15,14 @@
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
-	class SWIFTEN_API StatusSerializer : public GenericPayloadSerializer<Status> {
-		public:
-			StatusSerializer() : GenericPayloadSerializer<Status>() {}
+    class SWIFTEN_API StatusSerializer : public GenericPayloadSerializer<Status> {
+        public:
+            StatusSerializer() : GenericPayloadSerializer<Status>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<Status> status)  const {
-				XMLElement element("status");
-				element.addNode(boost::make_shared<XMLTextNode>(status->getText()));
-				return element.serialize();
-			}
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Status> status)  const {
+                XMLElement element("status");
+                element.addNode(boost::make_shared<XMLTextNode>(status->getText()));
+                return element.serialize();
+            }
+    };
 }

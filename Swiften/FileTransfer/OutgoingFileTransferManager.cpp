@@ -24,42 +24,42 @@
 namespace Swift {
 
 OutgoingFileTransferManager::OutgoingFileTransferManager(
-		JingleSessionManager* jingleSessionManager, 
-		IQRouter* router,
-		FileTransferTransporterFactory* transporterFactory,
-		TimerFactory* timerFactory,
-		CryptoProvider* crypto) : 
-			jingleSessionManager(jingleSessionManager), 
-			iqRouter(router), 
-			transporterFactory(transporterFactory),
-			timerFactory(timerFactory),
-			crypto(crypto) {
-	idGenerator = new IDGenerator();
+        JingleSessionManager* jingleSessionManager,
+        IQRouter* router,
+        FileTransferTransporterFactory* transporterFactory,
+        TimerFactory* timerFactory,
+        CryptoProvider* crypto) :
+            jingleSessionManager(jingleSessionManager),
+            iqRouter(router),
+            transporterFactory(transporterFactory),
+            timerFactory(timerFactory),
+            crypto(crypto) {
+    idGenerator = new IDGenerator();
 }
 
 OutgoingFileTransferManager::~OutgoingFileTransferManager() {
-	delete idGenerator;
+    delete idGenerator;
 }
 
 boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgoingFileTransfer(
-		const JID& from, 
-		const JID& recipient, 
-		boost::shared_ptr<ReadBytestream> readBytestream, 
-		const JingleFileTransferFileInfo& fileInfo,
-		const FileTransferOptions& config) {
-	JingleSessionImpl::ref jingleSession = boost::make_shared<JingleSessionImpl>(
-			from, recipient, idGenerator->generateID(), iqRouter);
-	jingleSessionManager->registerOutgoingSession(from, jingleSession);
-	return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
-				recipient, 
-				jingleSession, 
-				readBytestream, 
-				transporterFactory,
-				timerFactory,
-				idGenerator, 
-				fileInfo, 
-				config,
-				crypto));
+        const JID& from,
+        const JID& recipient,
+        boost::shared_ptr<ReadBytestream> readBytestream,
+        const JingleFileTransferFileInfo& fileInfo,
+        const FileTransferOptions& config) {
+    JingleSessionImpl::ref jingleSession = boost::make_shared<JingleSessionImpl>(
+            from, recipient, idGenerator->generateID(), iqRouter);
+    jingleSessionManager->registerOutgoingSession(from, jingleSession);
+    return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
+                recipient,
+                jingleSession,
+                readBytestream,
+                transporterFactory,
+                timerFactory,
+                idGenerator,
+                fileInfo,
+                config,
+                crypto));
 }
 
 }

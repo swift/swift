@@ -12,24 +12,24 @@
 namespace Swift {
 
 bool OpenSSLContextFactory::canCreate() const {
-	return true;
+    return true;
 }
 
 TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&) {
-	return new OpenSSLContext();
+    return new OpenSSLContext();
 }
 
 void OpenSSLContextFactory::setCheckCertificateRevocation(bool check) {
-	if (check) {
-		SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
-		assert(false);
-	}
+    if (check) {
+        SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
+        assert(false);
+    }
 }
 
 void OpenSSLContextFactory::setDisconnectOnCardRemoval(bool check) {
-	if (check) {
-		SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL" << std::endl;
-	}
+    if (check) {
+        SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL" << std::endl;
+    }
 }
 
 

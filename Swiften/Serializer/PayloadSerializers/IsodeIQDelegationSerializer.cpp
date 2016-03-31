@@ -22,12 +22,12 @@ IsodeIQDelegationSerializer::~IsodeIQDelegationSerializer() {
 }
 
 std::string IsodeIQDelegationSerializer::serializePayload(boost::shared_ptr<IsodeIQDelegation> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("delegate", "http://isode.com/iq_delegation");
-	element.addNode(boost::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(payload->getForward())->serialize(payload->getForward())));
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("delegate", "http://isode.com/iq_delegation");
+    element.addNode(boost::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(payload->getForward())->serialize(payload->getForward())));
+    return element.serialize();
 }
 
 

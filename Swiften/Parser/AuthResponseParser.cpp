@@ -14,18 +14,18 @@ AuthResponseParser::AuthResponseParser() : GenericElementParser<AuthResponse>(),
 }
 
 void AuthResponseParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
-	++depth;
+    ++depth;
 }
 
 void AuthResponseParser::handleEndElement(const std::string&, const std::string&) {
-	--depth;
-	if (depth == 0) {
-		getElementGeneric()->setValue(createSafeByteArray(Base64::decode(text)));
-	}
+    --depth;
+    if (depth == 0) {
+        getElementGeneric()->setValue(createSafeByteArray(Base64::decode(text)));
+    }
 }
 
 void AuthResponseParser::handleCharacterData(const std::string& text) {
-	this->text += text;
+    this->text += text;
 }
 
 }

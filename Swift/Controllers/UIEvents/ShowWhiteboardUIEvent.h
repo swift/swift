@@ -17,12 +17,12 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class ShowWhiteboardUIEvent : public UIEvent {
-	public:
-		ShowWhiteboardUIEvent(const JID& contact) : contact_(contact) {}
-		const JID& getContact() const {return contact_;}
-	private:
-		JID contact_;
-	};
+    class ShowWhiteboardUIEvent : public UIEvent {
+    public:
+        ShowWhiteboardUIEvent(const JID& contact) : contact_(contact) {}
+        const JID& getContact() const {return contact_;}
+    private:
+        JID contact_;
+    };
 }
 

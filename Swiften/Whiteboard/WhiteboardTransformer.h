@@ -19,17 +19,17 @@
 #include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
 
 namespace Swift {
-	class WhiteboardTransformer {
-	public:
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardOperation::ref clientOp, WhiteboardOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardInsertOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardInsertOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardInsertOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp);
-		static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp);
-	};
+    class WhiteboardTransformer {
+    public:
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardOperation::ref clientOp, WhiteboardOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardInsertOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardInsertOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardInsertOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp);
+        static std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp);
+    };
 }

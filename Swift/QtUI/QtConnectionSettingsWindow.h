@@ -13,25 +13,25 @@
 #include <Swift/QtUI/ui_QtConnectionSettings.h>
 
 namespace Swift {
-	class QtConnectionSettingsWindow : public QDialog {
-			Q_OBJECT
+    class QtConnectionSettingsWindow : public QDialog {
+            Q_OBJECT
 
-		public:
-			QtConnectionSettingsWindow(const ClientOptions& options);
+        public:
+            QtConnectionSettingsWindow(const ClientOptions& options);
 
-			ClientOptions getOptions();
+            ClientOptions getOptions();
 
-		private slots:
-			void handleProxyTypeChanged(int);
-			void handleAcceptRequested();
+        private slots:
+            void handleProxyTypeChanged(int);
+            void handleAcceptRequested();
 
-		private:
-			enum {
-				NoProxy = 0,
-				SystemProxy = 1,
-				SOCKS5Proxy = 2,
-				HTTPProxy = 3
-			};
-			Ui::QtConnectionSettings ui;
-	};
+        private:
+            enum {
+                NoProxy = 0,
+                SystemProxy = 1,
+                SOCKS5Proxy = 2,
+                HTTPProxy = 3
+            };
+            Ui::QtConnectionSettings ui;
+    };
 }

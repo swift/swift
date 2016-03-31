@@ -9,13 +9,13 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class XMLParser;
-	class XMLParserClient;
+    class XMLParser;
+    class XMLParserClient;
 
-	class SWIFTEN_API XMLParserFactory {
-		public:
-			virtual ~XMLParserFactory();
+    class SWIFTEN_API XMLParserFactory {
+        public:
+            virtual ~XMLParserFactory();
 
-			virtual XMLParser* createXMLParser(XMLParserClient*) = 0;
-	};
+            virtual XMLParser* createXMLParser(XMLParserClient*) = 0;
+    };
 }

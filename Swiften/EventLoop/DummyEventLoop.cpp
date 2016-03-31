@@ -14,26 +14,26 @@ DummyEventLoop::DummyEventLoop() : hasEvents_(false) {
 }
 
 DummyEventLoop::~DummyEventLoop() {
-	if (hasEvents()) {
-		std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
-	}
+    if (hasEvents()) {
+        std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
+    }
 }
 
 void DummyEventLoop::processEvents() {
-	while(hasEvents()) {
-		hasEvents_ = false;
-		handleNextEvents();
-	}
+    while(hasEvents()) {
+        hasEvents_ = false;
+        handleNextEvents();
+    }
 }
 
 bool DummyEventLoop::hasEvents() {
-	boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
-	return hasEvents_;
+    boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
+    return hasEvents_;
 }
 
 void DummyEventLoop::eventPosted() {
-	boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
-	hasEvents_ = true;
+    boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
+    hasEvents_ = true;
 }
 
 }

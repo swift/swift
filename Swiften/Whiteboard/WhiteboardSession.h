@@ -23,39 +23,39 @@
 #include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
-	class IQRouter;
-	class ErrorPayload;
-	class WhiteboardPayload;
+    class IQRouter;
+    class ErrorPayload;
+    class WhiteboardPayload;
 
-	class SWIFTEN_API WhiteboardSession {
-	public:
-		typedef boost::shared_ptr<WhiteboardSession> ref;
+    class SWIFTEN_API WhiteboardSession {
+    public:
+        typedef boost::shared_ptr<WhiteboardSession> ref;
 
-	public:
-		WhiteboardSession(const JID& jid, IQRouter* router);
-		virtual ~WhiteboardSession();
-		void handleIncomingAction(boost::shared_ptr<WhiteboardPayload> payload);
-		void sendElement(const WhiteboardElement::ref element);
-		virtual void sendOperation(WhiteboardOperation::ref operation) = 0;
-		void cancel();
-		const JID& getTo() const;
+    public:
+        WhiteboardSession(const JID& jid, IQRouter* router);
+        virtual ~WhiteboardSession();
+        void handleIncomingAction(boost::shared_ptr<WhiteboardPayload> payload);
+        void sendElement(const WhiteboardElement::ref element);
+        virtual void sendOperation(WhiteboardOperation::ref operation) = 0;
+        void cancel();
+        const JID& getTo() const;
 
-	public:
-		boost::signal< void(const WhiteboardElement::ref element)> onElementReceived; 
-		boost::signal< void(const WhiteboardOperation::ref operation)> onOperationReceived;
-		boost::signal< void(const JID& contact)> onSessionTerminated;
-		boost::signal< void(const JID& contact)> onRequestAccepted;
-		boost::signal< void(const JID& contact)> onRequestRejected;
+    public:
+        boost::signal< void(const WhiteboardElement::ref element)> onElementReceived;
+        boost::signal< void(const WhiteboardOperation::ref operation)> onOperationReceived;
+        boost::signal< void(const JID& contact)> onSessionTerminated;
+        boost::signal< void(const JID& contact)> onRequestAccepted;
+        boost::signal< void(const JID& contact)> onRequestRejected;
 
-	private:
-		virtual void handleIncomingOperation(WhiteboardOperation::ref operation) = 0;
+    private:
+        virtual void handleIncomingOperation(WhiteboardOperation::ref operation) = 0;
 
-	protected:
-		void sendPayload(boost::shared_ptr<WhiteboardPayload> payload);
+    protected:
+        void sendPayload(boost::shared_ptr<WhiteboardPayload> payload);
 
-		JID toJID_;
-		IQRouter* router_;
-		std::string lastOpID;
-		IDGenerator idGenerator;
-	};
+        JID toJID_;
+        IQRouter* router_;
+        std::string lastOpID;
+        IDGenerator idGenerator;
+    };
 }

@@ -20,7 +20,7 @@
 #include <Swift/QtUI/QtVCardWidget/QtRemovableItemDelegate.h>
 
 namespace Ui {
-	class QtBlockListEditorWindow;
+    class QtBlockListEditorWindow;
 }
 
 namespace Swift {
@@ -28,29 +28,29 @@ namespace Swift {
 class QtJIDValidatedItemDelegate;
 
 class QtBlockListEditorWindow : public QWidget, public BlockListEditorWidget {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		QtBlockListEditorWindow();
-		virtual ~QtBlockListEditorWindow();
+    public:
+        QtBlockListEditorWindow();
+        virtual ~QtBlockListEditorWindow();
 
-		virtual void show();
-		virtual void hide();
-		virtual void setCurrentBlockList(const std::vector<JID>& blockedJIDs);
-		virtual void setBusy(bool isBusy);
-		virtual void setError(const std::string& error);
-		virtual std::vector<JID> getCurrentBlockList() const;
-		virtual bool eventFilter(QObject* target, QEvent* event);
+        virtual void show();
+        virtual void hide();
+        virtual void setCurrentBlockList(const std::vector<JID>& blockedJIDs);
+        virtual void setBusy(bool isBusy);
+        virtual void setError(const std::string& error);
+        virtual std::vector<JID> getCurrentBlockList() const;
+        virtual bool eventFilter(QObject* target, QEvent* event);
 
-	private slots:
-		void handleItemChanged(QTreeWidgetItem*, int);
-		void applyChanges();
+    private slots:
+        void handleItemChanged(QTreeWidgetItem*, int);
+        void applyChanges();
 
-	private:
-		Ui::QtBlockListEditorWindow* ui;
-		QtRemovableItemDelegate* removeItemDelegate;
-		QtJIDValidatedItemDelegate* editItemDelegate;
-		QString freshBlockListTemplate;
+    private:
+        Ui::QtBlockListEditorWindow* ui;
+        QtRemovableItemDelegate* removeItemDelegate;
+        QtJIDValidatedItemDelegate* editItemDelegate;
+        QString freshBlockListTemplate;
 };
 
 }

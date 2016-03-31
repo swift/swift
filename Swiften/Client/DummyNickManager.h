@@ -9,15 +9,15 @@
 #include <Swiften/Client/NickManager.h>
 
 namespace Swift {
-	class VCardManager;
+    class VCardManager;
 
-	class DummyNickManager : public NickManager {
-		public:
-			std::string getOwnNick() const {
-				return "";
-			}
+    class DummyNickManager : public NickManager {
+        public:
+            std::string getOwnNick() const {
+                return "";
+            }
 
-			void setOwnNick(const std::string&) {
-			}
-	};
+            void setOwnNick(const std::string&) {
+            }
+    };
 }

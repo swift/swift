@@ -11,12 +11,12 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class Connection;
+    class Connection;
 
-	class SWIFTEN_API ConnectionFactory {
-		public:
-			virtual ~ConnectionFactory();
+    class SWIFTEN_API ConnectionFactory {
+        public:
+            virtual ~ConnectionFactory();
 
-			virtual boost::shared_ptr<Connection> createConnection() = 0;
-	};
+            virtual boost::shared_ptr<Connection> createConnection() = 0;
+    };
 }

@@ -25,27 +25,27 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API WhiteboardElementSerializingVisitor : public WhiteboardElementVisitor {
-	public:
-		void visit(WhiteboardLineElement& line);
-		void visit(WhiteboardFreehandPathElement& path);
-		void visit(WhiteboardRectElement& rect);
-		void visit(WhiteboardPolygonElement& polygon);
-		void visit(WhiteboardTextElement& text);
-		void visit(WhiteboardEllipseElement& ellipse);
-		XMLElement::ref getResult() const;
+    class SWIFTEN_API WhiteboardElementSerializingVisitor : public WhiteboardElementVisitor {
+    public:
+        void visit(WhiteboardLineElement& line);
+        void visit(WhiteboardFreehandPathElement& path);
+        void visit(WhiteboardRectElement& rect);
+        void visit(WhiteboardPolygonElement& polygon);
+        void visit(WhiteboardTextElement& text);
+        void visit(WhiteboardEllipseElement& ellipse);
+        XMLElement::ref getResult() const;
 
-	private:
-		std::string alphaToOpacity(int alpha) const;
-		
-		XMLElement::ref element;
-	};
+    private:
+        std::string alphaToOpacity(int alpha) const;
 
-	class SWIFTEN_API WhiteboardSerializer : public GenericPayloadSerializer<WhiteboardPayload> {
-	public:
-		std::string serializePayload(boost::shared_ptr<WhiteboardPayload> payload) const;
+        XMLElement::ref element;
+    };
 
-	private:
-		std::string typeToString(WhiteboardPayload::Type type) const;
-	};
+    class SWIFTEN_API WhiteboardSerializer : public GenericPayloadSerializer<WhiteboardPayload> {
+    public:
+        std::string serializePayload(boost::shared_ptr<WhiteboardPayload> payload) const;
+
+    private:
+        std::string typeToString(WhiteboardPayload::Type type) const;
+    };
 }

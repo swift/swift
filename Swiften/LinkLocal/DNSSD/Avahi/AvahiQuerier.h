@@ -20,37 +20,37 @@
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 
 namespace Swift {
-	class EventLoop;
+    class EventLoop;
 
-	class AvahiQuerier : 
-			public DNSSDQuerier, 
-			public boost::enable_shared_from_this<AvahiQuerier> {
-		public:
-			AvahiQuerier(EventLoop* eventLoop);
-			~AvahiQuerier();
+    class AvahiQuerier :
+            public DNSSDQuerier,
+            public boost::enable_shared_from_this<AvahiQuerier> {
+        public:
+            AvahiQuerier(EventLoop* eventLoop);
+            ~AvahiQuerier();
 
-			boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
-			boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-					const std::string& name, int port, const ByteArray& info);
-			boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
-					const DNSSDServiceID&);
-			boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
-					const std::string& hostname, int interfaceIndex);
+            boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
+            boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
+                    const std::string& name, int port, const ByteArray& info);
+            boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
+                    const DNSSDServiceID&);
+            boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
+                    const std::string& hostname, int interfaceIndex);
 
-			void start();
-			void stop();
-			
-			AvahiThreadedPoll* getThreadedPoll() const {
-				return threadedPoll;
-			}
+            void start();
+            void stop();
 
-			AvahiClient* getClient() const {
-				return client;
-			}
+            AvahiThreadedPoll* getThreadedPoll() const {
+                return threadedPoll;
+            }
 
-		private:
-			EventLoop* eventLoop;
-			AvahiClient* client;
-			AvahiThreadedPoll* threadedPoll;
-	};
+            AvahiClient* getClient() const {
+                return client;
+            }
+
+        private:
+            EventLoop* eventLoop;
+            AvahiClient* client;
+            AvahiThreadedPoll* threadedPoll;
+    };
 }

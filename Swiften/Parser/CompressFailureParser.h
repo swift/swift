@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API CompressFailureParser : public GenericElementParser<CompressFailure> {
-		public:
-			CompressFailureParser() : GenericElementParser<CompressFailure>() {}
-	};
+    class SWIFTEN_API CompressFailureParser : public GenericElementParser<CompressFailure> {
+        public:
+            CompressFailureParser() : GenericElementParser<CompressFailure>() {}
+    };
 }

@@ -18,32 +18,32 @@
 #include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerConfigure : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerConfigure();
-			PubSubOwnerConfigure(const std::string& node) : node(node) {}
-			virtual ~PubSubOwnerConfigure();
+    class SWIFTEN_API PubSubOwnerConfigure : public PubSubOwnerPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubOwnerConfigure();
+            PubSubOwnerConfigure(const std::string& node) : node(node) {}
+            virtual ~PubSubOwnerConfigure();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			boost::shared_ptr<Form> getData() const {
-				return data;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			void setData(boost::shared_ptr<Form> value) {
-				this->data = value ;
-			}
+            boost::shared_ptr<Form> getData() const {
+                return data;
+            }
+
+            void setData(boost::shared_ptr<Form> value) {
+                this->data = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			boost::shared_ptr<Form> data;
-	};
+        private:
+            boost::optional< std::string > node;
+            boost::shared_ptr<Form> data;
+    };
 }

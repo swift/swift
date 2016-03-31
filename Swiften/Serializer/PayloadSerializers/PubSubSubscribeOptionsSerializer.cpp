@@ -22,12 +22,12 @@ PubSubSubscribeOptionsSerializer::~PubSubSubscribeOptionsSerializer() {
 }
 
 std::string PubSubSubscribeOptionsSerializer::serializePayload(boost::shared_ptr<PubSubSubscribeOptions> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("subscribe-options", "http://jabber.org/protocol/pubsub");
-	element.addNode(payload->isRequired() ? boost::make_shared<XMLElement>("required", "") : boost::shared_ptr<XMLElement>());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("subscribe-options", "http://jabber.org/protocol/pubsub");
+    element.addNode(payload->isRequired() ? boost::make_shared<XMLElement>("required", "") : boost::shared_ptr<XMLElement>());
+    return element.serialize();
 }
 
 

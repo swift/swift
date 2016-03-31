@@ -14,23 +14,23 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubConfigure : public Payload {
-		public:
-			
-			PubSubConfigure();
-			
-			virtual ~PubSubConfigure();
+    class SWIFTEN_API PubSubConfigure : public Payload {
+        public:
 
-			boost::shared_ptr<Form> getData() const {
-				return data;
-			}
+            PubSubConfigure();
 
-			void setData(boost::shared_ptr<Form> value) {
-				this->data = value ;
-			}
+            virtual ~PubSubConfigure();
+
+            boost::shared_ptr<Form> getData() const {
+                return data;
+            }
+
+            void setData(boost::shared_ptr<Form> value) {
+                this->data = value ;
+            }
 
 
-		private:
-			boost::shared_ptr<Form> data;
-	};
+        private:
+            boost::shared_ptr<Form> data;
+    };
 }

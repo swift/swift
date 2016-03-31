@@ -9,34 +9,34 @@
 namespace Swift {
 
 QtUserSearchFieldsPage::QtUserSearchFieldsPage() : formWidget_(0) {
-	setupUi(this);
+    setupUi(this);
 }
 
 bool QtUserSearchFieldsPage::isComplete() const {
-	if (formWidget_) {
-		return formWidget_->isEnabled();
-	} else {
-		return nickInput_->isEnabled() || firstInput_->isEnabled() || lastInput_->isEnabled() || emailInput_->isEnabled();
-	}
+    if (formWidget_) {
+        return formWidget_->isEnabled();
+    } else {
+        return nickInput_->isEnabled() || firstInput_->isEnabled() || lastInput_->isEnabled() || emailInput_->isEnabled();
+    }
 }
 
 QtFormWidget* QtUserSearchFieldsPage::getFormWidget() {
-	return formWidget_;
+    return formWidget_;
 }
 
 void QtUserSearchFieldsPage::setFormWidget(QtFormWidget *widget) {
-	if (formWidget_) {
-		delete formWidget_;
-		formWidget_ = NULL;
-	}
-	if (widget) {
-		formContainer_->layout()->addWidget(widget);
-	}
-	formWidget_ = widget;
+    if (formWidget_) {
+        delete formWidget_;
+        formWidget_ = NULL;
+    }
+    if (widget) {
+        formContainer_->layout()->addWidget(widget);
+    }
+    formWidget_ = widget;
 }
 
 void QtUserSearchFieldsPage::emitCompletenessCheck() {
-	emit completeChanged();
+    emit completeChanged();
 }
 
 }

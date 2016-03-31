@@ -12,22 +12,22 @@
 #include <Swiften/Base/Error.h>
 
 namespace Swift {
-	class SWIFTEN_API TLSError : public Error {
-		public:
-			typedef boost::shared_ptr<TLSError> ref;
+    class SWIFTEN_API TLSError : public Error {
+        public:
+            typedef boost::shared_ptr<TLSError> ref;
 
-			enum Type {
-				UnknownError,
-				CertificateCardRemoved
-			};
+            enum Type {
+                UnknownError,
+                CertificateCardRemoved
+            };
 
-			TLSError(Type type = UnknownError) : type(type) {}
+            TLSError(Type type = UnknownError) : type(type) {}
 
-			Type getType() const { 
-				return type; 
-			}
+            Type getType() const {
+                return type;
+            }
 
-		private:
-			Type type;
-	};
+        private:
+            Type type;
+    };
 }

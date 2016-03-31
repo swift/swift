@@ -15,11 +15,11 @@
 namespace Swift {
 
 QtChatWindowJSBridge::QtChatWindowJSBridge() {
-	
+
 }
 
 QtChatWindowJSBridge::~QtChatWindowJSBridge() {
-	
+
 }
 
 }

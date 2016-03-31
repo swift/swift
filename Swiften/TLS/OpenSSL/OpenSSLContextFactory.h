@@ -11,13 +11,13 @@
 #include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
-	class OpenSSLContextFactory : public TLSContextFactory {
-		public:
-			bool canCreate() const;
-			virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
+    class OpenSSLContextFactory : public TLSContextFactory {
+        public:
+            bool canCreate() const;
+            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
 
-			// Not supported
-			virtual void setCheckCertificateRevocation(bool b);
-			virtual void setDisconnectOnCardRemoval(bool b);
-	};
+            // Not supported
+            virtual void setCheckCertificateRevocation(bool b);
+            virtual void setDisconnectOnCardRemoval(bool b);
+    };
 }

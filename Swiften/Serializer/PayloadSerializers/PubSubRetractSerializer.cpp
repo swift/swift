@@ -24,16 +24,16 @@ PubSubRetractSerializer::~PubSubRetractSerializer() {
 }
 
 std::string PubSubRetractSerializer::serializePayload(boost::shared_ptr<PubSubRetract> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("retract", "http://jabber.org/protocol/pubsub");
-	element.setAttribute("node", payload->getNode());
-	foreach(boost::shared_ptr<PubSubItem> item, payload->getItems()) {
-		element.addNode(boost::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
-	}
-	element.setAttribute("notify", payload->isNotify() ? "true" : "false");
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("retract", "http://jabber.org/protocol/pubsub");
+    element.setAttribute("node", payload->getNode());
+    foreach(boost::shared_ptr<PubSubItem> item, payload->getItems()) {
+        element.addNode(boost::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
+    }
+    element.setAttribute("notify", payload->isNotify() ? "true" : "false");
+    return element.serialize();
 }
 
 

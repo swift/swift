@@ -9,16 +9,16 @@
 #include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
-	class PlatformIdleQuerier : public IdleQuerier {
-		public:
-			PlatformIdleQuerier();
-			~PlatformIdleQuerier();
+    class PlatformIdleQuerier : public IdleQuerier {
+        public:
+            PlatformIdleQuerier();
+            ~PlatformIdleQuerier();
 
-			virtual int getIdleTimeSeconds() {
-				return querier->getIdleTimeSeconds();
-			}
+            virtual int getIdleTimeSeconds() {
+                return querier->getIdleTimeSeconds();
+            }
 
-		private:
-			IdleQuerier* querier;
-	};
+        private:
+            IdleQuerier* querier;
+    };
 }

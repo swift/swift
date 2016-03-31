@@ -31,33 +31,33 @@ class SettingsProvider;
 class QtRemovableItemDelegate;
 
 class QtContactListWidget : public QTreeView {
-	Q_OBJECT
+    Q_OBJECT
 public:
-	QtContactListWidget(QWidget* parent, SettingsProvider* settings);
-	virtual ~QtContactListWidget();
+    QtContactListWidget(QWidget* parent, SettingsProvider* settings);
+    virtual ~QtContactListWidget();
 
-	void setList(const std::vector<Contact::ref>& list);
-	std::vector<Contact::ref> getList() const;
-	Contact::ref getContact(const size_t i);
-	void setMaximumNoOfContactsToOne(bool limited);
-	bool isFull() const;
+    void setList(const std::vector<Contact::ref>& list);
+    std::vector<Contact::ref> getList() const;
+    Contact::ref getContact(const size_t i);
+    void setMaximumNoOfContactsToOne(bool limited);
+    bool isFull() const;
 
 public slots:
-	void updateContacts(const std::vector<Contact::ref>& contactUpdates);
+    void updateContacts(const std::vector<Contact::ref>& contactUpdates);
 
 signals:
-	void onListChanged(std::vector<Contact::ref> list);
-	void onJIDsAdded(const std::vector<JID>& jids);
+    void onListChanged(std::vector<Contact::ref> list);
+    void onJIDsAdded(const std::vector<JID>& jids);
 
 private:
-	void handleSettingsChanged(const std::string&);
+    void handleSettingsChanged(const std::string&);
 
 private:
-	SettingsProvider* settings_;
-	ContactListModel* contactListModel_;
-	ContactListDelegate* contactListDelegate_;
-	QtRemovableItemDelegate* removableItemDelegate_;
-	bool limited_;
+    SettingsProvider* settings_;
+    ContactListModel* contactListModel_;
+    ContactListDelegate* contactListDelegate_;
+    QtRemovableItemDelegate* removableItemDelegate_;
+    bool limited_;
 };
 
 }

@@ -11,10 +11,10 @@
 #include <Swiften/Parser/PayloadParsers/MUCItemParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
-	class SWIFTEN_API TreeReparser {
-		public:
-			static boost::shared_ptr<Payload> parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection);
+    class PayloadParserFactoryCollection;
+    class SWIFTEN_API TreeReparser {
+        public:
+            static boost::shared_ptr<Payload> parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection);
 
-	};
+    };
 }

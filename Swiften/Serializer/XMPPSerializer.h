@@ -17,23 +17,23 @@
 #include <Swiften/Serializer/ElementSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
-	class CompressRequestSerializer;
-	class ProtocolHeader;
+    class PayloadSerializerCollection;
+    class CompressRequestSerializer;
+    class ProtocolHeader;
 
-	class SWIFTEN_API XMPPSerializer {
-		public:
-			XMPPSerializer(PayloadSerializerCollection*, StreamType type, bool setExplictNSonTopLevelElements);
+    class SWIFTEN_API XMPPSerializer {
+        public:
+            XMPPSerializer(PayloadSerializerCollection*, StreamType type, bool setExplictNSonTopLevelElements);
 
-			std::string serializeHeader(const ProtocolHeader&) const;
-			SafeByteArray serializeElement(boost::shared_ptr<ToplevelElement> stanza) const;
-			std::string serializeFooter() const;
-		
-		private:
-			std::string getDefaultNamespace() const;
+            std::string serializeHeader(const ProtocolHeader&) const;
+            SafeByteArray serializeElement(boost::shared_ptr<ToplevelElement> stanza) const;
+            std::string serializeFooter() const;
 
-		private:
-			StreamType type_;
-			std::vector< boost::shared_ptr<ElementSerializer> > serializers_;
-	};
+        private:
+            std::string getDefaultNamespace() const;
+
+        private:
+            StreamType type_;
+            std::vector< boost::shared_ptr<ElementSerializer> > serializers_;
+    };
 }

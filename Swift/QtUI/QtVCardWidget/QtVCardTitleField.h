@@ -21,27 +21,27 @@
 namespace Swift {
 
 class QtVCardTitleField : public QtVCardGeneralField {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO(tr("Title"), UNLIMITED_INSTANCES, QtVCardTitleField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Title"), UNLIMITED_INSTANCES, QtVCardTitleField)
 
-		QtVCardTitleField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardTitleField();
+        QtVCardTitleField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        virtual ~QtVCardTitleField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setTitle(const std::string& title);
-		std::string getTitle() const;
+        void setTitle(const std::string& title);
+        std::string getTitle() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QtResizableLineEdit* titleLineEdit;
+    private:
+        QtResizableLineEdit* titleLineEdit;
 };
 
 }

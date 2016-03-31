@@ -14,18 +14,18 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class PayloadSerializer;
-	
+    class PayloadSerializer;
 
-	class SWIFTEN_API PayloadSerializerCollection {
-		public:
-			PayloadSerializerCollection();
 
-			void addSerializer(PayloadSerializer* factory);
-			void removeSerializer(PayloadSerializer* factory);
-			PayloadSerializer* getPayloadSerializer(boost::shared_ptr<Payload>) const;
+    class SWIFTEN_API PayloadSerializerCollection {
+        public:
+            PayloadSerializerCollection();
 
-		private:
-			std::vector<PayloadSerializer*> serializers_;
-	};
+            void addSerializer(PayloadSerializer* factory);
+            void removeSerializer(PayloadSerializer* factory);
+            PayloadSerializer* getPayloadSerializer(boost::shared_ptr<Payload>) const;
+
+        private:
+            std::vector<PayloadSerializer*> serializers_;
+    };
 }

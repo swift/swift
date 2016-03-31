@@ -17,15 +17,15 @@
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsSentSerializer : public GenericPayloadSerializer<CarbonsSent> {
-		public:
-			CarbonsSentSerializer(PayloadSerializerCollection* serializers);
-			virtual ~CarbonsSentSerializer();
+    class SWIFTEN_API CarbonsSentSerializer : public GenericPayloadSerializer<CarbonsSent> {
+        public:
+            CarbonsSentSerializer(PayloadSerializerCollection* serializers);
+            virtual ~CarbonsSentSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<CarbonsSent> sent) const;
+            virtual std::string serializePayload(boost::shared_ptr<CarbonsSent> sent) const;
 
-		private:
-			PayloadSerializerCollection* serializers_;
-	};
+        private:
+            PayloadSerializerCollection* serializers_;
+    };
 }
 

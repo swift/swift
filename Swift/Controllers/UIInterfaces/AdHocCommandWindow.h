@@ -9,10 +9,10 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class AdHocCommandWindow {
-		public:
-			virtual ~AdHocCommandWindow() {}
-			virtual void setOnline(bool /*online*/) {}
-			boost::signal<void ()> onClosing;
-	};
+    class AdHocCommandWindow {
+        public:
+            virtual ~AdHocCommandWindow() {}
+            virtual void setOnline(bool /*online*/) {}
+            boost::signal<void ()> onClosing;
+    };
 }

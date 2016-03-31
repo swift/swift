@@ -13,20 +13,20 @@
 #include <Swiften/Queries/GenericRequest.h>
 
 namespace Swift {
-	class SWIFTEN_API GetSoftwareVersionRequest : public GenericRequest<SoftwareVersion> {
-		public:
-			typedef boost::shared_ptr<GetSoftwareVersionRequest> ref;
+    class SWIFTEN_API GetSoftwareVersionRequest : public GenericRequest<SoftwareVersion> {
+        public:
+            typedef boost::shared_ptr<GetSoftwareVersionRequest> ref;
 
-			static ref create(const JID& recipient, IQRouter* router) {
-				return ref(new GetSoftwareVersionRequest(recipient, router));
-			}
+            static ref create(const JID& recipient, IQRouter* router) {
+                return ref(new GetSoftwareVersionRequest(recipient, router));
+            }
 
-		private:
-			GetSoftwareVersionRequest(
-					const JID& recipient, 
-					IQRouter* router) :
-						GenericRequest<SoftwareVersion>(
-							IQ::Get, recipient, boost::make_shared<SoftwareVersion>(), router) {
-			}
-	};
+        private:
+            GetSoftwareVersionRequest(
+                    const JID& recipient,
+                    IQRouter* router) :
+                        GenericRequest<SoftwareVersion>(
+                            IQ::Get, recipient, boost::make_shared<SoftwareVersion>(), router) {
+            }
+    };
 }

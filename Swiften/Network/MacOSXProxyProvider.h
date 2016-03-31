@@ -17,10 +17,10 @@
 #include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class MacOSXProxyProvider : public ProxyProvider {
-		public:
-			MacOSXProxyProvider();
-			virtual HostAddressPort getHTTPConnectProxy() const;
-			virtual HostAddressPort getSOCKS5Proxy() const;
-	};
+    class MacOSXProxyProvider : public ProxyProvider {
+        public:
+            MacOSXProxyProvider();
+            virtual HostAddressPort getHTTPConnectProxy() const;
+            virtual HostAddressPort getSOCKS5Proxy() const;
+    };
 }

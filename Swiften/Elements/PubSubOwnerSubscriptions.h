@@ -18,36 +18,36 @@
 #include <Swiften/Elements/PubSubOwnerSubscription.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerSubscriptions : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerSubscriptions();
-			
-			virtual ~PubSubOwnerSubscriptions();
+    class SWIFTEN_API PubSubOwnerSubscriptions : public PubSubOwnerPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubOwnerSubscriptions();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubOwnerSubscriptions();
 
-			const std::vector< boost::shared_ptr<PubSubOwnerSubscription> >& getSubscriptions() const {
-				return subscriptions;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setSubscriptions(const std::vector< boost::shared_ptr<PubSubOwnerSubscription> >& value) {
-				this->subscriptions = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void addSubscription(boost::shared_ptr<PubSubOwnerSubscription> value) {
-				this->subscriptions.push_back(value);
-			}
+            const std::vector< boost::shared_ptr<PubSubOwnerSubscription> >& getSubscriptions() const {
+                return subscriptions;
+            }
+
+            void setSubscriptions(const std::vector< boost::shared_ptr<PubSubOwnerSubscription> >& value) {
+                this->subscriptions = value ;
+            }
+
+            void addSubscription(boost::shared_ptr<PubSubOwnerSubscription> value) {
+                this->subscriptions.push_back(value);
+            }
 
 
-		private:
-			std::string node;
-			std::vector< boost::shared_ptr<PubSubOwnerSubscription> > subscriptions;
-	};
+        private:
+            std::string node;
+            std::vector< boost::shared_ptr<PubSubOwnerSubscription> > subscriptions;
+    };
 }

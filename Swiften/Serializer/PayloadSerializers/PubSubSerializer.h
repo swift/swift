@@ -14,17 +14,17 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PubSubSerializer : public GenericPayloadSerializer<PubSub> {
-		public:
-			PubSubSerializer(PayloadSerializerCollection* serializers);
-			virtual ~PubSubSerializer();
+    class SWIFTEN_API PubSubSerializer : public GenericPayloadSerializer<PubSub> {
+        public:
+            PubSubSerializer(PayloadSerializerCollection* serializers);
+            virtual ~PubSubSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<PubSub>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(boost::shared_ptr<PubSub>) const SWIFTEN_OVERRIDE;
 
-		private:
-			std::vector< boost::shared_ptr<PayloadSerializer> > pubsubSerializers;
-			PayloadSerializerCollection* serializers;
-	};
+        private:
+            std::vector< boost::shared_ptr<PayloadSerializer> > pubsubSerializers;
+            PayloadSerializerCollection* serializers;
+    };
 }

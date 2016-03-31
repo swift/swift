@@ -12,9 +12,9 @@
 #include <Swiften/Base/Override.h>
 
 namespace Swift {
-	class ClientError;
-	class ComponentError;
+    class ClientError;
+    class ComponentError;
 
-	std::string getErrorString(const ClientError& error);
-	std::string getErrorString(const ComponentError& error);
+    std::string getErrorString(const ClientError& error);
+    std::string getErrorString(const ComponentError& error);
 }

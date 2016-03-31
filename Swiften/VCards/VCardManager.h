@@ -18,52 +18,52 @@
 #include <Swiften/VCards/SetVCardRequest.h>
 
 namespace Swift {
-	class IQRouter;
-	class JID;
-	class VCardStorage;
+    class IQRouter;
+    class JID;
+    class VCardStorage;
 
-	class SWIFTEN_API VCardManager : public boost::bsignals::trackable {
-		public:
-			VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage);
-			~VCardManager();
+    class SWIFTEN_API VCardManager : public boost::bsignals::trackable {
+        public:
+            VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage);
+            ~VCardManager();
 
-			VCard::ref getVCard(const JID& jid) const;
-			VCard::ref getVCardAndRequestWhenNeeded(const JID& jid, const boost::posix_time::time_duration& allowedAge = boost::posix_time::time_duration(boost::date_time::pos_infin));
-			void requestVCard(const JID& jid);
-			void requestOwnVCard();
+            VCard::ref getVCard(const JID& jid) const;
+            VCard::ref getVCardAndRequestWhenNeeded(const JID& jid, const boost::posix_time::time_duration& allowedAge = boost::posix_time::time_duration(boost::date_time::pos_infin));
+            void requestVCard(const JID& jid);
+            void requestOwnVCard();
 
-			std::string getPhotoHash(const JID& jid) const;
+            std::string getPhotoHash(const JID& jid) const;
 
 
-			SetVCardRequest::ref createSetVCardRequest(VCard::ref);
+            SetVCardRequest::ref createSetVCardRequest(VCard::ref);
 
-		public:
-			/**
-			 * The JID will always be bare.
-			 */
-			boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
+        public:
+            /**
+             * The JID will always be bare.
+             */
+            boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
 
-			/**
-			 * Emitted when we received an error on looking up a vCard.
-			 */
-			boost::signal<void (const JID&, ErrorPayload::ref)> onVCardRetrievalError;
+            /**
+             * Emitted when we received an error on looking up a vCard.
+             */
+            boost::signal<void (const JID&, ErrorPayload::ref)> onVCardRetrievalError;
 
-			/**
-			 * Emitted when our own vcard changes.
-			 *
-			 * onVCardChanged will also be emitted.
-			 */
-			boost::signal<void (VCard::ref)> onOwnVCardChanged;
+            /**
+             * Emitted when our own vcard changes.
+             *
+             * onVCardChanged will also be emitted.
+             */
+            boost::signal<void (VCard::ref)> onOwnVCardChanged;
 
-		private:
-			void handleVCardReceived(const JID& from, VCard::ref, ErrorPayload::ref);
-			void handleSetVCardResponse(VCard::ref, ErrorPayload::ref);
-			void setVCard(const JID& jid, VCard::ref vcard);
+        private:
+            void handleVCardReceived(const JID& from, VCard::ref, ErrorPayload::ref);
+            void handleSetVCardResponse(VCard::ref, ErrorPayload::ref);
+            void setVCard(const JID& jid, VCard::ref vcard);
 
-		private:
-			JID ownJID;
-			IQRouter* iqRouter;
-			VCardStorage* storage;
-			std::set<JID> requestedVCards;
-	};
+        private:
+            JID ownJID;
+            IQRouter* iqRouter;
+            VCardStorage* storage;
+            std::set<JID> requestedVCards;
+    };
 }

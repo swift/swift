@@ -22,59 +22,59 @@ class UIEventStream;
 class SettingsProvider;
 
 class QtTreeWidget : public QTreeView {
-	Q_OBJECT
-	public:
-		enum MessageTarget {MessageDefaultJID, MessageDisplayJID};
+    Q_OBJECT
+    public:
+        enum MessageTarget {MessageDefaultJID, MessageDisplayJID};
 
-		QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent = 0);
-		~QtTreeWidget();
-		void show();
-		QtTreeWidgetItem* getRoot();
-		void setRosterModel(Roster* roster);
-		Roster* getRoster() {return roster_;}
-		void refreshTooltip();
-		void setMessageTarget(MessageTarget messageTarget);
-		JID jidFromIndex(const QModelIndex& index) const;
-		JID selectedJID() const;
-		void setOnline(bool isOnline);
+        QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent = 0);
+        ~QtTreeWidget();
+        void show();
+        QtTreeWidgetItem* getRoot();
+        void setRosterModel(Roster* roster);
+        Roster* getRoster() {return roster_;}
+        void refreshTooltip();
+        void setMessageTarget(MessageTarget messageTarget);
+        JID jidFromIndex(const QModelIndex& index) const;
+        JID selectedJID() const;
+        void setOnline(bool isOnline);
 
-	public:
-		boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
+    public:
+        boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
 
-	private slots:
-		void handleItemActivated(const QModelIndex&);
-		void handleModelItemExpanded(const QModelIndex&, bool expanded);
-		void handleExpanded(const QModelIndex&);
-		void handleCollapsed(const QModelIndex&);
-		void handleClicked(const QModelIndex&);
-		void handleSettingChanged(const std::string& setting);
-		void handleRefreshTooltip();
+    private slots:
+        void handleItemActivated(const QModelIndex&);
+        void handleModelItemExpanded(const QModelIndex&, bool expanded);
+        void handleExpanded(const QModelIndex&);
+        void handleCollapsed(const QModelIndex&);
+        void handleClicked(const QModelIndex&);
+        void handleSettingChanged(const std::string& setting);
+        void handleRefreshTooltip();
 
-	protected:
-		void dragEnterEvent(QDragEnterEvent* event);
-		void dropEvent(QDropEvent* event);
-		void dragMoveEvent(QDragMoveEvent* event);
-		bool event(QEvent* event);
-		QModelIndexList getSelectedIndexes() const;
-		bool isOnline() const;
+    protected:
+        void dragEnterEvent(QDragEnterEvent* event);
+        void dropEvent(QDropEvent* event);
+        void dragMoveEvent(QDragMoveEvent* event);
+        bool event(QEvent* event);
+        QModelIndexList getSelectedIndexes() const;
+        bool isOnline() const;
 
-	private:
-		void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
+    private:
+        void drawBranches(QPainter*, const QRect&, const QModelIndex&) const;
 
-	protected slots:
-		virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous);
-	protected:
-		UIEventStream* eventStream_;
+    protected slots:
+        virtual void currentChanged(const QModelIndex& current, const QModelIndex& previous);
+    protected:
+        UIEventStream* eventStream_;
 
-	private:
-		RosterModel* model_;
-		Roster* roster_;
-		RosterDelegate* delegate_;
-		QtTreeWidgetItem* treeRoot_;
-		SettingsProvider* settings_;
-		bool tooltipShown_;
-		MessageTarget messageTarget_;
-		bool isOnline_;
+    private:
+        RosterModel* model_;
+        Roster* roster_;
+        RosterDelegate* delegate_;
+        QtTreeWidgetItem* treeRoot_;
+        SettingsProvider* settings_;
+        bool tooltipShown_;
+        MessageTarget messageTarget_;
+        bool isOnline_;
 };
 
 }

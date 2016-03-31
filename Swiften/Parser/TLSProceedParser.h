@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API TLSProceedParser : public GenericElementParser<TLSProceed> {
-		public:
-			TLSProceedParser() : GenericElementParser<TLSProceed>() {}
-	};
+    class SWIFTEN_API TLSProceedParser : public GenericElementParser<TLSProceed> {
+        public:
+            TLSProceedParser() : GenericElementParser<TLSProceed>() {}
+    };
 }

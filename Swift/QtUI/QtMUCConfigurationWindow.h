@@ -17,23 +17,23 @@ class QBoxLayout;
 class QCloseEvent;
 
 namespace Swift {
-	class QtFormWidget;
-	class QtMUCConfigurationWindow : public QWidget {
-		Q_OBJECT
-		public:
-			QtMUCConfigurationWindow(Form::ref form);
-			virtual ~QtMUCConfigurationWindow();
-			boost::signal<void (Form::ref)> onFormComplete;
-			boost::signal<void ()> onFormCancelled;
-		private slots:
-			void handleCancelClicked();
-			void handleOKClicked();
-		protected:
-			virtual void closeEvent(QCloseEvent* event);
-		private:
-			QtFormWidget* formWidget_;
-			QPushButton* okButton_;
-			QPushButton* cancelButton_;
-			bool closed_;
-	};
+    class QtFormWidget;
+    class QtMUCConfigurationWindow : public QWidget {
+        Q_OBJECT
+        public:
+            QtMUCConfigurationWindow(Form::ref form);
+            virtual ~QtMUCConfigurationWindow();
+            boost::signal<void (Form::ref)> onFormComplete;
+            boost::signal<void ()> onFormCancelled;
+        private slots:
+            void handleCancelClicked();
+            void handleOKClicked();
+        protected:
+            virtual void closeEvent(QCloseEvent* event);
+        private:
+            QtFormWidget* formWidget_;
+            QPushButton* okButton_;
+            QPushButton* cancelButton_;
+            bool closed_;
+    };
 }

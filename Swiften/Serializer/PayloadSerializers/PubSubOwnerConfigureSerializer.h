@@ -14,19 +14,19 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PubSubOwnerConfigureSerializer : public GenericPayloadSerializer<PubSubOwnerConfigure> {
-		public:
-			PubSubOwnerConfigureSerializer(PayloadSerializerCollection* serializers);
-			virtual ~PubSubOwnerConfigureSerializer();
+    class SWIFTEN_API PubSubOwnerConfigureSerializer : public GenericPayloadSerializer<PubSubOwnerConfigure> {
+        public:
+            PubSubOwnerConfigureSerializer(PayloadSerializerCollection* serializers);
+            virtual ~PubSubOwnerConfigureSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<PubSubOwnerConfigure>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(boost::shared_ptr<PubSubOwnerConfigure>) const SWIFTEN_OVERRIDE;
 
-		private:
-			
+        private:
 
-		private:
-			PayloadSerializerCollection* serializers;
-	};
+
+        private:
+            PayloadSerializerCollection* serializers;
+    };
 }

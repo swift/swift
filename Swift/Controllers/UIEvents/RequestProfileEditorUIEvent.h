@@ -9,8 +9,8 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class RequestProfileEditorUIEvent : public UIEvent {
-		public:
-			RequestProfileEditorUIEvent() {}
-	};
+    class RequestProfileEditorUIEvent : public UIEvent {
+        public:
+            RequestProfileEditorUIEvent() {}
+    };
 }

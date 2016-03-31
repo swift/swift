@@ -15,23 +15,23 @@
 #include <Swiften/Elements/PubSubOwnerPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerDefault : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerDefault();
-			
-			virtual ~PubSubOwnerDefault();
+    class SWIFTEN_API PubSubOwnerDefault : public PubSubOwnerPayload {
+        public:
 
-			boost::shared_ptr<Form> getData() const {
-				return data;
-			}
+            PubSubOwnerDefault();
 
-			void setData(boost::shared_ptr<Form> value) {
-				this->data = value ;
-			}
+            virtual ~PubSubOwnerDefault();
+
+            boost::shared_ptr<Form> getData() const {
+                return data;
+            }
+
+            void setData(boost::shared_ptr<Form> value) {
+                this->data = value ;
+            }
 
 
-		private:
-			boost::shared_ptr<Form> data;
-	};
+        private:
+            boost::shared_ptr<Form> data;
+    };
 }

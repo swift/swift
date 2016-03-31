@@ -15,17 +15,17 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StanzaAckSerializer : public GenericElementSerializer<StanzaAck> {
-		public:
-			StanzaAckSerializer() : GenericElementSerializer<StanzaAck>() {
-			}
+    class SWIFTEN_API StanzaAckSerializer : public GenericElementSerializer<StanzaAck> {
+        public:
+            StanzaAckSerializer() : GenericElementSerializer<StanzaAck>() {
+            }
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const {
-				StanzaAck::ref stanzaAck(boost::dynamic_pointer_cast<StanzaAck>(element));
-				assert(stanzaAck->isValid());
-				XMLElement result("a", "urn:xmpp:sm:2");
-				result.setAttribute("h", std::string(boost::lexical_cast<std::string>(stanzaAck->getHandledStanzasCount())));
-				return createSafeByteArray(result.serialize());
-			}
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const {
+                StanzaAck::ref stanzaAck(boost::dynamic_pointer_cast<StanzaAck>(element));
+                assert(stanzaAck->isValid());
+                XMLElement result("a", "urn:xmpp:sm:2");
+                result.setAttribute("h", std::string(boost::lexical_cast<std::string>(stanzaAck->getHandledStanzasCount())));
+                return createSafeByteArray(result.serialize());
+            }
+    };
 }

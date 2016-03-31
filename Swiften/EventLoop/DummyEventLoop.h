@@ -15,19 +15,19 @@
 #include <Swiften/EventLoop/EventLoop.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyEventLoop : public EventLoop {
-		public:
-			DummyEventLoop();
-			virtual ~DummyEventLoop();
+    class SWIFTEN_API DummyEventLoop : public EventLoop {
+        public:
+            DummyEventLoop();
+            virtual ~DummyEventLoop();
 
-			void processEvents();
+            void processEvents();
 
-			bool hasEvents();
+            bool hasEvents();
 
-			virtual void eventPosted();
+            virtual void eventPosted();
 
-		private:
-			bool hasEvents_;
-			boost::mutex hasEventsMutex_;
-	};
+        private:
+            bool hasEvents_;
+            boost::mutex hasEventsMutex_;
+    };
 }

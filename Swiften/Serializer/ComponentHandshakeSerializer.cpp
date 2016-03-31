@@ -14,8 +14,8 @@ ComponentHandshakeSerializer::ComponentHandshakeSerializer() {
 }
 
 SafeByteArray ComponentHandshakeSerializer::serialize(boost::shared_ptr<ToplevelElement> element)  const {
-	boost::shared_ptr<ComponentHandshake> handshake(boost::dynamic_pointer_cast<ComponentHandshake>(element));
-	return createSafeByteArray("<handshake>" + handshake->getData() + "</handshake>");
+    boost::shared_ptr<ComponentHandshake> handshake(boost::dynamic_pointer_cast<ComponentHandshake>(element));
+    return createSafeByteArray("<handshake>" + handshake->getData() + "</handshake>");
 }
 
 }

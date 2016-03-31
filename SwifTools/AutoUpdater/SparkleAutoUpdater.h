@@ -11,15 +11,15 @@
 #include <SwifTools/AutoUpdater/AutoUpdater.h>
 
 namespace Swift {
-	class SparkleAutoUpdater : public AutoUpdater {
-		public:
-			SparkleAutoUpdater(const std::string& url);
-			~SparkleAutoUpdater();
+    class SparkleAutoUpdater : public AutoUpdater {
+        public:
+            SparkleAutoUpdater(const std::string& url);
+            ~SparkleAutoUpdater();
 
-			void checkForUpdates();
-		
-		private:
-			class Private;
-			Private* d;
-	};
+            void checkForUpdates();
+
+        private:
+            class Private;
+            Private* d;
+    };
 }

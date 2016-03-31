@@ -22,7 +22,7 @@ TLSConnectionFactory::~TLSConnectionFactory() {
 
 
 boost::shared_ptr<Connection> TLSConnectionFactory::createConnection() {
-	return boost::make_shared<TLSConnection>(connectionFactory->createConnection(), contextFactory, options_);
+    return boost::make_shared<TLSConnection>(connectionFactory->createConnection(), contextFactory, options_);
 }
 
 }

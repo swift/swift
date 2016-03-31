@@ -11,12 +11,12 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API StartSessionParser : public GenericPayloadParser<StartSession> {
-		public:
-			StartSessionParser() {}
+    class SWIFTEN_API StartSessionParser : public GenericPayloadParser<StartSession> {
+        public:
+            StartSessionParser() {}
 
-			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {}
-			virtual void handleEndElement(const std::string&, const std::string&) {}
-			virtual void handleCharacterData(const std::string&) {}
-	};
+            virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {}
+            virtual void handleEndElement(const std::string&, const std::string&) {}
+            virtual void handleCharacterData(const std::string&) {}
+    };
 }

@@ -11,12 +11,12 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API DelaySerializer : public GenericPayloadSerializer<Delay> {
-		public:
-			DelaySerializer();
+    class SWIFTEN_API DelaySerializer : public GenericPayloadSerializer<Delay> {
+        public:
+            DelaySerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<Delay>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Delay>)  const;
+    };
 }
 
 

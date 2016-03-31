@@ -23,29 +23,29 @@ PubSubSubscriptionSerializer::~PubSubSubscriptionSerializer() {
 }
 
 std::string PubSubSubscriptionSerializer::serializePayload(boost::shared_ptr<PubSubSubscription> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("subscription", "http://jabber.org/protocol/pubsub");
-	if (payload->getNode()) {
-		element.setAttribute("node", *payload->getNode());
-	}
-	if (payload->getSubscriptionID()) {
-		element.setAttribute("subid", *payload->getSubscriptionID());
-	}
-	element.setAttribute("jid", payload->getJID());
-	element.addNode(boost::make_shared<XMLRawTextNode>(PubSubSubscribeOptionsSerializer(serializers).serialize(payload->getOptions())));
-	element.setAttribute("subscription", serializeSubscriptionType(payload->getSubscription()));
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("subscription", "http://jabber.org/protocol/pubsub");
+    if (payload->getNode()) {
+        element.setAttribute("node", *payload->getNode());
+    }
+    if (payload->getSubscriptionID()) {
+        element.setAttribute("subid", *payload->getSubscriptionID());
+    }
+    element.setAttribute("jid", payload->getJID());
+    element.addNode(boost::make_shared<XMLRawTextNode>(PubSubSubscribeOptionsSerializer(serializers).serialize(payload->getOptions())));
+    element.setAttribute("subscription", serializeSubscriptionType(payload->getSubscription()));
+    return element.serialize();
 }
 
 std::string PubSubSubscriptionSerializer::serializeSubscriptionType(PubSubSubscription::SubscriptionType value) {
-	switch (value) {
-		case PubSubSubscription::None: return "none";
-		case PubSubSubscription::Pending: return "pending";
-		case PubSubSubscription::Subscribed: return "subscribed";
-		case PubSubSubscription::Unconfigured: return "unconfigured";
-	}
-	assert(false);
-	return "";
+    switch (value) {
+        case PubSubSubscription::None: return "none";
+        case PubSubSubscription::Pending: return "pending";
+        case PubSubSubscription::Subscribed: return "subscribed";
+        case PubSubSubscription::Unconfigured: return "unconfigured";
+    }
+    assert(false);
+    return "";
 }

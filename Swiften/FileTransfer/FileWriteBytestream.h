@@ -13,16 +13,16 @@
 #include <Swiften/FileTransfer/WriteBytestream.h>
 
 namespace Swift {
-	class SWIFTEN_API FileWriteBytestream : public WriteBytestream {
-		public:
-			FileWriteBytestream(const boost::filesystem::path& file);
-			virtual ~FileWriteBytestream();
+    class SWIFTEN_API FileWriteBytestream : public WriteBytestream {
+        public:
+            FileWriteBytestream(const boost::filesystem::path& file);
+            virtual ~FileWriteBytestream();
 
-			virtual bool write(const std::vector<unsigned char>&);
-			void close();
+            virtual bool write(const std::vector<unsigned char>&);
+            void close();
 
-		private:
-			boost::filesystem::path file;
-			boost::filesystem::ofstream* stream;
-	};
+        private:
+            boost::filesystem::path file;
+            boost::filesystem::ofstream* stream;
+    };
 }

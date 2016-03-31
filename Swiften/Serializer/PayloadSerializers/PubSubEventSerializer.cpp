@@ -23,29 +23,29 @@
 using namespace Swift;
 
 PubSubEventSerializer::PubSubEventSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
-	pubsubSerializers.push_back(boost::make_shared<PubSubEventSubscriptionSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubEventPurgeSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubEventCollectionSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubEventDeleteSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubEventItemsSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubEventConfigurationSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubEventSubscriptionSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubEventPurgeSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubEventCollectionSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubEventDeleteSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubEventItemsSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubEventConfigurationSerializer>(serializers));
 }
 
 PubSubEventSerializer::~PubSubEventSerializer() {
 }
 
 std::string PubSubEventSerializer::serializePayload(boost::shared_ptr<PubSubEvent> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("event", "http://jabber.org/protocol/pubsub#event");
-	boost::shared_ptr<PubSubEventPayload> p = payload->getPayload();
-	foreach(boost::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
-		if (serializer->canSerialize(p)) {
-			element.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(p)));
-		}
-	}
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("event", "http://jabber.org/protocol/pubsub#event");
+    boost::shared_ptr<PubSubEventPayload> p = payload->getPayload();
+    foreach(boost::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
+        if (serializer->canSerialize(p)) {
+            element.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(p)));
+        }
+    }
+    return element.serialize();
 }
 
 

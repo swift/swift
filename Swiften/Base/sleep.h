@@ -9,5 +9,5 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	SWIFTEN_API void sleep(unsigned int msecs);
+    SWIFTEN_API void sleep(unsigned int msecs);
 }

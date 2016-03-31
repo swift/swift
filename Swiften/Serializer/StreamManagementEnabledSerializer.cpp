@@ -17,13 +17,13 @@ StreamManagementEnabledSerializer::StreamManagementEnabledSerializer() : Generic
 }
 
 SafeByteArray StreamManagementEnabledSerializer::serialize(boost::shared_ptr<ToplevelElement> el) const {
-	boost::shared_ptr<StreamManagementEnabled> e(boost::dynamic_pointer_cast<StreamManagementEnabled>(el));
-	XMLElement element("enabled", "urn:xmpp:sm:2");
-	if (!e->getResumeID().empty()) {
-		element.setAttribute("id", e->getResumeID());
-	}
-	if (e->getResumeSupported()) {
-		element.setAttribute("resume", "true");
-	}
-	return createSafeByteArray(element.serialize());
+    boost::shared_ptr<StreamManagementEnabled> e(boost::dynamic_pointer_cast<StreamManagementEnabled>(el));
+    XMLElement element("enabled", "urn:xmpp:sm:2");
+    if (!e->getResumeID().empty()) {
+        element.setAttribute("id", e->getResumeID());
+    }
+    if (e->getResumeSupported()) {
+        element.setAttribute("resume", "true");
+    }
+    return createSafeByteArray(element.serialize());
 }

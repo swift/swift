@@ -15,40 +15,40 @@
 #include <Swiften/LinkLocal/LinkLocalServiceInfo.h>
 
 namespace Swift {
-	class SWIFTEN_API LinkLocalService {
-		public:
-			LinkLocalService(
-					const DNSSDServiceID& id,
-					const DNSSDResolveServiceQuery::Result& info) :
-						id(id),
-						info(info) {}
+    class SWIFTEN_API LinkLocalService {
+        public:
+            LinkLocalService(
+                    const DNSSDServiceID& id,
+                    const DNSSDResolveServiceQuery::Result& info) :
+                        id(id),
+                        info(info) {}
 
-			const DNSSDServiceID& getID() const {
-				return id;
-			}
+            const DNSSDServiceID& getID() const {
+                return id;
+            }
 
-			const std::string& getName() const {
-				return id.getName();
-			}
+            const std::string& getName() const {
+                return id.getName();
+            }
 
-			int getPort() const {
-				return info.port;
-			}
+            int getPort() const {
+                return info.port;
+            }
 
-			const std::string& getHostname() const {
-				return info.host;
-			}
+            const std::string& getHostname() const {
+                return info.host;
+            }
 
-			LinkLocalServiceInfo getInfo() const {
-				return LinkLocalServiceInfo::createFromTXTRecord(info.info);
-			}
+            LinkLocalServiceInfo getInfo() const {
+                return LinkLocalServiceInfo::createFromTXTRecord(info.info);
+            }
 
-			std::string getDescription() const;
+            std::string getDescription() const;
 
-			JID getJID() const;
+            JID getJID() const;
 
-		private:
-			DNSSDServiceID id;
-			DNSSDResolveServiceQuery::Result info;
-	};
+        private:
+            DNSSDServiceID id;
+            DNSSDResolveServiceQuery::Result info;
+    };
 }

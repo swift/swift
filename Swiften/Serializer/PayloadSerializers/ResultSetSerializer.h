@@ -14,13 +14,13 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API ResultSetSerializer : public GenericPayloadSerializer<ResultSet> {
-		public:
-			ResultSetSerializer();
-			virtual ~ResultSetSerializer();
+    class SWIFTEN_API ResultSetSerializer : public GenericPayloadSerializer<ResultSet> {
+        public:
+            ResultSetSerializer();
+            virtual ~ResultSetSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<ResultSet>) const SWIFTEN_OVERRIDE;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<ResultSet>) const SWIFTEN_OVERRIDE;
+    };
 }

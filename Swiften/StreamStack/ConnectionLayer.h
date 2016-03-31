@@ -13,19 +13,19 @@
 #include <Swiften/StreamStack/LowLayer.h>
 
 namespace Swift {
-	class SWIFTEN_API ConnectionLayer : public LowLayer {
-		public:
-			ConnectionLayer(boost::shared_ptr<Connection> connection);
-			virtual ~ConnectionLayer();
+    class SWIFTEN_API ConnectionLayer : public LowLayer {
+        public:
+            ConnectionLayer(boost::shared_ptr<Connection> connection);
+            virtual ~ConnectionLayer();
 
-			void writeData(const SafeByteArray& data) {
-				connection->write(data);
-			}
+            void writeData(const SafeByteArray& data) {
+                connection->write(data);
+            }
 
-		private:
-			void handleDataRead(boost::shared_ptr<SafeByteArray>);
+        private:
+            void handleDataRead(boost::shared_ptr<SafeByteArray>);
 
-		private:
-			boost::shared_ptr<Connection> connection;
-	};
+        private:
+            boost::shared_ptr<Connection> connection;
+    };
 }

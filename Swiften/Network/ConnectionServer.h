@@ -15,23 +15,23 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-	class SWIFTEN_API ConnectionServer {
-		public:
-			enum Error {
-				Conflict,
-				UnknownError
-			};
+    class SWIFTEN_API ConnectionServer {
+        public:
+            enum Error {
+                Conflict,
+                UnknownError
+            };
 
-			virtual ~ConnectionServer();
+            virtual ~ConnectionServer();
 
-			virtual HostAddressPort getAddressPort() const = 0;
+            virtual HostAddressPort getAddressPort() const = 0;
 
-			virtual boost::optional<Error> tryStart() = 0; // FIXME: This should become the new start
+            virtual boost::optional<Error> tryStart() = 0; // FIXME: This should become the new start
 
-			virtual void start() = 0;
+            virtual void start() = 0;
 
-			virtual void stop() = 0;
+            virtual void stop() = 0;
 
-			boost::signal<void (boost::shared_ptr<Connection>)> onNewConnection;
-	};
+            boost::signal<void (boost::shared_ptr<Connection>)> onNewConnection;
+    };
 }

@@ -12,14 +12,14 @@
 #include <Slimber/VCardCollection.h>
 
 namespace Swift {
-	class FileVCardCollection : public VCardCollection {
-		public:
-			FileVCardCollection(boost::filesystem::path dir);
+    class FileVCardCollection : public VCardCollection {
+        public:
+            FileVCardCollection(boost::filesystem::path dir);
 
-			boost::shared_ptr<VCard> getOwnVCard() const;
-			void setOwnVCard(boost::shared_ptr<VCard> vcard);
+            boost::shared_ptr<VCard> getOwnVCard() const;
+            void setOwnVCard(boost::shared_ptr<VCard> vcard);
 
-		private:
-			boost::filesystem::path vcardsPath;
-	};
+        private:
+            boost::filesystem::path vcardsPath;
+    };
 }

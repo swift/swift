@@ -13,28 +13,28 @@
 #include <Swiften/StreamStack/StreamLayer.h>
 
 namespace Swift {
-	class Timer;
-	class TimerFactory;
+    class Timer;
+    class TimerFactory;
 
-	class SWIFTEN_API WhitespacePingLayer : public StreamLayer, boost::noncopyable {
-		public:
-			WhitespacePingLayer(TimerFactory* timerFactory);
-			virtual ~WhitespacePingLayer();
+    class SWIFTEN_API WhitespacePingLayer : public StreamLayer, boost::noncopyable {
+        public:
+            WhitespacePingLayer(TimerFactory* timerFactory);
+            virtual ~WhitespacePingLayer();
 
-			void setActive();
-			void setInactive();
-			void writeData(const SafeByteArray& data);
-			void handleDataRead(const SafeByteArray& data);
+            void setActive();
+            void setInactive();
+            void writeData(const SafeByteArray& data);
+            void handleDataRead(const SafeByteArray& data);
 
-			bool getIsActive() const {
-				return isActive;
-			}
+            bool getIsActive() const {
+                return isActive;
+            }
 
-		private:
-			void handleTimerTick();
+        private:
+            void handleTimerTick();
 
-		private:
-			bool isActive;
-			boost::shared_ptr<Timer> timer;
-	};
+        private:
+            bool isActive;
+            boost::shared_ptr<Timer> timer;
+    };
 }

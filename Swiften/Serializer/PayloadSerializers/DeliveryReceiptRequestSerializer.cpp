@@ -21,8 +21,8 @@ DeliveryReceiptRequestSerializer::DeliveryReceiptRequestSerializer() : GenericPa
 }
 
 std::string DeliveryReceiptRequestSerializer::serializePayload(boost::shared_ptr<DeliveryReceiptRequest> /* request*/) const {
-	XMLElement requestXML("request", "urn:xmpp:receipts");
-	return requestXML.serialize();
+    XMLElement requestXML("request", "urn:xmpp:receipts");
+    return requestXML.serialize();
 }
 
 }

@@ -13,12 +13,12 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class AddMUCBookmarkUIEvent : public UIEvent {
-		public:
-			AddMUCBookmarkUIEvent(const MUCBookmark& bookmark) : bookmark(bookmark) {}
-			const MUCBookmark& getBookmark() { return bookmark; }
+    class AddMUCBookmarkUIEvent : public UIEvent {
+        public:
+            AddMUCBookmarkUIEvent(const MUCBookmark& bookmark) : bookmark(bookmark) {}
+            const MUCBookmark& getBookmark() { return bookmark; }
 
-		private:
-			MUCBookmark bookmark;
-	};
+        private:
+            MUCBookmark bookmark;
+    };
 }

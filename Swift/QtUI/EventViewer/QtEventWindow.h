@@ -20,26 +20,26 @@
 class QPushButton;
 
 namespace Swift {
-	class QtEventWindow : public QWidget, public EventWindow {
-		Q_OBJECT
-		public:
-			QtEventWindow(UIEventStream* eventStream);
-			~QtEventWindow();
-			void addEvent(boost::shared_ptr<StanzaEvent> event, bool active);
-			void removeEvent(boost::shared_ptr<StanzaEvent> event);
-		signals:
-			void onNewEventCountUpdated(int count);
-		private slots:
-			void handleItemActivated(const QModelIndex& item);
-			void handleItemClicked(const QModelIndex& item);
-			void handleReadClicked();
-		private:
-			EventModel* model_;
-			EventDelegate* delegate_;
-			UIEventStream* eventStream_;
-			QTreeView* view_;
-			QPushButton* readButton_;
-	};
-		
+    class QtEventWindow : public QWidget, public EventWindow {
+        Q_OBJECT
+        public:
+            QtEventWindow(UIEventStream* eventStream);
+            ~QtEventWindow();
+            void addEvent(boost::shared_ptr<StanzaEvent> event, bool active);
+            void removeEvent(boost::shared_ptr<StanzaEvent> event);
+        signals:
+            void onNewEventCountUpdated(int count);
+        private slots:
+            void handleItemActivated(const QModelIndex& item);
+            void handleItemClicked(const QModelIndex& item);
+            void handleReadClicked();
+        private:
+            EventModel* model_;
+            EventDelegate* delegate_;
+            UIEventStream* eventStream_;
+            QTreeView* view_;
+            QPushButton* readButton_;
+    };
+
 }
 

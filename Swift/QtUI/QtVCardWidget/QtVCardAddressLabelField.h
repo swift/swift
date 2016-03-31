@@ -27,32 +27,32 @@ namespace Swift {
 class QtElidingLabel;
 
 class QtVCardAddressLabelField : public QtVCardGeneralField, public QtVCardHomeWork {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO(tr("Address Label"), UNLIMITED_INSTANCES, QtVCardAddressLabelField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Address Label"), UNLIMITED_INSTANCES, QtVCardAddressLabelField)
 
-		QtVCardAddressLabelField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardAddressLabelField();
+        QtVCardAddressLabelField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        virtual ~QtVCardAddressLabelField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setAddressLabel(const VCard::AddressLabel& addressLabel);
-		VCard::AddressLabel getAddressLabel() const;
+        void setAddressLabel(const VCard::AddressLabel& addressLabel);
+        VCard::AddressLabel getAddressLabel() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QPlainTextEdit* addressLabelPlainTextEdit;
+    private:
+        QPlainTextEdit* addressLabelPlainTextEdit;
 
-		QtElidingLabel* deliveryTypeLabel;
-		QRadioButton* domesticRadioButton;
-		QRadioButton* internationalRadioButton;
-		QButtonGroup* buttonGroup;
+        QtElidingLabel* deliveryTypeLabel;
+        QRadioButton* domesticRadioButton;
+        QRadioButton* internationalRadioButton;
+        QButtonGroup* buttonGroup;
 };
 
 }

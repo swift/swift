@@ -12,11 +12,11 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsEnable : public Payload {
-		public:
-			typedef boost::shared_ptr<CarbonsEnable> ref;
+    class SWIFTEN_API CarbonsEnable : public Payload {
+        public:
+            typedef boost::shared_ptr<CarbonsEnable> ref;
 
-		public:
-			virtual ~CarbonsEnable();
-	};
+        public:
+            virtual ~CarbonsEnable();
+    };
 }

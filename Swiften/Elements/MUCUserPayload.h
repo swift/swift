@@ -19,79 +19,79 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCUserPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<MUCUserPayload> ref;
+    class SWIFTEN_API MUCUserPayload : public Payload {
+        public:
+            typedef boost::shared_ptr<MUCUserPayload> ref;
 
-			struct StatusCode {
-				StatusCode() : code(0) {}
-				StatusCode(int code) : code(code) {}
-				int code;
-			};
+            struct StatusCode {
+                StatusCode() : code(0) {}
+                StatusCode(int code) : code(code) {}
+                int code;
+            };
 
-			//struct Password {
+            //struct Password {
 
-			//}
+            //}
 
-			// struct History {
+            // struct History {
 
-			// }
+            // }
 
-			/**
-			 * reason is optional.
-			 * from and to are mutually exclusive.
-			 * From is used for MUC sending to invited client. To is used sending to MUC from inviting client.
-			 * from is the JID the MUC claims the invite is from.
-			 * to is the JID to send the invite to.
-			 */
-			struct Invite {
-				std::string reason;
-				JID from;
-				JID to;
-			};
+            /**
+             * reason is optional.
+             * from and to are mutually exclusive.
+             * From is used for MUC sending to invited client. To is used sending to MUC from inviting client.
+             * from is the JID the MUC claims the invite is from.
+             * to is the JID to send the invite to.
+             */
+            struct Invite {
+                std::string reason;
+                JID from;
+                JID to;
+            };
 
-			MUCUserPayload() {
-			}
+            MUCUserPayload() {
+            }
 
-			void addItem(const MUCItem& item) {items_.push_back(item);}
-		
-			void addStatusCode(StatusCode code) {statusCodes_.push_back(code);}
+            void addItem(const MUCItem& item) {items_.push_back(item);}
 
-			const std::vector<MUCItem>& getItems() const {return items_;}
+            void addStatusCode(StatusCode code) {statusCodes_.push_back(code);}
 
-			const std::vector<StatusCode>& getStatusCodes() const {return statusCodes_;}
+            const std::vector<MUCItem>& getItems() const {return items_;}
 
-			boost::shared_ptr<Payload> getPayload() const {
-				return payload_;
-			}
+            const std::vector<StatusCode>& getStatusCodes() const {return statusCodes_;}
 
-			void setPayload(boost::shared_ptr<Payload> p) {
-				payload_ = p;
-			}
+            boost::shared_ptr<Payload> getPayload() const {
+                return payload_;
+            }
 
-			const boost::optional<std::string>& getPassword() const {
-				return password_;
-			}
+            void setPayload(boost::shared_ptr<Payload> p) {
+                payload_ = p;
+            }
 
-			void setPassword(const std::string& password) {
-				password_ = password;
-			}
+            const boost::optional<std::string>& getPassword() const {
+                return password_;
+            }
 
-
-			const boost::optional<Invite>& getInvite() const {
-				return invite_;
-			}
-
-			void setInvite(const Invite& invite) {
-				invite_ = invite;
-			}
+            void setPassword(const std::string& password) {
+                password_ = password;
+            }
 
 
-		private:
-			std::vector<MUCItem> items_;
-			std::vector<StatusCode> statusCodes_;
-			boost::shared_ptr<Payload> payload_;
-			boost::optional<std::string> password_;
-			boost::optional<Invite> invite_;
-	};
+            const boost::optional<Invite>& getInvite() const {
+                return invite_;
+            }
+
+            void setInvite(const Invite& invite) {
+                invite_ = invite;
+            }
+
+
+        private:
+            std::vector<MUCItem> items_;
+            std::vector<StatusCode> statusCodes_;
+            boost::shared_ptr<Payload> payload_;
+            boost::optional<std::string> password_;
+            boost::optional<Invite> invite_;
+    };
 }

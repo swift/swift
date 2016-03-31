@@ -12,15 +12,15 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	
-	class ProtocolHeader;
 
-	class SWIFTEN_API XMPPParserClient {
-		public:
-			virtual ~XMPPParserClient();
+    class ProtocolHeader;
 
-			virtual void handleStreamStart(const ProtocolHeader&) = 0;
-			virtual void handleElement(boost::shared_ptr<ToplevelElement>) = 0;
-			virtual void handleStreamEnd() = 0;
-	};
+    class SWIFTEN_API XMPPParserClient {
+        public:
+            virtual ~XMPPParserClient();
+
+            virtual void handleStreamStart(const ProtocolHeader&) = 0;
+            virtual void handleElement(boost::shared_ptr<ToplevelElement>) = 0;
+            virtual void handleStreamEnd() = 0;
+    };
 }

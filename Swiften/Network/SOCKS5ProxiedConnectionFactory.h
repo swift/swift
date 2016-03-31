@@ -18,20 +18,20 @@
 #include <Swiften/Network/HostNameOrAddress.h>
 
 namespace Swift {
-	class DomainNameResolver;
-	class TimerFactory;
+    class DomainNameResolver;
+    class TimerFactory;
 
-	class SWIFTEN_API SOCKS5ProxiedConnectionFactory : public ConnectionFactory {
-		public:
-			SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
+    class SWIFTEN_API SOCKS5ProxiedConnectionFactory : public ConnectionFactory {
+        public:
+            SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 
-			virtual boost::shared_ptr<Connection> createConnection();
+            virtual boost::shared_ptr<Connection> createConnection();
 
-		private:
-			DomainNameResolver* resolver_;
-			ConnectionFactory* connectionFactory_;
-			TimerFactory* timerFactory_;
-			std::string proxyHost_;
-			int proxyPort_;
-	};
+        private:
+            DomainNameResolver* resolver_;
+            ConnectionFactory* connectionFactory_;
+            TimerFactory* timerFactory_;
+            std::string proxyHost_;
+            int proxyPort_;
+    };
 }

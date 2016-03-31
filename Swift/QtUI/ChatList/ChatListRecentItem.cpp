@@ -17,25 +17,25 @@ ChatListRecentItem::ChatListRecentItem(const ChatListWindow::Chat& chat, ChatLis
 }
 
 const ChatListWindow::Chat& ChatListRecentItem::getChat() const {
-	return chat_;
+    return chat_;
 }
 
 QVariant ChatListRecentItem::data(int role) const {
-	switch (role) {
-		case Qt::DisplayRole: return chat_.impromptuJIDs.empty() ? P2QSTRING(chat_.chatName) : P2QSTRING(chat_.getImpromptuTitle());
-		case DetailTextRole: return P2QSTRING(chat_.activity);
-			/*case Qt::TextColorRole: return textColor_;
-		case Qt::BackgroundColorRole: return backgroundColor_;
-		case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
-		case StatusTextRole: return statusText_;*/
-		case AvatarRole: return QVariant(P2QSTRING(pathToString(chat_.avatarPath)));
-		case PresenceIconRole: return getPresenceIcon();
-		default: return QVariant();
-	}
+    switch (role) {
+        case Qt::DisplayRole: return chat_.impromptuJIDs.empty() ? P2QSTRING(chat_.chatName) : P2QSTRING(chat_.getImpromptuTitle());
+        case DetailTextRole: return P2QSTRING(chat_.activity);
+            /*case Qt::TextColorRole: return textColor_;
+        case Qt::BackgroundColorRole: return backgroundColor_;
+        case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
+        case StatusTextRole: return statusText_;*/
+        case AvatarRole: return QVariant(P2QSTRING(pathToString(chat_.avatarPath)));
+        case PresenceIconRole: return getPresenceIcon();
+        default: return QVariant();
+    }
 }
 
 QIcon ChatListRecentItem::getPresenceIcon() const {
-	return QIcon(statusShowTypeToIconPath(chat_.statusType));
+    return QIcon(statusShowTypeToIconPath(chat_.statusType));
 }
 
 }

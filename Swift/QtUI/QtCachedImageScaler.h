@@ -9,11 +9,11 @@
 #include <boost/filesystem.hpp>
 
 namespace Swift {
-	class QtCachedImageScaler {
-		public:
-			QtCachedImageScaler();
+    class QtCachedImageScaler {
+        public:
+            QtCachedImageScaler();
 
-			boost::filesystem::path getScaledImage(const boost::filesystem::path& image, int size);
-	};
+            boost::filesystem::path getScaledImage(const boost::filesystem::path& image, int size);
+    };
 }
 

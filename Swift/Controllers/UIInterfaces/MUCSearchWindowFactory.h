@@ -9,11 +9,11 @@
 #include <Swift/Controllers/UIInterfaces/MUCSearchWindow.h>
 
 namespace Swift {
-	class UIEventStream;
-	class MUCSearchWindowFactory {
-		public:
-			virtual ~MUCSearchWindowFactory() {}
+    class UIEventStream;
+    class MUCSearchWindowFactory {
+        public:
+            virtual ~MUCSearchWindowFactory() {}
 
-			virtual MUCSearchWindow* createMUCSearchWindow() = 0;
-	};
+            virtual MUCSearchWindow* createMUCSearchWindow() = 0;
+    };
 }

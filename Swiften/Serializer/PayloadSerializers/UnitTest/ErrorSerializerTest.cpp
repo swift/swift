@@ -16,31 +16,31 @@
 using namespace Swift;
 
 class ErrorSerializerTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(ErrorSerializerTest);
-		CPPUNIT_TEST(testSerialize);
-		CPPUNIT_TEST(testSerialize_Payload);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(ErrorSerializerTest);
+        CPPUNIT_TEST(testSerialize);
+        CPPUNIT_TEST(testSerialize_Payload);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void testSerialize() {
-			ErrorSerializer testling(&serializers);
-			boost::shared_ptr<ErrorPayload> error(new ErrorPayload(ErrorPayload::BadRequest, ErrorPayload::Cancel, "My Error"));
+    public:
+        void testSerialize() {
+            ErrorSerializer testling(&serializers);
+            boost::shared_ptr<ErrorPayload> error(new ErrorPayload(ErrorPayload::BadRequest, ErrorPayload::Cancel, "My Error"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("<error type=\"cancel\"><bad-request xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">My Error</text></error>"), testling.serialize(error));
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string("<error type=\"cancel\"><bad-request xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">My Error</text></error>"), testling.serialize(error));
+        }
 
-		void testSerialize_Payload() {
-			ErrorSerializer testling(&serializers);
-			boost::shared_ptr<ErrorPayload> error = boost::make_shared<ErrorPayload>();
-			error->setPayload(boost::make_shared<Delay>());
+        void testSerialize_Payload() {
+            ErrorSerializer testling(&serializers);
+            boost::shared_ptr<ErrorPayload> error = boost::make_shared<ErrorPayload>();
+            error->setPayload(boost::make_shared<Delay>());
 
-			CPPUNIT_ASSERT_EQUAL(std::string(
-					"<error type=\"cancel\"><undefined-condition xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><delay stamp=\"not-a-date-timeZ\" xmlns=\"urn:xmpp:delay\"/></error>"
-					), testling.serialize(error));
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string(
+                    "<error type=\"cancel\"><undefined-condition xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><delay stamp=\"not-a-date-timeZ\" xmlns=\"urn:xmpp:delay\"/></error>"
+                    ), testling.serialize(error));
+        }
 
-	private:
-		FullPayloadSerializerCollection serializers;
+    private:
+        FullPayloadSerializerCollection serializers;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ErrorSerializerTest);

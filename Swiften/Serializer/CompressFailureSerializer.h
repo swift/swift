@@ -14,13 +14,13 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API CompressFailureSerializer : public GenericElementSerializer<CompressFailure> {
-		public:
-			CompressFailureSerializer() : GenericElementSerializer<CompressFailure>() {
-			}
+    class SWIFTEN_API CompressFailureSerializer : public GenericElementSerializer<CompressFailure> {
+        public:
+            CompressFailureSerializer() : GenericElementSerializer<CompressFailure>() {
+            }
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
-				return createSafeByteArray(XMLElement("failure", "http://jabber.org/protocol/compress").serialize());
-			}
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
+                return createSafeByteArray(XMLElement("failure", "http://jabber.org/protocol/compress").serialize());
+            }
+    };
 }

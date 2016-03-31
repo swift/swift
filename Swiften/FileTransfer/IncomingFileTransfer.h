@@ -14,24 +14,24 @@
 #include <Swiften/FileTransfer/FileTransferOptions.h>
 
 namespace Swift {
-	class WriteBytestream;
-	class JID;
+    class WriteBytestream;
+    class JID;
 
-	/**
-	 * @brief The IncomingFileTransfer abstract class is the general interface in Swiften
-	 * for incoming file transfers.
-	 */
-	class SWIFTEN_API IncomingFileTransfer : public FileTransfer {
-		public:
-			typedef boost::shared_ptr<IncomingFileTransfer> ref;
+    /**
+     * @brief The IncomingFileTransfer abstract class is the general interface in Swiften
+     * for incoming file transfers.
+     */
+    class SWIFTEN_API IncomingFileTransfer : public FileTransfer {
+        public:
+            typedef boost::shared_ptr<IncomingFileTransfer> ref;
 
-			virtual ~IncomingFileTransfer();
-			
-			virtual void accept(
-					boost::shared_ptr<WriteBytestream>, 
-					const FileTransferOptions& = FileTransferOptions()) = 0;
+            virtual ~IncomingFileTransfer();
 
-			virtual const JID& getSender() const = 0;
-			virtual const JID& getRecipient() const = 0;
-	};
+            virtual void accept(
+                    boost::shared_ptr<WriteBytestream>,
+                    const FileTransferOptions& = FileTransferOptions()) = 0;
+
+            virtual const JID& getSender() const = 0;
+            virtual const JID& getRecipient() const = 0;
+    };
 }

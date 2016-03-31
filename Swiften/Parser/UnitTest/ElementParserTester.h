@@ -9,5 +9,5 @@
 #include <Swiften/Parser/UnitTest/ParserTester.h>
 
 namespace Swift {
-	typedef ParserTester<ElementParser> ElementParserTester;
+    typedef ParserTester<ElementParser> ElementParserTester;
 }

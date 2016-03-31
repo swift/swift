@@ -12,31 +12,31 @@
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
-	class SWIFTEN_API HostAddressPort {
-		public:
-			HostAddressPort(const HostAddress& address = HostAddress(), int port = -1);
-			HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint);
+    class SWIFTEN_API HostAddressPort {
+        public:
+            HostAddressPort(const HostAddress& address = HostAddress(), int port = -1);
+            HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint);
 
-			const HostAddress& getAddress() const {
-				return address_;
-			}
+            const HostAddress& getAddress() const {
+                return address_;
+            }
 
-			int getPort() const {
-				return port_;
-			}
+            int getPort() const {
+                return port_;
+            }
 
-			bool operator==(const HostAddressPort& o) const {
-				return address_ == o.address_ && port_ == o.port_;
-			}
+            bool operator==(const HostAddressPort& o) const {
+                return address_ == o.address_ && port_ == o.port_;
+            }
 
-			bool isValid() const {
-				return address_.isValid() && port_ > 0;
-			}
-			
-			std::string toString() const;
+            bool isValid() const {
+                return address_.isValid() && port_ > 0;
+            }
 
-		private:
-			HostAddress address_;
-			int port_;
-	};
+            std::string toString() const;
+
+        private:
+            HostAddress address_;
+            int port_;
+    };
 }

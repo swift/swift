@@ -17,7 +17,7 @@
 #include <boost/signal.hpp>
 
 namespace boost {
-	namespace bsignals = signals;
+    namespace bsignals = signals;
 }
 
 #if defined(signals) && defined(Q_SIGNALS) && !defined(QT_MOC_CPP)

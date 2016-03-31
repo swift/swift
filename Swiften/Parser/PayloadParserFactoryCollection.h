@@ -12,20 +12,20 @@
 #include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
-	class PayloadParserFactory;
+    class PayloadParserFactory;
 
-	class SWIFTEN_API PayloadParserFactoryCollection {
-		public:
-			PayloadParserFactoryCollection();
+    class SWIFTEN_API PayloadParserFactoryCollection {
+        public:
+            PayloadParserFactoryCollection();
 
-			void addFactory(PayloadParserFactory* factory);
-			void removeFactory(PayloadParserFactory* factory);
-			void setDefaultFactory(PayloadParserFactory* factory);
+            void addFactory(PayloadParserFactory* factory);
+            void removeFactory(PayloadParserFactory* factory);
+            void setDefaultFactory(PayloadParserFactory* factory);
 
-			PayloadParserFactory* getPayloadParserFactory(const std::string& element, const std::string& ns, const AttributeMap& attributes);
+            PayloadParserFactory* getPayloadParserFactory(const std::string& element, const std::string& ns, const AttributeMap& attributes);
 
-		private:
-			std::vector<PayloadParserFactory*> factories_;
-			PayloadParserFactory* defaultFactory_;
-	};
+        private:
+            std::vector<PayloadParserFactory*> factories_;
+            PayloadParserFactory* defaultFactory_;
+    };
 }

@@ -19,23 +19,23 @@ using namespace Swift;
 
 int main(void)
 {
-	int ret = 0;
-	HostAddressPort hap;
-	
-	std::cout << "constructing PlatfromProxyProvider instance ..." << std::endl;
-	PlatformProxyProvider ppp;
+    int ret = 0;
+    HostAddressPort hap;
 
-	hap = ppp.getSOCKS5Proxy();
-	std::cout << "SOCKS5 Proxy configured: " << hap.isValid() << std::endl;
-	if(hap.isValid()) {
-		std::cout << "SOCKS5 Proxy: " << hap.getAddress().toString() << ":" << hap.getPort() << std::endl;
-	}
+    std::cout << "constructing PlatfromProxyProvider instance ..." << std::endl;
+    PlatformProxyProvider ppp;
 
-	hap = ppp.getHTTPConnectProxy();
-	std::cout << "HTTPConnect Proxy configured: " << hap.isValid() << std::endl;
-	if(hap.isValid()) {
-		std::cout << "HTTPConnect Proxy: " << hap.getAddress().toString() << ":" << hap.getPort() << std::endl;
-	}
+    hap = ppp.getSOCKS5Proxy();
+    std::cout << "SOCKS5 Proxy configured: " << hap.isValid() << std::endl;
+    if(hap.isValid()) {
+        std::cout << "SOCKS5 Proxy: " << hap.getAddress().toString() << ":" << hap.getPort() << std::endl;
+    }
 
-	return ret;
+    hap = ppp.getHTTPConnectProxy();
+    std::cout << "HTTPConnect Proxy configured: " << hap.isValid() << std::endl;
+    if(hap.isValid()) {
+        std::cout << "HTTPConnect Proxy: " << hap.getAddress().toString() << ":" << hap.getPort() << std::endl;
+    }
+
+    return ret;
 }

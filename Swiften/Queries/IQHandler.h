@@ -12,12 +12,12 @@
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
-	class IQRouter;
+    class IQRouter;
 
-	class SWIFTEN_API IQHandler {
-		public:
-			virtual ~IQHandler();
+    class SWIFTEN_API IQHandler {
+        public:
+            virtual ~IQHandler();
 
-			virtual bool handleIQ(boost::shared_ptr<IQ>) = 0;
-	};
+            virtual bool handleIQ(boost::shared_ptr<IQ>) = 0;
+    };
 }

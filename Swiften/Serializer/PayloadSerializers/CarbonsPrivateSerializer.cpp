@@ -9,15 +9,15 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	CarbonsPrivateSerializer::CarbonsPrivateSerializer() : GenericPayloadSerializer<CarbonsPrivate>() {
-	}
+    CarbonsPrivateSerializer::CarbonsPrivateSerializer() : GenericPayloadSerializer<CarbonsPrivate>() {
+    }
 
-	CarbonsPrivateSerializer::~CarbonsPrivateSerializer() {
+    CarbonsPrivateSerializer::~CarbonsPrivateSerializer() {
 
-	}
+    }
 
-	std::string CarbonsPrivateSerializer::serializePayload(boost::shared_ptr<CarbonsPrivate>)	const {
-		XMLElement element("private", "urn:xmpp:carbons:2");
-		return element.serialize();
-	}
+    std::string CarbonsPrivateSerializer::serializePayload(boost::shared_ptr<CarbonsPrivate>)    const {
+        XMLElement element("private", "urn:xmpp:carbons:2");
+        return element.serialize();
+    }
 }

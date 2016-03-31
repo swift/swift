@@ -12,12 +12,12 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class SoftwareVersionConvertor : public GenericLuaElementConvertor<SoftwareVersion> {
-		public:
-			SoftwareVersionConvertor();
-			virtual ~SoftwareVersionConvertor();
+    class SoftwareVersionConvertor : public GenericLuaElementConvertor<SoftwareVersion> {
+        public:
+            SoftwareVersionConvertor();
+            virtual ~SoftwareVersionConvertor();
 
-			virtual boost::shared_ptr<SoftwareVersion> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<SoftwareVersion>) SWIFTEN_OVERRIDE;
-	};
+            virtual boost::shared_ptr<SoftwareVersion> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<SoftwareVersion>) SWIFTEN_OVERRIDE;
+    };
 }

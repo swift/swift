@@ -9,13 +9,13 @@
 #include <SwifTools/Dock/Dock.h>
 
 namespace Swift {
-	
-	class CocoaApplication;
 
-	class MacOSXDock : public Dock {
-		public:
-			MacOSXDock(CocoaApplication* application);
+    class CocoaApplication;
 
-			virtual void setNumberOfPendingMessages(int i);
-	};
+    class MacOSXDock : public Dock {
+        public:
+            MacOSXDock(CocoaApplication* application);
+
+            virtual void setNumberOfPendingMessages(int i);
+    };
 }

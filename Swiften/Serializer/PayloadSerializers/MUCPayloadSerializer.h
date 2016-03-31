@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCPayloadSerializer : public GenericPayloadSerializer<MUCPayload> {
-		public:
-			MUCPayloadSerializer();
-			virtual std::string serializePayload(boost::shared_ptr<MUCPayload> version)  const;
-	};
+    class SWIFTEN_API MUCPayloadSerializer : public GenericPayloadSerializer<MUCPayload> {
+        public:
+            MUCPayloadSerializer();
+            virtual std::string serializePayload(boost::shared_ptr<MUCPayload> version)  const;
+    };
 }
 

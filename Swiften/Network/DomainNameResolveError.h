@@ -10,8 +10,8 @@
 #include <Swiften/Base/Error.h>
 
 namespace Swift {
-	class SWIFTEN_API DomainNameResolveError : public Error {
-		public:
-			DomainNameResolveError() {}
-	};
+    class SWIFTEN_API DomainNameResolveError : public Error {
+        public:
+            DomainNameResolveError() {}
+    };
 }

@@ -10,23 +10,23 @@
 
 namespace Swift {
 
-	class QtColorToolButton : public QToolButton {
-		Q_OBJECT
-		Q_PROPERTY(QColor color READ getColor WRITE setColor NOTIFY colorChanged)
-		public:
-			explicit QtColorToolButton(QWidget* parent = NULL);
-			void setColor(const QColor& color);
-			const QColor& getColor() const { return color_; }
+    class QtColorToolButton : public QToolButton {
+        Q_OBJECT
+        Q_PROPERTY(QColor color READ getColor WRITE setColor NOTIFY colorChanged)
+        public:
+            explicit QtColorToolButton(QWidget* parent = NULL);
+            void setColor(const QColor& color);
+            const QColor& getColor() const { return color_; }
 
-		signals:
-			void colorChanged(const QColor&);
+        signals:
+            void colorChanged(const QColor&);
 
-		private slots:
-			void onClicked();
+        private slots:
+            void onClicked();
 
-		private:
-			void setColorIcon(const QColor& color);
-			QColor color_;
-	};
+        private:
+            void setColorIcon(const QColor& color);
+            QColor color_;
+    };
 
 }

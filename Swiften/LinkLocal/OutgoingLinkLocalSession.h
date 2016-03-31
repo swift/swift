@@ -17,30 +17,30 @@
 #include <Swiften/Session/Session.h>
 
 namespace Swift {
-	class ConnectionFactory;
-	class XMLParserFactory;	
-	class ToplevelElement;
-	class PayloadParserFactoryCollection;
-	class PayloadSerializerCollection;
+    class ConnectionFactory;
+    class XMLParserFactory;
+    class ToplevelElement;
+    class PayloadParserFactoryCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API OutgoingLinkLocalSession : public Session {
-		public:
-			OutgoingLinkLocalSession(
-					const JID& localJID,
-					const JID& remoteJID,
-					boost::shared_ptr<Connection> connection,
-					PayloadParserFactoryCollection* payloadParserFactories, 
-					PayloadSerializerCollection* payloadSerializers,
-					XMLParserFactory* xmlParserFactory);
+    class SWIFTEN_API OutgoingLinkLocalSession : public Session {
+        public:
+            OutgoingLinkLocalSession(
+                    const JID& localJID,
+                    const JID& remoteJID,
+                    boost::shared_ptr<Connection> connection,
+                    PayloadParserFactoryCollection* payloadParserFactories,
+                    PayloadSerializerCollection* payloadSerializers,
+                    XMLParserFactory* xmlParserFactory);
 
-			void queueElement(boost::shared_ptr<ToplevelElement> element);
+            void queueElement(boost::shared_ptr<ToplevelElement> element);
 
-		private:
-			void handleSessionStarted();
-			void handleElement(boost::shared_ptr<ToplevelElement>);
-			void handleStreamStart(const ProtocolHeader&);
+        private:
+            void handleSessionStarted();
+            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleStreamStart(const ProtocolHeader&);
 
-		private:
-			std::vector<boost::shared_ptr<ToplevelElement> > queuedElements_;
-	};
+        private:
+            std::vector<boost::shared_ptr<ToplevelElement> > queuedElements_;
+    };
 }

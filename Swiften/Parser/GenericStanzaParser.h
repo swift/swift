@@ -13,26 +13,26 @@
 #include <Swiften/Parser/StanzaParser.h>
 
 namespace Swift {
-	
-	class PayloadParserFactoryCollection;
 
-	template<typename STANZA_TYPE>
-	class SWIFTEN_API GenericStanzaParser : public StanzaParser {
-		public:
-			GenericStanzaParser(PayloadParserFactoryCollection* collection) : 
-						StanzaParser(collection) {
-				stanza_ = boost::make_shared<STANZA_TYPE>();
-			}
+    class PayloadParserFactoryCollection;
 
-			virtual boost::shared_ptr<ToplevelElement> getElement() const {
-				return stanza_;
-			}
+    template<typename STANZA_TYPE>
+    class SWIFTEN_API GenericStanzaParser : public StanzaParser {
+        public:
+            GenericStanzaParser(PayloadParserFactoryCollection* collection) :
+                        StanzaParser(collection) {
+                stanza_ = boost::make_shared<STANZA_TYPE>();
+            }
 
-			virtual boost::shared_ptr<STANZA_TYPE> getStanzaGeneric() const {
-				return stanza_;
-			}
+            virtual boost::shared_ptr<ToplevelElement> getElement() const {
+                return stanza_;
+            }
 
-		private:
-			boost::shared_ptr<STANZA_TYPE> stanza_;
-	};
+            virtual boost::shared_ptr<STANZA_TYPE> getStanzaGeneric() const {
+                return stanza_;
+            }
+
+        private:
+            boost::shared_ptr<STANZA_TYPE> stanza_;
+    };
 }

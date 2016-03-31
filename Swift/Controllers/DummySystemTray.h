@@ -9,10 +9,10 @@
 #include <Swift/Controllers/SystemTray.h>
 
 namespace Swift {
-	class DummySystemTray : public SystemTray {
-	public:
-		void setUnreadMessages(bool /*some*/) {}
-		void setStatusType(StatusShow::Type /*type*/) {}
-		void setConnecting() {}
-	};
+    class DummySystemTray : public SystemTray {
+    public:
+        void setUnreadMessages(bool /*some*/) {}
+        void setStatusType(StatusShow::Type /*type*/) {}
+        void setConnecting() {}
+    };
 }

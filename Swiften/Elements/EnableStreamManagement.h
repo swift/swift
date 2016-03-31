@@ -10,8 +10,8 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API EnableStreamManagement : public ToplevelElement {
-		public:
-			EnableStreamManagement() {}
-	};
+    class SWIFTEN_API EnableStreamManagement : public ToplevelElement {
+        public:
+            EnableStreamManagement() {}
+    };
 }

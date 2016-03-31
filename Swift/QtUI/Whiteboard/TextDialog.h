@@ -23,27 +23,27 @@
 #include <QVBoxLayout>
 
 namespace Swift {
-	class TextDialog : public QDialog
-	{
-		Q_OBJECT
-	public:
-		TextDialog(QGraphicsTextItem* item, QWidget* parent = 0);
+    class TextDialog : public QDialog
+    {
+        Q_OBJECT
+    public:
+        TextDialog(QGraphicsTextItem* item, QWidget* parent = 0);
 
-	private:
-		QGraphicsTextItem* item;
-		QLineEdit* editor;
-		QDialogButtonBox* buttonBox;
-		QVBoxLayout* layout;
-		QHBoxLayout* hLayout;
-		QSpinBox* fontSizeBox;
+    private:
+        QGraphicsTextItem* item;
+        QLineEdit* editor;
+        QDialogButtonBox* buttonBox;
+        QVBoxLayout* layout;
+        QHBoxLayout* hLayout;
+        QSpinBox* fontSizeBox;
 
-	signals:
-		void accepted(QGraphicsTextItem* item);
+    signals:
+        void accepted(QGraphicsTextItem* item);
 
-	private slots:
-		void accept();
-		void changeItemText(const QString &text);
-		void changeItemFontSize(int i);
-	};
+    private slots:
+        void accept();
+        void changeItemText(const QString &text);
+        void changeItemFontSize(int i);
+    };
 }
 

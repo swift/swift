@@ -86,96 +86,96 @@
 namespace Swift {
 
 FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
-	serializers_.push_back(new IBBSerializer());
-	serializers_.push_back(new BodySerializer());
-	serializers_.push_back(new SubjectSerializer());
-	serializers_.push_back(new ThreadSerializer());
-	serializers_.push_back(new ChatStateSerializer());
-	serializers_.push_back(new PrioritySerializer());
-	serializers_.push_back(new ErrorSerializer(this));
-	serializers_.push_back(new RosterSerializer());
-	serializers_.push_back(new RosterItemExchangeSerializer());
-	serializers_.push_back(new MUCPayloadSerializer());
-	serializers_.push_back(new MUCDestroyPayloadSerializer());
-	serializers_.push_back(new MUCAdminPayloadSerializer());
-	serializers_.push_back(new MUCInvitationPayloadSerializer());
-	serializers_.push_back(new MUCOwnerPayloadSerializer(this));
-	serializers_.push_back(new MUCUserPayloadSerializer(this));
-	serializers_.push_back(new SoftwareVersionSerializer());
-	serializers_.push_back(new StatusSerializer());
-	serializers_.push_back(new StatusShowSerializer());
-	serializers_.push_back(new DiscoInfoSerializer());
-	serializers_.push_back(new DiscoItemsSerializer());
-	serializers_.push_back(new CapsInfoSerializer());
-	serializers_.push_back(new BlockSerializer<BlockPayload>("block"));
-	serializers_.push_back(new BlockSerializer<UnblockPayload>("unblock"));
-	serializers_.push_back(new BlockSerializer<BlockListPayload>("blocklist"));
-	serializers_.push_back(new ResourceBindSerializer());
-	serializers_.push_back(new StartSessionSerializer());
-	serializers_.push_back(new SecurityLabelSerializer());
-	serializers_.push_back(new SecurityLabelsCatalogSerializer());
-	serializers_.push_back(new StreamInitiationSerializer());
-	serializers_.push_back(new BytestreamsSerializer());
-	serializers_.push_back(new VCardSerializer());
-	serializers_.push_back(new VCardUpdateSerializer());
-	serializers_.push_back(new RawXMLPayloadSerializer());
-	serializers_.push_back(new StorageSerializer());
-	serializers_.push_back(new DelaySerializer());
-	serializers_.push_back(new FormSerializer());
-	serializers_.push_back(new PrivateStorageSerializer(this));
-	serializers_.push_back(new CommandSerializer());
-	serializers_.push_back(new InBandRegistrationPayloadSerializer());
-	serializers_.push_back(new NicknameSerializer());
-	serializers_.push_back(new SearchPayloadSerializer());
-	serializers_.push_back(new ReplaceSerializer());
-	serializers_.push_back(new LastSerializer());
-	serializers_.push_back(new WhiteboardSerializer());
-	serializers_.push_back(new UserLocationSerializer(this));
-	serializers_.push_back(new UserTuneSerializer(this));
-	serializers_.push_back(new IdleSerializer());
-	
-	serializers_.push_back(new StreamInitiationFileInfoSerializer());
-	serializers_.push_back(new JingleFileTransferFileInfoSerializer());
-	serializers_.push_back(new JingleContentPayloadSerializer());
-	serializers_.push_back(new JingleFileTransferDescriptionSerializer());
-	serializers_.push_back(new JingleFileTransferHashSerializer());
-	serializers_.push_back(new JingleIBBTransportPayloadSerializer());
-	serializers_.push_back(new JingleS5BTransportPayloadSerializer());
-	serializers_.push_back(new JinglePayloadSerializer(this));
-	serializers_.push_back(new S5BProxyRequestSerializer());
-	serializers_.push_back(new DeliveryReceiptSerializer());
-	serializers_.push_back(new DeliveryReceiptRequestSerializer());
+    serializers_.push_back(new IBBSerializer());
+    serializers_.push_back(new BodySerializer());
+    serializers_.push_back(new SubjectSerializer());
+    serializers_.push_back(new ThreadSerializer());
+    serializers_.push_back(new ChatStateSerializer());
+    serializers_.push_back(new PrioritySerializer());
+    serializers_.push_back(new ErrorSerializer(this));
+    serializers_.push_back(new RosterSerializer());
+    serializers_.push_back(new RosterItemExchangeSerializer());
+    serializers_.push_back(new MUCPayloadSerializer());
+    serializers_.push_back(new MUCDestroyPayloadSerializer());
+    serializers_.push_back(new MUCAdminPayloadSerializer());
+    serializers_.push_back(new MUCInvitationPayloadSerializer());
+    serializers_.push_back(new MUCOwnerPayloadSerializer(this));
+    serializers_.push_back(new MUCUserPayloadSerializer(this));
+    serializers_.push_back(new SoftwareVersionSerializer());
+    serializers_.push_back(new StatusSerializer());
+    serializers_.push_back(new StatusShowSerializer());
+    serializers_.push_back(new DiscoInfoSerializer());
+    serializers_.push_back(new DiscoItemsSerializer());
+    serializers_.push_back(new CapsInfoSerializer());
+    serializers_.push_back(new BlockSerializer<BlockPayload>("block"));
+    serializers_.push_back(new BlockSerializer<UnblockPayload>("unblock"));
+    serializers_.push_back(new BlockSerializer<BlockListPayload>("blocklist"));
+    serializers_.push_back(new ResourceBindSerializer());
+    serializers_.push_back(new StartSessionSerializer());
+    serializers_.push_back(new SecurityLabelSerializer());
+    serializers_.push_back(new SecurityLabelsCatalogSerializer());
+    serializers_.push_back(new StreamInitiationSerializer());
+    serializers_.push_back(new BytestreamsSerializer());
+    serializers_.push_back(new VCardSerializer());
+    serializers_.push_back(new VCardUpdateSerializer());
+    serializers_.push_back(new RawXMLPayloadSerializer());
+    serializers_.push_back(new StorageSerializer());
+    serializers_.push_back(new DelaySerializer());
+    serializers_.push_back(new FormSerializer());
+    serializers_.push_back(new PrivateStorageSerializer(this));
+    serializers_.push_back(new CommandSerializer());
+    serializers_.push_back(new InBandRegistrationPayloadSerializer());
+    serializers_.push_back(new NicknameSerializer());
+    serializers_.push_back(new SearchPayloadSerializer());
+    serializers_.push_back(new ReplaceSerializer());
+    serializers_.push_back(new LastSerializer());
+    serializers_.push_back(new WhiteboardSerializer());
+    serializers_.push_back(new UserLocationSerializer(this));
+    serializers_.push_back(new UserTuneSerializer(this));
+    serializers_.push_back(new IdleSerializer());
 
-	serializers_.push_back(new PubSubSerializer(this));
-	serializers_.push_back(new PubSubEventSerializer(this));
-	serializers_.push_back(new PubSubOwnerPubSubSerializer(this));
-	serializers_.push_back(new PubSubErrorSerializer());
+    serializers_.push_back(new StreamInitiationFileInfoSerializer());
+    serializers_.push_back(new JingleFileTransferFileInfoSerializer());
+    serializers_.push_back(new JingleContentPayloadSerializer());
+    serializers_.push_back(new JingleFileTransferDescriptionSerializer());
+    serializers_.push_back(new JingleFileTransferHashSerializer());
+    serializers_.push_back(new JingleIBBTransportPayloadSerializer());
+    serializers_.push_back(new JingleS5BTransportPayloadSerializer());
+    serializers_.push_back(new JinglePayloadSerializer(this));
+    serializers_.push_back(new S5BProxyRequestSerializer());
+    serializers_.push_back(new DeliveryReceiptSerializer());
+    serializers_.push_back(new DeliveryReceiptRequestSerializer());
 
-	serializers_.push_back(new ResultSetSerializer());
-	serializers_.push_back(new ForwardedSerializer(this));
-	serializers_.push_back(new MAMResultSerializer(this));
-	serializers_.push_back(new MAMQuerySerializer());
-	serializers_.push_back(new MAMFinSerializer());
+    serializers_.push_back(new PubSubSerializer(this));
+    serializers_.push_back(new PubSubEventSerializer(this));
+    serializers_.push_back(new PubSubOwnerPubSubSerializer(this));
+    serializers_.push_back(new PubSubErrorSerializer());
 
-	serializers_.push_back(new CarbonsDisableSerializer());
-	serializers_.push_back(new CarbonsEnableSerializer());
-	serializers_.push_back(new CarbonsPrivateSerializer());
-	serializers_.push_back(new CarbonsReceivedSerializer(this));
-	serializers_.push_back(new CarbonsSentSerializer(this));
+    serializers_.push_back(new ResultSetSerializer());
+    serializers_.push_back(new ForwardedSerializer(this));
+    serializers_.push_back(new MAMResultSerializer(this));
+    serializers_.push_back(new MAMQuerySerializer());
+    serializers_.push_back(new MAMFinSerializer());
 
-	serializers_.push_back(new IsodeIQDelegationSerializer(this));
-	
-	foreach(PayloadSerializer* serializer, serializers_) {
-		addSerializer(serializer);
-	}
+    serializers_.push_back(new CarbonsDisableSerializer());
+    serializers_.push_back(new CarbonsEnableSerializer());
+    serializers_.push_back(new CarbonsPrivateSerializer());
+    serializers_.push_back(new CarbonsReceivedSerializer(this));
+    serializers_.push_back(new CarbonsSentSerializer(this));
+
+    serializers_.push_back(new IsodeIQDelegationSerializer(this));
+
+    foreach(PayloadSerializer* serializer, serializers_) {
+        addSerializer(serializer);
+    }
 }
 
 FullPayloadSerializerCollection::~FullPayloadSerializerCollection() {
-	foreach(PayloadSerializer* serializer, serializers_) {
-		removeSerializer(serializer);
-		delete serializer;
-	}
-	serializers_.clear();
+    foreach(PayloadSerializer* serializer, serializers_) {
+        removeSerializer(serializer);
+        delete serializer;
+    }
+    serializers_.clear();
 }
 
 }

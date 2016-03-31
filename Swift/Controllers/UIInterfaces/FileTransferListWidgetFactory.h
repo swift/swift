@@ -18,9 +18,9 @@ namespace Swift {
 
 class FileTransferListWidgetFactory {
 public:
-	virtual ~FileTransferListWidgetFactory() {}
+    virtual ~FileTransferListWidgetFactory() {}
 
-	virtual FileTransferListWidget* createFileTransferListWidget() = 0;
+    virtual FileTransferListWidget* createFileTransferListWidget() = 0;
 };
 
 }

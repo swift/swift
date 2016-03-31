@@ -22,29 +22,29 @@
 using namespace Swift;
 
 class DeliveryReceiptSerializerTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(DeliveryReceiptSerializerTest);
-		CPPUNIT_TEST(testSerialize_XEP0184Example3);
-		CPPUNIT_TEST(testSerialize_XEP0184Example4);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(DeliveryReceiptSerializerTest);
+        CPPUNIT_TEST(testSerialize_XEP0184Example3);
+        CPPUNIT_TEST(testSerialize_XEP0184Example4);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void testSerialize_XEP0184Example3() {
-			std::string expected =	"<request xmlns=\"urn:xmpp:receipts\"/>";
+    public:
+        void testSerialize_XEP0184Example3() {
+            std::string expected =    "<request xmlns=\"urn:xmpp:receipts\"/>";
 
-			DeliveryReceiptRequest::ref receipt = boost::make_shared<DeliveryReceiptRequest>();
+            DeliveryReceiptRequest::ref receipt = boost::make_shared<DeliveryReceiptRequest>();
 
-			boost::shared_ptr<DeliveryReceiptRequestSerializer> serializer = boost::make_shared<DeliveryReceiptRequestSerializer>();
-			CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(receipt));
-		}
+            boost::shared_ptr<DeliveryReceiptRequestSerializer> serializer = boost::make_shared<DeliveryReceiptRequestSerializer>();
+            CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(receipt));
+        }
 
-		void testSerialize_XEP0184Example4() {
-			std::string expected =	"<received id=\"richard2-4.1.247\" xmlns=\"urn:xmpp:receipts\"/>";
+        void testSerialize_XEP0184Example4() {
+            std::string expected =    "<received id=\"richard2-4.1.247\" xmlns=\"urn:xmpp:receipts\"/>";
 
-			DeliveryReceipt::ref receipt = boost::make_shared<DeliveryReceipt>("richard2-4.1.247");
+            DeliveryReceipt::ref receipt = boost::make_shared<DeliveryReceipt>("richard2-4.1.247");
 
-			boost::shared_ptr<DeliveryReceiptSerializer> serializer = boost::make_shared<DeliveryReceiptSerializer>();
-			CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(receipt));
-		}
+            boost::shared_ptr<DeliveryReceiptSerializer> serializer = boost::make_shared<DeliveryReceiptSerializer>();
+            CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(receipt));
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DeliveryReceiptSerializerTest);

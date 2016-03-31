@@ -31,53 +31,53 @@ JingleContentPayloadSerializer::JingleContentPayloadSerializer() {
 }
 
 std::string JingleContentPayloadSerializer::serializePayload(boost::shared_ptr<JingleContentPayload> payload) const {
-	XMLElement payloadXML("content");
-	payloadXML.setAttribute("creator", creatorToString(payload->getCreator()));
-	payloadXML.setAttribute("name", payload->getName());
-	
-	if (!payload->getDescriptions().empty()) {
-		// JingleFileTransferDescription
-		JingleFileTransferDescriptionSerializer ftSerializer;
-		JingleFileTransferDescription::ref filetransfer;
-		
-		foreach(JingleDescription::ref desc, payload->getDescriptions()) {
-			if ((filetransfer = boost::dynamic_pointer_cast<JingleFileTransferDescription>(desc))) {
-				payloadXML.addNode(boost::make_shared<XMLRawTextNode>(ftSerializer.serializePayload(filetransfer)));
-			}
-		}
-	}
-	
-	if (!payload->getTransports().empty()) {	
-		// JingleIBBTransportPayload
-		JingleIBBTransportPayloadSerializer ibbSerializer;
-		JingleIBBTransportPayload::ref ibb;
-		
-		// JingleS5BTransportPayload
-		JingleS5BTransportPayloadSerializer s5bSerializer;
-		JingleS5BTransportPayload::ref s5b;
+    XMLElement payloadXML("content");
+    payloadXML.setAttribute("creator", creatorToString(payload->getCreator()));
+    payloadXML.setAttribute("name", payload->getName());
 
-		foreach(JingleTransportPayload::ref transport, payload->getTransports()) {
-			if ((ibb = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
-				payloadXML.addNode(boost::make_shared<XMLRawTextNode>(ibbSerializer.serializePayload(ibb)));
-			} else if ((s5b = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transport))) {
-				payloadXML.addNode(boost::make_shared<XMLRawTextNode>(s5bSerializer.serializePayload(s5b)));
-			}
-		}
-	}
-	return payloadXML.serialize();
+    if (!payload->getDescriptions().empty()) {
+        // JingleFileTransferDescription
+        JingleFileTransferDescriptionSerializer ftSerializer;
+        JingleFileTransferDescription::ref filetransfer;
+
+        foreach(JingleDescription::ref desc, payload->getDescriptions()) {
+            if ((filetransfer = boost::dynamic_pointer_cast<JingleFileTransferDescription>(desc))) {
+                payloadXML.addNode(boost::make_shared<XMLRawTextNode>(ftSerializer.serializePayload(filetransfer)));
+            }
+        }
+    }
+
+    if (!payload->getTransports().empty()) {
+        // JingleIBBTransportPayload
+        JingleIBBTransportPayloadSerializer ibbSerializer;
+        JingleIBBTransportPayload::ref ibb;
+
+        // JingleS5BTransportPayload
+        JingleS5BTransportPayloadSerializer s5bSerializer;
+        JingleS5BTransportPayload::ref s5b;
+
+        foreach(JingleTransportPayload::ref transport, payload->getTransports()) {
+            if ((ibb = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
+                payloadXML.addNode(boost::make_shared<XMLRawTextNode>(ibbSerializer.serializePayload(ibb)));
+            } else if ((s5b = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transport))) {
+                payloadXML.addNode(boost::make_shared<XMLRawTextNode>(s5bSerializer.serializePayload(s5b)));
+            }
+        }
+    }
+    return payloadXML.serialize();
 }
 
 std::string JingleContentPayloadSerializer::creatorToString(JingleContentPayload::Creator creator) const {
-	switch(creator) {
-		case JingleContentPayload::InitiatorCreator:
-			return "initiator";
-		case JingleContentPayload::ResponderCreator:
-			return "responder";
-		case JingleContentPayload::UnknownCreator:
-			SWIFT_LOG(error) << "Serializing unknown creator value.";
-			return "ERROR ERROR ERROR";
-	}
-	assert(false);
-	return "";
+    switch(creator) {
+        case JingleContentPayload::InitiatorCreator:
+            return "initiator";
+        case JingleContentPayload::ResponderCreator:
+            return "responder";
+        case JingleContentPayload::UnknownCreator:
+            SWIFT_LOG(error) << "Serializing unknown creator value.";
+            return "ERROR ERROR ERROR";
+    }
+    assert(false);
+    return "";
 }
 }

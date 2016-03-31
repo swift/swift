@@ -19,18 +19,18 @@
 #include <Swiften/Network/ConnectionServerFactory.h>
 
 namespace Swift {
-	class ConnectionServer;
+    class ConnectionServer;
 
-	class SWIFTEN_API BoostConnectionServerFactory : public ConnectionServerFactory {
-		public:
-			BoostConnectionServerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
+    class SWIFTEN_API BoostConnectionServerFactory : public ConnectionServerFactory {
+        public:
+            BoostConnectionServerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 
-			virtual boost::shared_ptr<ConnectionServer> createConnectionServer(int port);
+            virtual boost::shared_ptr<ConnectionServer> createConnectionServer(int port);
 
-			virtual boost::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress &hostAddress, int port);
+            virtual boost::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress &hostAddress, int port);
 
-		private:
-			boost::shared_ptr<boost::asio::io_service> ioService;
-			EventLoop* eventLoop;
-	};
+        private:
+            boost::shared_ptr<boost::asio::io_service> ioService;
+            EventLoop* eventLoop;
+    };
 }

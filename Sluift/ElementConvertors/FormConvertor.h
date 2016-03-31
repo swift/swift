@@ -12,12 +12,12 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class FormConvertor : public GenericLuaElementConvertor<Form> {
-		public:
-			FormConvertor();
-			virtual ~FormConvertor();
+    class FormConvertor : public GenericLuaElementConvertor<Form> {
+        public:
+            FormConvertor();
+            virtual ~FormConvertor();
 
-			virtual boost::shared_ptr<Form> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<Form>) SWIFTEN_OVERRIDE;
-	};
+            virtual boost::shared_ptr<Form> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<Form>) SWIFTEN_OVERRIDE;
+    };
 }

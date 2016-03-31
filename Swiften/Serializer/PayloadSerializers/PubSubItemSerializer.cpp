@@ -23,17 +23,17 @@ PubSubItemSerializer::~PubSubItemSerializer() {
 }
 
 std::string PubSubItemSerializer::serializePayload(boost::shared_ptr<PubSubItem> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("item", "http://jabber.org/protocol/pubsub");
-	foreach(boost::shared_ptr<Payload> item, payload->getData()) {
-		element.addNode(boost::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(item)->serialize(item)));
-	}
-	if (!payload->getID().empty()) {
-		element.setAttribute("id", payload->getID());
-	}
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("item", "http://jabber.org/protocol/pubsub");
+    foreach(boost::shared_ptr<Payload> item, payload->getData()) {
+        element.addNode(boost::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(item)->serialize(item)));
+    }
+    if (!payload->getID().empty()) {
+        element.setAttribute("id", payload->getID());
+    }
+    return element.serialize();
 }
 
 

@@ -22,14 +22,14 @@
 class Hunspell;
 
 namespace Swift {
-	class HunspellChecker : public SpellChecker {
-		public:
-			HunspellChecker(const char* affix_path, const char* dict_path);
-			virtual ~HunspellChecker();
-			virtual bool isCorrect(const std::string& word);
-			virtual void getSuggestions(const std::string& word, std::vector<std::string>& list);
-			virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions);
-		private:
-			Hunspell* speller_;
-	};
+    class HunspellChecker : public SpellChecker {
+        public:
+            HunspellChecker(const char* affix_path, const char* dict_path);
+            virtual ~HunspellChecker();
+            virtual bool isCorrect(const std::string& word);
+            virtual void getSuggestions(const std::string& word, std::vector<std::string>& list);
+            virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions);
+        private:
+            Hunspell* speller_;
+    };
 }

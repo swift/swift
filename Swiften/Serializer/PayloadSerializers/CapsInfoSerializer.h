@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API CapsInfoSerializer : public GenericPayloadSerializer<CapsInfo> {
-		public:
-			CapsInfoSerializer();
+    class SWIFTEN_API CapsInfoSerializer : public GenericPayloadSerializer<CapsInfo> {
+        public:
+            CapsInfoSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<CapsInfo>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<CapsInfo>)  const;
+    };
 }

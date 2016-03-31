@@ -18,18 +18,18 @@
 
 namespace Swift {
 
-	class MUCSearchWindow {
-		public:
-			virtual ~MUCSearchWindow() {}
+    class MUCSearchWindow {
+        public:
+            virtual ~MUCSearchWindow() {}
 
-			virtual void clearList() = 0;
-			virtual void addService(const MUCService& service) = 0;
-			virtual void addSavedServices(const std::list<JID>& services) = 0;
-			virtual void setSearchInProgress(bool searching) = 0;
+            virtual void clearList() = 0;
+            virtual void addService(const MUCService& service) = 0;
+            virtual void addSavedServices(const std::list<JID>& services) = 0;
+            virtual void setSearchInProgress(bool searching) = 0;
 
-			virtual void show() = 0;
+            virtual void show() = 0;
 
-			boost::signal<void (const JID&)> onSearchService;
-			boost::signal<void (const boost::optional<JID>&)> onFinished;
-	};
+            boost::signal<void (const JID&)> onSearchService;
+            boost::signal<void (const boost::optional<JID>&)> onFinished;
+    };
 }

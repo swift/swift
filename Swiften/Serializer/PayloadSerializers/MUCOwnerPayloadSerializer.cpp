@@ -18,15 +18,15 @@ MUCOwnerPayloadSerializer::MUCOwnerPayloadSerializer(PayloadSerializerCollection
 }
 
 std::string MUCOwnerPayloadSerializer::serializePayload(boost::shared_ptr<MUCOwnerPayload> mucOwner)  const {
-	XMLElement mucElement("query", "http://jabber.org/protocol/muc#owner");
-	boost::shared_ptr<Payload> payload = mucOwner->getPayload();
-	if (payload) {
-		PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
-		if (serializer) {
-			mucElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
-		}
-	}
-	return mucElement.serialize();
+    XMLElement mucElement("query", "http://jabber.org/protocol/muc#owner");
+    boost::shared_ptr<Payload> payload = mucOwner->getPayload();
+    if (payload) {
+        PayloadSerializer* serializer = serializers->getPayloadSerializer(payload);
+        if (serializer) {
+            mucElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
+        }
+    }
+    return mucElement.serialize();
 }
 
 }

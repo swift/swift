@@ -21,45 +21,45 @@
 #include <Swiften/Elements/WhiteboardPayload.h>
 
 namespace Swift {
-	OutgoingWhiteboardSession::OutgoingWhiteboardSession(const JID& jid, IQRouter* router) : WhiteboardSession(jid, router) {
-	}
+    OutgoingWhiteboardSession::OutgoingWhiteboardSession(const JID& jid, IQRouter* router) : WhiteboardSession(jid, router) {
+    }
 
-	OutgoingWhiteboardSession::~OutgoingWhiteboardSession() {
-	}
+    OutgoingWhiteboardSession::~OutgoingWhiteboardSession() {
+    }
 
-	void OutgoingWhiteboardSession::startSession() {
-		boost::shared_ptr<WhiteboardPayload> payload = boost::make_shared<WhiteboardPayload>(WhiteboardPayload::SessionRequest);
-		boost::shared_ptr<GenericRequest<WhiteboardPayload> > request = boost::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
-		request->onResponse.connect(boost::bind(&OutgoingWhiteboardSession::handleRequestResponse, this, _1, _2));
-		request->send();
-	}
+    void OutgoingWhiteboardSession::startSession() {
+        boost::shared_ptr<WhiteboardPayload> payload = boost::make_shared<WhiteboardPayload>(WhiteboardPayload::SessionRequest);
+        boost::shared_ptr<GenericRequest<WhiteboardPayload> > request = boost::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
+        request->onResponse.connect(boost::bind(&OutgoingWhiteboardSession::handleRequestResponse, this, _1, _2));
+        request->send();
+    }
 
-	void OutgoingWhiteboardSession::handleRequestResponse(boost::shared_ptr<WhiteboardPayload> /*payload*/, ErrorPayload::ref error) {
-		if (error) {
-			onRequestRejected(toJID_);
-		}
-	}
+    void OutgoingWhiteboardSession::handleRequestResponse(boost::shared_ptr<WhiteboardPayload> /*payload*/, ErrorPayload::ref error) {
+        if (error) {
+            onRequestRejected(toJID_);
+        }
+    }
 
-	void OutgoingWhiteboardSession::handleIncomingOperation(WhiteboardOperation::ref operation) {
-		WhiteboardOperation::ref op = server.handleClientOperationReceived(operation);
-		if (op->getPos() != -1) {
-			onOperationReceived(op);
-		}
-		lastOpID = op->getID();
+    void OutgoingWhiteboardSession::handleIncomingOperation(WhiteboardOperation::ref operation) {
+        WhiteboardOperation::ref op = server.handleClientOperationReceived(operation);
+        if (op->getPos() != -1) {
+            onOperationReceived(op);
+        }
+        lastOpID = op->getID();
 
-		WhiteboardPayload::ref payload = boost::make_shared<WhiteboardPayload>();
-		payload->setOperation(op);
-		sendPayload(payload);
-	}
+        WhiteboardPayload::ref payload = boost::make_shared<WhiteboardPayload>();
+        payload->setOperation(op);
+        sendPayload(payload);
+    }
 
-	void OutgoingWhiteboardSession::sendOperation(WhiteboardOperation::ref operation) {
-		operation->setID(idGenerator.generateID());
-		operation->setParentID(lastOpID);
-		lastOpID = operation->getID();
+    void OutgoingWhiteboardSession::sendOperation(WhiteboardOperation::ref operation) {
+        operation->setID(idGenerator.generateID());
+        operation->setParentID(lastOpID);
+        lastOpID = operation->getID();
 
-		server.handleLocalOperationReceived(operation);
-		WhiteboardPayload::ref payload = boost::make_shared<WhiteboardPayload>();
-		payload->setOperation(operation);
-		sendPayload(payload);
-	}
+        server.handleLocalOperationReceived(operation);
+        WhiteboardPayload::ref payload = boost::make_shared<WhiteboardPayload>();
+        payload->setOperation(operation);
+        sendPayload(payload);
+    }
 }

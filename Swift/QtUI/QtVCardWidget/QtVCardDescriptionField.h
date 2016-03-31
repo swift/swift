@@ -22,27 +22,27 @@
 namespace Swift {
 
 class QtVCardDescriptionField : public QtVCardGeneralField {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO(tr("Description"), 1, QtVCardDescriptionField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Description"), 1, QtVCardDescriptionField)
 
-		QtVCardDescriptionField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardDescriptionField();
+        QtVCardDescriptionField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        virtual ~QtVCardDescriptionField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setDescription(const std::string& description);
-		std::string getDescription() const;
+        void setDescription(const std::string& description);
+        std::string getDescription() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QPlainTextEdit* descriptionPlainTextEdit;
+    private:
+        QPlainTextEdit* descriptionPlainTextEdit;
 };
 
 }

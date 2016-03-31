@@ -9,16 +9,16 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	CarbonsDisableSerializer::CarbonsDisableSerializer() : GenericPayloadSerializer<CarbonsDisable>() {
+    CarbonsDisableSerializer::CarbonsDisableSerializer() : GenericPayloadSerializer<CarbonsDisable>() {
 
-	}
+    }
 
-	CarbonsDisableSerializer::~CarbonsDisableSerializer() {
+    CarbonsDisableSerializer::~CarbonsDisableSerializer() {
 
-	}
+    }
 
- 	std::string CarbonsDisableSerializer::serializePayload(boost::shared_ptr<CarbonsDisable>)	const {
-		XMLElement element("disable", "urn:xmpp:carbons:2");
-		return element.serialize();
-	}
+     std::string CarbonsDisableSerializer::serializePayload(boost::shared_ptr<CarbonsDisable>)    const {
+        XMLElement element("disable", "urn:xmpp:carbons:2");
+        return element.serialize();
+    }
 }

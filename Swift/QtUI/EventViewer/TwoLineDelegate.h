@@ -12,18 +12,18 @@
 #include <Swift/QtUI/Roster/DelegateCommons.h>
 
 namespace Swift {
-	class TwoLineDelegate {
-		public:
-			TwoLineDelegate(int firstRole, int secondRole, bool wrap);
-			~TwoLineDelegate();
-			QSize sizeHint(const QStyleOptionViewItem& option, QtEvent* event) const;
-			void paint(QPainter* painter, const QStyleOptionViewItem& option, QtEvent* event) const;
-		private:
-			DelegateCommons common_;
-			int firstRole_;
-			int secondRole_;
-			bool wrap_;
-	};
+    class TwoLineDelegate {
+        public:
+            TwoLineDelegate(int firstRole, int secondRole, bool wrap);
+            ~TwoLineDelegate();
+            QSize sizeHint(const QStyleOptionViewItem& option, QtEvent* event) const;
+            void paint(QPainter* painter, const QStyleOptionViewItem& option, QtEvent* event) const;
+        private:
+            DelegateCommons common_;
+            int firstRole_;
+            int secondRole_;
+            bool wrap_;
+    };
 
 }
 

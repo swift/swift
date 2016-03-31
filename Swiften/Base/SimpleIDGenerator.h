@@ -13,18 +13,18 @@
 
 namespace Swift {
 
-	/**
-	 * @brief The SimpleIDGenerator class implements a IDGenerator generating consecutive ID strings from
-	 * the lower case latin alphabet.
-	 */
+    /**
+     * @brief The SimpleIDGenerator class implements a IDGenerator generating consecutive ID strings from
+     * the lower case latin alphabet.
+     */
 
-	class SWIFTEN_API SimpleIDGenerator : public IDGenerator {
-		public:
-			SimpleIDGenerator();
+    class SWIFTEN_API SimpleIDGenerator : public IDGenerator {
+        public:
+            SimpleIDGenerator();
 
-			std::string generateID();
+            std::string generateID();
 
-		private:
-			std::string currentID;
-	};
+        private:
+            std::string currentID;
+    };
 }

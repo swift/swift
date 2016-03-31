@@ -11,12 +11,12 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API RawXMLPayloadSerializer : public GenericPayloadSerializer<RawXMLPayload> {
-		public:
-			RawXMLPayloadSerializer() : GenericPayloadSerializer<RawXMLPayload>() {}
+    class SWIFTEN_API RawXMLPayloadSerializer : public GenericPayloadSerializer<RawXMLPayload> {
+        public:
+            RawXMLPayloadSerializer() : GenericPayloadSerializer<RawXMLPayload>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<RawXMLPayload> p)  const {
-				return p->getRawXML();
-			}
-	};
+            virtual std::string serializePayload(boost::shared_ptr<RawXMLPayload> p)  const {
+                return p->getRawXML();
+            }
+    };
 }

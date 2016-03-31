@@ -14,100 +14,100 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	/**
-	 * disco#info from XEP-0030
-	 */
-	class SWIFTEN_API DiscoInfo : public Payload {
-		public:
-			typedef boost::shared_ptr<DiscoInfo> ref;
+    /**
+     * disco#info from XEP-0030
+     */
+    class SWIFTEN_API DiscoInfo : public Payload {
+        public:
+            typedef boost::shared_ptr<DiscoInfo> ref;
 
-			static const std::string ChatStatesFeature;
-			static const std::string SecurityLabelsFeature;
-			static const std::string SecurityLabelsCatalogFeature;
-			static const std::string JabberSearchFeature;
-			static const std::string CommandsFeature;
-			static const std::string MessageCorrectionFeature;
-			static const std::string JingleFeature;
-			static const std::string JingleFTFeature;
-			static const std::string JingleTransportsIBBFeature;
-			static const std::string JingleTransportsS5BFeature;
-			static const std::string Bytestream;
-			static const std::string MessageDeliveryReceiptsFeature;
-			static const std::string WhiteboardFeature;
-			static const std::string BlockingCommandFeature;
+            static const std::string ChatStatesFeature;
+            static const std::string SecurityLabelsFeature;
+            static const std::string SecurityLabelsCatalogFeature;
+            static const std::string JabberSearchFeature;
+            static const std::string CommandsFeature;
+            static const std::string MessageCorrectionFeature;
+            static const std::string JingleFeature;
+            static const std::string JingleFTFeature;
+            static const std::string JingleTransportsIBBFeature;
+            static const std::string JingleTransportsS5BFeature;
+            static const std::string Bytestream;
+            static const std::string MessageDeliveryReceiptsFeature;
+            static const std::string WhiteboardFeature;
+            static const std::string BlockingCommandFeature;
 
-			class Identity {
-				public:
-					Identity(const std::string& name, const std::string& category = "client", const std::string& type = "pc", const std::string& lang = "") : name_(name), category_(category), type_(type), lang_(lang) {
-					}
+            class Identity {
+                public:
+                    Identity(const std::string& name, const std::string& category = "client", const std::string& type = "pc", const std::string& lang = "") : name_(name), category_(category), type_(type), lang_(lang) {
+                    }
 
-					const std::string& getCategory() const {
-						return category_;
-					}
-					
-					const std::string& getType() const {
-						return type_;
-					}
+                    const std::string& getCategory() const {
+                        return category_;
+                    }
 
-					const std::string& getLanguage() const {
-						return lang_;
-					}
+                    const std::string& getType() const {
+                        return type_;
+                    }
 
-					const std::string& getName() const {
-						return name_;
-					}
+                    const std::string& getLanguage() const {
+                        return lang_;
+                    }
 
-					// Sorted according to XEP-115 rules
-					bool operator<(const Identity& other) const;
+                    const std::string& getName() const {
+                        return name_;
+                    }
 
-				private:
-					std::string name_;
-					std::string category_;
-					std::string type_;
-					std::string lang_;
-			};
+                    // Sorted according to XEP-115 rules
+                    bool operator<(const Identity& other) const;
 
-			DiscoInfo() {
-			}
+                private:
+                    std::string name_;
+                    std::string category_;
+                    std::string type_;
+                    std::string lang_;
+            };
 
-			const std::string& getNode() const {
-				return node_;
-			}
+            DiscoInfo() {
+            }
 
-			void setNode(const std::string& node) {
-				node_ = node;
-			}
+            const std::string& getNode() const {
+                return node_;
+            }
 
-			const std::vector<Identity>& getIdentities() const {
-				return identities_;
-			}
+            void setNode(const std::string& node) {
+                node_ = node;
+            }
 
-			void addIdentity(const Identity& identity) {
-				identities_.push_back(identity);
-			}
+            const std::vector<Identity>& getIdentities() const {
+                return identities_;
+            }
 
-			const std::vector<std::string>& getFeatures() const {
-				return features_;
-			}
+            void addIdentity(const Identity& identity) {
+                identities_.push_back(identity);
+            }
 
-			void addFeature(const std::string& feature) {
-				features_.push_back(feature);
-			}
+            const std::vector<std::string>& getFeatures() const {
+                return features_;
+            }
 
-			bool hasFeature(const std::string& feature) const;
+            void addFeature(const std::string& feature) {
+                features_.push_back(feature);
+            }
 
-			void addExtension(Form::ref form) {
-				extensions_.push_back(form);
-			}
+            bool hasFeature(const std::string& feature) const;
 
-			const std::vector<Form::ref>& getExtensions() const {
-				return extensions_;
-			}
+            void addExtension(Form::ref form) {
+                extensions_.push_back(form);
+            }
 
-		private:
-			std::string node_;
-			std::vector<Identity> identities_;
-			std::vector<std::string> features_;
-			std::vector<Form::ref> extensions_;
-	};
+            const std::vector<Form::ref>& getExtensions() const {
+                return extensions_;
+            }
+
+        private:
+            std::string node_;
+            std::vector<Identity> identities_;
+            std::vector<std::string> features_;
+            std::vector<Form::ref> extensions_;
+    };
 }

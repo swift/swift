@@ -14,27 +14,27 @@
 #include <Swiften/Queries/Request.h>
 
 namespace Swift {
-	class SWIFTEN_API SetRosterRequest : public Request {
-		public:
-			typedef boost::shared_ptr<SetRosterRequest> ref;
+    class SWIFTEN_API SetRosterRequest : public Request {
+        public:
+            typedef boost::shared_ptr<SetRosterRequest> ref;
 
-			static ref create(RosterPayload::ref payload, IQRouter* router) {
-				return ref(new SetRosterRequest(JID(), payload, router));
-			}
+            static ref create(RosterPayload::ref payload, IQRouter* router) {
+                return ref(new SetRosterRequest(JID(), payload, router));
+            }
 
-			static ref create(RosterPayload::ref payload, const JID& to, IQRouter* router) {
-				return ref(new SetRosterRequest(to, payload, router));
-			}
+            static ref create(RosterPayload::ref payload, const JID& to, IQRouter* router) {
+                return ref(new SetRosterRequest(to, payload, router));
+            }
 
-		private:
-			SetRosterRequest(const JID& to, boost::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, to, boost::shared_ptr<RosterPayload>(payload), router) {
-			}
+        private:
+            SetRosterRequest(const JID& to, boost::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, to, boost::shared_ptr<RosterPayload>(payload), router) {
+            }
 
-			virtual void handleResponse(boost::shared_ptr<Payload> /*payload*/, ErrorPayload::ref error) {
-				onResponse(error);
-			}
+            virtual void handleResponse(boost::shared_ptr<Payload> /*payload*/, ErrorPayload::ref error) {
+                onResponse(error);
+            }
 
-		public:
-			boost::signal<void (ErrorPayload::ref)> onResponse;
-	};
+        public:
+            boost::signal<void (ErrorPayload::ref)> onResponse;
+    };
 }

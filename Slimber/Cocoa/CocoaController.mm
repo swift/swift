@@ -11,19 +11,19 @@
 #include <Slimber/MainController.h>
 
 @implementation CocoaController {
-	CocoaMenulet* menulet;
-	MainController* main;
+    CocoaMenulet* menulet;
+    MainController* main;
 }
 
 - (void) dealloc {
-	delete main;
-	delete menulet;
-	[super dealloc];
+    delete main;
+    delete menulet;
+    [super dealloc];
 }
 
 - (void) awakeFromNib {
-	menulet = new CocoaMenulet();
-	main = new MainController(menulet, eventLoop);
+    menulet = new CocoaMenulet();
+    main = new MainController(menulet, eventLoop);
 }
 
 @end

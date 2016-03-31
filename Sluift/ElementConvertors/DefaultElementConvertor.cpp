@@ -19,12 +19,12 @@ DefaultElementConvertor::~DefaultElementConvertor() {
 }
 
 boost::shared_ptr<Element> DefaultElementConvertor::convertFromLua(lua_State*, int, const std::string& type) {
-	std::cerr << "Warning: Unable to convert type '" << type << "'" << std::endl;
-	return boost::shared_ptr<Element>();
+    std::cerr << "Warning: Unable to convert type '" << type << "'" << std::endl;
+    return boost::shared_ptr<Element>();
 }
 
 boost::optional<std::string> DefaultElementConvertor::convertToLua(lua_State*, boost::shared_ptr<Element>) {
-	// Should have been handled by the raw XML convertor
-	assert(false);
-	return NO_RESULT;
+    // Should have been handled by the raw XML convertor
+    assert(false);
+    return NO_RESULT;
 }

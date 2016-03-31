@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API StreamErrorSerializer : public GenericElementSerializer<StreamError> {
-		public:
-			StreamErrorSerializer();
+    class SWIFTEN_API StreamErrorSerializer : public GenericElementSerializer<StreamError> {
+        public:
+            StreamErrorSerializer();
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> error) const;
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> error) const;
+    };
 }

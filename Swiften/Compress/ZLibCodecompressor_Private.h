@@ -11,7 +11,7 @@
 #include <Swiften/Compress/ZLibCodecompressor.h>
 
 namespace Swift {
-	struct ZLibCodecompressor::Private {
-		z_stream stream;
-	};
+    struct ZLibCodecompressor::Private {
+        z_stream stream;
+    };
 }

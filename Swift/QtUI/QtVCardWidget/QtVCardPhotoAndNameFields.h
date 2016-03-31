@@ -12,51 +12,51 @@
 #include <Swiften/Base/ByteArray.h>
 
 namespace Ui {
-	class QtVCardPhotoAndNameFields;
+    class QtVCardPhotoAndNameFields;
 }
 
 
 namespace Swift {
 
-	class QtVCardPhotoAndNameFields : public QWidget {
-		Q_OBJECT
-		Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
+    class QtVCardPhotoAndNameFields : public QWidget {
+        Q_OBJECT
+        Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
-		public:
-			explicit QtVCardPhotoAndNameFields(QWidget* parent = 0);
-			~QtVCardPhotoAndNameFields();
+        public:
+            explicit QtVCardPhotoAndNameFields(QWidget* parent = 0);
+            ~QtVCardPhotoAndNameFields();
 
-			bool isEditable() const;
-			void setEditable(bool);
+            bool isEditable() const;
+            void setEditable(bool);
 
-			void setAvatar(const ByteArray& data, const std::string& type);
-			ByteArray getAvatarData() const;
-			std::string getAvatarType() const;
+            void setAvatar(const ByteArray& data, const std::string& type);
+            ByteArray getAvatarData() const;
+            std::string getAvatarType() const;
 
-			void setFormattedName(const QString& formattedName);
-			QString getFormattedName() const;
+            void setFormattedName(const QString& formattedName);
+            QString getFormattedName() const;
 
-			void setNickname(const QString& nickname);
-			QString getNickname() const;
+            void setNickname(const QString& nickname);
+            QString getNickname() const;
 
-			void setPrefix(const QString& prefix);
-			QString getPrefix() const;
+            void setPrefix(const QString& prefix);
+            QString getPrefix() const;
 
-			void setGivenName(const QString& givenName);
-			QString getGivenName() const;
+            void setGivenName(const QString& givenName);
+            QString getGivenName() const;
 
-			void setMiddleName(const QString& middleName);
-			QString getMiddleName() const;
+            void setMiddleName(const QString& middleName);
+            QString getMiddleName() const;
 
-			void setFamilyName(const QString& familyName);
-			QString getFamilyName() const;
+            void setFamilyName(const QString& familyName);
+            QString getFamilyName() const;
 
-			void setSuffix(const QString& suffix);
-			QString getSuffix() const;
+            void setSuffix(const QString& suffix);
+            QString getSuffix() const;
 
-		private:
-			Ui::QtVCardPhotoAndNameFields* ui;
-			bool editable;
-	};
+        private:
+            Ui::QtVCardPhotoAndNameFields* ui;
+            bool editable;
+    };
 
 }

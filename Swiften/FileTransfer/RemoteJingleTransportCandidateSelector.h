@@ -27,37 +27,37 @@
 #include <Swiften/Network/Connection.h>
 
 namespace Swift {
-	class ConnectionFactory;
-	class TimerFactory;
+    class ConnectionFactory;
+    class TimerFactory;
 
-	class RemoteJingleTransportCandidateSelector {
-		public:
-			RemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*, const FileTransferOptions&);
-			virtual ~RemoteJingleTransportCandidateSelector();
+    class RemoteJingleTransportCandidateSelector {
+        public:
+            RemoteJingleTransportCandidateSelector(ConnectionFactory*, TimerFactory*, const FileTransferOptions&);
+            virtual ~RemoteJingleTransportCandidateSelector();
 
-			virtual void addCandidates(const std::vector<JingleS5BTransportPayload::Candidate>&);
-			virtual void setSOCKS5DstAddr(const std::string&);
-			virtual void startSelectingCandidate();
-			virtual void stopSelectingCandidate();
+            virtual void addCandidates(const std::vector<JingleS5BTransportPayload::Candidate>&);
+            virtual void setSOCKS5DstAddr(const std::string&);
+            virtual void startSelectingCandidate();
+            virtual void stopSelectingCandidate();
 
-			boost::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, boost::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
+            boost::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, boost::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
 
-		private:
-			void tryNextCandidate();
-			void handleSessionReady(bool error);
+        private:
+            void tryNextCandidate();
+            void handleSessionReady(bool error);
 
-		private:
-			ConnectionFactory* connectionFactory;
-			TimerFactory* timerFactory;
+        private:
+            ConnectionFactory* connectionFactory;
+            TimerFactory* timerFactory;
 
-			std::priority_queue<
-				JingleS5BTransportPayload::Candidate, 
-				std::vector<JingleS5BTransportPayload::Candidate>, 
-				JingleS5BTransportPayload::CompareCandidate> candidates;
-			boost::shared_ptr<SOCKS5BytestreamClientSession> s5bSession;
-			boost::bsignals::connection sessionReadyConnection;
-			JingleS5BTransportPayload::Candidate lastCandidate;
-			std::string socks5DstAddr;
-			FileTransferOptions options;
-		};
+            std::priority_queue<
+                JingleS5BTransportPayload::Candidate,
+                std::vector<JingleS5BTransportPayload::Candidate>,
+                JingleS5BTransportPayload::CompareCandidate> candidates;
+            boost::shared_ptr<SOCKS5BytestreamClientSession> s5bSession;
+            boost::bsignals::connection sessionReadyConnection;
+            JingleS5BTransportPayload::Candidate lastCandidate;
+            std::string socks5DstAddr;
+            FileTransferOptions options;
+        };
 }

@@ -27,186 +27,186 @@
 using namespace Swift;
 
 class VCardUpdateAvatarManagerTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(VCardUpdateAvatarManagerTest);
-		CPPUNIT_TEST(testUpdate_NewHashNewVCardRequestsVCard);
-		CPPUNIT_TEST(testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive);
-		CPPUNIT_TEST(testUpdate_KnownHash);
-		CPPUNIT_TEST(testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification);
-		CPPUNIT_TEST(testVCardWithEmptyPhoto);
-		CPPUNIT_TEST(testStanzaChannelReset_ClearsHash);
-		CPPUNIT_TEST(testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(VCardUpdateAvatarManagerTest);
+        CPPUNIT_TEST(testUpdate_NewHashNewVCardRequestsVCard);
+        CPPUNIT_TEST(testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive);
+        CPPUNIT_TEST(testUpdate_KnownHash);
+        CPPUNIT_TEST(testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification);
+        CPPUNIT_TEST(testVCardWithEmptyPhoto);
+        CPPUNIT_TEST(testStanzaChannelReset_ClearsHash);
+        CPPUNIT_TEST(testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void setUp() {
-			crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-			ownJID = JID("foo@fum.com/bum");
-			stanzaChannel = new DummyStanzaChannel();
-			stanzaChannel->setAvailable(true);
-			iqRouter = new IQRouter(stanzaChannel);
-			mucRegistry = new DummyMUCRegistry();
-			avatarStorage = new AvatarMemoryStorage();
-			vcardStorage = new VCardMemoryStorage(crypto.get());
-			vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
-			avatar1 = createByteArray("abcdefg");
-			avatar1Hash = Hexify::hexify(crypto->getSHA1Hash(avatar1));
-			user1 = JID("user1@bar.com/bla");
-			user2 = JID("user2@foo.com/baz");
-		}
-		
+    public:
+        void setUp() {
+            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            ownJID = JID("foo@fum.com/bum");
+            stanzaChannel = new DummyStanzaChannel();
+            stanzaChannel->setAvailable(true);
+            iqRouter = new IQRouter(stanzaChannel);
+            mucRegistry = new DummyMUCRegistry();
+            avatarStorage = new AvatarMemoryStorage();
+            vcardStorage = new VCardMemoryStorage(crypto.get());
+            vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
+            avatar1 = createByteArray("abcdefg");
+            avatar1Hash = Hexify::hexify(crypto->getSHA1Hash(avatar1));
+            user1 = JID("user1@bar.com/bla");
+            user2 = JID("user2@foo.com/baz");
+        }
 
-		void tearDown() {
-			delete vcardManager;
-			delete vcardStorage;
-			delete avatarStorage;
-			delete mucRegistry;
-			delete iqRouter;
-			delete stanzaChannel;
-		}
 
-		void testUpdate_NewHashNewVCardRequestsVCard() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+        void tearDown() {
+            delete vcardManager;
+            delete vcardStorage;
+            delete avatarStorage;
+            delete mucRegistry;
+            delete iqRouter;
+            delete stanzaChannel;
+        }
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, user1.toBare(), IQ::Get));
-		}
+        void testUpdate_NewHashNewVCardRequestsVCard() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 
-		void testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
-			stanzaChannel->onIQReceived(createVCardResult(avatar1));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, user1.toBare(), IQ::Get));
+        }
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
-			boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
-			CPPUNIT_ASSERT(hash);
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
-			CPPUNIT_ASSERT(avatarStorage->hasAvatar(avatar1Hash));
-			CPPUNIT_ASSERT_EQUAL(avatar1, avatarStorage->getAvatar(avatar1Hash));
-		}
+        void testUpdate_NewHashStoresAvatarAndEmitsNotificationOnVCardReceive() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+            stanzaChannel->onIQReceived(createVCardResult(avatar1));
 
-		void testUpdate_KnownHash() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
-			stanzaChannel->onIQReceived(createVCardResult(avatar1));
-			changes.clear();
-			stanzaChannel->sentStanzas.clear();
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
+            boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
+            CPPUNIT_ASSERT(hash);
+            CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
+            CPPUNIT_ASSERT(avatarStorage->hasAvatar(avatar1Hash));
+            CPPUNIT_ASSERT_EQUAL(avatar1, avatarStorage->getAvatar(avatar1Hash));
+        }
 
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+        void testUpdate_KnownHash() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+            stanzaChannel->onIQReceived(createVCardResult(avatar1));
+            changes.clear();
+            stanzaChannel->sentStanzas.clear();
 
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
-		}
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 
-		void testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
-			stanzaChannel->onIQReceived(createVCardResult(avatar1));
-			changes.clear();
-			stanzaChannel->sentStanzas.clear();
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
 
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user2, avatar1Hash));
+        void testUpdate_KnownHashFromDifferentUserDoesNotRequestVCardButTriggersNotification() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+            stanzaChannel->onIQReceived(createVCardResult(avatar1));
+            changes.clear();
+            stanzaChannel->sentStanzas.clear();
 
-			CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(user2.toBare(), changes[0]);
-			boost::optional<std::string> hash = testling->getAvatarHash(user2.toBare());
-			CPPUNIT_ASSERT(hash);
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
-		}
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user2, avatar1Hash));
 
-		void testVCardWithEmptyPhoto() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			vcardManager->requestVCard(JID("foo@bar.com"));
-			stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
-			
-			CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(crypto->getSHA1Hash(ByteArray()))));
-			boost::optional<std::string> hash = testling->getAvatarHash(JID("foo@bar.com"));
-			CPPUNIT_ASSERT(hash);
-			CPPUNIT_ASSERT_EQUAL(std::string(), *hash);
-		}
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(user2.toBare(), changes[0]);
+            boost::optional<std::string> hash = testling->getAvatarHash(user2.toBare());
+            CPPUNIT_ASSERT(hash);
+            CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
+        }
 
-		void testStanzaChannelReset_ClearsHash() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
-			stanzaChannel->onIQReceived(createVCardResult(avatar1));
-			changes.clear();
-			stanzaChannel->sentStanzas.clear();
+        void testVCardWithEmptyPhoto() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            vcardManager->requestVCard(JID("foo@bar.com"));
+            stanzaChannel->onIQReceived(createVCardResult(ByteArray()));
 
-			stanzaChannel->setAvailable(false);
-			stanzaChannel->setAvailable(true);
+            CPPUNIT_ASSERT(!avatarStorage->hasAvatar(Hexify::hexify(crypto->getSHA1Hash(ByteArray()))));
+            boost::optional<std::string> hash = testling->getAvatarHash(JID("foo@bar.com"));
+            CPPUNIT_ASSERT(hash);
+            CPPUNIT_ASSERT_EQUAL(std::string(), *hash);
+        }
 
-			CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
-			boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
-			CPPUNIT_ASSERT(!hash);
-			//CPPUNIT_ASSERT_EQUAL(std::string(""), *hash);
-		}
+        void testStanzaChannelReset_ClearsHash() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+            stanzaChannel->onIQReceived(createVCardResult(avatar1));
+            changes.clear();
+            stanzaChannel->sentStanzas.clear();
 
-		void testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash() {
-			boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
-			stanzaChannel->onIQReceived(createVCardResult(avatar1));
-			changes.clear();
-			stanzaChannel->sentStanzas.clear();
+            stanzaChannel->setAvailable(false);
+            stanzaChannel->setAvailable(true);
 
-			stanzaChannel->setAvailable(false);
-			stanzaChannel->setAvailable(true);
-			stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[0]);
+            boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
+            CPPUNIT_ASSERT(!hash);
+            //CPPUNIT_ASSERT_EQUAL(std::string(""), *hash);
+        }
 
-			CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(changes.size()));
-			CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[1]);
-			boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
-			CPPUNIT_ASSERT(hash);
-			CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
-		}
+        void testStanzaChannelReset_ReceiveHashAfterResetUpdatesHash() {
+            boost::shared_ptr<VCardUpdateAvatarManager> testling = createManager();
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
+            stanzaChannel->onIQReceived(createVCardResult(avatar1));
+            changes.clear();
+            stanzaChannel->sentStanzas.clear();
 
-	private:
-		boost::shared_ptr<VCardUpdateAvatarManager> createManager() {
-			boost::shared_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, crypto.get(), mucRegistry));
-			result->onAvatarChanged.connect(boost::bind(&VCardUpdateAvatarManagerTest::handleAvatarChanged, this, _1));
-			return result;
-		}
+            stanzaChannel->setAvailable(false);
+            stanzaChannel->setAvailable(true);
+            stanzaChannel->onPresenceReceived(createPresenceWithPhotoHash(user1, avatar1Hash));
 
-		boost::shared_ptr<Presence> createPresenceWithPhotoHash(const JID& jid, const std::string& hash) {
-			boost::shared_ptr<Presence> presence(new Presence());
-			presence->setFrom(jid);
-			presence->addPayload(boost::make_shared<VCardUpdate>(hash));
-			return presence;
-		}
+            CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(user1.toBare(), changes[1]);
+            boost::optional<std::string> hash = testling->getAvatarHash(user1.toBare());
+            CPPUNIT_ASSERT(hash);
+            CPPUNIT_ASSERT_EQUAL(avatar1Hash, *hash);
+        }
 
-		IQ::ref createVCardResult(const ByteArray& avatar) {
-			VCard::ref vcard(new VCard());
-			if (!avatar.empty()) {
-				vcard->setPhoto(avatar);
-			}
-			return IQ::createResult(JID("baz@fum.com"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
-		}
+    private:
+        boost::shared_ptr<VCardUpdateAvatarManager> createManager() {
+            boost::shared_ptr<VCardUpdateAvatarManager> result(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, crypto.get(), mucRegistry));
+            result->onAvatarChanged.connect(boost::bind(&VCardUpdateAvatarManagerTest::handleAvatarChanged, this, _1));
+            return result;
+        }
 
-		void handleAvatarChanged(const JID& jid) {
-			changes.push_back(jid);
-		}
+        boost::shared_ptr<Presence> createPresenceWithPhotoHash(const JID& jid, const std::string& hash) {
+            boost::shared_ptr<Presence> presence(new Presence());
+            presence->setFrom(jid);
+            presence->addPayload(boost::make_shared<VCardUpdate>(hash));
+            return presence;
+        }
 
-	private:
-		struct DummyMUCRegistry : public MUCRegistry {
-			bool isMUC(const JID& jid) const { return std::find(mucs_.begin(), mucs_.end(), jid) != mucs_.end(); }
-			std::vector<JID> mucs_;
-		};
+        IQ::ref createVCardResult(const ByteArray& avatar) {
+            VCard::ref vcard(new VCard());
+            if (!avatar.empty()) {
+                vcard->setPhoto(avatar);
+            }
+            return IQ::createResult(JID("baz@fum.com"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+        }
 
-		JID ownJID;
-		DummyStanzaChannel* stanzaChannel;
-		IQRouter* iqRouter;
-		DummyMUCRegistry* mucRegistry;
-		AvatarMemoryStorage* avatarStorage;
-		VCardManager* vcardManager;
-		VCardMemoryStorage* vcardStorage;
-		ByteArray avatar1;
-		std::string avatar1Hash;
-		std::vector<JID> changes;
-		JID user1;
-		JID user2;
-		boost::shared_ptr<CryptoProvider> crypto;
+        void handleAvatarChanged(const JID& jid) {
+            changes.push_back(jid);
+        }
+
+    private:
+        struct DummyMUCRegistry : public MUCRegistry {
+            bool isMUC(const JID& jid) const { return std::find(mucs_.begin(), mucs_.end(), jid) != mucs_.end(); }
+            std::vector<JID> mucs_;
+        };
+
+        JID ownJID;
+        DummyStanzaChannel* stanzaChannel;
+        IQRouter* iqRouter;
+        DummyMUCRegistry* mucRegistry;
+        AvatarMemoryStorage* avatarStorage;
+        VCardManager* vcardManager;
+        VCardMemoryStorage* vcardStorage;
+        ByteArray avatar1;
+        std::string avatar1Hash;
+        std::vector<JID> changes;
+        JID user1;
+        JID user2;
+        boost::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(VCardUpdateAvatarManagerTest);

@@ -10,16 +10,16 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API ZLibCodecompressor {
-		public:
-			ZLibCodecompressor();
-			virtual ~ZLibCodecompressor();
+    class SWIFTEN_API ZLibCodecompressor {
+        public:
+            ZLibCodecompressor();
+            virtual ~ZLibCodecompressor();
 
-			SafeByteArray process(const SafeByteArray& data);
-			virtual int processZStream() = 0;
+            SafeByteArray process(const SafeByteArray& data);
+            virtual int processZStream() = 0;
 
-		protected:
-			struct Private;
-			boost::shared_ptr<Private> p;
-	};
+        protected:
+            struct Private;
+            boost::shared_ptr<Private> p;
+    };
 }

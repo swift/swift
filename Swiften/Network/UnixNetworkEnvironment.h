@@ -21,8 +21,8 @@
 namespace Swift {
 
 class UnixNetworkEnvironment : public NetworkEnvironment {
-	public:
-		std::vector<NetworkInterface> getNetworkInterfaces() const;
+    public:
+        std::vector<NetworkInterface> getNetworkInterfaces() const;
 };
 
 }

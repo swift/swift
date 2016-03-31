@@ -13,14 +13,14 @@
 #include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 
 namespace Swift {
-	class DNSSDRegisterQuery {
-		public:
-			virtual ~DNSSDRegisterQuery();
+    class DNSSDRegisterQuery {
+        public:
+            virtual ~DNSSDRegisterQuery();
 
-			virtual void registerService() = 0;
-			virtual void unregisterService() = 0;
-			virtual void updateServiceInfo(const ByteArray& info) = 0;
+            virtual void registerService() = 0;
+            virtual void unregisterService() = 0;
+            virtual void updateServiceInfo(const ByteArray& info) = 0;
 
-			boost::signal<void (boost::optional<DNSSDServiceID>)> onRegisterFinished;
-	};
+            boost::signal<void (boost::optional<DNSSDServiceID>)> onRegisterFinished;
+    };
 }

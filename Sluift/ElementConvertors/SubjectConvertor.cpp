@@ -21,17 +21,17 @@ SubjectConvertor::~SubjectConvertor() {
 }
 
 boost::shared_ptr<Subject> SubjectConvertor::doConvertFromLua(lua_State* L) {
-	boost::shared_ptr<Subject> result = boost::make_shared<Subject>();
-	if (boost::optional<std::string> value = Lua::getStringField(L, -1, "text")) {
-		result->setText(*value);
-	}
-	return result;
+    boost::shared_ptr<Subject> result = boost::make_shared<Subject>();
+    if (boost::optional<std::string> value = Lua::getStringField(L, -1, "text")) {
+        result->setText(*value);
+    }
+    return result;
 }
 
 void SubjectConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Subject> payload) {
-	lua_createtable(L, 0, 0);
-	if (!payload->getText().empty()) {
-		lua_pushstring(L, payload->getText().c_str());
-		lua_setfield(L, -2, "text");
-	}
+    lua_createtable(L, 0, 0);
+    if (!payload->getText().empty()) {
+        lua_pushstring(L, payload->getText().c_str());
+        lua_setfield(L, -2, "text");
+    }
 }

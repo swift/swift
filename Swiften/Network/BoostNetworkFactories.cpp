@@ -29,44 +29,44 @@
 namespace Swift {
 
 BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, boost::shared_ptr<boost::asio::io_service> ioService) : ioServiceThread(ioService), eventLoop(eventLoop) {
-	timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
-	connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
-	connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
+    timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
+    connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
+    connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
 #ifdef SWIFT_EXPERIMENTAL_FT
-	natTraverser = new PlatformNATTraversalWorker(eventLoop);
+    natTraverser = new PlatformNATTraversalWorker(eventLoop);
 #else
-	natTraverser = new NullNATTraverser(eventLoop);
+    natTraverser = new NullNATTraverser(eventLoop);
 #endif
-	networkEnvironment = new PlatformNetworkEnvironment();
-	xmlParserFactory = new PlatformXMLParserFactory();
-	tlsFactories = new PlatformTLSFactories();
-	proxyProvider = new PlatformProxyProvider();
-	idnConverter = PlatformIDNConverter::create();
+    networkEnvironment = new PlatformNetworkEnvironment();
+    xmlParserFactory = new PlatformXMLParserFactory();
+    tlsFactories = new PlatformTLSFactories();
+    proxyProvider = new PlatformProxyProvider();
+    idnConverter = PlatformIDNConverter::create();
 #ifdef USE_UNBOUND
-	// TODO: What to do about idnConverter.
-	domainNameResolver = new UnboundDomainNameResolver(idnConverter, ioServiceThread.getIOService(), eventLoop);
+    // TODO: What to do about idnConverter.
+    domainNameResolver = new UnboundDomainNameResolver(idnConverter, ioServiceThread.getIOService(), eventLoop);
 #else
-	domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
+    domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
 #endif
-	cryptoProvider = PlatformCryptoProvider::create();
+    cryptoProvider = PlatformCryptoProvider::create();
 }
 
 BoostNetworkFactories::~BoostNetworkFactories() {
-	delete cryptoProvider;
-	delete domainNameResolver;
-	delete idnConverter;
-	delete proxyProvider;
-	delete tlsFactories;
-	delete xmlParserFactory;
-	delete networkEnvironment;
-	delete natTraverser;
-	delete connectionServerFactory;
-	delete connectionFactory;
-	delete timerFactory;
+    delete cryptoProvider;
+    delete domainNameResolver;
+    delete idnConverter;
+    delete proxyProvider;
+    delete tlsFactories;
+    delete xmlParserFactory;
+    delete networkEnvironment;
+    delete natTraverser;
+    delete connectionServerFactory;
+    delete connectionFactory;
+    delete timerFactory;
 }
 
 TLSContextFactory* BoostNetworkFactories::getTLSContextFactory() const {
-	return tlsFactories->getTLSContextFactory();
+    return tlsFactories->getTLSContextFactory();
 }
 
 }

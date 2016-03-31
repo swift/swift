@@ -13,7 +13,7 @@ QtChatView::QtChatView(QWidget* parent) : QWidget(parent) {
 }
 
 QtChatView::~QtChatView() {
-	
+
 }
 
 }

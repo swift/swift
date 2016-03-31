@@ -12,8 +12,8 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API StartSession : public Payload {
-		public:
-			StartSession() {}
-	};
+    class SWIFTEN_API StartSession : public Payload {
+        public:
+            StartSession() {}
+    };
 }

@@ -22,73 +22,73 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API RosterItemExchangePayload : public Payload {
-		public:
-			typedef boost::shared_ptr<RosterItemExchangePayload> ref;
+    class SWIFTEN_API RosterItemExchangePayload : public Payload {
+        public:
+            typedef boost::shared_ptr<RosterItemExchangePayload> ref;
 
-			class SWIFTEN_API Item {
-				public:
-					enum Action { Add, Modify, Delete };
+            class SWIFTEN_API Item {
+                public:
+                    enum Action { Add, Modify, Delete };
 
-					Item(Action action = Add);
+                    Item(Action action = Add);
 
-					Action getAction() const {
-						return action;
-					}
+                    Action getAction() const {
+                        return action;
+                    }
 
-					void setAction(Action action) {
-						this->action = action;
-					}
+                    void setAction(Action action) {
+                        this->action = action;
+                    }
 
-					const JID& getJID() const {
-						return jid;
-					}
+                    const JID& getJID() const {
+                        return jid;
+                    }
 
-					void setJID(const JID& jid) {
-						this->jid = jid;
-					}
+                    void setJID(const JID& jid) {
+                        this->jid = jid;
+                    }
 
-					const std::string& getName() const {
-						return name;
-					}
+                    const std::string& getName() const {
+                        return name;
+                    }
 
-					void setName(const std::string& name) {
-						this->name = name;
-					}
+                    void setName(const std::string& name) {
+                        this->name = name;
+                    }
 
-					const std::vector<std::string>& getGroups() const {
-						return groups;
-					}
+                    const std::vector<std::string>& getGroups() const {
+                        return groups;
+                    }
 
-					void setGroups(const std::vector<std::string> &groups) {
-						this->groups = groups;
-					}
+                    void setGroups(const std::vector<std::string> &groups) {
+                        this->groups = groups;
+                    }
 
-					void addGroup(const std::string& group) {
-						groups.push_back(group);
-					}
+                    void addGroup(const std::string& group) {
+                        groups.push_back(group);
+                    }
 
-				private:
-					Action action;
-					JID jid;
-					std::string name;
-					std::vector<std::string> groups;
-			};
+                private:
+                    Action action;
+                    JID jid;
+                    std::string name;
+                    std::vector<std::string> groups;
+            };
 
-			typedef std::vector<RosterItemExchangePayload::Item> RosterItemExchangePayloadItems;
+            typedef std::vector<RosterItemExchangePayload::Item> RosterItemExchangePayloadItems;
 
-		public:
-			RosterItemExchangePayload();
+        public:
+            RosterItemExchangePayload();
 
-			void addItem(const RosterItemExchangePayload::Item& item) {
-				items_.push_back(item);
-			}
+            void addItem(const RosterItemExchangePayload::Item& item) {
+                items_.push_back(item);
+            }
 
-			const RosterItemExchangePayloadItems& getItems() const {
-				return items_;
-			}
+            const RosterItemExchangePayloadItems& getItems() const {
+                return items_;
+            }
 
-		private:
-			RosterItemExchangePayloadItems items_;
-	};
+        private:
+            RosterItemExchangePayloadItems items_;
+    };
 }

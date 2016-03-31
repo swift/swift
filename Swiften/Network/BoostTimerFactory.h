@@ -13,17 +13,17 @@
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
-	class BoostTimer;
-	class EventLoop;
+    class BoostTimer;
+    class EventLoop;
 
-	class SWIFTEN_API BoostTimerFactory : public TimerFactory {
-		public:
-			BoostTimerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
+    class SWIFTEN_API BoostTimerFactory : public TimerFactory {
+        public:
+            BoostTimerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 
-			virtual boost::shared_ptr<Timer> createTimer(int milliseconds);
+            virtual boost::shared_ptr<Timer> createTimer(int milliseconds);
 
-		private:
-			boost::shared_ptr<boost::asio::io_service> ioService;
-			EventLoop* eventLoop;
-	};
+        private:
+            boost::shared_ptr<boost::asio::io_service> ioService;
+            EventLoop* eventLoop;
+    };
 }

@@ -9,11 +9,11 @@
 #include <Swift/Controllers/UIInterfaces/XMLConsoleWidget.h>
 
 namespace Swift {
-	class UIEventStream;
-	class XMLConsoleWidgetFactory {
-		public:
-			virtual ~XMLConsoleWidgetFactory() {}
+    class UIEventStream;
+    class XMLConsoleWidgetFactory {
+        public:
+            virtual ~XMLConsoleWidgetFactory() {}
 
-			virtual XMLConsoleWidget* createXMLConsoleWidget() = 0;
-	};
+            virtual XMLConsoleWidget* createXMLConsoleWidget() = 0;
+    };
 }

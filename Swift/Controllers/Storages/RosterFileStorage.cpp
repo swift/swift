@@ -18,9 +18,9 @@ RosterFileStorage::RosterFileStorage(const boost::filesystem::path& path) : path
 }
 
 boost::shared_ptr<RosterPayload> RosterFileStorage::getRoster() const {
-	return RosterPersister().loadPayloadGeneric(path);
+    return RosterPersister().loadPayloadGeneric(path);
 }
 
 void RosterFileStorage::setRoster(boost::shared_ptr<RosterPayload> roster) {
-	RosterPersister().savePayload(roster, path);
+    RosterPersister().savePayload(roster, path);
 }

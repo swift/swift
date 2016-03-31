@@ -10,17 +10,17 @@
 
 namespace Swift {
 MUCSearchRoomItem::MUCSearchRoomItem(const QString& node, MUCSearchServiceItem* parent) : parent_(parent), node_(node) {
-	parent_->addRoom(this);
+    parent_->addRoom(this);
 }
 
 MUCSearchServiceItem* MUCSearchRoomItem::getParent() {
-	return parent_;
+    return parent_;
 }
 QVariant MUCSearchRoomItem::data(int role) {
-	switch (role) {
-		case Qt::DisplayRole: return QVariant(node_); 
-		default: return QVariant();
-	}
+    switch (role) {
+        case Qt::DisplayRole: return QVariant(node_);
+        default: return QVariant();
+    }
 }
 
 }

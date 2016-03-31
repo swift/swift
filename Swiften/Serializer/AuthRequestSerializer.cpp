@@ -17,18 +17,18 @@ AuthRequestSerializer::AuthRequestSerializer() {
 }
 
 SafeByteArray AuthRequestSerializer::serialize(boost::shared_ptr<ToplevelElement> element)  const {
-	boost::shared_ptr<AuthRequest> authRequest(boost::dynamic_pointer_cast<AuthRequest>(element));
-	SafeByteArray value;
-	boost::optional<SafeByteArray> message = authRequest->getMessage();
-	if (message) {
-		if ((*message).empty()) {
-			value = createSafeByteArray("=");
-		}
-		else {
-			value = Base64::encode(*message);
-		}
-	}
-	return concat(createSafeByteArray("<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"" + authRequest->getMechanism() + "\">"), value, createSafeByteArray("</auth>"));
+    boost::shared_ptr<AuthRequest> authRequest(boost::dynamic_pointer_cast<AuthRequest>(element));
+    SafeByteArray value;
+    boost::optional<SafeByteArray> message = authRequest->getMessage();
+    if (message) {
+        if ((*message).empty()) {
+            value = createSafeByteArray("=");
+        }
+        else {
+            value = Base64::encode(*message);
+        }
+    }
+    return concat(createSafeByteArray("<auth xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\" mechanism=\"" + authRequest->getMechanism() + "\">"), value, createSafeByteArray("</auth>"));
 }
 
 }

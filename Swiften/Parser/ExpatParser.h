@@ -13,17 +13,17 @@
 #include <Swiften/Parser/XMLParser.h>
 
 namespace Swift {
-	class SWIFTEN_API ExpatParser : public XMLParser, public boost::noncopyable {
-		public:
-			ExpatParser(XMLParserClient* client);
-			~ExpatParser();
+    class SWIFTEN_API ExpatParser : public XMLParser, public boost::noncopyable {
+        public:
+            ExpatParser(XMLParserClient* client);
+            ~ExpatParser();
 
-			bool parse(const std::string& data);
+            bool parse(const std::string& data);
 
-			void stopParser();
+            void stopParser();
 
-		private:
-			struct Private;
-			boost::shared_ptr<Private> p;
-	};
+        private:
+            struct Private;
+            boost::shared_ptr<Private> p;
+    };
 }

@@ -10,24 +10,24 @@
 
 namespace Swift {
 
-	class QtResizableLineEdit : public QLineEdit {
-		Q_OBJECT
-		Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
+    class QtResizableLineEdit : public QLineEdit {
+        Q_OBJECT
+        Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
-		public:
-			explicit QtResizableLineEdit(QWidget* parent = 0);
-			~QtResizableLineEdit();
+        public:
+            explicit QtResizableLineEdit(QWidget* parent = 0);
+            ~QtResizableLineEdit();
 
-			bool isEditable() const;
-			void setEditable(const bool);
+            bool isEditable() const;
+            void setEditable(const bool);
 
-			virtual QSize sizeHint() const;
+            virtual QSize sizeHint() const;
 
-		private slots:
-			void textChanged(QString);
+        private slots:
+            void textChanged(QString);
 
-		private:
-			bool editable;
-	};
+        private:
+            bool editable;
+    };
 
 }

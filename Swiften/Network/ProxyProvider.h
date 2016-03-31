@@ -19,12 +19,12 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-	class SWIFTEN_API ProxyProvider {
-		public:
-			ProxyProvider();
-			virtual ~ProxyProvider();
-			virtual HostAddressPort getHTTPConnectProxy() const = 0;
-			virtual HostAddressPort getSOCKS5Proxy() const = 0;
-	};
+    class SWIFTEN_API ProxyProvider {
+        public:
+            ProxyProvider();
+            virtual ~ProxyProvider();
+            virtual HostAddressPort getHTTPConnectProxy() const = 0;
+            virtual HostAddressPort getSOCKS5Proxy() const = 0;
+    };
 }
 

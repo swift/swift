@@ -14,21 +14,21 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API IDNConverter {
-		public:
-			virtual ~IDNConverter();
+    class SWIFTEN_API IDNConverter {
+        public:
+            virtual ~IDNConverter();
 
-			enum StringPrepProfile {
-				NamePrep,
-				XMPPNodePrep,
-				XMPPResourcePrep,
-				SASLPrep
-			};
+            enum StringPrepProfile {
+                NamePrep,
+                XMPPNodePrep,
+                XMPPResourcePrep,
+                SASLPrep
+            };
 
-			virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) = 0;
-			virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) = 0;
+            virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) = 0;
+            virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) = 0;
 
-			// Thread-safe
-			virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) = 0;
-	};
+            // Thread-safe
+            virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) = 0;
+    };
 }

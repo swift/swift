@@ -9,17 +9,17 @@
 #include <Swift/QtUI/MUCSearch/MUCSearchItem.h>
 
 namespace Swift {
-	class MUCSearchServiceItem;
+    class MUCSearchServiceItem;
 
-	class MUCSearchEmptyItem : public MUCSearchItem {
-		public:
-			MUCSearchEmptyItem(MUCSearchServiceItem* parent);
+    class MUCSearchEmptyItem : public MUCSearchItem {
+        public:
+            MUCSearchEmptyItem(MUCSearchServiceItem* parent);
 
-			MUCSearchServiceItem* getParent();
+            MUCSearchServiceItem* getParent();
 
-			QVariant data(int role);
+            QVariant data(int role);
 
-		private:
-			MUCSearchServiceItem* parent;
-	};
+        private:
+            MUCSearchServiceItem* parent;
+    };
 }

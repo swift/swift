@@ -14,19 +14,19 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class SWIFTEN_API WriteBytestream {
-		public:
-			typedef boost::shared_ptr<WriteBytestream> ref;
+    class SWIFTEN_API WriteBytestream {
+        public:
+            typedef boost::shared_ptr<WriteBytestream> ref;
 
-			virtual ~WriteBytestream();
+            virtual ~WriteBytestream();
 
-			/**
-			 * Write data from vector argument to bytestream.
-			 * 
-			 * On success true is returned and \ref onWrite is called. On failure false is returned.
-			 */
-			virtual bool write(const std::vector<unsigned char>&) = 0;
+            /**
+             * Write data from vector argument to bytestream.
+             *
+             * On success true is returned and \ref onWrite is called. On failure false is returned.
+             */
+            virtual bool write(const std::vector<unsigned char>&) = 0;
 
-			boost::signal<void (const std::vector<unsigned char>&)> onWrite;
-	};
+            boost::signal<void (const std::vector<unsigned char>&)> onWrite;
+    };
 }

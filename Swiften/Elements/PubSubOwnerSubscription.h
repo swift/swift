@@ -12,38 +12,38 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerSubscription : public Payload {
-		public:
-			enum SubscriptionType {
-				None,
-				Pending,
-				Subscribed,
-				Unconfigured
-			};
+    class SWIFTEN_API PubSubOwnerSubscription : public Payload {
+        public:
+            enum SubscriptionType {
+                None,
+                Pending,
+                Subscribed,
+                Unconfigured
+            };
 
-			PubSubOwnerSubscription();
-			
-			virtual ~PubSubOwnerSubscription();
+            PubSubOwnerSubscription();
 
-			const JID& getJID() const {
-				return jid;
-			}
+            virtual ~PubSubOwnerSubscription();
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			SubscriptionType getSubscription() const {
-				return subscription;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
 
-			void setSubscription(SubscriptionType value) {
-				this->subscription = value ;
-			}
+            SubscriptionType getSubscription() const {
+                return subscription;
+            }
+
+            void setSubscription(SubscriptionType value) {
+                this->subscription = value ;
+            }
 
 
-		private:
-			JID jid;
-			SubscriptionType subscription;
-	};
+        private:
+            JID jid;
+            SubscriptionType subscription;
+    };
 }

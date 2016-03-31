@@ -10,24 +10,24 @@
 #include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {
-	
-	class PayloadParser;
 
-	/**
-	 * A factory for PayloadParsers.
-	 */
-	class SWIFTEN_API PayloadParserFactory {
-		public:
-			virtual ~PayloadParserFactory();
+    class PayloadParser;
 
-			/**
-			 * Checks whether this factory can parse the given top-level element in the given namespace (with the given attributes).
-			 */
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap& attributes) const = 0;
+    /**
+     * A factory for PayloadParsers.
+     */
+    class SWIFTEN_API PayloadParserFactory {
+        public:
+            virtual ~PayloadParserFactory();
 
-			/**
-			 * Creates a new payload parser.
-			 */
-			virtual PayloadParser* createPayloadParser() = 0;
-	};
+            /**
+             * Checks whether this factory can parse the given top-level element in the given namespace (with the given attributes).
+             */
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap& attributes) const = 0;
+
+            /**
+             * Creates a new payload parser.
+             */
+            virtual PayloadParser* createPayloadParser() = 0;
+    };
 }

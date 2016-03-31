@@ -11,9 +11,9 @@
 
 namespace Swift {
 
-	class SWIFTEN_API FormReportedRef {
+    class SWIFTEN_API FormReportedRef {
 
-		public:
-			typedef boost::shared_ptr<FormReportedRef> ref;
-	};
+        public:
+            typedef boost::shared_ptr<FormReportedRef> ref;
+    };
 }

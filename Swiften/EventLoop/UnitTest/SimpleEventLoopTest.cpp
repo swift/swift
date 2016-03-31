@@ -16,53 +16,53 @@
 using namespace Swift;
 
 class SimpleEventLoopTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(SimpleEventLoopTest);
-		// FIXME: Temporarily disabling run, because it generates a "vector 
-		// iterator not incrementable" on XP
-		//CPPUNIT_TEST(testRun);
-		CPPUNIT_TEST(testPostFromMainThread);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(SimpleEventLoopTest);
+        // FIXME: Temporarily disabling run, because it generates a "vector
+        // iterator not incrementable" on XP
+        //CPPUNIT_TEST(testRun);
+        CPPUNIT_TEST(testPostFromMainThread);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void setUp() {
-			counter_ = 0;
-		}
+    public:
+        void setUp() {
+            counter_ = 0;
+        }
 
-		void testRun() {
-			SimpleEventLoop testling;
-			boost::thread thread(boost::bind(&SimpleEventLoopTest::runIncrementingThread, this, &testling));
-			testling.run();
+        void testRun() {
+            SimpleEventLoop testling;
+            boost::thread thread(boost::bind(&SimpleEventLoopTest::runIncrementingThread, this, &testling));
+            testling.run();
 
-			CPPUNIT_ASSERT_EQUAL(10, counter_);
-		}
+            CPPUNIT_ASSERT_EQUAL(10, counter_);
+        }
 
-		void testPostFromMainThread() {
-			SimpleEventLoop testling;
-			testling.postEvent(boost::bind(&SimpleEventLoopTest::incrementCounterAndStop, this, &testling));
-			testling.run();
+        void testPostFromMainThread() {
+            SimpleEventLoop testling;
+            testling.postEvent(boost::bind(&SimpleEventLoopTest::incrementCounterAndStop, this, &testling));
+            testling.run();
 
-			CPPUNIT_ASSERT_EQUAL(1, counter_);
-		}
+            CPPUNIT_ASSERT_EQUAL(1, counter_);
+        }
 
-	private:
-		void runIncrementingThread(SimpleEventLoop* loop) {
-			for (unsigned int i = 0; i < 10; ++i) {
-				Swift::sleep(1);
-				loop->postEvent(boost::bind(&SimpleEventLoopTest::incrementCounter, this));
-			}
-			loop->stop();
-		}
+    private:
+        void runIncrementingThread(SimpleEventLoop* loop) {
+            for (unsigned int i = 0; i < 10; ++i) {
+                Swift::sleep(1);
+                loop->postEvent(boost::bind(&SimpleEventLoopTest::incrementCounter, this));
+            }
+            loop->stop();
+        }
 
-		void incrementCounter() {
-			counter_++;
-		}
+        void incrementCounter() {
+            counter_++;
+        }
 
-		void incrementCounterAndStop(SimpleEventLoop* loop) {
-			counter_++;
-			loop->stop();
-		}
+        void incrementCounterAndStop(SimpleEventLoop* loop) {
+            counter_++;
+            loop->stop();
+        }
 
-		int counter_;
+        int counter_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SimpleEventLoopTest);

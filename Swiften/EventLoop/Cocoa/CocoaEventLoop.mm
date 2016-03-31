@@ -19,25 +19,25 @@ CocoaEventLoop::~CocoaEventLoop() {
 }
 
 void CocoaEventLoop::handleNextCocoaEvent() {
-	{
-		boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
-		isEventInCocoaEventLoop_ = false;
-	}
-	handleNextEvents();
+    {
+        boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
+        isEventInCocoaEventLoop_ = false;
+    }
+    handleNextEvents();
 }
 
 void CocoaEventLoop::eventPosted() {
-	boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
-	if (!isEventInCocoaEventLoop_) {
-		isEventInCocoaEventLoop_ = true;
-		
-		CocoaEvent* cocoaEvent = [[CocoaEvent alloc] init: this];
-		[cocoaEvent
-			performSelectorOnMainThread:@selector(process) 
-			withObject: nil
-			waitUntilDone: NO];
-		[cocoaEvent release];
-	}
+    boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
+    if (!isEventInCocoaEventLoop_) {
+        isEventInCocoaEventLoop_ = true;
+
+        CocoaEvent* cocoaEvent = [[CocoaEvent alloc] init: this];
+        [cocoaEvent
+            performSelectorOnMainThread:@selector(process)
+            withObject: nil
+            waitUntilDone: NO];
+        [cocoaEvent release];
+    }
 }
 
 }

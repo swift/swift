@@ -13,16 +13,16 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API AuthRequestParser : public GenericElementParser<AuthRequest> {
-		public:
-			AuthRequestParser();
+    class SWIFTEN_API AuthRequestParser : public GenericElementParser<AuthRequest> {
+        public:
+            AuthRequestParser();
 
-			virtual void handleStartElement(const std::string&, const std::string& ns, const AttributeMap&);
-			virtual void handleEndElement(const std::string&, const std::string& ns);
-			virtual void handleCharacterData(const std::string&);
+            virtual void handleStartElement(const std::string&, const std::string& ns, const AttributeMap&);
+            virtual void handleEndElement(const std::string&, const std::string& ns);
+            virtual void handleCharacterData(const std::string&);
 
-		private:
-			std::string text_;
-			int depth_;
-	};
+        private:
+            std::string text_;
+            int depth_;
+    };
 }

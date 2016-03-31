@@ -14,23 +14,23 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API IsodeIQDelegation : public Payload {
-		public:
-			
-			IsodeIQDelegation();
-			
-			virtual ~IsodeIQDelegation();
+    class SWIFTEN_API IsodeIQDelegation : public Payload {
+        public:
 
-			boost::shared_ptr<Forwarded> getForward() const {
-				return forward;
-			}
+            IsodeIQDelegation();
 
-			void setForward(boost::shared_ptr<Forwarded> value) {
-				this->forward = value ;
-			}
+            virtual ~IsodeIQDelegation();
+
+            boost::shared_ptr<Forwarded> getForward() const {
+                return forward;
+            }
+
+            void setForward(boost::shared_ptr<Forwarded> value) {
+                this->forward = value ;
+            }
 
 
-		private:
-			boost::shared_ptr<Forwarded> forward;
-	};
+        private:
+            boost::shared_ptr<Forwarded> forward;
+    };
 }

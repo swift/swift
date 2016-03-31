@@ -11,11 +11,11 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCInvitationPayloadSerializer : public GenericPayloadSerializer<MUCInvitationPayload> {
-		public:
-			MUCInvitationPayloadSerializer();
+    class SWIFTEN_API MUCInvitationPayloadSerializer : public GenericPayloadSerializer<MUCInvitationPayload> {
+        public:
+            MUCInvitationPayloadSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<MUCInvitationPayload> version)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<MUCInvitationPayload> version)  const;
+    };
 }
 

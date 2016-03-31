@@ -18,58 +18,58 @@
 #include <Swiften/StreamStack/HighLayer.h>
 
 namespace Swift {
-	class ProtocolHeader;
-	class XMPPParser;
-	class PayloadParserFactoryCollection;
-	class XMPPSerializer;
-	class PayloadSerializerCollection;
-	class XMLParserFactory;
-	class BOSHSessionStream;
+    class ProtocolHeader;
+    class XMPPParser;
+    class PayloadParserFactoryCollection;
+    class XMPPSerializer;
+    class PayloadSerializerCollection;
+    class XMLParserFactory;
+    class BOSHSessionStream;
 
-	class SWIFTEN_API XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
-		friend class BOSHSessionStream;
-		public:
-			XMPPLayer(
-					PayloadParserFactoryCollection* payloadParserFactories,
-					PayloadSerializerCollection* payloadSerializers,
-					XMLParserFactory* xmlParserFactory,
-					StreamType streamType,
-					bool setExplictNSonTopLevelElements = false);
-			virtual ~XMPPLayer();
+    class SWIFTEN_API XMPPLayer : public XMPPParserClient, public HighLayer, boost::noncopyable {
+        friend class BOSHSessionStream;
+        public:
+            XMPPLayer(
+                    PayloadParserFactoryCollection* payloadParserFactories,
+                    PayloadSerializerCollection* payloadSerializers,
+                    XMLParserFactory* xmlParserFactory,
+                    StreamType streamType,
+                    bool setExplictNSonTopLevelElements = false);
+            virtual ~XMPPLayer();
 
-			void writeHeader(const ProtocolHeader& header);
-			void writeFooter();
-			void writeElement(boost::shared_ptr<ToplevelElement>);
-			void writeData(const std::string& data);
+            void writeHeader(const ProtocolHeader& header);
+            void writeFooter();
+            void writeElement(boost::shared_ptr<ToplevelElement>);
+            void writeData(const std::string& data);
 
-			void resetParser();
+            void resetParser();
 
-		protected:
-			void handleDataRead(const SafeByteArray& data);
-			void writeDataInternal(const SafeByteArray& data);
+        protected:
+            void handleDataRead(const SafeByteArray& data);
+            void writeDataInternal(const SafeByteArray& data);
 
-		public:
-			boost::signal<void (const ProtocolHeader&)> onStreamStart;
-			boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElement;
-			boost::signal<void (const SafeByteArray&)> onWriteData;
-			boost::signal<void (const SafeByteArray&)> onDataRead;
-			boost::signal<void ()> onError;
+        public:
+            boost::signal<void (const ProtocolHeader&)> onStreamStart;
+            boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElement;
+            boost::signal<void (const SafeByteArray&)> onWriteData;
+            boost::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signal<void ()> onError;
 
-		private:
-			void handleStreamStart(const ProtocolHeader&);
-			void handleElement(boost::shared_ptr<ToplevelElement>);
-			void handleStreamEnd();
+        private:
+            void handleStreamStart(const ProtocolHeader&);
+            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleStreamEnd();
 
-			void doResetParser();
+            void doResetParser();
 
-		private:
-			PayloadParserFactoryCollection* payloadParserFactories_;
-			XMPPParser* xmppParser_;
-			PayloadSerializerCollection* payloadSerializers_;
-			XMLParserFactory* xmlParserFactory_;
-			XMPPSerializer* xmppSerializer_;
-			bool setExplictNSonTopLevelElements_;
-			bool resetParserAfterParse_;
-			bool inParser_;
-	};
+        private:
+            PayloadParserFactoryCollection* payloadParserFactories_;
+            XMPPParser* xmppParser_;
+            PayloadSerializerCollection* payloadSerializers_;
+            XMLParserFactory* xmlParserFactory_;
+            XMPPSerializer* xmppSerializer_;
+            bool setExplictNSonTopLevelElements_;
+            bool resetParserAfterParse_;
+            bool inParser_;
+    };
 }

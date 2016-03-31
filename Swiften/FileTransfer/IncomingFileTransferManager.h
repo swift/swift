@@ -14,32 +14,32 @@
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
 
 namespace Swift {
-	class JingleSessionManager;
-	class FileTransferTransporterFactory;
-	class TimerFactory;
-	class CryptoProvider;
+    class JingleSessionManager;
+    class FileTransferTransporterFactory;
+    class TimerFactory;
+    class CryptoProvider;
 
-	class SWIFTEN_API IncomingFileTransferManager : public IncomingJingleSessionHandler {
-		public:
-			IncomingFileTransferManager(
-					JingleSessionManager* jingleSessionManager, 
-					FileTransferTransporterFactory* transporterFactory,
-					TimerFactory* timerFactory, 
-					CryptoProvider* crypto);
-			virtual ~IncomingFileTransferManager();
+    class SWIFTEN_API IncomingFileTransferManager : public IncomingJingleSessionHandler {
+        public:
+            IncomingFileTransferManager(
+                    JingleSessionManager* jingleSessionManager,
+                    FileTransferTransporterFactory* transporterFactory,
+                    TimerFactory* timerFactory,
+                    CryptoProvider* crypto);
+            virtual ~IncomingFileTransferManager();
 
-			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
+            boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 
-		private:
-			bool handleIncomingJingleSession(
-					JingleSession::ref session, 
-					const std::vector<JingleContentPayload::ref>& contents, 
-					const JID& recipient);
+        private:
+            bool handleIncomingJingleSession(
+                    JingleSession::ref session,
+                    const std::vector<JingleContentPayload::ref>& contents,
+                    const JID& recipient);
 
-		private:
-			JingleSessionManager* jingleSessionManager;
-			FileTransferTransporterFactory* transporterFactory;
-			TimerFactory* timerFactory;
-			CryptoProvider* crypto;
-	};
+        private:
+            JingleSessionManager* jingleSessionManager;
+            FileTransferTransporterFactory* transporterFactory;
+            TimerFactory* timerFactory;
+            CryptoProvider* crypto;
+    };
 }

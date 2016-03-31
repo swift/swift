@@ -18,12 +18,12 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API IdleSerializer : public GenericPayloadSerializer<Idle> {
-		public:
-			IdleSerializer() : GenericPayloadSerializer<Idle>() {}
+    class SWIFTEN_API IdleSerializer : public GenericPayloadSerializer<Idle> {
+        public:
+            IdleSerializer() : GenericPayloadSerializer<Idle>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<Idle> idle)  const {
-				return "<idle xmlns='urn:xmpp:idle:1' since='" + dateTimeToString(idle->getSince()) + "'/>";
-			}
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Idle> idle)  const {
+                return "<idle xmlns='urn:xmpp:idle:1' since='" + dateTimeToString(idle->getSince()) + "'/>";
+            }
+    };
 }

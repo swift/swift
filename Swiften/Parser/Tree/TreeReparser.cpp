@@ -22,28 +22,28 @@ namespace Swift {
 typedef std::pair<ParserElement::ref, bool> ElementState;
 
 boost::shared_ptr<Payload> TreeReparser::parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection) {
-	PayloadParser* parser = collection->getPayloadParserFactory(root->getName(), root->getNamespace(), root->getAttributes())->createPayloadParser();
-	std::deque<ElementState > stack;
-	stack.push_back(ElementState(root, true));
-	while (!stack.empty()) {
-		ElementState current = stack.back();
-		stack.pop_back();
-		if (current.second) {
-			stack.push_back(ElementState(current.first, false));
-			parser->handleStartElement(current.first->getName(), current.first->getNamespace(), current.first->getAttributes());
-			foreach(ParserElement::ref child, current.first->getAllChildren()) {
-				stack.push_back(ElementState(child, true));
-			}
-		} else {
-			parser->handleCharacterData(current.first->getText());
-			parser->handleEndElement(current.first->getName(), current.first->getNamespace());
-		}
+    PayloadParser* parser = collection->getPayloadParserFactory(root->getName(), root->getNamespace(), root->getAttributes())->createPayloadParser();
+    std::deque<ElementState > stack;
+    stack.push_back(ElementState(root, true));
+    while (!stack.empty()) {
+        ElementState current = stack.back();
+        stack.pop_back();
+        if (current.second) {
+            stack.push_back(ElementState(current.first, false));
+            parser->handleStartElement(current.first->getName(), current.first->getNamespace(), current.first->getAttributes());
+            foreach(ParserElement::ref child, current.first->getAllChildren()) {
+                stack.push_back(ElementState(child, true));
+            }
+        } else {
+            parser->handleCharacterData(current.first->getText());
+            parser->handleEndElement(current.first->getName(), current.first->getNamespace());
+        }
 
-	}
+    }
 
-	boost::shared_ptr<Payload> payload = parser->getPayload();
-	delete parser;
-	return payload;
+    boost::shared_ptr<Payload> payload = parser->getPayload();
+    delete parser;
+    return payload;
 }
 
 }

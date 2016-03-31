@@ -16,48 +16,48 @@
 #include <Swiften/Elements/ResultSet.h>
 
 namespace Swift {
-	class SWIFTEN_API MAMFin : public Payload {
-		public:
-			MAMFin() : isComplete_(false), isStable_(true) {}
-			virtual ~MAMFin();
+    class SWIFTEN_API MAMFin : public Payload {
+        public:
+            MAMFin() : isComplete_(false), isStable_(true) {}
+            virtual ~MAMFin();
 
-			void setComplete(const bool isComplete) {
-				isComplete_ = isComplete;
-			}
+            void setComplete(const bool isComplete) {
+                isComplete_ = isComplete;
+            }
 
-			bool isComplete() const {
-				return isComplete_;
-			}
+            bool isComplete() const {
+                return isComplete_;
+            }
 
-			void setStable(const bool isStable) {
-				isStable_ = isStable;
-			}
+            void setStable(const bool isStable) {
+                isStable_ = isStable;
+            }
 
-			bool isStable() const {
-				return isStable_;
-			}
+            bool isStable() const {
+                return isStable_;
+            }
 
-			void setResultSet(boost::shared_ptr<ResultSet> resultSet) {
-				resultSet_ = resultSet;
-			}
+            void setResultSet(boost::shared_ptr<ResultSet> resultSet) {
+                resultSet_ = resultSet;
+            }
 
-			boost::shared_ptr<ResultSet> getResultSet() const {
-				return resultSet_;
-			}
+            boost::shared_ptr<ResultSet> getResultSet() const {
+                return resultSet_;
+            }
 
-			void setQueryID(const std::string& queryID) {
-				queryID_ = queryID;
-			}
+            void setQueryID(const std::string& queryID) {
+                queryID_ = queryID;
+            }
 
-			const boost::optional<std::string>& getQueryID() const {
-				return queryID_;
-			}
+            const boost::optional<std::string>& getQueryID() const {
+                return queryID_;
+            }
 
 
-		private:
-			bool isComplete_;
-			bool isStable_;
-			boost::shared_ptr<ResultSet> resultSet_;
-			boost::optional<std::string> queryID_;
-	};
+        private:
+            bool isComplete_;
+            bool isStable_;
+            boost::shared_ptr<ResultSet> resultSet_;
+            boost::optional<std::string> queryID_;
+    };
 }

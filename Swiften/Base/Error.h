@@ -9,10 +9,10 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API Error {
-		public:
-			Error() {}
-			SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Error)
-			virtual ~Error();
-	};
+    class SWIFTEN_API Error {
+        public:
+            Error() {}
+            SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Error)
+            virtual ~Error();
+    };
 }

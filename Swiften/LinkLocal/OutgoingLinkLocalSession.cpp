@@ -17,36 +17,36 @@
 namespace Swift {
 
 OutgoingLinkLocalSession::OutgoingLinkLocalSession(
-		const JID& localJID,
-		const JID& remoteJID,
-		boost::shared_ptr<Connection> connection,
-		PayloadParserFactoryCollection* payloadParserFactories, 
-		PayloadSerializerCollection* payloadSerializers,
-		XMLParserFactory* xmlParserFactory) :
-			Session(connection, payloadParserFactories, payloadSerializers, xmlParserFactory) {
-	setLocalJID(localJID);
-	setRemoteJID(remoteJID);
+        const JID& localJID,
+        const JID& remoteJID,
+        boost::shared_ptr<Connection> connection,
+        PayloadParserFactoryCollection* payloadParserFactories,
+        PayloadSerializerCollection* payloadSerializers,
+        XMLParserFactory* xmlParserFactory) :
+            Session(connection, payloadParserFactories, payloadSerializers, xmlParserFactory) {
+    setLocalJID(localJID);
+    setRemoteJID(remoteJID);
 }
 
 void OutgoingLinkLocalSession::handleSessionStarted() {
-	ProtocolHeader header;
-	header.setFrom(getLocalJID());
-	getXMPPLayer()->writeHeader(header);
+    ProtocolHeader header;
+    header.setFrom(getLocalJID());
+    getXMPPLayer()->writeHeader(header);
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
-	foreach(const boost::shared_ptr<ToplevelElement>& stanza, queuedElements_) {
-		sendElement(stanza);
-	}
-	queuedElements_.clear();
+    foreach(const boost::shared_ptr<ToplevelElement>& stanza, queuedElements_) {
+        sendElement(stanza);
+    }
+    queuedElements_.clear();
 }
 
 void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
-	onElementReceived(element);
+    onElementReceived(element);
 }
 
 void OutgoingLinkLocalSession::queueElement(boost::shared_ptr<ToplevelElement> element) {
-	queuedElements_.push_back(element);
+    queuedElements_.push_back(element);
 }
 
 

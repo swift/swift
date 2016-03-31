@@ -23,29 +23,29 @@
 using namespace Swift;
 
 PubSubOwnerPubSubSerializer::PubSubOwnerPubSubSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
-	pubsubSerializers.push_back(boost::make_shared<PubSubOwnerConfigureSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubOwnerSubscriptionsSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubOwnerDefaultSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubOwnerPurgeSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubOwnerAffiliationsSerializer>(serializers));
-	pubsubSerializers.push_back(boost::make_shared<PubSubOwnerDeleteSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerConfigureSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerSubscriptionsSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerDefaultSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerPurgeSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerAffiliationsSerializer>(serializers));
+    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerDeleteSerializer>(serializers));
 }
 
 PubSubOwnerPubSubSerializer::~PubSubOwnerPubSubSerializer() {
 }
 
 std::string PubSubOwnerPubSubSerializer::serializePayload(boost::shared_ptr<PubSubOwnerPubSub> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("pubsub", "http://jabber.org/protocol/pubsub#owner");
-	boost::shared_ptr<PubSubOwnerPayload> p = payload->getPayload();
-	foreach(boost::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
-		if (serializer->canSerialize(p)) {
-			element.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(p)));
-		}
-	}
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("pubsub", "http://jabber.org/protocol/pubsub#owner");
+    boost::shared_ptr<PubSubOwnerPayload> p = payload->getPayload();
+    foreach(boost::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
+        if (serializer->canSerialize(p)) {
+            element.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(p)));
+        }
+    }
+    return element.serialize();
 }
 
 

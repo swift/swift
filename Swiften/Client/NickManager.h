@@ -12,13 +12,13 @@
 #include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
-	class SWIFTEN_API NickManager {
-		public:
-			virtual ~NickManager();
+    class SWIFTEN_API NickManager {
+        public:
+            virtual ~NickManager();
 
-			virtual std::string getOwnNick() const = 0;
-			virtual void setOwnNick(const std::string& nick) = 0;
+            virtual std::string getOwnNick() const = 0;
+            virtual void setOwnNick(const std::string& nick) = 0;
 
-			boost::signal<void (const std::string&)> onOwnNickChanged;
-	};
+            boost::signal<void (const std::string&)> onOwnNickChanged;
+    };
 }

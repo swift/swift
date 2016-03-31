@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 namespace Swift {
-	class NotificationCenterNotifier;
+    class NotificationCenterNotifier;
 }
 
 @interface NotificationCenterNotifierDelegate : NSObject<NSUserNotificationCenterDelegate> {

@@ -7,8 +7,8 @@
 #pragma once
 
 namespace Swift {
-	class ZLibException {
-		public:
-			ZLibException() {}
-	};
+    class ZLibException {
+        public:
+            ZLibException() {}
+    };
 }

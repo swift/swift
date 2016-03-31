@@ -19,41 +19,41 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubSubscribe : public PubSubPayload {
-		public:
-			
-			PubSubSubscribe();
-			
-			virtual ~PubSubSubscribe();
+    class SWIFTEN_API PubSubSubscribe : public PubSubPayload {
+        public:
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            PubSubSubscribe();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubSubscribe();
 
-			const JID& getJID() const {
-				return jid;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			void setJID(const JID& value) {
-				this->jid = value ;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			boost::shared_ptr<PubSubOptions> getOptions() const {
-				return options;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-			void setOptions(boost::shared_ptr<PubSubOptions> value) {
-				this->options = value ;
-			}
+            void setJID(const JID& value) {
+                this->jid = value ;
+            }
+
+            boost::shared_ptr<PubSubOptions> getOptions() const {
+                return options;
+            }
+
+            void setOptions(boost::shared_ptr<PubSubOptions> value) {
+                this->options = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			JID jid;
-			boost::shared_ptr<PubSubOptions> options;
-	};
+        private:
+            boost::optional< std::string > node;
+            JID jid;
+            boost::shared_ptr<PubSubOptions> options;
+    };
 }

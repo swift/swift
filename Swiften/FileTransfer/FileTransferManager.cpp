@@ -12,12 +12,12 @@ FileTransferManager::~FileTransferManager() {
 }
 
 bool FileTransferManager::isSupportedBy(const DiscoInfo::ref info) {
-	if (info) {
-		return info->hasFeature(DiscoInfo::JingleFeature)
-						&& info->hasFeature(DiscoInfo::JingleFTFeature)
-						&& (info->hasFeature(DiscoInfo::JingleTransportsIBBFeature) || info->hasFeature(DiscoInfo::JingleTransportsS5BFeature));
-	}
-	return false;
+    if (info) {
+        return info->hasFeature(DiscoInfo::JingleFeature)
+                        && info->hasFeature(DiscoInfo::JingleFTFeature)
+                        && (info->hasFeature(DiscoInfo::JingleTransportsIBBFeature) || info->hasFeature(DiscoInfo::JingleTransportsS5BFeature));
+    }
+    return false;
 }
 
 }

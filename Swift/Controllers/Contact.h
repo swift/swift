@@ -21,21 +21,21 @@
 namespace Swift {
 
 class Contact : public boost::enable_shared_from_this<Contact> {
-	public:
-		typedef boost::shared_ptr<Contact> ref;
+    public:
+        typedef boost::shared_ptr<Contact> ref;
 
-		Contact();
-		Contact(const std::string& name, const JID& jid, StatusShow::Type statusType, const boost::filesystem::path& path);
+        Contact();
+        Contact(const std::string& name, const JID& jid, StatusShow::Type statusType, const boost::filesystem::path& path);
 
-		static bool lexicographicalSortPredicate(const Contact::ref& a, const Contact::ref& b);
-		static bool equalityPredicate(const Contact::ref& a, const Contact::ref& b);
-		static bool sortPredicate(const Contact::ref& a, const Contact::ref& b, const std::string& search);
+        static bool lexicographicalSortPredicate(const Contact::ref& a, const Contact::ref& b);
+        static bool equalityPredicate(const Contact::ref& a, const Contact::ref& b);
+        static bool sortPredicate(const Contact::ref& a, const Contact::ref& b, const std::string& search);
 
-	public:
-		std::string name;
-		JID jid;
-		StatusShow::Type statusType;
-		boost::filesystem::path avatarPath;
+    public:
+        std::string name;
+        JID jid;
+        StatusShow::Type statusType;
+        boost::filesystem::path avatarPath;
 };
 
 }

@@ -12,10 +12,10 @@
 #include <Swiften/Network/Timer.h>
 
 namespace Swift {
-	class SWIFTEN_API TimerFactory {
-		public:
-			virtual ~TimerFactory();
+    class SWIFTEN_API TimerFactory {
+        public:
+            virtual ~TimerFactory();
 
-			virtual Timer::ref createTimer(int milliseconds) = 0;
-	};
+            virtual Timer::ref createTimer(int milliseconds) = 0;
+    };
 }

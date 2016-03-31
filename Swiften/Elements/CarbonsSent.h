@@ -13,16 +13,16 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsSent : public Payload {
-		public:
-			typedef boost::shared_ptr<CarbonsSent> ref;
+    class SWIFTEN_API CarbonsSent : public Payload {
+        public:
+            typedef boost::shared_ptr<CarbonsSent> ref;
 
-		public:
-			virtual ~CarbonsSent();
-			void setForwarded(boost::shared_ptr<Forwarded> forwarded);
-			boost::shared_ptr<Forwarded> getForwarded() const;
+        public:
+            virtual ~CarbonsSent();
+            void setForwarded(boost::shared_ptr<Forwarded> forwarded);
+            boost::shared_ptr<Forwarded> getForwarded() const;
 
-		private:
-			boost::shared_ptr<Forwarded> forwarded_;
-	};
+        private:
+            boost::shared_ptr<Forwarded> forwarded_;
+    };
 }

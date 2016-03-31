@@ -19,23 +19,23 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class SendFileUIEvent : public UIEvent {
-		public:
-			typedef boost::shared_ptr<SendFileUIEvent> ref;
+    class SendFileUIEvent : public UIEvent {
+        public:
+            typedef boost::shared_ptr<SendFileUIEvent> ref;
 
-			SendFileUIEvent(const JID& jid, const std::string& filename) : jid(jid), filename(filename) {
-			}
+            SendFileUIEvent(const JID& jid, const std::string& filename) : jid(jid), filename(filename) {
+            }
 
-			const JID& getJID() const {
-				return jid;
-			}
-			
-			const std::string& getFilename() const {
-				return filename;
-			}
+            const JID& getJID() const {
+                return jid;
+            }
 
-		private:
-			JID jid;
-			std::string filename;
-	};
+            const std::string& getFilename() const {
+                return filename;
+            }
+
+        private:
+            JID jid;
+            std::string filename;
+    };
 }

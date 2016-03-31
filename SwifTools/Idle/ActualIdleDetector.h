@@ -11,20 +11,20 @@
 #include <SwifTools/Idle/IdleDetector.h>
 
 namespace Swift {
-	class IdleQuerier;
-	class TimerFactory;
-	class Timer;
+    class IdleQuerier;
+    class TimerFactory;
+    class Timer;
 
-	class ActualIdleDetector : public IdleDetector, public boost::bsignals::trackable {
-		public:
-			ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateMilliseconds);
-			~ActualIdleDetector();
+    class ActualIdleDetector : public IdleDetector, public boost::bsignals::trackable {
+        public:
+            ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateMilliseconds);
+            ~ActualIdleDetector();
 
-		private:
-			void handleTimerTick();
+        private:
+            void handleTimerTick();
 
-		private:
-			IdleQuerier* querier;
-			boost::shared_ptr<Timer> timer;
-	};
+        private:
+            IdleQuerier* querier;
+            boost::shared_ptr<Timer> timer;
+    };
 }

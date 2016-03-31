@@ -15,14 +15,14 @@
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
-	class SWIFTEN_API ChatStateTracker {
-		public:
-			ChatStateTracker();
-			void handleMessageReceived(boost::shared_ptr<Message> message);
-			void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
-			boost::signal<void (ChatState::ChatStateType)> onChatStateChange;
-		private:
-			void changeState(ChatState::ChatStateType state);
-			ChatState::ChatStateType currentState_;
-	};
+    class SWIFTEN_API ChatStateTracker {
+        public:
+            ChatStateTracker();
+            void handleMessageReceived(boost::shared_ptr<Message> message);
+            void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
+            boost::signal<void (ChatState::ChatStateType)> onChatStateChange;
+        private:
+            void changeState(ChatState::ChatStateType state);
+            ChatState::ChatStateType currentState_;
+    };
 }

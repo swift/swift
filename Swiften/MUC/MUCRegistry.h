@@ -12,17 +12,17 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class JID;
+    class JID;
 
-	class SWIFTEN_API MUCRegistry {
-		public:
-			~MUCRegistry();
+    class SWIFTEN_API MUCRegistry {
+        public:
+            ~MUCRegistry();
 
-			bool isMUC(const JID& j) const;
-			void addMUC(const JID& j);
-			void removeMUC(const JID& j);
+            bool isMUC(const JID& j) const;
+            void addMUC(const JID& j);
+            void removeMUC(const JID& j);
 
-		private:
-			std::vector<JID> mucs;
-	};
+        private:
+            std::vector<JID> mucs;
+    };
 }

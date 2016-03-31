@@ -11,8 +11,8 @@
 #include <SwifTools/URIHandler/URIHandler.h>
 
 namespace Swift {
-	class QtDBUSURIHandler : public QObject, public URIHandler {
-		public:
-			QtDBUSURIHandler();
-	};
+    class QtDBUSURIHandler : public QObject, public URIHandler {
+        public:
+            QtDBUSURIHandler();
+    };
 }

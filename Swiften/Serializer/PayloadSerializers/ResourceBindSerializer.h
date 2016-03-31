@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API ResourceBindSerializer : public GenericPayloadSerializer<ResourceBind> {
-		public:
-			ResourceBindSerializer();
+    class SWIFTEN_API ResourceBindSerializer : public GenericPayloadSerializer<ResourceBind> {
+        public:
+            ResourceBindSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<ResourceBind>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<ResourceBind>)  const;
+    };
 }

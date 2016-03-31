@@ -15,29 +15,29 @@ class QCheckBox;
 class QColor;
 
 namespace Swift {
-	class QtXMLConsoleWidget : public QtTabbable, public XMLConsoleWidget {
-			Q_OBJECT
+    class QtXMLConsoleWidget : public QtTabbable, public XMLConsoleWidget {
+            Q_OBJECT
 
-		public:
-			QtXMLConsoleWidget();
-			~QtXMLConsoleWidget();
+        public:
+            QtXMLConsoleWidget();
+            ~QtXMLConsoleWidget();
 
-			void show();
-			void activate();
+            void show();
+            void activate();
 
-			virtual void handleDataRead(const SafeByteArray& data);
-			virtual void handleDataWritten(const SafeByteArray& data);
+            virtual void handleDataRead(const SafeByteArray& data);
+            virtual void handleDataWritten(const SafeByteArray& data);
 
-			virtual std::string getID() const;
+            virtual std::string getID() const;
 
-		private:
-			virtual void closeEvent(QCloseEvent* event);
-			virtual void showEvent(QShowEvent* event);
+        private:
+            virtual void closeEvent(QCloseEvent* event);
+            virtual void showEvent(QShowEvent* event);
 
-			void appendTextIfEnabled(const std::string& data, const QColor& color);
+            void appendTextIfEnabled(const std::string& data, const QColor& color);
 
-		private:
-			QTextEdit* textEdit;
-			QCheckBox* enabled;
-	};
+        private:
+            QTextEdit* textEdit;
+            QCheckBox* enabled;
+    };
 }

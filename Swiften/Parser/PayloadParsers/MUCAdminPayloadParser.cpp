@@ -14,10 +14,10 @@
 namespace Swift {
 
 void MUCAdminPayloadParser::handleTree(ParserElement::ref root) {
-	foreach (ParserElement::ref itemElement, root->getChildren("item", "http://jabber.org/protocol/muc#admin")) {
-		MUCItem item = MUCItemParser::itemFromTree(itemElement);
-		getPayloadInternal()->addItem(item);
-	}
+    foreach (ParserElement::ref itemElement, root->getChildren("item", "http://jabber.org/protocol/muc#admin")) {
+        MUCItem item = MUCItemParser::itemFromTree(itemElement);
+        getPayloadInternal()->addItem(item);
+    }
 }
 
 }

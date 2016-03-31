@@ -13,10 +13,10 @@
 #include <Swiften/Serializer/GenericElementSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API AuthChallengeSerializer : public GenericElementSerializer<AuthChallenge> {
-		public:
-			AuthChallengeSerializer();
+    class SWIFTEN_API AuthChallengeSerializer : public GenericElementSerializer<AuthChallenge> {
+        public:
+            AuthChallengeSerializer();
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element)  const;
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element)  const;
+    };
 }

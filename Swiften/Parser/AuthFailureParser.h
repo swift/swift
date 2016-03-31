@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericElementParser.h>
 
 namespace Swift {
-	class SWIFTEN_API AuthFailureParser : public GenericElementParser<AuthFailure> {
-		public:
-			AuthFailureParser() : GenericElementParser<AuthFailure>() {}
-	};
+    class SWIFTEN_API AuthFailureParser : public GenericElementParser<AuthFailure> {
+        public:
+            AuthFailureParser() : GenericElementParser<AuthFailure>() {}
+    };
 }

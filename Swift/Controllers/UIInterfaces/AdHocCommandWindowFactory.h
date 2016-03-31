@@ -12,9 +12,9 @@
 
 namespace Swift {
 class AdHocCommandWindow;
-	class AdHocCommandWindowFactory {
-		public:
-			virtual ~AdHocCommandWindowFactory() {}
-			virtual AdHocCommandWindow* createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) = 0;
-	};
+    class AdHocCommandWindowFactory {
+        public:
+            virtual ~AdHocCommandWindowFactory() {}
+            virtual AdHocCommandWindow* createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) = 0;
+    };
 }

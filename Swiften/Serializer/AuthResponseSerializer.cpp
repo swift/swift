@@ -16,19 +16,19 @@ namespace Swift {
 AuthResponseSerializer::AuthResponseSerializer() {
 }
 
-SafeByteArray AuthResponseSerializer::serialize(boost::shared_ptr<ToplevelElement> element)	const {
-	boost::shared_ptr<AuthResponse> authResponse(boost::dynamic_pointer_cast<AuthResponse>(element));
-	SafeByteArray value;
-	boost::optional<SafeByteArray> message = authResponse->getValue();
-	if (message) {
-		if ((*message).empty()) {
-			value = createSafeByteArray("");
-		}
-		else {
-			value = Base64::encode(*message);
-		}
-	}
-	return concat(createSafeByteArray("<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"), value, createSafeByteArray("</response>"));
+SafeByteArray AuthResponseSerializer::serialize(boost::shared_ptr<ToplevelElement> element)    const {
+    boost::shared_ptr<AuthResponse> authResponse(boost::dynamic_pointer_cast<AuthResponse>(element));
+    SafeByteArray value;
+    boost::optional<SafeByteArray> message = authResponse->getValue();
+    if (message) {
+        if ((*message).empty()) {
+            value = createSafeByteArray("");
+        }
+        else {
+            value = Base64::encode(*message);
+        }
+    }
+    return concat(createSafeByteArray("<response xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"), value, createSafeByteArray("</response>"));
 }
 
 }

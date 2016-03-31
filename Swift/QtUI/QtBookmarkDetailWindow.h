@@ -15,18 +15,18 @@
 #include <Swift/QtUI/ui_QtBookmarkDetailWindow.h>
 
 namespace Swift {
-	class QtBookmarkDetailWindow : public QDialog, protected Ui::QtBookmarkDetailWindow {
-		Q_OBJECT
-		public:
-			QtBookmarkDetailWindow(QWidget* parent = NULL);
-			virtual bool commit() = 0;
-			boost::optional<MUCBookmark> createBookmarkFromForm();
+    class QtBookmarkDetailWindow : public QDialog, protected Ui::QtBookmarkDetailWindow {
+        Q_OBJECT
+        public:
+            QtBookmarkDetailWindow(QWidget* parent = NULL);
+            virtual bool commit() = 0;
+            boost::optional<MUCBookmark> createBookmarkFromForm();
 
-		protected:
-			void createFormFromBookmark(const MUCBookmark& bookmark);
+        protected:
+            void createFormFromBookmark(const MUCBookmark& bookmark);
 
-		public slots:
-			void accept();
-	};
+        public slots:
+            void accept();
+    };
 }
 

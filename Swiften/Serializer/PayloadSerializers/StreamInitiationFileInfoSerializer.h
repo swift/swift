@@ -19,12 +19,12 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API StreamInitiationFileInfoSerializer : public GenericPayloadSerializer<StreamInitiationFileInfo> {
-		public:
-			StreamInitiationFileInfoSerializer();
+    class SWIFTEN_API StreamInitiationFileInfoSerializer : public GenericPayloadSerializer<StreamInitiationFileInfo> {
+        public:
+            StreamInitiationFileInfoSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<StreamInitiationFileInfo>)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<StreamInitiationFileInfo>)  const;
+    };
 }

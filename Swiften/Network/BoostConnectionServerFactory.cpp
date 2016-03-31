@@ -20,11 +20,11 @@ BoostConnectionServerFactory::BoostConnectionServerFactory(boost::shared_ptr<boo
 }
 
 boost::shared_ptr<ConnectionServer> BoostConnectionServerFactory::createConnectionServer(int port) {
-	return BoostConnectionServer::create(port, ioService, eventLoop);
+    return BoostConnectionServer::create(port, ioService, eventLoop);
 }
 
 boost::shared_ptr<ConnectionServer> BoostConnectionServerFactory::createConnectionServer(const Swift::HostAddress &hostAddress, int port) {
-	return BoostConnectionServer::create(hostAddress, port, ioService, eventLoop);
+    return BoostConnectionServer::create(hostAddress, port, ioService, eventLoop);
 }
 
 }

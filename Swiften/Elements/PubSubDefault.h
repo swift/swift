@@ -16,37 +16,37 @@
 #include <Swiften/Elements/PubSubPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubDefault : public PubSubPayload {
-		public:
-			enum Type {
-				None,
-				Collection,
-				Leaf
-			};
+    class SWIFTEN_API PubSubDefault : public PubSubPayload {
+        public:
+            enum Type {
+                None,
+                Collection,
+                Leaf
+            };
 
-			PubSubDefault();
-			
-			virtual ~PubSubDefault();
+            PubSubDefault();
 
-			const boost::optional< std::string >& getNode() const {
-				return node;
-			}
+            virtual ~PubSubDefault();
 
-			void setNode(const boost::optional< std::string >& value) {
-				this->node = value ;
-			}
+            const boost::optional< std::string >& getNode() const {
+                return node;
+            }
 
-			Type getType() const {
-				return type;
-			}
+            void setNode(const boost::optional< std::string >& value) {
+                this->node = value ;
+            }
 
-			void setType(Type value) {
-				this->type = value ;
-			}
+            Type getType() const {
+                return type;
+            }
+
+            void setType(Type value) {
+                this->type = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > node;
-			Type type;
-	};
+        private:
+            boost::optional< std::string > node;
+            Type type;
+    };
 }

@@ -17,10 +17,10 @@ QtTabWidget::~QtTabWidget() {
 }
 
 QTabBar* QtTabWidget::tabBar() {
-	return QTabWidget::tabBar();
+    return QTabWidget::tabBar();
 }
 
 void QtTabWidget::setTabBar(QTabBar* tabBar) {
-	QTabWidget::setTabBar(tabBar);
+    QTabWidget::setTabBar(tabBar);
 }
 }

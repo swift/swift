@@ -22,12 +22,12 @@ PubSubEventPurgeSerializer::~PubSubEventPurgeSerializer() {
 }
 
 std::string PubSubEventPurgeSerializer::serializePayload(boost::shared_ptr<PubSubEventPurge> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("purge", "http://jabber.org/protocol/pubsub#event");
-	element.setAttribute("node", payload->getNode());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("purge", "http://jabber.org/protocol/pubsub#event");
+    element.setAttribute("node", payload->getNode());
+    return element.serialize();
 }
 
 

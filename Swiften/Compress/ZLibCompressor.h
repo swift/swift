@@ -10,14 +10,14 @@
 #include <Swiften/Compress/ZLibCodecompressor.h>
 
 namespace Swift {
-	class SWIFTEN_API ZLibCompressor : public ZLibCodecompressor {
-		public:
-			ZLibCompressor();
-			virtual ~ZLibCompressor();
+    class SWIFTEN_API ZLibCompressor : public ZLibCodecompressor {
+        public:
+            ZLibCompressor();
+            virtual ~ZLibCompressor();
 
-			virtual int processZStream();
+            virtual int processZStream();
 
-		private:
-			static const int COMPRESSION_LEVEL = 9;
-	};
+        private:
+            static const int COMPRESSION_LEVEL = 9;
+    };
 }

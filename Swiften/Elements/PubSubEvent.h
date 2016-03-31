@@ -15,9 +15,9 @@
 #include <Swiften/Elements/PubSubEventPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubEvent : public ContainerPayload<PubSubEventPayload> {
-		public:
-			PubSubEvent();
-			virtual ~PubSubEvent();
-	};
+    class SWIFTEN_API PubSubEvent : public ContainerPayload<PubSubEventPayload> {
+        public:
+            PubSubEvent();
+            virtual ~PubSubEvent();
+    };
 }

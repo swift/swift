@@ -11,9 +11,9 @@
 namespace Swift {
 
 static struct DefaultTranslator : public Translator {
-	virtual std::string translate(const std::string& text, const std::string&) {
-		return text;
-	}
+    virtual std::string translate(const std::string& text, const std::string&) {
+        return text;
+    }
 } defaultTranslator;
 
 Translator* Translator::translator = &defaultTranslator;
@@ -22,7 +22,7 @@ Translator::~Translator() {
 }
 
 void Translator::setInstance(Translator* t) {
-	translator = t;
+    translator = t;
 }
 
 }

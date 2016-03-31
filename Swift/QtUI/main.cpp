@@ -33,72 +33,72 @@
 #include <Swift/QtUI/QtTranslator.h>
 
 int main(int argc, char* argv[]) {
-	Swift::PlatformApplicationPathProvider applicationPathProvider(SWIFT_APPLICATION_NAME);
+    Swift::PlatformApplicationPathProvider applicationPathProvider(SWIFT_APPLICATION_NAME);
 
-	Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
+    Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
 
 #if QT_VERSION < 0x050000
-	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 #endif
 
-	// Parse program options
-	boost::program_options::options_description desc = Swift::QtSwift::getOptionsDescription();
-	boost::program_options::variables_map vm;
-	try {
-		boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
-	} catch (const boost::program_options::unknown_option& option) {
+    // Parse program options
+    boost::program_options::options_description desc = Swift::QtSwift::getOptionsDescription();
+    boost::program_options::variables_map vm;
+    try {
+        boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
+    } catch (const boost::program_options::unknown_option& option) {
 #if BOOST_VERSION >= 104200
-		std::cout << "Ignoring unknown option " << option.get_option_name() << " but continuing." <<  std::endl;
+        std::cout << "Ignoring unknown option " << option.get_option_name() << " but continuing." <<  std::endl;
 #else
-		std::cout << "Error: " << option.what() << " (continuing)" <<  std::endl;
+        std::cout << "Error: " << option.what() << " (continuing)" <<  std::endl;
 #endif
-	}
-	boost::program_options::notify(vm);
-	if (vm.count("help") > 0) {
-		std::cout << SWIFT_APPLICATION_NAME << " is an instant messaging client for the XMPP network." << std::endl;
-		std::cout << std::endl;
-		std::cout << "Usage: " << argv[0] << " [OPTIONS]..." << std::endl;
-		std::cout << std::endl;
-		std::cout << desc << std::endl;
-		return 1;
-	}
-	if (vm.count("version") > 0) {
-		std::cout << SWIFT_APPLICATION_NAME << " " << buildVersion << std::endl;
-		return 0;
-	}
+    }
+    boost::program_options::notify(vm);
+    if (vm.count("help") > 0) {
+        std::cout << SWIFT_APPLICATION_NAME << " is an instant messaging client for the XMPP network." << std::endl;
+        std::cout << std::endl;
+        std::cout << "Usage: " << argv[0] << " [OPTIONS]..." << std::endl;
+        std::cout << std::endl;
+        std::cout << desc << std::endl;
+        return 1;
+    }
+    if (vm.count("version") > 0) {
+        std::cout << SWIFT_APPLICATION_NAME << " " << buildVersion << std::endl;
+        return 0;
+    }
 
-	// Translation
+    // Translation
 #if QT_VERSION < 0x050000
-	QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
+    QTextCodec::setCodecForTr(QTextCodec::codecForName("UTF-8"));
 #endif
-	boost::filesystem::path someTranslationPath = applicationPathProvider.getResourcePath("/translations/swift_en.qm");
+    boost::filesystem::path someTranslationPath = applicationPathProvider.getResourcePath("/translations/swift_en.qm");
 
-	QTranslator qtTranslator;
-	if (!someTranslationPath.empty()) {
+    QTranslator qtTranslator;
+    if (!someTranslationPath.empty()) {
 #if QT_VERSION >= 0x040800
-		if (vm.count("language") > 0) {
-			qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + P2QSTRING(vm["language"].as<std::string>()), P2QSTRING(Swift::pathToString(someTranslationPath.parent_path())));
-		}
-		else {
-			qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", P2QSTRING(Swift::pathToString(someTranslationPath)));
-		}
+        if (vm.count("language") > 0) {
+            qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + P2QSTRING(vm["language"].as<std::string>()), P2QSTRING(Swift::pathToString(someTranslationPath.parent_path())));
+        }
+        else {
+            qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", P2QSTRING(Swift::pathToString(someTranslationPath)));
+        }
 #else
-		//std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
-		qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), P2QSTRING(Swift::pathToString(someTranslationPath)));
+        //std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
+        qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + QLocale::system().name(), P2QSTRING(Swift::pathToString(someTranslationPath)));
 #endif
-	}
+    }
 
-	QApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-	app.installTranslator(&qtTranslator);
-	QtTranslator swiftTranslator;
-	Swift::Translator::setInstance(&swiftTranslator);
+    app.installTranslator(&qtTranslator);
+    QtTranslator swiftTranslator;
+    Swift::Translator::setInstance(&swiftTranslator);
 
 
-	Swift::QtSwift swift(vm);
-	int result = app.exec();
+    Swift::QtSwift swift(vm);
+    int result = app.exec();
 
-	Swift::Translator::setInstance(NULL);
+    Swift::Translator::setInstance(NULL);
 
-	return result;
+    return result;
 }

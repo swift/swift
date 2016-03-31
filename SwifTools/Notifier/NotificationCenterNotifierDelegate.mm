@@ -18,9 +18,9 @@ using namespace Swift;
 @synthesize notifier;
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *) center didActivateNotification:(NSUserNotification *)notification {
-	(void)center;
-	std::string identifier = ns2StdString(notification.identifier);
-	notifier->handleUserNotificationActivated(identifier);
+    (void)center;
+    std::string identifier = ns2StdString(notification.identifier);
+    notifier->handleUserNotificationActivated(identifier);
 }
 
 @end

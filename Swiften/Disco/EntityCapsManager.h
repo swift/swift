@@ -16,31 +16,31 @@
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
-	class StanzaChannel;
-	class CapsProvider;
+    class StanzaChannel;
+    class CapsProvider;
 
-	/**
-	 * This class is responsible for gathering and providing
-	 * information about capabilities of entities on the network.
-	 * This information is provided in the form of service discovery
-	 * information.
-	 */
-	class SWIFTEN_API EntityCapsManager : public EntityCapsProvider, public boost::bsignals::trackable {
-		public:
-			EntityCapsManager(CapsProvider*, StanzaChannel*);
+    /**
+     * This class is responsible for gathering and providing
+     * information about capabilities of entities on the network.
+     * This information is provided in the form of service discovery
+     * information.
+     */
+    class SWIFTEN_API EntityCapsManager : public EntityCapsProvider, public boost::bsignals::trackable {
+        public:
+            EntityCapsManager(CapsProvider*, StanzaChannel*);
 
-			/**
-			 * Returns the service discovery information of the given JID.
-			 */
-			DiscoInfo::ref getCaps(const JID&) const;
+            /**
+             * Returns the service discovery information of the given JID.
+             */
+            DiscoInfo::ref getCaps(const JID&) const;
 
-		private:
-			void handlePresenceReceived(boost::shared_ptr<Presence>);
-			void handleStanzaChannelAvailableChanged(bool);
-			void handleCapsAvailable(const std::string&);
+        private:
+            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handleStanzaChannelAvailableChanged(bool);
+            void handleCapsAvailable(const std::string&);
 
-		private:
-			CapsProvider* capsProvider;
-			std::map<JID, std::string> caps;
-	};
+        private:
+            CapsProvider* capsProvider;
+            std::map<JID, std::string> caps;
+    };
 }

@@ -12,11 +12,11 @@
 using namespace Swift;
 
 int main() {
-	SimpleEventLoop eventLoop;
-	
-	DummyMenulet menulet;
-	MainController controller(&menulet, &eventLoop);
+    SimpleEventLoop eventLoop;
 
-	eventLoop.run();
-	return 0;
+    DummyMenulet menulet;
+    MainController controller(&menulet, &eventLoop);
+
+    eventLoop.run();
+    return 0;
 }

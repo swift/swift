@@ -23,12 +23,12 @@ PubSubConfigureSerializer::~PubSubConfigureSerializer() {
 }
 
 std::string PubSubConfigureSerializer::serializePayload(boost::shared_ptr<PubSubConfigure> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("configure", "http://jabber.org/protocol/pubsub");
-	element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("configure", "http://jabber.org/protocol/pubsub");
+    element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
+    return element.serialize();
 }
 
 

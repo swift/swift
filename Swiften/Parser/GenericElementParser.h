@@ -13,35 +13,35 @@
 #include <Swiften/Parser/ElementParser.h>
 
 namespace Swift {
-	
-	class PayloadParserFactoryCollection;
 
-	template<typename ElementType>
-	class SWIFTEN_API GenericElementParser : public ElementParser {
-		public:
-			GenericElementParser() {
-				stanza_ = boost::make_shared<ElementType>();
-			}
+    class PayloadParserFactoryCollection;
 
-			virtual boost::shared_ptr<ToplevelElement> getElement() const {
-				return stanza_;
-			}
+    template<typename ElementType>
+    class SWIFTEN_API GenericElementParser : public ElementParser {
+        public:
+            GenericElementParser() {
+                stanza_ = boost::make_shared<ElementType>();
+            }
 
-			virtual boost::shared_ptr<ElementType> getElementGeneric() const {
-				return stanza_;
-			}
+            virtual boost::shared_ptr<ToplevelElement> getElement() const {
+                return stanza_;
+            }
 
-		private:
-			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
-			}
+            virtual boost::shared_ptr<ElementType> getElementGeneric() const {
+                return stanza_;
+            }
 
-			virtual void handleEndElement(const std::string&, const std::string&) {
-			}
+        private:
+            virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
+            }
 
-			virtual void handleCharacterData(const std::string&) {
-			}
+            virtual void handleEndElement(const std::string&, const std::string&) {
+            }
 
-		private:
-			boost::shared_ptr<ElementType> stanza_;
-	};
+            virtual void handleCharacterData(const std::string&) {
+            }
+
+        private:
+            boost::shared_ptr<ElementType> stanza_;
+    };
 }

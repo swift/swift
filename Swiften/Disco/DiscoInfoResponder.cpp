@@ -17,34 +17,34 @@ DiscoInfoResponder::DiscoInfoResponder(IQRouter* router) : GetResponder<DiscoInf
 }
 
 void DiscoInfoResponder::clearDiscoInfo() {
-	info_ = DiscoInfo();
-	nodeInfo_.clear();
+    info_ = DiscoInfo();
+    nodeInfo_.clear();
 }
 
 void DiscoInfoResponder::setDiscoInfo(const DiscoInfo& info) {
-	info_ = info;
+    info_ = info;
 }
 
 void DiscoInfoResponder::setDiscoInfo(const std::string& node, const DiscoInfo& info) {
-	DiscoInfo newInfo(info);
-	newInfo.setNode(node);
-	nodeInfo_[node] = newInfo;
+    DiscoInfo newInfo(info);
+    newInfo.setNode(node);
+    nodeInfo_[node] = newInfo;
 }
 
 bool DiscoInfoResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<DiscoInfo> info) {
-	if (info->getNode().empty()) {
-		sendResponse(from, id, boost::make_shared<DiscoInfo>(info_));
-	}
-	else {
-		std::map<std::string,DiscoInfo>::const_iterator i = nodeInfo_.find(info->getNode());
-		if (i != nodeInfo_.end()) {
-			sendResponse(from, id, boost::make_shared<DiscoInfo>((*i).second));
-		}
-		else {
-			sendError(from, id, ErrorPayload::ItemNotFound, ErrorPayload::Cancel);
-		}
-	}
-	return true;
+    if (info->getNode().empty()) {
+        sendResponse(from, id, boost::make_shared<DiscoInfo>(info_));
+    }
+    else {
+        std::map<std::string,DiscoInfo>::const_iterator i = nodeInfo_.find(info->getNode());
+        if (i != nodeInfo_.end()) {
+            sendResponse(from, id, boost::make_shared<DiscoInfo>((*i).second));
+        }
+        else {
+            sendError(from, id, ErrorPayload::ItemNotFound, ErrorPayload::Cancel);
+        }
+    }
+    return true;
 }
 
 }

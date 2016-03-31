@@ -10,17 +10,17 @@
 #include <Swiften/Roster/RosterStorage.h>
 
 namespace Swift {
-	class SWIFTEN_API RosterMemoryStorage : public RosterStorage {
-		public:
-			RosterMemoryStorage();
+    class SWIFTEN_API RosterMemoryStorage : public RosterStorage {
+        public:
+            RosterMemoryStorage();
 
-			virtual boost::shared_ptr<RosterPayload> getRoster() const {
-				return roster;
-			}
+            virtual boost::shared_ptr<RosterPayload> getRoster() const {
+                return roster;
+            }
 
-			virtual void setRoster(boost::shared_ptr<RosterPayload>);
+            virtual void setRoster(boost::shared_ptr<RosterPayload>);
 
-		private:
-			boost::shared_ptr<RosterPayload> roster;
-	};
+        private:
+            boost::shared_ptr<RosterPayload> roster;
+    };
 }

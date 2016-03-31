@@ -18,12 +18,12 @@
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
-	class SWIFTEN_API ReplaceSerializer : public GenericPayloadSerializer<Replace> {
-		public:
-			ReplaceSerializer() : GenericPayloadSerializer<Replace>() {}
+    class SWIFTEN_API ReplaceSerializer : public GenericPayloadSerializer<Replace> {
+        public:
+            ReplaceSerializer() : GenericPayloadSerializer<Replace>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<Replace> replace) const {
-				return "<replace id = '" + replace->getID() + "' xmlns='urn:xmpp:message-correct:0'/>";
-			}
-	};
+            virtual std::string serializePayload(boost::shared_ptr<Replace> replace) const {
+                return "<replace id = '" + replace->getID() + "' xmlns='urn:xmpp:message-correct:0'/>";
+            }
+    };
 }

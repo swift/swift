@@ -19,20 +19,20 @@
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 
 namespace Swift {
-	class SWIFTEN_API IncomingWhiteboardSession : public WhiteboardSession {
-	public:
-		typedef boost::shared_ptr<IncomingWhiteboardSession> ref;
+    class SWIFTEN_API IncomingWhiteboardSession : public WhiteboardSession {
+    public:
+        typedef boost::shared_ptr<IncomingWhiteboardSession> ref;
 
-	public:
-		IncomingWhiteboardSession(const JID& jid, IQRouter* router);
-		~IncomingWhiteboardSession();
+    public:
+        IncomingWhiteboardSession(const JID& jid, IQRouter* router);
+        ~IncomingWhiteboardSession();
 
-		void accept();
+        void accept();
 
-	private:
-		void handleIncomingOperation(WhiteboardOperation::ref operation);
-		void sendOperation(WhiteboardOperation::ref operation);
+    private:
+        void handleIncomingOperation(WhiteboardOperation::ref operation);
+        void sendOperation(WhiteboardOperation::ref operation);
 
-		WhiteboardClient client;
-	};
+        WhiteboardClient client;
+    };
 }

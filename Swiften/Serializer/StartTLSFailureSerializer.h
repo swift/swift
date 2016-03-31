@@ -14,13 +14,13 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StartTLSFailureSerializer : public GenericElementSerializer<StartTLSFailure> {
-		public:
-			StartTLSFailureSerializer() : GenericElementSerializer<StartTLSFailure>() {
-			}
+    class SWIFTEN_API StartTLSFailureSerializer : public GenericElementSerializer<StartTLSFailure> {
+        public:
+            StartTLSFailureSerializer() : GenericElementSerializer<StartTLSFailure>() {
+            }
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
-				return createSafeByteArray(XMLElement("failure", "urn:ietf:params:xml:ns:xmpp-tls").serialize());
-			}
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
+                return createSafeByteArray(XMLElement("failure", "urn:ietf:params:xml:ns:xmpp-tls").serialize());
+            }
+    };
 }

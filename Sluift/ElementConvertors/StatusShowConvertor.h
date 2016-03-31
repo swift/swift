@@ -12,15 +12,15 @@
 #include <Sluift/GenericLuaElementConvertor.h>
 
 namespace Swift {
-	class StatusShowConvertor : public GenericLuaElementConvertor<StatusShow> {
-		public:
-			StatusShowConvertor();
-			virtual ~StatusShowConvertor();
+    class StatusShowConvertor : public GenericLuaElementConvertor<StatusShow> {
+        public:
+            StatusShowConvertor();
+            virtual ~StatusShowConvertor();
 
-			virtual boost::shared_ptr<StatusShow> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-			virtual void doConvertToLua(lua_State*, boost::shared_ptr<StatusShow>) SWIFTEN_OVERRIDE;
+            virtual boost::shared_ptr<StatusShow> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, boost::shared_ptr<StatusShow>) SWIFTEN_OVERRIDE;
 
-			static std::string convertStatusShowTypeToString(const StatusShow::Type &show);
-			static StatusShow::Type convertStatusShowTypeFromString(const std::string& show);
-	};
+            static std::string convertStatusShowTypeToString(const StatusShow::Type &show);
+            static StatusShow::Type convertStatusShowTypeFromString(const std::string& show);
+    };
 }

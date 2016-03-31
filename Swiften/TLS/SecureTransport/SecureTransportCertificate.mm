@@ -19,7 +19,7 @@ template <typename T, typename S>
 T bridge_cast(S source) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wold-style-cast"
-	return (__bridge T)(source);
+    return (__bridge T)(source);
 #pragma clang diagnostic pop
 }
 
@@ -29,11 +29,11 @@ namespace {
 
 inline std::string ns2StdString(NSString* _Nullable nsString);
 inline std::string ns2StdString(NSString* _Nullable nsString) {
-	std::string stdString;
-	if (nsString != nil) {
-		stdString = std::string([nsString cStringUsingEncoding:NSUTF8StringEncoding]);
-	}
-	return stdString;
+    std::string stdString;
+    if (nsString != nil) {
+        stdString = std::string([nsString cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+    return stdString;
 }
 
 }
@@ -41,21 +41,21 @@ inline std::string ns2StdString(NSString* _Nullable nsString) {
 namespace Swift {
 
 SecureTransportCertificate::SecureTransportCertificate(SecCertificateRef certificate) {
-	assert(certificate);
-	CFRetain(certificate);
-	certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
-	parse();
+    assert(certificate);
+    CFRetain(certificate);
+    certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
+    parse();
 }
 
 
 SecureTransportCertificate::SecureTransportCertificate(const ByteArray& der) {
-	CFDataRef derData = CFDataCreateWithBytesNoCopy(NULL, der.data(), static_cast<CFIndex>(der.size()), NULL);
-	// certificate will take ownership of derData and free it on its release.
-	SecCertificateRef certificate = SecCertificateCreateWithData(NULL, derData);
-	if (certificate) {
-		certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
-		parse();
-	}
+    CFDataRef derData = CFDataCreateWithBytesNoCopy(NULL, der.data(), static_cast<CFIndex>(der.size()), NULL);
+    // certificate will take ownership of derData and free it on its release.
+    SecCertificateRef certificate = SecCertificateCreateWithData(NULL, derData);
+    if (certificate) {
+        certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
+        parse();
+    }
 }
 
 SecureTransportCertificate::~SecureTransportCertificate() {
@@ -63,89 +63,89 @@ SecureTransportCertificate::~SecureTransportCertificate() {
 }
 
 void SecureTransportCertificate::parse() {
-	assert(certificateHandle_);
-	CFErrorRef error = NULL;
+    assert(certificateHandle_);
+    CFErrorRef error = NULL;
 
-	// The SecCertificateCopyValues function is not part of the iOS Secure Transport API.
-	CFDictionaryRef valueDict = SecCertificateCopyValues(certificateHandle_.get(), 0, &error);
-	if (valueDict) {
-		// Handle subject.
-		CFStringRef subject = SecCertificateCopySubjectSummary(certificateHandle_.get());
-		if (subject) {
-			NSString* subjectStr = bridge_cast<NSString*>(subject);
-			subjectName_ = ns2StdString(subjectStr);
-			CFRelease(subject);
-		}
+    // The SecCertificateCopyValues function is not part of the iOS Secure Transport API.
+    CFDictionaryRef valueDict = SecCertificateCopyValues(certificateHandle_.get(), 0, &error);
+    if (valueDict) {
+        // Handle subject.
+        CFStringRef subject = SecCertificateCopySubjectSummary(certificateHandle_.get());
+        if (subject) {
+            NSString* subjectStr = bridge_cast<NSString*>(subject);
+            subjectName_ = ns2StdString(subjectStr);
+            CFRelease(subject);
+        }
 
-		// Handle a single Common Name.
-		CFStringRef commonName = NULL;
-		OSStatus error = SecCertificateCopyCommonName(certificateHandle_.get(), &commonName);
-		if (!error && commonName) {
-			NSString* commonNameStr = bridge_cast<NSString*>(commonName);
-			commonNames_.push_back(ns2StdString(commonNameStr));
-		}
-		if (commonName) {
-			CFRelease(commonName);
-		}
+        // Handle a single Common Name.
+        CFStringRef commonName = NULL;
+        OSStatus error = SecCertificateCopyCommonName(certificateHandle_.get(), &commonName);
+        if (!error && commonName) {
+            NSString* commonNameStr = bridge_cast<NSString*>(commonName);
+            commonNames_.push_back(ns2StdString(commonNameStr));
+        }
+        if (commonName) {
+            CFRelease(commonName);
+        }
 
-		// Handle Subject Alternative Names
-		NSDictionary* certDict = bridge_cast<NSDictionary*>(valueDict);
-		NSDictionary* subjectAltNamesDict = certDict[@"2.5.29.17"][@"value"];
+        // Handle Subject Alternative Names
+        NSDictionary* certDict = bridge_cast<NSDictionary*>(valueDict);
+        NSDictionary* subjectAltNamesDict = certDict[@"2.5.29.17"][@"value"];
 
-		for (NSDictionary* entry in subjectAltNamesDict) {
-			if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_XMPPADDR_OID])]) {
-				xmppAddresses_.push_back(ns2StdString(entry[@"value"]));
-			}
-			else if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_DNSSRV_OID])]) {
-				srvNames_.push_back(ns2StdString(entry[@"value"]));
-			}
-			else if ([entry[@"label"] isEqualToString:@"DNS Name"]) {
-				dnsNames_.push_back(ns2StdString(entry[@"value"]));
-			}
-		}
-		CFRelease(valueDict);
-	}
+        for (NSDictionary* entry in subjectAltNamesDict) {
+            if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_XMPPADDR_OID])]) {
+                xmppAddresses_.push_back(ns2StdString(entry[@"value"]));
+            }
+            else if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_DNSSRV_OID])]) {
+                srvNames_.push_back(ns2StdString(entry[@"value"]));
+            }
+            else if ([entry[@"label"] isEqualToString:@"DNS Name"]) {
+                dnsNames_.push_back(ns2StdString(entry[@"value"]));
+            }
+        }
+        CFRelease(valueDict);
+    }
 
-	if (error) {
-		CFRelease(error);
-	}
+    if (error) {
+        CFRelease(error);
+    }
 }
 
 std::string SecureTransportCertificate::getSubjectName() const {
-	return subjectName_;
+    return subjectName_;
 }
 
 std::vector<std::string> SecureTransportCertificate::getCommonNames() const {
-	return commonNames_;
+    return commonNames_;
 }
 
 std::vector<std::string> SecureTransportCertificate::getSRVNames() const {
-	return srvNames_;
+    return srvNames_;
 }
 
 std::vector<std::string> SecureTransportCertificate::getDNSNames() const {
-	return dnsNames_;
+    return dnsNames_;
 }
 
 std::vector<std::string> SecureTransportCertificate::getXMPPAddresses() const {
-	return xmppAddresses_;
+    return xmppAddresses_;
 }
 
 ByteArray SecureTransportCertificate::toDER() const {
-	ByteArray der;
-	if (certificateHandle_) {
-		CFDataRef derData = SecCertificateCopyData(certificateHandle_.get());
-		if (derData) {
-			try {
-				size_t dataSize = boost::numeric_cast<size_t>(CFDataGetLength(derData));
-				der.resize(dataSize);
-				CFDataGetBytes(derData, CFRangeMake(0,CFDataGetLength(derData)), der.data());
-			} catch (...) {
-			}
-			CFRelease(derData);
-		}
-	}
-	return der;
+    ByteArray der;
+    if (certificateHandle_) {
+        CFDataRef derData = SecCertificateCopyData(certificateHandle_.get());
+        if (derData) {
+            try {
+                size_t dataSize = boost::numeric_cast<size_t>(CFDataGetLength(derData));
+                der.resize(dataSize);
+                CFDataGetBytes(derData, CFRangeMake(0,CFDataGetLength(derData)), der.data());
+            } catch (...) {
+            }
+            CFRelease(derData);
+        }
+    }
+    return der;
 }
 
 }

@@ -15,15 +15,15 @@
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
-	class SWIFTEN_API IQChannel {
-		public:
-			virtual ~IQChannel();
+    class SWIFTEN_API IQChannel {
+        public:
+            virtual ~IQChannel();
 
-			virtual void sendIQ(boost::shared_ptr<IQ>) = 0;
-			virtual std::string getNewIQID() = 0;
-			
-			virtual bool isAvailable() const = 0;
+            virtual void sendIQ(boost::shared_ptr<IQ>) = 0;
+            virtual std::string getNewIQID() = 0;
 
-			boost::signal<void (boost::shared_ptr<IQ>)> onIQReceived;
-	};
+            virtual bool isAvailable() const = 0;
+
+            boost::signal<void (boost::shared_ptr<IQ>)> onIQReceived;
+    };
 }

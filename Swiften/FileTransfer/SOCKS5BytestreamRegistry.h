@@ -14,22 +14,22 @@
 #include <Swiften/Base/IDGenerator.h>
 
 namespace Swift {
-	class SOCKS5BytestreamServerSession;
+    class SOCKS5BytestreamServerSession;
 
-	class SWIFTEN_API SOCKS5BytestreamRegistry {
-		public:
-			SOCKS5BytestreamRegistry();
+    class SWIFTEN_API SOCKS5BytestreamRegistry {
+        public:
+            SOCKS5BytestreamRegistry();
 
-			void setHasBytestream(const std::string& destination, bool);
-			bool hasBytestream(const std::string& destination) const;
+            void setHasBytestream(const std::string& destination, bool);
+            bool hasBytestream(const std::string& destination) const;
 
-			/**
-			 * Generate a new session ID to use for new S5B streams.
-			 */
-			std::string generateSessionID();
+            /**
+             * Generate a new session ID to use for new S5B streams.
+             */
+            std::string generateSessionID();
 
-		private:
-			std::set<std::string> availableBytestreams;
-			IDGenerator idGenerator;
-	};
+        private:
+            std::set<std::string> availableBytestreams;
+            IDGenerator idGenerator;
+    };
 }

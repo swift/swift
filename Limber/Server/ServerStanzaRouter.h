@@ -14,18 +14,18 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class ServerSession;
+    class ServerSession;
 
-	class ServerStanzaRouter {
-		public:
-			ServerStanzaRouter();
+    class ServerStanzaRouter {
+        public:
+            ServerStanzaRouter();
 
-			bool routeStanza(boost::shared_ptr<Stanza>);
+            bool routeStanza(boost::shared_ptr<Stanza>);
 
-			void addClientSession(ServerSession*);
-			void removeClientSession(ServerSession*);
+            void addClientSession(ServerSession*);
+            void removeClientSession(ServerSession*);
 
-		private:
-			std::vector<ServerSession*> clientSessions_;
-	};
+        private:
+            std::vector<ServerSession*> clientSessions_;
+    };
 }

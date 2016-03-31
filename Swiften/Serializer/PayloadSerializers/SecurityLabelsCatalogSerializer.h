@@ -11,10 +11,10 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class SWIFTEN_API SecurityLabelsCatalogSerializer : public GenericPayloadSerializer<SecurityLabelsCatalog> {
-		public:
-			SecurityLabelsCatalogSerializer();
+    class SWIFTEN_API SecurityLabelsCatalogSerializer : public GenericPayloadSerializer<SecurityLabelsCatalog> {
+        public:
+            SecurityLabelsCatalogSerializer();
 
-			virtual std::string serializePayload(boost::shared_ptr<SecurityLabelsCatalog> version)  const;
-	};
+            virtual std::string serializePayload(boost::shared_ptr<SecurityLabelsCatalog> version)  const;
+    };
 }

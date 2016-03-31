@@ -19,41 +19,41 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class WhiteboardOperation {
-	public:
-		typedef boost::shared_ptr<WhiteboardOperation> ref;
-	public:
-		WhiteboardOperation() {}
-		SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(WhiteboardOperation)
-		virtual ~WhiteboardOperation(){}
+    class WhiteboardOperation {
+    public:
+        typedef boost::shared_ptr<WhiteboardOperation> ref;
+    public:
+        WhiteboardOperation() {}
+        SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(WhiteboardOperation)
+        virtual ~WhiteboardOperation(){}
 
-		std::string getID() const {
-			return id_;
-		}
+        std::string getID() const {
+            return id_;
+        }
 
-		void setID(const std::string& id) {
-			id_ = id;
-		}
+        void setID(const std::string& id) {
+            id_ = id;
+        }
 
-		std::string getParentID() const {
-			return parentID_;
-		}
+        std::string getParentID() const {
+            return parentID_;
+        }
 
-		void setParentID(const std::string& parentID) {
-			parentID_ = parentID;
-		}
+        void setParentID(const std::string& parentID) {
+            parentID_ = parentID;
+        }
 
-		int getPos() const {
-			return pos_;
-		}
+        int getPos() const {
+            return pos_;
+        }
 
-		void setPos(int pos) {
-			pos_ = pos;
-		}
+        void setPos(int pos) {
+            pos_ = pos;
+        }
 
-	private:
-		std::string id_;
-		std::string parentID_;
-		int pos_;
-	};
+    private:
+        std::string id_;
+        std::string parentID_;
+        int pos_;
+    };
 }

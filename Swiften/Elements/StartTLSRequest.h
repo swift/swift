@@ -10,8 +10,8 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StartTLSRequest : public ToplevelElement {
-		public:
-			StartTLSRequest() {}
-	};
+    class SWIFTEN_API StartTLSRequest : public ToplevelElement {
+        public:
+            StartTLSRequest() {}
+    };
 }

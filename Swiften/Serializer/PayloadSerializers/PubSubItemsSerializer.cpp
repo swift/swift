@@ -26,24 +26,24 @@ PubSubItemsSerializer::~PubSubItemsSerializer() {
 }
 
 std::string PubSubItemsSerializer::serializePayload(boost::shared_ptr<PubSubItems> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("items", "http://jabber.org/protocol/pubsub");
-	if (payload->getNode().empty()) {
-		SWIFT_LOG(warning) << "Serializing PubSubItems with empty node attribute";
-	}
-	element.setAttribute("node", payload->getNode());
-	foreach(boost::shared_ptr<PubSubItem> item, payload->getItems()) {
-		element.addNode(boost::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
-	}
-	if (payload->getMaximumItems()) {
-		element.setAttribute("max_items", boost::lexical_cast<std::string>(*payload->getMaximumItems()));
-	}
-	if (payload->getSubscriptionID()) {
-		element.setAttribute("subid", *payload->getSubscriptionID());
-	}
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("items", "http://jabber.org/protocol/pubsub");
+    if (payload->getNode().empty()) {
+        SWIFT_LOG(warning) << "Serializing PubSubItems with empty node attribute";
+    }
+    element.setAttribute("node", payload->getNode());
+    foreach(boost::shared_ptr<PubSubItem> item, payload->getItems()) {
+        element.addNode(boost::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
+    }
+    if (payload->getMaximumItems()) {
+        element.setAttribute("max_items", boost::lexical_cast<std::string>(*payload->getMaximumItems()));
+    }
+    if (payload->getSubscriptionID()) {
+        element.setAttribute("subid", *payload->getSubscriptionID());
+    }
+    return element.serialize();
 }
 
 

@@ -16,48 +16,48 @@
 namespace Swift {
 
 MemoryStorages::MemoryStorages(CryptoProvider* crypto) {
-	vcardStorage = new VCardMemoryStorage(crypto);
-	capsStorage = new CapsMemoryStorage();
-	avatarStorage = new AvatarMemoryStorage();
-	rosterStorage = new RosterMemoryStorage();
+    vcardStorage = new VCardMemoryStorage(crypto);
+    capsStorage = new CapsMemoryStorage();
+    avatarStorage = new AvatarMemoryStorage();
+    rosterStorage = new RosterMemoryStorage();
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
-	historyStorage = new SQLiteHistoryStorage(":memory:");
+    historyStorage = new SQLiteHistoryStorage(":memory:");
 #else
-	historyStorage = NULL;
+    historyStorage = NULL;
 #endif
 }
 
 MemoryStorages::~MemoryStorages() {
-	delete rosterStorage;
-	delete avatarStorage;
-	delete capsStorage;
-	delete vcardStorage;
+    delete rosterStorage;
+    delete avatarStorage;
+    delete capsStorage;
+    delete vcardStorage;
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
-	delete historyStorage;
+    delete historyStorage;
 #endif
 }
 
 VCardStorage* MemoryStorages::getVCardStorage() const {
-	return vcardStorage;
+    return vcardStorage;
 }
 
 CapsStorage* MemoryStorages::getCapsStorage() const {
-	return capsStorage;
+    return capsStorage;
 }
 
 AvatarStorage* MemoryStorages::getAvatarStorage() const {
-	return avatarStorage;
+    return avatarStorage;
 }
 
 RosterStorage* MemoryStorages::getRosterStorage() const {
-	return rosterStorage;
+    return rosterStorage;
 }
 
 HistoryStorage* MemoryStorages::getHistoryStorage() const {
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
-	return historyStorage;
+    return historyStorage;
 #else
-	return NULL;
+    return NULL;
 #endif
 }
 

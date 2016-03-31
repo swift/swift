@@ -13,11 +13,11 @@
 #include <Swiften/IDN/IDNConverter.h>
 
 namespace Swift {
-	class SWIFTEN_API ICUConverter : public IDNConverter {
-		public:
-			virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
-			virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
+    class SWIFTEN_API ICUConverter : public IDNConverter {
+        public:
+            virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
+            virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
 
-			virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) SWIFTEN_OVERRIDE;
-	};
+            virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) SWIFTEN_OVERRIDE;
+    };
 }

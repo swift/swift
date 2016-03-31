@@ -17,38 +17,38 @@
 
 namespace Swift {
 
-	class OpenSSLContext : public TLSContext, boost::noncopyable {
-		public:
-			OpenSSLContext();
-			virtual ~OpenSSLContext();
+    class OpenSSLContext : public TLSContext, boost::noncopyable {
+        public:
+            OpenSSLContext();
+            virtual ~OpenSSLContext();
 
-			void connect();
-			bool setClientCertificate(CertificateWithKey::ref cert);
+            void connect();
+            bool setClientCertificate(CertificateWithKey::ref cert);
 
-			void handleDataFromNetwork(const SafeByteArray&);
-			void handleDataFromApplication(const SafeByteArray&);
+            void handleDataFromNetwork(const SafeByteArray&);
+            void handleDataFromApplication(const SafeByteArray&);
 
-			std::vector<Certificate::ref> getPeerCertificateChain() const;
-			boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            std::vector<Certificate::ref> getPeerCertificateChain() const;
+            boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
-			virtual ByteArray getFinishMessage() const;
+            virtual ByteArray getFinishMessage() const;
 
-		private:
-			static void ensureLibraryInitialized();	
+        private:
+            static void ensureLibraryInitialized();
 
-			static CertificateVerificationError::Type getVerificationErrorTypeForResult(int);
+            static CertificateVerificationError::Type getVerificationErrorTypeForResult(int);
 
-			void doConnect();
-			void sendPendingDataToNetwork();
-			void sendPendingDataToApplication();
+            void doConnect();
+            void sendPendingDataToNetwork();
+            void sendPendingDataToApplication();
 
-		private:
-			enum State { Start, Connecting, Connected, Error };
+        private:
+            enum State { Start, Connecting, Connected, Error };
 
-			State state_;
-			SSL_CTX* context_;
-			SSL* handle_;
-			BIO* readBIO_;
-			BIO* writeBIO_;
-	};
+            State state_;
+            SSL_CTX* context_;
+            SSL* handle_;
+            BIO* readBIO_;
+            BIO* writeBIO_;
+    };
 }

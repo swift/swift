@@ -14,13 +14,13 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StanzaAckRequestSerializer : public GenericElementSerializer<StanzaAckRequest> {
-		public:
-			StanzaAckRequestSerializer() : GenericElementSerializer<StanzaAckRequest>() {
-			}
+    class SWIFTEN_API StanzaAckRequestSerializer : public GenericElementSerializer<StanzaAckRequest> {
+        public:
+            StanzaAckRequestSerializer() : GenericElementSerializer<StanzaAckRequest>() {
+            }
 
-			virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
-				return createSafeByteArray(XMLElement("r", "urn:xmpp:sm:2").serialize());
-			}
-	};
+            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement>) const {
+                return createSafeByteArray(XMLElement("r", "urn:xmpp:sm:2").serialize());
+            }
+    };
 }

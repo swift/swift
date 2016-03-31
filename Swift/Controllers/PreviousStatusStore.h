@@ -13,16 +13,16 @@
 #include <Swiften/Elements/StatusShow.h>
 
 namespace Swift {
-	typedef std::pair<StatusShow::Type, std::string> TypeStringPair;
-	class PreviousStatusStore {
-		public:
-			PreviousStatusStore();
-			~PreviousStatusStore();
-			void addStatus(StatusShow::Type status, const std::string& message);
-			std::vector<TypeStringPair> getSuggestions(const std::string& message);
+    typedef std::pair<StatusShow::Type, std::string> TypeStringPair;
+    class PreviousStatusStore {
+        public:
+            PreviousStatusStore();
+            ~PreviousStatusStore();
+            void addStatus(StatusShow::Type status, const std::string& message);
+            std::vector<TypeStringPair> getSuggestions(const std::string& message);
 
-		private:
-			std::vector<TypeStringPair> exactMatchSuggestions(StatusShow::Type status, const std::string& message);
-			std::vector<TypeStringPair> store_;
-	};
+        private:
+            std::vector<TypeStringPair> exactMatchSuggestions(StatusShow::Type status, const std::string& message);
+            std::vector<TypeStringPair> store_;
+    };
 }

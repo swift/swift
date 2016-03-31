@@ -10,15 +10,15 @@
 #include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class SWIFTEN_API WindowsProxyProvider : public ProxyProvider {
-		public:
-			WindowsProxyProvider();
-			virtual HostAddressPort getHTTPConnectProxy() const;
-			virtual HostAddressPort getSOCKS5Proxy() const;
-		private:
-			HostAddressPort getAsHostAddressPort(std::string proxy);
-			bool proxyEnabled(HKEY hKey) const;
-			HostAddressPort socksProxy;
-			HostAddressPort httpProxy;
-	};
+    class SWIFTEN_API WindowsProxyProvider : public ProxyProvider {
+        public:
+            WindowsProxyProvider();
+            virtual HostAddressPort getHTTPConnectProxy() const;
+            virtual HostAddressPort getSOCKS5Proxy() const;
+        private:
+            HostAddressPort getAsHostAddressPort(std::string proxy);
+            bool proxyEnabled(HKEY hKey) const;
+            HostAddressPort socksProxy;
+            HostAddressPort httpProxy;
+    };
 }

@@ -12,12 +12,12 @@
 #include <Swiften/FileTransfer/FileTransfer.h>
 
 namespace Swift {
-	class SWIFTEN_API OutgoingFileTransfer : public FileTransfer {
-		public:
-			typedef boost::shared_ptr<OutgoingFileTransfer> ref;
-		public:
-			virtual ~OutgoingFileTransfer();
+    class SWIFTEN_API OutgoingFileTransfer : public FileTransfer {
+        public:
+            typedef boost::shared_ptr<OutgoingFileTransfer> ref;
+        public:
+            virtual ~OutgoingFileTransfer();
 
-			virtual void start() = 0;
-	};
+            virtual void start() = 0;
+    };
 }

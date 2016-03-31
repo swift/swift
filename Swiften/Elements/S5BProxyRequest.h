@@ -25,45 +25,45 @@ namespace Swift {
 
 class SWIFTEN_API S5BProxyRequest : public Payload {
 public:
-	typedef boost::shared_ptr<S5BProxyRequest> ref;
+    typedef boost::shared_ptr<S5BProxyRequest> ref;
 
 public:
-	struct StreamHost {
-		std::string host;
-		int port;
-		JID jid;
-	};
+    struct StreamHost {
+        std::string host;
+        int port;
+        JID jid;
+    };
 
 public:
-	const boost::optional<StreamHost>& getStreamHost() const {
-		return streamHost;
-	}
+    const boost::optional<StreamHost>& getStreamHost() const {
+        return streamHost;
+    }
 
-	void setStreamHost(const StreamHost& streamHost) {
-		this->streamHost = boost::optional<StreamHost>(streamHost);
-	}
+    void setStreamHost(const StreamHost& streamHost) {
+        this->streamHost = boost::optional<StreamHost>(streamHost);
+    }
 
-	const std::string& getSID() const {
-		return sid;
-	}
+    const std::string& getSID() const {
+        return sid;
+    }
 
-	void setSID(const std::string& sid) {
-		this->sid = sid;
-	}
+    void setSID(const std::string& sid) {
+        this->sid = sid;
+    }
 
-	const boost::optional<JID>& getActivate() const {
-		return activate;
-	}
+    const boost::optional<JID>& getActivate() const {
+        return activate;
+    }
 
-	void setActivate(const JID& activate) {
-		this->activate = activate;
-	}
+    void setActivate(const JID& activate) {
+        this->activate = activate;
+    }
 
 private:
-	boost::optional<StreamHost> streamHost;
+    boost::optional<StreamHost> streamHost;
 
-	std::string sid;
-	boost::optional<JID> activate;
+    std::string sid;
+    boost::optional<JID> activate;
 };
 
 }

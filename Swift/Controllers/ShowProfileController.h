@@ -18,25 +18,25 @@
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
-	class VCardManager;
-	class ProfileWindow;
-	class ProfileWindowFactory;
-	class UIEventStream;
+    class VCardManager;
+    class ProfileWindow;
+    class ProfileWindowFactory;
+    class UIEventStream;
 
-	class ShowProfileController {
-		public:
-			ShowProfileController(VCardManager* vcardManager, ProfileWindowFactory* profileWindowFactory, UIEventStream* uiEventStream);
-			~ShowProfileController();
+    class ShowProfileController {
+        public:
+            ShowProfileController(VCardManager* vcardManager, ProfileWindowFactory* profileWindowFactory, UIEventStream* uiEventStream);
+            ~ShowProfileController();
 
-		private:
-			void handleUIEvent(UIEvent::ref event);
-			void handleVCardChanged(const JID&, VCard::ref);
-			void handleProfileWindowAboutToBeClosed(const JID& profileJid);
+        private:
+            void handleUIEvent(UIEvent::ref event);
+            void handleVCardChanged(const JID&, VCard::ref);
+            void handleProfileWindowAboutToBeClosed(const JID& profileJid);
 
-		private:
-			VCardManager* vcardManager;
-			ProfileWindowFactory* profileWindowFactory;
-			UIEventStream* uiEventStream;
-			std::map<JID, ProfileWindow*> openedProfileWindows;
-	};
+        private:
+            VCardManager* vcardManager;
+            ProfileWindowFactory* profileWindowFactory;
+            UIEventStream* uiEventStream;
+            std::map<JID, ProfileWindow*> openedProfileWindows;
+    };
 }

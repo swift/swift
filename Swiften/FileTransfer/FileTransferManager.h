@@ -26,29 +26,29 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class ReadBytestream;
+    class ReadBytestream;
 
-	class SWIFTEN_API FileTransferManager {
-		public:
-			virtual ~FileTransferManager();
-			
-			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(
-					const JID& to, 
-					const boost::filesystem::path& filepath, 
-					const std::string& description, 
-					boost::shared_ptr<ReadBytestream> bytestream,
-					const FileTransferOptions& = FileTransferOptions()) = 0;
-			virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(
-					const JID& to, 
-					const std::string& filename, 
-					const std::string& description, 
-					const boost::uintmax_t sizeInBytes, 
-					const boost::posix_time::ptime& lastModified, 
-					boost::shared_ptr<ReadBytestream> bytestream,
-					const FileTransferOptions& = FileTransferOptions()) = 0;
-			
-			static bool isSupportedBy(const DiscoInfo::ref info);
+    class SWIFTEN_API FileTransferManager {
+        public:
+            virtual ~FileTransferManager();
 
-			boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
-	};
+            virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(
+                    const JID& to,
+                    const boost::filesystem::path& filepath,
+                    const std::string& description,
+                    boost::shared_ptr<ReadBytestream> bytestream,
+                    const FileTransferOptions& = FileTransferOptions()) = 0;
+            virtual OutgoingFileTransfer::ref createOutgoingFileTransfer(
+                    const JID& to,
+                    const std::string& filename,
+                    const std::string& description,
+                    const boost::uintmax_t sizeInBytes,
+                    const boost::posix_time::ptime& lastModified,
+                    boost::shared_ptr<ReadBytestream> bytestream,
+                    const FileTransferOptions& = FileTransferOptions()) = 0;
+
+            static bool isSupportedBy(const DiscoInfo::ref info);
+
+            boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
+    };
 }

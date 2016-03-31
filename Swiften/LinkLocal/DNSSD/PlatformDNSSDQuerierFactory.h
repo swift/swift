@@ -11,18 +11,18 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class DNSSDQuerier;
-	class EventLoop;
+    class DNSSDQuerier;
+    class EventLoop;
 
-	class SWIFTEN_API PlatformDNSSDQuerierFactory {
-		public:
-			PlatformDNSSDQuerierFactory(EventLoop* eventLoop);
+    class SWIFTEN_API PlatformDNSSDQuerierFactory {
+        public:
+            PlatformDNSSDQuerierFactory(EventLoop* eventLoop);
 
-			boost::shared_ptr<DNSSDQuerier> createQuerier();
+            boost::shared_ptr<DNSSDQuerier> createQuerier();
 
-			bool canCreate();
+            bool canCreate();
 
-		private:
-			EventLoop* eventLoop;
-	};
+        private:
+            EventLoop* eventLoop;
+    };
 }

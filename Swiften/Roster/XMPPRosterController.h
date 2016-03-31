@@ -18,31 +18,31 @@
 #include <Swiften/Roster/RosterPushResponder.h>
 
 namespace Swift {
-	class IQRouter;
-	class XMPPRosterImpl;
-	class RosterStorage;
+    class IQRouter;
+    class XMPPRosterImpl;
+    class RosterStorage;
 
-	class SWIFTEN_API XMPPRosterController {
-		public:
-			XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster, RosterStorage* storage);
-			~XMPPRosterController();
+    class SWIFTEN_API XMPPRosterController {
+        public:
+            XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster, RosterStorage* storage);
+            ~XMPPRosterController();
 
-			void requestRoster();
+            void requestRoster();
 
-			void setUseVersioning(bool b) {
-				useVersioning = b;
-			}
+            void setUseVersioning(bool b) {
+                useVersioning = b;
+            }
 
-		private:
-			void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial, boost::shared_ptr<RosterPayload> previousRoster);
-			void saveRoster(const std::string& version);
+        private:
+            void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial, boost::shared_ptr<RosterPayload> previousRoster);
+            void saveRoster(const std::string& version);
 
-		private:
-			IQRouter* iqRouter_;
-			RosterPushResponder rosterPushResponder_;
-			XMPPRosterImpl* xmppRoster_;
-			RosterStorage* rosterStorage_;
-			bool useVersioning;
-	};
+        private:
+            IQRouter* iqRouter_;
+            RosterPushResponder rosterPushResponder_;
+            XMPPRosterImpl* xmppRoster_;
+            RosterStorage* rosterStorage_;
+            bool useVersioning;
+    };
 }
 

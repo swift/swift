@@ -13,13 +13,13 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class Payload;
+    class Payload;
 
-	class SWIFTEN_API PayloadSerializer {
-		public:
-			virtual ~PayloadSerializer();
+    class SWIFTEN_API PayloadSerializer {
+        public:
+            virtual ~PayloadSerializer();
 
-			virtual bool canSerialize(boost::shared_ptr<Payload>) const = 0;
-			virtual std::string serialize(boost::shared_ptr<Payload>) const = 0;
-	};
+            virtual bool canSerialize(boost::shared_ptr<Payload>) const = 0;
+            virtual std::string serialize(boost::shared_ptr<Payload>) const = 0;
+    };
 }

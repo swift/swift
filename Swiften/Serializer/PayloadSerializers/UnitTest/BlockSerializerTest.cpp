@@ -23,39 +23,39 @@ using namespace Swift;
 
 class BlockSerializerTest : public CppUnit::TestFixture
 {
-		CPPUNIT_TEST_SUITE(BlockSerializerTest);
-		CPPUNIT_TEST(testExample4);
-		CPPUNIT_TEST(testExample6);
-		CPPUNIT_TEST(testExample10);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(BlockSerializerTest);
+        CPPUNIT_TEST(testExample4);
+        CPPUNIT_TEST(testExample6);
+        CPPUNIT_TEST(testExample10);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		BlockSerializerTest() {}
+    public:
+        BlockSerializerTest() {}
 
-		void testExample4() {
-			BlockSerializer<BlockListPayload> testling("blocklist");
-			boost::shared_ptr<BlockListPayload> blocklist = boost::make_shared<BlockListPayload>();
-			blocklist->addItem(JID("romeo@montague.net"));
-			blocklist->addItem(JID("iago@shakespeare.lit"));
+        void testExample4() {
+            BlockSerializer<BlockListPayload> testling("blocklist");
+            boost::shared_ptr<BlockListPayload> blocklist = boost::make_shared<BlockListPayload>();
+            blocklist->addItem(JID("romeo@montague.net"));
+            blocklist->addItem(JID("iago@shakespeare.lit"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("<blocklist xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/><item jid=\"iago@shakespeare.lit\"/></blocklist>"), testling.serialize(blocklist));
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string("<blocklist xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/><item jid=\"iago@shakespeare.lit\"/></blocklist>"), testling.serialize(blocklist));
+        }
 
-		void testExample6() {
-			BlockSerializer<BlockPayload> testling("block");
-			boost::shared_ptr<BlockPayload> block = boost::make_shared<BlockPayload>();
-			block->addItem(JID("romeo@montague.net"));
+        void testExample6() {
+            BlockSerializer<BlockPayload> testling("block");
+            boost::shared_ptr<BlockPayload> block = boost::make_shared<BlockPayload>();
+            block->addItem(JID("romeo@montague.net"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("<block xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/></block>"), testling.serialize(block));
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string("<block xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/></block>"), testling.serialize(block));
+        }
 
-		void testExample10() {
-			BlockSerializer<UnblockPayload> testling("unblock");
-			boost::shared_ptr<UnblockPayload> unblock = boost::make_shared<UnblockPayload>();
-			unblock->addItem(JID("romeo@montague.net"));
+        void testExample10() {
+            BlockSerializer<UnblockPayload> testling("unblock");
+            boost::shared_ptr<UnblockPayload> unblock = boost::make_shared<UnblockPayload>();
+            unblock->addItem(JID("romeo@montague.net"));
 
-			CPPUNIT_ASSERT_EQUAL(std::string("<unblock xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/></unblock>"), testling.serialize(unblock));
-		}
+            CPPUNIT_ASSERT_EQUAL(std::string("<unblock xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/></unblock>"), testling.serialize(unblock));
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(BlockSerializerTest);

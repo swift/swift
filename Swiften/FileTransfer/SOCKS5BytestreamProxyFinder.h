@@ -29,28 +29,28 @@ class IQRouter;
  * restrictive environments.
  */
 class SWIFTEN_API SOCKS5BytestreamProxyFinder {
-	public:
-		SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);
-		~SOCKS5BytestreamProxyFinder();
+    public:
+        SOCKS5BytestreamProxyFinder(const JID& service, IQRouter *iqRouter);
+        ~SOCKS5BytestreamProxyFinder();
 
-		void start();
-		void stop();
+        void start();
+        void stop();
 
-		boost::signal<void(std::vector<boost::shared_ptr<S5BProxyRequest> >)> onProxiesFound;
+        boost::signal<void(std::vector<boost::shared_ptr<S5BProxyRequest> >)> onProxiesFound;
 
-	private:
-		void sendBytestreamQuery(const JID&);
+    private:
+        void sendBytestreamQuery(const JID&);
 
-		void handleServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
-		void handleProxyResponse(boost::shared_ptr<GenericRequest<S5BProxyRequest> > requester, boost::shared_ptr<S5BProxyRequest>, ErrorPayload::ref);
-		void handleWalkEnded();
+        void handleServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
+        void handleProxyResponse(boost::shared_ptr<GenericRequest<S5BProxyRequest> > requester, boost::shared_ptr<S5BProxyRequest>, ErrorPayload::ref);
+        void handleWalkEnded();
 
-	private:
-		JID service;
-		IQRouter* iqRouter;
-		boost::shared_ptr<DiscoServiceWalker> serviceWalker;
-		std::vector<S5BProxyRequest::ref> proxyHosts;
-		std::set<boost::shared_ptr<GenericRequest<S5BProxyRequest> > > pendingRequests;
+    private:
+        JID service;
+        IQRouter* iqRouter;
+        boost::shared_ptr<DiscoServiceWalker> serviceWalker;
+        std::vector<S5BProxyRequest::ref> proxyHosts;
+        std::set<boost::shared_ptr<GenericRequest<S5BProxyRequest> > > pendingRequests;
 };
 
 }

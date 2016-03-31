@@ -22,23 +22,23 @@ namespace QtUtilities {
 
 void setX11Resource(QWidget* widget, const QString& c) {
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC) && QT_VERSION < 0x050000
-	char res_class[] = SWIFT_APPLICATION_NAME;
-	XClassHint hint;
-	QByteArray resName = (QString(SWIFT_APPLICATION_NAME) + "-" + c).toUtf8();
-	hint.res_name = resName.data();
-	hint.res_class = res_class;
-	XSetClassHint(widget->x11Info().display(), widget->winId(), &hint);
+    char res_class[] = SWIFT_APPLICATION_NAME;
+    XClassHint hint;
+    QByteArray resName = (QString(SWIFT_APPLICATION_NAME) + "-" + c).toUtf8();
+    hint.res_name = resName.data();
+    hint.res_class = res_class;
+    XSetClassHint(widget->x11Info().display(), widget->winId(), &hint);
 #else
-	(void) widget;
-	(void) c;
+    (void) widget;
+    (void) c;
 #endif
 }
 
 QString htmlEscape(const QString& s) {
 #if QT_VERSION >= 0x050000
-	return s.toHtmlEscaped();
+    return s.toHtmlEscaped();
 #else
-	return Qt::escape(s);
+    return Qt::escape(s);
 #endif
 }
 

@@ -11,25 +11,25 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class MUCRegistry;
-	class AvatarStorage;
-	class VCardManager;
-	class CryptoProvider;
+    class MUCRegistry;
+    class AvatarStorage;
+    class VCardManager;
+    class CryptoProvider;
 
-	class SWIFTEN_API VCardAvatarManager : public AvatarProvider {
-		public:
-			VCardAvatarManager(VCardManager*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
+    class SWIFTEN_API VCardAvatarManager : public AvatarProvider {
+        public:
+            VCardAvatarManager(VCardManager*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
 
-			boost::optional<std::string> getAvatarHash(const JID&) const;
+            boost::optional<std::string> getAvatarHash(const JID&) const;
 
-		private:
-			void handleVCardChanged(const JID& from);
-			JID getAvatarJID(const JID& o) const;
+        private:
+            void handleVCardChanged(const JID& from);
+            JID getAvatarJID(const JID& o) const;
 
-		private:
-			VCardManager* vcardManager_;
-			AvatarStorage* avatarStorage_;
-			CryptoProvider* crypto_;
-			MUCRegistry* mucRegistry_;
-	};
+        private:
+            VCardManager* vcardManager_;
+            AvatarStorage* avatarStorage_;
+            CryptoProvider* crypto_;
+            MUCRegistry* mucRegistry_;
+    };
 }

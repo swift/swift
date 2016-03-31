@@ -12,30 +12,30 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	template<typename BLOCK_ELEMENT>
-	class SWIFTEN_API BlockParser : public GenericPayloadParser<BLOCK_ELEMENT> {
-		public:
-			BlockParser() : GenericPayloadParser<BLOCK_ELEMENT>(), level(0) {
-			}
+    template<typename BLOCK_ELEMENT>
+    class SWIFTEN_API BlockParser : public GenericPayloadParser<BLOCK_ELEMENT> {
+        public:
+            BlockParser() : GenericPayloadParser<BLOCK_ELEMENT>(), level(0) {
+            }
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
-				if (level == 1 && element == "item") {
-					JID jid(attributes.getAttribute("jid"));
-					if (jid.isValid()) {
-						GenericPayloadParser<BLOCK_ELEMENT>::getPayloadInternal()->addItem(jid);
-					}
-				}
-				++level;
-			}
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) {
+                if (level == 1 && element == "item") {
+                    JID jid(attributes.getAttribute("jid"));
+                    if (jid.isValid()) {
+                        GenericPayloadParser<BLOCK_ELEMENT>::getPayloadInternal()->addItem(jid);
+                    }
+                }
+                ++level;
+            }
 
-			virtual void handleEndElement(const std::string&, const std::string&) {
-				--level;
-			}
+            virtual void handleEndElement(const std::string&, const std::string&) {
+                --level;
+            }
 
-			virtual void handleCharacterData(const std::string&) {
-			}
+            virtual void handleCharacterData(const std::string&) {
+            }
 
-		private:
-			int level;
-	};
+        private:
+            int level;
+    };
 }

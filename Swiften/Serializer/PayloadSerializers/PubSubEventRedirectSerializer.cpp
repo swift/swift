@@ -22,12 +22,12 @@ PubSubEventRedirectSerializer::~PubSubEventRedirectSerializer() {
 }
 
 std::string PubSubEventRedirectSerializer::serializePayload(boost::shared_ptr<PubSubEventRedirect> payload) const {
-	if (!payload) {
-		return "";
-	}
-	XMLElement element("redirect", "http://jabber.org/protocol/pubsub#event");
-	element.setAttribute("uri", payload->getURI());
-	return element.serialize();
+    if (!payload) {
+        return "";
+    }
+    XMLElement element("redirect", "http://jabber.org/protocol/pubsub#event");
+    element.setAttribute("uri", payload->getURI());
+    return element.serialize();
 }
 
 

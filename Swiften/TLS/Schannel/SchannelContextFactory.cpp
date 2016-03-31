@@ -20,22 +20,22 @@ SchannelContextFactory::SchannelContextFactory() : checkCertificateRevocation(tr
 }
 
 bool SchannelContextFactory::canCreate() const {
-	return true;
+    return true;
 }
 
 TLSContext* SchannelContextFactory::createTLSContext(const TLSOptions& tlsOptions) {
-	SchannelContext* context = new SchannelContext(tlsOptions.schannelTLS1_0Workaround);
-	context->setCheckCertificateRevocation(checkCertificateRevocation);
-	context->setDisconnectOnCardRemoval(disconnectOnCardRemoval);
-	return context;
+    SchannelContext* context = new SchannelContext(tlsOptions.schannelTLS1_0Workaround);
+    context->setCheckCertificateRevocation(checkCertificateRevocation);
+    context->setDisconnectOnCardRemoval(disconnectOnCardRemoval);
+    return context;
 }
 
 void SchannelContextFactory::setCheckCertificateRevocation(bool b) {
-	checkCertificateRevocation = b;
+    checkCertificateRevocation = b;
 }
 
 void SchannelContextFactory::setDisconnectOnCardRemoval(bool b) {
-	disconnectOnCardRemoval = b;
+    disconnectOnCardRemoval = b;
 }
 
 }

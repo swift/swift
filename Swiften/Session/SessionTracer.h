@@ -13,13 +13,13 @@
 #include <Swiften/Session/Session.h>
 
 namespace Swift {
-	class SWIFTEN_API SessionTracer {
-		public:
-			SessionTracer(boost::shared_ptr<Session> session);
+    class SWIFTEN_API SessionTracer {
+        public:
+            SessionTracer(boost::shared_ptr<Session> session);
 
-		private:
-			void printData(char direction, const SafeByteArray& data);
+        private:
+            void printData(char direction, const SafeByteArray& data);
 
-			boost::shared_ptr<Session> session;
-	};
+            boost::shared_ptr<Session> session;
+    };
 }

@@ -13,16 +13,16 @@
 
 namespace Swift {
 
-	class SWIFTEN_API FormText{
+    class SWIFTEN_API FormText{
 
-		public:
-			typedef boost::shared_ptr<FormText> text;
-			FormText();
-			virtual ~FormText();
-			void setTextString(const std::string& text);
-			const std::string& getTextString() const;
+        public:
+            typedef boost::shared_ptr<FormText> text;
+            FormText();
+            virtual ~FormText();
+            void setTextString(const std::string& text);
+            const std::string& getTextString() const;
 
-		private:
-			std::string text_;
-	};
+        private:
+            std::string text_;
+    };
 }

@@ -23,27 +23,27 @@ MAMFinSerializer::~MAMFinSerializer() {
 }
 
 std::string MAMFinSerializer::serializePayload(boost::shared_ptr<MAMFin> payload) const {
-	if (!payload) {
-		return "";
-	}
+    if (!payload) {
+        return "";
+    }
 
-	XMLElement element("fin", "urn:xmpp:mam:0");
+    XMLElement element("fin", "urn:xmpp:mam:0");
 
-	if (payload->isComplete()) {
-		element.setAttribute("complete", "true");
-	}
+    if (payload->isComplete()) {
+        element.setAttribute("complete", "true");
+    }
 
-	if (!payload->isStable()) {
-		element.setAttribute("stable", "false");
-	}
+    if (!payload->isStable()) {
+        element.setAttribute("stable", "false");
+    }
 
-	if (payload->getQueryID()) {
-		element.setAttribute("queryid", *payload->getQueryID());
-	}
+    if (payload->getQueryID()) {
+        element.setAttribute("queryid", *payload->getQueryID());
+    }
 
-	if (payload->getResultSet()) {
-		element.addNode(boost::make_shared<XMLRawTextNode>(ResultSetSerializer().serialize(payload->getResultSet())));
-	}
+    if (payload->getResultSet()) {
+        element.addNode(boost::make_shared<XMLRawTextNode>(ResultSetSerializer().serialize(payload->getResultSet())));
+    }
 
-	return element.serialize();
+    return element.serialize();
 }

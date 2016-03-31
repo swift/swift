@@ -16,30 +16,30 @@
 namespace Swift {
 QtMUCConfigurationWindow::QtMUCConfigurationWindow(Form::ref form) : closed_(false) {
 
-	setAttribute(Qt::WA_DeleteOnClose);
+    setAttribute(Qt::WA_DeleteOnClose);
 
-	QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
-	layout->setContentsMargins(0,0,0,0);
-	layout->setSpacing(2);
-	//QLabel* label = new QLabel(this);
-	//label->setText(tr("Room configuration"));
-	//layout->addWidget(label);
+    QBoxLayout* layout = new QBoxLayout(QBoxLayout::TopToBottom, this);
+    layout->setContentsMargins(0,0,0,0);
+    layout->setSpacing(2);
+    //QLabel* label = new QLabel(this);
+    //label->setText(tr("Room configuration"));
+    //layout->addWidget(label);
 
-	formWidget_ = NULL;
-	formWidget_ = new QtFormWidget(form, this);
-	layout->addWidget(formWidget_);
+    formWidget_ = NULL;
+    formWidget_ = new QtFormWidget(form, this);
+    layout->addWidget(formWidget_);
 
-	QWidget* buttonsWidget = new QWidget(this);
-	layout->addWidget(buttonsWidget);
+    QWidget* buttonsWidget = new QWidget(this);
+    layout->addWidget(buttonsWidget);
 
-	QBoxLayout* buttonsLayout = new QBoxLayout(QBoxLayout::LeftToRight, buttonsWidget);
-	cancelButton_ = new QPushButton(tr("Cancel"), buttonsWidget);
-	buttonsLayout->addWidget(cancelButton_);
-	connect(cancelButton_, SIGNAL(clicked()), this, SLOT(handleCancelClicked()));
-	okButton_ = new QPushButton(tr("OK"), buttonsWidget);
-	buttonsLayout->addWidget(okButton_);
-	connect(okButton_, SIGNAL(clicked()), this, SLOT(handleOKClicked()));
-	show();
+    QBoxLayout* buttonsLayout = new QBoxLayout(QBoxLayout::LeftToRight, buttonsWidget);
+    cancelButton_ = new QPushButton(tr("Cancel"), buttonsWidget);
+    buttonsLayout->addWidget(cancelButton_);
+    connect(cancelButton_, SIGNAL(clicked()), this, SLOT(handleCancelClicked()));
+    okButton_ = new QPushButton(tr("OK"), buttonsWidget);
+    buttonsLayout->addWidget(okButton_);
+    connect(okButton_, SIGNAL(clicked()), this, SLOT(handleOKClicked()));
+    show();
 }
 
 QtMUCConfigurationWindow::~QtMUCConfigurationWindow() {
@@ -47,19 +47,19 @@ QtMUCConfigurationWindow::~QtMUCConfigurationWindow() {
 }
 
 void QtMUCConfigurationWindow::closeEvent(QCloseEvent* /*event*/) {
-	if (!closed_) {
-		onFormCancelled();
-	}
+    if (!closed_) {
+        onFormCancelled();
+    }
 }
 
 void QtMUCConfigurationWindow::handleCancelClicked() {
-	close();
+    close();
 }
 
 void QtMUCConfigurationWindow::handleOKClicked() {
-	onFormComplete(formWidget_->getCompletedForm());
-	closed_ = true;
-	close();
+    onFormComplete(formWidget_->getCompletedForm());
+    closed_ = true;
+    close();
 }
 
 

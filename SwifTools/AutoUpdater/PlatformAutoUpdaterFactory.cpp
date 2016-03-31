@@ -16,18 +16,18 @@ namespace Swift {
 
 bool PlatformAutoUpdaterFactory::isSupported() const {
 #ifdef HAVE_SPARKLE
-	return true;
+    return true;
 #else
-	return false;
+    return false;
 #endif
 }
 
 AutoUpdater* PlatformAutoUpdaterFactory::createAutoUpdater(const std::string& appcastURL) {
 #ifdef HAVE_SPARKLE
-	return new SparkleAutoUpdater(appcastURL);
+    return new SparkleAutoUpdater(appcastURL);
 #else
-	(void) appcastURL;
-	return NULL;
+    (void) appcastURL;
+    return NULL;
 #endif
 }
 
