@@ -6,7 +6,7 @@
 
 #include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Queries/IQRouter.h>
 
@@ -21,8 +21,8 @@ void SoftwareVersionResponder::setVersion(const std::string& client, const std::
     this->os = os;
 }
 
-bool SoftwareVersionResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion>) {
-    sendResponse(from, id, boost::make_shared<SoftwareVersion>(client, version, os));
+bool SoftwareVersionResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, std::shared_ptr<SoftwareVersion>) {
+    sendResponse(from, id, std::make_shared<SoftwareVersion>(client, version, os));
     return true;
 }
 

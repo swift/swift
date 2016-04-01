@@ -12,7 +12,7 @@
 
 #include <Swiften/FileTransfer/OutgoingFileTransferManager.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
@@ -41,16 +41,16 @@ OutgoingFileTransferManager::~OutgoingFileTransferManager() {
     delete idGenerator;
 }
 
-boost::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgoingFileTransfer(
+std::shared_ptr<OutgoingFileTransfer> OutgoingFileTransferManager::createOutgoingFileTransfer(
         const JID& from,
         const JID& recipient,
-        boost::shared_ptr<ReadBytestream> readBytestream,
+        std::shared_ptr<ReadBytestream> readBytestream,
         const JingleFileTransferFileInfo& fileInfo,
         const FileTransferOptions& config) {
-    JingleSessionImpl::ref jingleSession = boost::make_shared<JingleSessionImpl>(
+    JingleSessionImpl::ref jingleSession = std::make_shared<JingleSessionImpl>(
             from, recipient, idGenerator->generateID(), iqRouter);
     jingleSessionManager->registerOutgoingSession(from, jingleSession);
-    return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
+    return std::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
                 recipient,
                 jingleSession,
                 readBytestream,

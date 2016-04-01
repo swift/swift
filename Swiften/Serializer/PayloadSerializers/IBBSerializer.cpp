@@ -7,10 +7,9 @@
 #include <Swiften/Serializer/PayloadSerializers/IBBSerializer.h>
 
 #include <cassert>
+#include <memory>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -22,7 +21,7 @@ namespace Swift {
 IBBSerializer::IBBSerializer() {
 }
 
-std::string IBBSerializer::serializePayload(boost::shared_ptr<IBB> ibb) const {
+std::string IBBSerializer::serializePayload(std::shared_ptr<IBB> ibb) const {
     switch(ibb->getAction()) {
         case IBB::Data: {
             XMLElement ibbElement("data", "http://jabber.org/protocol/ibb");
@@ -30,7 +29,7 @@ std::string IBBSerializer::serializePayload(boost::shared_ptr<IBB> ibb) const {
             if (ibb->getSequenceNumber() >= 0) {
                 ibbElement.setAttribute("seq", boost::lexical_cast<std::string>(ibb->getSequenceNumber()));
             }
-            ibbElement.addNode(boost::make_shared<XMLTextNode>(Base64::encode(ibb->getData())));
+            ibbElement.addNode(std::make_shared<XMLTextNode>(Base64::encode(ibb->getData())));
             return ibbElement.serialize();
         }
         case IBB::Open: {

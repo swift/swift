@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ class StatusSerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             StatusSerializer testling;
-            boost::shared_ptr<Status> status(new Status("I am away"));
+            std::shared_ptr<Status> status(new Status("I am away"));
 
             CPPUNIT_ASSERT_EQUAL(std::string("<status>I am away</status>"), testling.serialize(status));
         }

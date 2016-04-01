@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,7 @@ class SWIFTEN_API JingleContentPayloadParser : public GenericPayloadParser<Jingl
     private:
         PayloadParserFactoryCollection* factories;
         int level;
-        boost::shared_ptr<PayloadParser> currentPayloadParser;
+        std::shared_ptr<PayloadParser> currentPayloadParser;
 };
 
 }

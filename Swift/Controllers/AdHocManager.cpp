@@ -6,9 +6,9 @@
 
 #include <Swift/Controllers/AdHocManager.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 #include <Swiften/Base/foreach.h>
@@ -38,12 +38,12 @@ AdHocManager::~AdHocManager() {
     }
 }
 
-void AdHocManager::removeController(boost::shared_ptr<AdHocController> controller) {
+void AdHocManager::removeController(std::shared_ptr<AdHocController> controller) {
     controller->onDeleting.disconnect(boost::bind(&AdHocManager::removeController, this, controller));
     controllers_.erase(std::find(controllers_.begin(), controllers_.end(), controller));
 }
 
-void AdHocManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
+void AdHocManager::setServerDiscoInfo(std::shared_ptr<DiscoInfo> info) {
     if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::CommandsFeature)) {
         if (discoItemsRequest_) {
             discoItemsRequest_->onResponse.disconnect(boost::bind(&AdHocManager::handleServerDiscoItemsResponse, this, _1, _2));
@@ -58,12 +58,12 @@ void AdHocManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
 }
 
 void AdHocManager::setOnline(bool online) {
-    foreach (boost::shared_ptr<AdHocController> controller, controllers_) {
+    foreach (std::shared_ptr<AdHocController> controller, controllers_) {
         controller->setOnline(online);
     }
 }
 
-void AdHocManager::handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
+void AdHocManager::handleServerDiscoItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
     std::vector<DiscoItems::Item> commands;
     if (!error) {
         foreach (DiscoItems::Item item, items->getItems()) {
@@ -75,18 +75,18 @@ void AdHocManager::handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems> 
     mainWindow_->setAvailableAdHocCommands(commands);
 }
 
-void AdHocManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-    boost::shared_ptr<RequestAdHocUIEvent> adHocEvent = boost::dynamic_pointer_cast<RequestAdHocUIEvent>(event);
+void AdHocManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
+    std::shared_ptr<RequestAdHocUIEvent> adHocEvent = std::dynamic_pointer_cast<RequestAdHocUIEvent>(event);
     if (adHocEvent) {
-        boost::shared_ptr<OutgoingAdHocCommandSession> command = boost::make_shared<OutgoingAdHocCommandSession>(adHocEvent->getCommand().getJID(), adHocEvent->getCommand().getNode(), iqRouter_);
-        boost::shared_ptr<AdHocController> controller = boost::make_shared<AdHocController>(factory_, command);
+        std::shared_ptr<OutgoingAdHocCommandSession> command = std::make_shared<OutgoingAdHocCommandSession>(adHocEvent->getCommand().getJID(), adHocEvent->getCommand().getNode(), iqRouter_);
+        std::shared_ptr<AdHocController> controller = std::make_shared<AdHocController>(factory_, command);
         controller->onDeleting.connect(boost::bind(&AdHocManager::removeController, this, controller));
         controllers_.push_back(controller);
     }
-    boost::shared_ptr<RequestAdHocWithJIDUIEvent> adHocJIDEvent = boost::dynamic_pointer_cast<RequestAdHocWithJIDUIEvent>(event);
+    std::shared_ptr<RequestAdHocWithJIDUIEvent> adHocJIDEvent = std::dynamic_pointer_cast<RequestAdHocWithJIDUIEvent>(event);
     if (!!adHocJIDEvent) {
-        boost::shared_ptr<OutgoingAdHocCommandSession> command = boost::make_shared<OutgoingAdHocCommandSession>(adHocJIDEvent->getJID(), adHocJIDEvent->getNode(), iqRouter_);
-        boost::shared_ptr<AdHocController> controller = boost::make_shared<AdHocController>(factory_, command);
+        std::shared_ptr<OutgoingAdHocCommandSession> command = std::make_shared<OutgoingAdHocCommandSession>(adHocJIDEvent->getJID(), adHocJIDEvent->getNode(), iqRouter_);
+        std::shared_ptr<AdHocController> controller = std::make_shared<AdHocController>(factory_, command);
         controller->onDeleting.connect(boost::bind(&AdHocManager::removeController, this, controller));
         controllers_.push_back(controller);
     }

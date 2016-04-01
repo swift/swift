@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -28,7 +28,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
         void testSerializeFull() {
             ResultSetSerializer serializer;
 
-            boost::shared_ptr<ResultSet> resultSet(boost::make_shared<ResultSet>());
+            std::shared_ptr<ResultSet> resultSet(std::make_shared<ResultSet>());
 
             resultSet->setMaxItems(100);
             resultSet->setCount(800);
@@ -56,7 +56,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
         void testSerializeMaxItems() {
             ResultSetSerializer serializer;
 
-            boost::shared_ptr<ResultSet> resultSet(boost::make_shared<ResultSet>());
+            std::shared_ptr<ResultSet> resultSet(std::make_shared<ResultSet>());
 
             resultSet->setMaxItems(100);
 
@@ -71,7 +71,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
         void testSerializeEmptyBefore() {
             ResultSetSerializer serializer;
 
-            boost::shared_ptr<ResultSet> resultSet(boost::make_shared<ResultSet>());
+            std::shared_ptr<ResultSet> resultSet(std::make_shared<ResultSet>());
 
             resultSet->setBefore(std::string());
 
@@ -86,7 +86,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
         void testSerializeFirst() {
             ResultSetSerializer serializer;
 
-            boost::shared_ptr<ResultSet> resultSet(boost::make_shared<ResultSet>());
+            std::shared_ptr<ResultSet> resultSet(std::make_shared<ResultSet>());
 
             resultSet->setFirstID(std::string("stpeter@jabber.org"));
 
@@ -101,7 +101,7 @@ class ResultSetSerializerTest : public CppUnit::TestFixture {
         void testSerializeFirstWithIndex() {
             ResultSetSerializer serializer;
 
-            boost::shared_ptr<ResultSet> resultSet(boost::make_shared<ResultSet>());
+            std::shared_ptr<ResultSet> resultSet(std::make_shared<ResultSet>());
 
             resultSet->setFirstID(std::string("stpeter@jabber.org"));
             resultSet->setFirstIDIndex(123);

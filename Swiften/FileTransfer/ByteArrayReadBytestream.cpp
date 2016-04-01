@@ -6,19 +6,20 @@
 
 #include <Swiften/FileTransfer/ByteArrayReadBytestream.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 
 using namespace Swift;
 
-boost::shared_ptr<ByteArray> ByteArrayReadBytestream::read(size_t size) {
+std::shared_ptr<ByteArray> ByteArrayReadBytestream::read(size_t size) {
     size_t readSize = size;
     if (position + readSize > data.size()) {
         readSize = data.size() - position;
     }
-    boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>(
+    std::shared_ptr<ByteArray> result = std::make_shared<ByteArray>(
             data.begin() + boost::numeric_cast<long long>(position),
             data.begin() + boost::numeric_cast<long long>(position) + boost::numeric_cast<long long>(readSize));
 

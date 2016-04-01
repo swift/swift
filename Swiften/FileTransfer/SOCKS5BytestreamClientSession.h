@@ -5,15 +5,16 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
@@ -48,11 +49,11 @@ public:
     };
 
 public:
-    typedef boost::shared_ptr<SOCKS5BytestreamClientSession> ref;
+    typedef std::shared_ptr<SOCKS5BytestreamClientSession> ref;
 
 public:
     SOCKS5BytestreamClientSession(
-            boost::shared_ptr<Connection> connection,
+            std::shared_ptr<Connection> connection,
             const HostAddressPort&,
             const std::string&,
             TimerFactory*);
@@ -61,8 +62,8 @@ public:
     void start();
     void stop();
 
-    void startReceiving(boost::shared_ptr<WriteBytestream>);
-    void startSending(boost::shared_ptr<ReadBytestream>);
+    void startReceiving(std::shared_ptr<WriteBytestream>);
+    void startSending(std::shared_ptr<ReadBytestream>);
 
     HostAddressPort getAddressPort() const;
 
@@ -78,7 +79,7 @@ private:
     void authenticate();
 
     void handleConnectFinished(bool error);
-    void handleDataRead(boost::shared_ptr<SafeByteArray>);
+    void handleDataRead(std::shared_ptr<SafeByteArray>);
     void handleDisconnected(const boost::optional<Connection::Error>&);
     void handleWeFailedTimeout();
 
@@ -87,7 +88,7 @@ private:
     void closeConnection();
 
 private:
-    boost::shared_ptr<Connection> connection;
+    std::shared_ptr<Connection> connection;
     HostAddressPort addressPort;
     std::string destination; // hexify(SHA1(sessionID + requester + target))
 
@@ -97,8 +98,8 @@ private:
     ByteArray authenticateAddress;
 
     int chunkSize;
-    boost::shared_ptr<WriteBytestream> writeBytestream;
-    boost::shared_ptr<ReadBytestream> readBytestream;
+    std::shared_ptr<WriteBytestream> writeBytestream;
+    std::shared_ptr<ReadBytestream> readBytestream;
 
     Timer::ref weFailedTimeout;
 

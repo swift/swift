@@ -24,7 +24,7 @@ namespace Swift {
      */
     class SWIFTEN_API Form : public Payload {
         public:
-            typedef boost::shared_ptr<Form> ref;
+            typedef std::shared_ptr<Form> ref;
             typedef std::vector<FormField::ref> FormItem;
 
             enum Type { FormType, SubmitType, CancelType, ResultType };
@@ -32,21 +32,21 @@ namespace Swift {
         public:
             Form(Type type = FormType) : type_(type) {}
 
-            void addPage(boost::shared_ptr<FormPage> page) {
+            void addPage(std::shared_ptr<FormPage> page) {
                 assert(page);
                 pages_.push_back(page);
             }
 
-            const std::vector<boost::shared_ptr<FormPage> >& getPages() const {
+            const std::vector<std::shared_ptr<FormPage> >& getPages() const {
                 return pages_;
             }
 
-            void addField(boost::shared_ptr<FormField> field) {
+            void addField(std::shared_ptr<FormField> field) {
                 assert(field);
                 fields_.push_back(field);
             }
 
-            const std::vector<boost::shared_ptr<FormField> >& getFields() const {
+            const std::vector<std::shared_ptr<FormField> >& getFields() const {
                 return fields_;
             }
 
@@ -54,21 +54,21 @@ namespace Swift {
                 fields_.clear();
             }
 
-            void addTextElement(boost::shared_ptr<FormText> text) {
+            void addTextElement(std::shared_ptr<FormText> text) {
                 assert(text);
                 textElements_.push_back(text);
             }
 
-            const std::vector<boost::shared_ptr<FormText> >& getTextElements() const {
+            const std::vector<std::shared_ptr<FormText> >& getTextElements() const {
                 return textElements_;
             }
 
-            void addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef) {
+            void addReportedRef(std::shared_ptr<FormReportedRef> reportedRef) {
                 assert(reportedRef);
                 reportedRefs_.push_back(reportedRef);
             }
 
-            const std::vector<boost::shared_ptr<FormReportedRef> >& getReportedRefs() const {
+            const std::vector<std::shared_ptr<FormReportedRef> >& getReportedRefs() const {
                 return reportedRefs_;
             }
 
@@ -109,13 +109,13 @@ namespace Swift {
             void clearReportedFields() { reportedFields_.clear(); }
 
         private:
-            std::vector<boost::shared_ptr<FormReportedRef> >reportedRefs_;
-            std::vector<boost::shared_ptr<FormText> > textElements_;
-            std::vector<boost::shared_ptr<FormPage> > pages_;
-            std::vector<boost::shared_ptr<FormField> > fields_;
-            std::vector<boost::shared_ptr<FormField> > reportedFields_;
+            std::vector<std::shared_ptr<FormReportedRef> >reportedRefs_;
+            std::vector<std::shared_ptr<FormText> > textElements_;
+            std::vector<std::shared_ptr<FormPage> > pages_;
+            std::vector<std::shared_ptr<FormField> > fields_;
+            std::vector<std::shared_ptr<FormField> > reportedFields_;
             std::vector<FormItem> items_;
-            boost::shared_ptr<FormReportedRef> reportedRef_;
+            std::shared_ptr<FormReportedRef> reportedRef_;
             std::string title_;
             std::string instructions_;
             Type type_;

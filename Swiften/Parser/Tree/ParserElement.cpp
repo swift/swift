@@ -25,7 +25,7 @@ ParserElement::~ParserElement() {
 }
 
 ParserElement::ref ParserElement::addChild(const std::string& name, const std::string& xmlns, const AttributeMap& attributes) {
-    ParserElement::ref child = boost::make_shared<ParserElement>(name, xmlns, attributes);
+    ParserElement::ref child = std::make_shared<ParserElement>(name, xmlns, attributes);
     children_.push_back(child);
     return child;
 }

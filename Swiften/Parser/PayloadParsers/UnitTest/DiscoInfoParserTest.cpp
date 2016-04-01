@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture {
                     "<feature var=\"baz-feature\"/>"
                 "</query>"));
 
-            DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
+            DiscoInfo::ref payload = std::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getIdentities().size()));
             CPPUNIT_ASSERT_EQUAL(std::string("Swift"), payload->getIdentities()[0].getName());
             CPPUNIT_ASSERT_EQUAL(std::string("pc"), payload->getIdentities()[0].getType());
@@ -61,7 +61,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture {
                     "<feature var=\"baz-feature\"/>"
                 "</query>"));
 
-            DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
+            DiscoInfo::ref payload = std::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getIdentities().size()));
             CPPUNIT_ASSERT_EQUAL(std::string("Swift"), payload->getIdentities()[0].getName());
             CPPUNIT_ASSERT_EQUAL(std::string("pc"), payload->getIdentities()[0].getType());
@@ -91,7 +91,7 @@ class DiscoInfoParserTest : public CppUnit::TestFixture {
                     "<feature var=\"bar-feature\"/>"
                 "</query>"));
 
-            DiscoInfo::ref payload = boost::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
+            DiscoInfo::ref payload = std::dynamic_pointer_cast<DiscoInfo>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(payload->getExtensions().size()));
             CPPUNIT_ASSERT_EQUAL(std::string("Bot Configuration"), payload->getExtensions()[0]->getTitle());
             CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getFeatures().size()));

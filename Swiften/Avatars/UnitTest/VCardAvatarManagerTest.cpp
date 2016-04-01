@@ -38,7 +38,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
             ownJID = JID("foo@fum.com/bum");
             stanzaChannel = new DummyStanzaChannel();
             stanzaChannel->setAvailable(true);
@@ -63,7 +63,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarHashKnownAvatar() {
-            boost::shared_ptr<VCardAvatarManager> testling = createManager();
+            std::shared_ptr<VCardAvatarManager> testling = createManager();
             storeVCardWithPhoto(user1.toBare(), avatar1);
             avatarStorage->addAvatar(avatar1Hash, avatar1);
 
@@ -74,7 +74,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarHashEmptyAvatar() {
-            boost::shared_ptr<VCardAvatarManager> testling = createManager();
+            std::shared_ptr<VCardAvatarManager> testling = createManager();
             storeEmptyVCard(user1.toBare());
 
             boost::optional<std::string> result = testling->getAvatarHash(user1);
@@ -84,7 +84,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarHashUnknownAvatarKnownVCardStoresAvatar() {
-            boost::shared_ptr<VCardAvatarManager> testling = createManager();
+            std::shared_ptr<VCardAvatarManager> testling = createManager();
             storeVCardWithPhoto(user1.toBare(), avatar1);
 
             boost::optional<std::string> result = testling->getAvatarHash(user1);
@@ -96,7 +96,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarHashUnknownAvatarUnknownVCard() {
-            boost::shared_ptr<VCardAvatarManager> testling = createManager();
+            std::shared_ptr<VCardAvatarManager> testling = createManager();
 
             boost::optional<std::string> result = testling->getAvatarHash(user1);
 
@@ -105,7 +105,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarHashKnownAvatarUnknownVCard() {
-            boost::shared_ptr<VCardAvatarManager> testling = createManager();
+            std::shared_ptr<VCardAvatarManager> testling = createManager();
 
             avatarStorage->setAvatarForJID(user1, avatar1Hash);
 
@@ -117,7 +117,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
 
 
         void testVCardUpdateTriggersUpdate() {
-            boost::shared_ptr<VCardAvatarManager> testling = createManager();
+            std::shared_ptr<VCardAvatarManager> testling = createManager();
             vcardManager->requestVCard(user1);
             sendVCardResult();
 
@@ -125,8 +125,8 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<VCardAvatarManager> createManager() {
-            boost::shared_ptr<VCardAvatarManager> result(new VCardAvatarManager(vcardManager, avatarStorage, crypto.get(), mucRegistry));
+        std::shared_ptr<VCardAvatarManager> createManager() {
+            std::shared_ptr<VCardAvatarManager> result(new VCardAvatarManager(vcardManager, avatarStorage, crypto.get(), mucRegistry));
             result->onAvatarChanged.connect(boost::bind(&VCardAvatarManagerTest::handleAvatarChanged, this, _1));
             return result;
         }
@@ -170,7 +170,7 @@ class VCardAvatarManagerTest : public CppUnit::TestFixture {
         std::vector<JID> changes;
         JID user1;
         JID user2;
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(VCardAvatarManagerTest);

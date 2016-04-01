@@ -6,11 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -48,7 +47,7 @@ namespace Swift {
             }
 
             /** Emitted for each service found. */
-            boost::signal<void(const JID&, boost::shared_ptr<DiscoInfo>)> onServiceFound;
+            boost::signal<void(const JID&, std::shared_ptr<DiscoInfo>)> onServiceFound;
 
             /** Emitted when walking is aborted. */
             boost::signal<void()> onWalkAborted;
@@ -59,8 +58,8 @@ namespace Swift {
         private:
             void walkNode(const JID& jid);
             void markNodeCompleted(const JID& jid);
-            void handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request);
-            void handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, GetDiscoItemsRequest::ref request);
+            void handleDiscoInfoResponse(std::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request);
+            void handleDiscoItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error, GetDiscoItemsRequest::ref request);
             void handleDiscoError(const JID& jid, ErrorPayload::ref error);
 
         private:

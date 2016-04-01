@@ -20,7 +20,7 @@
 namespace Swift {
     class SWIFTEN_API WhiteboardLineElement : public WhiteboardElement {
     public:
-        typedef boost::shared_ptr<WhiteboardLineElement> ref;
+        typedef std::shared_ptr<WhiteboardLineElement> ref;
     public:
         WhiteboardLineElement(int x1, int y1, int x2, int y2) : penWidth_(1) {
             x1_ = x1;

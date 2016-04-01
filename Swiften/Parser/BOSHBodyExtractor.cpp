@@ -6,8 +6,9 @@
 
 #include <Swiften/Parser/BOSHBodyExtractor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Parser/XMLParser.h>
 #include <Swiften/Parser/XMLParserClient.h>
@@ -125,7 +126,7 @@ BOSHBodyExtractor::BOSHBodyExtractor(XMLParserFactory* parserFactory, const Byte
 
     // Parse the body element
     BOSHBodyParserClient parserClient(this);
-    boost::shared_ptr<XMLParser> parser(parserFactory->createXMLParser(&parserClient));
+    std::shared_ptr<XMLParser> parser(parserFactory->createXMLParser(&parserClient));
     if (!parser->parse(std::string(
             reinterpret_cast<const char*>(vecptr(data)),
             boost::numeric_cast<size_t>(std::distance(data.begin(), i))))) {

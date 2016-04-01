@@ -145,7 +145,7 @@ std::vector<XMPPRosterItem> SluiftClient::getRoster(int timeout) {
     return client->getRoster()->getItems();
 }
 
-void SluiftClient::handleIncomingMessage(boost::shared_ptr<Message> stanza) {
+void SluiftClient::handleIncomingMessage(std::shared_ptr<Message> stanza) {
     if (stanza->getPayload<PubSubEvent>()) {
         // Already handled by pubsub manager
         return;
@@ -153,11 +153,11 @@ void SluiftClient::handleIncomingMessage(boost::shared_ptr<Message> stanza) {
     pendingEvents.push_back(Event(stanza));
 }
 
-void SluiftClient::handleIncomingPresence(boost::shared_ptr<Presence> stanza) {
+void SluiftClient::handleIncomingPresence(std::shared_ptr<Presence> stanza) {
     pendingEvents.push_back(Event(stanza));
 }
 
-void SluiftClient::handleIncomingPubSubEvent(const JID& from, boost::shared_ptr<PubSubEventPayload> event) {
+void SluiftClient::handleIncomingPubSubEvent(const JID& from, std::shared_ptr<PubSubEventPayload> event) {
     pendingEvents.push_back(Event(from, event));
 }
 
@@ -165,7 +165,7 @@ void SluiftClient::handleInitialRosterPopulated() {
     rosterReceived = true;
 }
 
-void SluiftClient::handleRequestResponse(boost::shared_ptr<Payload> response, boost::shared_ptr<ErrorPayload> error) {
+void SluiftClient::handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error) {
     requestResponse = response;
     requestError = error;
     requestResponseReceived = true;
@@ -175,7 +175,7 @@ void SluiftClient::handleDisconnected(const boost::optional<ClientError>& error)
     disconnectedError = error;
 }
 
-Sluift::Response SluiftClient::doSendRequest(boost::shared_ptr<Request> request, int timeout) {
+Sluift::Response SluiftClient::doSendRequest(std::shared_ptr<Request> request, int timeout) {
     requestResponse.reset();
     requestError.reset();
     requestResponseReceived = false;
@@ -186,5 +186,5 @@ Sluift::Response SluiftClient::doSendRequest(boost::shared_ptr<Request> request,
         eventLoop->runUntilEvents();
     }
     return Sluift::Response(requestResponse, watchdog.getTimedOut() ?
-            boost::make_shared<ErrorPayload>(ErrorPayload::RemoteServerTimeout) : requestError);
+            std::make_shared<ErrorPayload>(ErrorPayload::RemoteServerTimeout) : requestError);
 }

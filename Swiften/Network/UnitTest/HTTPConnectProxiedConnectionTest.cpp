@@ -1,15 +1,15 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
+
+#include <memory>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QA/Checker/IO.h>
 
@@ -254,7 +254,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
         void testTrafficFilter() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
 
-            boost::shared_ptr<ExampleHTTPTrafficFilter> httpTrafficFilter = boost::make_shared<ExampleHTTPTrafficFilter>();
+            std::shared_ptr<ExampleHTTPTrafficFilter> httpTrafficFilter = std::make_shared<ExampleHTTPTrafficFilter>();
 
             testling->setHTTPTrafficFilter(httpTrafficFilter);
             connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
@@ -295,7 +295,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
         void testTrafficFilterNoConnectionReuse() {
             HTTPConnectProxiedConnection::ref testling = createTestling();
 
-            boost::shared_ptr<ProxyAuthenticationHTTPTrafficFilter> httpTrafficFilter = boost::make_shared<ProxyAuthenticationHTTPTrafficFilter>();
+            std::shared_ptr<ProxyAuthenticationHTTPTrafficFilter> httpTrafficFilter = std::make_shared<ProxyAuthenticationHTTPTrafficFilter>();
             testling->setHTTPTrafficFilter(httpTrafficFilter);
 
             connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
@@ -351,7 +351,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
     private:
         HTTPConnectProxiedConnection::ref createTestling() {
-            boost::shared_ptr<HTTPConnectProxiedConnection> c = HTTPConnectProxiedConnection::create(resolver, connectionFactory, timerFactory, proxyHost, proxyPort, "", "");
+            std::shared_ptr<HTTPConnectProxiedConnection> c = HTTPConnectProxiedConnection::create(resolver, connectionFactory, timerFactory, proxyHost, proxyPort, "", "");
             c->onConnectFinished.connect(boost::bind(&HTTPConnectProxiedConnectionTest::handleConnectFinished, this, _1));
             c->onDisconnected.connect(boost::bind(&HTTPConnectProxiedConnectionTest::handleDisconnected, this, _1));
             c->onDataRead.connect(boost::bind(&HTTPConnectProxiedConnectionTest::handleDataRead, this, _1));
@@ -368,7 +368,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
             disconnectedError = e;
         }
 
-        void handleDataRead(boost::shared_ptr<SafeByteArray> d) {
+        void handleDataRead(std::shared_ptr<SafeByteArray> d) {
             append(dataRead, *d);
         }
 
@@ -408,15 +408,15 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
             MockConnectionFactory(EventLoop* eventLoop) : eventLoop(eventLoop) {
             }
 
-            boost::shared_ptr<Connection> createConnection() {
-                boost::shared_ptr<MockConnection> connection = boost::make_shared<MockConnection>(failingPorts, eventLoop);
+            std::shared_ptr<Connection> createConnection() {
+                std::shared_ptr<MockConnection> connection = std::make_shared<MockConnection>(failingPorts, eventLoop);
                 connections.push_back(connection);
                 SWIFT_LOG(debug) << "new connection created" << std::endl;
                 return connection;
             }
 
             EventLoop* eventLoop;
-            std::vector< boost::shared_ptr<MockConnection> > connections;
+            std::vector< std::shared_ptr<MockConnection> > connections;
             std::vector<HostAddressPort> failingPorts;
         };
 

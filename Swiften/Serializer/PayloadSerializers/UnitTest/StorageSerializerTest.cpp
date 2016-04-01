@@ -23,7 +23,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize() {
             PayloadsSerializer serializer;
-            boost::shared_ptr<Storage> storage(new Storage());
+            std::shared_ptr<Storage> storage(new Storage());
             Storage::Room room;
             room.name = "Council of Oberon";
             room.autoJoin = true;
@@ -51,7 +51,7 @@ class StorageSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_NoNickOrPassword() {
             PayloadsSerializer serializer;
-            boost::shared_ptr<Storage> storage(new Storage());
+            std::shared_ptr<Storage> storage(new Storage());
             Storage::Room room;
             room.name = "Council of Oberon";
             room.autoJoin = true;

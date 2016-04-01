@@ -16,7 +16,7 @@ namespace Swift {
         public:
             MUCUserPayloadSerializer(PayloadSerializerCollection* serializers);
 
-            virtual std::string serializePayload(boost::shared_ptr<MUCUserPayload> version)  const;
+            virtual std::string serializePayload(std::shared_ptr<MUCUserPayload> version)  const;
         private:
             PayloadSerializerCollection* serializers;
     };

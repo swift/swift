@@ -23,7 +23,7 @@ namespace Swift {
     class SWIFTEN_API WhiteboardFreehandPathElement : public WhiteboardElement {
         typedef std::pair<int, int> Point;
     public:
-        typedef boost::shared_ptr<WhiteboardFreehandPathElement> ref;
+        typedef std::shared_ptr<WhiteboardFreehandPathElement> ref;
     public:
         WhiteboardFreehandPathElement() {
         }

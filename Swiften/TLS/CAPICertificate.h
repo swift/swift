@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Base/API.h>
@@ -58,7 +64,7 @@ namespace Swift {
             std::string certStore_;
             std::string certName_;
             std::string smartCardReaderName_;
-            boost::shared_ptr<Timer> smartCardTimer_;
+            std::shared_ptr<Timer> smartCardTimer_;
             TimerFactory* timerFactory_;
 
             bool lastPollingResult_;

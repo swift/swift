@@ -92,7 +92,7 @@ void ProxiedConnection::handleConnectFinished(Connection::ref connection) {
     }
 }
 
-void ProxiedConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+void ProxiedConnection::handleDataRead(std::shared_ptr<SafeByteArray> data) {
     if (!connected_) {
         handleProxyInitializeData(data);
     }

@@ -15,6 +15,6 @@ namespace Swift {
         public:
             VCardSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<VCard>)  const;
+            virtual std::string serializePayload(std::shared_ptr<VCard>)  const;
     };
 }

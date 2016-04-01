@@ -39,14 +39,14 @@ void ComponentConnector::start() {
 }
 
 void ComponentConnector::stop() {
-    finish(boost::shared_ptr<Connection>());
+    finish(std::shared_ptr<Connection>());
 }
 
 
 void ComponentConnector::handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
     addressQuery.reset();
     if (error || addresses.empty()) {
-        finish(boost::shared_ptr<Connection>());
+        finish(std::shared_ptr<Connection>());
     }
     else {
         addressQueryResults = std::deque<HostAddress>(addresses.begin(), addresses.end());
@@ -76,7 +76,7 @@ void ComponentConnector::handleConnectionConnectFinished(bool error) {
             tryNextAddress();
         }
         else {
-            finish(boost::shared_ptr<Connection>());
+            finish(std::shared_ptr<Connection>());
         }
     }
     else {
@@ -84,7 +84,7 @@ void ComponentConnector::handleConnectionConnectFinished(bool error) {
     }
 }
 
-void ComponentConnector::finish(boost::shared_ptr<Connection> connection) {
+void ComponentConnector::finish(std::shared_ptr<Connection> connection) {
     if (timer) {
         timer->stop();
         timer->onTick.disconnect(boost::bind(&ComponentConnector::handleTimeout, shared_from_this()));
@@ -102,7 +102,7 @@ void ComponentConnector::finish(boost::shared_ptr<Connection> connection) {
 }
 
 void ComponentConnector::handleTimeout() {
-    finish(boost::shared_ptr<Connection>());
+    finish(std::shared_ptr<Connection>());
 }
 
 }

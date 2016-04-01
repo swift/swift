@@ -6,11 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Body.h>
@@ -22,14 +21,14 @@
 namespace Swift {
     class SWIFTEN_API Message : public Stanza {
       public:
-            typedef boost::shared_ptr<Message> ref;
+            typedef std::shared_ptr<Message> ref;
 
             enum Type { Normal, Chat, Error, Groupchat, Headline };
 
             Message() : type_(Chat) { }
 
             std::string getSubject() const {
-                boost::shared_ptr<Subject> subject(getPayload<Subject>());
+                std::shared_ptr<Subject> subject(getPayload<Subject>());
                 if (subject) {
                     return subject->getText();
                 }
@@ -37,7 +36,7 @@ namespace Swift {
             }
 
             void setSubject(const std::string& subject) {
-                updatePayload(boost::make_shared<Subject>(subject));
+                updatePayload(std::make_shared<Subject>(subject));
             }
 
             // Explicitly convert to bool. In C++11, it would be cleaner to
@@ -47,7 +46,7 @@ namespace Swift {
             }
 
             boost::optional<std::string> getBody() const {
-                boost::shared_ptr<Body> body(getPayload<Body>());
+                std::shared_ptr<Body> body(getPayload<Body>());
                 boost::optional<std::string> bodyData;
                 if (body) {
                     bodyData = body->getText();
@@ -61,15 +60,15 @@ namespace Swift {
 
             void setBody(const boost::optional<std::string>& body) {
                 if (body) {
-                    updatePayload(boost::make_shared<Body>(body.get()));
+                    updatePayload(std::make_shared<Body>(body.get()));
                 }
                 else {
-                    removePayloadOfSameType(boost::make_shared<Body>());
+                    removePayloadOfSameType(std::make_shared<Body>());
                 }
             }
 
             bool isError() {
-                boost::shared_ptr<Swift::ErrorPayload> error(getPayload<Swift::ErrorPayload>());
+                std::shared_ptr<Swift::ErrorPayload> error(getPayload<Swift::ErrorPayload>());
                 return getType() == Message::Error || error;
             }
 

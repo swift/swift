@@ -10,7 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -31,7 +31,7 @@ class UserLocationSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize_withAllVariablesSet() {
             UserLocationSerializer testling(&serializers);
-            boost::shared_ptr<UserLocation> userLocation(new UserLocation());
+            std::shared_ptr<UserLocation> userLocation(new UserLocation());
             userLocation->setArea(boost::optional<std::string>("Barbaric"));
             userLocation->setAltitude(5.75F);
             userLocation->setLocality(boost::optional<std::string>("Near"));
@@ -70,7 +70,7 @@ class UserLocationSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_withSomeVariablesSet() {
             UserLocationSerializer testling(&serializers);
-            boost::shared_ptr<UserLocation> userLocation(new UserLocation());
+            std::shared_ptr<UserLocation> userLocation(new UserLocation());
             userLocation->setArea(boost::optional<std::string>("Barbaric"));
             userLocation->setAltitude(5.75F);
             userLocation->setLocality(boost::optional<std::string>("Near"));

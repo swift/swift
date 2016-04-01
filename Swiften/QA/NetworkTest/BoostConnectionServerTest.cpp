@@ -1,12 +1,11 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -194,7 +193,7 @@ class BoostConnectionServerTest : public CppUnit::TestFixture {
             stoppedError_ = e;
         }
 
-        void handleNewConnection(boost::shared_ptr<Connection> connection) {
+        void handleNewConnection(std::shared_ptr<Connection> connection) {
             receivedNewConnection_ = true;
             remoteAddress_ = connection->getRemoteAddress();
         }

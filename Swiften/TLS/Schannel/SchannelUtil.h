@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #define SECURITY_WIN32
@@ -92,7 +98,7 @@ namespace Swift
         }
 
     private:
-        boost::shared_ptr<HandleContext> m_pHandle;
+        std::shared_ptr<HandleContext> m_pHandle;
     };
 
     //------------------------------------------------------------------------
@@ -168,7 +174,7 @@ namespace Swift
         }
 
     private:
-        boost::shared_ptr<HandleContext> m_pHandle;
+        std::shared_ptr<HandleContext> m_pHandle;
     };
 
     //------------------------------------------------------------------------
@@ -303,7 +309,7 @@ namespace Swift
         }
 
     private:
-        boost::shared_ptr<HandleContext> m_pHandle;
+        std::shared_ptr<HandleContext> m_pHandle;
     };
 
     //------------------------------------------------------------------------
@@ -420,6 +426,6 @@ namespace Swift
         }
 
     private:
-        boost::shared_ptr<HandleContext> m_pHandle;
+        std::shared_ptr<HandleContext> m_pHandle;
     };
 }

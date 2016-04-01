@@ -15,7 +15,7 @@ namespace Swift {
         public:
             CommandSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<Command>)  const;
+            virtual std::string serializePayload(std::shared_ptr<Command>)  const;
 
         private:
             std::string actionToString(Command::Action action) const;

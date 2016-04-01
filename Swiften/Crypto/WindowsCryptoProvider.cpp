@@ -17,7 +17,7 @@
 #include <security.h>
 #include <Wincrypt.h>
 #include <cassert>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Crypto/Hash.h>
 #include <Swiften/Base/ByteArray.h>
@@ -191,7 +191,7 @@ namespace {
 }
 
 WindowsCryptoProvider::WindowsCryptoProvider() {
-    p = boost::make_shared<Private>();
+    p = std::make_shared<Private>();
     if (!CryptAcquireContext(&p->context, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
         assert(false);
     }

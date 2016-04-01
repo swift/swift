@@ -61,7 +61,7 @@ class StreamStackTest : public CppUnit::TestFixture {
 
         void testWriteData_OneIntermediateStream() {
             StreamStack testling(xmppStream_, physicalStream_);
-            boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
+            std::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
             testling.addLayer(xStream.get());
 
             xmppStream_->writeData("foo");
@@ -72,8 +72,8 @@ class StreamStackTest : public CppUnit::TestFixture {
 
         void testWriteData_TwoIntermediateStreamStack() {
             StreamStack testling(xmppStream_, physicalStream_);
-            boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
-            boost::shared_ptr<MyStreamLayer> yStream(new MyStreamLayer("Y"));
+            std::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
+            std::shared_ptr<MyStreamLayer> yStream(new MyStreamLayer("Y"));
             testling.addLayer(xStream.get());
             testling.addLayer(yStream.get());
 
@@ -95,7 +95,7 @@ class StreamStackTest : public CppUnit::TestFixture {
         void testReadData_OneIntermediateStream() {
             StreamStack testling(xmppStream_, physicalStream_);
             xmppStream_->onElement.connect(boost::bind(&StreamStackTest::handleElement, this, _1));
-            boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("<"));
+            std::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("<"));
             testling.addLayer(xStream.get());
 
             physicalStream_->onDataRead(createSafeByteArray("stream:stream xmlns:stream='http://etherx.jabber.org/streams'><presence/>"));
@@ -106,8 +106,8 @@ class StreamStackTest : public CppUnit::TestFixture {
         void testReadData_TwoIntermediateStreamStack() {
             StreamStack testling(xmppStream_, physicalStream_);
             xmppStream_->onElement.connect(boost::bind(&StreamStackTest::handleElement, this, _1));
-            boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("s"));
-            boost::shared_ptr<MyStreamLayer> yStream(new MyStreamLayer("<"));
+            std::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("s"));
+            std::shared_ptr<MyStreamLayer> yStream(new MyStreamLayer("<"));
             testling.addLayer(xStream.get());
             testling.addLayer(yStream.get());
 
@@ -119,7 +119,7 @@ class StreamStackTest : public CppUnit::TestFixture {
         void testAddLayer_ExistingOnWriteDataSlot() {
             StreamStack testling(xmppStream_, physicalStream_);
             xmppStream_->onWriteData.connect(boost::bind(&StreamStackTest::handleWriteData, this, _1));
-            boost::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
+            std::shared_ptr<MyStreamLayer> xStream(new MyStreamLayer("X"));
             testling.addLayer(xStream.get());
 
             xmppStream_->writeData("foo");
@@ -127,7 +127,7 @@ class StreamStackTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, dataWriteReceived_);
         }
 
-        void handleElement(boost::shared_ptr<ToplevelElement>) {
+        void handleElement(std::shared_ptr<ToplevelElement>) {
             ++elementsReceived_;
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,14 +18,14 @@ namespace Swift {
 PlatformDNSSDQuerierFactory::PlatformDNSSDQuerierFactory(EventLoop* eventLoop) : eventLoop(eventLoop) {
 }
 
-boost::shared_ptr<DNSSDQuerier> PlatformDNSSDQuerierFactory::createQuerier() {
+std::shared_ptr<DNSSDQuerier> PlatformDNSSDQuerierFactory::createQuerier() {
 #if defined(HAVE_BONJOUR)
-    return boost::shared_ptr<DNSSDQuerier>(new BonjourQuerier(eventLoop));
+    return std::make_shared<BonjourQuerier>(eventLoop);
 #elif defined(HAVE_AVAHI)
-    return boost::shared_ptr<DNSSDQuerier>(new AvahiQuerier(eventLoop));
+    return std::make_shared<AvahiQuerier>(eventLoop);
 #else
     (void)eventLoop;
-    return boost::shared_ptr<DNSSDQuerier>();
+    return std::shared_ptr<DNSSDQuerier>();
 #endif
 }
 

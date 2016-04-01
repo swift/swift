@@ -47,9 +47,9 @@ namespace {
             }
         }
 
-        void operator()(const std::map<std::string, boost::shared_ptr<Value> >& table) const {
+        void operator()(const std::map<std::string, std::shared_ptr<Value> >& table) const {
             lua_createtable(state, 0, boost::numeric_cast<int>(table.size()));
-            for(std::map<std::string, boost::shared_ptr<Value> >::const_iterator i = table.begin(); i != table.end(); ++i) {
+            for(std::map<std::string, std::shared_ptr<Value> >::const_iterator i = table.begin(); i != table.end(); ++i) {
                 boost::apply_visitor(PushVisitor(state), *i->second);
                 lua_setfield(state, -2, i->first.c_str());
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -60,7 +60,7 @@ class BlockListImplTest : public CppUnit::TestFixture {
         }
 
         void setUp() {
-            blockList_ = boost::make_shared<BlockListImpl>();
+            blockList_ = std::make_shared<BlockListImpl>();
             addedJIDs_.clear();
             removedJIDs_.clear();
             blockList_->addItem(JID("a@example.com"));
@@ -83,7 +83,7 @@ class BlockListImplTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<BlockListImpl> blockList_;
+        std::shared_ptr<BlockListImpl> blockList_;
         std::vector<JID> addedJIDs_;
         std::vector<JID> removedJIDs_;
 };

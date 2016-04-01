@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -78,64 +78,64 @@ class SearchPayloadSerializerTest : public CppUnit::TestFixture {
             SearchPayloadSerializer testling;
 
             SearchPayload::ref payload(new SearchPayload());
-            boost::shared_ptr<Form> form(new Form(Form::ResultType));
+            std::shared_ptr<Form> form(new Form(Form::ResultType));
 
-            FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:iq:search");
+            FormField::ref field = std::make_shared<FormField>(FormField::HiddenType, "jabber:iq:search");
             field->setName("FORM_TYPE");
             form->addField(field);
 
             // reported fields
-            field = boost::make_shared<FormField>(FormField::TextSingleType);
+            field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("first");
             field->setLabel("Given Name");
             form->addReportedField(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType);
+            field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("last");
             field->setLabel("Family Name");
             form->addReportedField(field);
 
-            field = boost::make_shared<FormField>(FormField::JIDSingleType);
+            field = std::make_shared<FormField>(FormField::JIDSingleType);
             field->setName("jid");
             field->setLabel("Jabber ID");
             form->addReportedField(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType);
+            field = std::make_shared<FormField>(FormField::ListSingleType);
             field->setName("x-gender");
             field->setLabel("Gender");
             form->addReportedField(field);
 
             Form::FormItem firstItem;
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Benvolio");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Benvolio");
             field->setName("first");
             firstItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Montague");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Montague");
             field->setName("last");
             firstItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "benvolio@montague.net");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "benvolio@montague.net");
             field->setName("jid");
             firstItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType, "male");
+            field = std::make_shared<FormField>(FormField::ListSingleType, "male");
             field->setName("x-gender");
             firstItem.push_back(field);
 
             Form::FormItem secondItem;
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Romeo");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Romeo");
             field->setName("first");
             secondItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Montague");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Montague");
             field->setName("last");
             secondItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "romeo@montague.net");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "romeo@montague.net");
             field->setName("jid");
             secondItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType, "male");
+            field = std::make_shared<FormField>(FormField::ListSingleType, "male");
             field->setName("x-gender");
             secondItem.push_back(field);
 

@@ -57,17 +57,17 @@ namespace Swift {
             }
 
             if (level == 1) {
-                boost::shared_ptr<JinglePayload::Reason> reason = boost::dynamic_pointer_cast<JinglePayload::Reason>(currentPayloadParser->getPayload());
+                std::shared_ptr<JinglePayload::Reason> reason = std::dynamic_pointer_cast<JinglePayload::Reason>(currentPayloadParser->getPayload());
                 if (reason) {
                     getPayloadInternal()->setReason(*reason);
                 }
 
-                boost::shared_ptr<JingleContentPayload> payload = boost::dynamic_pointer_cast<JingleContentPayload>(currentPayloadParser->getPayload());
+                std::shared_ptr<JingleContentPayload> payload = std::dynamic_pointer_cast<JingleContentPayload>(currentPayloadParser->getPayload());
                 if (payload) {
                     getPayloadInternal()->addContent(payload);
                 }
 
-                boost::shared_ptr<JingleFileTransferHash> hash = boost::dynamic_pointer_cast<JingleFileTransferHash>(currentPayloadParser->getPayload());
+                std::shared_ptr<JingleFileTransferHash> hash = std::dynamic_pointer_cast<JingleFileTransferHash>(currentPayloadParser->getPayload());
                 if (hash) {
                     getPayloadInternal()->addPayload(hash);
                 }

@@ -52,17 +52,17 @@ QtVCardWidget::QtVCardWidget(QWidget* parent) :
     toolButton->hide();
     toolButton->setMenu(menu);
 
-    addFieldType(menu, boost::make_shared<QtVCardInternetEMailField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardTelephoneField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardAddressField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardAddressLabelField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardBirthdayField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardJIDField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardDescriptionField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardRoleField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardTitleField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardOrganizationField::FieldInfo>());
-    addFieldType(menu, boost::make_shared<QtVCardURLField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardInternetEMailField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardTelephoneField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardAddressField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardAddressLabelField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardBirthdayField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardJIDField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardDescriptionField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardRoleField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardTitleField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardOrganizationField::FieldInfo>());
+    addFieldType(menu, std::make_shared<QtVCardURLField::FieldInfo>());
 
     setEditable(false);
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -111,7 +111,7 @@ void QtVCardWidget::setEditable(bool editable) {
 
 void QtVCardWidget::setVCard(VCard::ref vcard) {
     clearFields();
-    this->vcard = boost::make_shared<VCard>(*vcard);
+    this->vcard = std::make_shared<VCard>(*vcard);
     ui->photoAndName->setFormattedName(P2QSTRING(vcard->getFullName()));
     ui->photoAndName->setNickname(P2QSTRING(vcard->getNickname()));
     ui->photoAndName->setPrefix(P2QSTRING(vcard->getPrefix()));
@@ -312,7 +312,7 @@ VCard::ref QtVCardWidget::getVCard() {
 void QtVCardWidget::addField() {
     QAction* action = nullptr;
     if ((action = dynamic_cast<QAction*>(sender()))) {
-        boost::shared_ptr<QtVCardFieldInfo> fieldInfo = actionFieldInfo[action];
+        std::shared_ptr<QtVCardFieldInfo> fieldInfo = actionFieldInfo[action];
         QWidget* newField = fieldInfo->createFieldInstance(this, ui->cardFields, true);
         QtVCardGeneralField* newGeneralField = dynamic_cast<QtVCardGeneralField*>(newField);
         if (newGeneralField) {
@@ -341,7 +341,7 @@ void QtVCardWidget::removeField(QtVCardGeneralField *field) {
     delete field;
 }
 
-void QtVCardWidget::addFieldType(QMenu* menu, boost::shared_ptr<QtVCardFieldInfo> fieldType) {
+void QtVCardWidget::addFieldType(QMenu* menu, std::shared_ptr<QtVCardFieldInfo> fieldType) {
     if (!fieldType->getMenuName().isEmpty()) {
         QAction* action = new QAction(tr("Add %1").arg(fieldType->getMenuName()), this);
         actionFieldInfo[action] = fieldType;
@@ -350,7 +350,7 @@ void QtVCardWidget::addFieldType(QMenu* menu, boost::shared_ptr<QtVCardFieldInfo
     }
 }
 
-int QtVCardWidget::fieldTypeInstances(boost::shared_ptr<QtVCardFieldInfo> fieldType) {
+int QtVCardWidget::fieldTypeInstances(std::shared_ptr<QtVCardFieldInfo> fieldType) {
     int instances = 0;
     for (int n = 0; n < ui->cardFields->count(); n++) {
         if (fieldType->testInstance(ui->cardFields->itemAt(n)->widget())) instances++;

@@ -17,7 +17,7 @@ namespace Swift {
             StatusConvertor();
             virtual ~StatusConvertor();
 
-            virtual boost::shared_ptr<Status> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<Status>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Status> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Status>) SWIFTEN_OVERRIDE;
     };
 }

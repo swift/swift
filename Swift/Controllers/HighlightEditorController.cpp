@@ -34,9 +34,9 @@ HighlightEditorController::~HighlightEditorController()
     highlightEditorWindow_ = nullptr;
 }
 
-void HighlightEditorController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent)
+void HighlightEditorController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent)
 {
-    boost::shared_ptr<RequestHighlightEditorUIEvent> event = boost::dynamic_pointer_cast<RequestHighlightEditorUIEvent>(rawEvent);
+    std::shared_ptr<RequestHighlightEditorUIEvent> event = std::dynamic_pointer_cast<RequestHighlightEditorUIEvent>(rawEvent);
     if (event) {
         if (!highlightEditorWindow_) {
             highlightEditorWindow_ = highlightEditorWindowFactory_->createHighlightEditorWindow();

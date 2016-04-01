@@ -5,14 +5,15 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
+
 #include <boost/filesystem/path.hpp>
 
 #include <Swiften/Elements/StatusShow.h>
@@ -20,9 +21,9 @@
 
 namespace Swift {
 
-class Contact : public boost::enable_shared_from_this<Contact> {
+class Contact : public std::enable_shared_from_this<Contact> {
     public:
-        typedef boost::shared_ptr<Contact> ref;
+        typedef std::shared_ptr<Contact> ref;
 
         Contact();
         Contact(const std::string& name, const JID& jid, StatusShow::Type statusType, const boost::filesystem::path& path);

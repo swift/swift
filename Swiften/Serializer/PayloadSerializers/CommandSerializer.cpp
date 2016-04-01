@@ -6,8 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/CommandSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -20,7 +19,7 @@ namespace Swift {
 CommandSerializer::CommandSerializer() {
 }
 
-std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> command)    const {
+std::string CommandSerializer::serializePayload(std::shared_ptr<Command> command)    const {
     XMLElement commandElement("command", "http://jabber.org/protocol/commands");
     commandElement.setAttribute("node", command->getNode());
 
@@ -55,11 +54,11 @@ std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> comma
             actions += "<" + actionToString(action) + "/>";
         }
         actions += "</actions>";
-        commandElement.addNode(boost::make_shared<XMLRawTextNode>(actions));
+        commandElement.addNode(std::make_shared<XMLRawTextNode>(actions));
     }
 
     foreach (Command::Note note, command->getNotes()) {
-        boost::shared_ptr<XMLElement> noteElement(new XMLElement("note"));
+        std::shared_ptr<XMLElement> noteElement(new XMLElement("note"));
         std::string type;
         switch (note.type) {
             case Command::Note::Info: type = "info"; break;
@@ -69,13 +68,13 @@ std::string CommandSerializer::serializePayload(boost::shared_ptr<Command> comma
         if (!type.empty()) {
             noteElement->setAttribute("type", type);
         }
-        noteElement->addNode(boost::make_shared<XMLTextNode>(note.note));
+        noteElement->addNode(std::make_shared<XMLTextNode>(note.note));
         commandElement.addNode(noteElement);
     }
 
     Form::ref form = command->getForm();
     if (form) {
-        commandElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
+        commandElement.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
     }
     return commandElement.serialize();
 }

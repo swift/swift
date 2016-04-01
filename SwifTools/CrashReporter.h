@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/filesystem.hpp>
-#include <boost/shared_ptr.hpp>
 
 namespace Swift {
     class CrashReporter {
@@ -18,6 +18,6 @@ namespace Swift {
 
         private:
             struct Private;
-            boost::shared_ptr<Private> p;
+            std::shared_ptr<Private> p;
     };
 }

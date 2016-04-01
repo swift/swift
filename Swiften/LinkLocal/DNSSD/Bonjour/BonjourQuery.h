@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
+
 #include <boost/thread/mutex.hpp>
 
 #include <dns_sd.h>
@@ -20,9 +20,9 @@ namespace Swift {
 
     class BonjourQuery :
             public EventOwner,
-            public boost::enable_shared_from_this<BonjourQuery> {
+            public std::enable_shared_from_this<BonjourQuery> {
         public:
-            BonjourQuery(boost::shared_ptr<BonjourQuerier>, EventLoop* eventLoop);
+            BonjourQuery(std::shared_ptr<BonjourQuerier>, EventLoop* eventLoop);
             virtual ~BonjourQuery();
 
             void processResult();
@@ -34,7 +34,7 @@ namespace Swift {
 
         protected:
             EventLoop* eventLoop;
-            boost::shared_ptr<BonjourQuerier> querier;
+            std::shared_ptr<BonjourQuerier> querier;
             mutable boost::mutex sdRefMutex;
             DNSServiceRef sdRef;
     };

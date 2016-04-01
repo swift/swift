@@ -36,8 +36,8 @@ using namespace Swift;
 static const std::string CLIENT_NAME = "Swiften FT Test";
 static const std::string CLIENT_NODE = "http://swift.im";
 
-static boost::shared_ptr<SimpleEventLoop> eventLoop;
-static boost::shared_ptr<BoostNetworkFactories> networkFactories;
+static std::shared_ptr<SimpleEventLoop> eventLoop;
+static std::shared_ptr<BoostNetworkFactories> networkFactories;
 
 BoostRandomGenerator randGen;
 
@@ -56,12 +56,12 @@ class ConcurrentFileTransferTest {
 
     private:
         int clientACandidates_;
-        boost::shared_ptr<Client> clientA_;
+        std::shared_ptr<Client> clientA_;
         std::map<std::string, ByteArray> clientASendFiles_;
 
 
         int clientBCandidates_;
-        boost::shared_ptr<Client> clientB_;
+        std::shared_ptr<Client> clientB_;
 };
 
 /**

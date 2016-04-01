@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swift/Controllers/HighlightAction.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
@@ -23,7 +23,7 @@ namespace Swift {
             bool getSoundEnabled() {return playSounds_;}
         private:
             void handleSettingChanged(const std::string& settingPath);
-            void handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event);
+            void handleEventQueueEventAdded(std::shared_ptr<StanzaEvent> event);
             void handleHighlight(const HighlightAction& action);
             EventController* eventController_;
             SoundPlayer* soundPlayer_;

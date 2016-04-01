@@ -14,7 +14,7 @@ namespace Swift {
 ErrorSerializer::ErrorSerializer(PayloadSerializerCollection* serializers) : GenericPayloadSerializer<ErrorPayload>(), serializers(serializers) {
 }
 
-std::string ErrorSerializer::serializePayload(boost::shared_ptr<ErrorPayload> error)  const {
+std::string ErrorSerializer::serializePayload(std::shared_ptr<ErrorPayload> error)  const {
     std::string result("<error type=\"");
     switch (error->getType()) {
         case ErrorPayload::Continue: result += "continue"; break;

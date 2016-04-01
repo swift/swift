@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,11 +7,11 @@
 #pragma once
 
 #include <deque>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -33,12 +33,12 @@ namespace Swift {
             void start();
             void stop();
 
-            boost::signal<void (boost::shared_ptr<Connection>, boost::shared_ptr<Error>)> onConnectFinished;
+            boost::signal<void (std::shared_ptr<Connection>, std::shared_ptr<Error>)> onConnectFinished;
 
         private:
-            void finish(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error>);
+            void finish(std::shared_ptr<Connection> connection, std::shared_ptr<Error>);
             void tryNextConnectionFactory();
-            void handleConnectorFinished(boost::shared_ptr<Connection>, boost::shared_ptr<Error>);
+            void handleConnectorFinished(std::shared_ptr<Connection>, std::shared_ptr<Error>);
 
         private:
             std::string hostname;
@@ -49,7 +49,7 @@ namespace Swift {
             TimerFactory* timerFactory;
             int timeoutMilliseconds;
             std::deque<ConnectionFactory*> connectionFactoryQueue;
-            boost::shared_ptr<Connector> currentConnector;
-            boost::shared_ptr<Error> lastError;
+            std::shared_ptr<Connector> currentConnector;
+            std::shared_ptr<Error> lastError;
     };
 }

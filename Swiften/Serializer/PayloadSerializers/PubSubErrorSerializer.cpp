@@ -17,7 +17,7 @@ PubSubErrorSerializer::PubSubErrorSerializer() {
 PubSubErrorSerializer::~PubSubErrorSerializer() {
 }
 
-std::string PubSubErrorSerializer::serializePayload(boost::shared_ptr<PubSubError> payload) const {
+std::string PubSubErrorSerializer::serializePayload(std::shared_ptr<PubSubError> payload) const {
     if (payload->getType() == PubSubError::UnknownType) {
         return "";
     }

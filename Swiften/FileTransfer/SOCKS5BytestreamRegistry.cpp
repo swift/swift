@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>

@@ -6,8 +6,9 @@
 
 #include <Swiften/Network/NullNATTraverser.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/Network/NATTraversalForwardPortRequest.h>
@@ -67,16 +68,16 @@ class NullNATTraversalRemovePortForwardingRequest : public NATTraversalRemovePor
 NullNATTraverser::NullNATTraverser(EventLoop* eventLoop) : eventLoop(eventLoop) {
 }
 
-boost::shared_ptr<NATTraversalGetPublicIPRequest> NullNATTraverser::createGetPublicIPRequest() {
-    return boost::make_shared<NullNATTraversalGetPublicIPRequest>(eventLoop);
+std::shared_ptr<NATTraversalGetPublicIPRequest> NullNATTraverser::createGetPublicIPRequest() {
+    return std::make_shared<NullNATTraversalGetPublicIPRequest>(eventLoop);
 }
 
-boost::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(int, int) {
-    return boost::make_shared<NullNATTraversalForwardPortRequest>(eventLoop);
+std::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(int, int) {
+    return std::make_shared<NullNATTraversalForwardPortRequest>(eventLoop);
 }
 
-boost::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(int, int) {
-    return boost::make_shared<NullNATTraversalRemovePortForwardingRequest>(eventLoop);
+std::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(int, int) {
+    return std::make_shared<NullNATTraversalRemovePortForwardingRequest>(eventLoop);
 }
 
 }

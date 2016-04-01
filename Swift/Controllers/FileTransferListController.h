@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 
@@ -30,7 +30,7 @@ public:
     void setFileTransferOverview(FileTransferOverview* overview);
 
 private:
-    void handleUIEvent(boost::shared_ptr<UIEvent> event);
+    void handleUIEvent(std::shared_ptr<UIEvent> event);
 
 private:
     FileTransferListWidgetFactory* fileTransferListWidgetFactory;

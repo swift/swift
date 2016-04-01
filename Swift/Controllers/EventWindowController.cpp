@@ -26,11 +26,11 @@ EventWindowController::~EventWindowController() {
     }
 }
 
-void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event) {
+void EventWindowController::handleEventQueueEventAdded(std::shared_ptr<StanzaEvent> event) {
     if (event->getConcluded()) {
         handleEventConcluded(event);
     } else {
-        boost::shared_ptr<MessageEvent> message = boost::dynamic_pointer_cast<MessageEvent>(event);
+        std::shared_ptr<MessageEvent> message = std::dynamic_pointer_cast<MessageEvent>(event);
         if (!(message && message->isReadable())) {
             event->onConclusion.connect(boost::bind(&EventWindowController::handleEventConcluded, this, event));
             window_->addEvent(event, true);
@@ -38,11 +38,11 @@ void EventWindowController::handleEventQueueEventAdded(boost::shared_ptr<StanzaE
     }
 }
 
-void EventWindowController::handleEventConcluded(boost::shared_ptr<StanzaEvent> event) {
+void EventWindowController::handleEventConcluded(std::shared_ptr<StanzaEvent> event) {
     window_->removeEvent(event);
     bool includeAsCompleted = true;
     /* Because subscription requests get duplicated, don't add them back */
-    if (boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event) || boost::dynamic_pointer_cast<MessageEvent>(event)) {
+    if (std::dynamic_pointer_cast<SubscriptionRequestEvent>(event) || std::dynamic_pointer_cast<MessageEvent>(event)) {
         includeAsCompleted = false;
     }
     if (includeAsCompleted) {

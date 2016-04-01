@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -32,17 +31,17 @@ namespace Swift {
                 this->node = value ;
             }
 
-            boost::shared_ptr<PubSubOwnerRedirect> getRedirect() const {
+            std::shared_ptr<PubSubOwnerRedirect> getRedirect() const {
                 return redirect;
             }
 
-            void setRedirect(boost::shared_ptr<PubSubOwnerRedirect> value) {
+            void setRedirect(std::shared_ptr<PubSubOwnerRedirect> value) {
                 this->redirect = value ;
             }
 
 
         private:
             std::string node;
-            boost::shared_ptr<PubSubOwnerRedirect> redirect;
+            std::shared_ptr<PubSubOwnerRedirect> redirect;
     };
 }

@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -21,16 +21,16 @@ namespace Swift {
 
             virtual ~PubSubConfigure();
 
-            boost::shared_ptr<Form> getData() const {
+            std::shared_ptr<Form> getData() const {
                 return data;
             }
 
-            void setData(boost::shared_ptr<Form> value) {
+            void setData(std::shared_ptr<Form> value) {
                 this->data = value ;
             }
 
 
         private:
-            boost::shared_ptr<Form> data;
+            std::shared_ptr<Form> data;
     };
 }

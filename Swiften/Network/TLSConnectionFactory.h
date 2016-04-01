@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Network/ConnectionFactory.h>
@@ -21,7 +21,7 @@ namespace Swift {
             TLSConnectionFactory(TLSContextFactory* contextFactory, ConnectionFactory* connectionFactory, const TLSOptions&);
             virtual ~TLSConnectionFactory();
 
-            virtual boost::shared_ptr<Connection> createConnection();
+            virtual std::shared_ptr<Connection> createConnection();
         private:
             TLSContextFactory* contextFactory;
             ConnectionFactory* connectionFactory;

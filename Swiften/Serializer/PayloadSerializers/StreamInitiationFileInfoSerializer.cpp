@@ -12,9 +12,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/StreamInitiationFileInfoSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/foreach.h>
@@ -27,7 +27,7 @@ namespace Swift {
 StreamInitiationFileInfoSerializer::StreamInitiationFileInfoSerializer() {
 }
 
-std::string StreamInitiationFileInfoSerializer::serializePayload(boost::shared_ptr<StreamInitiationFileInfo> fileInfo) const {
+std::string StreamInitiationFileInfoSerializer::serializePayload(std::shared_ptr<StreamInitiationFileInfo> fileInfo) const {
     XMLElement fileElement("file", "http://jabber.org/protocol/si/profile/file-transfer");
 
     if (fileInfo->getDate() != stringToDateTime("")) {
@@ -44,11 +44,11 @@ std::string StreamInitiationFileInfoSerializer::serializePayload(boost::shared_p
         fileElement.setAttribute("size", boost::lexical_cast<std::string>(fileInfo->getSize()));
     }
     if (!fileInfo->getDescription().empty()) {
-        boost::shared_ptr<XMLElement> desc = boost::make_shared<XMLElement>("desc", "", fileInfo->getDescription());
+        std::shared_ptr<XMLElement> desc = std::make_shared<XMLElement>("desc", "", fileInfo->getDescription());
         fileElement.addNode(desc);
     }
     if (fileInfo->getSupportsRangeRequests()) {
-        boost::shared_ptr<XMLElement> range = boost::make_shared<XMLElement>("range");
+        std::shared_ptr<XMLElement> range = std::make_shared<XMLElement>("range");
         if (fileInfo->getRangeOffset() != 0) {
             range->setAttribute("offset", boost::lexical_cast<std::string>(fileInfo->getRangeOffset()));
         }

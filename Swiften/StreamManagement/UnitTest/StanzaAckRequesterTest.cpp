@@ -37,28 +37,28 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
         }
 
         void testHandleStanzaSent_MessageRequestsAck() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createMessage("m1"));
 
             CPPUNIT_ASSERT_EQUAL(1, acksRequested);
         }
 
         void testHandleStanzaSent_IQDoesNotRequestAck() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createIQ("iq1"));
 
             CPPUNIT_ASSERT_EQUAL(0, acksRequested);
         }
 
         void testHandleStanzaSent_PresenceDoesNotRequestAck() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createPresence("p1"));
 
             CPPUNIT_ASSERT_EQUAL(0, acksRequested);
         }
 
         void testHandleAckReceived_AcksStanza() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createMessage("m1"));
 
             testling->handleAckReceived(1);
@@ -68,7 +68,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
         }
 
         void testHandleAckReceived_AcksMultipleMessages() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createMessage("m1"));
             testling->handleStanzaSent(createMessage("m2"));
 
@@ -80,7 +80,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
         }
 
         void testHandleAckReceived_AcksMultipleStanzas() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createIQ("iq1"));
             testling->handleStanzaSent(createPresence("p1"));
             testling->handleStanzaSent(createMessage("m1"));
@@ -94,7 +94,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
         }
 
         void testHandleAckReceived_MultipleAcks() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->handleStanzaSent(createMessage("m1"));
             testling->handleAckReceived(1);
 
@@ -110,7 +110,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
 
         // Handle stanza ack count wrapping, as per the XEP
         void testHandleAckReceived_WrapAround() {
-            boost::shared_ptr<StanzaAckRequester> testling(createRequester());
+            std::shared_ptr<StanzaAckRequester> testling(createRequester());
             testling->lastHandledStanzasCount = boost::numeric_cast<unsigned int>((1ULL<<32) - 1);
             testling->handleStanzaSent(createMessage("m1"));
             testling->handleStanzaSent(createMessage("m2"));
@@ -152,13 +152,13 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
             acksRequested++;
         }
 
-        void handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
+        void handleStanzaAcked(std::shared_ptr<Stanza> stanza) {
             ackedStanzas.push_back(stanza);
         }
 
     private:
         int acksRequested;
-        std::vector< boost::shared_ptr<Stanza> > ackedStanzas;
+        std::vector< std::shared_ptr<Stanza> > ackedStanzas;
 };
 
 }

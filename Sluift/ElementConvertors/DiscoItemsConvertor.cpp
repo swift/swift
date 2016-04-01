@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/DiscoItemsConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -21,8 +22,8 @@ DiscoItemsConvertor::DiscoItemsConvertor() : GenericLuaElementConvertor<DiscoIte
 DiscoItemsConvertor::~DiscoItemsConvertor() {
 }
 
-boost::shared_ptr<DiscoItems> DiscoItemsConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<DiscoItems> result = boost::make_shared<DiscoItems>();
+std::shared_ptr<DiscoItems> DiscoItemsConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<DiscoItems> result = std::make_shared<DiscoItems>();
     if (boost::optional<std::string> value = Lua::getStringField(L, -1, "node")) {
         result->setNode(*value);
     }
@@ -40,7 +41,7 @@ boost::shared_ptr<DiscoItems> DiscoItemsConvertor::doConvertFromLua(lua_State* L
     return result;
 }
 
-void DiscoItemsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<DiscoItems> payload) {
+void DiscoItemsConvertor::doConvertToLua(lua_State* L, std::shared_ptr<DiscoItems> payload) {
     lua_newtable(L);
     if (!payload->getNode().empty()) {
         lua_pushstring(L, payload->getNode().c_str());

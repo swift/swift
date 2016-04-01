@@ -15,7 +15,7 @@ extern "C" {
 #include <cstdlib>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/SafeAllocator.h>

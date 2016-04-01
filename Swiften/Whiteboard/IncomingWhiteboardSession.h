@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Whiteboard/WhiteboardClient.h>
@@ -21,7 +21,7 @@
 namespace Swift {
     class SWIFTEN_API IncomingWhiteboardSession : public WhiteboardSession {
     public:
-        typedef boost::shared_ptr<IncomingWhiteboardSession> ref;
+        typedef std::shared_ptr<IncomingWhiteboardSession> ref;
 
     public:
         IncomingWhiteboardSession(const JID& jid, IQRouter* router);

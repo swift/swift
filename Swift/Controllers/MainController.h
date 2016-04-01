@@ -7,10 +7,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Client/ClientError.h>
@@ -109,12 +108,12 @@ namespace Swift {
             void handleQuitRequest();
             void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
             void handleDisconnected(const boost::optional<ClientError>& error);
-            void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo>, ErrorPayload::ref);
+            void handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo>, ErrorPayload::ref);
             void handleEventQueueLengthChange(int count);
             void handleVCardReceived(const JID& j, VCard::ref vCard);
             void handleSettingChanged(const std::string& settingPath);
             void handlePurgeSavedLoginRequest(const std::string& username);
-            void sendPresence(boost::shared_ptr<Presence> presence);
+            void sendPresence(std::shared_ptr<Presence> presence);
             void handleInputIdleChanged(bool);
             void handleShowCertificateRequest();
             void logout();
@@ -142,7 +141,7 @@ namespace Swift {
             CertificateStorage* certificateStorage_;
             CertificateStorageTrustChecker* certificateTrustChecker_;
             bool clientInitialized_;
-            boost::shared_ptr<Client> client_;
+            std::shared_ptr<Client> client_;
             SettingsProvider *settings_;
             ProfileSettingsProvider* profileSettings_;
             Dock* dock_;
@@ -178,7 +177,7 @@ namespace Swift {
             std::string password_;
             CertificateWithKey::ref certificate_;
             ClientOptions clientOptions_;
-            boost::shared_ptr<ErrorEvent> lastDisconnectError_;
+            std::shared_ptr<ErrorEvent> lastDisconnectError_;
             bool useDelayForLatency_;
             UserSearchController* userSearchControllerChat_;
             UserSearchController* userSearchControllerAdd_;

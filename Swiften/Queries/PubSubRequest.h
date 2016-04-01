@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -56,10 +56,10 @@ namespace Swift {
             PubSubRequest(
                     IQ::Type type,
                     const JID& receiver,
-                    boost::shared_ptr<T> payload,
+                    std::shared_ptr<T> payload,
                     IQRouter* router) :
                         Request(type, receiver, router) {
-                boost::shared_ptr<ContainerType> wrapper = boost::make_shared<ContainerType>();
+                std::shared_ptr<ContainerType> wrapper = std::make_shared<ContainerType>();
                 wrapper->setPayload(payload);
                 setPayload(wrapper);
             }
@@ -68,24 +68,24 @@ namespace Swift {
                     IQ::Type type,
                     const JID& sender,
                     const JID& receiver,
-                    boost::shared_ptr<T> payload,
+                    std::shared_ptr<T> payload,
                     IQRouter* router) :
                         Request(type, sender, receiver, router) {
-                boost::shared_ptr<ContainerType> wrapper = boost::make_shared<ContainerType>();
+                std::shared_ptr<ContainerType> wrapper = std::make_shared<ContainerType>();
                 wrapper->setPayload(payload);
                 setPayload(wrapper);
             }
 
             virtual void handleResponse(
-                    boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
-                boost::shared_ptr<ResponseType> result;
-                if (boost::shared_ptr<ContainerType> container = boost::dynamic_pointer_cast<ContainerType>(payload)) {
-                    result = boost::dynamic_pointer_cast<ResponseType>(container->getPayload());
+                    std::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+                std::shared_ptr<ResponseType> result;
+                if (std::shared_ptr<ContainerType> container = std::dynamic_pointer_cast<ContainerType>(payload)) {
+                    result = std::dynamic_pointer_cast<ResponseType>(container->getPayload());
                 }
                 onResponse(result, error);
             }
 
         public:
-            boost::signal<void (boost::shared_ptr<ResponseType>, ErrorPayload::ref)> onResponse;
+            boost::signal<void (std::shared_ptr<ResponseType>, ErrorPayload::ref)> onResponse;
     };
 }

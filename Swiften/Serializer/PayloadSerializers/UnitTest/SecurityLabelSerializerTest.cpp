@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ class SecurityLabelSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize() {
             SecurityLabelSerializer testling;
-            boost::shared_ptr<SecurityLabel> securityLabel(new SecurityLabel());
+            std::shared_ptr<SecurityLabel> securityLabel(new SecurityLabel());
             securityLabel->setDisplayMarking("SECRET");
             securityLabel->setForegroundColor("black");
             securityLabel->setBackgroundColor("red");
@@ -45,7 +45,7 @@ class SecurityLabelSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_EmptyLabel() {
             SecurityLabelSerializer testling;
-            boost::shared_ptr<SecurityLabel> securityLabel(new SecurityLabel());
+            std::shared_ptr<SecurityLabel> securityLabel(new SecurityLabel());
             securityLabel->setDisplayMarking("SECRET");
             securityLabel->setLabel("");
 

@@ -12,9 +12,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -27,7 +27,7 @@ namespace Swift {
 JingleS5BTransportPayloadSerializer::JingleS5BTransportPayloadSerializer() {
 }
 
-std::string JingleS5BTransportPayloadSerializer::serializePayload(boost::shared_ptr<JingleS5BTransportPayload> payload) const {
+std::string JingleS5BTransportPayloadSerializer::serializePayload(std::shared_ptr<JingleS5BTransportPayload> payload) const {
     XMLElement payloadXML("transport", "urn:xmpp:jingle:transports:s5b:1");
     payloadXML.setAttribute("sid", payload->getSessionID());
     payloadXML.setAttribute("mode", modeToString(payload->getMode()));
@@ -36,7 +36,7 @@ std::string JingleS5BTransportPayloadSerializer::serializePayload(boost::shared_
     }
 
     foreach(JingleS5BTransportPayload::Candidate candidate, payload->getCandidates()) {
-        boost::shared_ptr<XMLElement> candidateXML = boost::make_shared<XMLElement>("candidate");
+        std::shared_ptr<XMLElement> candidateXML = std::make_shared<XMLElement>("candidate");
         candidateXML->setAttribute("cid", candidate.cid);
         candidateXML->setAttribute("host", candidate.hostPort.getAddress().toString());
         candidateXML->setAttribute("jid", candidate.jid.toString());
@@ -47,19 +47,19 @@ std::string JingleS5BTransportPayloadSerializer::serializePayload(boost::shared_
     }
 
     if (payload->hasCandidateError()) {
-        payloadXML.addNode(boost::make_shared<XMLElement>("candidate-error"));
+        payloadXML.addNode(std::make_shared<XMLElement>("candidate-error"));
     }
     if (payload->hasProxyError()) {
-        payloadXML.addNode(boost::make_shared<XMLElement>("proxy-error"));
+        payloadXML.addNode(std::make_shared<XMLElement>("proxy-error"));
     }
 
     if (!payload->getActivated().empty()) {
-        boost::shared_ptr<XMLElement> activatedXML = boost::make_shared<XMLElement>("activated");
+        std::shared_ptr<XMLElement> activatedXML = std::make_shared<XMLElement>("activated");
         activatedXML->setAttribute("cid", payload->getActivated());
         payloadXML.addNode(activatedXML);
     }
     if (!payload->getCandidateUsed().empty()) {
-        boost::shared_ptr<XMLElement> candusedXML = boost::make_shared<XMLElement>("candidate-used");
+        std::shared_ptr<XMLElement> candusedXML = std::make_shared<XMLElement>("candidate-used");
         candusedXML->setAttribute("cid", payload->getCandidateUsed());
         payloadXML.addNode(candusedXML);
     }

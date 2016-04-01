@@ -7,10 +7,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -97,9 +96,9 @@ namespace Swift {
 
         private:
             void handleSearchService(const JID& jid);
-            void handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid);
+            void handleRoomsItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid);
             void handleDiscoError(const JID& jid, ErrorPayload::ref error);
-            void handleDiscoServiceFound(const JID&, boost::shared_ptr<DiscoInfo>);
+            void handleDiscoServiceFound(const JID&, std::shared_ptr<DiscoInfo>);
             void handleDiscoWalkFinished();
             void handleMUCSearchFinished(const boost::optional<JID>& result);
             void removeService(const JID& jid);

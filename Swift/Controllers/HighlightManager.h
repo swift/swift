@@ -47,7 +47,7 @@ namespace Swift {
 
             Highlighter* createHighlighter();
 
-            boost::shared_ptr<const HighlightManager::HighlightRulesList> getRules() const { return rules_; }
+            std::shared_ptr<const HighlightManager::HighlightRulesList> getRules() const { return rules_; }
 
             bool isDefaultRulesList() const;
             void resetToDefaultRulesList();
@@ -72,10 +72,10 @@ namespace Swift {
             SettingsProvider* settings_;
             bool storingSettings_;
 
-            boost::shared_ptr<HighlightManager::HighlightRulesList> rules_;
+            std::shared_ptr<HighlightManager::HighlightRulesList> rules_;
             boost::bsignals::scoped_connection handleSettingChangedConnection_;
     };
 
-    typedef boost::shared_ptr<const HighlightManager::HighlightRulesList> HighlightRulesListPtr;
+    typedef std::shared_ptr<const HighlightManager::HighlightRulesList> HighlightRulesListPtr;
 
 }

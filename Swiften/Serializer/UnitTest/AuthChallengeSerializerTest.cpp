@@ -24,7 +24,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize() {
             AuthChallengeSerializer testling;
-            boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
+            std::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
             authChallenge->setValue(createByteArray("foo"));
 
             CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
@@ -35,7 +35,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_NoMessage() {
             AuthChallengeSerializer testling;
-            boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
+            std::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
 
             CPPUNIT_ASSERT_EQUAL(createSafeByteArray(
                 "<challenge xmlns=\"urn:ietf:params:xml:ns:xmpp-sasl\">"
@@ -44,7 +44,7 @@ class AuthChallengeSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_EmptyMessage() {
             AuthChallengeSerializer testling;
-            boost::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
+            std::shared_ptr<AuthChallenge> authChallenge(new AuthChallenge());
             authChallenge->setValue(std::vector<unsigned char>());
 
             CPPUNIT_ASSERT_EQUAL(createSafeByteArray(

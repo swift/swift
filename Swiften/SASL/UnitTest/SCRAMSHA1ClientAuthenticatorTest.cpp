@@ -43,8 +43,8 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            idnConverter = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         }
 
         void testGetInitialResponse() {
@@ -226,8 +226,8 @@ class SCRAMSHA1ClientAuthenticatorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(!testling.getResponse());
         }
 
-        boost::shared_ptr<IDNConverter> idnConverter;
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<IDNConverter> idnConverter;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(SCRAMSHA1ClientAuthenticatorTest);

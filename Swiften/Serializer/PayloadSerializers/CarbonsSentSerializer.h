@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/CarbonsSent.h>
@@ -22,7 +22,7 @@ namespace Swift {
             CarbonsSentSerializer(PayloadSerializerCollection* serializers);
             virtual ~CarbonsSentSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<CarbonsSent> sent) const;
+            virtual std::string serializePayload(std::shared_ptr<CarbonsSent> sent) const;
 
         private:
             PayloadSerializerCollection* serializers_;

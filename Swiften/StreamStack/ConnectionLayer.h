@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Network/Connection.h>
@@ -15,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API ConnectionLayer : public LowLayer {
         public:
-            ConnectionLayer(boost::shared_ptr<Connection> connection);
+            ConnectionLayer(std::shared_ptr<Connection> connection);
             virtual ~ConnectionLayer();
 
             void writeData(const SafeByteArray& data) {
@@ -23,9 +23,9 @@ namespace Swift {
             }
 
         private:
-            void handleDataRead(boost::shared_ptr<SafeByteArray>);
+            void handleDataRead(std::shared_ptr<SafeByteArray>);
 
         private:
-            boost::shared_ptr<Connection> connection;
+            std::shared_ptr<Connection> connection;
     };
 }

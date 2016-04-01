@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -39,7 +40,7 @@ namespace Swift {
 
             void writeHeader(const ProtocolHeader& header);
             void writeFooter();
-            void writeElement(boost::shared_ptr<ToplevelElement>);
+            void writeElement(std::shared_ptr<ToplevelElement>);
             void writeData(const std::string& data);
 
             void resetParser();
@@ -50,14 +51,14 @@ namespace Swift {
 
         public:
             boost::signal<void (const ProtocolHeader&)> onStreamStart;
-            boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElement;
+            boost::signal<void (std::shared_ptr<ToplevelElement>)> onElement;
             boost::signal<void (const SafeByteArray&)> onWriteData;
             boost::signal<void (const SafeByteArray&)> onDataRead;
             boost::signal<void ()> onError;
 
         private:
             void handleStreamStart(const ProtocolHeader&);
-            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleElement(std::shared_ptr<ToplevelElement>);
             void handleStreamEnd();
 
             void doResetParser();

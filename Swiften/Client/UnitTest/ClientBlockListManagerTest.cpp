@@ -61,7 +61,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             blockRequest->send();
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(2);
             CPPUNIT_ASSERT(request.get() != nullptr);
-            boost::shared_ptr<BlockPayload> blockPayload = request->getPayload<BlockPayload>();
+            std::shared_ptr<BlockPayload> blockPayload = request->getPayload<BlockPayload>();
             CPPUNIT_ASSERT(blockPayload.get() != nullptr);
             CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), blockPayload->getItems().at(0));
 
@@ -72,7 +72,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), clientBlockListManager_->getBlockList()->getItems().size());
 
             // send block push
-            boost::shared_ptr<BlockPayload> pushPayload = boost::make_shared<BlockPayload>();
+            std::shared_ptr<BlockPayload> pushPayload = std::make_shared<BlockPayload>();
             pushPayload->addItem(JID("romeo@montague.net"));
             IQ::ref blockPush = IQ::createRequest(IQ::Set, ownJID_, "push1", pushPayload);
             stanzaChannel_->sendIQ(blockPush);
@@ -95,7 +95,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             unblockRequest->send();
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(2);
             CPPUNIT_ASSERT(request.get() != nullptr);
-            boost::shared_ptr<UnblockPayload> unblockPayload = request->getPayload<UnblockPayload>();
+            std::shared_ptr<UnblockPayload> unblockPayload = request->getPayload<UnblockPayload>();
             CPPUNIT_ASSERT(unblockPayload.get() != nullptr);
             CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), unblockPayload->getItems().at(0));
 
@@ -106,7 +106,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), clientBlockListManager_->getBlockList()->getItems().size());
 
             // send block push
-            boost::shared_ptr<UnblockPayload> pushPayload = boost::make_shared<UnblockPayload>();
+            std::shared_ptr<UnblockPayload> pushPayload = std::make_shared<UnblockPayload>();
             pushPayload->addItem(JID("romeo@montague.net"));
             IQ::ref unblockPush = IQ::createRequest(IQ::Set, ownJID_, "push1", pushPayload);
             stanzaChannel_->sendIQ(unblockPush);
@@ -130,7 +130,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             unblockRequest->send();
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(2);
             CPPUNIT_ASSERT(request.get() != nullptr);
-            boost::shared_ptr<UnblockPayload> unblockPayload = request->getPayload<UnblockPayload>();
+            std::shared_ptr<UnblockPayload> unblockPayload = request->getPayload<UnblockPayload>();
             CPPUNIT_ASSERT(unblockPayload.get() != nullptr);
             CPPUNIT_ASSERT_EQUAL(true, unblockPayload->getItems().empty());
 
@@ -141,7 +141,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(3), clientBlockListManager_->getBlockList()->getItems().size());
 
             // send block push
-            boost::shared_ptr<UnblockPayload> pushPayload = boost::make_shared<UnblockPayload>();
+            std::shared_ptr<UnblockPayload> pushPayload = std::make_shared<UnblockPayload>();
             IQ::ref unblockPush = IQ::createRequest(IQ::Set, ownJID_, "push1", pushPayload);
             stanzaChannel_->sendIQ(unblockPush);
             stanzaChannel_->onIQReceived(unblockPush);
@@ -157,20 +157,20 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
 
     private:
         void helperInitialBlockListFetch(const std::vector<JID>& blockedJids) {
-            boost::shared_ptr<BlockList> blockList = clientBlockListManager_->requestBlockList();
+            std::shared_ptr<BlockList> blockList = clientBlockListManager_->requestBlockList();
             CPPUNIT_ASSERT(blockList);
 
             // check for IQ request
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(0);
             CPPUNIT_ASSERT(request.get() != nullptr);
-            boost::shared_ptr<BlockListPayload> requestPayload = request->getPayload<BlockListPayload>();
+            std::shared_ptr<BlockListPayload> requestPayload = request->getPayload<BlockListPayload>();
             CPPUNIT_ASSERT(requestPayload.get() != nullptr);
 
             CPPUNIT_ASSERT_EQUAL(BlockList::Requesting, blockList->getState());
             CPPUNIT_ASSERT_EQUAL(BlockList::Requesting, clientBlockListManager_->getBlockList()->getState());
 
             // build IQ response
-            boost::shared_ptr<BlockListPayload> responsePayload = boost::make_shared<BlockListPayload>();
+            std::shared_ptr<BlockListPayload> responsePayload = std::make_shared<BlockListPayload>();
             foreach(const JID& jid, blockedJids) {
                 responsePayload->addItem(jid);
             }

@@ -11,7 +11,7 @@
  */
 
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -34,44 +34,44 @@ class WhiteboardServerTest : public CppUnit::TestFixture {
 public:
     void testSimpleOp() {
         WhiteboardServer server;
-        WhiteboardInsertOperation::ref firstOp = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref firstOp = std::make_shared<WhiteboardInsertOperation>();
         firstOp->setID("0");
         server.handleLocalOperationReceived(firstOp);
-        WhiteboardInsertOperation::ref serverOp = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref serverOp = std::make_shared<WhiteboardInsertOperation>();
         serverOp->setID("b");
         serverOp->setParentID("0");
         serverOp->setPos(1);
         server.handleLocalOperationReceived(serverOp);
-        WhiteboardInsertOperation::ref clientOp = boost::make_shared<WhiteboardInsertOperation>();
-        WhiteboardEllipseElement::ref clientElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardInsertOperation::ref clientOp = std::make_shared<WhiteboardInsertOperation>();
+        WhiteboardEllipseElement::ref clientElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setID("a");
         clientOp->setParentID("0");
         clientOp->setPos(1);
         clientOp->setElement(clientElement);
-        WhiteboardInsertOperation::ref op = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(server.handleClientOperationReceived(clientOp));
+        WhiteboardInsertOperation::ref op = std::dynamic_pointer_cast<WhiteboardInsertOperation>(server.handleClientOperationReceived(clientOp));
         CPPUNIT_ASSERT_EQUAL(std::string("b"), op->getParentID());
         CPPUNIT_ASSERT_EQUAL(std::string("a"), op->getID());
         CPPUNIT_ASSERT_EQUAL(1, op->getPos());
-        CPPUNIT_ASSERT_EQUAL(clientElement, boost::dynamic_pointer_cast<WhiteboardEllipseElement>(op->getElement()));
+        CPPUNIT_ASSERT_EQUAL(clientElement, std::dynamic_pointer_cast<WhiteboardEllipseElement>(op->getElement()));
     }
 
     void testSimpleOp1() {
         WhiteboardServer server;
-        WhiteboardInsertOperation::ref firstOp = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref firstOp = std::make_shared<WhiteboardInsertOperation>();
         firstOp->setID("0");
         server.handleLocalOperationReceived(firstOp);
-        WhiteboardDeleteOperation::ref serverOp = boost::make_shared<WhiteboardDeleteOperation>();
+        WhiteboardDeleteOperation::ref serverOp = std::make_shared<WhiteboardDeleteOperation>();
         serverOp->setID("b");
         serverOp->setParentID("0");
         serverOp->setPos(1);
         server.handleLocalOperationReceived(serverOp);
-        WhiteboardUpdateOperation::ref clientOp = boost::make_shared<WhiteboardUpdateOperation>();
-        WhiteboardEllipseElement::ref clientElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardUpdateOperation::ref clientOp = std::make_shared<WhiteboardUpdateOperation>();
+        WhiteboardEllipseElement::ref clientElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setID("a");
         clientOp->setParentID("0");
         clientOp->setPos(1);
         clientOp->setElement(clientElement);
-        WhiteboardDeleteOperation::ref op = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(server.handleClientOperationReceived(clientOp));
+        WhiteboardDeleteOperation::ref op = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(server.handleClientOperationReceived(clientOp));
         CPPUNIT_ASSERT_EQUAL(std::string("b"), op->getParentID());
         CPPUNIT_ASSERT_EQUAL(std::string("a"), op->getID());
         CPPUNIT_ASSERT_EQUAL(-1, op->getPos());
@@ -79,19 +79,19 @@ public:
 
     void testSimpleOp2() {
         WhiteboardServer server;
-        WhiteboardInsertOperation::ref firstOp = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref firstOp = std::make_shared<WhiteboardInsertOperation>();
         firstOp->setID("0");
         server.handleLocalOperationReceived(firstOp);
-        WhiteboardUpdateOperation::ref serverOp = boost::make_shared<WhiteboardUpdateOperation>();
+        WhiteboardUpdateOperation::ref serverOp = std::make_shared<WhiteboardUpdateOperation>();
         serverOp->setID("b");
         serverOp->setParentID("0");
         serverOp->setPos(1);
         server.handleLocalOperationReceived(serverOp);
-        WhiteboardDeleteOperation::ref clientOp = boost::make_shared<WhiteboardDeleteOperation>();
+        WhiteboardDeleteOperation::ref clientOp = std::make_shared<WhiteboardDeleteOperation>();
         clientOp->setID("a");
         clientOp->setParentID("0");
         clientOp->setPos(1);
-        WhiteboardDeleteOperation::ref op = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(server.handleClientOperationReceived(clientOp));
+        WhiteboardDeleteOperation::ref op = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(server.handleClientOperationReceived(clientOp));
         CPPUNIT_ASSERT_EQUAL(std::string("b"), op->getParentID());
         CPPUNIT_ASSERT_EQUAL(std::string("a"), op->getID());
         CPPUNIT_ASSERT_EQUAL(1, op->getPos());
@@ -100,35 +100,35 @@ public:
 
     void testFewSimpleOps() {
         WhiteboardServer server;
-        WhiteboardInsertOperation::ref firstOp = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref firstOp = std::make_shared<WhiteboardInsertOperation>();
         firstOp->setID("0");
         server.handleLocalOperationReceived(firstOp);
-        WhiteboardInsertOperation::ref serverOp = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref serverOp = std::make_shared<WhiteboardInsertOperation>();
         serverOp->setID("a");
         serverOp->setParentID("0");
         serverOp->setPos(1);
         server.handleLocalOperationReceived(serverOp);
-        serverOp = boost::make_shared<WhiteboardInsertOperation>();
+        serverOp = std::make_shared<WhiteboardInsertOperation>();
         serverOp->setID("b");
         serverOp->setParentID("a");
         serverOp->setPos(2);
         server.handleLocalOperationReceived(serverOp);
-        serverOp = boost::make_shared<WhiteboardInsertOperation>();
+        serverOp = std::make_shared<WhiteboardInsertOperation>();
         serverOp->setID("c");
         serverOp->setParentID("b");
         serverOp->setPos(3);
         server.handleLocalOperationReceived(serverOp);
-        WhiteboardInsertOperation::ref clientOp = boost::make_shared<WhiteboardInsertOperation>();
-        WhiteboardEllipseElement::ref clientElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardInsertOperation::ref clientOp = std::make_shared<WhiteboardInsertOperation>();
+        WhiteboardEllipseElement::ref clientElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setID("d");
         clientOp->setParentID("0");
         clientOp->setPos(1);
         clientOp->setElement(clientElement);
-        WhiteboardInsertOperation::ref op = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(server.handleClientOperationReceived(clientOp));
+        WhiteboardInsertOperation::ref op = std::dynamic_pointer_cast<WhiteboardInsertOperation>(server.handleClientOperationReceived(clientOp));
         CPPUNIT_ASSERT_EQUAL(std::string("c"), op->getParentID());
         CPPUNIT_ASSERT_EQUAL(std::string("d"), op->getID());
         CPPUNIT_ASSERT_EQUAL(1, op->getPos());
-        CPPUNIT_ASSERT_EQUAL(clientElement, boost::dynamic_pointer_cast<WhiteboardEllipseElement>(op->getElement()));
+        CPPUNIT_ASSERT_EQUAL(clientElement, std::dynamic_pointer_cast<WhiteboardEllipseElement>(op->getElement()));
     }
 };
 

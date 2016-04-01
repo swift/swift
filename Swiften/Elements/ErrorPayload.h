@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -16,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API ErrorPayload : public Payload {
         public:
-            typedef boost::shared_ptr<ErrorPayload> ref;
+            typedef std::shared_ptr<ErrorPayload> ref;
 
             enum Type { Cancel, Continue, Modify, Auth, Wait };
 
@@ -71,11 +70,11 @@ namespace Swift {
                 return text_;
             }
 
-            void setPayload(boost::shared_ptr<Payload> payload) {
+            void setPayload(std::shared_ptr<Payload> payload) {
                 payload_ = payload;
             }
 
-            boost::shared_ptr<Payload> getPayload() const {
+            std::shared_ptr<Payload> getPayload() const {
                 return payload_;
             }
 
@@ -83,6 +82,6 @@ namespace Swift {
             Type type_;
             Condition condition_;
             std::string text_;
-            boost::shared_ptr<Payload> payload_;
+            std::shared_ptr<Payload> payload_;
     };
 }

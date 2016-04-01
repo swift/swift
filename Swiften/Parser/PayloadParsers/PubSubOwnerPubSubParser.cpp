@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,22 +33,22 @@ void PubSubOwnerPubSubParser::handleStartElement(const std::string& element, con
 
     if (level == 1) {
         if (element == "configure" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerConfigureParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerConfigureParser>(parsers);
         }
         if (element == "subscriptions" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerSubscriptionsParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerSubscriptionsParser>(parsers);
         }
         if (element == "default" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerDefaultParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerDefaultParser>(parsers);
         }
         if (element == "purge" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerPurgeParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerPurgeParser>(parsers);
         }
         if (element == "affiliations" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerAffiliationsParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerAffiliationsParser>(parsers);
         }
         if (element == "delete" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerDeleteParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerDeleteParser>(parsers);
         }
     }
 
@@ -67,7 +67,7 @@ void PubSubOwnerPubSubParser::handleEndElement(const std::string& element, const
 
         if (level == 1) {
             if (currentPayloadParser) {
-                getPayloadInternal()->setPayload(boost::dynamic_pointer_cast<PubSubOwnerPayload>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setPayload(std::dynamic_pointer_cast<PubSubOwnerPayload>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

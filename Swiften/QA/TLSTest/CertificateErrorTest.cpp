@@ -50,7 +50,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
         void setUp() {
             eventLoop_ = new DummyEventLoop();
             boostIOServiceThread_ = new BoostIOServiceThread();
-            boostIOService_ = boost::make_shared<boost::asio::io_service>();
+            boostIOService_ = std::make_shared<boost::asio::io_service>();
             connectionFactory_ = new BoostConnectionFactory(boostIOServiceThread_->getIOService(), eventLoop_);
             idnConverter_ = PlatformIDNConverter::create();
             domainNameResolver_ = new PlatformDomainNameResolver(idnConverter_, eventLoop_);
@@ -81,7 +81,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
         }
 
         HostAddress resolveName(const std::string& name) {
-            boost::shared_ptr<DomainNameAddressQuery> query = domainNameResolver_->createAddressQuery(name);
+            std::shared_ptr<DomainNameAddressQuery> query = domainNameResolver_->createAddressQuery(name);
             query->onResult.connect(boost::bind(&CertificateErrorTest::handleAddressQueryResult, this, _1, _2));
             lastResoverResult_ = HostAddress();
             resolvingDone_ = false;
@@ -94,7 +94,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
             return lastResoverResult_;
         }
 
-        void connectToServer(boost::shared_ptr<TLSConnection> connection, const std::string& hostname, int port) {
+        void connectToServer(std::shared_ptr<TLSConnection> connection, const std::string& hostname, int port) {
             connection->onConnectFinished.connect(boost::bind(&CertificateErrorTest::handleConnectFinished, this, _1));
 
             HostAddress address = resolveName(hostname);
@@ -107,7 +107,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
         }
 
         void testTLS_O_MaticTrusted() {
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "test1.tls-o-matic.com", 443);
@@ -117,7 +117,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
         }
 
         void testTLS_O_MaticCertificateFromTheFuture() {
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "test5.tls-o-matic.com", 405);
@@ -133,7 +133,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
         }
 
         void testTLS_O_MaticCertificateFromThePast() {
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "test6.tls-o-matic.com", 406);
@@ -144,7 +144,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
         }
 
         void testTLS_O_MaticCertificateFromUnknownCA() {
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "test7.tls-o-matic.com", 407);
@@ -156,7 +156,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
         // test14.tls-o-matic.com:414
         void testTLS_O_MaticCertificateWrongPurpose() {
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "test14.tls-o-matic.com", 414);
@@ -168,7 +168,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
         void testRevokedCertificateRevocationDisabled() {
             tlsContextFactory_->setCheckCertificateRevocation(false);
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "revoked.grc.com", 443);
@@ -179,7 +179,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
         void testRevokedCertificateRevocationEnabled() {
             tlsContextFactory_->setCheckCertificateRevocation(true);
-            boost::shared_ptr<TLSConnection> connection = boost::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
+            std::shared_ptr<TLSConnection> connection = std::dynamic_pointer_cast<TLSConnection>(tlsConnectionFactory_->createConnection());
             TLSContext* context = connection->getTLSContext();
 
             connectToServer(connection, "revoked.grc.com", 443);
@@ -204,7 +204,7 @@ class CertificateErrorTest : public CppUnit::TestFixture {
 
     private:
         BoostIOServiceThread* boostIOServiceThread_;
-        boost::shared_ptr<boost::asio::io_service> boostIOService_;
+        std::shared_ptr<boost::asio::io_service> boostIOService_;
         DummyEventLoop* eventLoop_;
         ConnectionFactory* connectionFactory_;
         PlatformTLSFactories* tlsFactories_;

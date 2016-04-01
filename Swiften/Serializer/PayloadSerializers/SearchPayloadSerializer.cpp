@@ -6,8 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/SearchPayloadSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -19,7 +18,7 @@ namespace Swift {
 SearchPayloadSerializer::SearchPayloadSerializer() {
 }
 
-std::string SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPayload> searchPayload)    const {
+std::string SearchPayloadSerializer::serializePayload(std::shared_ptr<SearchPayload> searchPayload)    const {
     XMLElement searchElement("query", "jabber:iq:search");
 
     if (searchPayload->getInstructions()) {
@@ -54,7 +53,7 @@ std::string SearchPayloadSerializer::serializePayload(boost::shared_ptr<SearchPa
     }
 
     if (Form::ref form = searchPayload->getForm()) {
-        searchElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
+        searchElement.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
     }
 
     return searchElement.serialize();

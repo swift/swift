@@ -5,18 +5,17 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
 
+#include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>

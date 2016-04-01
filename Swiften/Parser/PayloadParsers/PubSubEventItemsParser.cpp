@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,10 +33,10 @@ void PubSubEventItemsParser::handleStartElement(const std::string& element, cons
 
     if (level == 1) {
         if (element == "item" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventItemParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventItemParser>(parsers);
         }
         if (element == "retract" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventRetractParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventRetractParser>(parsers);
         }
     }
 
@@ -55,10 +55,10 @@ void PubSubEventItemsParser::handleEndElement(const std::string& element, const 
 
         if (level == 1) {
             if (element == "item" && ns == "http://jabber.org/protocol/pubsub#event") {
-                getPayloadInternal()->addItem(boost::dynamic_pointer_cast<PubSubEventItem>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->addItem(std::dynamic_pointer_cast<PubSubEventItem>(currentPayloadParser->getPayload()));
             }
             if (element == "retract" && ns == "http://jabber.org/protocol/pubsub#event") {
-                getPayloadInternal()->addRetract(boost::dynamic_pointer_cast<PubSubEventRetract>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->addRetract(std::dynamic_pointer_cast<PubSubEventRetract>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

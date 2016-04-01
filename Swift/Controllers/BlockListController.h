@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Queries/GenericRequest.h>
 
@@ -34,10 +34,10 @@ public:
 private:
     void blockListDifferences(const std::vector<JID> &newBlockList, std::vector<JID>& jidsToUnblock, std::vector<JID>& jidsToBlock) const;
 
-    void handleUIEvent(boost::shared_ptr<UIEvent> event);
+    void handleUIEvent(std::shared_ptr<UIEvent> event);
 
-    void handleBlockResponse(GenericRequest<BlockPayload>::ref, boost::shared_ptr<BlockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor);
-    void handleUnblockResponse(GenericRequest<UnblockPayload>::ref, boost::shared_ptr<UnblockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor);
+    void handleBlockResponse(GenericRequest<BlockPayload>::ref, std::shared_ptr<BlockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor);
+    void handleUnblockResponse(GenericRequest<UnblockPayload>::ref, std::shared_ptr<UnblockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor);
 
     void handleSetNewBlockList(const std::vector<JID>& newBlockList);
 

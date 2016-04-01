@@ -1,14 +1,14 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>
@@ -21,7 +21,7 @@ namespace Swift {
     class SWIFTEN_API FakeConnection :
             public Connection,
             public EventOwner,
-            public boost::enable_shared_from_this<FakeConnection> {
+            public std::enable_shared_from_this<FakeConnection> {
         public:
             enum State {
                 Initial,

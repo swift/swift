@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -21,16 +21,16 @@ namespace Swift {
 
             virtual ~IsodeIQDelegation();
 
-            boost::shared_ptr<Forwarded> getForward() const {
+            std::shared_ptr<Forwarded> getForward() const {
                 return forward;
             }
 
-            void setForward(boost::shared_ptr<Forwarded> value) {
+            void setForward(std::shared_ptr<Forwarded> value) {
                 this->forward = value ;
             }
 
 
         private:
-            boost::shared_ptr<Forwarded> forward;
+            std::shared_ptr<Forwarded> forward;
     };
 }

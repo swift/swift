@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -51,15 +51,15 @@ namespace Swift {
 
             BOSHError(Type type) : SessionStream::SessionStreamError(SessionStream::SessionStreamError::ConnectionReadError), type(type) {}
             Type getType() {return type;}
-            typedef boost::shared_ptr<BOSHError> ref;
+            typedef std::shared_ptr<BOSHError> ref;
 
         private:
             Type type;
     };
 
-    class SWIFTEN_API BOSHConnection : public boost::enable_shared_from_this<BOSHConnection> {
+    class SWIFTEN_API BOSHConnection : public std::enable_shared_from_this<BOSHConnection> {
         public:
-            typedef boost::shared_ptr<BOSHConnection> ref;
+            typedef std::shared_ptr<BOSHConnection> ref;
             static ref create(const URL& boshURL, Connector::ref connector, XMLParserFactory* parserFactory, TLSContextFactory* tlsContextFactory, const TLSOptions& tlsOptions) {
                 return ref(new BOSHConnection(boshURL, connector, parserFactory, tlsContextFactory, tlsOptions));
             }
@@ -97,7 +97,7 @@ namespace Swift {
 
             static std::pair<SafeByteArray, size_t> createHTTPRequest(const SafeByteArray& data, bool streamRestart, bool terminate, unsigned long long rid, const std::string& sid, const URL& boshURL);
             void handleConnectFinished(Connection::ref);
-            void handleDataRead(boost::shared_ptr<SafeByteArray> data);
+            void handleDataRead(std::shared_ptr<SafeByteArray> data);
             void handleDisconnected(const boost::optional<Connection::Error>& error);
             void write(const SafeByteArray& data, bool streamRestart, bool terminate); /* FIXME: refactor */
             BOSHError::Type parseTerminationCondition(const std::string& text);
@@ -106,16 +106,16 @@ namespace Swift {
             void handleTLSConnected();
             void handleTLSApplicationDataRead(const SafeByteArray& data);
             void handleTLSNetowrkDataWriteRequest(const SafeByteArray& data);
-            void handleRawDataRead(boost::shared_ptr<SafeByteArray> data);
-            void handleTLSError(boost::shared_ptr<TLSError> error);
+            void handleRawDataRead(std::shared_ptr<SafeByteArray> data);
+            void handleTLSError(std::shared_ptr<TLSError> error);
             void writeData(const SafeByteArray& data);
 
             URL boshURL_;
             Connector::ref connector_;
             XMLParserFactory* parserFactory_;
-            boost::shared_ptr<Connection> connection_;
-            boost::shared_ptr<HighLayer> dummyLayer_;
-            boost::shared_ptr<TLSLayer> tlsLayer_;
+            std::shared_ptr<Connection> connection_;
+            std::shared_ptr<HighLayer> dummyLayer_;
+            std::shared_ptr<TLSLayer> tlsLayer_;
             std::string sid_;
             bool waitingForStartResponse_;
             unsigned long long rid_;

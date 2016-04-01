@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@
 
 #define ASSIGN_ERROR(status, errorCode) \
 { \
-    errorCode = boost::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
+    errorCode = std::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
     SWIFT_LOG(debug) << std::hex << "status: 0x" << status << ": " << errorCode->message() << std::endl; \
 }
 
@@ -32,11 +32,11 @@
 
 namespace Swift {
 
-boost::shared_ptr<boost::system::error_code> getUserNameEx(std::string& userName, std::string& clientName, std::string& serverName) {
+std::shared_ptr<boost::system::error_code> getUserNameEx(std::string& userName, std::string& clientName, std::string& serverName) {
     ULONG length = 512;
     DWORD status = ERROR_MORE_DATA;
     bool firstCall = true;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
 
     while (status == ERROR_MORE_DATA) {
         std::vector<wchar_t> value(length);
@@ -70,9 +70,9 @@ boost::shared_ptr<boost::system::error_code> getUserNameEx(std::string& userName
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> acquireCredentialsHandle(PCredHandle credentialsHandle) {
+std::shared_ptr<boost::system::error_code> acquireCredentialsHandle(PCredHandle credentialsHandle) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
     TimeStamp validity;
 
     status = AcquireCredentialsHandle(
@@ -90,9 +90,9 @@ boost::shared_ptr<boost::system::error_code> acquireCredentialsHandle(PCredHandl
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> freeCredentialsHandle(PCredHandle credentialsHandle) {
+std::shared_ptr<boost::system::error_code> freeCredentialsHandle(PCredHandle credentialsHandle) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
 
     status = FreeCredentialsHandle(credentialsHandle);
     ASSIGN_SEC_ERROR(status, errorCode);
@@ -100,9 +100,9 @@ boost::shared_ptr<boost::system::error_code> freeCredentialsHandle(PCredHandle c
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> initializeSecurityContext(const boost::optional<ByteArray>& inputToken, const std::string& servicePrincipalNameString, const PCredHandle credentialsHandle, bool haveContextHandle, PCtxtHandle contextHandle, ULONG contextRequested, ULONG* contextSupported, bool* haveCompleteContext, SafeByteArray& outputToken) {
+std::shared_ptr<boost::system::error_code> initializeSecurityContext(const boost::optional<ByteArray>& inputToken, const std::string& servicePrincipalNameString, const PCredHandle credentialsHandle, bool haveContextHandle, PCtxtHandle contextHandle, ULONG contextRequested, ULONG* contextSupported, bool* haveCompleteContext, SafeByteArray& outputToken) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
     SecBufferDesc input;
     SecBufferDesc output;
     SecBuffer inputTokenBuffer;
@@ -164,15 +164,15 @@ boost::shared_ptr<boost::system::error_code> initializeSecurityContext(const boo
         SWIFT_LOG(debug) << "outputToken.size(): " << outputToken.size() << std::endl;
         freeContextBuffer(outputTokenBuffer.pvBuffer);
 
-        return boost::shared_ptr<boost::system::error_code>(); /* success */
+        return std::shared_ptr<boost::system::error_code>(); /* success */
     }
 
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> deleteSecurityContext(PCtxtHandle contextHandle) {
+std::shared_ptr<boost::system::error_code> deleteSecurityContext(PCtxtHandle contextHandle) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
 
     status = DeleteSecurityContext(contextHandle);
     ASSIGN_SEC_ERROR(status, errorCode);
@@ -180,9 +180,9 @@ boost::shared_ptr<boost::system::error_code> deleteSecurityContext(PCtxtHandle c
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> completeAuthToken(const PCtxtHandle contextHandle, PSecBufferDesc token) {
+std::shared_ptr<boost::system::error_code> completeAuthToken(const PCtxtHandle contextHandle, PSecBufferDesc token) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
 
     status = CompleteAuthToken(
             contextHandle, /* partial context */
@@ -192,9 +192,9 @@ boost::shared_ptr<boost::system::error_code> completeAuthToken(const PCtxtHandle
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> freeContextBuffer(PVOID contextBuffer) {
+std::shared_ptr<boost::system::error_code> freeContextBuffer(PVOID contextBuffer) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
 
     if (contextBuffer == NULL) {
         return errorCode;
@@ -206,11 +206,11 @@ boost::shared_ptr<boost::system::error_code> freeContextBuffer(PVOID contextBuff
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle contextHandle, const ByteArray& message, SafeByteArray& decrypted) {
+std::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle contextHandle, const ByteArray& message, SafeByteArray& decrypted) {
     /* Following https://msdn.microsoft.com/en-us/library/windows/desktop/aa380496%28v=vs.85%29.aspx */
 
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
     SecBufferDesc inOut;
     SecBuffer messageBuffer[2];
     SafeByteArray inputMessage;
@@ -253,11 +253,11 @@ boost::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle co
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle contextHandle, const SecPkgContext_Sizes& sizes, const SafeByteArray& message, SafeByteArray& output) {
+std::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle contextHandle, const SecPkgContext_Sizes& sizes, const SafeByteArray& message, SafeByteArray& output) {
     /* Following https://msdn.microsoft.com/en-us/library/windows/desktop/aa380496%28v=vs.85%29.aspx */
 
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
     SecBufferDesc inOut;
     SecBuffer messageBuffer[3];
     SafeByteArray securityTrailer(sizes.cbSecurityTrailer);
@@ -311,9 +311,9 @@ boost::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle co
     return errorCode;
 }
 
-boost::shared_ptr<boost::system::error_code> queryContextAttributes(const PCtxtHandle contextHandle, ULONG attribute, PVOID buffer) {
+std::shared_ptr<boost::system::error_code> queryContextAttributes(const PCtxtHandle contextHandle, ULONG attribute, PVOID buffer) {
     SECURITY_STATUS status;
-    boost::shared_ptr<boost::system::error_code> errorCode;
+    std::shared_ptr<boost::system::error_code> errorCode;
 
     status = QueryContextAttributes(
             contextHandle,

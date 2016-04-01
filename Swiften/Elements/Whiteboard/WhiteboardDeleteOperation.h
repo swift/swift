@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API WhiteboardDeleteOperation : public WhiteboardOperation {
     public:
-        typedef boost::shared_ptr<WhiteboardDeleteOperation> ref;
+        typedef std::shared_ptr<WhiteboardDeleteOperation> ref;
     public:
         std::string getElementID() const {
             return elementID_;

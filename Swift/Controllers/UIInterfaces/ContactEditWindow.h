@@ -6,11 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 

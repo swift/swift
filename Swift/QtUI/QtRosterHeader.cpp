@@ -128,7 +128,7 @@ void QtRosterHeader::setNick(const QString& nick) {
     nameWidget_->setNick(nick);
 }
 
-void QtRosterHeader::setContactRosterItem(boost::shared_ptr<ContactRosterItem> contact) {
+void QtRosterHeader::setContactRosterItem(std::shared_ptr<ContactRosterItem> contact) {
     contact_ = contact;
 }
 

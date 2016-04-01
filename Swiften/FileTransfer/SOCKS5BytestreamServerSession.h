@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -20,7 +20,7 @@ namespace Swift {
 
     class SWIFTEN_API SOCKS5BytestreamServerSession {
         public:
-        typedef boost::shared_ptr<SOCKS5BytestreamServerSession> ref;
+        typedef std::shared_ptr<SOCKS5BytestreamServerSession> ref;
 
         public:
             enum State {
@@ -33,7 +33,7 @@ namespace Swift {
                 Finished
             };
 
-            SOCKS5BytestreamServerSession(boost::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* registry);
+            SOCKS5BytestreamServerSession(std::shared_ptr<Connection> connection, SOCKS5BytestreamRegistry* registry);
             ~SOCKS5BytestreamServerSession();
 
             void setChunkSize(int chunkSize) {
@@ -43,8 +43,8 @@ namespace Swift {
             void start();
             void stop();
 
-            void startSending(boost::shared_ptr<ReadBytestream>);
-            void startReceiving(boost::shared_ptr<WriteBytestream>);
+            void startSending(std::shared_ptr<ReadBytestream>);
+            void startReceiving(std::shared_ptr<WriteBytestream>);
 
             HostAddressPort getAddressPort() const;
 
@@ -58,20 +58,20 @@ namespace Swift {
         private:
             void finish(const boost::optional<FileTransferError>& error = boost::optional<FileTransferError>());
             void process();
-            void handleDataRead(boost::shared_ptr<SafeByteArray>);
+            void handleDataRead(std::shared_ptr<SafeByteArray>);
             void handleDisconnected(const boost::optional<Connection::Error>&);
             void handleDataAvailable();
             void sendData();
 
         private:
-            boost::shared_ptr<Connection> connection;
+            std::shared_ptr<Connection> connection;
             SOCKS5BytestreamRegistry* bytestreams;
             ByteArray unprocessedData;
             State state;
             int chunkSize;
             std::string streamID;
-            boost::shared_ptr<ReadBytestream> readBytestream;
-            boost::shared_ptr<WriteBytestream> writeBytestream;
+            std::shared_ptr<ReadBytestream> readBytestream;
+            std::shared_ptr<WriteBytestream> writeBytestream;
             bool waitingForData;
 
             boost::bsignals::connection disconnectedConnection;

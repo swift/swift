@@ -7,9 +7,8 @@
 #pragma once
 
 #include <list>
+#include <memory>
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread.hpp>
 
@@ -20,17 +19,17 @@
 namespace Swift {
     class BonjourQuerier :
             public DNSSDQuerier,
-            public boost::enable_shared_from_this<BonjourQuerier> {
+            public std::enable_shared_from_this<BonjourQuerier> {
         public:
             BonjourQuerier(EventLoop* eventLoop);
             ~BonjourQuerier();
 
-            boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
-            boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
+            std::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
+            std::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
                     const std::string& name, int port, const ByteArray& info);
-            boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
+            std::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
                     const DNSSDServiceID&);
-            boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
+            std::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
                     const std::string& hostname, int interfaceIndex);
 
             void start();
@@ -39,8 +38,8 @@ namespace Swift {
         private:
             friend class BonjourQuery;
 
-            void addRunningQuery(boost::shared_ptr<BonjourQuery>);
-            void removeRunningQuery(boost::shared_ptr<BonjourQuery>);
+            void addRunningQuery(std::shared_ptr<BonjourQuery>);
+            void removeRunningQuery(std::shared_ptr<BonjourQuery>);
             void interruptSelect();
             void run();
 
@@ -49,7 +48,7 @@ namespace Swift {
             bool stopRequested;
             boost::thread* thread;
             boost::mutex runningQueriesMutex;
-            std::list< boost::shared_ptr<BonjourQuery> > runningQueries;
+            std::list< std::shared_ptr<BonjourQuery> > runningQueries;
             int interruptSelectReadSocket;
             int interruptSelectWriteSocket;
             boost::condition_variable runningQueriesAvailableEvent;

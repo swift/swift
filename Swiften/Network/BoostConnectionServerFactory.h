@@ -23,14 +23,14 @@ namespace Swift {
 
     class SWIFTEN_API BoostConnectionServerFactory : public ConnectionServerFactory {
         public:
-            BoostConnectionServerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
+            BoostConnectionServerFactory(std::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 
-            virtual boost::shared_ptr<ConnectionServer> createConnectionServer(int port);
+            virtual std::shared_ptr<ConnectionServer> createConnectionServer(int port);
 
-            virtual boost::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress &hostAddress, int port);
+            virtual std::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress &hostAddress, int port);
 
         private:
-            boost::shared_ptr<boost::asio::io_service> ioService;
+            std::shared_ptr<boost::asio::io_service> ioService;
             EventLoop* eventLoop;
     };
 }

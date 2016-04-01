@@ -6,8 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MUCInvitationPayloadSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCItemSerializer.h>
@@ -19,7 +18,7 @@ namespace Swift {
 MUCInvitationPayloadSerializer::MUCInvitationPayloadSerializer() : GenericPayloadSerializer<MUCInvitationPayload>() {
 }
 
-std::string MUCInvitationPayloadSerializer::serializePayload(boost::shared_ptr<MUCInvitationPayload> payload)  const {
+std::string MUCInvitationPayloadSerializer::serializePayload(std::shared_ptr<MUCInvitationPayload> payload)  const {
     XMLElement mucElement("x", "jabber:x:conference");
     if (payload->getIsContinuation()) {
         mucElement.setAttribute("continue", "true");
@@ -37,7 +36,7 @@ std::string MUCInvitationPayloadSerializer::serializePayload(boost::shared_ptr<M
         mucElement.setAttribute("thread", payload->getThread());
     }
     if (payload->getIsImpromptu()) {
-        mucElement.addNode(boost::make_shared<XMLElement>("impromptu", "http://swift.im/impromptu"));
+        mucElement.addNode(std::make_shared<XMLElement>("impromptu", "http://swift.im/impromptu"));
     }
     return mucElement.serialize();
 }

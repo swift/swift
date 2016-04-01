@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,7 +16,7 @@ namespace Swift {
 
     }
 
-    std::string CarbonsEnableSerializer::serializePayload(boost::shared_ptr<CarbonsEnable>)    const {
+    std::string CarbonsEnableSerializer::serializePayload(std::shared_ptr<CarbonsEnable>)    const {
         XMLElement element("enable", "urn:xmpp:carbons:2");
         return element.serialize();
     }

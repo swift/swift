@@ -50,7 +50,7 @@ namespace Swift {
         void deleteSessionEntry(const JID& contact);
 
     private:
-        std::map<JID, boost::shared_ptr<WhiteboardSession> > sessions_;
+        std::map<JID, std::shared_ptr<WhiteboardSession> > sessions_;
         IQRouter* router_;
         StanzaChannel* stanzaChannel_;
         PresenceOracle* presenceOracle_;

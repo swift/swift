@@ -20,7 +20,7 @@ namespace Swift {
             CarbonsReceivedSerializer(PayloadSerializerCollection* serializers);
             virtual ~CarbonsReceivedSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<CarbonsReceived> received) const;
+            virtual std::string serializePayload(std::shared_ptr<CarbonsReceived> received) const;
 
         private:
             PayloadSerializerCollection* serializers_;

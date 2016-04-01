@@ -6,7 +6,7 @@
 
 #include <Swiften/Disco/DiscoInfoResponder.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -31,14 +31,14 @@ void DiscoInfoResponder::setDiscoInfo(const std::string& node, const DiscoInfo& 
     nodeInfo_[node] = newInfo;
 }
 
-bool DiscoInfoResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<DiscoInfo> info) {
+bool DiscoInfoResponder::handleGetRequest(const JID& from, const JID&, const std::string& id, std::shared_ptr<DiscoInfo> info) {
     if (info->getNode().empty()) {
-        sendResponse(from, id, boost::make_shared<DiscoInfo>(info_));
+        sendResponse(from, id, std::make_shared<DiscoInfo>(info_));
     }
     else {
         std::map<std::string,DiscoInfo>::const_iterator i = nodeInfo_.find(info->getNode());
         if (i != nodeInfo_.end()) {
-            sendResponse(from, id, boost::make_shared<DiscoInfo>((*i).second));
+            sendResponse(from, id, std::make_shared<DiscoInfo>((*i).second));
         }
         else {
             sendError(from, id, ErrorPayload::ItemNotFound, ErrorPayload::Cancel);

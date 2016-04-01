@@ -89,7 +89,7 @@ void CommandParser::handleEndElement(const std::string& element, const std::stri
 
     if (level_ == FormOrNoteOrActionsLevel) {
         if (formParser_) {
-            Form::ref form(boost::dynamic_pointer_cast<Form>(formParser_->getPayload()));
+            Form::ref form(std::dynamic_pointer_cast<Form>(formParser_->getPayload()));
             assert(form);
             getPayloadInternal()->setForm(form);
             delete formParser_;

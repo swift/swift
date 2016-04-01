@@ -17,7 +17,7 @@ namespace Swift {
             VCardConvertor();
             virtual ~VCardConvertor();
 
-            virtual boost::shared_ptr<VCard> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<VCard>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<VCard> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<VCard>) SWIFTEN_OVERRIDE;
     };
 }

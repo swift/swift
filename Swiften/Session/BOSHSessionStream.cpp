@@ -40,7 +40,7 @@ BOSHSessionStream::BOSHSessionStream(const URL& boshURL,
         const SafeString& boshHTTPConnectProxyAuthID,
         const SafeString& boshHTTPConnectProxyAuthPassword,
         const TLSOptions& tlsOptions,
-        boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
+        std::shared_ptr<HTTPTrafficFilter> trafficFilter) :
             available(false),
             eventLoop(eventLoop),
             firstHeader(true) {
@@ -92,7 +92,7 @@ void BOSHSessionStream::handlePoolXMPPDataRead(const SafeByteArray& data) {
     xmppLayer->handleDataRead(data);
 }
 
-void BOSHSessionStream::writeElement(boost::shared_ptr<ToplevelElement> element) {
+void BOSHSessionStream::writeElement(std::shared_ptr<ToplevelElement> element) {
     assert(available);
     xmppLayer->writeElement(element);
 }
@@ -134,7 +134,7 @@ std::vector<Certificate::ref> BOSHSessionStream::getPeerCertificateChain() const
     return connectionPool->getPeerCertificateChain();
 }
 
-boost::shared_ptr<CertificateVerificationError> BOSHSessionStream::getPeerCertificateVerificationError() const {
+std::shared_ptr<CertificateVerificationError> BOSHSessionStream::getPeerCertificateVerificationError() const {
     return connectionPool->getPeerCertificateVerificationError();
 }
 
@@ -162,13 +162,13 @@ void BOSHSessionStream::handleStreamStartReceived(const ProtocolHeader& header) 
     onStreamStartReceived(header);
 }
 
-void BOSHSessionStream::handleElementReceived(boost::shared_ptr<ToplevelElement> element) {
+void BOSHSessionStream::handleElementReceived(std::shared_ptr<ToplevelElement> element) {
     onElementReceived(element);
 }
 
 void BOSHSessionStream::handleXMPPError() {
     available = false;
-    onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ParseError));
+    onClosed(std::make_shared<SessionStreamError>(SessionStreamError::ParseError));
 }
 
 void BOSHSessionStream::handlePoolSessionStarted() {

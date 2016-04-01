@@ -26,7 +26,7 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/IDN/IDNConverter.h>
 #ifndef SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <Swiften/IDN/PlatformIDNConverter.h>
 #endif
 
@@ -51,7 +51,7 @@ namespace {
         IDNInitializer() : defaultIDNConverter(PlatformIDNConverter::create()) {
             idnConverter = defaultIDNConverter.get();
         }
-        boost::shared_ptr<IDNConverter> defaultIDNConverter;
+        std::shared_ptr<IDNConverter> defaultIDNConverter;
     } initializer;
 }
 #endif

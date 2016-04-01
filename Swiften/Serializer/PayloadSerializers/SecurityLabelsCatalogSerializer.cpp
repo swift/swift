@@ -6,7 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.h>
@@ -18,7 +18,7 @@ namespace Swift {
 SecurityLabelsCatalogSerializer::SecurityLabelsCatalogSerializer() : GenericPayloadSerializer<SecurityLabelsCatalog>() {
 }
 
-std::string SecurityLabelsCatalogSerializer::serializePayload(boost::shared_ptr<SecurityLabelsCatalog> catalog)  const {
+std::string SecurityLabelsCatalogSerializer::serializePayload(std::shared_ptr<SecurityLabelsCatalog> catalog)  const {
     XMLElement element("catalog", "urn:xmpp:sec-label:catalog:2");
     if (!catalog->getName().empty()) {
         element.setAttribute("name", catalog->getName());
@@ -30,14 +30,14 @@ std::string SecurityLabelsCatalogSerializer::serializePayload(boost::shared_ptr<
         element.setAttribute("desc", catalog->getDescription());
     }
     foreach (const SecurityLabelsCatalog::Item& item, catalog->getItems()) {
-        boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+        std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("selector", item.getSelector());
         if (item.getIsDefault()) {
             itemElement->setAttribute("default", "true");
         }
         if (item.getLabel()) {
             std::string serializedLabel = SecurityLabelSerializer().serialize(item.getLabel());
-            itemElement->addNode(boost::make_shared<XMLRawTextNode>(serializedLabel));
+            itemElement->addNode(std::make_shared<XMLRawTextNode>(serializedLabel));
         }
         element.addNode(itemElement);
     }

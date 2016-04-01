@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,16 +20,16 @@ template <typename T>
 class SWIFTEN_API S5BTransportSession : public TransportSession {
     public:
         S5BTransportSession(
-                boost::shared_ptr<T> session,
-                boost::shared_ptr<ReadBytestream> readStream) :
+                std::shared_ptr<T> session,
+                std::shared_ptr<ReadBytestream> readStream) :
                     session(session),
                     readStream(readStream) {
             initialize();
         }
 
         S5BTransportSession(
-                boost::shared_ptr<T> session,
-                boost::shared_ptr<WriteBytestream> writeStream) :
+                std::shared_ptr<T> session,
+                std::shared_ptr<WriteBytestream> writeStream) :
                     session(session),
                     writeStream(writeStream) {
             initialize();
@@ -58,9 +58,9 @@ class SWIFTEN_API S5BTransportSession : public TransportSession {
         }
 
     private:
-        boost::shared_ptr<T> session;
-        boost::shared_ptr<ReadBytestream> readStream;
-        boost::shared_ptr<WriteBytestream> writeStream;
+        std::shared_ptr<T> session;
+        std::shared_ptr<ReadBytestream> readStream;
+        std::shared_ptr<WriteBytestream> writeStream;
 
         boost::bsignals::scoped_connection finishedConnection;
         boost::bsignals::scoped_connection bytesSentConnection;

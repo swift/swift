@@ -21,7 +21,7 @@
 namespace Swift {
     class SendFileUIEvent : public UIEvent {
         public:
-            typedef boost::shared_ptr<SendFileUIEvent> ref;
+            typedef std::shared_ptr<SendFileUIEvent> ref;
 
             SendFileUIEvent(const JID& jid, const std::string& filename) : jid(jid), filename(filename) {
             }

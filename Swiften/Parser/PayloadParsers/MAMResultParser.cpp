@@ -28,7 +28,7 @@ void MAMResultParser::handleStartElement(const std::string& element, const std::
         }
     } else if (level_ == PayloadLevel) {
         if (element == "forwarded" && ns == "urn:xmpp:forward:0") {
-            payloadParser_ = boost::make_shared<ForwardedParser>(factories_);
+            payloadParser_ = std::make_shared<ForwardedParser>(factories_);
         }
     }
 
@@ -47,7 +47,7 @@ void MAMResultParser::handleEndElement(const std::string& element, const std::st
     }
     if (payloadParser_ && level_ == PayloadLevel) {
         /* done parsing nested stanza */
-        getPayloadInternal()->setPayload(boost::dynamic_pointer_cast<Forwarded>(payloadParser_->getPayload()));
+        getPayloadInternal()->setPayload(std::dynamic_pointer_cast<Forwarded>(payloadParser_->getPayload()));
         payloadParser_.reset();
     }
 }

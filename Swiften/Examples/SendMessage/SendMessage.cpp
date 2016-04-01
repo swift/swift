@@ -30,7 +30,7 @@ static boost::bsignals::connection errorConnection;
 
 
 static void handleConnected() {
-    boost::shared_ptr<Message> message(new Message());
+    std::shared_ptr<Message> message(new Message());
     message->setBody(messageBody);
     message->setTo(recipient);
     client->sendMessage(message);

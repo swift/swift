@@ -47,7 +47,7 @@ void SOCKS5ProxiedConnection::initializeProxy() {
     write(socksConnect);
 }
 
-void SOCKS5ProxiedConnection::handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data) {
+void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByteArray> data) {
     SafeByteArray socksConnect;
     boost::asio::ip::address rawAddress = getServer().getAddress().getRawAddress();
     assert(rawAddress.is_v4() || rawAddress.is_v6());

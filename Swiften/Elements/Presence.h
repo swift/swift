@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
@@ -15,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API Presence : public Stanza {
         public:
-            typedef boost::shared_ptr<Presence> ref;
+            typedef std::shared_ptr<Presence> ref;
 
             enum Type { Available, Error, Probe, Subscribe, Subscribed, Unavailable, Unsubscribe, Unsubscribed };
 
@@ -25,22 +25,22 @@ namespace Swift {
             virtual ~Presence();
 
             static ref create() {
-                return boost::make_shared<Presence>();
+                return std::make_shared<Presence>();
             }
 
             static ref create(const std::string& status) {
-                return boost::make_shared<Presence>(status);
+                return std::make_shared<Presence>(status);
             }
 
             static ref create(Presence::ref presence) {
-                return boost::make_shared<Presence>(*presence);
+                return std::make_shared<Presence>(*presence);
             }
 
             Type getType() const { return type_; }
             void setType(Type type) { type_ = type; }
 
             StatusShow::Type getShow() const {
-                boost::shared_ptr<StatusShow> show(getPayload<StatusShow>());
+                std::shared_ptr<StatusShow> show(getPayload<StatusShow>());
                 if (show) {
                     return show->getType();
                 }
@@ -48,7 +48,7 @@ namespace Swift {
             }
 
             void setShow(const StatusShow::Type &show) {
-                updatePayload(boost::make_shared<StatusShow>(show));
+                updatePayload(std::make_shared<StatusShow>(show));
             }
 
             std::string getStatus() const;
@@ -57,8 +57,8 @@ namespace Swift {
             int getPriority() const;
             void setPriority(int priority);
 
-            boost::shared_ptr<Presence> clone() const {
-                return boost::make_shared<Presence>(*this);
+            std::shared_ptr<Presence> clone() const {
+                return std::make_shared<Presence>(*this);
             }
 
             bool isAvailable() const {

@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -19,17 +18,17 @@ namespace Swift {
     class SWIFTEN_API ContainerPayload : public Payload {
         public:
             ContainerPayload() {}
-            ContainerPayload(boost::shared_ptr<T> payload) : payload(payload) {}
+            ContainerPayload(std::shared_ptr<T> payload) : payload(payload) {}
 
-            void setPayload(boost::shared_ptr<T> payload) {
+            void setPayload(std::shared_ptr<T> payload) {
                 this->payload = payload;
             }
 
-            boost::shared_ptr<T> getPayload() const {
+            std::shared_ptr<T> getPayload() const {
                 return payload;
             }
 
         private:
-            boost::shared_ptr<T> payload;
+            std::shared_ptr<T> payload;
     };
 }

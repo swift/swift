@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -21,7 +20,7 @@ namespace Swift {
         public:
             virtual ~DomainNameResolver();
 
-            virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) = 0;
-            virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name) = 0;
+            virtual std::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) = 0;
+            virtual std::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name) = 0;
     };
 }

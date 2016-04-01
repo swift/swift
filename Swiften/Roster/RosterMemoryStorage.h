@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,13 +14,13 @@ namespace Swift {
         public:
             RosterMemoryStorage();
 
-            virtual boost::shared_ptr<RosterPayload> getRoster() const {
+            virtual std::shared_ptr<RosterPayload> getRoster() const {
                 return roster;
             }
 
-            virtual void setRoster(boost::shared_ptr<RosterPayload>);
+            virtual void setRoster(std::shared_ptr<RosterPayload>);
 
         private:
-            boost::shared_ptr<RosterPayload> roster;
+            std::shared_ptr<RosterPayload> roster;
     };
 }

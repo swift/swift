@@ -12,7 +12,7 @@
 
 #include <Swiften/Whiteboard/IncomingWhiteboardSession.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
@@ -27,8 +27,8 @@ namespace Swift {
     }
 
     void IncomingWhiteboardSession::accept() {
-        boost::shared_ptr<WhiteboardPayload> payload = boost::make_shared<WhiteboardPayload>(WhiteboardPayload::SessionAccept);
-        boost::shared_ptr<GenericRequest<WhiteboardPayload> > request = boost::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
+        std::shared_ptr<WhiteboardPayload> payload = std::make_shared<WhiteboardPayload>(WhiteboardPayload::SessionAccept);
+        std::shared_ptr<GenericRequest<WhiteboardPayload> > request = std::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
         request->send();
         onRequestAccepted(toJID_);
     }
@@ -43,7 +43,7 @@ namespace Swift {
         }
 
         if (pairResult.server) {
-            WhiteboardPayload::ref payload = boost::make_shared<WhiteboardPayload>();
+            WhiteboardPayload::ref payload = std::make_shared<WhiteboardPayload>();
             payload->setOperation(pairResult.server);
             sendPayload(payload);
         }
@@ -57,7 +57,7 @@ namespace Swift {
         WhiteboardOperation::ref result = client.handleLocalOperationReceived(operation);
 
         if (result) {
-            WhiteboardPayload::ref payload = boost::make_shared<WhiteboardPayload>();
+            WhiteboardPayload::ref payload = std::make_shared<WhiteboardPayload>();
             payload->setOperation(result);
             sendPayload(payload);
         }

@@ -159,7 +159,7 @@ ContactEditWindow* QtUIFactory::createContactEditWindow() {
     return new QtContactEditWindow();
 }
 
-WhiteboardWindow* QtUIFactory::createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) {
+WhiteboardWindow* QtUIFactory::createWhiteboardWindow(std::shared_ptr<WhiteboardSession> whiteboardSession) {
     return new QtWhiteboardWindow(whiteboardSession);
 }
 
@@ -171,7 +171,7 @@ BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {
     return new QtBlockListEditorWindow();
 }
 
-AdHocCommandWindow* QtUIFactory::createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) {
+AdHocCommandWindow* QtUIFactory::createAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command) {
     return new QtAdHocCommandWindow(command);
 }
 

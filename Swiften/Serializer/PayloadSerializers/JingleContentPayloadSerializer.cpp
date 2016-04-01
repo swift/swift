@@ -12,9 +12,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/JingleContentPayloadSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/intrusive_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -30,7 +28,7 @@ namespace Swift {
 JingleContentPayloadSerializer::JingleContentPayloadSerializer() {
 }
 
-std::string JingleContentPayloadSerializer::serializePayload(boost::shared_ptr<JingleContentPayload> payload) const {
+std::string JingleContentPayloadSerializer::serializePayload(std::shared_ptr<JingleContentPayload> payload) const {
     XMLElement payloadXML("content");
     payloadXML.setAttribute("creator", creatorToString(payload->getCreator()));
     payloadXML.setAttribute("name", payload->getName());
@@ -41,8 +39,8 @@ std::string JingleContentPayloadSerializer::serializePayload(boost::shared_ptr<J
         JingleFileTransferDescription::ref filetransfer;
 
         foreach(JingleDescription::ref desc, payload->getDescriptions()) {
-            if ((filetransfer = boost::dynamic_pointer_cast<JingleFileTransferDescription>(desc))) {
-                payloadXML.addNode(boost::make_shared<XMLRawTextNode>(ftSerializer.serializePayload(filetransfer)));
+            if ((filetransfer = std::dynamic_pointer_cast<JingleFileTransferDescription>(desc))) {
+                payloadXML.addNode(std::make_shared<XMLRawTextNode>(ftSerializer.serializePayload(filetransfer)));
             }
         }
     }
@@ -57,10 +55,10 @@ std::string JingleContentPayloadSerializer::serializePayload(boost::shared_ptr<J
         JingleS5BTransportPayload::ref s5b;
 
         foreach(JingleTransportPayload::ref transport, payload->getTransports()) {
-            if ((ibb = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
-                payloadXML.addNode(boost::make_shared<XMLRawTextNode>(ibbSerializer.serializePayload(ibb)));
-            } else if ((s5b = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transport))) {
-                payloadXML.addNode(boost::make_shared<XMLRawTextNode>(s5bSerializer.serializePayload(s5b)));
+            if ((ibb = std::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
+                payloadXML.addNode(std::make_shared<XMLRawTextNode>(ibbSerializer.serializePayload(ibb)));
+            } else if ((s5b = std::dynamic_pointer_cast<JingleS5BTransportPayload>(transport))) {
+                payloadXML.addNode(std::make_shared<XMLRawTextNode>(s5bSerializer.serializePayload(s5b)));
             }
         }
     }

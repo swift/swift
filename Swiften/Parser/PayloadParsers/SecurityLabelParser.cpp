@@ -63,7 +63,7 @@ void SecurityLabelParser::handleCharacterData(const std::string& data) {
     }
 }
 
-boost::shared_ptr<SecurityLabel> SecurityLabelParser::getLabelPayload() const {
+std::shared_ptr<SecurityLabel> SecurityLabelParser::getLabelPayload() const {
     return getPayloadInternal();
 }
 

@@ -6,9 +6,10 @@
 
 #include <Swiften/Client/CoreClient.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/IDGenerator.h>
@@ -115,7 +116,7 @@ void CoreClient::connect(const ClientOptions& o) {
     }
     assert(!connector_);
     if (options.boshURL.isEmpty()) {
-        connector_ = boost::make_shared<ChainedConnector>(host, port, serviceLookupPrefix, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
+        connector_ = std::make_shared<ChainedConnector>(host, port, serviceLookupPrefix, networkFactories->getDomainNameResolver(), connectionFactories, networkFactories->getTimerFactory());
         connector_->onConnectFinished.connect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
         connector_->setTimeoutMilliseconds(2*60*1000);
         connector_->start();
@@ -124,7 +125,7 @@ void CoreClient::connect(const ClientOptions& o) {
         /* Autodiscovery of which proxy works is largely ok with a TCP session, because this is a one-off. With BOSH
          * it would be quite painful given that potentially every stanza could be sent on a new connection.
          */
-        boost::shared_ptr<BOSHSessionStream> boshSessionStream_ = boost::shared_ptr<BOSHSessionStream>(new BOSHSessionStream(
+        std::shared_ptr<BOSHSessionStream> boshSessionStream_ = std::shared_ptr<BOSHSessionStream>(new BOSHSessionStream(
             options.boshURL,
             getPayloadParserFactories(),
             getPayloadSerializers(),
@@ -181,7 +182,7 @@ void CoreClient::bindSessionToStream() {
 /**
  * Only called for TCP sessions. BOSH is handled inside the BOSHSessionStream.
  */
-void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> error) {
+void CoreClient::handleConnectorFinished(std::shared_ptr<Connection> connection, std::shared_ptr<Error> error) {
     resetConnector();
     if (!connection) {
         if (options.forgetPassword) {
@@ -189,7 +190,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
         }
         boost::optional<ClientError> clientError;
         if (!disconnectRequested_) {
-            clientError = boost::dynamic_pointer_cast<DomainNameResolveError>(error) ? boost::optional<ClientError>(ClientError::DomainNameResolveError) : boost::optional<ClientError>(ClientError::ConnectionError);
+            clientError = std::dynamic_pointer_cast<DomainNameResolveError>(error) ? boost::optional<ClientError>(ClientError::DomainNameResolveError) : boost::optional<ClientError>(ClientError::ConnectionError);
         }
         onDisconnected(clientError);
     }
@@ -205,7 +206,7 @@ void CoreClient::handleConnectorFinished(boost::shared_ptr<Connection> connectio
 
         connection_ = connection;
 
-        sessionStream_ = boost::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), options.tlsOptions);
+        sessionStream_ = std::make_shared<BasicSessionStream>(ClientStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), networkFactories->getTLSContextFactory(), networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), options.tlsOptions);
         if (certificate_) {
             sessionStream_->setTLSCertificate(certificate_);
         }
@@ -232,7 +233,7 @@ void CoreClient::setCertificate(CertificateWithKey::ref certificate) {
     certificate_ = certificate;
 }
 
-void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
+void CoreClient::handleSessionFinished(std::shared_ptr<Error> error) {
     if (options.forgetPassword) {
         purgePassword();
     }
@@ -241,7 +242,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
     boost::optional<ClientError> actualError;
     if (error) {
         ClientError clientError;
-        if (boost::shared_ptr<ClientSession::Error> actualError = boost::dynamic_pointer_cast<ClientSession::Error>(error)) {
+        if (std::shared_ptr<ClientSession::Error> actualError = std::dynamic_pointer_cast<ClientSession::Error>(error)) {
             switch(actualError->type) {
                 case ClientSession::Error::AuthenticationFailedError:
                     clientError = ClientError(ClientError::AuthenticationFailedError);
@@ -276,7 +277,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
             }
             clientError.setErrorCode(actualError->errorCode);
         }
-        else if (boost::shared_ptr<TLSError> actualError = boost::dynamic_pointer_cast<TLSError>(error)) {
+        else if (std::shared_ptr<TLSError> actualError = std::dynamic_pointer_cast<TLSError>(error)) {
             switch(actualError->getType()) {
                 case TLSError::CertificateCardRemoved:
                     clientError = ClientError(ClientError::CertificateCardRemoved);
@@ -286,7 +287,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
                     break;
             }
         }
-        else if (boost::shared_ptr<SessionStream::SessionStreamError> actualError = boost::dynamic_pointer_cast<SessionStream::SessionStreamError>(error)) {
+        else if (std::shared_ptr<SessionStream::SessionStreamError> actualError = std::dynamic_pointer_cast<SessionStream::SessionStreamError>(error)) {
             switch(actualError->type) {
                 case SessionStream::SessionStreamError::ParseError:
                     clientError = ClientError(ClientError::XMLError);
@@ -305,7 +306,7 @@ void CoreClient::handleSessionFinished(boost::shared_ptr<Error> error) {
                     break;
             }
         }
-        else if (boost::shared_ptr<CertificateVerificationError> verificationError = boost::dynamic_pointer_cast<CertificateVerificationError>(error)) {
+        else if (std::shared_ptr<CertificateVerificationError> verificationError = std::dynamic_pointer_cast<CertificateVerificationError>(error)) {
             switch(verificationError->getType()) {
                 case CertificateVerificationError::UnknownError:
                     clientError = ClientError(ClientError::UnknownCertificateError);
@@ -377,11 +378,11 @@ void CoreClient::handleStanzaChannelAvailableChanged(bool available) {
     }
 }
 
-void CoreClient::sendMessage(boost::shared_ptr<Message> message) {
+void CoreClient::sendMessage(std::shared_ptr<Message> message) {
     stanzaChannel_->sendMessage(message);
 }
 
-void CoreClient::sendPresence(boost::shared_ptr<Presence> presence) {
+void CoreClient::sendPresence(std::shared_ptr<Presence> presence) {
     stanzaChannel_->sendPresence(presence);
 }
 
@@ -458,7 +459,7 @@ void CoreClient::resetSession() {
     if (connection_) {
         connection_->disconnect();
     }
-    else if (boost::dynamic_pointer_cast<BOSHSessionStream>(sessionStream_)) {
+    else if (std::dynamic_pointer_cast<BOSHSessionStream>(sessionStream_)) {
         sessionStream_->close();
     }
     sessionStream_.reset();

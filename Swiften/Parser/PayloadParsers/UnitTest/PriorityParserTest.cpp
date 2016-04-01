@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,7 +24,7 @@ class PriorityParserTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT(parser.parse("<priority>-120</priority>"));
 
-            boost::shared_ptr<Priority> payload = boost::dynamic_pointer_cast<Priority>(parser.getPayload());
+            std::shared_ptr<Priority> payload = std::dynamic_pointer_cast<Priority>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(-120, payload->getPriority());
         }
 
@@ -33,7 +33,7 @@ class PriorityParserTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT(parser.parse("<priority>invalid</priority>"));
 
-            boost::shared_ptr<Priority> payload = boost::dynamic_pointer_cast<Priority>(parser.getPayload());
+            std::shared_ptr<Priority> payload = std::dynamic_pointer_cast<Priority>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(0, payload->getPriority());
         }
 };

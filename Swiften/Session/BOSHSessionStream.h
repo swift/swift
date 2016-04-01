@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -30,7 +30,7 @@ namespace Swift {
     class XMLParserFactory;
     class XMPPLayer;
 
-    class SWIFTEN_API BOSHSessionStream : public SessionStream, public EventOwner, public boost::enable_shared_from_this<BOSHSessionStream> {
+    class SWIFTEN_API BOSHSessionStream : public SessionStream, public EventOwner, public std::enable_shared_from_this<BOSHSessionStream> {
         public:
             BOSHSessionStream(
                     const URL& boshURL,
@@ -47,7 +47,7 @@ namespace Swift {
                     const SafeString& boshHTTPConnectProxyAuthID,
                     const SafeString& boshHTTPConnectProxyAuthPassword,
                     const TLSOptions& tlsOptions,
-                    boost::shared_ptr<HTTPTrafficFilter> trafficFilter
+                    std::shared_ptr<HTTPTrafficFilter> trafficFilter
             );
             virtual ~BOSHSessionStream();
 
@@ -56,7 +56,7 @@ namespace Swift {
             virtual bool isOpen();
 
             virtual void writeHeader(const ProtocolHeader& header);
-            virtual void writeElement(boost::shared_ptr<ToplevelElement>);
+            virtual void writeElement(std::shared_ptr<ToplevelElement>);
             virtual void writeFooter();
             virtual void writeData(const std::string& data);
 
@@ -68,7 +68,7 @@ namespace Swift {
             virtual bool isTLSEncrypted();
             virtual Certificate::ref getPeerCertificate() const;
             virtual std::vector<Certificate::ref> getPeerCertificateChain() const;
-            virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            virtual std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
             virtual ByteArray getTLSFinishMessage() const;
 
             virtual void setWhitespacePingEnabled(bool);
@@ -78,7 +78,7 @@ namespace Swift {
         private:
             void handleXMPPError();
             void handleStreamStartReceived(const ProtocolHeader&);
-            void handleElementReceived(boost::shared_ptr<ToplevelElement>);
+            void handleElementReceived(std::shared_ptr<ToplevelElement>);
             void handlePoolXMPPDataRead(const SafeByteArray& data);
             void handleXMPPLayerDataWritten(const SafeByteArray& data);
             void handlePoolSessionStarted();

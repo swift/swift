@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,7 @@ class MUCAdminPayloadParserTest : public CppUnit::TestFixture
 
             CPPUNIT_ASSERT(parser.parse("<query xmlns=\"http://jabber.org/protocol/muc#admin\"><item affiliation=\"owner\" role=\"visitor\"><actor jid=\"kev@tester.lit\"/><reason>malice</reason></item></query>"));
 
-            MUCAdminPayload::ref payload = boost::dynamic_pointer_cast<MUCAdminPayload>(parser.getPayload());
+            MUCAdminPayload::ref payload = std::dynamic_pointer_cast<MUCAdminPayload>(parser.getPayload());
             MUCItem item = payload->getItems()[0];
             CPPUNIT_ASSERT_EQUAL(MUCOccupant::Owner, item.affiliation.get());
             CPPUNIT_ASSERT_EQUAL(MUCOccupant::Visitor, item.role.get());

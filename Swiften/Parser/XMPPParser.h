@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Parser/AttributeMap.h>

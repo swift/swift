@@ -22,7 +22,7 @@ bool QtEditBookmarkWindow::commit() {
     if (!bookmark) {
         return false;
     }
-    eventStream_->send(boost::shared_ptr<UIEvent>(new EditMUCBookmarkUIEvent(bookmark_, *bookmark)));
+    eventStream_->send(std::make_shared<EditMUCBookmarkUIEvent>(bookmark_, *bookmark));
     return true;
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,10 +13,10 @@ namespace Swift {
     CarbonsSentSerializer::~CarbonsSentSerializer() {
     }
 
-    std::string CarbonsSentSerializer::serializePayload(boost::shared_ptr<CarbonsSent> sent) const {
+    std::string CarbonsSentSerializer::serializePayload(std::shared_ptr<CarbonsSent> sent) const {
         XMLElement element("sent", "urn:xmpp:carbons:2");
         if (sent->getForwarded()) {
-            element.addNode(boost::make_shared<XMLRawTextNode>(ForwardedSerializer(serializers_).serialize(sent->getForwarded())));
+            element.addNode(std::make_shared<XMLRawTextNode>(ForwardedSerializer(serializers_).serialize(sent->getForwarded())));
         }
         return element.serialize();
     }

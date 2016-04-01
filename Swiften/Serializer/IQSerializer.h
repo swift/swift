@@ -22,7 +22,7 @@ namespace Swift {
 
         private:
             virtual void setStanzaSpecificAttributesGeneric(
-                    boost::shared_ptr<IQ> iq,
+                    std::shared_ptr<IQ> iq,
                     XMLElement& element) const {
                 switch (iq->getType()) {
                     case IQ::Get: element.setAttribute("type","get"); break;

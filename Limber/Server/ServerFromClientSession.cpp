@@ -6,8 +6,9 @@
 
 #include <Limber/Server/ServerFromClientSession.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/AuthFailure.h>
 #include <Swiften/Elements/AuthRequest.h>
@@ -27,7 +28,7 @@ namespace Swift {
 
 ServerFromClientSession::ServerFromClientSession(
         const std::string& id,
-        boost::shared_ptr<Connection> connection,
+        std::shared_ptr<Connection> connection,
         PayloadParserFactoryCollection* payloadParserFactories,
         PayloadSerializerCollection* payloadSerializers,
         XMLParserFactory* xmlParserFactory,
@@ -41,7 +42,7 @@ ServerFromClientSession::ServerFromClientSession(
 }
 
 
-void ServerFromClientSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
+void ServerFromClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
     if (isInitialized()) {
         onElementReceived(element);
     }
@@ -49,33 +50,33 @@ void ServerFromClientSession::handleElement(boost::shared_ptr<ToplevelElement> e
         if (AuthRequest* authRequest = dynamic_cast<AuthRequest*>(element.get())) {
             if (authRequest->getMechanism() == "PLAIN" || (allowSASLEXTERNAL && authRequest->getMechanism() == "EXTERNAL")) {
                 if (authRequest->getMechanism() == "EXTERNAL") {
-                        getXMPPLayer()->writeElement(boost::make_shared<AuthSuccess>());
+                        getXMPPLayer()->writeElement(std::make_shared<AuthSuccess>());
                         authenticated_ = true;
                         getXMPPLayer()->resetParser();
                 }
                 else {
                     PLAINMessage plainMessage(authRequest->getMessage() ? *authRequest->getMessage() : createSafeByteArray(""));
                     if (userRegistry_->isValidUserPassword(JID(plainMessage.getAuthenticationID(), getLocalJID().getDomain()), plainMessage.getPassword())) {
-                        getXMPPLayer()->writeElement(boost::make_shared<AuthSuccess>());
+                        getXMPPLayer()->writeElement(std::make_shared<AuthSuccess>());
                         user_ = plainMessage.getAuthenticationID();
                         authenticated_ = true;
                         getXMPPLayer()->resetParser();
                     }
                     else {
-                        getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
+                        getXMPPLayer()->writeElement(std::shared_ptr<AuthFailure>(new AuthFailure));
                         finishSession(AuthenticationFailedError);
                     }
                 }
             }
             else {
-                getXMPPLayer()->writeElement(boost::shared_ptr<AuthFailure>(new AuthFailure));
+                getXMPPLayer()->writeElement(std::shared_ptr<AuthFailure>(new AuthFailure));
                 finishSession(NoSupportedAuthMechanismsError);
             }
         }
         else if (IQ* iq = dynamic_cast<IQ*>(element.get())) {
-            if (boost::shared_ptr<ResourceBind> resourceBind = iq->getPayload<ResourceBind>()) {
+            if (std::shared_ptr<ResourceBind> resourceBind = iq->getPayload<ResourceBind>()) {
                 setRemoteJID(JID(user_, getLocalJID().getDomain(), resourceBind->getResource()));
-                boost::shared_ptr<ResourceBind> resultResourceBind(new ResourceBind());
+                std::shared_ptr<ResourceBind> resultResourceBind(new ResourceBind());
                 resultResourceBind->setJID(getRemoteJID());
                 getXMPPLayer()->writeElement(IQ::createResult(JID(), iq->getID(), resultResourceBind));
             }
@@ -94,7 +95,7 @@ void ServerFromClientSession::handleStreamStart(const ProtocolHeader& incomingHe
     header.setID(id_);
     getXMPPLayer()->writeHeader(header);
 
-    boost::shared_ptr<StreamFeatures> features(new StreamFeatures());
+    std::shared_ptr<StreamFeatures> features(new StreamFeatures());
     if (!authenticated_) {
         features->addAuthenticationMechanism("PLAIN");
         if (allowSASLEXTERNAL) {

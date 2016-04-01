@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -16,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API SoftwareVersion : public Payload {
         public:
-            typedef boost::shared_ptr<SoftwareVersion> ref;
+            typedef std::shared_ptr<SoftwareVersion> ref;
 
             SoftwareVersion(
                     const std::string& name = "",

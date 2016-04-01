@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,7 +30,7 @@ namespace Swift {
 
             Certificate::ref getPeerCertificate() const;
             std::vector<Certificate::ref> getPeerCertificateChain() const;
-            boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
             void writeData(const SafeByteArray& data);
             void handleDataRead(const SafeByteArray& data);
@@ -40,7 +40,7 @@ namespace Swift {
             }
 
         public:
-            boost::signal<void (boost::shared_ptr<TLSError>)> onError;
+            boost::signal<void (std::shared_ptr<TLSError>)> onError;
             boost::signal<void ()> onConnected;
 
         private:

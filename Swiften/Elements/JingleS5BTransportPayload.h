@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Bytestreams.h>
@@ -106,7 +105,7 @@ namespace Swift {
                 return proxyError;
             }
         public:
-            typedef boost::shared_ptr<JingleS5BTransportPayload> ref;
+            typedef std::shared_ptr<JingleS5BTransportPayload> ref;
 
         private:
             Mode mode;

@@ -20,7 +20,7 @@
 
 #define DEBUG_SCARD_STATUS(function, status) \
 { \
-    boost::shared_ptr<boost::system::error_code> errorCode = boost::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
+    std::shared_ptr<boost::system::error_code> errorCode = std::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
     SWIFT_LOG(debug) << std::hex << function << ": status: 0x" << status << ": " << errorCode->message() << std::endl; \
 }
 

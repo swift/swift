@@ -17,13 +17,13 @@ namespace Swift {
             RosterPushResponder(IQRouter* router) : SetResponder<RosterPayload>(router) {}
 
         public:
-            boost::signal<void (boost::shared_ptr<RosterPayload>)> onRosterReceived;
+            boost::signal<void (std::shared_ptr<RosterPayload>)> onRosterReceived;
 
         private:
-            virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<RosterPayload> payload) {
+            virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, std::shared_ptr<RosterPayload> payload) {
                 if (getIQRouter()->isAccountJID(from)) {
                     onRosterReceived(payload);
-                    sendResponse(from, id, boost::shared_ptr<RosterPayload>());
+                    sendResponse(from, id, std::shared_ptr<RosterPayload>());
                 }
                 else {
                     sendError(from, id, ErrorPayload::NotAuthorized, ErrorPayload::Cancel);

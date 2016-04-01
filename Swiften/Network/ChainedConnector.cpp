@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,14 +58,14 @@ void ChainedConnector::stop() {
         currentConnector->stop();
         currentConnector.reset();
     }
-    finish(boost::shared_ptr<Connection>(), boost::shared_ptr<Error>());
+    finish(std::shared_ptr<Connection>(), std::shared_ptr<Error>());
 }
 
 void ChainedConnector::tryNextConnectionFactory() {
     assert(!currentConnector);
     if (connectionFactoryQueue.empty()) {
         SWIFT_LOG(debug) << "No more connection factories" << std::endl;
-        finish(boost::shared_ptr<Connection>(), lastError);
+        finish(std::shared_ptr<Connection>(), lastError);
     }
     else {
         ConnectionFactory* connectionFactory = connectionFactoryQueue.front();
@@ -78,7 +78,7 @@ void ChainedConnector::tryNextConnectionFactory() {
     }
 }
 
-void ChainedConnector::handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> error) {
+void ChainedConnector::handleConnectorFinished(std::shared_ptr<Connection> connection, std::shared_ptr<Error> error) {
     SWIFT_LOG(debug) << "Connector finished" << std::endl;
     currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
     lastError = error;
@@ -91,6 +91,6 @@ void ChainedConnector::handleConnectorFinished(boost::shared_ptr<Connection> con
     }
 }
 
-void ChainedConnector::finish(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> error) {
+void ChainedConnector::finish(std::shared_ptr<Connection> connection, std::shared_ptr<Error> error) {
     onConnectFinished(connection, error);
 }

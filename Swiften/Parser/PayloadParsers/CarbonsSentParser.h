@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,7 +29,7 @@ namespace Swift {
 
         private:
             PayloadParserFactoryCollection* factories_;
-            boost::shared_ptr<ForwardedParser> forwardedParser_;
+            std::shared_ptr<ForwardedParser> forwardedParser_;
             int level_;
     };
 }

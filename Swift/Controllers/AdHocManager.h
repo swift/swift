@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,12 +25,12 @@ class AdHocManager {
 public:
     AdHocManager(const JID& jid, AdHocCommandWindowFactory* factory, IQRouter* iqRouter, UIEventStream* uiEventStream, MainWindow* mainWindow);
     ~AdHocManager();
-    void removeController(boost::shared_ptr<AdHocController> contoller);
-    void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
+    void removeController(std::shared_ptr<AdHocController> contoller);
+    void setServerDiscoInfo(std::shared_ptr<DiscoInfo> info);
     void setOnline(bool online);
 private:
-    void handleServerDiscoItemsResponse(boost::shared_ptr<DiscoItems>, ErrorPayload::ref error);
-    void handleUIEvent(boost::shared_ptr<UIEvent> event);
+    void handleServerDiscoItemsResponse(std::shared_ptr<DiscoItems>, ErrorPayload::ref error);
+    void handleUIEvent(std::shared_ptr<UIEvent> event);
     boost::signal<void (const AdHocController&)> onControllerComplete;
     JID jid_;
     IQRouter* iqRouter_;
@@ -38,7 +38,7 @@ private:
     MainWindow* mainWindow_;
     AdHocCommandWindowFactory* factory_;
     GetDiscoItemsRequest::ref discoItemsRequest_;
-    std::vector<boost::shared_ptr<AdHocController> > controllers_;
+    std::vector<std::shared_ptr<AdHocController> > controllers_;
 };
 
 }

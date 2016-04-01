@@ -67,7 +67,7 @@ class MUCControllerTest : public CppUnit::TestFixture {
 
 public:
     void setUp() {
-        crypto_ = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+        crypto_ = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         self_ = JID("girl@wonderland.lit/rabbithole");
         nick_ = "aLiCe";
         mucJID_ = JID("teaparty@rooms.wonderland.lit");
@@ -90,9 +90,9 @@ public:
         entityCapsProvider_ = new DummyEntityCapsProvider();
         settings_ = new DummySettingsProvider();
         highlightManager_ = new HighlightManager(settings_);
-        muc_ = boost::make_shared<MockMUC>(mucJID_);
+        muc_ = std::make_shared<MockMUC>(mucJID_);
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-        chatMessageParser_ = boost::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getRules(), true);
+        chatMessageParser_ = std::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getRules(), true);
         vcardStorage_ = new VCardMemoryStorage(crypto_.get());
         vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
@@ -204,18 +204,18 @@ public:
         SecurityLabelsCatalog::Item label;
         label.setSelector("Bob");
         window_->label_ = label;
-        boost::shared_ptr<DiscoInfo> features = boost::make_shared<DiscoInfo>();
+        std::shared_ptr<DiscoInfo> features = std::make_shared<DiscoInfo>();
         features->addFeature(DiscoInfo::SecurityLabelsCatalogFeature);
         controller_->setAvailableServerFeatures(features);
         IQ::ref iq = iqChannel_->iqs_[iqChannel_->iqs_.size() - 1];
-        SecurityLabelsCatalog::ref labelPayload = boost::make_shared<SecurityLabelsCatalog>();
+        SecurityLabelsCatalog::ref labelPayload = std::make_shared<SecurityLabelsCatalog>();
         labelPayload->addItem(label);
         IQ::ref result = IQ::createResult(self_, iq->getID(), labelPayload);
         iqChannel_->onIQReceived(result);
         std::string messageBody("agamemnon");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT_EQUAL(iq->getTo(), result->getFrom());
         CPPUNIT_ASSERT(window_->labelsEnabled_);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
@@ -225,24 +225,24 @@ public:
     }
 
     void testMessageWithLabelItem() {
-        boost::shared_ptr<SecurityLabel> label = boost::make_shared<SecurityLabel>();
+        std::shared_ptr<SecurityLabel> label = std::make_shared<SecurityLabel>();
         label->setLabel("a");
         SecurityLabelsCatalog::Item labelItem;
         labelItem.setSelector("Bob");
         labelItem.setLabel(label);
         window_->label_ = labelItem;
-        boost::shared_ptr<DiscoInfo> features = boost::make_shared<DiscoInfo>();
+        std::shared_ptr<DiscoInfo> features = std::make_shared<DiscoInfo>();
         features->addFeature(DiscoInfo::SecurityLabelsCatalogFeature);
         controller_->setAvailableServerFeatures(features);
         IQ::ref iq = iqChannel_->iqs_[iqChannel_->iqs_.size() - 1];
-        SecurityLabelsCatalog::ref labelPayload = boost::make_shared<SecurityLabelsCatalog>();
+        SecurityLabelsCatalog::ref labelPayload = std::make_shared<SecurityLabelsCatalog>();
         labelPayload->addItem(labelItem);
         IQ::ref result = IQ::createResult(self_, iq->getID(), labelPayload);
         iqChannel_->onIQReceived(result);
         std::string messageBody("agamemnon");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT_EQUAL(iq->getTo(), result->getFrom());
         CPPUNIT_ASSERT(window_->labelsEnabled_);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
@@ -252,29 +252,29 @@ public:
     }
 
     void testCorrectMessageWithLabelItem() {
-        boost::shared_ptr<SecurityLabel> label = boost::make_shared<SecurityLabel>();
+        std::shared_ptr<SecurityLabel> label = std::make_shared<SecurityLabel>();
         label->setLabel("a");
         SecurityLabelsCatalog::Item labelItem;
         labelItem.setSelector("Bob");
         labelItem.setLabel(label);
-        boost::shared_ptr<SecurityLabel> label2 = boost::make_shared<SecurityLabel>();
+        std::shared_ptr<SecurityLabel> label2 = std::make_shared<SecurityLabel>();
         label->setLabel("b");
         SecurityLabelsCatalog::Item labelItem2;
         labelItem2.setSelector("Charlie");
         labelItem2.setLabel(label2);
         window_->label_ = labelItem;
-        boost::shared_ptr<DiscoInfo> features = boost::make_shared<DiscoInfo>();
+        std::shared_ptr<DiscoInfo> features = std::make_shared<DiscoInfo>();
         features->addFeature(DiscoInfo::SecurityLabelsCatalogFeature);
         controller_->setAvailableServerFeatures(features);
         IQ::ref iq = iqChannel_->iqs_[iqChannel_->iqs_.size() - 1];
-        SecurityLabelsCatalog::ref labelPayload = boost::make_shared<SecurityLabelsCatalog>();
+        SecurityLabelsCatalog::ref labelPayload = std::make_shared<SecurityLabelsCatalog>();
         labelPayload->addItem(labelItem);
         IQ::ref result = IQ::createResult(self_, iq->getID(), labelPayload);
         iqChannel_->onIQReceived(result);
         std::string messageBody("agamemnon");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT_EQUAL(iq->getTo(), result->getFrom());
         CPPUNIT_ASSERT(window_->labelsEnabled_);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
@@ -284,7 +284,7 @@ public:
         window_->label_ = labelItem2;
         window_->onSendMessageRequest(messageBody, true);
         rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get());
         CPPUNIT_ASSERT_EQUAL(label, message->getPayload<SecurityLabel>());
     }
@@ -406,22 +406,22 @@ public:
     void testSubjectChangeCorrect() {
         std::string messageBody("test message");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
         CPPUNIT_ASSERT(message);
         CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
 
         {
-            Message::ref message = boost::make_shared<Message>();
+            Message::ref message = std::make_shared<Message>();
             message->setType(Message::Groupchat);
             message->setTo(self_);
             message->setFrom(mucJID_.withResource("SomeNickname"));
             message->setID(iqChannel_->getNewIQID());
             message->setSubject("New Room Subject");
 
-            controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
-            CPPUNIT_ASSERT_EQUAL(std::string("The room subject is now: New Room Subject"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+            controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
+            CPPUNIT_ASSERT_EQUAL(std::string("The room subject is now: New Room Subject"), std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
         }
     }
 
@@ -431,14 +431,14 @@ public:
     void testSubjectChangeIncorrectA() {
         std::string messageBody("test message");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
         CPPUNIT_ASSERT(message);
         CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
 
         {
-            Message::ref message = boost::make_shared<Message>();
+            Message::ref message = std::make_shared<Message>();
             message->setType(Message::Groupchat);
             message->setTo(self_);
             message->setFrom(mucJID_.withResource("SomeNickname"));
@@ -446,8 +446,8 @@ public:
             message->setSubject("New Room Subject");
             message->setBody("Some body text that prevents this stanza from being a subject change.");
 
-            controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
-            CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+            controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
+            CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
         }
     }
 
@@ -457,23 +457,23 @@ public:
     void testSubjectChangeIncorrectB() {
         std::string messageBody("test message");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
         CPPUNIT_ASSERT(message);
         CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
 
         {
-            Message::ref message = boost::make_shared<Message>();
+            Message::ref message = std::make_shared<Message>();
             message->setType(Message::Groupchat);
             message->setTo(self_);
             message->setFrom(mucJID_.withResource("SomeNickname"));
             message->setID(iqChannel_->getNewIQID());
             message->setSubject("New Room Subject");
-            message->addPayload(boost::make_shared<Thread>("Thread that prevents the subject change."));
+            message->addPayload(std::make_shared<Thread>("Thread that prevents the subject change."));
 
-            controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
-            CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+            controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
+            CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
         }
     }
 
@@ -483,14 +483,14 @@ public:
     void testSubjectChangeIncorrectC() {
         std::string messageBody("test message");
         window_->onSendMessageRequest(messageBody, false);
-        boost::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = boost::dynamic_pointer_cast<Message>(rawStanza);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
         CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
         CPPUNIT_ASSERT(message);
         CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
 
         {
-            Message::ref message = boost::make_shared<Message>();
+            Message::ref message = std::make_shared<Message>();
             message->setType(Message::Groupchat);
             message->setTo(self_);
             message->setFrom(mucJID_.withResource("SomeNickname"));
@@ -498,8 +498,8 @@ public:
             message->setSubject("New Room Subject");
             message->setBody("");
 
-            controller_->handleIncomingMessage(boost::make_shared<MessageEvent>(message));
-            CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
+            controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
+            CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
         }
     }
 
@@ -544,8 +544,8 @@ private:
     DummyEntityCapsProvider* entityCapsProvider_;
     DummySettingsProvider* settings_;
     HighlightManager* highlightManager_;
-    boost::shared_ptr<ChatMessageParser> chatMessageParser_;
-    boost::shared_ptr<CryptoProvider> crypto_;
+    std::shared_ptr<ChatMessageParser> chatMessageParser_;
+    std::shared_ptr<CryptoProvider> crypto_;
     VCardManager* vcardManager_;
     VCardMemoryStorage* vcardStorage_;
     ClientBlockListManager* clientBlockListManager_;

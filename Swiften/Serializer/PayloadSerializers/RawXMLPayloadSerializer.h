@@ -15,7 +15,7 @@ namespace Swift {
         public:
             RawXMLPayloadSerializer() : GenericPayloadSerializer<RawXMLPayload>() {}
 
-            virtual std::string serializePayload(boost::shared_ptr<RawXMLPayload> p)  const {
+            virtual std::string serializePayload(std::shared_ptr<RawXMLPayload> p)  const {
                 return p->getRawXML();
             }
     };

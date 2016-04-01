@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <QTextEdit>
 #include <QWidget>
@@ -35,11 +35,11 @@ namespace Swift {
             /** Add message to window.
              * @return id of added message (for acks).
              */
-            virtual std::string addMessage(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/);
+            virtual std::string addMessage(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/);
             /** Adds action to window.
              * @return id of added message (for acks);
              */
-            virtual std::string addAction(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/);
+            virtual std::string addAction(const ChatWindow::ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/);
 
             virtual std::string addSystemMessage(const ChatWindow::ChatMessage& /*message*/, ChatWindow::Direction /*direction*/);
             virtual void addPresenceMessage(const ChatWindow::ChatMessage& /*message*/, ChatWindow::Direction /*direction*/);
@@ -127,7 +127,7 @@ namespace Swift {
             UIEventStream* eventStream_;
             LogTextEdit* log_;
             FileTransferMap fileTransfers_;
-            std::map<std::string, boost::shared_ptr<SecurityLabel> > lastMessageLabel_;
+            std::map<std::string, std::shared_ptr<SecurityLabel> > lastMessageLabel_;
             int idGenerator_;
 
     };

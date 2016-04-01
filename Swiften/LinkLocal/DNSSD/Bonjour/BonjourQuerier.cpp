@@ -33,23 +33,23 @@ BonjourQuerier::~BonjourQuerier() {
     assert(!thread);
 }
 
-boost::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
-    return boost::shared_ptr<DNSSDBrowseQuery>(new BonjourBrowseQuery(shared_from_this(), eventLoop));
+std::shared_ptr<DNSSDBrowseQuery> BonjourQuerier::createBrowseQuery() {
+    return std::make_shared<BonjourBrowseQuery>(shared_from_this(), eventLoop);
 }
 
-boost::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const std::string& name, int port, const ByteArray& info) {
-    return boost::shared_ptr<DNSSDRegisterQuery>(new BonjourRegisterQuery(name, port, info, shared_from_this(), eventLoop));
+std::shared_ptr<DNSSDRegisterQuery> BonjourQuerier::createRegisterQuery(const std::string& name, int port, const ByteArray& info) {
+    return std::make_shared<BonjourRegisterQuery>(name, port, info, shared_from_this(), eventLoop);
 }
 
-boost::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
-    return boost::shared_ptr<DNSSDResolveServiceQuery>(new BonjourResolveServiceQuery(service, shared_from_this(), eventLoop));
+std::shared_ptr<DNSSDResolveServiceQuery> BonjourQuerier::createResolveServiceQuery(const DNSSDServiceID& service) {
+    return std::make_shared<BonjourResolveServiceQuery>(service, shared_from_this(), eventLoop);
 }
 
-boost::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostnameQuery(const std::string& hostname, int interfaceIndex) {
-    return boost::shared_ptr<DNSSDResolveHostnameQuery>(new BonjourResolveHostnameQuery(hostname, interfaceIndex, shared_from_this(), eventLoop));
+std::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostnameQuery(const std::string& hostname, int interfaceIndex) {
+    return std::make_shared<BonjourResolveHostnameQuery>(hostname, interfaceIndex, shared_from_this(), eventLoop);
 }
 
-void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {
+void BonjourQuerier::addRunningQuery(std::shared_ptr<BonjourQuery> query) {
     {
         boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
         runningQueries.push_back(query);
@@ -58,7 +58,7 @@ void BonjourQuerier::addRunningQuery(boost::shared_ptr<BonjourQuery> query) {
     interruptSelect();
 }
 
-void BonjourQuerier::removeRunningQuery(boost::shared_ptr<BonjourQuery> query) {
+void BonjourQuerier::removeRunningQuery(std::shared_ptr<BonjourQuery> query) {
     {
         boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
         erase(runningQueries, query);
@@ -106,7 +106,7 @@ void BonjourQuerier::run() {
             maxSocket = interruptSelectReadSocket;
             FD_SET(interruptSelectReadSocket, &fdSet);
 
-            foreach(const boost::shared_ptr<BonjourQuery>& query, runningQueries) {
+            foreach(const std::shared_ptr<BonjourQuery>& query, runningQueries) {
                 int socketID = query->getSocketID();
                 maxSocket = std::max(maxSocket, socketID);
                 FD_SET(socketID, &fdSet);
@@ -124,7 +124,7 @@ void BonjourQuerier::run() {
 
         {
             boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
-            foreach(boost::shared_ptr<BonjourQuery> query, runningQueries) {
+            foreach(std::shared_ptr<BonjourQuery> query, runningQueries) {
                 if (FD_ISSET(query->getSocketID(), &fdSet)) {
                     query->processResult();
                 }

@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -16,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API CapsInfo : public Payload {
         public:
-            typedef boost::shared_ptr<CapsInfo> ref;
+            typedef std::shared_ptr<CapsInfo> ref;
 
             CapsInfo(const std::string& node = "", const std::string& version = "", const std::string& hash = "sha-1") : node_(node), version_(version), hash_(hash) {}
 

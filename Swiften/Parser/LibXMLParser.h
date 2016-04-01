@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Parser/XMLParser.h>
 
@@ -27,6 +28,6 @@ namespace Swift {
             static bool initialized;
 
             struct Private;
-            boost::shared_ptr<Private> p;
+            std::shared_ptr<Private> p;
     };
 }

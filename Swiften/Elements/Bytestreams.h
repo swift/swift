@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API Bytestreams : public Payload {
         public:
-            typedef boost::shared_ptr<Bytestreams> ref;
+            typedef std::shared_ptr<Bytestreams> ref;
 
             struct StreamHost {
                 StreamHost(const std::string& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}

@@ -12,8 +12,8 @@
 
 #include "PlatformNATTraversalWorker.h"
 
-#include <boost/smart_ptr/make_shared.hpp>
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
+#include <memory>
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
@@ -31,9 +31,9 @@
 
 namespace Swift {
 
-class PlatformNATTraversalRequest : public boost::enable_shared_from_this<PlatformNATTraversalRequest>, public EventOwner {
+class PlatformNATTraversalRequest : public std::enable_shared_from_this<PlatformNATTraversalRequest>, public EventOwner {
     public:
-        typedef boost::shared_ptr<PlatformNATTraversalRequest> ref;
+        typedef std::shared_ptr<PlatformNATTraversalRequest> ref;
 
     public:
         PlatformNATTraversalRequest(PlatformNATTraversalWorker* worker) : worker(worker) {
@@ -139,7 +139,7 @@ PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : e
 
 PlatformNATTraversalWorker::~PlatformNATTraversalWorker() {
     stopRequested = true;
-    addRequestToQueue(boost::shared_ptr<PlatformNATTraversalRequest>());
+    addRequestToQueue(std::shared_ptr<PlatformNATTraversalRequest>());
     thread->join();
     delete thread;
 #ifdef HAVE_LIBNATPMP
@@ -177,17 +177,17 @@ NATTraversalInterface* PlatformNATTraversalWorker::getNATTraversalInterface() co
     return nullNATTraversalInterface;
 }
 
-boost::shared_ptr<NATTraversalGetPublicIPRequest> PlatformNATTraversalWorker::createGetPublicIPRequest() {
-    return boost::make_shared<PlatformNATTraversalGetPublicIPRequest>(this);
+std::shared_ptr<NATTraversalGetPublicIPRequest> PlatformNATTraversalWorker::createGetPublicIPRequest() {
+    return std::make_shared<PlatformNATTraversalGetPublicIPRequest>(this);
 }
 
-boost::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(int localPort, int publicPort) {
-    return boost::make_shared<PlatformNATTraversalForwardPortRequest>(this, localPort, publicPort);
+std::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(int localPort, int publicPort) {
+    return std::make_shared<PlatformNATTraversalForwardPortRequest>(this, localPort, publicPort);
 }
 
-boost::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(int localPort, int publicPort) {
+std::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(int localPort, int publicPort) {
     NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP); // FIXME
-    return boost::make_shared<PlatformNATTraversalRemovePortForwardingRequest>(this, mapping);
+    return std::make_shared<PlatformNATTraversalRemovePortForwardingRequest>(this, mapping);
 }
 
 void PlatformNATTraversalWorker::start() {

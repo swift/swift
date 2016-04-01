@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubAffiliationConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -19,8 +19,8 @@ PubSubAffiliationConvertor::PubSubAffiliationConvertor() :
 PubSubAffiliationConvertor::~PubSubAffiliationConvertor() {
 }
 
-boost::shared_ptr<PubSubAffiliation> PubSubAffiliationConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubAffiliation> result = boost::make_shared<PubSubAffiliation>();
+std::shared_ptr<PubSubAffiliation> PubSubAffiliationConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubAffiliation> result = std::make_shared<PubSubAffiliation>();
     lua_getfield(L, -1, "node");
     if (lua_isstring(L, -1)) {
         result->setNode(std::string(lua_tostring(L, -1)));
@@ -51,7 +51,7 @@ boost::shared_ptr<PubSubAffiliation> PubSubAffiliationConvertor::doConvertFromLu
     return result;
 }
 
-void PubSubAffiliationConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubAffiliation> payload) {
+void PubSubAffiliationConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubAffiliation> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getNode().c_str());
     lua_setfield(L, -2, "node");

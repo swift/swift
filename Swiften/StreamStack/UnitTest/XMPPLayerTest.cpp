@@ -85,7 +85,7 @@ class XMPPLayerTest : public CppUnit::TestFixture {
         }
 
         void testWriteElement() {
-            testling_->writeElement(boost::make_shared<Presence>());
+            testling_->writeElement(std::make_shared<Presence>());
 
             CPPUNIT_ASSERT_EQUAL(std::string("<presence/>"), lowLayer_->writtenData);
         }
@@ -96,11 +96,11 @@ class XMPPLayerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("</stream:stream>"), lowLayer_->writtenData);
         }
 
-        void handleElement(boost::shared_ptr<ToplevelElement>) {
+        void handleElement(std::shared_ptr<ToplevelElement>) {
             ++elementsReceived_;
         }
 
-        void handleElementAndReset(boost::shared_ptr<ToplevelElement>) {
+        void handleElementAndReset(std::shared_ptr<ToplevelElement>) {
             ++elementsReceived_;
             testling_->resetParser();
         }

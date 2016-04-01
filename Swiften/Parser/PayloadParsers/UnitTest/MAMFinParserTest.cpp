@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ class MAMFinParserTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT(parser.parse(
                 "<fin xmlns='urn:xmpp:mam:0' queryid='f27' />"));
 
-            boost::shared_ptr<MAMFin> payload = parser.getPayload<MAMFin>();
+            std::shared_ptr<MAMFin> payload = parser.getPayload<MAMFin>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT_EQUAL(false, payload->isComplete());
             CPPUNIT_ASSERT_EQUAL(true, payload->isStable());
@@ -46,13 +46,13 @@ class MAMFinParserTest : public CppUnit::TestFixture
                     "</set>"
                 "</fin>"));
 
-            boost::shared_ptr<MAMFin> payload = parser.getPayload<MAMFin>();
+            std::shared_ptr<MAMFin> payload = parser.getPayload<MAMFin>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT_EQUAL(true, payload->isComplete());
             CPPUNIT_ASSERT_EQUAL(true, payload->isStable());
 
             CPPUNIT_ASSERT(!!payload->getResultSet());
-            boost::shared_ptr<ResultSet> resultSet = payload->getResultSet();
+            std::shared_ptr<ResultSet> resultSet = payload->getResultSet();
         }
 };
 

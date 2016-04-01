@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,11 +11,11 @@ namespace Swift {
 
     }
 
-    void CarbonsReceived::setForwarded(boost::shared_ptr<Forwarded> forwarded) {
+    void CarbonsReceived::setForwarded(std::shared_ptr<Forwarded> forwarded) {
         forwarded_ = forwarded;
     }
 
-    boost::shared_ptr<Forwarded> CarbonsReceived::getForwarded() const {
+    std::shared_ptr<Forwarded> CarbonsReceived::getForwarded() const {
         return forwarded_;
     }
 }

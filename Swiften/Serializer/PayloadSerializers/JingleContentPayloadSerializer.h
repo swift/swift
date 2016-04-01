@@ -24,7 +24,7 @@ namespace Swift {
         public:
             JingleContentPayloadSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<JingleContentPayload>)  const;
+            virtual std::string serializePayload(std::shared_ptr<JingleContentPayload>)  const;
 
         private:
             std::string creatorToString(JingleContentPayload::Creator creator) const;

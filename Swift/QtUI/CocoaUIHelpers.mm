@@ -12,7 +12,7 @@
 
 #include "CocoaUIHelpers.h"
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/type_traits.hpp>
 
 #include <Cocoa/Cocoa.h>
@@ -32,8 +32,8 @@ void CocoaUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::
     foreach(Certificate::ref cert, chain) {
         // convert chain to SecCertificateRef
         ByteArray certAsDER = cert->toDER();
-        boost::shared_ptr<boost::remove_pointer<CFDataRef>::type> certData(CFDataCreate(nullptr, certAsDER.data(), certAsDER.size()), CFRelease);
-        boost::shared_ptr<OpaqueSecCertificateRef> macCert(SecCertificateCreateWithData(nullptr, certData.get()), CFRelease);
+        std::shared_ptr<boost::remove_pointer<CFDataRef>::type> certData(CFDataCreate(nullptr, certAsDER.data(), certAsDER.size()), CFRelease);
+        std::shared_ptr<OpaqueSecCertificateRef> macCert(SecCertificateCreateWithData(nullptr, certData.get()), CFRelease);
 
         // add to NSMutable array
         [certificates addObject: (id)macCert.get()];

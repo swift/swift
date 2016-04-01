@@ -12,10 +12,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/variant.hpp>
 
 #include <Swiften/Base/API.h>
@@ -45,8 +45,8 @@ namespace Swift {
         };
 
         struct InfoCall {
-            InfoCall(boost::shared_ptr<Payload> info) : payload(info) {}
-            boost::shared_ptr<Payload> payload;
+            InfoCall(std::shared_ptr<Payload> info) : payload(info) {}
+            std::shared_ptr<Payload> payload;
         };
 
         struct AcceptCall {
@@ -83,14 +83,14 @@ namespace Swift {
         typedef boost::variant<InitiateCall, TerminateCall, AcceptCall, InfoCall, InfoTransportCall, AcceptTransportCall, RejectTransportCall, ReplaceTransportCall> Command;
 
         public:
-            typedef boost::shared_ptr<FakeJingleSession> ref;
+            typedef std::shared_ptr<FakeJingleSession> ref;
 
             FakeJingleSession(const JID& initiator, const std::string& id);
             virtual ~FakeJingleSession();
 
             virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
             virtual void sendTerminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;
-            virtual void sendInfo(boost::shared_ptr<Payload>) SWIFTEN_OVERRIDE;
+            virtual void sendInfo(std::shared_ptr<Payload>) SWIFTEN_OVERRIDE;
             virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref()) SWIFTEN_OVERRIDE;
             virtual std::string sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
             virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
@@ -98,13 +98,13 @@ namespace Swift {
             virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
 
             void handleSessionTerminateReceived(boost::optional<JinglePayload::Reason>);
-            void handleSessionAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleDescription>, boost::shared_ptr<JingleTransportPayload>);
-            void handleSessionInfoReceived(boost::shared_ptr<JinglePayload>);
+            void handleSessionAcceptReceived(const JingleContentID&, std::shared_ptr<JingleDescription>, std::shared_ptr<JingleTransportPayload>);
+            void handleSessionInfoReceived(std::shared_ptr<JinglePayload>);
 
             void handleTransportReplaceReceived(const JingleContentID&, JingleTransportPayload::ref);
-            void handleTransportAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>);
-            void handleTransportInfoReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>);
-            void handleTransportRejectReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>);
+            void handleTransportAcceptReceived(const JingleContentID&, std::shared_ptr<JingleTransportPayload>);
+            void handleTransportInfoReceived(const JingleContentID&, std::shared_ptr<JingleTransportPayload>);
+            void handleTransportRejectReceived(const JingleContentID&, std::shared_ptr<JingleTransportPayload>);
             void handleTransportInfoAcknowledged(const std::string& id);
 
         public:

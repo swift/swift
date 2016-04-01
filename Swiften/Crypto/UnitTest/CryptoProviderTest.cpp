@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,14 +58,14 @@ class CryptoProviderTest : public CppUnit::TestFixture {
         ////////////////////////////////////////////////////////////
 
         void testGetSHA1Hash() {
-            boost::shared_ptr<Hash> sha = boost::shared_ptr<Hash>(provider->createSHA1());
+            std::shared_ptr<Hash> sha = std::shared_ptr<Hash>(provider->createSHA1());
             sha->update(createByteArray("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
 
             CPPUNIT_ASSERT_EQUAL(createByteArray("\x42\x06\xb2\x3c\xa6\xb0\xa6\x43\xd2\x0d\x89\xb0\x4f\xf5\x8c\xf7\x8b\x80\x96\xed"), sha->getHash());
         }
 
         void testGetSHA1Hash_TwoUpdates() {
-            boost::shared_ptr<Hash> sha = boost::shared_ptr<Hash>(provider->createSHA1());
+            std::shared_ptr<Hash> sha = std::shared_ptr<Hash>(provider->createSHA1());
             sha->update(createByteArray("client/pc//Exodus 0.9.1<http://jabber.org/protocol/caps<"));
             sha->update(createByteArray("http://jabber.org/protocol/disco#info<http://jabber.org/protocol/disco#items<http://jabber.org/protocol/muc<"));
 
@@ -73,7 +73,7 @@ class CryptoProviderTest : public CppUnit::TestFixture {
         }
 
         void testGetSHA1Hash_NoData() {
-            boost::shared_ptr<Hash> sha = boost::shared_ptr<Hash>(provider->createSHA1());
+            std::shared_ptr<Hash> sha = std::shared_ptr<Hash>(provider->createSHA1());
             sha->update(std::vector<unsigned char>());
 
             CPPUNIT_ASSERT_EQUAL(createByteArray("\xda\x39\xa3\xee\x5e\x6b\x4b\x0d\x32\x55\xbf\xef\x95\x60\x18\x90\xaf\xd8\x07\x09"), sha->getHash());
@@ -117,7 +117,7 @@ class CryptoProviderTest : public CppUnit::TestFixture {
         }
 
         void testMD5Incremental() {
-            boost::shared_ptr<Hash> testling = boost::shared_ptr<Hash>(provider->createMD5());
+            std::shared_ptr<Hash> testling = std::shared_ptr<Hash>(provider->createMD5());
             testling->update(createByteArray("ABCDEFGHIJKLMNOPQRSTUVWXYZ"));
             testling->update(createByteArray("abcdefghijklmnopqrstuvwxyz0123456789"));
 

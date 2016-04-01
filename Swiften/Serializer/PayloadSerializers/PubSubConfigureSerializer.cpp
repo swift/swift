@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubConfigureSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -22,12 +22,12 @@ PubSubConfigureSerializer::PubSubConfigureSerializer(PayloadSerializerCollection
 PubSubConfigureSerializer::~PubSubConfigureSerializer() {
 }
 
-std::string PubSubConfigureSerializer::serializePayload(boost::shared_ptr<PubSubConfigure> payload) const {
+std::string PubSubConfigureSerializer::serializePayload(std::shared_ptr<PubSubConfigure> payload) const {
     if (!payload) {
         return "";
     }
     XMLElement element("configure", "http://jabber.org/protocol/pubsub");
-    element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
+    element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
     return element.serialize();
 }
 

@@ -65,7 +65,7 @@ void StanzaParser::handleEndElement(const std::string& element, const std::strin
         currentPayloadParser_->handleEndElement(element, ns);
         --currentDepth_;
         if (!inPayload()) {
-            boost::shared_ptr<Payload> payload(currentPayloadParser_->getPayload());
+            std::shared_ptr<Payload> payload(currentPayloadParser_->getPayload());
             if (payload) {
                 getStanza()->addPayload(payload);
             }

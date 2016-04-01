@@ -7,10 +7,10 @@
 #include <Swiften/FileTransfer/FileReadBytestream.h>
 
 #include <cassert>
+#include <memory>
 
 #include <boost/filesystem/fstream.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 
@@ -27,11 +27,11 @@ FileReadBytestream::~FileReadBytestream() {
     }
 }
 
-boost::shared_ptr<ByteArray> FileReadBytestream::read(size_t size)  {
+std::shared_ptr<ByteArray> FileReadBytestream::read(size_t size)  {
     if (!stream) {
         stream = new boost::filesystem::ifstream(file, std::ios_base::in|std::ios_base::binary);
     }
-    boost::shared_ptr<ByteArray> result = boost::make_shared<ByteArray>();
+    std::shared_ptr<ByteArray> result = std::make_shared<ByteArray>();
     result->resize(size);
     assert(stream->good());
     stream->read(reinterpret_cast<char*>(vecptr(*result)), boost::numeric_cast<std::streamsize>(size));

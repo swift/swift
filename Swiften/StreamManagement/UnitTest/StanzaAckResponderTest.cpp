@@ -27,7 +27,7 @@ class StanzaAckResponderTest : public CppUnit::TestFixture {
 
     public:
         void testHandleAckRequestReceived_AcksStanza() {
-            boost::shared_ptr<StanzaAckResponder> testling(createResponder());
+            std::shared_ptr<StanzaAckResponder> testling(createResponder());
             testling->handleStanzaReceived();
 
             testling->handleAckRequestReceived();
@@ -37,7 +37,7 @@ class StanzaAckResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleAckRequestReceived_AcksMultipleStanzas() {
-            boost::shared_ptr<StanzaAckResponder> testling(createResponder());
+            std::shared_ptr<StanzaAckResponder> testling(createResponder());
             testling->handleStanzaReceived();
             testling->handleStanzaReceived();
 
@@ -48,7 +48,7 @@ class StanzaAckResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleAckRequestReceived_MultipleAcks() {
-            boost::shared_ptr<StanzaAckResponder> testling(createResponder());
+            std::shared_ptr<StanzaAckResponder> testling(createResponder());
             testling->handleStanzaReceived();
             testling->handleAckRequestReceived();
 
@@ -62,7 +62,7 @@ class StanzaAckResponderTest : public CppUnit::TestFixture {
 
         // Handle stanza ack count wrapping, as per the XEP
         void testHandleAckRequestReceived_WrapAround() {
-            boost::shared_ptr<StanzaAckResponder> testling(createResponder());
+            std::shared_ptr<StanzaAckResponder> testling(createResponder());
             testling->handledStanzasCount = boost::numeric_cast<unsigned int>((1ULL<<32) - 1);
             testling->handleStanzaReceived();
             testling->handleStanzaReceived();

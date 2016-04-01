@@ -6,8 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/RosterSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -19,13 +18,13 @@ namespace Swift {
 RosterSerializer::RosterSerializer() : GenericPayloadSerializer<RosterPayload>() {
 }
 
-std::string RosterSerializer::serializePayload(boost::shared_ptr<RosterPayload> roster)  const {
+std::string RosterSerializer::serializePayload(std::shared_ptr<RosterPayload> roster)  const {
     XMLElement queryElement("query", "jabber:iq:roster");
     if (roster->getVersion()) {
         queryElement.setAttribute("ver", *roster->getVersion());
     }
     foreach(const RosterItemPayload& item, roster->getItems()) {
-        boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+        std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("jid", item.getJID());
         itemElement->setAttribute("name", item.getName());
 
@@ -42,13 +41,13 @@ std::string RosterSerializer::serializePayload(boost::shared_ptr<RosterPayload> 
         }
 
         foreach(const std::string& group, item.getGroups()) {
-            boost::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
-            groupElement->addNode(boost::make_shared<XMLTextNode>(group));
+            std::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
+            groupElement->addNode(std::make_shared<XMLTextNode>(group));
             itemElement->addNode(groupElement);
         }
 
         if (!item.getUnknownContent().empty()) {
-            itemElement->addNode(boost::make_shared<XMLRawTextNode>(item.getUnknownContent()));
+            itemElement->addNode(std::make_shared<XMLRawTextNode>(item.getUnknownContent()));
         }
 
 

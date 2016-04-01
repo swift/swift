@@ -24,8 +24,8 @@ class PrivateStorageSerializerTest : public CppUnit::TestFixture {
         void testSerialize() {
             PayloadsSerializer serializer;
 
-            boost::shared_ptr<PrivateStorage> privateStorage(new PrivateStorage());
-            boost::shared_ptr<Storage> storage(new Storage());
+            std::shared_ptr<PrivateStorage> privateStorage(new PrivateStorage());
+            std::shared_ptr<Storage> storage(new Storage());
             Storage::Room room;
             room.name = "Swift";
             room.jid = JID("swift@rooms.swift.im");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@ void PubSubConfigureParser::handleStartElement(const std::string& element, const
 
     if (level == 1) {
         if (element == "x" && ns == "jabber:x:data") {
-            currentPayloadParser = boost::make_shared<FormParser>();
+            currentPayloadParser = std::make_shared<FormParser>();
         }
     }
 
@@ -47,7 +47,7 @@ void PubSubConfigureParser::handleEndElement(const std::string& element, const s
 
         if (level == 1) {
             if (element == "x" && ns == "jabber:x:data") {
-                getPayloadInternal()->setData(boost::dynamic_pointer_cast<Form>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setData(std::dynamic_pointer_cast<Form>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

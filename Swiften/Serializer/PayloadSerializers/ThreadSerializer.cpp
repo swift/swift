@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
     ThreadSerializer::~ThreadSerializer() {
     }
 
-    std::string ThreadSerializer::serializePayload(boost::shared_ptr<Thread> thread)  const {
+    std::string ThreadSerializer::serializePayload(std::shared_ptr<Thread> thread)  const {
         XMLElement threadNode("thread", "", thread->getText());
         if (!thread->getParent().empty()) {
             threadNode.setAttribute("parent", thread->getParent());

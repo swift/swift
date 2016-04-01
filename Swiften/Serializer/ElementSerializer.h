@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -16,7 +16,7 @@ namespace Swift {
         public:
             virtual ~ElementSerializer();
 
-            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const = 0;
-            virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const = 0;
+            virtual SafeByteArray serialize(std::shared_ptr<ToplevelElement> element) const = 0;
+            virtual bool canSerialize(std::shared_ptr<ToplevelElement> element) const = 0;
     };
 }

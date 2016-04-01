@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Swift {
     class PlatformDomainNameResolver;
 
     class PlatformDomainNameQuery {
         public:
-            typedef boost::shared_ptr<PlatformDomainNameQuery> ref;
+            typedef std::shared_ptr<PlatformDomainNameQuery> ref;
 
             PlatformDomainNameQuery(PlatformDomainNameResolver* resolver) : resolver(resolver) {}
             virtual ~PlatformDomainNameQuery() {}

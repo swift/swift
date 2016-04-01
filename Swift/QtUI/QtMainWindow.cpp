@@ -8,7 +8,7 @@
 
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <QAction>
 #include <QBoxLayout>
@@ -225,7 +225,7 @@ void QtMainWindow::handleShowCertificateInfo() {
 }
 
 void QtMainWindow::handleEditBlockingList() {
-    uiEventStream_->send(boost::make_shared<RequestBlockListDialogUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestBlockListDialogUIEvent>());
 }
 
 void QtMainWindow::handleSomethingSelectedChanged(bool itemSelected) {
@@ -246,7 +246,7 @@ void QtMainWindow::setRosterModel(Roster* roster) {
 }
 
 void QtMainWindow::handleEditProfileRequest() {
-    uiEventStream_->send(boost::make_shared<RequestProfileEditorUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestProfileEditorUIEvent>());
 }
 
 void QtMainWindow::handleEventCountUpdated(int count) {
@@ -272,12 +272,12 @@ void QtMainWindow::handleChatCountUpdated(int count) {
 }
 
 void QtMainWindow::handleAddUserActionTriggered(bool /*checked*/) {
-    boost::shared_ptr<UIEvent> event(new RequestAddUserDialogUIEvent());
+    std::shared_ptr<UIEvent> event(new RequestAddUserDialogUIEvent());
     uiEventStream_->send(event);
 }
 
 void QtMainWindow::handleChatUserActionTriggered(bool /*checked*/) {
-    boost::shared_ptr<UIEvent> event(new RequestChatWithUserDialogUIEvent());
+    std::shared_ptr<UIEvent> event(new RequestChatWithUserDialogUIEvent());
     uiEventStream_->send(event);
 }
 
@@ -291,15 +291,15 @@ void QtMainWindow::handleSignOutAction() {
 }
 
 void QtMainWindow::handleEditProfileAction() {
-    uiEventStream_->send(boost::make_shared<RequestProfileEditorUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestProfileEditorUIEvent>());
 }
 
 void QtMainWindow::handleJoinMUCAction() {
-    uiEventStream_->send(boost::make_shared<RequestJoinMUCUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestJoinMUCUIEvent>());
 }
 
 void QtMainWindow::handleViewLogsAction() {
-    uiEventStream_->send(boost::make_shared<RequestHistoryUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestHistoryUIEvent>());
 }
 
 void QtMainWindow::handleStatusChanged(StatusShow::Type showType, const QString &statusMessage) {
@@ -363,7 +363,7 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
     serverAdHocMenu_->setEnabled(online);
 }
 
-void QtMainWindow::setMyContactRosterItem(boost::shared_ptr<ContactRosterItem> contact) {
+void QtMainWindow::setMyContactRosterItem(std::shared_ptr<ContactRosterItem> contact) {
     meView_->setContactRosterItem(contact);
 }
 
@@ -393,7 +393,7 @@ void QtMainWindow::handleAdHocActionTriggered(bool /*checked*/) {
     QAction* action = qobject_cast<QAction*>(sender());
     assert(action);
     DiscoItems::Item command = serverAdHocCommands_[serverAdHocCommandActions_.indexOf(action)];
-    uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestAdHocUIEvent(command)));
+    uiEventStream_->send(std::make_shared<RequestAdHocUIEvent>(command));
 }
 
 void QtMainWindow::setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands) {

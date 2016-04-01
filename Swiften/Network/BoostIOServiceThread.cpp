@@ -6,17 +6,17 @@
 
 #include <Swiften/Network/BoostIOServiceThread.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 namespace Swift {
 
-BoostIOServiceThread::BoostIOServiceThread(boost::shared_ptr<boost::asio::io_service> ioService) {
+BoostIOServiceThread::BoostIOServiceThread(std::shared_ptr<boost::asio::io_service> ioService) {
     if (!!ioService) {
         ioService_ = ioService;
         thread_ = nullptr;
     }
     else {
-        ioService_ = boost::make_shared<boost::asio::io_service>();
+        ioService_ = std::make_shared<boost::asio::io_service>();
         thread_ = new boost::thread(boost::bind(&BoostIOServiceThread::doRun, this));
     }
 }

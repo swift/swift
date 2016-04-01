@@ -50,7 +50,7 @@ namespace Swift {
 HighlightManager::HighlightManager(SettingsProvider* settings)
     : settings_(settings)
     , storingSettings_(false) {
-    rules_ = boost::make_shared<HighlightRulesList>();
+    rules_ = std::make_shared<HighlightRulesList>();
     loadSettings();
     handleSettingChangedConnection_ = settings_->onSettingChanged.connect(boost::bind(&HighlightManager::handleSettingChanged, this, _1));
 }

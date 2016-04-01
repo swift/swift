@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -109,7 +110,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
         }
 
         void testReceivePresence() {
-            boost::shared_ptr<Presence> sentPresence(createPresence(user1));
+            std::shared_ptr<Presence> sentPresence(createPresence(user1));
             stanzaChannel_->onPresenceReceived(sentPresence);
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
@@ -119,8 +120,8 @@ class PresenceOracleTest : public CppUnit::TestFixture {
         }
 
         void testReceivePresenceFromDifferentResources() {
-            boost::shared_ptr<Presence> sentPresence1(createPresence(user1));
-            boost::shared_ptr<Presence> sentPresence2(createPresence(user1alt));
+            std::shared_ptr<Presence> sentPresence1(createPresence(user1));
+            std::shared_ptr<Presence> sentPresence2(createPresence(user1alt));
             stanzaChannel_->onPresenceReceived(sentPresence1);
             stanzaChannel_->onPresenceReceived(sentPresence2);
 
@@ -132,7 +133,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
             std::string reasonText = "Because I want to";
             JID sentJID = JID("me@example.com");
 
-            boost::shared_ptr<Presence> sentPresence(new Presence());
+            std::shared_ptr<Presence> sentPresence(new Presence());
             sentPresence->setType(Presence::Subscribe);
             sentPresence->setFrom(sentJID);
             sentPresence->setStatus(reasonText);
@@ -145,7 +146,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
         }
 
         void testReconnectResetsPresences() {
-            boost::shared_ptr<Presence> sentPresence(createPresence(user1));
+            std::shared_ptr<Presence> sentPresence(createPresence(user1));
             stanzaChannel_->onPresenceReceived(sentPresence);
             stanzaChannel_->setAvailable(false);
             stanzaChannel_->setAvailable(true);
@@ -189,7 +190,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
 
     private:
         Presence::ref createPresence(const JID &jid, int priority, Presence::Type type, const StatusShow::Type& statusShow) {
-            Presence::ref presence = boost::make_shared<Presence>();
+            Presence::ref presence = std::make_shared<Presence>();
             presence->setFrom(jid);
             presence->setPriority(priority);
             presence->setType(type);
@@ -212,7 +213,7 @@ class PresenceOracleTest : public CppUnit::TestFixture {
             return presence;
         }
 
-        void handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
+        void handlePresenceChange(std::shared_ptr<Presence> newPresence) {
             changes.push_back(newPresence);
         }
 
@@ -223,8 +224,8 @@ class PresenceOracleTest : public CppUnit::TestFixture {
             subscriptionRequests.push_back(subscriptionRequest);
         }
 
-        boost::shared_ptr<Presence> createPresence(const JID& jid) {
-            boost::shared_ptr<Presence> sentPresence(new Presence("blarb"));
+        std::shared_ptr<Presence> createPresence(const JID& jid) {
+            std::shared_ptr<Presence> sentPresence(new Presence("blarb"));
             sentPresence->setFrom(jid);
             return sentPresence;
         }

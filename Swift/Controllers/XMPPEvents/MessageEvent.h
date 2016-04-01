@@ -7,8 +7,7 @@
 #pragma once
 
 #include <cassert>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Elements/Message.h>
 
@@ -17,11 +16,11 @@
 namespace Swift {
     class MessageEvent : public StanzaEvent {
         public:
-            typedef boost::shared_ptr<MessageEvent> ref;
+            typedef std::shared_ptr<MessageEvent> ref;
 
-            MessageEvent(boost::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
+            MessageEvent(std::shared_ptr<Message> stanza) : stanza_(stanza), targetsMe_(true) {}
 
-            boost::shared_ptr<Message> getStanza() {return stanza_;}
+            std::shared_ptr<Message> getStanza() {return stanza_;}
 
             bool isReadable() {
                 return getStanza()->isError() || !getStanza()->getBody().get_value_or("").empty();
@@ -41,7 +40,7 @@ namespace Swift {
             }
 
         private:
-            boost::shared_ptr<Message> stanza_;
+            std::shared_ptr<Message> stanza_;
             bool targetsMe_;
     };
 }

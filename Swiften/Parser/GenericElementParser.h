@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Parser/ElementParser.h>
@@ -20,14 +19,14 @@ namespace Swift {
     class SWIFTEN_API GenericElementParser : public ElementParser {
         public:
             GenericElementParser() {
-                stanza_ = boost::make_shared<ElementType>();
+                stanza_ = std::make_shared<ElementType>();
             }
 
-            virtual boost::shared_ptr<ToplevelElement> getElement() const {
+            virtual std::shared_ptr<ToplevelElement> getElement() const {
                 return stanza_;
             }
 
-            virtual boost::shared_ptr<ElementType> getElementGeneric() const {
+            virtual std::shared_ptr<ElementType> getElementGeneric() const {
                 return stanza_;
             }
 
@@ -42,6 +41,6 @@ namespace Swift {
             }
 
         private:
-            boost::shared_ptr<ElementType> stanza_;
+            std::shared_ptr<ElementType> stanza_;
     };
 }

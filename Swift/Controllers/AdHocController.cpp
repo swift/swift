@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-AdHocController::AdHocController(AdHocCommandWindowFactory* factory, boost::shared_ptr<OutgoingAdHocCommandSession> command) {
+AdHocController::AdHocController(AdHocCommandWindowFactory* factory, std::shared_ptr<OutgoingAdHocCommandSession> command) {
     window_ = factory->createAdHocCommandWindow(command);
     window_->onClosing.connect(boost::bind(&AdHocController::handleWindowClosed, this));
 }

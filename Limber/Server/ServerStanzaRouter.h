@@ -7,8 +7,7 @@
 #pragma once
 
 #include <map>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/JID/JID.h>
@@ -20,7 +19,7 @@ namespace Swift {
         public:
             ServerStanzaRouter();
 
-            bool routeStanza(boost::shared_ptr<Stanza>);
+            bool routeStanza(std::shared_ptr<Stanza>);
 
             void addClientSession(ServerSession*);
             void removeClientSession(ServerSession*);

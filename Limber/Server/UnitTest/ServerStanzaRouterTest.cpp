@@ -125,8 +125,8 @@ class ServerStanzaRouterTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<Message> createMessageTo(const std::string& recipient) {
-            boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> createMessageTo(const std::string& recipient) {
+            std::shared_ptr<Message> message(new Message());
             message->setTo(JID(recipient));
             return message;
         }
@@ -138,13 +138,13 @@ class ServerStanzaRouterTest : public CppUnit::TestFixture {
                 virtual const JID& getJID() const { return jid; }
                 virtual int getPriority() const { return priority; }
 
-                virtual void sendStanza(boost::shared_ptr<Stanza> stanza) {
+                virtual void sendStanza(std::shared_ptr<Stanza> stanza) {
                     sentStanzas.push_back(stanza);
                 }
 
                 JID jid;
                 int priority;
-                std::vector< boost::shared_ptr<Stanza> > sentStanzas;
+                std::vector< std::shared_ptr<Stanza> > sentStanzas;
         };
 };
 

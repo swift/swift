@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ class VCardSerializerTest : public CppUnit::TestFixture
     public:
         void testSerialize() {
             VCardSerializer testling;
-            boost::shared_ptr<VCard> vcard(new VCard());
+            std::shared_ptr<VCard> vcard(new VCard());
             vcard->setVersion("2.0");
             vcard->setFullName("Alice In Wonderland");
             vcard->setPrefix("Mrs");

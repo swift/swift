@@ -7,6 +7,7 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <vector>
 
 #include <Swiften/Base/API.h>
@@ -48,13 +49,13 @@ namespace Swift {
                 isResponsive = b;
             }
 
-            virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
-            virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
+            virtual std::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
+            virtual std::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
         private:
             EventLoop* eventLoop;
             bool isResponsive;
             AddressesMap addresses;
             ServicesCollection services;
-            boost::shared_ptr<EventOwner> owner;
+            std::shared_ptr<EventOwner> owner;
     };
 }

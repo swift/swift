@@ -12,8 +12,9 @@
 
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -59,10 +60,10 @@ SOCKS5BytestreamServerManager::~SOCKS5BytestreamServerManager() {
     }
 }
 
-boost::shared_ptr<SOCKS5BytestreamServerResourceUser> SOCKS5BytestreamServerManager::aquireResourceUser() {
-    boost::shared_ptr<SOCKS5BytestreamServerResourceUser> resourceUser;
+std::shared_ptr<SOCKS5BytestreamServerResourceUser> SOCKS5BytestreamServerManager::aquireResourceUser() {
+    std::shared_ptr<SOCKS5BytestreamServerResourceUser> resourceUser;
     if (s5bServerResourceUser_.expired()) {
-        resourceUser = boost::make_shared<SOCKS5BytestreamServerResourceUser>(this);
+        resourceUser = std::make_shared<SOCKS5BytestreamServerResourceUser>(this);
         s5bServerResourceUser_ = resourceUser;
     }
     else {
@@ -71,10 +72,10 @@ boost::shared_ptr<SOCKS5BytestreamServerResourceUser> SOCKS5BytestreamServerMana
     return resourceUser;
 }
 
-boost::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> SOCKS5BytestreamServerManager::aquirePortForwardingUser() {
-    boost::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> portForwardingUser;
+std::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> SOCKS5BytestreamServerManager::aquirePortForwardingUser() {
+    std::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> portForwardingUser;
     if (s5bServerPortForwardingUser_.expired()) {
-        portForwardingUser = boost::make_shared<SOCKS5BytestreamServerPortForwardingUser>(this);
+        portForwardingUser = std::make_shared<SOCKS5BytestreamServerPortForwardingUser>(this);
         s5bServerPortForwardingUser_ = portForwardingUser;
     }
     else {

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>

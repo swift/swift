@@ -6,8 +6,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MAMQuerySerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -24,7 +25,7 @@ MAMQuerySerializer::MAMQuerySerializer() {
 MAMQuerySerializer::~MAMQuerySerializer() {
 }
 
-std::string MAMQuerySerializer::serializePayload(boost::shared_ptr<MAMQuery> payload) const {
+std::string MAMQuerySerializer::serializePayload(std::shared_ptr<MAMQuery> payload) const {
     if (!payload) {
         return "";
     }
@@ -40,11 +41,11 @@ std::string MAMQuerySerializer::serializePayload(boost::shared_ptr<MAMQuery> pay
     }
 
     if (payload->getForm()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getForm())));
+        element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getForm())));
     }
 
     if (payload->getResultSet()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(ResultSetSerializer().serialize(payload->getResultSet())));
+        element.addNode(std::make_shared<XMLRawTextNode>(ResultSetSerializer().serialize(payload->getResultSet())));
     }
 
     return element.serialize();

@@ -7,9 +7,9 @@
 #include <Swiften/MUC/MUCBookmarkManager.h>
 
 #include <iostream>
+#include <memory>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -26,7 +26,7 @@ MUCBookmarkManager::MUCBookmarkManager(IQRouter* iqRouter) {
     request->send();
 }
 
-void MUCBookmarkManager::handleBookmarksReceived(boost::shared_ptr<Storage> payload, ErrorPayload::ref error) {
+void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payload, ErrorPayload::ref error) {
     if (error) {
         return;
     }
@@ -99,7 +99,7 @@ void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
 
 void MUCBookmarkManager::flush() {
     if (!storage) {
-        storage = boost::make_shared<Storage>();
+        storage = std::make_shared<Storage>();
     }
     // Update the storage element
     storage->clearRooms();

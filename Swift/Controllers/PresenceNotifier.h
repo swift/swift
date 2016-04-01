@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <set>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -35,7 +34,7 @@ namespace Swift {
             boost::signal<void (const JID&)> onNotificationActivated;
 
         private:
-            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handlePresenceReceived(std::shared_ptr<Presence>);
             void handleStanzaChannelAvailableChanged(bool);
             void handleNotificationActivated(JID jid);
             void handleTimerTick();
@@ -53,7 +52,7 @@ namespace Swift {
             NickResolver* nickResolver;
             const PresenceOracle* presenceOracle;
             TimerFactory* timerFactory;
-            boost::shared_ptr<Timer> timer;
+            std::shared_ptr<Timer> timer;
             bool justInitialized;
             bool inQuietPeriod;
             std::set<JID> availableUsers;

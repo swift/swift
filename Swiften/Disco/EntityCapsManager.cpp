@@ -19,10 +19,10 @@ EntityCapsManager::EntityCapsManager(CapsProvider* capsProvider, StanzaChannel* 
     capsProvider->onCapsAvailable.connect(boost::bind(&EntityCapsManager::handleCapsAvailable, this, _1));
 }
 
-void EntityCapsManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
+void EntityCapsManager::handlePresenceReceived(std::shared_ptr<Presence> presence) {
     JID from = presence->getFrom();
     if (presence->isAvailable()) {
-        boost::shared_ptr<CapsInfo> capsInfo = presence->getPayload<CapsInfo>();
+        std::shared_ptr<CapsInfo> capsInfo = presence->getPayload<CapsInfo>();
         if (!capsInfo || capsInfo->getHash() != "sha-1" || presence->getPayload<ErrorPayload>()) {
             return;
         }

@@ -26,7 +26,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         }
 
         void testGetInitialResponse() {
@@ -64,7 +64,7 @@ class DIGESTMD5ClientAuthenticatorTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(DIGESTMD5ClientAuthenticatorTest);

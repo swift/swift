@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -34,7 +32,7 @@ namespace Swift {
         public:
             ServerFromClientSession(
                     const std::string& id,
-                    boost::shared_ptr<Connection> connection,
+                    std::shared_ptr<Connection> connection,
                     PayloadParserFactoryCollection* payloadParserFactories,
                     PayloadSerializerCollection* payloadSerializers,
                     XMLParserFactory* xmlParserFactory,
@@ -44,7 +42,7 @@ namespace Swift {
             void setAllowSASLEXTERNAL();
 
         private:
-            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleElement(std::shared_ptr<ToplevelElement>);
             void handleStreamStart(const ProtocolHeader& header);
 
             void setInitialized();

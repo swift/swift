@@ -38,7 +38,7 @@ PresenceNotifier::~PresenceNotifier() {
     stanzaChannel->onPresenceReceived.disconnect(boost::bind(&PresenceNotifier::handlePresenceReceived, this, _1));
 }
 
-void PresenceNotifier::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
+void PresenceNotifier::handlePresenceReceived(std::shared_ptr<Presence> presence) {
     JID from = presence->getFrom();
 
     if (mucRegistry->isMUC(from.toBare())) {

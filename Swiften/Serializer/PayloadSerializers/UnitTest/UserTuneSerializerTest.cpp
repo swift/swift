@@ -10,7 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -31,7 +31,7 @@ class UserTuneSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize_withAllVariablesSet() {
             UserTuneSerializer testling(&serializers);
-            boost::shared_ptr<UserTune> userTune(new UserTune());
+            std::shared_ptr<UserTune> userTune(new UserTune());
             userTune->setRating(5);
             userTune->setTitle(boost::optional<std::string>("Minion"));
             userTune->setTrack(boost::optional<std::string>("Yellow"));
@@ -49,7 +49,7 @@ class UserTuneSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_withSomeVariablesSet() {
             UserTuneSerializer testling(&serializers);
-            boost::shared_ptr<UserTune> userTune(new UserTune());
+            std::shared_ptr<UserTune> userTune(new UserTune());
             userTune->setTitle(boost::optional<std::string>("Minion"));
             userTune->setTrack(boost::optional<std::string>("Yellow"));
             userTune->setArtist(boost::optional<std::string>("Ice"));

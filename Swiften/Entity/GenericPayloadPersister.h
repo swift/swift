@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,8 +18,8 @@ namespace Swift {
             }
 
         public:
-            boost::shared_ptr<PAYLOAD> loadPayloadGeneric(const boost::filesystem::path& path) {
-                return boost::dynamic_pointer_cast<PAYLOAD>(loadPayload(path));
+            std::shared_ptr<PAYLOAD> loadPayloadGeneric(const boost::filesystem::path& path) {
+                return std::dynamic_pointer_cast<PAYLOAD>(loadPayload(path));
             }
 
         protected:

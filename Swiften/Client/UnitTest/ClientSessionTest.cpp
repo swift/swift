@@ -5,10 +5,10 @@
  */
 
 #include <deque>
+#include <memory>
 
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -75,9 +75,9 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-            idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
-            server = boost::make_shared<MockSessionStream>();
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            idnConverter = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+            server = std::make_shared<MockSessionStream>();
             sessionFinishedReceived = false;
             needCredentials = false;
             blindCertificateTrustChecker = new BlindCertificateTrustChecker();
@@ -88,7 +88,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStart_Error() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->breakConnection();
 
@@ -98,7 +98,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStart_StreamError() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->sendStreamStart();
             server->sendStreamError();
@@ -109,7 +109,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStartTLS() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->setCertificateTrustChecker(blindCertificateTrustChecker);
             session->start();
             server->receiveStreamStart();
@@ -127,7 +127,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStartTLS_ServerError() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -142,7 +142,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStartTLS_ConnectError() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -157,7 +157,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStartTLS_InvalidIdentity() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -171,11 +171,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
-            CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::InvalidServerIdentity, boost::dynamic_pointer_cast<CertificateVerificationError>(sessionFinishedError)->getType());
+            CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::InvalidServerIdentity, std::dynamic_pointer_cast<CertificateVerificationError>(sessionFinishedError)->getType());
         }
 
         void testStart_StreamFeaturesWithoutResourceBindingFails() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -187,7 +187,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -203,7 +203,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate_Unauthorized() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -220,7 +220,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate_PLAINOverNonTLS() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->setAllowPLAINOverNonTLS(false);
             session->start();
             server->receiveStreamStart();
@@ -233,7 +233,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate_RequireTLS() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->setUseTLS(ClientSession::RequireTLS);
             session->setAllowPLAINOverNonTLS(true);
             session->start();
@@ -247,7 +247,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate_NoValidAuthMechanisms() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -259,7 +259,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate_EXTERNAL() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -272,7 +272,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testUnexpectedChallenge() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -287,7 +287,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStreamManagement() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -311,7 +311,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testStreamManagement_Failed() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -334,7 +334,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
         void testFinishAcksStanzas() {
-            boost::shared_ptr<ClientSession> session(createSession());
+            std::shared_ptr<ClientSession> session(createSession());
             initializeSession(session);
             server->sendMessage();
             server->sendMessage();
@@ -346,15 +346,15 @@ class ClientSessionTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<ClientSession> createSession() {
-            boost::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get(), crypto.get());
+        std::shared_ptr<ClientSession> createSession() {
+            std::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get(), crypto.get());
             session->onFinished.connect(boost::bind(&ClientSessionTest::handleSessionFinished, this, _1));
             session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
             session->setAllowPLAINOverNonTLS(true);
             return session;
         }
 
-        void initializeSession(boost::shared_ptr<ClientSession> session) {
+        void initializeSession(std::shared_ptr<ClientSession> session) {
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -371,7 +371,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamManagementEnabled();
         }
 
-        void handleSessionFinished(boost::shared_ptr<Error> error) {
+        void handleSessionFinished(std::shared_ptr<Error> error) {
             sessionFinishedReceived = true;
             sessionFinishedError = error;
         }
@@ -383,11 +383,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
         class MockSessionStream : public SessionStream {
             public:
                 struct Event {
-                    Event(boost::shared_ptr<ToplevelElement> element) : element(element), footer(false) {}
+                    Event(std::shared_ptr<ToplevelElement> element) : element(element), footer(false) {}
                     Event(const ProtocolHeader& header) : header(header), footer(false) {}
                     Event() : footer(true) {}
 
-                    boost::shared_ptr<ToplevelElement> element;
+                    std::shared_ptr<ToplevelElement> element;
                     boost::optional<ProtocolHeader> header;
                     bool footer;
                 };
@@ -396,7 +396,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 }
 
                 virtual void close() {
-                    onClosed(boost::shared_ptr<Error>());
+                    onClosed(std::shared_ptr<Error>());
                 }
 
                 virtual bool isOpen() {
@@ -411,7 +411,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
                     receivedEvents.push_back(Event());
                 }
 
-                virtual void writeElement(boost::shared_ptr<ToplevelElement> element) {
+                virtual void writeElement(std::shared_ptr<ToplevelElement> element) {
                     receivedEvents.push_back(Event(element));
                 }
 
@@ -442,8 +442,8 @@ class ClientSessionTest : public CppUnit::TestFixture {
                      return std::vector<Certificate::ref>();
                 }
 
-                virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
-                    return boost::shared_ptr<CertificateVerificationError>();
+                virtual std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
+                    return std::shared_ptr<CertificateVerificationError>();
                 }
 
                 virtual bool supportsZLibCompression() {
@@ -463,11 +463,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 }
 
                 void breakConnection() {
-                    onClosed(boost::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::ConnectionReadError));
+                    onClosed(std::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::ConnectionReadError));
                 }
 
                 void breakTLS() {
-                    onClosed(boost::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::TLSError));
+                    onClosed(std::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::TLSError));
                 }
 
 
@@ -478,29 +478,29 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 }
 
                 void sendStreamFeaturesWithStartTLS() {
-                    boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+                    std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
                     streamFeatures->setHasStartTLS();
                     onElementReceived(streamFeatures);
                 }
 
                 void sendChallenge() {
-                    onElementReceived(boost::make_shared<AuthChallenge>());
+                    onElementReceived(std::make_shared<AuthChallenge>());
                 }
 
                 void sendStreamError() {
-                    onElementReceived(boost::make_shared<StreamError>());
+                    onElementReceived(std::make_shared<StreamError>());
                 }
 
                 void sendTLSProceed() {
-                    onElementReceived(boost::make_shared<TLSProceed>());
+                    onElementReceived(std::make_shared<TLSProceed>());
                 }
 
                 void sendTLSFailure() {
-                    onElementReceived(boost::make_shared<StartTLSFailure>());
+                    onElementReceived(std::make_shared<StartTLSFailure>());
                 }
 
                 void sendStreamFeaturesWithMultipleAuthentication() {
-                    boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+                    std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
                     streamFeatures->addAuthenticationMechanism("PLAIN");
                     streamFeatures->addAuthenticationMechanism("DIGEST-MD5");
                     streamFeatures->addAuthenticationMechanism("SCRAM-SHA1");
@@ -508,59 +508,59 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 }
 
                 void sendStreamFeaturesWithPLAINAuthentication() {
-                    boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+                    std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
                     streamFeatures->addAuthenticationMechanism("PLAIN");
                     onElementReceived(streamFeatures);
                 }
 
                 void sendStreamFeaturesWithEXTERNALAuthentication() {
-                    boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+                    std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
                     streamFeatures->addAuthenticationMechanism("EXTERNAL");
                     onElementReceived(streamFeatures);
                 }
 
                 void sendStreamFeaturesWithUnknownAuthentication() {
-                    boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+                    std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
                     streamFeatures->addAuthenticationMechanism("UNKNOWN");
                     onElementReceived(streamFeatures);
                 }
 
                 void sendStreamFeaturesWithBindAndStreamManagement() {
-                    boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+                    std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
                     streamFeatures->setHasResourceBind();
                     streamFeatures->setHasStreamManagement();
                     onElementReceived(streamFeatures);
                 }
 
                 void sendEmptyStreamFeatures() {
-                    onElementReceived(boost::make_shared<StreamFeatures>());
+                    onElementReceived(std::make_shared<StreamFeatures>());
                 }
 
                 void sendAuthSuccess() {
-                    onElementReceived(boost::make_shared<AuthSuccess>());
+                    onElementReceived(std::make_shared<AuthSuccess>());
                 }
 
                 void sendAuthFailure() {
-                    onElementReceived(boost::make_shared<AuthFailure>());
+                    onElementReceived(std::make_shared<AuthFailure>());
                 }
 
                 void sendStreamManagementEnabled() {
-                    onElementReceived(boost::make_shared<StreamManagementEnabled>());
+                    onElementReceived(std::make_shared<StreamManagementEnabled>());
                 }
 
                 void sendStreamManagementFailed() {
-                    onElementReceived(boost::make_shared<StreamManagementFailed>());
+                    onElementReceived(std::make_shared<StreamManagementFailed>());
                 }
 
                 void sendBindResult() {
-                    boost::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
+                    std::shared_ptr<ResourceBind> resourceBind(new ResourceBind());
                     resourceBind->setJID(JID("foo@bar.com/bla"));
-                    boost::shared_ptr<IQ> iq = IQ::createResult(JID("foo@bar.com"), bindID, resourceBind);
+                    std::shared_ptr<IQ> iq = IQ::createResult(JID("foo@bar.com"), bindID, resourceBind);
                     onElementReceived(iq);
                 }
 
                 void sendMessage() {
-                    boost::shared_ptr<Message> message = boost::make_shared<Message>();
+                    std::shared_ptr<Message> message = std::make_shared<Message>();
                     message->setTo(JID("foo@bar.com/bla"));
                     onElementReceived(message);
                 }
@@ -573,13 +573,13 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 void receiveStartTLS() {
                     Event event = popEvent();
                     CPPUNIT_ASSERT(event.element);
-                    CPPUNIT_ASSERT(boost::dynamic_pointer_cast<StartTLSRequest>(event.element));
+                    CPPUNIT_ASSERT(std::dynamic_pointer_cast<StartTLSRequest>(event.element));
                 }
 
                 void receiveAuthRequest(const std::string& mech) {
                     Event event = popEvent();
                     CPPUNIT_ASSERT(event.element);
-                    boost::shared_ptr<AuthRequest> request(boost::dynamic_pointer_cast<AuthRequest>(event.element));
+                    std::shared_ptr<AuthRequest> request(std::dynamic_pointer_cast<AuthRequest>(event.element));
                     CPPUNIT_ASSERT(request);
                     CPPUNIT_ASSERT_EQUAL(mech, request->getMechanism());
                 }
@@ -587,13 +587,13 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 void receiveStreamManagementEnable() {
                     Event event = popEvent();
                     CPPUNIT_ASSERT(event.element);
-                    CPPUNIT_ASSERT(boost::dynamic_pointer_cast<EnableStreamManagement>(event.element));
+                    CPPUNIT_ASSERT(std::dynamic_pointer_cast<EnableStreamManagement>(event.element));
                 }
 
                 void receiveBind() {
                     Event event = popEvent();
                     CPPUNIT_ASSERT(event.element);
-                    boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(event.element);
+                    std::shared_ptr<IQ> iq = std::dynamic_pointer_cast<IQ>(event.element);
                     CPPUNIT_ASSERT(iq);
                     CPPUNIT_ASSERT(iq->getPayload<ResourceBind>());
                     bindID = iq->getID();
@@ -602,7 +602,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 void receiveAck(unsigned int n) {
                     Event event = popEvent();
                     CPPUNIT_ASSERT(event.element);
-                    boost::shared_ptr<StanzaAck> ack = boost::dynamic_pointer_cast<StanzaAck>(event.element);
+                    std::shared_ptr<StanzaAck> ack = std::dynamic_pointer_cast<StanzaAck>(event.element);
                     CPPUNIT_ASSERT(ack);
                     CPPUNIT_ASSERT_EQUAL(n, ack->getHandledStanzasCount());
                 }
@@ -624,20 +624,20 @@ class ClientSessionTest : public CppUnit::TestFixture {
                 std::deque<Event> receivedEvents;
         };
 
-        boost::shared_ptr<IDNConverter> idnConverter;
-        boost::shared_ptr<MockSessionStream> server;
+        std::shared_ptr<IDNConverter> idnConverter;
+        std::shared_ptr<MockSessionStream> server;
         bool sessionFinishedReceived;
         bool needCredentials;
-        boost::shared_ptr<Error> sessionFinishedError;
+        std::shared_ptr<Error> sessionFinishedError;
         BlindCertificateTrustChecker* blindCertificateTrustChecker;
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
 
 #if 0
         void testAuthenticate() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::setNeedCredentials, this));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
@@ -658,7 +658,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testAuthenticate_Unauthorized() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithAuthentication();
@@ -675,7 +675,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testAuthenticate_NoValidAuthMechanisms() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithUnsupportedAuthentication();
@@ -687,7 +687,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testResourceBind() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithResourceBind();
@@ -703,7 +703,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testResourceBind_ChangeResource() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithResourceBind();
@@ -717,7 +717,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testResourceBind_EmptyResource() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithResourceBind();
@@ -731,7 +731,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testResourceBind_Error() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithResourceBind();
@@ -745,7 +745,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testSessionStart() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             session->onSessionStarted.connect(boost::bind(&ClientSessionTest::setSessionStarted, this));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
@@ -761,7 +761,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testSessionStart_Error() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeaturesWithSession();
@@ -775,7 +775,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testSessionStart_AfterResourceBind() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             session->onSessionStarted.connect(boost::bind(&ClientSessionTest::setSessionStarted, this));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
@@ -792,7 +792,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testWhitespacePing() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeatures();
@@ -802,7 +802,7 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
         }
 
         void testReceiveElementAfterSessionStarted() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
             getMockServer()->sendStreamFeatures();
@@ -810,11 +810,11 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
             processEvents();
 
             getMockServer()->expectMessage();
-            session->sendElement(boost::make_shared<Message>()));
+            session->sendElement(std::make_shared<Message>()));
         }
 
         void testSendElement() {
-            boost::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
+            std::shared_ptr<MockSession> session(createSession("me@foo.com/Bar"));
             session->onElementReceived.connect(boost::bind(&ClientSessionTest::addReceivedElement, this, _1));
             getMockServer()->expectStreamStart();
             getMockServer()->sendStreamStart();
@@ -824,6 +824,6 @@ CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);
             processEvents();
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(receivedElements_.size()));
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<Message>(receivedElements_[0]));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<Message>(receivedElements_[0]));
         }
 #endif

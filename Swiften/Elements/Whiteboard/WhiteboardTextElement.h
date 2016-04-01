@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API WhiteboardTextElement : public WhiteboardElement {
     public:
-        typedef boost::shared_ptr<WhiteboardTextElement> ref;
+        typedef std::shared_ptr<WhiteboardTextElement> ref;
     public:
         WhiteboardTextElement(int x, int y) {
             x_ = x;

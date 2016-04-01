@@ -34,8 +34,8 @@ void FileTransferListController::setFileTransferOverview(FileTransferOverview *o
     }
 }
 
-void FileTransferListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
-    boost::shared_ptr<RequestFileTransferListUIEvent> event = boost::dynamic_pointer_cast<RequestFileTransferListUIEvent>(rawEvent);
+void FileTransferListController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
+    std::shared_ptr<RequestFileTransferListUIEvent> event = std::dynamic_pointer_cast<RequestFileTransferListUIEvent>(rawEvent);
     if (event != nullptr) {
         if (fileTransferListWidget == nullptr) {
             fileTransferListWidget = fileTransferListWidgetFactory->createFileTransferListWidget();

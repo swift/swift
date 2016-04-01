@@ -73,14 +73,14 @@ class CarbonsParserTest : public CppUnit::TestFixture {
             CarbonsReceived::ref received = parser.getPayload<CarbonsReceived>();
             CPPUNIT_ASSERT(received);
 
-            boost::shared_ptr<Forwarded> forwarded = received->getForwarded();
+            std::shared_ptr<Forwarded> forwarded = received->getForwarded();
             CPPUNIT_ASSERT(forwarded);
 
-            boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(forwarded->getStanza());
+            std::shared_ptr<Message> message = std::dynamic_pointer_cast<Message>(forwarded->getStanza());
             CPPUNIT_ASSERT(message);
             CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.example/balcony"), message->getFrom());
 
-            boost::shared_ptr<Thread> thread = message->getPayload<Thread>();
+            std::shared_ptr<Thread> thread = message->getPayload<Thread>();
             CPPUNIT_ASSERT(thread);
             CPPUNIT_ASSERT_EQUAL(std::string("0e3141cd80894871a68e6fe6b1ec56fa"), thread->getText());
         }
@@ -105,10 +105,10 @@ class CarbonsParserTest : public CppUnit::TestFixture {
             CarbonsSent::ref sent = parser.getPayload<CarbonsSent>();
             CPPUNIT_ASSERT(sent);
 
-            boost::shared_ptr<Forwarded> forwarded = sent->getForwarded();
+            std::shared_ptr<Forwarded> forwarded = sent->getForwarded();
             CPPUNIT_ASSERT(forwarded);
 
-            boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(forwarded->getStanza());
+            std::shared_ptr<Message> message = std::dynamic_pointer_cast<Message>(forwarded->getStanza());
             CPPUNIT_ASSERT(message);
             CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.example/balcony"), message->getTo());
         }

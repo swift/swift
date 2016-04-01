@@ -20,7 +20,7 @@
 namespace Swift {
     class SWIFTEN_API JingleContentPayload : public Payload {
         public:
-            typedef boost::shared_ptr<JingleContentPayload> ref;
+            typedef std::shared_ptr<JingleContentPayload> ref;
 
             enum Creator {
                 UnknownCreator,
@@ -62,34 +62,34 @@ namespace Swift {
                 descriptions.push_back(description);
             }
 
-            const std::vector<boost::shared_ptr<JingleTransportPayload> >& getTransports() const {
+            const std::vector<std::shared_ptr<JingleTransportPayload> >& getTransports() const {
                 return transports;
             }
 
-            void addTransport(boost::shared_ptr<JingleTransportPayload>  transport) {
+            void addTransport(std::shared_ptr<JingleTransportPayload>  transport) {
                 transports.push_back(transport);
             }
 
             template<typename T>
-            boost::shared_ptr<T> getDescription() const {
+            std::shared_ptr<T> getDescription() const {
                 for (size_t i = 0; i < descriptions.size(); ++i) {
-                    boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(descriptions[i]));
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(descriptions[i]));
                     if (result) {
                         return result;
                     }
                 }
-                return boost::shared_ptr<T>();
+                return std::shared_ptr<T>();
             }
 
             template<typename T>
-            boost::shared_ptr<T> getTransport() const {
+            std::shared_ptr<T> getTransport() const {
                 for (size_t i = 0; i < transports.size(); ++i) {
-                    boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(transports[i]));
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(transports[i]));
                     if (result) {
                         return result;
                     }
                 }
-                return boost::shared_ptr<T>();
+                return std::shared_ptr<T>();
             }
 
         private:
@@ -97,6 +97,6 @@ namespace Swift {
             std::string name;
             //Senders senders;
             std::vector<JingleDescription::ref> descriptions;
-            std::vector<boost::shared_ptr<JingleTransportPayload> > transports;
+            std::vector<std::shared_ptr<JingleTransportPayload> > transports;
     };
 }

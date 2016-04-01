@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,7 @@ namespace Swift {
 
     class SWIFTEN_API BOSHConnectionPool : public boost::bsignals::trackable {
         public:
-            BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, boost::shared_ptr<HTTPTrafficFilter> trafficFilter = boost::shared_ptr<HTTPTrafficFilter>());
+            BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, std::shared_ptr<HTTPTrafficFilter> trafficFilter = std::shared_ptr<HTTPTrafficFilter>());
             ~BOSHConnectionPool();
 
             void open();
@@ -39,7 +39,7 @@ namespace Swift {
             bool isTLSEncrypted() const;
             Certificate::ref getPeerCertificate() const;
             std::vector<Certificate::ref> getPeerCertificateChain() const;
-            boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
             boost::signal<void (BOSHError::ref)> onSessionTerminated;
             boost::signal<void ()> onSessionStarted;
@@ -82,7 +82,7 @@ namespace Swift {
             CertificateWithKey::ref clientCertificate;
             TLSContextFactory* tlsContextFactory_;
             TLSOptions tlsOptions_;
-            std::vector<boost::shared_ptr<Certificate> > pinnedCertificateChain_;
-            boost::shared_ptr<CertificateVerificationError> lastVerificationError_;
+            std::vector<std::shared_ptr<Certificate> > pinnedCertificateChain_;
+            std::shared_ptr<CertificateVerificationError> lastVerificationError_;
     };
 }

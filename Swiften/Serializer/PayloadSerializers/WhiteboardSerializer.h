@@ -43,7 +43,7 @@ namespace Swift {
 
     class SWIFTEN_API WhiteboardSerializer : public GenericPayloadSerializer<WhiteboardPayload> {
     public:
-        std::string serializePayload(boost::shared_ptr<WhiteboardPayload> payload) const;
+        std::string serializePayload(std::shared_ptr<WhiteboardPayload> payload) const;
 
     private:
         std::string typeToString(WhiteboardPayload::Type type) const;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,6 +33,6 @@ namespace Swift {
             int level_;
             SecurityLabelParserFactory* labelParserFactory_;
             SecurityLabelParser* labelParser_;
-            boost::shared_ptr<SecurityLabelsCatalog::Item> currentItem_;
+            std::shared_ptr<SecurityLabelsCatalog::Item> currentItem_;
     };
 }

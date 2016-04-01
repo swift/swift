@@ -33,7 +33,7 @@ ProfileController::~ProfileController() {
 }
 
 void ProfileController::handleUIEvent(UIEvent::ref event) {
-    if (!boost::dynamic_pointer_cast<RequestProfileEditorUIEvent>(event)) {
+    if (!std::dynamic_pointer_cast<RequestProfileEditorUIEvent>(event)) {
         return;
     }
 
@@ -77,7 +77,7 @@ void ProfileController::handleVCardRetrievalError(const JID& jid, ErrorPayload::
     if ((jid == JID()) && profileWindow) {
         profileWindow->setProcessing(false);
         profileWindow->setEnabled(false);
-        profileWindow->setVCard(boost::make_shared<VCard>());
+        profileWindow->setVCard(std::make_shared<VCard>());
         profileWindow->setError(QT_TRANSLATE_NOOP("", "There was an error fetching your current profile data"));
     }
 }

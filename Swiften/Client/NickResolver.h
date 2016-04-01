@@ -7,9 +7,8 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>

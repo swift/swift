@@ -6,8 +6,10 @@
 
 #pragma once
 
+#include <memory>
+#include <string>
+
 #include <boost/optional/optional_fwd.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -33,6 +35,6 @@ namespace Swift {
 
         private:
             struct Private;
-            boost::shared_ptr<Private> p;
+            std::shared_ptr<Private> p;
     };
 }

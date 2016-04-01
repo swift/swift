@@ -6,8 +6,9 @@
 
 #include <Swift/QtUI/UserSearch/QtUserSearchWindow.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QItemDelegate>
 #include <QModelIndex>
@@ -132,11 +133,11 @@ void QtUserSearchWindow::handleAccepted() {
     switch(type_) {
         case AddContact:
             jid = getContactJID();
-            eventStream_->send(boost::make_shared<AddContactUIEvent>(jid, detailsPage_->getName(), detailsPage_->getSelectedGroups()));
+            eventStream_->send(std::make_shared<AddContactUIEvent>(jid, detailsPage_->getName(), detailsPage_->getSelectedGroups()));
             break;
         case ChatToContact:
             if (contactVector_.size() == 1) {
-                boost::shared_ptr<UIEvent> event(new RequestChatUIEvent(contactVector_[0]->jid));
+                std::shared_ptr<UIEvent> event(new RequestChatUIEvent(contactVector_[0]->jid));
                 eventStream_->send(event);
                 break;
             }
@@ -145,13 +146,13 @@ void QtUserSearchWindow::handleAccepted() {
                 jids.push_back(contact->jid);
             }
 
-            eventStream_->send(boost::make_shared<CreateImpromptuMUCUIEvent>(jids, JID(), Q2PSTRING(firstMultiJIDPage_->reason_->text())));
+            eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, JID(), Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
         case InviteToChat:
             foreach(Contact::ref contact, contactVector_) {
                 jids.push_back(contact->jid);
             }
-            eventStream_->send(boost::make_shared<InviteToMUCUIEvent>(roomJID_, jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
+            eventStream_->send(std::make_shared<InviteToMUCUIEvent>(roomJID_, jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
     }
 }
@@ -229,7 +230,7 @@ void QtUserSearchWindow::handleFirstPageRadioChange() {
 }
 
 void QtUserSearchWindow::handleSearch() {
-    boost::shared_ptr<SearchPayload> search(new SearchPayload());
+    std::shared_ptr<SearchPayload> search(new SearchPayload());
     if (fieldsPage_->getFormWidget()) {
         search->setForm(fieldsPage_->getFormWidget()->getCompletedForm());
         search->getForm()->clearEmptyTextFields();
@@ -292,7 +293,7 @@ JID QtUserSearchWindow::getContactJID() const {
 }
 
 Contact::ref QtUserSearchWindow::getContact() const {
-    return boost::make_shared<Contact>("", getContactJID(), StatusShow::None, "");
+    return std::make_shared<Contact>("", getContactJID(), StatusShow::None, "");
 }
 
 void QtUserSearchWindow::addSearchedJIDToList(const Contact::ref& contact) {
@@ -330,7 +331,7 @@ void QtUserSearchWindow::addSavedServices(const std::vector<JID>& services) {
     }
 }
 
-void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields) {
+void QtUserSearchWindow::setSearchFields(std::shared_ptr<SearchPayload> fields) {
     fieldsPage_->fetchingThrobber_->hide();
     fieldsPage_->fetchingThrobber_->movie()->stop();
     fieldsPage_->fetchingLabel_->hide();
@@ -375,7 +376,7 @@ void QtUserSearchWindow::setContactSuggestions(const std::vector<Contact::ref>& 
 
 void QtUserSearchWindow::setJIDs(const std::vector<JID> &jids) {
     foreach(JID jid, jids) {
-        addSearchedJIDToList(boost::make_shared<Contact>("", jid, StatusShow::None, ""));
+        addSearchedJIDToList(std::make_shared<Contact>("", jid, StatusShow::None, ""));
     }
     onJIDUpdateRequested(jids);
 }

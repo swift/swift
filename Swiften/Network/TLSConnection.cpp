@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,7 +47,7 @@ void TLSConnection::handleTLSDataForNetwork(const SafeByteArray& data) {
 }
 
 void TLSConnection::handleTLSDataForApplication(const SafeByteArray& data) {
-    onDataRead(boost::make_shared<SafeByteArray>(data));
+    onDataRead(std::make_shared<SafeByteArray>(data));
 }
 
 void TLSConnection::connect(const HostAddressPort& address) {
@@ -88,7 +88,7 @@ void TLSConnection::handleRawDisconnected(const boost::optional<Error>& error) {
     onDisconnected(error);
 }
 
-void TLSConnection::handleRawDataRead(boost::shared_ptr<SafeByteArray> data) {
+void TLSConnection::handleRawDataRead(std::shared_ptr<SafeByteArray> data) {
     context->handleDataFromNetwork(*data);
 }
 

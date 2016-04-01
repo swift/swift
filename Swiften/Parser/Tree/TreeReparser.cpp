@@ -21,7 +21,7 @@ namespace Swift {
 
 typedef std::pair<ParserElement::ref, bool> ElementState;
 
-boost::shared_ptr<Payload> TreeReparser::parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection) {
+std::shared_ptr<Payload> TreeReparser::parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection) {
     PayloadParser* parser = collection->getPayloadParserFactory(root->getName(), root->getNamespace(), root->getAttributes())->createPayloadParser();
     std::deque<ElementState > stack;
     stack.push_back(ElementState(root, true));
@@ -41,7 +41,7 @@ boost::shared_ptr<Payload> TreeReparser::parseTree(ParserElement::ref root, Payl
 
     }
 
-    boost::shared_ptr<Payload> payload = parser->getPayload();
+    std::shared_ptr<Payload> payload = parser->getPayload();
     delete parser;
     return payload;
 }

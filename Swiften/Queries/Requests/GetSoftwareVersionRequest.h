@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/SoftwareVersion.h>
@@ -15,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API GetSoftwareVersionRequest : public GenericRequest<SoftwareVersion> {
         public:
-            typedef boost::shared_ptr<GetSoftwareVersionRequest> ref;
+            typedef std::shared_ptr<GetSoftwareVersionRequest> ref;
 
             static ref create(const JID& recipient, IQRouter* router) {
                 return ref(new GetSoftwareVersionRequest(recipient, router));
@@ -26,7 +26,7 @@ namespace Swift {
                     const JID& recipient,
                     IQRouter* router) :
                         GenericRequest<SoftwareVersion>(
-                            IQ::Get, recipient, boost::make_shared<SoftwareVersion>(), router) {
+                            IQ::Get, recipient, std::make_shared<SoftwareVersion>(), router) {
             }
     };
 }

@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleTransportPayload.h>
@@ -17,7 +17,7 @@
 namespace Swift {
     class SWIFTEN_API JingleIBBTransportPayload : public JingleTransportPayload {
         public:
-            typedef boost::shared_ptr<JingleIBBTransportPayload> ref;
+            typedef std::shared_ptr<JingleIBBTransportPayload> ref;
 
             enum StanzaType {
                 IQStanza,

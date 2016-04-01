@@ -22,7 +22,7 @@ namespace Swift {
 StanzaSerializer::StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS) : tag_(tag), payloadSerializers_(payloadSerializers), explicitDefaultNS_(explicitNS) {
 }
 
-SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element) const {
+SafeByteArray StanzaSerializer::serialize(std::shared_ptr<ToplevelElement> element) const {
     if (explicitDefaultNS_) {
         return serialize(element, explicitDefaultNS_.get());
     }
@@ -31,8 +31,8 @@ SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> ele
     }
 }
 
-SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const {
-    boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
+SafeByteArray StanzaSerializer::serialize(std::shared_ptr<ToplevelElement> element, const std::string& xmlns) const {
+    std::shared_ptr<Stanza> stanza(std::dynamic_pointer_cast<Stanza>(element));
 
     XMLElement stanzaElement(tag_, explicitDefaultNS_ ? explicitDefaultNS_.get() : xmlns);
     if (stanza->getFrom().isValid()) {
@@ -47,7 +47,7 @@ SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> ele
     setStanzaSpecificAttributes(stanza, stanzaElement);
 
     std::string serializedPayloads;
-    foreach (const boost::shared_ptr<Payload>& payload, stanza->getPayloads()) {
+    foreach (const std::shared_ptr<Payload>& payload, stanza->getPayloads()) {
         PayloadSerializer* serializer = payloadSerializers_->getPayloadSerializer(payload);
         if (serializer) {
             serializedPayloads += serializer->serialize(payload);
@@ -57,7 +57,7 @@ SafeByteArray StanzaSerializer::serialize(boost::shared_ptr<ToplevelElement> ele
         }
     }
     if (!serializedPayloads.empty()) {
-        stanzaElement.addNode(boost::shared_ptr<XMLNode>(new XMLRawTextNode(serializedPayloads)));
+        stanzaElement.addNode(std::make_shared<XMLRawTextNode>(serializedPayloads));
     }
 
     return createSafeByteArray(stanzaElement.serialize());

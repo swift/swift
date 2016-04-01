@@ -6,10 +6,10 @@
 
 #include <Swiften/FileTransfer/IncomingJingleFileTransfer.h>
 
+#include <memory>
 #include <set>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -66,7 +66,7 @@ IncomingJingleFileTransfer::~IncomingJingleFileTransfer() {
 }
 
 void IncomingJingleFileTransfer::accept(
-        boost::shared_ptr<WriteBytestream> stream,
+        std::shared_ptr<WriteBytestream> stream,
         const FileTransferOptions& options) {
     SWIFT_LOG(debug) << std::endl;
     if (state != Initial) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
@@ -126,7 +126,7 @@ void IncomingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 
     fillCandidateMap(localCandidates, candidates);
 
-    JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
+    JingleS5BTransportPayload::ref transport = std::make_shared<JingleS5BTransportPayload>();
     transport->setSessionID(s5bSessionID);
     transport->setMode(JingleS5BTransportPayload::TCPMode);
     transport->setDstAddr(dstAddr);
@@ -233,7 +233,7 @@ void IncomingJingleFileTransfer::handleTransportReplaceReceived(
     }
 
     JingleIBBTransportPayload::ref ibbTransport;
-    if (options.isInBandAllowed() && (ibbTransport = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
+    if (options.isInBandAllowed() && (ibbTransport = std::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
         SWIFT_LOG(debug) << "transport replaced with IBB" << std::endl;
 
         startTransferring(transporter->createIBBReceiveSession(
@@ -379,7 +379,7 @@ void IncomingJingleFileTransfer::startTransferViaLocalCandidate() {
     }
 }
 
-void IncomingJingleFileTransfer::startTransferring(boost::shared_ptr<TransportSession> transportSession) {
+void IncomingJingleFileTransfer::startTransferring(std::shared_ptr<TransportSession> transportSession) {
     SWIFT_LOG(debug) << std::endl;
 
     this->transportSession = transportSession;
@@ -401,11 +401,11 @@ bool IncomingJingleFileTransfer::isTryingCandidates() const {
     return state == TryingCandidates;
 }
 
-boost::shared_ptr<TransportSession> IncomingJingleFileTransfer::createLocalCandidateSession() {
+std::shared_ptr<TransportSession> IncomingJingleFileTransfer::createLocalCandidateSession() {
     return transporter->createLocalCandidateSession(stream, theirCandidateChoice.get());
 }
 
-boost::shared_ptr<TransportSession> IncomingJingleFileTransfer::createRemoteCandidateSession() {
+std::shared_ptr<TransportSession> IncomingJingleFileTransfer::createRemoteCandidateSession() {
     return transporter->createRemoteCandidateSession(stream, ourCandidateChoice.get());
 }
 

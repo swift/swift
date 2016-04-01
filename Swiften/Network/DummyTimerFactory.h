@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,12 +18,12 @@ namespace Swift {
 
             DummyTimerFactory();
 
-            virtual boost::shared_ptr<Timer> createTimer(int milliseconds);
+            virtual std::shared_ptr<Timer> createTimer(int milliseconds);
             void setTime(int time);
 
         private:
             friend class DummyTimer;
             int currentTime;
-            std::list<boost::shared_ptr<DummyTimer> > timers;
+            std::list<std::shared_ptr<DummyTimer> > timers;
     };
 }

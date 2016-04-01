@@ -12,9 +12,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/foreach.h>
@@ -29,11 +29,11 @@ namespace Swift {
 JingleFileTransferDescriptionSerializer::JingleFileTransferDescriptionSerializer() {
 }
 
-std::string JingleFileTransferDescriptionSerializer::serializePayload(boost::shared_ptr<JingleFileTransferDescription> payload) const {
+std::string JingleFileTransferDescriptionSerializer::serializePayload(std::shared_ptr<JingleFileTransferDescription> payload) const {
     XMLElement description("description", "urn:xmpp:jingle:apps:file-transfer:4");
 
     JingleFileTransferFileInfoSerializer fileInfoSerializer;
-    boost::shared_ptr<XMLRawTextNode> fileInfoXML = boost::make_shared<XMLRawTextNode>(fileInfoSerializer.serialize(boost::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
+    std::shared_ptr<XMLRawTextNode> fileInfoXML = std::make_shared<XMLRawTextNode>(fileInfoSerializer.serialize(std::make_shared<JingleFileTransferFileInfo>(payload->getFileInfo())));
     description.addNode(fileInfoXML);
     return description.serialize();
 }

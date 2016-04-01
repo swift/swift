@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubSubscribeOptionsSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -21,12 +21,12 @@ PubSubSubscribeOptionsSerializer::PubSubSubscribeOptionsSerializer(PayloadSerial
 PubSubSubscribeOptionsSerializer::~PubSubSubscribeOptionsSerializer() {
 }
 
-std::string PubSubSubscribeOptionsSerializer::serializePayload(boost::shared_ptr<PubSubSubscribeOptions> payload) const {
+std::string PubSubSubscribeOptionsSerializer::serializePayload(std::shared_ptr<PubSubSubscribeOptions> payload) const {
     if (!payload) {
         return "";
     }
     XMLElement element("subscribe-options", "http://jabber.org/protocol/pubsub");
-    element.addNode(payload->isRequired() ? boost::make_shared<XMLElement>("required", "") : boost::shared_ptr<XMLElement>());
+    element.addNode(payload->isRequired() ? std::make_shared<XMLElement>("required", "") : std::shared_ptr<XMLElement>());
     return element.serialize();
 }
 

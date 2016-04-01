@@ -12,9 +12,10 @@
 
 #include <Swiften/Parser/PayloadParsers/WhiteboardParser.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/Whiteboard/WhiteboardColor.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
@@ -37,15 +38,15 @@ namespace Swift {
         } else if (level_ == 1) {
             std::string type = attributes.getAttributeValue("type").get_value_or("");
             if (type == "insert") {
-                WhiteboardInsertOperation::ref insertOp = boost::make_shared<WhiteboardInsertOperation>();
+                WhiteboardInsertOperation::ref insertOp = std::make_shared<WhiteboardInsertOperation>();
                 operation = insertOp;
             } else if (type == "update") {
-                WhiteboardUpdateOperation::ref updateOp = boost::make_shared<WhiteboardUpdateOperation>();
+                WhiteboardUpdateOperation::ref updateOp = std::make_shared<WhiteboardUpdateOperation>();
                 std::string move = attributes.getAttributeValue("newpos").get_value_or("0");
                 updateOp->setNewPos(boost::lexical_cast<int>(attributes.getAttributeValue("newpos").get_value_or("0")));
                 operation = updateOp;
             } else if (type == "delete") {
-                WhiteboardDeleteOperation::ref deleteOp = boost::make_shared<WhiteboardDeleteOperation>();
+                WhiteboardDeleteOperation::ref deleteOp = std::make_shared<WhiteboardDeleteOperation>();
                 deleteOp->setElementID(attributes.getAttributeValue("elementid").get_value_or(""));
                 operation = deleteOp;
             }
@@ -71,7 +72,7 @@ namespace Swift {
                     y2 = boost::lexical_cast<int>(attributes.getAttributeValue("y2").get_value_or("0"));
                 } catch (boost::bad_lexical_cast&) {
                 }
-                WhiteboardLineElement::ref whiteboardElement = boost::make_shared<WhiteboardLineElement>(x1, y1, x2, y2);
+                WhiteboardLineElement::ref whiteboardElement = std::make_shared<WhiteboardLineElement>(x1, y1, x2, y2);
 
                 WhiteboardColor color(attributes.getAttributeValue("stroke").get_value_or("#000000"));
                 color.setAlpha(opacityToAlpha(attributes.getAttributeValue("opacity").get_value_or("1")));
@@ -87,7 +88,7 @@ namespace Swift {
                 getPayloadInternal()->setElement(whiteboardElement);
                 wbElement = whiteboardElement;
             } else if (element == "path") {
-                WhiteboardFreehandPathElement::ref whiteboardElement = boost::make_shared<WhiteboardFreehandPathElement>();
+                WhiteboardFreehandPathElement::ref whiteboardElement = std::make_shared<WhiteboardFreehandPathElement>();
                 std::string pathData = attributes.getAttributeValue("d").get_value_or("");
                 std::vector<std::pair<int, int> > points;
                 if (pathData[0] == 'M') {
@@ -148,7 +149,7 @@ namespace Swift {
                 } catch (boost::bad_lexical_cast&) {
                 }
 
-                WhiteboardRectElement::ref whiteboardElement = boost::make_shared<WhiteboardRectElement>(x, y, width, height);
+                WhiteboardRectElement::ref whiteboardElement = std::make_shared<WhiteboardRectElement>(x, y, width, height);
 
                 int penWidth = 1;
                 try {
@@ -167,7 +168,7 @@ namespace Swift {
                 getPayloadInternal()->setElement(whiteboardElement);
                 wbElement = whiteboardElement;
             } else if (element == "polygon") {
-                WhiteboardPolygonElement::ref whiteboardElement = boost::make_shared<WhiteboardPolygonElement>();
+                WhiteboardPolygonElement::ref whiteboardElement = std::make_shared<WhiteboardPolygonElement>();
 
                 std::string pointsData = attributes.getAttributeValue("points").get_value_or("");
                 std::vector<std::pair<int, int> > points;
@@ -214,7 +215,7 @@ namespace Swift {
                 } catch (boost::bad_lexical_cast&) {
                 }
 
-                WhiteboardTextElement::ref whiteboardElement = boost::make_shared<WhiteboardTextElement>(x, y);
+                WhiteboardTextElement::ref whiteboardElement = std::make_shared<WhiteboardTextElement>(x, y);
 
                 actualIsText = true;
                 WhiteboardColor color(attributes.getAttributeValue("fill").get_value_or("#000000"));
@@ -243,7 +244,7 @@ namespace Swift {
                 } catch (boost::bad_lexical_cast&) {
                 }
 
-                WhiteboardEllipseElement::ref whiteboardElement = boost::make_shared<WhiteboardEllipseElement>(cx, cy, rx, ry);
+                WhiteboardEllipseElement::ref whiteboardElement = std::make_shared<WhiteboardEllipseElement>(cx, cy, rx, ry);
 
                 int penWidth = 1;
                 try {
@@ -271,12 +272,12 @@ namespace Swift {
         if (level_ == 0) {
             getPayloadInternal()->setData(data_);
         } else if (level_ == 1) {
-            WhiteboardInsertOperation::ref insertOp = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
+            WhiteboardInsertOperation::ref insertOp = std::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
             if (insertOp) {
                 insertOp->setElement(wbElement);
             }
 
-            WhiteboardUpdateOperation::ref updateOp = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
+            WhiteboardUpdateOperation::ref updateOp = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
             if (updateOp) {
                 updateOp->setElement(wbElement);
             }
@@ -290,7 +291,7 @@ namespace Swift {
 
     void WhiteboardParser::handleCharacterData(const std::string& data) {
         if (level_ == 3 && actualIsText) {
-            WhiteboardTextElement::ref element = boost::dynamic_pointer_cast<WhiteboardTextElement>(getPayloadInternal()->getElement());
+            WhiteboardTextElement::ref element = std::dynamic_pointer_cast<WhiteboardTextElement>(getPayloadInternal()->getElement());
             element->setText(data);
         }
     }

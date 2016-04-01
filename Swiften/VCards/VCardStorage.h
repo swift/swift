@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/VCard.h>

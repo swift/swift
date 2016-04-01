@@ -125,7 +125,7 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
         const JID& to,
         const boost::filesystem::path& filepath,
         const std::string& description,
-        boost::shared_ptr<ReadBytestream> bytestream,
+        std::shared_ptr<ReadBytestream> bytestream,
         const FileTransferOptions& config) {
 #if BOOST_FILESYSTEM_VERSION == 2 // TODO: Delete this when boost 1.44 becomes a minimum requirement, and we no longer need v2
     std::string filename = filepath.filename();
@@ -144,7 +144,7 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
         const std::string& description,
         const boost::uintmax_t sizeInBytes,
         const boost::posix_time::ptime& lastModified,
-        boost::shared_ptr<ReadBytestream> bytestream,
+        std::shared_ptr<ReadBytestream> bytestream,
         const FileTransferOptions& config) {
     JingleFileTransferFileInfo fileInfo;
     fileInfo.setDate(lastModified);

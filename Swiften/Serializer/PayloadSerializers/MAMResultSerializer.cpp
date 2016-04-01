@@ -6,8 +6,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/ForwardedSerializer.h>
@@ -22,7 +23,7 @@ MAMResultSerializer::MAMResultSerializer(PayloadSerializerCollection* serializer
 MAMResultSerializer::~MAMResultSerializer() {
 }
 
-std::string MAMResultSerializer::serializePayload(boost::shared_ptr<MAMResult> payload) const {
+std::string MAMResultSerializer::serializePayload(std::shared_ptr<MAMResult> payload) const {
     if (!payload) {
         return "";
     }
@@ -35,7 +36,7 @@ std::string MAMResultSerializer::serializePayload(boost::shared_ptr<MAMResult> p
         element.setAttribute("queryid", *payload->getQueryID());
     }
 
-    element.addNode(boost::make_shared<XMLRawTextNode>(ForwardedSerializer(serializers_).serialize(payload->getPayload())));
+    element.addNode(std::make_shared<XMLRawTextNode>(ForwardedSerializer(serializers_).serialize(payload->getPayload())));
 
     return element.serialize();
 }

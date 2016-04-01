@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -50,8 +49,8 @@ namespace Swift {
             void connect(const std::string& host, int port);
             void disconnect();
 
-            void sendMessage(boost::shared_ptr<Message>);
-            void sendPresence(boost::shared_ptr<Presence>);
+            void sendMessage(std::shared_ptr<Message>);
+            void sendPresence(std::shared_ptr<Presence>);
             void sendData(const std::string& data);
 
             IQRouter* getIQRouter() const {
@@ -79,13 +78,13 @@ namespace Swift {
             boost::signal<void (const SafeByteArray&)> onDataRead;
             boost::signal<void (const SafeByteArray&)> onDataWritten;
 
-            boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
-            boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
+            boost::signal<void (std::shared_ptr<Message>)> onMessageReceived;
+            boost::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
 
         private:
-            void handleConnectorFinished(boost::shared_ptr<Connection>);
+            void handleConnectorFinished(std::shared_ptr<Connection>);
             void handleStanzaChannelAvailableChanged(bool available);
-            void handleSessionFinished(boost::shared_ptr<Error>);
+            void handleSessionFinished(std::shared_ptr<Error>);
             void handleDataRead(const SafeByteArray&);
             void handleDataWritten(const SafeByteArray&);
 
@@ -96,9 +95,9 @@ namespace Swift {
             ComponentSessionStanzaChannel* stanzaChannel_;
             IQRouter* iqRouter_;
             ComponentConnector::ref connector_;
-            boost::shared_ptr<Connection> connection_;
-            boost::shared_ptr<BasicSessionStream> sessionStream_;
-            boost::shared_ptr<ComponentSession> session_;
+            std::shared_ptr<Connection> connection_;
+            std::shared_ptr<BasicSessionStream> sessionStream_;
+            std::shared_ptr<ComponentSession> session_;
             bool disconnectRequested_;
     };
 }

@@ -97,7 +97,7 @@ public:
         mucRegistry_ = new MUCRegistry();
         nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, nullptr, mucRegistry_);
         presenceOracle_ = new PresenceOracle(stanzaChannel_, xmppRoster_);
-        serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
+        serverDiscoInfo_ = std::make_shared<DiscoInfo>();
         presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
         directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
         mucManager_ = new MUCManager(stanzaChannel_, iqRouter_, directedPresenceSender_, mucRegistry_);
@@ -167,7 +167,7 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
 
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         message->setFrom(messageJID);
         std::string body("This is a legible message. >HEH@)oeueu");
         message->setBody(body);
@@ -181,7 +181,7 @@ public:
         MockChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1, uiEventStream_).Return(window1);
 
-        boost::shared_ptr<Message> message1(new Message());
+        std::shared_ptr<Message> message1(new Message());
         message1->setFrom(messageJID1);
         std::string body1("This is a legible message. >HEH@)oeueu");
         message1->setBody(body1);
@@ -193,7 +193,7 @@ public:
         //MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         //mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
-        boost::shared_ptr<Message> message2(new Message());
+        std::shared_ptr<Message> message2(new Message());
         message2->setFrom(messageJID2);
         std::string body2("This is a legible message. .cmaulm.chul");
         message2->setBody(body2);
@@ -207,7 +207,7 @@ public:
         ChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString), uiEventStream_).Return(window);
 
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString)));
     }
 
 
@@ -217,9 +217,9 @@ public:
 
         MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString), uiEventStream_).Return(window);
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(bareJIDString))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(bareJIDString)));
 
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         message->setFrom(JID(fullJIDString));
         std::string body("This is a legible message. mjuga3089gm8G(*>M)@*(");
         message->setBody(body);
@@ -231,13 +231,13 @@ public:
         std::string messageJIDString1("testling1@test.com");
         ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1), uiEventStream_).Return(window1);
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString1)));
 
         std::string messageJIDString2("testling2@test.com");
         ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString2))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString2)));
     }
 
     /** Complete cycle.
@@ -253,23 +253,23 @@ public:
 
         MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString), uiEventStream_).Return(window);
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(bareJIDString))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(bareJIDString)));
 
-        boost::shared_ptr<Message> message1(new Message());
+        std::shared_ptr<Message> message1(new Message());
         message1->setFrom(JID(fullJIDString1));
         std::string messageBody1("This is a legible message.");
         message1->setBody(messageBody1);
         manager_->handleIncomingMessage(message1);
         CPPUNIT_ASSERT_EQUAL(messageBody1, window->lastMessageBody_);
 
-        boost::shared_ptr<Presence> jid1Online(new Presence());
+        std::shared_ptr<Presence> jid1Online(new Presence());
         jid1Online->setFrom(JID(fullJIDString1));
-        boost::shared_ptr<Presence> jid1Offline(new Presence());
+        std::shared_ptr<Presence> jid1Offline(new Presence());
         jid1Offline->setFrom(JID(fullJIDString1));
         jid1Offline->setType(Presence::Unavailable);
         presenceOracle_->onPresenceChange(jid1Offline);
 
-        boost::shared_ptr<Message> message2(new Message());
+        std::shared_ptr<Message> message2(new Message());
         message2->setFrom(JID(fullJIDString2));
         std::string messageBody2("This is another legible message.");
         message2->setBody(messageBody2);
@@ -284,29 +284,29 @@ public:
         JID muc("testling@test.com");
         ChatWindow* mucWindow = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc, uiEventStream_).Return(mucWindow);
-        uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(muc, std::string("nick")));
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(muc, std::string("nick")));
 
 
         std::string messageJIDString1("testling@test.com/1");
         ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1), uiEventStream_).Return(window1);
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString1)));
 
         std::string messageJIDString2("testling@test.com/2");
         ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString2))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString2)));
 
         std::string messageJIDString3("testling@test.com/3");
         ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
 
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString3))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString3)));
 
         /* Refetch an earlier window */
         /* We do not expect a new window to be created */
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(messageJIDString1))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString1)));
 
     }
 
@@ -325,7 +325,7 @@ public:
         MockChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1, uiEventStream_).Return(window1);
 
-        boost::shared_ptr<Message> message1(new Message());
+        std::shared_ptr<Message> message1(new Message());
         message1->setFrom(messageJID1);
         message1->setBody("This is a legible message1.");
         manager_->handleIncomingMessage(message1);
@@ -335,35 +335,35 @@ public:
         //MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
         //mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
-        boost::shared_ptr<Message> message2(new Message());
+        std::shared_ptr<Message> message2(new Message());
         message2->setFrom(messageJID2);
         message2->setBody("This is a legible message2.");
         manager_->handleIncomingMessage(message2);
 
-        boost::shared_ptr<Presence> jid1Online(new Presence());
+        std::shared_ptr<Presence> jid1Online(new Presence());
         jid1Online->setFrom(JID(messageJID1));
-        boost::shared_ptr<Presence> jid1Offline(new Presence());
+        std::shared_ptr<Presence> jid1Offline(new Presence());
         jid1Offline->setFrom(JID(messageJID1));
         jid1Offline->setType(Presence::Unavailable);
         presenceOracle_->onPresenceChange(jid1Offline);
 
-        boost::shared_ptr<Presence> jid2Online(new Presence());
+        std::shared_ptr<Presence> jid2Online(new Presence());
         jid2Online->setFrom(JID(messageJID2));
-        boost::shared_ptr<Presence> jid2Offline(new Presence());
+        std::shared_ptr<Presence> jid2Offline(new Presence());
         jid2Offline->setFrom(JID(messageJID2));
         jid2Offline->setType(Presence::Unavailable);
         presenceOracle_->onPresenceChange(jid2Offline);
 
         JID messageJID3("testling@test.com/resource3");
 
-        boost::shared_ptr<Message> message3(new Message());
+        std::shared_ptr<Message> message3(new Message());
         message3->setFrom(messageJID3);
         std::string body3("This is a legible message3.");
         message3->setBody(body3);
         manager_->handleIncomingMessage(message3);
         CPPUNIT_ASSERT_EQUAL(body3, window1->lastMessageBody_);
 
-        boost::shared_ptr<Message> message2b(new Message());
+        std::shared_ptr<Message> message2b(new Message());
         message2b->setFrom(messageJID2);
         std::string body2b("This is a legible message2b.");
         message2b->setBody(body2b);
@@ -382,7 +382,7 @@ public:
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
         settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
-        boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
+        std::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
         manager_->handleIncomingMessage(message);
         Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
         CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
@@ -405,7 +405,7 @@ public:
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
         settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
-        boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
+        std::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
         manager_->handleIncomingMessage(message);
 
         CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->sentStanzas.size());
@@ -447,16 +447,16 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(sender, uiEventStream_).Return(window);
 
-        uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(sender));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(sender));
 
         foreach(const JID& senderJID, senderResource) {
             // The sender supports delivery receipts.
-            DiscoInfo::ref disco = boost::make_shared<DiscoInfo>();
+            DiscoInfo::ref disco = std::make_shared<DiscoInfo>();
             disco->addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
             entityCapsProvider_->caps[senderJID] = disco;
 
             // The sender is online.
-            Presence::ref senderPresence = boost::make_shared<Presence>();
+            Presence::ref senderPresence = std::make_shared<Presence>();
             senderPresence->setFrom(senderJID);
             senderPresence->setTo(ownJID);
             stanzaChannel_->onPresenceReceived(senderPresence);
@@ -473,11 +473,11 @@ public:
 
         // Two resources respond with message receipts.
         foreach(const JID& senderJID, senderResource) {
-            Message::ref receiptReply = boost::make_shared<Message>();
+            Message::ref receiptReply = std::make_shared<Message>();
             receiptReply->setFrom(senderJID);
             receiptReply->setTo(ownJID);
 
-            boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+            std::shared_ptr<DeliveryReceipt> receipt = std::make_shared<DeliveryReceipt>();
             receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(0)->getID());
             receiptReply->addPayload(receipt);
             manager_->handleIncomingMessage(receiptReply);
@@ -492,18 +492,18 @@ public:
 
         // Two resources respond with message receipts.
         foreach(const JID& senderJID, senderResource) {
-            Message::ref receiptReply = boost::make_shared<Message>();
+            Message::ref receiptReply = std::make_shared<Message>();
             receiptReply->setFrom(senderJID);
             receiptReply->setTo(ownJID);
 
-            boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+            std::shared_ptr<DeliveryReceipt> receipt = std::make_shared<DeliveryReceipt>();
             receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(1)->getID());
             receiptReply->addPayload(receipt);
             manager_->handleIncomingMessage(receiptReply);
         }
 
         // Reply with a message including a body text.
-        Message::ref reply = boost::make_shared<Message>();
+        Message::ref reply = std::make_shared<Message>();
         reply->setFrom(senderResource[0]);
         reply->setTo(ownJID);
         reply->setBody("fine.");
@@ -517,11 +517,11 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(2)->getPayload<DeliveryReceiptRequest>());
 
         // Receive random receipt from second sender resource.
-        reply = boost::make_shared<Message>();
+        reply = std::make_shared<Message>();
         reply->setFrom(senderResource[1]);
         reply->setTo(ownJID);
 
-        boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+        std::shared_ptr<DeliveryReceipt> receipt = std::make_shared<DeliveryReceipt>();
         receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(2)->getID());
         reply->addPayload(receipt);
         manager_->handleIncomingMessage(reply);
@@ -534,7 +534,7 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(3)->getPayload<DeliveryReceiptRequest>());
 
         // Reply with a message including a body text from second resource.
-        reply = boost::make_shared<Message>();
+        reply = std::make_shared<Message>();
         reply->setFrom(senderResource[1]);
         reply->setTo(ownJID);
         reply->setBody("nothing.");
@@ -562,16 +562,16 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(sender, uiEventStream_).Return(window);
 
-        uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(sender));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(sender));
 
         foreach(const JID& senderJID, senderResource) {
             // The sender supports delivery receipts.
-            DiscoInfo::ref disco = boost::make_shared<DiscoInfo>();
+            DiscoInfo::ref disco = std::make_shared<DiscoInfo>();
             disco->addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
             entityCapsProvider_->caps[senderJID] = disco;
 
             // The sender is online.
-            Presence::ref senderPresence = boost::make_shared<Presence>();
+            Presence::ref senderPresence = std::make_shared<Presence>();
             senderPresence->setFrom(senderJID);
             senderPresence->setTo(ownJID);
             stanzaChannel_->onPresenceReceived(senderPresence);
@@ -588,11 +588,11 @@ public:
 
         // Two resources respond with message receipts.
         foreach(const JID& senderJID, senderResource) {
-            Message::ref reply = boost::make_shared<Message>();
+            Message::ref reply = std::make_shared<Message>();
             reply->setFrom(senderJID);
             reply->setTo(ownJID);
 
-            boost::shared_ptr<ChatState> csn = boost::make_shared<ChatState>();
+            std::shared_ptr<ChatState> csn = std::make_shared<ChatState>();
             csn->setChatState(ChatState::Active);
             reply->addPayload(csn);
             manager_->handleIncomingMessage(reply);
@@ -607,22 +607,22 @@ public:
 
         // Two resources respond with message receipts.
         foreach(const JID& senderJID, senderResource) {
-            Message::ref receiptReply = boost::make_shared<Message>();
+            Message::ref receiptReply = std::make_shared<Message>();
             receiptReply->setFrom(senderJID);
             receiptReply->setTo(ownJID);
 
-            boost::shared_ptr<DeliveryReceipt> receipt = boost::make_shared<DeliveryReceipt>();
+            std::shared_ptr<DeliveryReceipt> receipt = std::make_shared<DeliveryReceipt>();
             receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(1)->getID());
             receiptReply->addPayload(receipt);
             manager_->handleIncomingMessage(receiptReply);
         }
 
         // Reply with a message including a CSN.
-        Message::ref reply = boost::make_shared<Message>();
+        Message::ref reply = std::make_shared<Message>();
         reply->setFrom(senderResource[0]);
         reply->setTo(ownJID);
 
-        boost::shared_ptr<ChatState> csn = boost::make_shared<ChatState>();
+        std::shared_ptr<ChatState> csn = std::make_shared<ChatState>();
         csn->setChatState(ChatState::Composing);
         reply->addPayload(csn);
         manager_->handleIncomingMessage(reply);
@@ -635,11 +635,11 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(2)->getPayload<DeliveryReceiptRequest>());
 
         // Reply with a message including a CSN from the other resource.
-        reply = boost::make_shared<Message>();
+        reply = std::make_shared<Message>();
         reply->setFrom(senderResource[1]);
         reply->setTo(ownJID);
 
-        csn = boost::make_shared<ChatState>();
+        csn = std::make_shared<ChatState>();
         csn->setChatState(ChatState::Composing);
         reply->addPayload(csn);
         manager_->handleIncomingMessage(reply);
@@ -661,7 +661,7 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(participantA, uiEventStream_).Return(window);
 
-        uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(JID(participantA))));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(participantA)));
 
         Presence::ref presence = Presence::create();
         presence->setFrom(participantA);
@@ -692,17 +692,17 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(sender, uiEventStream_).Return(window);
 
-        uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(sender));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(sender));
 
         CPPUNIT_ASSERT_EQUAL(false, window->impromptuMUCSupported_);
 
-        boost::shared_ptr<IQ> infoRequest= iqChannel_->iqs_[1];
-        boost::shared_ptr<IQ> infoResponse = IQ::createResult(infoRequest->getFrom(), infoRequest->getTo(), infoRequest->getID());
+        std::shared_ptr<IQ> infoRequest= iqChannel_->iqs_[1];
+        std::shared_ptr<IQ> infoResponse = IQ::createResult(infoRequest->getFrom(), infoRequest->getTo(), infoRequest->getID());
 
         DiscoInfo info;
         info.addIdentity(DiscoInfo::Identity("Shakespearean Chat Service", "conference", "text"));
         info.addFeature("http://jabber.org/protocol/muc");
-        infoResponse->addPayload(boost::make_shared<DiscoInfo>(info));
+        infoResponse->addPayload(std::make_shared<DiscoInfo>(info));
         iqChannel_->onIQReceived(infoResponse);
 
         CPPUNIT_ASSERT_EQUAL(true, window->impromptuMUCSupported_);
@@ -718,7 +718,7 @@ public:
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
         settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
-        boost::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
+        std::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
         manager_->handleIncomingMessage(message);
 
         CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->sentStanzas.size());
@@ -757,7 +757,7 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
 
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         message->setFrom(messageJID);
         std::string body("This message should cause two sounds: Juliet and Romeo.");
         message->setBody(body);
@@ -792,7 +792,7 @@ public:
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
 
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         message->setFrom(messageJID);
         std::string body("This message should cause one sound, because both actions have the same sound: Juliet and Romeo.");
         message->setBody(body);
@@ -804,12 +804,12 @@ public:
     }
 
 private:
-    boost::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {
-        boost::shared_ptr<Message> message = boost::make_shared<Message>();
+    std::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {
+        std::shared_ptr<Message> message = std::make_shared<Message>();
         message->setFrom(from);
         message->setID(id);
         message->setBody("This will cause the window to open");
-        message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
+        message->addPayload(std::make_shared<DeliveryReceiptRequest>());
         return message;
     }
 
@@ -836,7 +836,7 @@ private:
     NickResolver* nickResolver_;
     PresenceOracle* presenceOracle_;
     AvatarManager* avatarManager_;
-    boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
+    std::shared_ptr<DiscoInfo> serverDiscoInfo_;
     XMPPRosterImpl* xmppRoster_;
     PresenceSender* presenceSender_;
     MockRepository* mocks_;

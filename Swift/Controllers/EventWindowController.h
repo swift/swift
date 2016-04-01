@@ -17,8 +17,8 @@ namespace Swift {
             EventWindowController(EventController* eventController, EventWindowFactory* windowFactory);
             ~EventWindowController();
         private:
-            void handleEventQueueEventAdded(boost::shared_ptr<StanzaEvent> event);
-            void handleEventConcluded(boost::shared_ptr<StanzaEvent> event);
+            void handleEventQueueEventAdded(std::shared_ptr<StanzaEvent> event);
+            void handleEventConcluded(std::shared_ptr<StanzaEvent> event);
 
             EventController* eventController_;
             EventWindowFactory* windowFactory_;

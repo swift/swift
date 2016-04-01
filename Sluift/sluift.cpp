@@ -123,7 +123,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         "data  the data to hash",
         ""
 ) {
-    static boost::shared_ptr<CryptoProvider> crypto(PlatformCryptoProvider::create());
+    static std::shared_ptr<CryptoProvider> crypto(PlatformCryptoProvider::create());
     if (!lua_isstring(L, 1)) {
         throw Lua::Exception("Expected string");
     }
@@ -178,7 +178,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         ""
 ) {
     static FullPayloadSerializerCollection serializers;
-    boost::shared_ptr<Payload> payload = boost::dynamic_pointer_cast<Payload>(Sluift::globals.elementConvertor.convertFromLua(L, 1));
+    std::shared_ptr<Payload> payload = std::dynamic_pointer_cast<Payload>(Sluift::globals.elementConvertor.convertFromLua(L, 1));
     if (!payload) {
         throw Lua::Exception("Unrecognized XML");
     }
@@ -488,7 +488,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
     lua_pop(L, 1);
 
     // Register documentation for all elements
-    foreach (boost::shared_ptr<LuaElementConvertor> convertor, Sluift::globals.elementConvertor.getConvertors()) {
+    foreach (std::shared_ptr<LuaElementConvertor> convertor, Sluift::globals.elementConvertor.getConvertors()) {
         boost::optional<LuaElementConvertor::Documentation> documentation = convertor->getDocumentation();
         if (documentation) {
             Lua::registerClassHelp(L, documentation->className, documentation->description);

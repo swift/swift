@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -33,8 +32,8 @@ namespace Swift {
             };
 
         private:
-            boost::shared_ptr<FormParser> formParser_;
-            boost::shared_ptr<ResultSetParser> resultSetParser_;
+            std::shared_ptr<FormParser> formParser_;
+            std::shared_ptr<ResultSetParser> resultSetParser_;
             int level_;
     };
 }

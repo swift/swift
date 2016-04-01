@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
@@ -29,12 +29,12 @@ namespace Swift {
 
     class SWIFTEN_API WhiteboardSession {
     public:
-        typedef boost::shared_ptr<WhiteboardSession> ref;
+        typedef std::shared_ptr<WhiteboardSession> ref;
 
     public:
         WhiteboardSession(const JID& jid, IQRouter* router);
         virtual ~WhiteboardSession();
-        void handleIncomingAction(boost::shared_ptr<WhiteboardPayload> payload);
+        void handleIncomingAction(std::shared_ptr<WhiteboardPayload> payload);
         void sendElement(const WhiteboardElement::ref element);
         virtual void sendOperation(WhiteboardOperation::ref operation) = 0;
         void cancel();
@@ -51,7 +51,7 @@ namespace Swift {
         virtual void handleIncomingOperation(WhiteboardOperation::ref operation) = 0;
 
     protected:
-        void sendPayload(boost::shared_ptr<WhiteboardPayload> payload);
+        void sendPayload(std::shared_ptr<WhiteboardPayload> payload);
 
         JID toJID_;
         IQRouter* router_;

@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -29,11 +29,11 @@ class XMLElementTest : public CppUnit::TestFixture
         void testSerialize() {
             XMLElement testling("foo", "http://example.com");
             testling.setAttribute("myatt", "myval");
-            boost::shared_ptr<XMLElement> barElement(new XMLElement("bar"));
-            barElement->addNode(boost::make_shared<XMLTextNode>("Blo"));
+            std::shared_ptr<XMLElement> barElement(new XMLElement("bar"));
+            barElement->addNode(std::make_shared<XMLTextNode>("Blo"));
             testling.addNode(barElement);
-            boost::shared_ptr<XMLElement> bazElement(new XMLElement("baz"));
-            bazElement->addNode(boost::make_shared<XMLTextNode>("Bli&</stream>"));
+            std::shared_ptr<XMLElement> bazElement(new XMLElement("baz"));
+            bazElement->addNode(std::make_shared<XMLTextNode>("Bli&</stream>"));
             testling.addNode(bazElement);
 
             std::string result = testling.serialize();

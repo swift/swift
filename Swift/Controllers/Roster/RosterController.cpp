@@ -6,8 +6,9 @@
 
 #include <Swift/Controllers/Roster/RosterController.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
@@ -96,7 +97,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 
     handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 
-    ownContact_ = boost::make_shared<ContactRosterItem>(myJID_.toBare(), myJID_.toBare(), nickManager_->getOwnNick(), static_cast<GroupRosterItem*>(nullptr));
+    ownContact_ = std::make_shared<ContactRosterItem>(myJID_.toBare(), myJID_.toBare(), nickManager_->getOwnNick(), static_cast<GroupRosterItem*>(nullptr));
     ownContact_->setVCard(vcardManager_->getVCard(myJID_.toBare()));
     ownContact_->setAvatarPath(pathToString(avatarManager_->getAvatarPath(myJID_.toBare())));
     mainWindow_->setMyContactRosterItem(ownContact_);
@@ -216,39 +217,39 @@ void RosterController::handleBlockingItemRemoved(const JID& jid) {
     roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsUnblocked));
 }
 
-void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-    if (boost::shared_ptr<AddContactUIEvent> addContactEvent = boost::dynamic_pointer_cast<AddContactUIEvent>(event)) {
+void RosterController::handleUIEvent(std::shared_ptr<UIEvent> event) {
+    if (std::shared_ptr<AddContactUIEvent> addContactEvent = std::dynamic_pointer_cast<AddContactUIEvent>(event)) {
         RosterItemPayload item;
         item.setName(addContactEvent->getName());
         item.setJID(addContactEvent->getJID());
         item.setGroups(std::vector<std::string>(addContactEvent->getGroups().begin(), addContactEvent->getGroups().end()));
-        boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+        std::shared_ptr<RosterPayload> roster(new RosterPayload());
         roster->addItem(item);
         SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
         request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
         request->send();
         subscriptionManager_->requestSubscription(addContactEvent->getJID());
     }
-    else if (boost::shared_ptr<RemoveRosterItemUIEvent> removeEvent = boost::dynamic_pointer_cast<RemoveRosterItemUIEvent>(event)) {
+    else if (std::shared_ptr<RemoveRosterItemUIEvent> removeEvent = std::dynamic_pointer_cast<RemoveRosterItemUIEvent>(event)) {
         RosterItemPayload item(removeEvent->getJID(), "", RosterItemPayload::Remove);
-        boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+        std::shared_ptr<RosterPayload> roster(new RosterPayload());
         roster->addItem(item);
         SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
         request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
         request->send();
 
     }
-    else if (boost::shared_ptr<RenameRosterItemUIEvent> renameEvent = boost::dynamic_pointer_cast<RenameRosterItemUIEvent>(event)) {
+    else if (std::shared_ptr<RenameRosterItemUIEvent> renameEvent = std::dynamic_pointer_cast<RenameRosterItemUIEvent>(event)) {
         JID contact(renameEvent->getJID());
         RosterItemPayload item(contact, renameEvent->getNewName(), xmppRoster_->getSubscriptionStateForJID(contact));
         item.setGroups(xmppRoster_->getGroupsForJID(contact));
-        boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+        std::shared_ptr<RosterPayload> roster(new RosterPayload());
         roster->addItem(item);
         SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
         request->onResponse.connect(boost::bind(&RosterController::handleRosterSetError, this, _1, roster));
         request->send();
     }
-    else if (boost::shared_ptr<RenameGroupUIEvent> renameGroupEvent = boost::dynamic_pointer_cast<RenameGroupUIEvent>(event)) {
+    else if (std::shared_ptr<RenameGroupUIEvent> renameGroupEvent = std::dynamic_pointer_cast<RenameGroupUIEvent>(event)) {
         std::vector<XMPPRosterItem> items = xmppRoster_->getItems();
         std::string group = renameGroupEvent->getGroup();
         // FIXME: We should handle contacts groups specially to avoid clashes
@@ -267,7 +268,7 @@ void RosterController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
             }
         }
     }
-    else if (boost::shared_ptr<SendFileUIEvent> sendFileEvent = boost::dynamic_pointer_cast<SendFileUIEvent>(event)) {
+    else if (std::shared_ptr<SendFileUIEvent> sendFileEvent = std::dynamic_pointer_cast<SendFileUIEvent>(event)) {
         //TODO add send file dialog to ChatView of receipient jid
         ftOverview_->sendFile(sendFileEvent->getJID(), sendFileEvent->getFilename());
     }
@@ -281,7 +282,7 @@ void RosterController::updateItem(const XMPPRosterItem& item) {
     RosterItemPayload itemPayload(item.getJID(), item.getName(), item.getSubscription());
     itemPayload.setGroups(item.getGroups());
 
-    RosterPayload::ref roster = boost::make_shared<RosterPayload>();
+    RosterPayload::ref roster = std::make_shared<RosterPayload>();
     roster->addItem(itemPayload);
 
     SetRosterRequest::ref request = SetRosterRequest::create(roster, iqRouter_);
@@ -290,7 +291,7 @@ void RosterController::updateItem(const XMPPRosterItem& item) {
 }
 
 void RosterController::initBlockingCommand() {
-    boost::shared_ptr<BlockList> blockList = clientBlockListManager_->requestBlockList();
+    std::shared_ptr<BlockList> blockList = clientBlockListManager_->requestBlockList();
 
     blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&RosterController::handleBlockingStateChanged, this));
     blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&RosterController::handleBlockingItemAdded, this, _1));
@@ -303,11 +304,11 @@ void RosterController::initBlockingCommand() {
     }
 }
 
-void RosterController::handleRosterItemUpdated(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload) {
+void RosterController::handleRosterItemUpdated(ErrorPayload::ref error, std::shared_ptr<RosterPayload> rosterPayload) {
     if (!!error) {
         handleRosterSetError(error, rosterPayload);
     }
-    boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+    std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
     std::vector<RosterItemPayload> items = rosterPayload->getItems();
     if (blockList->getState() == BlockList::Available && items.size() > 0) {
         std::vector<JID> jids = blockList->getItems();
@@ -317,7 +318,7 @@ void RosterController::handleRosterItemUpdated(ErrorPayload::ref error, boost::s
     }
 }
 
-void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload) {
+void RosterController::handleRosterSetError(ErrorPayload::ref error, std::shared_ptr<RosterPayload> rosterPayload) {
     if (!error) {
         return;
     }
@@ -325,7 +326,7 @@ void RosterController::handleRosterSetError(ErrorPayload::ref error, boost::shar
     if (!error->getText().empty()) {
         text += ": " + error->getText();
     }
-    boost::shared_ptr<ErrorEvent> errorEvent(new ErrorEvent(JID(myJID_.getDomain()), text));
+    std::shared_ptr<ErrorEvent> errorEvent(new ErrorEvent(JID(myJID_.getDomain()), text));
     eventController_->handleIncomingEvent(errorEvent);
 }
 
@@ -350,7 +351,7 @@ void RosterController::handleSubscriptionRequest(const JID& jid, const std::stri
     SubscriptionRequestEvent* eventPointer = new SubscriptionRequestEvent(jid, message);
     eventPointer->onAccept.connect(boost::bind(&RosterController::handleSubscriptionRequestAccepted, this, eventPointer));
     eventPointer->onDecline.connect(boost::bind(&RosterController::handleSubscriptionRequestDeclined, this, eventPointer));
-    boost::shared_ptr<StanzaEvent> event(eventPointer);
+    std::shared_ptr<StanzaEvent> event(eventPointer);
     eventController_->handleIncomingEvent(event);
 }
 

@@ -20,7 +20,7 @@ namespace Swift {
 
         private:
             virtual void setStanzaSpecificAttributesGeneric(
-                    boost::shared_ptr<Presence> presence,
+                    std::shared_ptr<Presence> presence,
                     XMLElement& element) const;
     };
 }

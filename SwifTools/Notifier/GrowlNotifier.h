@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2011 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,6 +36,6 @@ namespace Swift {
 
         private:
             class Private;
-            boost::shared_ptr<Private> p;
+            std::shared_ptr<Private> p;
     };
 }

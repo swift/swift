@@ -6,8 +6,9 @@
 
 #include <Swiften/Client/NickResolver.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Roster/XMPPRoster.h>

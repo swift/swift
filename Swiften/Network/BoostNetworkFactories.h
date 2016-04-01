@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
              * @param ioService If this optional parameter is provided, it will be
              * used for the construction of the BoostIOServiceThread.
              */
-            BoostNetworkFactories(EventLoop* eventLoop, boost::shared_ptr<boost::asio::io_service> ioService = boost::shared_ptr<boost::asio::io_service>());
+            BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService = std::shared_ptr<boost::asio::io_service>());
             virtual ~BoostNetworkFactories();
 
             virtual TimerFactory* getTimerFactory() const SWIFTEN_OVERRIDE {

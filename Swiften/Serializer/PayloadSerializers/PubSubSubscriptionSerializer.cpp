@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubSubscriptionSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubSubscribeOptionsSerializer.h>
@@ -22,7 +22,7 @@ PubSubSubscriptionSerializer::PubSubSubscriptionSerializer(PayloadSerializerColl
 PubSubSubscriptionSerializer::~PubSubSubscriptionSerializer() {
 }
 
-std::string PubSubSubscriptionSerializer::serializePayload(boost::shared_ptr<PubSubSubscription> payload) const {
+std::string PubSubSubscriptionSerializer::serializePayload(std::shared_ptr<PubSubSubscription> payload) const {
     if (!payload) {
         return "";
     }
@@ -34,7 +34,7 @@ std::string PubSubSubscriptionSerializer::serializePayload(boost::shared_ptr<Pub
         element.setAttribute("subid", *payload->getSubscriptionID());
     }
     element.setAttribute("jid", payload->getJID());
-    element.addNode(boost::make_shared<XMLRawTextNode>(PubSubSubscribeOptionsSerializer(serializers).serialize(payload->getOptions())));
+    element.addNode(std::make_shared<XMLRawTextNode>(PubSubSubscribeOptionsSerializer(serializers).serialize(payload->getOptions())));
     element.setAttribute("subscription", serializeSubscriptionType(payload->getSubscription()));
     return element.serialize();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ IBBSendSession::IBBSendSession(
         const std::string& id,
         const JID& from,
         const JID& to,
-        boost::shared_ptr<ReadBytestream> bytestream,
+        std::shared_ptr<ReadBytestream> bytestream,
         IQRouter* router) :
             id(id),
             from(from),
@@ -75,7 +75,7 @@ void IBBSendSession::handleIBBResponse(IBB::ref, ErrorPayload::ref error) {
 
 void IBBSendSession::sendMoreData() {
     try {
-        boost::shared_ptr<ByteArray> data = bytestream->read(blockSize);
+        std::shared_ptr<ByteArray> data = bytestream->read(blockSize);
         if (!data->empty()) {
             waitingForData = false;
             IBBRequest::ref request = IBBRequest::create(from, to, IBB::createIBBData(id, sequenceNumber, *data), router);

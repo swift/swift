@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -32,11 +32,11 @@ class ForwardedSerializerTest : public CppUnit::TestFixture {
         void testSerializeIQ() {
             ForwardedSerializer serializer(&serializers);
 
-            boost::shared_ptr<IQ> iq = IQ::createResult(JID("juliet@capulet.lit/balcony"), JID("romeo@montague.lit/orchard"), "id0");
+            std::shared_ptr<IQ> iq = IQ::createResult(JID("juliet@capulet.lit/balcony"), JID("romeo@montague.lit/orchard"), "id0");
 
-            boost::shared_ptr<Forwarded> forwarded(boost::make_shared<Forwarded>());
+            std::shared_ptr<Forwarded> forwarded(std::make_shared<Forwarded>());
             forwarded->setStanza(iq);
-            forwarded->setDelay(boost::make_shared<Delay>(stringToDateTime(std::string("2010-07-10T23:08:25Z"))));
+            forwarded->setDelay(std::make_shared<Delay>(stringToDateTime(std::string("2010-07-10T23:08:25Z"))));
 
             std::string expectedResult =
                 "<forwarded xmlns=\"urn:xmpp:forward:0\">"
@@ -50,15 +50,15 @@ class ForwardedSerializerTest : public CppUnit::TestFixture {
         void testSerializeMessage() {
             ForwardedSerializer serializer(&serializers);
 
-            boost::shared_ptr<Message> message(boost::make_shared<Message>());
+            std::shared_ptr<Message> message(std::make_shared<Message>());
             message->setType(Message::Chat);
             message->setTo(JID("juliet@capulet.lit/balcony"));
             message->setFrom(JID("romeo@montague.lit/orchard"));
             message->setBody("Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.");
 
-            boost::shared_ptr<Forwarded> forwarded(boost::make_shared<Forwarded>());
+            std::shared_ptr<Forwarded> forwarded(std::make_shared<Forwarded>());
             forwarded->setStanza(message);
-            forwarded->setDelay(boost::make_shared<Delay>(stringToDateTime(std::string("2010-07-10T23:08:25Z"))));
+            forwarded->setDelay(std::make_shared<Delay>(stringToDateTime(std::string("2010-07-10T23:08:25Z"))));
 
             std::string expectedResult =
                 "<forwarded xmlns=\"urn:xmpp:forward:0\">"
@@ -74,13 +74,13 @@ class ForwardedSerializerTest : public CppUnit::TestFixture {
         void testSerializeMessageNoDelay() {
             ForwardedSerializer serializer(&serializers);
 
-            boost::shared_ptr<Message> message(boost::make_shared<Message>());
+            std::shared_ptr<Message> message(std::make_shared<Message>());
             message->setType(Message::Chat);
             message->setTo(JID("juliet@capulet.lit/balcony"));
             message->setFrom(JID("romeo@montague.lit/orchard"));
             message->setBody("Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.");
 
-            boost::shared_ptr<Forwarded> forwarded(boost::make_shared<Forwarded>());
+            std::shared_ptr<Forwarded> forwarded(std::make_shared<Forwarded>());
             forwarded->setStanza(message);
 
             std::string expectedResult =
@@ -96,12 +96,12 @@ class ForwardedSerializerTest : public CppUnit::TestFixture {
         void testSerializePresence() {
             ForwardedSerializer serializer(&serializers);
 
-            boost::shared_ptr<Presence> presence(boost::make_shared<Presence>());
+            std::shared_ptr<Presence> presence(std::make_shared<Presence>());
             presence->setType(Presence::Subscribe);
 
-            boost::shared_ptr<Forwarded> forwarded(boost::make_shared<Forwarded>());
+            std::shared_ptr<Forwarded> forwarded(std::make_shared<Forwarded>());
             forwarded->setStanza(presence);
-            forwarded->setDelay(boost::make_shared<Delay>(stringToDateTime(std::string("2010-07-10T23:08:25Z"))));
+            forwarded->setDelay(std::make_shared<Delay>(stringToDateTime(std::string("2010-07-10T23:08:25Z"))));
 
             std::string expectedResult =
                 "<forwarded xmlns=\"urn:xmpp:forward:0\">"

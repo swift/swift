@@ -6,8 +6,9 @@
 
 #include <Swift/Controllers/XMPPURIController.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
@@ -30,10 +31,10 @@ void XMPPURIController::handleURI(const std::string& s) {
     XMPPURI uri = XMPPURI::fromString(s);
     if (!uri.isNull()) {
         if (uri.getQueryType() == "join") {
-            uiEventStream->send(boost::make_shared<RequestJoinMUCUIEvent>(uri.getPath()));
+            uiEventStream->send(std::make_shared<RequestJoinMUCUIEvent>(uri.getPath()));
         }
         else {
-            uiEventStream->send(boost::make_shared<RequestChatUIEvent>(uri.getPath()));
+            uiEventStream->send(std::make_shared<RequestChatUIEvent>(uri.getPath()));
         }
     }
 }

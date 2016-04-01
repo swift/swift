@@ -36,7 +36,7 @@ class NickResolverTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
             ownJID_ = JID("kev@wonderland.lit");
             xmppRoster_ = new XMPPRosterImpl();
             stanzaChannel_ = new DummyStanzaChannel();
@@ -147,7 +147,7 @@ class NickResolverTest : public CppUnit::TestFixture {
         MUCRegistry* registry_;
         NickResolver* resolver_;
         JID ownJID_;
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(NickResolverTest);

@@ -17,8 +17,8 @@
 using namespace Swift;
 
 namespace {
-    struct ServiceQuery : public DomainNameServiceQuery, public boost::enable_shared_from_this<ServiceQuery> {
-        ServiceQuery(const std::string& service, Swift::StaticDomainNameResolver* resolver, EventLoop* eventLoop, boost::shared_ptr<EventOwner> owner) : eventLoop(eventLoop), service(service), resolver(resolver), owner(owner) {}
+    struct ServiceQuery : public DomainNameServiceQuery, public std::enable_shared_from_this<ServiceQuery> {
+        ServiceQuery(const std::string& service, Swift::StaticDomainNameResolver* resolver, EventLoop* eventLoop, std::shared_ptr<EventOwner> owner) : eventLoop(eventLoop), service(service), resolver(resolver), owner(owner) {}
 
         virtual void run() {
             if (!resolver->getIsResponsive()) {
@@ -40,11 +40,11 @@ namespace {
         EventLoop* eventLoop;
         std::string service;
         StaticDomainNameResolver* resolver;
-        boost::shared_ptr<EventOwner> owner;
+        std::shared_ptr<EventOwner> owner;
     };
 
-    struct AddressQuery : public DomainNameAddressQuery, public boost::enable_shared_from_this<AddressQuery> {
-        AddressQuery(const std::string& host, StaticDomainNameResolver* resolver, EventLoop* eventLoop, boost::shared_ptr<EventOwner> owner) : eventLoop(eventLoop), host(host), resolver(resolver), owner(owner) {}
+    struct AddressQuery : public DomainNameAddressQuery, public std::enable_shared_from_this<AddressQuery> {
+        AddressQuery(const std::string& host, StaticDomainNameResolver* resolver, EventLoop* eventLoop, std::shared_ptr<EventOwner> owner) : eventLoop(eventLoop), host(host), resolver(resolver), owner(owner) {}
 
         virtual void run() {
             if (!resolver->getIsResponsive()) {
@@ -67,7 +67,7 @@ namespace {
         EventLoop* eventLoop;
         std::string host;
         StaticDomainNameResolver* resolver;
-        boost::shared_ptr<EventOwner> owner;
+        std::shared_ptr<EventOwner> owner;
     };
 }
 
@@ -109,12 +109,12 @@ void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, c
     addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, port, 0, 0));
 }
 
-boost::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
-    return boost::shared_ptr<DomainNameServiceQuery>(new ServiceQuery(serviceLookupPrefix + domain, this, eventLoop, owner));
+std::shared_ptr<DomainNameServiceQuery> StaticDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+    return std::make_shared<ServiceQuery>(serviceLookupPrefix + domain, this, eventLoop, owner);
 }
 
-boost::shared_ptr<DomainNameAddressQuery> StaticDomainNameResolver::createAddressQuery(const std::string& name) {
-    return boost::shared_ptr<DomainNameAddressQuery>(new AddressQuery(name, this, eventLoop, owner));
+std::shared_ptr<DomainNameAddressQuery> StaticDomainNameResolver::createAddressQuery(const std::string& name) {
+    return std::make_shared<AddressQuery>(name, this, eventLoop, owner);
 }
 
 }

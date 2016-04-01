@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -16,7 +16,7 @@
 namespace Swift {
     class SWIFTEN_API SetInBandRegistrationRequest : public Request {
         public:
-            typedef boost::shared_ptr<SetInBandRegistrationRequest> ref;
+            typedef std::shared_ptr<SetInBandRegistrationRequest> ref;
 
             static ref create(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) {
                 return ref(new SetInBandRegistrationRequest(to, payload, router));
@@ -26,11 +26,11 @@ namespace Swift {
             SetInBandRegistrationRequest(const JID& to, InBandRegistrationPayload::ref payload, IQRouter* router) : Request(IQ::Set, to, InBandRegistrationPayload::ref(payload), router) {
             }
 
-            virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+            virtual void handleResponse(std::shared_ptr<Payload> payload, ErrorPayload::ref error) {
                 onResponse(payload, error);
             }
 
         public:
-            boost::signal<void (boost::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
+            boost::signal<void (std::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
     };
 }

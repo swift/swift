@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -19,11 +18,11 @@ namespace Swift {
         public:
             virtual ~IQChannel();
 
-            virtual void sendIQ(boost::shared_ptr<IQ>) = 0;
+            virtual void sendIQ(std::shared_ptr<IQ>) = 0;
             virtual std::string getNewIQID() = 0;
 
             virtual bool isAvailable() const = 0;
 
-            boost::signal<void (boost::shared_ptr<IQ>)> onIQReceived;
+            boost::signal<void (std::shared_ptr<IQ>)> onIQReceived;
     };
 }

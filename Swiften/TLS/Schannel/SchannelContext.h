@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@ namespace Swift
     class SchannelContext : public TLSContext, boost::noncopyable
     {
     public:
-        typedef boost::shared_ptr<SchannelContext> sp_t;
+        typedef std::shared_ptr<SchannelContext> sp_t;
 
     public:
         SchannelContext(bool tls1_0Workaround);
@@ -62,9 +62,9 @@ namespace Swift
     private:
         void            determineStreamSizes();
         void            continueHandshake(const SafeByteArray& data);
-        void            indicateError(boost::shared_ptr<TLSError> error);
+        void            indicateError(std::shared_ptr<TLSError> error);
         //FIXME: Remove
-        void indicateError() {indicateError(boost::make_shared<TLSError>());}
+        void indicateError() {indicateError(std::make_shared<TLSError>());}
         void            handleCertError(SECURITY_STATUS status) ;
 
         void            sendDataOnNetwork(const void* pData, size_t dataSize);
@@ -104,7 +104,7 @@ namespace Swift
         std::string        certName_;
 ////Not needed, most likely
         std::string        smartCardReader_;    //Can be empty string for non SmartCard certificates
-        boost::shared_ptr<CAPICertificate> userCertificate_;
+        std::shared_ptr<CAPICertificate> userCertificate_;
         bool checkCertificateRevocation_;
         bool tls1_0Workaround_;
         bool disconnectOnCardRemoval_;

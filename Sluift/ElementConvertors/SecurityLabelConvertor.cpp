@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/SecurityLabelConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -22,8 +23,8 @@ SecurityLabelConvertor::SecurityLabelConvertor() :
 SecurityLabelConvertor::~SecurityLabelConvertor() {
 }
 
-boost::shared_ptr<SecurityLabel> SecurityLabelConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<SecurityLabel> result = boost::make_shared<SecurityLabel>();
+std::shared_ptr<SecurityLabel> SecurityLabelConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<SecurityLabel> result = std::make_shared<SecurityLabel>();
     lua_getfield(L, -1, "equivalent_labels");
     if (lua_type(L, -1) == LUA_TTABLE) {
         std::vector< std::string > items;
@@ -62,7 +63,7 @@ boost::shared_ptr<SecurityLabel> SecurityLabelConvertor::doConvertFromLua(lua_St
     return result;
 }
 
-void SecurityLabelConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<SecurityLabel> payload) {
+void SecurityLabelConvertor::doConvertToLua(lua_State* L, std::shared_ptr<SecurityLabel> payload) {
     lua_createtable(L, 0, 0);
     if (!payload->getEquivalentLabels().empty()) {
         lua_createtable(L, boost::numeric_cast<int>(payload->getEquivalentLabels().size()), 0);

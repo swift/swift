@@ -4,9 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -102,7 +102,7 @@ class MUCTest : public CppUnit::TestFixture {
         void testCreateInstant() {
             MUC::ref testling = createMUC(JID("rabbithole@wonderland.lit"));
             testling->joinAs("Alice");
-            Presence::ref serverRespondsLocked = boost::make_shared<Presence>();
+            Presence::ref serverRespondsLocked = std::make_shared<Presence>();
             serverRespondsLocked->setFrom(JID("rabbithole@wonderland.lit/Alice"));
             MUCUserPayload::ref mucPayload(new MUCUserPayload());
             MUCItem myItem;
@@ -122,12 +122,12 @@ class MUCTest : public CppUnit::TestFixture {
         }
 
         void testReplicateBug() {
-            Presence::ref initialPresence = boost::make_shared<Presence>();
+            Presence::ref initialPresence = std::make_shared<Presence>();
             initialPresence->setStatus("");
-            VCard::ref vcard = boost::make_shared<VCard>();
+            VCard::ref vcard = std::make_shared<VCard>();
             vcard->setPhoto(createByteArray("15c30080ae98ec48be94bf0e191d43edd06e500a"));
             initialPresence->addPayload(vcard);
-            CapsInfo::ref caps = boost::make_shared<CapsInfo>();
+            CapsInfo::ref caps = std::make_shared<CapsInfo>();
             caps->setNode("http://swift.im");
             caps->setVersion("p2UP0DrcVgKM6jJqYN/B92DKK0o=");
             initialPresence->addPayload(caps);
@@ -135,7 +135,7 @@ class MUCTest : public CppUnit::TestFixture {
 
             MUC::ref testling = createMUC(JID("test@rooms.swift.im"));
             testling->joinAs("Test");
-            Presence::ref serverRespondsLocked = boost::make_shared<Presence>();
+            Presence::ref serverRespondsLocked = std::make_shared<Presence>();
             serverRespondsLocked->setFrom(JID("test@rooms.swift.im/Test"));
             serverRespondsLocked->setTo(JID("test@swift.im/6913d576d55f0b67"));
             serverRespondsLocked->addPayload(vcard);
@@ -163,14 +163,14 @@ class MUCTest : public CppUnit::TestFixture {
             testling->joinAs("Rabbit");
 
             // Rabbit joins
-            Presence::ref rabbitJoins = boost::make_shared<Presence>();
+            Presence::ref rabbitJoins = std::make_shared<Presence>();
             rabbitJoins->setTo("test@swift.im/6913d576d55f0b67");
             rabbitJoins->setFrom(testling->getJID().toString() + "/Rabbit");
             channel->onPresenceReceived(rabbitJoins);
             CPPUNIT_ASSERT_EQUAL(true, testling->hasOccupant("Rabbit"));
 
             // Alice joins
-            Presence::ref aliceJoins = boost::make_shared<Presence>();
+            Presence::ref aliceJoins = std::make_shared<Presence>();
             aliceJoins->setTo("test@swift.im/6913d576d55f0b67");
             aliceJoins->setFrom(testling->getJID().toString() + "/Alice");
             channel->onPresenceReceived(aliceJoins);
@@ -183,7 +183,7 @@ class MUCTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("Dodo"), stanza->getTo().getResource());
 
             // Alice changes nick to Alice2
-            stanza = boost::make_shared<Presence>();
+            stanza = std::make_shared<Presence>();
             stanza->setFrom(JID("foo@bar.com/Alice"));
             stanza->setTo(JID(router->getJID()));
             stanza->setType(Presence::Unavailable);
@@ -201,7 +201,7 @@ class MUCTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(true, testling->hasOccupant("Alice2"));
 
             // We (Rabbit) change nick to Robot
-            stanza = boost::make_shared<Presence>();
+            stanza = std::make_shared<Presence>();
             stanza->setFrom(JID("foo@bar.com/Rabbit"));
             stanza->setTo(JID(router->getJID()));
             stanza->setType(Presence::Unavailable);
@@ -235,7 +235,7 @@ class MUCTest : public CppUnit::TestFixture {
 
     private:
         MUC::ref createMUC(const JID& jid) {
-            MUC::ref muc = boost::make_shared<MUCImpl>(channel, router, presenceSender, jid, mucRegistry);
+            MUC::ref muc = std::make_shared<MUCImpl>(channel, router, presenceSender, jid, mucRegistry);
             muc->onOccupantNicknameChanged.connect(boost::bind(&MUCTest::handleOccupantNicknameChanged, this, _1, _2));
             return muc;
         }
@@ -250,7 +250,7 @@ class MUCTest : public CppUnit::TestFixture {
         void receivePresence(const JID& jid, const std::string& status) {
             Presence::ref p = Presence::create(status);
             p->setFrom(jid);
-            //MUCUserPayload::ref mucUserPayload = boost::make_shared<MUCUserPayload>();
+            //MUCUserPayload::ref mucUserPayload = std::make_shared<MUCUserPayload>();
             //mucUserPayload->addItem(item);
             //p->addPayload(mucUserPayload);
             channel->onPresenceReceived(p);

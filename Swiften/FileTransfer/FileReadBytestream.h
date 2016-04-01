@@ -18,7 +18,7 @@ namespace Swift {
             FileReadBytestream(const boost::filesystem::path& file);
             virtual ~FileReadBytestream();
 
-            virtual boost::shared_ptr< std::vector<unsigned char> > read(size_t size);
+            virtual std::shared_ptr< std::vector<unsigned char> > read(size_t size);
             virtual bool isFinished() const;
 
         private:

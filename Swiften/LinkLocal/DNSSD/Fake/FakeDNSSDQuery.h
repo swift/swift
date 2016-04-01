@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/EventLoop/EventOwner.h>
 
@@ -16,9 +15,9 @@ namespace Swift {
 
     class FakeDNSSDQuery :
             public EventOwner,
-            public boost::enable_shared_from_this<FakeDNSSDQuery> {
+            public std::enable_shared_from_this<FakeDNSSDQuery> {
         public:
-            FakeDNSSDQuery(boost::shared_ptr<FakeDNSSDQuerier>);
+            FakeDNSSDQuery(std::shared_ptr<FakeDNSSDQuerier>);
             virtual ~FakeDNSSDQuery();
 
         protected:
@@ -26,6 +25,6 @@ namespace Swift {
             void finish();
 
         protected:
-            boost::shared_ptr<FakeDNSSDQuerier> querier;
+            std::shared_ptr<FakeDNSSDQuerier> querier;
     };
 }

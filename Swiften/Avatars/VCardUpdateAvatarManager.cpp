@@ -26,8 +26,8 @@ VCardUpdateAvatarManager::VCardUpdateAvatarManager(VCardManager* vcardManager, S
     vcardManager_->onVCardChanged.connect(boost::bind(&VCardUpdateAvatarManager::handleVCardChanged, this, _1, _2));
 }
 
-void VCardUpdateAvatarManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
-    boost::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
+void VCardUpdateAvatarManager::handlePresenceReceived(std::shared_ptr<Presence> presence) {
+    std::shared_ptr<VCardUpdate> update = presence->getPayload<VCardUpdate>();
     if (!update || presence->getPayload<ErrorPayload>()) {
         return;
     }

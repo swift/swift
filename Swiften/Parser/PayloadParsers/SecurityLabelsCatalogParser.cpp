@@ -6,7 +6,7 @@
 
 #include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParser.h>
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParserFactory.h>
@@ -29,7 +29,7 @@ void SecurityLabelsCatalogParser::handleStartElement(const std::string& element,
         getPayloadInternal()->setDescription(attributes.getAttribute("desc"));
     }
     else if (level_ == ItemLevel && element == "item" && ns == "urn:xmpp:sec-label:catalog:2") {
-        currentItem_ = boost::make_shared<SecurityLabelsCatalog::Item>();
+        currentItem_ = std::make_shared<SecurityLabelsCatalog::Item>();
         currentItem_->setSelector(attributes.getAttribute("selector"));
         currentItem_->setIsDefault(attributes.getBoolAttribute("default", false));
     }
@@ -51,7 +51,7 @@ void SecurityLabelsCatalogParser::handleEndElement(const std::string& element, c
         labelParser_->handleEndElement(element, ns);
     }
     if (level_ == LabelLevel && labelParser_ && currentItem_) {
-        boost::shared_ptr<SecurityLabel> currentLabel = labelParser_->getLabelPayload();
+        std::shared_ptr<SecurityLabel> currentLabel = labelParser_->getLabelPayload();
         assert(currentLabel);
         currentItem_->setLabel(currentLabel);
         delete labelParser_;

@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/cstdint.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
@@ -42,18 +42,18 @@ namespace Swift {
      */
     class SWIFTEN_API IncomingJingleFileTransfer : public IncomingFileTransfer, public JingleFileTransfer {
         public:
-            typedef boost::shared_ptr<IncomingJingleFileTransfer> ref;
+            typedef std::shared_ptr<IncomingJingleFileTransfer> ref;
 
             IncomingJingleFileTransfer(
                 const JID& recipient,
-                boost::shared_ptr<JingleSession>,
-                boost::shared_ptr<JingleContentPayload> content,
+                std::shared_ptr<JingleSession>,
+                std::shared_ptr<JingleContentPayload> content,
                 FileTransferTransporterFactory*,
                 TimerFactory*,
                 CryptoProvider*);
             virtual ~IncomingJingleFileTransfer();
 
-            virtual void accept(boost::shared_ptr<WriteBytestream>, const FileTransferOptions& = FileTransferOptions()) SWIFTEN_OVERRIDE;
+            virtual void accept(std::shared_ptr<WriteBytestream>, const FileTransferOptions& = FileTransferOptions()) SWIFTEN_OVERRIDE;
             virtual void cancel() SWIFTEN_OVERRIDE;
 
         private:
@@ -71,9 +71,9 @@ namespace Swift {
 
             virtual void handleSessionTerminateReceived(
                     boost::optional<JinglePayload::Reason> reason) SWIFTEN_OVERRIDE;
-            virtual void handleSessionInfoReceived(boost::shared_ptr<JinglePayload>) SWIFTEN_OVERRIDE;
+            virtual void handleSessionInfoReceived(std::shared_ptr<JinglePayload>) SWIFTEN_OVERRIDE;
             virtual void handleTransportReplaceReceived(
-                    const JingleContentID&, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
+                    const JingleContentID&, std::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
 
             virtual void handleLocalTransportCandidatesGenerated(
                     const std::string& s5bSessionID,
@@ -101,24 +101,24 @@ namespace Swift {
             static FileTransfer::State::Type getExternalState(State state);
             virtual bool hasPriorityOnCandidateTie() const SWIFTEN_OVERRIDE;
             virtual void fallback() SWIFTEN_OVERRIDE;
-            virtual void startTransferring(boost::shared_ptr<TransportSession>) SWIFTEN_OVERRIDE;
+            virtual void startTransferring(std::shared_ptr<TransportSession>) SWIFTEN_OVERRIDE;
             virtual bool isWaitingForPeerProxyActivate() const SWIFTEN_OVERRIDE;
             virtual bool isWaitingForLocalProxyActivate() const SWIFTEN_OVERRIDE;
             virtual bool isTryingCandidates() const SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
             virtual void terminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;
 
 
         private:
-            boost::shared_ptr<JingleContentPayload> initialContent;
+            std::shared_ptr<JingleContentPayload> initialContent;
             CryptoProvider* crypto;
             State state;
-            boost::shared_ptr<JingleFileTransferDescription> description;
-            boost::shared_ptr<WriteBytestream> stream;
+            std::shared_ptr<JingleFileTransferDescription> description;
+            std::shared_ptr<WriteBytestream> stream;
             boost::uintmax_t receivedBytes;
             IncrementalBytestreamHashCalculator* hashCalculator;
-            boost::shared_ptr<Timer> waitOnHashTimer;
+            std::shared_ptr<Timer> waitOnHashTimer;
             std::map<std::string, ByteArray> hashes;
             FileTransferOptions options;
 

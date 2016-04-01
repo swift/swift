@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <QToolButton>
 #include <QWidget>
@@ -53,8 +53,8 @@ namespace Swift {
             void removeField(QtVCardGeneralField* field);
 
         private:
-            void addFieldType(QMenu*, boost::shared_ptr<QtVCardFieldInfo>);
-            int fieldTypeInstances(boost::shared_ptr<QtVCardFieldInfo>);
+            void addFieldType(QMenu*, std::shared_ptr<QtVCardFieldInfo>);
+            int fieldTypeInstances(std::shared_ptr<QtVCardFieldInfo>);
             void clearFields();
             void clearEmptyFields();
             void appendField(QtVCardGeneralField* field);
@@ -67,7 +67,7 @@ namespace Swift {
             bool editable;
             QMenu* menu;
             std::list<QtVCardGeneralField*> fields;
-            std::map<QAction*, boost::shared_ptr<QtVCardFieldInfo> > actionFieldInfo;
+            std::map<QAction*, std::shared_ptr<QtVCardFieldInfo> > actionFieldInfo;
     };
 
 }

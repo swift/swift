@@ -74,7 +74,7 @@ int EventModel::rowCount(const QModelIndex& parent) const {
     return count;
 }
 
-void EventModel::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
+void EventModel::addEvent(std::shared_ptr<StanzaEvent> event, bool active) {
     beginResetModel();
     if (active) {
         activeEvents_.push_front(new QtEvent(event, active));
@@ -87,7 +87,7 @@ void EventModel::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
     endResetModel();
 }
 
-void EventModel::removeEvent(boost::shared_ptr<StanzaEvent> event) {
+void EventModel::removeEvent(std::shared_ptr<StanzaEvent> event) {
     beginResetModel();
     for (int i = inactiveEvents_.size() - 1; i >= 0; i--) {
         if (event == inactiveEvents_[i]->getEvent()) {

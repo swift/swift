@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,9 +49,9 @@ namespace Swift {
             const boost::optional<std::vector<S5BProxyRequest::ref> >& getOrDiscoverS5BProxies();
 
             void connectToProxies(const std::string& sessionID);
-            boost::shared_ptr<SOCKS5BytestreamClientSession> getProxySessionAndCloseOthers(const JID& proxyJID, const std::string& sessionID);
+            std::shared_ptr<SOCKS5BytestreamClientSession> getProxySessionAndCloseOthers(const JID& proxyJID, const std::string& sessionID);
 
-            boost::shared_ptr<SOCKS5BytestreamClientSession> createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr);
+            std::shared_ptr<SOCKS5BytestreamClientSession> createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr);
 
         public:
             boost::signal<void ()> onDiscoveredProxiesChanged;
@@ -62,8 +62,8 @@ namespace Swift {
 
             void queryForProxies();
 
-            void handleProxySessionReady(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, bool error);
-            void handleProxySessionFinished(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, boost::optional<FileTransferError> error);
+            void handleProxySessionReady(const std::string& sessionID, const JID& jid, std::shared_ptr<SOCKS5BytestreamClientSession> session, bool error);
+            void handleProxySessionFinished(const std::string& sessionID, const JID& jid, std::shared_ptr<SOCKS5BytestreamClientSession> session, boost::optional<FileTransferError> error);
 
         private:
             ConnectionFactory* connectionFactory_;
@@ -72,11 +72,11 @@ namespace Swift {
             IQRouter* iqRouter_;
             JID serviceRoot_;
 
-            typedef std::vector<std::pair<JID, boost::shared_ptr<SOCKS5BytestreamClientSession> > > ProxyJIDClientSessionVector;
+            typedef std::vector<std::pair<JID, std::shared_ptr<SOCKS5BytestreamClientSession> > > ProxyJIDClientSessionVector;
             typedef std::map<std::string, ProxyJIDClientSessionVector> ProxySessionsMap;
             ProxySessionsMap proxySessions_;
 
-            boost::shared_ptr<SOCKS5BytestreamProxyFinder> proxyFinder_;
+            std::shared_ptr<SOCKS5BytestreamProxyFinder> proxyFinder_;
 
             boost::optional<std::vector<S5BProxyRequest::ref> > localS5BProxies_;
     };

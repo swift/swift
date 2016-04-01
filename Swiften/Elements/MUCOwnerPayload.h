@@ -15,24 +15,24 @@
 namespace Swift {
     class SWIFTEN_API MUCOwnerPayload : public Payload {
         public:
-            typedef boost::shared_ptr<MUCOwnerPayload> ref;
+            typedef std::shared_ptr<MUCOwnerPayload> ref;
 
             MUCOwnerPayload() {
             }
 
-            boost::shared_ptr<Payload> getPayload() const {
+            std::shared_ptr<Payload> getPayload() const {
                 return payload;
             }
 
-            void setPayload(boost::shared_ptr<Payload> p) {
+            void setPayload(std::shared_ptr<Payload> p) {
                 payload = p;
             }
 
             Form::ref getForm() {
-                return boost::dynamic_pointer_cast<Form>(payload);
+                return std::dynamic_pointer_cast<Form>(payload);
             }
 
         private:
-            boost::shared_ptr<Payload> payload;
+            std::shared_ptr<Payload> payload;
     };
 }

@@ -21,7 +21,7 @@
 namespace Swift {
     class WhiteboardOperation {
     public:
-        typedef boost::shared_ptr<WhiteboardOperation> ref;
+        typedef std::shared_ptr<WhiteboardOperation> ref;
     public:
         WhiteboardOperation() {}
         SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(WhiteboardOperation)

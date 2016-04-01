@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ void PubSubEventDeleteParser::handleStartElement(const std::string& element, con
 
     if (level == 1) {
         if (element == "redirect" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventRedirectParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventRedirectParser>(parsers);
         }
     }
 
@@ -51,7 +51,7 @@ void PubSubEventDeleteParser::handleEndElement(const std::string& element, const
 
         if (level == 1) {
             if (element == "redirect" && ns == "http://jabber.org/protocol/pubsub#event") {
-                getPayloadInternal()->setRedirects(boost::dynamic_pointer_cast<PubSubEventRedirect>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setRedirects(std::dynamic_pointer_cast<PubSubEventRedirect>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

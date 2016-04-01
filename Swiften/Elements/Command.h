@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Form.h>
@@ -20,7 +19,7 @@ namespace Swift {
      */
     class SWIFTEN_API Command : public Payload {
         public:
-            typedef boost::shared_ptr<Command> ref;
+            typedef std::shared_ptr<Command> ref;
 
             enum Status {Executing, Completed, Canceled, NoStatus};
             enum Action {Cancel, Execute, Complete, Prev, Next, NoAction};

@@ -7,8 +7,7 @@
 #pragma once
 
 #include <deque>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -19,17 +18,17 @@ namespace Swift {
         public:
             StanzaAckRequester();
 
-            void handleStanzaSent(boost::shared_ptr<Stanza> stanza);
+            void handleStanzaSent(std::shared_ptr<Stanza> stanza);
             void handleAckReceived(unsigned int handledStanzasCount);
 
         public:
             boost::signal<void ()> onRequestAck;
-            boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
+            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
 
         private:
             friend class StanzaAckRequesterTest;
             unsigned int lastHandledStanzasCount;
-            std::deque<boost::shared_ptr<Stanza> > unackedStanzas;
+            std::deque<std::shared_ptr<Stanza> > unackedStanzas;
     };
 
 }

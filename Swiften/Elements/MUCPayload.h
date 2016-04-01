@@ -18,7 +18,7 @@
 namespace Swift {
     class SWIFTEN_API MUCPayload : public Payload {
         public:
-            typedef boost::shared_ptr<MUCPayload> ref;
+            typedef std::shared_ptr<MUCPayload> ref;
 
             MUCPayload() {
                 maxChars_ = -1;

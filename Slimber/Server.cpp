@@ -111,11 +111,11 @@ void Server::stop(boost::optional<ServerError> e) {
         serverFromClientSession->finishSession();
     }
     serverFromClientSession.reset();
-    foreach(boost::shared_ptr<Session> session, linkLocalSessions) {
+    foreach(std::shared_ptr<Session> session, linkLocalSessions) {
         session->finishSession();
     }
     linkLocalSessions.clear();
-    foreach(boost::shared_ptr<LinkLocalConnector> connector, connectors) {
+    foreach(std::shared_ptr<LinkLocalConnector> connector, connectors) {
         connector->cancel();
     }
     connectors.clear();
@@ -142,11 +142,11 @@ void Server::stop(boost::optional<ServerError> e) {
     onStopped(e);
 }
 
-void Server::handleNewClientConnection(boost::shared_ptr<Connection> connection) {
+void Server::handleNewClientConnection(std::shared_ptr<Connection> connection) {
     if (serverFromClientSession) {
         connection->disconnect();
     }
-    serverFromClientSession = boost::shared_ptr<ServerFromClientSession>(
+    serverFromClientSession = std::shared_ptr<ServerFromClientSession>(
             new ServerFromClientSession(idGenerator.generateID(), connection,
                     &payloadParserFactories, &payloadSerializers, &xmlParserFactory, &userRegistry));
     serverFromClientSession->setAllowSASLEXTERNAL();
@@ -158,7 +158,7 @@ void Server::handleNewClientConnection(boost::shared_ptr<Connection> connection)
     serverFromClientSession->onSessionFinished.connect(
             boost::bind(&Server::handleSessionFinished, this,
             serverFromClientSession));
-    //tracers.push_back(boost::shared_ptr<SessionTracer>(
+    //tracers.push_back(std::shared_ptr<SessionTracer>(
     //        new SessionTracer(serverFromClientSession)));
     serverFromClientSession->startSession();
 }
@@ -167,7 +167,7 @@ void Server::handleSessionStarted() {
     onSelfConnected(true);
 }
 
-void Server::handleSessionFinished(boost::shared_ptr<ServerFromClientSession>) {
+void Server::handleSessionFinished(std::shared_ptr<ServerFromClientSession>) {
     serverFromClientSession.reset();
     unregisterService();
     selfJID = JID();
@@ -183,8 +183,8 @@ void Server::unregisterService() {
     }
 }
 
-void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<ServerFromClientSession> session) {
-    boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element);
+void Server::handleElementReceived(std::shared_ptr<ToplevelElement> element, std::shared_ptr<ServerFromClientSession> session) {
+    std::shared_ptr<Stanza> stanza = std::dynamic_pointer_cast<Stanza>(element);
     if (!stanza) {
         return;
     }
@@ -194,7 +194,7 @@ void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, b
         stanza->setTo(session->getLocalJID());
     }
 
-    if (boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(stanza)) {
+    if (std::shared_ptr<Presence> presence = std::dynamic_pointer_cast<Presence>(stanza)) {
         if (presence->getType() == Presence::Available) {
             if (!linkLocalServiceRegistered) {
                 linkLocalServiceRegistered = true;
@@ -213,12 +213,12 @@ void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, b
         }
     }
     else if (!stanza->getTo().isValid() || stanza->getTo() == session->getLocalJID() || stanza->getTo() == session->getRemoteJID().toBare()) {
-        if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
+        if (std::shared_ptr<IQ> iq = std::dynamic_pointer_cast<IQ>(stanza)) {
             if (iq->getPayload<RosterPayload>()) {
                 if (iq->getType() == IQ::Get) {
                     session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), presenceManager->getRoster()));
                     rosterRequested = true;
-                    foreach(const boost::shared_ptr<Presence> presence, presenceManager->getAllPresence()) {
+                    foreach(const std::shared_ptr<Presence> presence, presenceManager->getAllPresence()) {
                         session->sendElement(presence);
                     }
                 }
@@ -226,7 +226,7 @@ void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, b
                     session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::Forbidden, ErrorPayload::Cancel));
                 }
             }
-            if (boost::shared_ptr<VCard> vcard = iq->getPayload<VCard>()) {
+            if (std::shared_ptr<VCard> vcard = iq->getPayload<VCard>()) {
                 if (iq->getType() == IQ::Get) {
                     session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vCardCollection->getOwnVCard()));
                 }
@@ -245,7 +245,7 @@ void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, b
     }
     else {
         JID toJID = stanza->getTo();
-        boost::shared_ptr<Session> outgoingSession =
+        std::shared_ptr<Session> outgoingSession =
                 getLinkLocalSessionForJID(toJID);
         if (outgoingSession) {
             outgoingSession->sendElement(stanza);
@@ -254,10 +254,10 @@ void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, b
             boost::optional<LinkLocalService> service =
                     presenceManager->getServiceForJID(toJID);
             if (service) {
-                boost::shared_ptr<LinkLocalConnector> connector =
+                std::shared_ptr<LinkLocalConnector> connector =
                     getLinkLocalConnectorForJID(toJID);
                 if (!connector) {
-                    connector = boost::shared_ptr<LinkLocalConnector>(
+                    connector = std::shared_ptr<LinkLocalConnector>(
                             new LinkLocalConnector(
                                 *service,
                                 linkLocalServiceBrowser->getQuerier(),
@@ -278,23 +278,23 @@ void Server::handleElementReceived(boost::shared_ptr<ToplevelElement> element, b
     }
 }
 
-void Server::handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection) {
-    boost::shared_ptr<IncomingLinkLocalSession> session(
+void Server::handleNewLinkLocalConnection(std::shared_ptr<Connection> connection) {
+    std::shared_ptr<IncomingLinkLocalSession> session(
             new IncomingLinkLocalSession(
                 selfJID, connection,
                 &payloadParserFactories, &payloadSerializers, &xmlParserFactory));
     registerLinkLocalSession(session);
 }
 
-void Server::handleLinkLocalSessionFinished(boost::shared_ptr<Session> session) {
+void Server::handleLinkLocalSessionFinished(std::shared_ptr<Session> session) {
     //std::cout << "Link local session from " << session->getRemoteJID() << " ended" << std::endl;
     linkLocalSessions.erase(
             std::remove(linkLocalSessions.begin(), linkLocalSessions.end(), session),
             linkLocalSessions.end());
 }
 
-void Server::handleLinkLocalElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<Session> session) {
-    if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
+void Server::handleLinkLocalElementReceived(std::shared_ptr<ToplevelElement> element, std::shared_ptr<Session> session) {
+    if (std::shared_ptr<Stanza> stanza = std::dynamic_pointer_cast<Stanza>(element)) {
         JID fromJID = session->getRemoteJID();
         if (!presenceManager->getServiceForJID(fromJID.toBare())) {
             return; // TODO: Send error back
@@ -304,17 +304,17 @@ void Server::handleLinkLocalElementReceived(boost::shared_ptr<ToplevelElement> e
     }
 }
 
-void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connector, bool error) {
+void Server::handleConnectFinished(std::shared_ptr<LinkLocalConnector> connector, bool error) {
     if (error) {
         std::cerr << "Error connecting" << std::endl;
         // TODO: Send back queued stanzas
     }
     else {
-        boost::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
+        std::shared_ptr<OutgoingLinkLocalSession> outgoingSession(
                 new OutgoingLinkLocalSession(
                     selfJID, connector->getService().getJID(), connector->getConnection(),
                     &payloadParserFactories, &payloadSerializers, &xmlParserFactory));
-        foreach(const boost::shared_ptr<ToplevelElement> element, connector->getQueuedElements()) {
+        foreach(const std::shared_ptr<ToplevelElement> element, connector->getQueuedElements()) {
             outgoingSession->queueElement(element);
         }
         registerLinkLocalSession(outgoingSession);
@@ -322,42 +322,42 @@ void Server::handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connect
     connectors.erase(std::remove(connectors.begin(), connectors.end(), connector), connectors.end());
 }
 
-void Server::registerLinkLocalSession(boost::shared_ptr<Session> session) {
+void Server::registerLinkLocalSession(std::shared_ptr<Session> session) {
     session->onSessionFinished.connect(
             boost::bind(&Server::handleLinkLocalSessionFinished, this, session));
     session->onElementReceived.connect(
             boost::bind(&Server::handleLinkLocalElementReceived, this, _1, session));
     linkLocalSessions.push_back(session);
-    //tracers.push_back(boost::make_shared<SessionTracer>(session));
+    //tracers.push_back(std::make_shared<SessionTracer>(session));
     session->startSession();
 }
 
-boost::shared_ptr<Session> Server::getLinkLocalSessionForJID(const JID& jid) {
-    foreach(const boost::shared_ptr<Session> session, linkLocalSessions) {
+std::shared_ptr<Session> Server::getLinkLocalSessionForJID(const JID& jid) {
+    foreach(const std::shared_ptr<Session> session, linkLocalSessions) {
         if (session->getRemoteJID() == jid) {
             return session;
         }
     }
-    return boost::shared_ptr<Session>();
+    return std::shared_ptr<Session>();
 }
 
-boost::shared_ptr<LinkLocalConnector> Server::getLinkLocalConnectorForJID(const JID& jid) {
-    foreach(const boost::shared_ptr<LinkLocalConnector> connector, connectors) {
+std::shared_ptr<LinkLocalConnector> Server::getLinkLocalConnectorForJID(const JID& jid) {
+    foreach(const std::shared_ptr<LinkLocalConnector> connector, connectors) {
         if (connector->getService().getJID() == jid) {
             return connector;
         }
     }
-    return boost::shared_ptr<LinkLocalConnector>();
+    return std::shared_ptr<LinkLocalConnector>();
 }
 
 void Server::handleServiceRegistered(const DNSSDServiceID& service) {
     selfJID = JID(service.getName());
 }
 
-void Server::handleRosterChanged(boost::shared_ptr<RosterPayload> roster) {
+void Server::handleRosterChanged(std::shared_ptr<RosterPayload> roster) {
     if (rosterRequested) {
         assert(serverFromClientSession);
-        boost::shared_ptr<IQ> iq = IQ::createRequest(
+        std::shared_ptr<IQ> iq = IQ::createRequest(
                 IQ::Set, serverFromClientSession->getRemoteJID(),
                 idGenerator.generateID(), roster);
         iq->setFrom(serverFromClientSession->getRemoteJID().toBare());
@@ -365,7 +365,7 @@ void Server::handleRosterChanged(boost::shared_ptr<RosterPayload> roster) {
     }
 }
 
-void Server::handlePresenceChanged(boost::shared_ptr<Presence> presence) {
+void Server::handlePresenceChanged(std::shared_ptr<Presence> presence) {
     if (rosterRequested) {
         serverFromClientSession->sendElement(presence);
     }
@@ -399,9 +399,9 @@ void Server::handleLinkLocalConnectionServerStopped(boost::optional<BoostConnect
     }
 }
 
-LinkLocalServiceInfo Server::getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence) {
+LinkLocalServiceInfo Server::getLinkLocalServiceInfo(std::shared_ptr<Presence> presence) {
     LinkLocalServiceInfo info;
-    boost::shared_ptr<VCard> vcard = vCardCollection->getOwnVCard();
+    std::shared_ptr<VCard> vcard = vCardCollection->getOwnVCard();
     if (!vcard->getFamilyName().empty() || !vcard->getGivenName().empty()) {
         info.setFirstName(vcard->getGivenName());
         info.setLastName(vcard->getFamilyName());

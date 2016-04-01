@@ -34,22 +34,22 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 
             stanzaChannel = new DummyStanzaChannel();
             capsProvider = new DummyCapsProvider();
 
             user1 = JID("user1@bar.com/bla");
-            discoInfo1 = boost::make_shared<DiscoInfo>();
+            discoInfo1 = std::make_shared<DiscoInfo>();
             discoInfo1->addFeature("http://swift.im/feature1");
-            capsInfo1 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node1.im", crypto.get()).generateCapsInfo(*discoInfo1.get()));
-            capsInfo1alt = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo1.get()));
+            capsInfo1 = std::make_shared<CapsInfo>(CapsInfoGenerator("http://node1.im", crypto.get()).generateCapsInfo(*discoInfo1.get()));
+            capsInfo1alt = std::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo1.get()));
             user2 = JID("user2@foo.com/baz");
-            discoInfo2 = boost::make_shared<DiscoInfo>();
+            discoInfo2 = std::make_shared<DiscoInfo>();
             discoInfo2->addFeature("http://swift.im/feature2");
-            capsInfo2 = boost::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo2.get()));
+            capsInfo2 = std::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo2.get()));
             user3 = JID("user3@foo.com/baz");
-            legacyCapsInfo = boost::make_shared<CapsInfo>("http://swift.im", "ver1", "");
+            legacyCapsInfo = std::make_shared<CapsInfo>("http://swift.im", "ver1", "");
         }
 
         void tearDown() {
@@ -58,7 +58,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
         void testReceiveKnownHash() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
             sendPresenceWithCaps(user1, capsInfo1);
 
@@ -68,7 +68,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
         void testReceiveKnownHashTwiceDoesNotTriggerChange() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
             sendPresenceWithCaps(user1, capsInfo1);
             changes.clear();
@@ -79,14 +79,14 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
         void testReceiveUnknownHashDoesNotTriggerChange() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             sendPresenceWithCaps(user1, capsInfo1);
 
             CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
         }
 
         void testHashAvailable() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             sendPresenceWithCaps(user1, capsInfo1);
 
             capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
@@ -98,7 +98,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
         void testReceiveUnknownHashAfterKnownHashTriggersChangeAndClearsCaps() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
             sendPresenceWithCaps(user1, capsInfo1);
             changes.clear();
@@ -110,7 +110,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
         void testReceiveUnavailablePresenceAfterKnownHashTriggersChangeAndClearsCaps() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
             sendPresenceWithCaps(user1, capsInfo1);
             changes.clear();
@@ -122,7 +122,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
         void testReconnectTriggersChangeAndClearsCaps() {
-            boost::shared_ptr<EntityCapsManager> testling = createManager();
+            std::shared_ptr<EntityCapsManager> testling = createManager();
             capsProvider->caps[capsInfo1->getVersion()] = discoInfo1;
             capsProvider->caps[capsInfo2->getVersion()] = discoInfo2;
             sendPresenceWithCaps(user1, capsInfo1);
@@ -139,8 +139,8 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<EntityCapsManager> createManager() {
-            boost::shared_ptr<EntityCapsManager> manager(new EntityCapsManager(capsProvider, stanzaChannel));
+        std::shared_ptr<EntityCapsManager> createManager() {
+            std::shared_ptr<EntityCapsManager> manager(new EntityCapsManager(capsProvider, stanzaChannel));
             manager->onCapsChanged.connect(boost::bind(&EntityCapsManagerTest::handleCapsChanged, this, _1));
             return manager;
         }
@@ -149,15 +149,15 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
             changes.push_back(jid);
         }
 
-        void sendPresenceWithCaps(const JID& jid, boost::shared_ptr<CapsInfo> caps) {
-            boost::shared_ptr<Presence> presence(new Presence());
+        void sendPresenceWithCaps(const JID& jid, std::shared_ptr<CapsInfo> caps) {
+            std::shared_ptr<Presence> presence(new Presence());
             presence->setFrom(jid);
             presence->addPayload(caps);
             stanzaChannel->onPresenceReceived(presence);
         }
 
         void sendUnavailablePresence(const JID& jid) {
-            boost::shared_ptr<Presence> presence(new Presence());
+            std::shared_ptr<Presence> presence(new Presence());
             presence->setFrom(jid);
             presence->setType(Presence::Unavailable);
             stanzaChannel->onPresenceReceived(presence);
@@ -180,16 +180,16 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         DummyStanzaChannel* stanzaChannel;
         DummyCapsProvider* capsProvider;
         JID user1;
-        boost::shared_ptr<DiscoInfo> discoInfo1;
-        boost::shared_ptr<CapsInfo> capsInfo1;
-        boost::shared_ptr<CapsInfo> capsInfo1alt;
+        std::shared_ptr<DiscoInfo> discoInfo1;
+        std::shared_ptr<CapsInfo> capsInfo1;
+        std::shared_ptr<CapsInfo> capsInfo1alt;
         JID user2;
-        boost::shared_ptr<DiscoInfo> discoInfo2;
-        boost::shared_ptr<CapsInfo> capsInfo2;
-        boost::shared_ptr<CapsInfo> legacyCapsInfo;
+        std::shared_ptr<DiscoInfo> discoInfo2;
+        std::shared_ptr<CapsInfo> capsInfo2;
+        std::shared_ptr<CapsInfo> legacyCapsInfo;
         JID user3;
         std::vector<JID> changes;
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(EntityCapsManagerTest);

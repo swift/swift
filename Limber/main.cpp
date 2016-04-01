@@ -4,10 +4,10 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <string>
 
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/IQ.h>
@@ -39,20 +39,20 @@ class Server {
         }
 
     private:
-        void handleNewConnection(boost::shared_ptr<Connection> c) {
-            boost::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &xmlParserFactory, userRegistry_));
+        void handleNewConnection(std::shared_ptr<Connection> c) {
+            std::shared_ptr<ServerFromClientSession> session(new ServerFromClientSession(idGenerator_.generateID(), c, &payloadParserFactories_, &payloadSerializers_, &xmlParserFactory, userRegistry_));
             serverFromClientSessions_.push_back(session);
             session->onElementReceived.connect(boost::bind(&Server::handleElementReceived, this, _1, session));
             session->onSessionFinished.connect(boost::bind(&Server::handleSessionFinished, this, session));
             session->startSession();
         }
 
-        void handleSessionFinished(boost::shared_ptr<ServerFromClientSession> session) {
+        void handleSessionFinished(std::shared_ptr<ServerFromClientSession> session) {
             serverFromClientSessions_.erase(std::remove(serverFromClientSessions_.begin(), serverFromClientSessions_.end(), session), serverFromClientSessions_.end());
         }
 
-        void handleElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<ServerFromClientSession> session) {
-            boost::shared_ptr<Stanza> stanza(boost::dynamic_pointer_cast<Stanza>(element));
+        void handleElementReceived(std::shared_ptr<ToplevelElement> element, std::shared_ptr<ServerFromClientSession> session) {
+            std::shared_ptr<Stanza> stanza(std::dynamic_pointer_cast<Stanza>(element));
             if (!stanza) {
                 return;
             }
@@ -61,13 +61,13 @@ class Server {
                 stanza->setTo(JID(session->getLocalJID()));
             }
             if (!stanza->getTo().isValid() || stanza->getTo() == session->getLocalJID() || stanza->getTo() == session->getRemoteJID().toBare()) {
-                if (boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza)) {
+                if (std::shared_ptr<IQ> iq = std::dynamic_pointer_cast<IQ>(stanza)) {
                     if (iq->getPayload<RosterPayload>()) {
-                        session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), boost::make_shared<RosterPayload>()));
+                        session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), std::make_shared<RosterPayload>()));
                     }
                     if (iq->getPayload<VCard>()) {
                         if (iq->getType() == IQ::Get) {
-                            boost::shared_ptr<VCard> vcard(new VCard());
+                            std::shared_ptr<VCard> vcard(new VCard());
                             vcard->setNickname(iq->getFrom().getNode());
                             session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), vcard));
                         }
@@ -87,8 +87,8 @@ class Server {
         PlatformXMLParserFactory xmlParserFactory;
         UserRegistry* userRegistry_;
         BoostIOServiceThread boostIOServiceThread_;
-        boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
-        std::vector< boost::shared_ptr<ServerFromClientSession> > serverFromClientSessions_;
+        std::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer_;
+        std::vector< std::shared_ptr<ServerFromClientSession> > serverFromClientSessions_;
         FullPayloadParserFactoryCollection payloadParserFactories_;
         FullPayloadSerializerCollection payloadSerializers_;
 };

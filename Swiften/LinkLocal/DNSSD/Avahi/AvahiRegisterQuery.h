@@ -18,7 +18,7 @@ namespace Swift {
 
     class AvahiRegisterQuery : public DNSSDRegisterQuery, public AvahiQuery {
         public:
-            AvahiRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), name(name), port(port), txtRecord(txtRecord), group(0) {
+            AvahiRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, std::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), name(name), port(port), txtRecord(txtRecord), group(0) {
             }
 
             void registerService();

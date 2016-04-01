@@ -7,9 +7,9 @@
 #include <Swiften/Jingle/JingleSessionImpl.h>
 
 #include <algorithm>
+#include <memory>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Elements/JingleContentPayload.h>
@@ -81,9 +81,9 @@ void JingleSessionImpl::handleIncomingAction(JinglePayload::ref action) {
 }
 
 void JingleSessionImpl::sendInitiate(const JingleContentID& id, JingleDescription::ref description, JingleTransportPayload::ref transport) {
-    JinglePayload::ref payload = boost::make_shared<JinglePayload>(JinglePayload::SessionInitiate, getID());
+    JinglePayload::ref payload = std::make_shared<JinglePayload>(JinglePayload::SessionInitiate, getID());
     payload->setInitiator(getInitiator());
-    JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+    JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
     content->setCreator(id.getCreator());
     content->setName(id.getName());
     content->addDescription(description);
@@ -94,14 +94,14 @@ void JingleSessionImpl::sendInitiate(const JingleContentID& id, JingleDescriptio
 }
 
 void JingleSessionImpl::sendTerminate(JinglePayload::Reason::Type reason) {
-    JinglePayload::ref payload = boost::make_shared<JinglePayload>(JinglePayload::SessionTerminate, getID());
+    JinglePayload::ref payload = std::make_shared<JinglePayload>(JinglePayload::SessionTerminate, getID());
     payload->setReason(JinglePayload::Reason(reason));
     payload->setInitiator(getInitiator());
     sendSetRequest(payload);
 }
 
-void JingleSessionImpl::sendInfo(boost::shared_ptr<Payload> info) {
-    JinglePayload::ref payload = boost::make_shared<JinglePayload>(JinglePayload::SessionInfo, getID());
+void JingleSessionImpl::sendInfo(std::shared_ptr<Payload> info) {
+    JinglePayload::ref payload = std::make_shared<JinglePayload>(JinglePayload::SessionInfo, getID());
     payload->addPayload(info);
 
     sendSetRequest(payload);
@@ -110,7 +110,7 @@ void JingleSessionImpl::sendInfo(boost::shared_ptr<Payload> info) {
 void JingleSessionImpl::sendAccept(const JingleContentID& id, JingleDescription::ref description, JingleTransportPayload::ref transPayload) {
     JinglePayload::ref payload = createPayload();
 
-    JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+    JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
     content->setCreator(id.getCreator());
     content->setName(id.getName());
     content->addTransport(transPayload);
@@ -126,7 +126,7 @@ void JingleSessionImpl::sendAccept(const JingleContentID& id, JingleDescription:
 void JingleSessionImpl::sendTransportAccept(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
     JinglePayload::ref payload = createPayload();
 
-    JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+    JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
     content->setCreator(id.getCreator());
     content->setName(id.getName());
     content->addTransport(transPayload);
@@ -140,7 +140,7 @@ void JingleSessionImpl::sendTransportAccept(const JingleContentID& id, JingleTra
 std::string JingleSessionImpl::sendTransportInfo(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
     JinglePayload::ref payload = createPayload();
 
-    JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+    JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
     content->setCreator(id.getCreator());
     content->setName(id.getName());
     content->addTransport(transPayload);
@@ -153,7 +153,7 @@ std::string JingleSessionImpl::sendTransportInfo(const JingleContentID& id, Jing
 void JingleSessionImpl::sendTransportReject(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
     JinglePayload::ref payload = createPayload();
 
-    JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+    JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
     content->setCreator(id.getCreator());
     content->setName(id.getName());
     content->addTransport(transPayload);
@@ -166,7 +166,7 @@ void JingleSessionImpl::sendTransportReject(const JingleContentID& id, JingleTra
 void JingleSessionImpl::sendTransportReplace(const JingleContentID& id, JingleTransportPayload::ref transPayload) {
     JinglePayload::ref payload = createPayload();
 
-    JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+    JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
     content->setCreator(id.getCreator());
     content->setName(id.getName());
     content->addTransport(transPayload);
@@ -178,7 +178,7 @@ void JingleSessionImpl::sendTransportReplace(const JingleContentID& id, JingleTr
 
 
 std::string JingleSessionImpl::sendSetRequest(JinglePayload::ref payload) {
-    boost::shared_ptr<GenericRequest<JinglePayload> > request = boost::make_shared<GenericRequest<JinglePayload> >(
+    std::shared_ptr<GenericRequest<JinglePayload> > request = std::make_shared<GenericRequest<JinglePayload> >(
             IQ::Set, peerJID, payload, iqRouter);
     pendingRequests.insert(std::make_pair(
         request,
@@ -188,7 +188,7 @@ std::string JingleSessionImpl::sendSetRequest(JinglePayload::ref payload) {
 
 
 JinglePayload::ref JingleSessionImpl::createPayload() const {
-    JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+    JinglePayload::ref payload = std::make_shared<JinglePayload>();
     payload->setSessionID(getID());
     payload->setInitiator(getInitiator());
     return payload;

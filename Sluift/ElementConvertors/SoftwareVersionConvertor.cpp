@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/SoftwareVersionConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -21,8 +22,8 @@ SoftwareVersionConvertor::SoftwareVersionConvertor() : GenericLuaElementConverto
 SoftwareVersionConvertor::~SoftwareVersionConvertor() {
 }
 
-boost::shared_ptr<SoftwareVersion> SoftwareVersionConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<SoftwareVersion> result = boost::make_shared<SoftwareVersion>();
+std::shared_ptr<SoftwareVersion> SoftwareVersionConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<SoftwareVersion> result = std::make_shared<SoftwareVersion>();
     lua_getfield(L, -1, "name");
     if (!lua_isnil(L, -1)) {
         result->setName(std::string(Lua::checkString(L, -1)));
@@ -41,7 +42,7 @@ boost::shared_ptr<SoftwareVersion> SoftwareVersionConvertor::doConvertFromLua(lu
     return result;
 }
 
-void SoftwareVersionConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<SoftwareVersion> payload) {
+void SoftwareVersionConvertor::doConvertToLua(lua_State* L, std::shared_ptr<SoftwareVersion> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getName().c_str());
     lua_setfield(L, -2, "name");

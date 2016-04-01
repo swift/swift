@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-SessionTracer::SessionTracer(boost::shared_ptr<Session> session) : session(session) {
+SessionTracer::SessionTracer(std::shared_ptr<Session> session) : session(session) {
     session->onDataRead.connect(boost::bind(&SessionTracer::printData, this, '<', _1));
     session->onDataWritten.connect(boost::bind(&SessionTracer::printData, this, '>', _1));
 }

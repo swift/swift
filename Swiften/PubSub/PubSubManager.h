@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -34,8 +34,8 @@
 #include <Swiften/PubSub/PubSubUtil.h>
 #include <Swiften/Queries/PubSubRequest.h>
 #define SWIFTEN_PUBSUBMANAGER_DECLARE_CREATE_REQUEST(payload, container, response) \
-    virtual boost::shared_ptr< PubSubRequest<payload> >  \
-        createRequest(IQ::Type, const JID&, boost::shared_ptr<payload>) = 0;
+    virtual std::shared_ptr< PubSubRequest<payload> >  \
+        createRequest(IQ::Type, const JID&, std::shared_ptr<payload>) = 0;
 
 namespace Swift {
     class JID;
@@ -47,6 +47,6 @@ namespace Swift {
             SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
                     SWIFTEN_PUBSUBMANAGER_DECLARE_CREATE_REQUEST)
 
-            boost::signal<void (const JID&, const boost::shared_ptr<PubSubEventPayload>)> onEvent;
+            boost::signal<void (const JID&, const std::shared_ptr<PubSubEventPayload>)> onEvent;
     };
 }

@@ -17,7 +17,7 @@ namespace Swift {
             FormConvertor();
             virtual ~FormConvertor();
 
-            virtual boost::shared_ptr<Form> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<Form>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Form> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Form>) SWIFTEN_OVERRIDE;
     };
 }

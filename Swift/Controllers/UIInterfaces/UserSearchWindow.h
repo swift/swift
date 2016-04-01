@@ -29,7 +29,7 @@ namespace Swift {
             virtual void setSelectedService(const JID& service) = 0;
             virtual void setServerSupportsSearch(bool support) = 0;
             virtual void setSearchError(bool support) = 0;
-            virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields) = 0;
+            virtual void setSearchFields(std::shared_ptr<SearchPayload> fields) = 0;
             virtual void setNameSuggestions(const std::vector<std::string>& suggestions) = 0;
             virtual void prepopulateJIDAndName(const JID& jid, const std::string& name) = 0;
             virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions) = 0;
@@ -46,7 +46,7 @@ namespace Swift {
             virtual void show() = 0;
 
             boost::signal<void (const JID&)> onFormRequested;
-            boost::signal<void (boost::shared_ptr<SearchPayload>, const JID&)> onSearchRequested;
+            boost::signal<void (std::shared_ptr<SearchPayload>, const JID&)> onSearchRequested;
             boost::signal<void (const JID&)> onNameSuggestionRequested;
             boost::signal<void (const std::string&)> onContactSuggestionsRequested;
             boost::signal<void (const std::vector<JID>&)> onJIDUpdateRequested;

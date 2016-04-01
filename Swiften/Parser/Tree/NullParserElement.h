@@ -18,6 +18,6 @@ namespace Swift {
 
             virtual operator bool() { return false; }
 
-            static boost::shared_ptr<NullParserElement> element;
+            static std::shared_ptr<NullParserElement> element;
     };
 }

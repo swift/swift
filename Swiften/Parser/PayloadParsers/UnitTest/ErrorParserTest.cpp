@@ -29,7 +29,7 @@ class ErrorParserTest : public CppUnit::TestFixture {
                     "<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">boo</text>"
                 "</error>"));
 
-            ErrorPayload::ref payload = boost::dynamic_pointer_cast<ErrorPayload>(parser.getPayload());
+            ErrorPayload::ref payload = std::dynamic_pointer_cast<ErrorPayload>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, payload->getCondition());
             CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, payload->getType());
             CPPUNIT_ASSERT_EQUAL(std::string("boo"), payload->getText());
@@ -46,11 +46,11 @@ class ErrorParserTest : public CppUnit::TestFixture {
                     "<text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">boo</text>"
                     "</error>"));
 
-            ErrorPayload::ref payload = boost::dynamic_pointer_cast<ErrorPayload>(parser.getPayload());
+            ErrorPayload::ref payload = std::dynamic_pointer_cast<ErrorPayload>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, payload->getCondition());
             CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, payload->getType());
             CPPUNIT_ASSERT_EQUAL(std::string("boo"), payload->getText());
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<Delay>(payload->getPayload()));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<Delay>(payload->getPayload()));
         }
 
 };

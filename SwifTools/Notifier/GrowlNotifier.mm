@@ -6,7 +6,7 @@
 
 #include <SwifTools/Notifier/GrowlNotifier.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 #include <set>
 
 #include <SwifTools/Notifier/GrowlNotifierDelegate.h>
@@ -33,7 +33,7 @@ class GrowlNotifier::Private {
 };
 
 GrowlNotifier::GrowlNotifier(const std::string& name) {
-    p = boost::make_shared<Private>();
+    p = std::make_shared<Private>();
     p->delegate = boost::intrusive_ptr<GrowlNotifierDelegate>([[GrowlNotifierDelegate alloc] init], false);
     p->delegate.get().notifier = this;
     p->delegate.get().name = std2NSString(name);

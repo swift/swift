@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/JID/JID.h>
@@ -65,26 +65,26 @@ namespace Swift {
         private:
             void stop(boost::optional<ServerError>);
 
-            void handleNewClientConnection(boost::shared_ptr<Connection> c);
+            void handleNewClientConnection(std::shared_ptr<Connection> c);
             void handleSessionStarted();
-            void handleSessionFinished(boost::shared_ptr<ServerFromClientSession>);
-            void handleElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<ServerFromClientSession> session);
-            void handleRosterChanged(boost::shared_ptr<RosterPayload> roster);
-            void handlePresenceChanged(boost::shared_ptr<Presence> presence);
+            void handleSessionFinished(std::shared_ptr<ServerFromClientSession>);
+            void handleElementReceived(std::shared_ptr<ToplevelElement> element, std::shared_ptr<ServerFromClientSession> session);
+            void handleRosterChanged(std::shared_ptr<RosterPayload> roster);
+            void handlePresenceChanged(std::shared_ptr<Presence> presence);
             void handleServiceRegistered(const DNSSDServiceID& service);
-            void handleNewLinkLocalConnection(boost::shared_ptr<Connection> connection);
-            void handleLinkLocalSessionFinished(boost::shared_ptr<Session> session);
-            void handleLinkLocalElementReceived(boost::shared_ptr<ToplevelElement> element, boost::shared_ptr<Session> session);
-            void handleConnectFinished(boost::shared_ptr<LinkLocalConnector> connector, bool error);
+            void handleNewLinkLocalConnection(std::shared_ptr<Connection> connection);
+            void handleLinkLocalSessionFinished(std::shared_ptr<Session> session);
+            void handleLinkLocalElementReceived(std::shared_ptr<ToplevelElement> element, std::shared_ptr<Session> session);
+            void handleConnectFinished(std::shared_ptr<LinkLocalConnector> connector, bool error);
             void handleClientConnectionServerStopped(
                     boost::optional<BoostConnectionServer::Error>);
             void handleLinkLocalConnectionServerStopped(
                     boost::optional<BoostConnectionServer::Error>);
-            boost::shared_ptr<Session> getLinkLocalSessionForJID(const JID& jid);
-            boost::shared_ptr<LinkLocalConnector> getLinkLocalConnectorForJID(const JID& jid);
-            void registerLinkLocalSession(boost::shared_ptr<Session> session);
+            std::shared_ptr<Session> getLinkLocalSessionForJID(const JID& jid);
+            std::shared_ptr<LinkLocalConnector> getLinkLocalConnectorForJID(const JID& jid);
+            void registerLinkLocalSession(std::shared_ptr<Session> session);
             void unregisterService();
-            LinkLocalServiceInfo getLinkLocalServiceInfo(boost::shared_ptr<Presence> presence);
+            LinkLocalServiceInfo getLinkLocalServiceInfo(std::shared_ptr<Presence> presence);
 
         private:
             class DummyUserRegistry : public UserRegistry {
@@ -112,15 +112,15 @@ namespace Swift {
             EventLoop* eventLoop;
             LinkLocalPresenceManager* presenceManager;
             bool stopping;
-            boost::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer;
+            std::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer;
             std::vector<boost::bsignals::connection> serverFromClientConnectionServerSignalConnections;
-            boost::shared_ptr<ServerFromClientSession> serverFromClientSession;
-            boost::shared_ptr<Presence> lastPresence;
+            std::shared_ptr<ServerFromClientSession> serverFromClientSession;
+            std::shared_ptr<Presence> lastPresence;
             JID selfJID;
-            boost::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer;
+            std::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer;
             std::vector<boost::bsignals::connection> serverFromNetworkConnectionServerSignalConnections;
-            std::vector< boost::shared_ptr<Session> > linkLocalSessions;
-            std::vector< boost::shared_ptr<LinkLocalConnector> > connectors;
-            std::vector< boost::shared_ptr<SessionTracer> > tracers;
+            std::vector< std::shared_ptr<Session> > linkLocalSessions;
+            std::vector< std::shared_ptr<LinkLocalConnector> > connectors;
+            std::vector< std::shared_ptr<SessionTracer> > tracers;
     };
 }

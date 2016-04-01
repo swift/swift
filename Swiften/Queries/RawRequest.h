@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <typeinfo>
-
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -22,7 +21,7 @@
 namespace Swift {
     class SWIFTEN_API RawRequest : public Request {
         public:
-            typedef boost::shared_ptr<RawRequest> ref;
+            typedef std::shared_ptr<RawRequest> ref;
 
             static ref create(IQ::Type type, const JID& recipient, const std::string& data, IQRouter* router) {
                 return ref(new RawRequest(type, recipient, data, router));
@@ -31,10 +30,10 @@ namespace Swift {
             boost::signal<void (const std::string&)> onResponse;
 
         private:
-            RawRequest(IQ::Type type, const JID& receiver, const std::string& data, IQRouter* router) : Request(type, receiver, boost::make_shared<RawXMLPayload>(data), router) {
+            RawRequest(IQ::Type type, const JID& receiver, const std::string& data, IQRouter* router) : Request(type, receiver, std::make_shared<RawXMLPayload>(data), router) {
             }
 
-            virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+            virtual void handleResponse(std::shared_ptr<Payload> payload, ErrorPayload::ref error) {
                 if (error) {
                     onResponse(ErrorSerializer(&serializers).serializePayload(error));
                 }

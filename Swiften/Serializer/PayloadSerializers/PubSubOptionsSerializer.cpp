@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubOptionsSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -22,14 +22,14 @@ PubSubOptionsSerializer::PubSubOptionsSerializer(PayloadSerializerCollection* se
 PubSubOptionsSerializer::~PubSubOptionsSerializer() {
 }
 
-std::string PubSubOptionsSerializer::serializePayload(boost::shared_ptr<PubSubOptions> payload) const {
+std::string PubSubOptionsSerializer::serializePayload(std::shared_ptr<PubSubOptions> payload) const {
     if (!payload) {
         return "";
     }
     XMLElement element("options", "http://jabber.org/protocol/pubsub");
     element.setAttribute("node", payload->getNode());
     element.setAttribute("jid", payload->getJID());
-    element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
+    element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
     if (payload->getSubscriptionID()) {
         element.setAttribute("subid", *payload->getSubscriptionID());
     }

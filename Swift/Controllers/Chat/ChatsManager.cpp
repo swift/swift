@@ -6,6 +6,8 @@
 
 #include <Swift/Controllers/Chat/ChatsManager.h>
 
+#include <memory>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
@@ -15,7 +17,6 @@
 #include <boost/serialization/split_free.hpp>
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/vector.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Log.h>
@@ -155,7 +156,7 @@ ChatsManager::ChatsManager(
     nickResolver_ = nickResolver;
     presenceOracle_ = presenceOracle;
     avatarManager_ = nullptr;
-    serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
+    serverDiscoInfo_ = std::make_shared<DiscoInfo>();
     presenceSender_ = presenceSender;
     uiEventStream_ = uiEventStream;
     mucBookmarkManager_ = nullptr;
@@ -544,24 +545,24 @@ void ChatsManager::finalizeImpromptuJoin(MUC::ref muc, const std::vector<JID>& j
     }
 }
 
-void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-    boost::shared_ptr<RequestChatUIEvent> chatEvent = boost::dynamic_pointer_cast<RequestChatUIEvent>(event);
+void ChatsManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
+    std::shared_ptr<RequestChatUIEvent> chatEvent = std::dynamic_pointer_cast<RequestChatUIEvent>(event);
     if (chatEvent) {
         handleChatRequest(chatEvent->getContact());
         return;
     }
-    boost::shared_ptr<RemoveMUCBookmarkUIEvent> removeMUCBookmarkEvent = boost::dynamic_pointer_cast<RemoveMUCBookmarkUIEvent>(event);
+    std::shared_ptr<RemoveMUCBookmarkUIEvent> removeMUCBookmarkEvent = std::dynamic_pointer_cast<RemoveMUCBookmarkUIEvent>(event);
     if (removeMUCBookmarkEvent) {
         mucBookmarkManager_->removeBookmark(removeMUCBookmarkEvent->getBookmark());
         return;
     }
-    boost::shared_ptr<AddMUCBookmarkUIEvent> addMUCBookmarkEvent = boost::dynamic_pointer_cast<AddMUCBookmarkUIEvent>(event);
+    std::shared_ptr<AddMUCBookmarkUIEvent> addMUCBookmarkEvent = std::dynamic_pointer_cast<AddMUCBookmarkUIEvent>(event);
     if (addMUCBookmarkEvent) {
         mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
         return;
     }
 
-    boost::shared_ptr<CreateImpromptuMUCUIEvent> createImpromptuMUCEvent = boost::dynamic_pointer_cast<CreateImpromptuMUCUIEvent>(event);
+    std::shared_ptr<CreateImpromptuMUCUIEvent> createImpromptuMUCEvent = std::dynamic_pointer_cast<CreateImpromptuMUCUIEvent>(event);
     if (createImpromptuMUCEvent) {
         assert(!localMUCServiceJID_.toString().empty());
         // create new muc
@@ -573,15 +574,15 @@ void ChatsManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
         mucControllers_[roomJID]->activateChatWindow();
     }
 
-    boost::shared_ptr<EditMUCBookmarkUIEvent> editMUCBookmarkEvent = boost::dynamic_pointer_cast<EditMUCBookmarkUIEvent>(event);
+    std::shared_ptr<EditMUCBookmarkUIEvent> editMUCBookmarkEvent = std::dynamic_pointer_cast<EditMUCBookmarkUIEvent>(event);
     if (editMUCBookmarkEvent) {
         mucBookmarkManager_->replaceBookmark(editMUCBookmarkEvent->getOldBookmark(), editMUCBookmarkEvent->getNewBookmark());
     }
-    else if (JoinMUCUIEvent::ref joinEvent = boost::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
+    else if (JoinMUCUIEvent::ref joinEvent = std::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
         handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getPassword(), joinEvent->getNick(), joinEvent->getShouldJoinAutomatically(), joinEvent->getCreateAsReservedRoomIfNew(), joinEvent->isImpromptu());
         mucControllers_[joinEvent->getJID()]->activateChatWindow();
     }
-    else if (boost::shared_ptr<RequestJoinMUCUIEvent> joinEvent = boost::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
+    else if (std::shared_ptr<RequestJoinMUCUIEvent> joinEvent = std::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
         if (!joinMUCWindow_) {
             joinMUCWindow_ = joinMUCWindowFactory_->createJoinMUCWindow(uiEventStream_);
             joinMUCWindow_->onSearchMUC.connect(boost::bind(&ChatsManager::handleSearchMUCRequest, this));
@@ -619,7 +620,7 @@ void ChatsManager::handleTransformChatToMUC(ChatController* chatController, Chat
 /**
  * If a resource goes offline, release bound chatdialog to that resource.
  */
-void ChatsManager::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
+void ChatsManager::handlePresenceChange(std::shared_ptr<Presence> newPresence) {
     if (mucRegistry_->isMUC(newPresence->getFrom().toBare())) return;
 
     foreach (ChatListWindow::Chat& chat, recentChats_) {
@@ -663,7 +664,7 @@ void ChatsManager::handleAvatarChanged(const JID& jid) {
     }
 }
 
-void ChatsManager::setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info) {
+void ChatsManager::setServerDiscoInfo(std::shared_ptr<DiscoInfo> info) {
     serverDiscoInfo_ = info;
     foreach (JIDChatControllerPair pair, chatControllers_) {
         pair.second->setAvailableServerFeatures(info);
@@ -691,7 +692,7 @@ void ChatsManager::setOnline(bool enabled) {
     } else {
         setupBookmarks();
         localMUCServiceJID_ = JID();
-        localMUCServiceFinderWalker_ = boost::make_shared<DiscoServiceWalker>(jid_.getDomain(), iqRouter_);
+        localMUCServiceFinderWalker_ = std::make_shared<DiscoServiceWalker>(jid_.getDomain(), iqRouter_);
         localMUCServiceFinderWalker_->onServiceFound.connect(boost::bind(&ChatsManager::handleLocalServiceFound, this, _1, _2));
         localMUCServiceFinderWalker_->onWalkAborted.connect(boost::bind(&ChatsManager::handleLocalServiceWalkFinished, this));
         localMUCServiceFinderWalker_->onWalkComplete.connect(boost::bind(&ChatsManager::handleLocalServiceWalkFinished, this));
@@ -723,7 +724,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
     assert(chatControllers_.find(contact) == chatControllers_.end());
-    boost::shared_ptr<ChatMessageParser> chatMessageParser = boost::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), false); /* a message parser that knows this is a chat (not a room/MUC) */
+    std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), false); /* a message parser that knows this is a chat (not a room/MUC) */
     ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, autoAcceptMUCInviteDecider_);
     chatControllers_[contact] = controller;
     controller->setAvailableServerFeatures(serverDiscoInfo_);
@@ -812,7 +813,7 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
         if (reuseChatwindow) {
             chatWindowFactoryAdapter = new SingleChatWindowFactoryAdapter(reuseChatwindow);
         }
-        boost::shared_ptr<ChatMessageParser> chatMessageParser = boost::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), true); /* a message parser that knows this is a room/MUC (not a chat) */
+        std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), true); /* a message parser that knows this is a room/MUC (not a chat) */
         controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_, mucBookmarkManager_);
         if (chatWindowFactoryAdapter) {
             /* The adapters are only passed to chat windows, which are deleted in their
@@ -866,9 +867,9 @@ void ChatsManager::handleUserNicknameChanged(MUCController* mucController, const
     }
 }
 
-void ChatsManager::handleIncomingMessage(boost::shared_ptr<Message> message) {
+void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> message) {
     JID jid = message->getFrom();
-    boost::shared_ptr<MessageEvent> event(new MessageEvent(message));
+    std::shared_ptr<MessageEvent> event(new MessageEvent(message));
     bool isInvite = !!message->getPayload<MUCInvitationPayload>();
     bool isMediatedInvite = (message->getPayload<MUCUserPayload>() && message->getPayload<MUCUserPayload>()->getInvite());
     if (isMediatedInvite) {
@@ -937,7 +938,7 @@ void ChatsManager::handleMUCSelectedAfterSearch(const JID& muc) {
 }
 
 void ChatsManager::handleMUCBookmarkActivated(const MUCBookmark& mucBookmark) {
-    uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(mucBookmark.getRoom(), mucBookmark.getPassword(), mucBookmark.getNick()));
+    uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(mucBookmark.getRoom(), mucBookmark.getPassword(), mucBookmark.getNick()));
 }
 
 void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) {
@@ -945,7 +946,7 @@ void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) 
     chatController->handleNewFileTransferController(ftc);
     chatController->activateChatWindow();
     if (ftc->isIncoming()) {
-        eventController_->handleIncomingEvent(boost::make_shared<IncomingFileTransferEvent>(ftc->getOtherParty()));
+        eventController_->handleIncomingEvent(std::make_shared<IncomingFileTransferEvent>(ftc->getOtherParty()));
     }
 }
 
@@ -979,18 +980,18 @@ void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
         foreach(StringJIDPair pair, chat.impromptuJIDs) {
             inviteJIDs.push_back(pair.second);
         }
-        uiEventStream_->send(boost::make_shared<CreateImpromptuMUCUIEvent>(inviteJIDs, chat.jid, ""));
+        uiEventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(inviteJIDs, chat.jid, ""));
     }
     else if (chat.isMUC) {
         /* FIXME: This means that recents requiring passwords will just flat-out not work */
-        uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick));
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick));
     }
     else {
-        uiEventStream_->send(boost::make_shared<RequestChatUIEvent>(chat.jid));
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(chat.jid));
     }
 }
 
-void ChatsManager::handleLocalServiceFound(const JID& service, boost::shared_ptr<DiscoInfo> info) {
+void ChatsManager::handleLocalServiceFound(const JID& service, std::shared_ptr<DiscoInfo> info) {
     foreach (DiscoInfo::Identity identity, info->getIdentities()) {
             if ((identity.getCategory() == "directory"
                 && identity.getType() == "chatroom")
@@ -1023,7 +1024,7 @@ std::vector<Contact::ref> Swift::ChatsManager::getContacts(bool withMUCNicks) {
     std::vector<Contact::ref> result;
     foreach (ChatListWindow::Chat chat, recentChats_) {
         if (!chat.isMUC) {
-            result.push_back(boost::make_shared<Contact>(chat.chatName.empty() ? chat.jid.toString() : chat.chatName, chat.jid, chat.statusType, chat.avatarPath));
+            result.push_back(std::make_shared<Contact>(chat.chatName.empty() ? chat.jid.toString() : chat.chatName, chat.jid, chat.statusType, chat.avatarPath));
         }
     }
     if (withMUCNicks) {
@@ -1037,7 +1038,7 @@ std::vector<Contact::ref> Swift::ChatsManager::getContacts(bool withMUCNicks) {
                 const JID nickJID = JID(mucJID.getNode(), mucJID.getDomain(), participant.first);
                 Presence::ref presence = presenceOracle_->getLastPresence(nickJID);
                 const boost::filesystem::path avatar = avatarManager_->getAvatarPath(nickJID);
-                result.push_back(boost::make_shared<Contact>(participant.first, JID(), presence->getShow(), avatar));
+                result.push_back(std::make_shared<Contact>(participant.first, JID(), presence->getShow(), avatar));
             }
         }
     }

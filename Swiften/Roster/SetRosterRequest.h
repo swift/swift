@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -16,7 +16,7 @@
 namespace Swift {
     class SWIFTEN_API SetRosterRequest : public Request {
         public:
-            typedef boost::shared_ptr<SetRosterRequest> ref;
+            typedef std::shared_ptr<SetRosterRequest> ref;
 
             static ref create(RosterPayload::ref payload, IQRouter* router) {
                 return ref(new SetRosterRequest(JID(), payload, router));
@@ -27,10 +27,10 @@ namespace Swift {
             }
 
         private:
-            SetRosterRequest(const JID& to, boost::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, to, boost::shared_ptr<RosterPayload>(payload), router) {
+            SetRosterRequest(const JID& to, std::shared_ptr<RosterPayload> payload, IQRouter* router) : Request(IQ::Set, to, std::shared_ptr<RosterPayload>(payload), router) {
             }
 
-            virtual void handleResponse(boost::shared_ptr<Payload> /*payload*/, ErrorPayload::ref error) {
+            virtual void handleResponse(std::shared_ptr<Payload> /*payload*/, ErrorPayload::ref error) {
                 onResponse(error);
             }
 

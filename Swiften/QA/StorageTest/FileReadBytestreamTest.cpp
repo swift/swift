@@ -32,24 +32,24 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
         }
 
         void testRead() {
-            boost::shared_ptr<FileReadBytestream> testling(createTestling());
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
-            boost::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
+            std::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
 
             CPPUNIT_ASSERT(createByteArray("/*\n * Copy") == *result.get());
         }
 
         void testRead_Twice() {
-            boost::shared_ptr<FileReadBytestream> testling(createTestling());
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
             testling->read(10);
-            boost::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
+            std::shared_ptr< std::vector<unsigned char> > result = testling->read(10);
 
             CPPUNIT_ASSERT_EQUAL(std::string("right (c) "), byteArrayToString(*result));
         }
 
         void testIsFinished_NotFinished() {
-            boost::shared_ptr<FileReadBytestream> testling(createTestling());
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
             testling->read(10);
 
@@ -57,7 +57,7 @@ class FileReadBytestreamTest : public CppUnit::TestFixture {
         }
 
         void testIsFinished_IsFinished() {
-            boost::shared_ptr<FileReadBytestream> testling(createTestling());
+            std::shared_ptr<FileReadBytestream> testling(createTestling());
 
             testling->read(4096);
 

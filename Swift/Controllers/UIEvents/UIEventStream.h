@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/boost_bsignals.h>
 
@@ -15,9 +15,9 @@
 namespace Swift {
     class UIEventStream {
         public:
-            boost::signal<void (boost::shared_ptr<UIEvent>)> onUIEvent;
+            boost::signal<void (std::shared_ptr<UIEvent>)> onUIEvent;
 
-            void send(boost::shared_ptr<UIEvent> event) {
+            void send(std::shared_ptr<UIEvent> event) {
                 onUIEvent(event);
             }
     };

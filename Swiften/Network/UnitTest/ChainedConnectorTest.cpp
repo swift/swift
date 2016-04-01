@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -51,7 +52,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
         }
 
         void testConnect_FirstConnectorSucceeds() {
-            boost::shared_ptr<ChainedConnector> testling(createConnector());
+            std::shared_ptr<ChainedConnector> testling(createConnector());
             connectionFactory1->connects = true;
             connectionFactory2->connects = false;
 
@@ -60,12 +61,12 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
-            CPPUNIT_ASSERT_EQUAL(1, boost::dynamic_pointer_cast<MockConnection>(connections[0])->id);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT_EQUAL(1, std::dynamic_pointer_cast<MockConnection>(connections[0])->id);
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_SecondConnectorSucceeds() {
-            boost::shared_ptr<ChainedConnector> testling(createConnector());
+            std::shared_ptr<ChainedConnector> testling(createConnector());
             connectionFactory1->connects = false;
             connectionFactory2->connects = true;
 
@@ -74,12 +75,12 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
-            CPPUNIT_ASSERT_EQUAL(2, boost::dynamic_pointer_cast<MockConnection>(connections[0])->id);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT_EQUAL(2, std::dynamic_pointer_cast<MockConnection>(connections[0])->id);
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_NoConnectorSucceeds() {
-            boost::shared_ptr<ChainedConnector> testling(createConnector());
+            std::shared_ptr<ChainedConnector> testling(createConnector());
             connectionFactory1->connects = false;
             connectionFactory2->connects = false;
 
@@ -88,14 +89,14 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_NoDNS() {
             /* Reset resolver so there's no record */
             delete resolver;
             resolver = new StaticDomainNameResolver(eventLoop);
-            boost::shared_ptr<ChainedConnector> testling(createConnector());
+            std::shared_ptr<ChainedConnector> testling(createConnector());
             connectionFactory1->connects = false;
             connectionFactory2->connects = false;
 
@@ -105,11 +106,11 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testStop() {
-            boost::shared_ptr<ChainedConnector> testling(createConnector());
+            std::shared_ptr<ChainedConnector> testling(createConnector());
             connectionFactory1->connects = true;
             connectionFactory2->connects = false;
 
@@ -122,18 +123,18 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<ChainedConnector> createConnector() {
+        std::shared_ptr<ChainedConnector> createConnector() {
             std::vector<ConnectionFactory*> factories;
             factories.push_back(connectionFactory1);
             factories.push_back(connectionFactory2);
-            boost::shared_ptr<ChainedConnector> connector = boost::make_shared<ChainedConnector>("foo.com", -1, boost::optional<std::string>("_xmpp-client._tcp."), resolver, factories, timerFactory);
+            std::shared_ptr<ChainedConnector> connector = std::make_shared<ChainedConnector>("foo.com", -1, boost::optional<std::string>("_xmpp-client._tcp."), resolver, factories, timerFactory);
             connector->onConnectFinished.connect(boost::bind(&ChainedConnectorTest::handleConnectorFinished, this, _1, _2));
             return connector;
         }
 
-        void handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> resultError) {
+        void handleConnectorFinished(std::shared_ptr<Connection> connection, std::shared_ptr<Error> resultError) {
             error = resultError;
-            boost::shared_ptr<MockConnection> c(boost::dynamic_pointer_cast<MockConnection>(connection));
+            std::shared_ptr<MockConnection> c(std::dynamic_pointer_cast<MockConnection>(connection));
             if (connection) {
                 assert(c);
             }
@@ -164,8 +165,8 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
             MockConnectionFactory(EventLoop* eventLoop, int id) : eventLoop(eventLoop), connects(true), id(id) {
             }
 
-            boost::shared_ptr<Connection> createConnection() {
-                return boost::make_shared<MockConnection>(connects, id, eventLoop);
+            std::shared_ptr<Connection> createConnection() {
+                return std::make_shared<MockConnection>(connects, id, eventLoop);
             }
 
             EventLoop* eventLoop;
@@ -180,8 +181,8 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
         MockConnectionFactory* connectionFactory1;
         MockConnectionFactory* connectionFactory2;
         DummyTimerFactory* timerFactory;
-        std::vector< boost::shared_ptr<MockConnection> > connections;
-        boost::shared_ptr<Error> error;
+        std::vector< std::shared_ptr<MockConnection> > connections;
+        std::shared_ptr<Error> error;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChainedConnectorTest);

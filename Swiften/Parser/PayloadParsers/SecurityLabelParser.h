@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
             virtual void handleEndElement(const std::string& element, const std::string&);
             virtual void handleCharacterData(const std::string& data);
-            boost::shared_ptr<SecurityLabel> getLabelPayload() const;
+            std::shared_ptr<SecurityLabel> getLabelPayload() const;
         private:
             enum Level {
                 TopLevel = 0,

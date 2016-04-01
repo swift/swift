@@ -53,9 +53,9 @@ void BlockListController::blockListDifferences(const std::vector<JID> &newBlockL
     }
 }
 
-void BlockListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
+void BlockListController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
     // handle UI dialog
-    boost::shared_ptr<RequestBlockListDialogUIEvent> requestDialogEvent = boost::dynamic_pointer_cast<RequestBlockListDialogUIEvent>(rawEvent);
+    std::shared_ptr<RequestBlockListDialogUIEvent> requestDialogEvent = std::dynamic_pointer_cast<RequestBlockListDialogUIEvent>(rawEvent);
     if (requestDialogEvent != nullptr) {
         if (blockListEditorWidget_ == nullptr) {
             blockListEditorWidget_ = blockListEditorWidgetFactory_->createBlockListEditorWidget();
@@ -69,7 +69,7 @@ void BlockListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
     }
 
     // handle block state change
-    boost::shared_ptr<RequestChangeBlockStateUIEvent> changeStateEvent = boost::dynamic_pointer_cast<RequestChangeBlockStateUIEvent>(rawEvent);
+    std::shared_ptr<RequestChangeBlockStateUIEvent> changeStateEvent = std::dynamic_pointer_cast<RequestChangeBlockStateUIEvent>(rawEvent);
     if (changeStateEvent != nullptr) {
         if (changeStateEvent->getBlockState() == RequestChangeBlockStateUIEvent::Blocked) {
             GenericRequest<BlockPayload>::ref blockRequest = blockListManager_->createBlockJIDRequest(changeStateEvent->getContact());
@@ -84,7 +84,7 @@ void BlockListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
     }
 }
 
-void BlockListController::handleBlockResponse(GenericRequest<BlockPayload>::ref request, boost::shared_ptr<BlockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor) {
+void BlockListController::handleBlockResponse(GenericRequest<BlockPayload>::ref request, std::shared_ptr<BlockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor) {
     if (error) {
         std::string errorMessage;
         // FIXME: Handle reporting of list of JIDs in a translatable way.
@@ -97,7 +97,7 @@ void BlockListController::handleBlockResponse(GenericRequest<BlockPayload>::ref 
             blockListEditorWidget_->setBusy(false);
         }
         else {
-            eventController_->handleIncomingEvent(boost::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
+            eventController_->handleIncomingEvent(std::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
         }
     }
     if (originEditor) {
@@ -109,7 +109,7 @@ void BlockListController::handleBlockResponse(GenericRequest<BlockPayload>::ref 
     }
 }
 
-void BlockListController::handleUnblockResponse(GenericRequest<UnblockPayload>::ref request, boost::shared_ptr<UnblockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor) {
+void BlockListController::handleUnblockResponse(GenericRequest<UnblockPayload>::ref request, std::shared_ptr<UnblockPayload>, ErrorPayload::ref error, const std::vector<JID>& jids, bool originEditor) {
     if (error) {
         std::string errorMessage;
         // FIXME: Handle reporting of list of JIDs in a translatable way.
@@ -122,7 +122,7 @@ void BlockListController::handleUnblockResponse(GenericRequest<UnblockPayload>::
             blockListEditorWidget_->setBusy(false);
         }
         else {
-            eventController_->handleIncomingEvent(boost::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
+            eventController_->handleIncomingEvent(std::make_shared<ErrorEvent>(request->getReceiver(), errorMessage));
         }
     }
     if (originEditor) {

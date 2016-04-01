@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/IsodeIQDelegationConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,11 +22,11 @@ IsodeIQDelegationConvertor::IsodeIQDelegationConvertor(LuaElementConvertors* con
 IsodeIQDelegationConvertor::~IsodeIQDelegationConvertor() {
 }
 
-boost::shared_ptr<IsodeIQDelegation> IsodeIQDelegationConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<IsodeIQDelegation> result = boost::make_shared<IsodeIQDelegation>();
+std::shared_ptr<IsodeIQDelegation> IsodeIQDelegationConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<IsodeIQDelegation> result = std::make_shared<IsodeIQDelegation>();
     lua_getfield(L, -1, "forward");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<Forwarded> payload = boost::dynamic_pointer_cast<Forwarded>(convertors->convertFromLuaUntyped(L, -1, "forwarded"))) {
+        if (std::shared_ptr<Forwarded> payload = std::dynamic_pointer_cast<Forwarded>(convertors->convertFromLuaUntyped(L, -1, "forwarded"))) {
             result->setForward(payload);
         }
     }
@@ -34,7 +34,7 @@ boost::shared_ptr<IsodeIQDelegation> IsodeIQDelegationConvertor::doConvertFromLu
     return result;
 }
 
-void IsodeIQDelegationConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<IsodeIQDelegation> payload) {
+void IsodeIQDelegationConvertor::doConvertToLua(lua_State* L, std::shared_ptr<IsodeIQDelegation> payload) {
     lua_createtable(L, 0, 0);
     if (convertors->convertToLuaUntyped(L, payload->getForward()) > 0) {
         lua_setfield(L, -2, "forward");

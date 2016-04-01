@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Override.h>
 
@@ -24,29 +24,29 @@ namespace Swift {
             LuaElementConvertors();
             virtual ~LuaElementConvertors();
 
-            boost::shared_ptr<Element> convertFromLua(lua_State*, int index);
-            int convertToLua(lua_State*, boost::shared_ptr<Element>);
+            std::shared_ptr<Element> convertFromLua(lua_State*, int index);
+            int convertToLua(lua_State*, std::shared_ptr<Element>);
 
             /**
              * Adds a toplevel type+data table with the given type.
              */
-            boost::shared_ptr<Element> convertFromLuaUntyped(lua_State*, int index, const std::string& type);
+            std::shared_ptr<Element> convertFromLuaUntyped(lua_State*, int index, const std::string& type);
 
             /**
              * Strips the toplevel type+data table, and only return the
              * data.
              */
-            int convertToLuaUntyped(lua_State*, boost::shared_ptr<Element>);
+            int convertToLuaUntyped(lua_State*, std::shared_ptr<Element>);
 
-            const std::vector< boost::shared_ptr<LuaElementConvertor> >& getConvertors() const {
+            const std::vector< std::shared_ptr<LuaElementConvertor> >& getConvertors() const {
                 return convertors;
             }
 
         private:
-            boost::optional<std::string> doConvertToLuaUntyped(lua_State*, boost::shared_ptr<Element>);
+            boost::optional<std::string> doConvertToLuaUntyped(lua_State*, std::shared_ptr<Element>);
             void registerConvertors();
 
         private:
-            std::vector< boost::shared_ptr<LuaElementConvertor> > convertors;
+            std::vector< std::shared_ptr<LuaElementConvertor> > convertors;
     };
 }

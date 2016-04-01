@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -23,12 +23,12 @@ namespace Swift {
      */
     class SWIFTEN_API IncomingFileTransfer : public FileTransfer {
         public:
-            typedef boost::shared_ptr<IncomingFileTransfer> ref;
+            typedef std::shared_ptr<IncomingFileTransfer> ref;
 
             virtual ~IncomingFileTransfer();
 
             virtual void accept(
-                    boost::shared_ptr<WriteBytestream>,
+                    std::shared_ptr<WriteBytestream>,
                     const FileTransferOptions& = FileTransferOptions()) = 0;
 
             virtual const JID& getSender() const = 0;

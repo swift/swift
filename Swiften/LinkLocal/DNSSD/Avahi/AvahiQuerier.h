@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <avahi-client/client.h>
 #include <avahi-client/lookup.h>
@@ -24,17 +23,17 @@ namespace Swift {
 
     class AvahiQuerier :
             public DNSSDQuerier,
-            public boost::enable_shared_from_this<AvahiQuerier> {
+            public std::enable_shared_from_this<AvahiQuerier> {
         public:
             AvahiQuerier(EventLoop* eventLoop);
             ~AvahiQuerier();
 
-            boost::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
-            boost::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
+            std::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
+            std::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
                     const std::string& name, int port, const ByteArray& info);
-            boost::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
+            std::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
                     const DNSSDServiceID&);
-            boost::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
+            std::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
                     const std::string& hostname, int interfaceIndex);
 
             void start();

@@ -44,13 +44,13 @@ namespace Swift {
             PlatformNATTraversalWorker(EventLoop* eventLoop);
             virtual ~PlatformNATTraversalWorker();
 
-            boost::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest();
-            boost::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort);
-            boost::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(int localPort, int publicPort);
+            std::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest();
+            std::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort);
+            std::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(int localPort, int publicPort);
 
         private:
             NATTraversalInterface* getNATTraversalInterface() const;
-            void addRequestToQueue(boost::shared_ptr<PlatformNATTraversalRequest>);
+            void addRequestToQueue(std::shared_ptr<PlatformNATTraversalRequest>);
             void start();
             void stop();
 
@@ -62,7 +62,7 @@ namespace Swift {
             EventLoop* eventLoop;
             Atomic<bool> stopRequested;
             boost::thread* thread;
-            std::deque<boost::shared_ptr<PlatformNATTraversalRequest> > queue;
+            std::deque<std::shared_ptr<PlatformNATTraversalRequest> > queue;
             boost::mutex queueMutex;
             boost::condition_variable queueNonEmpty;
 

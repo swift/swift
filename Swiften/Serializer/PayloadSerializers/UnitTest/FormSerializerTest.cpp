@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -22,7 +22,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerializeFormInformation() {
             FormSerializer testling;
-            boost::shared_ptr<Form> form(new Form(Form::FormType));
+            std::shared_ptr<Form> form(new Form(Form::FormType));
             form->setTitle("Bot Configuration");
             form->setInstructions("Hello!\nFill out this form to configure your new bot!");
 
@@ -36,39 +36,39 @@ class FormSerializerTest : public CppUnit::TestFixture {
 
         void testSerializeLayout() {
             FormSerializer testling;
-            boost::shared_ptr<Form> form(new Form(Form::FormType));
+            std::shared_ptr<Form> form(new Form(Form::FormType));
 
-            FormPage::page page = boost::make_shared<FormPage>();
+            FormPage::page page = std::make_shared<FormPage>();
             page->setLabel("P1");
-            FormReportedRef::ref reportedRef = boost::make_shared<FormReportedRef>();
+            FormReportedRef::ref reportedRef = std::make_shared<FormReportedRef>();
             page->addReportedRef(reportedRef);
-            FormText::text formText = boost::make_shared<FormText>();
+            FormText::text formText = std::make_shared<FormText>();
             formText->setTextString("P1T1");
             page->addTextElement(formText);
-            FormField::ref field = boost::make_shared<FormField>(FormField::TextSingleType);
+            FormField::ref field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("P1F1");
             field->setLabel("field one");
             page->addField(field);
 
-            FormSection::section section = boost::make_shared<FormSection>();
+            FormSection::section section = std::make_shared<FormSection>();
             section->setLabel("P1S1");
-            formText = boost::make_shared<FormText>();
+            formText = std::make_shared<FormText>();
             formText->setTextString("P1S1T1");
             section->addTextElement(formText);
-            field = boost::make_shared<FormField>(FormField::TextSingleType);
+            field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("P1S1F1");
             field->setLabel("field two");
             section->addField(field);
             page->addChildSection(section);
             form->addPage(page);
 
-            page = boost::make_shared<FormPage>();
+            page = std::make_shared<FormPage>();
             page->setLabel("P2");
-            section = boost::make_shared<FormSection>();
+            section = std::make_shared<FormSection>();
             section->setLabel("P2S1");
-            FormSection::section subSection = boost::make_shared<FormSection>();
+            FormSection::section subSection = std::make_shared<FormSection>();
             subSection->setLabel("P2S2");
-            FormSection::section subSection2 = boost::make_shared<FormSection>();
+            FormSection::section subSection2 = std::make_shared<FormSection>();
             subSection2->setLabel("P2S3");
             subSection->addChildSection(subSection2);
             section->addChildSection(subSection);
@@ -101,37 +101,37 @@ class FormSerializerTest : public CppUnit::TestFixture {
 
         void testSerializeFields() {
             FormSerializer testling;
-            boost::shared_ptr<Form> form(new Form(Form::FormType));
+            std::shared_ptr<Form> form(new Form(Form::FormType));
 
-            FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:bot");
+            FormField::ref field = std::make_shared<FormField>(FormField::HiddenType, "jabber:bot");
             field->setName("FORM_TYPE");
             form->addField(field);
 
-            form->addField(boost::make_shared<FormField>(FormField::FixedType, "Section 1: Bot Info"));
+            form->addField(std::make_shared<FormField>(FormField::FixedType, "Section 1: Bot Info"));
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType);
+            field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("botname");
             field->setLabel("The name of your bot");
             form->addField(field);
 
-            field = boost::make_shared<FormField>(FormField::TextMultiType);
+            field = std::make_shared<FormField>(FormField::TextMultiType);
             field->setTextMultiValue("This is a bot.\nA quite good one actually");
             field->setName("description");
             field->setLabel("Helpful description of your bot");
             form->addField(field);
 
-            field = boost::make_shared<FormField>(FormField::BooleanType, "1");
+            field = std::make_shared<FormField>(FormField::BooleanType, "1");
             field->setName("public");
             field->setLabel("Public bot?");
             field->setRequired(true);
             form->addField(field);
 
-            field = boost::make_shared<FormField>(FormField::TextPrivateType);
+            field = std::make_shared<FormField>(FormField::TextPrivateType);
             field->setName("password");
             field->setLabel("Password for special access");
             form->addField(field);
 
-            field = boost::make_shared<FormField>(FormField::ListMultiType);
+            field = std::make_shared<FormField>(FormField::ListMultiType);
             field->addValue("news");
             field->addValue("search");
             field->setName("features");
@@ -143,7 +143,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
             field->addOption(FormField::Option("Search", "search"));
             form->addField(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType, "20");
+            field = std::make_shared<FormField>(FormField::ListSingleType, "20");
             field->setName("maxsubs");
             field->setLabel("Maximum number of subscribers");
             field->addOption(FormField::Option("10", "10"));
@@ -155,7 +155,7 @@ class FormSerializerTest : public CppUnit::TestFixture {
             form->addField(field);
 
             std::vector<JID> jids;
-            field = boost::make_shared<FormField>(FormField::JIDMultiType);
+            field = std::make_shared<FormField>(FormField::JIDMultiType);
             field->addValue("foo@bar.com");
             field->addValue("baz@fum.org");
             field->setName("invitelist");
@@ -204,64 +204,64 @@ class FormSerializerTest : public CppUnit::TestFixture {
 
         void testSerializeFormItems() {
             FormSerializer testling;
-            boost::shared_ptr<Form> form(new Form(Form::ResultType));
+            std::shared_ptr<Form> form(new Form(Form::ResultType));
 
-            FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:iq:search");
+            FormField::ref field = std::make_shared<FormField>(FormField::HiddenType, "jabber:iq:search");
             field->setName("FORM_TYPE");
             form->addField(field);
 
             // reported fields
-            field = boost::make_shared<FormField>(FormField::TextSingleType);
+            field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("first");
             field->setLabel("Given Name");
             form->addReportedField(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType);
+            field = std::make_shared<FormField>(FormField::TextSingleType);
             field->setName("last");
             field->setLabel("Family Name");
             form->addReportedField(field);
 
-            field = boost::make_shared<FormField>(FormField::JIDSingleType);
+            field = std::make_shared<FormField>(FormField::JIDSingleType);
             field->setName("jid");
             field->setLabel("Jabber ID");
             form->addReportedField(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType);
+            field = std::make_shared<FormField>(FormField::ListSingleType);
             field->setName("x-gender");
             field->setLabel("Gender");
             form->addReportedField(field);
 
             Form::FormItem firstItem;
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Benvolio");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Benvolio");
             field->setName("first");
             firstItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Montague");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Montague");
             field->setName("last");
             firstItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::JIDSingleType, JID("benvolio@montague.net"));
+            field = std::make_shared<FormField>(FormField::JIDSingleType, JID("benvolio@montague.net"));
             field->setName("jid");
             firstItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType, "male");
+            field = std::make_shared<FormField>(FormField::ListSingleType, "male");
             field->setName("x-gender");
             firstItem.push_back(field);
 
             Form::FormItem secondItem;
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Romeo");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Romeo");
             field->setName("first");
             secondItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::TextSingleType, "Montague");
+            field = std::make_shared<FormField>(FormField::TextSingleType, "Montague");
             field->setName("last");
             secondItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::JIDSingleType, JID("romeo@montague.net"));
+            field = std::make_shared<FormField>(FormField::JIDSingleType, JID("romeo@montague.net"));
             field->setName("jid");
             secondItem.push_back(field);
 
-            field = boost::make_shared<FormField>(FormField::ListSingleType, "male");
+            field = std::make_shared<FormField>(FormField::ListSingleType, "male");
             field->setName("x-gender");
             secondItem.push_back(field);
 

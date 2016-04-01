@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ ClientSessionStanzaChannel::~ClientSessionStanzaChannel() {
     }
 }
 
-void ClientSessionStanzaChannel::setSession(boost::shared_ptr<ClientSession> session) {
+void ClientSessionStanzaChannel::setSession(std::shared_ptr<ClientSession> session) {
     assert(!this->session);
     this->session = session;
     session->onInitialized.connect(boost::bind(&ClientSessionStanzaChannel::handleSessionInitialized, this));
@@ -31,15 +31,15 @@ void ClientSessionStanzaChannel::setSession(boost::shared_ptr<ClientSession> ses
     session->onStanzaAcked.connect(boost::bind(&ClientSessionStanzaChannel::handleStanzaAcked, this, _1));
 }
 
-void ClientSessionStanzaChannel::sendIQ(boost::shared_ptr<IQ> iq) {
+void ClientSessionStanzaChannel::sendIQ(std::shared_ptr<IQ> iq) {
     send(iq);
 }
 
-void ClientSessionStanzaChannel::sendMessage(boost::shared_ptr<Message> message) {
+void ClientSessionStanzaChannel::sendMessage(std::shared_ptr<Message> message) {
     send(message);
 }
 
-void ClientSessionStanzaChannel::sendPresence(boost::shared_ptr<Presence> presence) {
+void ClientSessionStanzaChannel::sendPresence(std::shared_ptr<Presence> presence) {
     send(presence);
 }
 
@@ -47,7 +47,7 @@ std::string ClientSessionStanzaChannel::getNewIQID() {
     return idGenerator.generateID();
 }
 
-void ClientSessionStanzaChannel::send(boost::shared_ptr<Stanza> stanza) {
+void ClientSessionStanzaChannel::send(std::shared_ptr<Stanza> stanza) {
     if (!isAvailable()) {
         std::cerr << "Warning: Client: Trying to send a stanza while disconnected." << std::endl;
         return;
@@ -55,7 +55,7 @@ void ClientSessionStanzaChannel::send(boost::shared_ptr<Stanza> stanza) {
     session->sendStanza(stanza);
 }
 
-void ClientSessionStanzaChannel::handleSessionFinished(boost::shared_ptr<Error>) {
+void ClientSessionStanzaChannel::handleSessionFinished(std::shared_ptr<Error>) {
     session->onFinished.disconnect(boost::bind(&ClientSessionStanzaChannel::handleSessionFinished, this, _1));
     session->onStanzaReceived.disconnect(boost::bind(&ClientSessionStanzaChannel::handleStanza, this, _1));
     session->onStanzaAcked.disconnect(boost::bind(&ClientSessionStanzaChannel::handleStanzaAcked, this, _1));
@@ -65,20 +65,20 @@ void ClientSessionStanzaChannel::handleSessionFinished(boost::shared_ptr<Error>)
     onAvailableChanged(false);
 }
 
-void ClientSessionStanzaChannel::handleStanza(boost::shared_ptr<Stanza> stanza) {
-    boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(stanza);
+void ClientSessionStanzaChannel::handleStanza(std::shared_ptr<Stanza> stanza) {
+    std::shared_ptr<Message> message = std::dynamic_pointer_cast<Message>(stanza);
     if (message) {
         onMessageReceived(message);
         return;
     }
 
-    boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(stanza);
+    std::shared_ptr<Presence> presence = std::dynamic_pointer_cast<Presence>(stanza);
     if (presence) {
         onPresenceReceived(presence);
         return;
     }
 
-    boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(stanza);
+    std::shared_ptr<IQ> iq = std::dynamic_pointer_cast<IQ>(stanza);
     if (iq) {
         onIQReceived(iq);
         return;
@@ -100,7 +100,7 @@ std::vector<Certificate::ref> ClientSessionStanzaChannel::getPeerCertificateChai
     return std::vector<Certificate::ref>();
 }
 
-void ClientSessionStanzaChannel::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
+void ClientSessionStanzaChannel::handleStanzaAcked(std::shared_ptr<Stanza> stanza) {
     onStanzaAcked(stanza);
 }
 

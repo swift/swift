@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ void PubSubSubscriptionParser::handleStartElement(const std::string& element, co
 
     if (level == 1) {
         if (element == "subscribe-options" && ns == "http://jabber.org/protocol/pubsub") {
-            currentPayloadParser = boost::make_shared<PubSubSubscribeOptionsParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubSubscribeOptionsParser>(parsers);
         }
     }
 
@@ -65,7 +65,7 @@ void PubSubSubscriptionParser::handleEndElement(const std::string& element, cons
 
         if (level == 1) {
             if (element == "subscribe-options" && ns == "http://jabber.org/protocol/pubsub") {
-                getPayloadInternal()->setOptions(boost::dynamic_pointer_cast<PubSubSubscribeOptions>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setOptions(std::dynamic_pointer_cast<PubSubSubscribeOptions>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

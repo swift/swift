@@ -6,7 +6,7 @@
 
 #include <Sluift/LuaElementConvertors.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 
@@ -42,30 +42,30 @@ using namespace Swift;
 
 LuaElementConvertors::LuaElementConvertors() {
     registerConvertors();
-    convertors.push_back(boost::make_shared<StatusConvertor>());
-    convertors.push_back(boost::make_shared<StatusShowConvertor>());
-    convertors.push_back(boost::make_shared<DelayConvertor>());
-    convertors.push_back(boost::make_shared<CommandConvertor>(this));
-    convertors.push_back(boost::make_shared<PubSubEventConvertor>(this));
-    convertors.push_back(boost::make_shared<BodyConvertor>());
-    convertors.push_back(boost::make_shared<SubjectConvertor>());
-    convertors.push_back(boost::make_shared<VCardConvertor>());
-    convertors.push_back(boost::make_shared<VCardUpdateConvertor>());
-    convertors.push_back(boost::make_shared<FormConvertor>());
-    convertors.push_back(boost::make_shared<SoftwareVersionConvertor>());
-    convertors.push_back(boost::make_shared<DiscoInfoConvertor>());
-    convertors.push_back(boost::make_shared<DiscoItemsConvertor>());
-    convertors.push_back(boost::make_shared<IQConvertor>(this));
-    convertors.push_back(boost::make_shared<PresenceConvertor>(this));
-    convertors.push_back(boost::make_shared<MessageConvertor>(this));
-    convertors.push_back(boost::make_shared<ResultSetConvertor>());
-    convertors.push_back(boost::make_shared<ForwardedConvertor>(this));
-    convertors.push_back(boost::make_shared<MAMResultConvertor>(this));
-    convertors.push_back(boost::make_shared<MAMQueryConvertor>(this));
-    convertors.push_back(boost::make_shared<MAMFinConvertor>(this));
-    convertors.push_back(boost::make_shared<DOMElementConvertor>());
-    convertors.push_back(boost::make_shared<RawXMLElementConvertor>());
-    convertors.push_back(boost::make_shared<DefaultElementConvertor>());
+    convertors.push_back(std::make_shared<StatusConvertor>());
+    convertors.push_back(std::make_shared<StatusShowConvertor>());
+    convertors.push_back(std::make_shared<DelayConvertor>());
+    convertors.push_back(std::make_shared<CommandConvertor>(this));
+    convertors.push_back(std::make_shared<PubSubEventConvertor>(this));
+    convertors.push_back(std::make_shared<BodyConvertor>());
+    convertors.push_back(std::make_shared<SubjectConvertor>());
+    convertors.push_back(std::make_shared<VCardConvertor>());
+    convertors.push_back(std::make_shared<VCardUpdateConvertor>());
+    convertors.push_back(std::make_shared<FormConvertor>());
+    convertors.push_back(std::make_shared<SoftwareVersionConvertor>());
+    convertors.push_back(std::make_shared<DiscoInfoConvertor>());
+    convertors.push_back(std::make_shared<DiscoItemsConvertor>());
+    convertors.push_back(std::make_shared<IQConvertor>(this));
+    convertors.push_back(std::make_shared<PresenceConvertor>(this));
+    convertors.push_back(std::make_shared<MessageConvertor>(this));
+    convertors.push_back(std::make_shared<ResultSetConvertor>());
+    convertors.push_back(std::make_shared<ForwardedConvertor>(this));
+    convertors.push_back(std::make_shared<MAMResultConvertor>(this));
+    convertors.push_back(std::make_shared<MAMQueryConvertor>(this));
+    convertors.push_back(std::make_shared<MAMFinConvertor>(this));
+    convertors.push_back(std::make_shared<DOMElementConvertor>());
+    convertors.push_back(std::make_shared<RawXMLElementConvertor>());
+    convertors.push_back(std::make_shared<DefaultElementConvertor>());
 }
 
 LuaElementConvertors::~LuaElementConvertors() {
@@ -73,7 +73,7 @@ LuaElementConvertors::~LuaElementConvertors() {
 
 #include <Sluift/ElementConvertors/ElementConvertors.ipp>
 
-boost::shared_ptr<Element> LuaElementConvertors::convertFromLua(lua_State* L, int index) {
+std::shared_ptr<Element> LuaElementConvertors::convertFromLua(lua_State* L, int index) {
     if (lua_isstring(L, index)) {
         return convertFromLuaUntyped(L, index, "xml");
     }
@@ -89,18 +89,18 @@ boost::shared_ptr<Element> LuaElementConvertors::convertFromLua(lua_State* L, in
     throw Lua::Exception("Unable to determine type");
 }
 
-boost::shared_ptr<Element> LuaElementConvertors::convertFromLuaUntyped(lua_State* L, int index, const std::string& type) {
+std::shared_ptr<Element> LuaElementConvertors::convertFromLuaUntyped(lua_State* L, int index, const std::string& type) {
     index = Lua::absoluteOffset(L, index);
-    foreach (boost::shared_ptr<LuaElementConvertor> convertor, convertors) {
-        if (boost::shared_ptr<Element> result = convertor->convertFromLua(L, index, type)) {
+    foreach (std::shared_ptr<LuaElementConvertor> convertor, convertors) {
+        if (std::shared_ptr<Element> result = convertor->convertFromLua(L, index, type)) {
             return result;
         }
     }
-    return boost::shared_ptr<Element>();
+    return std::shared_ptr<Element>();
 }
 
 
-int LuaElementConvertors::convertToLua(lua_State* L, boost::shared_ptr<Element> payload) {
+int LuaElementConvertors::convertToLua(lua_State* L, std::shared_ptr<Element> payload) {
     if (boost::optional<std::string> type = doConvertToLuaUntyped(L, payload)) {
         if (lua_istable(L, -1)) {
             lua_pushstring(L, type->c_str());
@@ -115,7 +115,7 @@ int LuaElementConvertors::convertToLua(lua_State* L, boost::shared_ptr<Element> 
     return 0;
 }
 
-int LuaElementConvertors::convertToLuaUntyped(lua_State* L, boost::shared_ptr<Element> payload) {
+int LuaElementConvertors::convertToLuaUntyped(lua_State* L, std::shared_ptr<Element> payload) {
     if (doConvertToLuaUntyped(L, payload)) {
         return 1;
     }
@@ -123,11 +123,11 @@ int LuaElementConvertors::convertToLuaUntyped(lua_State* L, boost::shared_ptr<El
 }
 
 boost::optional<std::string> LuaElementConvertors::doConvertToLuaUntyped(
-        lua_State* L, boost::shared_ptr<Element> payload) {
+        lua_State* L, std::shared_ptr<Element> payload) {
     if (!payload) {
         return LuaElementConvertor::NO_RESULT;
     }
-    foreach (boost::shared_ptr<LuaElementConvertor> convertor, convertors) {
+    foreach (std::shared_ptr<LuaElementConvertor> convertor, convertors) {
         if (boost::optional<std::string> type = convertor->convertToLua(L, payload)) {
             return *type;
         }

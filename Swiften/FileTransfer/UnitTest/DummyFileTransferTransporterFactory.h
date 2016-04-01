@@ -84,37 +84,37 @@ public:
     virtual void stopActivatingProxy() {
     }
 
-    virtual boost::shared_ptr<TransportSession> createIBBSendSession(const std::string& sessionID, unsigned int blockSize, boost::shared_ptr<ReadBytestream> stream) {
-        boost::shared_ptr<IBBSendSession> ibbSession = boost::make_shared<IBBSendSession>(
+    virtual std::shared_ptr<TransportSession> createIBBSendSession(const std::string& sessionID, unsigned int blockSize, std::shared_ptr<ReadBytestream> stream) {
+        std::shared_ptr<IBBSendSession> ibbSession = std::make_shared<IBBSendSession>(
                 sessionID, initiator_, responder_, stream, iqRouter_);
         ibbSession->setBlockSize(blockSize);
-        return boost::make_shared<IBBSendTransportSession>(ibbSession);
+        return std::make_shared<IBBSendTransportSession>(ibbSession);
     }
 
-    virtual boost::shared_ptr<TransportSession> createIBBReceiveSession(const std::string& sessionID, unsigned long long size, boost::shared_ptr<WriteBytestream> stream) {
-        boost::shared_ptr<IBBReceiveSession> ibbSession = boost::make_shared<IBBReceiveSession>(
+    virtual std::shared_ptr<TransportSession> createIBBReceiveSession(const std::string& sessionID, unsigned long long size, std::shared_ptr<WriteBytestream> stream) {
+        std::shared_ptr<IBBReceiveSession> ibbSession = std::make_shared<IBBReceiveSession>(
                 sessionID, initiator_, responder_, size, stream, iqRouter_);
-        return boost::make_shared<IBBReceiveTransportSession>(ibbSession);
+        return std::make_shared<IBBReceiveTransportSession>(ibbSession);
     }
 
-    virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-            boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
-        return boost::shared_ptr<TransportSession>();
+    virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
+            std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
+        return std::shared_ptr<TransportSession>();
     }
 
-    virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-            boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
-        return boost::shared_ptr<TransportSession>();
+    virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
+            std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
+        return std::shared_ptr<TransportSession>();
     }
 
-    virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-            boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
-        return boost::shared_ptr<TransportSession>();
+    virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
+            std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
+        return std::shared_ptr<TransportSession>();
     }
 
-    virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-            boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
-        return boost::shared_ptr<TransportSession>();
+    virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
+            std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& /* candidate */) {
+        return std::shared_ptr<TransportSession>();
     }
 
 private:

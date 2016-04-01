@@ -41,7 +41,7 @@ void XMPPLayer::writeFooter() {
     writeDataInternal(createSafeByteArray(xmppSerializer_->serializeFooter()));
 }
 
-void XMPPLayer::writeElement(boost::shared_ptr<ToplevelElement> element) {
+void XMPPLayer::writeElement(std::shared_ptr<ToplevelElement> element) {
     writeDataInternal(xmppSerializer_->serializeElement(element));
 }
 
@@ -81,7 +81,7 @@ void XMPPLayer::handleStreamStart(const ProtocolHeader& header) {
     onStreamStart(header);
 }
 
-void XMPPLayer::handleElement(boost::shared_ptr<ToplevelElement> stanza) {
+void XMPPLayer::handleElement(std::shared_ptr<ToplevelElement> stanza) {
     onElement(stanza);
 }
 

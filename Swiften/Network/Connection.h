@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -17,7 +17,7 @@ namespace Swift {
 
     class SWIFTEN_API Connection {
         public:
-            typedef boost::shared_ptr<Connection> ref;
+            typedef std::shared_ptr<Connection> ref;
 
             enum Error {
                 ReadError,
@@ -38,7 +38,7 @@ namespace Swift {
         public:
             boost::signal<void (bool /* error */)> onConnectFinished;
             boost::signal<void (const boost::optional<Error>&)> onDisconnected;
-            boost::signal<void (boost::shared_ptr<SafeByteArray>)> onDataRead;
+            boost::signal<void (std::shared_ptr<SafeByteArray>)> onDataRead;
             boost::signal<void ()> onDataWritten;
     };
 }

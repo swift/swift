@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -56,24 +56,24 @@ void EventDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,
     }
 }
 
-EventType EventDelegate::getEventType(boost::shared_ptr<StanzaEvent> event) const {
-    boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event);
+EventType EventDelegate::getEventType(std::shared_ptr<StanzaEvent> event) const {
+    std::shared_ptr<MessageEvent> messageEvent = std::dynamic_pointer_cast<MessageEvent>(event);
     if (messageEvent) {
         return MessageEventType;
     }
-    boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event);
+    std::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = std::dynamic_pointer_cast<SubscriptionRequestEvent>(event);
     if (subscriptionEvent) {
         return SubscriptionEventType;
     }
-    boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event);
+    std::shared_ptr<ErrorEvent> errorEvent = std::dynamic_pointer_cast<ErrorEvent>(event);
     if (errorEvent) {
         return ErrorEventType;
     }
-    boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event);
+    std::shared_ptr<MUCInviteEvent> mucInviteEvent = std::dynamic_pointer_cast<MUCInviteEvent>(event);
     if (mucInviteEvent) {
         return MUCInviteEventType;
     }
-    boost::shared_ptr<IncomingFileTransferEvent> incomingFileTransferEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event);
+    std::shared_ptr<IncomingFileTransferEvent> incomingFileTransferEvent = std::dynamic_pointer_cast<IncomingFileTransferEvent>(event);
     if (incomingFileTransferEvent) {
         return IncomingFileTransferEventType;
     }

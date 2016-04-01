@@ -103,7 +103,7 @@ void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
     }
     else if (ChatListWhiteboardItem* whiteboardItem = dynamic_cast<ChatListWhiteboardItem*>(item)) {
         if (!whiteboardItem->getChat().isMUC || bookmarksEnabled_) {
-            eventStream_->send(boost::make_shared<ShowWhiteboardUIEvent>(whiteboardItem->getChat().jid));
+            eventStream_->send(std::make_shared<ShowWhiteboardUIEvent>(whiteboardItem->getChat().jid));
         }
     }
 }
@@ -143,7 +143,7 @@ void QtChatListWindow::setOnline(bool isOnline) {
 void QtChatListWindow::handleRemoveBookmark() {
     const ChatListMUCItem* mucItem = dynamic_cast<const ChatListMUCItem*>(contextMenuItem_);
     if (!mucItem) return;
-    eventStream_->send(boost::shared_ptr<UIEvent>(new RemoveMUCBookmarkUIEvent(mucItem->getBookmark())));
+    eventStream_->send(std::make_shared<RemoveMUCBookmarkUIEvent>(mucItem->getBookmark()));
 }
 
 void QtChatListWindow::handleAddBookmarkFromRecents() {
@@ -153,7 +153,7 @@ void QtChatListWindow::handleAddBookmarkFromRecents() {
         MUCBookmark bookmark(chat.jid, chat.jid.toBare().toString());
         bookmark.setNick(chat.nick);
         bookmark.setPassword(chat.password);
-        eventStream_->send(boost::shared_ptr<UIEvent>(new AddMUCBookmarkUIEvent(bookmark)));
+        eventStream_->send(std::make_shared<AddMUCBookmarkUIEvent>(bookmark));
     }
 }
 

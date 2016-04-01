@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-IBBReceiveTransportSession::IBBReceiveTransportSession(boost::shared_ptr<IBBReceiveSession> session) : session(session) {
+IBBReceiveTransportSession::IBBReceiveTransportSession(std::shared_ptr<IBBReceiveSession> session) : session(session) {
     finishedConnection = session->onFinished.connect(boost::bind(boost::ref(onFinished), _1));
 }
 

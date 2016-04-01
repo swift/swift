@@ -5,16 +5,17 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
+
 #include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -46,7 +47,7 @@ namespace Swift {
                 Type type;
                 std::string message;
             };
-            typedef boost::shared_ptr<FileTransfer> ref;
+            typedef std::shared_ptr<FileTransfer> ref;
 
         public:
             FileTransfer();

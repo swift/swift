@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 
@@ -17,7 +17,7 @@ class AdHocCommandWindow;
 
 class AdHocController {
 public:
-    AdHocController(AdHocCommandWindowFactory* factory, boost::shared_ptr<OutgoingAdHocCommandSession> command);
+    AdHocController(AdHocCommandWindowFactory* factory, std::shared_ptr<OutgoingAdHocCommandSession> command);
     ~AdHocController();
     boost::signal<void ()> onDeleting;
     void setOnline(bool online);

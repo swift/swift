@@ -7,9 +7,8 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -84,7 +83,7 @@ namespace Swift {
             ActionState getActionState(Command::Action action) const;
 
         private:
-            void handleResponse(boost::shared_ptr<Command> payload, ErrorPayload::ref error);
+            void handleResponse(std::shared_ptr<Command> payload, ErrorPayload::ref error);
             void submitForm(Form::ref, Command::Action action);
 
         private:

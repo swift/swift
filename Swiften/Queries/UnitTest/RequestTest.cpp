@@ -4,9 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -56,25 +56,25 @@ class RequestTest : public CppUnit::TestFixture {
                 MyRequest(
                         IQ::Type type,
                         const JID& receiver,
-                        boost::shared_ptr<Payload> payload,
+                        std::shared_ptr<Payload> payload,
                         IQRouter* router) :
                             Request(type, receiver, payload, router) {
                 }
 
-                virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+                virtual void handleResponse(std::shared_ptr<Payload> payload, ErrorPayload::ref error) {
                     onResponse(payload, error);
                 }
 
             public:
-                boost::signal<void (boost::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
+                boost::signal<void (std::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
         };
 
     public:
         void setUp() {
             channel_ = new DummyIQChannel();
             router_ = new IQRouter(channel_);
-            payload_ = boost::shared_ptr<Payload>(new MyPayload("foo"));
-            responsePayload_ = boost::shared_ptr<Payload>(new MyPayload("bar"));
+            payload_ = std::make_shared<MyPayload>("foo");
+            responsePayload_ = std::make_shared<MyPayload>("bar");
             responsesReceived_ = 0;
         }
 
@@ -131,8 +131,8 @@ class RequestTest : public CppUnit::TestFixture {
             testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
             testling.send();
 
-            boost::shared_ptr<IQ> error = createError(JID("foo@bar.com/baz"),"test-id");
-            boost::shared_ptr<Payload> errorPayload = boost::make_shared<ErrorPayload>(ErrorPayload::InternalServerError);
+            std::shared_ptr<IQ> error = createError(JID("foo@bar.com/baz"),"test-id");
+            std::shared_ptr<Payload> errorPayload = std::make_shared<ErrorPayload>(ErrorPayload::InternalServerError);
             error->addPayload(errorPayload);
             channel_->onIQReceived(error);
 
@@ -170,7 +170,7 @@ class RequestTest : public CppUnit::TestFixture {
             testling.onResponse.connect(boost::bind(&RequestTest::handleDifferentResponse, this, _1, _2));
             testling.send();
 
-            responsePayload_ = boost::make_shared<MyOtherPayload>();
+            responsePayload_ = std::make_shared<MyOtherPayload>();
             channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"test-id"));
 
             CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
@@ -179,12 +179,12 @@ class RequestTest : public CppUnit::TestFixture {
         }
 
         void testHandleIQ_RawXMLPayload() {
-            payload_ = boost::make_shared<RawXMLPayload>("<bla/>");
+            payload_ = std::make_shared<RawXMLPayload>("<bla/>");
             MyRequest testling(IQ::Get, JID("foo@bar.com/baz"), payload_, router_);
             testling.onResponse.connect(boost::bind(&RequestTest::handleRawXMLResponse, this, _1, _2));
             testling.send();
 
-            responsePayload_ = boost::make_shared<MyOtherPayload>();
+            responsePayload_ = std::make_shared<MyOtherPayload>();
             channel_->onIQReceived(createResponse(JID("foo@bar.com/baz"),"test-id"));
 
             CPPUNIT_ASSERT_EQUAL(1, responsesReceived_);
@@ -197,7 +197,7 @@ class RequestTest : public CppUnit::TestFixture {
             testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
             testling.send();
 
-            boost::shared_ptr<IQ> response = createResponse(JID("foo@bar.com/baz"),"test-id");
+            std::shared_ptr<IQ> response = createResponse(JID("foo@bar.com/baz"),"test-id");
             response->setType(IQ::Get);
             channel_->onIQReceived(response);
 
@@ -211,7 +211,7 @@ class RequestTest : public CppUnit::TestFixture {
             testling.onResponse.connect(boost::bind(&RequestTest::handleResponse, this, _1, _2));
             testling.send();
 
-            boost::shared_ptr<IQ> response = createResponse(JID("foo@bar.com/baz"), "test-id");
+            std::shared_ptr<IQ> response = createResponse(JID("foo@bar.com/baz"), "test-id");
             response->setType(IQ::Set);
             channel_->onIQReceived(response);
 
@@ -315,41 +315,41 @@ class RequestTest : public CppUnit::TestFixture {
 
 
     private:
-        void handleResponse(boost::shared_ptr<Payload> p, ErrorPayload::ref e) {
+        void handleResponse(std::shared_ptr<Payload> p, ErrorPayload::ref e) {
             if (e) {
                 receivedErrors.push_back(*e);
             }
             else {
-                boost::shared_ptr<MyPayload> payload(boost::dynamic_pointer_cast<MyPayload>(p));
+                std::shared_ptr<MyPayload> payload(std::dynamic_pointer_cast<MyPayload>(p));
                 CPPUNIT_ASSERT(payload);
                 CPPUNIT_ASSERT_EQUAL(std::string("bar"), payload->text_);
                 ++responsesReceived_;
             }
         }
 
-        void handleDifferentResponse(boost::shared_ptr<Payload> p, ErrorPayload::ref e) {
+        void handleDifferentResponse(std::shared_ptr<Payload> p, ErrorPayload::ref e) {
             CPPUNIT_ASSERT(!e);
             CPPUNIT_ASSERT(!p);
             ++responsesReceived_;
         }
 
-        void handleRawXMLResponse(boost::shared_ptr<Payload> p, ErrorPayload::ref e) {
+        void handleRawXMLResponse(std::shared_ptr<Payload> p, ErrorPayload::ref e) {
             CPPUNIT_ASSERT(!e);
             CPPUNIT_ASSERT(p);
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<MyOtherPayload>(p));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<MyOtherPayload>(p));
             ++responsesReceived_;
         }
 
-        boost::shared_ptr<IQ> createResponse(const JID& from, const std::string& id) {
-            boost::shared_ptr<IQ> iq(new IQ(IQ::Result));
+        std::shared_ptr<IQ> createResponse(const JID& from, const std::string& id) {
+            std::shared_ptr<IQ> iq(new IQ(IQ::Result));
             iq->setFrom(from);
             iq->addPayload(responsePayload_);
             iq->setID(id);
             return iq;
         }
 
-        boost::shared_ptr<IQ> createError(const JID& from, const std::string& id) {
-            boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
+        std::shared_ptr<IQ> createError(const JID& from, const std::string& id) {
+            std::shared_ptr<IQ> iq(new IQ(IQ::Error));
             iq->setFrom(from);
             iq->setID(id);
             return iq;
@@ -358,8 +358,8 @@ class RequestTest : public CppUnit::TestFixture {
     private:
         IQRouter* router_;
         DummyIQChannel* channel_;
-        boost::shared_ptr<Payload> payload_;
-        boost::shared_ptr<Payload> responsePayload_;
+        std::shared_ptr<Payload> payload_;
+        std::shared_ptr<Payload> responsePayload_;
         int responsesReceived_;
         std::vector<ErrorPayload> receivedErrors;
 };

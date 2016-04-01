@@ -17,7 +17,7 @@
 #include <cryptuiapi.h>
 #pragma comment(lib, "cryptui.lib")
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 
@@ -35,7 +35,7 @@ void WinUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::ve
     }
 
     ByteArray certAsDER = chain[0]->toDER();
-    boost::shared_ptr<const CERT_CONTEXT> certificate_chain;
+    std::shared_ptr<const CERT_CONTEXT> certificate_chain;
     {
         PCCERT_CONTEXT certChain;
         BOOL ok = CertAddCertificateContextToStore(chainStore, CertCreateCertificateContext(X509_ASN_ENCODING, vecptr(certAsDER), certAsDER.size()), CERT_STORE_ADD_ALWAYS, &certChain);

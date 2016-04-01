@@ -4,6 +4,12 @@
  * See http://www.opensource.org/licenses/bsd-license.php for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -25,7 +31,7 @@ class DeliveryReceiptParserTest : public CppUnit::TestFixture {
             PayloadsParserTester parser;
             CPPUNIT_ASSERT(parser.parse("<request xmlns='urn:xmpp:receipts'/>"));
 
-            DeliveryReceiptRequest::ref request = boost::dynamic_pointer_cast<DeliveryReceiptRequest>(parser.getPayload());
+            DeliveryReceiptRequest::ref request = std::dynamic_pointer_cast<DeliveryReceiptRequest>(parser.getPayload());
 
             CPPUNIT_ASSERT(request);
         }
@@ -34,7 +40,7 @@ class DeliveryReceiptParserTest : public CppUnit::TestFixture {
             PayloadsParserTester parser;
             CPPUNIT_ASSERT(parser.parse("<received xmlns='urn:xmpp:receipts' id='richard2-4.1.247'/>"));
 
-            DeliveryReceipt::ref receipt = boost::dynamic_pointer_cast<DeliveryReceipt>(parser.getPayload());
+            DeliveryReceipt::ref receipt = std::dynamic_pointer_cast<DeliveryReceipt>(parser.getPayload());
 
             CPPUNIT_ASSERT_EQUAL(std::string("richard2-4.1.247"), receipt->getReceivedID());
         }

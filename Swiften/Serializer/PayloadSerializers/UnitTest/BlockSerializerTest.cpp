@@ -34,7 +34,7 @@ class BlockSerializerTest : public CppUnit::TestFixture
 
         void testExample4() {
             BlockSerializer<BlockListPayload> testling("blocklist");
-            boost::shared_ptr<BlockListPayload> blocklist = boost::make_shared<BlockListPayload>();
+            std::shared_ptr<BlockListPayload> blocklist = std::make_shared<BlockListPayload>();
             blocklist->addItem(JID("romeo@montague.net"));
             blocklist->addItem(JID("iago@shakespeare.lit"));
 
@@ -43,7 +43,7 @@ class BlockSerializerTest : public CppUnit::TestFixture
 
         void testExample6() {
             BlockSerializer<BlockPayload> testling("block");
-            boost::shared_ptr<BlockPayload> block = boost::make_shared<BlockPayload>();
+            std::shared_ptr<BlockPayload> block = std::make_shared<BlockPayload>();
             block->addItem(JID("romeo@montague.net"));
 
             CPPUNIT_ASSERT_EQUAL(std::string("<block xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/></block>"), testling.serialize(block));
@@ -51,7 +51,7 @@ class BlockSerializerTest : public CppUnit::TestFixture
 
         void testExample10() {
             BlockSerializer<UnblockPayload> testling("unblock");
-            boost::shared_ptr<UnblockPayload> unblock = boost::make_shared<UnblockPayload>();
+            std::shared_ptr<UnblockPayload> unblock = std::make_shared<UnblockPayload>();
             unblock->addItem(JID("romeo@montague.net"));
 
             CPPUNIT_ASSERT_EQUAL(std::string("<unblock xmlns=\"urn:xmpp:blocking\"><item jid=\"romeo@montague.net\"/></unblock>"), testling.serialize(unblock));

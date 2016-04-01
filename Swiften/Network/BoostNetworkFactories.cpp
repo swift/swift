@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@
 
 namespace Swift {
 
-BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, boost::shared_ptr<boost::asio::io_service> ioService) : ioServiceThread(ioService), eventLoop(eventLoop) {
+BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService) : ioServiceThread(ioService), eventLoop(eventLoop) {
     timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
     connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
     connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);

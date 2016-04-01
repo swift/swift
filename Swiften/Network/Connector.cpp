@@ -54,7 +54,7 @@ void Connector::stop() {
         currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
         currentConnection->disconnect();
     }
-    finish(boost::shared_ptr<Connection>());
+    finish(std::shared_ptr<Connection>());
 }
 
 void Connector::queryAddress(const std::string& hostname) {
@@ -77,7 +77,7 @@ void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuer
 void Connector::tryNextServiceOrFallback() {
     if (queriedAllServices) {
         SWIFT_LOG(debug) << "Queried all services" << std::endl;
-        finish(boost::shared_ptr<Connection>());
+        finish(std::shared_ptr<Connection>());
     }
     else if (serviceQueryResults.empty()) {
         SWIFT_LOG(debug) << "Falling back on A resolution" << std::endl;
@@ -165,7 +165,7 @@ void Connector::handleConnectionConnectFinished(bool error) {
     }
 }
 
-void Connector::finish(boost::shared_ptr<Connection> connection) {
+void Connector::finish(std::shared_ptr<Connection> connection) {
     if (timer) {
         timer->stop();
         timer->onTick.disconnect(boost::bind(&Connector::handleTimeout, shared_from_this()));
@@ -183,7 +183,7 @@ void Connector::finish(boost::shared_ptr<Connection> connection) {
         currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
         currentConnection.reset();
     }
-    onConnectFinished(connection, (connection || foundSomeDNS) ? boost::shared_ptr<Error>() : boost::make_shared<DomainNameResolveError>());
+    onConnectFinished(connection, (connection || foundSomeDNS) ? std::shared_ptr<Error>() : std::make_shared<DomainNameResolveError>());
 }
 
 void Connector::handleTimeout() {

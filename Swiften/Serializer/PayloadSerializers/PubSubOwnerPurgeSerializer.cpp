@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@ PubSubOwnerPurgeSerializer::PubSubOwnerPurgeSerializer(PayloadSerializerCollecti
 PubSubOwnerPurgeSerializer::~PubSubOwnerPurgeSerializer() {
 }
 
-std::string PubSubOwnerPurgeSerializer::serializePayload(boost::shared_ptr<PubSubOwnerPurge> payload) const {
+std::string PubSubOwnerPurgeSerializer::serializePayload(std::shared_ptr<PubSubOwnerPurge> payload) const {
     if (!payload) {
         return "";
     }

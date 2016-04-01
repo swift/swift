@@ -12,7 +12,7 @@ namespace Swift {
 
 MessageSnippet::MessageSnippet(const QString& message, const QString& sender, const QDateTime& time, const QString& iconURI, bool isIncoming, bool appendToPrevious, QtChatTheme* theme, const QString& id, Direction direction) : ChatSnippet(appendToPrevious) {
     if (appendToPrevious) {
-        setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet>(new MessageSnippet(message, sender, time, iconURI, isIncoming, false, theme, id, direction)));
+        setContinuationFallbackSnippet(std::make_shared<MessageSnippet>(message, sender, time, iconURI, isIncoming, false, theme, id, direction));
     }
     if (isIncoming) {
         if (appendToPrevious) {

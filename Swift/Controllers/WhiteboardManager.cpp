@@ -55,20 +55,20 @@ namespace Swift {
         return whiteboardWindows_[contact.toBare()];
     }
 
-    void WhiteboardManager::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-        boost::shared_ptr<RequestWhiteboardUIEvent> requestWhiteboardEvent = boost::dynamic_pointer_cast<RequestWhiteboardUIEvent>(event);
+    void WhiteboardManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
+        std::shared_ptr<RequestWhiteboardUIEvent> requestWhiteboardEvent = std::dynamic_pointer_cast<RequestWhiteboardUIEvent>(event);
         if (requestWhiteboardEvent) {
             requestSession(requestWhiteboardEvent->getContact());
         }
-        boost::shared_ptr<AcceptWhiteboardSessionUIEvent> sessionAcceptEvent = boost::dynamic_pointer_cast<AcceptWhiteboardSessionUIEvent>(event);
+        std::shared_ptr<AcceptWhiteboardSessionUIEvent> sessionAcceptEvent = std::dynamic_pointer_cast<AcceptWhiteboardSessionUIEvent>(event);
         if (sessionAcceptEvent) {
             acceptSession(sessionAcceptEvent->getContact());
         }
-        boost::shared_ptr<CancelWhiteboardSessionUIEvent> sessionCancelEvent = boost::dynamic_pointer_cast<CancelWhiteboardSessionUIEvent>(event);
+        std::shared_ptr<CancelWhiteboardSessionUIEvent> sessionCancelEvent = std::dynamic_pointer_cast<CancelWhiteboardSessionUIEvent>(event);
         if (sessionCancelEvent) {
             cancelSession(sessionCancelEvent->getContact());
         }
-        boost::shared_ptr<ShowWhiteboardUIEvent> showWindowEvent = boost::dynamic_pointer_cast<ShowWhiteboardUIEvent>(event);
+        std::shared_ptr<ShowWhiteboardUIEvent> showWindowEvent = std::dynamic_pointer_cast<ShowWhiteboardUIEvent>(event);
         if (showWindowEvent) {
             WhiteboardWindow* window = findWhiteboardWindow(showWindowEvent->getContact());
             if (window != nullptr) {
@@ -78,7 +78,7 @@ namespace Swift {
     }
 
     void WhiteboardManager::acceptSession(const JID& from) {
-        IncomingWhiteboardSession::ref session = boost::dynamic_pointer_cast<IncomingWhiteboardSession>(whiteboardSessionManager_->getSession(from));
+        IncomingWhiteboardSession::ref session = std::dynamic_pointer_cast<IncomingWhiteboardSession>(whiteboardSessionManager_->getSession(from));
         WhiteboardWindow* window = findWhiteboardWindow(from);
         if (session && window) {
             session->accept();

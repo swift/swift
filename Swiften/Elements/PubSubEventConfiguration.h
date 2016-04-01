@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -32,17 +31,17 @@ namespace Swift {
                 this->node = value ;
             }
 
-            boost::shared_ptr<Form> getData() const {
+            std::shared_ptr<Form> getData() const {
                 return data;
             }
 
-            void setData(boost::shared_ptr<Form> value) {
+            void setData(std::shared_ptr<Form> value) {
                 this->data = value ;
             }
 
 
         private:
             std::string node;
-            boost::shared_ptr<Form> data;
+            std::shared_ptr<Form> data;
     };
 }

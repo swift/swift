@@ -6,9 +6,10 @@
 
 #include <Swift/Controllers/ContactEditController.h>
 
+#include <memory>
+
 #include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/VCards/VCardManager.h>
 
@@ -35,7 +36,7 @@ ContactEditController::~ContactEditController() {
 }
 
 void ContactEditController::handleUIEvent(UIEvent::ref event) {
-    RequestContactEditorUIEvent::ref editEvent = boost::dynamic_pointer_cast<RequestContactEditorUIEvent>(event);
+    RequestContactEditorUIEvent::ref editEvent = std::dynamic_pointer_cast<RequestContactEditorUIEvent>(event);
     if (!editEvent) {
         return;
     }
@@ -90,7 +91,7 @@ std::vector<std::string> ContactEditController::nameSuggestionsFromVCard(VCard::
 
 void ContactEditController::handleRemoveContactRequest() {
     assert(currentContact);
-    uiEventStream->send(boost::make_shared<RemoveRosterItemUIEvent>(currentContact->getJID()));
+    uiEventStream->send(std::make_shared<RemoveRosterItemUIEvent>(currentContact->getJID()));
     contactEditWindow->hide();
 }
 

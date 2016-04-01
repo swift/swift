@@ -60,7 +60,7 @@ static inline int getGlobalTimeout(lua_State* L) {
     return result;
 }
 
-static void addPayloadsToTable(lua_State* L, const std::vector<boost::shared_ptr<Payload> >& payloads) {
+static void addPayloadsToTable(lua_State* L, const std::vector<std::shared_ptr<Payload> >& payloads) {
     if (!payloads.empty()) {
         lua_createtable(L, boost::numeric_cast<int>(payloads.size()), 0);
         for (size_t i = 0; i < payloads.size(); ++i) {
@@ -72,25 +72,25 @@ static void addPayloadsToTable(lua_State* L, const std::vector<boost::shared_ptr
     }
 }
 
-static boost::shared_ptr<Payload> getPayload(lua_State* L, int index) {
+static std::shared_ptr<Payload> getPayload(lua_State* L, int index) {
     if (lua_type(L, index) == LUA_TTABLE) {
-        return boost::dynamic_pointer_cast<Payload>(Sluift::globals.elementConvertor.convertFromLua(L, index));
+        return std::dynamic_pointer_cast<Payload>(Sluift::globals.elementConvertor.convertFromLua(L, index));
     }
     else if (lua_type(L, index) == LUA_TSTRING) {
-        return boost::make_shared<RawXMLPayload>(Lua::checkString(L, index));
+        return std::make_shared<RawXMLPayload>(Lua::checkString(L, index));
     }
     else {
-        return boost::shared_ptr<Payload>();
+        return std::shared_ptr<Payload>();
     }
 }
 
-static std::vector< boost::shared_ptr<Payload> > getPayloadsFromTable(lua_State* L, int index) {
+static std::vector< std::shared_ptr<Payload> > getPayloadsFromTable(lua_State* L, int index) {
     index = Lua::absoluteOffset(L, index);
-    std::vector< boost::shared_ptr<Payload> > result;
+    std::vector< std::shared_ptr<Payload> > result;
     lua_getfield(L, index, "payloads");
     if (lua_istable(L, -1)) {
         for (lua_pushnil(L); lua_next(L, -2); lua_pop(L, 1)) {
-            boost::shared_ptr<Payload> payload = getPayload(L, -1);
+            std::shared_ptr<Payload> payload = getPayload(L, -1);
             if (payload) {
                 result.push_back(payload);
             }
@@ -172,7 +172,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 ) {
     Sluift::globals.eventLoop.runOnce();
     SluiftClient* client = getClient(L);
-    if (boost::shared_ptr<SoftwareVersion> version = boost::dynamic_pointer_cast<SoftwareVersion>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "software_version"))) {
+    if (std::shared_ptr<SoftwareVersion> version = std::dynamic_pointer_cast<SoftwareVersion>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "software_version"))) {
         client->setSoftwareVersion(version->getName(), version->getVersion(), version->getOS());
     }
     return 0;
@@ -198,11 +198,11 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
             case RosterItemPayload::Remove: subscription = "remove"; break;
         }
         Lua::Table itemTable = boost::assign::map_list_of
-            ("jid", boost::make_shared<Lua::Value>(item.getJID().toString()))
-            ("name", boost::make_shared<Lua::Value>(item.getName()))
-            ("subscription", boost::make_shared<Lua::Value>(subscription))
-            ("groups", boost::make_shared<Lua::Value>(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end())));
-        contactsTable[item.getJID().toString()] = boost::make_shared<Lua::Value>(itemTable);
+            ("jid", std::make_shared<Lua::Value>(item.getJID().toString()))
+            ("name", std::make_shared<Lua::Value>(item.getName()))
+            ("subscription", std::make_shared<Lua::Value>(subscription))
+            ("groups", std::make_shared<Lua::Value>(std::vector<Lua::Value>(item.getGroups().begin(), item.getGroups().end())));
+        contactsTable[item.getJID().toString()] = std::make_shared<Lua::Value>(itemTable);
     }
     pushValue(L, contactsTable);
     Lua::registerTableToString(L, -1);
@@ -226,7 +226,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     JID to;
     boost::optional<std::string> body;
     boost::optional<std::string> subject;
-    std::vector<boost::shared_ptr<Payload> > payloads;
+    std::vector<std::shared_ptr<Payload> > payloads;
     int index = 2;
     Message::Type type = Message::Chat;
     if (lua_isstring(L, index)) {
@@ -263,7 +263,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     if ((!body || body->empty()) && !subject && payloads.empty()) {
         throw Lua::Exception("Missing any of 'body', 'subject' or 'payloads'");
     }
-    Message::ref message = boost::make_shared<Message>();
+    Message::ref message = std::make_shared<Message>();
     message->setTo(to);
     if (body && !body->empty()) {
         message->setBody(*body);
@@ -292,7 +292,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         "payloads  payloads to add to the presence\n"
 ) {
     Sluift::globals.eventLoop.runOnce();
-    boost::shared_ptr<Presence> presence = boost::make_shared<Presence>();
+    std::shared_ptr<Presence> presence = std::make_shared<Presence>();
 
     int index = 2;
     if (lua_isstring(L, index)) {
@@ -315,7 +315,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         if (boost::optional<std::string> value = Lua::getStringField(L, index, "show")) {
             presence->setShow(StatusShowConvertor::convertStatusShowTypeFromString(*value));
         }
-        std::vector< boost::shared_ptr<Payload> > payloads = getPayloadsFromTable(L, index);
+        std::vector< std::shared_ptr<Payload> > payloads = getPayloadsFromTable(L, index);
         presence->addPayloads(payloads.begin(), payloads.end());
     }
 
@@ -337,17 +337,17 @@ static int sendQuery(lua_State* L, IQ::Type type) {
         timeout = *timeoutInt;
     }
 
-    boost::shared_ptr<Payload> payload;
+    std::shared_ptr<Payload> payload;
     lua_getfield(L, 2, "query");
     payload = getPayload(L, -1);
     lua_pop(L, 1);
 
     return client->sendRequest(
-        boost::make_shared< GenericRequest<Payload> >(type, to, payload, client->getClient()->getIQRouter()), timeout).convertToLuaResult(L);
+        std::make_shared< GenericRequest<Payload> >(type, to, payload, client->getClient()->getIQRouter()), timeout).convertToLuaResult(L);
 }
 
 #define DISPATCH_PUBSUB_PAYLOAD(payloadType, container, response) \
-    else if (boost::shared_ptr<payloadType> p = boost::dynamic_pointer_cast<payloadType>(payload)) { \
+    else if (std::shared_ptr<payloadType> p = std::dynamic_pointer_cast<payloadType>(payload)) { \
         return client->sendPubSubRequest(type, to, p, timeout).convertToLuaResult(L); \
     }
 
@@ -376,7 +376,7 @@ SLUIFT_LUA_FUNCTION(Client, query_pubsub) {
     if (!lua_istable(L, -1)) {
         throw Lua::Exception("Missing/incorrect query");
     }
-    boost::shared_ptr<Payload> payload = getPayload(L, -1);
+    std::shared_ptr<Payload> payload = getPayload(L, -1);
 
     if (false) { }
     SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(DISPATCH_PUBSUB_PAYLOAD)
@@ -470,13 +470,13 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 
     SluiftClient* client = getClient(L);
     Lua::Table optionsTable = boost::assign::map_list_of
-        ("host", boost::make_shared<Lua::Value>(client->getOptions().manualHostname))
-        ("port", boost::make_shared<Lua::Value>(client->getOptions().manualPort))
-        ("ack", boost::make_shared<Lua::Value>(client->getOptions().useAcks))
-        ("compress", boost::make_shared<Lua::Value>(client->getOptions().useStreamCompression))
-        ("tls", boost::make_shared<Lua::Value>(client->getOptions().useTLS == ClientOptions::NeverUseTLS ? false : true))
-        ("bosh_url", boost::make_shared<Lua::Value>(client->getOptions().boshURL.toString()))
-        ("allow_plain_without_tls", boost::make_shared<Lua::Value>(client->getOptions().allowPLAINWithoutTLS));
+        ("host", std::make_shared<Lua::Value>(client->getOptions().manualHostname))
+        ("port", std::make_shared<Lua::Value>(client->getOptions().manualPort))
+        ("ack", std::make_shared<Lua::Value>(client->getOptions().useAcks))
+        ("compress", std::make_shared<Lua::Value>(client->getOptions().useStreamCompression))
+        ("tls", std::make_shared<Lua::Value>(client->getOptions().useTLS == ClientOptions::NeverUseTLS ? false : true))
+        ("bosh_url", std::make_shared<Lua::Value>(client->getOptions().boshURL.toString()))
+        ("allow_plain_without_tls", std::make_shared<Lua::Value>(client->getOptions().allowPLAINWithoutTLS));
     pushValue(L, optionsTable);
     Lua::registerTableToString(L, -1);
     return 1;
@@ -485,24 +485,24 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
     switch (event.type) {
         case SluiftClient::Event::MessageType: {
-            Message::ref message = boost::dynamic_pointer_cast<Message>(event.stanza);
+            Message::ref message = std::dynamic_pointer_cast<Message>(event.stanza);
             Lua::Table result = boost::assign::map_list_of
-                ("type", boost::make_shared<Lua::Value>(std::string("message")))
-                ("from", boost::make_shared<Lua::Value>(message->getFrom().toString()))
-                ("body", boost::make_shared<Lua::Value>(message->getBody().get_value_or("")))
-                ("message_type", boost::make_shared<Lua::Value>(MessageConvertor::convertMessageTypeToString(message->getType())));
+                ("type", std::make_shared<Lua::Value>(std::string("message")))
+                ("from", std::make_shared<Lua::Value>(message->getFrom().toString()))
+                ("body", std::make_shared<Lua::Value>(message->getBody().get_value_or("")))
+                ("message_type", std::make_shared<Lua::Value>(MessageConvertor::convertMessageTypeToString(message->getType())));
             Lua::pushValue(L, result);
             addPayloadsToTable(L, message->getPayloads());
             Lua::registerTableToString(L, -1);
             break;
         }
         case SluiftClient::Event::PresenceType: {
-            Presence::ref presence = boost::dynamic_pointer_cast<Presence>(event.stanza);
+            Presence::ref presence = std::dynamic_pointer_cast<Presence>(event.stanza);
             Lua::Table result = boost::assign::map_list_of
-                ("type", boost::make_shared<Lua::Value>(std::string("presence")))
-                ("from", boost::make_shared<Lua::Value>(presence->getFrom().toString()))
-                ("status", boost::make_shared<Lua::Value>(presence->getStatus()))
-                ("presence_type", boost::make_shared<Lua::Value>(PresenceConvertor::convertPresenceTypeToString(presence->getType())));
+                ("type", std::make_shared<Lua::Value>(std::string("presence")))
+                ("from", std::make_shared<Lua::Value>(presence->getFrom().toString()))
+                ("status", std::make_shared<Lua::Value>(presence->getStatus()))
+                ("presence_type", std::make_shared<Lua::Value>(PresenceConvertor::convertPresenceTypeToString(presence->getType())));
             Lua::pushValue(L, result);
             addPayloadsToTable(L, presence->getPayloads());
             Lua::registerTableToString(L, -1);
@@ -640,7 +640,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 
     client->getRoster(timeout);
     if (!client->getClient()->getRoster()->containsJID(item.getJID())) {
-        RosterPayload::ref roster = boost::make_shared<RosterPayload>();
+        RosterPayload::ref roster = std::make_shared<RosterPayload>();
         roster->addItem(item);
 
         Sluift::Response response = client->sendVoidRequest(
@@ -666,7 +666,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     JID jid(Lua::checkString(L, 2));
     int timeout = getGlobalTimeout(L);
 
-    RosterPayload::ref roster = boost::make_shared<RosterPayload>();
+    RosterPayload::ref roster = std::make_shared<RosterPayload>();
     roster->addItem(RosterItemPayload(JID(Lua::checkString(L, 2)), "", RosterItemPayload::Remove));
 
     return client->sendVoidRequest(
@@ -712,7 +712,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     if (!lua_istable(L, 2)) {
         throw Lua::Exception("Missing disco info");
     }
-    if (boost::shared_ptr<DiscoInfo> discoInfo = boost::dynamic_pointer_cast<DiscoInfo>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "disco_info"))) {
+    if (std::shared_ptr<DiscoInfo> discoInfo = std::dynamic_pointer_cast<DiscoInfo>(Sluift::globals.elementConvertor.convertFromLuaUntyped(L, 2, "disco_info"))) {
         client->getClient()->getDiscoManager()->setDiscoInfo(*discoInfo);
     }
     else {
@@ -756,7 +756,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     if (file.empty()) {
         getClient(L)->getClient()->setCertificate(CertificateWithKey::ref());
     } else {
-        getClient(L)->getClient()->setCertificate(boost::make_shared<PKCS12Certificate>(file, createSafeByteArray(pwd)));
+        getClient(L)->getClient()->setCertificate(std::make_shared<PKCS12Certificate>(file, createSafeByteArray(pwd)));
     }
     return 0;
 }

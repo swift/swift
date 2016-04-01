@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -27,7 +28,7 @@ namespace Swift {
                     const std::string& id,
                     const JID& from,
                     const JID& to,
-                    boost::shared_ptr<ReadBytestream> bytestream,
+                    std::shared_ptr<ReadBytestream> bytestream,
                     IQRouter* router);
             ~IBBSendSession();
 
@@ -59,12 +60,12 @@ namespace Swift {
             std::string id;
             JID from;
             JID to;
-            boost::shared_ptr<ReadBytestream> bytestream;
+            std::shared_ptr<ReadBytestream> bytestream;
             IQRouter* router;
             unsigned int blockSize;
             int sequenceNumber;
             bool active;
             bool waitingForData;
-            boost::shared_ptr<IBBRequest> currentRequest;
+            std::shared_ptr<IBBRequest> currentRequest;
     };
 }

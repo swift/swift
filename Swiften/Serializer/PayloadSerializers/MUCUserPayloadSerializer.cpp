@@ -6,10 +6,8 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MUCUserPayloadSerializer.h>
 
+#include <memory>
 #include <sstream>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
@@ -23,10 +21,10 @@ namespace Swift {
 MUCUserPayloadSerializer::MUCUserPayloadSerializer(PayloadSerializerCollection* serializers) : GenericPayloadSerializer<MUCUserPayload>(), serializers(serializers) {
 }
 
-std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUserPayload> payload)  const {
+std::string MUCUserPayloadSerializer::serializePayload(std::shared_ptr<MUCUserPayload> payload)  const {
     XMLElement mucElement("x", "http://jabber.org/protocol/muc#user");
     foreach (const MUCUserPayload::StatusCode statusCode, payload->getStatusCodes()) {
-        boost::shared_ptr<XMLElement> statusElement(new XMLElement("status"));
+        std::shared_ptr<XMLElement> statusElement(new XMLElement("status"));
         std::ostringstream code;
         code << statusCode.code;
         statusElement->setAttribute("code", code.str());
@@ -37,13 +35,13 @@ std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUser
     }
 
     if (payload->getPassword()) {
-        boost::shared_ptr<XMLElement> passwordElement = boost::make_shared<XMLElement>("password");
-        passwordElement->addNode(boost::make_shared<XMLTextNode>(*payload->getPassword()));
+        std::shared_ptr<XMLElement> passwordElement = std::make_shared<XMLElement>("password");
+        passwordElement->addNode(std::make_shared<XMLTextNode>(*payload->getPassword()));
     }
 
     if (payload->getInvite()) {
         MUCUserPayload::Invite invite = *payload->getInvite();
-        boost::shared_ptr<XMLElement> inviteElement = boost::make_shared<XMLElement>("invite");
+        std::shared_ptr<XMLElement> inviteElement = std::make_shared<XMLElement>("invite");
         if (invite.to.isValid()) {
             inviteElement->setAttribute("to", invite.to.toString());
         }
@@ -51,17 +49,17 @@ std::string MUCUserPayloadSerializer::serializePayload(boost::shared_ptr<MUCUser
             inviteElement->setAttribute("from", invite.from.toString());
         }
         if (!invite.reason.empty()) {
-            boost::shared_ptr<XMLElement> reasonElement = boost::make_shared<XMLElement>("reason");
-            reasonElement->addNode(boost::make_shared<XMLTextNode>(invite.reason));
+            std::shared_ptr<XMLElement> reasonElement = std::make_shared<XMLElement>("reason");
+            reasonElement->addNode(std::make_shared<XMLTextNode>(invite.reason));
         }
         mucElement.addNode(inviteElement);
     }
 
-    boost::shared_ptr<Payload> childPayload = payload->getPayload();
+    std::shared_ptr<Payload> childPayload = payload->getPayload();
     if (childPayload) {
         PayloadSerializer* serializer = serializers->getPayloadSerializer(childPayload);
         if (serializer) {
-            mucElement.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(childPayload)));
+            mucElement.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(childPayload)));
         }
     }
     return mucElement.serialize();

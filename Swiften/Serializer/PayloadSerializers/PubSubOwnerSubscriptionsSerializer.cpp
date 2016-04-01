@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerSubscriptionsSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
@@ -23,14 +23,14 @@ PubSubOwnerSubscriptionsSerializer::PubSubOwnerSubscriptionsSerializer(PayloadSe
 PubSubOwnerSubscriptionsSerializer::~PubSubOwnerSubscriptionsSerializer() {
 }
 
-std::string PubSubOwnerSubscriptionsSerializer::serializePayload(boost::shared_ptr<PubSubOwnerSubscriptions> payload) const {
+std::string PubSubOwnerSubscriptionsSerializer::serializePayload(std::shared_ptr<PubSubOwnerSubscriptions> payload) const {
     if (!payload) {
         return "";
     }
     XMLElement element("subscriptions", "http://jabber.org/protocol/pubsub#owner");
     element.setAttribute("node", payload->getNode());
-    foreach(boost::shared_ptr<PubSubOwnerSubscription> item, payload->getSubscriptions()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(PubSubOwnerSubscriptionSerializer(serializers).serialize(item)));
+    foreach(std::shared_ptr<PubSubOwnerSubscription> item, payload->getSubscriptions()) {
+        element.addNode(std::make_shared<XMLRawTextNode>(PubSubOwnerSubscriptionSerializer(serializers).serialize(item)));
     }
     return element.serialize();
 }

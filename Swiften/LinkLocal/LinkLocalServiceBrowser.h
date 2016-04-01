@@ -7,11 +7,11 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -25,7 +25,7 @@
 namespace Swift {
     class SWIFTEN_API LinkLocalServiceBrowser {
         public:
-            LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier);
+            LinkLocalServiceBrowser(std::shared_ptr<DNSSDQuerier> querier);
             ~LinkLocalServiceBrowser();
 
             void start();
@@ -45,7 +45,7 @@ namespace Swift {
             std::vector<LinkLocalService> getServices() const;
 
             // FIXME: Ugly that we need this
-            boost::shared_ptr<DNSSDQuerier> getQuerier() const {
+            std::shared_ptr<DNSSDQuerier> getQuerier() const {
                 return querier;
             }
 
@@ -63,11 +63,11 @@ namespace Swift {
             void handleBrowseError();
 
         private:
-            boost::shared_ptr<DNSSDQuerier> querier;
+            std::shared_ptr<DNSSDQuerier> querier;
             boost::optional<DNSSDServiceID> selfService;
-            boost::shared_ptr<DNSSDBrowseQuery> browseQuery;
-            boost::shared_ptr<DNSSDRegisterQuery> registerQuery;
-            typedef std::map<DNSSDServiceID, boost::shared_ptr<DNSSDResolveServiceQuery> > ResolveQueryMap;
+            std::shared_ptr<DNSSDBrowseQuery> browseQuery;
+            std::shared_ptr<DNSSDRegisterQuery> registerQuery;
+            typedef std::map<DNSSDServiceID, std::shared_ptr<DNSSDResolveServiceQuery> > ResolveQueryMap;
             ResolveQueryMap resolveQueries;
             typedef std::map<DNSSDServiceID, DNSSDResolveServiceQuery::Result> ServiceMap;
             ServiceMap services;

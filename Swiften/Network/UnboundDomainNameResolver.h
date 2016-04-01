@@ -12,9 +12,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/asio.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/DomainNameResolver.h>
@@ -31,26 +31,26 @@ namespace Swift {
     class UnboundDomainNameResolver;
     class UnboundQuery;
 
-    class UnboundDomainNameResolver : public DomainNameResolver, public EventOwner, public boost::enable_shared_from_this<UnboundDomainNameResolver> {
+    class UnboundDomainNameResolver : public DomainNameResolver, public EventOwner, public std::enable_shared_from_this<UnboundDomainNameResolver> {
         public:
-            UnboundDomainNameResolver(IDNConverter* idnConverter, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+            UnboundDomainNameResolver(IDNConverter* idnConverter, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
             virtual ~UnboundDomainNameResolver();
 
-            virtual boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
-            virtual boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
+            virtual std::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain);
+            virtual std::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& name);
 
             static void unbound_callback_wrapper(void* data, int err, ub_result* result);
 
         private:
-            void unbound_callback(boost::shared_ptr<UnboundQuery> query, int err, ub_result* result);
+            void unbound_callback(std::shared_ptr<UnboundQuery> query, int err, ub_result* result);
 
             void handleUBSocketReadable(boost::system::error_code);
             void processData();
 
         private:
             IDNConverter* idnConverter;
-            boost::shared_ptr<EventOwner> eventOwner;
-            boost::shared_ptr<boost::asio::io_service> ioService;
+            std::shared_ptr<EventOwner> eventOwner;
+            std::shared_ptr<boost::asio::io_service> ioService;
             boost::asio::posix::stream_descriptor ubDescriptior;
             EventLoop* eventLoop;
             ub_ctx* ubContext;

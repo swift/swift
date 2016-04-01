@@ -5,15 +5,16 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -38,8 +39,8 @@ namespace Swift {
         public:
             OutgoingJingleFileTransfer(
                 const JID& to,
-                boost::shared_ptr<JingleSession>,
-                boost::shared_ptr<ReadBytestream>,
+                std::shared_ptr<JingleSession>,
+                std::shared_ptr<ReadBytestream>,
                 FileTransferTransporterFactory*,
                 TimerFactory*,
                 IDGenerator*,
@@ -66,10 +67,10 @@ namespace Swift {
                 Finished
             };
 
-            virtual void handleSessionAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleDescription>, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
+            virtual void handleSessionAcceptReceived(const JingleContentID&, std::shared_ptr<JingleDescription>, std::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
             virtual void handleSessionTerminateReceived(boost::optional<JinglePayload::Reason> reason) SWIFTEN_OVERRIDE;
-            virtual void handleTransportAcceptReceived(const JingleContentID&, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
-            virtual void handleTransportRejectReceived(const JingleContentID &, boost::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
+            virtual void handleTransportAcceptReceived(const JingleContentID&, std::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
+            virtual void handleTransportRejectReceived(const JingleContentID &, std::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
             virtual void startTransferViaRemoteCandidate() SWIFTEN_OVERRIDE;
             virtual void startTransferViaLocalCandidate() SWIFTEN_OVERRIDE;
             void startTransferringIfCandidateAcknowledged();
@@ -86,14 +87,14 @@ namespace Swift {
 
             void sendSessionInfoHash();
 
-            virtual void startTransferring(boost::shared_ptr<TransportSession>) SWIFTEN_OVERRIDE;
+            virtual void startTransferring(std::shared_ptr<TransportSession>) SWIFTEN_OVERRIDE;
 
             virtual bool hasPriorityOnCandidateTie() const SWIFTEN_OVERRIDE;
             virtual bool isWaitingForPeerProxyActivate() const SWIFTEN_OVERRIDE;
             virtual bool isWaitingForLocalProxyActivate() const SWIFTEN_OVERRIDE;
             virtual bool isTryingCandidates() const SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
 
             void handleWaitForRemoteTerminationTimeout();
 
@@ -105,7 +106,7 @@ namespace Swift {
 
         private:
             IDGenerator* idGenerator;
-            boost::shared_ptr<ReadBytestream> stream;
+            std::shared_ptr<ReadBytestream> stream;
             JingleFileTransferFileInfo fileInfo;
             FileTransferOptions options;
             JingleContentID contentID;

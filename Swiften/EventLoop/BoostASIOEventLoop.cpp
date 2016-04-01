@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-BoostASIOEventLoop::BoostASIOEventLoop(boost::shared_ptr<boost::asio::io_service> ioService) : ioService_(ioService) {
+BoostASIOEventLoop::BoostASIOEventLoop(std::shared_ptr<boost::asio::io_service> ioService) : ioService_(ioService) {
 
 }
 

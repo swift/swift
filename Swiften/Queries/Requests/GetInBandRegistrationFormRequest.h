@@ -13,7 +13,7 @@
 namespace Swift {
     class SWIFTEN_API GetInBandRegistrationFormRequest : public GenericRequest<InBandRegistrationPayload> {
         public:
-            typedef boost::shared_ptr<GetInBandRegistrationFormRequest> ref;
+            typedef std::shared_ptr<GetInBandRegistrationFormRequest> ref;
 
             static ref create(const JID& to, IQRouter* router) {
                 return ref(new GetInBandRegistrationFormRequest(to, router));

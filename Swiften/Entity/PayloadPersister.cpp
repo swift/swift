@@ -25,7 +25,7 @@ PayloadPersister::PayloadPersister() {
 PayloadPersister::~PayloadPersister() {
 }
 
-void PayloadPersister::savePayload(boost::shared_ptr<Payload> payload, const boost::filesystem::path& path) {
+void PayloadPersister::savePayload(std::shared_ptr<Payload> payload, const boost::filesystem::path& path) {
     try {
         if (!boost::filesystem::exists(path.parent_path())) {
             boost::filesystem::create_directories(path.parent_path());
@@ -39,12 +39,12 @@ void PayloadPersister::savePayload(boost::shared_ptr<Payload> payload, const boo
     }
 }
 
-boost::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem::path& path) {
+std::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem::path& path) {
     try {
         if (boost::filesystem::exists(path)) {
             ByteArray data;
             readByteArrayFromFile(data, path);
-            boost::shared_ptr<PayloadParser> parser(createParser());
+            std::shared_ptr<PayloadParser> parser(createParser());
             PayloadParserTester tester(parser.get());
             tester.parse(byteArrayToString(data));
             return parser->getPayload();
@@ -53,5 +53,5 @@ boost::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem
     catch (const boost::filesystem::filesystem_error& e) {
         std::cerr << "ERROR: " << e.what() << std::endl;
     }
-    return boost::shared_ptr<Payload>();
+    return std::shared_ptr<Payload>();
 }

@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -16,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API WriteBytestream {
         public:
-            typedef boost::shared_ptr<WriteBytestream> ref;
+            typedef std::shared_ptr<WriteBytestream> ref;
 
             virtual ~WriteBytestream();
 

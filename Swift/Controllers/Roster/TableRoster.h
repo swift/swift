@@ -80,6 +80,6 @@ namespace Swift {
             Roster* model;
             std::vector<Section> sections;
             bool updatePending;
-            boost::shared_ptr<Timer> updateTimer;
+            std::shared_ptr<Timer> updateTimer;
     };
 }

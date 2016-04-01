@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -90,7 +90,7 @@ class RosterTest : public CppUnit::TestFixture {
             roster_->removeContact(jid4b);
             roster_->addContact(jid4c, JID(), "Bert", "group1", "");
             roster_->addContact(jid4b, JID(), "Ernie", "group1", "");
-            boost::shared_ptr<Presence> presence(new Presence());
+            std::shared_ptr<Presence> presence(new Presence());
             presence->setShow(StatusShow::DND);
             presence->setFrom(jid4a);
             roster_->applyOnItems(SetPresence(presence, JID::WithResource));
@@ -99,7 +99,7 @@ class RosterTest : public CppUnit::TestFixture {
             presence->setFrom(jid4c);
             roster_->applyOnItems(SetPresence(presence, JID::WithResource));
 
-            presence = boost::make_shared<Presence>();
+            presence = std::make_shared<Presence>();
             presence->setFrom(jid4b);
             presence->setShow(StatusShow::Online);
             roster_->applyOnItems(SetPresence(presence, JID::WithResource));
@@ -111,7 +111,7 @@ class RosterTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("Bert"), children[1]->getDisplayName());
             CPPUNIT_ASSERT_EQUAL(std::string("Bird"), children[2]->getDisplayName());
 
-            presence = boost::make_shared<Presence>();
+            presence = std::make_shared<Presence>();
             presence->setFrom(jid4c);
             presence->setType(Presence::Unavailable);
             roster_->removeContact(jid4c);

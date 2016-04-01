@@ -35,12 +35,12 @@ class ForwardedParserTest : public CppUnit::TestFixture
                     "<iq xmlns=\"jabber:client\" type=\"get\" from=\"kindanormal@example.com/IM\" to=\"stupidnewbie@example.com\" id=\"id0\"/>"
                 "</forwarded>"));
 
-            boost::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
+            std::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getDelay());
             CPPUNIT_ASSERT_EQUAL(std::string("2010-07-10T23:08:25Z"), dateTimeToString(payload->getDelay()->getStamp()));
 
-            boost::shared_ptr<IQ> iq = boost::dynamic_pointer_cast<IQ>(payload->getStanza());
+            std::shared_ptr<IQ> iq = std::dynamic_pointer_cast<IQ>(payload->getStanza());
             CPPUNIT_ASSERT(!!iq);
             CPPUNIT_ASSERT_EQUAL(JID("stupidnewbie@example.com"), iq->getTo());
             CPPUNIT_ASSERT_EQUAL(JID("kindanormal@example.com/IM"), iq->getFrom());
@@ -58,12 +58,12 @@ class ForwardedParserTest : public CppUnit::TestFixture
                     "</message>"
                 "</forwarded>"));
 
-            boost::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
+            std::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getDelay());
             CPPUNIT_ASSERT_EQUAL(std::string("2010-07-10T23:08:25Z"), dateTimeToString(payload->getDelay()->getStamp()));
 
-            boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(payload->getStanza());
+            std::shared_ptr<Message> message = std::dynamic_pointer_cast<Message>(payload->getStanza());
             CPPUNIT_ASSERT(!!message);
             const std::string expectedBody = "Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.";
             CPPUNIT_ASSERT_EQUAL(expectedBody, message->getBody().get());
@@ -81,11 +81,11 @@ class ForwardedParserTest : public CppUnit::TestFixture
                     "</message>"
                 "</forwarded>"));
 
-            boost::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
+            std::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(!payload->getDelay());
 
-            boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(payload->getStanza());
+            std::shared_ptr<Message> message = std::dynamic_pointer_cast<Message>(payload->getStanza());
             CPPUNIT_ASSERT(!!message);
             const std::string expectedBody = "Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.";
             CPPUNIT_ASSERT_EQUAL(expectedBody, message->getBody().get());
@@ -102,12 +102,12 @@ class ForwardedParserTest : public CppUnit::TestFixture
                     "<presence xmlns=\"jabber:client\" from=\"alice@wonderland.lit/rabbithole\" to=\"madhatter@wonderland.lit\" type=\"unavailable\"/>"
                 "</forwarded>"));
 
-            boost::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
+            std::shared_ptr<Forwarded> payload = parser.getPayload<Forwarded>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getDelay());
             CPPUNIT_ASSERT_EQUAL(std::string("2010-07-10T23:08:25Z"), dateTimeToString(payload->getDelay()->getStamp()));
 
-            boost::shared_ptr<Presence> presence = boost::dynamic_pointer_cast<Presence>(payload->getStanza());
+            std::shared_ptr<Presence> presence = std::dynamic_pointer_cast<Presence>(payload->getStanza());
             CPPUNIT_ASSERT(!!presence);
             CPPUNIT_ASSERT_EQUAL(JID("madhatter@wonderland.lit"), presence->getTo());
             CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit/rabbithole"), presence->getFrom());

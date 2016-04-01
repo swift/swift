@@ -24,7 +24,7 @@ class StreamFeaturesSerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             StreamFeaturesSerializer testling;
-            boost::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
+            std::shared_ptr<StreamFeatures> streamFeatures(new StreamFeatures());
             streamFeatures->setHasStartTLS();
             streamFeatures->addCompressionMethod("zlib");
             streamFeatures->addCompressionMethod("lzw");

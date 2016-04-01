@@ -20,7 +20,7 @@ namespace Swift {
             void setVersion(const std::string& client, const std::string& version, const std::string& os = "");
 
         private:
-            virtual bool handleGetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<SoftwareVersion> payload);
+            virtual bool handleGetRequest(const JID& from, const JID& to, const std::string& id, std::shared_ptr<SoftwareVersion> payload);
 
         private:
             std::string client;

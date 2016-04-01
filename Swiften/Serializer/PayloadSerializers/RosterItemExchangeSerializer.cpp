@@ -12,8 +12,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/RosterItemExchangeSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -25,10 +24,10 @@ namespace Swift {
 RosterItemExchangeSerializer::RosterItemExchangeSerializer() : GenericPayloadSerializer<RosterItemExchangePayload>() {
 }
 
-std::string RosterItemExchangeSerializer::serializePayload(boost::shared_ptr<RosterItemExchangePayload> roster)  const {
+std::string RosterItemExchangeSerializer::serializePayload(std::shared_ptr<RosterItemExchangePayload> roster)  const {
     XMLElement queryElement("x", "http://jabber.org/protocol/rosterx");
     foreach(const RosterItemExchangePayload::Item& item, roster->getItems()) {
-        boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+        std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("jid", item.getJID());
         itemElement->setAttribute("name", item.getName());
 
@@ -39,8 +38,8 @@ std::string RosterItemExchangeSerializer::serializePayload(boost::shared_ptr<Ros
         }
 
         foreach(const std::string& group, item.getGroups()) {
-            boost::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
-            groupElement->addNode(boost::make_shared<XMLTextNode>(group));
+            std::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
+            groupElement->addNode(std::make_shared<XMLTextNode>(group));
             itemElement->addNode(groupElement);
         }
 

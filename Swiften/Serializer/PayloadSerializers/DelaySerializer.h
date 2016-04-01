@@ -15,7 +15,7 @@ namespace Swift {
         public:
             DelaySerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<Delay>)  const;
+            virtual std::string serializePayload(std::shared_ptr<Delay>)  const;
     };
 }
 

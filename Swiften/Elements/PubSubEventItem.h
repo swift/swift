@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -40,15 +40,15 @@ namespace Swift {
                 this->publisher = value ;
             }
 
-            const std::vector< boost::shared_ptr<Payload> >& getData() const {
+            const std::vector< std::shared_ptr<Payload> >& getData() const {
                 return data;
             }
 
-            void setData(const std::vector< boost::shared_ptr<Payload> >& value) {
+            void setData(const std::vector< std::shared_ptr<Payload> >& value) {
                 this->data = value ;
             }
 
-            void addData(boost::shared_ptr<Payload> value) {
+            void addData(std::shared_ptr<Payload> value) {
                 this->data.push_back(value);
             }
 
@@ -64,7 +64,7 @@ namespace Swift {
         private:
             boost::optional< std::string > node;
             boost::optional< std::string > publisher;
-            std::vector< boost::shared_ptr<Payload> > data;
+            std::vector< std::shared_ptr<Payload> > data;
             boost::optional< std::string > id;
     };
 }

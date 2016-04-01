@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/RosterItemPayload.h>
@@ -24,13 +23,13 @@ namespace Swift {
         public:
             LinkLocalPresenceManager(LinkLocalServiceBrowser*);
 
-            boost::shared_ptr<RosterPayload> getRoster() const;
-            std::vector<boost::shared_ptr<Presence> > getAllPresence() const;
+            std::shared_ptr<RosterPayload> getRoster() const;
+            std::vector<std::shared_ptr<Presence> > getAllPresence() const;
 
             boost::optional<LinkLocalService> getServiceForJID(const JID&) const;
 
-            boost::signal<void (boost::shared_ptr<RosterPayload>)> onRosterChanged;
-            boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChanged;
+            boost::signal<void (std::shared_ptr<RosterPayload>)> onRosterChanged;
+            boost::signal<void (std::shared_ptr<Presence>)> onPresenceChanged;
 
         private:
             void handleServiceAdded(const LinkLocalService&);
@@ -39,7 +38,7 @@ namespace Swift {
 
             RosterItemPayload getRosterItem(const LinkLocalService& service) const;
             std::string getRosterName(const LinkLocalService& service) const;
-            boost::shared_ptr<Presence> getPresence(const LinkLocalService& service) const;
+            std::shared_ptr<Presence> getPresence(const LinkLocalService& service) const;
 
         private:
             LinkLocalServiceBrowser* browser;

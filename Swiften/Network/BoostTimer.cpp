@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,7 @@
 
 namespace Swift {
 
-BoostTimer::BoostTimer(int milliseconds, boost::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop) :
+BoostTimer::BoostTimer(int milliseconds, std::shared_ptr<boost::asio::io_service> service, EventLoop* eventLoop) :
         timeout(milliseconds), ioService(service), eventLoop(eventLoop), shuttingDown(false) {
         timer.reset(new boost::asio::deadline_timer(*service));
 }

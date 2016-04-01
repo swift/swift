@@ -70,21 +70,21 @@ public:
 
     void testContactShouldReceiveStates_CapsOnly() {
         setContactHas85Caps();
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         notifier_->addChatStateRequest(message);
         CPPUNIT_ASSERT(message->getPayload<ChatState>());
         CPPUNIT_ASSERT_EQUAL(ChatState::Active, message->getPayload<ChatState>()->getChatState());
     }
 
     void testContactShouldReceiveStates_CapsNorActive() {
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         notifier_->addChatStateRequest(message);
         CPPUNIT_ASSERT(!message->getPayload<ChatState>());
     }
 
     void testContactShouldReceiveStates_ActiveOverrideOn() {
         notifier_->receivedMessageFromContact(true);
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         notifier_->addChatStateRequest(message);
         CPPUNIT_ASSERT(message->getPayload<ChatState>());
         CPPUNIT_ASSERT_EQUAL(ChatState::Active, message->getPayload<ChatState>()->getChatState());
@@ -97,7 +97,7 @@ public:
          * thought this should check for false, but I later found it was OPTIONAL
          * (MAY) behaviour only for if you didn't receive caps.
          */
-        boost::shared_ptr<Message> message(new Message());
+        std::shared_ptr<Message> message(new Message());
         notifier_->addChatStateRequest(message);
         CPPUNIT_ASSERT(message->getPayload<ChatState>());
         CPPUNIT_ASSERT_EQUAL(ChatState::Active, message->getPayload<ChatState>()->getChatState());
@@ -142,7 +142,7 @@ public:
 
         int getComposingCount() const {
             int result = 0;
-            foreach(boost::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
+            foreach(std::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
                 if (stanza->getPayload<ChatState>() && stanza->getPayload<ChatState>()->getChatState() == ChatState::Composing) {
                     result++;
                 }
@@ -152,7 +152,7 @@ public:
 
         int getActiveCount() const {
             int result = 0;
-            foreach(boost::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
+            foreach(std::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
                 if (stanza->getPayload<ChatState>() && stanza->getPayload<ChatState>()->getChatState() == ChatState::Active) {
                     result++;
                 }

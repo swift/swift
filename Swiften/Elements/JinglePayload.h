@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleContentPayload.h>
@@ -20,7 +20,7 @@
 namespace Swift {
     class SWIFTEN_API JinglePayload : public Payload {
         public:
-            typedef boost::shared_ptr<JinglePayload> ref;
+            typedef std::shared_ptr<JinglePayload> ref;
             struct Reason : public Payload {
                     enum Type {
                         UnknownType,
@@ -109,7 +109,7 @@ namespace Swift {
                 this->payloads.push_back(content);
             }
 
-            void addPayload(boost::shared_ptr<Payload> payload) {
+            void addPayload(std::shared_ptr<Payload> payload) {
                 this->payloads.push_back(payload);
             }
 
@@ -117,15 +117,15 @@ namespace Swift {
                 return getPayloads<JingleContentPayload>();
             }
 
-            const std::vector<boost::shared_ptr<Payload> > getPayloads() const {
+            const std::vector<std::shared_ptr<Payload> > getPayloads() const {
                 return payloads;
             }
 
             template<typename T>
-            const std::vector<boost::shared_ptr<T> > getPayloads() const {
-                std::vector<boost::shared_ptr<T> > matched_payloads;
-                for (std::vector<boost::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
-                    boost::shared_ptr<T> result = boost::dynamic_pointer_cast<T>(*i);
+            const std::vector<std::shared_ptr<T> > getPayloads() const {
+                std::vector<std::shared_ptr<T> > matched_payloads;
+                for (std::vector<std::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
+                    std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(*i);
                     if (result) {
                         matched_payloads.push_back(result);
                     }
@@ -136,10 +136,10 @@ namespace Swift {
             }
 
             template<typename T>
-            const boost::shared_ptr<T> getPayload() const {
-                boost::shared_ptr<T> result;
-                for (std::vector<boost::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
-                    result = boost::dynamic_pointer_cast<T>(*i);
+            const std::shared_ptr<T> getPayload() const {
+                std::shared_ptr<T> result;
+                for (std::vector<std::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
+                    result = std::dynamic_pointer_cast<T>(*i);
                     if (result) {
                         return result;
                     }
@@ -161,7 +161,7 @@ namespace Swift {
             JID initiator;
             JID responder;
             std::string sessionID;
-            std::vector<boost::shared_ptr<Payload> > payloads;
+            std::vector<std::shared_ptr<Payload> > payloads;
             boost::optional<Reason> reason;
     };
 }

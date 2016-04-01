@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/AuthResponse.h>
@@ -17,6 +17,6 @@ namespace Swift {
         public:
             AuthResponseSerializer();
 
-            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element)  const;
+            virtual SafeByteArray serialize(std::shared_ptr<ToplevelElement> element)  const;
     };
 }

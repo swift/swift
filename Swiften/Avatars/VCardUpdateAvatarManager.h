@@ -7,8 +7,7 @@
 #pragma once
 
 #include <map>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Avatars/AvatarProvider.h>
 #include <Swiften/Base/API.h>
@@ -31,7 +30,7 @@ namespace Swift {
             boost::optional<std::string> getAvatarHash(const JID&) const;
 
         private:
-            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handlePresenceReceived(std::shared_ptr<Presence>);
             void handleStanzaChannelAvailableChanged(bool);
             void handleVCardChanged(const JID& from, VCard::ref);
             void setAvatarHash(const JID& from, const std::string& hash);

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
 
 class SWIFTEN_API DeliveryReceiptRequest : public Payload {
     public:
-        typedef boost::shared_ptr<DeliveryReceiptRequest> ref;
+        typedef std::shared_ptr<DeliveryReceiptRequest> ref;
 
     public:
         DeliveryReceiptRequest() {}

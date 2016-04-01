@@ -12,8 +12,9 @@
 
 #include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -58,7 +59,7 @@ void RemoteJingleTransportCandidateSelector::tryNextCandidate() {
     if (candidates.empty()) {
         SWIFT_LOG(debug) << "No more candidates" << std::endl;
         onCandidateSelectFinished(
-                boost::optional<JingleS5BTransportPayload::Candidate>(), boost::shared_ptr<SOCKS5BytestreamClientSession>());
+                boost::optional<JingleS5BTransportPayload::Candidate>(), std::shared_ptr<SOCKS5BytestreamClientSession>());
     }
     else {
         lastCandidate = candidates.top();
@@ -67,8 +68,8 @@ void RemoteJingleTransportCandidateSelector::tryNextCandidate() {
         if ((lastCandidate.type == JingleS5BTransportPayload::Candidate::DirectType && options.isDirectAllowed()) ||
             (lastCandidate.type == JingleS5BTransportPayload::Candidate::AssistedType && options.isAssistedAllowed()) ||
             (lastCandidate.type == JingleS5BTransportPayload::Candidate::ProxyType && options.isProxiedAllowed())) {
-            boost::shared_ptr<Connection> connection = connectionFactory->createConnection();
-            s5bSession = boost::make_shared<SOCKS5BytestreamClientSession>(
+            std::shared_ptr<Connection> connection = connectionFactory->createConnection();
+            s5bSession = std::make_shared<SOCKS5BytestreamClientSession>(
                     connection, lastCandidate.hostPort, socks5DstAddr, timerFactory);
             sessionReadyConnection = s5bSession->onSessionReady.connect(
                     boost::bind(&RemoteJingleTransportCandidateSelector::handleSessionReady, this, _1));

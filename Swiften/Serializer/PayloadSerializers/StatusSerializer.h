@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Status.h>
@@ -19,9 +19,9 @@ namespace Swift {
         public:
             StatusSerializer() : GenericPayloadSerializer<Status>() {}
 
-            virtual std::string serializePayload(boost::shared_ptr<Status> status)  const {
+            virtual std::string serializePayload(std::shared_ptr<Status> status)  const {
                 XMLElement element("status");
-                element.addNode(boost::make_shared<XMLTextNode>(status->getText()));
+                element.addNode(std::make_shared<XMLTextNode>(status->getText()));
                 return element.serialize();
             }
     };

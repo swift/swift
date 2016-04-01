@@ -77,7 +77,7 @@ bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
             } else if (keyEvent->key() == Qt::Key_Return) {
                 JID target = treeView_->selectedJID();
                 if (target.isValid()) {
-                    eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
+                    eventStream_->send(std::make_shared<RequestChatUIEvent>(target));
                 }
                 filterLineEdit_->setText("");
                 updateRosterFilters();

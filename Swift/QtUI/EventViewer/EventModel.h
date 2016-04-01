@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <QAbstractListModel>
 #include <QList>
@@ -21,8 +21,8 @@ class EventModel : public QAbstractListModel {
     public:
         EventModel();
         virtual ~EventModel();
-        void addEvent(boost::shared_ptr<StanzaEvent> event, bool active);
-        void removeEvent(boost::shared_ptr<StanzaEvent> event);
+        void addEvent(std::shared_ptr<StanzaEvent> event, bool active);
+        void removeEvent(std::shared_ptr<StanzaEvent> event);
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
         int rowCount(const QModelIndex& parent = QModelIndex()) const;
         QtEvent* getItem(int row) const;

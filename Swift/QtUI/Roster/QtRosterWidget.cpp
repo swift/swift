@@ -48,7 +48,7 @@ void QtRosterWidget::handleEditUserActionTriggered(bool /*checked*/) {
     }
     RosterItem* item = static_cast<RosterItem*>(index.internalPointer());
     if (ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(item)) {
-        eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
+        eventStream_->send(std::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
     }
 }
 
@@ -95,15 +95,15 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 #endif
         QAction* result = contextMenu.exec(event->globalPos());
         if (result == editContact) {
-            eventStream_->send(boost::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
+            eventStream_->send(std::make_shared<RequestContactEditorUIEvent>(contact->getJID()));
         }
         else if (result == removeContact) {
             if (QtContactEditWindow::confirmContactDeletion(contact->getJID())) {
-                eventStream_->send(boost::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
+                eventStream_->send(std::make_shared<RemoveRosterItemUIEvent>(contact->getJID()));
             }
         }
         else if (result == showProfileForContact) {
-            eventStream_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
+            eventStream_->send(std::make_shared<ShowProfileForRosterItemUIEvent>(contact->getJID()));
         }
         else if (unblockContact && result == unblockContact) {
             if (contact->blockState() == ContactRosterItem::IsDomainBlocked) {
@@ -113,26 +113,26 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 
                 messageBox.exec();
                 if (messageBox.clickedButton() == unblockDomainButton)  {
-                    eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID().getDomain()));
+                    eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID().getDomain()));
                 }
             } else {
-                eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
+                eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, contact->getJID()));
             }
         }
         else if (blockContact && result == blockContact) {
-            eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, contact->getJID()));
+            eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, contact->getJID()));
         }
 #ifdef SWIFT_EXPERIMENTAL_FT
         else if (sendFile && result == sendFile) {
             QString fileName = QFileDialog::getOpenFileName(this, tr("Send File"), "", tr("All Files (*);;"));
             if (!fileName.isEmpty()) {
-                eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(fileName)));
+                eventStream_->send(std::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(fileName)));
             }
         }
 #endif
 #ifdef SWIFT_EXPERIMENTAL_WB
         else if (startWhiteboardChat && result == startWhiteboardChat) {
-            eventStream_->send(boost::make_shared<RequestWhiteboardUIEvent>(contact->getJID()));
+            eventStream_->send(std::make_shared<RequestWhiteboardUIEvent>(contact->getJID()));
         }
 #endif
     }
@@ -155,7 +155,7 @@ void QtRosterWidget::renameGroup(GroupRosterItem* group) {
     bool ok;
     QString newName = QInputDialog::getText(nullptr, tr("Rename group"), tr("Enter a new name for group '%1':").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
     if (ok) {
-        eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
+        eventStream_->send(std::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
     }
 }
 

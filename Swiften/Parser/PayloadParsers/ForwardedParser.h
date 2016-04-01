@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -33,8 +33,8 @@ namespace Swift {
 
         private:
             PayloadParserFactoryCollection* factories_;
-            boost::shared_ptr<StanzaParser> childParser_;
-            boost::shared_ptr<DelayParser> delayParser_;
+            std::shared_ptr<StanzaParser> childParser_;
+            std::shared_ptr<DelayParser> delayParser_;
             int level_;
     };
 }

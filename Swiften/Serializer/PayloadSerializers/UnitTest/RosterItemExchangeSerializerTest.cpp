@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -22,7 +28,7 @@ class RosterItemExchangeSerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             RosterItemExchangeSerializer testling;
-            boost::shared_ptr<RosterItemExchangePayload> roster(new RosterItemExchangePayload());
+            std::shared_ptr<RosterItemExchangePayload> roster(new RosterItemExchangePayload());
 
             RosterItemExchangePayload::Item item1;
             item1.setJID("foo@bar.com");

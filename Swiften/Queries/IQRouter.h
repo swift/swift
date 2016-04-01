@@ -6,10 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/IQ.h>
@@ -50,8 +49,8 @@ namespace Swift {
 
             void addHandler(IQHandler* handler);
             void removeHandler(IQHandler* handler);
-            void addHandler(boost::shared_ptr<IQHandler> handler);
-            void removeHandler(boost::shared_ptr<IQHandler> handler);
+            void addHandler(std::shared_ptr<IQHandler> handler);
+            void removeHandler(std::shared_ptr<IQHandler> handler);
 
             /**
              * Sends an IQ stanza.
@@ -60,7 +59,7 @@ namespace Swift {
              * be set as the 'from' address on iq before sending
              * it.
              */
-            void sendIQ(boost::shared_ptr<IQ> iq);
+            void sendIQ(std::shared_ptr<IQ> iq);
             std::string getNewIQID();
 
             bool isAvailable();
@@ -76,15 +75,15 @@ namespace Swift {
             }
 
         private:
-            void handleIQ(boost::shared_ptr<IQ> iq);
+            void handleIQ(std::shared_ptr<IQ> iq);
             void processPendingRemoves();
 
         private:
             IQChannel* channel_;
             JID jid_;
             JID from_;
-            std::vector< boost::shared_ptr<IQHandler> > handlers_;
-            std::vector< boost::shared_ptr<IQHandler> > queuedRemoves_;
+            std::vector< std::shared_ptr<IQHandler> > handlers_;
+            std::vector< std::shared_ptr<IQHandler> > queuedRemoves_;
             bool queueRemoves_;
     };
 }

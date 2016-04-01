@@ -48,19 +48,19 @@ namespace Swift {
                 payloadParser->handleCharacterData(data);
             }
 
-            boost::shared_ptr<Payload> getPayload() const {
+            std::shared_ptr<Payload> getPayload() const {
                 return payloadParser->getPayload();
             }
 
             template<typename T>
-            boost::shared_ptr<T> getPayload() const {
-                return boost::dynamic_pointer_cast<T>(payloadParser->getPayload());
+            std::shared_ptr<T> getPayload() const {
+                return std::dynamic_pointer_cast<T>(payloadParser->getPayload());
             }
 
         private:
             XMLParser* xmlParser;
             FullPayloadParserFactoryCollection factories;
-            boost::shared_ptr<PayloadParser> payloadParser;
+            std::shared_ptr<PayloadParser> payloadParser;
             int level;
     };
 }

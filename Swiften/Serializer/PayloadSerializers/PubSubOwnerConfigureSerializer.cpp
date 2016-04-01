@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerConfigureSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -22,7 +22,7 @@ PubSubOwnerConfigureSerializer::PubSubOwnerConfigureSerializer(PayloadSerializer
 PubSubOwnerConfigureSerializer::~PubSubOwnerConfigureSerializer() {
 }
 
-std::string PubSubOwnerConfigureSerializer::serializePayload(boost::shared_ptr<PubSubOwnerConfigure> payload) const {
+std::string PubSubOwnerConfigureSerializer::serializePayload(std::shared_ptr<PubSubOwnerConfigure> payload) const {
     if (!payload) {
         return "";
     }
@@ -30,7 +30,7 @@ std::string PubSubOwnerConfigureSerializer::serializePayload(boost::shared_ptr<P
     if (payload->getNode()) {
         element.setAttribute("node", *payload->getNode());
     }
-    element.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
+    element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
     return element.serialize();
 }
 

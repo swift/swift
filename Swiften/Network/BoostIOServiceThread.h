@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/asio/io_service.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
 
 #include <Swiften/Base/API.h>
@@ -23,10 +24,10 @@ namespace Swift {
              * you are re-using an io_service from elsewhere (particularly if you
            * are using the BoostASIOEventLoop).
              */
-            BoostIOServiceThread(boost::shared_ptr<boost::asio::io_service> ioService = boost::shared_ptr<boost::asio::io_service>());
+            BoostIOServiceThread(std::shared_ptr<boost::asio::io_service> ioService = std::shared_ptr<boost::asio::io_service>());
             ~BoostIOServiceThread();
 
-            boost::shared_ptr<boost::asio::io_service> getIOService() const {
+            std::shared_ptr<boost::asio::io_service> getIOService() const {
                 return ioService_;
             }
 
@@ -34,7 +35,7 @@ namespace Swift {
             void doRun();
 
         private:
-            boost::shared_ptr<boost::asio::io_service> ioService_;
+            std::shared_ptr<boost::asio::io_service> ioService_;
             boost::thread* thread_;
     };
 }

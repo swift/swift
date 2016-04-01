@@ -12,12 +12,11 @@
 
 #include <Swift/QtUI/QtHistoryWindow.h>
 
+#include <memory>
 #include <string>
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QDateTime>
 #include <QLineEdit>
@@ -138,14 +137,14 @@ void QtHistoryWindow::addMessage(const std::string &message, const std::string &
 
     if (addAtTheTop) {
         bool appendToPrevious = ((senderIsSelf && previousTopMessageWasSelf_) || (!senderIsSelf && !previousTopMessageWasSelf_&& previousTopSenderName_ == P2QSTRING(senderName)));
-        conversation_->addMessageTop(boost::shared_ptr<ChatSnippet>(new MessageSnippet(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(message))));
+        conversation_->addMessageTop(std::make_shared<MessageSnippet>(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(message)));
 
         previousTopMessageWasSelf_ = senderIsSelf;
         previousTopSenderName_ = P2QSTRING(senderName);
     }
     else {
         bool appendToPrevious = ((senderIsSelf && previousBottomMessageWasSelf_) || (!senderIsSelf && !previousBottomMessageWasSelf_&& previousBottomSenderName_ == P2QSTRING(senderName)));
-        conversation_->addMessageBottom(boost::make_shared<MessageSnippet>(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(message)));
+        conversation_->addMessageBottom(std::make_shared<MessageSnippet>(messageHTML, QtUtilities::htmlEscape(P2QSTRING(senderName)), qTime, qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(message)));
         previousBottomMessageWasSelf_ = senderIsSelf;
         previousBottomSenderName_ = P2QSTRING(senderName);
     }

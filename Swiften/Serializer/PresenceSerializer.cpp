@@ -6,7 +6,7 @@
 
 #include <Swiften/Serializer/PresenceSerializer.h>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -19,7 +19,7 @@ PresenceSerializer::PresenceSerializer(PayloadSerializerCollection* payloadSeria
 }
 
 void PresenceSerializer::setStanzaSpecificAttributesGeneric(
-        boost::shared_ptr<Presence> presence,
+        std::shared_ptr<Presence> presence,
         XMLElement& element) const {
     switch (presence->getType()) {
         case Presence::Unavailable: element.setAttribute("type","unavailable"); break;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -87,7 +87,7 @@ namespace {
     std::vector<char, SafeAllocator<char> > getStringPreparedDetail(const StringType& s, IDNConverter::StringPrepProfile profile) {
         UErrorCode status = U_ZERO_ERROR;
 
-        boost::shared_ptr<UStringPrepProfile> icuProfile(usprep_openByType(getICUProfileType(profile), &status), usprep_close);
+        std::shared_ptr<UStringPrepProfile> icuProfile(usprep_openByType(getICUProfileType(profile), &status), usprep_close);
         assert(U_SUCCESS(status));
 
         ICUString icuInput = convertToICUString(s);

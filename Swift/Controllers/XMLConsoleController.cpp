@@ -19,8 +19,8 @@ XMLConsoleController::~XMLConsoleController() {
     delete xmlConsoleWidget;
 }
 
-void XMLConsoleController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
-    boost::shared_ptr<RequestXMLConsoleUIEvent> event = boost::dynamic_pointer_cast<RequestXMLConsoleUIEvent>(rawEvent);
+void XMLConsoleController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
+    std::shared_ptr<RequestXMLConsoleUIEvent> event = std::dynamic_pointer_cast<RequestXMLConsoleUIEvent>(rawEvent);
     if (event != nullptr) {
         if (xmlConsoleWidget == nullptr) {
             xmlConsoleWidget = xmlConsoleWidgetFactory->createXMLConsoleWidget();

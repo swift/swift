@@ -15,7 +15,7 @@ namespace Swift {
      */
     class SWIFTEN_API Timer {
         public:
-            typedef boost::shared_ptr<Timer> ref;
+            typedef std::shared_ptr<Timer> ref;
 
             virtual ~Timer();
 

@@ -12,10 +12,10 @@
 
 #pragma once
 
+#include <memory>
 #include <set>
 
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/History/HistoryStorage.h>
@@ -40,7 +40,7 @@ namespace Swift {
             ~HistoryViewController();
 
         private:
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
             void handleSelectedContactChanged(RosterItem* item);
             void handleNewMessage(const HistoryMessage& message);
             void handleReturnPressed(const std::string& keyword);

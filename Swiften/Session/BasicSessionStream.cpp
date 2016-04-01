@@ -6,8 +6,9 @@
 
 #include <Swiften/Session/BasicSessionStream.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/StreamStack/CompressionLayer.h>
 #include <Swiften/StreamStack/ConnectionLayer.h>
@@ -22,7 +23,7 @@ namespace Swift {
 
 BasicSessionStream::BasicSessionStream(
         StreamType streamType,
-        boost::shared_ptr<Connection> connection,
+        std::shared_ptr<Connection> connection,
         PayloadParserFactoryCollection* payloadParserFactories,
         PayloadSerializerCollection* payloadSerializers,
         TLSContextFactory* tlsContextFactory,
@@ -79,7 +80,7 @@ void BasicSessionStream::writeHeader(const ProtocolHeader& header) {
     xmppLayer->writeHeader(header);
 }
 
-void BasicSessionStream::writeElement(boost::shared_ptr<ToplevelElement> element) {
+void BasicSessionStream::writeElement(std::shared_ptr<ToplevelElement> element) {
     assert(available);
     xmppLayer->writeElement(element);
 }
@@ -110,7 +111,7 @@ void BasicSessionStream::addTLSEncryption() {
     assert(available);
     tlsLayer = new TLSLayer(tlsContextFactory, tlsOptions_);
     if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
-        onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::InvalidTLSCertificateError));
+        onClosed(std::make_shared<SessionStreamError>(SessionStreamError::InvalidTLSCertificateError));
     }
     else {
         streamStack->addLayer(tlsLayer);
@@ -132,7 +133,7 @@ std::vector<Certificate::ref> BasicSessionStream::getPeerCertificateChain() cons
     return tlsLayer->getPeerCertificateChain();
 }
 
-boost::shared_ptr<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
+std::shared_ptr<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
     return tlsLayer->getPeerCertificateVerificationError();
 }
 
@@ -170,20 +171,20 @@ void BasicSessionStream::handleStreamStartReceived(const ProtocolHeader& header)
     onStreamStartReceived(header);
 }
 
-void BasicSessionStream::handleElementReceived(boost::shared_ptr<ToplevelElement> element) {
+void BasicSessionStream::handleElementReceived(std::shared_ptr<ToplevelElement> element) {
     onElementReceived(element);
 }
 
 void BasicSessionStream::handleXMPPError() {
     available = false;
-    onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ParseError));
+    onClosed(std::make_shared<SessionStreamError>(SessionStreamError::ParseError));
 }
 
 void BasicSessionStream::handleTLSConnected() {
     onTLSEncrypted();
 }
 
-void BasicSessionStream::handleTLSError(boost::shared_ptr<TLSError> error) {
+void BasicSessionStream::handleTLSError(std::shared_ptr<TLSError> error) {
     available = false;
     onClosed(error);
 }
@@ -191,13 +192,13 @@ void BasicSessionStream::handleTLSError(boost::shared_ptr<TLSError> error) {
 void BasicSessionStream::handleConnectionFinished(const boost::optional<Connection::Error>& error) {
     available = false;
     if (error == Connection::ReadError) {
-        onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ConnectionReadError));
+        onClosed(std::make_shared<SessionStreamError>(SessionStreamError::ConnectionReadError));
     }
     else if (error) {
-        onClosed(boost::make_shared<SessionStreamError>(SessionStreamError::ConnectionWriteError));
+        onClosed(std::make_shared<SessionStreamError>(SessionStreamError::ConnectionWriteError));
     }
     else {
-        onClosed(boost::shared_ptr<SessionStreamError>());
+        onClosed(std::shared_ptr<SessionStreamError>());
     }
 }
 

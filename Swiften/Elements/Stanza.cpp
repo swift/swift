@@ -22,8 +22,8 @@ Stanza::~Stanza() {
     payloads_.clear();
 }
 
-void Stanza::updatePayload(boost::shared_ptr<Payload> payload) {
-    foreach (boost::shared_ptr<Payload>& i, payloads_) {
+void Stanza::updatePayload(std::shared_ptr<Payload> payload) {
+    foreach (std::shared_ptr<Payload>& i, payloads_) {
         if (typeid(*i.get()) == typeid(*payload.get())) {
             i = payload;
             return;
@@ -32,32 +32,32 @@ void Stanza::updatePayload(boost::shared_ptr<Payload> payload) {
     addPayload(payload);
 }
 
-static bool sameType(boost::shared_ptr<Payload> a, boost::shared_ptr<Payload> b) {
+static bool sameType(std::shared_ptr<Payload> a, std::shared_ptr<Payload> b) {
     return typeid(*a.get()) == typeid(*b.get());
 }
 
-void Stanza::removePayloadOfSameType(boost::shared_ptr<Payload> payload) {
+void Stanza::removePayloadOfSameType(std::shared_ptr<Payload> payload) {
     payloads_.erase(std::remove_if(payloads_.begin(), payloads_.end(),
         boost::bind<bool>(&sameType, payload, _1)),
         payloads_.end());
 }
 
-boost::shared_ptr<Payload> Stanza::getPayloadOfSameType(boost::shared_ptr<Payload> payload) const {
-    foreach (const boost::shared_ptr<Payload>& i, payloads_) {
+std::shared_ptr<Payload> Stanza::getPayloadOfSameType(std::shared_ptr<Payload> payload) const {
+    foreach (const std::shared_ptr<Payload>& i, payloads_) {
         if (typeid(*i.get()) == typeid(*payload.get())) {
             return i;
         }
     }
-    return boost::shared_ptr<Payload>();
+    return std::shared_ptr<Payload>();
 }
 
 boost::optional<boost::posix_time::ptime> Stanza::getTimestamp() const {
-    boost::shared_ptr<Delay> delay = getPayload<Delay>();
+    std::shared_ptr<Delay> delay = getPayload<Delay>();
     return delay ? delay->getStamp() : boost::optional<boost::posix_time::ptime>();
 }
 
 boost::optional<boost::posix_time::ptime> Stanza::getTimestampFrom(const JID& jid) const {
-    std::vector< boost::shared_ptr<Delay> > delays = getPayloads<Delay>();
+    std::vector< std::shared_ptr<Delay> > delays = getPayloads<Delay>();
     for (size_t i = 0; i < delays.size(); ++i) {
         if (delays[i]->getFrom() == jid) {
             return delays[i]->getStamp();

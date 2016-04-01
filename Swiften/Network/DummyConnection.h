@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -15,7 +15,7 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-    class SWIFTEN_API DummyConnection : public Connection, public EventOwner,    public boost::enable_shared_from_this<DummyConnection> {
+    class SWIFTEN_API DummyConnection : public Connection, public EventOwner,    public std::enable_shared_from_this<DummyConnection> {
         public:
             DummyConnection(EventLoop* eventLoop);
 

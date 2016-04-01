@@ -10,7 +10,7 @@
 #include <cassert>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -399,12 +399,12 @@ void QtLoginWindow::loginClicked() {
         if (!certificateString.empty()) {
 #if defined(HAVE_SCHANNEL)
             if (isCAPIURI(certificateString)) {
-                certificate = boost::make_shared<CAPICertificate>(certificateString, timerFactory_);
+                certificate = std::make_shared<CAPICertificate>(certificateString, timerFactory_);
             } else {
-                certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
+                certificate = std::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
             }
 #else
-            certificate = boost::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
+            certificate = std::make_shared<PKCS12Certificate>(certificateString, createSafeByteArray(Q2PSTRING(password_->text())));
 #endif
         }
 
@@ -454,15 +454,15 @@ void QtLoginWindow::handleAbout() {
 }
 
 void QtLoginWindow::handleShowXMLConsole() {
-    uiEventStream_->send(boost::make_shared<RequestXMLConsoleUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestXMLConsoleUIEvent>());
 }
 
 void QtLoginWindow::handleShowFileTransferOverview() {
-    uiEventStream_->send(boost::make_shared<RequestFileTransferListUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestFileTransferListUIEvent>());
 }
 
 void QtLoginWindow::handleShowHighlightEditor() {
-    uiEventStream_->send(boost::make_shared<RequestHighlightEditorUIEvent>());
+    uiEventStream_->send(std::make_shared<RequestHighlightEditorUIEvent>());
 }
 
 void QtLoginWindow::handleToggleSounds(bool enabled) {

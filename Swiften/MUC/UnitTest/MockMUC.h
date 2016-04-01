@@ -7,9 +7,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/signals/connection.hpp>
 
 #include <Swiften/Base/API.h>
@@ -31,7 +31,7 @@ namespace Swift {
 
     class SWIFTEN_API MockMUC : public MUC{
         public:
-            typedef boost::shared_ptr<MockMUC> ref;
+            typedef std::shared_ptr<MockMUC> ref;
 
         public:
             MockMUC(const JID &muc);

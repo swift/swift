@@ -19,8 +19,8 @@ namespace Swift {
             PubSubOwnerRedirectConvertor();
             virtual ~PubSubOwnerRedirectConvertor();
 
-            virtual boost::shared_ptr<PubSubOwnerRedirect> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubOwnerRedirect>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<PubSubOwnerRedirect> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubOwnerRedirect>) SWIFTEN_OVERRIDE;
             virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
     };
 }

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ namespace Swift {
 
 class SWIFTEN_API S5BProxyRequest : public Payload {
 public:
-    typedef boost::shared_ptr<S5BProxyRequest> ref;
+    typedef std::shared_ptr<S5BProxyRequest> ref;
 
 public:
     struct StreamHost {

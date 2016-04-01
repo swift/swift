@@ -6,9 +6,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/foreach.h>
@@ -22,28 +22,28 @@ namespace Swift {
 JingleFileTransferFileInfoSerializer::JingleFileTransferFileInfoSerializer() {
 }
 
-std::string JingleFileTransferFileInfoSerializer::serializePayload(boost::shared_ptr<JingleFileTransferFileInfo> fileInfo) const {
+std::string JingleFileTransferFileInfoSerializer::serializePayload(std::shared_ptr<JingleFileTransferFileInfo> fileInfo) const {
 
     XMLElement fileElement("file", "");
 
     if (fileInfo->getDate() != stringToDateTime("")) {
-        fileElement.addNode(boost::make_shared<XMLElement>("date", "", dateTimeToString(fileInfo->getDate())));
+        fileElement.addNode(std::make_shared<XMLElement>("date", "", dateTimeToString(fileInfo->getDate())));
     }
 
     if (!fileInfo->getDescription().empty()) {
-        fileElement.addNode(boost::make_shared<XMLElement>("desc", "", fileInfo->getDescription()));
+        fileElement.addNode(std::make_shared<XMLElement>("desc", "", fileInfo->getDescription()));
     }
 
     if (!fileInfo->getMediaType().empty()) {
-        fileElement.addNode(boost::make_shared<XMLElement>("media-type", "", fileInfo->getMediaType()));
+        fileElement.addNode(std::make_shared<XMLElement>("media-type", "", fileInfo->getMediaType()));
     }
 
     if (!fileInfo->getName().empty()) {
-        fileElement.addNode(boost::make_shared<XMLElement>("name", "", fileInfo->getName()));
+        fileElement.addNode(std::make_shared<XMLElement>("name", "", fileInfo->getName()));
     }
 
     if (fileInfo->getSupportsRangeRequests()) {
-        boost::shared_ptr<XMLElement> range = boost::make_shared<XMLElement>("range");
+        std::shared_ptr<XMLElement> range = std::make_shared<XMLElement>("range");
         if (fileInfo->getRangeOffset() != 0) {
             range->setAttribute("offset", boost::lexical_cast<std::string>(fileInfo->getRangeOffset()));
         }
@@ -51,11 +51,11 @@ std::string JingleFileTransferFileInfoSerializer::serializePayload(boost::shared
     }
 
     if (fileInfo->getSize() > 0) {
-        fileElement.addNode(boost::make_shared<XMLElement>("size", "", boost::lexical_cast<std::string>(fileInfo->getSize())));
+        fileElement.addNode(std::make_shared<XMLElement>("size", "", boost::lexical_cast<std::string>(fileInfo->getSize())));
     }
 
     foreach (JingleFileTransferFileInfo::HashElementMap::value_type hashElement, fileInfo->getHashes()) {
-        boost::shared_ptr<XMLElement> hash = boost::make_shared<XMLElement>("hash", "urn:xmpp:hashes:1", Base64::encode(hashElement.second));
+        std::shared_ptr<XMLElement> hash = std::make_shared<XMLElement>("hash", "urn:xmpp:hashes:1", Base64::encode(hashElement.second));
         hash->setAttribute("algo", hashElement.first);
         fileElement.addNode(hash);
     }

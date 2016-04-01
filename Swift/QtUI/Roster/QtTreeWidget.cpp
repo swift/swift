@@ -6,8 +6,9 @@
 
 #include <Swift/QtUI/Roster/QtTreeWidget.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QLabel>
 #include <QMimeData>
@@ -140,7 +141,7 @@ void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex&
 void QtTreeWidget::handleItemActivated(const QModelIndex& index) {
     JID target = jidFromIndex(index);
     if (target.isValid()) {
-        eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(target)));
+        eventStream_->send(std::make_shared<RequestChatUIEvent>(target));
     }
 }
 
@@ -158,7 +159,7 @@ void QtTreeWidget::dropEvent(QDropEvent *event) {
             if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
                 QString filename = event->mimeData()->urls().at(0).toLocalFile();
                 if (!filename.isEmpty()) {
-                    eventStream_->send(boost::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(filename)));
+                    eventStream_->send(std::make_shared<SendFileUIEvent>(contact->getJID(), Q2PSTRING(filename)));
                 }
             }
         }

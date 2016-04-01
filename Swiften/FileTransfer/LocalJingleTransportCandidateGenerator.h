@@ -58,9 +58,9 @@ namespace Swift {
             SOCKS5BytestreamProxiesManager* s5bProxy;
             JID ownJID;
             IDGenerator* idGenerator;
-            boost::shared_ptr<SOCKS5BytestreamServerInitializeRequest> s5bServerInitializeRequest;
-            boost::shared_ptr<SOCKS5BytestreamServerResourceUser> s5bServerResourceUser_;
-            boost::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> s5bServerPortForwardingUser_;
+            std::shared_ptr<SOCKS5BytestreamServerInitializeRequest> s5bServerInitializeRequest;
+            std::shared_ptr<SOCKS5BytestreamServerResourceUser> s5bServerResourceUser_;
+            std::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> s5bServerPortForwardingUser_;
             bool triedServerInit_;
             bool triedForwarding_;
             bool triedProxyDiscovery_;

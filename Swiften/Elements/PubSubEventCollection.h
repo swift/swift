@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -34,26 +34,26 @@ namespace Swift {
                 this->node = value ;
             }
 
-            boost::shared_ptr<PubSubEventDisassociate> getDisassociate() const {
+            std::shared_ptr<PubSubEventDisassociate> getDisassociate() const {
                 return disassociate;
             }
 
-            void setDisassociate(boost::shared_ptr<PubSubEventDisassociate> value) {
+            void setDisassociate(std::shared_ptr<PubSubEventDisassociate> value) {
                 this->disassociate = value ;
             }
 
-            boost::shared_ptr<PubSubEventAssociate> getAssociate() const {
+            std::shared_ptr<PubSubEventAssociate> getAssociate() const {
                 return associate;
             }
 
-            void setAssociate(boost::shared_ptr<PubSubEventAssociate> value) {
+            void setAssociate(std::shared_ptr<PubSubEventAssociate> value) {
                 this->associate = value ;
             }
 
 
         private:
             boost::optional< std::string > node;
-            boost::shared_ptr<PubSubEventDisassociate> disassociate;
-            boost::shared_ptr<PubSubEventAssociate> associate;
+            std::shared_ptr<PubSubEventDisassociate> disassociate;
+            std::shared_ptr<PubSubEventAssociate> associate;
     };
 }

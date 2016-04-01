@@ -6,8 +6,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MAMFinSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/ResultSetSerializer.h>
@@ -22,7 +23,7 @@ MAMFinSerializer::MAMFinSerializer() {
 MAMFinSerializer::~MAMFinSerializer() {
 }
 
-std::string MAMFinSerializer::serializePayload(boost::shared_ptr<MAMFin> payload) const {
+std::string MAMFinSerializer::serializePayload(std::shared_ptr<MAMFin> payload) const {
     if (!payload) {
         return "";
     }
@@ -42,7 +43,7 @@ std::string MAMFinSerializer::serializePayload(boost::shared_ptr<MAMFin> payload
     }
 
     if (payload->getResultSet()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(ResultSetSerializer().serialize(payload->getResultSet())));
+        element.addNode(std::make_shared<XMLRawTextNode>(ResultSetSerializer().serialize(payload->getResultSet())));
     }
 
     return element.serialize();

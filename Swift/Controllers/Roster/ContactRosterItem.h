@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -13,7 +14,6 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/filesystem/path.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/MUCOccupant.h>
@@ -55,7 +55,7 @@ class ContactRosterItem : public RosterItem {
         const JID& getJID() const;
         void setDisplayJID(const JID& jid);
         const JID& getDisplayJID() const;
-        void applyPresence(boost::shared_ptr<Presence> presence);
+        void applyPresence(std::shared_ptr<Presence> presence);
         const std::vector<std::string>& getGroups() const;
         /** Only used so a contact can know about the groups it's in*/
         void addGroup(const std::string& group);
@@ -84,7 +84,7 @@ class ContactRosterItem : public RosterItem {
         JID displayJID_;
         boost::posix_time::ptime lastAvailableTime_;
         boost::filesystem::path avatarPath_;
-        boost::shared_ptr<Presence> presence_;
+        std::shared_ptr<Presence> presence_;
         std::vector<std::string> groups_;
         MUCOccupant::Role mucRole_;
         MUCOccupant::Affiliation mucAffiliation_;

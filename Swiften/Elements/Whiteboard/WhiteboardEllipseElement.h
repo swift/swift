@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API WhiteboardEllipseElement : public WhiteboardElement {
     public:
-        typedef boost::shared_ptr<WhiteboardEllipseElement> ref;
+        typedef std::shared_ptr<WhiteboardEllipseElement> ref;
     public:
         WhiteboardEllipseElement(int cx, int cy, int rx, int ry) {
             cx_ = cx;

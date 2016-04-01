@@ -43,7 +43,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
         }
 
         void testSetVCard() {
-            boost::shared_ptr<VCardFileStorage> testling(createTestling());
+            std::shared_ptr<VCardFileStorage> testling(createTestling());
             VCard::ref vcard(new VCard());
             vcard->setFullName("Alice In Wonderland");
 
@@ -73,7 +73,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
         }
 
         void testGetVCard() {
-            boost::shared_ptr<VCardFileStorage> testling(createTestling());
+            std::shared_ptr<VCardFileStorage> testling(createTestling());
             VCard::ref vcard(new VCard());
             vcard->setFullName("Alice In Wonderland");
             testling->setVCard(JID("alice@wonderland.lit"), vcard);
@@ -99,7 +99,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
         }
 
         void testGetVCard_FileDoesNotExist() {
-            boost::shared_ptr<VCardFileStorage> testling(createTestling());
+            std::shared_ptr<VCardFileStorage> testling(createTestling());
             VCard::ref result = testling->getVCard(JID("alice@wonderland.lit"));
             CPPUNIT_ASSERT(!result);
         }

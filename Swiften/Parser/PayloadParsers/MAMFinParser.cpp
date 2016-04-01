@@ -30,7 +30,7 @@ void MAMFinParser::handleStartElement(const std::string& element, const std::str
     }
     else if (level_ == PayloadLevel) {
         if (element == "set" && ns == "http://jabber.org/protocol/rsm") {
-            resultSetParser_ = boost::make_shared<ResultSetParser>();
+            resultSetParser_ = std::make_shared<ResultSetParser>();
         }
     }
 
@@ -49,7 +49,7 @@ void MAMFinParser::handleEndElement(const std::string& element, const std::strin
     }
     if (resultSetParser_ && level_ == PayloadLevel) {
         /* done parsing nested ResultSet */
-        getPayloadInternal()->setResultSet(boost::dynamic_pointer_cast<ResultSet>(resultSetParser_->getPayload()));
+        getPayloadInternal()->setResultSet(std::dynamic_pointer_cast<ResultSet>(resultSetParser_->getPayload()));
         resultSetParser_.reset();
     }
 }

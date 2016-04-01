@@ -6,8 +6,9 @@
 
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Queries/GenericRequest.h>
@@ -21,7 +22,7 @@ OutgoingAdHocCommandSession::~OutgoingAdHocCommandSession() {
     connection_.disconnect();
 }
 
-void OutgoingAdHocCommandSession::handleResponse(boost::shared_ptr<Command> payload, ErrorPayload::ref error) {
+void OutgoingAdHocCommandSession::handleResponse(std::shared_ptr<Command> payload, ErrorPayload::ref error) {
     if (error) {
         onError(error);
     } else {
@@ -61,7 +62,7 @@ bool OutgoingAdHocCommandSession::getIsMultiStage() const {
 }
 
 void OutgoingAdHocCommandSession::start() {
-    boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, to_, boost::make_shared<Command>(commandNode_), iqRouter_);
+    std::shared_ptr<GenericRequest<Command> > commandRequest = std::make_shared< GenericRequest<Command> >(IQ::Set, to_, std::make_shared<Command>(commandNode_), iqRouter_);
     connection_ = commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
     commandRequest->send();
 }
@@ -85,9 +86,9 @@ void OutgoingAdHocCommandSession::goNext(Form::ref form) {
 }
 
 void OutgoingAdHocCommandSession::submitForm(Form::ref form, Command::Action action) {
-    boost::shared_ptr<Command> command(boost::make_shared<Command>(commandNode_, sessionID_, action));
+    std::shared_ptr<Command> command(std::make_shared<Command>(commandNode_, sessionID_, action));
     command->setForm(form);
-    boost::shared_ptr<GenericRequest<Command> > commandRequest = boost::make_shared< GenericRequest<Command> >(IQ::Set, to_, command, iqRouter_);
+    std::shared_ptr<GenericRequest<Command> > commandRequest = std::make_shared< GenericRequest<Command> >(IQ::Set, to_, command, iqRouter_);
     connection_.disconnect();
     connection_ = commandRequest->onResponse.connect(boost::bind(&OutgoingAdHocCommandSession::handleResponse, this, _1, _2));
     commandRequest->send();

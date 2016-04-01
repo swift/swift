@@ -7,9 +7,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/signals/connection.hpp>
 
 #include <Swiften/Base/API.h>
@@ -31,7 +31,7 @@ namespace Swift {
 
     class SWIFTEN_API MUCImpl : public MUC {
         public:
-            typedef boost::shared_ptr<MUCImpl> ref;
+            typedef std::shared_ptr<MUCImpl> ref;
 
         public:
             MUCImpl(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry);

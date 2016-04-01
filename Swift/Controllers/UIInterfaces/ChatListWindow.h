@@ -8,10 +8,10 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <set>
 
 #include <boost/filesystem/path.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/foreach.h>

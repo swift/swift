@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -46,7 +47,7 @@ namespace Swift {
 
             virtual void writeHeader(const ProtocolHeader& header) = 0;
             virtual void writeFooter() = 0;
-            virtual void writeElement(boost::shared_ptr<ToplevelElement>) = 0;
+            virtual void writeElement(std::shared_ptr<ToplevelElement>) = 0;
             virtual void writeData(const std::string& data) = 0;
 
             virtual bool supportsZLibCompression() = 0;
@@ -69,13 +70,13 @@ namespace Swift {
 
             virtual Certificate::ref getPeerCertificate() const = 0;
             virtual std::vector<Certificate::ref> getPeerCertificateChain() const = 0;
-            virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
+            virtual std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const = 0;
 
             virtual ByteArray getTLSFinishMessage() const = 0;
 
             boost::signal<void (const ProtocolHeader&)> onStreamStartReceived;
-            boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElementReceived;
-            boost::signal<void (boost::shared_ptr<Error>)> onClosed;
+            boost::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
+            boost::signal<void (std::shared_ptr<Error>)> onClosed;
             boost::signal<void ()> onTLSEncrypted;
             boost::signal<void (const SafeByteArray&)> onDataRead;
             boost::signal<void (const SafeByteArray&)> onDataWritten;

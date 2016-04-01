@@ -163,7 +163,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
             public:
                 enum Type { StreamStart, ElementEvent, StreamEnd };
                 struct Event {
-                    Event(Type type, boost::shared_ptr<ToplevelElement> element)
+                    Event(Type type, std::shared_ptr<ToplevelElement> element)
                         : type(type), element(element) {}
                     Event(Type type, const ProtocolHeader& header) : type(type), header(header) {}
 
@@ -171,7 +171,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
 
                     Type type;
                     boost::optional<ProtocolHeader> header;
-                    boost::shared_ptr<ToplevelElement> element;
+                    std::shared_ptr<ToplevelElement> element;
                 };
 
                 Client() {}
@@ -180,7 +180,7 @@ class XMPPParserTest : public CppUnit::TestFixture {
                     events.push_back(Event(StreamStart, header));
                 }
 
-                void handleElement(boost::shared_ptr<ToplevelElement> element) {
+                void handleElement(std::shared_ptr<ToplevelElement> element) {
                     events.push_back(Event(ElementEvent, element));
                 }
 

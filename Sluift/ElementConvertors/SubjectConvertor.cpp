@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/SubjectConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -20,15 +20,15 @@ SubjectConvertor::SubjectConvertor() : GenericLuaElementConvertor<Subject>("subj
 SubjectConvertor::~SubjectConvertor() {
 }
 
-boost::shared_ptr<Subject> SubjectConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<Subject> result = boost::make_shared<Subject>();
+std::shared_ptr<Subject> SubjectConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<Subject> result = std::make_shared<Subject>();
     if (boost::optional<std::string> value = Lua::getStringField(L, -1, "text")) {
         result->setText(*value);
     }
     return result;
 }
 
-void SubjectConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Subject> payload) {
+void SubjectConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Subject> payload) {
     lua_createtable(L, 0, 0);
     if (!payload->getText().empty()) {
         lua_pushstring(L, payload->getText().c_str());

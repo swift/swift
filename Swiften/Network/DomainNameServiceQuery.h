@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -21,7 +21,7 @@ namespace Swift {
 
     class SWIFTEN_API DomainNameServiceQuery {
         public:
-            typedef boost::shared_ptr<DomainNameServiceQuery> ref;
+            typedef std::shared_ptr<DomainNameServiceQuery> ref;
 
             struct Result {
                 Result(const std::string& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}

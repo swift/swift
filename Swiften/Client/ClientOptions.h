@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeString.h>
@@ -152,7 +152,7 @@ namespace Swift {
          * This can be initialized with a custom HTTPTrafficFilter, which allows HTTP CONNECT
          * proxy initialization to be customized.
          */
-        boost::shared_ptr<HTTPTrafficFilter> httpTrafficFilter;
+        std::shared_ptr<HTTPTrafficFilter> httpTrafficFilter;
 
         /**
          * Options passed to the TLS stack

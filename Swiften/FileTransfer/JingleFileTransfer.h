@@ -1,14 +1,13 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -31,7 +30,7 @@ namespace Swift {
     class SWIFTEN_API JingleFileTransfer : public AbstractJingleSessionListener {
         public:
             JingleFileTransfer(
-                    boost::shared_ptr<JingleSession>,
+                    std::shared_ptr<JingleSession>,
                     const JID& target,
                     FileTransferTransporterFactory*);
             virtual ~JingleFileTransfer();
@@ -49,15 +48,15 @@ namespace Swift {
             void handleRemoteTransportCandidateSelectFinished(
                     const std::string& s5bSessionID, const boost::optional<JingleS5BTransportPayload::Candidate>&);
             virtual JingleContentID getContentID() const = 0;
-            virtual void startTransferring(boost::shared_ptr<TransportSession>) = 0;
+            virtual void startTransferring(std::shared_ptr<TransportSession>) = 0;
             virtual void terminate(JinglePayload::Reason::Type reason) = 0;
             virtual void fallback() = 0;
             virtual bool hasPriorityOnCandidateTie() const = 0;
             virtual bool isWaitingForPeerProxyActivate() const = 0;
             virtual bool isWaitingForLocalProxyActivate() const = 0;
             virtual bool isTryingCandidates() const = 0;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession() = 0;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession() = 0;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession() = 0;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession() = 0;
             virtual void startTransferViaLocalCandidate() = 0;
             virtual void startTransferViaRemoteCandidate() = 0;
 
@@ -75,7 +74,7 @@ namespace Swift {
             static FileTransfer::State::Type getExternalFinishedState(JinglePayload::Reason::Type);
             static boost::optional<FileTransferError> getFileTransferError(JinglePayload::Reason::Type);
 
-            boost::shared_ptr<JingleSession> session;
+            std::shared_ptr<JingleSession> session;
             JID target;
             FileTransferTransporterFactory* transporterFactory;
             FileTransferTransporter* transporter;
@@ -87,7 +86,7 @@ namespace Swift {
             boost::optional<JingleS5BTransportPayload::Candidate> theirCandidateChoice;
             CandidateMap localCandidates;
 
-            boost::shared_ptr<TransportSession> transportSession;
+            std::shared_ptr<TransportSession> transportSession;
 
             boost::bsignals::scoped_connection localTransportCandidatesGeneratedConnection;
             boost::bsignals::scoped_connection remoteTransportCandidateSelectFinishedConnection;

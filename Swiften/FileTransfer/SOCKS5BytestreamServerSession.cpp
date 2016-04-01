@@ -21,7 +21,7 @@
 namespace Swift {
 
 SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(
-        boost::shared_ptr<Connection> connection,
+        std::shared_ptr<Connection> connection,
         SOCKS5BytestreamRegistry* bytestreams) :
             connection(connection),
             bytestreams(bytestreams),
@@ -49,7 +49,7 @@ void SOCKS5BytestreamServerSession::stop() {
     finish();
 }
 
-void SOCKS5BytestreamServerSession::startSending(boost::shared_ptr<ReadBytestream> stream) {
+void SOCKS5BytestreamServerSession::startSending(std::shared_ptr<ReadBytestream> stream) {
     if (state != ReadyForTransfer) { SWIFT_LOG(debug) << "Not ready for transfer!" << std::endl; return; }
 
     readBytestream = stream;
@@ -61,7 +61,7 @@ void SOCKS5BytestreamServerSession::startSending(boost::shared_ptr<ReadBytestrea
     sendData();
 }
 
-void SOCKS5BytestreamServerSession::startReceiving(boost::shared_ptr<WriteBytestream> stream) {
+void SOCKS5BytestreamServerSession::startReceiving(std::shared_ptr<WriteBytestream> stream) {
     if (state != ReadyForTransfer) { SWIFT_LOG(debug) << "Not ready for transfer!" << std::endl; return; }
 
     writeBytestream = stream;
@@ -75,7 +75,7 @@ HostAddressPort SOCKS5BytestreamServerSession::getAddressPort() const {
     return connection->getLocalAddress();
 }
 
-void SOCKS5BytestreamServerSession::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+void SOCKS5BytestreamServerSession::handleDataRead(std::shared_ptr<SafeByteArray> data) {
     if (state != ReadingData) {
         append(unprocessedData, *data);
         process();

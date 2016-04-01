@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <openssl/ssl.h>
 
@@ -17,7 +16,7 @@
 namespace Swift {
     class OpenSSLCertificate : public Certificate {
         public:
-            OpenSSLCertificate(boost::shared_ptr<X509>);
+            OpenSSLCertificate(std::shared_ptr<X509>);
             OpenSSLCertificate(const ByteArray& der);
 
             std::string getSubjectName() const {
@@ -42,7 +41,7 @@ namespace Swift {
 
             ByteArray toDER() const;
 
-            boost::shared_ptr<X509> getInternalX509() const {
+            std::shared_ptr<X509> getInternalX509() const {
                 return cert;
             }
 
@@ -62,7 +61,7 @@ namespace Swift {
             }
 
         private:
-            boost::shared_ptr<X509> cert;
+            std::shared_ptr<X509> cert;
             std::string subjectName;
             std::vector<std::string> commonNames;
             std::vector<std::string> dnsNames;

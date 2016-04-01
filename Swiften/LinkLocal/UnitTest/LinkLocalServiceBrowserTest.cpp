@@ -5,9 +5,9 @@
  */
 
 #include <map>
+#include <memory>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -45,7 +45,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             eventLoop = new DummyEventLoop();
-            querier = boost::make_shared<FakeDNSSDQuerier>("wonderland.lit", eventLoop);
+            querier = std::make_shared<FakeDNSSDQuerier>("wonderland.lit", eventLoop);
             aliceServiceID = new DNSSDServiceID("alice", "wonderland.lit");
             aliceServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.wonderland.lit", "xmpp.wonderland.lit", 1234, LinkLocalServiceInfo().toTXTRecord());
             testServiceID = new DNSSDServiceID("foo", "bar.local");
@@ -70,14 +70,14 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testConstructor() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
 
             CPPUNIT_ASSERT(!testling->isRunning());
             CPPUNIT_ASSERT(!testling->hasError());
         }
 
         void testStart() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
 
             CPPUNIT_ASSERT(testling->isRunning());
@@ -87,7 +87,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceAdded() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
 
@@ -109,7 +109,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceAdded_NoServiceInfo() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
 
@@ -123,7 +123,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceAdded_RegisteredService() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
 
@@ -140,7 +140,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceAdded_UnregisteredService() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
             testling->registerService("alice", 1234, LinkLocalServiceInfo());
@@ -166,7 +166,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceRemoved_UnregisteredService() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
             testling->registerService("alice", 1234, LinkLocalServiceInfo());
@@ -183,7 +183,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceAdded_Twice() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
 
@@ -208,7 +208,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
 
         void testServiceChanged() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             querier->setServiceInfo(*testServiceID,*testServiceInfo);
             querier->addService(*testServiceID);
@@ -231,7 +231,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testServiceRemoved() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             querier->setServiceInfo(*testServiceID,*testServiceInfo);
             querier->addService(*testServiceID);
@@ -252,7 +252,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testError_BrowseErrorAfterStart() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
 
             querier->setBrowseError();
@@ -264,7 +264,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testError_BrowseErrorAfterResolve() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             querier->setServiceInfo(*testServiceID,*testServiceInfo);
             querier->addService(*testServiceID);
@@ -283,7 +283,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testRegisterService() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
 
@@ -299,7 +299,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testRegisterService_Error() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             LinkLocalServiceInfo info;
             testling->registerService("foo@bar", 1234, info);
@@ -315,7 +315,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testRegisterService_Reregister() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
             LinkLocalServiceInfo info;
@@ -335,7 +335,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
         void testUpdateService() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
+            std::shared_ptr<LinkLocalServiceBrowser> testling = createTestling();
             testling->start();
             eventLoop->processEvents();
 
@@ -352,8 +352,8 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<LinkLocalServiceBrowser> createTestling() {
-            boost::shared_ptr<LinkLocalServiceBrowser> testling(
+        std::shared_ptr<LinkLocalServiceBrowser> createTestling() {
+            std::shared_ptr<LinkLocalServiceBrowser> testling(
                     new LinkLocalServiceBrowser(querier));
             testling->onServiceAdded.connect(boost::bind(
                     &LinkLocalServiceBrowserTest::handleServiceAdded, this, _1));
@@ -397,7 +397,7 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
 
     private:
         DummyEventLoop* eventLoop;
-        boost::shared_ptr<FakeDNSSDQuerier> querier;
+        std::shared_ptr<FakeDNSSDQuerier> querier;
         std::vector<LinkLocalService> addedServices;
         std::vector<LinkLocalService> changedServices;
         std::vector<LinkLocalService> removedServices;

@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/StatusConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -21,8 +22,8 @@ StatusConvertor::StatusConvertor() : GenericLuaElementConvertor<Status>("status"
 StatusConvertor::~StatusConvertor() {
 }
 
-boost::shared_ptr<Status> StatusConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<Status> result = boost::make_shared<Status>();
+std::shared_ptr<Status> StatusConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<Status> result = std::make_shared<Status>();
     lua_getfield(L, -1, "text");
     if (lua_isstring(L, -1)) {
         result->setText(lua_tostring(L, -1));
@@ -31,7 +32,7 @@ boost::shared_ptr<Status> StatusConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void StatusConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Status> payload) {
+void StatusConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Status> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getText().c_str());
     lua_setfield(L, -2, "text");

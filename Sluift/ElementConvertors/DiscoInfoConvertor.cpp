@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/DiscoInfoConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -21,8 +22,8 @@ DiscoInfoConvertor::DiscoInfoConvertor() : GenericLuaElementConvertor<DiscoInfo>
 DiscoInfoConvertor::~DiscoInfoConvertor() {
 }
 
-boost::shared_ptr<DiscoInfo> DiscoInfoConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<DiscoInfo> result = boost::make_shared<DiscoInfo>();
+std::shared_ptr<DiscoInfo> DiscoInfoConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<DiscoInfo> result = std::make_shared<DiscoInfo>();
     if (boost::optional<std::string> value = Lua::getStringField(L, -1, "node")) {
         result->setNode(*value);
     }
@@ -56,7 +57,7 @@ boost::shared_ptr<DiscoInfo> DiscoInfoConvertor::doConvertFromLua(lua_State* L) 
     return result;
 }
 
-void DiscoInfoConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<DiscoInfo> payload) {
+void DiscoInfoConvertor::doConvertToLua(lua_State* L, std::shared_ptr<DiscoInfo> payload) {
     lua_newtable(L);
     if (!payload->getNode().empty()) {
         lua_pushstring(L, payload->getNode().c_str());

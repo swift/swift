@@ -74,7 +74,7 @@ void EventLoop::handleNextEvents() {
     }
 }
 
-void EventLoop::postEvent(boost::function<void ()> callback, boost::shared_ptr<EventOwner> owner) {
+void EventLoop::postEvent(boost::function<void ()> callback, std::shared_ptr<EventOwner> owner) {
     Event event(owner, callback);
     bool callEventPosted = false;
     {
@@ -91,7 +91,7 @@ void EventLoop::postEvent(boost::function<void ()> callback, boost::shared_ptr<E
     }
 }
 
-void EventLoop::removeEventsFromOwner(boost::shared_ptr<EventOwner> owner) {
+void EventLoop::removeEventsFromOwner(std::shared_ptr<EventOwner> owner) {
     boost::recursive_mutex::scoped_lock removeLock(removeEventsMutex_);
     boost::recursive_mutex::scoped_lock lock(eventsMutex_);
     events_.remove_if(lambda::bind(&Event::owner, lambda::_1) == owner);

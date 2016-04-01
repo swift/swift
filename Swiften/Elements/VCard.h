@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/date_time/posix_time/ptime.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API VCard : public Payload {
         public:
-            typedef boost::shared_ptr<VCard> ref;
+            typedef std::shared_ptr<VCard> ref;
 
             struct EMailAddress {
                 EMailAddress() : isHome(false), isWork(false), isInternet(false), isPreferred(false), isX400(false) {

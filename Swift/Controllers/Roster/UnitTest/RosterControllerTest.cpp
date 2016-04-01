@@ -318,10 +318,10 @@ class RosterControllerTest : public CppUnit::TestFixture {
             groups.push_back("Enemies");
             xmppRoster_->addContact(jid, "Bob", groups, RosterItemPayload::From);
             CPPUNIT_ASSERT_EQUAL(groups.size(), xmppRoster_->getGroupsForJID(jid).size());
-            uiEventStream_->send(boost::shared_ptr<UIEvent>(new RenameRosterItemUIEvent(jid, "Robert")));
+            uiEventStream_->send(std::make_shared<RenameRosterItemUIEvent>(jid, "Robert"));
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), channel_->iqs_.size());
             CPPUNIT_ASSERT_EQUAL(IQ::Set, channel_->iqs_[0]->getType());
-            boost::shared_ptr<RosterPayload> payload = channel_->iqs_[0]->getPayload<RosterPayload>();
+            std::shared_ptr<RosterPayload> payload = channel_->iqs_[0]->getPayload<RosterPayload>();
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), payload->getItems().size());
             RosterItemPayload item = payload->getItems()[0];
             CPPUNIT_ASSERT_EQUAL(jid, item.getJID());

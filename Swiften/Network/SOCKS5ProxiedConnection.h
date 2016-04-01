@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ namespace Swift {
 
     class SWIFTEN_API SOCKS5ProxiedConnection : public ProxiedConnection {
         public:
-            typedef boost::shared_ptr<SOCKS5ProxiedConnection> ref;
+            typedef std::shared_ptr<SOCKS5ProxiedConnection> ref;
 
             static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort) {
                 return ref(new SOCKS5ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort));
@@ -32,7 +32,7 @@ namespace Swift {
             SOCKS5ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 
             virtual void initializeProxy();
-            virtual void handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data);
+            virtual void handleProxyInitializeData(std::shared_ptr<SafeByteArray> data);
 
         private:
             enum {

@@ -93,12 +93,12 @@ namespace Swift {
             /**
              * Returns the last received presence for the given (full) JID.
              */
-            boost::shared_ptr<Presence> getLastPresence(const JID& jid) const;
+            std::shared_ptr<Presence> getLastPresence(const JID& jid) const;
 
             /**
              * Returns the presence with the highest priority received for the given JID.
              */
-            boost::shared_ptr<Presence> getHighestPriorityPresence(const JID& bareJID) const;
+            std::shared_ptr<Presence> getHighestPriorityPresence(const JID& bareJID) const;
 
             PresenceOracle* getPresenceOracle() const {
                 return presenceOracle;
@@ -169,7 +169,7 @@ namespace Swift {
             /**
              * This signal is emitted when a JID changes presence.
              */
-            boost::signal<void (boost::shared_ptr<Presence>)> onPresenceChange;
+            boost::signal<void (std::shared_ptr<Presence>)> onPresenceChange;
 
         private:
             Storages* getStorages() const;

@@ -65,28 +65,28 @@ namespace Swift {
             virtual void startActivatingProxy(const JID& jid) SWIFTEN_OVERRIDE;
             virtual void stopActivatingProxy() SWIFTEN_OVERRIDE;
 
-            virtual boost::shared_ptr<TransportSession> createIBBSendSession(
-                    const std::string& sessionID, unsigned int blockSize, boost::shared_ptr<ReadBytestream>) SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createIBBReceiveSession(
-                    const std::string& sessionID, unsigned long long size, boost::shared_ptr<WriteBytestream>) SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-                    boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-                    boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-                    boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-                    boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createIBBSendSession(
+                    const std::string& sessionID, unsigned int blockSize, std::shared_ptr<ReadBytestream>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createIBBReceiveSession(
+                    const std::string& sessionID, unsigned long long size, std::shared_ptr<WriteBytestream>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
+                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
+                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
+                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
+                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
 
         private:
             void handleLocalCandidatesGenerated(const std::vector<JingleS5BTransportPayload::Candidate>&);
             void handleRemoteCandidateSelectFinished(
                     const boost::optional<JingleS5BTransportPayload::Candidate>&,
-                    boost::shared_ptr<SOCKS5BytestreamClientSession>);
+                    std::shared_ptr<SOCKS5BytestreamClientSession>);
             void handleActivateProxySessionResult(const std::string& sessionID, ErrorPayload::ref error);
             void closeLocalSession();
             void closeRemoteSession();
-            boost::shared_ptr<SOCKS5BytestreamServerSession> getServerSession();
+            std::shared_ptr<SOCKS5BytestreamServerSession> getServerSession();
 
             std::string getSOCKS5DstAddr() const;
             std::string getInitiatorCandidateSOCKS5DstAddr() const;
@@ -106,7 +106,7 @@ namespace Swift {
             LocalJingleTransportCandidateGenerator* localCandidateGenerator;
             RemoteJingleTransportCandidateSelector* remoteCandidateSelector;
             std::string s5bSessionID;
-            boost::shared_ptr<SOCKS5BytestreamClientSession> remoteS5BClientSession;
+            std::shared_ptr<SOCKS5BytestreamClientSession> remoteS5BClientSession;
     };
 }
 

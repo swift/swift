@@ -10,8 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -49,8 +48,8 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 
         CPPUNIT_TEST_SUITE_END();
 
-         boost::shared_ptr<JinglePayloadSerializer> createTestling() {
-             return boost::make_shared<JinglePayloadSerializer>(&collection);
+         std::shared_ptr<JinglePayloadSerializer> createTestling() {
+             return std::make_shared<JinglePayloadSerializer>(&collection);
         }
 
 
@@ -66,7 +65,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                             "<range/>"
                         "</file>";
 
-            StreamInitiationFileInfo::ref fileInfo = boost::make_shared<StreamInitiationFileInfo>();
+            StreamInitiationFileInfo::ref fileInfo = std::make_shared<StreamInitiationFileInfo>();
             fileInfo->setDate(stringToDateTime("1969-07-21T02:56:15Z"));
             fileInfo->setHash("552da749930852c69ae5d2141d3766b1");
             fileInfo->setSize(1022);
@@ -74,7 +73,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
             fileInfo->setDescription("This is a test. If this were a real file...");
             fileInfo->setSupportsRangeRequests(true);
 
-            boost::shared_ptr<StreamInitiationFileInfoSerializer> serializer = boost::make_shared<StreamInitiationFileInfoSerializer>();
+            std::shared_ptr<StreamInitiationFileInfoSerializer> serializer = std::make_shared<StreamInitiationFileInfoSerializer>();
             CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(fileInfo));
         }
 
@@ -84,12 +83,12 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                             "<range offset=\"270336\"/>"
                         "</file>";
 
-            StreamInitiationFileInfo::ref fileInfo = boost::make_shared<StreamInitiationFileInfo>();
+            StreamInitiationFileInfo::ref fileInfo = std::make_shared<StreamInitiationFileInfo>();
             fileInfo->setHash("552da749930852c69ae5d2141d3766b1");
             fileInfo->setSupportsRangeRequests(true);
             fileInfo->setRangeOffset(270336);
 
-            boost::shared_ptr<StreamInitiationFileInfoSerializer> serializer = boost::make_shared<StreamInitiationFileInfoSerializer>();
+            std::shared_ptr<StreamInitiationFileInfoSerializer> serializer = std::make_shared<StreamInitiationFileInfoSerializer>();
             CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(fileInfo));
         }
 
@@ -110,16 +109,16 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     "</content>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::SessionInitiate);
             payload->setSessionID("a73sjjvkla37jfea");
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
 
-            JingleIBBTransportPayload::ref transport = boost::make_shared<JingleIBBTransportPayload>();
+            JingleIBBTransportPayload::ref transport = std::make_shared<JingleIBBTransportPayload>();
             transport->setBlockSize(4096);
             transport->setSessionID("ch3d9s71");
 
-            JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+            JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
             content->setCreator(JingleContentPayload::InitiatorCreator);
             content->setName("ex");
             content->addTransport(transport);
@@ -143,16 +142,16 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     "</content>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::TransportInfo);
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
             payload->setSessionID("a73sjjvkla37jfea");
 
-            JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+            JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
             content->setCreator(JingleContentPayload::InitiatorCreator);
             content->setName("ex");
 
-            JingleIBBTransportPayload::ref transport = boost::make_shared<JingleIBBTransportPayload>();
+            JingleIBBTransportPayload::ref transport = std::make_shared<JingleIBBTransportPayload>();
             transport->setBlockSize(2048);
             transport->setSessionID("bt8a71h6");
 
@@ -172,7 +171,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     "<reason><success/></reason>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::SessionTerminate);
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
             payload->setSessionID("a73sjjvkla37jfea");
@@ -193,7 +192,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                         "<hash algo=\"sha-1\" xmlns=\"urn:xmpp:hashes:1\">VS2nSZMIUsaa5dIUHTdmsQ==</hash>"
                     "</file>"
                 "</description>";
-            JingleFileTransferDescription::ref desc = boost::make_shared<JingleFileTransferDescription>();
+            JingleFileTransferDescription::ref desc = std::make_shared<JingleFileTransferDescription>();
             JingleFileTransferFileInfo fileInfo;
 
             fileInfo.setDate(stringToDateTime("1969-07-21T02:56:15Z"));
@@ -205,7 +204,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 
             desc->setFileInfo(fileInfo);
 
-            CPPUNIT_ASSERT_EQUAL(expected, boost::make_shared<JingleFileTransferDescriptionSerializer>()->serialize(desc));
+            CPPUNIT_ASSERT_EQUAL(expected, std::make_shared<JingleFileTransferDescriptionSerializer>()->serialize(desc));
         }
 
         // http://xmpp.org/extensions/xep-0234.html#example-3
@@ -251,16 +250,16 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     "</content>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::SessionAccept);
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
             payload->setSessionID("851ba2");
 
-            JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+            JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
             content->setCreator(JingleContentPayload::InitiatorCreator);
             content->setName("a-file-offer");
 
-            JingleFileTransferDescription::ref description = boost::make_shared<JingleFileTransferDescription>();
+            JingleFileTransferDescription::ref description = std::make_shared<JingleFileTransferDescription>();
             JingleFileTransferFileInfo fileInfo;
             fileInfo.setName("test.txt");
             fileInfo.setSize(1022);
@@ -293,12 +292,12 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     //"</content>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::TransportInfo);
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
             payload->setSessionID("a73sjjvkla37jfea");
 
-            JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+            JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
             content->setCreator(JingleContentPayload::InitiatorCreator);
             content->setName("ex");
             payload->addPayload(content);
@@ -321,12 +320,12 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     "</checksum>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::SessionInfo);
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
             payload->setSessionID("a73sjjvkla37jfea");
 
-            JingleFileTransferHash::ref hash = boost::make_shared<JingleFileTransferHash>();
+            JingleFileTransferHash::ref hash = std::make_shared<JingleFileTransferHash>();
             hash->getFileInfo().addHash(HashElement("sha-1", Base64::decode("VS2nSZMIUsaa5dIUHTdmsQ==")));
 
             payload->addPayload(hash);
@@ -364,16 +363,16 @@ class JingleSerializersTest : public CppUnit::TestFixture {
                     "</content>"
                 "</jingle>";
 
-            JinglePayload::ref payload = boost::make_shared<JinglePayload>();
+            JinglePayload::ref payload = std::make_shared<JinglePayload>();
             payload->setAction(JinglePayload::SessionInitiate);
             payload->setInitiator(JID("romeo@montague.lit/orchard"));
             payload->setSessionID("a73sjjvkla37jfea");
 
-            JingleContentPayload::ref content = boost::make_shared<JingleContentPayload>();
+            JingleContentPayload::ref content = std::make_shared<JingleContentPayload>();
             content->setCreator(JingleContentPayload::InitiatorCreator);
             content->setName("ex");
 
-            JingleS5BTransportPayload::ref transport = boost::make_shared<JingleS5BTransportPayload>();
+            JingleS5BTransportPayload::ref transport = std::make_shared<JingleS5BTransportPayload>();
             transport->setMode(JingleS5BTransportPayload::TCPMode);
             transport->setDstAddr("1a12fb7bc625e55f3ed5b29a53dbe0e4aa7d80ba");
             transport->setSessionID("vj3hs98y");

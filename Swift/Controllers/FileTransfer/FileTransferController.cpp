@@ -12,9 +12,10 @@
 
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -82,7 +83,7 @@ boost::uintmax_t FileTransferController::getSize() const {
 
 void FileTransferController::start(std::string& description) {
     SWIFT_LOG(debug) << "FileTransferController::start" << std::endl;
-    fileReadStream = boost::make_shared<FileReadBytestream>(boost::filesystem::path(filename));
+    fileReadStream = std::make_shared<FileReadBytestream>(boost::filesystem::path(filename));
     OutgoingFileTransfer::ref outgoingTransfer = ftManager->createOutgoingFileTransfer(otherParty, boost::filesystem::path(filename), description, fileReadStream);
     if (outgoingTransfer) {
         ftProgressInfo = new FileTransferProgressInfo(outgoingTransfer->getFileSizeInBytes());
@@ -98,9 +99,9 @@ void FileTransferController::start(std::string& description) {
 
 void FileTransferController::accept(std::string& file) {
     SWIFT_LOG(debug) << "FileTransferController::accept" << std::endl;
-    IncomingFileTransfer::ref incomingTransfer = boost::dynamic_pointer_cast<IncomingFileTransfer>(transfer);
+    IncomingFileTransfer::ref incomingTransfer = std::dynamic_pointer_cast<IncomingFileTransfer>(transfer);
     if (incomingTransfer) {
-        fileWriteStream = boost::make_shared<FileWriteBytestream>(boost::filesystem::path(file));
+        fileWriteStream = std::make_shared<FileWriteBytestream>(boost::filesystem::path(file));
 
         ftProgressInfo = new FileTransferProgressInfo(transfer->getFileSizeInBytes());
         ftProgressInfo->onProgressPercentage.connect(boost::bind(&FileTransferController::handleProgressPercentageChange, this, _1));

@@ -5,9 +5,9 @@
  */
 
 #include <iostream>
+#include <memory>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
@@ -27,7 +27,7 @@ using namespace std;
 static SimpleEventLoop eventLoop;
 static BoostNetworkFactories networkFactories(&eventLoop);
 
-static boost::shared_ptr<Client> client;
+static std::shared_ptr<Client> client;
 static MUC::ref muc;
 static JID mucJID;
 static JID roomJID;
@@ -39,7 +39,7 @@ static void joinMUC() {
     muc->joinAs("SwiftExample");
 }
 
-static void handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
+static void handleRoomsItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
     if (error) {
         cout << "Error fetching list of rooms." << endl;
         return;
@@ -73,7 +73,7 @@ static void handleDisconnected(const boost::optional<ClientError>&) {
     cout << "Disconnected." << endl;
 }
 
-static void handleIncomingMessage(boost::shared_ptr<Message> message) {
+static void handleIncomingMessage(std::shared_ptr<Message> message) {
     if (message->getFrom().toBare() == roomJID) {
         cout << "[ " << roomJID << " ] " << message->getFrom().getResource() << ": " << message->getBody().get_value_or("") << endl;
     }
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
     }
     else {
         mucJID = JID(argv[3]);
-        client = boost::make_shared<Client>(JID(argv[1]), string(argv[2]), &networkFactories);
+        client = std::make_shared<Client>(JID(argv[1]), string(argv[2]), &networkFactories);
         client->setAlwaysTrustCertificates();
 
         // Enable the following line for detailed XML logging

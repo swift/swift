@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,6 +28,6 @@ namespace Swift {
             PayloadParserFactoryCollection* factories;
             int level_;
             std::string currentText_;
-            boost::shared_ptr<PayloadParser> currentPayloadParser;
+            std::shared_ptr<PayloadParser> currentPayloadParser;
     };
 }

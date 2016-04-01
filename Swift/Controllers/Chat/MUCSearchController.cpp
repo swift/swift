@@ -7,9 +7,9 @@
 #include <Swift/Controllers/Chat/MUCSearchController.h>
 
 #include <iostream>
+#include <memory>
 
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
@@ -101,7 +101,7 @@ void MUCSearchController::handleSearchService(const JID& jid) {
     walker_->beginWalk();
 }
 
-void MUCSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
+void MUCSearchController::handleDiscoServiceFound(const JID& jid, std::shared_ptr<DiscoInfo> info) {
     bool isMUC = false;
     std::string name;
     foreach (DiscoInfo::Identity identity, info->getIdentities()) {
@@ -143,7 +143,7 @@ void MUCSearchController::removeService(const JID& jid) {
     refreshView();
 }
 
-void MUCSearchController::handleRoomsItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
+void MUCSearchController::handleRoomsItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
     itemsInProgress_--;
     SWIFT_LOG(debug) << "Items received for " << jid << " (" << itemsInProgress_ << " item requests in progress)" << std::endl;
     updateInProgressness();

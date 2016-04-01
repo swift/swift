@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Elements/MUCItem.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
@@ -40,8 +40,8 @@ namespace Swift {
 
             }
 
-            static boost::shared_ptr<XMLElement> itemToElement(const MUCItem& item) {
-                boost::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
+            static std::shared_ptr<XMLElement> itemToElement(const MUCItem& item) {
+                std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
                 if (item.affiliation) {
                     itemElement->setAttribute("affiliation", affiliationToString(item.affiliation.get()));
                 }
@@ -55,13 +55,13 @@ namespace Swift {
                     itemElement->setAttribute("nick", item.nick.get());
                 }
                 if (item.actor) {
-                    boost::shared_ptr<XMLElement> actorElement(new XMLElement("actor"));
+                    std::shared_ptr<XMLElement> actorElement(new XMLElement("actor"));
                     actorElement->setAttribute("jid", item.actor->toString());
                     itemElement->addNode(actorElement);
                 }
                 if (item.reason) {
-                    boost::shared_ptr<XMLElement> reasonElement(new XMLElement("reason"));
-                    reasonElement->addNode(boost::make_shared<XMLTextNode>(*item.reason));
+                    std::shared_ptr<XMLElement> reasonElement(new XMLElement("reason"));
+                    reasonElement->addNode(std::make_shared<XMLTextNode>(*item.reason));
                     itemElement->addNode(reasonElement);
                 }
                 return itemElement;

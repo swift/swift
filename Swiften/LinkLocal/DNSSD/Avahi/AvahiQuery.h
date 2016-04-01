@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/EventLoop/EventOwner.h>
 
@@ -17,13 +16,13 @@ namespace Swift {
 
     class AvahiQuery :
             public EventOwner,
-            public boost::enable_shared_from_this<AvahiQuery> {
+            public std::enable_shared_from_this<AvahiQuery> {
         public:
-            AvahiQuery(boost::shared_ptr<AvahiQuerier>, EventLoop* eventLoop);
+            AvahiQuery(std::shared_ptr<AvahiQuerier>, EventLoop* eventLoop);
             virtual ~AvahiQuery();
 
         protected:
-            boost::shared_ptr<AvahiQuerier> querier;
+            std::shared_ptr<AvahiQuerier> querier;
             EventLoop* eventLoop;
     };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ void PubSubOwnerDeleteParser::handleStartElement(const std::string& element, con
 
     if (level == 1) {
         if (element == "redirect" && ns == "http://jabber.org/protocol/pubsub#owner") {
-            currentPayloadParser = boost::make_shared<PubSubOwnerRedirectParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubOwnerRedirectParser>(parsers);
         }
     }
 
@@ -51,7 +51,7 @@ void PubSubOwnerDeleteParser::handleEndElement(const std::string& element, const
 
         if (level == 1) {
             if (element == "redirect" && ns == "http://jabber.org/protocol/pubsub#owner") {
-                getPayloadInternal()->setRedirect(boost::dynamic_pointer_cast<PubSubOwnerRedirect>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setRedirect(std::dynamic_pointer_cast<PubSubOwnerRedirect>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

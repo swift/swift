@@ -11,10 +11,10 @@
  */
 
 #include <iostream>
+#include <memory>
 
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -81,16 +81,16 @@ class OutgoingJingleFileTransferTest : public CppUnit::TestFixture {
 
 public:
 
-        boost::shared_ptr<OutgoingJingleFileTransfer> createTestling(const FileTransferOptions& options = FileTransferOptions().withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false)) {
+        std::shared_ptr<OutgoingJingleFileTransfer> createTestling(const FileTransferOptions& options = FileTransferOptions().withAssistedAllowed(false).withDirectAllowed(false).withProxiedAllowed(false)) {
             JID to("test@foo.com/bla");
             JingleFileTransferFileInfo fileInfo;
             fileInfo.setDescription("some file");
             fileInfo.setName("test.bin");
             fileInfo.addHash(HashElement("sha-1", ByteArray()));
             fileInfo.setSize(1024 * 1024);
-            return boost::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
+            return std::shared_ptr<OutgoingJingleFileTransfer>(new OutgoingJingleFileTransfer(
                 to,
-                boost::shared_ptr<JingleSession>(fakeJingleSession),
+                std::shared_ptr<JingleSession>(fakeJingleSession),
                 stream,
                 ftTransportFactory,
                 timerFactory,
@@ -107,9 +107,9 @@ public:
         }
 
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
             fakeJingleSession = new FakeJingleSession("foo@bar.com/baz", "mysession");
-            jingleContentPayload = boost::make_shared<JingleContentPayload>();
+            jingleContentPayload = std::make_shared<JingleContentPayload>();
             stanzaChannel = new DummyStanzaChannel();
             iqRouter = new IQRouter(stanzaChannel);
             eventLoop = new DummyEventLoop();
@@ -126,7 +126,7 @@ public:
                 data.push_back(34);
             }
 
-            stream = boost::make_shared<ByteArrayReadBytestream>(data);
+            stream = std::make_shared<ByteArrayReadBytestream>(data);
 
             idGen = new IDGenerator();
             s5bProxy = new SOCKS5BytestreamProxiesManager(connectionFactory, timerFactory, resolver, iqRouter, "bar.com");
@@ -151,29 +151,29 @@ public:
 
 
         void test_SendSessionInitiateOnStart() {
-            boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
+            std::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
             transfer->start();
 
             FakeJingleSession::InitiateCall call = getCall<FakeJingleSession::InitiateCall>(0);
-            JingleFileTransferDescription::ref description = boost::dynamic_pointer_cast<JingleFileTransferDescription>(call.description);
+            JingleFileTransferDescription::ref description = std::dynamic_pointer_cast<JingleFileTransferDescription>(call.description);
             CPPUNIT_ASSERT(description);
             CPPUNIT_ASSERT(static_cast<size_t>(1048576) == description->getFileInfo().getSize());
 
-            JingleIBBTransportPayload::ref transport = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(call.payload);
+            JingleIBBTransportPayload::ref transport = std::dynamic_pointer_cast<JingleIBBTransportPayload>(call.payload);
             CPPUNIT_ASSERT(transport);
         }
 
         void test_FallbackToIBBAfterFailingS5B() {
-            boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling(FileTransferOptions().withAssistedAllowed(true).withDirectAllowed(true).withProxiedAllowed(true));
+            std::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling(FileTransferOptions().withAssistedAllowed(true).withDirectAllowed(true).withProxiedAllowed(true));
             transfer->start();
 
             FakeJingleSession::InitiateCall call = getCall<FakeJingleSession::InitiateCall>(0);
 
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<JingleS5BTransportPayload>(call.payload));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<JingleS5BTransportPayload>(call.payload));
             fakeJingleSession->handleSessionAcceptReceived(call.id, call.description, call.payload);
 
             // send candidate failure
-            JingleS5BTransportPayload::ref candidateFailurePayload = boost::make_shared<JingleS5BTransportPayload>();
+            JingleS5BTransportPayload::ref candidateFailurePayload = std::make_shared<JingleS5BTransportPayload>();
             candidateFailurePayload->setCandidateError(true);
             candidateFailurePayload->setSessionID(call.payload->getSessionID());
             fakeJingleSession->handleTransportInfoReceived(call.id, candidateFailurePayload);
@@ -193,7 +193,7 @@ public:
         }
 
         void test_ReceiveSessionTerminateAfterSessionInitiate() {
-            boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
+            std::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
             transfer->start();
 
             getCall<FakeJingleSession::InitiateCall>(0);
@@ -207,7 +207,7 @@ public:
         }
 
         void test_DeclineEmitsFinishedStateCanceled() {
-            boost::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
+            std::shared_ptr<OutgoingJingleFileTransfer> transfer = createTestling();
             transfer->start();
 
             getCall<FakeJingleSession::InitiateCall>(0);
@@ -227,20 +227,20 @@ public:
 
 private:
     void addFileTransferDescription() {
-        boost::shared_ptr<JingleFileTransferDescription> desc = boost::make_shared<JingleFileTransferDescription>();
+        std::shared_ptr<JingleFileTransferDescription> desc = std::make_shared<JingleFileTransferDescription>();
         desc->setFileInfo(JingleFileTransferFileInfo());
         jingleContentPayload->addDescription(desc);
     }
 
-    boost::shared_ptr<JingleS5BTransportPayload> addJingleS5BPayload() {
-        JingleS5BTransportPayload::ref payLoad = boost::make_shared<JingleS5BTransportPayload>();
+    std::shared_ptr<JingleS5BTransportPayload> addJingleS5BPayload() {
+        JingleS5BTransportPayload::ref payLoad = std::make_shared<JingleS5BTransportPayload>();
         payLoad->setSessionID("mysession");
         jingleContentPayload->addTransport(payLoad);
         return payLoad;
     }
 
-    boost::shared_ptr<JingleIBBTransportPayload> addJingleIBBPayload() {
-        JingleIBBTransportPayload::ref payLoad = boost::make_shared<JingleIBBTransportPayload>();
+    std::shared_ptr<JingleIBBTransportPayload> addJingleIBBPayload() {
+        JingleIBBTransportPayload::ref payLoad = std::make_shared<JingleIBBTransportPayload>();
         payLoad->setSessionID("mysession");
         jingleContentPayload->addTransport(payLoad);
         return payLoad;
@@ -260,9 +260,9 @@ private:
 
 private:
     std::vector<unsigned char> data;
-    boost::shared_ptr<ByteArrayReadBytestream> stream;
+    std::shared_ptr<ByteArrayReadBytestream> stream;
     FakeJingleSession* fakeJingleSession;
-    boost::shared_ptr<JingleContentPayload> jingleContentPayload;
+    std::shared_ptr<JingleContentPayload> jingleContentPayload;
     FileTransferTransporterFactory* ftTransportFactory;
     SOCKS5BytestreamServerManager* bytestreamServerManager;
     DummyStanzaChannel* stanzaChannel;
@@ -274,7 +274,7 @@ private:
     DummyTimerFactory* timerFactory;
     DummyConnectionFactory* connectionFactory;
     DummyConnectionServerFactory* serverConnectionFactory;
-    boost::shared_ptr<CryptoProvider> crypto;
+    std::shared_ptr<CryptoProvider> crypto;
     NetworkEnvironment* networkEnvironment;
     NATTraverser* natTraverser;
     DomainNameResolver* resolver;

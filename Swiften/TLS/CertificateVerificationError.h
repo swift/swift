@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -14,7 +14,7 @@
 namespace Swift {
     class SWIFTEN_API CertificateVerificationError : public Error {
         public:
-            typedef boost::shared_ptr<CertificateVerificationError> ref;
+            typedef std::shared_ptr<CertificateVerificationError> ref;
 
             enum Type {
                 UnknownError,

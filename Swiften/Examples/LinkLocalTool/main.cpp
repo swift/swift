@@ -24,11 +24,11 @@ int main(int argc, char* argv[]) {
 
     SimpleEventLoop eventLoop;
     PlatformDNSSDQuerierFactory factory(&eventLoop);
-    boost::shared_ptr<DNSSDQuerier> querier = factory.createQuerier();
+    std::shared_ptr<DNSSDQuerier> querier = factory.createQuerier();
     querier->start();
 
     if (std::string(argv[1]) == "browse") {
-        boost::shared_ptr<DNSSDBrowseQuery> browseQuery = querier->createBrowseQuery();
+        std::shared_ptr<DNSSDBrowseQuery> browseQuery = querier->createBrowseQuery();
         browseQuery->startBrowsing();
         eventLoop.run();
         browseQuery->stopBrowsing();
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
             std::cerr << "Invalid parameters" << std::endl;
             return -1;
         }
-        boost::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(DNSSDServiceID(argv[2], argv[3], argv[4]));
+        std::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(DNSSDServiceID(argv[2], argv[3], argv[4]));
         resolveQuery->start();
         eventLoop.run();
         std::cerr << "Done running" << std::endl;

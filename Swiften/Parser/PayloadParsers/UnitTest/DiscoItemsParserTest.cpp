@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -27,7 +33,7 @@ class DiscoItemsParserTest : public CppUnit::TestFixture {
                     "<item jid='responder@domain' node='config' name='Configure Service'/>"
                 "</query>"));
 
-            boost::shared_ptr<DiscoItems> payload = boost::dynamic_pointer_cast<DiscoItems>(parser.getPayload());
+            std::shared_ptr<DiscoItems> payload = std::dynamic_pointer_cast<DiscoItems>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(payload->getItems().size()));
             CPPUNIT_ASSERT_EQUAL(std::string("List Service Configurations"), payload->getItems()[0].getName());
             CPPUNIT_ASSERT_EQUAL(std::string("list"), payload->getItems()[0].getNode());

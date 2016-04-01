@@ -21,7 +21,7 @@ namespace Swift {
 
         private:
             void setStanzaSpecificAttributesGeneric(
-                    boost::shared_ptr<Message> message,
+                    std::shared_ptr<Message> message,
                     XMLElement& element) const;
     };
 }

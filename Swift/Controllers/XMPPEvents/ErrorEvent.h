@@ -7,9 +7,8 @@
 #pragma once
 
 #include <cassert>
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>

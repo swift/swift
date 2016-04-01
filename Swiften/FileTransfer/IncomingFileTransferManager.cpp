@@ -6,7 +6,7 @@
 
 #include <Swiften/FileTransfer/IncomingFileTransferManager.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Elements/JingleDescription.h>
@@ -43,7 +43,7 @@ bool IncomingFileTransferManager::handleIncomingJingleSession(
         if (content->getTransport<JingleS5BTransportPayload>() || content->getTransport<JingleIBBTransportPayload>()) {
             JingleFileTransferDescription::ref description = content->getDescription<JingleFileTransferDescription>();
             if (description) {
-                IncomingJingleFileTransfer::ref transfer = boost::make_shared<IncomingJingleFileTransfer>(
+                IncomingJingleFileTransfer::ref transfer = std::make_shared<IncomingJingleFileTransfer>(
                         recipient, session, content, transporterFactory, timerFactory, crypto);
                 onIncomingFileTransfer(transfer);
             }

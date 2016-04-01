@@ -45,18 +45,18 @@ namespace Swift {
                     PubSubEventType
                 };
 
-                Event(boost::shared_ptr<Message> stanza) : type(MessageType), stanza(stanza) {}
-                Event(boost::shared_ptr<Presence> stanza) : type(PresenceType), stanza(stanza) {}
-                Event(const JID& from, boost::shared_ptr<PubSubEventPayload> payload) : type(PubSubEventType), from(from), pubsubEvent(payload) {}
+                Event(std::shared_ptr<Message> stanza) : type(MessageType), stanza(stanza) {}
+                Event(std::shared_ptr<Presence> stanza) : type(PresenceType), stanza(stanza) {}
+                Event(const JID& from, std::shared_ptr<PubSubEventPayload> payload) : type(PubSubEventType), from(from), pubsubEvent(payload) {}
 
                 Type type;
 
                 // Message & Presence
-                boost::shared_ptr<Stanza> stanza;
+                std::shared_ptr<Stanza> stanza;
 
                 // PubSubEvent
                 JID from;
-                boost::shared_ptr<PubSubEventPayload> pubsubEvent;
+                std::shared_ptr<PubSubEventPayload> pubsubEvent;
             };
 
             SluiftClient(
@@ -82,7 +82,7 @@ namespace Swift {
 
             template<typename T>
                 Sluift::Response sendPubSubRequest(
-                    IQ::Type type, const JID& jid, boost::shared_ptr<T> payload, int timeout) {
+                    IQ::Type type, const JID& jid, std::shared_ptr<T> payload, int timeout) {
                 return sendRequest(client->getPubSubManager()->createRequest(
                             type, jid, payload), timeout);
             }
@@ -97,7 +97,7 @@ namespace Swift {
             template<typename REQUEST_TYPE>
             Sluift::Response sendVoidRequest(REQUEST_TYPE request, int timeout) {
                 boost::signals::scoped_connection c = request->onResponse.connect(
-                        boost::bind(&SluiftClient::handleRequestResponse, this, boost::shared_ptr<Payload>(), _1));
+                        boost::bind(&SluiftClient::handleRequestResponse, this, std::shared_ptr<Payload>(), _1));
                 return doSendRequest(request, timeout);
             }
 
@@ -108,13 +108,13 @@ namespace Swift {
             std::vector<XMPPRosterItem> getRoster(int timeout);
 
         private:
-            Sluift::Response doSendRequest(boost::shared_ptr<Request> request, int timeout);
+            Sluift::Response doSendRequest(std::shared_ptr<Request> request, int timeout);
 
-            void handleIncomingMessage(boost::shared_ptr<Message> stanza);
-            void handleIncomingPresence(boost::shared_ptr<Presence> stanza);
-            void handleIncomingPubSubEvent(const JID& from, boost::shared_ptr<PubSubEventPayload> event);
+            void handleIncomingMessage(std::shared_ptr<Message> stanza);
+            void handleIncomingPresence(std::shared_ptr<Presence> stanza);
+            void handleIncomingPubSubEvent(const JID& from, std::shared_ptr<PubSubEventPayload> event);
             void handleInitialRosterPopulated();
-            void handleRequestResponse(boost::shared_ptr<Payload> response, boost::shared_ptr<ErrorPayload> error);
+            void handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error);
             void handleDisconnected(const boost::optional<ClientError>& error);
 
         private:
@@ -127,7 +127,7 @@ namespace Swift {
             std::deque<Event> pendingEvents;
             boost::optional<ClientError> disconnectedError;
             bool requestResponseReceived;
-            boost::shared_ptr<Payload> requestResponse;
-            boost::shared_ptr<ErrorPayload> requestError;
+            std::shared_ptr<Payload> requestResponse;
+            std::shared_ptr<ErrorPayload> requestError;
     };
 }

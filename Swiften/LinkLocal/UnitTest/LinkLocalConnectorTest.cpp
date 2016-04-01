@@ -31,8 +31,8 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             eventLoop = new DummyEventLoop();
-            querier = boost::make_shared<FakeDNSSDQuerier>("rabbithole.local", eventLoop);
-            connection = boost::make_shared<FakeConnection>(eventLoop);
+            querier = std::make_shared<FakeDNSSDQuerier>("rabbithole.local", eventLoop);
+            connection = std::make_shared<FakeConnection>(eventLoop);
             connectFinished = false;
         }
 
@@ -42,7 +42,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
         void testConnect() {
-            boost::shared_ptr<LinkLocalConnector>
+            std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
             querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
 
@@ -57,7 +57,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
         void testConnect_UnableToResolve() {
-            boost::shared_ptr<LinkLocalConnector>
+            std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
             querier->setAddress("rabbithole.local", boost::optional<HostAddress>());
 
@@ -70,7 +70,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
         void testConnect_UnableToConnect() {
-            boost::shared_ptr<LinkLocalConnector>
+            std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
             querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
             connection->setError(Connection::ReadError);
@@ -84,7 +84,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
         void testCancel_DuringResolve() {
-            boost::shared_ptr<LinkLocalConnector>
+            std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
             testling->connect();
             eventLoop->processEvents();
@@ -99,7 +99,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
         void testCancel_DuringConnect() {
-            boost::shared_ptr<LinkLocalConnector>
+            std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
             querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
             connection->setDelayConnect();
@@ -114,13 +114,13 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<LinkLocalConnector> createConnector(const std::string& hostname, int port) {
+        std::shared_ptr<LinkLocalConnector> createConnector(const std::string& hostname, int port) {
             LinkLocalService service(
                     DNSSDServiceID("myname", "local."),
                     DNSSDResolveServiceQuery::Result(
                         "myname._presence._tcp.local", hostname, port,
                         LinkLocalServiceInfo().toTXTRecord()));
-            boost::shared_ptr<LinkLocalConnector> result(
+            std::shared_ptr<LinkLocalConnector> result(
                     new LinkLocalConnector(service, querier, connection));
             result->onConnectFinished.connect(
                     boost::bind(&LinkLocalConnectorTest::handleConnected, this, _1));
@@ -134,8 +134,8 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 
     private:
         DummyEventLoop* eventLoop;
-        boost::shared_ptr<FakeDNSSDQuerier> querier;
-        boost::shared_ptr<FakeConnection> connection;
+        std::shared_ptr<FakeDNSSDQuerier> querier;
+        std::shared_ptr<FakeConnection> connection;
         bool connectFinished;
         bool connectError;
 };

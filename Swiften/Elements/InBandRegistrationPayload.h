@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Form.h>
@@ -18,7 +18,7 @@
 namespace Swift {
     class SWIFTEN_API InBandRegistrationPayload : public Payload {
         public:
-            typedef boost::shared_ptr<InBandRegistrationPayload> ref;
+            typedef std::shared_ptr<InBandRegistrationPayload> ref;
 
             InBandRegistrationPayload() : registered(false), remove(false) {}
 

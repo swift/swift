@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -56,11 +56,11 @@ namespace Swift {
                 this->jid = value ;
             }
 
-            boost::shared_ptr<PubSubSubscribeOptions> getOptions() const {
+            std::shared_ptr<PubSubSubscribeOptions> getOptions() const {
                 return options;
             }
 
-            void setOptions(boost::shared_ptr<PubSubSubscribeOptions> value) {
+            void setOptions(std::shared_ptr<PubSubSubscribeOptions> value) {
                 this->options = value ;
             }
 
@@ -77,7 +77,7 @@ namespace Swift {
             boost::optional< std::string > node;
             boost::optional< std::string > subscriptionID;
             JID jid;
-            boost::shared_ptr<PubSubSubscribeOptions> options;
+            std::shared_ptr<PubSubSubscribeOptions> options;
             SubscriptionType subscription;
     };
 }

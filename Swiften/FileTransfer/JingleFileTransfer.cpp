@@ -19,7 +19,7 @@
 using namespace Swift;
 
 JingleFileTransfer::JingleFileTransfer(
-        boost::shared_ptr<JingleSession> session,
+        std::shared_ptr<JingleSession> session,
         const JID& target,
         FileTransferTransporterFactory* transporterFactory) :
             session(session),
@@ -87,7 +87,7 @@ void JingleFileTransfer::handleRemoteTransportCandidateSelectFinished(
     ourCandidateChoice = candidate;
     ourCandidateSelectFinished = true;
 
-    JingleS5BTransportPayload::ref s5bPayload = boost::make_shared<JingleS5BTransportPayload>();
+    JingleS5BTransportPayload::ref s5bPayload = std::make_shared<JingleS5BTransportPayload>();
     s5bPayload->setSessionID(s5bSessionID);
     if (candidate) {
         s5bPayload->setCandidateUsed(candidate->cid);
@@ -151,14 +151,14 @@ void JingleFileTransfer::handleProxyActivateFinished(
 
     if (error) {
         SWIFT_LOG(debug) << "Error activating proxy" << std::endl;
-        JingleS5BTransportPayload::ref proxyError = boost::make_shared<JingleS5BTransportPayload>();
+        JingleS5BTransportPayload::ref proxyError = std::make_shared<JingleS5BTransportPayload>();
         proxyError->setSessionID(s5bSessionID);
         proxyError->setProxyError(true);
         session->sendTransportInfo(getContentID(), proxyError);
         fallback();
     }
     else {
-        JingleS5BTransportPayload::ref proxyActivate = boost::make_shared<JingleS5BTransportPayload>();
+        JingleS5BTransportPayload::ref proxyActivate = std::make_shared<JingleS5BTransportPayload>();
         proxyActivate->setSessionID(s5bSessionID);
         proxyActivate->setActivated(theirCandidateChoice->cid);
         session->sendTransportInfo(getContentID(), proxyActivate);
@@ -170,7 +170,7 @@ void JingleFileTransfer::handleTransportInfoReceived(
         const JingleContentID& /* contentID */, JingleTransportPayload::ref transport) {
     SWIFT_LOG(debug) << std::endl;
 
-    if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transport)) {
+    if (JingleS5BTransportPayload::ref s5bPayload = std::dynamic_pointer_cast<JingleS5BTransportPayload>(transport)) {
         if (s5bPayload->hasCandidateError() || !s5bPayload->getCandidateUsed().empty()) {
             SWIFT_LOG(debug) << "Received candidate decision from peer" << std::endl;
             if (!isTryingCandidates()) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }

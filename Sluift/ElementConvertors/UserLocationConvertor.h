@@ -19,8 +19,8 @@ namespace Swift {
             UserLocationConvertor();
             virtual ~UserLocationConvertor();
 
-            virtual boost::shared_ptr<UserLocation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<UserLocation>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<UserLocation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<UserLocation>) SWIFTEN_OVERRIDE;
             virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
     };
 }

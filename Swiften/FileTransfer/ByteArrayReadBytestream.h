@@ -18,7 +18,7 @@ namespace Swift {
             ByteArrayReadBytestream(const std::vector<unsigned char>& data) : data(data), position(0), dataComplete(true) {
             }
 
-            virtual boost::shared_ptr<ByteArray> read(size_t size);
+            virtual std::shared_ptr<ByteArray> read(size_t size);
 
             virtual bool isFinished() const {
                 return position >= data.size() && dataComplete;

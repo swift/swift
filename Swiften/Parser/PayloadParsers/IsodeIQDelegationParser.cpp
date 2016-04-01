@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ void IsodeIQDelegationParser::handleEndElement(const std::string& element, const
         }
 
         if (level == 1) {
-            getPayloadInternal()->setForward(boost::dynamic_pointer_cast<Forwarded>(currentPayloadParser->getPayload()));
+            getPayloadInternal()->setForward(std::dynamic_pointer_cast<Forwarded>(currentPayloadParser->getPayload()));
             currentPayloadParser.reset();
         }
     }

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <deque>
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -26,9 +26,9 @@ namespace Swift {
     class ConnectionFactory;
     class TimerFactory;
 
-    class SWIFTEN_API Connector : public boost::bsignals::trackable, public boost::enable_shared_from_this<Connector> {
+    class SWIFTEN_API Connector : public boost::bsignals::trackable, public std::enable_shared_from_this<Connector> {
         public:
-            typedef boost::shared_ptr<Connector> ref;
+            typedef std::shared_ptr<Connector> ref;
 
             static Connector::ref create(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
                 return ref(new Connector(hostname, port, serviceLookupPrefix, resolver, connectionFactory, timerFactory));
@@ -43,7 +43,7 @@ namespace Swift {
             void start();
             void stop();
 
-            boost::signal<void (boost::shared_ptr<Connection>, boost::shared_ptr<Error>)> onConnectFinished;
+            boost::signal<void (std::shared_ptr<Connection>, std::shared_ptr<Error>)> onConnectFinished;
 
         private:
             Connector(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
@@ -57,7 +57,7 @@ namespace Swift {
             void tryConnect(const HostAddressPort& target);
 
             void handleConnectionConnectFinished(bool error);
-            void finish(boost::shared_ptr<Connection>);
+            void finish(std::shared_ptr<Connection>);
             void handleTimeout();
 
 
@@ -69,13 +69,13 @@ namespace Swift {
             ConnectionFactory* connectionFactory;
             TimerFactory* timerFactory;
             int timeoutMilliseconds;
-            boost::shared_ptr<Timer> timer;
-            boost::shared_ptr<DomainNameServiceQuery> serviceQuery;
+            std::shared_ptr<Timer> timer;
+            std::shared_ptr<DomainNameServiceQuery> serviceQuery;
             std::deque<DomainNameServiceQuery::Result> serviceQueryResults;
-            boost::shared_ptr<DomainNameAddressQuery> addressQuery;
+            std::shared_ptr<DomainNameAddressQuery> addressQuery;
             std::deque<HostAddress> addressQueryResults;
             bool queriedAllServices;
-            boost::shared_ptr<Connection> currentConnection;
+            std::shared_ptr<Connection> currentConnection;
             bool foundSomeDNS;
     };
 }

@@ -4,9 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -34,7 +34,7 @@ class ResponderTest : public CppUnit::TestFixture {
         void setUp() {
             channel_ = new DummyIQChannel();
             router_ = new IQRouter(channel_);
-            payload_ = boost::make_shared<SoftwareVersion>("foo");
+            payload_ = std::make_shared<SoftwareVersion>("foo");
         }
 
         void tearDown() {
@@ -110,15 +110,15 @@ class ResponderTest : public CppUnit::TestFixture {
         void testHandleIQ_NoPayload() {
             MyResponder testling(router_);
 
-            CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(boost::make_shared<IQ>(IQ::Get)));
+            CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(std::make_shared<IQ>(IQ::Get)));
 
             CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling.getPayloads_.size()));
             CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(testling.setPayloads_.size()));
         }
 
     private:
-        boost::shared_ptr<IQ> createRequest(IQ::Type type) {
-            boost::shared_ptr<IQ> iq(new IQ(type));
+        std::shared_ptr<IQ> createRequest(IQ::Type type) {
+            std::shared_ptr<IQ> iq(new IQ(type));
             iq->addPayload(payload_);
             iq->setID("myid");
             iq->setFrom(JID("foo@bar.com/baz"));
@@ -130,13 +130,13 @@ class ResponderTest : public CppUnit::TestFixture {
             public:
                 MyResponder(IQRouter* router) : Responder<SoftwareVersion>(router), getRequestResponse_(true), setRequestResponse_(true) {}
 
-                virtual bool handleGetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion> payload) {
+                virtual bool handleGetRequest(const JID& from, const JID&, const std::string& id, std::shared_ptr<SoftwareVersion> payload) {
                     CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), from);
                     CPPUNIT_ASSERT_EQUAL(std::string("myid"), id);
                     getPayloads_.push_back(payload);
                     return getRequestResponse_;
                 }
-                virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, boost::shared_ptr<SoftwareVersion> payload) {
+                virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, std::shared_ptr<SoftwareVersion> payload) {
                     CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), from);
                     CPPUNIT_ASSERT_EQUAL(std::string("myid"), id);
                     setPayloads_.push_back(payload);
@@ -145,14 +145,14 @@ class ResponderTest : public CppUnit::TestFixture {
 
                 bool getRequestResponse_;
                 bool setRequestResponse_;
-                std::vector<boost::shared_ptr<SoftwareVersion> > getPayloads_;
-                std::vector<boost::shared_ptr<SoftwareVersion> > setPayloads_;
+                std::vector<std::shared_ptr<SoftwareVersion> > getPayloads_;
+                std::vector<std::shared_ptr<SoftwareVersion> > setPayloads_;
         };
 
     private:
         IQRouter* router_;
         DummyIQChannel* channel_;
-        boost::shared_ptr<SoftwareVersion> payload_;
+        std::shared_ptr<SoftwareVersion> payload_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ResponderTest);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -87,14 +87,14 @@ const JID& ContactRosterItem::getDisplayJID() const {
 }
 
 
-typedef std::pair<std::string, boost::shared_ptr<Presence> > StringPresencePair;
+typedef std::pair<std::string, std::shared_ptr<Presence> > StringPresencePair;
 
 void ContactRosterItem::clearPresence() {
     presence_.reset();
     onDataChanged();
 }
 
-void ContactRosterItem::applyPresence(boost::shared_ptr<Presence> presence) {
+void ContactRosterItem::applyPresence(std::shared_ptr<Presence> presence) {
     presence_ = presence;
     onDataChanged();
 }

@@ -7,9 +7,9 @@
 #include <Swiften/Jingle/JingleSession.h>
 
 #include <algorithm>
+#include <memory>
 
 #include <boost/function.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 

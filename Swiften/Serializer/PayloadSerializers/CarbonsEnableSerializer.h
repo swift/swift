@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,6 +17,6 @@ namespace Swift {
             CarbonsEnableSerializer();
             virtual ~CarbonsEnableSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<CarbonsEnable>)    const;
+            virtual std::string serializePayload(std::shared_ptr<CarbonsEnable>)    const;
     };
 }

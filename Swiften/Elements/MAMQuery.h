@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Form.h>
@@ -27,16 +27,16 @@ namespace Swift {
             void setNode(const boost::optional<std::string>& node) { node_ = node; }
             const boost::optional<std::string>& getNode() const { return node_; }
 
-            void setForm(boost::shared_ptr<Form> form) { form_ = form; }
-            const boost::shared_ptr<Form>& getForm() const { return form_; }
+            void setForm(std::shared_ptr<Form> form) { form_ = form; }
+            const std::shared_ptr<Form>& getForm() const { return form_; }
 
-            void setResultSet(boost::shared_ptr<ResultSet> resultSet) { resultSet_ = resultSet; }
-            const boost::shared_ptr<ResultSet>& getResultSet() const { return resultSet_; }
+            void setResultSet(std::shared_ptr<ResultSet> resultSet) { resultSet_ = resultSet; }
+            const std::shared_ptr<ResultSet>& getResultSet() const { return resultSet_; }
 
         private:
             boost::optional<std::string> queryID_;
             boost::optional<std::string> node_;
-            boost::shared_ptr<Form> form_;
-            boost::shared_ptr<ResultSet> resultSet_;
+            std::shared_ptr<Form> form_;
+            std::shared_ptr<ResultSet> resultSet_;
     };
 }

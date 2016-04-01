@@ -12,9 +12,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -26,7 +26,7 @@ namespace Swift {
 JingleIBBTransportPayloadSerializer::JingleIBBTransportPayloadSerializer() {
 }
 
-std::string JingleIBBTransportPayloadSerializer::serializePayload(boost::shared_ptr<JingleIBBTransportPayload> payload) const {
+std::string JingleIBBTransportPayloadSerializer::serializePayload(std::shared_ptr<JingleIBBTransportPayload> payload) const {
     XMLElement payloadXML("transport", "urn:xmpp:jingle:transports:ibb:1");
     if (payload->getBlockSize()) {
         payloadXML.setAttribute("block-size", boost::lexical_cast<std::string>(*payload->getBlockSize()));

@@ -22,7 +22,7 @@ class MyXMPPParserClient : public XMPPParserClient {
         virtual void handleStreamStart(const ProtocolHeader&) {
             std::cout << "-> Stream start" << std::endl;
         }
-        virtual void handleElement(boost::shared_ptr<ToplevelElement> element) {
+        virtual void handleElement(std::shared_ptr<ToplevelElement> element) {
             std::cout << "-> Element " << typeid(*element.get()).name() << std::endl;
         }
         virtual void handleStreamEnd() {

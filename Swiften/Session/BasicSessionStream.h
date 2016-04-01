@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -33,7 +33,7 @@ namespace Swift {
         public:
             BasicSessionStream(
                 StreamType streamType,
-                boost::shared_ptr<Connection> connection,
+                std::shared_ptr<Connection> connection,
                 PayloadParserFactoryCollection* payloadParserFactories,
                 PayloadSerializerCollection* payloadSerializers,
                 TLSContextFactory* tlsContextFactory,
@@ -47,7 +47,7 @@ namespace Swift {
             virtual bool isOpen();
 
             virtual void writeHeader(const ProtocolHeader& header);
-            virtual void writeElement(boost::shared_ptr<ToplevelElement>);
+            virtual void writeElement(std::shared_ptr<ToplevelElement>);
             virtual void writeFooter();
             virtual void writeData(const std::string& data);
 
@@ -60,7 +60,7 @@ namespace Swift {
             virtual Certificate::ref getPeerCertificate() const;
             virtual std::vector<Certificate::ref> getPeerCertificateChain() const;
 
-            virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            virtual std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
             virtual ByteArray getTLSFinishMessage() const;
 
             virtual void setWhitespacePingEnabled(bool);
@@ -71,15 +71,15 @@ namespace Swift {
             void handleConnectionFinished(const boost::optional<Connection::Error>& error);
             void handleXMPPError();
             void handleTLSConnected();
-            void handleTLSError(boost::shared_ptr<TLSError>);
+            void handleTLSError(std::shared_ptr<TLSError>);
             void handleStreamStartReceived(const ProtocolHeader&);
-            void handleElementReceived(boost::shared_ptr<ToplevelElement>);
+            void handleElementReceived(std::shared_ptr<ToplevelElement>);
             void handleDataRead(const SafeByteArray& data);
             void handleDataWritten(const SafeByteArray& data);
 
         private:
             bool available;
-            boost::shared_ptr<Connection> connection;
+            std::shared_ptr<Connection> connection;
             TLSContextFactory* tlsContextFactory;
             TimerFactory* timerFactory;
             XMPPLayer* xmppLayer;

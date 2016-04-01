@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -24,7 +24,7 @@ class MAMFinSerializerTest : public CppUnit::TestFixture {
         void testSerialize_XEP0313_Exmaple1() {
             MAMFinSerializer serializer;
 
-            boost::shared_ptr<MAMFin> fin = boost::make_shared<MAMFin>();
+            std::shared_ptr<MAMFin> fin = std::make_shared<MAMFin>();
             fin->setQueryID("f27");
 
             std::string expectedResult =
@@ -35,10 +35,10 @@ class MAMFinSerializerTest : public CppUnit::TestFixture {
         void testSerialize_XEP0313_Exmaple9() {
             MAMFinSerializer serializer;
 
-            boost::shared_ptr<MAMFin> fin = boost::make_shared<MAMFin>();
+            std::shared_ptr<MAMFin> fin = std::make_shared<MAMFin>();
             fin->setComplete(true);
 
-            boost::shared_ptr<ResultSet> set = boost::make_shared<ResultSet>();
+            std::shared_ptr<ResultSet> set = std::make_shared<ResultSet>();
             set->setFirstID(std::string("23452-4534-1"));
             set->setFirstIDIndex(0);
             set->setLastID(std::string("390-2342-22"));

@@ -19,7 +19,7 @@ namespace Swift {
 OutgoingLinkLocalSession::OutgoingLinkLocalSession(
         const JID& localJID,
         const JID& remoteJID,
-        boost::shared_ptr<Connection> connection,
+        std::shared_ptr<Connection> connection,
         PayloadParserFactoryCollection* payloadParserFactories,
         PayloadSerializerCollection* payloadSerializers,
         XMLParserFactory* xmlParserFactory) :
@@ -35,17 +35,17 @@ void OutgoingLinkLocalSession::handleSessionStarted() {
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
-    foreach(const boost::shared_ptr<ToplevelElement>& stanza, queuedElements_) {
+    foreach(const std::shared_ptr<ToplevelElement>& stanza, queuedElements_) {
         sendElement(stanza);
     }
     queuedElements_.clear();
 }
 
-void OutgoingLinkLocalSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
+void OutgoingLinkLocalSession::handleElement(std::shared_ptr<ToplevelElement> element) {
     onElementReceived(element);
 }
 
-void OutgoingLinkLocalSession::queueElement(boost::shared_ptr<ToplevelElement> element) {
+void OutgoingLinkLocalSession::queueElement(std::shared_ptr<ToplevelElement> element) {
     queuedElements_.push_back(element);
 }
 

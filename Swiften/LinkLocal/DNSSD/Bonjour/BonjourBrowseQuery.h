@@ -17,7 +17,7 @@ namespace Swift {
 
     class BonjourBrowseQuery : public DNSSDBrowseQuery, public BonjourQuery {
         public:
-            BonjourBrowseQuery(boost::shared_ptr<BonjourQuerier> q, EventLoop* eventLoop) : BonjourQuery(q, eventLoop) {
+            BonjourBrowseQuery(std::shared_ptr<BonjourQuerier> q, EventLoop* eventLoop) : BonjourQuery(q, eventLoop) {
                 DNSServiceErrorType result = DNSServiceBrowse(
                         &sdRef, 0, 0, "_presence._tcp", nullptr,
                         &BonjourBrowseQuery::handleServiceDiscoveredStatic, this);

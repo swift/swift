@@ -113,15 +113,15 @@ boost::optional<SluiftComponent::Event> SluiftComponent::getNextEvent(
     }
 }
 
-void SluiftComponent::handleIncomingMessage(boost::shared_ptr<Message> stanza) {
+void SluiftComponent::handleIncomingMessage(std::shared_ptr<Message> stanza) {
     pendingEvents.push_back(Event(stanza));
 }
 
-void SluiftComponent::handleIncomingPresence(boost::shared_ptr<Presence> stanza) {
+void SluiftComponent::handleIncomingPresence(std::shared_ptr<Presence> stanza) {
     pendingEvents.push_back(Event(stanza));
 }
 
-void SluiftComponent::handleRequestResponse(boost::shared_ptr<Payload> response, boost::shared_ptr<ErrorPayload> error) {
+void SluiftComponent::handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error) {
     requestResponse = response;
     requestError = error;
     requestResponseReceived = true;
@@ -131,7 +131,7 @@ void SluiftComponent::handleError(const boost::optional<ComponentError>& error) 
     disconnectedError = error;
 }
 
-Sluift::Response SluiftComponent::doSendRequest(boost::shared_ptr<Request> request, int timeout) {
+Sluift::Response SluiftComponent::doSendRequest(std::shared_ptr<Request> request, int timeout) {
     requestResponse.reset();
     requestError.reset();
     requestResponseReceived = false;
@@ -142,5 +142,5 @@ Sluift::Response SluiftComponent::doSendRequest(boost::shared_ptr<Request> reque
         eventLoop->runUntilEvents();
     }
     return Sluift::Response(requestResponse, watchdog.getTimedOut() ?
-            boost::make_shared<ErrorPayload>(ErrorPayload::RemoteServerTimeout) : requestError);
+            std::make_shared<ErrorPayload>(ErrorPayload::RemoteServerTimeout) : requestError);
 }

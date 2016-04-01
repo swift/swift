@@ -15,7 +15,7 @@ namespace Swift {
     class SWIFTEN_API MUCDestroyPayloadSerializer : public GenericPayloadSerializer<MUCDestroyPayload> {
         public:
             MUCDestroyPayloadSerializer();
-            virtual std::string serializePayload(boost::shared_ptr<MUCDestroyPayload> version)  const;
+            virtual std::string serializePayload(std::shared_ptr<MUCDestroyPayload> version)  const;
     };
 }
 

@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubEventConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,14 +22,14 @@ PubSubEventConvertor::PubSubEventConvertor(LuaElementConvertors* convertors) :
 PubSubEventConvertor::~PubSubEventConvertor() {
 }
 
-boost::shared_ptr<PubSubEvent> PubSubEventConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubEvent> result = boost::make_shared<PubSubEvent>();
-    if (boost::shared_ptr<PubSubEventPayload> payload = boost::dynamic_pointer_cast<PubSubEventPayload>(convertors->convertFromLua(L, -1))) {
+std::shared_ptr<PubSubEvent> PubSubEventConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubEvent> result = std::make_shared<PubSubEvent>();
+    if (std::shared_ptr<PubSubEventPayload> payload = std::dynamic_pointer_cast<PubSubEventPayload>(convertors->convertFromLua(L, -1))) {
         result->setPayload(payload);
     }
     return result;
 }
 
-void PubSubEventConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEvent> event) {
+void PubSubEventConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubEvent> event) {
     convertors->convertToLua(L,  event->getPayload());
 }

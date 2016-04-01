@@ -15,14 +15,14 @@ namespace Swift {
 
 class SWIFTEN_API IBBReceiveTransportSession : public TransportSession {
     public:
-        IBBReceiveTransportSession(boost::shared_ptr<IBBReceiveSession> session);
+        IBBReceiveTransportSession(std::shared_ptr<IBBReceiveSession> session);
         virtual ~IBBReceiveTransportSession();
 
         virtual void start() SWIFTEN_OVERRIDE;
         virtual void stop() SWIFTEN_OVERRIDE;
 
     private:
-        boost::shared_ptr<IBBReceiveSession> session;
+        std::shared_ptr<IBBReceiveSession> session;
         boost::bsignals::scoped_connection finishedConnection;
         boost::bsignals::scoped_connection bytesSentConnection;
 };

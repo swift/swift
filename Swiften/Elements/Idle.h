@@ -12,8 +12,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -22,7 +23,7 @@ namespace Swift {
 
     class SWIFTEN_API Idle : public Payload {
     public:
-        typedef boost::shared_ptr<Idle> ref;
+        typedef std::shared_ptr<Idle> ref;
 
     public:
         Idle() {}

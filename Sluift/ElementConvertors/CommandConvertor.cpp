@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/CommandConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -49,8 +50,8 @@ CommandConvertor::CommandConvertor(LuaElementConvertors* convertors) :
 CommandConvertor::~CommandConvertor() {
 }
 
-boost::shared_ptr<Command> CommandConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<Command> result = boost::make_shared<Command>();
+std::shared_ptr<Command> CommandConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<Command> result = std::make_shared<Command>();
 
     lua_getfield(L, -1, "node");
     if (!lua_isnil(L, -1)) {
@@ -129,7 +130,7 @@ boost::shared_ptr<Command> CommandConvertor::doConvertFromLua(lua_State* L) {
 
     lua_getfield(L, -1, "form");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<Form> form = boost::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"))) {
+        if (std::shared_ptr<Form> form = std::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"))) {
             result->setForm(form);
         }
     }
@@ -138,7 +139,7 @@ boost::shared_ptr<Command> CommandConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void CommandConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Command> payload) {
+void CommandConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Command> payload) {
     Lua::Table result;
     if (!payload->getNode().empty()) {
         result["node"] = Lua::valueRef(payload->getNode());

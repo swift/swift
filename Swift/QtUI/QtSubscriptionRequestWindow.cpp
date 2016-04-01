@@ -14,7 +14,7 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(boost::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) : QDialog(parent), event_(event) {
+QtSubscriptionRequestWindow::QtSubscriptionRequestWindow(std::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) : QDialog(parent), event_(event) {
     QString text = QString(tr("%1 would like to add you to their contact list.")).arg(P2QSTRING(event->getJID().toString()));
     QVBoxLayout* layout = new QVBoxLayout();
     QLabel* label = new QLabel(text, this);
@@ -72,7 +72,7 @@ QtSubscriptionRequestWindow::~QtSubscriptionRequestWindow() {
     windows_.removeOne(this);
 }
 
-QtSubscriptionRequestWindow* QtSubscriptionRequestWindow::getWindow(boost::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) {
+QtSubscriptionRequestWindow* QtSubscriptionRequestWindow::getWindow(std::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) {
     foreach (QtSubscriptionRequestWindow* window, windows_) {
         if (window->getEvent() == event) {
             return window;
@@ -83,7 +83,7 @@ QtSubscriptionRequestWindow* QtSubscriptionRequestWindow::getWindow(boost::share
     return window;
 }
 
-boost::shared_ptr<SubscriptionRequestEvent> QtSubscriptionRequestWindow::getEvent() {
+std::shared_ptr<SubscriptionRequestEvent> QtSubscriptionRequestWindow::getEvent() {
     return event_;
 }
 

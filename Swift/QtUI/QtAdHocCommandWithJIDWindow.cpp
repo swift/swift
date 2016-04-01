@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -52,7 +52,7 @@ QtAdHocCommandWithJIDWindow::~QtAdHocCommandWithJIDWindow() {
 void QtAdHocCommandWithJIDWindow::handleAcceptClick() {
     const JID jid = JID(Q2PSTRING(jid_->text()));
     const std::string node = Q2PSTRING(node_->text());
-    boost::shared_ptr<UIEvent> event(new RequestAdHocWithJIDUIEvent(jid, node));
+    std::shared_ptr<UIEvent> event(new RequestAdHocWithJIDUIEvent(jid, node));
     uiEventStream_->send(event);
     accept();
 }

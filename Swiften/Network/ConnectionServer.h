@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional/optional_fwd.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -32,6 +33,6 @@ namespace Swift {
 
             virtual void stop() = 0;
 
-            boost::signal<void (boost::shared_ptr<Connection>)> onNewConnection;
+            boost::signal<void (std::shared_ptr<Connection>)> onNewConnection;
     };
 }

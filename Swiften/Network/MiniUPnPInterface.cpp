@@ -12,8 +12,9 @@
 
 #include <Swiften/Network/MiniUPnPInterface.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <miniupnpc.h>
 #include <upnpcommands.h>
@@ -31,7 +32,7 @@ struct MiniUPnPInterface::Private {
     IGDdatas data;
 };
 
-MiniUPnPInterface::MiniUPnPInterface() : p(boost::make_shared<Private>()) {
+MiniUPnPInterface::MiniUPnPInterface() : p(std::make_shared<Private>()) {
     p->isValid = false;
     int error = 0;
     p->deviceList = upnpDiscover(1500 /* timeout in ms */, nullptr, nullptr, 0, 0 /* do IPv6? */, &error);

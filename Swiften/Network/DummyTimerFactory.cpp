@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -41,15 +41,15 @@ class DummyTimerFactory::DummyTimer : public Timer {
 DummyTimerFactory::DummyTimerFactory() : currentTime(0) {
 }
 
-boost::shared_ptr<Timer> DummyTimerFactory::createTimer(int milliseconds) {
-    boost::shared_ptr<DummyTimer> timer(new DummyTimer(milliseconds, this));
+std::shared_ptr<Timer> DummyTimerFactory::createTimer(int milliseconds) {
+    std::shared_ptr<DummyTimer> timer(new DummyTimer(milliseconds, this));
     timers.push_back(timer);
     return timer;
 }
 
 void DummyTimerFactory::setTime(int time) {
     assert(time > currentTime);
-    foreach(boost::shared_ptr<DummyTimer> timer, timers) {
+    foreach(std::shared_ptr<DummyTimer> timer, timers) {
         if (timer->getAlarmTime() > currentTime && timer->getAlarmTime() <= time && timer->isRunning) {
             timer->onTick();
         }

@@ -39,7 +39,7 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+            idnConverter = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
         }
 
         void testCertificateVerifies_WithoutMatchingDNSName() {
@@ -172,7 +172,7 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(!testling.certificateVerifies(certificate));
         }
 
-        boost::shared_ptr<IDNConverter> idnConverter;
+        std::shared_ptr<IDNConverter> idnConverter;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ServerIdentityVerifierTest);

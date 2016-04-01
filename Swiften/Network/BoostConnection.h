@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/thread/mutex.hpp>
 
 #include <Swiften/Base/API.h>
@@ -29,13 +30,13 @@ namespace boost {
 namespace Swift {
     class EventLoop;
 
-    class SWIFTEN_API BoostConnection : public Connection, public EventOwner, public boost::enable_shared_from_this<BoostConnection> {
+    class SWIFTEN_API BoostConnection : public Connection, public EventOwner, public std::enable_shared_from_this<BoostConnection> {
         public:
-            typedef boost::shared_ptr<BoostConnection> ref;
+            typedef std::shared_ptr<BoostConnection> ref;
 
             virtual ~BoostConnection();
 
-            static ref create(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
+            static ref create(std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
                 return ref(new BoostConnection(ioService, eventLoop));
             }
 
@@ -55,10 +56,10 @@ namespace Swift {
 
             Certificate::ref getPeerCertificate() const;
             std::vector<Certificate::ref> getPeerCertificateChain() const;
-            boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
         private:
-            BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+            BoostConnection(std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 
             void handleConnectFinished(const boost::system::error_code& error);
             void handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred);
@@ -69,9 +70,9 @@ namespace Swift {
 
         private:
             EventLoop* eventLoop;
-            boost::shared_ptr<boost::asio::io_service> ioService;
+            std::shared_ptr<boost::asio::io_service> ioService;
             boost::asio::ip::tcp::socket socket_;
-            boost::shared_ptr<SafeByteArray> readBuffer_;
+            std::shared_ptr<SafeByteArray> readBuffer_;
             boost::mutex writeMutex_;
             bool writing_;
             SafeByteArray writeQueue_;

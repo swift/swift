@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
         public:
             DummyIQChannel() {}
 
-            virtual void sendIQ(boost::shared_ptr<IQ> iq) {
+            virtual void sendIQ(std::shared_ptr<IQ> iq) {
                 iqs_.push_back(iq);
             }
 
@@ -27,6 +27,6 @@ namespace Swift {
                 return true;
             }
 
-            std::vector<boost::shared_ptr<IQ> > iqs_;
+            std::vector<std::shared_ptr<IQ> > iqs_;
     };
 }

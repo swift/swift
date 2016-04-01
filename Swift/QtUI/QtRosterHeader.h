@@ -38,7 +38,7 @@ namespace Swift {
 
         void setJID(const QString& jid);
         void setNick(const QString& nick);
-        void setContactRosterItem(boost::shared_ptr<ContactRosterItem> contact);
+        void setContactRosterItem(std::shared_ptr<ContactRosterItem> contact);
 
         void setStatusText(const QString& statusMessage);
         void setStatusType(StatusShow::Type type);
@@ -61,6 +61,6 @@ namespace Swift {
         QtStatusWidget* statusWidget_;
         QToolButton* securityInfoButton_;
         static const int avatarSize_;
-        boost::shared_ptr<ContactRosterItem> contact_;
+        std::shared_ptr<ContactRosterItem> contact_;
     };
 }

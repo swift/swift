@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/IQ.h>
@@ -18,6 +18,6 @@ namespace Swift {
         public:
             virtual ~IQHandler();
 
-            virtual bool handleIQ(boost::shared_ptr<IQ>) = 0;
+            virtual bool handleIQ(std::shared_ptr<IQ>) = 0;
     };
 }

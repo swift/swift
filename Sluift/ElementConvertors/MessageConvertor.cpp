@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/MessageConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,8 +22,8 @@ MessageConvertor::MessageConvertor(LuaElementConvertors* convertors) :
 MessageConvertor::~MessageConvertor() {
 }
 
-boost::shared_ptr<Message> MessageConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<Message> result = getStanza(L, convertors);
+std::shared_ptr<Message> MessageConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<Message> result = getStanza(L, convertors);
     lua_getfield(L, -1, "type");
     if (lua_isstring(L, -1)) {
         result->setType(convertMessageTypeFromString(lua_tostring(L, -1)));
@@ -32,7 +32,7 @@ boost::shared_ptr<Message> MessageConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void MessageConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Message> stanza) {
+void MessageConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Message> stanza) {
     pushStanza(L, stanza, convertors);
     const std::string type = convertMessageTypeToString(stanza->getType());
     lua_pushstring(L, type.c_str());

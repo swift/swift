@@ -13,7 +13,7 @@
 namespace Swift {
     class SWIFTEN_API GetRosterRequest : public GenericRequest<RosterPayload> {
         public:
-            typedef boost::shared_ptr<GetRosterRequest> ref;
+            typedef std::shared_ptr<GetRosterRequest> ref;
 
             static ref create(IQRouter* router) {
                 return ref(new GetRosterRequest(router));
@@ -27,7 +27,7 @@ namespace Swift {
 
         private:
             GetRosterRequest(IQRouter* router) :
-                    GenericRequest<RosterPayload>(IQ::Get, JID(), boost::shared_ptr<Payload>(new RosterPayload()), router) {
+                    GenericRequest<RosterPayload>(IQ::Get, JID(), std::make_shared<RosterPayload>(), router) {
             }
     };
 }

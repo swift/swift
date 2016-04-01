@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ namespace Swift {
         public:
             StartSessionSerializer() : GenericPayloadSerializer<StartSession>() {}
 
-            virtual std::string serializePayload(boost::shared_ptr<StartSession>)  const {
+            virtual std::string serializePayload(std::shared_ptr<StartSession>)  const {
                 return XMLElement("session", "urn:ietf:params:xml:ns:xmpp-session").serialize();
             }
     };

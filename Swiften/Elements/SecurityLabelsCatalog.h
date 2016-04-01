@@ -6,10 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -19,15 +18,15 @@
 namespace Swift {
     class SWIFTEN_API SecurityLabelsCatalog : public Payload {
         public:
-            typedef boost::shared_ptr<SecurityLabelsCatalog> ref;
+            typedef std::shared_ptr<SecurityLabelsCatalog> ref;
             class Item {
                 public:
                     Item() : default_(false) {}
-                    boost::shared_ptr<SecurityLabel> getLabel() const {
+                    std::shared_ptr<SecurityLabel> getLabel() const {
                         return label_;
                     }
 
-                    void setLabel(boost::shared_ptr<SecurityLabel> label) {
+                    void setLabel(std::shared_ptr<SecurityLabel> label) {
                         label_ = label;
                     }
 
@@ -43,7 +42,7 @@ namespace Swift {
                         default_ = isDefault;
                     }
                 private:
-                    boost::shared_ptr<SecurityLabel> label_;
+                    std::shared_ptr<SecurityLabel> label_;
                     std::string selector_;
                     bool default_;
             };

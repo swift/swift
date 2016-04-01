@@ -5,17 +5,17 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/cstdint.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/FileTransfer/FileReadBytestream.h>
 #include <Swiften/FileTransfer/FileTransfer.h>
@@ -68,8 +68,8 @@ private:
     JID otherParty;
     std::string filename;
     FileTransfer::ref transfer;
-    boost::shared_ptr<FileReadBytestream> fileReadStream;
-    boost::shared_ptr<FileWriteBytestream> fileWriteStream;
+    std::shared_ptr<FileReadBytestream> fileReadStream;
+    std::shared_ptr<FileWriteBytestream> fileWriteStream;
     FileTransferManager* ftManager;
     FileTransferProgressInfo* ftProgressInfo;
     ChatWindow* chatWindow;

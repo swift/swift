@@ -25,7 +25,7 @@ namespace Swift {
         public:
             JingleS5BTransportPayloadSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<JingleS5BTransportPayload>)  const;
+            virtual std::string serializePayload(std::shared_ptr<JingleS5BTransportPayload>)  const;
 
         private:
             std::string modeToString(JingleS5BTransportPayload::Mode) const;

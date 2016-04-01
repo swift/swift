@@ -150,18 +150,18 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
             MockTimerFactory() {}
 
             void updateTime(int milliseconds) {
-                foreach(boost::shared_ptr<MockTimer> timer, timers) {
+                foreach(std::shared_ptr<MockTimer> timer, timers) {
                     timer->updateTime(milliseconds);
                 }
             }
 
-            boost::shared_ptr<Timer> createTimer(int milliseconds) {
-                boost::shared_ptr<MockTimer> timer(new MockTimer(milliseconds));
+            std::shared_ptr<Timer> createTimer(int milliseconds) {
+                std::shared_ptr<MockTimer> timer(new MockTimer(milliseconds));
                 timers.push_back(timer);
                 return timer;
             }
 
-            std::vector<boost::shared_ptr<MockTimer> > timers;
+            std::vector<std::shared_ptr<MockTimer> > timers;
         };
 
         MockIdleQuerier* querier;

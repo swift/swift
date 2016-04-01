@@ -7,12 +7,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/HashElement.h>
@@ -24,7 +24,7 @@ namespace Swift {
      * @brief This class represents the file info used in XEP-0234.
      */
     class SWIFTEN_API JingleFileTransferFileInfo : public Payload {
-        typedef boost::shared_ptr<JingleFileTransferFileInfo> ref;
+        typedef std::shared_ptr<JingleFileTransferFileInfo> ref;
 
         public:
             JingleFileTransferFileInfo(const std::string& name = "", const std::string& description = "", unsigned long long size = 0, const boost::posix_time::ptime &date = boost::posix_time::ptime()) :

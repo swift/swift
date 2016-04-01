@@ -15,11 +15,11 @@
 namespace Swift {
     class SWIFTEN_API SessionTracer {
         public:
-            SessionTracer(boost::shared_ptr<Session> session);
+            SessionTracer(std::shared_ptr<Session> session);
 
         private:
             void printData(char direction, const SafeByteArray& data);
 
-            boost::shared_ptr<Session> session;
+            std::shared_ptr<Session> session;
     };
 }

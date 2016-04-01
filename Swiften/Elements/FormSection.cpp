@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,35 +21,35 @@ const std::string& FormSection::getLabel() const {
     return label_;
 }
 
-void FormSection::addTextElement(boost::shared_ptr<FormText> textElement) {
+void FormSection::addTextElement(std::shared_ptr<FormText> textElement) {
     textElements_.push_back(textElement);
 }
 
-const std::vector<boost::shared_ptr<FormText> >& FormSection::getTextElements() const {
+const std::vector<std::shared_ptr<FormText> >& FormSection::getTextElements() const {
     return textElements_;
 }
 
-void FormSection::addReportedRef(boost::shared_ptr<FormReportedRef> reportedRef) {
+void FormSection::addReportedRef(std::shared_ptr<FormReportedRef> reportedRef) {
     reportedRefs_.push_back(reportedRef);
 }
 
-const std::vector<boost::shared_ptr<FormReportedRef> >& FormSection::getReportedRefs() const {
+const std::vector<std::shared_ptr<FormReportedRef> >& FormSection::getReportedRefs() const {
     return reportedRefs_;
 }
 
-void FormSection::addChildSection(boost::shared_ptr<FormSection> childSection) {
+void FormSection::addChildSection(std::shared_ptr<FormSection> childSection) {
     childSections_.push_back(childSection);
 }
 
-const std::vector<boost::shared_ptr<FormSection> >& FormSection::getChildSections() const {
+const std::vector<std::shared_ptr<FormSection> >& FormSection::getChildSections() const {
     return childSections_;
 }
 
-void FormSection::addField(boost::shared_ptr<FormField> field) {
+void FormSection::addField(std::shared_ptr<FormField> field) {
     fields_.push_back(field);
 }
 
-const std::vector<boost::shared_ptr<FormField> >& FormSection::getFields() const {
+const std::vector<std::shared_ptr<FormField> >& FormSection::getFields() const {
     return fields_;
 }
 

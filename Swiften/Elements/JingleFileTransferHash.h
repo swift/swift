@@ -13,9 +13,8 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/JingleDescription.h>
@@ -25,7 +24,7 @@ namespace Swift {
 
 class SWIFTEN_API JingleFileTransferHash : public Payload {
 public:
-    typedef boost::shared_ptr<JingleFileTransferHash> ref;
+    typedef std::shared_ptr<JingleFileTransferHash> ref;
 
     void setFileInfo(const JingleFileTransferFileInfo& fileInfo) {
         fileInfo_ = fileInfo;

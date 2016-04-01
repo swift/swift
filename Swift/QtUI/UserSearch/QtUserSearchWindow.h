@@ -42,7 +42,7 @@ namespace Swift {
             virtual void setSelectedService(const JID& jid);
             virtual void setServerSupportsSearch(bool error);
             virtual void setSearchError(bool error);
-            virtual void setSearchFields(boost::shared_ptr<SearchPayload> fields);
+            virtual void setSearchFields(std::shared_ptr<SearchPayload> fields);
             virtual void setNameSuggestions(const std::vector<std::string>& suggestions);
             virtual void prepopulateJIDAndName(const JID& jid, const std::string& name);
             virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions);

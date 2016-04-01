@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,7 +29,7 @@ namespace Swift {
             void handleDataFromApplication(const SafeByteArray&);
 
             std::vector<Certificate::ref> getPeerCertificateChain() const;
-            boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
+            std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
             virtual ByteArray getFinishMessage() const;
 

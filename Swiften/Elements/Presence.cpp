@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,16 +22,16 @@ Presence::~Presence() {
 }
 
 int Presence::getPriority() const {
-    boost::shared_ptr<Priority> priority(getPayload<Priority>());
+    std::shared_ptr<Priority> priority(getPayload<Priority>());
     return (priority ? priority->getPriority() : 0);
 }
 
 void Presence::setPriority(int priority) {
-    updatePayload(boost::make_shared<Priority>(priority));
+    updatePayload(std::make_shared<Priority>(priority));
 }
 
 std::string Presence::getStatus() const {
-    boost::shared_ptr<Status> status(getPayload<Status>());
+    std::shared_ptr<Status> status(getPayload<Status>());
     if (status) {
         return status->getText();
     }
@@ -39,7 +39,7 @@ std::string Presence::getStatus() const {
 }
 
 void Presence::setStatus(const std::string& status) {
-    updatePayload(boost::make_shared<Status>(status));
+    updatePayload(std::make_shared<Status>(status));
 }
 
 }

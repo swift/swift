@@ -72,7 +72,7 @@ IBBReceiveSession::IBBReceiveSession(
         const JID& from,
         const JID& to,
         unsigned long long size,
-        boost::shared_ptr<WriteBytestream> bytestream,
+        std::shared_ptr<WriteBytestream> bytestream,
         IQRouter* router) :
             id(id),
             from(from),

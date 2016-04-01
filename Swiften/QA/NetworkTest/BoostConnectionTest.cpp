@@ -4,11 +4,10 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <string>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -38,7 +37,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
         void setUp() {
             eventLoop_ = new DummyEventLoop();
             boostIOServiceThread_ = new BoostIOServiceThread();
-            boostIOService_ = boost::make_shared<boost::asio::io_service>();
+            boostIOService_ = std::make_shared<boost::asio::io_service>();
             disconnected_ = false;
             connectFinished_ = false;
         }
@@ -145,7 +144,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
             connection->write(createSafeByteArray("\r\n\r\n")); // Temporarily, while we don't have an xmpp server running on ipv6
         }
 
-        void handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+        void handleDataRead(std::shared_ptr<SafeByteArray> data) {
             append(receivedData_, *data);
         }
 
@@ -159,7 +158,7 @@ class BoostConnectionTest : public CppUnit::TestFixture {
 
     private:
         BoostIOServiceThread* boostIOServiceThread_;
-        boost::shared_ptr<boost::asio::io_service> boostIOService_;
+        std::shared_ptr<boost::asio::io_service> boostIOService_;
         DummyEventLoop* eventLoop_;
         ByteArray receivedData_;
         bool disconnected_;

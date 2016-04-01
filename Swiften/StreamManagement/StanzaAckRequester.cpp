@@ -20,9 +20,9 @@ StanzaAckRequester::StanzaAckRequester() : lastHandledStanzasCount(0) {
 
 }
 
-void StanzaAckRequester::handleStanzaSent(boost::shared_ptr<Stanza> stanza) {
+void StanzaAckRequester::handleStanzaSent(std::shared_ptr<Stanza> stanza) {
     unackedStanzas.push_back(stanza);
-    if (boost::dynamic_pointer_cast<Message>(stanza)) {
+    if (std::dynamic_pointer_cast<Message>(stanza)) {
         onRequestAck();
     }
 }
@@ -34,7 +34,7 @@ void StanzaAckRequester::handleAckReceived(unsigned int handledStanzasCount) {
             std::cerr << "Warning: Server acked more stanzas than we sent" << std::endl;
             break;
         }
-        boost::shared_ptr<Stanza> ackedStanza = unackedStanzas.front();
+        std::shared_ptr<Stanza> ackedStanza = unackedStanzas.front();
         unackedStanzas.pop_front();
         onStanzaAcked(ackedStanza);
         i = (i == MAX_HANDLED_STANZA_COUNT ? 0 : i + 1);

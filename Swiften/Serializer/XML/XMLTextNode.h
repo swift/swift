@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/String.h>
@@ -15,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API XMLTextNode : public XMLNode {
         public:
-            typedef boost::shared_ptr<XMLTextNode> ref;
+            typedef std::shared_ptr<XMLTextNode> ref;
 
             XMLTextNode(const std::string& text) : text_(text) {
                 String::replaceAll(text_, '&', "&amp;"); // Should come first

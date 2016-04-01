@@ -7,11 +7,10 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/variant.hpp>
 
 struct lua_State;
@@ -26,34 +25,34 @@ namespace Swift {
                 int,
                 std::string,
                 std::vector< boost::recursive_variant_ >,
-                std::map<std::string, boost::shared_ptr<boost::recursive_variant_> >
+                std::map<std::string, std::shared_ptr<boost::recursive_variant_> >
             >::type Value;
 
-        typedef std::map<std::string, boost::shared_ptr<Value> > Table;
+        typedef std::map<std::string, std::shared_ptr<Value> > Table;
         typedef std::vector<Value> Array;
 
-        inline boost::shared_ptr<Value> nilRef() {
-            return boost::make_shared<Value>(Nil());
+        inline std::shared_ptr<Value> nilRef() {
+            return std::make_shared<Value>(Nil());
         }
 
-        inline boost::shared_ptr<Value> valueRef(const std::string& value) {
-            return boost::make_shared<Value>(value);
+        inline std::shared_ptr<Value> valueRef(const std::string& value) {
+            return std::make_shared<Value>(value);
         }
 
-        inline boost::shared_ptr<Value> intRef(int value) {
-            return boost::make_shared<Value>(value);
+        inline std::shared_ptr<Value> intRef(int value) {
+            return std::make_shared<Value>(value);
         }
 
-        inline boost::shared_ptr<Value> boolRef(bool value) {
-            return boost::make_shared<Value>(value);
+        inline std::shared_ptr<Value> boolRef(bool value) {
+            return std::make_shared<Value>(value);
         }
 
-        inline boost::shared_ptr<Value> valueRef(const Table& table) {
-            return boost::make_shared<Value>(table);
+        inline std::shared_ptr<Value> valueRef(const Table& table) {
+            return std::make_shared<Value>(table);
         }
 
-        inline boost::shared_ptr<Value> valueRef(const Array& array) {
-             return boost::make_shared<Value>(array);
+        inline std::shared_ptr<Value> valueRef(const Array& array) {
+             return std::make_shared<Value>(array);
         }
 
         void pushValue(lua_State* state, const Value& value);

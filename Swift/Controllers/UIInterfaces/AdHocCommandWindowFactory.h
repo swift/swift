@@ -15,6 +15,6 @@ class AdHocCommandWindow;
     class AdHocCommandWindowFactory {
         public:
             virtual ~AdHocCommandWindowFactory() {}
-            virtual AdHocCommandWindow* createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) = 0;
+            virtual AdHocCommandWindow* createAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command) = 0;
     };
 }

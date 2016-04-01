@@ -19,7 +19,7 @@ namespace Swift {
             PubSubErrorSerializer();
             virtual ~PubSubErrorSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<PubSubError>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubError>) const SWIFTEN_OVERRIDE;
 
         private:
             static std::string serializeType(PubSubError::Type);

@@ -45,28 +45,28 @@ QtPlainChatView::~QtPlainChatView() {
 
 QString chatMessageToString(const ChatWindow::ChatMessage& message) {
     QString result;
-    foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
-        boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
-        boost::shared_ptr<ChatWindow::ChatURIMessagePart> uriPart;
-        boost::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart;
-        boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart;
+    foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
+        std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+        std::shared_ptr<ChatWindow::ChatURIMessagePart> uriPart;
+        std::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart;
+        std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart;
 
-        if ((textPart = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+        if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
             QString text = QtUtilities::htmlEscape(P2QSTRING(textPart->text));
             text.replace("\n","<br/>");
             result += text;
             continue;
         }
-        if ((uriPart = boost::dynamic_pointer_cast<ChatWindow::ChatURIMessagePart>(part))) {
+        if ((uriPart = std::dynamic_pointer_cast<ChatWindow::ChatURIMessagePart>(part))) {
             QString uri = QtUtilities::htmlEscape(P2QSTRING(uriPart->target));
             result += "<a href='" + uri + "' >" + uri + "</a>";
             continue;
         }
-        if ((emoticonPart = boost::dynamic_pointer_cast<ChatWindow::ChatEmoticonMessagePart>(part))) {
+        if ((emoticonPart = std::dynamic_pointer_cast<ChatWindow::ChatEmoticonMessagePart>(part))) {
             result += P2QSTRING(emoticonPart->alternativeText);
             continue;
         }
-        if ((highlightPart = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part))) {
+        if ((highlightPart = std::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part))) {
             //FIXME: Maybe do something here. Anything, really.
             continue;
         }
@@ -74,7 +74,7 @@ QString chatMessageToString(const ChatWindow::ChatMessage& message) {
     return result;
 }
 
-std::string QtPlainChatView::addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time) {
+std::string QtPlainChatView::addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time) {
     QString text = "<p>";
     if (label) {
         text += P2QSTRING(label->getLabel()) + "<br/>";
@@ -89,7 +89,7 @@ std::string QtPlainChatView::addMessage(const ChatWindow::ChatMessage& message, 
     return idx;
 }
 
-std::string QtPlainChatView::addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time) {
+std::string QtPlainChatView::addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& time) {
     QString text = "<p>";
     if (label) {
         text += P2QSTRING(label->getLabel()) + "<br/>";
@@ -328,7 +328,7 @@ void QtPlainChatView::acceptMUCInvite()
 {
     AcceptMUCInviteAction *action = dynamic_cast<AcceptMUCInviteAction*>(sender());
     if (action) {
-        eventStream_->send(boost::make_shared<JoinMUCUIEvent>(action->jid_.toString(), action->password_, boost::optional<std::string>(), false, false, action->isImpromptu_, action->isContinuation_));
+        eventStream_->send(std::make_shared<JoinMUCUIEvent>(action->jid_.toString(), action->password_, boost::optional<std::string>(), false, false, action->isImpromptu_, action->isContinuation_));
         delete action->parent_;
     }
 }

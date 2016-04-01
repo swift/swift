@@ -12,14 +12,15 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <string>
 
 #include <Swiften/Elements/Whiteboard/WhiteboardElementVisitor.h>
 
 namespace Swift {
     class WhiteboardElement {
     public:
-        typedef boost::shared_ptr<WhiteboardElement> ref;
+        typedef std::shared_ptr<WhiteboardElement> ref;
 
     public:
         virtual ~WhiteboardElement() {}

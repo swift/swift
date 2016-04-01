@@ -18,6 +18,6 @@ namespace Swift {
         public:
             SearchPayloadSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<SearchPayload>)  const;
+            virtual std::string serializePayload(std::shared_ptr<SearchPayload>)  const;
     };
 }

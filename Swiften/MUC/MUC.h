@@ -7,9 +7,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/signals/connection.hpp>
 
 #include <Swiften/Base/API.h>
@@ -30,7 +30,7 @@ namespace Swift {
 
     class SWIFTEN_API MUC {
         public:
-            typedef boost::shared_ptr<MUC> ref;
+            typedef std::shared_ptr<MUC> ref;
 
             enum JoinResult { JoinSucceeded, JoinFailed };
             enum LeavingType { LeavePart, LeaveKick, LeaveBan, LeaveDestroy, LeaveNotMember, Disconnect };

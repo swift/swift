@@ -15,7 +15,7 @@ namespace Swift {
         public:
             StatusShowSerializer() : GenericPayloadSerializer<StatusShow>() {}
 
-            virtual std::string serializePayload(boost::shared_ptr<StatusShow> statusShow)  const {
+            virtual std::string serializePayload(std::shared_ptr<StatusShow> statusShow)  const {
                 if (statusShow->getType () == StatusShow::Online || statusShow->getType() == StatusShow::None) {
                     return "";
                 }

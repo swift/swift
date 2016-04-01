@@ -46,7 +46,7 @@ void JingleFileTransferDescriptionParser::handleEndElement(const std::string& el
     }
 
     if (level == 0) {
-        boost::shared_ptr<JingleFileTransferFileInfo> info = boost::dynamic_pointer_cast<JingleFileTransferFileInfo>(currentPayloadParser->getPayload());
+        std::shared_ptr<JingleFileTransferFileInfo> info = std::dynamic_pointer_cast<JingleFileTransferFileInfo>(currentPayloadParser->getPayload());
         if (info) {
             getPayloadInternal()->setFileInfo(*info);
         }

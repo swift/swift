@@ -6,8 +6,9 @@
 
 #include <Swiften/Serializer/StreamResumedSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Elements/StreamResumed.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -17,8 +18,8 @@ using namespace Swift;
 StreamResumedSerializer::StreamResumedSerializer() : GenericElementSerializer<StreamResumed>() {
 }
 
-SafeByteArray StreamResumedSerializer::serialize(boost::shared_ptr<ToplevelElement> el) const {
-    boost::shared_ptr<StreamResumed> e(boost::dynamic_pointer_cast<StreamResumed>(el));
+SafeByteArray StreamResumedSerializer::serialize(std::shared_ptr<ToplevelElement> el) const {
+    std::shared_ptr<StreamResumed> e(std::dynamic_pointer_cast<StreamResumed>(el));
     XMLElement element("resumed", "urn:xmpp:sm:2");
     element.setAttribute("previd", e->getResumeID());
     if (e->getHandledStanzasCount()) {

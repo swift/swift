@@ -15,6 +15,6 @@ namespace Swift {
         public:
             SecurityLabelSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<SecurityLabel> version)  const;
+            virtual std::string serializePayload(std::shared_ptr<SecurityLabel> version)  const;
     };
 }

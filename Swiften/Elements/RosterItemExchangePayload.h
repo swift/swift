@@ -12,10 +12,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -24,7 +23,7 @@
 namespace Swift {
     class SWIFTEN_API RosterItemExchangePayload : public Payload {
         public:
-            typedef boost::shared_ptr<RosterItemExchangePayload> ref;
+            typedef std::shared_ptr<RosterItemExchangePayload> ref;
 
             class SWIFTEN_API Item {
                 public:

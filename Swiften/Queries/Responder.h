@@ -58,26 +58,26 @@ namespace Swift {
              *
              * This method is implemented in the concrete subclasses.
              */
-            virtual bool handleGetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
+            virtual bool handleGetRequest(const JID& from, const JID& to, const std::string& id, std::shared_ptr<PAYLOAD_TYPE> payload) = 0;
 
             /**
              * Handle an incoming IQ-Set request containing a payload of class PAYLOAD_TYPE.
              *
              * This method is implemented in the concrete subclasses.
              */
-            virtual bool handleSetRequest(const JID& from, const JID& to, const std::string& id, boost::shared_ptr<PAYLOAD_TYPE> payload) = 0;
+            virtual bool handleSetRequest(const JID& from, const JID& to, const std::string& id, std::shared_ptr<PAYLOAD_TYPE> payload) = 0;
 
             /**
              * Convenience function for sending an IQ response.
              */
-            void sendResponse(const JID& to, const std::string& id, boost::shared_ptr<PAYLOAD_TYPE> payload) {
+            void sendResponse(const JID& to, const std::string& id, std::shared_ptr<PAYLOAD_TYPE> payload) {
                 router_->sendIQ(IQ::createResult(to, id, payload));
             }
 
             /**
              * Convenience function for sending an IQ response, with a specific from address.
              */
-            void sendResponse(const JID& to, const JID& from, const std::string& id, boost::shared_ptr<PAYLOAD_TYPE> payload) {
+            void sendResponse(const JID& to, const JID& from, const std::string& id, std::shared_ptr<PAYLOAD_TYPE> payload) {
                 router_->sendIQ(IQ::createResult(to, from, id, payload));
             }
 
@@ -104,9 +104,9 @@ namespace Swift {
             }
 
         private:
-            virtual bool handleIQ(boost::shared_ptr<IQ> iq) {
+            virtual bool handleIQ(std::shared_ptr<IQ> iq) {
                 if (iq->getType() == IQ::Set || iq->getType() == IQ::Get) {
-                    boost::shared_ptr<PAYLOAD_TYPE> payload(iq->getPayload<PAYLOAD_TYPE>());
+                    std::shared_ptr<PAYLOAD_TYPE> payload(iq->getPayload<PAYLOAD_TYPE>());
                     if (payload) {
                         bool result;
                         if (iq->getType() == IQ::Set) {

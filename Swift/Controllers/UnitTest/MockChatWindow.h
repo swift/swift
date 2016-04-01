@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 
@@ -18,12 +18,12 @@ namespace Swift {
             MockChatWindow() : labelsEnabled_(false), impromptuMUCSupported_(false) {}
             virtual ~MockChatWindow();
 
-            virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
+            virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
                 lastMessageBody_ = bodyFromMessage(message);
                 return "id";
             }
 
-            virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, boost::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {return "id";}
+            virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {return "id";}
 
             virtual std::string addSystemMessage(const ChatMessage& message, Direction /*direction*/) {
                 lastAddedSystemMessage_ = message;
@@ -91,9 +91,9 @@ namespace Swift {
             virtual void setBookmarkState(RoomBookmarkState) {}
 
             static std::string bodyFromMessage(const ChatMessage& message) {
-                boost::shared_ptr<ChatTextMessagePart> text;
-                foreach (boost::shared_ptr<ChatMessagePart> part, message.getParts()) {
-                    if ((text = boost::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
+                std::shared_ptr<ChatTextMessagePart> text;
+                foreach (std::shared_ptr<ChatMessagePart> part, message.getParts()) {
+                    if ((text = std::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
                         return text->text;
                     }
                 }

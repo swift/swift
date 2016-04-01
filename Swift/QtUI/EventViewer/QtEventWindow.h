@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <QTreeView>
 
@@ -25,8 +25,8 @@ namespace Swift {
         public:
             QtEventWindow(UIEventStream* eventStream);
             ~QtEventWindow();
-            void addEvent(boost::shared_ptr<StanzaEvent> event, bool active);
-            void removeEvent(boost::shared_ptr<StanzaEvent> event);
+            void addEvent(std::shared_ptr<StanzaEvent> event, bool active);
+            void removeEvent(std::shared_ptr<StanzaEvent> event);
         signals:
             void onNewEventCountUpdated(int count);
         private slots:

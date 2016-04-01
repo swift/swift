@@ -5,14 +5,14 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 
@@ -39,10 +39,10 @@ namespace Swift {
                     CryptoProvider* crypto);
             ~OutgoingFileTransferManager();
 
-            boost::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(
+            std::shared_ptr<OutgoingFileTransfer> createOutgoingFileTransfer(
                     const JID& from,
                     const JID& to,
-                    boost::shared_ptr<ReadBytestream>,
+                    std::shared_ptr<ReadBytestream>,
                     const JingleFileTransferFileInfo&,
                     const FileTransferOptions&);
 

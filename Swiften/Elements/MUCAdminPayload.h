@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/MUCItem.h>
@@ -21,7 +21,7 @@
 namespace Swift {
     class SWIFTEN_API MUCAdminPayload : public Payload {
         public:
-            typedef boost::shared_ptr<MUCAdminPayload> ref;
+            typedef std::shared_ptr<MUCAdminPayload> ref;
 
 
             MUCAdminPayload() {

@@ -12,9 +12,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/JinglePayloadSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/intrusive_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -35,27 +33,27 @@ namespace Swift {
 JinglePayloadSerializer::JinglePayloadSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
 }
 
-std::string JinglePayloadSerializer::serializePayload(boost::shared_ptr<JinglePayload> payload) const {
+std::string JinglePayloadSerializer::serializePayload(std::shared_ptr<JinglePayload> payload) const {
     XMLElement jinglePayload("jingle", "urn:xmpp:jingle:1");
     jinglePayload.setAttribute("action", actionToString(payload->getAction()));
     jinglePayload.setAttribute("initiator", payload->getInitiator());
     jinglePayload.setAttribute("sid", payload->getSessionID());
 
-    std::vector<boost::shared_ptr<Payload> > payloads = payload->getPayloads();
+    std::vector<std::shared_ptr<Payload> > payloads = payload->getPayloads();
     if (!payloads.empty()) {
-        foreach(boost::shared_ptr<Payload> subPayload, payloads) {
+        foreach(std::shared_ptr<Payload> subPayload, payloads) {
             PayloadSerializer* serializer = serializers->getPayloadSerializer(subPayload);
             if (serializer) {
-                jinglePayload.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(subPayload)));
+                jinglePayload.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(subPayload)));
             }
         }
     }
 
     if (payload->getReason().is_initialized()) {
-        boost::shared_ptr<XMLElement> reason = boost::make_shared<XMLElement>("reason");
-        reason->addNode(boost::make_shared<XMLElement>(reasonTypeToString(payload->getReason()->type)));
+        std::shared_ptr<XMLElement> reason = std::make_shared<XMLElement>("reason");
+        reason->addNode(std::make_shared<XMLElement>(reasonTypeToString(payload->getReason()->type)));
         if (!payload->getReason()->text.empty()) {
-            reason->addNode(boost::make_shared<XMLElement>("desc", "", payload->getReason()->text));
+            reason->addNode(std::make_shared<XMLElement>("desc", "", payload->getReason()->text));
         }
         jinglePayload.addNode(reason);
     }

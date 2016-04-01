@@ -18,12 +18,12 @@ namespace Swift {
 
     class SWIFTEN_API BoostTimerFactory : public TimerFactory {
         public:
-            BoostTimerFactory(boost::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
+            BoostTimerFactory(std::shared_ptr<boost::asio::io_service>, EventLoop* eventLoop);
 
-            virtual boost::shared_ptr<Timer> createTimer(int milliseconds);
+            virtual std::shared_ptr<Timer> createTimer(int milliseconds);
 
         private:
-            boost::shared_ptr<boost::asio::io_service> ioService;
+            std::shared_ptr<boost::asio::io_service> ioService;
             EventLoop* eventLoop;
     };
 }

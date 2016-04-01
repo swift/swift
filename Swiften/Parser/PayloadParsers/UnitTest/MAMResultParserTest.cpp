@@ -35,17 +35,17 @@ class MAMResultParserTest : public CppUnit::TestFixture
                     "</forwarded>"
                 "</result>"));
 
-            boost::shared_ptr<MAMResult> payload = parser.getPayload<MAMResult>();
+            std::shared_ptr<MAMResult> payload = parser.getPayload<MAMResult>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT_EQUAL(std::string("28482-98726-73623"), payload->getID());
             CPPUNIT_ASSERT(payload->getQueryID());
             CPPUNIT_ASSERT_EQUAL(std::string("f27"), *payload->getQueryID());
 
-            boost::shared_ptr<Forwarded> forwarded = payload->getPayload();
+            std::shared_ptr<Forwarded> forwarded = payload->getPayload();
             CPPUNIT_ASSERT(forwarded->getDelay());
             CPPUNIT_ASSERT_EQUAL(std::string("2010-07-10T23:08:25Z"), dateTimeToString(forwarded->getDelay()->getStamp()));
 
-            boost::shared_ptr<Message> message = boost::dynamic_pointer_cast<Message>(forwarded->getStanza());
+            std::shared_ptr<Message> message = std::dynamic_pointer_cast<Message>(forwarded->getStanza());
             CPPUNIT_ASSERT(!!message);
             const std::string expectedBody = "Call me but love, and I'll be new baptized; Henceforth I never will be Romeo.";
             CPPUNIT_ASSERT_EQUAL(expectedBody, message->getBody().get());

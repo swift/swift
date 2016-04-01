@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API WhiteboardUpdateOperation : public WhiteboardOperation {
     public:
-        typedef boost::shared_ptr<WhiteboardUpdateOperation> ref;
+        typedef std::shared_ptr<WhiteboardUpdateOperation> ref;
     public:
         WhiteboardElement::ref getElement() const {
             return element_;

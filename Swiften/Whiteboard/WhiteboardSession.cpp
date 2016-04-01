@@ -13,8 +13,7 @@
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 
 #include <iostream>
-
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/WhiteboardPayload.h>
@@ -27,7 +26,7 @@ namespace Swift {
     WhiteboardSession::~WhiteboardSession() {
     }
 
-    void WhiteboardSession::handleIncomingAction(boost::shared_ptr<WhiteboardPayload> payload) {
+    void WhiteboardSession::handleIncomingAction(std::shared_ptr<WhiteboardPayload> payload) {
         switch (payload->getType()) {
             case WhiteboardPayload::Data:
                 handleIncomingOperation(payload->getOperation());
@@ -48,21 +47,21 @@ namespace Swift {
     }
 
     void WhiteboardSession::sendElement(const WhiteboardElement::ref element) {
-        boost::shared_ptr<WhiteboardPayload> payload = boost::make_shared<WhiteboardPayload>();
+        std::shared_ptr<WhiteboardPayload> payload = std::make_shared<WhiteboardPayload>();
         payload->setElement(element);
-        boost::shared_ptr<GenericRequest<WhiteboardPayload> > request = boost::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
+        std::shared_ptr<GenericRequest<WhiteboardPayload> > request = std::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
         request->send();
     }
 
-    void WhiteboardSession::sendPayload(boost::shared_ptr<WhiteboardPayload> payload) {
-        boost::shared_ptr<GenericRequest<WhiteboardPayload> > request = boost::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
+    void WhiteboardSession::sendPayload(std::shared_ptr<WhiteboardPayload> payload) {
+        std::shared_ptr<GenericRequest<WhiteboardPayload> > request = std::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
         request->send();
     }
 
     void WhiteboardSession::cancel() {
         if (router_->isAvailable()) {
-            boost::shared_ptr<WhiteboardPayload> payload = boost::make_shared<WhiteboardPayload>(WhiteboardPayload::SessionTerminate);
-            boost::shared_ptr<GenericRequest<WhiteboardPayload> > request = boost::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
+            std::shared_ptr<WhiteboardPayload> payload = std::make_shared<WhiteboardPayload>(WhiteboardPayload::SessionTerminate);
+            std::shared_ptr<GenericRequest<WhiteboardPayload> > request = std::make_shared<GenericRequest<WhiteboardPayload> >(IQ::Set, toJID_, payload, router_);
             request->send();
         }
         onSessionTerminated(toJID_);

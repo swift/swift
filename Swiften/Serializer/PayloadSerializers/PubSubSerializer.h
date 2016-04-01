@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -21,10 +21,10 @@ namespace Swift {
             PubSubSerializer(PayloadSerializerCollection* serializers);
             virtual ~PubSubSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<PubSub>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSub>) const SWIFTEN_OVERRIDE;
 
         private:
-            std::vector< boost::shared_ptr<PayloadSerializer> > pubsubSerializers;
+            std::vector< std::shared_ptr<PayloadSerializer> > pubsubSerializers;
             PayloadSerializerCollection* serializers;
     };
 }

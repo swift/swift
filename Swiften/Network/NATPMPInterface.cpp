@@ -12,8 +12,9 @@
 
 #include <Swiften/Network/NATPMPInterface.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 
@@ -29,7 +30,7 @@ struct NATPMPInterface::Private {
     natpmp_t natpmp;
 };
 
-NATPMPInterface::NATPMPInterface() : p(boost::make_shared<Private>()) {
+NATPMPInterface::NATPMPInterface() : p(std::make_shared<Private>()) {
     initnatpmp(&p->natpmp, 0, 0);
 }
 

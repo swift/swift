@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
@@ -32,7 +32,7 @@ namespace Swift {
             boost::signal<void (const JID&)> onNotificationActivated;
 
         private:
-            void handleEventAdded(boost::shared_ptr<StanzaEvent>);
+            void handleEventAdded(std::shared_ptr<StanzaEvent>);
             void handleNotificationActivated(JID jid);
 
         private:

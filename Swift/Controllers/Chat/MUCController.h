@@ -7,10 +7,10 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 
-#include <boost/shared_ptr.hpp>
 #include <boost/signals/connection.hpp>
 
 #include <Swiften/Base/Override.h>
@@ -54,14 +54,14 @@ namespace Swift {
 
     class MUCController : public ChatControllerBase {
         public:
-            MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
+            MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
             virtual ~MUCController();
             boost::signal<void ()> onUserLeft;
             boost::signal<void ()> onUserJoined;
             boost::signal<void ()> onImpromptuConfigCompleted;
             boost::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
             virtual void setOnline(bool online) SWIFTEN_OVERRIDE;
-            virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
+            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
             void rejoin();
             static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
             static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu);
@@ -75,14 +75,14 @@ namespace Swift {
             void sendInvites(const std::vector<JID>& jids, const std::string& reason) const;
 
         protected:
-            virtual void preSendMessageRequest(boost::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
-            virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+            virtual void preSendMessageRequest(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
             virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
             virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
-            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message> message) const SWIFTEN_OVERRIDE;
-            virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) SWIFTEN_OVERRIDE;
-            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
-            virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
+            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message> message) const SWIFTEN_OVERRIDE;
+            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent>) SWIFTEN_OVERRIDE;
+            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
+            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
             virtual void cancelReplaces() SWIFTEN_OVERRIDE;
             virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
 
@@ -97,11 +97,11 @@ namespace Swift {
             void handleOccupantJoined(const MUCOccupant& occupant);
             void handleOccupantNicknameChanged(const std::string& oldNickname, const std::string& newNickname);
             void handleOccupantLeft(const MUCOccupant& occupant, MUC::LeavingType type, const std::string& reason);
-            void handleOccupantPresenceChange(boost::shared_ptr<Presence> presence);
+            void handleOccupantPresenceChange(std::shared_ptr<Presence> presence);
             void handleOccupantRoleChanged(const std::string& nick, const MUCOccupant& occupant,const MUCOccupant::Role& oldRole);
             void handleOccupantAffiliationChanged(const std::string& nick, const MUCOccupant::Affiliation& affiliation,const MUCOccupant::Affiliation& oldAffiliation);
             void handleJoinComplete(const std::string& nick);
-            void handleJoinFailed(boost::shared_ptr<ErrorPayload> error);
+            void handleJoinFailed(std::shared_ptr<ErrorPayload> error);
             void handleJoinTimeoutTick();
             void handleChangeSubjectRequest(const std::string&);
             void handleBookmarkRequest();
@@ -110,7 +110,7 @@ namespace Swift {
             JID nickToJID(const std::string& nick);
             std::string roleToFriendlyName(MUCOccupant::Role role);
             void receivedActivity();
-            bool messageTargetsMe(boost::shared_ptr<Message> message);
+            bool messageTargetsMe(std::shared_ptr<Message> message);
             void updateJoinParts();
             bool shouldUpdateJoinParts();
             virtual void dayTicked() SWIFTEN_OVERRIDE { clearPresenceQueue(); }
@@ -128,9 +128,9 @@ namespace Swift {
             void handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes);
             void handleInviteToMUCWindowDismissed();
             void handleInviteToMUCWindowCompleted();
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
             void addRecentLogs();
-            void checkDuplicates(boost::shared_ptr<Message> newMessage);
+            void checkDuplicates(std::shared_ptr<Message> newMessage);
             void setNick(const std::string& nick);
             void setImpromptuWindowTitle();
             void handleRoomUnlocked();
@@ -157,7 +157,7 @@ namespace Swift {
             bool shouldJoinOnReconnect_;
             bool doneGettingHistory_;
             boost::bsignals::scoped_connection avatarChangedConnection_;
-            boost::shared_ptr<Timer> loginCheckTimer_;
+            std::shared_ptr<Timer> loginCheckTimer_;
             std::set<std::string> currentOccupants_;
             std::vector<NickJoinPart> joinParts_;
             boost::posix_time::ptime lastActivity_;

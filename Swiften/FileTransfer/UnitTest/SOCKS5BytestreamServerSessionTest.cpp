@@ -37,9 +37,9 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
             receivedDataChunks = 0;
             eventLoop = new DummyEventLoop();
             bytestreams = new SOCKS5BytestreamRegistry();
-            connection = boost::make_shared<DummyConnection>(eventLoop);
+            connection = std::make_shared<DummyConnection>(eventLoop);
             connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
-            stream1 = boost::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg"));
+            stream1 = std::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg"));
             finished = false;
         }
 
@@ -50,7 +50,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 
             receive(createSafeByteArray("\x05\x02\x01\x02"));
@@ -59,7 +59,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testAuthenticate_Chunked() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
 
             receive(createSafeByteArray("\x05\x02\x01"));
@@ -70,7 +70,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testRequest() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
             bytestreams->setHasBytestream("abcdef", true);
             authenticate();
@@ -81,7 +81,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testRequest_UnknownBytestream() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
             authenticate();
 
@@ -91,7 +91,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testReceiveData() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
             bytestreams->setHasBytestream("abcdef", true);
             authenticate();
@@ -106,7 +106,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testReceiveData_Chunked() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             testling->setChunkSize(3);
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
             bytestreams->setHasBytestream("abcdef", true);
@@ -121,7 +121,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testDataStreamPauseStopsSendingData() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             testling->setChunkSize(3);
             stream1->setDataComplete(false);
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
@@ -140,7 +140,7 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
         }
 
         void testDataStreamResumeAfterPauseSendsData() {
-            boost::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
+            std::shared_ptr<SOCKS5BytestreamServerSession> testling(createSession());
             testling->setChunkSize(3);
             stream1->setDataComplete(false);
             StartStopper<SOCKS5BytestreamServerSession> stopper(testling.get());
@@ -202,10 +202,10 @@ class SOCKS5BytestreamServerSessionTest : public CppUnit::TestFixture {
     private:
         DummyEventLoop* eventLoop;
         SOCKS5BytestreamRegistry* bytestreams;
-        boost::shared_ptr<DummyConnection> connection;
+        std::shared_ptr<DummyConnection> connection;
         std::vector<unsigned char> receivedData;
         int receivedDataChunks;
-        boost::shared_ptr<ByteArrayReadBytestream> stream1;
+        std::shared_ptr<ByteArrayReadBytestream> stream1;
         bool finished;
         boost::optional<FileTransferError> error;
 };

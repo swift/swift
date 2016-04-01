@@ -6,9 +6,9 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -28,7 +28,7 @@ namespace Swift {
     class XMPPLayer;
     class XMLParserFactory;
 
-    class SWIFTEN_API Session : public boost::enable_shared_from_this<Session> {
+    class SWIFTEN_API Session : public std::enable_shared_from_this<Session> {
         public:
             enum SessionError {
                 ConnectionReadError,
@@ -45,7 +45,7 @@ namespace Swift {
             };
 
             Session(
-                    boost::shared_ptr<Connection> connection,
+                    std::shared_ptr<Connection> connection,
                     PayloadParserFactoryCollection* payloadParserFactories,
                     PayloadSerializerCollection* payloadSerializers,
                     XMLParserFactory* xmlParserFactory);
@@ -54,7 +54,7 @@ namespace Swift {
             void startSession();
             void finishSession();
 
-            void sendElement(boost::shared_ptr<ToplevelElement>);
+            void sendElement(std::shared_ptr<ToplevelElement>);
 
             const JID& getLocalJID() const {
                 return localJID;
@@ -64,7 +64,7 @@ namespace Swift {
                 return remoteJID;
             }
 
-            boost::signal<void (boost::shared_ptr<ToplevelElement>)> onElementReceived;
+            boost::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
             boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
             boost::signal<void (const SafeByteArray&)> onDataWritten;
             boost::signal<void (const SafeByteArray&)> onDataRead;
@@ -82,7 +82,7 @@ namespace Swift {
 
             virtual void handleSessionStarted() {}
             virtual void handleSessionFinished(const boost::optional<SessionError>&) {}
-            virtual void handleElement(boost::shared_ptr<ToplevelElement>) = 0;
+            virtual void handleElement(std::shared_ptr<ToplevelElement>) = 0;
             virtual void handleStreamStart(const ProtocolHeader&) = 0;
 
             void initializeStreamStack();
@@ -103,7 +103,7 @@ namespace Swift {
         private:
             JID localJID;
             JID remoteJID;
-            boost::shared_ptr<Connection> connection;
+            std::shared_ptr<Connection> connection;
             PayloadParserFactoryCollection* payloadParserFactories;
             PayloadSerializerCollection* payloadSerializers;
             XMLParserFactory* xmlParserFactory;

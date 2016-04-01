@@ -6,10 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -33,21 +32,21 @@ namespace Swift {
                 this->node = value ;
             }
 
-            const std::vector< boost::shared_ptr<PubSubOwnerAffiliation> >& getAffiliations() const {
+            const std::vector< std::shared_ptr<PubSubOwnerAffiliation> >& getAffiliations() const {
                 return affiliations;
             }
 
-            void setAffiliations(const std::vector< boost::shared_ptr<PubSubOwnerAffiliation> >& value) {
+            void setAffiliations(const std::vector< std::shared_ptr<PubSubOwnerAffiliation> >& value) {
                 this->affiliations = value ;
             }
 
-            void addAffiliation(boost::shared_ptr<PubSubOwnerAffiliation> value) {
+            void addAffiliation(std::shared_ptr<PubSubOwnerAffiliation> value) {
                 this->affiliations.push_back(value);
             }
 
 
         private:
             std::string node;
-            std::vector< boost::shared_ptr<PubSubOwnerAffiliation> > affiliations;
+            std::vector< std::shared_ptr<PubSubOwnerAffiliation> > affiliations;
     };
 }

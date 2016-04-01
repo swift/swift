@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubAffiliationsSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
@@ -23,7 +23,7 @@ PubSubAffiliationsSerializer::PubSubAffiliationsSerializer(PayloadSerializerColl
 PubSubAffiliationsSerializer::~PubSubAffiliationsSerializer() {
 }
 
-std::string PubSubAffiliationsSerializer::serializePayload(boost::shared_ptr<PubSubAffiliations> payload) const {
+std::string PubSubAffiliationsSerializer::serializePayload(std::shared_ptr<PubSubAffiliations> payload) const {
     if (!payload) {
         return "";
     }
@@ -31,8 +31,8 @@ std::string PubSubAffiliationsSerializer::serializePayload(boost::shared_ptr<Pub
     if (payload->getNode()) {
         element.setAttribute("node", *payload->getNode());
     }
-    foreach(boost::shared_ptr<PubSubAffiliation> item, payload->getAffiliations()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(PubSubAffiliationSerializer(serializers).serialize(item)));
+    foreach(std::shared_ptr<PubSubAffiliation> item, payload->getAffiliations()) {
+        element.addNode(std::make_shared<XMLRawTextNode>(PubSubAffiliationSerializer(serializers).serialize(item)));
     }
     return element.serialize();
 }

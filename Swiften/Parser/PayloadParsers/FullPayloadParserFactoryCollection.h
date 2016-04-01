@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
@@ -21,7 +20,7 @@ namespace Swift {
             ~FullPayloadParserFactoryCollection();
 
         private:
-            std::vector< boost::shared_ptr<PayloadParserFactory> > factories_;
+            std::vector< std::shared_ptr<PayloadParserFactory> > factories_;
             PayloadParserFactory* defaultFactory_;
     };
 }

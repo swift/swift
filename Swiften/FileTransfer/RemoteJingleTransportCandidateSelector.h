@@ -14,10 +14,9 @@
 
 #include <Swiften/FileTransfer/RemoteJingleTransportCandidateSelector.h>
 
+#include <memory>
 #include <queue>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Override.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
@@ -40,7 +39,7 @@ namespace Swift {
             virtual void startSelectingCandidate();
             virtual void stopSelectingCandidate();
 
-            boost::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, boost::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
+            boost::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, std::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
 
         private:
             void tryNextCandidate();
@@ -54,7 +53,7 @@ namespace Swift {
                 JingleS5BTransportPayload::Candidate,
                 std::vector<JingleS5BTransportPayload::Candidate>,
                 JingleS5BTransportPayload::CompareCandidate> candidates;
-            boost::shared_ptr<SOCKS5BytestreamClientSession> s5bSession;
+            std::shared_ptr<SOCKS5BytestreamClientSession> s5bSession;
             boost::bsignals::connection sessionReadyConnection;
             JingleS5BTransportPayload::Candidate lastCandidate;
             std::string socks5DstAddr;

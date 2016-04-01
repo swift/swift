@@ -88,7 +88,7 @@ namespace Swift {
               *
               * @return Error details.
               */
-            boost::shared_ptr<boost::system::error_code> getErrorCode() {
+            std::shared_ptr<boost::system::error_code> getErrorCode() {
                 return errorCode_;
             }
 
@@ -102,7 +102,7 @@ namespace Swift {
                 ServerAuthenticated
             } step_;
             bool error_;
-            boost::shared_ptr<boost::system::error_code> errorCode_;
+            std::shared_ptr<boost::system::error_code> errorCode_;
             std::string servicePrincipalNameString_;
             bool haveCredentialsHandle_;
             bool haveContextHandle_;

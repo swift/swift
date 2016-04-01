@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -16,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API StreamError : public ToplevelElement {
         public:
-            typedef boost::shared_ptr<StreamError> ref;
+            typedef std::shared_ptr<StreamError> ref;
 
             enum Type {
                 BadFormat,

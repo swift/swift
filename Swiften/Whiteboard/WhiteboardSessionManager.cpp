@@ -13,8 +13,9 @@
 
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
@@ -37,7 +38,7 @@ namespace Swift {
 
     WhiteboardSession::ref WhiteboardSessionManager::getSession(const JID& to) {
         if (sessions_.find(to) == sessions_.end()) {
-            return boost::shared_ptr<WhiteboardSession>();
+            return std::shared_ptr<WhiteboardSession>();
         }
         return sessions_[to];
     }
@@ -47,7 +48,7 @@ namespace Swift {
         if (fullJID.isBare()) {
             fullJID = getFullJID(fullJID);
         }
-        OutgoingWhiteboardSession::ref session = boost::make_shared<OutgoingWhiteboardSession>(fullJID, router_);
+        OutgoingWhiteboardSession::ref session = std::make_shared<OutgoingWhiteboardSession>(fullJID, router_);
         sessions_[fullJID] = session;
         session->onSessionTerminated.connect(boost::bind(&WhiteboardSessionManager::deleteSessionEntry, this, _1));
         session->onRequestRejected.connect(boost::bind(&WhiteboardSessionManager::deleteSessionEntry, this, _1));

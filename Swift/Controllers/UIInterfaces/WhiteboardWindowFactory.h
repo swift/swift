@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 namespace Swift {
@@ -14,6 +20,6 @@ namespace Swift {
     public :
         virtual ~WhiteboardWindowFactory() {}
 
-        virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession) = 0;
+        virtual WhiteboardWindow* createWhiteboardWindow(std::shared_ptr<WhiteboardSession> whiteboardSession) = 0;
     };
 }

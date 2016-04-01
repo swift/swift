@@ -17,7 +17,7 @@ namespace Swift {
 
     class FakeDNSSDRegisterQuery : public DNSSDRegisterQuery, public FakeDNSSDQuery {
         public:
-            FakeDNSSDRegisterQuery(const std::string& name, int port, const ByteArray& info, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), name(name), port(port), info(info) {
+            FakeDNSSDRegisterQuery(const std::string& name, int port, const ByteArray& info, std::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), name(name), port(port), info(info) {
             }
 
             void registerService() {

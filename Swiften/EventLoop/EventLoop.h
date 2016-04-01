@@ -33,13 +33,13 @@ namespace Swift {
              * An optional \ref EventOwner can be passed, allowing later removal of events that have not yet been
              * executed using the \ref removeEventsFromOwner method.
              */
-            void postEvent(boost::function<void ()> event, boost::shared_ptr<EventOwner> owner = boost::shared_ptr<EventOwner>());
+            void postEvent(boost::function<void ()> event, std::shared_ptr<EventOwner> owner = std::shared_ptr<EventOwner>());
 
             /**
              * The \ref removeEventsFromOwner method removes all events from the specified \ref owner from the
              * event queue.
              */
-            void removeEventsFromOwner(boost::shared_ptr<EventOwner> owner);
+            void removeEventsFromOwner(std::shared_ptr<EventOwner> owner);
 
         protected:
             /**

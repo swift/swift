@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/UserTuneConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -20,8 +21,8 @@ UserTuneConvertor::UserTuneConvertor() :
 UserTuneConvertor::~UserTuneConvertor() {
 }
 
-boost::shared_ptr<UserTune> UserTuneConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<UserTune> result = boost::make_shared<UserTune>();
+std::shared_ptr<UserTune> UserTuneConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<UserTune> result = std::make_shared<UserTune>();
     lua_getfield(L, -1, "rating");
     if (lua_isnumber(L, -1)) {
         result->setRating(boost::numeric_cast<unsigned int>(lua_tonumber(L, -1)));
@@ -60,7 +61,7 @@ boost::shared_ptr<UserTune> UserTuneConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void UserTuneConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<UserTune> payload) {
+void UserTuneConvertor::doConvertToLua(lua_State* L, std::shared_ptr<UserTune> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getRating()) {
         lua_pushnumber(L, (*payload->getRating()));

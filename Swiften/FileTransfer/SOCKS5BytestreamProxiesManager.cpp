@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,8 +13,9 @@
 
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -67,13 +68,13 @@ void SOCKS5BytestreamProxiesManager::connectToProxies(const std::string& session
 
     if (localS5BProxies_) {
         foreach(S5BProxyRequest::ref proxy, localS5BProxies_.get()) {
-            boost::shared_ptr<Connection> conn = connectionFactory_->createConnection();
+            std::shared_ptr<Connection> conn = connectionFactory_->createConnection();
 
             HostAddressPort addressPort = HostAddressPort(proxy->getStreamHost().get().host, proxy->getStreamHost().get().port);
             SWIFT_LOG_ASSERT(addressPort.isValid(), warning) << std::endl;
-            boost::shared_ptr<SOCKS5BytestreamClientSession> session = boost::make_shared<SOCKS5BytestreamClientSession>(conn, addressPort, sessionID, timerFactory_);
+            std::shared_ptr<SOCKS5BytestreamClientSession> session = std::make_shared<SOCKS5BytestreamClientSession>(conn, addressPort, sessionID, timerFactory_);
             JID proxyJid = proxy->getStreamHost().get().jid;
-            clientSessions.push_back(std::pair<JID, boost::shared_ptr<SOCKS5BytestreamClientSession> >(proxyJid, session));
+            clientSessions.push_back(std::pair<JID, std::shared_ptr<SOCKS5BytestreamClientSession> >(proxyJid, session));
             session->onSessionReady.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this,sessionID, proxyJid, session, _1));
             session->onFinished.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, sessionID, proxyJid, session, _1));
             session->start();
@@ -83,14 +84,14 @@ void SOCKS5BytestreamProxiesManager::connectToProxies(const std::string& session
     proxySessions_[sessionID] = clientSessions;
 }
 
-boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::getProxySessionAndCloseOthers(const JID& proxyJID, const std::string& sessionID) {
+std::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::getProxySessionAndCloseOthers(const JID& proxyJID, const std::string& sessionID) {
     // checking parameters
     if (proxySessions_.find(sessionID) == proxySessions_.end()) {
-        return boost::shared_ptr<SOCKS5BytestreamClientSession>();
+        return std::shared_ptr<SOCKS5BytestreamClientSession>();
     }
 
     // get active session
-    boost::shared_ptr<SOCKS5BytestreamClientSession> activeSession;
+    std::shared_ptr<SOCKS5BytestreamClientSession> activeSession;
     for (ProxyJIDClientSessionVector::iterator i = proxySessions_[sessionID].begin(); i != proxySessions_[sessionID].end(); i++) {
         i->second->onSessionReady.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this,sessionID, proxyJID, i->second, _1));
         i->second->onFinished.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, sessionID, proxyJID, i->second, _1));
@@ -107,8 +108,8 @@ boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager:
     return activeSession;
 }
 
-boost::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr) {
-    SOCKS5BytestreamClientSession::ref connection = boost::make_shared<SOCKS5BytestreamClientSession>(connectionFactory_->createConnection(), addressPort, destAddr, timerFactory_);
+std::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr) {
+    SOCKS5BytestreamClientSession::ref connection = std::make_shared<SOCKS5BytestreamClientSession>(connectionFactory_->createConnection(), addressPort, destAddr, timerFactory_);
     return connection;
 }
 
@@ -146,7 +147,7 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
             // generate proxy per returned address
             foreach (const HostAddress& address, addresses) {
                 S5BProxyRequest::StreamHost streamHost = proxy->getStreamHost().get();
-                S5BProxyRequest::ref proxyForAddress = boost::make_shared<S5BProxyRequest>(*proxy);
+                S5BProxyRequest::ref proxyForAddress = std::make_shared<S5BProxyRequest>(*proxy);
                 streamHost.host = address.toString();
                 proxyForAddress->setStreamHost(streamHost);
                 addS5BProxy(proxyForAddress);
@@ -157,13 +158,13 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
 }
 
 void SOCKS5BytestreamProxiesManager::queryForProxies() {
-    proxyFinder_ = boost::make_shared<SOCKS5BytestreamProxyFinder>(serviceRoot_, iqRouter_);
+    proxyFinder_ = std::make_shared<SOCKS5BytestreamProxyFinder>(serviceRoot_, iqRouter_);
 
     proxyFinder_->onProxiesFound.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxiesFound, this, _1));
     proxyFinder_->start();
 }
 
-void SOCKS5BytestreamProxiesManager::handleProxySessionReady(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, bool error) {
+void SOCKS5BytestreamProxiesManager::handleProxySessionReady(const std::string& sessionID, const JID& jid, std::shared_ptr<SOCKS5BytestreamClientSession> session, bool error) {
     session->onSessionReady.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this, boost::cref(sessionID), boost::cref(jid), session, _1));
     if (!error) {
         // The SOCKS5 bytestream session to the proxy succeeded; stop and remove other sessions.
@@ -181,7 +182,7 @@ void SOCKS5BytestreamProxiesManager::handleProxySessionReady(const std::string& 
     }
 }
 
-void SOCKS5BytestreamProxiesManager::handleProxySessionFinished(const std::string& sessionID, const JID& jid, boost::shared_ptr<SOCKS5BytestreamClientSession> session, boost::optional<FileTransferError> error) {
+void SOCKS5BytestreamProxiesManager::handleProxySessionFinished(const std::string& sessionID, const JID& jid, std::shared_ptr<SOCKS5BytestreamClientSession> session, boost::optional<FileTransferError> error) {
     session->onFinished.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, sessionID, jid, session, _1));
     if (error.is_initialized()) {
         // The SOCKS5 bytestream session to the proxy failed; remove it.

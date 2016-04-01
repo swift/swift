@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -70,7 +70,7 @@ DiscoInfo::ref FeatureOracle::getDiscoResultForJID(const JID& jid) {
                 }
             }
         }
-        discoInfo = boost::make_shared<DiscoInfo>();
+        discoInfo = std::make_shared<DiscoInfo>();
 
         foreach(const std::string& commonFeature, commonFeatures) {
             discoInfo->addFeature(commonFeature);

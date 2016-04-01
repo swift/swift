@@ -9,7 +9,7 @@
 #include <map>
 #include <string>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/Log.h>
 
@@ -35,12 +35,12 @@ namespace Swift {
 
 class NotificationCenterNotifier::Private {
     public:
-        std::map<std::string, boost::shared_ptr<Context> > callbacksForNotifications;
+        std::map<std::string, std::shared_ptr<Context> > callbacksForNotifications;
         boost::intrusive_ptr<NotificationCenterNotifierDelegate> delegate;
 };
 
 NotificationCenterNotifier::NotificationCenterNotifier() {
-    p = boost::make_shared<Private>();
+    p = std::make_shared<Private>();
     p->delegate = boost::intrusive_ptr<NotificationCenterNotifierDelegate>([[NotificationCenterNotifierDelegate alloc] init], false);
     [p->delegate.get() setNotifier: this];
 
@@ -73,7 +73,7 @@ void NotificationCenterNotifier::showMessage(Type type, const std::string& subje
     /// \todo Currently the elements are only removed on application exit. Ideally the notifications not required anymore
     ///       are removed from the map; e.g. when visiting a chat view, all notifications from that view can be removed from
     ///       the map and the NSUserNotificationCenter.
-    p->callbacksForNotifications[ns2StdString(notification.identifier)] = boost::make_shared<Context>(callback);
+    p->callbacksForNotifications[ns2StdString(notification.identifier)] = std::make_shared<Context>(callback);
     [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
     [notification release];
 }

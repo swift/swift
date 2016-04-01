@@ -14,8 +14,7 @@
 #pragma once
 
 #include <map>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/JID/JID.h>
 #include <Swiften/Whiteboard/IncomingWhiteboardSession.h>
@@ -43,7 +42,7 @@ namespace Swift {
         boost::signal< void (const JID&)> onRequestRejected;
 
     private:
-        void handleUIEvent(boost::shared_ptr<UIEvent> event);
+        void handleUIEvent(std::shared_ptr<UIEvent> event);
         void handleSessionTerminate(const JID& contact);
         void handleSessionCancel(const JID& contact);
         void handleSessionAccept(const JID& contact);

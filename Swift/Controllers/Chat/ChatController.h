@@ -30,10 +30,10 @@ namespace Swift {
 
     class ChatController : public ChatControllerBase {
         public:
-            ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
             virtual ~ChatController();
             virtual void setToJID(const JID& jid) SWIFTEN_OVERRIDE;
-            virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
+            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
             virtual void setOnline(bool online) SWIFTEN_OVERRIDE;
             virtual void handleNewFileTransferController(FileTransferController* ftc);
             virtual void handleWhiteboardSessionRequest(bool senderIsSelf);
@@ -47,17 +47,17 @@ namespace Swift {
             virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
 
         private:
-            void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
-            std::string getStatusChangeString(boost::shared_ptr<Presence> presence);
-            virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
-            virtual void postSendMessage(const std::string &body, boost::shared_ptr<Stanza> sentStanza) SWIFTEN_OVERRIDE;
-            virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) SWIFTEN_OVERRIDE;
-            virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
-            virtual void preSendMessageRequest(boost::shared_ptr<Message>) SWIFTEN_OVERRIDE;
+            void handlePresenceChange(std::shared_ptr<Presence> newPresence);
+            std::string getStatusChangeString(std::shared_ptr<Presence> presence);
+            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+            virtual void postSendMessage(const std::string &body, std::shared_ptr<Stanza> sentStanza) SWIFTEN_OVERRIDE;
+            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) SWIFTEN_OVERRIDE;
+            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
+            virtual void preSendMessageRequest(std::shared_ptr<Message>) SWIFTEN_OVERRIDE;
             virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
             virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
-            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const SWIFTEN_OVERRIDE;
-            void handleStanzaAcked(boost::shared_ptr<Stanza> stanza);
+            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message>) const SWIFTEN_OVERRIDE;
+            void handleStanzaAcked(std::shared_ptr<Stanza> stanza);
             virtual void dayTicked() SWIFTEN_OVERRIDE { lastWasPresence_ = false; }
             void handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/);
             virtual void handleBareJIDCapsChanged(const JID& jid) SWIFTEN_OVERRIDE;
@@ -82,7 +82,7 @@ namespace Swift {
 
             void handleWindowClosed();
 
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
 
         private:
             NickResolver* nickResolver_;
@@ -92,7 +92,7 @@ namespace Swift {
             bool isInMUC_;
             bool lastWasPresence_;
             std::string lastStatusChangeString_;
-            std::map<boost::shared_ptr<Stanza>, std::string> unackedStanzas_;
+            std::map<std::shared_ptr<Stanza>, std::string> unackedStanzas_;
             std::map<std::string, std::string> requestedReceipts_;
             StatusShow::Type lastShownStatus_;
             UIEventStream* eventStream_;

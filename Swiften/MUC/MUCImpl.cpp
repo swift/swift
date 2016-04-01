@@ -6,9 +6,9 @@
 
 #include <Swiften/MUC/MUCImpl.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Client/StanzaChannel.h>
@@ -92,10 +92,10 @@ void MUCImpl::internalJoin(const std::string &nick) {
 
     ownMUCJID = JID(ownMUCJID.getNode(), ownMUCJID.getDomain(), nick);
 
-    Presence::ref joinPresence = presenceSender->getLastSentUndirectedPresence() ? (*presenceSender->getLastSentUndirectedPresence())->clone() : boost::make_shared<Presence>();
+    Presence::ref joinPresence = presenceSender->getLastSentUndirectedPresence() ? (*presenceSender->getLastSentUndirectedPresence())->clone() : std::make_shared<Presence>();
     assert(joinPresence->getType() == Presence::Available);
     joinPresence->setTo(ownMUCJID);
-    MUCPayload::ref mucPayload = boost::make_shared<MUCPayload>();
+    MUCPayload::ref mucPayload = std::make_shared<MUCPayload>();
     if (joinSince_ != boost::posix_time::not_a_date_time) {
         mucPayload->setSince(joinSince_);
     }
@@ -108,7 +108,7 @@ void MUCImpl::internalJoin(const std::string &nick) {
 }
 
 void MUCImpl::changeNickname(const std::string& newNickname) {
-    Presence::ref changeNicknamePresence = boost::make_shared<Presence>();
+    Presence::ref changeNicknamePresence = std::make_shared<Presence>();
     changeNicknamePresence->setTo(ownMUCJID.toBare().toString() + std::string("/") + newNickname);
     presenceSender->sendPresence(changeNicknamePresence);
 }
@@ -157,7 +157,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
             presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
             if (presenceSender->getLastSentUndirectedPresence() && !isEqualExceptID(**(presenceSender->getLastSentUndirectedPresence()), *joinRequestPresence_)) {
                 // our presence changed between join request and join complete, send current presence to MUC
-                Presence::ref latestPresence = boost::make_shared<Presence>(**presenceSender->getLastSentUndirectedPresence());
+                Presence::ref latestPresence = std::make_shared<Presence>(**presenceSender->getLastSentUndirectedPresence());
                 latestPresence->setTo(ownMUCJID);
                 presenceSender->sendPresence(latestPresence);
             }
@@ -185,7 +185,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
         LeavingType type = LeavePart;
         boost::optional<std::string> newNickname;
         if (mucPayload) {
-            if (boost::dynamic_pointer_cast<MUCDestroyPayload>(mucPayload->getPayload())) {
+            if (std::dynamic_pointer_cast<MUCDestroyPayload>(mucPayload->getPayload())) {
                 type = LeaveDestroy;
             }
             else foreach (MUCUserPayload::StatusCode status, mucPayload->getStatusCodes()) {
@@ -285,8 +285,8 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
                     // Accept default room configuration and create an instant room http://xmpp.org/extensions/xep-0045.html#createroom-instant
                     MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
                     presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-                    mucPayload->setPayload(boost::make_shared<Form>(Form::SubmitType));
-                    boost::shared_ptr< GenericRequest<MUCOwnerPayload> > request = boost::make_shared< GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+                    mucPayload->setPayload(std::make_shared<Form>(Form::SubmitType));
+                    std::shared_ptr< GenericRequest<MUCOwnerPayload> > request = std::make_shared< GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
                     request->onResponse.connect(boost::bind(&MUCImpl::handleCreationConfigResponse, this, _1, _2));
                     request->send();
                 }
@@ -330,12 +330,12 @@ void MUCImpl::kickOccupant(const JID& jid) {
  * Call with the room JID, not the real JID.
  */
 void MUCImpl::changeOccupantRole(const JID& jid, MUCOccupant::Role role) {
-    MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
+    MUCAdminPayload::ref mucPayload = std::make_shared<MUCAdminPayload>();
     MUCItem item;
     item.role = role;
     item.nick = jid.getResource();
     mucPayload->addItem(item);
-    boost::shared_ptr<GenericRequest<MUCAdminPayload> > request = boost::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+    std::shared_ptr<GenericRequest<MUCAdminPayload> > request = std::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MUCImpl::handleOccupantRoleChangeResponse, this, _1, _2, jid, role));
     request->send();
 
@@ -348,11 +348,11 @@ void MUCImpl::handleOccupantRoleChangeResponse(MUCAdminPayload::ref /*unused*/, 
 }
 
 void MUCImpl::requestAffiliationList(MUCOccupant::Affiliation affiliation) {
-    MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
+    MUCAdminPayload::ref mucPayload = std::make_shared<MUCAdminPayload>();
     MUCItem item;
     item.affiliation = affiliation;
     mucPayload->addItem(item);
-    boost::shared_ptr<GenericRequest<MUCAdminPayload> > request = boost::make_shared< GenericRequest<MUCAdminPayload> >(IQ::Get, getJID(), mucPayload, iqRouter_);
+    std::shared_ptr<GenericRequest<MUCAdminPayload> > request = std::make_shared< GenericRequest<MUCAdminPayload> >(IQ::Get, getJID(), mucPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MUCImpl::handleAffiliationListResponse, this, _1, _2, affiliation));
     request->send();
 }
@@ -361,12 +361,12 @@ void MUCImpl::requestAffiliationList(MUCOccupant::Affiliation affiliation) {
  * Must be called with the real JID, not the room JID.
  */
 void MUCImpl::changeAffiliation(const JID& jid, MUCOccupant::Affiliation affiliation) {
-    MUCAdminPayload::ref mucPayload = boost::make_shared<MUCAdminPayload>();
+    MUCAdminPayload::ref mucPayload = std::make_shared<MUCAdminPayload>();
     MUCItem item;
     item.affiliation = affiliation;
     item.realJID = jid.toBare();
     mucPayload->addItem(item);
-    boost::shared_ptr<GenericRequest<MUCAdminPayload> > request = boost::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+    std::shared_ptr<GenericRequest<MUCAdminPayload> > request = std::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MUCImpl::handleAffiliationChangeResponse, this, _1, _2, jid, affiliation));
     request->send();
 }
@@ -393,7 +393,7 @@ void MUCImpl::handleAffiliationChangeResponse(MUCAdminPayload::ref /*unused*/, E
 }
 
 void MUCImpl::changeSubject(const std::string& subject) {
-    Message::ref message = boost::make_shared<Message>();
+    Message::ref message = std::make_shared<Message>();
     message->setSubject(subject);
     message->setType(Message::Groupchat);
     message->setTo(ownMUCJID.toBare());
@@ -402,15 +402,15 @@ void MUCImpl::changeSubject(const std::string& subject) {
 
 void MUCImpl::requestConfigurationForm() {
     MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
-    boost::shared_ptr<GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Get, getJID(), mucPayload, iqRouter_);
+    std::shared_ptr<GenericRequest<MUCOwnerPayload> > request = std::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Get, getJID(), mucPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MUCImpl::handleConfigurationFormReceived, this, _1, _2));
     request->send();
 }
 
 void MUCImpl::cancelConfigureRoom() {
     MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
-    mucPayload->setPayload(boost::make_shared<Form>(Form::CancelType));
-    boost::shared_ptr<GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+    mucPayload->setPayload(std::make_shared<Form>(Form::CancelType));
+    std::shared_ptr<GenericRequest<MUCOwnerPayload> > request = std::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
     request->send();
 }
 
@@ -435,7 +435,7 @@ void MUCImpl::handleConfigurationResultReceived(MUCOwnerPayload::ref /*payload*/
 void MUCImpl::configureRoom(Form::ref form) {
     MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
     mucPayload->setPayload(form);
-    boost::shared_ptr<GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+    std::shared_ptr<GenericRequest<MUCOwnerPayload> > request = std::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
     if (unlocking) {
         request->onResponse.connect(boost::bind(&MUCImpl::handleCreationConfigResponse, this, _1, _2));
     }
@@ -446,19 +446,19 @@ void MUCImpl::configureRoom(Form::ref form) {
 }
 
 void MUCImpl::destroyRoom() {
-    MUCOwnerPayload::ref mucPayload = boost::make_shared<MUCOwnerPayload>();
-    MUCDestroyPayload::ref mucDestroyPayload = boost::make_shared<MUCDestroyPayload>();
+    MUCOwnerPayload::ref mucPayload = std::make_shared<MUCOwnerPayload>();
+    MUCDestroyPayload::ref mucDestroyPayload = std::make_shared<MUCDestroyPayload>();
     mucPayload->setPayload(mucDestroyPayload);
-    boost::shared_ptr< GenericRequest<MUCOwnerPayload> > request = boost::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+    std::shared_ptr< GenericRequest<MUCOwnerPayload> > request = std::make_shared<GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MUCImpl::handleConfigurationResultReceived, this, _1, _2));
     request->send();
 }
 
 void MUCImpl::invitePerson(const JID& person, const std::string& reason, bool isImpromptu, bool isReuseChat) {
-    Message::ref message = boost::make_shared<Message>();
+    Message::ref message = std::make_shared<Message>();
     message->setTo(person);
     message->setType(Message::Normal);
-    MUCInvitationPayload::ref invite = boost::make_shared<MUCInvitationPayload>();
+    MUCInvitationPayload::ref invite = std::make_shared<MUCInvitationPayload>();
     invite->setReason(reason);
     invite->setJID(ownMUCJID.toBare());
     invite->setIsImpromptu(isImpromptu);

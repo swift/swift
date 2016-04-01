@@ -5,10 +5,10 @@
  */
 
 #include <iostream>
+#include <memory>
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -82,7 +82,7 @@ class FileReceiver {
         void handleIncomingFileTransfer(IncomingFileTransfer::ref transfer) {
             SWIFT_LOG(debug) << "foo" << std::endl;
             incomingFileTransfers.push_back(transfer);
-            boost::shared_ptr<FileWriteBytestream> out = boost::make_shared<FileWriteBytestream>("out");
+            std::shared_ptr<FileWriteBytestream> out = std::make_shared<FileWriteBytestream>("out");
             transfer->onFinished.connect(boost::bind(&FileReceiver::handleFileTransferFinished, this, _1, out));
             transfer->accept(out);
         }
@@ -94,7 +94,7 @@ class FileReceiver {
 
         void handleFileTransferFinished(
                 const boost::optional<FileTransferError>& error,
-                boost::shared_ptr<FileWriteBytestream> out) {
+                std::shared_ptr<FileWriteBytestream> out) {
             std::cout << "File transfer finished" << std::endl;
             out->close();
             if (error) {

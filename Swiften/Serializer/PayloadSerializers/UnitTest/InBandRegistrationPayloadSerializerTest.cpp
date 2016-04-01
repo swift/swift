@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -22,7 +22,7 @@ class InBandRegistrationPayloadSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize() {
             InBandRegistrationPayloadSerializer testling;
-            boost::shared_ptr<InBandRegistrationPayload> registration(new InBandRegistrationPayload());
+            std::shared_ptr<InBandRegistrationPayload> registration(new InBandRegistrationPayload());
             registration->setRegistered(true);
 
             std::string expectedResult =
@@ -34,13 +34,13 @@ class InBandRegistrationPayloadSerializerTest : public CppUnit::TestFixture {
         }
         void testSerialize_Form() {
             InBandRegistrationPayloadSerializer testling;
-            boost::shared_ptr<InBandRegistrationPayload> registration(new InBandRegistrationPayload());
+            std::shared_ptr<InBandRegistrationPayload> registration(new InBandRegistrationPayload());
             registration->setInstructions("Use the enclosed form to register.");
 
-            boost::shared_ptr<Form> form(new Form(Form::FormType));
+            std::shared_ptr<Form> form(new Form(Form::FormType));
             form->setTitle("Contest Registration");
 
-            FormField::ref field = boost::make_shared<FormField>(FormField::HiddenType, "jabber:iq:register");
+            FormField::ref field = std::make_shared<FormField>(FormField::HiddenType, "jabber:iq:register");
             field->setName("FORM_TYPE");
             form->addField(field);
             registration->setForm(form);

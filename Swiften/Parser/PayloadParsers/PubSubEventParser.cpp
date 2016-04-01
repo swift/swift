@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,22 +33,22 @@ void PubSubEventParser::handleStartElement(const std::string& element, const std
 
     if (level == 1) {
         if (element == "items" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventItemsParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventItemsParser>(parsers);
         }
         if (element == "collection" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventCollectionParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventCollectionParser>(parsers);
         }
         if (element == "purge" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventPurgeParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventPurgeParser>(parsers);
         }
         if (element == "configuration" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventConfigurationParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventConfigurationParser>(parsers);
         }
         if (element == "delete" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventDeleteParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventDeleteParser>(parsers);
         }
         if (element == "subscription" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventSubscriptionParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventSubscriptionParser>(parsers);
         }
     }
 
@@ -67,7 +67,7 @@ void PubSubEventParser::handleEndElement(const std::string& element, const std::
 
         if (level == 1) {
             if (currentPayloadParser) {
-                getPayloadInternal()->setPayload(boost::dynamic_pointer_cast<PubSubEventPayload>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setPayload(std::dynamic_pointer_cast<PubSubEventPayload>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

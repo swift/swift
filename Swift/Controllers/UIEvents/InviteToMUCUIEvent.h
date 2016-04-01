@@ -12,9 +12,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/JID/JID.h>
 
@@ -23,7 +22,7 @@
 namespace Swift {
     class InviteToMUCUIEvent : public UIEvent {
         public:
-            typedef boost::shared_ptr<InviteToMUCUIEvent> ref;
+            typedef std::shared_ptr<InviteToMUCUIEvent> ref;
 
             InviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite, const std::string& reason) : room_(room), invite_(JIDsToInvite), reason_(reason) {
             }

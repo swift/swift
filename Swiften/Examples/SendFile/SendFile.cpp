@@ -67,7 +67,7 @@ class FileSender {
         void handleCapsChanged(JID jid) {
             if (jid.toBare() == recipient) {
                 // create ReadBytestream from file
-                boost::shared_ptr<FileReadBytestream> fileStream = boost::make_shared<FileReadBytestream>(file);
+                std::shared_ptr<FileReadBytestream> fileStream = std::make_shared<FileReadBytestream>(file);
 
                 outgoingFileTransfer = client->getFileTransferManager()->createOutgoingFileTransfer(recipient, file, "Some File!", fileStream);
 

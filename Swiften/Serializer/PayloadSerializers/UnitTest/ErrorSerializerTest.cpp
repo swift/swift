@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -24,15 +24,15 @@ class ErrorSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize() {
             ErrorSerializer testling(&serializers);
-            boost::shared_ptr<ErrorPayload> error(new ErrorPayload(ErrorPayload::BadRequest, ErrorPayload::Cancel, "My Error"));
+            std::shared_ptr<ErrorPayload> error(new ErrorPayload(ErrorPayload::BadRequest, ErrorPayload::Cancel, "My Error"));
 
             CPPUNIT_ASSERT_EQUAL(std::string("<error type=\"cancel\"><bad-request xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><text xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\">My Error</text></error>"), testling.serialize(error));
         }
 
         void testSerialize_Payload() {
             ErrorSerializer testling(&serializers);
-            boost::shared_ptr<ErrorPayload> error = boost::make_shared<ErrorPayload>();
-            error->setPayload(boost::make_shared<Delay>());
+            std::shared_ptr<ErrorPayload> error = std::make_shared<ErrorPayload>();
+            error->setPayload(std::make_shared<Delay>());
 
             CPPUNIT_ASSERT_EQUAL(std::string(
                     "<error type=\"cancel\"><undefined-condition xmlns=\"urn:ietf:params:xml:ns:xmpp-stanzas\"/><delay stamp=\"not-a-date-timeZ\" xmlns=\"urn:xmpp:delay\"/></error>"

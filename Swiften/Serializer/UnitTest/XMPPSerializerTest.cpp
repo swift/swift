@@ -31,7 +31,7 @@ class XMPPSerializerTest : public CppUnit::TestFixture {
         }
 
         void testSerializeHeader_Client() {
-            boost::shared_ptr<XMPPSerializer> testling(createSerializer(ClientStreamType));
+            std::shared_ptr<XMPPSerializer> testling(createSerializer(ClientStreamType));
             ProtocolHeader protocolHeader;
             protocolHeader.setFrom("bla@foo.com");
             protocolHeader.setTo("foo.com");
@@ -42,7 +42,7 @@ class XMPPSerializerTest : public CppUnit::TestFixture {
         }
 
         void testSerializeHeader_Component() {
-            boost::shared_ptr<XMPPSerializer> testling(createSerializer(ComponentStreamType));
+            std::shared_ptr<XMPPSerializer> testling(createSerializer(ComponentStreamType));
             ProtocolHeader protocolHeader;
             protocolHeader.setFrom("bla@foo.com");
             protocolHeader.setTo("foo.com");
@@ -53,7 +53,7 @@ class XMPPSerializerTest : public CppUnit::TestFixture {
         }
 
         void testSerializeHeader_Server() {
-            boost::shared_ptr<XMPPSerializer> testling(createSerializer(ServerStreamType));
+            std::shared_ptr<XMPPSerializer> testling(createSerializer(ServerStreamType));
             ProtocolHeader protocolHeader;
             protocolHeader.setFrom("bla@foo.com");
             protocolHeader.setTo("foo.com");

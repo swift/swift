@@ -10,8 +10,8 @@
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
+#include <memory>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/String.h>
@@ -328,7 +328,7 @@ void MainController::resetPendingReconnects() {
 void MainController::resetCurrentError() {
     if (lastDisconnectError_) {
         lastDisconnectError_->conclude();
-        lastDisconnectError_ = boost::shared_ptr<ErrorEvent>();
+        lastDisconnectError_ = std::shared_ptr<ErrorEvent>();
     }
 }
 
@@ -447,7 +447,7 @@ void MainController::reconnectAfterError() {
 }
 
 void MainController::handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText) {
-    boost::shared_ptr<Presence> presence(new Presence());
+    std::shared_ptr<Presence> presence(new Presence());
     if (show == StatusShow::None) {
         // Note: this is misleading, None doesn't mean unavailable on the wire.
         presence->setType(Presence::Unavailable);
@@ -472,14 +472,14 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const std:
     }
 }
 
-void MainController::sendPresence(boost::shared_ptr<Presence> presence) {
+void MainController::sendPresence(std::shared_ptr<Presence> presence) {
     rosterController_->getWindow()->setMyStatusType(presence->getShow());
     rosterController_->getWindow()->setMyStatusText(presence->getStatus());
     systemTrayController_->setMyStatusType(presence->getShow());
     notifier_->setTemporarilyDisabled(presence->getShow() == StatusShow::DND);
 
     // Add information and send
-    presence->updatePayload(boost::make_shared<VCardUpdate>(vCardPhotoHash_));
+    presence->updatePayload(std::make_shared<VCardUpdate>(vCardPhotoHash_));
     client_->getPresenceSender()->sendPresence(presence);
     if (presence->getType() == Presence::Unavailable) {
         logout();
@@ -533,7 +533,7 @@ void MainController::handleLoginRequest(const std::string &username, const std::
             std::string userName;
             std::string clientName;
             std::string serverName;
-            boost::shared_ptr<boost::system::error_code> errorCode = getUserNameEx(userName, clientName, serverName);
+            std::shared_ptr<boost::system::error_code> errorCode = getUserNameEx(userName, clientName, serverName);
 
             if (!errorCode) {
                 /* Create JID using the Windows logon name and user provided domain name */
@@ -593,7 +593,7 @@ void MainController::performLoginFromCachedCredentials() {
         certificateStorage_ = certificateStorageFactory_->createCertificateStorage(jid_.toBare());
         certificateTrustChecker_ = new CertificateStorageTrustChecker(certificateStorage_);
 
-        client_ = boost::make_shared<Swift::Client>(clientJID, createSafeByteArray(password_.c_str()), networkFactories_, storages_);
+        client_ = std::make_shared<Swift::Client>(clientJID, createSafeByteArray(password_.c_str()), networkFactories_, storages_);
         clientInitialized_ = true;
         client_->setCertificateTrustChecker(certificateTrustChecker_);
         client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
@@ -611,7 +611,7 @@ void MainController::performLoginFromCachedCredentials() {
         if (certificate_) {
             client_->setCertificate(certificate_);
         }
-        boost::shared_ptr<Presence> presence(new Presence());
+        std::shared_ptr<Presence> presence(new Presence());
         presence->setShow(static_cast<StatusShow::Type>(profileSettings_->getIntSetting("lastShow", StatusShow::Online)));
         presence->setStatus(profileSettings_->getStringSetting("lastStatus"));
         statusTracker_->setRequestedPresence(presence);
@@ -725,7 +725,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
                 } else {
                     message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%.")) % jid_.getDomain() % message);
                 }
-                lastDisconnectError_ = boost::make_shared<ErrorEvent>(JID(jid_.getDomain()), message);
+                lastDisconnectError_ = std::make_shared<ErrorEvent>(JID(jid_.getDomain()), message);
                 eventController_->handleIncomingEvent(lastDisconnectError_);
             }
         }
@@ -794,7 +794,7 @@ void MainController::setManagersOffline() {
     }
 }
 
-void MainController::handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error) {
+void MainController::handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> info, ErrorPayload::ref error) {
     if (!error) {
         chatsManager_->setServerDiscoInfo(info);
         adHocManager_->setServerDiscoInfo(info);
@@ -825,10 +825,10 @@ void MainController::handleNotificationClicked(const JID& jid) {
     assert(chatsManager_);
     if (clientInitialized_) {
         if (client_->getMUCRegistry()->isMUC(jid)) {
-            uiEventStream_->send(boost::make_shared<JoinMUCUIEvent>(jid));
+            uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(jid));
         }
         else {
-            uiEventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(jid)));
+            uiEventStream_->send(std::make_shared<RequestChatUIEvent>(jid));
         }
     }
 }

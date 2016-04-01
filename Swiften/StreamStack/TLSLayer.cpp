@@ -49,7 +49,7 @@ std::vector<Certificate::ref> TLSLayer::getPeerCertificateChain() const {
     return context->getPeerCertificateChain();
 }
 
-boost::shared_ptr<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
+std::shared_ptr<CertificateVerificationError> TLSLayer::getPeerCertificateVerificationError() const {
     return context->getPeerCertificateVerificationError();
 }
 

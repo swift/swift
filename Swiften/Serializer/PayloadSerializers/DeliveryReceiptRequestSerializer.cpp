@@ -20,7 +20,7 @@ namespace Swift {
 DeliveryReceiptRequestSerializer::DeliveryReceiptRequestSerializer() : GenericPayloadSerializer<DeliveryReceiptRequest>() {
 }
 
-std::string DeliveryReceiptRequestSerializer::serializePayload(boost::shared_ptr<DeliveryReceiptRequest> /* request*/) const {
+std::string DeliveryReceiptRequestSerializer::serializePayload(std::shared_ptr<DeliveryReceiptRequest> /* request*/) const {
     XMLElement requestXML("request", "urn:xmpp:receipts");
     return requestXML.serialize();
 }

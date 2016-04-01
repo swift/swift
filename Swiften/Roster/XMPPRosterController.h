@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -34,7 +33,7 @@ namespace Swift {
             }
 
         private:
-            void handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial, boost::shared_ptr<RosterPayload> previousRoster);
+            void handleRosterReceived(std::shared_ptr<RosterPayload> rosterPayload, bool initial, std::shared_ptr<RosterPayload> previousRoster);
             void saveRoster(const std::string& version);
 
         private:

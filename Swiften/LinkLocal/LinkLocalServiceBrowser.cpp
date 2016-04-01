@@ -15,7 +15,7 @@
 
 namespace Swift {
 
-LinkLocalServiceBrowser::LinkLocalServiceBrowser(boost::shared_ptr<DNSSDQuerier> querier) : querier(querier), haveError(false) {
+LinkLocalServiceBrowser::LinkLocalServiceBrowser(std::shared_ptr<DNSSDQuerier> querier) : querier(querier), haveError(false) {
 }
 
 LinkLocalServiceBrowser::~LinkLocalServiceBrowser() {
@@ -98,10 +98,10 @@ void LinkLocalServiceBrowser::handleServiceAdded(const DNSSDServiceID& service) 
         return;
     }
 
-    std::pair<ResolveQueryMap::iterator, bool> r = resolveQueries.insert(std::make_pair(service, boost::shared_ptr<DNSSDResolveServiceQuery>()));
+    std::pair<ResolveQueryMap::iterator, bool> r = resolveQueries.insert(std::make_pair(service, std::shared_ptr<DNSSDResolveServiceQuery>()));
     if (r.second) {
         // There was no existing query yet. Start a new query.
-        boost::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(service);
+        std::shared_ptr<DNSSDResolveServiceQuery> resolveQuery = querier->createResolveServiceQuery(service);
         resolveQuery->onServiceResolved.connect(
             boost::bind(&LinkLocalServiceBrowser::handleServiceResolved, this, service, _1));
         r.first->second = resolveQuery;

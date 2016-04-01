@@ -13,8 +13,7 @@
 #include <Swiften/Whiteboard/WhiteboardClient.h>
 
 #include <iostream>
-
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Whiteboard/WhiteboardTransformer.h>
 
@@ -23,17 +22,17 @@ namespace Swift {
         localOperations_.push_back(operation);
 
         WhiteboardOperation::ref op;
-        WhiteboardInsertOperation::ref insertOp = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
+        WhiteboardInsertOperation::ref insertOp = std::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
         if (insertOp) {
-            op = boost::make_shared<WhiteboardInsertOperation>(*insertOp);
+            op = std::make_shared<WhiteboardInsertOperation>(*insertOp);
         }
-        WhiteboardUpdateOperation::ref updateOp = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
+        WhiteboardUpdateOperation::ref updateOp = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
         if (updateOp) {
-            op = boost::make_shared<WhiteboardUpdateOperation>(*updateOp);
+            op = std::make_shared<WhiteboardUpdateOperation>(*updateOp);
         }
-        WhiteboardDeleteOperation::ref deleteOp = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(operation);
+        WhiteboardDeleteOperation::ref deleteOp = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(operation);
         if (deleteOp) {
-            op = boost::make_shared<WhiteboardDeleteOperation>(*deleteOp);
+            op = std::make_shared<WhiteboardDeleteOperation>(*deleteOp);
         }
 
         if (!bridge_.empty()) {
@@ -43,17 +42,17 @@ namespace Swift {
 
         if (lastSentOperationID_.empty())
         {
-            WhiteboardInsertOperation::ref insertOp = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
+            WhiteboardInsertOperation::ref insertOp = std::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
             if (insertOp) {
-                op = boost::make_shared<WhiteboardInsertOperation>(*insertOp);
+                op = std::make_shared<WhiteboardInsertOperation>(*insertOp);
             }
-            WhiteboardUpdateOperation::ref updateOp = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
+            WhiteboardUpdateOperation::ref updateOp = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
             if (updateOp) {
-                op = boost::make_shared<WhiteboardUpdateOperation>(*updateOp);
+                op = std::make_shared<WhiteboardUpdateOperation>(*updateOp);
             }
-            WhiteboardDeleteOperation::ref deleteOp = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(operation);
+            WhiteboardDeleteOperation::ref deleteOp = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(operation);
             if (deleteOp) {
-                op = boost::make_shared<WhiteboardDeleteOperation>(*deleteOp);
+                op = std::make_shared<WhiteboardDeleteOperation>(*deleteOp);
             }
 
 

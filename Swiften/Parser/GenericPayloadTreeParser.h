@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,7 @@
 #pragma once
 
 #include <deque>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
@@ -24,7 +22,7 @@ namespace Swift {
         public:
             virtual void handleStartElement(const std::string& element, const std::string& xmlns, const AttributeMap& attributes) {
                 if (!root_) {
-                    root_ = boost::make_shared<ParserElement>(element, xmlns, attributes);
+                    root_ = std::make_shared<ParserElement>(element, xmlns, attributes);
                     elementStack_.push_back(root_);
                 }
                 else {

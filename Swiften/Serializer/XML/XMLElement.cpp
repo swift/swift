@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,7 +30,7 @@ std::string XMLElement::serialize() {
 
     if (!childNodes_.empty()) {
         result += ">";
-        foreach (boost::shared_ptr<XMLNode> node, childNodes_) {
+        foreach (std::shared_ptr<XMLNode> node, childNodes_) {
             result += node->serialize();
         }
         result += "</" + tag_ + ">";
@@ -51,7 +51,7 @@ void XMLElement::setAttribute(const std::string& attribute, const std::string& v
     attributes_[attribute] = escapedValue;
 }
 
-void XMLElement::addNode(boost::shared_ptr<XMLNode> node) {
+void XMLElement::addNode(std::shared_ptr<XMLNode> node) {
     if (node) {
         childNodes_.push_back(node);
     }

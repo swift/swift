@@ -6,10 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -23,15 +22,15 @@ namespace Swift {
 
             virtual ~PubSubItem();
 
-            const std::vector< boost::shared_ptr<Payload> >& getData() const {
+            const std::vector< std::shared_ptr<Payload> >& getData() const {
                 return data;
             }
 
-            void setData(const std::vector< boost::shared_ptr<Payload> >& value) {
+            void setData(const std::vector< std::shared_ptr<Payload> >& value) {
                 this->data = value ;
             }
 
-            void addData(boost::shared_ptr<Payload> value) {
+            void addData(std::shared_ptr<Payload> value) {
                 this->data.push_back(value);
             }
 
@@ -45,7 +44,7 @@ namespace Swift {
 
 
         private:
-            std::vector< boost::shared_ptr<Payload> > data;
+            std::vector< std::shared_ptr<Payload> > data;
             std::string id;
     };
 }

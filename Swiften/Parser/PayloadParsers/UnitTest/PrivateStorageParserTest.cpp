@@ -36,9 +36,9 @@ class PrivateStorageParserTest : public CppUnit::TestFixture {
                     "</storage>"
                 "</query>"));
 
-            boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
+            std::shared_ptr<PrivateStorage> payload = std::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
             CPPUNIT_ASSERT(payload);
-            boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
+            std::shared_ptr<Storage> storage = std::dynamic_pointer_cast<Storage>(payload->getPayload());
             CPPUNIT_ASSERT(storage);
             CPPUNIT_ASSERT_EQUAL(std::string("Alice"), storage->getRooms()[0].nick);
             CPPUNIT_ASSERT_EQUAL(JID("swift@rooms.swift.im"), storage->getRooms()[0].jid);
@@ -49,7 +49,7 @@ class PrivateStorageParserTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT(parser.parse("<query xmlns='jabber:iq:private'/>"));
 
-            boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
+            std::shared_ptr<PrivateStorage> payload = std::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT(!payload->getPayload());
         }
@@ -71,9 +71,9 @@ class PrivateStorageParserTest : public CppUnit::TestFixture {
                     "</storage>"
                 "</query>"));
 
-            boost::shared_ptr<PrivateStorage> payload = boost::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
+            std::shared_ptr<PrivateStorage> payload = std::dynamic_pointer_cast<PrivateStorage>(parser.getPayload());
             CPPUNIT_ASSERT(payload);
-            boost::shared_ptr<Storage> storage = boost::dynamic_pointer_cast<Storage>(payload->getPayload());
+            std::shared_ptr<Storage> storage = std::dynamic_pointer_cast<Storage>(payload->getPayload());
             CPPUNIT_ASSERT(storage);
             CPPUNIT_ASSERT_EQUAL(std::string("Rabbit"), storage->getRooms()[0].nick);
         }
@@ -88,7 +88,7 @@ class PrivateStorageParserTest : public CppUnit::TestFixture {
                     "<foo>Bar</foo>"
                 "</query>"));
 
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<PrivateStorage>(testling.getPayload())->getPayload());
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<PrivateStorage>(testling.getPayload())->getPayload());
         }
 };
 

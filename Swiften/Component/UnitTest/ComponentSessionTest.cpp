@@ -30,13 +30,13 @@ class ComponentSessionTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            server = boost::make_shared<MockSessionStream>();
+            server = std::make_shared<MockSessionStream>();
             sessionFinishedReceived = false;
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         }
 
         void testStart() {
-            boost::shared_ptr<ComponentSession> session(createSession());
+            std::shared_ptr<ComponentSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -51,7 +51,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
         }
 
         void testStart_Error() {
-            boost::shared_ptr<ComponentSession> session(createSession());
+            std::shared_ptr<ComponentSession> session(createSession());
             session->start();
             server->breakConnection();
 
@@ -61,7 +61,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
         }
 
         void testStart_Unauthorized() {
-            boost::shared_ptr<ComponentSession> session(createSession());
+            std::shared_ptr<ComponentSession> session(createSession());
             session->start();
             server->receiveStreamStart();
             server->sendStreamStart();
@@ -74,13 +74,13 @@ class ComponentSessionTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<ComponentSession> createSession() {
-            boost::shared_ptr<ComponentSession> session = ComponentSession::create(JID("service.foo.com"), "servicesecret", server, crypto.get());
+        std::shared_ptr<ComponentSession> createSession() {
+            std::shared_ptr<ComponentSession> session = ComponentSession::create(JID("service.foo.com"), "servicesecret", server, crypto.get());
             session->onFinished.connect(boost::bind(&ComponentSessionTest::handleSessionFinished, this, _1));
             return session;
         }
 
-        void handleSessionFinished(boost::shared_ptr<Error> error) {
+        void handleSessionFinished(std::shared_ptr<Error> error) {
             sessionFinishedReceived = true;
             sessionFinishedError = error;
         }
@@ -88,11 +88,11 @@ class ComponentSessionTest : public CppUnit::TestFixture {
         class MockSessionStream : public SessionStream {
             public:
                 struct Event {
-                    Event(boost::shared_ptr<ToplevelElement> element) : element(element), footer(false) {}
+                    Event(std::shared_ptr<ToplevelElement> element) : element(element), footer(false) {}
                     Event(const ProtocolHeader& header) : header(header), footer(false) {}
                     Event() : footer(true) {}
 
-                    boost::shared_ptr<ToplevelElement> element;
+                    std::shared_ptr<ToplevelElement> element;
                     boost::optional<ProtocolHeader> header;
                     bool footer;
                 };
@@ -101,7 +101,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
                 }
 
                 virtual void close() {
-                    onClosed(boost::shared_ptr<Error>());
+                    onClosed(std::shared_ptr<Error>());
                 }
 
                 virtual bool isOpen() {
@@ -116,7 +116,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
                     receivedEvents.push_back(Event());
                 }
 
-                virtual void writeElement(boost::shared_ptr<ToplevelElement> element) {
+                virtual void writeElement(std::shared_ptr<ToplevelElement> element) {
                     receivedEvents.push_back(Event(element));
                 }
 
@@ -147,8 +147,8 @@ class ComponentSessionTest : public CppUnit::TestFixture {
                      return std::vector<Certificate::ref>();
                 }
 
-                virtual boost::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
-                    return boost::shared_ptr<CertificateVerificationError>();
+                virtual std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const {
+                    return std::shared_ptr<CertificateVerificationError>();
                 }
 
                 virtual bool supportsZLibCompression() {
@@ -168,7 +168,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
                 }
 
                 void breakConnection() {
-                    onClosed(boost::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::ConnectionReadError));
+                    onClosed(std::make_shared<SessionStream::SessionStreamError>(SessionStream::SessionStreamError::ConnectionReadError));
                 }
 
                 void sendStreamStart() {
@@ -194,7 +194,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
                 void receiveHandshake() {
                     Event event = popEvent();
                     CPPUNIT_ASSERT(event.element);
-                    ComponentHandshake::ref handshake(boost::dynamic_pointer_cast<ComponentHandshake>(event.element));
+                    ComponentHandshake::ref handshake(std::dynamic_pointer_cast<ComponentHandshake>(event.element));
                     CPPUNIT_ASSERT(handshake);
                     CPPUNIT_ASSERT_EQUAL(std::string("4c4f8a41141722c8bbfbdd92d827f7b2fc0a542b"), handshake->getData());
                 }
@@ -213,10 +213,10 @@ class ComponentSessionTest : public CppUnit::TestFixture {
                 std::deque<Event> receivedEvents;
         };
 
-        boost::shared_ptr<MockSessionStream> server;
+        std::shared_ptr<MockSessionStream> server;
         bool sessionFinishedReceived;
-        boost::shared_ptr<Error> sessionFinishedError;
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<Error> sessionFinishedError;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ComponentSessionTest);

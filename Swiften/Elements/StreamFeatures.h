@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -18,7 +18,7 @@
 namespace Swift {
     class SWIFTEN_API StreamFeatures : public ToplevelElement    {
         public:
-            typedef boost::shared_ptr<StreamFeatures> ref;
+            typedef std::shared_ptr<StreamFeatures> ref;
 
             StreamFeatures() : hasStartTLS_(false), hasResourceBind_(false), hasSession_(false), hasStreamManagement_(false), hasRosterVersioning_(false) {}
 

@@ -12,7 +12,7 @@
 
 #include <Swiften/Jingle/FakeJingleSession.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Jingle/JingleSessionListener.h>
 
@@ -33,7 +33,7 @@ void FakeJingleSession::sendTerminate(JinglePayload::Reason::Type reason) {
     calledCommands.push_back(TerminateCall(reason));
 }
 
-void FakeJingleSession::sendInfo(boost::shared_ptr<Payload> payload) {
+void FakeJingleSession::sendInfo(std::shared_ptr<Payload> payload) {
     calledCommands.push_back(InfoCall(payload));
 }
 
@@ -74,7 +74,7 @@ void FakeJingleSession::handleSessionTerminateReceived(boost::optional<JinglePay
     notifyListeners(&JingleSessionListener::handleSessionTerminateReceived, reason);
 }
 
-void FakeJingleSession::handleSessionAcceptReceived(const JingleContentID& contentID, boost::shared_ptr<JingleDescription> desc, boost::shared_ptr<JingleTransportPayload> payload) {
+void FakeJingleSession::handleSessionAcceptReceived(const JingleContentID& contentID, std::shared_ptr<JingleDescription> desc, std::shared_ptr<JingleTransportPayload> payload) {
     notifyListeners(&JingleSessionListener::handleSessionAcceptReceived, contentID, desc, payload);
 }
 

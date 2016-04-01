@@ -5,9 +5,8 @@
  */
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -16,7 +15,7 @@ namespace Swift {
     class SWIFTEN_API FormText{
 
         public:
-            typedef boost::shared_ptr<FormText> text;
+            typedef std::shared_ptr<FormText> text;
             FormText();
             virtual ~FormText();
             void setTextString(const std::string& text);

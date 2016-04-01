@@ -25,7 +25,7 @@ Client* client_;
 SimpleEventLoop eventLoop_;
 int count = 0;
 
-void handleTick(boost::shared_ptr<BoostTimer> timer) {
+void handleTick(std::shared_ptr<BoostTimer> timer) {
     std::cout << "Count " << count++ << std::endl;
     if (timer) {
         timer->stop();
@@ -43,7 +43,7 @@ void handleTick(boost::shared_ptr<BoostTimer> timer) {
 
     int delay = 500;
 //    int delay = 0;
-    boost::shared_ptr<BoostTimer> newTimer(BoostTimer::create(delay, &MainBoostIOServiceThread::getInstance().getIOService()));
+    std::shared_ptr<BoostTimer> newTimer(BoostTimer::create(delay, &MainBoostIOServiceThread::getInstance().getIOService()));
     newTimer->onTick.connect(boost::bind(&handleTick, timer));
     newTimer->start();
 }
@@ -64,7 +64,7 @@ int main(int, char**) {
     std::string pass(passChars);
 
     client_ = new Swift::Client(jid, pass);
-    handleTick(boost::shared_ptr<BoostTimer>());
+    handleTick(std::shared_ptr<BoostTimer>());
     eventLoop_.run();
 
     delete client_;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,10 +7,9 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -57,13 +56,13 @@ namespace Swift {
             void setCanInitiateImpromptuMUC(bool supportsImpromptu);
 
         private:
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
             void handleFormRequested(const JID& service);
-            void handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info);
+            void handleDiscoServiceFound(const JID& jid, std::shared_ptr<DiscoInfo> info);
             void handleDiscoWalkFinished();
-            void handleFormResponse(boost::shared_ptr<SearchPayload> items, ErrorPayload::ref error);
-            void handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid);
-            void handleSearchResponse(boost::shared_ptr<SearchPayload> results, ErrorPayload::ref error);
+            void handleFormResponse(std::shared_ptr<SearchPayload> items, ErrorPayload::ref error);
+            void handleSearch(std::shared_ptr<SearchPayload> fields, const JID& jid);
+            void handleSearchResponse(std::shared_ptr<SearchPayload> results, ErrorPayload::ref error);
             void handleNameSuggestionRequest(const JID& jid);
             void handleContactSuggestionsRequested(std::string text);
             void handleVCardChanged(const JID& jid, VCard::ref vcard);

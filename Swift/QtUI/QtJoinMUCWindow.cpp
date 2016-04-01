@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtJoinMUCWindow.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <QToolTip>
 
@@ -49,7 +49,7 @@ void QtJoinMUCWindow::handleJoin() {
     lastSetNick = Q2PSTRING(ui.nickName->text());
     std::string password = Q2PSTRING(ui.password->text());
     JID room(Q2PSTRING(ui.room->text()));
-    uiEventStream->send(boost::make_shared<JoinMUCUIEvent>(room, password, lastSetNick, ui.joinAutomatically->isChecked(), !ui.instantRoom->isChecked()));
+    uiEventStream->send(std::make_shared<JoinMUCUIEvent>(room, password, lastSetNick, ui.joinAutomatically->isChecked(), !ui.instantRoom->isChecked()));
     hide();
 }
 

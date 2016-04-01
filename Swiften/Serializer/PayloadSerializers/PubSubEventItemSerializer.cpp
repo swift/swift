@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubEventItemSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
@@ -22,7 +22,7 @@ PubSubEventItemSerializer::PubSubEventItemSerializer(PayloadSerializerCollection
 PubSubEventItemSerializer::~PubSubEventItemSerializer() {
 }
 
-std::string PubSubEventItemSerializer::serializePayload(boost::shared_ptr<PubSubEventItem> payload) const {
+std::string PubSubEventItemSerializer::serializePayload(std::shared_ptr<PubSubEventItem> payload) const {
     if (!payload) {
         return "";
     }
@@ -33,8 +33,8 @@ std::string PubSubEventItemSerializer::serializePayload(boost::shared_ptr<PubSub
     if (payload->getPublisher()) {
         element.setAttribute("publisher", *payload->getPublisher());
     }
-    foreach(boost::shared_ptr<Payload> item, payload->getData()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(item)->serialize(item)));
+    foreach(std::shared_ptr<Payload> item, payload->getData()) {
+        element.addNode(std::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(item)->serialize(item)));
     }
     if (payload->getID()) {
         element.setAttribute("id", *payload->getID());

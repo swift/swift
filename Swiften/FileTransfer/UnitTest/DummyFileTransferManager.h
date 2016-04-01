@@ -33,7 +33,7 @@ namespace Swift {
                     const JID&,
                     const boost::filesystem::path&,
                     const std::string&,
-                    boost::shared_ptr<ReadBytestream>,
+                    std::shared_ptr<ReadBytestream>,
                     const FileTransferOptions&) SWIFTEN_OVERRIDE {
                 return OutgoingFileTransfer::ref();
             }
@@ -44,12 +44,12 @@ namespace Swift {
                     const std::string&,
                     const boost::uintmax_t,
                     const boost::posix_time::ptime&,
-                    boost::shared_ptr<ReadBytestream>,
+                    std::shared_ptr<ReadBytestream>,
                     const FileTransferOptions&) SWIFTEN_OVERRIDE {
                 return OutgoingFileTransfer::ref();
             }
 
-            virtual void addS5BProxy(boost::shared_ptr<S5BProxyRequest>) {
+            virtual void addS5BProxy(std::shared_ptr<S5BProxyRequest>) {
             }
 
     };

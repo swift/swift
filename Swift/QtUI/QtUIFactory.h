@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -48,10 +48,10 @@ namespace Swift {
             virtual ProfileWindow* createProfileWindow();
             virtual ContactEditWindow* createContactEditWindow();
             virtual FileTransferListWidget* createFileTransferListWidget();
-            virtual WhiteboardWindow* createWhiteboardWindow(boost::shared_ptr<WhiteboardSession> whiteboardSession);
+            virtual WhiteboardWindow* createWhiteboardWindow(std::shared_ptr<WhiteboardSession> whiteboardSession);
             virtual HighlightEditorWindow* createHighlightEditorWindow();
             virtual BlockListEditorWidget* createBlockListEditorWidget();
-            virtual AdHocCommandWindow* createAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
+            virtual AdHocCommandWindow* createAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command);
 
         private slots:
             void handleLoginWindowGeometryChanged();

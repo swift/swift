@@ -4,11 +4,11 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QA/Checker/IO.h>
 
@@ -151,17 +151,17 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
             testling->connect();
             eventLoop->processEvents();
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), connectionFactory->connections.size());
-            boost::shared_ptr<MockConnection> connection = connectionFactory->connections[0];
-            boost::shared_ptr<SafeByteArray> data1 = boost::make_shared<SafeByteArray>(createSafeByteArray(
+            std::shared_ptr<MockConnection> connection = connectionFactory->connections[0];
+            std::shared_ptr<SafeByteArray> data1 = std::make_shared<SafeByteArray>(createSafeByteArray(
                 "HTTP/1.1 200 OK\r\n"
                 "Content-Type: text/xml; charset=utf-8\r\n"
                 "Access-Control-Allow-Origin: *\r\n"
                 "Access-Control-Allow-Headers: Content-Type\r\n"
                 "Content-Length: 64\r\n"));
-            boost::shared_ptr<SafeByteArray> data2 = boost::make_shared<SafeByteArray>(createSafeByteArray(
+            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(
                 "\r\n<body xmlns='http://jabber.org/protocol/httpbind'>"
                 "<bl"));
-            boost::shared_ptr<SafeByteArray> data3 = boost::make_shared<SafeByteArray>(createSafeByteArray(
+            std::shared_ptr<SafeByteArray> data3 = std::make_shared<SafeByteArray>(createSafeByteArray(
                 "ah/>"
                 "</body>"));
             connection->onDataRead(data1);
@@ -258,30 +258,30 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
             MockConnectionFactory(EventLoop* eventLoop) : eventLoop(eventLoop) {
             }
 
-            boost::shared_ptr<Connection> createConnection() {
-                boost::shared_ptr<MockConnection> connection = boost::make_shared<MockConnection>(failingPorts, eventLoop);
+            std::shared_ptr<Connection> createConnection() {
+                std::shared_ptr<MockConnection> connection = std::make_shared<MockConnection>(failingPorts, eventLoop);
                 connections.push_back(connection);
                 return connection;
             }
 
             EventLoop* eventLoop;
-            std::vector< boost::shared_ptr<MockConnection> > connections;
+            std::vector< std::shared_ptr<MockConnection> > connections;
             std::vector<HostAddressPort> failingPorts;
         };
 
-        void readResponse(const std::string& response, boost::shared_ptr<MockConnection> connection) {
-            boost::shared_ptr<SafeByteArray> data1 = boost::make_shared<SafeByteArray>(createSafeByteArray(
+        void readResponse(const std::string& response, std::shared_ptr<MockConnection> connection) {
+            std::shared_ptr<SafeByteArray> data1 = std::make_shared<SafeByteArray>(createSafeByteArray(
                 "HTTP/1.1 200 OK\r\n"
                 "Content-Type: text/xml; charset=utf-8\r\n"
                 "Access-Control-Allow-Origin: *\r\n"
                 "Access-Control-Allow-Headers: Content-Type\r\n"
                 "Content-Length: "));
             connection->onDataRead(data1);
-            boost::shared_ptr<SafeByteArray> data2 = boost::make_shared<SafeByteArray>(createSafeByteArray(boost::lexical_cast<std::string>(response.size())));
+            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(boost::lexical_cast<std::string>(response.size())));
             connection->onDataRead(data2);
-            boost::shared_ptr<SafeByteArray> data3 = boost::make_shared<SafeByteArray>(createSafeByteArray("\r\n\r\n"));
+            std::shared_ptr<SafeByteArray> data3 = std::make_shared<SafeByteArray>(createSafeByteArray("\r\n\r\n"));
             connection->onDataRead(data3);
-            boost::shared_ptr<SafeByteArray> data4 = boost::make_shared<SafeByteArray>(createSafeByteArray(response));
+            std::shared_ptr<SafeByteArray> data4 = std::make_shared<SafeByteArray>(createSafeByteArray(response));
             connection->onDataRead(data4);
         }
 

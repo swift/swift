@@ -13,9 +13,9 @@
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
 
 #include <iostream>
+#include <memory>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
@@ -24,7 +24,7 @@
 
 namespace Swift {
     void WhiteboardElementSerializingVisitor::visit(WhiteboardLineElement& line) {
-        element = boost::make_shared<XMLElement>("line");
+        element = std::make_shared<XMLElement>("line");
         try {
             element->setAttribute("x1", boost::lexical_cast<std::string>(line.x1()));
             element->setAttribute("y1", boost::lexical_cast<std::string>(line.y1()));
@@ -39,7 +39,7 @@ namespace Swift {
     }
 
     void WhiteboardElementSerializingVisitor::visit(WhiteboardFreehandPathElement& path) {
-        element = boost::make_shared<XMLElement>("path");
+        element = std::make_shared<XMLElement>("path");
         element->setAttribute("id", path.getID());
         element->setAttribute("stroke", path.getColor().toHex());
         try {
@@ -59,7 +59,7 @@ namespace Swift {
     }
 
     void WhiteboardElementSerializingVisitor::visit(WhiteboardRectElement& rect) {
-        element = boost::make_shared<XMLElement>("rect");
+        element = std::make_shared<XMLElement>("rect");
         try {
             element->setAttribute("x", boost::lexical_cast<std::string>(rect.getX()));
             element->setAttribute("y", boost::lexical_cast<std::string>(rect.getY()));
@@ -76,7 +76,7 @@ namespace Swift {
     }
 
     void WhiteboardElementSerializingVisitor::visit(WhiteboardPolygonElement& polygon) {
-        element = boost::make_shared<XMLElement>("polygon");
+        element = std::make_shared<XMLElement>("polygon");
         try {
             element->setAttribute("id", polygon.getID());
             element->setAttribute("stroke", polygon.getPenColor().toHex());
@@ -95,7 +95,7 @@ namespace Swift {
     }
 
     void WhiteboardElementSerializingVisitor::visit(WhiteboardTextElement& text) {
-        element = boost::make_shared<XMLElement>("text");
+        element = std::make_shared<XMLElement>("text");
         try {
             element->setAttribute("x", boost::lexical_cast<std::string>(text.getX()));
             element->setAttribute("y", boost::lexical_cast<std::string>(text.getY()));
@@ -103,13 +103,13 @@ namespace Swift {
             element->setAttribute("id", text.getID());
             element->setAttribute("fill", text.getColor().toHex());
             element->setAttribute("opacity", alphaToOpacity(text.getColor().getAlpha()));
-            element->addNode(boost::make_shared<XMLTextNode>(text.getText()));
+            element->addNode(std::make_shared<XMLTextNode>(text.getText()));
         } catch (boost::bad_lexical_cast&) {
         }
     }
 
      void WhiteboardElementSerializingVisitor::visit(WhiteboardEllipseElement& ellipse) {
-        element = boost::make_shared<XMLElement>("ellipse");
+        element = std::make_shared<XMLElement>("ellipse");
         try {
             element->setAttribute("cx", boost::lexical_cast<std::string>(ellipse.getCX()));
             element->setAttribute("cy", boost::lexical_cast<std::string>(ellipse.getCY()));
@@ -138,13 +138,13 @@ namespace Swift {
         }
     }
 
-    std::string WhiteboardSerializer::serializePayload(boost::shared_ptr<WhiteboardPayload> payload) const {
+    std::string WhiteboardSerializer::serializePayload(std::shared_ptr<WhiteboardPayload> payload) const {
         XMLElement element("wb", "http://swift.im/whiteboard");
         if (payload->getType() == WhiteboardPayload::Data) {
-            XMLElement::ref operationNode = boost::make_shared<XMLElement>("operation");
+            XMLElement::ref operationNode = std::make_shared<XMLElement>("operation");
             WhiteboardElementSerializingVisitor visitor;
 //            payload->getElement()->accept(visitor);
-            WhiteboardInsertOperation::ref insertOp = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(payload->getOperation());
+            WhiteboardInsertOperation::ref insertOp = std::dynamic_pointer_cast<WhiteboardInsertOperation>(payload->getOperation());
             if (insertOp) {
                 try {
                     operationNode->setAttribute("type", "insert");
@@ -156,7 +156,7 @@ namespace Swift {
                 insertOp->getElement()->accept(visitor);
                 operationNode->addNode(visitor.getResult());
             }
-            WhiteboardUpdateOperation::ref updateOp = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(payload->getOperation());
+            WhiteboardUpdateOperation::ref updateOp = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(payload->getOperation());
             if (updateOp) {
                 try {
                     operationNode->setAttribute("type", "update");
@@ -171,7 +171,7 @@ namespace Swift {
 
             }
 
-            WhiteboardDeleteOperation::ref deleteOp = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(payload->getOperation());
+            WhiteboardDeleteOperation::ref deleteOp = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(payload->getOperation());
             if (deleteOp) {
                 try {
                     operationNode->setAttribute("type", "delete");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
             QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const;
             void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
         private:
-            EventType getEventType(boost::shared_ptr<StanzaEvent> event) const;
+            EventType getEventType(std::shared_ptr<StanzaEvent> event) const;
             DelegateCommons common_;
             TwoLineDelegate messageDelegate_;
             TwoLineDelegate subscriptionDelegate_;

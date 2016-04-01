@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Forwarded.h>
@@ -15,14 +15,14 @@
 namespace Swift {
     class SWIFTEN_API CarbonsSent : public Payload {
         public:
-            typedef boost::shared_ptr<CarbonsSent> ref;
+            typedef std::shared_ptr<CarbonsSent> ref;
 
         public:
             virtual ~CarbonsSent();
-            void setForwarded(boost::shared_ptr<Forwarded> forwarded);
-            boost::shared_ptr<Forwarded> getForwarded() const;
+            void setForwarded(std::shared_ptr<Forwarded> forwarded);
+            std::shared_ptr<Forwarded> getForwarded() const;
 
         private:
-            boost::shared_ptr<Forwarded> forwarded_;
+            std::shared_ptr<Forwarded> forwarded_;
     };
 }

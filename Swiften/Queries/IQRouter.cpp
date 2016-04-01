@@ -30,13 +30,13 @@ bool IQRouter::isAvailable() {
     return channel_->isAvailable();
 }
 
-void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
+void IQRouter::handleIQ(std::shared_ptr<IQ> iq) {
     queueRemoves_ = true;
 
     bool handled = false;
     // Go through the handlers in reverse order, to give precedence to the last added handler
-    std::vector<boost::shared_ptr<IQHandler> >::const_reverse_iterator i = handlers_.rbegin();
-    std::vector<boost::shared_ptr<IQHandler> >::const_reverse_iterator rend = handlers_.rend();
+    std::vector<std::shared_ptr<IQHandler> >::const_reverse_iterator i = handlers_.rbegin();
+    std::vector<std::shared_ptr<IQHandler> >::const_reverse_iterator rend = handlers_.rend();
     for (; i != rend; ++i) {
         handled |= (*i)->handleIQ(iq);
         if (handled) {
@@ -53,25 +53,25 @@ void IQRouter::handleIQ(boost::shared_ptr<IQ> iq) {
 }
 
 void IQRouter::processPendingRemoves() {
-    foreach(boost::shared_ptr<IQHandler> handler, queuedRemoves_) {
+    foreach(std::shared_ptr<IQHandler> handler, queuedRemoves_) {
         erase(handlers_, handler);
     }
     queuedRemoves_.clear();
 }
 
 void IQRouter::addHandler(IQHandler* handler) {
-    addHandler(boost::shared_ptr<IQHandler>(handler, noop));
+    addHandler(std::shared_ptr<IQHandler>(handler, noop));
 }
 
 void IQRouter::removeHandler(IQHandler* handler) {
-    removeHandler(boost::shared_ptr<IQHandler>(handler, noop));
+    removeHandler(std::shared_ptr<IQHandler>(handler, noop));
 }
 
-void IQRouter::addHandler(boost::shared_ptr<IQHandler> handler) {
+void IQRouter::addHandler(std::shared_ptr<IQHandler> handler) {
     handlers_.push_back(handler);
 }
 
-void IQRouter::removeHandler(boost::shared_ptr<IQHandler> handler) {
+void IQRouter::removeHandler(std::shared_ptr<IQHandler> handler) {
     if (queueRemoves_) {
         queuedRemoves_.push_back(handler);
     }
@@ -80,7 +80,7 @@ void IQRouter::removeHandler(boost::shared_ptr<IQHandler> handler) {
     }
 }
 
-void IQRouter::sendIQ(boost::shared_ptr<IQ> iq) {
+void IQRouter::sendIQ(std::shared_ptr<IQ> iq) {
     if (from_.isValid() && !iq->getFrom().isValid()) {
         iq->setFrom(from_);
     }

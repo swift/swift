@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -25,7 +25,7 @@ class IDNConverterTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            testling = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+            testling = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
         }
 
         void testStringPrep() {
@@ -58,7 +58,7 @@ class IDNConverterTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<IDNConverter> testling;
+        std::shared_ptr<IDNConverter> testling;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(IDNConverterTest);

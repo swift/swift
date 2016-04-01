@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubEventCollectionConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,8 +22,8 @@ PubSubEventCollectionConvertor::PubSubEventCollectionConvertor(LuaElementConvert
 PubSubEventCollectionConvertor::~PubSubEventCollectionConvertor() {
 }
 
-boost::shared_ptr<PubSubEventCollection> PubSubEventCollectionConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubEventCollection> result = boost::make_shared<PubSubEventCollection>();
+std::shared_ptr<PubSubEventCollection> PubSubEventCollectionConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubEventCollection> result = std::make_shared<PubSubEventCollection>();
     lua_getfield(L, -1, "node");
     if (lua_isstring(L, -1)) {
         result->setNode(std::string(lua_tostring(L, -1)));
@@ -31,14 +31,14 @@ boost::shared_ptr<PubSubEventCollection> PubSubEventCollectionConvertor::doConve
     lua_pop(L, 1);
     lua_getfield(L, -1, "disassociate");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<PubSubEventDisassociate> payload = boost::dynamic_pointer_cast<PubSubEventDisassociate>(convertors->convertFromLuaUntyped(L, -1, "pubsub_event_disassociate"))) {
+        if (std::shared_ptr<PubSubEventDisassociate> payload = std::dynamic_pointer_cast<PubSubEventDisassociate>(convertors->convertFromLuaUntyped(L, -1, "pubsub_event_disassociate"))) {
             result->setDisassociate(payload);
         }
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "associate");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<PubSubEventAssociate> payload = boost::dynamic_pointer_cast<PubSubEventAssociate>(convertors->convertFromLuaUntyped(L, -1, "pubsub_event_associate"))) {
+        if (std::shared_ptr<PubSubEventAssociate> payload = std::dynamic_pointer_cast<PubSubEventAssociate>(convertors->convertFromLuaUntyped(L, -1, "pubsub_event_associate"))) {
             result->setAssociate(payload);
         }
     }
@@ -46,7 +46,7 @@ boost::shared_ptr<PubSubEventCollection> PubSubEventCollectionConvertor::doConve
     return result;
 }
 
-void PubSubEventCollectionConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEventCollection> payload) {
+void PubSubEventCollectionConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubEventCollection> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getNode()) {
         lua_pushstring(L, (*payload->getNode()).c_str());

@@ -7,9 +7,8 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -67,8 +66,8 @@ namespace Swift {
             virtual ~ChatsManager();
             void setAvatarManager(AvatarManager* avatarManager);
             void setOnline(bool enabled);
-            void setServerDiscoInfo(boost::shared_ptr<DiscoInfo> info);
-            void handleIncomingMessage(boost::shared_ptr<Message> message);
+            void setServerDiscoInfo(std::shared_ptr<DiscoInfo> info);
+            void handleIncomingMessage(std::shared_ptr<Message> message);
             std::vector<ChatListWindow::Chat> getRecentChats() const;
             virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
 
@@ -93,8 +92,8 @@ namespace Swift {
             void handleSearchMUCRequest();
             void handleMUCSelectedAfterSearch(const JID&);
             void rebindControllerJID(const JID& from, const JID& to);
-            void handlePresenceChange(boost::shared_ptr<Presence> newPresence);
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
+            void handlePresenceChange(std::shared_ptr<Presence> newPresence);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
             void handleMUCBookmarkAdded(const MUCBookmark& bookmark);
             void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
             void handleUserLeftMUC(MUCController* mucController);
@@ -126,7 +125,7 @@ namespace Swift {
             void markAllRecentsOffline();
             void handleTransformChatToMUC(ChatController* chatController, ChatWindow* chatWindow, const std::vector<JID>& jidsToInvite, const std::string& reason);
 
-            void handleLocalServiceFound(const JID& service, boost::shared_ptr<DiscoInfo> info);
+            void handleLocalServiceFound(const JID& service, std::shared_ptr<DiscoInfo> info);
             void handleLocalServiceWalkFinished();
 
             void updatePresenceReceivingStateOnChatController(const JID&);
@@ -154,7 +153,7 @@ namespace Swift {
             PresenceSender* presenceSender_;
             UIEventStream* uiEventStream_;
             MUCBookmarkManager* mucBookmarkManager_;
-            boost::shared_ptr<DiscoInfo> serverDiscoInfo_;
+            std::shared_ptr<DiscoInfo> serverDiscoInfo_;
             ChatListWindow* chatListWindow_;
             JoinMUCWindow* joinMUCWindow_;
             boost::bsignals::scoped_connection uiEventConnection_;
@@ -177,7 +176,7 @@ namespace Swift {
             std::map<std::string, std::string> emoticons_;
             ClientBlockListManager* clientBlockListManager_;
             JID localMUCServiceJID_;
-            boost::shared_ptr<DiscoServiceWalker> localMUCServiceFinderWalker_;
+            std::shared_ptr<DiscoServiceWalker> localMUCServiceFinderWalker_;
             AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
             IDGenerator idGenerator_;
             VCardManager* vcardManager_;

@@ -1,13 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParser.h>
@@ -26,18 +25,18 @@ namespace Swift {
     class GenericPayloadParser : public PayloadParser {
         public:
             GenericPayloadParser() : PayloadParser() {
-                payload_ = boost::make_shared<PAYLOAD_TYPE>();
+                payload_ = std::make_shared<PAYLOAD_TYPE>();
             }
 
-            virtual boost::shared_ptr<Payload> getPayload() const {
+            virtual std::shared_ptr<Payload> getPayload() const {
                 return payload_;
             }
 
-            virtual boost::shared_ptr<PAYLOAD_TYPE> getPayloadInternal() const {
+            virtual std::shared_ptr<PAYLOAD_TYPE> getPayloadInternal() const {
                 return payload_;
             }
 
         private:
-            boost::shared_ptr<PAYLOAD_TYPE> payload_;
+            std::shared_ptr<PAYLOAD_TYPE> payload_;
     };
 }

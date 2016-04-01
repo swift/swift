@@ -12,7 +12,7 @@
 #pragma clang diagnostic pop
 #include <ScriptingBridge/ScriptingBridge.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 #include <boost/optional.hpp>
 #include <SwifTools/Cocoa/CocoaUtil.h>
 
@@ -25,7 +25,7 @@ struct ITunesInterface::Private {
     iTunesApplication* iTunes;
 };
 
-ITunesInterface::ITunesInterface() : p(boost::make_shared<Private>()) {
+ITunesInterface::ITunesInterface() : p(std::make_shared<Private>()) {
 }
 
 ITunesInterface::~ITunesInterface() {

@@ -53,8 +53,8 @@ VCardFileStorage::VCardFileStorage(boost::filesystem::path dir, CryptoProvider* 
     }
 }
 
-boost::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
-    boost::shared_ptr<VCard> result = VCardPersister().loadPayloadGeneric(getVCardPath(jid));
+std::shared_ptr<VCard> VCardFileStorage::getVCard(const JID& jid) const {
+    std::shared_ptr<VCard> result = VCardPersister().loadPayloadGeneric(getVCardPath(jid));
     getAndUpdatePhotoHash(jid, result);
     return result;
 }

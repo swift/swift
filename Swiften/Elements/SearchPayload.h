@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Form.h>
@@ -21,7 +21,7 @@ namespace Swift {
      */
     class SWIFTEN_API SearchPayload : public Payload {
         public:
-            typedef boost::shared_ptr<SearchPayload> ref;
+            typedef std::shared_ptr<SearchPayload> ref;
 
             struct Item {
                 std::string first;

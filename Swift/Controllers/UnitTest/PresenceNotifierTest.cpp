@@ -74,7 +74,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveFirstPresenceCreatesAvailableNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
 
             sendPresence(user1, StatusShow::Online);
 
@@ -83,7 +83,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveSecondPresenceCreatesStatusChangeNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             sendPresence(user1, StatusShow::Away);
             notifier->notifications.clear();
 
@@ -94,7 +94,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveUnavailablePresenceAfterAvailablePresenceCreatesUnavailableNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             sendPresence(user1, StatusShow::Away);
             notifier->notifications.clear();
 
@@ -105,7 +105,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveUnavailablePresenceWithoutAvailableDoesNotCreateNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
 
             sendUnavailablePresence(user1);
 
@@ -113,7 +113,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveAvailablePresenceAfterUnavailableCreatesAvailableNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             sendPresence(user1, StatusShow::Away);
             sendUnavailablePresence(user1);
             notifier->notifications.clear();
@@ -125,7 +125,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveAvailablePresenceAfterReconnectCreatesAvailableNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             sendPresence(user1, StatusShow::Away);
             stanzaChannel->setAvailable(false);
             stanzaChannel->setAvailable(true);
@@ -138,7 +138,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveAvailablePresenceFromMUCDoesNotCreateNotification() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             mucRegistry->addMUC(JID("teaparty@wonderland.lit"));
 
             sendPresence(JID("teaparty@wonderland.lit/Alice"), StatusShow::Away);
@@ -147,7 +147,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testNotificationPicture() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             avatarManager->avatars[user1] = createByteArray("abcdef");
 
             sendPresence(user1, StatusShow::Online);
@@ -157,7 +157,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testNotificationActivationEmitsSignal() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
 
             sendPresence(user1, StatusShow::Online);
             CPPUNIT_ASSERT(notifier->notifications[0].callback);
@@ -168,7 +168,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testNotificationSubjectContainsNameForJIDInRoster() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             roster->addContact(user1.toBare(), "User 1", std::vector<std::string>(), RosterItemPayload::Both);
 
             sendPresence(user1, StatusShow::Online);
@@ -179,7 +179,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testNotificationSubjectContainsJIDForJIDNotInRoster() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
 
             sendPresence(user1, StatusShow::Online);
 
@@ -189,7 +189,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testNotificationSubjectContainsStatus() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
 
             sendPresence(user1, StatusShow::Away);
 
@@ -199,7 +199,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testNotificationMessageContainsStatusMessage() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
 
             sendPresence(user1, StatusShow::Away);
 
@@ -208,7 +208,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveFirstPresenceWithQuietPeriodDoesNotNotify() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             testling->setInitialQuietPeriodMS(10);
 
             sendPresence(user1, StatusShow::Online);
@@ -217,7 +217,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceivePresenceDuringQuietPeriodDoesNotNotify() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             testling->setInitialQuietPeriodMS(10);
 
             sendPresence(user1, StatusShow::Online);
@@ -228,7 +228,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceivePresenceDuringQuietPeriodResetsTimer() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             testling->setInitialQuietPeriodMS(10);
 
             sendPresence(user1, StatusShow::Online);
@@ -241,7 +241,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceivePresenceAfterQuietPeriodNotifies() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             testling->setInitialQuietPeriodMS(10);
 
             sendPresence(user1, StatusShow::Online);
@@ -252,7 +252,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveFirstPresenceWithQuietPeriodDoesNotCountAsQuietPeriod() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             testling->setInitialQuietPeriodMS(10);
 
             timerFactory->setTime(11);
@@ -262,7 +262,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void testReceiveFirstPresenceAfterReconnectWithQuietPeriodDoesNotNotify() {
-            boost::shared_ptr<PresenceNotifier> testling = createNotifier();
+            std::shared_ptr<PresenceNotifier> testling = createNotifier();
             testling->setInitialQuietPeriodMS(10);
             sendPresence(user1, StatusShow::Online);
             timerFactory->setTime(15);
@@ -279,15 +279,15 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
 
 
     private:
-        boost::shared_ptr<PresenceNotifier> createNotifier() {
-            boost::shared_ptr<PresenceNotifier> result(new PresenceNotifier(stanzaChannel, notifier, mucRegistry, avatarManager, nickResolver, presenceOracle, timerFactory));
+        std::shared_ptr<PresenceNotifier> createNotifier() {
+            std::shared_ptr<PresenceNotifier> result(new PresenceNotifier(stanzaChannel, notifier, mucRegistry, avatarManager, nickResolver, presenceOracle, timerFactory));
             result->onNotificationActivated.connect(boost::bind(&PresenceNotifierTest::handleNotificationActivated, this, _1));
             result->setInitialQuietPeriodMS(0);
             return result;
         }
 
         void sendPresence(const JID& jid, StatusShow::Type type) {
-            boost::shared_ptr<Presence> presence(new Presence());
+            std::shared_ptr<Presence> presence(new Presence());
             presence->setFrom(jid);
             presence->setShow(type);
             presence->setStatus("Status Message");
@@ -295,7 +295,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
         }
 
         void sendUnavailablePresence(const JID& jid) {
-            boost::shared_ptr<Presence> presence(new Presence());
+            std::shared_ptr<Presence> presence(new Presence());
             presence->setType(Presence::Unavailable);
             presence->setFrom(jid);
             stanzaChannel->onPresenceReceived(presence);

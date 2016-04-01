@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <QDateTime>
 #include <QString>
@@ -31,7 +31,7 @@ namespace Swift {
             virtual const QString& getContent() const = 0;
             virtual QString getContinuationElementID() const { return ""; }
 
-            boost::shared_ptr<ChatSnippet> getContinuationFallbackSnippet() const {return continuationFallback_;}
+            std::shared_ptr<ChatSnippet> getContinuationFallbackSnippet() const {return continuationFallback_;}
 
             bool getAppendToPrevious() const {
                 return appendToPrevious_;
@@ -61,12 +61,12 @@ namespace Swift {
             static QString directionToCSS(Direction direction);
 
             QString wrapResizable(const QString& text);
-            void setContinuationFallbackSnippet(boost::shared_ptr<ChatSnippet> continuationFallback) {
+            void setContinuationFallbackSnippet(std::shared_ptr<ChatSnippet> continuationFallback) {
                 continuationFallback_ = continuationFallback;
             }
         private:
             bool appendToPrevious_;
-            boost::shared_ptr<ChatSnippet> continuationFallback_;
+            std::shared_ptr<ChatSnippet> continuationFallback_;
     };
 }
 

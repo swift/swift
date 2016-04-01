@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -38,7 +38,7 @@ namespace Swift {
         public:
             boost::signal<void (const SafeByteArray&)> onDataForNetwork;
             boost::signal<void (const SafeByteArray&)> onDataForApplication;
-            boost::signal<void (boost::shared_ptr<TLSError>)> onError;
+            boost::signal<void (std::shared_ptr<TLSError>)> onError;
             boost::signal<void ()> onConnected;
     };
 }

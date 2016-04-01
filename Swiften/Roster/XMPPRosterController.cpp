@@ -23,7 +23,7 @@ namespace Swift {
  * The controller does not gain ownership of these parameters.
  */
 XMPPRosterController::XMPPRosterController(IQRouter* iqRouter, XMPPRosterImpl* xmppRoster, RosterStorage* rosterStorage) : iqRouter_(iqRouter), rosterPushResponder_(iqRouter), xmppRoster_(xmppRoster), rosterStorage_(rosterStorage), useVersioning(false) {
-    rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1, false, boost::shared_ptr<RosterPayload>()));
+    rosterPushResponder_.onRosterReceived.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1, false, std::shared_ptr<RosterPayload>()));
     rosterPushResponder_.start();
 }
 
@@ -34,7 +34,7 @@ XMPPRosterController::~XMPPRosterController() {
 void XMPPRosterController::requestRoster() {
     xmppRoster_->clear();
 
-    boost::shared_ptr<RosterPayload> storedRoster = rosterStorage_->getRoster();
+    std::shared_ptr<RosterPayload> storedRoster = rosterStorage_->getRoster();
     GetRosterRequest::ref rosterRequest;
     if (useVersioning) {
         std::string version = "";
@@ -50,7 +50,7 @@ void XMPPRosterController::requestRoster() {
     rosterRequest->send();
 }
 
-void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload> rosterPayload, bool initial, boost::shared_ptr<RosterPayload> previousRoster) {
+void XMPPRosterController::handleRosterReceived(std::shared_ptr<RosterPayload> rosterPayload, bool initial, std::shared_ptr<RosterPayload> previousRoster) {
     if (rosterPayload) {
         foreach(const RosterItemPayload& item, rosterPayload->getItems()) {
             //Don't worry about the updated case, the XMPPRoster sorts that out.
@@ -82,7 +82,7 @@ void XMPPRosterController::handleRosterReceived(boost::shared_ptr<RosterPayload>
 
 void XMPPRosterController::saveRoster(const std::string& version) {
     std::vector<XMPPRosterItem> items = xmppRoster_->getItems();
-    boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+    std::shared_ptr<RosterPayload> roster(new RosterPayload());
     roster->setVersion(version);
     foreach(const XMPPRosterItem& item, items) {
         roster->addItem(RosterItemPayload(item.getJID(), item.getName(), item.getSubscription(), item.getGroups()));

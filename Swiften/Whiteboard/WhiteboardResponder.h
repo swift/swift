@@ -23,7 +23,7 @@ namespace Swift {
     class SWIFTEN_API WhiteboardResponder : public SetResponder<WhiteboardPayload> {
     public:
         WhiteboardResponder(WhiteboardSessionManager* sessionManager, IQRouter* router);
-        bool handleSetRequest(const JID& from, const JID& /*to*/, const std::string& id, boost::shared_ptr<WhiteboardPayload> payload);
+        bool handleSetRequest(const JID& from, const JID& /*to*/, const std::string& id, std::shared_ptr<WhiteboardPayload> payload);
 
     private:
         WhiteboardSessionManager* sessionManager_;

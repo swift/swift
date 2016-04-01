@@ -10,8 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -31,18 +30,18 @@ class DeliveryReceiptSerializerTest : public CppUnit::TestFixture {
         void testSerialize_XEP0184Example3() {
             std::string expected =    "<request xmlns=\"urn:xmpp:receipts\"/>";
 
-            DeliveryReceiptRequest::ref receipt = boost::make_shared<DeliveryReceiptRequest>();
+            DeliveryReceiptRequest::ref receipt = std::make_shared<DeliveryReceiptRequest>();
 
-            boost::shared_ptr<DeliveryReceiptRequestSerializer> serializer = boost::make_shared<DeliveryReceiptRequestSerializer>();
+            std::shared_ptr<DeliveryReceiptRequestSerializer> serializer = std::make_shared<DeliveryReceiptRequestSerializer>();
             CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(receipt));
         }
 
         void testSerialize_XEP0184Example4() {
             std::string expected =    "<received id=\"richard2-4.1.247\" xmlns=\"urn:xmpp:receipts\"/>";
 
-            DeliveryReceipt::ref receipt = boost::make_shared<DeliveryReceipt>("richard2-4.1.247");
+            DeliveryReceipt::ref receipt = std::make_shared<DeliveryReceipt>("richard2-4.1.247");
 
-            boost::shared_ptr<DeliveryReceiptSerializer> serializer = boost::make_shared<DeliveryReceiptSerializer>();
+            std::shared_ptr<DeliveryReceiptSerializer> serializer = std::make_shared<DeliveryReceiptSerializer>();
             CPPUNIT_ASSERT_EQUAL(expected, serializer->serializePayload(receipt));
         }
 };

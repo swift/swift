@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -24,7 +24,7 @@ class MUCAdminPayloadSerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             MUCAdminPayloadSerializer testling;
-            boost::shared_ptr<MUCAdminPayload> admin = boost::make_shared<MUCAdminPayload>();
+            std::shared_ptr<MUCAdminPayload> admin = std::make_shared<MUCAdminPayload>();
             MUCItem item;
             item.affiliation = MUCOccupant::Owner;
             item.role = MUCOccupant::Visitor;

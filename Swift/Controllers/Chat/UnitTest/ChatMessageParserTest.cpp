@@ -38,12 +38,12 @@ public:
     }
 
     void assertText(const ChatWindow::ChatMessage& result, size_t index, const std::string& text) {
-        boost::shared_ptr<ChatWindow::ChatTextMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(result.getParts()[index]);
+        std::shared_ptr<ChatWindow::ChatTextMessagePart> part = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(result.getParts()[index]);
         CPPUNIT_ASSERT_EQUAL(text, part->text);
     }
 
     void assertEmoticon(const ChatWindow::ChatMessage& result, size_t index, const std::string& text, const std::string& path) {
-        boost::shared_ptr<ChatWindow::ChatEmoticonMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatEmoticonMessagePart>(result.getParts()[index]);
+        std::shared_ptr<ChatWindow::ChatEmoticonMessagePart> part = std::dynamic_pointer_cast<ChatWindow::ChatEmoticonMessagePart>(result.getParts()[index]);
         CPPUNIT_ASSERT(!!part);
         CPPUNIT_ASSERT_EQUAL(text, part->alternativeText);
         CPPUNIT_ASSERT_EQUAL(path, part->imagePath);
@@ -51,13 +51,13 @@ public:
 
 #define assertHighlight(RESULT, INDEX, TEXT, EXPECTED_HIGHLIGHT) \
     { \
-        boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(RESULT.getParts()[INDEX]); \
+        std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> part = std::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(RESULT.getParts()[INDEX]); \
         CPPUNIT_ASSERT_EQUAL(std::string(TEXT), part->text); \
         CPPUNIT_ASSERT(EXPECTED_HIGHLIGHT == part->action); \
     }
 
     void assertURL(const ChatWindow::ChatMessage& result, size_t index, const std::string& text) {
-        boost::shared_ptr<ChatWindow::ChatURIMessagePart> part = boost::dynamic_pointer_cast<ChatWindow::ChatURIMessagePart>(result.getParts()[index]);
+        std::shared_ptr<ChatWindow::ChatURIMessagePart> part = std::dynamic_pointer_cast<ChatWindow::ChatURIMessagePart>(result.getParts()[index]);
         CPPUNIT_ASSERT_EQUAL(text, part->target);
     }
 
@@ -76,14 +76,14 @@ public:
 
     static const HighlightRulesListPtr ruleListFromKeyword(const std::string& keyword, bool matchCase, bool matchWholeWord)
     {
-        boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
+        std::shared_ptr<HighlightManager::HighlightRulesList> list = std::make_shared<HighlightManager::HighlightRulesList>();
         list->addRule(ruleFromKeyword(keyword, matchCase, matchWholeWord));
         return list;
     }
 
     static const HighlightRulesListPtr ruleListFromKeywords(const HighlightRule &rule1, const HighlightRule &rule2)
     {
-        boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
+        std::shared_ptr<HighlightManager::HighlightRulesList> list = std::make_shared<HighlightManager::HighlightRulesList>();
         list->addRule(rule1);
         list->addRule(rule2);
         return list;
@@ -99,14 +99,14 @@ public:
         if (withHighlightColour) {
             rule.getAction().setTextBackground("white");
         }
-        boost::shared_ptr<HighlightManager::HighlightRulesList> list = boost::make_shared<HighlightManager::HighlightRulesList>();
+        std::shared_ptr<HighlightManager::HighlightRulesList> list = std::make_shared<HighlightManager::HighlightRulesList>();
         list->addRule(rule);
         return list;
     }
 
     void testFullBody() {
         const std::string no_special_message = "a message with no special content";
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody(no_special_message);
         assertText(result, 0, no_special_message);
 
@@ -221,7 +221,7 @@ public:
     }
 
     void testOneEmoticon() {
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody(" :) ");
         assertText(result, 0, " ");
         assertEmoticon(result, 1, smile1_, smile1Path_);
@@ -230,26 +230,26 @@ public:
 
 
     void testBareEmoticon() {
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody(":)");
         assertEmoticon(result, 0, smile1_, smile1Path_);
     }
 
     void testHiddenEmoticon() {
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody("b:)a");
         assertText(result, 0, "b:)a");
     }
 
     void testEndlineEmoticon() {
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody("Lazy:)");
         assertText(result, 0, "Lazy");
         assertEmoticon(result, 1, smile1_, smile1Path_);
     }
 
     void testBoundedEmoticons() {
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody(":)Lazy:(");
         assertEmoticon(result, 0, smile1_, smile1Path_);
         assertText(result, 1, "Lazy");
@@ -257,7 +257,7 @@ public:
     }
 
     void testEmoticonParenthesis() {
-        ChatMessageParser testling(emoticons_, boost::make_shared<HighlightManager::HighlightRulesList>());
+        ChatMessageParser testling(emoticons_, std::make_shared<HighlightManager::HighlightRulesList>());
         ChatWindow::ChatMessage result = testling.parseMessageBody("(Like this :))");
         assertText(result, 0, "(Like this ");
         assertEmoticon(result, 1, smile1_, smile1Path_);

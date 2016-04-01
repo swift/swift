@@ -42,7 +42,7 @@ static void handleDisconnected(boost::optional<ClientError> e) {
     }
 }
 
-static void handleRosterReceived(boost::shared_ptr<Payload>) {
+static void handleRosterReceived(std::shared_ptr<Payload>) {
     rosterReceived = true;
     std::cout << "Disconnecting" << std::endl;
     client->disconnect();

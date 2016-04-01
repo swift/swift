@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PresenceConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,8 +22,8 @@ PresenceConvertor::PresenceConvertor(LuaElementConvertors* convertors) :
 PresenceConvertor::~PresenceConvertor() {
 }
 
-boost::shared_ptr<Presence> PresenceConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<Presence> result = getStanza(L, convertors);
+std::shared_ptr<Presence> PresenceConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<Presence> result = getStanza(L, convertors);
     lua_getfield(L, -1, "type");
     if (lua_isstring(L, -1)) {
         result->setType(convertPresenceTypeFromString(lua_tostring(L, -1)));
@@ -32,7 +32,7 @@ boost::shared_ptr<Presence> PresenceConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void PresenceConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Presence> stanza) {
+void PresenceConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Presence> stanza) {
     pushStanza(L, stanza, convertors);
     const std::string type = convertPresenceTypeToString(stanza->getType());
     lua_pushstring(L, type.c_str());

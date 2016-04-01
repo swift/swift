@@ -18,16 +18,16 @@ namespace Swift {
     class SWIFTEN_API FormSerializer : public GenericPayloadSerializer<Form> {
         public:
             FormSerializer();
-            virtual std::string serializePayload(boost::shared_ptr<Form>)  const;
+            virtual std::string serializePayload(std::shared_ptr<Form>)  const;
 
         private:
-            boost::shared_ptr<XMLElement> textToXML(boost::shared_ptr<FormText> textElement) const;
-            boost::shared_ptr<XMLElement> fieldRefToXML(const std::string& ref) const;
-            boost::shared_ptr<XMLElement> reportedRefToXML(boost::shared_ptr<FormReportedRef> reportedRef) const;
-            boost::shared_ptr<XMLElement> pageToXML(boost::shared_ptr<FormPage> page) const;
-            boost::shared_ptr<XMLElement> sectionToXML(boost::shared_ptr<FormSection> section) const;
-            boost::shared_ptr<XMLElement> fieldToXML(boost::shared_ptr<FormField> field, bool withTypeAttribute) const;
-            void multiLineify(const std::string& text, const std::string& elementName, boost::shared_ptr<XMLElement> parent) const;
-            mutable std::vector<boost::shared_ptr<FormField> > fields_;
+            std::shared_ptr<XMLElement> textToXML(std::shared_ptr<FormText> textElement) const;
+            std::shared_ptr<XMLElement> fieldRefToXML(const std::string& ref) const;
+            std::shared_ptr<XMLElement> reportedRefToXML(std::shared_ptr<FormReportedRef> reportedRef) const;
+            std::shared_ptr<XMLElement> pageToXML(std::shared_ptr<FormPage> page) const;
+            std::shared_ptr<XMLElement> sectionToXML(std::shared_ptr<FormSection> section) const;
+            std::shared_ptr<XMLElement> fieldToXML(std::shared_ptr<FormField> field, bool withTypeAttribute) const;
+            void multiLineify(const std::string& text, const std::string& elementName, std::shared_ptr<XMLElement> parent) const;
+            mutable std::vector<std::shared_ptr<FormField> > fields_;
     };
 }

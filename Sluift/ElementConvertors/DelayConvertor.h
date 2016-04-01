@@ -17,7 +17,7 @@ namespace Swift {
             DelayConvertor();
             virtual ~DelayConvertor();
 
-            virtual boost::shared_ptr<Delay> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<Delay>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Delay> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Delay>) SWIFTEN_OVERRIDE;
     };
 }

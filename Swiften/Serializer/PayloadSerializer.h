@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -19,7 +18,7 @@ namespace Swift {
         public:
             virtual ~PayloadSerializer();
 
-            virtual bool canSerialize(boost::shared_ptr<Payload>) const = 0;
-            virtual std::string serialize(boost::shared_ptr<Payload>) const = 0;
+            virtual bool canSerialize(std::shared_ptr<Payload>) const = 0;
+            virtual std::string serialize(std::shared_ptr<Payload>) const = 0;
     };
 }

@@ -62,14 +62,14 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarWithNoAvatarProviderReturnsEmpty() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
 
             boost::optional<std::string> hash = testling->getAvatarHash(user1);
             CPPUNIT_ASSERT(!hash);
         }
 
         void testGetAvatarWithSingleAvatarProvider() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider1->avatars[user1] = avatarHash1;
             testling->addProvider(avatarProvider1);
 
@@ -79,7 +79,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarWithMultipleAvatarProviderReturnsFirstAvatar() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider2->avatars[user1] = avatarHash2;
             testling->addProvider(avatarProvider1);
@@ -91,7 +91,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testGetAvatarWithMultipleAvatarProviderAndFailingFirstProviderReturnsSecondAvatar() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider2->avatars[user1] = avatarHash2;
             testling->addProvider(avatarProvider1);
             testling->addProvider(avatarProvider2);
@@ -102,7 +102,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testProviderUpdateTriggersChange() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
@@ -112,7 +112,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testProviderUpdateWithoutChangeDoesNotTriggerChange() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             testling->addProvider(avatarProvider2);
             avatarProvider1->avatars[user1] = avatarHash1;
@@ -126,7 +126,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testProviderSecondUpdateTriggersChange() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
@@ -140,7 +140,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
 
         void testProviderUpdateWithAvatarDisappearingTriggersChange() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
@@ -153,7 +153,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testProviderUpdateAfterAvatarDisappearedTriggersChange() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
@@ -169,7 +169,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
 
         void testProviderUpdateAfterGetDoesNotTriggerChange() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             avatarProvider1->avatars[user1] = avatarHash1;
 
@@ -180,7 +180,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testRemoveProviderDisconnectsUpdates() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             testling->addProvider(avatarProvider1);
             testling->addProvider(avatarProvider2);
             testling->removeProvider(avatarProvider1);
@@ -192,7 +192,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
         void testProviderUpdateBareJIDAfterGetFullJID() {
-            boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+            std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider1->useBare = true;
             testling->addProvider(avatarProvider1);
 
@@ -210,7 +210,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
                 JID ownJID = JID("user0@own.com/res");
                 JID user1 = JID("user1@bar.com/bla");
 
-                boost::shared_ptr<CryptoProvider> crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+                std::shared_ptr<CryptoProvider> crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
                 DummyStanzaChannel* stanzaChannel = new DummyStanzaChannel();
                 stanzaChannel->setAvailable(true);
                 IQRouter* iqRouter = new IQRouter(stanzaChannel);
@@ -219,16 +219,16 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
                 VCardMemoryStorage* vcardStorage = new VCardMemoryStorage(crypto.get());
                 VCardManager* vcardManager = new VCardManager(ownJID, iqRouter, vcardStorage);
 
-                boost::shared_ptr<VCardUpdateAvatarManager> updateManager(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, crypto.get(), mucRegistry));
+                std::shared_ptr<VCardUpdateAvatarManager> updateManager(new VCardUpdateAvatarManager(vcardManager, stanzaChannel, avatarStorage, crypto.get(), mucRegistry));
                 updateManager->onAvatarChanged.connect(boost::bind(&CombinedAvatarProviderTest::handleAvatarChanged, this, _1));
 
-                boost::shared_ptr<VCardAvatarManager> manager(new VCardAvatarManager(vcardManager, avatarStorage, crypto.get(), mucRegistry));
+                std::shared_ptr<VCardAvatarManager> manager(new VCardAvatarManager(vcardManager, avatarStorage, crypto.get(), mucRegistry));
                 manager->onAvatarChanged.connect(boost::bind(&CombinedAvatarProviderTest::handleAvatarChanged, this, _1));
 
-                boost::shared_ptr<OfflineAvatarManager> offlineManager(new OfflineAvatarManager(avatarStorage));
+                std::shared_ptr<OfflineAvatarManager> offlineManager(new OfflineAvatarManager(avatarStorage));
                 offlineManager->onAvatarChanged.connect(boost::bind(&CombinedAvatarProviderTest::handleAvatarChanged, this, _1));
 
-                boost::shared_ptr<CombinedAvatarProvider> testling(createProvider());
+                std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
                 avatarProvider1->useBare = true;
                 testling->addProvider(updateManager.get());
                 testling->addProvider(manager.get());
@@ -257,7 +257,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
                 vcardManager->requestVCard(user1.toBare());
                 CPPUNIT_ASSERT_EQUAL(size_t(1), stanzaChannel->sentStanzas.size());
-                IQ::ref request = boost::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas.back());
+                IQ::ref request = std::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas.back());
                 VCard::ref payload = request->getPayload<VCard>();
                 CPPUNIT_ASSERT(!!payload);
                 stanzaChannel->sentStanzas.pop_back();
@@ -267,7 +267,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
                 VCard::ref vcard2(new VCard());
                 vcard2->setPhoto(avatar2);
 
-                IQ::ref reply = boost::make_shared<IQ>();
+                IQ::ref reply = std::make_shared<IQ>();
                 reply->setTo(request->getFrom());
                 reply->setFrom(request->getTo());
                 reply->setID(request->getID());
@@ -295,13 +295,13 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
                 vcardManager->requestVCard(user1.toBare());
                 CPPUNIT_ASSERT_EQUAL(size_t(1), stanzaChannel->sentStanzas.size());
-                request = boost::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas.back());
+                request = std::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas.back());
                 payload = request->getPayload<VCard>();
                 CPPUNIT_ASSERT(!!payload);
                 stanzaChannel->sentStanzas.pop_back();
 
                 VCard::ref vcard3(new VCard());
-                reply = boost::make_shared<IQ>();
+                reply = std::make_shared<IQ>();
                 reply->setTo(request->getFrom());
                 reply->setFrom(request->getTo());
                 reply->setID(request->getID());
@@ -331,8 +331,8 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<CombinedAvatarProvider> createProvider() {
-            boost::shared_ptr<CombinedAvatarProvider> result(new CombinedAvatarProvider());
+        std::shared_ptr<CombinedAvatarProvider> createProvider() {
+            std::shared_ptr<CombinedAvatarProvider> result(new CombinedAvatarProvider());
             result->onAvatarChanged.connect(boost::bind(&CombinedAvatarProviderTest::handleAvatarChanged, this, _1));
             return result;
         }

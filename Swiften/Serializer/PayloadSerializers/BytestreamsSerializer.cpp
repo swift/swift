@@ -6,8 +6,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/BytestreamsSerializer.h>
 
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
@@ -18,11 +19,11 @@ namespace Swift {
 BytestreamsSerializer::BytestreamsSerializer() {
 }
 
-std::string BytestreamsSerializer::serializePayload(boost::shared_ptr<Bytestreams> bytestreams)    const {
+std::string BytestreamsSerializer::serializePayload(std::shared_ptr<Bytestreams> bytestreams)    const {
     XMLElement queryElement("query", "http://jabber.org/protocol/bytestreams");
     queryElement.setAttribute("sid", bytestreams->getStreamID());
     foreach(const Bytestreams::StreamHost& streamHost, bytestreams->getStreamHosts()) {
-        boost::shared_ptr<XMLElement> streamHostElement(new XMLElement("streamhost"));
+        std::shared_ptr<XMLElement> streamHostElement(new XMLElement("streamhost"));
         streamHostElement->setAttribute("host", streamHost.host);
         streamHostElement->setAttribute("jid", streamHost.jid.toString());
         streamHostElement->setAttribute("port", boost::lexical_cast<std::string>(streamHost.port));
@@ -30,7 +31,7 @@ std::string BytestreamsSerializer::serializePayload(boost::shared_ptr<Bytestream
     }
 
     if (bytestreams->getUsedStreamHost()) {
-        boost::shared_ptr<XMLElement> streamHostElement(new XMLElement("streamhost-used"));
+        std::shared_ptr<XMLElement> streamHostElement(new XMLElement("streamhost-used"));
         streamHostElement->setAttribute("jid", *bytestreams->getUsedStreamHost());
         queryElement.addNode(streamHostElement);
     }

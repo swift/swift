@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -37,11 +37,11 @@ namespace Swift {
                 return isStable_;
             }
 
-            void setResultSet(boost::shared_ptr<ResultSet> resultSet) {
+            void setResultSet(std::shared_ptr<ResultSet> resultSet) {
                 resultSet_ = resultSet;
             }
 
-            boost::shared_ptr<ResultSet> getResultSet() const {
+            std::shared_ptr<ResultSet> getResultSet() const {
                 return resultSet_;
             }
 
@@ -57,7 +57,7 @@ namespace Swift {
         private:
             bool isComplete_;
             bool isStable_;
-            boost::shared_ptr<ResultSet> resultSet_;
+            std::shared_ptr<ResultSet> resultSet_;
             boost::optional<std::string> queryID_;
     };
 }

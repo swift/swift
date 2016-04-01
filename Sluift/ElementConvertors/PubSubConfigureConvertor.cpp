@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubConfigureConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,11 +22,11 @@ PubSubConfigureConvertor::PubSubConfigureConvertor(LuaElementConvertors* convert
 PubSubConfigureConvertor::~PubSubConfigureConvertor() {
 }
 
-boost::shared_ptr<PubSubConfigure> PubSubConfigureConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubConfigure> result = boost::make_shared<PubSubConfigure>();
+std::shared_ptr<PubSubConfigure> PubSubConfigureConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubConfigure> result = std::make_shared<PubSubConfigure>();
     lua_getfield(L, -1, "data");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<Form> payload = boost::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"))) {
+        if (std::shared_ptr<Form> payload = std::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"))) {
             result->setData(payload);
         }
     }
@@ -34,7 +34,7 @@ boost::shared_ptr<PubSubConfigure> PubSubConfigureConvertor::doConvertFromLua(lu
     return result;
 }
 
-void PubSubConfigureConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubConfigure> payload) {
+void PubSubConfigureConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubConfigure> payload) {
     lua_createtable(L, 0, 0);
     if (convertors->convertToLuaUntyped(L, payload->getData()) > 0) {
         lua_setfield(L, -2, "data");

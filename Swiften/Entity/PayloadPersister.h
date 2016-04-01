@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/filesystem/path.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -21,8 +22,8 @@ namespace Swift {
             PayloadPersister();
             virtual ~PayloadPersister();
 
-            void savePayload(boost::shared_ptr<Payload>, const boost::filesystem::path&);
-            boost::shared_ptr<Payload> loadPayload(const boost::filesystem::path&);
+            void savePayload(std::shared_ptr<Payload>, const boost::filesystem::path&);
+            std::shared_ptr<Payload> loadPayload(const boost::filesystem::path&);
 
         protected:
 

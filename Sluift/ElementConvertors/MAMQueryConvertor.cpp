@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/MAMQueryConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -26,8 +27,8 @@ MAMQueryConvertor::MAMQueryConvertor(LuaElementConvertors* convertors) :
 MAMQueryConvertor::~MAMQueryConvertor() {
 }
 
-boost::shared_ptr<MAMQuery> MAMQueryConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<MAMQuery> result = boost::make_shared<MAMQuery>();
+std::shared_ptr<MAMQuery> MAMQueryConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<MAMQuery> result = std::make_shared<MAMQuery>();
     lua_getfield(L, -1, "query_id");
     if (lua_isstring(L, -1)) {
         result->setQueryID(std::string(lua_tostring(L, -1)));
@@ -40,7 +41,7 @@ boost::shared_ptr<MAMQuery> MAMQueryConvertor::doConvertFromLua(lua_State* L) {
     lua_pop(L, 1);
     lua_getfield(L, -1, "form");
     if (!lua_isnil(L, -1)) {
-        boost::shared_ptr<Form> form = boost::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"));
+        std::shared_ptr<Form> form = std::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"));
         if (!!form) {
             result->setForm(form);
         }
@@ -48,7 +49,7 @@ boost::shared_ptr<MAMQuery> MAMQueryConvertor::doConvertFromLua(lua_State* L) {
     lua_pop(L, 1);
     lua_getfield(L, -1, "result_set");
     if (!lua_isnil(L, -1)) {
-        boost::shared_ptr<ResultSet> resultSet = boost::dynamic_pointer_cast<ResultSet>(convertors->convertFromLuaUntyped(L, -1, "result_set"));
+        std::shared_ptr<ResultSet> resultSet = std::dynamic_pointer_cast<ResultSet>(convertors->convertFromLuaUntyped(L, -1, "result_set"));
         if (!!resultSet) {
             result->setResultSet(resultSet);
         }
@@ -57,7 +58,7 @@ boost::shared_ptr<MAMQuery> MAMQueryConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void MAMQueryConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<MAMQuery> payload) {
+void MAMQueryConvertor::doConvertToLua(lua_State* L, std::shared_ptr<MAMQuery> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getQueryID()) {
         lua_pushstring(L, (*payload->getQueryID()).c_str());

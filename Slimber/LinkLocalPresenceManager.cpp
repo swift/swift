@@ -34,7 +34,7 @@ boost::optional<LinkLocalService> LinkLocalPresenceManager::getServiceForJID(con
 }
 
 void LinkLocalPresenceManager::handleServiceAdded(const LinkLocalService& service) {
-    boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+    std::shared_ptr<RosterPayload> roster(new RosterPayload());
     roster->addItem(getRosterItem(service));
     onRosterChanged(roster);
     onPresenceChanged(getPresence(service));
@@ -45,21 +45,21 @@ void LinkLocalPresenceManager::handleServiceChanged(const LinkLocalService& serv
 }
 
 void LinkLocalPresenceManager::handleServiceRemoved(const LinkLocalService& service) {
-    boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+    std::shared_ptr<RosterPayload> roster(new RosterPayload());
     roster->addItem(RosterItemPayload(service.getJID(), "", RosterItemPayload::Remove));
     onRosterChanged(roster);
 }
 
-boost::shared_ptr<RosterPayload> LinkLocalPresenceManager::getRoster() const {
-    boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+std::shared_ptr<RosterPayload> LinkLocalPresenceManager::getRoster() const {
+    std::shared_ptr<RosterPayload> roster(new RosterPayload());
     foreach(const LinkLocalService& service, browser->getServices()) {
         roster->addItem(getRosterItem(service));
     }
     return roster;
 }
 
-std::vector<boost::shared_ptr<Presence> > LinkLocalPresenceManager::getAllPresence() const {
-    std::vector<boost::shared_ptr<Presence> > result;
+std::vector<std::shared_ptr<Presence> > LinkLocalPresenceManager::getAllPresence() const {
+    std::vector<std::shared_ptr<Presence> > result;
     foreach(const LinkLocalService& service, browser->getServices()) {
         result.push_back(getPresence(service));
     }
@@ -88,8 +88,8 @@ std::string LinkLocalPresenceManager::getRosterName(const LinkLocalService& serv
     return "";
 }
 
-boost::shared_ptr<Presence> LinkLocalPresenceManager::getPresence(const LinkLocalService& service) const {
-    boost::shared_ptr<Presence> presence(new Presence());
+std::shared_ptr<Presence> LinkLocalPresenceManager::getPresence(const LinkLocalService& service) const {
+    std::shared_ptr<Presence> presence(new Presence());
     presence->setFrom(service.getJID());
     switch (service.getInfo().getStatus()) {
         case LinkLocalServiceInfo::Available:

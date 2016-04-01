@@ -30,7 +30,7 @@ static JID recipient;
 static int exitCode = CANNOT_CONNECT;
 static boost::bsignals::connection errorConnection;
 
-static void handleServerDiscoInfoResponse(boost::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
+static void handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
     if (!error) {
         errorConnection.disconnect();
         client->disconnect();

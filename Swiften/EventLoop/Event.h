@@ -6,15 +6,16 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/function.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/EventLoop/EventOwner.h>
 
 namespace Swift {
     class Event {
         public:
-            Event(boost::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) : id(~0U), owner(owner), callback(callback) {
+            Event(std::shared_ptr<EventOwner> owner, const boost::function<void()>& callback) : id(~0U), owner(owner), callback(callback) {
             }
 
             bool operator==(const Event& o) const {
@@ -22,7 +23,7 @@ namespace Swift {
             }
 
             unsigned int id;
-            boost::shared_ptr<EventOwner> owner;
+            std::shared_ptr<EventOwner> owner;
             boost::function<void()> callback;
     };
 }

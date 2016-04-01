@@ -61,14 +61,14 @@ void SchannelContext::connect() {
         if (myCertStore_ == NULL) {
             myCertStore_ = CertOpenSystemStore(0, certStoreName_.c_str());
             if (!myCertStore_) {
-                indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+                indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
                 return;
             }
         }
 
         pCertContext = findCertificateInStore( myCertStore_, certName_ );
         if (pCertContext == NULL) {
-            indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+            indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
             return;
         }
     }
@@ -115,7 +115,7 @@ void SchannelContext::connect() {
 
     if (status != SEC_E_OK) {
         // We failed to obtain the credentials handle
-        indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+        indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
         return;
     }
 
@@ -158,7 +158,7 @@ void SchannelContext::connect() {
     if (status != SEC_E_OK && status != SEC_I_CONTINUE_NEEDED) {
         // We failed to initialize the security context
         handleCertError(status);
-        indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+        indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
         return;
     }
 
@@ -181,7 +181,7 @@ void SchannelContext::connect() {
 //------------------------------------------------------------------------
 
 SECURITY_STATUS SchannelContext::validateServerCertificate() {
-    SchannelCertificate::ref pServerCert = boost::dynamic_pointer_cast<SchannelCertificate>( getPeerCertificate() );
+    SchannelCertificate::ref pServerCert = std::dynamic_pointer_cast<SchannelCertificate>( getPeerCertificate() );
     if (!pServerCert) {
         return SEC_E_WRONG_PRINCIPAL;
     }
@@ -359,7 +359,7 @@ void SchannelContext::continueHandshake(const SafeByteArray& data) {
         else {
             // We failed to initialize the security context
             handleCertError(status);
-            indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+            indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
             return;
         }
     }
@@ -459,7 +459,7 @@ void SchannelContext::handleDataFromNetwork(const SafeByteArray& data) {
 
 //------------------------------------------------------------------------
 
-void SchannelContext::indicateError(boost::shared_ptr<TLSError> error) {
+void SchannelContext::indicateError(std::shared_ptr<TLSError> error) {
     state_ = Error;
     receivedData_.clear();
     onError(error);
@@ -505,15 +505,15 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data) {
         }
         else if (status == SEC_I_RENEGOTIATE) {
             // TODO: Handle renegotiation scenarios
-            indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+            indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
             break;
         }
         else if (status == SEC_I_CONTEXT_EXPIRED) {
-            indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+            indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
             break;
         }
         else if (status != SEC_E_OK) {
-            indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+            indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
             break;
         }
 
@@ -596,7 +596,7 @@ void SchannelContext::encryptAndSendData(const SafeByteArray& data) {
 
         SECURITY_STATUS status = EncryptMessage(contextHandle_, 0, &outBufferDesc, 0);
         if (status != SEC_E_OK) {
-            indicateError(boost::make_shared<TLSError>(TLSError::UnknownError));
+            indicateError(std::make_shared<TLSError>(TLSError::UnknownError));
             return;
         }
 
@@ -609,7 +609,7 @@ void SchannelContext::encryptAndSendData(const SafeByteArray& data) {
 //------------------------------------------------------------------------
 
 bool SchannelContext::setClientCertificate(CertificateWithKey::ref certificate) {
-    boost::shared_ptr<CAPICertificate> capiCertificate = boost::dynamic_pointer_cast<CAPICertificate>(certificate);
+    std::shared_ptr<CAPICertificate> capiCertificate = std::dynamic_pointer_cast<CAPICertificate>(certificate);
     if (!capiCertificate || capiCertificate->isNull()) {
         return false;
     }
@@ -631,7 +631,7 @@ bool SchannelContext::setClientCertificate(CertificateWithKey::ref certificate) 
 //------------------------------------------------------------------------
 void SchannelContext::handleCertificateCardRemoved() {
     if (disconnectOnCardRemoval_) {
-        indicateError(boost::make_shared<TLSError>(TLSError::CertificateCardRemoved));
+        indicateError(std::make_shared<TLSError>(TLSError::CertificateCardRemoved));
     }
 }
 
@@ -647,7 +647,7 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
     if (status != SEC_E_OK) {
         return certificateChain;
     }
-    certificateChain.push_back(boost::make_shared<SchannelCertificate>(pServerCert));
+    certificateChain.push_back(std::make_shared<SchannelCertificate>(pServerCert));
 
     pCurrentCert = pServerCert;
     while(pCurrentCert.GetPointer()) {
@@ -656,7 +656,7 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
         if (!(*pIssuerCert.GetPointer())) {
             break;
         }
-        certificateChain.push_back(boost::make_shared<SchannelCertificate>(pIssuerCert));
+        certificateChain.push_back(std::make_shared<SchannelCertificate>(pIssuerCert));
 
         pCurrentCert = pIssuerCert;
         pIssuerCert = NULL;
@@ -667,7 +667,7 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
 //------------------------------------------------------------------------
 
 CertificateVerificationError::ref SchannelContext::getPeerCertificateVerificationError() const {
-    return verificationError_ ? boost::make_shared<CertificateVerificationError>(*verificationError_) : CertificateVerificationError::ref();
+    return verificationError_ ? std::make_shared<CertificateVerificationError>(*verificationError_) : CertificateVerificationError::ref();
 }
 
 //------------------------------------------------------------------------

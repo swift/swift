@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-AvahiResolveHostnameQuery::AvahiResolveHostnameQuery(const std::string& hostname, int, boost::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), hostname(hostname) {
+AvahiResolveHostnameQuery::AvahiResolveHostnameQuery(const std::string& hostname, int, std::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), hostname(hostname) {
     std::cout << "Resolving hostname " << hostname << std::endl;
 }
 

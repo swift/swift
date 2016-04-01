@@ -43,13 +43,13 @@ namespace Swift {
                     PresenceType
                 };
 
-                Event(boost::shared_ptr<Message> stanza) : type(MessageType), stanza(stanza) {}
-                Event(boost::shared_ptr<Presence> stanza) : type(PresenceType), stanza(stanza) {}
+                Event(std::shared_ptr<Message> stanza) : type(MessageType), stanza(stanza) {}
+                Event(std::shared_ptr<Presence> stanza) : type(PresenceType), stanza(stanza) {}
 
                 Type type;
 
                 // Message & Presence
-                boost::shared_ptr<Stanza> stanza;
+                std::shared_ptr<Stanza> stanza;
             };
 
             SluiftComponent(
@@ -78,7 +78,7 @@ namespace Swift {
             template<typename REQUEST_TYPE>
             Sluift::Response sendVoidRequest(REQUEST_TYPE request, int timeout) {
                 boost::signals::scoped_connection c = request->onResponse.connect(
-                        boost::bind(&SluiftComponent::handleRequestResponse, this, boost::shared_ptr<Payload>(), _1));
+                        boost::bind(&SluiftComponent::handleRequestResponse, this, std::shared_ptr<Payload>(), _1));
                 return doSendRequest(request, timeout);
             }
 
@@ -88,11 +88,11 @@ namespace Swift {
                     boost::function<bool (const Event&)> condition = 0);
 
         private:
-            Sluift::Response doSendRequest(boost::shared_ptr<Request> request, int timeout);
+            Sluift::Response doSendRequest(std::shared_ptr<Request> request, int timeout);
 
-            void handleIncomingMessage(boost::shared_ptr<Message> stanza);
-            void handleIncomingPresence(boost::shared_ptr<Presence> stanza);
-            void handleRequestResponse(boost::shared_ptr<Payload> response, boost::shared_ptr<ErrorPayload> error);
+            void handleIncomingMessage(std::shared_ptr<Message> stanza);
+            void handleIncomingPresence(std::shared_ptr<Presence> stanza);
+            void handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error);
             void handleError(const boost::optional<ComponentError>& error);
 
         private:
@@ -103,7 +103,7 @@ namespace Swift {
             std::deque<Event> pendingEvents;
             boost::optional<ComponentError> disconnectedError;
             bool requestResponseReceived;
-            boost::shared_ptr<Payload> requestResponse;
-            boost::shared_ptr<ErrorPayload> requestError;
+            std::shared_ptr<Payload> requestResponse;
+            std::shared_ptr<ErrorPayload> requestError;
     };
 }

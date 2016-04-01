@@ -55,7 +55,7 @@ namespace Swift {
                 if (!index.isValid()) {
                     return QVariant();
                 }
-                boost::shared_ptr<SecurityLabel> label = availableLabels_[index.row()].getLabel();
+                std::shared_ptr<SecurityLabel> label = availableLabels_[index.row()].getLabel();
                 if (label && role == Qt::TextColorRole) {
                     return P2QSTRING(label->getForegroundColor());
                 }
@@ -80,8 +80,8 @@ namespace Swift {
         public:
             QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons);
             virtual ~QtChatWindow();
-            std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
-            std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+            std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
+            std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
 
             std::string addSystemMessage(const ChatMessage& message, Direction direction);
             void addPresenceMessage(const ChatMessage& message, Direction direction);

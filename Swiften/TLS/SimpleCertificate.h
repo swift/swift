@@ -14,7 +14,7 @@
 namespace Swift {
     class SWIFTEN_API SimpleCertificate : public Certificate {
         public:
-            typedef boost::shared_ptr<SimpleCertificate> ref;
+            typedef std::shared_ptr<SimpleCertificate> ref;
 
             void setSubjectName(const std::string& name) {
                 subjectName = name;

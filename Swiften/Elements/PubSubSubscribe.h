@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -42,11 +42,11 @@ namespace Swift {
                 this->jid = value ;
             }
 
-            boost::shared_ptr<PubSubOptions> getOptions() const {
+            std::shared_ptr<PubSubOptions> getOptions() const {
                 return options;
             }
 
-            void setOptions(boost::shared_ptr<PubSubOptions> value) {
+            void setOptions(std::shared_ptr<PubSubOptions> value) {
                 this->options = value ;
             }
 
@@ -54,6 +54,6 @@ namespace Swift {
         private:
             boost::optional< std::string > node;
             JID jid;
-            boost::shared_ptr<PubSubOptions> options;
+            std::shared_ptr<PubSubOptions> options;
     };
 }

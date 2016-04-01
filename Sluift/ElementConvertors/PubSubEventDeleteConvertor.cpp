@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubEventDeleteConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,8 +22,8 @@ PubSubEventDeleteConvertor::PubSubEventDeleteConvertor(LuaElementConvertors* con
 PubSubEventDeleteConvertor::~PubSubEventDeleteConvertor() {
 }
 
-boost::shared_ptr<PubSubEventDelete> PubSubEventDeleteConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubEventDelete> result = boost::make_shared<PubSubEventDelete>();
+std::shared_ptr<PubSubEventDelete> PubSubEventDeleteConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubEventDelete> result = std::make_shared<PubSubEventDelete>();
     lua_getfield(L, -1, "node");
     if (lua_isstring(L, -1)) {
         result->setNode(std::string(lua_tostring(L, -1)));
@@ -31,7 +31,7 @@ boost::shared_ptr<PubSubEventDelete> PubSubEventDeleteConvertor::doConvertFromLu
     lua_pop(L, 1);
     lua_getfield(L, -1, "redirects");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<PubSubEventRedirect> payload = boost::dynamic_pointer_cast<PubSubEventRedirect>(convertors->convertFromLuaUntyped(L, -1, "pubsub_event_redirect"))) {
+        if (std::shared_ptr<PubSubEventRedirect> payload = std::dynamic_pointer_cast<PubSubEventRedirect>(convertors->convertFromLuaUntyped(L, -1, "pubsub_event_redirect"))) {
             result->setRedirects(payload);
         }
     }
@@ -39,7 +39,7 @@ boost::shared_ptr<PubSubEventDelete> PubSubEventDeleteConvertor::doConvertFromLu
     return result;
 }
 
-void PubSubEventDeleteConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEventDelete> payload) {
+void PubSubEventDeleteConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubEventDelete> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getNode().c_str());
     lua_setfield(L, -2, "node");

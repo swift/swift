@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
     template<typename PAYLOAD_TYPE>
     class SWIFTEN_API GenericRequest : public Request {
         public:
-            typedef boost::shared_ptr<GenericRequest<PAYLOAD_TYPE> > ref;
+            typedef std::shared_ptr<GenericRequest<PAYLOAD_TYPE> > ref;
 
         public:
             /**
@@ -36,7 +36,7 @@ namespace Swift {
             GenericRequest(
                     IQ::Type type,
                     const JID& receiver,
-                    boost::shared_ptr<Payload> payload,
+                    std::shared_ptr<Payload> payload,
                     IQRouter* router) :
                         Request(type, receiver, payload, router) {
             }
@@ -53,7 +53,7 @@ namespace Swift {
                     IQ::Type type,
                     const JID& sender,
                     const JID& receiver,
-                    boost::shared_ptr<Payload> payload,
+                    std::shared_ptr<Payload> payload,
                     IQRouter* router) :
                         Request(type, sender, receiver, payload, router) {
             }
@@ -61,19 +61,19 @@ namespace Swift {
             /**
              * Internal method, do not use.
              */
-            virtual void handleResponse(boost::shared_ptr<Payload> payload, ErrorPayload::ref error) {
-                onResponse(boost::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
+            virtual void handleResponse(std::shared_ptr<Payload> payload, ErrorPayload::ref error) {
+                onResponse(std::dynamic_pointer_cast<PAYLOAD_TYPE>(payload), error);
             }
 
         public:
-            boost::shared_ptr<PAYLOAD_TYPE> getPayloadGeneric() const {
-                return boost::dynamic_pointer_cast<PAYLOAD_TYPE>(getPayload());
+            std::shared_ptr<PAYLOAD_TYPE> getPayloadGeneric() const {
+                return std::dynamic_pointer_cast<PAYLOAD_TYPE>(getPayload());
             }
 
         public:
             /**
              * Signal emitted when a reply to the iq has been received. Contains a payload if one was present, and an error if one was present.
              */
-            boost::signal<void (boost::shared_ptr<PAYLOAD_TYPE>, ErrorPayload::ref)> onResponse;
+            boost::signal<void (std::shared_ptr<PAYLOAD_TYPE>, ErrorPayload::ref)> onResponse;
     };
 }

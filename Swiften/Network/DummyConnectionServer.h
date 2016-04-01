@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/enable_shared_from_this.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -15,7 +15,7 @@
 #include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
-    class SWIFTEN_API DummyConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<DummyConnectionServer> {
+    class SWIFTEN_API DummyConnectionServer : public ConnectionServer, public EventOwner, public std::enable_shared_from_this<DummyConnectionServer> {
         public:
             DummyConnectionServer(EventLoop* /*eventLoop*/, int port) : localAddressPort(HostAddress(), port) {}
             DummyConnectionServer(EventLoop* /*eventLoop*/, const Swift::HostAddress& hostAddress, int port) : localAddressPort(hostAddress, port) {}

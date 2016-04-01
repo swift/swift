@@ -30,7 +30,7 @@ class IBBSerializerTest : public CppUnit::TestFixture
 
         void testSerialize_data() {
             IBBSerializer testling;
-            boost::shared_ptr<IBB> ibb = boost::make_shared<IBB>();
+            std::shared_ptr<IBB> ibb = std::make_shared<IBB>();
             ibb->setAction(IBB::Data);
             ibb->setData(createByteArray("abcdefgihjklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890\x0a"));
             ibb->setSequenceNumber(4);

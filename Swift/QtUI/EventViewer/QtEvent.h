@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <QVariant>
 
@@ -15,9 +15,9 @@
 namespace Swift {
     class QtEvent {
         public:
-            QtEvent(boost::shared_ptr<StanzaEvent> event, bool active);
+            QtEvent(std::shared_ptr<StanzaEvent> event, bool active);
             QVariant data(int role);
-            boost::shared_ptr<StanzaEvent> getEvent() { return event_; }
+            std::shared_ptr<StanzaEvent> getEvent() { return event_; }
             enum EventRoles {
                 SenderRole = Qt::UserRole
 
@@ -26,7 +26,7 @@ namespace Swift {
         private:
             QString text();
             QString sender();
-            boost::shared_ptr<StanzaEvent> event_;
+            std::shared_ptr<StanzaEvent> event_;
             bool active_;
     };
 }

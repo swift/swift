@@ -11,7 +11,7 @@
  */
 
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -46,7 +46,7 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         //Client receives first local operation, because it's parented off "0" which exists
@@ -54,7 +54,7 @@ public:
         //so this operation could be send
         WhiteboardInsertOperation::ref clientOp;
         clientOp = createInsertOperation("a", "0", 1);
-        WhiteboardEllipseElement::ref aElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref aElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(aElement);
         WhiteboardInsertOperation::ref result;
         checkOperation(client.handleLocalOperationReceived(clientOp), "a", "0", 1, aElement);
@@ -63,7 +63,7 @@ public:
         //so it have to be transformed against local operations and then transformed value can
         //be returned to draw
         serverOp = createInsertOperation("b", "0", 1);
-        WhiteboardEllipseElement::ref bElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref bElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(bElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "b", "a", 2, bElement);
@@ -82,7 +82,7 @@ public:
         //but operation returned to send to the server should be parented off last server
         //operation, which is "b"
         clientOp = createInsertOperation("c", "b", 3);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(cElement);
         checkOperation(client.handleLocalOperationReceived(clientOp), "c", "a", 3, cElement);
 
@@ -123,21 +123,21 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         //Client receives first local operation, because it's parented off "0" which exists
         //in server history and client doesn't wait for any operation ack from server,
         //so this operation could be send
         WhiteboardInsertOperation::ref clientOp = createInsertOperation("c", "0", 1);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(cElement);
         checkOperation(client.handleLocalOperationReceived(clientOp), "c", "0", 1, cElement);
 
         //Client receives second local operation, client didn't receive ack about previous
         //operation from the server so it can't be send.
         clientOp = createInsertOperation("d", "c", 2);
-        WhiteboardEllipseElement::ref dElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref dElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(dElement);
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), client.handleLocalOperationReceived(clientOp));
 
@@ -162,11 +162,11 @@ public:
         //the end of local history so it doesn't have to be transformed, so operation
         //to pass to window should be the same
         serverOp = createInsertOperation("e", "d", 3);
-        WhiteboardEllipseElement::ref eElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref eElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(eElement);
         pairResult = client.handleServerOperationReceived(serverOp);
-        WhiteboardInsertOperation::ref result = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        WhiteboardInsertOperation::ref result = std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client);
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
 
@@ -196,7 +196,7 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         //Client receives first local operation, because it's parented off "0" which exists
@@ -204,14 +204,14 @@ public:
         //so this operation could be send
         WhiteboardInsertOperation::ref clientOp;
         clientOp = createInsertOperation("a", "0", 1);
-        WhiteboardEllipseElement::ref aElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref aElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(aElement);
         checkOperation(client.handleLocalOperationReceived(clientOp), "a", "0", 1, aElement);
 
         //Client receives second local operation, client didn't receive ack about previous
         //operation from the server so it can't be send.
         clientOp = createInsertOperation("b", "a", 2);
-        WhiteboardEllipseElement::ref bElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref bElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(bElement);
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), client.handleLocalOperationReceived(clientOp));
 
@@ -219,7 +219,7 @@ public:
         //"a" and "b" before adding to local operations history because it's parented off "0".
         //Because client is waiting for ack of "a", there is no operation to send to server
         serverOp = createInsertOperation("c", "0", 1);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(cElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "c", "b", 3, cElement);
@@ -230,7 +230,7 @@ public:
         //"c" existing in local history.
         //Because client is waiting for ack of "a", there is no operation to send to server
         serverOp = createInsertOperation("d", "c", 2);
-        WhiteboardEllipseElement::ref dElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref dElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(dElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "d", "c", 4, dElement);
@@ -282,7 +282,7 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         //Client receives first local operation, because it's parented off "0" which exists
@@ -290,14 +290,14 @@ public:
         //so this operation could be send
         WhiteboardInsertOperation::ref clientOp;
         clientOp = createInsertOperation("a", "0", 1);
-        WhiteboardEllipseElement::ref aElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref aElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(aElement);
         checkOperation(client.handleLocalOperationReceived(clientOp), "a", "0", 1, aElement);
 
         //Client receives second local operation, client didn't receive ack about previous
         //operation from the server so it can't be send.
         clientOp = createInsertOperation("b", "a", 2);
-        WhiteboardEllipseElement::ref bElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref bElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(bElement);
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), client.handleLocalOperationReceived(clientOp));
 
@@ -305,7 +305,7 @@ public:
         //"a" and "b" before adding to local operations history because it's parented off "0".
         //Because client is waiting for ack of "a", there is no operation to send to server
         serverOp = createInsertOperation("c", "0", 1);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(cElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "c", "b", 3, cElement);
@@ -314,7 +314,7 @@ public:
         //Client receives new local operation, client is still waiting for ack so, it
         //should return nothing
         clientOp = createInsertOperation("e", "a", 4);
-        WhiteboardEllipseElement::ref eElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref eElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(eElement);
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), client.handleLocalOperationReceived(clientOp));
 
@@ -322,7 +322,7 @@ public:
         //against result of previous transformations and operation "e", returned operation should
         //be parented off "e", which was last local operation
         serverOp = createInsertOperation("d", "c", 2);
-        WhiteboardEllipseElement::ref dElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref dElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(dElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "d", "e", 5, dElement);
@@ -383,7 +383,7 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         //Client receives first local operation, because it's parented off "0" which exists
@@ -391,14 +391,14 @@ public:
         //so this operation could be send
         WhiteboardInsertOperation::ref clientOp;
         clientOp = createInsertOperation("a", "0", 1);
-        WhiteboardEllipseElement::ref aElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref aElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(aElement);
         checkOperation(client.handleLocalOperationReceived(clientOp), "a", "0", 1, aElement);
 
         //Client receives second local operation, client didn't receive ack about previous
         //operation from the server so it can't be send.
         clientOp = createInsertOperation("b", "a", 2);
-        WhiteboardEllipseElement::ref bElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref bElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(bElement);
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), client.handleLocalOperationReceived(clientOp));
 
@@ -406,7 +406,7 @@ public:
         //"a" and "b" before adding to local operations history because it's parented off "0".
         //Because client is waiting for ack of "a", there is no operation to send to server
         serverOp = createInsertOperation("c", "0", 1);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(cElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "c", "b", 3, cElement);
@@ -425,7 +425,7 @@ public:
         //against result of previous transformation(but only with transformation of "b"), returned
         //operation should be parented off "c", which was last local operation
         serverOp = createInsertOperation("d", "a", 3);
-        WhiteboardEllipseElement::ref dElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref dElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(dElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "d", "c", 4, dElement);
@@ -471,7 +471,7 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         //Client receives first local operation, because it's parented off "0" which exists
@@ -479,14 +479,14 @@ public:
         //so this operation could be send
         WhiteboardInsertOperation::ref clientOp;
         clientOp = createInsertOperation("a", "0", 1);
-        WhiteboardEllipseElement::ref aElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref aElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientOp->setElement(aElement);
         checkOperation(client.handleLocalOperationReceived(clientOp), "a", "0", 1, aElement);
 
         //Client receives second local operation, client didn't receive ack about previous
         //operation from the server so it can't be send.
         WhiteboardUpdateOperation::ref clientUpdateOp = createUpdateOperation("b", "a", 0);
-        WhiteboardEllipseElement::ref bElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref bElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientUpdateOp->setElement(bElement);
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), client.handleLocalOperationReceived(clientUpdateOp));
 
@@ -494,7 +494,7 @@ public:
         //"a" and "b" before adding to local operations history because it's parented off "0".
         //Because client is waiting for ack of "a", there is no operation to send to server
         WhiteboardUpdateOperation::ref serverUpdateOp = createUpdateOperation("c", "0", 0);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverUpdateOp->setElement(cElement);
         pairResult = client.handleServerOperationReceived(serverUpdateOp);
         checkOperation(pairResult.client, "c", "b", 0, cElement);
@@ -505,7 +505,7 @@ public:
         //"c" existing in local history.
         //Because client is waiting for ack of "a", there is no operation to send to server
         serverOp = createInsertOperation("d", "c", 1);
-        WhiteboardEllipseElement::ref dElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref dElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(dElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "d", "c", 2, dElement);
@@ -556,12 +556,12 @@ public:
         WhiteboardInsertOperation::ref serverOp;
         serverOp = createInsertOperation("0", "", 0);
         WhiteboardClient::Result pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
 
         serverOp = createInsertOperation("1", "0", 1);
         pairResult = client.handleServerOperationReceived(serverOp);
-        CPPUNIT_ASSERT_EQUAL(serverOp, boost::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
+        CPPUNIT_ASSERT_EQUAL(serverOp, std::dynamic_pointer_cast<WhiteboardInsertOperation>(pairResult.client));
         CPPUNIT_ASSERT_EQUAL(WhiteboardOperation::ref(), pairResult.server);
         //Client receives first local operation, because it's parented off "0" which exists
         //in server history and client doesn't wait for any operation ack from server,
@@ -570,7 +570,7 @@ public:
         WhiteboardUpdateOperation::ref clientUpdateOp;
         WhiteboardDeleteOperation::ref clientDeleteOp;
         clientUpdateOp = createUpdateOperation("a", "1", 0);
-        WhiteboardEllipseElement::ref aElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref aElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         clientUpdateOp->setElement(aElement);
         checkOperation(client.handleLocalOperationReceived(clientUpdateOp), "a", "1", 0, aElement);
 
@@ -583,7 +583,7 @@ public:
         //"a" and "b" before adding to local operations history because it's parented off "0".
         //Because client is waiting for ack of "a", there is no operation to send to server
         serverOp = createInsertOperation("c", "1", 2);
-        WhiteboardEllipseElement::ref cElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref cElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverOp->setElement(cElement);
         pairResult = client.handleServerOperationReceived(serverOp);
         checkOperation(pairResult.client, "c", "b", 1, cElement);
@@ -594,7 +594,7 @@ public:
         //"c" existing in local history.
         //Because client is waiting for ack of "a", there is no operation to send to server
         WhiteboardUpdateOperation::ref serverUpdateOp = createUpdateOperation("d", "c", 0);
-        WhiteboardEllipseElement::ref dElement = boost::make_shared<WhiteboardEllipseElement>(0,0,0,0);
+        WhiteboardEllipseElement::ref dElement = std::make_shared<WhiteboardEllipseElement>(0,0,0,0);
         serverUpdateOp->setElement(dElement);
         pairResult = client.handleServerOperationReceived(serverUpdateOp);
         checkOperation(pairResult.client, "d", "c", 0, dElement);
@@ -636,7 +636,7 @@ public:
 
 
     WhiteboardInsertOperation::ref createInsertOperation(std::string id, std::string parent, int pos) {
-        WhiteboardInsertOperation::ref operation = boost::make_shared<WhiteboardInsertOperation>();
+        WhiteboardInsertOperation::ref operation = std::make_shared<WhiteboardInsertOperation>();
         operation->setParentID(parent);
         operation->setID(id);
         operation->setPos(pos);
@@ -644,7 +644,7 @@ public:
     }
 
     WhiteboardUpdateOperation::ref createUpdateOperation(std::string id, std::string parent, int pos) {
-        WhiteboardUpdateOperation::ref operation = boost::make_shared<WhiteboardUpdateOperation>();
+        WhiteboardUpdateOperation::ref operation = std::make_shared<WhiteboardUpdateOperation>();
         operation->setParentID(parent);
         operation->setID(id);
         operation->setPos(pos);
@@ -652,7 +652,7 @@ public:
     }
 
     WhiteboardDeleteOperation::ref createDeleteOperation(std::string id, std::string parent, int pos) {
-        WhiteboardDeleteOperation::ref operation = boost::make_shared<WhiteboardDeleteOperation>();
+        WhiteboardDeleteOperation::ref operation = std::make_shared<WhiteboardDeleteOperation>();
         operation->setParentID(parent);
         operation->setID(id);
         operation->setPos(pos);
@@ -667,12 +667,12 @@ public:
         }
 
         if (element) {
-            WhiteboardInsertOperation::ref insertOp = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
+            WhiteboardInsertOperation::ref insertOp = std::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
             if (insertOp) {
                 CPPUNIT_ASSERT_EQUAL(element, insertOp->getElement());
             }
 
-            WhiteboardUpdateOperation::ref updateOp = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
+            WhiteboardUpdateOperation::ref updateOp = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
             if (updateOp) {
                 CPPUNIT_ASSERT_EQUAL(element, updateOp->getElement());
             }

@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Override.h>
 
@@ -31,8 +31,8 @@ namespace Swift {
 
             virtual ~LuaElementConvertor();
 
-            virtual boost::shared_ptr<Element> convertFromLua(lua_State*, int index, const std::string& type) = 0;
-            virtual boost::optional<std::string> convertToLua(lua_State*, boost::shared_ptr<Element>) = 0;
+            virtual std::shared_ptr<Element> convertFromLua(lua_State*, int index, const std::string& type) = 0;
+            virtual boost::optional<std::string> convertToLua(lua_State*, std::shared_ptr<Element>) = 0;
 
             virtual boost::optional<Documentation> getDocumentation() const {
                 return boost::optional<Documentation>();

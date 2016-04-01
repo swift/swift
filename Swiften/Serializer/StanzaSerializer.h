@@ -22,9 +22,9 @@ namespace Swift {
         public:
             StanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>());
 
-            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element) const;
-            virtual SafeByteArray serialize(boost::shared_ptr<ToplevelElement> element, const std::string& xmlns) const;
-            virtual void setStanzaSpecificAttributes(boost::shared_ptr<ToplevelElement>, XMLElement&) const = 0;
+            virtual SafeByteArray serialize(std::shared_ptr<ToplevelElement> element) const;
+            virtual SafeByteArray serialize(std::shared_ptr<ToplevelElement> element, const std::string& xmlns) const;
+            virtual void setStanzaSpecificAttributes(std::shared_ptr<ToplevelElement>, XMLElement&) const = 0;
 
         private:
             std::string tag_;

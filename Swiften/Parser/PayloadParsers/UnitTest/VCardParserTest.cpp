@@ -84,7 +84,7 @@ class VCardParserTest : public CppUnit::TestFixture {
                     "<MAILER>mutt</MAILER>"
                 "</vCard>"));
 
-            boost::shared_ptr<VCard> payload = boost::dynamic_pointer_cast<VCard>(parser.getPayload());
+            std::shared_ptr<VCard> payload = std::dynamic_pointer_cast<VCard>(parser.getPayload());
             CPPUNIT_ASSERT_EQUAL(std::string("2.0"), payload->getVersion());
             CPPUNIT_ASSERT_EQUAL(std::string("Alice In Wonderland"), payload->getFullName());
             CPPUNIT_ASSERT_EQUAL(std::string("Alice"), payload->getGivenName());

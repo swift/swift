@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ namespace Swift {
         public:
             SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 
-            virtual boost::shared_ptr<Connection> createConnection();
+            virtual std::shared_ptr<Connection> createConnection();
 
         private:
             DomainNameResolver* resolver_;

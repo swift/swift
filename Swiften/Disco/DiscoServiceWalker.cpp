@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ void DiscoServiceWalker::walkNode(const JID& jid) {
     discoInfoRequest->send();
 }
 
-void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request) {
+void DiscoServiceWalker::handleDiscoInfoResponse(std::shared_ptr<DiscoInfo> info, ErrorPayload::ref error, GetDiscoInfoRequest::ref request) {
     /* If we got canceled, don't do anything */
     if (!active_) {
         return;
@@ -85,7 +85,7 @@ void DiscoServiceWalker::handleDiscoInfoResponse(boost::shared_ptr<DiscoInfo> in
     }
 }
 
-void DiscoServiceWalker::handleDiscoItemsResponse(boost::shared_ptr<DiscoItems> items, ErrorPayload::ref error, GetDiscoItemsRequest::ref request) {
+void DiscoServiceWalker::handleDiscoItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error, GetDiscoItemsRequest::ref request) {
     /* If we got canceled, don't do anything */
     if (!active_) {
         return;

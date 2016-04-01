@@ -12,16 +12,16 @@
 
 #include <Swiften/Whiteboard/WhiteboardTransformer.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 namespace Swift {
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardOperation::ref clientOp, WhiteboardOperation::ref serverOp) {
-        WhiteboardInsertOperation::ref clientInsert = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(clientOp);
-        WhiteboardInsertOperation::ref serverInsert = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(serverOp);
-        WhiteboardUpdateOperation::ref clientUpdate = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(clientOp);
-        WhiteboardUpdateOperation::ref serverUpdate = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(serverOp);
-        WhiteboardDeleteOperation::ref clientDelete = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(clientOp);
-        WhiteboardDeleteOperation::ref serverDelete = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(serverOp);
+        WhiteboardInsertOperation::ref clientInsert = std::dynamic_pointer_cast<WhiteboardInsertOperation>(clientOp);
+        WhiteboardInsertOperation::ref serverInsert = std::dynamic_pointer_cast<WhiteboardInsertOperation>(serverOp);
+        WhiteboardUpdateOperation::ref clientUpdate = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(clientOp);
+        WhiteboardUpdateOperation::ref serverUpdate = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(serverOp);
+        WhiteboardDeleteOperation::ref clientDelete = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(clientOp);
+        WhiteboardDeleteOperation::ref serverDelete = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(serverOp);
         if (clientInsert && serverInsert) {
             return transform(clientInsert, serverInsert);
         } else if (clientUpdate && serverUpdate) {
@@ -47,9 +47,9 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardInsertOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp) {
         std::pair<WhiteboardInsertOperation::ref, WhiteboardInsertOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardInsertOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardInsertOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardInsertOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardInsertOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (clientOp->getPos() <= serverOp->getPos()) {
             result.first->setPos(result.first->getPos()+1);
@@ -61,15 +61,15 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp) {
         std::pair<WhiteboardUpdateOperation::ref, WhiteboardUpdateOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardUpdateOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardUpdateOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
 
         if (clientOp->getPos() == serverOp->getPos()) {
-            result.second = boost::make_shared<WhiteboardUpdateOperation>(*serverOp);
+            result.second = std::make_shared<WhiteboardUpdateOperation>(*serverOp);
             result.second->setID(clientOp->getID());
             result.second->setParentID(serverOp->getID());
         } else {
-            result.second = boost::make_shared<WhiteboardUpdateOperation>(*clientOp);
+            result.second = std::make_shared<WhiteboardUpdateOperation>(*clientOp);
             result.second->setParentID(serverOp->getID());
         }
 
@@ -95,9 +95,9 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp) {
         std::pair<WhiteboardInsertOperation::ref, WhiteboardUpdateOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardInsertOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardInsertOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardUpdateOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardUpdateOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (serverOp->getPos() <= clientOp->getPos()) {
             result.second->setPos(result.second->getPos()+1);
@@ -107,9 +107,9 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardInsertOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp) {
         std::pair<WhiteboardUpdateOperation::ref, WhiteboardInsertOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardUpdateOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardUpdateOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardInsertOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardInsertOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (serverOp->getPos() >= clientOp->getPos()) {
             result.first->setPos(result.first->getPos()+1);
@@ -119,9 +119,9 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp) {
         std::pair<WhiteboardDeleteOperation::ref, WhiteboardDeleteOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardDeleteOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardDeleteOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardDeleteOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardDeleteOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (clientOp->getPos() == -1) {
             result.second->setPos(-1);
@@ -142,9 +142,9 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardInsertOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp) {
         std::pair<WhiteboardDeleteOperation::ref, WhiteboardInsertOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardDeleteOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardDeleteOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardInsertOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardInsertOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (clientOp->getPos() <= serverOp->getPos()) {
             result.first->setPos(result.first->getPos()+1);
@@ -156,9 +156,9 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardInsertOperation::ref serverOp) {
         std::pair<WhiteboardInsertOperation::ref, WhiteboardDeleteOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardInsertOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardInsertOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardDeleteOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardDeleteOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (serverOp->getPos() <= clientOp->getPos()) {
             result.second->setPos(result.second->getPos()+1);
@@ -170,13 +170,13 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardUpdateOperation::ref clientOp, WhiteboardDeleteOperation::ref serverOp) {
         std::pair<WhiteboardDeleteOperation::ref, WhiteboardOperation::ref> result;
-        result.first = boost::make_shared<WhiteboardDeleteOperation>(*serverOp);
+        result.first = std::make_shared<WhiteboardDeleteOperation>(*serverOp);
         result.first->setParentID(clientOp->getID());
-        WhiteboardUpdateOperation::ref updateOp = boost::make_shared<WhiteboardUpdateOperation>(*clientOp);
+        WhiteboardUpdateOperation::ref updateOp = std::make_shared<WhiteboardUpdateOperation>(*clientOp);
         result.second = updateOp;
         result.second->setParentID(serverOp->getID());
         if (clientOp->getPos() == serverOp->getPos()) {
-            WhiteboardDeleteOperation::ref deleteOp = boost::make_shared<WhiteboardDeleteOperation>();
+            WhiteboardDeleteOperation::ref deleteOp = std::make_shared<WhiteboardDeleteOperation>();
             result.second = deleteOp;
             result.second->setPos(-1);
             result.second->setID(clientOp->getID());
@@ -195,13 +195,13 @@ namespace Swift {
 
     std::pair<WhiteboardOperation::ref, WhiteboardOperation::ref> WhiteboardTransformer::transform(WhiteboardDeleteOperation::ref clientOp, WhiteboardUpdateOperation::ref serverOp) {
         std::pair<WhiteboardOperation::ref, WhiteboardDeleteOperation::ref> result;
-        WhiteboardUpdateOperation::ref updateOp = boost::make_shared<WhiteboardUpdateOperation>(*serverOp);
+        WhiteboardUpdateOperation::ref updateOp = std::make_shared<WhiteboardUpdateOperation>(*serverOp);
         result.first = updateOp;
         result.first->setParentID(clientOp->getID());
-        result.second = boost::make_shared<WhiteboardDeleteOperation>(*clientOp);
+        result.second = std::make_shared<WhiteboardDeleteOperation>(*clientOp);
         result.second->setParentID(serverOp->getID());
         if (clientOp->getPos() == serverOp->getPos()) {
-            WhiteboardDeleteOperation::ref deleteOp = boost::make_shared<WhiteboardDeleteOperation>();
+            WhiteboardDeleteOperation::ref deleteOp = std::make_shared<WhiteboardDeleteOperation>();
             result.first = deleteOp;
             result.first->setPos(-1);
             result.first->setID(serverOp->getID());

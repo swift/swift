@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -26,8 +26,8 @@ class IQTest : public CppUnit::TestFixture
         IQTest() {}
 
         void testCreateResult() {
-            boost::shared_ptr<Payload> payload(new SoftwareVersion("myclient"));
-            boost::shared_ptr<IQ> iq(IQ::createResult(JID("foo@bar/fum"), "myid", payload));
+            std::shared_ptr<Payload> payload(new SoftwareVersion("myclient"));
+            std::shared_ptr<IQ> iq(IQ::createResult(JID("foo@bar/fum"), "myid", payload));
 
             CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
             CPPUNIT_ASSERT_EQUAL(std::string("myid"), iq->getID());
@@ -36,7 +36,7 @@ class IQTest : public CppUnit::TestFixture
         }
 
         void testCreateResult_WithoutPayload() {
-            boost::shared_ptr<IQ> iq(IQ::createResult(JID("foo@bar/fum"), "myid"));
+            std::shared_ptr<IQ> iq(IQ::createResult(JID("foo@bar/fum"), "myid"));
 
             CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
             CPPUNIT_ASSERT_EQUAL(std::string("myid"), iq->getID());
@@ -44,11 +44,11 @@ class IQTest : public CppUnit::TestFixture
         }
 
         void testCreateError() {
-            boost::shared_ptr<IQ> iq(IQ::createError(JID("foo@bar/fum"), "myid", ErrorPayload::BadRequest, ErrorPayload::Modify));
+            std::shared_ptr<IQ> iq(IQ::createError(JID("foo@bar/fum"), "myid", ErrorPayload::BadRequest, ErrorPayload::Modify));
 
             CPPUNIT_ASSERT_EQUAL(JID("foo@bar/fum"), iq->getTo());
             CPPUNIT_ASSERT_EQUAL(std::string("myid"), iq->getID());
-            boost::shared_ptr<ErrorPayload> error(iq->getPayload<ErrorPayload>());
+            std::shared_ptr<ErrorPayload> error(iq->getPayload<ErrorPayload>());
             CPPUNIT_ASSERT(error);
             CPPUNIT_ASSERT_EQUAL(ErrorPayload::BadRequest, error->getCondition());
             CPPUNIT_ASSERT_EQUAL(ErrorPayload::Modify, error->getType());

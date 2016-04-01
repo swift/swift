@@ -18,7 +18,7 @@ void MUCInvitationPayloadParser::handleTree(ParserElement::ref root) {
     invite->setReason(root->getAttributes().getAttribute("reason"));
     invite->setThread(root->getAttributes().getAttribute("thread"));
     ParserElement::ref impromptuNode = root->getChild("impromptu", "http://swift.im/impromptu");
-    invite->setIsImpromptu(!boost::dynamic_pointer_cast<NullParserElement>(impromptuNode));
+    invite->setIsImpromptu(!std::dynamic_pointer_cast<NullParserElement>(impromptuNode));
 }
 
 }

@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/IQConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,8 +22,8 @@ IQConvertor::IQConvertor(LuaElementConvertors* convertors) :
 IQConvertor::~IQConvertor() {
 }
 
-boost::shared_ptr<IQ> IQConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<IQ> result = getStanza(L, convertors);
+std::shared_ptr<IQ> IQConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<IQ> result = getStanza(L, convertors);
     lua_getfield(L, -1, "type");
     if (lua_isstring(L, -1)) {
         result->setType(IQConvertor::convertIQTypeFromString(lua_tostring(L, -1)));
@@ -32,7 +32,7 @@ boost::shared_ptr<IQ> IQConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void IQConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<IQ> stanza) {
+void IQConvertor::doConvertToLua(lua_State* L, std::shared_ptr<IQ> stanza) {
     pushStanza(L, stanza, convertors);
     const std::string type = IQConvertor::convertIQTypeToString(stanza->getType());
     lua_pushstring(L, type.c_str());

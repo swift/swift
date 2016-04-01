@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ HTTPConnectProxiedConnection::~HTTPConnectProxiedConnection() {
 
 }
 
-void HTTPConnectProxiedConnection::setHTTPTrafficFilter(boost::shared_ptr<HTTPTrafficFilter> trafficFilter) {
+void HTTPConnectProxiedConnection::setHTTPTrafficFilter(std::shared_ptr<HTTPTrafficFilter> trafficFilter) {
     trafficFilter_ = trafficFilter;
 }
 
@@ -112,7 +112,7 @@ void HTTPConnectProxiedConnection::sendHTTPRequest(const std::string& statusLine
     write(createSafeByteArray(request.str()));
 }
 
-void HTTPConnectProxiedConnection::handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data) {
+void HTTPConnectProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByteArray> data) {
     std::string dataString = byteArrayToString(ByteArray(data->begin(), data->end()));
     SWIFT_LOG(debug) << data << std::endl;
     httpResponseBuffer_.append(dataString);

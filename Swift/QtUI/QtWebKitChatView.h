@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <QList>
 #include <QString>
@@ -50,11 +50,11 @@ namespace Swift {
             /** Add message to window.
              * @return id of added message (for acks).
              */
-            virtual std::string addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
+            virtual std::string addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
             /** Adds action to window.
              * @return id of added message (for acks);
              */
-            virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
+            virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
 
             virtual std::string addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
             virtual void addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
@@ -75,8 +75,8 @@ namespace Swift {
             virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) SWIFTEN_OVERRIDE;
 
             virtual void showEmoticons(bool show) SWIFTEN_OVERRIDE;
-            void addMessageTop(boost::shared_ptr<ChatSnippet> snippet);
-            void addMessageBottom(boost::shared_ptr<ChatSnippet> snippet);
+            void addMessageTop(std::shared_ptr<ChatSnippet> snippet);
+            void addMessageBottom(std::shared_ptr<ChatSnippet> snippet);
 
             int getSnippetPositionByDate(const QDate& date); // FIXME : This probably shouldn't have been public
             virtual void addLastSeenLine() SWIFTEN_OVERRIDE;
@@ -140,7 +140,7 @@ namespace Swift {
                     const QString& message,
                     const std::string& senderName,
                     bool senderIsSelf,
-                    boost::shared_ptr<SecurityLabel> label,
+                    std::shared_ptr<SecurityLabel> label,
                     const std::string& avatarPath,
                     const QString& style,
                     const boost::posix_time::ptime& time,
@@ -162,7 +162,7 @@ namespace Swift {
         private:
             void headerEncode();
             void messageEncode();
-            void addToDOM(boost::shared_ptr<ChatSnippet> snippet);
+            void addToDOM(std::shared_ptr<ChatSnippet> snippet);
 
             QtChatWindow* window_;
             UIEventStream* eventStream_;

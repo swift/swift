@@ -7,13 +7,13 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -53,9 +53,9 @@ namespace Swift {
             void showChatWindow();
             void activateChatWindow();
             bool hasOpenWindow() const;
-            virtual void setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info);
-            void handleIncomingMessage(boost::shared_ptr<MessageEvent> message);
-            std::string addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time);
+            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info);
+            void handleIncomingMessage(std::shared_ptr<MessageEvent> message);
+            std::string addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time);
             void replaceMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& id, const boost::posix_time::ptime& time);
             virtual void setOnline(bool online);
             void setEnabled(bool enabled);
@@ -72,24 +72,24 @@ namespace Swift {
             boost::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
         protected:
-            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 
             /**
              * Pass the Message appended, and the stanza used to send it.
              */
-            virtual void postSendMessage(const std::string&, boost::shared_ptr<Stanza>) {}
+            virtual void postSendMessage(const std::string&, std::shared_ptr<Stanza>) {}
             virtual std::string senderDisplayNameFromMessage(const JID& from) = 0;
             virtual std::string senderHighlightNameFromMessage(const JID& from) = 0;
-            virtual bool isIncomingMessageFromMe(boost::shared_ptr<Message>) = 0;
-            virtual void preHandleIncomingMessage(boost::shared_ptr<MessageEvent>) {}
-            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time);
-            virtual void postHandleIncomingMessage(boost::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage&) {}
-            virtual void preSendMessageRequest(boost::shared_ptr<Message>) {}
+            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message>) = 0;
+            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent>) {}
+            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time);
+            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage&) {}
+            virtual void preSendMessageRequest(std::shared_ptr<Message>) {}
             virtual bool isFromContact(const JID& from);
-            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(boost::shared_ptr<Message>) const = 0;
+            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message>) const = 0;
             virtual void dayTicked() {}
             virtual void handleBareJIDCapsChanged(const JID& jid) = 0;
-            std::string getErrorMessage(boost::shared_ptr<ErrorPayload>);
+            std::string getErrorMessage(std::shared_ptr<ErrorPayload>);
             virtual void setContactIsReceivingPresence(bool /* isReceivingPresence */) {}
             virtual void cancelReplaces() = 0;
             /** JID any iq for account should go to - bare except for PMs */
@@ -105,7 +105,7 @@ namespace Swift {
 
             void handleSendMessageRequest(const std::string &body, bool isCorrectionMessage);
             void handleAllMessagesRead();
-            void handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
+            void handleSecurityLabelsCatalogResponse(std::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
             void handleDayChangeTick();
             void handleMUCInvitation(Message::ref message);
             void handleMediatedMUCInvitation(Message::ref message);
@@ -114,8 +114,8 @@ namespace Swift {
 
         protected:
             JID selfJID_;
-            std::vector<boost::shared_ptr<StanzaEvent> > unreadMessages_;
-            std::vector<boost::shared_ptr<StanzaEvent> > targetedUnreadMessages_;
+            std::vector<std::shared_ptr<StanzaEvent> > unreadMessages_;
+            std::vector<std::shared_ptr<StanzaEvent> > targetedUnreadMessages_;
             StanzaChannel* stanzaChannel_;
             IQRouter* iqRouter_;
             ChatWindowFactory* chatWindowFactory_;
@@ -127,14 +127,14 @@ namespace Swift {
             AvatarManager* avatarManager_;
             bool useDelayForLatency_;
             EventController* eventController_;
-            boost::shared_ptr<Timer> dateChangeTimer_;
+            std::shared_ptr<Timer> dateChangeTimer_;
             TimerFactory* timerFactory_;
             EntityCapsProvider* entityCapsProvider_;
             SecurityLabelsCatalog::Item lastLabel_;
             HistoryController* historyController_;
             MUCRegistry* mucRegistry_;
             Highlighter* highlighter_;
-            boost::shared_ptr<ChatMessageParser> chatMessageParser_;
+            std::shared_ptr<ChatMessageParser> chatMessageParser_;
             AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
             UIEventStream* eventStream_;
     };

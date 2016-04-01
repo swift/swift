@@ -12,13 +12,13 @@
 
 namespace Swift {
 
-Request::Request(IQ::Type type, const JID& receiver, boost::shared_ptr<Payload> payload, IQRouter* router) : router_(router), type_(type), receiver_(receiver), payload_(payload), sent_(false) {
+Request::Request(IQ::Type type, const JID& receiver, std::shared_ptr<Payload> payload, IQRouter* router) : router_(router), type_(type), receiver_(receiver), payload_(payload), sent_(false) {
 }
 
 Request::Request(IQ::Type type, const JID& receiver, IQRouter* router) : router_(router), type_(type), receiver_(receiver), sent_(false) {
 }
 
-Request::Request(IQ::Type type, const JID& sender, const JID& receiver, boost::shared_ptr<Payload> payload, IQRouter* router) : router_(router), type_(type), sender_(sender), receiver_(receiver), payload_(payload), sent_(false) {
+Request::Request(IQ::Type type, const JID& sender, const JID& receiver, std::shared_ptr<Payload> payload, IQRouter* router) : router_(router), type_(type), sender_(sender), receiver_(receiver), payload_(payload), sent_(false) {
 }
 
 Request::Request(IQ::Type type, const JID& sender, const JID& receiver, IQRouter* router) : router_(router), type_(type), sender_(sender), receiver_(receiver), sent_(false) {
@@ -29,7 +29,7 @@ std::string Request::send() {
     assert(!sent_);
     sent_ = true;
 
-    boost::shared_ptr<IQ> iq(new IQ(type_));
+    std::shared_ptr<IQ> iq(new IQ(type_));
     iq->setTo(receiver_);
     iq->setFrom(sender_);
     iq->addPayload(payload_);
@@ -47,14 +47,14 @@ std::string Request::send() {
     return id_;
 }
 
-bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
+bool Request::handleIQ(std::shared_ptr<IQ> iq) {
     bool handled = false;
     if (iq->getType() == IQ::Result || iq->getType() == IQ::Error) {
         if (sent_ && iq->getID() == id_) {
             if (isCorrectSender(iq->getFrom())) {
                 if (iq->getType() == IQ::Result) {
-                    boost::shared_ptr<Payload> payload = iq->getPayloadOfSameType(payload_);
-                    if (!payload && boost::dynamic_pointer_cast<RawXMLPayload>(payload_) && !iq->getPayloads().empty()) {
+                    std::shared_ptr<Payload> payload = iq->getPayloadOfSameType(payload_);
+                    if (!payload && std::dynamic_pointer_cast<RawXMLPayload>(payload_) && !iq->getPayloads().empty()) {
                         payload = iq->getPayloads().front();
                     }
                     handleResponse(payload, ErrorPayload::ref());
@@ -62,10 +62,10 @@ bool Request::handleIQ(boost::shared_ptr<IQ> iq) {
                 else {
                     ErrorPayload::ref errorPayload = iq->getPayload<ErrorPayload>();
                     if (errorPayload) {
-                        handleResponse(boost::shared_ptr<Payload>(), errorPayload);
+                        handleResponse(std::shared_ptr<Payload>(), errorPayload);
                     }
                     else {
-                        handleResponse(boost::shared_ptr<Payload>(), ErrorPayload::ref(new ErrorPayload(ErrorPayload::UndefinedCondition)));
+                        handleResponse(std::shared_ptr<Payload>(), ErrorPayload::ref(new ErrorPayload(ErrorPayload::UndefinedCondition)));
                     }
                 }
                 router_->removeHandler(this);

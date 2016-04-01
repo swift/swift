@@ -5,14 +5,15 @@
  */
 
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
+#include <string>
 
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
@@ -35,7 +36,7 @@ namespace Swift {
             void setContactSuggester(ContactSuggester *suggester) { contactSuggester_ = suggester; }
 
         private:
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
             void handleContactSuggestionsRequested(const std::string& text);
 
         private:

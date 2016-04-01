@@ -19,8 +19,8 @@ namespace Swift {
             CommandConvertor(LuaElementConvertors* convertors);
             virtual ~CommandConvertor();
 
-            virtual boost::shared_ptr<Command> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<Command>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Command> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Command>) SWIFTEN_OVERRIDE;
 
         private:
             LuaElementConvertors* convertors;

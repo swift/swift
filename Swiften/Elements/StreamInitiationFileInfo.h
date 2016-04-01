@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -18,7 +18,7 @@ namespace Swift {
 
 class SWIFTEN_API StreamInitiationFileInfo : public Payload {
 public:
-    typedef boost::shared_ptr<StreamInitiationFileInfo> ref;
+    typedef std::shared_ptr<StreamInitiationFileInfo> ref;
 
 public:
     StreamInitiationFileInfo(const std::string& name = "", const std::string& description = "", unsigned long long size = 0,

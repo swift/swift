@@ -21,6 +21,6 @@ namespace Swift {
         public:
             DeliveryReceiptRequestSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<DeliveryReceiptRequest> request) const;
+            virtual std::string serializePayload(std::shared_ptr<DeliveryReceiptRequest> request) const;
     };
 }

@@ -19,8 +19,8 @@ namespace Swift {
             PubSubEventCollectionConvertor(LuaElementConvertors* convertors);
             virtual ~PubSubEventCollectionConvertor();
 
-            virtual boost::shared_ptr<PubSubEventCollection> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<PubSubEventCollection>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<PubSubEventCollection> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubEventCollection>) SWIFTEN_OVERRIDE;
             virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
 
         private:

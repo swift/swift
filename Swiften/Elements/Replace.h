@@ -12,9 +12,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -22,7 +21,7 @@
 namespace Swift {
     class SWIFTEN_API Replace : public Payload {
         public:
-            typedef boost::shared_ptr<Replace> ref;
+            typedef std::shared_ptr<Replace> ref;
             Replace(const std::string& id = std::string()) : replaceID_(id) {}
             const std::string& getID() const {
                 return replaceID_;

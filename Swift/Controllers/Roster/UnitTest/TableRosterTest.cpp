@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,7 +16,7 @@ std::ostream& operator<<(std::ostream& os, const Swift::TableRoster::Index& i) {
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <boost/variant.hpp>
 
 #include <Swiften/Network/DummyTimerFactory.h>
@@ -46,7 +46,7 @@ class TableRosterTest : public CppUnit::TestFixture {
 
         void testAddContact_EmptyRoster() {
             /*
-            boost::shared_ptr<TableRoster> tableRoster(createTestling());
+            std::shared_ptr<TableRoster> tableRoster(createTestling());
 
             addContact(jid1, "1", "group1");
 

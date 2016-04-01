@@ -6,12 +6,12 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/optional/optional_fwd.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -22,7 +22,7 @@ namespace Swift {
 
     class SWIFTEN_API Stanza : public ToplevelElement {
         public:
-            typedef boost::shared_ptr<Stanza> ref;
+            typedef std::shared_ptr<Stanza> ref;
 
         protected:
             Stanza();
@@ -32,21 +32,21 @@ namespace Swift {
             SWIFTEN_DEFAULT_COPY_CONSTRUCTOR(Stanza)
 
             template<typename T>
-            boost::shared_ptr<T> getPayload() const {
+            std::shared_ptr<T> getPayload() const {
                 for (size_t i = 0; i < payloads_.size(); ++i) {
-                    boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(payloads_[i]));
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payloads_[i]));
                     if (result) {
                         return result;
                     }
                 }
-                return boost::shared_ptr<T>();
+                return std::shared_ptr<T>();
             }
 
             template<typename T>
-            std::vector< boost::shared_ptr<T> > getPayloads() const {
-                std::vector< boost::shared_ptr<T> > results;
+            std::vector< std::shared_ptr<T> > getPayloads() const {
+                std::vector< std::shared_ptr<T> > results;
                 for (size_t i = 0; i < payloads_.size(); ++i) {
-                    boost::shared_ptr<T> result(boost::dynamic_pointer_cast<T>(payloads_[i]));
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payloads_[i]));
                     if (result) {
                         results.push_back(result);
                     }
@@ -55,11 +55,11 @@ namespace Swift {
             }
 
 
-            const std::vector< boost::shared_ptr<Payload> >& getPayloads() const {
+            const std::vector< std::shared_ptr<Payload> >& getPayloads() const {
                 return payloads_;
             }
 
-            void addPayload(boost::shared_ptr<Payload> payload) {
+            void addPayload(std::shared_ptr<Payload> payload) {
                 payloads_.push_back(payload);
             }
 
@@ -68,10 +68,10 @@ namespace Swift {
                 payloads_.insert(payloads_.end(), begin, end);
             }
 
-            void updatePayload(boost::shared_ptr<Payload> payload);
+            void updatePayload(std::shared_ptr<Payload> payload);
 
-            void removePayloadOfSameType(boost::shared_ptr<Payload>);
-            boost::shared_ptr<Payload> getPayloadOfSameType(boost::shared_ptr<Payload>) const;
+            void removePayloadOfSameType(std::shared_ptr<Payload>);
+            std::shared_ptr<Payload> getPayloadOfSameType(std::shared_ptr<Payload>) const;
 
             const JID& getFrom() const { return from_; }
             void setFrom(const JID& from) { from_ = from; }
@@ -91,6 +91,6 @@ namespace Swift {
             std::string id_;
             JID from_;
             JID to_;
-            std::vector< boost::shared_ptr<Payload> > payloads_;
+            std::vector< std::shared_ptr<Payload> > payloads_;
     };
 }

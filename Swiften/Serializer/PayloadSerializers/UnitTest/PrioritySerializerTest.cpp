@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ class PrioritySerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             PrioritySerializer testling;
-            boost::shared_ptr<Priority> priority(new Priority(-113));
+            std::shared_ptr<Priority> priority(new Priority(-113));
 
             CPPUNIT_ASSERT_EQUAL(std::string("<priority>-113</priority>"), testling.serialize(priority));
         }

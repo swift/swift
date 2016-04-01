@@ -17,8 +17,9 @@
 
 #include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/typeof/typeof.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
@@ -46,7 +47,7 @@ static const int DEFAULT_BLOCK_SIZE = 4096;
 OutgoingJingleFileTransfer::OutgoingJingleFileTransfer(
         const JID& toJID,
         JingleSession::ref session,
-        boost::shared_ptr<ReadBytestream> stream,
+        std::shared_ptr<ReadBytestream> stream,
         FileTransferTransporterFactory* transporterFactory,
         TimerFactory* timerFactory,
         IDGenerator* idGenerator,
@@ -125,12 +126,12 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
     SWIFT_LOG(debug) << std::endl;
     if (state != WaitingForAccept) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
-    if (JingleS5BTransportPayload::ref s5bPayload = boost::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload)) {
+    if (JingleS5BTransportPayload::ref s5bPayload = std::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload)) {
         transporter->addRemoteCandidates(s5bPayload->getCandidates(), s5bPayload->getDstAddr());
         setInternalState(TryingCandidates);
         transporter->startTryingRemoteCandidates();
     }
-    else if (JingleIBBTransportPayload::ref ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transportPayload)) {
+    else if (JingleIBBTransportPayload::ref ibbPayload = std::dynamic_pointer_cast<JingleIBBTransportPayload>(transportPayload)) {
         startTransferring(transporter->createIBBSendSession(ibbPayload->getSessionID(), ibbPayload->getBlockSize().get_value_or(DEFAULT_BLOCK_SIZE), stream));
     }
     else {
@@ -165,7 +166,7 @@ void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleConte
     SWIFT_LOG(debug) << std::endl;
     if (state != FallbackRequested) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
 
-    if (JingleIBBTransportPayload::ref ibbPayload = boost::dynamic_pointer_cast<JingleIBBTransportPayload>(transport)) {
+    if (JingleIBBTransportPayload::ref ibbPayload = std::dynamic_pointer_cast<JingleIBBTransportPayload>(transport)) {
         startTransferring(transporter->createIBBSendSession(ibbPayload->getSessionID(), ibbPayload->getBlockSize().get_value_or(DEFAULT_BLOCK_SIZE), stream));
     }
     else {
@@ -174,7 +175,7 @@ void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleConte
     }
 }
 
-void OutgoingJingleFileTransfer::handleTransportRejectReceived(const JingleContentID &, boost::shared_ptr<JingleTransportPayload>) {
+void OutgoingJingleFileTransfer::handleTransportRejectReceived(const JingleContentID &, std::shared_ptr<JingleTransportPayload>) {
     SWIFT_LOG(debug) << std::endl;
 
     terminate(JinglePayload::Reason::UnsupportedTransports);
@@ -183,7 +184,7 @@ void OutgoingJingleFileTransfer::handleTransportRejectReceived(const JingleConte
 void OutgoingJingleFileTransfer::sendSessionInfoHash() {
     SWIFT_LOG(debug) << std::endl;
 
-    JingleFileTransferHash::ref hashElement = boost::make_shared<JingleFileTransferHash>();
+    JingleFileTransferHash::ref hashElement = std::make_shared<JingleFileTransferHash>();
     hashElement->getFileInfo().addHash(HashElement("sha-1", hashCalculator->getSHA1Hash()));
     hashElement->getFileInfo().addHash(HashElement("md5", hashCalculator->getMD5Hash()));
     session->sendInfo(hashElement);
@@ -196,7 +197,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 
     fillCandidateMap(localCandidates, candidates);
 
-    JingleFileTransferDescription::ref description = boost::make_shared<JingleFileTransferDescription>();
+    JingleFileTransferDescription::ref description = std::make_shared<JingleFileTransferDescription>();
     fileInfo.addHash(HashElement("sha-1", ByteArray()));
     fileInfo.addHash(HashElement("md5", ByteArray()));
     description->setFileInfo(fileInfo);
@@ -204,13 +205,13 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
     JingleTransportPayload::ref transport;
     if (candidates.empty()) {
         SWIFT_LOG(debug) << "no S5B candidates generated. Send IBB transport candidate." << std::endl;
-        JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
+        JingleIBBTransportPayload::ref ibbTransport = std::make_shared<JingleIBBTransportPayload>();
         ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
         ibbTransport->setSessionID(idGenerator->generateID());
         transport = ibbTransport;
     }
     else {
-        JingleS5BTransportPayload::ref s5bTransport = boost::make_shared<JingleS5BTransportPayload>();
+        JingleS5BTransportPayload::ref s5bTransport = std::make_shared<JingleS5BTransportPayload>();
         s5bTransport->setSessionID(s5bSessionID);
         s5bTransport->setMode(JingleS5BTransportPayload::TCPMode);
         s5bTransport->setDstAddr(dstAddr);
@@ -227,7 +228,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 void OutgoingJingleFileTransfer::fallback() {
     if (options.isInBandAllowed()) {
         SWIFT_LOG(debug) << "Trying to fallback to IBB transport." << std::endl;
-        JingleIBBTransportPayload::ref ibbTransport = boost::make_shared<JingleIBBTransportPayload>();
+        JingleIBBTransportPayload::ref ibbTransport = std::make_shared<JingleIBBTransportPayload>();
         ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
         ibbTransport->setSessionID(idGenerator->generateID());
         setInternalState(FallbackRequested);
@@ -255,7 +256,7 @@ void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTran
     }
 }
 
-void OutgoingJingleFileTransfer::startTransferring(boost::shared_ptr<TransportSession> transportSession) {
+void OutgoingJingleFileTransfer::startTransferring(std::shared_ptr<TransportSession> transportSession) {
     SWIFT_LOG(debug) << std::endl;
 
     this->transportSession = transportSession;
@@ -390,11 +391,11 @@ bool OutgoingJingleFileTransfer::isTryingCandidates() const {
     return state == TryingCandidates;
 }
 
-boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createLocalCandidateSession() {
+std::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createLocalCandidateSession() {
     return transporter->createLocalCandidateSession(stream, theirCandidateChoice.get());
 }
 
-boost::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createRemoteCandidateSession() {
+std::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createRemoteCandidateSession() {
     return transporter->createRemoteCandidateSession(stream, ourCandidateChoice.get());
 }
 

@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -19,7 +19,7 @@
 namespace Swift {
     class SWIFTEN_API StreamInitiation : public Payload {
         public:
-            typedef boost::shared_ptr<StreamInitiation> ref;
+            typedef std::shared_ptr<StreamInitiation> ref;
 
             StreamInitiation() : isFileTransfer(true) {}
 

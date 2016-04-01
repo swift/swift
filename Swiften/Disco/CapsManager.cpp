@@ -23,8 +23,8 @@ CapsManager::CapsManager(CapsStorage* capsStorage, StanzaChannel* stanzaChannel,
     stanzaChannel->onAvailableChanged.connect(boost::bind(&CapsManager::handleStanzaChannelAvailableChanged, this, _1));
 }
 
-void CapsManager::handlePresenceReceived(boost::shared_ptr<Presence> presence) {
-    boost::shared_ptr<CapsInfo> capsInfo = presence->getPayload<CapsInfo>();
+void CapsManager::handlePresenceReceived(std::shared_ptr<Presence> presence) {
+    std::shared_ptr<CapsInfo> capsInfo = presence->getPayload<CapsInfo>();
     if (!capsInfo || capsInfo->getHash() != "sha-1" || presence->getPayload<ErrorPayload>()) {
         return;
     }

@@ -16,7 +16,7 @@
 using namespace Swift;
 using namespace Swift::Sluift;
 
-static std::string getErrorString(boost::shared_ptr<ErrorPayload> error) {
+static std::string getErrorString(std::shared_ptr<ErrorPayload> error) {
     // Copied from ChatControllerBase.
     // TODO: Share this code;
     std::string defaultMessage = "Error sending message";

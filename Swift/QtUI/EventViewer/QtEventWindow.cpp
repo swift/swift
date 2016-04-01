@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -73,26 +73,26 @@ void QtEventWindow::handleReadClicked() {
 
 void QtEventWindow::handleItemActivated(const QModelIndex& item) {
     QtEvent* event = model_->getItem(item.row());
-    boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event->getEvent());
-    boost::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event->getEvent());
-    boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event->getEvent());
-    boost::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event->getEvent());
-    boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event->getEvent());
+    std::shared_ptr<MessageEvent> messageEvent = std::dynamic_pointer_cast<MessageEvent>(event->getEvent());
+    std::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = std::dynamic_pointer_cast<SubscriptionRequestEvent>(event->getEvent());
+    std::shared_ptr<MUCInviteEvent> mucInviteEvent = std::dynamic_pointer_cast<MUCInviteEvent>(event->getEvent());
+    std::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = std::dynamic_pointer_cast<IncomingFileTransferEvent>(event->getEvent());
+    std::shared_ptr<ErrorEvent> errorEvent = std::dynamic_pointer_cast<ErrorEvent>(event->getEvent());
 
     if (messageEvent) {
         if (messageEvent->getStanza()->getType() == Message::Groupchat) {
-            eventStream_->send(boost::shared_ptr<UIEvent>(new JoinMUCUIEvent(messageEvent->getStanza()->getFrom().toBare(), messageEvent->getStanza()->getTo().getResource())));
+            eventStream_->send(std::make_shared<JoinMUCUIEvent>(messageEvent->getStanza()->getFrom().toBare(), messageEvent->getStanza()->getTo().getResource()));
         } else {
-            eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(messageEvent->getStanza()->getFrom())));
+            eventStream_->send(std::make_shared<RequestChatUIEvent>(messageEvent->getStanza()->getFrom()));
         }
     } else if (subscriptionEvent) {
         QtSubscriptionRequestWindow* window = QtSubscriptionRequestWindow::getWindow(subscriptionEvent, this);
         window->show();
     } else if (mucInviteEvent) {
-        eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(mucInviteEvent->getInviter())));
+        eventStream_->send(std::make_shared<RequestChatUIEvent>(mucInviteEvent->getInviter()));
         mucInviteEvent->conclude();
     } else if (incomingFTEvent) {
-        eventStream_->send(boost::shared_ptr<UIEvent>(new RequestChatUIEvent(incomingFTEvent->getSender())));
+        eventStream_->send(std::make_shared<RequestChatUIEvent>(incomingFTEvent->getSender()));
         incomingFTEvent->conclude();
     } else {
         if (errorEvent) {
@@ -105,14 +105,14 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
 
 }
 
-void QtEventWindow::addEvent(boost::shared_ptr<StanzaEvent> event, bool active) {
+void QtEventWindow::addEvent(std::shared_ptr<StanzaEvent> event, bool active) {
     view_->clearSelection();
     model_->addEvent(event, active);
     emit onNewEventCountUpdated(model_->getNewEventCount());
     readButton_->setEnabled(model_->rowCount() > 0);
 }
 
-void QtEventWindow::removeEvent(boost::shared_ptr<StanzaEvent> event) {
+void QtEventWindow::removeEvent(std::shared_ptr<StanzaEvent> event) {
     view_->clearSelection();
     model_->removeEvent(event);
     emit onNewEventCountUpdated(model_->getNewEventCount());

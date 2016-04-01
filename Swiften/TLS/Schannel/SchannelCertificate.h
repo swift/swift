@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/TLS/Certificate.h>
@@ -23,7 +23,7 @@ namespace Swift
     class SchannelCertificate : public Certificate
     {
     public:
-        typedef boost::shared_ptr<SchannelCertificate> ref;
+        typedef std::shared_ptr<SchannelCertificate> ref;
 
     public:
         SchannelCertificate(const ScopedCertContext& certCtxt);

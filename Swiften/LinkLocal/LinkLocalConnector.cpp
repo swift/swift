@@ -19,8 +19,8 @@ namespace Swift {
 
 LinkLocalConnector::LinkLocalConnector(
         const LinkLocalService& service,
-        boost::shared_ptr<DNSSDQuerier> querier,
-        boost::shared_ptr<Connection> connection) :
+        std::shared_ptr<DNSSDQuerier> querier,
+        std::shared_ptr<Connection> connection) :
             service(service),
             querier(querier),
             connection(connection) {
@@ -36,7 +36,7 @@ void LinkLocalConnector::connect() {
             service.getID().getNetworkInterfaceID());
     resolveQueryHostNameResolvedConnection = resolveQuery->onHostnameResolved.connect(boost::bind(
             &LinkLocalConnector::handleHostnameResolved,
-            boost::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()),
+            std::dynamic_pointer_cast<LinkLocalConnector>(shared_from_this()),
             _1));
     resolveQuery->run();
 }
@@ -71,7 +71,7 @@ void LinkLocalConnector::handleConnected(bool error) {
     connectionConnectFinishedConnection.disconnect();
 }
 
-void LinkLocalConnector::queueElement(boost::shared_ptr<ToplevelElement> element) {
+void LinkLocalConnector::queueElement(std::shared_ptr<ToplevelElement> element) {
     queuedElements.push_back(element);
 }
 

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Parser/PayloadParser.h>
@@ -20,8 +20,8 @@ namespace Swift {
             virtual void handleEndElement(const std::string&, const std::string&) {}
             virtual void handleCharacterData(const std::string&) {}
 
-            virtual boost::shared_ptr<Payload> getPayload() const {
-                return boost::shared_ptr<Payload>();
+            virtual std::shared_ptr<Payload> getPayload() const {
+                return std::shared_ptr<Payload>();
             }
     };
 }

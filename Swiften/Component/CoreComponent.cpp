@@ -52,7 +52,7 @@ void CoreComponent::connect(const std::string& host, int port) {
     connector_->start();
 }
 
-void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connection) {
+void CoreComponent::handleConnectorFinished(std::shared_ptr<Connection> connection) {
     connector_->onConnectFinished.disconnect(boost::bind(&CoreComponent::handleConnectorFinished, this, _1));
     connector_.reset();
     if (!connection) {
@@ -65,7 +65,7 @@ void CoreComponent::handleConnectorFinished(boost::shared_ptr<Connection> connec
         connection_ = connection;
 
         assert(!sessionStream_);
-        sessionStream_ = boost::shared_ptr<BasicSessionStream>(new BasicSessionStream(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), nullptr, networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), TLSOptions()));
+        sessionStream_ = std::make_shared<BasicSessionStream>(ComponentStreamType, connection_, getPayloadParserFactories(), getPayloadSerializers(), nullptr, networkFactories->getTimerFactory(), networkFactories->getXMLParserFactory(), TLSOptions());
         sessionStream_->onDataRead.connect(boost::bind(&CoreComponent::handleDataRead, this, _1));
         sessionStream_->onDataWritten.connect(boost::bind(&CoreComponent::handleDataWritten, this, _1));
 
@@ -93,7 +93,7 @@ void CoreComponent::disconnect() {
     disconnectRequested_ = false;
 }
 
-void CoreComponent::handleSessionFinished(boost::shared_ptr<Error> error) {
+void CoreComponent::handleSessionFinished(std::shared_ptr<Error> error) {
     session_->onFinished.disconnect(boost::bind(&CoreComponent::handleSessionFinished, this, _1));
     session_.reset();
 
@@ -106,7 +106,7 @@ void CoreComponent::handleSessionFinished(boost::shared_ptr<Error> error) {
 
     if (error) {
         ComponentError componentError;
-        if (boost::shared_ptr<ComponentSession::Error> actualError = boost::dynamic_pointer_cast<ComponentSession::Error>(error)) {
+        if (std::shared_ptr<ComponentSession::Error> actualError = std::dynamic_pointer_cast<ComponentSession::Error>(error)) {
             switch(actualError->type) {
                 case ComponentSession::Error::AuthenticationFailedError:
                     componentError = ComponentError(ComponentError::AuthenticationFailedError);
@@ -116,7 +116,7 @@ void CoreComponent::handleSessionFinished(boost::shared_ptr<Error> error) {
                     break;
             }
         }
-        else if (boost::shared_ptr<SessionStream::SessionStreamError> actualError = boost::dynamic_pointer_cast<SessionStream::SessionStreamError>(error)) {
+        else if (std::shared_ptr<SessionStream::SessionStreamError> actualError = std::dynamic_pointer_cast<SessionStream::SessionStreamError>(error)) {
             switch(actualError->type) {
                 case SessionStream::SessionStreamError::ParseError:
                     componentError = ComponentError(ComponentError::XMLError);
@@ -155,11 +155,11 @@ void CoreComponent::handleStanzaChannelAvailableChanged(bool available) {
     }
 }
 
-void CoreComponent::sendMessage(boost::shared_ptr<Message> message) {
+void CoreComponent::sendMessage(std::shared_ptr<Message> message) {
     stanzaChannel_->sendMessage(message);
 }
 
-void CoreComponent::sendPresence(boost::shared_ptr<Presence> presence) {
+void CoreComponent::sendPresence(std::shared_ptr<Presence> presence) {
     stanzaChannel_->sendPresence(presence);
 }
 

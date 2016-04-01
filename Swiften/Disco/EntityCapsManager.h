@@ -35,7 +35,7 @@ namespace Swift {
             DiscoInfo::ref getCaps(const JID&) const;
 
         private:
-            void handlePresenceReceived(boost::shared_ptr<Presence>);
+            void handlePresenceReceived(std::shared_ptr<Presence>);
             void handleStanzaChannelAvailableChanged(bool);
             void handleCapsAvailable(const std::string&);
 

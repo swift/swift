@@ -40,21 +40,21 @@ namespace Swift {
             virtual void startActivatingProxy(const JID& proxy) = 0;
             virtual void stopActivatingProxy() = 0;
 
-            virtual boost::shared_ptr<TransportSession> createIBBSendSession(
-                    const std::string& sessionID, unsigned int blockSize, boost::shared_ptr<ReadBytestream>) = 0;
-            virtual boost::shared_ptr<TransportSession> createIBBReceiveSession(
-                    const std::string& sessionID, unsigned long long size, boost::shared_ptr<WriteBytestream>) = 0;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-                    boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
-            virtual boost::shared_ptr<TransportSession> createRemoteCandidateSession(
-                    boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-                    boost::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
-            virtual boost::shared_ptr<TransportSession> createLocalCandidateSession(
-                    boost::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
+            virtual std::shared_ptr<TransportSession> createIBBSendSession(
+                    const std::string& sessionID, unsigned int blockSize, std::shared_ptr<ReadBytestream>) = 0;
+            virtual std::shared_ptr<TransportSession> createIBBReceiveSession(
+                    const std::string& sessionID, unsigned long long size, std::shared_ptr<WriteBytestream>) = 0;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
+                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
+                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
+                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
+                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
 
             boost::signal<void (const std::string& /* sessionID */, const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string& /* dstAddr */)> onLocalCandidatesGenerated;
             boost::signal<void (const std::string& /* sessionID */, const boost::optional<JingleS5BTransportPayload::Candidate>&)> onRemoteCandidateSelectFinished;
-            boost::signal<void (const std::string& /* sessionID */, boost::shared_ptr<ErrorPayload>)> onProxyActivated;
+            boost::signal<void (const std::string& /* sessionID */, std::shared_ptr<ErrorPayload>)> onProxyActivated;
     };
 }

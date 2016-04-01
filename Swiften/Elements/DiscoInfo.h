@@ -19,7 +19,7 @@ namespace Swift {
      */
     class SWIFTEN_API DiscoInfo : public Payload {
         public:
-            typedef boost::shared_ptr<DiscoInfo> ref;
+            typedef std::shared_ptr<DiscoInfo> ref;
 
             static const std::string ChatStatesFeature;
             static const std::string SecurityLabelsFeature;

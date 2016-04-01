@@ -17,10 +17,10 @@ typedef GenericPayloadPersister<RosterPayload, RosterParser, RosterSerializer> R
 RosterFileStorage::RosterFileStorage(const boost::filesystem::path& path) : path(path) {
 }
 
-boost::shared_ptr<RosterPayload> RosterFileStorage::getRoster() const {
+std::shared_ptr<RosterPayload> RosterFileStorage::getRoster() const {
     return RosterPersister().loadPayloadGeneric(path);
 }
 
-void RosterFileStorage::setRoster(boost::shared_ptr<RosterPayload> roster) {
+void RosterFileStorage::setRoster(std::shared_ptr<RosterPayload> roster) {
     RosterPersister().savePayload(roster, path);
 }

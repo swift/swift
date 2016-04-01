@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@ PubSubEventSubscriptionSerializer::PubSubEventSubscriptionSerializer(PayloadSeri
 PubSubEventSubscriptionSerializer::~PubSubEventSubscriptionSerializer() {
 }
 
-std::string PubSubEventSubscriptionSerializer::serializePayload(boost::shared_ptr<PubSubEventSubscription> payload) const {
+std::string PubSubEventSubscriptionSerializer::serializePayload(std::shared_ptr<PubSubEventSubscription> payload) const {
     if (!payload) {
         return "";
     }

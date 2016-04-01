@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -45,6 +45,6 @@ namespace Swift {
             /**
              * Retrieve a pointer to the payload.
              */
-            virtual boost::shared_ptr<Payload> getPayload() const = 0;
+            virtual std::shared_ptr<Payload> getPayload() const = 0;
     };
 }

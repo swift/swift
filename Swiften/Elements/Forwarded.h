@@ -20,14 +20,14 @@ namespace Swift {
         public:
             virtual ~Forwarded();
 
-            void setDelay(boost::shared_ptr<Delay> delay) { delay_ = delay; }
-            const boost::shared_ptr<Delay>& getDelay() const { return delay_; }
+            void setDelay(std::shared_ptr<Delay> delay) { delay_ = delay; }
+            const std::shared_ptr<Delay>& getDelay() const { return delay_; }
 
-            void setStanza(boost::shared_ptr<Stanza> stanza) { stanza_ = stanza; }
-            const boost::shared_ptr<Stanza>& getStanza() const { return stanza_; }
+            void setStanza(std::shared_ptr<Stanza> stanza) { stanza_ = stanza; }
+            const std::shared_ptr<Stanza>& getStanza() const { return stanza_; }
 
         private:
-            boost::shared_ptr<Delay> delay_;
-            boost::shared_ptr<Stanza> stanza_;
+            std::shared_ptr<Delay> delay_;
+            std::shared_ptr<Stanza> stanza_;
     };
 }

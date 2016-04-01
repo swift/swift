@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubEventRedirectConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -19,8 +19,8 @@ PubSubEventRedirectConvertor::PubSubEventRedirectConvertor() :
 PubSubEventRedirectConvertor::~PubSubEventRedirectConvertor() {
 }
 
-boost::shared_ptr<PubSubEventRedirect> PubSubEventRedirectConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubEventRedirect> result = boost::make_shared<PubSubEventRedirect>();
+std::shared_ptr<PubSubEventRedirect> PubSubEventRedirectConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubEventRedirect> result = std::make_shared<PubSubEventRedirect>();
     lua_getfield(L, -1, "uri");
     if (lua_isstring(L, -1)) {
         result->setURI(std::string(lua_tostring(L, -1)));
@@ -29,7 +29,7 @@ boost::shared_ptr<PubSubEventRedirect> PubSubEventRedirectConvertor::doConvertFr
     return result;
 }
 
-void PubSubEventRedirectConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEventRedirect> payload) {
+void PubSubEventRedirectConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubEventRedirect> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getURI().c_str());
     lua_setfield(L, -2, "uri");

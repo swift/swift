@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2014 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,7 @@
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #ifdef SWIFTEN_PLATFORM_MACOSX
 #include "client/mac/handler/exception_handler.h"
@@ -35,7 +35,7 @@ static bool handleDump(const char* /* dir */, const char* /* id*/, void* /* cont
 namespace Swift {
 
 struct CrashReporter::Private {
-    boost::shared_ptr<google_breakpad::ExceptionHandler> handler;
+    std::shared_ptr<google_breakpad::ExceptionHandler> handler;
 };
 
 CrashReporter::CrashReporter(const boost::filesystem::path& path) {
@@ -49,11 +49,11 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path) {
         }
     }
 
-    p = boost::make_shared<Private>();
+    p = std::make_shared<Private>();
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
     // FIXME: Need UTF8 conversion from string to wstring
     std::string pathString = pathToString(path);
-    p->handler = boost::shared_ptr<google_breakpad::ExceptionHandler>(
+    p->handler = std::shared_ptr<google_breakpad::ExceptionHandler>(
             // Not using make_shared, because 'handleDump' seems to have problems with VC2010
             new google_breakpad::ExceptionHandler(
                 std::wstring(pathString.begin(), pathString.end()),
@@ -63,7 +63,7 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path) {
                 google_breakpad::ExceptionHandler::HANDLER_ALL));
 // Turning it off for Mac, because it doesn't really help us
 //#elif defined(SWIFTEN_PLATFORM_MACOSX)
-//    p->handler = boost::make_shared<google_breakpad::ExceptionHandler>(pathToString(path), (google_breakpad::ExceptionHandler::FilterCallback) 0, handleDump, (void*) 0, true, (const char*) 0);
+//    p->handler = std::make_shared<google_breakpad::ExceptionHandler>(pathToString(path), (google_breakpad::ExceptionHandler::FilterCallback) 0, handleDump, (void*) 0, true, (const char*) 0);
 #endif
 }
 

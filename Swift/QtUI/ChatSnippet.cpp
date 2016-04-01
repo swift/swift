@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,10 +46,10 @@ QString ChatSnippet::directionToCSS(Direction direction) {
 }
 
 ChatSnippet::Direction ChatSnippet::getDirection(const ChatWindow::ChatMessage& message) {
-    boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+    std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
     std::string text = "";
-    foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
-        if ((textPart = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+    foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
+        if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
             text = textPart->text;
             break;
         }

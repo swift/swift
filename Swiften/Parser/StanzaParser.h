@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Stanza.h>
@@ -29,11 +29,11 @@ namespace Swift {
             void handleEndElement(const std::string& element, const std::string& ns);
             void handleCharacterData(const std::string& data);
 
-            virtual boost::shared_ptr<ToplevelElement> getElement() const = 0;
+            virtual std::shared_ptr<ToplevelElement> getElement() const = 0;
             virtual void handleStanzaAttributes(const AttributeMap&) {}
 
-            virtual boost::shared_ptr<Stanza> getStanza() const {
-                return boost::dynamic_pointer_cast<Stanza>(getElement());
+            virtual std::shared_ptr<Stanza> getStanza() const {
+                return std::dynamic_pointer_cast<Stanza>(getElement());
             }
 
         private:
@@ -49,6 +49,6 @@ namespace Swift {
         private:
             int currentDepth_;
             PayloadParserFactoryCollection* factories_;
-            boost::shared_ptr<PayloadParser> currentPayloadParser_;
+            std::shared_ptr<PayloadParser> currentPayloadParser_;
     };
 }

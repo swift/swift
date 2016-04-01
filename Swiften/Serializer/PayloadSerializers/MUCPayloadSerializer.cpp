@@ -6,9 +6,10 @@
 
 #include <Swiften/Serializer/PayloadSerializers/MUCPayloadSerializer.h>
 
+#include <memory>
+
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -19,9 +20,9 @@ namespace Swift {
 MUCPayloadSerializer::MUCPayloadSerializer() : GenericPayloadSerializer<MUCPayload>() {
 }
 
-std::string MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload> muc)  const {
+std::string MUCPayloadSerializer::serializePayload(std::shared_ptr<MUCPayload> muc)  const {
     XMLElement mucElement("x", "http://jabber.org/protocol/muc");
-    boost::shared_ptr<XMLElement> historyElement(new XMLElement("history"));
+    std::shared_ptr<XMLElement> historyElement(new XMLElement("history"));
     bool history = false;
     if (muc->getMaxChars() >= 0) {
         historyElement->setAttribute("maxchars", boost::lexical_cast<std::string>(muc->getMaxChars()));
@@ -44,8 +45,8 @@ std::string MUCPayloadSerializer::serializePayload(boost::shared_ptr<MUCPayload>
     }
     if (muc->getPassword()) {
         std::string password = *muc->getPassword();
-        boost::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
-        passwordElement->addNode(boost::make_shared<XMLTextNode>(password));
+        std::shared_ptr<XMLElement> passwordElement(new XMLElement("password"));
+        passwordElement->addNode(std::make_shared<XMLTextNode>(password));
         mucElement.addNode(passwordElement);
     }
     if (history) {

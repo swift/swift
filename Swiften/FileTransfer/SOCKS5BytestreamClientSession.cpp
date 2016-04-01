@@ -27,7 +27,7 @@
 namespace Swift {
 
 SOCKS5BytestreamClientSession::SOCKS5BytestreamClientSession(
-        boost::shared_ptr<Connection> connection,
+        std::shared_ptr<Connection> connection,
         const HostAddressPort& addressPort,
         const std::string& destination,
         TimerFactory* timerFactory) :
@@ -161,7 +161,7 @@ void SOCKS5BytestreamClientSession::authenticate() {
     state = Authenticating;
 }
 
-void SOCKS5BytestreamClientSession::startReceiving(boost::shared_ptr<WriteBytestream> writeStream) {
+void SOCKS5BytestreamClientSession::startReceiving(std::shared_ptr<WriteBytestream> writeStream) {
     if (state == Ready) {
         state = Reading;
         writeBytestream = writeStream;
@@ -172,7 +172,7 @@ void SOCKS5BytestreamClientSession::startReceiving(boost::shared_ptr<WriteBytest
     }
 }
 
-void SOCKS5BytestreamClientSession::startSending(boost::shared_ptr<ReadBytestream> readStream) {
+void SOCKS5BytestreamClientSession::startSending(std::shared_ptr<ReadBytestream> readStream) {
     if (state == Ready) {
         state = Writing;
         readBytestream = readStream;
@@ -191,7 +191,7 @@ HostAddressPort SOCKS5BytestreamClientSession::getAddressPort() const {
 void SOCKS5BytestreamClientSession::sendData() {
     if (!readBytestream->isFinished()) {
         try {
-            boost::shared_ptr<ByteArray> dataToSend = readBytestream->read(boost::numeric_cast<size_t>(chunkSize));
+            std::shared_ptr<ByteArray> dataToSend = readBytestream->read(boost::numeric_cast<size_t>(chunkSize));
             connection->write(createSafeByteArray(*dataToSend));
             onBytesSent(dataToSend->size());
         }
@@ -241,7 +241,7 @@ void SOCKS5BytestreamClientSession::handleConnectFinished(bool error) {
     }
 }
 
-void SOCKS5BytestreamClientSession::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+void SOCKS5BytestreamClientSession::handleDataRead(std::shared_ptr<SafeByteArray> data) {
     SWIFT_LOG(debug) << "state: " << state << " data.size() = " << data->size() << std::endl;
     if (state != Reading) {
         append(unprocessedData, *data);

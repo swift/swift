@@ -14,7 +14,7 @@ namespace Swift {
 
     class FakeDNSSDBrowseQuery : public DNSSDBrowseQuery, public FakeDNSSDQuery {
         public:
-            FakeDNSSDBrowseQuery(boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier) {
+            FakeDNSSDBrowseQuery(std::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier) {
             }
 
             void startBrowsing() {

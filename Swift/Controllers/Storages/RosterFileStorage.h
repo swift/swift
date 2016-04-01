@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,8 +15,8 @@ namespace Swift {
         public:
             RosterFileStorage(const boost::filesystem::path& path);
 
-            virtual boost::shared_ptr<RosterPayload> getRoster() const;
-            virtual void setRoster(boost::shared_ptr<RosterPayload>);
+            virtual std::shared_ptr<RosterPayload> getRoster() const;
+            virtual void setRoster(std::shared_ptr<RosterPayload>);
 
         private:
             boost::filesystem::path path;

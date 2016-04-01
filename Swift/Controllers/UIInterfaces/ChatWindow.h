@@ -6,14 +6,13 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/make_shared.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Tristate.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -47,13 +46,13 @@ namespace Swift {
                 public:
                     ChatMessage() {}
                     ChatMessage(const std::string& text) {
-                        append(boost::make_shared<ChatTextMessagePart>(text));
+                        append(std::make_shared<ChatTextMessagePart>(text));
                     }
-                    void append(const boost::shared_ptr<ChatMessagePart>& part) {
+                    void append(const std::shared_ptr<ChatMessagePart>& part) {
                         parts_.push_back(part);
                     }
 
-                    const std::vector<boost::shared_ptr<ChatMessagePart> >& getParts() const {
+                    const std::vector<std::shared_ptr<ChatMessagePart> >& getParts() const {
                         return parts_;
                     }
 
@@ -68,7 +67,7 @@ namespace Swift {
                     bool isMeCommand() const {
                         bool isMeCommand = false;
                         if (!parts_.empty()) {
-                            boost::shared_ptr<ChatTextMessagePart> textPart = boost::dynamic_pointer_cast<ChatTextMessagePart>(parts_[0]);
+                            std::shared_ptr<ChatTextMessagePart> textPart = std::dynamic_pointer_cast<ChatTextMessagePart>(parts_[0]);
                             if (textPart) {
                                 if (boost::starts_with(textPart->text, "/me ")) {
                                     isMeCommand = true;
@@ -79,7 +78,7 @@ namespace Swift {
                     }
 
                 private:
-                    std::vector<boost::shared_ptr<ChatMessagePart> > parts_;
+                    std::vector<std::shared_ptr<ChatMessagePart> > parts_;
                     HighlightAction fullMessageHighlightAction_;
             };
 
@@ -134,11 +133,11 @@ namespace Swift {
             /** Add message to window.
              * @return id of added message (for acks).
              */
-            virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
+            virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
             /** Adds action to window.
              * @return id of added message (for acks);
              */
-            virtual std::string addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
+            virtual std::string addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) = 0;
 
             /** Adds system message to window
              * @return id of added message (for replacement)

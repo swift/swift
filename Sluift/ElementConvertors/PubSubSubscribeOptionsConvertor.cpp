@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubSubscribeOptionsConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -19,8 +19,8 @@ PubSubSubscribeOptionsConvertor::PubSubSubscribeOptionsConvertor() :
 PubSubSubscribeOptionsConvertor::~PubSubSubscribeOptionsConvertor() {
 }
 
-boost::shared_ptr<PubSubSubscribeOptions> PubSubSubscribeOptionsConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubSubscribeOptions> result = boost::make_shared<PubSubSubscribeOptions>();
+std::shared_ptr<PubSubSubscribeOptions> PubSubSubscribeOptionsConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubSubscribeOptions> result = std::make_shared<PubSubSubscribeOptions>();
     lua_getfield(L, -1, "required");
     if (lua_isboolean(L, -1)) {
         result->setRequired(lua_toboolean(L, -1));
@@ -29,7 +29,7 @@ boost::shared_ptr<PubSubSubscribeOptions> PubSubSubscribeOptionsConvertor::doCon
     return result;
 }
 
-void PubSubSubscribeOptionsConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubSubscribeOptions> payload) {
+void PubSubSubscribeOptionsConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubSubscribeOptions> payload) {
     lua_createtable(L, 0, 0);
     lua_pushboolean(L, payload->isRequired());
     lua_setfield(L, -2, "required");

@@ -45,7 +45,7 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
             parsingItem_ = true;
         }
         else if (element == "page") {
-            currentPage_ = boost::make_shared<FormPage>();
+            currentPage_ = std::make_shared<FormPage>();
             currentPage_->setLabel(attributes.getAttribute("label"));
         }
     }
@@ -59,7 +59,7 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
     }
     if (level_ >= PayloadLevel) {
         if (element == "field") {
-            currentField_ = boost::make_shared<FormField>();
+            currentField_ = std::make_shared<FormField>();
             std::string type = attributes.getAttribute("type");
             FormField::Type fieldType = FormField::UnknownType;
             if (type == "boolean") {
@@ -102,13 +102,13 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
     }
     if (level_ > PayloadLevel) {
         if (element == "section") {
-            currentSection_ = boost::make_shared<FormSection>();
+            currentSection_ = std::make_shared<FormSection>();
             currentSection_->setLabel(attributes.getAttribute("label"));
             sectionStack_.push_back(currentSection_);
             currentSections_.push_back(currentSection_);
         }
         if (element == "reportedref") {
-            currentReportedRef_ = boost::make_shared<FormReportedRef>();
+            currentReportedRef_ = std::make_shared<FormReportedRef>();
         }
         if (element == "fieldref") {
             currentText_.clear();
@@ -121,7 +121,7 @@ void FormParser::handleStartElement(const std::string& element, const std::strin
         }
         if (element == "text") {
             currentText_.clear();
-            currentTextElement_ = boost::make_shared<FormText>();
+            currentTextElement_ = std::make_shared<FormText>();
         }
     }
     ++level_;
@@ -191,14 +191,14 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
             }
             else {
                 if (currentPages_.size() > 0) {
-                    foreach (boost::shared_ptr<FormPage> page, currentPages_) {
+                    foreach (std::shared_ptr<FormPage> page, currentPages_) {
                         foreach (std::string pageRef, page->getFieldRefs()) {
                             if (pageRef == currentField_->getName()) {
                                 page->addField(currentField_);
                             }
                         }
                     }
-                    foreach (boost::shared_ptr<FormSection> section, currentSections_) {
+                    foreach (std::shared_ptr<FormSection> section, currentSections_) {
                         foreach (std::string sectionRef, section->getFieldRefs()) {
                             if (sectionRef == currentField_->getName()) {
                                 section->addField(currentField_);

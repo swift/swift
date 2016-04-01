@@ -19,7 +19,7 @@
 const int FormLayoutIndex = 1;
 
 namespace Swift {
-QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) : command_(command) {
+QtAdHocCommandWindow::QtAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command) : command_(command) {
     formWidget_ = nullptr;
 
     setAttribute(Qt::WA_DeleteOnClose);

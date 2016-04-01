@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -23,6 +22,6 @@ namespace Swift {
             virtual void handleEndElement(const std::string& element, const std::string& ns) = 0;
             virtual void handleCharacterData(const std::string& data) = 0;
 
-            virtual boost::shared_ptr<ToplevelElement> getElement() const = 0;
+            virtual std::shared_ptr<ToplevelElement> getElement() const = 0;
     };
 }

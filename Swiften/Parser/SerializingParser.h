@@ -24,7 +24,7 @@ namespace Swift {
             std::string getResult() const;
 
         private:
-            std::vector< boost::shared_ptr<XMLElement> > elementStack_;
-            boost::shared_ptr<XMLElement> rootElement_;
+            std::vector< std::shared_ptr<XMLElement> > elementStack_;
+            std::shared_ptr<XMLElement> rootElement_;
     };
 }

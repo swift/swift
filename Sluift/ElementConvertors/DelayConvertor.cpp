@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/DelayConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -23,8 +24,8 @@ DelayConvertor::DelayConvertor() : GenericLuaElementConvertor<Delay>("delay") {
 DelayConvertor::~DelayConvertor() {
 }
 
-boost::shared_ptr<Delay> DelayConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<Delay> result = boost::make_shared<Delay>();
+std::shared_ptr<Delay> DelayConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<Delay> result = std::make_shared<Delay>();
     lua_getfield(L, -1, "stamp");
     if (lua_isstring(L, -1)) {
         result->setStamp(stringToDateTime(lua_tostring(L, -1)));
@@ -39,7 +40,7 @@ boost::shared_ptr<Delay> DelayConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void DelayConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Delay> payload) {
+void DelayConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Delay> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getFrom()) {
         lua_pushstring(L, (*payload->getFrom()).toString().c_str());

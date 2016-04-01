@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,10 +42,10 @@ BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XML
       connectionReady_(false)
 {
     if (boshURL_.getScheme() == "https") {
-        tlsLayer_ = boost::make_shared<TLSLayer>(tlsContextFactory, tlsOptions);
+        tlsLayer_ = std::make_shared<TLSLayer>(tlsContextFactory, tlsOptions);
         // The following dummyLayer_ is needed as the TLSLayer will pass the decrypted data to its parent layer.
         // The dummyLayer_ will serve as the parent layer.
-        dummyLayer_ = boost::make_shared<DummyStreamLayer>(tlsLayer_.get());
+        dummyLayer_ = std::make_shared<DummyStreamLayer>(tlsLayer_.get());
     }
 }
 
@@ -78,7 +78,7 @@ void BOSHConnection::handleTLSConnected() {
 
 void BOSHConnection::handleTLSApplicationDataRead(const SafeByteArray& data) {
     SWIFT_LOG(debug) << std::endl;
-    handleDataRead(boost::make_shared<SafeByteArray>(data));
+    handleDataRead(std::make_shared<SafeByteArray>(data));
 }
 
 void BOSHConnection::handleTLSNetowrkDataWriteRequest(const SafeByteArray& data) {
@@ -86,12 +86,12 @@ void BOSHConnection::handleTLSNetowrkDataWriteRequest(const SafeByteArray& data)
     connection_->write(data);
 }
 
-void BOSHConnection::handleRawDataRead(boost::shared_ptr<SafeByteArray> data) {
+void BOSHConnection::handleRawDataRead(std::shared_ptr<SafeByteArray> data) {
     SWIFT_LOG(debug) << std::endl;
     tlsLayer_->handleDataRead(*data.get());
 }
 
-void BOSHConnection::handleTLSError(boost::shared_ptr<TLSError> /* error */) {
+void BOSHConnection::handleTLSError(std::shared_ptr<TLSError> /* error */) {
 
 }
 
@@ -276,7 +276,7 @@ void BOSHConnection::startStream(const std::string& to, unsigned long long rid) 
     SWIFT_LOG(debug) << "write stream header: " << safeByteArrayToString(safeHeader) << std::endl;
 }
 
-void BOSHConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
+void BOSHConnection::handleDataRead(std::shared_ptr<SafeByteArray> data) {
     onBOSHDataRead(*data);
     buffer_ = concat(buffer_, *data);
     std::string response = safeByteArrayToString(buffer_);
@@ -295,7 +295,7 @@ void BOSHConnection::handleDataRead(boost::shared_ptr<SafeByteArray> data) {
     if (parser.getBody()) {
         if (parser.getBody()->attributes.getAttribute("type") == "terminate") {
             BOSHError::Type errorType = parseTerminationCondition(parser.getBody()->attributes.getAttribute("condition"));
-            onSessionTerminated(errorType == BOSHError::NoError ? boost::shared_ptr<BOSHError>() : boost::make_shared<BOSHError>(errorType));
+            onSessionTerminated(errorType == BOSHError::NoError ? std::shared_ptr<BOSHError>() : std::make_shared<BOSHError>(errorType));
         }
         buffer_.clear();
         if (waitingForStartResponse_) {

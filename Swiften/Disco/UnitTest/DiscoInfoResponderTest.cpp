@@ -40,11 +40,11 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
             discoInfo.addFeature("foo");
             testling.setDiscoInfo(discoInfo);
 
-            boost::shared_ptr<DiscoInfo> query(new DiscoInfo());
+            std::shared_ptr<DiscoInfo> query(new DiscoInfo());
             channel_->onIQReceived(IQ::createRequest(IQ::Get, JID("foo@bar.com"), "id-1", query));
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
-            boost::shared_ptr<DiscoInfo> payload(channel_->iqs_[0]->getPayload<DiscoInfo>());
+            std::shared_ptr<DiscoInfo> payload(channel_->iqs_[0]->getPayload<DiscoInfo>());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT_EQUAL(std::string(""), payload->getNode());
             CPPUNIT_ASSERT(payload->hasFeature("foo"));
@@ -62,12 +62,12 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
             discoInfoBar.addFeature("bar");
             testling.setDiscoInfo("bar-node", discoInfoBar);
 
-            boost::shared_ptr<DiscoInfo> query(new DiscoInfo());
+            std::shared_ptr<DiscoInfo> query(new DiscoInfo());
             query->setNode("bar-node");
             channel_->onIQReceived(IQ::createRequest(IQ::Get, JID("foo@bar.com"), "id-1", query));
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
-            boost::shared_ptr<DiscoInfo> payload(channel_->iqs_[0]->getPayload<DiscoInfo>());
+            std::shared_ptr<DiscoInfo> payload(channel_->iqs_[0]->getPayload<DiscoInfo>());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT_EQUAL(std::string("bar-node"), payload->getNode());
             CPPUNIT_ASSERT(payload->hasFeature("bar"));
@@ -77,13 +77,13 @@ class DiscoInfoResponderTest : public CppUnit::TestFixture {
 
         void testHandleRequest_GetInvalidNodeInfo() {
             DiscoInfoResponder testling(router_);
-            boost::shared_ptr<DiscoInfo> query(new DiscoInfo());
+            std::shared_ptr<DiscoInfo> query(new DiscoInfo());
             query->setNode("bar-node");
             channel_->onIQReceived(IQ::createRequest(IQ::Get, JID("foo@bar.com"), "id-1", query));
             testling.start();
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel_->iqs_.size()));
-            boost::shared_ptr<ErrorPayload> payload(channel_->iqs_[0]->getPayload<ErrorPayload>());
+            std::shared_ptr<ErrorPayload> payload(channel_->iqs_[0]->getPayload<ErrorPayload>());
             CPPUNIT_ASSERT(payload);
 
             testling.stop();

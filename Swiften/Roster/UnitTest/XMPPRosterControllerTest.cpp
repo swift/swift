@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -61,10 +61,10 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
         }
 
         void testGet_Response() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
 
             testling->requestRoster();
-            boost::shared_ptr<RosterPayload> payload = boost::make_shared<RosterPayload>();
+            std::shared_ptr<RosterPayload> payload = std::make_shared<RosterPayload>();
             payload->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             payload->addItem(RosterItemPayload(jid2_, "Alice", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createResult("foo@bar.com", channel_->sentStanzas[0]->getID(), payload));
@@ -79,13 +79,13 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
             controller.requestRoster();
 
-            channel_->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), channel_->sentStanzas[0]->getID(), boost::shared_ptr<RosterPayload>()));
+            channel_->onIQReceived(IQ::createResult(JID("baz@fum.com/dum"), channel_->sentStanzas[0]->getID(), std::shared_ptr<RosterPayload>()));
         }
 
         void testAdd() {
             XMPPRosterController controller(router_, xmppRoster_, rosterStorage_);
 
-            boost::shared_ptr<RosterPayload> payload(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload(new RosterPayload());
             payload->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "eou", payload));
 
@@ -97,65 +97,65 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
         }
 
         void testGet_NoRosterInStorage() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
             testling->setUseVersioning(true);
 
             testling->requestRoster();
 
-            boost::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
+            std::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
             CPPUNIT_ASSERT(roster->getVersion());
             CPPUNIT_ASSERT_EQUAL(std::string(""), *roster->getVersion());
         }
 
         void testGet_NoVersionInStorage() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
             testling->setUseVersioning(true);
-            rosterStorage_->setRoster(boost::make_shared<RosterPayload>());
+            rosterStorage_->setRoster(std::make_shared<RosterPayload>());
 
             testling->requestRoster();
 
-            boost::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
+            std::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
             CPPUNIT_ASSERT(roster->getVersion());
             CPPUNIT_ASSERT_EQUAL(std::string(""), *roster->getVersion());
         }
 
         void testGet_VersionInStorage() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
             testling->setUseVersioning(true);
-            boost::shared_ptr<RosterPayload> payload(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload(new RosterPayload());
             payload->setVersion("foover");
             rosterStorage_->setRoster(payload);
 
             testling->requestRoster();
 
-            boost::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
+            std::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
             CPPUNIT_ASSERT(roster->getVersion());
             CPPUNIT_ASSERT_EQUAL(std::string("foover"), *roster->getVersion());
         }
 
         void testGet_ServerDoesNotSupportVersion() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
-            boost::shared_ptr<RosterPayload> payload(new RosterPayload());
+            std::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<RosterPayload> payload(new RosterPayload());
             payload->setVersion("foover");
             rosterStorage_->setRoster(payload);
 
             testling->requestRoster();
 
-            boost::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
+            std::shared_ptr<RosterPayload> roster = channel_->sentStanzas[0]->getPayload<RosterPayload>();
             CPPUNIT_ASSERT(!roster->getVersion());
         }
 
         void testGet_ResponseWithoutNewVersion() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
             testling->setUseVersioning(true);
-            boost::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
+            std::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
             storedRoster->setVersion("version10");
             storedRoster->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             storedRoster->addItem(RosterItemPayload(jid2_, "Alice", RosterItemPayload::Both));
             rosterStorage_->setRoster(storedRoster);
             testling->requestRoster();
 
-            channel_->onIQReceived(IQ::createResult("foo@bar.com", channel_->sentStanzas[0]->getID(), boost::shared_ptr<RosterPayload>()));
+            channel_->onIQReceived(IQ::createResult("foo@bar.com", channel_->sentStanzas[0]->getID(), std::shared_ptr<RosterPayload>()));
 
             CPPUNIT_ASSERT_EQUAL(2, handler_->getEventCount());
             CPPUNIT_ASSERT(xmppRoster_->getItem(jid1_));
@@ -170,15 +170,15 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
         }
 
         void testGet_ResponseWithNewVersion() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
             testling->setUseVersioning(true);
-            boost::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
+            std::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
             storedRoster->setVersion("version10");
             storedRoster->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             rosterStorage_->setRoster(storedRoster);
             testling->requestRoster();
 
-            boost::shared_ptr<RosterPayload> serverRoster(new RosterPayload());
+            std::shared_ptr<RosterPayload> serverRoster(new RosterPayload());
             serverRoster->setVersion("version12");
             serverRoster->addItem(RosterItemPayload(jid2_, "Alice", RosterItemPayload::Both));
             std::vector<std::string> groups;
@@ -204,9 +204,9 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
         }
 
         void testAddFromNonAccount() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
 
-            boost::shared_ptr<RosterPayload> payload(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload(new RosterPayload());
             payload->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             IQ::ref request = IQ::createRequest(IQ::Set, JID(), "eou", payload);
             request->setFrom(jid2_);
@@ -217,7 +217,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
         void testModify() {
             XMPPRosterController controller(router_, xmppRoster_, rosterStorage_);
-            boost::shared_ptr<RosterPayload> payload1(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload1(new RosterPayload());
             payload1->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id1", payload1));
 
@@ -225,7 +225,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload2(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload2(new RosterPayload());
             payload2->addItem(RosterItemPayload(jid1_, "Bob2", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id2", payload2));
 
@@ -237,7 +237,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
         void testRemove() {
             XMPPRosterController controller(router_, xmppRoster_, rosterStorage_);
-            boost::shared_ptr<RosterPayload> payload1(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload1(new RosterPayload());
             payload1->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id1", payload1));
 
@@ -245,7 +245,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload2(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload2(new RosterPayload());
             payload2->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Remove));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id2", payload2));
             CPPUNIT_ASSERT(!xmppRoster_->containsJID(jid1_));
@@ -255,17 +255,17 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
         }
 
         void testRemove_RosterStorageUpdated() {
-            boost::shared_ptr<XMPPRosterController> testling(createController());
+            std::shared_ptr<XMPPRosterController> testling(createController());
             testling->setUseVersioning(true);
-            boost::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
+            std::shared_ptr<RosterPayload> storedRoster(new RosterPayload());
             storedRoster->setVersion("version10");
             storedRoster->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             storedRoster->addItem(RosterItemPayload(jid2_, "Alice", RosterItemPayload::Both));
             rosterStorage_->setRoster(storedRoster);
             testling->requestRoster();
-            channel_->onIQReceived(IQ::createResult("foo@bar.com", channel_->sentStanzas[0]->getID(), boost::shared_ptr<RosterPayload>()));
+            channel_->onIQReceived(IQ::createResult("foo@bar.com", channel_->sentStanzas[0]->getID(), std::shared_ptr<RosterPayload>()));
 
-            boost::shared_ptr<RosterPayload> payload2(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload2(new RosterPayload());
             payload2->setVersion("version15");
             payload2->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Remove));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id2", payload2));
@@ -279,7 +279,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
 
         void testMany() {
             XMPPRosterController controller(router_, xmppRoster_, rosterStorage_);
-            boost::shared_ptr<RosterPayload> payload1(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload1(new RosterPayload());
             payload1->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id1", payload1));
 
@@ -287,7 +287,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload2(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload2(new RosterPayload());
             payload2->addItem(RosterItemPayload(jid2_, "Alice", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id2", payload2));
 
@@ -295,7 +295,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(jid2_, handler_->getLastJID());
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload3(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload3(new RosterPayload());
             payload3->addItem(RosterItemPayload(jid1_, "Ernie", RosterItemPayload::Both));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id3", payload3));
 
@@ -303,7 +303,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload4(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload4(new RosterPayload());
             RosterItemPayload item(jid3_, "Jane", RosterItemPayload::Both);
             std::string janesGroup("Jane's Group");
             item.addGroup(janesGroup);
@@ -316,7 +316,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(janesGroup, xmppRoster_->getGroupsForJID(jid3_)[0]);
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload5(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload5(new RosterPayload());
             payload5->addItem(RosterItemPayload(jid1_, "Bob", RosterItemPayload::Remove));
             channel_->onIQReceived(IQ::createRequest(IQ::Set, JID(), "id5", payload5));
             CPPUNIT_ASSERT(!xmppRoster_->containsJID(jid1_));
@@ -324,7 +324,7 @@ class XMPPRosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(jid1_, handler_->getLastJID());
             handler_->reset();
 
-            boost::shared_ptr<RosterPayload> payload6(new RosterPayload());
+            std::shared_ptr<RosterPayload> payload6(new RosterPayload());
             RosterItemPayload item2(jid2_, "Little Alice", RosterItemPayload::Both);
             std::string alicesGroup("Alice's Group");
             item2.addGroup(alicesGroup);

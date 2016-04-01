@@ -25,7 +25,7 @@ void PayloadSerializerCollection::removeSerializer(PayloadSerializer* serializer
     serializers_.erase(std::remove(serializers_.begin(), serializers_.end(), serializer), serializers_.end());
 }
 
-PayloadSerializer* PayloadSerializerCollection::getPayloadSerializer(boost::shared_ptr<Payload> payload) const {
+PayloadSerializer* PayloadSerializerCollection::getPayloadSerializer(std::shared_ptr<Payload> payload) const {
     std::vector<PayloadSerializer*>::const_iterator i = std::find_if(
             serializers_.begin(), serializers_.end(),
             boost::bind(&PayloadSerializer::canSerialize, _1, payload));

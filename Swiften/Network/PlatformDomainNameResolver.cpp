@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,22 +33,22 @@ PlatformDomainNameResolver::PlatformDomainNameResolver(IDNConverter* idnConverte
 
 PlatformDomainNameResolver::~PlatformDomainNameResolver() {
     stopRequested = true;
-    addQueryToQueue(boost::shared_ptr<PlatformDomainNameQuery>());
+    addQueryToQueue(std::shared_ptr<PlatformDomainNameQuery>());
     thread->join();
     delete thread;
 }
 
-boost::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+std::shared_ptr<DomainNameServiceQuery> PlatformDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
     boost::optional<std::string> encodedDomain = idnConverter->getIDNAEncoded(domain);
     std::string result;
     if (encodedDomain) {
         result = serviceLookupPrefix + *encodedDomain;
     }
-    return boost::shared_ptr<DomainNameServiceQuery>(new PlatformDomainNameServiceQuery(result, eventLoop, this));
+    return std::make_shared<PlatformDomainNameServiceQuery>(result, eventLoop, this);
 }
 
-boost::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const std::string& name) {
-    return boost::shared_ptr<DomainNameAddressQuery>(new PlatformDomainNameAddressQuery(idnConverter->getIDNAEncoded(name), eventLoop, this));
+std::shared_ptr<DomainNameAddressQuery> PlatformDomainNameResolver::createAddressQuery(const std::string& name) {
+    return std::make_shared<PlatformDomainNameAddressQuery>(idnConverter->getIDNAEncoded(name), eventLoop, this);
 }
 
 void PlatformDomainNameResolver::run() {

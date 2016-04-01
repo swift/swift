@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-BonjourQuery::BonjourQuery(boost::shared_ptr<BonjourQuerier> q, EventLoop* eventLoop) : eventLoop(eventLoop), querier(q), sdRef(nullptr) {
+BonjourQuery::BonjourQuery(std::shared_ptr<BonjourQuerier> q, EventLoop* eventLoop) : eventLoop(eventLoop), querier(q), sdRef(nullptr) {
 }
 
 BonjourQuery::~BonjourQuery() {

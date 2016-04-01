@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -25,7 +25,7 @@ namespace Swift {
         public:
             IncomingLinkLocalSession(
                     const JID& localJID,
-                    boost::shared_ptr<Connection> connection,
+                    std::shared_ptr<Connection> connection,
                     PayloadParserFactoryCollection* payloadParserFactories,
                     PayloadSerializerCollection* payloadSerializers,
                     XMLParserFactory* xmlParserFactory);
@@ -33,7 +33,7 @@ namespace Swift {
             boost::signal<void ()> onSessionStarted;
 
         private:
-            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleElement(std::shared_ptr<ToplevelElement>);
             void handleStreamStart(const ProtocolHeader&);
             void setInitialized();
             bool isInitialized() const {

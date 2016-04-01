@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/MUCItem.h>
@@ -21,7 +21,7 @@
 namespace Swift {
     class SWIFTEN_API MUCUserPayload : public Payload {
         public:
-            typedef boost::shared_ptr<MUCUserPayload> ref;
+            typedef std::shared_ptr<MUCUserPayload> ref;
 
             struct StatusCode {
                 StatusCode() : code(0) {}
@@ -61,11 +61,11 @@ namespace Swift {
 
             const std::vector<StatusCode>& getStatusCodes() const {return statusCodes_;}
 
-            boost::shared_ptr<Payload> getPayload() const {
+            std::shared_ptr<Payload> getPayload() const {
                 return payload_;
             }
 
-            void setPayload(boost::shared_ptr<Payload> p) {
+            void setPayload(std::shared_ptr<Payload> p) {
                 payload_ = p;
             }
 
@@ -90,7 +90,7 @@ namespace Swift {
         private:
             std::vector<MUCItem> items_;
             std::vector<StatusCode> statusCodes_;
-            boost::shared_ptr<Payload> payload_;
+            std::shared_ptr<Payload> payload_;
             boost::optional<std::string> password_;
             boost::optional<Invite> invite_;
     };

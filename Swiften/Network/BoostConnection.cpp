@@ -7,13 +7,13 @@
 #include <Swiften/Network/BoostConnection.h>
 
 #include <algorithm>
+#include <memory>
 #include <string>
 
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 #include <boost/thread.hpp>
 
 #include <Swiften/Base/Algorithm.h>
@@ -45,13 +45,13 @@ class SharedBuffer {
         const boost::asio::const_buffer* end() const { return &buffer_ + 1; }
 
     private:
-        boost::shared_ptr< std::vector<char, SafeAllocator<char> > > data_;
+        std::shared_ptr< std::vector<char, SafeAllocator<char> > > data_;
         boost::asio::const_buffer buffer_;
 };
 
 // -----------------------------------------------------------------------------
 
-BoostConnection::BoostConnection(boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) :
+BoostConnection::BoostConnection(std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) :
     eventLoop(eventLoop), ioService(ioService), socket_(*ioService), writing_(false), closeSocketAfterNextWrite_(false) {
 }
 
@@ -119,7 +119,7 @@ void BoostConnection::handleConnectFinished(const boost::system::error_code& err
 }
 
 void BoostConnection::doRead() {
-    readBuffer_ = boost::make_shared<SafeByteArray>(BUFFER_SIZE);
+    readBuffer_ = std::make_shared<SafeByteArray>(BUFFER_SIZE);
     boost::lock_guard<boost::mutex> lock(readCloseMutex_);
     socket_.async_read_some(
             boost::asio::buffer(*readBuffer_),

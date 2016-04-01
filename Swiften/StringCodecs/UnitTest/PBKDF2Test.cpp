@@ -25,7 +25,7 @@ class PBKDF2Test : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         }
 
         void testGetResult_I1() {
@@ -47,7 +47,7 @@ class PBKDF2Test : public CppUnit::TestFixture {
         }
 
     private:
-        boost::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<CryptoProvider> crypto;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(PBKDF2Test);

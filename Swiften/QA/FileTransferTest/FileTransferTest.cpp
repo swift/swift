@@ -35,8 +35,8 @@ using namespace Swift;
 static const std::string CLIENT_NAME = "Swiften FT Test";
 static const std::string CLIENT_NODE = "http://swift.im";
 
-static boost::shared_ptr<SimpleEventLoop> eventLoop;
-static boost::shared_ptr<BoostNetworkFactories> networkFactories;
+static std::shared_ptr<SimpleEventLoop> eventLoop;
+static std::shared_ptr<BoostNetworkFactories> networkFactories;
 
 BoostRandomGenerator randGen;
 
@@ -50,12 +50,12 @@ enum Candidate {
 class FileTransferTest {
     public:
         FileTransferTest(int senderCandidates, int receiverCandidates) : senderCandidates_(senderCandidates), senderError_(FileTransferError::UnknownError), senderIsDone_(false), receiverCandidates_(receiverCandidates), receiverError_(FileTransferError::UnknownError), receiverIsDone_(false) {
-            sender_ = boost::make_shared<Client>(JID(getenv("SWIFT_FILETRANSFERTEST_JID")), getenv("SWIFT_FILETRANSFERTEST_PASS"), networkFactories.get());
+            sender_ = std::make_shared<Client>(JID(getenv("SWIFT_FILETRANSFERTEST_JID")), getenv("SWIFT_FILETRANSFERTEST_PASS"), networkFactories.get());
             sender_->onDisconnected.connect(boost::bind(&FileTransferTest::handleSenderDisconnected, this, _1));
             sender_->onConnected.connect(boost::bind(&FileTransferTest::handleSenderConnected, this));
             sender_->getEntityCapsProvider()->onCapsChanged.connect(boost::bind(&FileTransferTest::handleSenderCapsChanged, this, _1));
 
-            receiver_ = boost::make_shared<Client>(JID(getenv("SWIFT_FILETRANSFERTEST2_JID")), getenv("SWIFT_FILETRANSFERTEST2_PASS"), networkFactories.get());
+            receiver_ = std::make_shared<Client>(JID(getenv("SWIFT_FILETRANSFERTEST2_JID")), getenv("SWIFT_FILETRANSFERTEST2_PASS"), networkFactories.get());
             receiver_->onConnected.connect(boost::bind(&FileTransferTest::handleReceiverConnected, this));
             receiver_->onDisconnected.connect(boost::bind(&FileTransferTest::handleReceiverDisconnected, this, _1));
 
@@ -145,7 +145,7 @@ class FileTransferTest {
 
         void handleReceiverIncomingFileTransfer(IncomingFileTransfer::ref transfer) {
             incomingFileTransfers_.push_back(transfer);
-            boost::shared_ptr<FileWriteBytestream> out = boost::make_shared<FileWriteBytestream>(receiveFilePath_.native());
+            std::shared_ptr<FileWriteBytestream> out = std::make_shared<FileWriteBytestream>(receiveFilePath_.native());
             transfer->onFinished.connect(boost::bind(&FileTransferTest::handleReceiverFileTransferFinished, this, _1, out));
 
             FileTransferOptions options;
@@ -164,7 +164,7 @@ class FileTransferTest {
 
         void handleSenderCapsChanged(const JID &jid) {
             if (receiver_ && (receiver_->getJID().toBare() == jid.toBare())) {
-                boost::shared_ptr<FileReadBytestream> fileStream = boost::make_shared<FileReadBytestream>(sendFilePath_);
+                std::shared_ptr<FileReadBytestream> fileStream = std::make_shared<FileReadBytestream>(sendFilePath_);
 
                 FileTransferOptions options;
                 options = options.withInBandAllowed(senderCandidates_ & InBandBytestream);
@@ -191,7 +191,7 @@ class FileTransferTest {
             }
         }
 
-        void handleReceiverFileTransferFinished(const boost::optional<FileTransferError>& error, boost::shared_ptr<FileWriteBytestream> out) {
+        void handleReceiverFileTransferFinished(const boost::optional<FileTransferError>& error, std::shared_ptr<FileWriteBytestream> out) {
             out->close();
             receiverError_ = error;
             receiverIsDone_ = true;
@@ -276,7 +276,7 @@ class FileTransferTest {
 
     private:
         int senderCandidates_;
-        boost::shared_ptr<Client> sender_;
+        std::shared_ptr<Client> sender_;
         ClientXMLTracer* senderTracer_;
         ByteArray sendData_;
         OutgoingFileTransfer::ref outgoingFileTransfer_;
@@ -285,7 +285,7 @@ class FileTransferTest {
         bool senderIsDone_;
 
         int receiverCandidates_;
-        boost::shared_ptr<Client> receiver_;
+        std::shared_ptr<Client> receiver_;
         ClientXMLTracer* receiverTracer_;
         ByteArray receiveData_;
         std::vector<IncomingFileTransfer::ref> incomingFileTransfers_;
@@ -302,10 +302,10 @@ static bool runTest(int senderCandidates, int receiverCandidates) {
     std::cout << "senderCandidates: " << senderCandidates << ", receiverCandidates: " << receiverCandidates << std::endl;
     bool expectSuccess = (senderCandidates & receiverCandidates) > 0;
 
-    eventLoop = boost::make_shared<SimpleEventLoop>();
-    networkFactories = boost::make_shared<BoostNetworkFactories>(eventLoop.get());
+    eventLoop = std::make_shared<SimpleEventLoop>();
+    networkFactories = std::make_shared<BoostNetworkFactories>(eventLoop.get());
 
-    boost::shared_ptr<FileTransferTest> testRun = boost::make_shared<FileTransferTest>(senderCandidates, receiverCandidates);
+    std::shared_ptr<FileTransferTest> testRun = std::make_shared<FileTransferTest>(senderCandidates, receiverCandidates);
 
     testRun->run();
 

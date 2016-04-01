@@ -15,7 +15,7 @@ MessageSerializer::MessageSerializer(PayloadSerializerCollection* payloadSeriali
 }
 
 void MessageSerializer::setStanzaSpecificAttributesGeneric(
-        boost::shared_ptr<Message> message,
+        std::shared_ptr<Message> message,
         XMLElement& element) const {
     if (message->getType() == Message::Chat) {
         element.setAttribute("type", "chat");

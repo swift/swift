@@ -12,9 +12,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/JID/JID.h>
 
@@ -23,7 +22,7 @@
 namespace Swift {
     class RequestInviteToMUCUIEvent : public UIEvent {
         public:
-            typedef boost::shared_ptr<RequestInviteToMUCUIEvent> ref;
+            typedef std::shared_ptr<RequestInviteToMUCUIEvent> ref;
 
             enum ImpromptuMode {
                 Impromptu,

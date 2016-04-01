@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -14,7 +14,7 @@
 namespace Swift {
     class SWIFTEN_API TLSError : public Error {
         public:
-            typedef boost::shared_ptr<TLSError> ref;
+            typedef std::shared_ptr<TLSError> ref;
 
             enum Type {
                 UnknownError,

@@ -67,7 +67,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         void setUp() {
             ioServiceThread = new BoostIOServiceThread();
             eventLoop = new DummyEventLoop();
-            idnConverter = boost::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+            idnConverter = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
 #ifdef USE_UNBOUND
             resolver = new UnboundDomainNameResolver(idnConverter.get(), ioServiceThread->getIOService(), eventLoop);
 #else
@@ -83,7 +83,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveAddress() {
-            boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp.test.swift.im"));
+            std::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp.test.swift.im"));
 
             query->run();
             waitForResults();
@@ -94,7 +94,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveAddress_Error() {
-            boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("invalid.test.swift.im"));
+            std::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("invalid.test.swift.im"));
 
             query->run();
             waitForResults();
@@ -103,7 +103,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveAddress_IPv6() {
-            boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp-ipv6.test.swift.im"));
+            std::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp-ipv6.test.swift.im"));
 
             query->run();
             waitForResults();
@@ -113,7 +113,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveAddress_IPv4and6() {
-            boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp-ipv46.test.swift.im"));
+            std::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("xmpp-ipv46.test.swift.im"));
 
             query->run();
             waitForResults();
@@ -125,7 +125,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveAddress_International() {
-            boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("tron\xc3\xa7on.test.swift.im"));
+            std::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("tron\xc3\xa7on.test.swift.im"));
 
             query->run();
             waitForResults();
@@ -136,7 +136,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveAddress_Localhost() {
-            boost::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("localhost"));
+            std::shared_ptr<DomainNameAddressQuery> query(createAddressQuery("localhost"));
 
             query->run();
             waitForResults();
@@ -172,7 +172,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
         void testResolveService() {
-            boost::shared_ptr<DomainNameServiceQuery> query(createServiceQuery("_xmpp-client._tcp.", "xmpp-srv.test.swift.im"));
+            std::shared_ptr<DomainNameServiceQuery> query(createServiceQuery("_xmpp-client._tcp.", "xmpp-srv.test.swift.im"));
 
             query->run();
             waitForResults();
@@ -200,8 +200,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
         }
 
     private:
-            boost::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& domain) {
-                boost::shared_ptr<DomainNameAddressQuery> result = resolver->createAddressQuery(domain);
+            std::shared_ptr<DomainNameAddressQuery> createAddressQuery(const std::string& domain) {
+                std::shared_ptr<DomainNameAddressQuery> result = resolver->createAddressQuery(domain);
                 result->onResult.connect(boost::bind(&DomainNameResolverTest::handleAddressQueryResult, this, _1, _2));
                 return result;
             }
@@ -214,8 +214,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
                 resultsAvailable = true;
             }
 
-            boost::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
-                boost::shared_ptr<DomainNameServiceQuery> result = resolver->createServiceQuery(serviceLookupPrefix, domain);
+            std::shared_ptr<DomainNameServiceQuery> createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+                std::shared_ptr<DomainNameServiceQuery> result = resolver->createServiceQuery(serviceLookupPrefix, domain);
                 result->onResult.connect(boost::bind(&DomainNameResolverTest::handleServiceQueryResult, this, _1));
                 return result;
             }
@@ -241,8 +241,8 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
     private:
         BoostIOServiceThread* ioServiceThread;
         DummyEventLoop* eventLoop;
-        boost::shared_ptr<IDNConverter> idnConverter;
-        boost::shared_ptr<TimerFactory> timerFactory;
+        std::shared_ptr<IDNConverter> idnConverter;
+        std::shared_ptr<TimerFactory> timerFactory;
         bool resultsAvailable;
         std::vector<HostAddress> addressQueryResult;
         std::vector<HostAddress> allAddressQueryResults;

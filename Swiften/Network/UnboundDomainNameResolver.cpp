@@ -10,11 +10,10 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <UnboundDomainNameResolver.h>
 #include <arpa/inet.h>
@@ -44,12 +43,12 @@ class UnboundQuery {
 };
 
 struct UnboundWrapperHelper {
-    UnboundWrapperHelper(UnboundDomainNameResolver* resolver, boost::shared_ptr<UnboundQuery> query) : resolver(resolver), query(query) {}
+    UnboundWrapperHelper(UnboundDomainNameResolver* resolver, std::shared_ptr<UnboundQuery> query) : resolver(resolver), query(query) {}
     UnboundDomainNameResolver* resolver;
-    boost::shared_ptr<UnboundQuery> query;
+    std::shared_ptr<UnboundQuery> query;
 };
 
-class UnboundDomainNameServiceQuery : public DomainNameServiceQuery, public UnboundQuery, public boost::enable_shared_from_this<UnboundDomainNameServiceQuery>  {
+class UnboundDomainNameServiceQuery : public DomainNameServiceQuery, public UnboundQuery, public std::enable_shared_from_this<UnboundDomainNameServiceQuery>  {
     public:
         UnboundDomainNameServiceQuery(UnboundDomainNameResolver* resolver, ub_ctx* context, std::string name) : UnboundQuery(resolver, context), name(name) {
         }
@@ -121,7 +120,7 @@ class UnboundDomainNameServiceQuery : public DomainNameServiceQuery, public Unbo
         std::string name;
 };
 
-class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public UnboundQuery, public boost::enable_shared_from_this<UnboundDomainNameAddressQuery> {
+class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public UnboundQuery, public std::enable_shared_from_this<UnboundDomainNameAddressQuery> {
     public:
         UnboundDomainNameAddressQuery(UnboundDomainNameResolver* resolver, ub_ctx* context, std::string name) : UnboundQuery(resolver, context), name(name) {
         }
@@ -179,12 +178,12 @@ class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public Unbo
         std::string name;
 };
 
-UnboundDomainNameResolver::UnboundDomainNameResolver(IDNConverter* idnConverter, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : idnConverter(idnConverter), ioService(ioService), ubDescriptior(*ioService), eventLoop(eventLoop) {
+UnboundDomainNameResolver::UnboundDomainNameResolver(IDNConverter* idnConverter, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : idnConverter(idnConverter), ioService(ioService), ubDescriptior(*ioService), eventLoop(eventLoop) {
     ubContext = ub_ctx_create();
     if(!ubContext) {
         SWIFT_LOG(debug) << "could not create unbound context" << std::endl;
     }
-    eventOwner = boost::make_shared<EventOwner>();
+    eventOwner = std::make_shared<EventOwner>();
 
     ub_ctx_async(ubContext, true);
 
@@ -211,7 +210,7 @@ UnboundDomainNameResolver::~UnboundDomainNameResolver() {
     }
 }
 
-void UnboundDomainNameResolver::unbound_callback(boost::shared_ptr<UnboundQuery> query, int err, ub_result* result) {
+void UnboundDomainNameResolver::unbound_callback(std::shared_ptr<UnboundQuery> query, int err, ub_result* result) {
     query->handleResult(err, result);
 }
 
@@ -236,17 +235,17 @@ void UnboundDomainNameResolver::processData() {
     }
 }
 
-boost::shared_ptr<DomainNameServiceQuery> UnboundDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
+std::shared_ptr<DomainNameServiceQuery> UnboundDomainNameResolver::createServiceQuery(const std::string& serviceLookupPrefix, const std::string& domain) {
     boost::optional<std::string> encodedDomain = idnConverter->getIDNAEncoded(domain);
     std::string result;
     if (encodedDomain) {
         result = serviceLookupPrefix + *encodedDomain;
     }
-    return boost::make_shared<UnboundDomainNameServiceQuery>(this, ubContext, result);
+    return std::make_shared<UnboundDomainNameServiceQuery>(this, ubContext, result);
 }
 
-boost::shared_ptr<DomainNameAddressQuery> UnboundDomainNameResolver::createAddressQuery(const std::string& name) {
-    return boost::make_shared<UnboundDomainNameAddressQuery>(this, ubContext, idnConverter->getIDNAEncoded(name).get_value_or(""));
+std::shared_ptr<DomainNameAddressQuery> UnboundDomainNameResolver::createAddressQuery(const std::string& name) {
+    return std::make_shared<UnboundDomainNameAddressQuery>(this, ubContext, idnConverter->getIDNAEncoded(name).get_value_or(""));
 }
 
 }

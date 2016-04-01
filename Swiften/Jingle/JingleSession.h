@@ -6,11 +6,11 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Listenable.h>
@@ -24,7 +24,7 @@ namespace Swift {
 
     class SWIFTEN_API JingleSession : public Listenable<JingleSessionListener> {
         public:
-            typedef boost::shared_ptr<JingleSession> ref;
+            typedef std::shared_ptr<JingleSession> ref;
 
             JingleSession(const JID& initiator, const std::string& id);
             virtual ~JingleSession();
@@ -39,7 +39,7 @@ namespace Swift {
 
             virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) = 0;
             virtual void sendTerminate(JinglePayload::Reason::Type reason) = 0;
-            virtual void sendInfo(boost::shared_ptr<Payload>) = 0;
+            virtual void sendInfo(std::shared_ptr<Payload>) = 0;
             virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref()) = 0;
             virtual std::string sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) = 0;
             virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) = 0;

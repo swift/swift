@@ -44,8 +44,8 @@ class EventLoopTest : public CppUnit::TestFixture {
 
         void testRemove() {
             SimpleEventLoop testling;
-            boost::shared_ptr<MyEventOwner> eventOwner1(new MyEventOwner());
-            boost::shared_ptr<MyEventOwner> eventOwner2(new MyEventOwner());
+            std::shared_ptr<MyEventOwner> eventOwner1(new MyEventOwner());
+            std::shared_ptr<MyEventOwner> eventOwner2(new MyEventOwner());
 
             testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 1), eventOwner1);
             testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 2), eventOwner2);
@@ -62,7 +62,7 @@ class EventLoopTest : public CppUnit::TestFixture {
 
         void testHandleEvent_Recursive() {
             DummyEventLoop testling;
-            boost::shared_ptr<MyEventOwner> eventOwner(new MyEventOwner());
+            std::shared_ptr<MyEventOwner> eventOwner(new MyEventOwner());
 
             testling.postEvent(boost::bind(&EventLoopTest::runEventLoop, this, &testling, eventOwner), eventOwner);
             testling.postEvent(boost::bind(&EventLoopTest::logEvent, this, 0), eventOwner);
@@ -78,7 +78,7 @@ class EventLoopTest : public CppUnit::TestFixture {
         void logEvent(int i) {
             events_.push_back(i);
         }
-        void runEventLoop(DummyEventLoop* loop, boost::shared_ptr<MyEventOwner> eventOwner) {
+        void runEventLoop(DummyEventLoop* loop, std::shared_ptr<MyEventOwner> eventOwner) {
             loop->processEvents();
             CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(events_.size()));
             loop->postEvent(boost::bind(&EventLoopTest::logEvent, this, 1), eventOwner);

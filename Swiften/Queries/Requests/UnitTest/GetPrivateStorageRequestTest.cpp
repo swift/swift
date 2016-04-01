@@ -4,8 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -49,9 +50,9 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->iqs_.size()));
             CPPUNIT_ASSERT_EQUAL(JID(), channel->iqs_[0]->getTo());
             CPPUNIT_ASSERT_EQUAL(IQ::Get, channel->iqs_[0]->getType());
-            boost::shared_ptr<PrivateStorage> storage = channel->iqs_[0]->getPayload<PrivateStorage>();
+            std::shared_ptr<PrivateStorage> storage = channel->iqs_[0]->getPayload<PrivateStorage>();
             CPPUNIT_ASSERT(storage);
-            boost::shared_ptr<MyPayload> payload = boost::dynamic_pointer_cast<MyPayload>(storage->getPayload());
+            std::shared_ptr<MyPayload> payload = std::dynamic_pointer_cast<MyPayload>(storage->getPayload());
             CPPUNIT_ASSERT(payload);
         }
 
@@ -62,7 +63,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
             channel->onIQReceived(createResponse("test-id", "foo"));
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(responses.size()));
-            CPPUNIT_ASSERT_EQUAL(std::string("foo"), boost::dynamic_pointer_cast<MyPayload>(responses[0])->text);
+            CPPUNIT_ASSERT_EQUAL(std::string("foo"), std::dynamic_pointer_cast<MyPayload>(responses[0])->text);
         }
 
         void testHandleResponse_Error() {
@@ -76,7 +77,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
         }
 
     private:
-        void handleResponse(boost::shared_ptr<Payload> p, ErrorPayload::ref e) {
+        void handleResponse(std::shared_ptr<Payload> p, ErrorPayload::ref e) {
             if (e) {
                 errors.push_back(*e);
             }
@@ -85,17 +86,17 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
             }
         }
 
-        boost::shared_ptr<IQ> createResponse(const std::string& id, const std::string& text) {
-            boost::shared_ptr<IQ> iq(new IQ(IQ::Result));
-            boost::shared_ptr<PrivateStorage> storage(new PrivateStorage());
-            storage->setPayload(boost::shared_ptr<Payload>(new MyPayload(text)));
+        std::shared_ptr<IQ> createResponse(const std::string& id, const std::string& text) {
+            std::shared_ptr<IQ> iq(new IQ(IQ::Result));
+            std::shared_ptr<PrivateStorage> storage(new PrivateStorage());
+            storage->setPayload(std::make_shared<MyPayload>(text));
             iq->addPayload(storage);
             iq->setID(id);
             return iq;
         }
 
-        boost::shared_ptr<IQ> createError(const std::string& id) {
-            boost::shared_ptr<IQ> iq(new IQ(IQ::Error));
+        std::shared_ptr<IQ> createError(const std::string& id) {
+            std::shared_ptr<IQ> iq(new IQ(IQ::Error));
             iq->setID(id);
             return iq;
         }
@@ -104,7 +105,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
         IQRouter* router;
         DummyIQChannel* channel;
         std::vector< ErrorPayload > errors;
-        std::vector< boost::shared_ptr<Payload> > responses;
+        std::vector< std::shared_ptr<Payload> > responses;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(GetPrivateStorageRequestTest);

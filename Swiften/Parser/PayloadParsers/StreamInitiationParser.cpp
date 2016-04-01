@@ -88,7 +88,7 @@ void StreamInitiationParser::handleEndElement(const std::string& element, const 
         else if (formParser) {
             Form::ref form = formParser->getPayloadInternal();
             if (form) {
-                FormField::ref field = boost::dynamic_pointer_cast<FormField>(form->getField("stream-method"));
+                FormField::ref field = std::dynamic_pointer_cast<FormField>(form->getField("stream-method"));
                 if (field) {
                     if (form->getType() == Form::FormType) {
                         foreach (const FormField::Option& option, field->getOptions()) {

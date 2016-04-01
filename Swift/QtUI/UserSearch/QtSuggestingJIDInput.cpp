@@ -74,13 +74,13 @@ Contact::ref QtSuggestingJIDInput::getContact() {
     if (!text().isEmpty()) {
         JID jid(Q2PSTRING(text()));
         if (jid.isValid()) {
-            Contact::ref manualContact = boost::make_shared<Contact>();
+            Contact::ref manualContact = std::make_shared<Contact>();
             manualContact->name = jid.toString();
             manualContact->jid = jid;
             return manualContact;
         }
     }
-    return boost::shared_ptr<Contact>();
+    return std::shared_ptr<Contact>();
 }
 
 void QtSuggestingJIDInput::setSuggestions(const std::vector<Contact::ref>& suggestions) {

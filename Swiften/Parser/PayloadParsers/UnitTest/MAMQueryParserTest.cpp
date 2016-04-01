@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -41,22 +41,22 @@ class MAMQueryParserTest : public CppUnit::TestFixture
                 "</query>"));
 
 
-            boost::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
+            std::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getQueryID());
             CPPUNIT_ASSERT_EQUAL(std::string("id0"), *payload->getQueryID());
             CPPUNIT_ASSERT_EQUAL(std::string("node1"), *payload->getNode());
 
             CPPUNIT_ASSERT(payload->getForm());
-            boost::shared_ptr<FormField> fieldType = payload->getForm()->getField("FORM_TYPE");
+            std::shared_ptr<FormField> fieldType = payload->getForm()->getField("FORM_TYPE");
             CPPUNIT_ASSERT(fieldType);
             CPPUNIT_ASSERT_EQUAL(std::string("urn:xmpp:mam:0"), fieldType->getTextSingleValue());
-            boost::shared_ptr<FormField> fieldStart = payload->getForm()->getField("start");
+            std::shared_ptr<FormField> fieldStart = payload->getForm()->getField("start");
             CPPUNIT_ASSERT(fieldStart);
             CPPUNIT_ASSERT_EQUAL(std::string("2010-08-07T00:00:00Z"), fieldStart->getTextSingleValue());
 
             CPPUNIT_ASSERT(payload->getResultSet());
-            boost::shared_ptr<ResultSet> resultSet = payload->getResultSet();
+            std::shared_ptr<ResultSet> resultSet = payload->getResultSet();
             CPPUNIT_ASSERT(resultSet->getMaxItems());
             CPPUNIT_ASSERT_EQUAL(*resultSet->getMaxItems(), 10);
         }
@@ -75,7 +75,7 @@ class MAMQueryParserTest : public CppUnit::TestFixture
                     "</x>"
                 "</query>"));
 
-            boost::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
+            std::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
             CPPUNIT_ASSERT(!!payload && !!payload->getForm() && !!payload->getForm()->getField("FORM_TYPE") && !!payload->getForm()->getField("with"));
             CPPUNIT_ASSERT_EQUAL(std::string("urn:xmpp:mam:0"), payload->getForm()->getField("FORM_TYPE")->getTextSingleValue());
             CPPUNIT_ASSERT_EQUAL(std::string("juliet@capulet.lit"), payload->getForm()->getField("with")->getTextSingleValue());
@@ -97,7 +97,7 @@ class MAMQueryParserTest : public CppUnit::TestFixture
                         "</field>"
                     "</x>"
                 "</query>"));
-            boost::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
+            std::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
             CPPUNIT_ASSERT(!!payload && !!payload->getForm() && !!payload->getForm()->getField("FORM_TYPE") && !!payload->getForm()->getField("start") && !!payload->getForm()->getField("start"));
             CPPUNIT_ASSERT_EQUAL(std::string("urn:xmpp:mam:0"), payload->getForm()->getField("FORM_TYPE")->getTextSingleValue());
             CPPUNIT_ASSERT_EQUAL(std::string("2010-06-07T00:00:00Z"), payload->getForm()->getField("start")->getTextSingleValue());
@@ -110,7 +110,7 @@ class MAMQueryParserTest : public CppUnit::TestFixture
                 "<query queryid=\"id0\" xmlns=\"urn:xmpp:mam:0\">"
                 "</query>"));
 
-            boost::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
+            std::shared_ptr<MAMQuery> payload = parser.getPayload<MAMQuery>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getQueryID());
             CPPUNIT_ASSERT_EQUAL(std::string("id0"), *payload->getQueryID());

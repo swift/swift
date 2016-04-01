@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,7 +27,7 @@ class ReplaceSerializerTest: public CppUnit::TestFixture {
 
         void testSerialize() {
             ReplaceSerializer testling;
-            boost::shared_ptr<Replace> replace(new Replace());
+            std::shared_ptr<Replace> replace(new Replace());
             replace->setID("bad1");
             CPPUNIT_ASSERT_EQUAL(std::string("<replace id = 'bad1' xmlns='urn:xmpp:message-correct:0'/>"), testling.serialize(replace));
         }

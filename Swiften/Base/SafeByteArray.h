@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
@@ -27,8 +26,8 @@ namespace Swift {
         return SafeByteArray(s.begin(), s.end());
     }
 
-    inline boost::shared_ptr<SafeByteArray> createSafeByteArrayRef(const std::string& s) {
-        return boost::make_shared<SafeByteArray>(s.begin(), s.end());
+    inline std::shared_ptr<SafeByteArray> createSafeByteArrayRef(const std::string& s) {
+        return std::make_shared<SafeByteArray>(s.begin(), s.end());
     }
 
     inline SafeByteArray createSafeByteArray(char c) {
@@ -39,16 +38,16 @@ namespace Swift {
         return SafeByteArray(c, c + n);
     }
 
-    inline boost::shared_ptr<SafeByteArray> createSafeByteArrayRef(const char* c, size_t n) {
-        return boost::make_shared<SafeByteArray>(c, c + n);
+    inline std::shared_ptr<SafeByteArray> createSafeByteArrayRef(const char* c, size_t n) {
+        return std::make_shared<SafeByteArray>(c, c + n);
     }
 
     inline SafeByteArray createSafeByteArray(const unsigned char* c, size_t n) {
         return SafeByteArray(c, c + n);
     }
 
-    inline boost::shared_ptr<SafeByteArray> createSafeByteArrayRef(const unsigned char* c, size_t n) {
-        return boost::make_shared<SafeByteArray>(c, c + n);
+    inline std::shared_ptr<SafeByteArray> createSafeByteArrayRef(const unsigned char* c, size_t n) {
+        return std::make_shared<SafeByteArray>(c, c + n);
     }
 
     /* WARNING! This breaks the safety of the data in the safe byte array.

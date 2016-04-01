@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/DefaultFileTransferTransporter.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -107,7 +108,7 @@ void DefaultFileTransferTransporter::handleLocalCandidatesGenerated(
 
 void DefaultFileTransferTransporter::handleRemoteCandidateSelectFinished(
         const boost::optional<JingleS5BTransportPayload::Candidate>& candidate,
-        boost::shared_ptr<SOCKS5BytestreamClientSession> session) {
+        std::shared_ptr<SOCKS5BytestreamClientSession> session) {
     remoteS5BClientSession = session;
     onRemoteCandidateSelectFinished(s5bSessionID, candidate);
 }
@@ -134,11 +135,11 @@ void DefaultFileTransferTransporter::handleActivateProxySessionResult(const std:
 void DefaultFileTransferTransporter::startActivatingProxy(const JID& proxyServiceJID) {
     // activate proxy
     SWIFT_LOG(debug) << "Start activating proxy " << proxyServiceJID.toString() << " with sid = " << s5bSessionID << "." << std::endl;
-    S5BProxyRequest::ref proxyRequest = boost::make_shared<S5BProxyRequest>();
+    S5BProxyRequest::ref proxyRequest = std::make_shared<S5BProxyRequest>();
     proxyRequest->setSID(s5bSessionID);
     proxyRequest->setActivate(role == Initiator ? responder : initiator);
 
-    boost::shared_ptr<GenericRequest<S5BProxyRequest> > request = boost::make_shared<GenericRequest<S5BProxyRequest> >(IQ::Set, proxyServiceJID, proxyRequest, router);
+    std::shared_ptr<GenericRequest<S5BProxyRequest> > request = std::make_shared<GenericRequest<S5BProxyRequest> >(IQ::Set, proxyServiceJID, proxyRequest, router);
     request->onResponse.connect(boost::bind(&DefaultFileTransferTransporter::handleActivateProxySessionResult, this, s5bSessionID, _2));
     request->send();
 }
@@ -148,97 +149,97 @@ void DefaultFileTransferTransporter::stopActivatingProxy() {
     assert(false);
 }
 
-boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBSendSession(
-        const std::string& sessionID, unsigned int blockSize, boost::shared_ptr<ReadBytestream> stream) {
+std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBSendSession(
+        const std::string& sessionID, unsigned int blockSize, std::shared_ptr<ReadBytestream> stream) {
     if (s5bServerManager->getServer()) {
         closeLocalSession();
     }
     closeRemoteSession();
-    boost::shared_ptr<IBBSendSession> ibbSession = boost::make_shared<IBBSendSession>(
+    std::shared_ptr<IBBSendSession> ibbSession = std::make_shared<IBBSendSession>(
             sessionID, initiator, responder, stream, router);
     ibbSession->setBlockSize(blockSize);
-    return boost::make_shared<IBBSendTransportSession>(ibbSession);
+    return std::make_shared<IBBSendTransportSession>(ibbSession);
 }
 
-boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBReceiveSession(
-        const std::string& sessionID, unsigned long long size, boost::shared_ptr<WriteBytestream> stream) {
+std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createIBBReceiveSession(
+        const std::string& sessionID, unsigned long long size, std::shared_ptr<WriteBytestream> stream) {
     if (s5bServerManager->getServer()) {
         closeLocalSession();
     }
     closeRemoteSession();
-    boost::shared_ptr<IBBReceiveSession> ibbSession = boost::make_shared<IBBReceiveSession>(
+    std::shared_ptr<IBBReceiveSession> ibbSession = std::make_shared<IBBReceiveSession>(
             sessionID, initiator, responder, size, stream, router);
-    return boost::make_shared<IBBReceiveTransportSession>(ibbSession);
+    return std::make_shared<IBBReceiveTransportSession>(ibbSession);
 }
 
-boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
-        boost::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& /* candidate */) {
+std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
+        std::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& /* candidate */) {
     closeLocalSession();
-    return boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
+    return std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
         remoteS5BClientSession, stream);
 }
 
-boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
-        boost::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& /* candidate */) {
+std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createRemoteCandidateSession(
+        std::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& /* candidate */) {
     closeLocalSession();
-    return boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
+    return std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(
         remoteS5BClientSession, stream);
 }
 
-boost::shared_ptr<SOCKS5BytestreamServerSession> DefaultFileTransferTransporter::getServerSession() {
+std::shared_ptr<SOCKS5BytestreamServerSession> DefaultFileTransferTransporter::getServerSession() {
     s5bRegistry->setHasBytestream(getSOCKS5DstAddr(), false);
-    std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > serverSessions =
+    std::vector<std::shared_ptr<SOCKS5BytestreamServerSession> > serverSessions =
         s5bServerManager->getServer()->getSessions(getSOCKS5DstAddr());
     while (serverSessions.size() > 1) {
-        boost::shared_ptr<SOCKS5BytestreamServerSession> session = serverSessions.back();
+        std::shared_ptr<SOCKS5BytestreamServerSession> session = serverSessions.back();
         serverSessions.pop_back();
         session->stop();
     }
-    return !serverSessions.empty() ? serverSessions.front() : boost::shared_ptr<SOCKS5BytestreamServerSession>();
+    return !serverSessions.empty() ? serverSessions.front() : std::shared_ptr<SOCKS5BytestreamServerSession>();
 }
 
-boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCandidateSession(
-        boost::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
+std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCandidateSession(
+        std::shared_ptr<ReadBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
     closeRemoteSession();
-    boost::shared_ptr<TransportSession> transportSession;
+    std::shared_ptr<TransportSession> transportSession;
     if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
         SOCKS5BytestreamClientSession::ref proxySession = s5bProxy->getProxySessionAndCloseOthers(candidate.jid, getLocalCandidateSOCKS5DstAddr());
         assert(proxySession);
-        transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
+        transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
     }
 
     if (!transportSession) {
-        boost::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
+        std::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
         if (serverSession) {
-            transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
+            transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
         }
     }
 
     if (!transportSession) {
-        transportSession = boost::make_shared<FailingTransportSession>();
+        transportSession = std::make_shared<FailingTransportSession>();
     }
     return transportSession;
 }
 
-boost::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCandidateSession(
-        boost::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
+std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCandidateSession(
+        std::shared_ptr<WriteBytestream> stream, const JingleS5BTransportPayload::Candidate& candidate) {
     closeRemoteSession();
-    boost::shared_ptr<TransportSession> transportSession;
+    std::shared_ptr<TransportSession> transportSession;
     if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
         SOCKS5BytestreamClientSession::ref proxySession = s5bProxy->getProxySessionAndCloseOthers(candidate.jid, getLocalCandidateSOCKS5DstAddr());
         assert(proxySession);
-        transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
+        transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
     }
 
     if (!transportSession) {
-        boost::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
+        std::shared_ptr<SOCKS5BytestreamServerSession> serverSession = getServerSession();
         if (serverSession) {
-            transportSession = boost::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
+            transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamServerSession> >(serverSession, stream);
         }
     }
 
     if (!transportSession) {
-        transportSession = boost::make_shared<FailingTransportSession>();
+        transportSession = std::make_shared<FailingTransportSession>();
     }
     return transportSession;
 }
@@ -285,8 +286,8 @@ std::string DefaultFileTransferTransporter::getLocalCandidateSOCKS5DstAddr() con
 void DefaultFileTransferTransporter::closeLocalSession() {
     s5bRegistry->setHasBytestream(getSOCKS5DstAddr(), false);
     if (s5bServerManager->getServer()) {
-        std::vector<boost::shared_ptr<SOCKS5BytestreamServerSession> > serverSessions = s5bServerManager->getServer()->getSessions(getSOCKS5DstAddr());
-        foreach(boost::shared_ptr<SOCKS5BytestreamServerSession> session, serverSessions) {
+        std::vector<std::shared_ptr<SOCKS5BytestreamServerSession> > serverSessions = s5bServerManager->getServer()->getSessions(getSOCKS5DstAddr());
+        foreach(std::shared_ptr<SOCKS5BytestreamServerSession> session, serverSessions) {
             session->stop();
         }
     }

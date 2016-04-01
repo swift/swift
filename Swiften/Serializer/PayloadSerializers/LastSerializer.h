@@ -17,7 +17,7 @@ namespace Swift {
         public:
             LastSerializer() : GenericPayloadSerializer<Last>() {}
 
-            virtual std::string serializePayload(boost::shared_ptr<Last> last)  const {
+            virtual std::string serializePayload(std::shared_ptr<Last> last)  const {
                 return "<query xmlns='jabber:iq:last' seconds='" + boost::lexical_cast<std::string>(last->getSeconds()) + "'/>";
             }
     };

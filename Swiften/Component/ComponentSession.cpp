@@ -6,8 +6,9 @@
 
 #include <Swiften/Component/ComponentSession.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Component/ComponentHandshakeGenerator.h>
 #include <Swiften/Elements/ComponentHandshake.h>
@@ -17,7 +18,7 @@
 
 namespace Swift {
 
-ComponentSession::ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream, CryptoProvider* crypto) : jid(jid), secret(secret), stream(stream), crypto(crypto), state(Initial) {
+ComponentSession::ComponentSession(const JID& jid, const std::string& secret, std::shared_ptr<SessionStream> stream, CryptoProvider* crypto) : jid(jid), secret(secret), stream(stream), crypto(crypto), state(Initial) {
 }
 
 ComponentSession::~ComponentSession() {
@@ -39,7 +40,7 @@ void ComponentSession::sendStreamHeader() {
     stream->writeHeader(header);
 }
 
-void ComponentSession::sendStanza(boost::shared_ptr<Stanza> stanza) {
+void ComponentSession::sendStanza(std::shared_ptr<Stanza> stanza) {
     stream->writeElement(stanza);
 }
 
@@ -49,8 +50,8 @@ void ComponentSession::handleStreamStart(const ProtocolHeader& header) {
     stream->writeElement(ComponentHandshake::ref(new ComponentHandshake(ComponentHandshakeGenerator::getHandshake(header.getID(), secret, crypto))));
 }
 
-void ComponentSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
-    if (boost::shared_ptr<Stanza> stanza = boost::dynamic_pointer_cast<Stanza>(element)) {
+void ComponentSession::handleElement(std::shared_ptr<ToplevelElement> element) {
+    if (std::shared_ptr<Stanza> stanza = std::dynamic_pointer_cast<Stanza>(element)) {
         if (getState() == Initialized) {
             onStanzaReceived(stanza);
         }
@@ -58,7 +59,7 @@ void ComponentSession::handleElement(boost::shared_ptr<ToplevelElement> element)
             finishSession(Error::UnexpectedElementError);
         }
     }
-    else if (boost::dynamic_pointer_cast<ComponentHandshake>(element)) {
+    else if (std::dynamic_pointer_cast<ComponentHandshake>(element)) {
         if (!checkState(Authenticating)) {
             return;
         }
@@ -67,7 +68,7 @@ void ComponentSession::handleElement(boost::shared_ptr<ToplevelElement> element)
         onInitialized();
     }
     else if (getState() == Authenticating) {
-        if (boost::dynamic_pointer_cast<StreamFeatures>(element)) {
+        if (std::dynamic_pointer_cast<StreamFeatures>(element)) {
             // M-Link sends stream features, so swallow that.
         }
         else {
@@ -88,7 +89,7 @@ bool ComponentSession::checkState(State state) {
     return true;
 }
 
-void ComponentSession::handleStreamClosed(boost::shared_ptr<Swift::Error> streamError) {
+void ComponentSession::handleStreamClosed(std::shared_ptr<Swift::Error> streamError) {
     State oldState = state;
     state = Finished;
     stream->setWhitespacePingEnabled(false);
@@ -104,14 +105,14 @@ void ComponentSession::handleStreamClosed(boost::shared_ptr<Swift::Error> stream
 }
 
 void ComponentSession::finish() {
-    finishSession(boost::shared_ptr<Error>());
+    finishSession(std::shared_ptr<Error>());
 }
 
 void ComponentSession::finishSession(Error::Type error) {
-    finishSession(boost::make_shared<Swift::ComponentSession::Error>(error));
+    finishSession(std::make_shared<Swift::ComponentSession::Error>(error));
 }
 
-void ComponentSession::finishSession(boost::shared_ptr<Swift::Error> finishError) {
+void ComponentSession::finishSession(std::shared_ptr<Swift::Error> finishError) {
     state = Finishing;
     error = finishError;
     assert(stream->isOpen());

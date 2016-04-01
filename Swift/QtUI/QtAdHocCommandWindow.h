@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ namespace Swift {
     class QtAdHocCommandWindow : public QWidget, public AdHocCommandWindow {
         Q_OBJECT
         public:
-            QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command);
+            QtAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command);
             virtual ~QtAdHocCommandWindow();
             virtual void setOnline(bool online);
 
@@ -41,7 +41,7 @@ namespace Swift {
             void handleCompleteClicked();
 
         private:
-            boost::shared_ptr<OutgoingAdHocCommandSession> command_;
+            std::shared_ptr<OutgoingAdHocCommandSession> command_;
             QtFormWidget* formWidget_;
             Form::ref form_;
             QLabel* label_;

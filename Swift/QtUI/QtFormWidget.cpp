@@ -6,8 +6,9 @@
 
 #include <Swift/QtUI/QtFormWidget.h>
 
+#include <memory>
+
 #include <boost/algorithm/string/join.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QCheckBox>
 #include <QGridLayout>
@@ -156,8 +157,8 @@ QWidget* QtFormWidget::createWidget(FormField::ref field, const FormField::Type 
 
 Form::ref QtFormWidget::getCompletedForm() {
     Form::ref result(new Form(Form::SubmitType));
-    foreach (boost::shared_ptr<FormField> field, form_->getFields()) {
-        boost::shared_ptr<FormField> resultField = boost::make_shared<FormField>(field->getType());
+    foreach (std::shared_ptr<FormField> field, form_->getFields()) {
+        std::shared_ptr<FormField> resultField = std::make_shared<FormField>(field->getType());
         if (field->getType() == FormField::BooleanType) {
             resultField->setBoolValue(qobject_cast<QCheckBox*>(fields_[field->getName()])->checkState() == Qt::Checked);
         }
@@ -225,7 +226,7 @@ void QtFormWidget::setEditable(bool editable) {
     if (!form_) {
         return;
     }
-    foreach (boost::shared_ptr<FormField> field, form_->getFields()) {
+    foreach (std::shared_ptr<FormField> field, form_->getFields()) {
         QWidget* widget = nullptr;
         if (field) {
             widget = fields_[field->getName()];

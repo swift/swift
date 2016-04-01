@@ -7,9 +7,9 @@
 #include <Swiften/Network/DummyConnection.h>
 
 #include <cassert>
+#include <memory>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 namespace Swift {
 
@@ -17,7 +17,7 @@ DummyConnection::DummyConnection(EventLoop* eventLoop) : eventLoop(eventLoop) {
 }
 
 void DummyConnection::receive(const SafeByteArray& data) {
-    eventLoop->postEvent(boost::bind(boost::ref(onDataRead), boost::make_shared<SafeByteArray>(data)), shared_from_this());
+    eventLoop->postEvent(boost::bind(boost::ref(onDataRead), std::make_shared<SafeByteArray>(data)), shared_from_this());
 }
 
 void DummyConnection::listen() {

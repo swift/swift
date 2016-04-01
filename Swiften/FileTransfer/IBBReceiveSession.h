@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional/optional_fwd.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -26,7 +27,7 @@ namespace Swift {
                     const JID& from,
                     const JID& to,
                     unsigned long long size,
-                    boost::shared_ptr<WriteBytestream> bytestream,
+                    std::shared_ptr<WriteBytestream> bytestream,
                     IQRouter* router);
             ~IBBReceiveSession();
 
@@ -55,7 +56,7 @@ namespace Swift {
             JID from;
             JID to;
             unsigned long long size;
-            boost::shared_ptr<WriteBytestream> bytestream;
+            std::shared_ptr<WriteBytestream> bytestream;
             IQRouter* router;
             IBBResponder* responder;
             bool active;

@@ -7,14 +7,13 @@
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
 
 #include <map>
+#include <memory>
 #include <sstream>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
@@ -42,7 +41,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
     chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
     chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
     chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
@@ -117,7 +116,7 @@ JID ChatControllerBase::getBaseJID() {
     return JID(toJID_.toBare());
 }
 
-void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
+void ChatControllerBase::setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) {
     if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::SecurityLabelsCatalogFeature)) {
         GetSecurityLabelsCatalogRequest::ref request = GetSecurityLabelsCatalogRequest::create(getBaseJID(), iqRouter_);
         request->onResponse.connect(boost::bind(&ChatControllerBase::handleSecurityLabelsCatalogResponse, this, _1, _2));
@@ -131,7 +130,7 @@ void ChatControllerBase::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo>
 void ChatControllerBase::handleAllMessagesRead() {
     if (!unreadMessages_.empty()) {
         targetedUnreadMessages_.clear();
-        foreach (boost::shared_ptr<StanzaEvent> stanzaEvent, unreadMessages_) {
+        foreach (std::shared_ptr<StanzaEvent> stanzaEvent, unreadMessages_) {
             stanzaEvent->conclude();
         }
         unreadMessages_.clear();
@@ -148,7 +147,7 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
     if (!stanzaChannel_->isAvailable() || body.empty()) {
         return;
     }
-    boost::shared_ptr<Message> message(new Message());
+    std::shared_ptr<Message> message(new Message());
     message->setTo(toJID_);
     message->setType(Swift::Message::Chat);
     message->setBody(body);
@@ -165,14 +164,14 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 
     boost::posix_time::ptime now = boost::posix_time::microsec_clock::universal_time();
     if (useDelayForLatency_) {
-        message->addPayload(boost::make_shared<Delay>(now, selfJID_));
+        message->addPayload(std::make_shared<Delay>(now, selfJID_));
     }
     if (isCorrectionMessage) {
-        message->addPayload(boost::shared_ptr<Replace> (new Replace(lastSentMessageStanzaID_)));
+        message->addPayload(std::shared_ptr<Replace> (new Replace(lastSentMessageStanzaID_)));
     }
     message->setID(lastSentMessageStanzaID_ = idGenerator_.generateID());
     stanzaChannel_->sendMessage(message);
-    postSendMessage(message->getBody().get(), boost::dynamic_pointer_cast<Stanza>(message));
+    postSendMessage(message->getBody().get(), std::dynamic_pointer_cast<Stanza>(message));
     onActivity(message->getBody().get());
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
@@ -180,7 +179,7 @@ void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool 
 #endif
 }
 
-void ChatControllerBase::handleSecurityLabelsCatalogResponse(boost::shared_ptr<SecurityLabelsCatalog> catalog, ErrorPayload::ref error) {
+void ChatControllerBase::handleSecurityLabelsCatalogResponse(std::shared_ptr<SecurityLabelsCatalog> catalog, ErrorPayload::ref error) {
     if (catalog && !error) {
         if (catalog->getItems().size() == 0) {
             chatWindow_->setSecurityLabelsEnabled(false);
@@ -226,8 +225,8 @@ void ChatControllerBase::handleHighlightActions(const ChatWindow::ChatMessage& c
         highlighter_->handleHighlightAction(chatMessage.getFullMessageHighlightAction());
         playedSounds.insert(chatMessage.getFullMessageHighlightAction().getSoundFile());
     }
-    foreach(boost::shared_ptr<ChatWindow::ChatMessagePart> part, chatMessage.getParts()) {
-        boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightMessage = boost::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part);
+    foreach(std::shared_ptr<ChatWindow::ChatMessagePart> part, chatMessage.getParts()) {
+        std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightMessage = std::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part);
         if (highlightMessage && highlightMessage->action.playSound()) {
             if (playedSounds.find(highlightMessage->action.getSoundFile()) == playedSounds.end()) {
                 highlighter_->handleHighlightAction(highlightMessage->action);
@@ -237,7 +236,7 @@ void ChatControllerBase::handleHighlightActions(const ChatWindow::ChatMessage& c
     }
 }
 
-std::string ChatControllerBase::addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, const boost::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time) {
+std::string ChatControllerBase::addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, const std::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time) {
     if (chatMessage.isMeCommand()) {
         return chatWindow_->addAction(chatMessage, senderName, senderIsSelf, label, pathToString(avatarPath), time);
     }
@@ -259,7 +258,7 @@ bool ChatControllerBase::isFromContact(const JID& from) {
     return from.toBare() == toJID_.toBare();
 }
 
-void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) {
     preHandleIncomingMessage(messageEvent);
     if (messageEvent->isReadable() && !messageEvent->getConcluded()) {
         unreadMessages_.push_back(messageEvent);
@@ -268,7 +267,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
         }
     }
 
-    boost::shared_ptr<Message> message = messageEvent->getStanza();
+    std::shared_ptr<Message> message = messageEvent->getStanza();
     ChatWindow::ChatMessage chatMessage;
     boost::optional<std::string> optionalBody = message->getBody();
     std::string body = optionalBody.get_value_or("");
@@ -292,7 +291,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
         }
         showChatWindow();
         JID from = message->getFrom();
-        std::vector<boost::shared_ptr<Delay> > delayPayloads = message->getPayloads<Delay>();
+        std::vector<std::shared_ptr<Delay> > delayPayloads = message->getPayloads<Delay>();
         for (size_t i = 0; useDelayForLatency_ && i < delayPayloads.size(); i++) {
             if (!delayPayloads[i]->getFrom()) {
                 continue;
@@ -302,7 +301,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
             s << "The following message took " << (now - delayPayloads[i]->getStamp()).total_milliseconds() / 1000.0 <<  " seconds to be delivered from " << delayPayloads[i]->getFrom()->toString() << ".";
             chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(std::string(s.str())), ChatWindow::DefaultDirection);
         }
-        boost::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
+        std::shared_ptr<SecurityLabel> label = message->getPayload<SecurityLabel>();
 
         // Determine the timestamp
         boost::posix_time::ptime timeStamp = boost::posix_time::microsec_clock::universal_time();
@@ -318,7 +317,7 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
             fullMessageHighlight = highlighter_->findFirstFullMessageMatchAction(body, senderHighlightNameFromMessage(from));
         }
 
-        boost::shared_ptr<Replace> replace = message->getPayload<Replace>();
+        std::shared_ptr<Replace> replace = message->getPayload<Replace>();
         bool senderIsSelf = isIncomingMessageFromMe(message);
         if (replace) {
             // Should check if the user has a previous message
@@ -342,11 +341,11 @@ void ChatControllerBase::handleIncomingMessage(boost::shared_ptr<MessageEvent> m
     postHandleIncomingMessage(messageEvent, chatMessage);
 }
 
-void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
+void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
     lastMessagesUIID_[from] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp);
 }
 
-std::string ChatControllerBase::getErrorMessage(boost::shared_ptr<ErrorPayload> error) {
+std::string ChatControllerBase::getErrorMessage(std::shared_ptr<ErrorPayload> error) {
     std::string defaultMessage = QT_TRANSLATE_NOOP("", "Error sending message");
     if (!error->getText().empty()) {
         return error->getText();
@@ -394,9 +393,9 @@ void ChatControllerBase::handleMUCInvitation(Message::ref message) {
     MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
 
     if (autoAcceptMUCInviteDecider_->isAutoAcceptedInvite(message->getFrom(), invite)) {
-        eventStream_->send(boost::make_shared<JoinMUCUIEvent>(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true));
+        eventStream_->send(std::make_shared<JoinMUCUIEvent>(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true));
     } else {
-        MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(toJID_, invite->getJID(), invite->getReason(), invite->getPassword(), true, invite->getIsImpromptu());
+        MUCInviteEvent::ref inviteEvent = std::make_shared<MUCInviteEvent>(toJID_, invite->getJID(), invite->getReason(), invite->getPassword(), true, invite->getIsImpromptu());
         handleGeneralMUCInvitation(inviteEvent);
     }
 }
@@ -413,7 +412,7 @@ void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
         password = *message->getPayload<MUCUserPayload>()->getPassword();
     }
 
-    MUCInviteEvent::ref inviteEvent = boost::make_shared<MUCInviteEvent>(invite.from, from, reason, password, false, false);
+    MUCInviteEvent::ref inviteEvent = std::make_shared<MUCInviteEvent>(invite.from, from, reason, password, false, false);
     handleGeneralMUCInvitation(inviteEvent);
 }
 

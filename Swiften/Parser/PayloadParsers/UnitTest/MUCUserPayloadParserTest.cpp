@@ -34,7 +34,7 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
             bool found110 = false;
             bool found210 = false;
 
-            MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
+            MUCUserPayload::ref payload = std::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
 
             foreach (MUCUserPayload::StatusCode status, payload->getStatusCodes()) {
                 if (status.code == 110) found110 = true;
@@ -55,7 +55,7 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 
             CPPUNIT_ASSERT(parser.parse("<x xmlns=\"http://jabber.org/protocol/muc#user\"/>"));
 
-            MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
+            MUCUserPayload::ref payload = std::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT(payload->getItems().empty());
         }
@@ -65,9 +65,9 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 
             CPPUNIT_ASSERT(parser.parse("<x xmlns=\"http://jabber.org/protocol/muc#user\"><destroy jid='alice@wonderland.lit'><reason>bert</reason></destroy></x>"));
 
-            MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
+            MUCUserPayload::ref payload = std::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
             CPPUNIT_ASSERT(payload);
-            MUCDestroyPayload::ref destroy = boost::dynamic_pointer_cast<MUCDestroyPayload>(payload->getPayload());
+            MUCDestroyPayload::ref destroy = std::dynamic_pointer_cast<MUCDestroyPayload>(payload->getPayload());
             CPPUNIT_ASSERT(destroy);
             CPPUNIT_ASSERT_EQUAL(std::string("bert"), destroy->getReason());
             CPPUNIT_ASSERT_EQUAL(JID("alice@wonderland.lit"), destroy->getNewVenue());
@@ -78,7 +78,7 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 
             CPPUNIT_ASSERT(parser.parse("<x xmlns=\"http://jabber.org/protocol/muc#user\"><invite from='crone1@shakespeare.lit/desktop' to='alice@wonderland.lit/xxx'>      <reason>Hey Hecate, this is the place for all good witches!</reason>    </invite>    <password>cauldronburn</password></x>"));
 
-            MUCUserPayload::ref payload = boost::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
+            MUCUserPayload::ref payload = std::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT(payload->getInvite());
             CPPUNIT_ASSERT(payload->getPassword());

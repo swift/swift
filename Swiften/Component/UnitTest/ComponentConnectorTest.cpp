@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -152,8 +152,8 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
             return connector;
         }
 
-        void handleConnectorFinished(boost::shared_ptr<Connection> connection) {
-            boost::shared_ptr<MockConnection> c(boost::dynamic_pointer_cast<MockConnection>(connection));
+        void handleConnectorFinished(std::shared_ptr<Connection> connection) {
+            std::shared_ptr<MockConnection> c(std::dynamic_pointer_cast<MockConnection>(connection));
             if (connection) {
                 assert(c);
             }
@@ -188,8 +188,8 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
             MockConnectionFactory(EventLoop* eventLoop) : eventLoop(eventLoop), isResponsive(true) {
             }
 
-            boost::shared_ptr<Connection> createConnection() {
-                return boost::shared_ptr<Connection>(new MockConnection(failingPorts, isResponsive, eventLoop));
+            std::shared_ptr<Connection> createConnection() {
+                return std::make_shared<MockConnection>(failingPorts, isResponsive, eventLoop);
             }
 
             EventLoop* eventLoop;
@@ -204,7 +204,7 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
         StaticDomainNameResolver* resolver;
         MockConnectionFactory* connectionFactory;
         DummyTimerFactory* timerFactory;
-        std::vector< boost::shared_ptr<MockConnection> > connections;
+        std::vector< std::shared_ptr<MockConnection> > connections;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ComponentConnectorTest);

@@ -17,7 +17,7 @@ namespace Swift {
         public:
             ErrorSerializer(PayloadSerializerCollection* serializers);
 
-            virtual std::string serializePayload(boost::shared_ptr<ErrorPayload> error)  const;
+            virtual std::string serializePayload(std::shared_ptr<ErrorPayload> error)  const;
 
         private:
             PayloadSerializerCollection* serializers;

@@ -6,10 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/JID/JID.h>
 
@@ -18,7 +18,7 @@
 namespace Swift {
     class JoinMUCUIEvent : public UIEvent {
         public:
-            typedef boost::shared_ptr<JoinMUCUIEvent> ref;
+            typedef std::shared_ptr<JoinMUCUIEvent> ref;
             JoinMUCUIEvent(const JID& jid, const boost::optional<std::string>& password = boost::optional<std::string>(), const boost::optional<std::string>& nick = boost::optional<std::string>(), bool joinAutomaticallyInFuture = false, bool createAsReservedRoomIfNew = false, bool isImpromptu = false, bool isContinuation = false) : jid_(jid), nick_(nick), joinAutomatically_(joinAutomaticallyInFuture), createAsReservedRoomIfNew_(createAsReservedRoomIfNew), password_(password), isImpromptuMUC_(isImpromptu), isContinuation_(isContinuation) {}
             const boost::optional<std::string>& getNick() const {return nick_;}
             const JID& getJID() const {return jid_;}

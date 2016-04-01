@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ class StreamInitiationSerializerTest : public CppUnit::TestFixture{
     public:
         void testSerialize_Request() {
             StreamInitiationSerializer testling;
-            boost::shared_ptr<StreamInitiation> streamInitiation(new StreamInitiation());
+            std::shared_ptr<StreamInitiation> streamInitiation(new StreamInitiation());
             StreamInitiationFileInfo fileInfo("test.txt", "This is info about the file.", 1022);
             streamInitiation->setID("a0");
             streamInitiation->setFileInfo(fileInfo);
@@ -48,7 +48,7 @@ class StreamInitiationSerializerTest : public CppUnit::TestFixture{
 
         void testSerialize_Response() {
             StreamInitiationSerializer testling;
-            boost::shared_ptr<StreamInitiation> streamInitiation(new StreamInitiation());
+            std::shared_ptr<StreamInitiation> streamInitiation(new StreamInitiation());
             streamInitiation->setRequestedMethod("http://jabber.org/protocol/bytestreams");
 
             CPPUNIT_ASSERT_EQUAL(std::string(

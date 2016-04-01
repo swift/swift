@@ -6,9 +6,10 @@
 
 #include <Swift/QtUI/QtChatWindow.h>
 
+#include <memory>
+
 #include <boost/cstdint.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -630,7 +631,7 @@ void QtChatWindow::dropEvent(QDropEvent *event) {
         else {
             std::string messageText(Q2PSTRING(tr("Sending of multiple files at once isn't supported at this time.")));
             ChatMessage message;
-            message.append(boost::make_shared<ChatTextMessagePart>(messageText));
+            message.append(std::make_shared<ChatTextMessagePart>(messageText));
             addSystemMessage(message, DefaultDirection);
         }
     }
@@ -866,12 +867,12 @@ void QtChatWindow::addMUCInvitation(const std::string& senderName, const JID& ji
     messageLog_->addMUCInvitation(senderName, jid, reason, password, direct, isImpromptu, isContinuation);
 }
 
-std::string QtChatWindow::addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+std::string QtChatWindow::addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
     handleAppendedToLog();
     return messageLog_->addMessage(message, senderName, senderIsSelf, label, avatarPath, time);
 }
 
-std::string QtChatWindow::addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
+std::string QtChatWindow::addAction(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) {
     handleAppendedToLog();
     return messageLog_->addAction(message, senderName, senderIsSelf, label, avatarPath, time);
 }

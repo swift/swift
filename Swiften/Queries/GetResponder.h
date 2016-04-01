@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,6 +16,6 @@ namespace Swift {
             GetResponder(IQRouter* router) : Responder<T>(router) {}
 
         private:
-            virtual bool handleSetRequest(const JID&, const JID&, const std::string&, boost::shared_ptr<T>) { return false; }
+            virtual bool handleSetRequest(const JID&, const JID&, const std::string&, std::shared_ptr<T>) { return false; }
     };
 }

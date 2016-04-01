@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/StreamStack/StreamLayer.h>
@@ -35,6 +36,6 @@ namespace Swift {
 
         private:
             bool isActive;
-            boost::shared_ptr<Timer> timer;
+            std::shared_ptr<Timer> timer;
     };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,7 +33,7 @@ class ResultSetParserTest : public CppUnit::TestFixture
                     "<after>09af3-cc343-b409f</after>"
                 "</set>"));
 
-            boost::shared_ptr<ResultSet> payload = parser.getPayload<ResultSet>();
+            std::shared_ptr<ResultSet> payload = parser.getPayload<ResultSet>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getMaxItems());
             CPPUNIT_ASSERT_EQUAL(100, *payload->getMaxItems());
@@ -60,7 +60,7 @@ class ResultSetParserTest : public CppUnit::TestFixture
                     "<first>stpeter@jabber.org</first>"
                 "</set>"));
 
-            boost::shared_ptr<ResultSet> payload = parser.getPayload<ResultSet>();
+            std::shared_ptr<ResultSet> payload = parser.getPayload<ResultSet>();
             CPPUNIT_ASSERT(!!payload);
             CPPUNIT_ASSERT(payload->getFirstID());
             CPPUNIT_ASSERT_EQUAL(std::string("stpeter@jabber.org"), *payload->getFirstID());

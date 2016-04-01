@@ -6,11 +6,11 @@
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 
+#include <memory>
 #include <utility>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/Regex.h>
 #include <Swiften/Base/foreach.h>
@@ -42,10 +42,10 @@ namespace Swift {
                 else {
                     if (i == links.second) {
                         found = true;
-                        parsedMessage.append(boost::make_shared<ChatWindow::ChatURIMessagePart>(part));
+                        parsedMessage.append(std::make_shared<ChatWindow::ChatURIMessagePart>(part));
                     }
                     else {
-                        parsedMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(part));
+                        parsedMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(part));
                     }
                 }
             }
@@ -85,9 +85,9 @@ namespace Swift {
             boost::regex emoticonRegex(regexString);
 
             ChatWindow::ChatMessage newMessage;
-            foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
-                boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
-                if ((textPart = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+            foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
+                std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+                if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
                     try {
                         boost::match_results<std::string::const_iterator> match;
                         const std::string& text = textPart->text;
@@ -104,9 +104,9 @@ namespace Swift {
                             std::string::const_iterator matchEnd = match[matchIndex].second;
                             if (start != matchStart) {
                                 /* If we're skipping over plain text since the previous emoticon, record it as plain text */
-                                newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
+                                newMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
                             }
-                            boost::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart = boost::make_shared<ChatWindow::ChatEmoticonMessagePart>();
+                            std::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart = std::make_shared<ChatWindow::ChatEmoticonMessagePart>();
                             std::string matchString = match[matchIndex].str();
                             std::map<std::string, std::string>::const_iterator emoticonIterator = emoticons_.find(matchString);
                             assert (emoticonIterator != emoticons_.end());
@@ -118,7 +118,7 @@ namespace Swift {
                         }
                         if (start != text.end()) {
                             /* If there's plain text after the last emoticon, record it */
-                            newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
+                            newMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
                         }
 
                     }
@@ -153,9 +153,9 @@ namespace Swift {
             const std::vector<boost::regex> keywordRegex = rule.getKeywordRegex(nick);
             foreach(const boost::regex& regex, keywordRegex) {
                 ChatWindow::ChatMessage newMessage;
-                foreach (boost::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
-                    boost::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
-                    if ((textPart = boost::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+                foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
+                    std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+                    if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
                         try {
                             boost::match_results<std::string::const_iterator> match;
                             const std::string& text = textPart->text;
@@ -165,9 +165,9 @@ namespace Swift {
                                 std::string::const_iterator matchEnd = match[0].second;
                                 if (start != matchStart) {
                                     /* If we're skipping over plain text since the previous emoticon, record it as plain text */
-                                    newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
+                                    newMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
                                 }
-                                boost::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart = boost::make_shared<ChatWindow::ChatHighlightingMessagePart>();
+                                std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart = std::make_shared<ChatWindow::ChatHighlightingMessagePart>();
                                 highlightPart->text = match.str();
                                 highlightPart->action = rule.getAction();
                                 newMessage.append(highlightPart);
@@ -175,7 +175,7 @@ namespace Swift {
                             }
                             if (start != text.end()) {
                                 /* If there's plain text after the last emoticon, record it */
-                                newMessage.append(boost::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
+                                newMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
                             }
                         }
                         catch (std::runtime_error) {

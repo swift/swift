@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-QtEvent::QtEvent(boost::shared_ptr<StanzaEvent> event, bool active) : event_(event) {
+QtEvent::QtEvent(std::shared_ptr<StanzaEvent> event, bool active) : event_(event) {
     active_ = active;
 }
 
@@ -38,23 +38,23 @@ QVariant QtEvent::data(int role) {
 }
 
 QString QtEvent::sender() {
-    boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event_);
+    std::shared_ptr<MessageEvent> messageEvent = std::dynamic_pointer_cast<MessageEvent>(event_);
     if (messageEvent) {
         return P2QSTRING(messageEvent->getStanza()->getFrom().toString());
     }
-    boost::shared_ptr<SubscriptionRequestEvent> subscriptionRequestEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event_);
+    std::shared_ptr<SubscriptionRequestEvent> subscriptionRequestEvent = std::dynamic_pointer_cast<SubscriptionRequestEvent>(event_);
     if (subscriptionRequestEvent) {
         return P2QSTRING(subscriptionRequestEvent->getJID().toBare().toString());
     }
-    boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event_);
+    std::shared_ptr<ErrorEvent> errorEvent = std::dynamic_pointer_cast<ErrorEvent>(event_);
     if (errorEvent) {
         return P2QSTRING(errorEvent->getJID().toBare().toString());
     }
-    boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event_);
+    std::shared_ptr<MUCInviteEvent> mucInviteEvent = std::dynamic_pointer_cast<MUCInviteEvent>(event_);
     if (mucInviteEvent) {
         return P2QSTRING(mucInviteEvent->getInviter().toString());
     }
-    boost::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event_);
+    std::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = std::dynamic_pointer_cast<IncomingFileTransferEvent>(event_);
     if (incomingFTEvent) {
         return P2QSTRING(incomingFTEvent->getSender().toString());
     }
@@ -62,11 +62,11 @@ QString QtEvent::sender() {
 }
 
 QString QtEvent::text() {
-    boost::shared_ptr<MessageEvent> messageEvent = boost::dynamic_pointer_cast<MessageEvent>(event_);
+    std::shared_ptr<MessageEvent> messageEvent = std::dynamic_pointer_cast<MessageEvent>(event_);
     if (messageEvent) {
         return P2QSTRING(messageEvent->getStanza()->getBody().get_value_or(""));
     }
-    boost::shared_ptr<SubscriptionRequestEvent> subscriptionRequestEvent = boost::dynamic_pointer_cast<SubscriptionRequestEvent>(event_);
+    std::shared_ptr<SubscriptionRequestEvent> subscriptionRequestEvent = std::dynamic_pointer_cast<SubscriptionRequestEvent>(event_);
     if (subscriptionRequestEvent) {
         std::string reason = subscriptionRequestEvent->getReason();
         QString message;
@@ -78,16 +78,16 @@ QString QtEvent::text() {
         }
         return message;
     }
-    boost::shared_ptr<ErrorEvent> errorEvent = boost::dynamic_pointer_cast<ErrorEvent>(event_);
+    std::shared_ptr<ErrorEvent> errorEvent = std::dynamic_pointer_cast<ErrorEvent>(event_);
     if (errorEvent) {
         return P2QSTRING(errorEvent->getText());
     }
-    boost::shared_ptr<MUCInviteEvent> mucInviteEvent = boost::dynamic_pointer_cast<MUCInviteEvent>(event_);
+    std::shared_ptr<MUCInviteEvent> mucInviteEvent = std::dynamic_pointer_cast<MUCInviteEvent>(event_);
     if (mucInviteEvent) {
         QString message = QString(QObject::tr("%1 has invited you to enter the %2 room.")).arg(P2QSTRING(mucInviteEvent->getInviter().toBare().toString())).arg(P2QSTRING(mucInviteEvent->getRoomJID().toString()));
         return message;
     }
-    boost::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = boost::dynamic_pointer_cast<IncomingFileTransferEvent>(event_);
+    std::shared_ptr<IncomingFileTransferEvent> incomingFTEvent = std::dynamic_pointer_cast<IncomingFileTransferEvent>(event_);
     if (incomingFTEvent) {
         QString message = QString(QObject::tr("%1 would like to send a file to you.")).arg(P2QSTRING(incomingFTEvent->getSender().toBare().toString()));
         return message;

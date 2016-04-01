@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,13 +22,13 @@ class SecurityLabelsCatalogSerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             SecurityLabelsCatalogSerializer testling;
-            boost::shared_ptr<SecurityLabelsCatalog> catalog(new SecurityLabelsCatalog());
+            std::shared_ptr<SecurityLabelsCatalog> catalog(new SecurityLabelsCatalog());
             catalog->setTo(JID("example.com"));
             catalog->setName("Default");
             catalog->setDescription("an example set of labels");
 
             SecurityLabelsCatalog::Item item1;
-            boost::shared_ptr<SecurityLabel> securityLabel1(new SecurityLabel());
+            std::shared_ptr<SecurityLabel> securityLabel1(new SecurityLabel());
             item1.setLabel(securityLabel1);
             securityLabel1->setDisplayMarking("SECRET");
             securityLabel1->setForegroundColor("black");
@@ -39,7 +39,7 @@ class SecurityLabelsCatalogSerializerTest : public CppUnit::TestFixture
             catalog->addItem(item1);
 
             SecurityLabelsCatalog::Item item2;
-            boost::shared_ptr<SecurityLabel> securityLabel2(new SecurityLabel());
+            std::shared_ptr<SecurityLabel> securityLabel2(new SecurityLabel());
             item2.setLabel(securityLabel2);
             securityLabel2->setDisplayMarking("CONFIDENTIAL");
             securityLabel2->setForegroundColor("black");

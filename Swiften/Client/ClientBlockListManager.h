@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -30,12 +30,12 @@ namespace Swift {
             /**
              * Returns the blocklist.
              */
-            boost::shared_ptr<BlockList> getBlockList();
+            std::shared_ptr<BlockList> getBlockList();
 
             /**
              * Get the blocklist from the server.
              */
-            boost::shared_ptr<BlockList> requestBlockList();
+            std::shared_ptr<BlockList> requestBlockList();
 
             GenericRequest<BlockPayload>::ref createBlockJIDRequest(const JID& jid);
             GenericRequest<BlockPayload>::ref createBlockJIDsRequest(const std::vector<JID>& jids);
@@ -45,13 +45,13 @@ namespace Swift {
             GenericRequest<UnblockPayload>::ref createUnblockAllRequest();
 
         private:
-            void handleBlockListReceived(boost::shared_ptr<BlockListPayload> payload, ErrorPayload::ref);
+            void handleBlockListReceived(std::shared_ptr<BlockListPayload> payload, ErrorPayload::ref);
 
         private:
             IQRouter* iqRouter;
-            boost::shared_ptr<SetResponder<BlockPayload> > blockResponder;
-            boost::shared_ptr<SetResponder<UnblockPayload> > unblockResponder;
-            boost::shared_ptr<BlockListImpl> blockList;
+            std::shared_ptr<SetResponder<BlockPayload> > blockResponder;
+            std::shared_ptr<SetResponder<UnblockPayload> > unblockResponder;
+            std::shared_ptr<BlockListImpl> blockList;
     };
 }
 

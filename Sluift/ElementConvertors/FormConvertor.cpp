@@ -6,11 +6,11 @@
 
 #include <Sluift/ElementConvertors/FormConvertor.h>
 
+#include <memory>
 #include <sstream>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -66,7 +66,7 @@ namespace {
         return 0;
     }
 
-    Lua::Table convertFieldToLua(boost::shared_ptr<FormField> field) {
+    Lua::Table convertFieldToLua(std::shared_ptr<FormField> field) {
         Lua::Table luaField = boost::assign::map_list_of("name", Lua::valueRef(field->getName()));
         std::string type;
         switch (field->getType()) {
@@ -116,17 +116,17 @@ namespace {
         return luaField;
     }
 
-    Lua::Array convertFieldListToLua(const std::vector< boost::shared_ptr<FormField> >& fieldList) {
+    Lua::Array convertFieldListToLua(const std::vector< std::shared_ptr<FormField> >& fieldList) {
         Lua::Array fields;
-        foreach(boost::shared_ptr<FormField> field, fieldList) {
+        foreach(std::shared_ptr<FormField> field, fieldList) {
             fields.push_back(convertFieldToLua(field));
         }
         return fields;
     }
 
 
-    boost::shared_ptr<FormField> convertFieldFromLua(lua_State* L) {
-        boost::shared_ptr<FormField> result = boost::make_shared<FormField>();
+    std::shared_ptr<FormField> convertFieldFromLua(lua_State* L) {
+        std::shared_ptr<FormField> result = std::make_shared<FormField>();
         FormField::Type fieldType = FormField::UnknownType;
         boost::optional<std::string> type = Lua::getStringField(L, -1, "type");
         if (type) {
@@ -212,8 +212,8 @@ namespace {
         return result;
     }
 
-    std::vector< boost::shared_ptr<FormField> > convertFieldListFromLua(lua_State* L) {
-        std::vector< boost::shared_ptr<FormField> > result;
+    std::vector< std::shared_ptr<FormField> > convertFieldListFromLua(lua_State* L) {
+        std::vector< std::shared_ptr<FormField> > result;
         for (lua_pushnil(L); lua_next(L, -2);) {
             result.push_back(convertFieldFromLua(L));
             lua_pop(L, 1);
@@ -221,8 +221,8 @@ namespace {
         return result;
     }
 
-    boost::shared_ptr<Form> convertFormFromLua(lua_State* L) {
-        boost::shared_ptr<Form> result = boost::make_shared<Form>();
+    std::shared_ptr<Form> convertFormFromLua(lua_State* L) {
+        std::shared_ptr<Form> result = std::make_shared<Form>();
         if (boost::optional<std::string> title = Lua::getStringField(L, -1, "title")) {
             result->setTitle(*title);
         }
@@ -245,7 +245,7 @@ namespace {
 
         lua_getfield(L, -1, "fields");
         if (lua_istable(L, -1)) {
-            foreach (boost::shared_ptr<FormField> formField, convertFieldListFromLua(L)) {
+            foreach (std::shared_ptr<FormField> formField, convertFieldListFromLua(L)) {
                 result->addField(formField);
             }
         }
@@ -253,7 +253,7 @@ namespace {
 
         lua_getfield(L, -1, "reported_fields");
         if (lua_istable(L, -1)) {
-            foreach (boost::shared_ptr<FormField> formField, convertFieldListFromLua(L)) {
+            foreach (std::shared_ptr<FormField> formField, convertFieldListFromLua(L)) {
                 result->addReportedField(formField);
             }
         }
@@ -271,7 +271,7 @@ namespace {
         return result;
     }
 
-    void convertFormToLua(lua_State* L, boost::shared_ptr<Form> payload) {
+    void convertFormToLua(lua_State* L, std::shared_ptr<Form> payload) {
         std::string type;
         switch (payload->getType()) {
             case Form::FormType: type = "form"; break;
@@ -315,16 +315,16 @@ namespace {
     }
 
     int createSubmission(lua_State* L) {
-        boost::shared_ptr<Form> form = convertFormFromLua(L);
+        std::shared_ptr<Form> form = convertFormFromLua(L);
 
         // Remove all redundant elements
         form->setInstructions("");
         form->setTitle("");
         form->clearItems();
         form->clearReportedFields();
-        std::vector< boost::shared_ptr<FormField> > fields(form->getFields());
+        std::vector< std::shared_ptr<FormField> > fields(form->getFields());
         form->clearFields();
-        foreach (boost::shared_ptr<FormField> field, fields) {
+        foreach (std::shared_ptr<FormField> field, fields) {
             if (field->getType() == FormField::FixedType) {
                 continue;
             }
@@ -350,11 +350,11 @@ FormConvertor::FormConvertor() : GenericLuaElementConvertor<Form>("form") {
 FormConvertor::~FormConvertor() {
 }
 
-boost::shared_ptr<Form> FormConvertor::doConvertFromLua(lua_State* L) {
+std::shared_ptr<Form> FormConvertor::doConvertFromLua(lua_State* L) {
     return convertFormFromLua(L);
 }
 
-void FormConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<Form> payload) {
+void FormConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Form> payload) {
     convertFormToLua(L, payload);
 
     lua_pushstring(L, "create_submission");

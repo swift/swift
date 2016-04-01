@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubOwnerConfigureConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -22,8 +22,8 @@ PubSubOwnerConfigureConvertor::PubSubOwnerConfigureConvertor(LuaElementConvertor
 PubSubOwnerConfigureConvertor::~PubSubOwnerConfigureConvertor() {
 }
 
-boost::shared_ptr<PubSubOwnerConfigure> PubSubOwnerConfigureConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubOwnerConfigure> result = boost::make_shared<PubSubOwnerConfigure>();
+std::shared_ptr<PubSubOwnerConfigure> PubSubOwnerConfigureConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubOwnerConfigure> result = std::make_shared<PubSubOwnerConfigure>();
     lua_getfield(L, -1, "node");
     if (lua_isstring(L, -1)) {
         result->setNode(std::string(lua_tostring(L, -1)));
@@ -31,7 +31,7 @@ boost::shared_ptr<PubSubOwnerConfigure> PubSubOwnerConfigureConvertor::doConvert
     lua_pop(L, 1);
     lua_getfield(L, -1, "data");
     if (!lua_isnil(L, -1)) {
-        if (boost::shared_ptr<Form> payload = boost::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"))) {
+        if (std::shared_ptr<Form> payload = std::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"))) {
             result->setData(payload);
         }
     }
@@ -39,7 +39,7 @@ boost::shared_ptr<PubSubOwnerConfigure> PubSubOwnerConfigureConvertor::doConvert
     return result;
 }
 
-void PubSubOwnerConfigureConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubOwnerConfigure> payload) {
+void PubSubOwnerConfigureConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubOwnerConfigure> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getNode()) {
         lua_pushstring(L, (*payload->getNode()).c_str());

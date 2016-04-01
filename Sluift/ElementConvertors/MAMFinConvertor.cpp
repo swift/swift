@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/MAMFinConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -25,8 +26,8 @@ MAMFinConvertor::MAMFinConvertor(LuaElementConvertors* convertors) :
 MAMFinConvertor::~MAMFinConvertor() {
 }
 
-boost::shared_ptr<MAMFin> MAMFinConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<MAMFin> result = boost::make_shared<MAMFin>();
+std::shared_ptr<MAMFin> MAMFinConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<MAMFin> result = std::make_shared<MAMFin>();
     lua_getfield(L, -1, "query_id");
     if (lua_isstring(L, -1)) {
         result->setQueryID(std::string(lua_tostring(L, -1)));
@@ -44,7 +45,7 @@ boost::shared_ptr<MAMFin> MAMFinConvertor::doConvertFromLua(lua_State* L) {
     lua_pop(L, 1);
     lua_getfield(L, -1, "result_set");
     if (!lua_isnil(L, -1)) {
-        boost::shared_ptr<ResultSet> resultSet = boost::dynamic_pointer_cast<ResultSet>(convertors->convertFromLuaUntyped(L, -1, "result_set"));
+        std::shared_ptr<ResultSet> resultSet = std::dynamic_pointer_cast<ResultSet>(convertors->convertFromLuaUntyped(L, -1, "result_set"));
         if (!!resultSet) {
             result->setResultSet(resultSet);
         }
@@ -53,7 +54,7 @@ boost::shared_ptr<MAMFin> MAMFinConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void MAMFinConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<MAMFin> payload) {
+void MAMFinConvertor::doConvertToLua(lua_State* L, std::shared_ptr<MAMFin> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getQueryID()) {
         lua_pushstring(L, (*payload->getQueryID()).c_str());

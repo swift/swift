@@ -29,9 +29,9 @@ void MAMQueryParser::handleStartElement(const std::string& element, const std::s
         }
     } else if (level_ == PayloadLevel) {
         if (element == "x" && ns == "jabber:x:data") {
-            formParser_ = boost::make_shared<FormParser>();
+            formParser_ = std::make_shared<FormParser>();
         } else if (element == "set" && ns == "http://jabber.org/protocol/rsm") {
-            resultSetParser_ = boost::make_shared<ResultSetParser>();
+            resultSetParser_ = std::make_shared<ResultSetParser>();
         }
     }
 
@@ -54,7 +54,7 @@ void MAMQueryParser::handleEndElement(const std::string& element, const std::str
     }
     if (formParser_ && level_ == PayloadLevel) {
         /* done parsing nested Form */
-        getPayloadInternal()->setForm(boost::dynamic_pointer_cast<Form>(formParser_->getPayload()));
+        getPayloadInternal()->setForm(std::dynamic_pointer_cast<Form>(formParser_->getPayload()));
         formParser_.reset();
     }
 
@@ -63,7 +63,7 @@ void MAMQueryParser::handleEndElement(const std::string& element, const std::str
     }
     if (resultSetParser_ && level_ == PayloadLevel) {
         /* done parsing nested ResultSet */
-        getPayloadInternal()->setResultSet(boost::dynamic_pointer_cast<ResultSet>(resultSetParser_->getPayload()));
+        getPayloadInternal()->setResultSet(std::dynamic_pointer_cast<ResultSet>(resultSetParser_->getPayload()));
         resultSetParser_.reset();
     }
 }

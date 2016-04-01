@@ -4,11 +4,11 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QA/Checker/IO.h>
 
@@ -29,7 +29,7 @@
 
 using namespace Swift;
 
-typedef boost::shared_ptr<BOSHConnectionPool> PoolRef;
+typedef std::shared_ptr<BOSHConnectionPool> PoolRef;
 
 
 class BOSHConnectionPoolTest : public CppUnit::TestFixture {
@@ -167,8 +167,8 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
         }
 
         void testConnectionCount_ThreeWritesTwoReads() {
-            boost::shared_ptr<MockConnection> c0;
-            boost::shared_ptr<MockConnection> c1;
+            std::shared_ptr<MockConnection> c0;
+            std::shared_ptr<MockConnection> c1;
             unsigned long long rid = initialRID;
 
             PoolRef testling = createTestling();
@@ -294,7 +294,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
         }
 
         void testWrite_Empty() {
-            boost::shared_ptr<MockConnection> c0;
+            std::shared_ptr<MockConnection> c0;
 
             PoolRef testling = createTestling();
             CPPUNIT_ASSERT_EQUAL(st(1), connectionFactory->connections.size());
@@ -406,32 +406,32 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
             MockConnectionFactory(EventLoop* eventLoop, bool autoFinishConnect = true) : eventLoop(eventLoop), autoFinishConnect(autoFinishConnect) {
             }
 
-            boost::shared_ptr<Connection> createConnection() {
-                boost::shared_ptr<MockConnection> connection = boost::make_shared<MockConnection>(failingPorts, eventLoop, autoFinishConnect);
+            std::shared_ptr<Connection> createConnection() {
+                std::shared_ptr<MockConnection> connection = std::make_shared<MockConnection>(failingPorts, eventLoop, autoFinishConnect);
                 connections.push_back(connection);
                 return connection;
             }
 
             EventLoop* eventLoop;
-            std::vector< boost::shared_ptr<MockConnection> > connections;
+            std::vector< std::shared_ptr<MockConnection> > connections;
             std::vector<HostAddressPort> failingPorts;
             bool autoFinishConnect;
         };
 
-        void readResponse(const std::string& response, boost::shared_ptr<MockConnection> connection) {
+        void readResponse(const std::string& response, std::shared_ptr<MockConnection> connection) {
             connection->pending = false;
-            boost::shared_ptr<SafeByteArray> data1 = boost::make_shared<SafeByteArray>(createSafeByteArray(
+            std::shared_ptr<SafeByteArray> data1 = std::make_shared<SafeByteArray>(createSafeByteArray(
                 "HTTP/1.1 200 OK\r\n"
                 "Content-Type: text/xml; charset=utf-8\r\n"
                 "Access-Control-Allow-Origin: *\r\n"
                 "Access-Control-Allow-Headers: Content-Type\r\n"
                 "Content-Length: "));
             connection->onDataRead(data1);
-            boost::shared_ptr<SafeByteArray> data2 = boost::make_shared<SafeByteArray>(createSafeByteArray(boost::lexical_cast<std::string>(response.size())));
+            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(boost::lexical_cast<std::string>(response.size())));
             connection->onDataRead(data2);
-            boost::shared_ptr<SafeByteArray> data3 = boost::make_shared<SafeByteArray>(createSafeByteArray("\r\n\r\n"));
+            std::shared_ptr<SafeByteArray> data3 = std::make_shared<SafeByteArray>(createSafeByteArray("\r\n\r\n"));
             connection->onDataRead(data3);
-            boost::shared_ptr<SafeByteArray> data4 = boost::make_shared<SafeByteArray>(createSafeByteArray(response));
+            std::shared_ptr<SafeByteArray> data4 = std::make_shared<SafeByteArray>(createSafeByteArray(response));
             connection->onDataRead(data4);
         }
 

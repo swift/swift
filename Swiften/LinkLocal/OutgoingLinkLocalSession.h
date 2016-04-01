@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -28,19 +26,19 @@ namespace Swift {
             OutgoingLinkLocalSession(
                     const JID& localJID,
                     const JID& remoteJID,
-                    boost::shared_ptr<Connection> connection,
+                    std::shared_ptr<Connection> connection,
                     PayloadParserFactoryCollection* payloadParserFactories,
                     PayloadSerializerCollection* payloadSerializers,
                     XMLParserFactory* xmlParserFactory);
 
-            void queueElement(boost::shared_ptr<ToplevelElement> element);
+            void queueElement(std::shared_ptr<ToplevelElement> element);
 
         private:
             void handleSessionStarted();
-            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleElement(std::shared_ptr<ToplevelElement>);
             void handleStreamStart(const ProtocolHeader&);
 
         private:
-            std::vector<boost::shared_ptr<ToplevelElement> > queuedElements_;
+            std::vector<std::shared_ptr<ToplevelElement> > queuedElements_;
     };
 }

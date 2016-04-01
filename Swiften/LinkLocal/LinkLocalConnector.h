@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -25,12 +23,12 @@ namespace Swift {
     class DNSSDQuerier;
     class DNSSDResolveHostnameQuery;
 
-    class SWIFTEN_API LinkLocalConnector : public boost::enable_shared_from_this<LinkLocalConnector> {
+    class SWIFTEN_API LinkLocalConnector : public std::enable_shared_from_this<LinkLocalConnector> {
         public:
             LinkLocalConnector(
                     const LinkLocalService& service,
-                    boost::shared_ptr<DNSSDQuerier> querier,
-                    boost::shared_ptr<Connection> connection);
+                    std::shared_ptr<DNSSDQuerier> querier,
+                    std::shared_ptr<Connection> connection);
             ~LinkLocalConnector();
 
             const LinkLocalService& getService() const {
@@ -39,13 +37,13 @@ namespace Swift {
 
             void connect();
             void cancel();
-            void queueElement(boost::shared_ptr<ToplevelElement> element);
+            void queueElement(std::shared_ptr<ToplevelElement> element);
 
-            const std::vector<boost::shared_ptr<ToplevelElement> >& getQueuedElements() const {
+            const std::vector<std::shared_ptr<ToplevelElement> >& getQueuedElements() const {
                 return queuedElements;
             }
 
-            boost::shared_ptr<Connection> getConnection() const {
+            std::shared_ptr<Connection> getConnection() const {
                 return connection;
             }
 
@@ -57,11 +55,11 @@ namespace Swift {
 
         private:
             LinkLocalService service;
-            boost::shared_ptr<DNSSDQuerier> querier;
-            boost::shared_ptr<DNSSDResolveHostnameQuery> resolveQuery;
+            std::shared_ptr<DNSSDQuerier> querier;
+            std::shared_ptr<DNSSDResolveHostnameQuery> resolveQuery;
             boost::bsignals::connection resolveQueryHostNameResolvedConnection;
-            boost::shared_ptr<Connection> connection;
+            std::shared_ptr<Connection> connection;
             boost::bsignals::connection connectionConnectFinishedConnection;
-            std::vector<boost::shared_ptr<ToplevelElement> > queuedElements;
+            std::vector<std::shared_ptr<ToplevelElement> > queuedElements;
     };
 }

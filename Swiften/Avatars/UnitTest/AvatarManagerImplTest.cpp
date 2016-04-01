@@ -38,14 +38,14 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             ownerJID = JID("owner@domain.com/theowner");
-            stanzaChannel = boost::make_shared<DummyStanzaChannel>();
-            iqRouter = boost::make_shared<IQRouter>(stanzaChannel.get());
-            crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-            vcardStorage = boost::make_shared<VCardMemoryStorage>(crypto.get());
-            vcardManager = boost::make_shared<VCardManager>(ownerJID, iqRouter.get(), vcardStorage.get());
-            avatarStorage = boost::make_shared<AvatarMemoryStorage>();
-            mucRegistry = boost::make_shared<DummyMUCRegistry>();
-            avatarManager = boost::make_shared<AvatarManagerImpl>(vcardManager.get(), stanzaChannel.get(), avatarStorage.get(), crypto.get(), mucRegistry.get());
+            stanzaChannel = std::make_shared<DummyStanzaChannel>();
+            iqRouter = std::make_shared<IQRouter>(stanzaChannel.get());
+            crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
+            vcardStorage = std::make_shared<VCardMemoryStorage>(crypto.get());
+            vcardManager = std::make_shared<VCardManager>(ownerJID, iqRouter.get(), vcardStorage.get());
+            avatarStorage = std::make_shared<AvatarMemoryStorage>();
+            mucRegistry = std::make_shared<DummyMUCRegistry>();
+            avatarManager = std::make_shared<AvatarManagerImpl>(vcardManager.get(), stanzaChannel.get(), avatarStorage.get(), crypto.get(), mucRegistry.get());
         }
 
         void testGetSetAvatar() {
@@ -57,9 +57,9 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
             /* notify the 'owner' JID that our avatar has changed */
 
             ByteArray fullAvatar = createByteArray("abcdefg");
-            boost::shared_ptr<VCardUpdate> vcardUpdate = boost::make_shared<VCardUpdate>();
+            std::shared_ptr<VCardUpdate> vcardUpdate = std::make_shared<VCardUpdate>();
             vcardUpdate->setPhotoHash(Hexify::hexify(crypto->getSHA1Hash(fullAvatar)));
-            boost::shared_ptr<Presence> presence = boost::make_shared<Presence>();
+            std::shared_ptr<Presence> presence = std::make_shared<Presence>();
             presence->setTo(ownerJID);
             presence->setFrom(personJID);
             presence->setType(Presence::Available);
@@ -69,13 +69,13 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
             /* reply to the avatar request with our new avatar */
 
             CPPUNIT_ASSERT_EQUAL(size_t(1), stanzaChannel->sentStanzas.size());
-            boost::shared_ptr<IQ> request = boost::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas[0]);
+            std::shared_ptr<IQ> request = std::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas[0]);
             stanzaChannel->sentStanzas.pop_back();
             CPPUNIT_ASSERT(!!request);
-            boost::shared_ptr<VCard> vcard = request->getPayload<VCard>();
+            std::shared_ptr<VCard> vcard = request->getPayload<VCard>();
             CPPUNIT_ASSERT(!!vcard);
 
-            boost::shared_ptr<IQ> reply = boost::make_shared<IQ>(IQ::Result);
+            std::shared_ptr<IQ> reply = std::make_shared<IQ>(IQ::Result);
             reply->setTo(request->getFrom());
             reply->setFrom(request->getTo());
             reply->setID(request->getID());
@@ -90,8 +90,8 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
 
             /* send new presence to notify of blank avatar */
 
-            vcardUpdate = boost::make_shared<VCardUpdate>();
-            presence = boost::make_shared<Presence>();
+            vcardUpdate = std::make_shared<VCardUpdate>();
+            presence = std::make_shared<Presence>();
             presence->setTo(ownerJID);
             presence->setFrom(personJID);
             presence->setType(Presence::Available);
@@ -101,14 +101,14 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
             /* reply to the avatar request with our EMPTY avatar */
 
             CPPUNIT_ASSERT_EQUAL(size_t(1), stanzaChannel->sentStanzas.size());
-            request = boost::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas[0]);
+            request = std::dynamic_pointer_cast<IQ>(stanzaChannel->sentStanzas[0]);
             stanzaChannel->sentStanzas.pop_back();
             CPPUNIT_ASSERT(!!request);
             vcard = request->getPayload<VCard>();
             CPPUNIT_ASSERT(!!vcard);
 
             ByteArray blankAvatar = createByteArray("");
-            reply = boost::make_shared<IQ>(IQ::Result);
+            reply = std::make_shared<IQ>(IQ::Result);
             reply->setTo(request->getFrom());
             reply->setFrom(request->getTo());
             reply->setID(request->getID());
@@ -130,14 +130,14 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
     private:
 
         JID ownerJID;
-        boost::shared_ptr<DummyStanzaChannel> stanzaChannel;
-        boost::shared_ptr<IQRouter> iqRouter;
-        boost::shared_ptr<CryptoProvider> crypto;
-        boost::shared_ptr<VCardMemoryStorage> vcardStorage;
-        boost::shared_ptr<VCardManager> vcardManager;
-        boost::shared_ptr<AvatarMemoryStorage> avatarStorage;
-        boost::shared_ptr<DummyMUCRegistry> mucRegistry;
-        boost::shared_ptr<AvatarManagerImpl> avatarManager;
+        std::shared_ptr<DummyStanzaChannel> stanzaChannel;
+        std::shared_ptr<IQRouter> iqRouter;
+        std::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<VCardMemoryStorage> vcardStorage;
+        std::shared_ptr<VCardManager> vcardManager;
+        std::shared_ptr<AvatarMemoryStorage> avatarStorage;
+        std::shared_ptr<DummyMUCRegistry> mucRegistry;
+        std::shared_ptr<AvatarManagerImpl> avatarManager;
 
 };
 

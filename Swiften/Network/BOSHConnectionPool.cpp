@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 
 namespace Swift {
-BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, boost::shared_ptr<HTTPTrafficFilter> trafficFilter) :
+BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* realResolver, ConnectionFactory* connectionFactoryParameter, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, std::shared_ptr<HTTPTrafficFilter> trafficFilter) :
         boshURL(boshURL),
         connectionFactory(connectionFactoryParameter),
         xmlParserFactory(parserFactory),
@@ -96,7 +96,7 @@ std::vector<Certificate::ref> BOSHConnectionPool::getPeerCertificateChain() cons
     return pinnedCertificateChain_;
 }
 
-boost::shared_ptr<CertificateVerificationError> BOSHConnectionPool::getPeerCertificateVerificationError() const {
+std::shared_ptr<CertificateVerificationError> BOSHConnectionPool::getPeerCertificateVerificationError() const {
     return lastVerificationError_;
 }
 
@@ -132,7 +132,7 @@ void BOSHConnectionPool::handleSessionStarted(const std::string& sessionID, size
 
 void BOSHConnectionPool::handleConnectFinished(bool error, BOSHConnection::ref connection) {
     if (error) {
-        onSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
+        onSessionTerminated(std::make_shared<BOSHError>(BOSHError::UndefinedCondition));
         /*TODO: We can probably manage to not terminate the stream here and use the rid/ack retry
          * logic to just swallow the error and try again (some number of tries).
          */
@@ -235,7 +235,7 @@ void BOSHConnectionPool::tryToSendQueuedData() {
 }
 
 void BOSHConnectionPool::handleHTTPError(const std::string& /*errorCode*/) {
-    handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
+    handleSessionTerminated(std::make_shared<BOSHError>(BOSHError::UndefinedCondition));
 }
 
 void BOSHConnectionPool::handleConnectionDisconnected(bool/* error*/, BOSHConnection::ref connection) {
@@ -244,7 +244,7 @@ void BOSHConnectionPool::handleConnectionDisconnected(bool/* error*/, BOSHConnec
         handleSessionTerminated(BOSHError::ref());
     }
     //else if (error) {
-    //    handleSessionTerminated(boost::make_shared<BOSHError>(BOSHError::UndefinedCondition));
+    //    handleSessionTerminated(std::make_shared<BOSHError>(BOSHError::UndefinedCondition));
     //}
     else {
         /* We might have just freed up a connection slot to send with */
@@ -252,7 +252,7 @@ void BOSHConnectionPool::handleConnectionDisconnected(bool/* error*/, BOSHConnec
     }
 }
 
-boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
+std::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
     Connector::ref connector = Connector::create(boshURL.getHost(), URL::getPortOrDefaultPort(boshURL), boost::optional<std::string>(), resolver, connectionFactory, timerFactory);
     BOSHConnection::ref connection = BOSHConnection::create(boshURL, connector, xmlParserFactory, tlsContextFactory_, tlsOptions_);
     connection->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
@@ -274,7 +274,7 @@ boost::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
     return connection;
 }
 
-void BOSHConnectionPool::destroyConnection(boost::shared_ptr<BOSHConnection> connection) {
+void BOSHConnectionPool::destroyConnection(std::shared_ptr<BOSHConnection> connection) {
     connections.erase(std::remove(connections.begin(), connections.end(), connection), connections.end());
     connection->onXMPPDataRead.disconnect(boost::bind(&BOSHConnectionPool::handleDataRead, this, _1));
     connection->onSessionStarted.disconnect(boost::bind(&BOSHConnectionPool::handleSessionStarted, this, _1, _2));

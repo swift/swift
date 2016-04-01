@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -23,7 +22,7 @@ namespace Swift {
 
             void addSerializer(PayloadSerializer* factory);
             void removeSerializer(PayloadSerializer* factory);
-            PayloadSerializer* getPayloadSerializer(boost::shared_ptr<Payload>) const;
+            PayloadSerializer* getPayloadSerializer(std::shared_ptr<Payload>) const;
 
         private:
             std::vector<PayloadSerializer*> serializers_;

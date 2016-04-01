@@ -13,10 +13,10 @@
 #include <Swift/QtUI/Whiteboard/QtWhiteboardWindow.h>
 
 #include <iostream>
+#include <memory>
 
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <QLabel>
 #include <QMessageBox>
@@ -154,13 +154,13 @@ namespace Swift {
     }
 
     void QtWhiteboardWindow::handleWhiteboardOperationReceive(const WhiteboardOperation::ref operation) {
-        WhiteboardInsertOperation::ref insertOp = boost::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
+        WhiteboardInsertOperation::ref insertOp = std::dynamic_pointer_cast<WhiteboardInsertOperation>(operation);
         if (insertOp) {
             WhiteboardElementDrawingVisitor visitor(graphicsView, operation->getPos(), GView::New);
             insertOp->getElement()->accept(visitor);
         }
 
-        WhiteboardUpdateOperation::ref updateOp = boost::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
+        WhiteboardUpdateOperation::ref updateOp = std::dynamic_pointer_cast<WhiteboardUpdateOperation>(operation);
         if (updateOp) {
             WhiteboardElementDrawingVisitor visitor(graphicsView, operation->getPos(), GView::Update);
             updateOp->getElement()->accept(visitor);
@@ -169,7 +169,7 @@ namespace Swift {
             }
         }
 
-        WhiteboardDeleteOperation::ref deleteOp = boost::dynamic_pointer_cast<WhiteboardDeleteOperation>(operation);
+        WhiteboardDeleteOperation::ref deleteOp = std::dynamic_pointer_cast<WhiteboardDeleteOperation>(operation);
         if (deleteOp) {
             graphicsView->deleteItem(P2QSTRING(deleteOp->getElementID()));
         }
@@ -261,7 +261,7 @@ namespace Swift {
         if (lineItem != nullptr) {
             QLine line = lineItem->line().toLine();
             QColor color = lineItem->pen().color();
-            WhiteboardLineElement::ref element = boost::make_shared<WhiteboardLineElement>(line.x1()+lineItem->pos().x(), line.y1()+lineItem->pos().y(), line.x2()+lineItem->pos().x(), line.y2()+lineItem->pos().y());
+            WhiteboardLineElement::ref element = std::make_shared<WhiteboardLineElement>(line.x1()+lineItem->pos().x(), line.y1()+lineItem->pos().y(), line.x2()+lineItem->pos().x(), line.y2()+lineItem->pos().y());
             element->setColor(WhiteboardColor(color.red(), color.green(), color.blue(), color.alpha()));
             element->setPenWidth(lineItem->pen().width());
 
@@ -271,7 +271,7 @@ namespace Swift {
 
         FreehandLineItem* freehandLineItem = qgraphicsitem_cast<FreehandLineItem*>(item);
         if (freehandLineItem != nullptr) {
-            WhiteboardFreehandPathElement::ref element = boost::make_shared<WhiteboardFreehandPathElement>();
+            WhiteboardFreehandPathElement::ref element = std::make_shared<WhiteboardFreehandPathElement>();
             QColor color = freehandLineItem->pen().color();
             std::vector<std::pair<int, int> > points;
             QVector<QPointF>::const_iterator it = freehandLineItem->points().constBegin();
@@ -292,7 +292,7 @@ namespace Swift {
         QGraphicsRectItem* rectItem = qgraphicsitem_cast<QGraphicsRectItem*>(item);
         if (rectItem != nullptr) {
             QRectF rect = rectItem->rect();
-            WhiteboardRectElement::ref element = boost::make_shared<WhiteboardRectElement>(rect.x()+item->pos().x(), rect.y()+item->pos().y(), rect.width(), rect.height());
+            WhiteboardRectElement::ref element = std::make_shared<WhiteboardRectElement>(rect.x()+item->pos().x(), rect.y()+item->pos().y(), rect.width(), rect.height());
             QColor penColor = rectItem->pen().color();
             QColor brushColor = rectItem->brush().color();
 
@@ -307,7 +307,7 @@ namespace Swift {
         QGraphicsTextItem* textItem = qgraphicsitem_cast<QGraphicsTextItem*>(item);
         if (textItem != nullptr) {
             QPointF point = textItem->pos();
-            WhiteboardTextElement::ref element = boost::make_shared<WhiteboardTextElement>(point.x(), point.y());
+            WhiteboardTextElement::ref element = std::make_shared<WhiteboardTextElement>(point.x(), point.y());
             element->setText(textItem->toPlainText().toStdString());
             element->setSize(textItem->font().pointSize());
             QColor color = textItem->defaultTextColor();
@@ -319,7 +319,7 @@ namespace Swift {
 
         QGraphicsPolygonItem* polygonItem = qgraphicsitem_cast<QGraphicsPolygonItem*>(item);
         if (polygonItem) {
-            WhiteboardPolygonElement::ref element = boost::make_shared<WhiteboardPolygonElement>();
+            WhiteboardPolygonElement::ref element = std::make_shared<WhiteboardPolygonElement>();
             QPolygonF polygon = polygonItem->polygon();
             std::vector<std::pair<int, int> > points;
             QVector<QPointF>::const_iterator it = polygon.begin();
@@ -348,7 +348,7 @@ namespace Swift {
             int cy = boost::numeric_cast<int>(rect.y()+rect.height()/2 + item->pos().y());
             int rx = boost::numeric_cast<int>(rect.width()/2);
             int ry = boost::numeric_cast<int>(rect.height()/2);
-            WhiteboardEllipseElement::ref element = boost::make_shared<WhiteboardEllipseElement>(cx, cy, rx, ry);
+            WhiteboardEllipseElement::ref element = std::make_shared<WhiteboardEllipseElement>(cx, cy, rx, ry);
 
             QColor penColor = ellipseItem->pen().color();
             QColor brushColor = ellipseItem->brush().color();
@@ -361,12 +361,12 @@ namespace Swift {
         }
 
         if (type == GView::New) {
-            WhiteboardInsertOperation::ref insertOp = boost::make_shared<WhiteboardInsertOperation>();
+            WhiteboardInsertOperation::ref insertOp = std::make_shared<WhiteboardInsertOperation>();
             insertOp->setPos(pos);
             insertOp->setElement(el);
             whiteboardSession_->sendOperation(insertOp);
         } else {
-            WhiteboardUpdateOperation::ref updateOp = boost::make_shared<WhiteboardUpdateOperation>();
+            WhiteboardUpdateOperation::ref updateOp = std::make_shared<WhiteboardUpdateOperation>();
             updateOp->setPos(pos);
             if (type == GView::Update) {
                 updateOp->setNewPos(pos);
@@ -381,7 +381,7 @@ namespace Swift {
     }
 
     void QtWhiteboardWindow::handleItemDeleted(QString id, int pos) {
-        WhiteboardDeleteOperation::ref deleteOp = boost::make_shared<WhiteboardDeleteOperation>();
+        WhiteboardDeleteOperation::ref deleteOp = std::make_shared<WhiteboardDeleteOperation>();
         deleteOp->setElementID(Q2PSTRING(id));
         deleteOp->setPos(pos);
         whiteboardSession_->sendOperation(deleteOp);

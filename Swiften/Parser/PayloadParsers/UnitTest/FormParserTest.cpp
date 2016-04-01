@@ -203,7 +203,7 @@ class FormParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("first"), item[0]->getName());
             CPPUNIT_ASSERT_EQUAL(std::string("Montague"), item[1]->getValues()[0]);
             CPPUNIT_ASSERT_EQUAL(std::string("last"), item[1]->getName());
-            boost::shared_ptr<FormField> jidField = item[2];
+            std::shared_ptr<FormField> jidField = item[2];
             CPPUNIT_ASSERT_EQUAL(JID("benvolio@montague.net"), jidField->getJIDSingleValue());
             CPPUNIT_ASSERT_EQUAL(std::string("jid"), item[2]->getName());
             CPPUNIT_ASSERT_EQUAL(std::string("male"), item[3]->getValues()[0]);

@@ -6,11 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -18,7 +16,7 @@
 namespace Swift {
     class SWIFTEN_API IBB : public Payload {
         public:
-            typedef boost::shared_ptr<IBB> ref;
+            typedef std::shared_ptr<IBB> ref;
 
             enum Action {
                 Open,
@@ -34,20 +32,20 @@ namespace Swift {
             }
 
             static IBB::ref createIBBOpen(const std::string& streamID, int blockSize) {
-                IBB::ref result = boost::make_shared<IBB>(Open, streamID);
+                IBB::ref result = std::make_shared<IBB>(Open, streamID);
                 result->setBlockSize(blockSize);
                 return result;
             }
 
             static IBB::ref createIBBData(const std::string& streamID, int sequenceNumber, const std::vector<unsigned char>& data) {
-                IBB::ref result = boost::make_shared<IBB>(Data, streamID);
+                IBB::ref result = std::make_shared<IBB>(Data, streamID);
                 result->setSequenceNumber(sequenceNumber);
                 result->setData(data);
                 return result;
             }
 
             static IBB::ref createIBBClose(const std::string& streamID) {
-                return boost::make_shared<IBB>(Close, streamID);
+                return std::make_shared<IBB>(Close, streamID);
             }
 
             void setAction(Action action) {

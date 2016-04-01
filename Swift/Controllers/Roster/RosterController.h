@@ -1,15 +1,14 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <set>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -77,13 +76,13 @@ namespace Swift {
             void handleStartChatRequest(const JID& contact);
             void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
             void handleShowOfflineToggled(bool state);
-            void handleIncomingPresence(boost::shared_ptr<Presence> newPresence);
+            void handleIncomingPresence(std::shared_ptr<Presence> newPresence);
             void handleSubscriptionRequest(const JID& jid, const std::string& message);
             void handleSubscriptionRequestAccepted(SubscriptionRequestEvent* event);
             void handleSubscriptionRequestDeclined(SubscriptionRequestEvent* event);
-            void handleUIEvent(boost::shared_ptr<UIEvent> event);
-            void handleRosterItemUpdated(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
-            void handleRosterSetError(ErrorPayload::ref error, boost::shared_ptr<RosterPayload> rosterPayload);
+            void handleUIEvent(std::shared_ptr<UIEvent> event);
+            void handleRosterItemUpdated(ErrorPayload::ref error, std::shared_ptr<RosterPayload> rosterPayload);
+            void handleRosterSetError(ErrorPayload::ref error, std::shared_ptr<RosterPayload> rosterPayload);
             void applyAllPresenceTo(const JID& jid);
             void handleEditProfileRequest();
             void handleOnCapsChanged(const JID& jid);
@@ -114,7 +113,7 @@ namespace Swift {
             FileTransferOverview* ftOverview_;
             ClientBlockListManager* clientBlockListManager_;
             RosterVCardProvider* rosterVCardProvider_;
-            boost::shared_ptr<ContactRosterItem> ownContact_;
+            std::shared_ptr<ContactRosterItem> ownContact_;
 
             boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
             boost::bsignals::scoped_connection blockingOnItemAddedConnection_;

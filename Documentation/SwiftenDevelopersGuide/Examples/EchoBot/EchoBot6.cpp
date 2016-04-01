@@ -6,9 +6,9 @@
 
 //...
 #include <iostream>
+#include <memory>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Swiften.h>
 
@@ -91,7 +91,7 @@ class EchoBot {
             message->setFrom(JID());
             //...
             if (!message->getPayload<EchoPayload>()) {
-                boost::shared_ptr<EchoPayload> echoPayload = boost::make_shared<EchoPayload>();
+                std::shared_ptr<EchoPayload> echoPayload = std::make_shared<EchoPayload>();
                 echoPayload->setMessage("This is an echoed message");
                 message->addPayload(echoPayload);
                 client->sendMessage(message);

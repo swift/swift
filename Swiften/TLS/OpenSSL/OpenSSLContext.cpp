@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,7 @@
 #include <vector>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <Security/Security.h>
@@ -147,7 +147,7 @@ void OpenSSLContext::doConnect() {
             break;
         default:
             state_ = Error;
-            onError(boost::make_shared<TLSError>());
+            onError(std::make_shared<TLSError>());
     }
 }
 
@@ -181,7 +181,7 @@ void OpenSSLContext::handleDataFromApplication(const SafeByteArray& data) {
     }
     else {
         state_ = Error;
-        onError(boost::make_shared<TLSError>());
+        onError(std::make_shared<TLSError>());
     }
 }
 
@@ -197,12 +197,12 @@ void OpenSSLContext::sendPendingDataToApplication() {
     }
     if (ret < 0 && SSL_get_error(handle_, ret) != SSL_ERROR_WANT_READ) {
         state_ = Error;
-        onError(boost::make_shared<TLSError>());
+        onError(std::make_shared<TLSError>());
     }
 }
 
 bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {
-    boost::shared_ptr<PKCS12Certificate> pkcs12Certificate = boost::dynamic_pointer_cast<PKCS12Certificate>(certificate);
+    std::shared_ptr<PKCS12Certificate> pkcs12Certificate = std::dynamic_pointer_cast<PKCS12Certificate>(certificate);
     if (!pkcs12Certificate || pkcs12Certificate->isNull()) {
         return false;
     }
@@ -210,7 +210,7 @@ bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {
     // Create a PKCS12 structure
     BIO* bio = BIO_new(BIO_s_mem());
     BIO_write(bio, vecptr(pkcs12Certificate->getData()), pkcs12Certificate->getData().size());
-    boost::shared_ptr<PKCS12> pkcs12(d2i_PKCS12_bio(bio, NULL), PKCS12_free);
+    std::shared_ptr<PKCS12> pkcs12(d2i_PKCS12_bio(bio, NULL), PKCS12_free);
     BIO_free(bio);
     if (!pkcs12) {
         return false;
@@ -226,9 +226,9 @@ bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {
     if (result != 1) {
         return false;
     }
-    boost::shared_ptr<X509> cert(certPtr, X509_free);
-    boost::shared_ptr<EVP_PKEY> privateKey(privateKeyPtr, EVP_PKEY_free);
-    boost::shared_ptr<STACK_OF(X509)> caCerts(caCertsPtr, freeX509Stack);
+    std::shared_ptr<X509> cert(certPtr, X509_free);
+    std::shared_ptr<EVP_PKEY> privateKey(privateKeyPtr, EVP_PKEY_free);
+    std::shared_ptr<STACK_OF(X509)> caCerts(caCertsPtr, freeX509Stack);
 
     // Use the key & certificates
     if (SSL_CTX_use_certificate(context_, cert.get()) != 1) {
@@ -247,21 +247,21 @@ std::vector<Certificate::ref> OpenSSLContext::getPeerCertificateChain() const {
     std::vector<Certificate::ref> result;
     STACK_OF(X509)* chain = SSL_get_peer_cert_chain(handle_);
     for (int i = 0; i < sk_X509_num(chain); ++i) {
-        boost::shared_ptr<X509> x509Cert(X509_dup(sk_X509_value(chain, i)), X509_free);
+        std::shared_ptr<X509> x509Cert(X509_dup(sk_X509_value(chain, i)), X509_free);
 
-        Certificate::ref cert = boost::make_shared<OpenSSLCertificate>(x509Cert);
+        Certificate::ref cert = std::make_shared<OpenSSLCertificate>(x509Cert);
         result.push_back(cert);
     }
     return result;
 }
 
-boost::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertificateVerificationError() const {
+std::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertificateVerificationError() const {
     int verifyResult = SSL_get_verify_result(handle_);
     if (verifyResult != X509_V_OK) {
-        return boost::make_shared<CertificateVerificationError>(getVerificationErrorTypeForResult(verifyResult));
+        return std::make_shared<CertificateVerificationError>(getVerificationErrorTypeForResult(verifyResult));
     }
     else {
-        return boost::shared_ptr<CertificateVerificationError>();
+        return std::shared_ptr<CertificateVerificationError>();
     }
 }
 

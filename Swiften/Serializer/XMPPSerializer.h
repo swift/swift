@@ -6,10 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/StreamType.h>
@@ -26,7 +25,7 @@ namespace Swift {
             XMPPSerializer(PayloadSerializerCollection*, StreamType type, bool setExplictNSonTopLevelElements);
 
             std::string serializeHeader(const ProtocolHeader&) const;
-            SafeByteArray serializeElement(boost::shared_ptr<ToplevelElement> stanza) const;
+            SafeByteArray serializeElement(std::shared_ptr<ToplevelElement> stanza) const;
             std::string serializeFooter() const;
 
         private:
@@ -34,6 +33,6 @@ namespace Swift {
 
         private:
             StreamType type_;
-            std::vector< boost::shared_ptr<ElementSerializer> > serializers_;
+            std::vector< std::shared_ptr<ElementSerializer> > serializers_;
     };
 }

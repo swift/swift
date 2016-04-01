@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-OpenSSLCertificate::OpenSSLCertificate(boost::shared_ptr<X509> cert) : cert(cert) {
+OpenSSLCertificate::OpenSSLCertificate(std::shared_ptr<X509> cert) : cert(cert) {
     parse();
 }
 
@@ -30,7 +30,7 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 #else
     const unsigned char* p = vecptr(der);
 #endif
-    cert = boost::shared_ptr<X509>(d2i_X509(NULL, &p, der.size()), X509_free);
+    cert = std::shared_ptr<X509>(d2i_X509(NULL, &p, der.size()), X509_free);
     if (!cert) {
         SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
     }
@@ -75,9 +75,9 @@ void OpenSSLCertificate::parse() {
     int subjectAltNameLoc = X509_get_ext_by_NID(cert.get(), NID_subject_alt_name, -1);
     if(subjectAltNameLoc != -1) {
         X509_EXTENSION* extension = X509_get_ext(cert.get(), subjectAltNameLoc);
-        boost::shared_ptr<GENERAL_NAMES> generalNames(reinterpret_cast<GENERAL_NAMES*>(X509V3_EXT_d2i(extension)), GENERAL_NAMES_free);
-        boost::shared_ptr<ASN1_OBJECT> xmppAddrObject(OBJ_txt2obj(ID_ON_XMPPADDR_OID, 1), ASN1_OBJECT_free);
-        boost::shared_ptr<ASN1_OBJECT> dnsSRVObject(OBJ_txt2obj(ID_ON_DNSSRV_OID, 1), ASN1_OBJECT_free);
+        std::shared_ptr<GENERAL_NAMES> generalNames(reinterpret_cast<GENERAL_NAMES*>(X509V3_EXT_d2i(extension)), GENERAL_NAMES_free);
+        std::shared_ptr<ASN1_OBJECT> xmppAddrObject(OBJ_txt2obj(ID_ON_XMPPADDR_OID, 1), ASN1_OBJECT_free);
+        std::shared_ptr<ASN1_OBJECT> dnsSRVObject(OBJ_txt2obj(ID_ON_DNSSRV_OID, 1), ASN1_OBJECT_free);
         for (int i = 0; i < sk_GENERAL_NAME_num(generalNames.get()); ++i) {
             GENERAL_NAME* generalName = sk_GENERAL_NAME_value(generalNames.get(), i);
             if (generalName->type == GEN_OTHERNAME) {

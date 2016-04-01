@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
@@ -16,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API ComponentHandshake : public ToplevelElement {
         public:
-            typedef boost::shared_ptr<ComponentHandshake> ref;
+            typedef std::shared_ptr<ComponentHandshake> ref;
 
             ComponentHandshake(const std::string& data = "") : data(data) {
             }

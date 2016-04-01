@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/RosterPayload.h>
@@ -16,7 +16,7 @@ namespace Swift {
         public:
             virtual ~RosterStorage();
 
-            virtual boost::shared_ptr<RosterPayload> getRoster() const = 0;
-            virtual void setRoster(boost::shared_ptr<RosterPayload>) = 0;
+            virtual std::shared_ptr<RosterPayload> getRoster() const = 0;
+            virtual void setRoster(std::shared_ptr<RosterPayload>) = 0;
     };
 }

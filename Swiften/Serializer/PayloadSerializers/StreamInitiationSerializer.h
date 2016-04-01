@@ -15,6 +15,6 @@ namespace Swift {
         public:
             StreamInitiationSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<StreamInitiation>)  const;
+            virtual std::string serializePayload(std::shared_ptr<StreamInitiation>)  const;
     };
 }

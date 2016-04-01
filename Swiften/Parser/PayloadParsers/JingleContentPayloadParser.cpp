@@ -59,12 +59,12 @@ namespace Swift {
             }
 
             if (level == 1) {
-                boost::shared_ptr<JingleTransportPayload> transport = boost::dynamic_pointer_cast<JingleTransportPayload>(currentPayloadParser->getPayload());
+                std::shared_ptr<JingleTransportPayload> transport = std::dynamic_pointer_cast<JingleTransportPayload>(currentPayloadParser->getPayload());
                 if (transport) {
                     getPayloadInternal()->addTransport(transport);
                 }
 
-                boost::shared_ptr<JingleDescription> description = boost::dynamic_pointer_cast<JingleDescription>(currentPayloadParser->getPayload());
+                std::shared_ptr<JingleDescription> description = std::dynamic_pointer_cast<JingleDescription>(currentPayloadParser->getPayload());
                 if (description) {
                     getPayloadInternal()->addDescription(description);
                 }

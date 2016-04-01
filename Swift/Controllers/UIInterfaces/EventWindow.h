@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
 
@@ -20,8 +20,8 @@ namespace Swift {
             }
 
             virtual ~EventWindow() {}
-            virtual void addEvent(boost::shared_ptr<StanzaEvent> event, bool active) = 0;
-            virtual void removeEvent(boost::shared_ptr<StanzaEvent> event) = 0;
+            virtual void addEvent(std::shared_ptr<StanzaEvent> event, bool active) = 0;
+            virtual void removeEvent(std::shared_ptr<StanzaEvent> event) = 0;
 
         private:
             bool canDelete_;

@@ -17,6 +17,6 @@ namespace Swift {
             ThreadSerializer();
             virtual ~ThreadSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<Thread> thread) const;
+            virtual std::string serializePayload(std::shared_ptr<Thread> thread) const;
     };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,7 +16,7 @@ namespace Swift {
     void CarbonsSentParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
         if (level_ == PayloadLevel) {
             if (element == "forwarded") {
-                forwardedParser_ = boost::dynamic_pointer_cast<ForwardedParser>(boost::make_shared<ForwardedParser>(factories_));
+                forwardedParser_ = std::dynamic_pointer_cast<ForwardedParser>(std::make_shared<ForwardedParser>(factories_));
             }
         }
         if (forwardedParser_) {

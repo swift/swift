@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/MAMResultConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -25,11 +26,11 @@ MAMResultConvertor::MAMResultConvertor(LuaElementConvertors* convertors) :
 MAMResultConvertor::~MAMResultConvertor() {
 }
 
-boost::shared_ptr<MAMResult> MAMResultConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<MAMResult> result = boost::make_shared<MAMResult>();
+std::shared_ptr<MAMResult> MAMResultConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<MAMResult> result = std::make_shared<MAMResult>();
     lua_getfield(L, -1, "payload");
     if (!lua_isnil(L, -1)) {
-        boost::shared_ptr<Forwarded> payload = boost::dynamic_pointer_cast<Forwarded>(convertors->convertFromLuaUntyped(L, -1, "payload"));
+        std::shared_ptr<Forwarded> payload = std::dynamic_pointer_cast<Forwarded>(convertors->convertFromLuaUntyped(L, -1, "payload"));
         if (!!payload) {
             result->setPayload(payload);
         }
@@ -48,7 +49,7 @@ boost::shared_ptr<MAMResult> MAMResultConvertor::doConvertFromLua(lua_State* L) 
     return result;
 }
 
-void MAMResultConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<MAMResult> payload) {
+void MAMResultConvertor::doConvertToLua(lua_State* L, std::shared_ptr<MAMResult> payload) {
     lua_createtable(L, 0, 0);
     if (convertors->convertToLuaUntyped(L, payload->getPayload()) > 0) {
         lua_setfield(L, -2, "payload");

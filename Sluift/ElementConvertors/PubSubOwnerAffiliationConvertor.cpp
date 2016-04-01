@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubOwnerAffiliationConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -19,8 +19,8 @@ PubSubOwnerAffiliationConvertor::PubSubOwnerAffiliationConvertor() :
 PubSubOwnerAffiliationConvertor::~PubSubOwnerAffiliationConvertor() {
 }
 
-boost::shared_ptr<PubSubOwnerAffiliation> PubSubOwnerAffiliationConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubOwnerAffiliation> result = boost::make_shared<PubSubOwnerAffiliation>();
+std::shared_ptr<PubSubOwnerAffiliation> PubSubOwnerAffiliationConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubOwnerAffiliation> result = std::make_shared<PubSubOwnerAffiliation>();
     lua_getfield(L, -1, "jid");
     if (lua_isstring(L, -1)) {
         result->setJID(JID(std::string(lua_tostring(L, -1))));
@@ -51,7 +51,7 @@ boost::shared_ptr<PubSubOwnerAffiliation> PubSubOwnerAffiliationConvertor::doCon
     return result;
 }
 
-void PubSubOwnerAffiliationConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubOwnerAffiliation> payload) {
+void PubSubOwnerAffiliationConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubOwnerAffiliation> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getJID().toString().c_str());
     lua_setfield(L, -2, "jid");

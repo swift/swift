@@ -7,11 +7,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -20,7 +18,7 @@
 namespace Swift {
     class SWIFTEN_API ParserElement {
         public:
-            typedef boost::shared_ptr<ParserElement> ref;
+            typedef std::shared_ptr<ParserElement> ref;
 
             ParserElement(const std::string& name, const std::string& xmlns, const AttributeMap& attributes);
             virtual ~ParserElement();

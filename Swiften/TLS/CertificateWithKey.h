@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,7 +12,7 @@
 namespace Swift {
     class SWIFTEN_API CertificateWithKey {
         public:
-            typedef boost::shared_ptr<CertificateWithKey> ref;
+            typedef std::shared_ptr<CertificateWithKey> ref;
             CertificateWithKey() {}
 
             virtual ~CertificateWithKey() {}

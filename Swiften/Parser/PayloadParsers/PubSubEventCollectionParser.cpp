@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,10 +33,10 @@ void PubSubEventCollectionParser::handleStartElement(const std::string& element,
 
     if (level == 1) {
         if (element == "disassociate" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventDisassociateParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventDisassociateParser>(parsers);
         }
         if (element == "associate" && ns == "http://jabber.org/protocol/pubsub#event") {
-            currentPayloadParser = boost::make_shared<PubSubEventAssociateParser>(parsers);
+            currentPayloadParser = std::make_shared<PubSubEventAssociateParser>(parsers);
         }
     }
 
@@ -55,10 +55,10 @@ void PubSubEventCollectionParser::handleEndElement(const std::string& element, c
 
         if (level == 1) {
             if (element == "disassociate" && ns == "http://jabber.org/protocol/pubsub#event") {
-                getPayloadInternal()->setDisassociate(boost::dynamic_pointer_cast<PubSubEventDisassociate>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setDisassociate(std::dynamic_pointer_cast<PubSubEventDisassociate>(currentPayloadParser->getPayload()));
             }
             if (element == "associate" && ns == "http://jabber.org/protocol/pubsub#event") {
-                getPayloadInternal()->setAssociate(boost::dynamic_pointer_cast<PubSubEventAssociate>(currentPayloadParser->getPayload()));
+                getPayloadInternal()->setAssociate(std::dynamic_pointer_cast<PubSubEventAssociate>(currentPayloadParser->getPayload()));
             }
             currentPayloadParser.reset();
         }

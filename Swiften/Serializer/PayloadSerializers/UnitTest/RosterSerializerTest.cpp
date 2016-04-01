@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ class RosterSerializerTest : public CppUnit::TestFixture {
     public:
         void testSerialize() {
             RosterSerializer testling;
-            boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+            std::shared_ptr<RosterPayload> roster(new RosterPayload());
 
             RosterItemPayload item1;
             item1.setJID(JID("foo@bar.com"));
@@ -52,7 +52,7 @@ class RosterSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_ItemWithUnknownContent() {
             RosterSerializer testling;
-            boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+            std::shared_ptr<RosterPayload> roster(new RosterPayload());
 
             RosterItemPayload item;
             item.setJID(JID("baz@blo.com"));
@@ -79,7 +79,7 @@ class RosterSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_WithVersion() {
             RosterSerializer testling;
-            boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+            std::shared_ptr<RosterPayload> roster(new RosterPayload());
             roster->setVersion("ver20");
 
             std::string expectedResult = "<query ver=\"ver20\" xmlns=\"jabber:iq:roster\"/>";
@@ -89,7 +89,7 @@ class RosterSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize_WithEmptyVersion() {
             RosterSerializer testling;
-            boost::shared_ptr<RosterPayload> roster(new RosterPayload());
+            std::shared_ptr<RosterPayload> roster(new RosterPayload());
             roster->setVersion("");
 
             std::string expectedResult = "<query ver=\"\" xmlns=\"jabber:iq:roster\"/>";

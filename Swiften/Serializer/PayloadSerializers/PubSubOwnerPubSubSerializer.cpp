@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerPubSubSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerDeleteSerializer.h>
@@ -23,26 +23,26 @@
 using namespace Swift;
 
 PubSubOwnerPubSubSerializer::PubSubOwnerPubSubSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
-    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerConfigureSerializer>(serializers));
-    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerSubscriptionsSerializer>(serializers));
-    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerDefaultSerializer>(serializers));
-    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerPurgeSerializer>(serializers));
-    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerAffiliationsSerializer>(serializers));
-    pubsubSerializers.push_back(boost::make_shared<PubSubOwnerDeleteSerializer>(serializers));
+    pubsubSerializers.push_back(std::make_shared<PubSubOwnerConfigureSerializer>(serializers));
+    pubsubSerializers.push_back(std::make_shared<PubSubOwnerSubscriptionsSerializer>(serializers));
+    pubsubSerializers.push_back(std::make_shared<PubSubOwnerDefaultSerializer>(serializers));
+    pubsubSerializers.push_back(std::make_shared<PubSubOwnerPurgeSerializer>(serializers));
+    pubsubSerializers.push_back(std::make_shared<PubSubOwnerAffiliationsSerializer>(serializers));
+    pubsubSerializers.push_back(std::make_shared<PubSubOwnerDeleteSerializer>(serializers));
 }
 
 PubSubOwnerPubSubSerializer::~PubSubOwnerPubSubSerializer() {
 }
 
-std::string PubSubOwnerPubSubSerializer::serializePayload(boost::shared_ptr<PubSubOwnerPubSub> payload) const {
+std::string PubSubOwnerPubSubSerializer::serializePayload(std::shared_ptr<PubSubOwnerPubSub> payload) const {
     if (!payload) {
         return "";
     }
     XMLElement element("pubsub", "http://jabber.org/protocol/pubsub#owner");
-    boost::shared_ptr<PubSubOwnerPayload> p = payload->getPayload();
-    foreach(boost::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
+    std::shared_ptr<PubSubOwnerPayload> p = payload->getPayload();
+    foreach(std::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
         if (serializer->canSerialize(p)) {
-            element.addNode(boost::make_shared<XMLRawTextNode>(serializer->serialize(p)));
+            element.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(p)));
         }
     }
     return element.serialize();

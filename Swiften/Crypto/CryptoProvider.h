@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,11 +26,11 @@ namespace Swift {
 
             // Convenience
             template<typename T> ByteArray getSHA1Hash(const T& data) {
-                return boost::shared_ptr<Hash>(createSHA1())->update(data).getHash();
+                return std::shared_ptr<Hash>(createSHA1())->update(data).getHash();
             }
 
             template<typename T> ByteArray getMD5Hash(const T& data) {
-                return boost::shared_ptr<Hash>(createMD5())->update(data).getHash();
+                return std::shared_ptr<Hash>(createMD5())->update(data).getHash();
             }
     };
 }

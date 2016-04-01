@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ class StreamManagementEnabledParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(parser.parse(
                 "<enabled xmlns=\"urn:xmpp:sm:3\" id=\"some-long-sm-id\" resume=\"true\"/>"));
 
-            boost::shared_ptr<StreamManagementEnabled> element = boost::dynamic_pointer_cast<StreamManagementEnabled>(testling.getElement());
+            std::shared_ptr<StreamManagementEnabled> element = std::dynamic_pointer_cast<StreamManagementEnabled>(testling.getElement());
             CPPUNIT_ASSERT(element->getResumeSupported());
             CPPUNIT_ASSERT_EQUAL(std::string("some-long-sm-id"), element->getResumeID());
         }

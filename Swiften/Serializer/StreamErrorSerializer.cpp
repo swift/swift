@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/StreamErrorSerializer.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/XML/XMLElement.h>
 
@@ -15,8 +15,8 @@ namespace Swift {
 StreamErrorSerializer::StreamErrorSerializer() : GenericElementSerializer<StreamError>() {
 }
 
-SafeByteArray StreamErrorSerializer::serialize(boost::shared_ptr<ToplevelElement> element)  const {
-    StreamError::ref error = boost::dynamic_pointer_cast<StreamError>(element);
+SafeByteArray StreamErrorSerializer::serialize(std::shared_ptr<ToplevelElement> element)  const {
+    StreamError::ref error = std::dynamic_pointer_cast<StreamError>(element);
     XMLElement errorElement("error", "http://etherx.jabber.org/streams");
 
     std::string typeTag;
@@ -47,10 +47,10 @@ SafeByteArray StreamErrorSerializer::serialize(boost::shared_ptr<ToplevelElement
         case StreamError::UnsupportedStanzaType: typeTag = "unsupported-stanza-type"; break;
         case StreamError::UnsupportedVersion: typeTag = "unsupported-version"; break;
     }
-    errorElement.addNode(boost::make_shared<XMLElement>(typeTag, "urn:ietf:params:xml:ns:xmpp-streams"));
+    errorElement.addNode(std::make_shared<XMLElement>(typeTag, "urn:ietf:params:xml:ns:xmpp-streams"));
 
     if (!error->getText().empty()) {
-        errorElement.addNode(boost::make_shared<XMLElement>("text", "urn:ietf:params:xml:ns:xmpp-streams", error->getText()));
+        errorElement.addNode(std::make_shared<XMLElement>("text", "urn:ietf:params:xml:ns:xmpp-streams", error->getText()));
     }
 
     return createSafeByteArray(errorElement.serialize());

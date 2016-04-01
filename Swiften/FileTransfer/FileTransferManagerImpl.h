@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -71,7 +71,7 @@ namespace Swift {
                     const JID& to,
                     const boost::filesystem::path& filepath,
                     const std::string& description,
-                    boost::shared_ptr<ReadBytestream> bytestream,
+                    std::shared_ptr<ReadBytestream> bytestream,
                     const FileTransferOptions&) SWIFTEN_OVERRIDE;
             OutgoingFileTransfer::ref createOutgoingFileTransfer(
                     const JID& to,
@@ -79,7 +79,7 @@ namespace Swift {
                     const std::string& description,
                     const boost::uintmax_t sizeInBytes,
                     const boost::posix_time::ptime& lastModified,
-                    boost::shared_ptr<ReadBytestream> bytestream,
+                    std::shared_ptr<ReadBytestream> bytestream,
                     const FileTransferOptions&) SWIFTEN_OVERRIDE;
 
             void start();

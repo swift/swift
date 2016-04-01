@@ -6,8 +6,7 @@
 
 #include <Swiften/Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.h>
 
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
@@ -19,7 +18,7 @@ namespace Swift {
 InBandRegistrationPayloadSerializer::InBandRegistrationPayloadSerializer() {
 }
 
-std::string InBandRegistrationPayloadSerializer::serializePayload(boost::shared_ptr<InBandRegistrationPayload> registration)    const {
+std::string InBandRegistrationPayloadSerializer::serializePayload(std::shared_ptr<InBandRegistrationPayload> registration)    const {
     XMLElement registerElement("query", "jabber:iq:register");
 
     if (registration->isRegistered()) {
@@ -104,7 +103,7 @@ std::string InBandRegistrationPayloadSerializer::serializePayload(boost::shared_
     }
 
     if (Form::ref form = registration->getForm()) {
-        registerElement.addNode(boost::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
+        registerElement.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(form)));
     }
 
     return registerElement.serialize();

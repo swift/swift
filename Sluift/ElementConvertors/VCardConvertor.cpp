@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/VCardConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -24,8 +25,8 @@ VCardConvertor::VCardConvertor() : GenericLuaElementConvertor<VCard>("vcard") {
 VCardConvertor::~VCardConvertor() {
 }
 
-boost::shared_ptr<VCard> VCardConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<VCard> result = boost::make_shared<VCard>();
+std::shared_ptr<VCard> VCardConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<VCard> result = std::make_shared<VCard>();
     lua_getfield(L, -1, "fullname");
     if (lua_isstring(L, -1)) {
         result->setFullName(std::string(lua_tostring(L, -1)));
@@ -304,7 +305,7 @@ boost::shared_ptr<VCard> VCardConvertor::doConvertFromLua(lua_State* L) {
     return result;
 }
 
-void VCardConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<VCard> payload) {
+void VCardConvertor::doConvertToLua(lua_State* L, std::shared_ptr<VCard> payload) {
     lua_newtable(L);
     if (!payload->getFullName().empty()) {
         lua_pushstring(L, payload->getFullName().c_str());

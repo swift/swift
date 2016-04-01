@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -23,7 +21,7 @@ namespace Swift {
     class ComponentAuthenticator;
     class CryptoProvider;
 
-    class SWIFTEN_API ComponentSession : public boost::enable_shared_from_this<ComponentSession> {
+    class SWIFTEN_API ComponentSession : public std::enable_shared_from_this<ComponentSession> {
         public:
             enum State {
                 Initial,
@@ -44,8 +42,8 @@ namespace Swift {
 
             ~ComponentSession();
 
-            static boost::shared_ptr<ComponentSession> create(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream> stream, CryptoProvider* crypto) {
-                return boost::shared_ptr<ComponentSession>(new ComponentSession(jid, secret, stream, crypto));
+            static std::shared_ptr<ComponentSession> create(const JID& jid, const std::string& secret, std::shared_ptr<SessionStream> stream, CryptoProvider* crypto) {
+                return std::shared_ptr<ComponentSession>(new ComponentSession(jid, secret, stream, crypto));
             }
 
             State getState() const {
@@ -55,33 +53,33 @@ namespace Swift {
             void start();
             void finish();
 
-            void sendStanza(boost::shared_ptr<Stanza>);
+            void sendStanza(std::shared_ptr<Stanza>);
 
         public:
             boost::signal<void ()> onInitialized;
-            boost::signal<void (boost::shared_ptr<Swift::Error>)> onFinished;
-            boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaReceived;
+            boost::signal<void (std::shared_ptr<Swift::Error>)> onFinished;
+            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaReceived;
 
         private:
-            ComponentSession(const JID& jid, const std::string& secret, boost::shared_ptr<SessionStream>, CryptoProvider*);
+            ComponentSession(const JID& jid, const std::string& secret, std::shared_ptr<SessionStream>, CryptoProvider*);
 
             void finishSession(Error::Type error);
-            void finishSession(boost::shared_ptr<Swift::Error> error);
+            void finishSession(std::shared_ptr<Swift::Error> error);
 
             void sendStreamHeader();
 
-            void handleElement(boost::shared_ptr<ToplevelElement>);
+            void handleElement(std::shared_ptr<ToplevelElement>);
             void handleStreamStart(const ProtocolHeader&);
-            void handleStreamClosed(boost::shared_ptr<Swift::Error>);
+            void handleStreamClosed(std::shared_ptr<Swift::Error>);
 
             bool checkState(State);
 
         private:
             JID jid;
             std::string secret;
-            boost::shared_ptr<SessionStream> stream;
+            std::shared_ptr<SessionStream> stream;
             CryptoProvider* crypto;
-            boost::shared_ptr<Swift::Error> error;
+            std::shared_ptr<Swift::Error> error;
             State state;
     };
 }

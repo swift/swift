@@ -5,16 +5,15 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/JID/JID.h>
 
@@ -24,7 +23,7 @@ namespace Swift {
 
     class MUCInviteEvent : public StanzaEvent {
     public:
-        typedef boost::shared_ptr<MUCInviteEvent> ref;
+        typedef std::shared_ptr<MUCInviteEvent> ref;
 
     public:
         MUCInviteEvent(const JID& inviter, const JID& roomJID, const std::string& reason, const std::string& password, bool direct, bool impromptu) : inviter_(inviter), roomJID_(roomJID), reason_(reason), password_(password), direct_(direct), impromptu_(impromptu) {}

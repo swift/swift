@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubEventDisassociateConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -19,8 +19,8 @@ PubSubEventDisassociateConvertor::PubSubEventDisassociateConvertor() :
 PubSubEventDisassociateConvertor::~PubSubEventDisassociateConvertor() {
 }
 
-boost::shared_ptr<PubSubEventDisassociate> PubSubEventDisassociateConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubEventDisassociate> result = boost::make_shared<PubSubEventDisassociate>();
+std::shared_ptr<PubSubEventDisassociate> PubSubEventDisassociateConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubEventDisassociate> result = std::make_shared<PubSubEventDisassociate>();
     lua_getfield(L, -1, "node");
     if (lua_isstring(L, -1)) {
         result->setNode(std::string(lua_tostring(L, -1)));
@@ -29,7 +29,7 @@ boost::shared_ptr<PubSubEventDisassociate> PubSubEventDisassociateConvertor::doC
     return result;
 }
 
-void PubSubEventDisassociateConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubEventDisassociate> payload) {
+void PubSubEventDisassociateConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubEventDisassociate> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getNode().c_str());
     lua_setfield(L, -2, "node");

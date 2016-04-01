@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -33,7 +32,7 @@ namespace Swift {
             };
 
         private:
-            boost::shared_ptr<ForwardedParser> payloadParser_;
+            std::shared_ptr<ForwardedParser> payloadParser_;
             PayloadParserFactoryCollection* factories_;
             int level_;
     };

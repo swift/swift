@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,7 +42,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
                     "<ver xmlns=\"urn:xmpp:features:rosterver\"/>"
                 "</stream:features>"));
 
-            StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
+            StreamFeatures::ref element = std::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
             CPPUNIT_ASSERT(element->hasStartTLS());
             CPPUNIT_ASSERT(element->hasSession());
             CPPUNIT_ASSERT(element->hasResourceBind());
@@ -62,7 +62,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT(parser.parse("<stream:features xmlns:stream='http://etherx.jabber.org/streams'/>"));
 
-            StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
+            StreamFeatures::ref element = std::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
             CPPUNIT_ASSERT(!element->hasStartTLS());
             CPPUNIT_ASSERT(!element->hasSession());
             CPPUNIT_ASSERT(!element->hasResourceBind());
@@ -82,7 +82,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
                     "</mechanisms>"
                 "</stream:features>"));
 
-            StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
+            StreamFeatures::ref element = std::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
             CPPUNIT_ASSERT(element->hasAuthenticationMechanism("GSSAPI"));
             CPPUNIT_ASSERT_EQUAL(*element->getAuthenticationHostname(), hostname);
         }
@@ -99,7 +99,7 @@ class StreamFeaturesParserTest : public CppUnit::TestFixture {
                     "</mechanisms>"
                 "</stream:features>"));
 
-            StreamFeatures::ref element = boost::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
+            StreamFeatures::ref element = std::dynamic_pointer_cast<StreamFeatures>(testling.getElement());
             CPPUNIT_ASSERT(element->hasAuthenticationMechanism("GSSAPI"));
             CPPUNIT_ASSERT(element->getAuthenticationHostname()->empty());
         }

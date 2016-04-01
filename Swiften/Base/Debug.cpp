@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,7 @@
 #include <Swiften/Base/Debug.h>
 
 #include <iostream>
-
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
@@ -119,16 +118,16 @@ std::ostream& operator<<(std::ostream& os, const Swift::ClientError& error) {
 std::ostream& operator<<(std::ostream& os, Swift::Element* ele) {
     using namespace Swift;
 
-    boost::shared_ptr<Element> element = boost::shared_ptr<Element>(ele);
+    std::shared_ptr<Element> element = std::shared_ptr<Element>(ele);
 
-    boost::shared_ptr<Payload> payload = boost::dynamic_pointer_cast<Payload>(element);
+    std::shared_ptr<Payload> payload = std::dynamic_pointer_cast<Payload>(element);
     if (payload) {
          FullPayloadSerializerCollection payloadSerializerCollection;
          PayloadSerializer *serializer = payloadSerializerCollection.getPayloadSerializer(payload);
          os << "Payload(" << serializer->serialize(payload) << ")";
          return os;
     }
-    boost::shared_ptr<ToplevelElement> topLevelElement = boost::dynamic_pointer_cast<ToplevelElement>(element);
+    std::shared_ptr<ToplevelElement> topLevelElement = std::dynamic_pointer_cast<ToplevelElement>(element);
     if (topLevelElement) {
         FullPayloadSerializerCollection payloadSerializerCollection;
         XMPPSerializer xmppSerializer(&payloadSerializerCollection, ClientStreamType, false);

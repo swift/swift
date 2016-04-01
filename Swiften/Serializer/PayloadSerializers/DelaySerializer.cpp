@@ -6,8 +6,9 @@
 
 #include <Swiften/Serializer/PayloadSerializers/DelaySerializer.h>
 
+#include <memory>
+
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/String.h>
@@ -18,7 +19,7 @@ namespace Swift {
 DelaySerializer::DelaySerializer() : GenericPayloadSerializer<Delay>() {
 }
 
-std::string DelaySerializer::serializePayload(boost::shared_ptr<Delay> delay)  const {
+std::string DelaySerializer::serializePayload(std::shared_ptr<Delay> delay)  const {
     XMLElement delayElement("delay", "urn:xmpp:delay");
     if (delay->getFrom() && delay->getFrom()->isValid()) {
         delayElement.setAttribute("from", delay->getFrom()->toString());

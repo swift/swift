@@ -13,7 +13,7 @@ namespace Swift {
 DirectedPresenceSender::DirectedPresenceSender(PresenceSender* sender) : sender(sender) {
 }
 
-void DirectedPresenceSender::sendPresence(boost::shared_ptr<Presence> presence) {
+void DirectedPresenceSender::sendPresence(std::shared_ptr<Presence> presence) {
     if (!sender->isAvailable()) {
         return;
     }
@@ -21,7 +21,7 @@ void DirectedPresenceSender::sendPresence(boost::shared_ptr<Presence> presence) 
     sender->sendPresence(presence);
 
     if (!presence->getTo().isValid()) {
-        boost::shared_ptr<Presence> presenceCopy(new Presence(*presence));
+        std::shared_ptr<Presence> presenceCopy(new Presence(*presence));
         foreach(const JID& jid, directedPresenceReceivers) {
             presenceCopy->setTo(jid);
             sender->sendPresence(presenceCopy);
@@ -48,7 +48,7 @@ void DirectedPresenceSender::addDirectedPresenceReceiver(const JID& jid, SendPre
     directedPresenceReceivers.insert(jid);
     if (sendPresence == AndSendPresence && sender->isAvailable()) {
         if (lastSentUndirectedPresence && (*lastSentUndirectedPresence)->getType() == Presence::Available) {
-            boost::shared_ptr<Presence> presenceCopy((*lastSentUndirectedPresence)->clone());
+            std::shared_ptr<Presence> presenceCopy((*lastSentUndirectedPresence)->clone());
             presenceCopy->setTo(jid);
             sender->sendPresence(presenceCopy);
         }
@@ -63,7 +63,7 @@ void DirectedPresenceSender::addDirectedPresenceReceiver(const JID& jid, SendPre
 void DirectedPresenceSender::removeDirectedPresenceReceiver(const JID& jid, SendPresence sendPresence) {
     directedPresenceReceivers.erase(jid);
     if (sendPresence == AndSendPresence && sender->isAvailable()) {
-        boost::shared_ptr<Presence> presence(new Presence());
+        std::shared_ptr<Presence> presence(new Presence());
         presence->setType(Presence::Unavailable);
         presence->setTo(jid);
         sender->sendPresence(presence);

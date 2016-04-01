@@ -13,7 +13,7 @@
 namespace Swift {
     class RequestContactEditorUIEvent : public UIEvent {
         public:
-            typedef boost::shared_ptr<RequestContactEditorUIEvent> ref;
+            typedef std::shared_ptr<RequestContactEditorUIEvent> ref;
 
             RequestContactEditorUIEvent(const JID& jid) : jid(jid) {
             }

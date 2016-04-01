@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>
@@ -41,8 +39,8 @@ namespace Swift {
                     NATTraverser* natTraverser);
             ~SOCKS5BytestreamServerManager();
 
-            boost::shared_ptr<SOCKS5BytestreamServerResourceUser> aquireResourceUser();
-            boost::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> aquirePortForwardingUser();
+            std::shared_ptr<SOCKS5BytestreamServerResourceUser> aquireResourceUser();
+            std::shared_ptr<SOCKS5BytestreamServerPortForwardingUser> aquirePortForwardingUser();
 
             void stop();
 
@@ -78,18 +76,18 @@ namespace Swift {
             NATTraverser* natTraverser;
             enum { Start, Initializing, Initialized } state;
             SOCKS5BytestreamServer* server;
-            boost::shared_ptr<ConnectionServer> connectionServer;
+            std::shared_ptr<ConnectionServer> connectionServer;
             int connectionServerPort;
 
-            boost::shared_ptr<NATTraversalGetPublicIPRequest> getPublicIPRequest;
-            boost::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest;
-            boost::shared_ptr<NATTraversalRemovePortForwardingRequest> unforwardPortRequest;
+            std::shared_ptr<NATTraversalGetPublicIPRequest> getPublicIPRequest;
+            std::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest;
+            std::shared_ptr<NATTraversalRemovePortForwardingRequest> unforwardPortRequest;
             boost::optional<HostAddress> publicAddress;
             boost::optional<NATPortMapping> portMapping;
             bool attemptedPortMapping_;
 
-            boost::weak_ptr<SOCKS5BytestreamServerResourceUser> s5bServerResourceUser_;
-            boost::weak_ptr<SOCKS5BytestreamServerPortForwardingUser> s5bServerPortForwardingUser_;
+            std::weak_ptr<SOCKS5BytestreamServerResourceUser> s5bServerResourceUser_;
+            std::weak_ptr<SOCKS5BytestreamServerPortForwardingUser> s5bServerPortForwardingUser_;
     };
 }
 

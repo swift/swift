@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -78,12 +77,12 @@ namespace Swift {
             /**
              * Sends a message.
              */
-            void sendMessage(boost::shared_ptr<Message>);
+            void sendMessage(std::shared_ptr<Message>);
 
             /**
              * Sends a presence stanza.
              */
-            void sendPresence(boost::shared_ptr<Presence>);
+            void sendPresence(std::shared_ptr<Presence>);
 
             /**
              * Sends raw, unchecked data.
@@ -177,12 +176,12 @@ namespace Swift {
             /**
              * Emitted when a message is received.
              */
-            boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
+            boost::signal<void (std::shared_ptr<Message>)> onMessageReceived;
 
             /**
              * Emitted when a presence stanza is received.
              */
-            boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
+            boost::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
 
             /**
              * Emitted when the server acknowledges receipt of a
@@ -190,10 +189,10 @@ namespace Swift {
              *
              * \see getStreamManagementEnabled()
              */
-            boost::signal<void (boost::shared_ptr<Stanza>)> onStanzaAcked;
+            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
 
         protected:
-            boost::shared_ptr<ClientSession> getSession() const {
+            std::shared_ptr<ClientSession> getSession() const {
                 return session_;
             }
 
@@ -207,15 +206,15 @@ namespace Swift {
             virtual void handleConnected() {}
 
         private:
-            void handleConnectorFinished(boost::shared_ptr<Connection>, boost::shared_ptr<Error> error);
+            void handleConnectorFinished(std::shared_ptr<Connection>, std::shared_ptr<Error> error);
             void handleStanzaChannelAvailableChanged(bool available);
-            void handleSessionFinished(boost::shared_ptr<Error>);
+            void handleSessionFinished(std::shared_ptr<Error>);
             void handleNeedCredentials();
             void handleDataRead(const SafeByteArray&);
             void handleDataWritten(const SafeByteArray&);
-            void handlePresenceReceived(boost::shared_ptr<Presence>);
-            void handleMessageReceived(boost::shared_ptr<Message>);
-            void handleStanzaAcked(boost::shared_ptr<Stanza>);
+            void handlePresenceReceived(std::shared_ptr<Presence>);
+            void handleMessageReceived(std::shared_ptr<Message>);
+            void handleStanzaAcked(std::shared_ptr<Stanza>);
             void purgePassword();
             void bindSessionToStream();
 
@@ -230,11 +229,11 @@ namespace Swift {
             ClientSessionStanzaChannel* stanzaChannel_;
             IQRouter* iqRouter_;
             ClientOptions options;
-            boost::shared_ptr<ChainedConnector> connector_;
+            std::shared_ptr<ChainedConnector> connector_;
             std::vector<ConnectionFactory*> proxyConnectionFactories;
-            boost::shared_ptr<Connection> connection_;
-            boost::shared_ptr<SessionStream> sessionStream_;
-            boost::shared_ptr<ClientSession> session_;
+            std::shared_ptr<Connection> connection_;
+            std::shared_ptr<SessionStream> sessionStream_;
+            std::shared_ptr<ClientSession> session_;
             CertificateWithKey::ref certificate_;
             bool disconnectRequested_;
             CertificateTrustChecker* certificateTrustChecker;

@@ -6,9 +6,8 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -32,17 +31,17 @@ namespace Swift {
                 this->node = value ;
             }
 
-            boost::shared_ptr<PubSubConfigure> getConfigure() const {
+            std::shared_ptr<PubSubConfigure> getConfigure() const {
                 return configure;
             }
 
-            void setConfigure(boost::shared_ptr<PubSubConfigure> value) {
+            void setConfigure(std::shared_ptr<PubSubConfigure> value) {
                 this->configure = value ;
             }
 
 
         private:
             std::string node;
-            boost::shared_ptr<PubSubConfigure> configure;
+            std::shared_ptr<PubSubConfigure> configure;
     };
 }

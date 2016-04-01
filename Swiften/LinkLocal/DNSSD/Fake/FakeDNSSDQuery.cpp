@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-FakeDNSSDQuery::FakeDNSSDQuery(boost::shared_ptr<FakeDNSSDQuerier> querier) : querier(querier) {
+FakeDNSSDQuery::FakeDNSSDQuery(std::shared_ptr<FakeDNSSDQuerier> querier) : querier(querier) {
 }
 
 FakeDNSSDQuery::~FakeDNSSDQuery() {

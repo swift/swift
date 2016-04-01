@@ -14,7 +14,7 @@
 namespace Swift {
 
 Session::Session(
-        boost::shared_ptr<Connection> connection,
+        std::shared_ptr<Connection> connection,
         PayloadParserFactoryCollection* payloadParserFactories,
         PayloadSerializerCollection* payloadSerializers,
         XMLParserFactory* xmlParserFactory) :
@@ -76,7 +76,7 @@ void Session::initializeStreamStack() {
     streamStack = new StreamStack(xmppLayer, connectionLayer);
 }
 
-void Session::sendElement(boost::shared_ptr<ToplevelElement> stanza) {
+void Session::sendElement(std::shared_ptr<ToplevelElement> stanza) {
     xmppLayer->writeElement(stanza);
 }
 

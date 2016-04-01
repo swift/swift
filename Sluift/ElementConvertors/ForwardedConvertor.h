@@ -19,8 +19,8 @@ namespace Swift {
             ForwardedConvertor(LuaElementConvertors* convertors);
             virtual ~ForwardedConvertor();
 
-            virtual boost::shared_ptr<Forwarded> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, boost::shared_ptr<Forwarded>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Forwarded> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Forwarded>) SWIFTEN_OVERRIDE;
             virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
 
         private:

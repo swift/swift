@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> getUserNameEx(std::string& userName, std::string& clientName, std::string& serverName);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> getUserNameEx(std::string& userName, std::string& clientName, std::string& serverName);
 
     /**
      * Retrieves the handle to preexisting client credentials for the
@@ -42,7 +42,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> acquireCredentialsHandle(PCredHandle credentialsHandle);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> acquireCredentialsHandle(PCredHandle credentialsHandle);
 
     /**
      * Releases the credentials handle obtained by the
@@ -55,7 +55,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> freeCredentialsHandle(PCredHandle credentialsHandle);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> freeCredentialsHandle(PCredHandle credentialsHandle);
 
     /**
      * Builds the security context between the client and remote peer.
@@ -87,7 +87,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> initializeSecurityContext(const boost::optional<ByteArray>& inputToken, const std::string& servicePrincipalNameString, const PCredHandle credentialsHandle, bool haveContextHandle, PCtxtHandle contextHandle, ULONG contextRequested, ULONG* contextSupported, bool* haveCompleteContext, SafeByteArray& outputToken);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> initializeSecurityContext(const boost::optional<ByteArray>& inputToken, const std::string& servicePrincipalNameString, const PCredHandle credentialsHandle, bool haveContextHandle, PCtxtHandle contextHandle, ULONG contextRequested, ULONG* contextSupported, bool* haveCompleteContext, SafeByteArray& outputToken);
 
     /**
      * Releases the context handle obtained by the
@@ -100,7 +100,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> deleteSecurityContext(PCtxtHandle contextHandle);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> deleteSecurityContext(PCtxtHandle contextHandle);
 
     /**
      * Completes an authentication token for a partial security context.
@@ -111,7 +111,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> completeAuthToken(const PCtxtHandle contextHandle, PSecBufferDesc token);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> completeAuthToken(const PCtxtHandle contextHandle, PSecBufferDesc token);
 
     /**
      * Frees a memory buffer allocated by the security package.
@@ -121,7 +121,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> freeContextBuffer(PVOID contextBuffer);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> freeContextBuffer(PVOID contextBuffer);
 
     /**
      * Decrypt message (assumes that sequence numbers are not maintained).
@@ -133,7 +133,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle contextHandle, const ByteArray& message, SafeByteArray& decrypted);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle contextHandle, const ByteArray& message, SafeByteArray& decrypted);
 
     /**
      * Produces a header or trailer for the message but does not encrypt it
@@ -147,7 +147,7 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle contextHandle, const SecPkgContext_Sizes& sizes, const SafeByteArray& message, SafeByteArray& output);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle contextHandle, const SecPkgContext_Sizes& sizes, const SafeByteArray& message, SafeByteArray& output);
 
     /**
      * Queries the security package for attributes of the security context.
@@ -165,6 +165,6 @@ namespace Swift {
      * @return NULL for success, otherwise the error code returned by
      * Windows.
      */
-    SWIFTEN_API boost::shared_ptr<boost::system::error_code> queryContextAttributes(const PCtxtHandle contextHandle, ULONG attribute, PVOID buffer);
+    SWIFTEN_API std::shared_ptr<boost::system::error_code> queryContextAttributes(const PCtxtHandle contextHandle, ULONG attribute, PVOID buffer);
 
 }

@@ -6,7 +6,7 @@
 
 #include <Sluift/ElementConvertors/PubSubOwnerSubscriptionConvertor.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -19,8 +19,8 @@ PubSubOwnerSubscriptionConvertor::PubSubOwnerSubscriptionConvertor() :
 PubSubOwnerSubscriptionConvertor::~PubSubOwnerSubscriptionConvertor() {
 }
 
-boost::shared_ptr<PubSubOwnerSubscription> PubSubOwnerSubscriptionConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<PubSubOwnerSubscription> result = boost::make_shared<PubSubOwnerSubscription>();
+std::shared_ptr<PubSubOwnerSubscription> PubSubOwnerSubscriptionConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<PubSubOwnerSubscription> result = std::make_shared<PubSubOwnerSubscription>();
     lua_getfield(L, -1, "jid");
     if (lua_isstring(L, -1)) {
         result->setJID(JID(std::string(lua_tostring(L, -1))));
@@ -45,7 +45,7 @@ boost::shared_ptr<PubSubOwnerSubscription> PubSubOwnerSubscriptionConvertor::doC
     return result;
 }
 
-void PubSubOwnerSubscriptionConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<PubSubOwnerSubscription> payload) {
+void PubSubOwnerSubscriptionConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSubOwnerSubscription> payload) {
     lua_createtable(L, 0, 0);
     lua_pushstring(L, payload->getJID().toString().c_str());
     lua_setfield(L, -2, "jid");

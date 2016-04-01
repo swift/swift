@@ -43,7 +43,7 @@ namespace Swift {
 SecureTransportCertificate::SecureTransportCertificate(SecCertificateRef certificate) {
     assert(certificate);
     CFRetain(certificate);
-    certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
+    certificateHandle_ = std::shared_ptr<SecCertificate>(certificate, CFRelease);
     parse();
 }
 
@@ -53,7 +53,7 @@ SecureTransportCertificate::SecureTransportCertificate(const ByteArray& der) {
     // certificate will take ownership of derData and free it on its release.
     SecCertificateRef certificate = SecCertificateCreateWithData(nullptr, derData);
     if (certificate) {
-        certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
+        certificateHandle_ = std::shared_ptr<SecCertificate>(certificate, CFRelease);
         parse();
     }
 }

@@ -6,15 +6,15 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
 #include <Swiften/PubSub/PubSubManager.h>
 #define SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST(payload, container, response) \
-    virtual boost::shared_ptr< PubSubRequest<payload> >  \
-            createRequest(IQ::Type type, const JID& receiver, boost::shared_ptr<payload> p) SWIFTEN_OVERRIDE { \
-        return boost::make_shared< PubSubRequest<payload> >(type, receiver, p, router); \
+    virtual std::shared_ptr< PubSubRequest<payload> >  \
+            createRequest(IQ::Type type, const JID& receiver, std::shared_ptr<payload> p) SWIFTEN_OVERRIDE { \
+        return std::make_shared< PubSubRequest<payload> >(type, receiver, p, router); \
     }
 
 namespace Swift {
@@ -31,7 +31,7 @@ namespace Swift {
                     SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST)
 
         private:
-            void handleMessageRecevied(boost::shared_ptr<Message>);
+            void handleMessageRecevied(std::shared_ptr<Message>);
 
         private:
             StanzaChannel* stanzaChannel;

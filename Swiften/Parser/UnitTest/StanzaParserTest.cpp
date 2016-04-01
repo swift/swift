@@ -193,15 +193,15 @@ class StanzaParserTest : public CppUnit::TestFixture {
             public:
                 MyStanzaParser(PayloadParserFactoryCollection* collection) : StanzaParser(collection)
                 {
-                    stanza_ = boost::make_shared<MyStanza>();
+                    stanza_ = std::make_shared<MyStanza>();
                 }
 
-                virtual boost::shared_ptr<ToplevelElement> getElement() const {
+                virtual std::shared_ptr<ToplevelElement> getElement() const {
                     return stanza_;
                 }
 
             private:
-                boost::shared_ptr<MyStanza> stanza_;
+                std::shared_ptr<MyStanza> stanza_;
         };
 
         MyPayload1ParserFactory factory1_;

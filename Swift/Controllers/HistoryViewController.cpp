@@ -70,8 +70,8 @@ HistoryViewController::~HistoryViewController() {
     delete roster_;
 }
 
-void HistoryViewController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
-    boost::shared_ptr<RequestHistoryUIEvent> event = boost::dynamic_pointer_cast<RequestHistoryUIEvent>(rawEvent);
+void HistoryViewController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
+    std::shared_ptr<RequestHistoryUIEvent> event = std::dynamic_pointer_cast<RequestHistoryUIEvent>(rawEvent);
     if (event != nullptr) {
         if (historyWindow_ == nullptr) {
             historyWindow_ = historyWindowFactory_->createHistoryWindow(uiEventStream_);
@@ -320,7 +320,7 @@ void HistoryViewController::handlePresenceChanged(Presence::ref presence) {
     }
 
     if (contacts_[HistoryMessage::Groupchat].count(jid.toBare())) {
-        Presence::ref availablePresence = boost::make_shared<Presence>(Presence());
+        Presence::ref availablePresence = std::make_shared<Presence>(Presence());
         availablePresence->setFrom(jid.toBare());
         roster_->applyOnItems(SetPresence(availablePresence, JID::WithResource));
     }
@@ -342,7 +342,7 @@ Presence::ref HistoryViewController::getPresence(const JID& jid, bool isMUC) {
     std::vector<Presence::ref> mucPresence = presenceOracle_->getAllPresence(jid.toBare());
 
     if (isMUC && !mucPresence.empty()) {
-        Presence::ref presence = boost::make_shared<Presence>(Presence());
+        Presence::ref presence = std::make_shared<Presence>(Presence());
         presence->setFrom(jid);
         return presence;
     }

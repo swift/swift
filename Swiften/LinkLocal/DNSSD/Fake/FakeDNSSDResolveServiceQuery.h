@@ -15,7 +15,7 @@ namespace Swift {
 
     class FakeDNSSDResolveServiceQuery : public DNSSDResolveServiceQuery, public FakeDNSSDQuery {
         public:
-            FakeDNSSDResolveServiceQuery(const DNSSDServiceID& service, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), service(service) {
+            FakeDNSSDResolveServiceQuery(const DNSSDServiceID& service, std::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), service(service) {
             }
 
             void start() {

@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/DomainNameResolveError.h>
@@ -16,7 +17,7 @@
 namespace Swift {
     class DomainNameAddressQuery {
         public:
-            typedef boost::shared_ptr<DomainNameAddressQuery> ref;
+            typedef std::shared_ptr<DomainNameAddressQuery> ref;
 
             virtual ~DomainNameAddressQuery();
 

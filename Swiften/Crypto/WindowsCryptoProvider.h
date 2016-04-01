@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/noncopyable.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/Override.h>
 #include <Swiften/Crypto/CryptoProvider.h>
@@ -26,6 +27,6 @@ namespace Swift {
 
         private:
             struct Private;
-            boost::shared_ptr<Private> p;
+            std::shared_ptr<Private> p;
     };
 }

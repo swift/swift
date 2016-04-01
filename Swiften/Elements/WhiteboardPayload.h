@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@
 namespace Swift {
     class SWIFTEN_API WhiteboardPayload : public Payload {
     public:
-        typedef boost::shared_ptr<WhiteboardPayload> ref;
+        typedef std::shared_ptr<WhiteboardPayload> ref;
 
     public:
         enum Type {UnknownType, Data, SessionRequest, SessionAccept, SessionTerminate};

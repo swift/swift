@@ -6,9 +6,9 @@
 
 #include <Swift/Controllers/Chat/UserSearchController.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/String.h>
@@ -79,23 +79,23 @@ void UserSearchController::setCanInitiateImpromptuMUC(bool supportsImpromptu) {
     } // Else doesn't support search
 }
 
-void UserSearchController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
+void UserSearchController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     bool handle = false;
-    boost::shared_ptr<RequestAddUserDialogUIEvent> addUserRequest = boost::shared_ptr<RequestAddUserDialogUIEvent>();
+    std::shared_ptr<RequestAddUserDialogUIEvent> addUserRequest = std::shared_ptr<RequestAddUserDialogUIEvent>();
     RequestInviteToMUCUIEvent::ref inviteToMUCRequest = RequestInviteToMUCUIEvent::ref();
     switch (type_) {
         case AddContact:
-            if ((addUserRequest = boost::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event))) {
+            if ((addUserRequest = std::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event))) {
                 handle = true;
             }
             break;
         case StartChat:
-            if (boost::dynamic_pointer_cast<RequestChatWithUserDialogUIEvent>(event)) {
+            if (std::dynamic_pointer_cast<RequestChatWithUserDialogUIEvent>(event)) {
                 handle = true;
             }
             break;
         case InviteToChat:
-            if ((inviteToMUCRequest = boost::dynamic_pointer_cast<RequestInviteToMUCUIEvent>(event))) {
+            if ((inviteToMUCRequest = std::dynamic_pointer_cast<RequestInviteToMUCUIEvent>(event))) {
                 handle = true;
             }
             break;
@@ -140,7 +140,7 @@ void UserSearchController::endDiscoWalker() {
     }
 }
 
-void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared_ptr<DiscoInfo> info) {
+void UserSearchController::handleDiscoServiceFound(const JID& jid, std::shared_ptr<DiscoInfo> info) {
     //bool isUserDirectory = false;
     bool supports55 = false;
     foreach (DiscoInfo::Identity identity, info->getIdentities()) {
@@ -154,13 +154,13 @@ void UserSearchController::handleDiscoServiceFound(const JID& jid, boost::shared
     if (/*isUserDirectory && */supports55) { //FIXME: once M-Link correctly advertises directoryness.
         /* Abort further searches.*/
         endDiscoWalker();
-        boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Get, jid, boost::make_shared<SearchPayload>(), iqRouter_));
+        std::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Get, jid, std::make_shared<SearchPayload>(), iqRouter_));
         searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleFormResponse, this, _1, _2));
         searchRequest->send();
     }
 }
 
-void UserSearchController::handleFormResponse(boost::shared_ptr<SearchPayload> fields, ErrorPayload::ref error) {
+void UserSearchController::handleFormResponse(std::shared_ptr<SearchPayload> fields, ErrorPayload::ref error) {
     if (error || !fields) {
         window_->setServerSupportsSearch(false);
         return;
@@ -168,14 +168,14 @@ void UserSearchController::handleFormResponse(boost::shared_ptr<SearchPayload> f
     window_->setSearchFields(fields);
 }
 
-void UserSearchController::handleSearch(boost::shared_ptr<SearchPayload> fields, const JID& jid) {
+void UserSearchController::handleSearch(std::shared_ptr<SearchPayload> fields, const JID& jid) {
     addToSavedDirectories(jid);
-    boost::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Set, jid, fields, iqRouter_));
+    std::shared_ptr<GenericRequest<SearchPayload> > searchRequest(new GenericRequest<SearchPayload>(IQ::Set, jid, fields, iqRouter_));
     searchRequest->onResponse.connect(boost::bind(&UserSearchController::handleSearchResponse, this, _1, _2));
     searchRequest->send();
 }
 
-void UserSearchController::handleSearchResponse(boost::shared_ptr<SearchPayload> resultsPayload, ErrorPayload::ref error) {
+void UserSearchController::handleSearchResponse(std::shared_ptr<SearchPayload> resultsPayload, ErrorPayload::ref error) {
     if (error || !resultsPayload) {
         window_->setSearchError(true);
         return;
@@ -290,7 +290,7 @@ void UserSearchController::handleJIDAddRequested(const std::vector<JID>& jids) {
 }
 
 Contact::ref UserSearchController::convertJIDtoContact(const JID& jid) {
-    Contact::ref contact = boost::make_shared<Contact>();
+    Contact::ref contact = std::make_shared<Contact>();
     contact->jid = jid;
 
     // name lookup

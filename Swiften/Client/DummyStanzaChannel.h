@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
         public:
             DummyStanzaChannel() : available_(true) {}
 
-            virtual void sendStanza(boost::shared_ptr<Stanza> stanza) {
+            virtual void sendStanza(std::shared_ptr<Stanza> stanza) {
                 sentStanzas.push_back(stanza);
             }
 
@@ -24,15 +24,15 @@ namespace Swift {
                 onAvailableChanged(available);
             }
 
-            virtual void sendIQ(boost::shared_ptr<IQ> iq) {
+            virtual void sendIQ(std::shared_ptr<IQ> iq) {
                 sentStanzas.push_back(iq);
             }
 
-            virtual void sendMessage(boost::shared_ptr<Message> message) {
+            virtual void sendMessage(std::shared_ptr<Message> message) {
                 sentStanzas.push_back(message);
             }
 
-            virtual void sendPresence(boost::shared_ptr<Presence> presence) {
+            virtual void sendPresence(std::shared_ptr<Presence> presence) {
                 sentStanzas.push_back(presence);
             }
 
@@ -52,7 +52,7 @@ namespace Swift {
                 if (index >= sentStanzas.size()) {
                     return false;
                 }
-                boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
+                std::shared_ptr<IQ> iqStanza = std::dynamic_pointer_cast<IQ>(sentStanzas[index]);
                 return iqStanza && iqStanza->getType() == type && iqStanza->getTo() == jid && iqStanza->getPayload<T>();
             }
 
@@ -60,7 +60,7 @@ namespace Swift {
                 if (index >= sentStanzas.size()) {
                     return false;
                 }
-                boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
+                std::shared_ptr<IQ> iqStanza = std::dynamic_pointer_cast<IQ>(sentStanzas[index]);
                 return iqStanza && iqStanza->getType() == IQ::Result && iqStanza->getID() == id;
             }
 
@@ -68,22 +68,22 @@ namespace Swift {
                 if (index >= sentStanzas.size()) {
                     return false;
                 }
-                boost::shared_ptr<IQ> iqStanza = boost::dynamic_pointer_cast<IQ>(sentStanzas[index]);
+                std::shared_ptr<IQ> iqStanza = std::dynamic_pointer_cast<IQ>(sentStanzas[index]);
                 return iqStanza && iqStanza->getType() == IQ::Error && iqStanza->getID() == id;
             }
 
-            template<typename T> boost::shared_ptr<T> getStanzaAtIndex(size_t index) {
+            template<typename T> std::shared_ptr<T> getStanzaAtIndex(size_t index) {
                 if (sentStanzas.size() <= index) {
-                    return boost::shared_ptr<T>();
+                    return std::shared_ptr<T>();
                 }
-                return boost::dynamic_pointer_cast<T>(sentStanzas[index]);
+                return std::dynamic_pointer_cast<T>(sentStanzas[index]);
             }
 
             std::vector<Certificate::ref> getPeerCertificateChain() const {
                 return std::vector<Certificate::ref>();
             }
 
-            std::vector<boost::shared_ptr<Stanza> > sentStanzas;
+            std::vector<std::shared_ptr<Stanza> > sentStanzas;
             bool available_;
     };
 }

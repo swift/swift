@@ -19,10 +19,10 @@
 
 namespace Swift {
 
-BoostConnectionServer::BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
+BoostConnectionServer::BoostConnectionServer(int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
 }
 
-BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
+BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
 }
 
 void BoostConnectionServer::start() {
@@ -81,7 +81,7 @@ void BoostConnectionServer::acceptNextConnection() {
         boost::bind(&BoostConnectionServer::handleAccept, shared_from_this(), newConnection, boost::asio::placeholders::error));
 }
 
-void BoostConnectionServer::handleAccept(boost::shared_ptr<BoostConnection> newConnection, const boost::system::error_code& error) {
+void BoostConnectionServer::handleAccept(std::shared_ptr<BoostConnection> newConnection, const boost::system::error_code& error) {
     if (error) {
         eventLoop->postEvent(
                 boost::bind(

@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -26,10 +26,10 @@ class PubSubItemSerializerTest : public CppUnit::TestFixture {
         void testSerialize() {
             PubSubItemSerializer serializer(&serializers);
 
-            boost::shared_ptr<RawXMLPayload> payload(boost::make_shared<RawXMLPayload>());
+            std::shared_ptr<RawXMLPayload> payload(std::make_shared<RawXMLPayload>());
             payload->setRawXML("<payload xmlns=\"tmp\"/>");
 
-            boost::shared_ptr<PubSubItem> item(boost::make_shared<PubSubItem>());
+            std::shared_ptr<PubSubItem> item(std::make_shared<PubSubItem>());
             item->addData(payload);
             item->setID("pubsub-item-1");
 
@@ -44,7 +44,7 @@ class PubSubItemSerializerTest : public CppUnit::TestFixture {
         void testSerializeEmptyID() {
             PubSubItemSerializer serializer(&serializers);
 
-            boost::shared_ptr<PubSubItem> item(boost::make_shared<PubSubItem>());
+            std::shared_ptr<PubSubItem> item(std::make_shared<PubSubItem>());
 
             std::string expectedResult =
                 "<item xmlns=\"http://jabber.org/protocol/pubsub\"/>";

@@ -13,14 +13,14 @@
 namespace Swift {
     class SWIFTEN_API GetVCardRequest : public GenericRequest<VCard> {
         public:
-            typedef boost::shared_ptr<GetVCardRequest> ref;
+            typedef std::shared_ptr<GetVCardRequest> ref;
 
             static ref create(const JID& jid, IQRouter* router) {
                 return ref(new GetVCardRequest(jid, router));
             }
 
         private:
-            GetVCardRequest(const JID& jid, IQRouter* router) : GenericRequest<VCard>(IQ::Get, jid, boost::shared_ptr<Payload>(new VCard()), router) {
+            GetVCardRequest(const JID& jid, IQRouter* router) : GenericRequest<VCard>(IQ::Get, jid, std::make_shared<VCard>(), router) {
             }
     };
 }

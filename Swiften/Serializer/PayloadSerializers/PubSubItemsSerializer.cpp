@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,7 +9,7 @@
 #include <Swiften/Serializer/PayloadSerializers/PubSubItemsSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <boost/lexical_cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
@@ -25,7 +25,7 @@ PubSubItemsSerializer::PubSubItemsSerializer(PayloadSerializerCollection* serial
 PubSubItemsSerializer::~PubSubItemsSerializer() {
 }
 
-std::string PubSubItemsSerializer::serializePayload(boost::shared_ptr<PubSubItems> payload) const {
+std::string PubSubItemsSerializer::serializePayload(std::shared_ptr<PubSubItems> payload) const {
     if (!payload) {
         return "";
     }
@@ -34,8 +34,8 @@ std::string PubSubItemsSerializer::serializePayload(boost::shared_ptr<PubSubItem
         SWIFT_LOG(warning) << "Serializing PubSubItems with empty node attribute";
     }
     element.setAttribute("node", payload->getNode());
-    foreach(boost::shared_ptr<PubSubItem> item, payload->getItems()) {
-        element.addNode(boost::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
+    foreach(std::shared_ptr<PubSubItem> item, payload->getItems()) {
+        element.addNode(std::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
     }
     if (payload->getMaximumItems()) {
         element.setAttribute("max_items", boost::lexical_cast<std::string>(*payload->getMaximumItems()));

@@ -4,9 +4,10 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -57,7 +58,7 @@ public:
         foreach (const std::string& name, words) {
             foreach (const std::string& jid, words) {
                 foreach (const StatusShow::Type& status, statuses) {
-                    contacts.push_back(boost::make_shared<Contact>(name, jid, status, ""));
+                    contacts.push_back(std::make_shared<Contact>(name, jid, status, ""));
                 }
             }
         }

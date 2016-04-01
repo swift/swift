@@ -22,7 +22,7 @@ namespace Swift {
         public:
             IdleSerializer() : GenericPayloadSerializer<Idle>() {}
 
-            virtual std::string serializePayload(boost::shared_ptr<Idle> idle)  const {
+            virtual std::string serializePayload(std::shared_ptr<Idle> idle)  const {
                 return "<idle xmlns='urn:xmpp:idle:1' since='" + dateTimeToString(idle->getSince()) + "'/>";
             }
     };

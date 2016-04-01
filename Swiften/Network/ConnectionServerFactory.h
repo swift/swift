@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 
@@ -24,8 +24,8 @@ namespace Swift {
         public:
             virtual ~ConnectionServerFactory();
 
-            virtual boost::shared_ptr<ConnectionServer> createConnectionServer(int port) = 0;
+            virtual std::shared_ptr<ConnectionServer> createConnectionServer(int port) = 0;
 
-            virtual boost::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, int port) = 0;
+            virtual std::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, int port) = 0;
     };
 }

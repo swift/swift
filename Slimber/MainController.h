@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Slimber/ServerError.h>
 
@@ -37,7 +38,7 @@ class MainController {
         void stop();
 
     private:
-        boost::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;
+        std::shared_ptr<Swift::DNSSDQuerier> dnsSDQuerier;
         Swift::LinkLocalServiceBrowser* linkLocalServiceBrowser;
         Swift::VCardCollection* vCardCollection;
         Swift::Server* server;

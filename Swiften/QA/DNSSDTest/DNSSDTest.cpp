@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -35,7 +35,7 @@ class DNSSDTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             eventLoop = new DummyEventLoop();
-            querier = boost::shared_ptr<DNSSDQuerier>(new DNSSDQuerierType());
+            querier = std::make_shared<DNSSDQuerier>();
             querier->start();
         }
 
@@ -46,7 +46,7 @@ class DNSSDTest : public CppUnit::TestFixture {
         }
 
         void testPublish() {
-            boost::shared_ptr<DNSSDBrowseQuery> browseQuery = querier->createBrowseQuery();
+            std::shared_ptr<DNSSDBrowseQuery> browseQuery = querier->createBrowseQuery();
             browseQuery->onServiceAdded.connect(boost::bind(&DNSSDTest::handleServiceAdded, this, _1));
             browseQuery->onServiceRemoved.connect(boost::bind(&DNSSDTest::handleServiceRemoved, this, _1));
             browseQuery->onError.connect(boost::bind(&DNSSDTest::handleBrowseError, this));
@@ -55,7 +55,7 @@ class DNSSDTest : public CppUnit::TestFixture {
 
             // Publish the service
             LinkLocalServiceInfo info;
-            boost::shared_ptr<DNSSDRegisterQuery> registerQuery = querier->createRegisterQuery("DNSSDTest", 1234, info.toTXTRecord());
+            std::shared_ptr<DNSSDRegisterQuery> registerQuery = querier->createRegisterQuery("DNSSDTest", 1234, info.toTXTRecord());
             registerQuery->onRegisterFinished.connect(boost::bind(&DNSSDTest::handleRegisterFinished, this, _1));
             registerQuery->registerService();
 
@@ -82,7 +82,7 @@ class DNSSDTest : public CppUnit::TestFixture {
             // Resolve all added services
             for (size_t i = 0; i < added.size(); ++i) {
                 resolvedServices.clear();
-                boost::shared_ptr<DNSSDResolveServiceQuery> resolveServiceQuery = querier->createResolveServiceQuery(added[i]);
+                std::shared_ptr<DNSSDResolveServiceQuery> resolveServiceQuery = querier->createResolveServiceQuery(added[i]);
                 resolveServiceQuery->onServiceResolved.connect(boost::bind(&DNSSDTest::handleResolveFinished, this, _1));
                 resolveServiceQuery->start();
                 wait();
@@ -137,7 +137,7 @@ class DNSSDTest : public CppUnit::TestFixture {
 
     private:
         DummyEventLoop* eventLoop;
-        boost::shared_ptr<DNSSDQuerier> querier;
+        std::shared_ptr<DNSSDQuerier> querier;
         std::vector<DNSSDServiceID> added;
         std::vector<DNSSDServiceID> registered;
         std::vector<DNSSDServiceID> toRemove;

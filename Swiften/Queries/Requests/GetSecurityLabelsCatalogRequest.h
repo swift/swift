@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
@@ -15,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API GetSecurityLabelsCatalogRequest : public GenericRequest<SecurityLabelsCatalog> {
         public:
-            typedef boost::shared_ptr<GetSecurityLabelsCatalogRequest> ref;
+            typedef std::shared_ptr<GetSecurityLabelsCatalogRequest> ref;
 
             static ref create(const JID& recipient, IQRouter* router) {
                 return ref(new GetSecurityLabelsCatalogRequest(recipient, router));
@@ -26,7 +26,7 @@ namespace Swift {
                     const JID& recipient,
                     IQRouter* router) :
                         GenericRequest<SecurityLabelsCatalog>(
-                            IQ::Get, JID(), boost::make_shared<SecurityLabelsCatalog>(recipient), router) {
+                            IQ::Get, JID(), std::make_shared<SecurityLabelsCatalog>(recipient), router) {
             }
     };
 }

@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 
     PlatformNATTraversalWorker natTraverser(&eventLoop);
     if (std::string(argv[1]) == "get-public-ip") {
-        boost::shared_ptr<NATTraversalGetPublicIPRequest> query = natTraverser.createGetPublicIPRequest();
+        std::shared_ptr<NATTraversalGetPublicIPRequest> query = natTraverser.createGetPublicIPRequest();
         query->onResult.connect(boost::bind(&handleGetPublicIPRequestResponse, _1));
         query->start();
         eventLoop.run();
@@ -66,7 +66,7 @@ int main(int argc, char* argv[]) {
         if (argc < 4) {
             std::cerr << "Invalid parameters" << std::endl;
         }
-        boost::shared_ptr<NATTraversalForwardPortRequest> query = natTraverser.createForwardPortRequest(boost::lexical_cast<int>(argv[2]), boost::lexical_cast<int>(argv[3]));
+        std::shared_ptr<NATTraversalForwardPortRequest> query = natTraverser.createForwardPortRequest(boost::lexical_cast<int>(argv[2]), boost::lexical_cast<int>(argv[3]));
         query->onResult.connect(boost::bind(&handleGetForwardPortRequestResponse, _1));
         query->start();
         eventLoop.run();
@@ -75,7 +75,7 @@ int main(int argc, char* argv[]) {
         if (argc < 4) {
             std::cerr << "Invalid parameters" << std::endl;
         }
-        boost::shared_ptr<NATTraversalRemovePortForwardingRequest> query = natTraverser.createRemovePortForwardingRequest(boost::lexical_cast<int>(argv[2]), boost::lexical_cast<int>(argv[3]));
+        std::shared_ptr<NATTraversalRemovePortForwardingRequest> query = natTraverser.createRemovePortForwardingRequest(boost::lexical_cast<int>(argv[2]), boost::lexical_cast<int>(argv[3]));
         query->onResult.connect(boost::bind(&handleRemovePortForwardingRequestResponse, _1));
         query->start();
         eventLoop.run();

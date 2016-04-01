@@ -17,7 +17,7 @@ namespace Swift {
 
     class FakeDNSSDResolveHostnameQuery : public DNSSDResolveHostnameQuery, public FakeDNSSDQuery {
         public:
-            FakeDNSSDResolveHostnameQuery(const std::string& hostname, int interfaceIndex, boost::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), hostname(hostname), interfaceIndex(interfaceIndex) {
+            FakeDNSSDResolveHostnameQuery(const std::string& hostname, int interfaceIndex, std::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), hostname(hostname), interfaceIndex(interfaceIndex) {
             }
 
             void run() {

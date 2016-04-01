@@ -41,7 +41,7 @@ ShowProfileController::~ShowProfileController() {
 }
 
 void ShowProfileController::handleUIEvent(UIEvent::ref event) {
-    ShowProfileForRosterItemUIEvent::ref showProfileEvent = boost::dynamic_pointer_cast<ShowProfileForRosterItemUIEvent>(event);
+    ShowProfileForRosterItemUIEvent::ref showProfileEvent = std::dynamic_pointer_cast<ShowProfileForRosterItemUIEvent>(event);
     if (!showProfileEvent) {
         return;
     }

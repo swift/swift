@@ -6,10 +6,9 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -34,34 +33,34 @@ namespace Swift {
                 this->node = value ;
             }
 
-            const std::vector< boost::shared_ptr<PubSubEventItem> >& getItems() const {
+            const std::vector< std::shared_ptr<PubSubEventItem> >& getItems() const {
                 return items;
             }
 
-            void setItems(const std::vector< boost::shared_ptr<PubSubEventItem> >& value) {
+            void setItems(const std::vector< std::shared_ptr<PubSubEventItem> >& value) {
                 this->items = value ;
             }
 
-            void addItem(boost::shared_ptr<PubSubEventItem> value) {
+            void addItem(std::shared_ptr<PubSubEventItem> value) {
                 this->items.push_back(value);
             }
 
-            const std::vector< boost::shared_ptr<PubSubEventRetract> >& getRetracts() const {
+            const std::vector< std::shared_ptr<PubSubEventRetract> >& getRetracts() const {
                 return retracts;
             }
 
-            void setRetracts(const std::vector< boost::shared_ptr<PubSubEventRetract> >& value) {
+            void setRetracts(const std::vector< std::shared_ptr<PubSubEventRetract> >& value) {
                 this->retracts = value ;
             }
 
-            void addRetract(boost::shared_ptr<PubSubEventRetract> value) {
+            void addRetract(std::shared_ptr<PubSubEventRetract> value) {
                 this->retracts.push_back(value);
             }
 
 
         private:
             std::string node;
-            std::vector< boost::shared_ptr<PubSubEventItem> > items;
-            std::vector< boost::shared_ptr<PubSubEventRetract> > retracts;
+            std::vector< std::shared_ptr<PubSubEventItem> > items;
+            std::vector< std::shared_ptr<PubSubEventRetract> > retracts;
     };
 }

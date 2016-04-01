@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,8 +39,8 @@ namespace Swift {
             FormReportedRef::ref currentReportedRef_;
             FormPage::page currentPage_;
             FormSection::section currentSection_;
-            std::vector<boost::shared_ptr<FormPage> > currentPages_;
-            std::vector<boost::shared_ptr<FormSection> > sectionStack_;
-            std::vector<boost::shared_ptr<FormSection> > currentSections_;
+            std::vector<std::shared_ptr<FormPage> > currentPages_;
+            std::vector<std::shared_ptr<FormSection> > sectionStack_;
+            std::vector<std::shared_ptr<FormSection> > currentSections_;
     };
 }

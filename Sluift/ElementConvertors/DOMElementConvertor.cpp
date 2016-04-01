@@ -7,8 +7,7 @@
 #include <Sluift/ElementConvertors/DOMElementConvertor.h>
 
 #include <iostream>
-
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 #include <lua.hpp>
 
@@ -145,10 +144,10 @@ namespace {
             int index = Lua::absoluteOffset(L, -1);
             for (lua_pushnil(L); lua_next(L, index) != 0; ) {
                 if (lua_isstring(L, -1)) {
-                    element.addNode(boost::make_shared<XMLTextNode>(lua_tostring(L, -1)));
+                    element.addNode(std::make_shared<XMLTextNode>(lua_tostring(L, -1)));
                 }
                 else if (lua_istable(L, -1)) {
-                    element.addNode(boost::make_shared<XMLRawTextNode>(serializeElement(L)));
+                    element.addNode(std::make_shared<XMLRawTextNode>(serializeElement(L)));
                 }
                 lua_pop(L, 1); // value
             }
@@ -165,17 +164,17 @@ DOMElementConvertor::DOMElementConvertor() {
 DOMElementConvertor::~DOMElementConvertor() {
 }
 
-boost::shared_ptr<Element> DOMElementConvertor::convertFromLua(lua_State* L, int index, const std::string& type) {
+std::shared_ptr<Element> DOMElementConvertor::convertFromLua(lua_State* L, int index, const std::string& type) {
     if (!lua_istable(L, index) || type != "dom") {
-        return boost::shared_ptr<Payload>();
+        return std::shared_ptr<Payload>();
     }
-    return boost::make_shared<RawXMLPayload>(serializeElement(L).c_str());
+    return std::make_shared<RawXMLPayload>(serializeElement(L).c_str());
 }
 
 boost::optional<std::string> DOMElementConvertor::convertToLua(
-        lua_State* L, boost::shared_ptr<Element> element) {
+        lua_State* L, std::shared_ptr<Element> element) {
     // Serialize payload to XML
-    boost::shared_ptr<Payload> payload = boost::dynamic_pointer_cast<Payload>(element);
+    std::shared_ptr<Payload> payload = std::dynamic_pointer_cast<Payload>(element);
     if (!payload) {
         return boost::optional<std::string>();
     }
@@ -188,7 +187,7 @@ boost::optional<std::string> DOMElementConvertor::convertToLua(
 
     // Parse the payload again
     ParserClient parserClient(L);
-    boost::shared_ptr<XMLParser> parser(parsers.createXMLParser(&parserClient));
+    std::shared_ptr<XMLParser> parser(parsers.createXMLParser(&parserClient));
     bool result = parser->parse(serializedPayload);
     assert(result);
 

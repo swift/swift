@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
@@ -21,6 +21,6 @@ namespace Swift {
             MAMQuerySerializer();
             virtual ~MAMQuerySerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<MAMQuery>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MAMQuery>) const SWIFTEN_OVERRIDE;
     };
 }

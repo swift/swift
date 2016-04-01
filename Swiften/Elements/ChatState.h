@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,7 @@
 namespace Swift {
     class SWIFTEN_API ChatState : public Payload {
         public:
-            typedef boost::shared_ptr<ChatState> ref;
+            typedef std::shared_ptr<ChatState> ref;
 
         public:
             enum ChatStateType {Active, Composing, Paused, Inactive, Gone};

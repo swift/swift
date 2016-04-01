@@ -91,7 +91,7 @@ MUCController::MUCController (
         MUCRegistry* mucRegistry,
         HighlightManager* highlightManager,
         ClientBlockListManager* clientBlockListManager,
-        boost::shared_ptr<ChatMessageParser> chatMessageParser,
+        std::shared_ptr<ChatMessageParser> chatMessageParser,
         bool isImpromptu,
         AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
         VCardManager* vcardManager,
@@ -135,7 +135,7 @@ MUCController::MUCController (
     highlighter_->setMode(isImpromptu_ ? Highlighter::ChatMode : Highlighter::MUCMode);
     highlighter_->setNick(nick_);
     if (timerFactory && stanzaChannel_->isAvailable()) {
-        loginCheckTimer_ = boost::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
+        loginCheckTimer_ = std::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
         loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
         loginCheckTimer_->start();
     }
@@ -230,8 +230,8 @@ void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction a
         case ChatWindow::MakeModerator: muc_->changeOccupantRole(mucJID, MUCOccupant::Moderator);break;
         case ChatWindow::MakeParticipant: muc_->changeOccupantRole(mucJID, MUCOccupant::Participant);break;
         case ChatWindow::MakeVisitor: muc_->changeOccupantRole(mucJID, MUCOccupant::Visitor);break;
-        case ChatWindow::AddContact: if (occupant.getRealJID()) events_->send(boost::make_shared<RequestAddUserDialogUIEvent>(realJID, occupant.getNick()));break;
-        case ChatWindow::ShowProfile: events_->send(boost::make_shared<ShowProfileForRosterItemUIEvent>(mucJID));break;
+        case ChatWindow::AddContact: if (occupant.getRealJID()) events_->send(std::make_shared<RequestAddUserDialogUIEvent>(realJID, occupant.getNick()));break;
+        case ChatWindow::ShowProfile: events_->send(std::make_shared<ShowProfileForRosterItemUIEvent>(mucJID));break;
     }
 }
 
@@ -325,7 +325,7 @@ void MUCController::receivedActivity() {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wswitch-enum"
 
-void MUCController::handleJoinFailed(boost::shared_ptr<ErrorPayload> error) {
+void MUCController::handleJoinFailed(std::shared_ptr<ErrorPayload> error) {
     receivedActivity();
     std::string errorMessage = QT_TRANSLATE_NOOP("", "Unable to enter this room");
     std::string rejoinNick;
@@ -529,18 +529,18 @@ JID MUCController::nickToJID(const std::string& nick) {
     return muc_->getJID().withResource(nick);
 }
 
-bool MUCController::messageTargetsMe(boost::shared_ptr<Message> message) {
+bool MUCController::messageTargetsMe(std::shared_ptr<Message> message) {
     std::string stringRegexp(".*\\b" + boost::to_lower_copy(nick_) + "\\b.*");
     boost::regex myRegexp(stringRegexp);
     return boost::regex_match(boost::to_lower_copy(message->getBody().get_value_or("")), myRegexp);
 }
 
-void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+void MUCController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) {
     if (messageEvent->getStanza()->getType() == Message::Groupchat) {
         lastActivity_ = boost::posix_time::microsec_clock::universal_time();
     }
     clearPresenceQueue();
-    boost::shared_ptr<Message> message = messageEvent->getStanza();
+    std::shared_ptr<Message> message = messageEvent->getStanza();
     if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>() && messageEvent->isReadable()) {
         chatWindow_->flash();
     }
@@ -576,7 +576,7 @@ void MUCController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> mes
     }
 }
 
-void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, boost::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) {
+void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) {
     if (from.isBare()) {
         chatWindow_->addSystemMessage(message, ChatWindow::DefaultDirection);
     }
@@ -585,8 +585,8 @@ void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatW
     }
 }
 
-void MUCController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
-    boost::shared_ptr<Message> message = messageEvent->getStanza();
+void MUCController::postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
+    std::shared_ptr<Message> message = messageEvent->getStanza();
     if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {
         if (messageTargetsMe(message) || isImpromptu_) {
             eventController_->handleIncomingEvent(messageEvent);
@@ -646,7 +646,7 @@ void MUCController::setOnline(bool online) {
     } else {
         if (shouldJoinOnReconnect_) {
             renameCounter_ = 0;
-            boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+            std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
             if (blockList && blockList->isBlocked(muc_->getJID())) {
                 handleBlockingStateChanged();
                 lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "You've blocked this room. To enter the room, first unblock it using the cog menu and try again")), ChatWindow::DefaultDirection);
@@ -788,12 +788,12 @@ void MUCController::handleOccupantNicknameChanged(const std::string& oldNickname
     onUserNicknameChanged(oldNickname, newNickname);
 }
 
-void MUCController::handleOccupantPresenceChange(boost::shared_ptr<Presence> presence) {
+void MUCController::handleOccupantPresenceChange(std::shared_ptr<Presence> presence) {
     receivedActivity();
     roster_->applyOnItems(SetPresence(presence, JID::WithResource));
 }
 
-bool MUCController::isIncomingMessageFromMe(boost::shared_ptr<Message> message) {
+bool MUCController::isIncomingMessageFromMe(std::shared_ptr<Message> message) {
     JID from = message->getFrom();
     return nick_ == from.getResource();
 }
@@ -806,11 +806,11 @@ std::string MUCController::senderDisplayNameFromMessage(const JID& from) {
     return from.getResource();
 }
 
-void MUCController::preSendMessageRequest(boost::shared_ptr<Message> message) {
+void MUCController::preSendMessageRequest(std::shared_ptr<Message> message) {
     message->setType(Swift::Message::Groupchat);
 }
 
-boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(boost::shared_ptr<Message> message) const {
+boost::optional<boost::posix_time::ptime> MUCController::getMessageTimestamp(std::shared_ptr<Message> message) const {
     return message->getTimestampFrom(toJID_);
 }
 
@@ -994,12 +994,12 @@ void MUCController::handleDestroyRoomRequest() {
 
 void MUCController::handleInvitePersonToThisMUCRequest(const std::vector<JID>& jidsToInvite) {
     RequestInviteToMUCUIEvent::ImpromptuMode mode = isImpromptu_ ? RequestInviteToMUCUIEvent::Impromptu : RequestInviteToMUCUIEvent::NotImpromptu;
-    boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(muc_->getJID(), jidsToInvite, mode));
+    std::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(muc_->getJID(), jidsToInvite, mode));
     eventStream_->send(event);
 }
 
-void MUCController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-    boost::shared_ptr<InviteToMUCUIEvent> inviteEvent = boost::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
+void MUCController::handleUIEvent(std::shared_ptr<UIEvent> event) {
+    std::shared_ptr<InviteToMUCUIEvent> inviteEvent = std::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
     if (inviteEvent && inviteEvent->getRoom() == muc_->getJID()) {
         foreach (const JID& jid, inviteEvent->getInvites()) {
             muc_->invitePerson(jid, inviteEvent->getReason(), isImpromptu_);
@@ -1031,11 +1031,11 @@ void MUCController::handleChangeAffiliationsRequest(const std::vector<std::pair<
 }
 
 void MUCController::handleUnblockUserRequest() {
-    eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, muc_->getJID()));
+    eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, muc_->getJID()));
 }
 
 void MUCController::handleBlockingStateChanged() {
-    boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+    std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
     if (blockList->getState() == BlockList::Available) {
         if (blockList->isBlocked(toJID_)) {
             if (!blockedContactAlert_) {
@@ -1074,11 +1074,11 @@ void MUCController::addRecentLogs() {
         bool senderIsSelf = nick_ == message.getFromJID().getResource();
 
         // the chatWindow uses utc timestamps
-        addMessage(chatMessageParser_->parseMessageBody(message.getMessage()), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, boost::shared_ptr<SecurityLabel>(new SecurityLabel()), avatarManager_->getAvatarPath(message.getFromJID()), message.getTime() - boost::posix_time::hours(message.getOffset()));
+        addMessage(chatMessageParser_->parseMessageBody(message.getMessage()), senderDisplayNameFromMessage(message.getFromJID()), senderIsSelf, std::make_shared<SecurityLabel>(), avatarManager_->getAvatarPath(message.getFromJID()), message.getTime() - boost::posix_time::hours(message.getOffset()));
     }
 }
 
-void MUCController::checkDuplicates(boost::shared_ptr<Message> newMessage) {
+void MUCController::checkDuplicates(std::shared_ptr<Message> newMessage) {
     std::string body = newMessage->getBody().get_value_or("");
     JID jid = newMessage->getFrom();
     boost::optional<boost::posix_time::ptime> time = newMessage->getTimestamp();
@@ -1109,26 +1109,26 @@ void MUCController::setNick(const std::string& nick) {
 }
 
 Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigurationForm) {
-    Form::ref result = boost::make_shared<Form>(Form::SubmitType);
+    Form::ref result = std::make_shared<Form>(Form::SubmitType);
     std::string impromptuConfigs[] = { "muc#roomconfig_enablelogging", "muc#roomconfig_persistentroom", "muc#roomconfig_publicroom", "muc#roomconfig_whois"};
     std::set<std::string> impromptuConfigsMissing(impromptuConfigs, impromptuConfigs + 4);
-    foreach (boost::shared_ptr<FormField> field, roomConfigurationForm->getFields()) {
-        boost::shared_ptr<FormField> resultField;
+    foreach (std::shared_ptr<FormField> field, roomConfigurationForm->getFields()) {
+        std::shared_ptr<FormField> resultField;
         if (field->getName() == "muc#roomconfig_enablelogging") {
-            resultField = boost::make_shared<FormField>(FormField::BooleanType, "0");
+            resultField = std::make_shared<FormField>(FormField::BooleanType, "0");
         }
         if (field->getName() == "muc#roomconfig_persistentroom") {
-            resultField = boost::make_shared<FormField>(FormField::BooleanType, "0");
+            resultField = std::make_shared<FormField>(FormField::BooleanType, "0");
         }
         if (field->getName() == "muc#roomconfig_publicroom") {
-            resultField = boost::make_shared<FormField>(FormField::BooleanType, "0");
+            resultField = std::make_shared<FormField>(FormField::BooleanType, "0");
         }
         if (field->getName() == "muc#roomconfig_whois") {
-            resultField = boost::make_shared<FormField>(FormField::ListSingleType, "anyone");
+            resultField = std::make_shared<FormField>(FormField::ListSingleType, "anyone");
         }
 
         if (field->getName() == "FORM_TYPE") {
-            resultField = boost::make_shared<FormField>(FormField::HiddenType, "http://jabber.org/protocol/muc#roomconfig");
+            resultField = std::make_shared<FormField>(FormField::HiddenType, "http://jabber.org/protocol/muc#roomconfig");
         }
 
         if (resultField) {
@@ -1177,10 +1177,10 @@ void MUCController::handleRoomUnlocked() {
     }
 }
 
-void MUCController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
+void MUCController::setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) {
     ChatControllerBase::setAvailableServerFeatures(info);
     if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::BlockingCommandFeature)) {
-        boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+        std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
 
         blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&MUCController::handleBlockingStateChanged, this));
         blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&MUCController::handleBlockingStateChanged, this));

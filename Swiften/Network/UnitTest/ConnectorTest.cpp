@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -71,7 +71,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host1 == *(connections[0]->hostAddressPort));
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_NoServiceLookups() {
@@ -87,7 +87,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host3.getAddress() == (*(connections[0]->hostAddressPort)).getAddress());
             CPPUNIT_ASSERT(4321 == (*(connections[0]->hostAddressPort)).getPort());
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_NoServiceLookups_DefaultPort() {
@@ -103,7 +103,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host3.getAddress() == (*(connections[0]->hostAddressPort)).getAddress());
             CPPUNIT_ASSERT_EQUAL(5222, (*(connections[0]->hostAddressPort)).getPort());
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_NoSRVHost() {
@@ -116,7 +116,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host3 == *(connections[0]->hostAddressPort));
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_FirstAddressHostFails() {
@@ -135,7 +135,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(HostAddressPort(address2, 1234) == *(connections[0]->hostAddressPort));
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_NoHosts() {
@@ -146,7 +146,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_FirstSRVHostFails() {
@@ -160,7 +160,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(host2 == *(connections[0]->hostAddressPort));
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_AllSRVHostsFailWithoutFallbackHost() {
@@ -175,7 +175,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_AllSRVHostsFailWithFallbackHost() {
@@ -192,7 +192,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host3 == *(connections[0]->hostAddressPort));
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_SRVAndFallbackHostsFail() {
@@ -207,7 +207,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         /*void testConnect_TimeoutDuringResolve() {
@@ -221,7 +221,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             eventLoop->processEvents();
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<DomainNameResolveError>(error));
             CPPUNIT_ASSERT(!connections[0]);
         }*/
 
@@ -238,7 +238,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testConnect_TimeoutDuringConnectToCandidateFallsBack() {
@@ -261,7 +261,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(HostAddressPort(address2, 1234) == *(connections[0]->hostAddressPort));
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
 
@@ -277,7 +277,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
-            CPPUNIT_ASSERT(!boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testStop_DuringSRVQuery() {
@@ -291,7 +291,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(!connections[0]);
-            CPPUNIT_ASSERT(boost::dynamic_pointer_cast<DomainNameResolveError>(error));
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
         void testStop_Timeout() {
@@ -318,8 +318,8 @@ class ConnectorTest : public CppUnit::TestFixture {
             return connector;
         }
 
-        void handleConnectorFinished(boost::shared_ptr<Connection> connection, boost::shared_ptr<Error> resultError) {
-            boost::shared_ptr<MockConnection> c(boost::dynamic_pointer_cast<MockConnection>(connection));
+        void handleConnectorFinished(std::shared_ptr<Connection> connection, std::shared_ptr<Error> resultError) {
+            std::shared_ptr<MockConnection> c(std::dynamic_pointer_cast<MockConnection>(connection));
             if (connection) {
                 assert(c);
             }
@@ -355,8 +355,8 @@ class ConnectorTest : public CppUnit::TestFixture {
             MockConnectionFactory(EventLoop* eventLoop) : eventLoop(eventLoop), isResponsive(true) {
             }
 
-            boost::shared_ptr<Connection> createConnection() {
-                return boost::shared_ptr<Connection>(new MockConnection(failingPorts, isResponsive, eventLoop));
+            std::shared_ptr<Connection> createConnection() {
+                return std::make_shared<MockConnection>(failingPorts, isResponsive, eventLoop);
             }
 
             EventLoop* eventLoop;
@@ -372,8 +372,8 @@ class ConnectorTest : public CppUnit::TestFixture {
         StaticDomainNameResolver* resolver;
         MockConnectionFactory* connectionFactory;
         DummyTimerFactory* timerFactory;
-        std::vector< boost::shared_ptr<MockConnection> > connections;
-        boost::shared_ptr<Error> error;
+        std::vector< std::shared_ptr<MockConnection> > connections;
+        std::shared_ptr<Error> error;
 
 };
 

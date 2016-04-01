@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@
 namespace Swift {
     class SWIFTEN_API MUCDestroyPayload : public Payload {
         public:
-            typedef boost::shared_ptr<MUCDestroyPayload> ref;
+            typedef std::shared_ptr<MUCDestroyPayload> ref;
 
             MUCDestroyPayload() {
             }

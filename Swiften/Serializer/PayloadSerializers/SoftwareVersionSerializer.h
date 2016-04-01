@@ -15,6 +15,6 @@ namespace Swift {
         public:
             SoftwareVersionSerializer();
 
-            virtual std::string serializePayload(boost::shared_ptr<SoftwareVersion> version)  const;
+            virtual std::string serializePayload(std::shared_ptr<SoftwareVersion> version)  const;
     };
 }

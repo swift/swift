@@ -6,11 +6,10 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
-#include <boost/enable_shared_from_this.hpp>
 #include <boost/optional.hpp>
-#include <boost/shared_ptr.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -23,7 +22,7 @@ namespace Swift {
     /**
      * An IQ get/set request query.
      */
-    class SWIFTEN_API Request : public IQHandler, public boost::enable_shared_from_this<Request> {
+    class SWIFTEN_API Request : public IQHandler, public std::enable_shared_from_this<Request> {
         public:
             std::string send();
 
@@ -48,7 +47,7 @@ namespace Swift {
             Request(
                     IQ::Type type,
                     const JID& receiver,
-                    boost::shared_ptr<Payload> payload,
+                    std::shared_ptr<Payload> payload,
                     IQRouter* router);
 
             /**
@@ -59,7 +58,7 @@ namespace Swift {
                     IQ::Type type,
                     const JID& sender,
                     const JID& receiver,
-                    boost::shared_ptr<Payload> payload,
+                    std::shared_ptr<Payload> payload,
                     IQRouter* router);
 
 
@@ -81,18 +80,18 @@ namespace Swift {
                     IQRouter* router);
 
 
-            virtual void setPayload(boost::shared_ptr<Payload> payload) {
+            virtual void setPayload(std::shared_ptr<Payload> payload) {
                 payload_ = payload;
             }
 
-            boost::shared_ptr<Payload> getPayload() const {
+            std::shared_ptr<Payload> getPayload() const {
                 return payload_;
             }
 
-            virtual void handleResponse(boost::shared_ptr<Payload>, boost::shared_ptr<ErrorPayload>) = 0;
+            virtual void handleResponse(std::shared_ptr<Payload>, std::shared_ptr<ErrorPayload>) = 0;
 
         private:
-            bool handleIQ(boost::shared_ptr<IQ>);
+            bool handleIQ(std::shared_ptr<IQ>);
             bool isCorrectSender(const JID& jid);
 
         private:
@@ -100,7 +99,7 @@ namespace Swift {
             IQ::Type type_;
             JID sender_;
             JID receiver_;
-            boost::shared_ptr<Payload> payload_;
+            std::shared_ptr<Payload> payload_;
             std::string id_;
             bool sent_;
     };

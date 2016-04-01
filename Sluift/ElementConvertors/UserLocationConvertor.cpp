@@ -6,8 +6,9 @@
 
 #include <Sluift/ElementConvertors/UserLocationConvertor.h>
 
+#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <lua.hpp>
 
@@ -22,8 +23,8 @@ UserLocationConvertor::UserLocationConvertor() :
 UserLocationConvertor::~UserLocationConvertor() {
 }
 
-boost::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State* L) {
-    boost::shared_ptr<UserLocation> result = boost::make_shared<UserLocation>();
+std::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State* L) {
+    std::shared_ptr<UserLocation> result = std::make_shared<UserLocation>();
     lua_getfield(L, -1, "area");
     if (lua_isstring(L, -1)) {
         result->setArea(std::string(lua_tostring(L, -1)));
@@ -137,7 +138,7 @@ boost::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_Stat
     return result;
 }
 
-void UserLocationConvertor::doConvertToLua(lua_State* L, boost::shared_ptr<UserLocation> payload) {
+void UserLocationConvertor::doConvertToLua(lua_State* L, std::shared_ptr<UserLocation> payload) {
     lua_createtable(L, 0, 0);
     if (payload->getArea()) {
         lua_pushstring(L, (*payload->getArea()).c_str());

@@ -6,8 +6,9 @@
 
 #include <Swift/Controllers/Chat/ChatController.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
-#include <boost/smart_ptr/make_shared.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
@@ -49,7 +50,7 @@ namespace Swift {
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
-ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, boost::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider)
+ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider)
     : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), eventStream_(eventStream), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
     isInMUC_ = isInMUC;
     lastWasPresence_ = false;
@@ -147,10 +148,10 @@ void ChatController::setToJID(const JID& jid) {
     handleBareJIDCapsChanged(toJID_);
 }
 
-void ChatController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> info) {
+void ChatController::setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) {
     ChatControllerBase::setAvailableServerFeatures(info);
     if (iqRouter_->isAvailable() && info->hasFeature(DiscoInfo::BlockingCommandFeature)) {
-        boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+        std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
 
         blockingOnStateChangedConnection_ = blockList->onStateChanged.connect(boost::bind(&ChatController::handleBlockingStateChanged, this));
         blockingOnItemAddedConnection_ = blockList->onItemAdded.connect(boost::bind(&ChatController::handleBlockingStateChanged, this));
@@ -160,16 +161,16 @@ void ChatController::setAvailableServerFeatures(boost::shared_ptr<DiscoInfo> inf
     }
 }
 
-bool ChatController::isIncomingMessageFromMe(boost::shared_ptr<Message>) {
+bool ChatController::isIncomingMessageFromMe(std::shared_ptr<Message>) {
     return false;
 }
 
-void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent) {
+void ChatController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) {
     if (messageEvent->isReadable()) {
         chatWindow_->flash();
         lastWasPresence_ = false;
     }
-    boost::shared_ptr<Message> message = messageEvent->getStanza();
+    std::shared_ptr<Message> message = messageEvent->getStanza();
     JID from = message->getFrom();
     if (!from.equals(toJID_, JID::WithResource)) {
         if (toJID_.equals(from, JID::WithoutResource)  && toJID_.isBare()){
@@ -185,7 +186,7 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
 
     // handle XEP-0184 Message Receipts
     // incomming receipts
-    if (boost::shared_ptr<DeliveryReceipt> receipt = message->getPayload<DeliveryReceipt>()) {
+    if (std::shared_ptr<DeliveryReceipt> receipt = message->getPayload<DeliveryReceipt>()) {
         SWIFT_LOG(debug) << "received receipt for id: " << receipt->getReceivedID() << std::endl;
         if (requestedReceipts_.find(receipt->getReceivedID()) != requestedReceipts_.end()) {
             chatWindow_->setMessageReceiptState(requestedReceipts_[receipt->getReceivedID()], ChatWindow::ReceiptReceived);
@@ -200,15 +201,15 @@ void ChatController::preHandleIncomingMessage(boost::shared_ptr<MessageEvent> me
     // incoming receipt requests
     } else if (message->getPayload<DeliveryReceiptRequest>()) {
         if (receivingPresenceFromUs_) {
-            boost::shared_ptr<Message> receiptMessage = boost::make_shared<Message>();
+            std::shared_ptr<Message> receiptMessage = std::make_shared<Message>();
             receiptMessage->setTo(toJID_);
-            receiptMessage->addPayload(boost::make_shared<DeliveryReceipt>(message->getID()));
+            receiptMessage->addPayload(std::make_shared<DeliveryReceipt>(message->getID()));
             stanzaChannel_->sendMessage(receiptMessage);
         }
     }
 }
 
-void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
+void ChatController::postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
     eventController_->handleIncomingEvent(messageEvent);
     if (!messageEvent->getConcluded()) {
         handleHighlightActions(chatMessage);
@@ -216,10 +217,10 @@ void ChatController::postHandleIncomingMessage(boost::shared_ptr<MessageEvent> m
 }
 
 
-void ChatController::preSendMessageRequest(boost::shared_ptr<Message> message) {
+void ChatController::preSendMessageRequest(std::shared_ptr<Message> message) {
     chatStateNotifier_->addChatStateRequest(message);
     if (userWantsReceipts_ && (contactSupportsReceipts_ != No) && message) {
-        message->addPayload(boost::make_shared<DeliveryReceiptRequest>());
+        message->addPayload(std::make_shared<DeliveryReceiptRequest>());
     }
 }
 
@@ -255,7 +256,7 @@ void ChatController::checkForDisplayingDisplayReceiptsAlert() {
 }
 
 void ChatController::handleBlockingStateChanged() {
-    boost::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
+    std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
     if (blockList->getState() == BlockList::Available) {
         if (isInMUC_ ? blockList->isBlocked(toJID_) : blockList->isBlocked(toJID_.toBare())) {
             if (!blockedContactAlert_) {
@@ -281,22 +282,22 @@ void ChatController::handleBlockingStateChanged() {
 
 void ChatController::handleBlockUserRequest() {
     if (isInMUC_) {
-        eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, toJID_));
+        eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, toJID_));
     } else {
-        eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, toJID_.toBare()));
+        eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Blocked, toJID_.toBare()));
     }
 }
 
 void ChatController::handleUnblockUserRequest() {
     if (isInMUC_) {
-        eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_));
+        eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_));
     } else {
-        eventStream_->send(boost::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_.toBare()));
+        eventStream_->send(std::make_shared<RequestChangeBlockStateUIEvent>(RequestChangeBlockStateUIEvent::Unblocked, toJID_.toBare()));
     }
 }
 
 void ChatController::handleInviteToChat(const std::vector<JID>& droppedJIDs) {
-    boost::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs, RequestInviteToMUCUIEvent::Impromptu));
+    std::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs, RequestInviteToMUCUIEvent::Impromptu));
     eventStream_->send(event);
 }
 
@@ -304,21 +305,21 @@ void ChatController::handleWindowClosed() {
     onWindowClosed();
 }
 
-void ChatController::handleUIEvent(boost::shared_ptr<UIEvent> event) {
-    boost::shared_ptr<InviteToMUCUIEvent> inviteEvent = boost::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
+void ChatController::handleUIEvent(std::shared_ptr<UIEvent> event) {
+    std::shared_ptr<InviteToMUCUIEvent> inviteEvent = std::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
     if (inviteEvent && inviteEvent->getRoom() == toJID_.toBare()) {
         onConvertToMUC(detachChatWindow(), inviteEvent->getInvites(), inviteEvent->getReason());
     }
 }
 
 
-void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<Stanza> sentStanza) {
-    boost::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
+void ChatController::postSendMessage(const std::string& body, std::shared_ptr<Stanza> sentStanza) {
+    std::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();
     if (replace) {
-        eraseIf(unackedStanzas_, PairSecondEquals<boost::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
+        eraseIf(unackedStanzas_, PairSecondEquals<std::shared_ptr<Stanza>, std::string>(myLastMessageUIID_));
         replaceMessage(chatMessageParser_->parseMessageBody(body, "", true), myLastMessageUIID_, boost::posix_time::microsec_clock::universal_time());
     } else {
-        myLastMessageUIID_ = addMessage(chatMessageParser_->parseMessageBody(body, "", true), QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : boost::shared_ptr<SecurityLabel>(), avatarManager_->getAvatarPath(selfJID_), boost::posix_time::microsec_clock::universal_time());
+        myLastMessageUIID_ = addMessage(chatMessageParser_->parseMessageBody(body, "", true), QT_TRANSLATE_NOOP("", "me"), true, labelsEnabled_ ? chatWindow_->getSelectedSecurityLabel().getLabel() : std::shared_ptr<SecurityLabel>(), avatarManager_->getAvatarPath(selfJID_), boost::posix_time::microsec_clock::universal_time());
     }
 
     if (stanzaChannel_->getStreamManagementEnabled() && !myLastMessageUIID_.empty() ) {
@@ -335,8 +336,8 @@ void ChatController::postSendMessage(const std::string& body, boost::shared_ptr<
     chatStateNotifier_->userSentMessage();
 }
 
-void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
-    std::map<boost::shared_ptr<Stanza>, std::string>::iterator unackedStanza = unackedStanzas_.find(stanza);
+void ChatController::handleStanzaAcked(std::shared_ptr<Stanza> stanza) {
+    std::map<std::shared_ptr<Stanza>, std::string>::iterator unackedStanza = unackedStanzas_.find(stanza);
     if (unackedStanza != unackedStanzas_.end()) {
         chatWindow_->setAckState(unackedStanza->second, ChatWindow::Received);
         unackedStanzas_.erase(unackedStanza);
@@ -345,7 +346,7 @@ void ChatController::handleStanzaAcked(boost::shared_ptr<Stanza> stanza) {
 
 void ChatController::setOnline(bool online) {
     if (!online) {
-        std::map<boost::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin();
+        std::map<std::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin();
         for ( ; it != unackedStanzas_.end(); ++it) {
             chatWindow_->setAckState(it->second, ChatWindow::Failed);
         }
@@ -403,19 +404,19 @@ void ChatController::handleFileTransferAccept(std::string id, std::string filena
 
 void ChatController::handleSendFileRequest(std::string filename) {
     SWIFT_LOG(debug) << "ChatController::handleSendFileRequest(" << filename << ")" << std::endl;
-    eventStream_->send(boost::make_shared<SendFileUIEvent>(getToJID(), filename));
+    eventStream_->send(std::make_shared<SendFileUIEvent>(getToJID(), filename));
 }
 
 void ChatController::handleWhiteboardSessionAccept() {
-    eventStream_->send(boost::make_shared<AcceptWhiteboardSessionUIEvent>(toJID_));
+    eventStream_->send(std::make_shared<AcceptWhiteboardSessionUIEvent>(toJID_));
 }
 
 void ChatController::handleWhiteboardSessionCancel() {
-    eventStream_->send(boost::make_shared<CancelWhiteboardSessionUIEvent>(toJID_));
+    eventStream_->send(std::make_shared<CancelWhiteboardSessionUIEvent>(toJID_));
 }
 
 void ChatController::handleWhiteboardWindowShow() {
-    eventStream_->send(boost::make_shared<ShowWhiteboardUIEvent>(toJID_));
+    eventStream_->send(std::make_shared<ShowWhiteboardUIEvent>(toJID_));
 }
 
 std::string ChatController::senderHighlightNameFromMessage(const JID& from) {
@@ -431,7 +432,7 @@ std::string ChatController::senderDisplayNameFromMessage(const JID& from) {
     return nickResolver_->jidToNick(from);
 }
 
-std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> presence) {
+std::string ChatController::getStatusChangeString(std::shared_ptr<Presence> presence) {
     std::string nick = senderDisplayNameFromMessage(presence->getFrom());
     std::string response;
     if (!presence || presence->getType() == Presence::Unavailable || presence->getType() == Presence::Error) {
@@ -461,7 +462,7 @@ std::string ChatController::getStatusChangeString(boost::shared_ptr<Presence> pr
     return response + ".";
 }
 
-void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresence) {
+void ChatController::handlePresenceChange(std::shared_ptr<Presence> newPresence) {
     bool relevantPresence = false;
 
     if (isInMUC_) {
@@ -487,7 +488,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
     }
 
     if (!newPresence) {
-        newPresence = boost::make_shared<Presence>();
+        newPresence = std::make_shared<Presence>();
         newPresence->setType(Presence::Unavailable);
     }
     lastShownStatus_ = newPresence->getShow();
@@ -506,7 +507,7 @@ void ChatController::handlePresenceChange(boost::shared_ptr<Presence> newPresenc
     }
 }
 
-boost::optional<boost::posix_time::ptime> ChatController::getMessageTimestamp(boost::shared_ptr<Message> message) const {
+boost::optional<boost::posix_time::ptime> ChatController::getMessageTimestamp(std::shared_ptr<Message> message) const {
     return message->getTimestamp();
 }
 

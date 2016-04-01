@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ class DiscoInfoSerializerTest : public CppUnit::TestFixture
 
         void testSerialize() {
             DiscoInfoSerializer testling;
-            boost::shared_ptr<DiscoInfo> discoInfo(new DiscoInfo());
+            std::shared_ptr<DiscoInfo> discoInfo(new DiscoInfo());
             discoInfo->addIdentity(DiscoInfo::Identity("Swift", "client", "pc"));
             discoInfo->addIdentity(DiscoInfo::Identity("Vlug", "client", "pc", "nl"));
             discoInfo->addFeature("http://jabber.org/protocol/caps");
@@ -43,10 +43,10 @@ class DiscoInfoSerializerTest : public CppUnit::TestFixture
 
         void testSerialize_Form() {
             DiscoInfoSerializer testling;
-            boost::shared_ptr<DiscoInfo> discoInfo(new DiscoInfo());
+            std::shared_ptr<DiscoInfo> discoInfo(new DiscoInfo());
             discoInfo->addFeature("http://jabber.org/protocol/caps");
             discoInfo->addFeature("http://jabber.org/protocol/disco#info");
-            boost::shared_ptr<Form> form(new Form(Form::FormType));
+            std::shared_ptr<Form> form(new Form(Form::FormType));
             form->setTitle("Bot Configuration");
             discoInfo->addExtension(form);
 

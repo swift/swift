@@ -10,7 +10,7 @@
  * See the COPYING file for more information.
  */
 
-#include <boost/make_shared.hpp>
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -29,7 +29,7 @@ class IdleSerializerTest : public CppUnit::TestFixture {
 
         void testSerialize() {
             IdleSerializer testling;
-            Idle::ref idle = boost::make_shared<Idle>(stringToDateTime("1969-07-21T02:56:15Z"));
+            Idle::ref idle = std::make_shared<Idle>(stringToDateTime("1969-07-21T02:56:15Z"));
 
             CPPUNIT_ASSERT_EQUAL(std::string("<idle xmlns='urn:xmpp:idle:1' since='1969-07-21T02:56:15Z'/>"), testling.serialize(idle));
         }
