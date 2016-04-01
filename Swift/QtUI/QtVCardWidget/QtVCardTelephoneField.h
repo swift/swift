@@ -27,7 +27,7 @@ class QtVCardTelephoneField : public QtVCardGeneralField, public QtVCardHomeWork
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Telephone"), UNLIMITED_INSTANCES, QtVCardTelephoneField)
 
-        QtVCardTelephoneField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardTelephoneField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardTelephoneField();
 
         virtual bool isEmpty() const;

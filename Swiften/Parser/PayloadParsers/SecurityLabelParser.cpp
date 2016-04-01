@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-SecurityLabelParser::SecurityLabelParser() : level_(TopLevel), labelParser_(0) {
+SecurityLabelParser::SecurityLabelParser() : level_(TopLevel), labelParser_(nullptr) {
 }
 
 void SecurityLabelParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
@@ -44,7 +44,7 @@ void SecurityLabelParser::handleEndElement(const std::string& element, const std
                 getPayloadInternal()->addEquivalentLabel(labelParser_->getResult());
             }
             delete labelParser_;
-            labelParser_ = 0;
+            labelParser_ = nullptr;
         }
     }
     else if (labelParser_ && level_ >= SecurityLabelLevel) {

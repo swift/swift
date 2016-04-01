@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,5 +28,5 @@ CryptoProvider* PlatformCryptoProvider::create() {
     return new OpenSSLCryptoProvider();
 #endif
     assert(false);
-    return NULL;
+    return nullptr;
 }

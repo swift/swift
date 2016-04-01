@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,8 +40,8 @@ UserSearchController::UserSearchController(Type type, const JID& jid, UIEventStr
     vcardManager_->onVCardChanged.connect(boost::bind(&UserSearchController::handleVCardChanged, this, _1, _2));
     avatarManager_->onAvatarChanged.connect(boost::bind(&UserSearchController::handleAvatarChanged, this, _1));
     presenceOracle_->onPresenceChange.connect(boost::bind(&UserSearchController::handlePresenceChanged, this, _1));
-    window_ = NULL;
-    discoWalker_ = NULL;
+    window_ = nullptr;
+    discoWalker_ = nullptr;
     loadSavedDirectories();
 }
 

@@ -124,7 +124,7 @@ QModelIndexList QtTreeWidget::getSelectedIndexes() const {
 }
 
 void QtTreeWidget::currentChanged(const QModelIndex& current, const QModelIndex& previous) {
-    RosterItem* item = NULL;
+    RosterItem* item = nullptr;
     QModelIndexList selectedIndexList = getSelectedIndexes();
     if (selectedIndexList.empty() || !selectedIndexList[0].isValid()) {
         /* I didn't quite understand why using current didn't seem to work here.*/
@@ -180,7 +180,7 @@ void QtTreeWidget::dragMoveEvent(QDragMoveEvent* event) {
 }
 
 bool QtTreeWidget::event(QEvent* event) {
-    QChildEvent* childEvent = NULL;
+    QChildEvent* childEvent = nullptr;
     if ((childEvent = dynamic_cast<QChildEvent*>(event))) {
         if (childEvent->polished()) {
             if (dynamic_cast<QLabel*>(childEvent->child())) {

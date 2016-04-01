@@ -22,7 +22,7 @@
 namespace Swift {
 
 QtVCardBirthdayField::QtVCardBirthdayField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Birthday"), false, false), birthdayLabel(NULL), birthdayDateEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Birthday"), false, false), birthdayLabel(nullptr), birthdayDateEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

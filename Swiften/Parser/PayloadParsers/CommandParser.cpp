@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-CommandParser::CommandParser() : level_(TopLevel), inNote_(false), inActions_(false), noteType_(Command::Note::Info), formParser_(0)  {
+CommandParser::CommandParser() : level_(TopLevel), inNote_(false), inActions_(false), noteType_(Command::Note::Info), formParser_(nullptr)  {
     formParserFactory_ = new FormParserFactory();
 }
 
@@ -93,7 +93,7 @@ void CommandParser::handleEndElement(const std::string& element, const std::stri
             assert(form);
             getPayloadInternal()->setForm(form);
             delete formParser_;
-            formParser_ = 0;
+            formParser_ = nullptr;
         }
         else if (inNote_) {
             inNote_ = false;

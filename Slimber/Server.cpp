@@ -51,7 +51,7 @@ Server::Server(
             linkLocalServiceBrowser(linkLocalServiceBrowser),
             vCardCollection(vCardCollection),
             eventLoop(eventLoop),
-            presenceManager(NULL),
+            presenceManager(nullptr),
             stopping(false) {
     linkLocalServiceBrowser->onServiceRegistered.connect(
             boost::bind(&Server::handleServiceRegistered, this, _1));
@@ -105,7 +105,7 @@ void Server::stop(boost::optional<ServerError> e) {
     stopping = true;
 
     delete presenceManager;
-    presenceManager = NULL;
+    presenceManager = nullptr;
 
     if (serverFromClientSession) {
         serverFromClientSession->finishSession();

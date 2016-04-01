@@ -34,7 +34,7 @@ struct MiniUPnPInterface::Private {
 MiniUPnPInterface::MiniUPnPInterface() : p(boost::make_shared<Private>()) {
     p->isValid = false;
     int error = 0;
-    p->deviceList = upnpDiscover(1500 /* timeout in ms */, 0, 0, 0, 0 /* do IPv6? */, &error);
+    p->deviceList = upnpDiscover(1500 /* timeout in ms */, nullptr, nullptr, 0, 0 /* do IPv6? */, &error);
     if (!p->deviceList) {
         return;
     }
@@ -87,7 +87,7 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
             p->localAddress.c_str(),
             "Swift",
             mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP",
-            0,
+            nullptr,
             leaseSeconds.c_str());
     if (ret == UPNPCOMMAND_SUCCESS) {
         return mapping;
@@ -106,7 +106,7 @@ bool MiniUPnPInterface::removePortForward(const NATPortMapping& mapping) {
     std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
     std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
 
-    int ret = UPNP_DeletePortMapping(p->urls.controlURL, p->data.first.servicetype, publicPort.c_str(), mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", 0);
+    int ret = UPNP_DeletePortMapping(p->urls.controlURL, p->data.first.servicetype, publicPort.c_str(), mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", nullptr);
     return ret == UPNPCOMMAND_SUCCESS;
 }
 

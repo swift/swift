@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -121,33 +121,33 @@ MainController::MainController(
             settings_(settings),
             uriHandler_(uriHandler),
             idleDetector_(idleDetector),
-            loginWindow_(NULL) ,
+            loginWindow_(nullptr) ,
             useDelayForLatency_(useDelayForLatency),
-            ftOverview_(NULL),
+            ftOverview_(nullptr),
             emoticons_(emoticons) {
-    storages_ = NULL;
-    certificateStorage_ = NULL;
-    certificateTrustChecker_ = NULL;
-    statusTracker_ = NULL;
-    presenceNotifier_ = NULL;
-    eventNotifier_ = NULL;
-    rosterController_ = NULL;
-    chatsManager_ = NULL;
-    historyController_ = NULL;
-    historyViewController_ = NULL;
-    eventWindowController_ = NULL;
-    profileController_ = NULL;
-    blockListController_ = NULL;
-    showProfileController_ = NULL;
-    contactEditController_ = NULL;
-    userSearchControllerChat_ = NULL;
-    userSearchControllerAdd_ = NULL;
-    userSearchControllerInvite_ = NULL;
-    contactsFromRosterProvider_ = NULL;
-    contactSuggesterWithoutRoster_ = NULL;
-    contactSuggesterWithRoster_ = NULL;
-    whiteboardManager_ = NULL;
-    adHocManager_ = NULL;
+    storages_ = nullptr;
+    certificateStorage_ = nullptr;
+    certificateTrustChecker_ = nullptr;
+    statusTracker_ = nullptr;
+    presenceNotifier_ = nullptr;
+    eventNotifier_ = nullptr;
+    rosterController_ = nullptr;
+    chatsManager_ = nullptr;
+    historyController_ = nullptr;
+    historyViewController_ = nullptr;
+    eventWindowController_ = nullptr;
+    profileController_ = nullptr;
+    blockListController_ = nullptr;
+    showProfileController_ = nullptr;
+    contactEditController_ = nullptr;
+    userSearchControllerChat_ = nullptr;
+    userSearchControllerAdd_ = nullptr;
+    userSearchControllerInvite_ = nullptr;
+    contactsFromRosterProvider_ = nullptr;
+    contactSuggesterWithoutRoster_ = nullptr;
+    contactSuggesterWithRoster_ = nullptr;
+    whiteboardManager_ = nullptr;
+    adHocManager_ = nullptr;
     quitRequested_ = false;
     clientInitialized_ = false;
     offlineRequested_ = false;
@@ -221,7 +221,7 @@ MainController::MainController(
         /* FIXME: deal with autologin with a cert*/
         handleLoginRequest(selectedLoginJID, cachedPassword, cachedCertificate, CertificateWithKey::ref(), cachedOptions, true, true);
     } else {
-        profileSettings_ = NULL;
+        profileSettings_ = nullptr;
     }
 }
 
@@ -255,58 +255,58 @@ void MainController::resetClient() {
     resetPendingReconnects();
     vCardPhotoHash_.clear();
     delete contactEditController_;
-    contactEditController_ = NULL;
+    contactEditController_ = nullptr;
     delete profileController_;
-    profileController_ = NULL;
+    profileController_ = nullptr;
     delete showProfileController_;
-    showProfileController_ = NULL;
+    showProfileController_ = nullptr;
     delete eventWindowController_;
-    eventWindowController_ = NULL;
+    eventWindowController_ = nullptr;
     delete chatsManager_;
-    chatsManager_ = NULL;
+    chatsManager_ = nullptr;
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
     delete historyViewController_;
-    historyViewController_ = NULL;
+    historyViewController_ = nullptr;
     delete historyController_;
-    historyController_ = NULL;
+    historyController_ = nullptr;
 #endif
-    fileTransferListController_->setFileTransferOverview(NULL);
+    fileTransferListController_->setFileTransferOverview(nullptr);
     delete ftOverview_;
-    ftOverview_ = NULL;
+    ftOverview_ = nullptr;
     delete blockListController_;
-    blockListController_ = NULL;
+    blockListController_ = nullptr;
     delete rosterController_;
-    rosterController_ = NULL;
+    rosterController_ = nullptr;
     delete eventNotifier_;
-    eventNotifier_ = NULL;
+    eventNotifier_ = nullptr;
     delete presenceNotifier_;
-    presenceNotifier_ = NULL;
+    presenceNotifier_ = nullptr;
     delete certificateTrustChecker_;
-    certificateTrustChecker_ = NULL;
+    certificateTrustChecker_ = nullptr;
     delete certificateStorage_;
-    certificateStorage_ = NULL;
+    certificateStorage_ = nullptr;
     delete storages_;
-    storages_ = NULL;
+    storages_ = nullptr;
     delete statusTracker_;
-    statusTracker_ = NULL;
+    statusTracker_ = nullptr;
     delete profileSettings_;
-    profileSettings_ = NULL;
+    profileSettings_ = nullptr;
     delete userSearchControllerChat_;
-    userSearchControllerChat_ = NULL;
+    userSearchControllerChat_ = nullptr;
     delete userSearchControllerAdd_;
-    userSearchControllerAdd_ = NULL;
+    userSearchControllerAdd_ = nullptr;
     delete userSearchControllerInvite_;
-    userSearchControllerInvite_ = NULL;
+    userSearchControllerInvite_ = nullptr;
     delete contactSuggesterWithoutRoster_;
-    contactSuggesterWithoutRoster_ = NULL;
+    contactSuggesterWithoutRoster_ = nullptr;
     delete contactSuggesterWithRoster_;
-    contactSuggesterWithRoster_ = NULL;
+    contactSuggesterWithRoster_ = nullptr;
     delete contactsFromRosterProvider_;
-    contactsFromRosterProvider_ = NULL;
+    contactsFromRosterProvider_ = nullptr;
     delete adHocManager_;
-    adHocManager_ = NULL;
+    adHocManager_ = nullptr;
     delete whiteboardManager_;
-    whiteboardManager_ = NULL;
+    whiteboardManager_ = nullptr;
     clientInitialized_ = false;
 }
 
@@ -341,7 +341,7 @@ void MainController::handleConnected() {
         purgeCachedCredentials();
     }
 
-    bool freshLogin = rosterController_ == NULL;
+    bool freshLogin = rosterController_ == nullptr;
     myStatusLooksOnline_ = true;
     if (freshLogin) {
         profileController_ = new ProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
@@ -372,7 +372,7 @@ void MainController::handleConnected() {
         historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
         chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, client_->getVCardManager());
 #else
-        chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, NULL, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, client_->getVCardManager());
+        chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, nullptr, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, client_->getVCardManager());
 #endif
         contactsFromRosterProvider_ = new ContactsFromXMPPRoster(client_->getRoster(), client_->getAvatarManager(), client_->getPresenceOracle());
         contactSuggesterWithoutRoster_->addContactProvider(chatsManager_);

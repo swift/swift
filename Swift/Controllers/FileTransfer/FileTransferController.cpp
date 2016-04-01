@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,12 +28,12 @@
 namespace Swift {
 
 FileTransferController::FileTransferController(const JID& receipient, const std::string& filename, FileTransferManager* fileTransferManager) :
-    sending(true), otherParty(receipient), filename(filename), ftManager(fileTransferManager), ftProgressInfo(0), chatWindow(0), currentState(FileTransfer::State::WaitingForStart) {
+    sending(true), otherParty(receipient), filename(filename), ftManager(fileTransferManager), ftProgressInfo(nullptr), chatWindow(nullptr), currentState(FileTransfer::State::WaitingForStart) {
 
 }
 
 FileTransferController::FileTransferController(IncomingFileTransfer::ref transfer) :
-    sending(false), otherParty(transfer->getSender()), filename(transfer->getFileName()), transfer(transfer), ftManager(0), ftProgressInfo(0), chatWindow(0), currentState(FileTransfer::State::WaitingForStart) {
+    sending(false), otherParty(transfer->getSender()), filename(transfer->getFileName()), transfer(transfer), ftManager(nullptr), ftProgressInfo(nullptr), chatWindow(nullptr), currentState(FileTransfer::State::WaitingForStart) {
     transfer->onStateChanged.connect(boost::bind(&FileTransferController::handleFileTransferStateChange, this, _1));
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -73,8 +73,8 @@ ClientSession::ClientSession(
             needResourceBind(false),
             needAcking(false),
             rosterVersioningSupported(false),
-            authenticator(NULL),
-            certificateTrustChecker(NULL),
+            authenticator(nullptr),
+            certificateTrustChecker(nullptr),
             singleSignOn(false),
             authenticationPort(-1) {
 #ifdef SWIFTEN_PLATFORM_WIN32
@@ -348,7 +348,7 @@ void ClientSession::handleElement(boost::shared_ptr<ToplevelElement> element) {
         else {
             state = WaitingForStreamStart;
             delete authenticator;
-            authenticator = NULL;
+            authenticator = nullptr;
             stream->resetXMPPParser();
             sendStreamHeader();
         }
@@ -493,7 +493,7 @@ void ClientSession::finishSession(boost::shared_ptr<Swift::Error> error) {
     }
     if (authenticator) {
         delete authenticator;
-        authenticator = NULL;
+        authenticator = nullptr;
     }
     stream->writeFooter();
     stream->close();

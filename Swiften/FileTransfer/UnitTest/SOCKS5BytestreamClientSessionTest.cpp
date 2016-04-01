@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -57,7 +57,7 @@ public:
     void setUp() {
         crypto = boost::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         destination = "092a44d859d19c9eed676b551ee80025903351c2";
-        randomGen.seed(static_cast<unsigned int>(time(NULL)));
+        randomGen.seed(static_cast<unsigned int>(time(nullptr)));
         eventLoop = new DummyEventLoop();
         timerFactory = new DummyTimerFactory();
         connection = boost::make_shared<MockeryConnection>(failingPorts, true, eventLoop);

@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swiften/Network/UnixNetworkEnvironment.h>
 
 #include <string>
@@ -28,13 +34,13 @@ namespace Swift {
 std::vector<NetworkInterface> UnixNetworkEnvironment::getNetworkInterfaces() const {
     std::map<std::string, NetworkInterface> interfaces;
 #ifndef __ANDROID__
-    ifaddrs* addrs = 0;
+    ifaddrs* addrs = nullptr;
     int ret = getifaddrs(&addrs);
     if (ret != 0) {
         return std::vector<NetworkInterface>();
     }
 
-    for (ifaddrs* a = addrs; a != 0; a = a->ifa_next) {
+    for (ifaddrs* a = addrs; a != nullptr; a = a->ifa_next) {
         std::string name(a->ifa_name);
         boost::optional<HostAddress> address;
         if (a->ifa_addr->sa_family == PF_INET) {

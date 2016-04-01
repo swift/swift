@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -70,7 +70,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
             avatarManager_ = new NullAvatarManager();
             mainWindowFactory_ = new MockMainWindowFactory();
             mucRegistry_ = new MUCRegistry();
-            nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
+            nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, nullptr, mucRegistry_);
             channel_ = new DummyIQChannel();
             router_ = new IQRouter(channel_);
             stanzaChannel_ = new DummyStanzaChannel();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -176,7 +176,7 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
     connect(loginButton_, SIGNAL(clicked()), SLOT(loginClicked()));
     stack_->addWidget(loginWidgetWrapper_);
 #ifdef SWIFTEN_PLATFORM_MACOSX
-    menuBar_ = new QMenuBar(NULL);
+    menuBar_ = new QMenuBar(nullptr);
 #else
     menuBar_ = menuBar();
 #endif

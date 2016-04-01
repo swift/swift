@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "PlatformNATTraversalWorker.h"
 
 #include <boost/smart_ptr/make_shared.hpp>
@@ -125,7 +131,7 @@ class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemov
         NATPortMapping mapping;
 };
 
-PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), natPMPSupported(boost::logic::indeterminate), natPMPInterface(NULL), miniUPnPSupported(boost::logic::indeterminate), miniUPnPInterface(NULL) {
+PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), natPMPSupported(boost::logic::indeterminate), natPMPInterface(nullptr), miniUPnPSupported(boost::logic::indeterminate), miniUPnPInterface(nullptr) {
     nullNATTraversalInterface = new NullNATTraversalInterface();
     // FIXME: This should be done from start(), and the current start() should be an internal method
     thread = new boost::thread(boost::bind(&PlatformNATTraversalWorker::start, this));

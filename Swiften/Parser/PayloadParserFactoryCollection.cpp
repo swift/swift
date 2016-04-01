@@ -14,7 +14,7 @@
 
 namespace Swift {
 
-PayloadParserFactoryCollection::PayloadParserFactoryCollection() : defaultFactory_(NULL) {
+PayloadParserFactoryCollection::PayloadParserFactoryCollection() : defaultFactory_(nullptr) {
 }
 
 void PayloadParserFactoryCollection::addFactory(PayloadParserFactory* factory) {

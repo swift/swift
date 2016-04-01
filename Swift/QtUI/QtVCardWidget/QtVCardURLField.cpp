@@ -24,7 +24,7 @@
 namespace Swift {
 
 QtVCardURLField::QtVCardURLField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("URL"), false, false), urlLabel(NULL), urlLineEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("URL"), false, false), urlLabel(nullptr), urlLineEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

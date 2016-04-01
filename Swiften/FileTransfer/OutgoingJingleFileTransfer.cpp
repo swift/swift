@@ -82,7 +82,7 @@ OutgoingJingleFileTransfer::~OutgoingJingleFileTransfer() {
     stream->onRead.disconnect(
             boost::bind(&IncrementalBytestreamHashCalculator::feedData, hashCalculator, _1));
     delete hashCalculator;
-    hashCalculator = NULL;
+    hashCalculator = nullptr;
     removeTransporter();
 }
 

@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(NULL) {
+QtContactEditWindow::QtContactEditWindow() : contactEditWidget_(nullptr) {
     resize(400,300);
     setWindowTitle(tr("Edit contact"));
     setContentsMargins(0,0,0,0);

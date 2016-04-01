@@ -37,7 +37,7 @@ namespace Swift {
                         return layer;
                     }
                 }
-                return NULL;
+                return nullptr;
             }
 
         private:

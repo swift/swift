@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QToolButton>
@@ -14,7 +20,7 @@ namespace Swift {
         Q_OBJECT
         Q_PROPERTY(QColor color READ getColor WRITE setColor NOTIFY colorChanged)
         public:
-            explicit QtColorToolButton(QWidget* parent = NULL);
+            explicit QtColorToolButton(QWidget* parent = nullptr);
             void setColor(const QColor& color);
             const QColor& getColor() const { return color_; }
 

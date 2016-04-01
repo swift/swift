@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idn
 bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
     bool hasSAN = false;
 
-    if (certificate == NULL) {
+    if (certificate == nullptr) {
         return false;
     }
     // DNS names

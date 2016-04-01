@@ -28,7 +28,7 @@ SluiftComponent::SluiftComponent(
         SimpleEventLoop* eventLoop):
             networkFactories(networkFactories),
             eventLoop(eventLoop),
-            tracer(NULL) {
+            tracer(nullptr) {
     component = new Component(jid, password, networkFactories);
     component->onError.connect(boost::bind(&SluiftComponent::handleError, this, _1));
     component->onMessageReceived.connect(boost::bind(&SluiftComponent::handleIncomingMessage, this, _1));
@@ -51,7 +51,7 @@ void SluiftComponent::setTraceEnabled(bool b) {
     }
     else if (!b && tracer) {
         delete tracer;
-        tracer = NULL;
+        tracer = nullptr;
     }
 }
 

@@ -41,7 +41,7 @@ namespace {
 CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key) {
     boost::shared_ptr<PKCS12Certificate> pkcs12 = boost::dynamic_pointer_cast<PKCS12Certificate>(key);
     if (!key) {
-        return NULL;
+        return nullptr;
     }
 
     SafeByteArray safePassword = pkcs12->getPassword();
@@ -49,19 +49,19 @@ CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key)
     try {
         passwordSize = boost::numeric_cast<CFIndex>(safePassword.size());
     } catch (...) {
-        return NULL;
+        return nullptr;
     }
 
-    CFMutableArrayRef certChain = CFArrayCreateMutable(NULL, 0, 0);
+    CFMutableArrayRef certChain = CFArrayCreateMutable(nullptr, 0, nullptr);
 
     OSStatus securityError = errSecSuccess;
     CFStringRef password = CFStringCreateWithBytes(kCFAllocatorDefault, safePassword.data(), passwordSize, kCFStringEncodingUTF8, false);
     const void* keys[] = { kSecImportExportPassphrase };
     const void* values[] = { password };
 
-    CFDictionaryRef options = CFDictionaryCreate(NULL, keys, values, 1, NULL, NULL);
+    CFDictionaryRef options = CFDictionaryCreate(nullptr, keys, values, 1, nullptr, nullptr);
 
-    CFArrayRef items = NULL;
+    CFArrayRef items = nullptr;
     CFDataRef pkcs12Data = bridge_cast<CFDataRef>([NSData dataWithBytes: static_cast<const void *>(pkcs12->getData().data()) length:pkcs12->getData().size()]);
     securityError = SecPKCS12Import(pkcs12Data, options, &items);
     CFRelease(options);
@@ -85,10 +85,10 @@ CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key)
     if (securityError != errSecSuccess) {
         if (items) {
             CFRelease(items);
-            items = NULL;
+            items = nullptr;
         }
         CFRelease(certChain);
-        certChain = NULL;
+        certChain = nullptr;
     }
 
     if (certChain) {
@@ -104,7 +104,7 @@ CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key)
 }
 
 SecureTransportContext::SecureTransportContext(bool checkCertificateRevocation) : state_(None), checkCertificateRevocation_(checkCertificateRevocation) {
-    sslContext_ = boost::shared_ptr<SSLContext>(SSLCreateContext(NULL, kSSLClientSide, kSSLStreamType), CFRelease);
+    sslContext_ = boost::shared_ptr<SSLContext>(SSLCreateContext(nullptr, kSSLClientSide, kSSLStreamType), CFRelease);
 
     OSStatus error = noErr;
     // set IO callbacks
@@ -200,7 +200,7 @@ void SecureTransportContext::processHandshake() {
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
 void SecureTransportContext::verifyServerCertificate() {
-    SecTrustRef trust = NULL;
+    SecTrustRef trust = nullptr;
     OSStatus error = SSLCopyPeerTrust(sslContext_.get(), &trust);
     if (error != noErr) {
         fatalError(boost::make_shared<TLSError>(), boost::make_shared<CertificateVerificationError>());
@@ -364,7 +364,7 @@ std::vector<Certificate::ref> SecureTransportContext::getPeerCertificateChain() 
             typedef boost::remove_pointer<SecTrustRef>::type SecTrust;
             boost::shared_ptr<SecTrust> securityTrust;
 
-            SecTrustRef secTrust = NULL;;
+            SecTrustRef secTrust = nullptr;;
             OSStatus error = SSLCopyPeerTrust(sslContext_.get(), &secTrust);
             if (error == noErr) {
                 securityTrust = boost::shared_ptr<SecTrust>(secTrust, CFRelease);

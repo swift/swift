@@ -65,11 +65,11 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
     settings_ = settings;
     unreadCount_ = 0;
     isOnline_ = true;
-    completer_ = NULL;
-    affiliationEditor_ = NULL;
+    completer_ = nullptr;
+    affiliationEditor_ = nullptr;
     theme_ = theme;
     isCorrection_ = false;
-    labelModel_ = NULL;
+    labelModel_ = nullptr;
     correctionEnabled_ = Maybe;
     fileTransferEnabled_ = Maybe;
     updateTitleWithUnreadCount();
@@ -559,7 +559,7 @@ void QtChatWindow::handleCursorPositionChanged() {
 }
 
 void QtChatWindow::show() {
-    if (parentWidget() == NULL) {
+    if (parentWidget() == nullptr) {
         QWidget::show();
     }
     emit windowOpening();
@@ -685,14 +685,14 @@ void QtChatWindow::handleTextInputLostFocus() {
 
 void QtChatWindow::handleActionButtonClicked() {
     QMenu contextMenu;
-    QAction* changeSubject = NULL;
-    QAction* configure = NULL;
-    QAction* affiliations = NULL;
-    QAction* destroy = NULL;
-    QAction* invite = NULL;
+    QAction* changeSubject = nullptr;
+    QAction* configure = nullptr;
+    QAction* affiliations = nullptr;
+    QAction* destroy = nullptr;
+    QAction* invite = nullptr;
 
-    QAction* block = NULL;
-    QAction* unblock = NULL;
+    QAction* block = nullptr;
+    QAction* unblock = nullptr;
 
     if (availableRoomActions_.empty()) {
         if (blockingState_ == IsBlocked) {
@@ -748,7 +748,7 @@ void QtChatWindow::handleActionButtonClicked() {
         }
     }
 
-    QAction* bookmark = NULL;
+    QAction* bookmark = nullptr;
     if (isMUC_) {
         if (roomBookmarkState_ == RoomNotBookmarked) {
             bookmark = contextMenu.addAction(tr("Bookmark this room..."));
@@ -760,7 +760,7 @@ void QtChatWindow::handleActionButtonClicked() {
     }
 
     QAction* result = contextMenu.exec(QCursor::pos());
-    if (result == NULL) {
+    if (result == nullptr) {
         /* Skip processing. Note that otherwise, because the actions could be null they could match */
     }
     else if (result == changeSubject) {

@@ -36,7 +36,7 @@ void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewIte
     if (index.data().toString().isEmpty()) {
 #ifdef SWIFTEN_PLATFORM_MACOSX
         // workaround for Qt not painting relative to the cell we're in, on OS X
-        int height = style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0);
+        int height = style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, nullptr, nullptr);
         painter->translate(option.rect.x(), option.rect.y() + (option.rect.height() - height)/2);
 #endif
         style->drawPrimitive(QStyle::PE_IndicatorTabClose, &opt, painter);
@@ -45,7 +45,7 @@ void QtRemovableItemDelegate::paint(QPainter* painter, const QStyleOptionViewIte
 }
 
 QWidget* QtRemovableItemDelegate::createEditor(QWidget*, const QStyleOptionViewItem&, const QModelIndex&) const {
-    return NULL;
+    return nullptr;
 }
 
 bool QtRemovableItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* model, const QStyleOptionViewItem& option, const QModelIndex& index) {
@@ -58,7 +58,7 @@ bool QtRemovableItemDelegate::editorEvent(QEvent* event, QAbstractItemModel* mod
 }
 
 QSize QtRemovableItemDelegate::sizeHint(const QStyleOptionViewItem&, const QModelIndex&) const {
-    QSize size(style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0) + 2, style->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, 0, 0) + 2);
+    QSize size(style->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, nullptr, nullptr) + 2, style->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, nullptr, nullptr) + 2);
     return size;
 }
 

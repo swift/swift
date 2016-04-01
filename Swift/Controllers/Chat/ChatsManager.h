@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -89,7 +89,7 @@ namespace Swift {
             ChatListWindow::Chat createChatListChatItem(const JID& jid, const std::string& activity, bool privateMessage);
             void handleChatRequest(const std::string& contact);
             void finalizeImpromptuJoin(MUC::ref muc, const std::vector<JID>& jidsToInvite, const std::string& reason, const boost::optional<JID>& reuseChatJID = boost::optional<JID>());
-            MUC::ref handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow = 0);
+            MUC::ref handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow = nullptr);
             void handleSearchMUCRequest();
             void handleMUCSelectedAfterSearch(const JID&);
             void rebindControllerJID(const JID& from, const JID& to);

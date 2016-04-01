@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,7 +12,7 @@ namespace Swift {
     class Roster;
     class MockMainWindow : public MainWindow {
         public:
-            MockMainWindow() : roster(NULL) {}
+            MockMainWindow() : roster(nullptr) {}
             virtual ~MockMainWindow() {}
             virtual void setRosterModel(Roster* roster) {this->roster = roster;}
             virtual void setMyNick(const std::string& /*name*/) {}

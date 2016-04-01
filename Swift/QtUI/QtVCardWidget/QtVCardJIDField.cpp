@@ -23,7 +23,7 @@
 namespace Swift {
 
 QtVCardJIDField::QtVCardJIDField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("JID"), false, false), jidLabel(NULL), jidLineEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("JID"), false, false), jidLabel(nullptr), jidLineEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

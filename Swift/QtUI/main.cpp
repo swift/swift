@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
     Swift::QtSwift swift(vm);
     int result = app.exec();
 
-    Swift::Translator::setInstance(NULL);
+    Swift::Translator::setInstance(nullptr);
 
     return result;
 }

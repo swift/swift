@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,7 +16,7 @@ namespace Swift {
             GenericStanzaSerializer(const std::string& tag, PayloadSerializerCollection* payloadSerializers, const boost::optional<std::string>& explicitNS = boost::optional<std::string>()) : StanzaSerializer(tag, payloadSerializers, explicitNS) {}
 
             virtual bool canSerialize(boost::shared_ptr<ToplevelElement> element) const {
-                return dynamic_cast<STANZA_TYPE*>(element.get()) != 0;
+                return dynamic_cast<STANZA_TYPE*>(element.get()) != nullptr;
             }
 
             virtual void setStanzaSpecificAttributes(

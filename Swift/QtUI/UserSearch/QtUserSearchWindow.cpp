@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,7 +36,7 @@
 
 namespace Swift {
 
-QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(NULL), firstMultiJIDPage_(NULL), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
+QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(nullptr), firstMultiJIDPage_(nullptr), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
     setupUi(this);
 #ifndef Q_OS_MAC
 #ifdef  Q_OS_WIN32
@@ -339,7 +339,7 @@ void QtUserSearchWindow::setSearchFields(boost::shared_ptr<SearchPayload> fields
     if (fields->getForm()) {
         fieldsPage_->setFormWidget(new QtFormWidget(fields->getForm(), fieldsPage_));
     } else {
-        fieldsPage_->setFormWidget(NULL);
+        fieldsPage_->setFormWidget(nullptr);
         bool enabled[8] = {!!fields->getNick(), !!fields->getNick(), !!fields->getFirst(), !!fields->getFirst(), !!fields->getLast(), !!fields->getLast(), !!fields->getEMail(), !!fields->getEMail()};
         QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
         for (int i = 0; i < 8; i++) {
@@ -494,7 +494,7 @@ void QtUserSearchWindow::handleJIDEditingDone() {
 }
 
 void QtUserSearchWindow::setFirstPage(QString title) {
-    if (page(1) != 0) {
+    if (page(1) != nullptr) {
         removePage(1);
     }
     if (type_ == AddContact) {
@@ -524,7 +524,7 @@ void QtUserSearchWindow::setFirstPage(QString title) {
 }
 
 void QtUserSearchWindow::setSecondPage() {
-    if (page(2) != 0) {
+    if (page(2) != nullptr) {
         removePage(2);
     }
     fieldsPage_ = new QtUserSearchFieldsPage();
@@ -534,7 +534,7 @@ void QtUserSearchWindow::setSecondPage() {
 }
 
 void QtUserSearchWindow::setThirdPage() {
-    if (page(3) != 0) {
+    if (page(3) != nullptr) {
         removePage(3);
     }
     resultsPage_ = new QtUserSearchResultsPage();
@@ -585,9 +585,9 @@ void QtUserSearchWindow::clear() {
         firstMultiJIDPage_->howLabel_->setText(howText);
     }
     clearForm();
-    resultsPage_->results_->setModel(NULL);
+    resultsPage_->results_->setModel(nullptr);
     delete model_;
-    model_ = NULL;
+    model_ = nullptr;
     restart();
     lastPage_ = 1;
 }

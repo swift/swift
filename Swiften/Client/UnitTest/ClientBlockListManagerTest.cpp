@@ -60,9 +60,9 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             GenericRequest<BlockPayload>::ref blockRequest = clientBlockListManager_->createBlockJIDRequest(JID("romeo@montague.net"));
             blockRequest->send();
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(2);
-            CPPUNIT_ASSERT(request.get() != NULL);
+            CPPUNIT_ASSERT(request.get() != nullptr);
             boost::shared_ptr<BlockPayload> blockPayload = request->getPayload<BlockPayload>();
-            CPPUNIT_ASSERT(blockPayload.get() != NULL);
+            CPPUNIT_ASSERT(blockPayload.get() != nullptr);
             CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), blockPayload->getItems().at(0));
 
             IQ::ref blockRequestResponse = IQ::createResult(request->getFrom(), JID(), request->getID());
@@ -94,9 +94,9 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             GenericRequest<UnblockPayload>::ref unblockRequest = clientBlockListManager_->createUnblockJIDRequest(JID("romeo@montague.net"));
             unblockRequest->send();
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(2);
-            CPPUNIT_ASSERT(request.get() != NULL);
+            CPPUNIT_ASSERT(request.get() != nullptr);
             boost::shared_ptr<UnblockPayload> unblockPayload = request->getPayload<UnblockPayload>();
-            CPPUNIT_ASSERT(unblockPayload.get() != NULL);
+            CPPUNIT_ASSERT(unblockPayload.get() != nullptr);
             CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.net"), unblockPayload->getItems().at(0));
 
             IQ::ref unblockRequestResponse = IQ::createResult(request->getFrom(), JID(), request->getID());
@@ -129,9 +129,9 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
             GenericRequest<UnblockPayload>::ref unblockRequest = clientBlockListManager_->createUnblockAllRequest();
             unblockRequest->send();
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(2);
-            CPPUNIT_ASSERT(request.get() != NULL);
+            CPPUNIT_ASSERT(request.get() != nullptr);
             boost::shared_ptr<UnblockPayload> unblockPayload = request->getPayload<UnblockPayload>();
-            CPPUNIT_ASSERT(unblockPayload.get() != NULL);
+            CPPUNIT_ASSERT(unblockPayload.get() != nullptr);
             CPPUNIT_ASSERT_EQUAL(true, unblockPayload->getItems().empty());
 
             IQ::ref unblockRequestResponse = IQ::createResult(request->getFrom(), JID(), request->getID());
@@ -162,9 +162,9 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
 
             // check for IQ request
             IQ::ref request = stanzaChannel_->getStanzaAtIndex<IQ>(0);
-            CPPUNIT_ASSERT(request.get() != NULL);
+            CPPUNIT_ASSERT(request.get() != nullptr);
             boost::shared_ptr<BlockListPayload> requestPayload = request->getPayload<BlockListPayload>();
-            CPPUNIT_ASSERT(requestPayload.get() != NULL);
+            CPPUNIT_ASSERT(requestPayload.get() != nullptr);
 
             CPPUNIT_ASSERT_EQUAL(BlockList::Requesting, blockList->getState());
             CPPUNIT_ASSERT_EQUAL(BlockList::Requesting, clientBlockListManager_->getBlockList()->getState());

@@ -25,7 +25,7 @@ enum ExitCodes {OK = 0, CANNOT_CONNECT, CANNOT_AUTH, NO_RESPONSE, DISCO_ERROR};
 static SimpleEventLoop eventLoop;
 static BoostNetworkFactories networkFactories(&eventLoop);
 
-static Client* client = 0;
+static Client* client = nullptr;
 static JID recipient;
 static int exitCode = CANNOT_CONNECT;
 static boost::bsignals::connection errorConnection;

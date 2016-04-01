@@ -343,7 +343,7 @@ void QtPlainChatView::rejectMUCInvite()
 }
 
 QtPlainChatView::FileTransfer::FileTransfer(QtPlainChatView* parent, bool senderIsSelf, const std::string& ftId, const std::string& filename, const ChatWindow::FileTransferState state, const std::string &desc, const std::string& msg, bool initializing)
-: PopupDialog(parent), bar_(0), senderIsSelf_(senderIsSelf), ftId_(ftId), filename_(filename), description_(desc), message_(msg), initializing_(initializing)
+: PopupDialog(parent), bar_(nullptr), senderIsSelf_(senderIsSelf), ftId_(ftId), filename_(filename), description_(desc), message_(msg), initializing_(initializing)
 {
     QHBoxLayout* layout = new QHBoxLayout;
     QLabel* statusLabel = new QLabel;

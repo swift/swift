@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <Swift/QtUI/QtVCardWidget/QtVCardOrganizationField.h>
 
 #include <boost/algorithm/string.hpp>
@@ -17,7 +23,7 @@
 namespace Swift {
 
 QtVCardOrganizationField::QtVCardOrganizationField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Organization"), false, false), organizationLabel(NULL), organizationLineEdit(NULL), unitsTreeWidget(NULL), itemDelegate(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Organization"), false, false), organizationLabel(nullptr), organizationLineEdit(nullptr), unitsTreeWidget(nullptr), itemDelegate(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

@@ -32,7 +32,7 @@ class QtVCardAddressLabelField : public QtVCardGeneralField, public QtVCardHomeW
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Address Label"), UNLIMITED_INSTANCES, QtVCardAddressLabelField)
 
-        QtVCardAddressLabelField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardAddressLabelField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardAddressLabelField();
 
         virtual bool isEmpty() const;

@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-SecurityLabelsCatalogParser::SecurityLabelsCatalogParser() : level_(TopLevel), labelParser_(0) {
+SecurityLabelsCatalogParser::SecurityLabelsCatalogParser() : level_(TopLevel), labelParser_(nullptr) {
     labelParserFactory_ = new SecurityLabelParserFactory();
 }
 
@@ -55,7 +55,7 @@ void SecurityLabelsCatalogParser::handleEndElement(const std::string& element, c
         assert(currentLabel);
         currentItem_->setLabel(currentLabel);
         delete labelParser_;
-        labelParser_ = 0;
+        labelParser_ = nullptr;
     }
     else if (level_ == ItemLevel && element == "item" && ns == "urn:xmpp:sec-label:catalog:2") {
         if (currentItem_) {

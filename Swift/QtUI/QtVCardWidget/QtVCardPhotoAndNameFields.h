@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QMenu>
@@ -23,7 +29,7 @@ namespace Swift {
         Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
         public:
-            explicit QtVCardPhotoAndNameFields(QWidget* parent = 0);
+            explicit QtVCardPhotoAndNameFields(QWidget* parent = nullptr);
             ~QtVCardPhotoAndNameFields();
 
             bool isEditable() const;

@@ -43,7 +43,7 @@ SOCKS5BytestreamServerManager::SOCKS5BytestreamServerManager(
             networkEnvironment(networkEnvironment),
             natTraverser(natTraverser),
             state(Start),
-            server(NULL),
+            server(nullptr),
             attemptedPortMapping_(false) {
 }
 
@@ -199,7 +199,7 @@ void SOCKS5BytestreamServerManager::stop() {
     if (server) {
         server->stop();
         delete server;
-        server = NULL;
+        server = nullptr;
     }
     if (connectionServer) {
         connectionServer->stop();

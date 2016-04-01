@@ -35,7 +35,7 @@ namespace Swift {
         } else {
             sendResponse(from, id, boost::shared_ptr<WhiteboardPayload>());
             WhiteboardSession::ref session = sessionManager_->getSession(from);
-            if (session != NULL) {
+            if (session != nullptr) {
                 session->handleIncomingAction(payload);
             }
         }

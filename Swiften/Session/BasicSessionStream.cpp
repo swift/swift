@@ -33,9 +33,9 @@ BasicSessionStream::BasicSessionStream(
             connection(connection),
             tlsContextFactory(tlsContextFactory),
             timerFactory(timerFactory),
-            compressionLayer(NULL),
-            tlsLayer(NULL),
-            whitespacePingLayer(NULL),
+            compressionLayer(nullptr),
+            tlsLayer(nullptr),
+            whitespacePingLayer(nullptr),
             tlsOptions_(tlsOptions) {
     xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
     xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));

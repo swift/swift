@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -136,7 +136,7 @@ void QtSwift::loadEmoticonsFile(const QString& fileName, std::map<std::string, s
     }
 }
 
-QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(NULL), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
+QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMainThreadCaller_), autoUpdater_(nullptr), idleDetector_(&idleQuerier_, networkFactories_.getTimerFactory(), 1000) {
     QCoreApplication::setApplicationName(SWIFT_APPLICATION_NAME);
     QCoreApplication::setOrganizationName(SWIFT_ORGANIZATION_NAME);
     QCoreApplication::setOrganizationDomain(SWIFT_ORGANIZATION_DOMAIN);
@@ -157,7 +157,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     if (options.count("netbook-mode")) {
         splitter_ = new QtSingleWindow(qtSettings_);
     } else {
-        splitter_ = NULL;
+        splitter_ = nullptr;
     }
 
     int numberOfAccounts = 1;
@@ -173,12 +173,12 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     }
 
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
-    tabs_ = NULL;
+    tabs_ = nullptr;
     if (options.count("no-tabs") && !splitter_) {
         tabs_ = new QtChatTabsShortcutOnlySubstitute();
     }
     else {
-        tabs_ = new QtChatTabs(splitter_ != NULL, settingsHierachy_, options.count("trellis"));
+        tabs_ = new QtChatTabs(splitter_ != nullptr, settingsHierachy_, options.count("trellis"));
     }
     bool startMinimized = options.count("start-minimized") > 0;
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);

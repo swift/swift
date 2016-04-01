@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
         Q_OBJECT
 
         public:
-            UserSearchDelegate(QObject* parent = 0);
+            UserSearchDelegate(QObject* parent = nullptr);
             virtual ~UserSearchDelegate();
 
             void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;

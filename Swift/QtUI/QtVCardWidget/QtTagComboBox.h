@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QComboBox>
@@ -18,7 +24,7 @@ class QtTagComboBox : public QComboBox {
     Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
     public:
-        explicit QtTagComboBox(QWidget* parent = 0);
+        explicit QtTagComboBox(QWidget* parent = nullptr);
         ~QtTagComboBox();
 
         bool isEditable() const;

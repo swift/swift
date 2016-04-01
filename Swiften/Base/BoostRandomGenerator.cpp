@@ -16,7 +16,7 @@ namespace Swift {
 
 BoostRandomGenerator::BoostRandomGenerator() {
     // FIXME: Not a good seed
-    generator.seed(static_cast<unsigned int>(std::time(0)));
+    generator.seed(static_cast<unsigned int>(std::time(nullptr)));
 }
 
 int BoostRandomGenerator::generateRandomInteger(int maximum) {

@@ -28,7 +28,7 @@ class QtVCardBirthdayField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Birthday"), 1, QtVCardBirthdayField)
 
-        QtVCardBirthdayField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardBirthdayField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardBirthdayField();
 
         virtual bool isEmpty() const;

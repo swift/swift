@@ -26,7 +26,7 @@
 
 namespace Swift {
 
-QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventStream* eventStream, QBoxLayout* layout) : QWidget(parent), treeView_(treeView), eventStream_(eventStream), fuzzyRosterFilter_(0), isModifierSinglePressed_(false) {
+QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventStream* eventStream, QBoxLayout* layout) : QWidget(parent), treeView_(treeView), eventStream_(eventStream), fuzzyRosterFilter_(nullptr), isModifierSinglePressed_(false) {
     int targetIndex = layout->indexOf(treeView);
 
     QVBoxLayout* vboxLayout = new QVBoxLayout(this);
@@ -123,7 +123,7 @@ void QtFilterWidget::updateRosterFilters() {
             // remove currently installed search filter and put old filters back
             treeView_->getRoster()->removeFilter(fuzzyRosterFilter_);
             delete fuzzyRosterFilter_;
-            fuzzyRosterFilter_ = NULL;
+            fuzzyRosterFilter_ = nullptr;
             pushAllFilters();
         } else {
             // remove currently intsalled search filter and put new search filter in place
@@ -143,7 +143,7 @@ void QtFilterWidget::updateSearchFilter() {
     if (fuzzyRosterFilter_) {
         treeView_->getRoster()->removeFilter(fuzzyRosterFilter_);
         delete fuzzyRosterFilter_;
-        fuzzyRosterFilter_ = NULL;
+        fuzzyRosterFilter_ = nullptr;
     }
     fuzzyRosterFilter_ = new FuzzyRosterFilter(Q2PSTRING(filterLineEdit_->text()));
     treeView_->getRoster()->addFilter(fuzzyRosterFilter_);

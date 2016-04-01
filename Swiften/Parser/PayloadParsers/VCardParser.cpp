@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-VCardParser::VCardParser() : unknownContentParser_(NULL) {
+VCardParser::VCardParser() : unknownContentParser_(nullptr) {
 }
 
 void VCardParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
@@ -266,7 +266,7 @@ void VCardParser::handleEndElement(const std::string& element, const std::string
 
     if (elementStack_.size() == 2 && unknownContentParser_) {
         delete unknownContentParser_;
-        unknownContentParser_ = NULL;
+        unknownContentParser_ = nullptr;
     }
     elementStack_.pop_back();
 }

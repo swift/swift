@@ -20,7 +20,7 @@
 
 namespace Swift {
 
-ContactEditController::ContactEditController(RosterController* rosterController, VCardManager* vcardManager, ContactEditWindowFactory* contactEditWindowFactory, UIEventStream* uiEventStream) : rosterController(rosterController), vcardManager(vcardManager), contactEditWindowFactory(contactEditWindowFactory), uiEventStream(uiEventStream), contactEditWindow(NULL) {
+ContactEditController::ContactEditController(RosterController* rosterController, VCardManager* vcardManager, ContactEditWindowFactory* contactEditWindowFactory, UIEventStream* uiEventStream) : rosterController(rosterController), vcardManager(vcardManager), contactEditWindowFactory(contactEditWindowFactory), uiEventStream(uiEventStream), contactEditWindow(nullptr) {
     uiEventStream->onUIEvent.connect(boost::bind(&ContactEditController::handleUIEvent, this, _1));
     vcardManager->onVCardChanged.connect(boost::bind(&ContactEditController::handleVCardChanged, this, _1, _2));
 }

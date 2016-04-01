@@ -25,7 +25,7 @@ namespace Swift {
 
 static const std::string SEARCHED_SERVICES = "searchedServices";
 
-MUCSearchController::MUCSearchController(const JID& jid, MUCSearchWindowFactory* factory, IQRouter* iqRouter, ProfileSettingsProvider* settings) : jid_(jid), factory_(factory), iqRouter_(iqRouter), settings_(settings), window_(NULL), walker_(NULL) {
+MUCSearchController::MUCSearchController(const JID& jid, MUCSearchWindowFactory* factory, IQRouter* iqRouter, ProfileSettingsProvider* settings) : jid_(jid), factory_(factory), iqRouter_(iqRouter), settings_(settings), window_(nullptr), walker_(nullptr) {
     itemsInProgress_ = 0;
     loadSavedServices();
 }

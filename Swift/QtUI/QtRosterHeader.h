@@ -33,7 +33,7 @@ namespace Swift {
     class QtRosterHeader : public QWidget {
         Q_OBJECT
     public:
-        QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent = NULL);
+        QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent = nullptr);
         void setAvatar(const QString& path);
 
         void setJID(const QString& jid);

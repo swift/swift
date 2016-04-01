@@ -44,7 +44,7 @@ IncomingJingleFileTransfer::IncomingJingleFileTransfer(
             crypto(crypto),
             state(Initial),
             receivedBytes(0),
-            hashCalculator(NULL) {
+            hashCalculator(nullptr) {
     description = initialContent->getDescription<JingleFileTransferDescription>();
     assert(description);
     JingleFileTransferFileInfo fileInfo = description->getFileInfo();
@@ -62,7 +62,7 @@ IncomingJingleFileTransfer::~IncomingJingleFileTransfer() {
     }
 
     delete hashCalculator;
-    hashCalculator = NULL;
+    hashCalculator = nullptr;
 }
 
 void IncomingJingleFileTransfer::accept(
@@ -325,7 +325,7 @@ void IncomingJingleFileTransfer::stopAll() {
     if (state != Initial) {
         writeStreamDataReceivedConnection.disconnect();
         delete hashCalculator;
-        hashCalculator = NULL;
+        hashCalculator = nullptr;
     }
     switch (state) {
         case Initial: break;

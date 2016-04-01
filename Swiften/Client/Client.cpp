@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -72,7 +72,7 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
     jingleSessionManager = new JingleSessionManager(getIQRouter());
     blockListManager = new ClientBlockListManager(getIQRouter());
 
-    whiteboardSessionManager = NULL;
+    whiteboardSessionManager = nullptr;
 #ifdef SWIFT_EXPERIMENTAL_WB
     whiteboardSessionManager = new WhiteboardSessionManager(getIQRouter(), getStanzaChannel(), presenceOracle, getEntityCapsProvider());
 #endif

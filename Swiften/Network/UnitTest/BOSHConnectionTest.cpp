@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -48,7 +48,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
             connectionFactory = new MockConnectionFactory(eventLoop);
             resolver = new StaticDomainNameResolver(eventLoop);
             timerFactory = new DummyTimerFactory();
-            tlsContextFactory = NULL;
+            tlsContextFactory = nullptr;
             connectFinished = false;
             disconnected = false;
             disconnectedError = false;

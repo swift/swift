@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@
 
 namespace Swift {
 
-QtFileTransferListItemModel::QtFileTransferListItemModel(QObject *parent) : QAbstractItemModel(parent), fileTransferOverview(0) {
+QtFileTransferListItemModel::QtFileTransferListItemModel(QObject *parent) : QAbstractItemModel(parent), fileTransferOverview(nullptr) {
 }
 
 QtFileTransferListItemModel::~QtFileTransferListItemModel() {
@@ -137,7 +137,7 @@ int QtFileTransferListItemModel::rowCount(const QModelIndex& /* parent */) const
 }
 
 QModelIndex QtFileTransferListItemModel::index(int row, int column, const QModelIndex& /* parent */) const {
-    return createIndex(row, column, static_cast<void*>(0));
+    return createIndex(row, column, static_cast<void*>(nullptr));
 }
 
 }

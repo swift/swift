@@ -19,8 +19,8 @@
 namespace Swift {
 
 IncrementalBytestreamHashCalculator::IncrementalBytestreamHashCalculator(bool doMD5, bool doSHA1, CryptoProvider* crypto) {
-    md5Hasher = doMD5 ? crypto->createMD5() : NULL;
-    sha1Hasher = doSHA1 ? crypto->createSHA1() : NULL;
+    md5Hasher = doMD5 ? crypto->createMD5() : nullptr;
+    sha1Hasher = doSHA1 ? crypto->createSHA1() : nullptr;
 }
 
 IncrementalBytestreamHashCalculator::~IncrementalBytestreamHashCalculator() {

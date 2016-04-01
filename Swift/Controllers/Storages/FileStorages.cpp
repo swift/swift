@@ -25,7 +25,7 @@ FileStorages::FileStorages(const boost::filesystem::path& baseDir, const JID& ji
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
     historyStorage = new SQLiteHistoryStorage(baseDir / "history.db");
 #else
-    historyStorage = NULL;
+    historyStorage = nullptr;
 #endif
 }
 
@@ -57,7 +57,7 @@ HistoryStorage* FileStorages::getHistoryStorage() const {
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
     return historyStorage;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 

@@ -50,11 +50,11 @@ XMPPParser::XMPPParser(
         XMPPParserClient* client,
         PayloadParserFactoryCollection* payloadParserFactories,
         XMLParserFactory* xmlParserFactory) :
-                xmlParser_(0),
+                xmlParser_(nullptr),
                 client_(client),
                 payloadParserFactories_(payloadParserFactories),
                 level_(0),
-                currentElementParser_(0),
+                currentElementParser_(nullptr),
                 parseErrorOccurred_(false) {
     xmlParser_ = xmlParserFactory->createXMLParser(this);
 }
@@ -109,7 +109,7 @@ void XMPPParser::handleEndElement(const std::string& element, const std::string&
             if (level_ == StreamLevel) {
                 client_->handleElement(currentElementParser_->getElement());
                 delete currentElementParser_;
-                currentElementParser_ = NULL;
+                currentElementParser_ = nullptr;
             }
         }
     }

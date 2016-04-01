@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QWidget>
@@ -12,7 +18,7 @@ namespace Swift {
     class ColorWidget : public QWidget {
         Q_OBJECT
     public:
-        ColorWidget(QWidget* parent = 0);
+        ColorWidget(QWidget* parent = nullptr);
         QSize sizeHint() const;
 
     public slots:

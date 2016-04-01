@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
     class QtChatListWindow : public QTreeView, public ChatListWindow {
         Q_OBJECT
         public:
-            QtChatListWindow(UIEventStream *uiEventStream, SettingsProvider* settings, QWidget* parent = NULL);
+            QtChatListWindow(UIEventStream *uiEventStream, SettingsProvider* settings, QWidget* parent = nullptr);
             virtual ~QtChatListWindow();
             void addMUCBookmark(const MUCBookmark& bookmark);
             void removeMUCBookmark(const MUCBookmark& bookmark);

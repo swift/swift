@@ -26,7 +26,7 @@ class QtVCardTitleField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Title"), UNLIMITED_INSTANCES, QtVCardTitleField)
 
-        QtVCardTitleField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardTitleField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardTitleField();
 
         virtual bool isEmpty() const;

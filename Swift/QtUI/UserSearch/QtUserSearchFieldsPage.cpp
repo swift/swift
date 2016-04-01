@@ -8,7 +8,7 @@
 
 namespace Swift {
 
-QtUserSearchFieldsPage::QtUserSearchFieldsPage() : formWidget_(0) {
+QtUserSearchFieldsPage::QtUserSearchFieldsPage() : formWidget_(nullptr) {
     setupUi(this);
 }
 
@@ -27,7 +27,7 @@ QtFormWidget* QtUserSearchFieldsPage::getFormWidget() {
 void QtUserSearchFieldsPage::setFormWidget(QtFormWidget *widget) {
     if (formWidget_) {
         delete formWidget_;
-        formWidget_ = NULL;
+        formWidget_ = nullptr;
     }
     if (widget) {
         formContainer_->layout()->addWidget(widget);

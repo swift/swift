@@ -26,7 +26,7 @@ class QtVCardJIDField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("JID"), UNLIMITED_INSTANCES, QtVCardJIDField)
 
-        QtVCardJIDField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardJIDField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardJIDField();
 
         virtual bool isEmpty() const;

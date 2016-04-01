@@ -15,7 +15,7 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-    GView::GView(QGraphicsScene* scene, QWidget* parent) : QGraphicsView(scene, parent), zValue(0), mousePressed(false), brush(QColor(Qt::white)), defaultBrush(QColor(Qt::white)), mode(GView::Select), lastItem(NULL), selectionRect(NULL), textDialog(NULL) {
+    GView::GView(QGraphicsScene* scene, QWidget* parent) : QGraphicsView(scene, parent), zValue(0), mousePressed(false), brush(QColor(Qt::white)), defaultBrush(QColor(Qt::white)), mode(GView::Select), lastItem(nullptr), selectionRect(nullptr), textDialog(nullptr) {
     }
 
     void GView::setLineWidth(int i) {
@@ -63,7 +63,7 @@ namespace Swift {
 
     void GView::setMode(Mode mode) {
         this->mode = mode;
-        lastItem = 0;
+        lastItem = nullptr;
         deselect();
     }
 
@@ -86,8 +86,8 @@ namespace Swift {
         scene()->clear();
         items_.clear();
         itemsMap_.clear();
-        lastItem = 0;
-        selectionRect = 0;
+        lastItem = nullptr;
+        selectionRect = nullptr;
         brush = QBrush(QColor(Qt::white));
         defaultBrush = QBrush(QColor(Qt::white));
         pen = QPen();
@@ -123,7 +123,7 @@ namespace Swift {
 
         if (mode == Line) {
             QGraphicsLineItem* item = qgraphicsitem_cast<QGraphicsLineItem*>(lastItem);
-            if(item != 0) {
+            if(item != nullptr) {
                 QLineF line = item->line();
                 line.setP1(this->mapToScene(event->pos()));
                 item->setLine(line);
@@ -132,7 +132,7 @@ namespace Swift {
         }
         else if (mode == Rect) {
             QGraphicsRectItem* item = qgraphicsitem_cast<QGraphicsRectItem*>(lastItem);
-            if (item != 0) {
+            if (item != nullptr) {
                 QPointF beginPoint = item->data(0).toPointF();
                 QPointF newPoint = this->mapToScene(event->pos());
                 QRectF rect = item->rect();
@@ -182,7 +182,7 @@ namespace Swift {
         }
         else if (mode == HandLine) {
             FreehandLineItem* item  = qgraphicsitem_cast<FreehandLineItem*>(lastItem);
-            if (item != 0) {
+            if (item != nullptr) {
                 QPointF newPoint = this->mapToScene(event->pos());
                 item->lineTo(newPoint);
             }
@@ -197,7 +197,7 @@ namespace Swift {
         }
         else if (mode == Select) {
             QGraphicsItem* item = selectionRect->data(1).value<QGraphicsItem*>();
-            if (item != 0) {
+            if (item != nullptr) {
                 QPainterPath path;
                 QPointF beginPoint = selectionRect->data(0).toPointF();
                 QPointF newPoint = this->mapToScene(event->pos());
@@ -283,7 +283,7 @@ namespace Swift {
         else if (mode == Polygon) {
             QPointF point = this->mapToScene(event->pos());
             QGraphicsPolygonItem* item = dynamic_cast<QGraphicsPolygonItem*>(lastItem);
-            if (item == 0) {
+            if (item == nullptr) {
                 QPolygonF polygon;
                 polygon.append(point);
                 polygon.append(point);
@@ -376,7 +376,7 @@ namespace Swift {
 
     void GView::move(QGraphicsItem* item, int npos) {
         int pos = items_.indexOf(item);
-        QGraphicsItem* itemAfter = NULL;
+        QGraphicsItem* itemAfter = nullptr;
         if (npos-1 > pos) {
             if (npos == items_.size()) {
                 item->setZValue(zValue++);
@@ -473,12 +473,12 @@ namespace Swift {
     }
 
     void GView::deselect() {
-        if (selectionRect != 0)    {
+        if (selectionRect != nullptr)    {
             pen = defaultPen;
             brush = defaultBrush;
             scene()->removeItem(selectionRect);
             delete selectionRect;
-            selectionRect = 0;
+            selectionRect = nullptr;
             lineWidthChanged(pen.width());
             lineColorChanged(pen.color());
             brushColorChanged(brush.color());
@@ -486,14 +486,14 @@ namespace Swift {
     }
 
     void GView::deselect(QString id) {
-        if (selectionRect != 0)    {
+        if (selectionRect != nullptr)    {
             QGraphicsItem* item = getItem(id);
             if (item && selectionRect->data(1).value<QGraphicsItem*>() == item) {
                 pen = defaultPen;
                 brush = defaultBrush;
                 scene()->removeItem(selectionRect);
                 delete selectionRect;
-                selectionRect = 0;
+                selectionRect = nullptr;
                 lineWidthChanged(pen.width());
                 lineColorChanged(pen.color());
                 brushColorChanged(brush.color());

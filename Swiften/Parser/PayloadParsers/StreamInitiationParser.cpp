@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-StreamInitiationParser::StreamInitiationParser() : level(TopLevel), formParser(0), inFile(false), inFeature(false)  {
+StreamInitiationParser::StreamInitiationParser() : level(TopLevel), formParser(nullptr), inFile(false), inFeature(false)  {
     formParserFactory = new FormParserFactory();
 }
 
@@ -103,7 +103,7 @@ void StreamInitiationParser::handleEndElement(const std::string& element, const 
                 }
             }
             delete formParser;
-            formParser = NULL;
+            formParser = nullptr;
         }
     }
 }

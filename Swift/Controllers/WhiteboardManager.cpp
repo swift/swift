@@ -50,7 +50,7 @@ namespace Swift {
 
     WhiteboardWindow* WhiteboardManager::findWhiteboardWindow(const JID& contact) {
         if (whiteboardWindows_.find(contact.toBare()) == whiteboardWindows_.end()) {
-            return NULL;
+            return nullptr;
         }
         return whiteboardWindows_[contact.toBare()];
     }
@@ -71,7 +71,7 @@ namespace Swift {
         boost::shared_ptr<ShowWhiteboardUIEvent> showWindowEvent = boost::dynamic_pointer_cast<ShowWhiteboardUIEvent>(event);
         if (showWindowEvent) {
             WhiteboardWindow* window = findWhiteboardWindow(showWindowEvent->getContact());
-            if (window != NULL) {
+            if (window != nullptr) {
                 window->activateWindow();
             }
         }
@@ -93,7 +93,7 @@ namespace Swift {
         session->onRequestRejected.connect(boost::bind(&WhiteboardManager::handleRequestReject, this, _1));
 
         WhiteboardWindow* window = findWhiteboardWindow(contact);
-        if (window == NULL) {
+        if (window == nullptr) {
             createNewWhiteboardWindow(contact, session);
         } else {
             window->setSession(session);
@@ -113,7 +113,7 @@ namespace Swift {
         session->onRequestAccepted.connect(boost::bind(&WhiteboardManager::handleSessionAccept, this, _1));
 
         WhiteboardWindow* window = findWhiteboardWindow(session->getTo());
-        if (window == NULL) {
+        if (window == nullptr) {
             createNewWhiteboardWindow(session->getTo(), session);
         } else {
             window->setSession(session);
@@ -132,7 +132,7 @@ namespace Swift {
 
     void WhiteboardManager::handleSessionAccept(const JID& contact) {
         WhiteboardWindow* window = findWhiteboardWindow(contact);
-        if (window != NULL) {
+        if (window != nullptr) {
             window->show();
         }
         onRequestAccepted(contact);

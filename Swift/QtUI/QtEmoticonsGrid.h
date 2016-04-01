@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <map>
@@ -23,7 +29,7 @@ namespace Swift {
     class QtEmoticonsGrid : public QGridLayout {
         Q_OBJECT
         public:
-            explicit QtEmoticonsGrid(const std::map<std::string, std::string>& emoticons, QWidget* parent = 0);
+            explicit QtEmoticonsGrid(const std::map<std::string, std::string>& emoticons, QWidget* parent = nullptr);
             virtual ~QtEmoticonsGrid();
 
         signals:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@
 
 namespace Swift {
 
-PlatformIdleQuerier::PlatformIdleQuerier() : querier(NULL) {
+PlatformIdleQuerier::PlatformIdleQuerier() : querier(nullptr) {
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #if defined(HAVE_IOKIT) && !defined(SWIFTEN_PLATFORM_IPHONE)
     querier = new MacOSXIdleQuerier();

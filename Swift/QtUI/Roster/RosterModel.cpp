@@ -28,7 +28,7 @@
 
 namespace Swift {
 
-RosterModel::RosterModel(QtTreeWidget* view, bool screenReaderMode) : roster_(NULL), view_(view), screenReader_(screenReaderMode) {
+RosterModel::RosterModel(QtTreeWidget* view, bool screenReaderMode) : roster_(nullptr), view_(view), screenReader_(screenReaderMode) {
     const int tooltipAvatarSize = 96; // maximal suggested size according to XEP-0153
     cachedImageScaler_ = new QtScaledAvatarCache(tooltipAvatarSize);
 }
@@ -75,7 +75,7 @@ void RosterModel::handleDataChanged(RosterItem* item) {
 
 Qt::ItemFlags RosterModel::flags(const QModelIndex& index) const {
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
-    if (dynamic_cast<GroupRosterItem*>(getItem(index)) == NULL) {
+    if (dynamic_cast<GroupRosterItem*>(getItem(index)) == nullptr) {
         flags |= Qt::ItemIsDragEnabled;
     }
     return flags;
@@ -86,7 +86,7 @@ int RosterModel::columnCount(const QModelIndex& /*parent*/) const {
 }
 
 RosterItem* RosterModel::getItem(const QModelIndex& index) const {
-    return index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : NULL;
+    return index.isValid() ? static_cast<RosterItem*>(index.internalPointer()) : nullptr;
 }
 
 QVariant RosterModel::data(const QModelIndex& index, int role) const {
@@ -230,7 +230,7 @@ QModelIndex RosterModel::index(RosterItem* item) const {
     /* Recursive check that it's ok to create such an item
         Assuming there are more contacts in a group than groups in a
         group, this could save a decent chunk of search time at startup.*/
-    if (parent == NULL || roster_ == NULL || (parent != roster_->getRoot() && !index(parent).isValid())) {
+    if (parent == nullptr || roster_ == nullptr || (parent != roster_->getRoot() && !index(parent).isValid())) {
         return QModelIndex();
     }
     for (size_t i = 0; i < parent->getDisplayedChildren().size(); i++) {
@@ -264,7 +264,7 @@ QMimeData* RosterModel::mimeData(const QModelIndexList& indexes) const {
     QMimeData* data = QAbstractItemModel::mimeData(indexes);
 
     ContactRosterItem *item = dynamic_cast<ContactRosterItem*>(getItem(indexes.first()));
-    if (item == NULL) {
+    if (item == nullptr) {
         return data;
     }
 

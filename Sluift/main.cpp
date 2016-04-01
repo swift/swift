@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2014 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ static const luaL_Reg defaultLibraries[] = {
     {LUA_MATHLIBNAME, luaopen_math},
     {LUA_DBLIBNAME, luaopen_debug},
     {"sluift", luaopen_sluift},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 static void handleInterruptSignal(int) {

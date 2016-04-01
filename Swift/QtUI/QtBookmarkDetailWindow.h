@@ -18,7 +18,7 @@ namespace Swift {
     class QtBookmarkDetailWindow : public QDialog, protected Ui::QtBookmarkDetailWindow {
         Q_OBJECT
         public:
-            QtBookmarkDetailWindow(QWidget* parent = NULL);
+            QtBookmarkDetailWindow(QWidget* parent = nullptr);
             virtual bool commit() = 0;
             boost::optional<MUCBookmark> createBookmarkFromForm();
 

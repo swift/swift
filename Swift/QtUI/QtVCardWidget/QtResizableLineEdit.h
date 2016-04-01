@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QLineEdit>
@@ -15,7 +21,7 @@ namespace Swift {
         Q_PROPERTY(bool editable READ isEditable WRITE setEditable)
 
         public:
-            explicit QtResizableLineEdit(QWidget* parent = 0);
+            explicit QtResizableLineEdit(QWidget* parent = nullptr);
             ~QtResizableLineEdit();
 
             bool isEditable() const;

@@ -30,7 +30,7 @@ namespace Swift {
     public:
         enum Mode {    Rubber, Line, Rect, Circle, HandLine, Text, Polygon, Select };
         enum Type { New, Update, MoveUp, MoveDown };
-        GView(QGraphicsScene* scene, QWidget* parent = 0);
+        GView(QGraphicsScene* scene, QWidget* parent = nullptr);
         void setLineWidth(int i);
         void setLineColor(QColor color);
         QColor getLineColor();

@@ -185,7 +185,7 @@ public:
     }
 
     virtual FileTransferTransporter* createResponderTransporter(const JID& /* initiator */, const JID& /* responder */, const std::string& /* s5bSessionID */, const FileTransferOptions& /* options */) {
-        return NULL;
+        return nullptr;
     }
 
 private:

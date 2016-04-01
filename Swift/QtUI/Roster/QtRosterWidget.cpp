@@ -66,28 +66,28 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
         removeContact->setEnabled(isOnline());
         QAction* showProfileForContact = contextMenu.addAction(tr("Show Profile"));
 
-        QAction* unblockContact = NULL;
+        QAction* unblockContact = nullptr;
         if (contact->blockState() == ContactRosterItem::IsBlocked ||
             contact->blockState() == ContactRosterItem::IsDomainBlocked) {
             unblockContact = contextMenu.addAction(tr("Unblock"));
             unblockContact->setEnabled(isOnline());
         }
 
-        QAction* blockContact = NULL;
+        QAction* blockContact = nullptr;
         if (contact->blockState() == ContactRosterItem::IsUnblocked) {
             blockContact = contextMenu.addAction(tr("Block"));
             blockContact->setEnabled(isOnline());
         }
 
 #ifdef SWIFT_EXPERIMENTAL_FT
-        QAction* sendFile = NULL;
+        QAction* sendFile = nullptr;
         if (contact->supportsFeature(ContactRosterItem::FileTransferFeature)) {
             sendFile = contextMenu.addAction(tr("Send File"));
             sendFile->setEnabled(isOnline());
         }
 #endif
 #ifdef SWIFT_EXPERIMENTAL_WB
-        QAction* startWhiteboardChat = NULL;
+        QAction* startWhiteboardChat = nullptr;
         if (contact->supportsFeature(ContactRosterItem::WhiteboardFeature)) {
             startWhiteboardChat = contextMenu.addAction(tr("Start Whiteboard Chat"));
             startWhiteboardChat->setEnabled(isOnline());
@@ -153,7 +153,7 @@ void QtRosterWidget::contextMenuEvent(QContextMenuEvent* event) {
 
 void QtRosterWidget::renameGroup(GroupRosterItem* group) {
     bool ok;
-    QString newName = QInputDialog::getText(NULL, tr("Rename group"), tr("Enter a new name for group '%1':").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
+    QString newName = QInputDialog::getText(nullptr, tr("Rename group"), tr("Enter a new name for group '%1':").arg(P2QSTRING(group->getDisplayName())), QLineEdit::Normal, P2QSTRING(group->getDisplayName()), &ok);
     if (ok) {
         eventStream_->send(boost::make_shared<RenameGroupUIEvent>(group->getDisplayName(), Q2PSTRING(newName)));
     }

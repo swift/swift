@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * Licensed under the GNU General Public License.
  * See the COPYING file for more information.
  */
@@ -42,8 +42,8 @@ HistoryViewController::HistoryViewController(
             avatarManager_(avatarManager),
             presenceOracle_(presenceOracle),
             historyWindowFactory_(historyWindowFactory),
-            historyWindow_(NULL),
-            selectedItem_(NULL),
+            historyWindow_(nullptr),
+            selectedItem_(nullptr),
             currentResultDate_(boost::gregorian::not_a_date_time) {
     uiEventStream_->onUIEvent.connect(boost::bind(&HistoryViewController::handleUIEvent, this, _1));
 
@@ -72,8 +72,8 @@ HistoryViewController::~HistoryViewController() {
 
 void HistoryViewController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
     boost::shared_ptr<RequestHistoryUIEvent> event = boost::dynamic_pointer_cast<RequestHistoryUIEvent>(rawEvent);
-    if (event != NULL) {
-        if (historyWindow_ == NULL) {
+    if (event != nullptr) {
+        if (historyWindow_ == nullptr) {
             historyWindow_ = historyWindowFactory_->createHistoryWindow(uiEventStream_);
             historyWindow_->onSelectedContactChanged.connect(boost::bind(&HistoryViewController::handleSelectedContactChanged, this, _1));
             historyWindow_->onReturnPressed.connect(boost::bind(&HistoryViewController::handleReturnPressed, this, _1));
@@ -266,7 +266,7 @@ void HistoryViewController::handlePreviousButtonClicked() {
 void HistoryViewController::reset() {
     roster_->removeAll();
     contacts_.clear();
-    selectedItem_ = NULL;
+    selectedItem_ = nullptr;
     historyWindow_->resetConversationView();
 }
 

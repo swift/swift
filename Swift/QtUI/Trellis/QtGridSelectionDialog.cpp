@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -103,7 +103,7 @@ void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
             int yPos = verticalMargin + (y * (frameSize.height() + padding));
             option.menuRect.moveTo(QPoint(xPos, yPos));
             option.rect = option.menuRect;
-            style()->drawControl(QStyle::CE_MenuItem, &option, &painter, 0);
+            style()->drawControl(QStyle::CE_MenuItem, &option, &painter, nullptr);
         }
     }
 

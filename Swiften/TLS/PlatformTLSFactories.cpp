@@ -24,7 +24,7 @@
 
 namespace Swift {
 
-PlatformTLSFactories::PlatformTLSFactories() : contextFactory(NULL), certificateFactory(NULL) {
+PlatformTLSFactories::PlatformTLSFactories() : contextFactory(nullptr), certificateFactory(nullptr) {
 #ifdef HAVE_OPENSSL
     contextFactory = new OpenSSLContextFactory();
     certificateFactory = new OpenSSLCertificateFactory();

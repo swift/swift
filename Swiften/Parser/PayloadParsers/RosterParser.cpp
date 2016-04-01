@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-RosterParser::RosterParser() : level_(TopLevel), inItem_(false), unknownContentParser_(0) {
+RosterParser::RosterParser() : level_(TopLevel), inItem_(false), unknownContentParser_(nullptr) {
 }
 
 void RosterParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
@@ -81,7 +81,7 @@ void RosterParser::handleEndElement(const std::string& element, const std::strin
             unknownContentParser_->handleEndElement(element, ns);
             currentItem_.addUnknownContent(unknownContentParser_->getResult());
             delete unknownContentParser_;
-            unknownContentParser_ = NULL;
+            unknownContentParser_ = nullptr;
         }
         else if (element == "group") {
             currentItem_.addGroup(currentText_);

@@ -27,7 +27,7 @@
 
 namespace Swift {
 
-BlockListController::BlockListController(ClientBlockListManager* blockListManager, UIEventStream* uiEventStream, BlockListEditorWidgetFactory* blockListEditorWidgetFactory, EventController* eventController) : blockListManager_(blockListManager), blockListEditorWidgetFactory_(blockListEditorWidgetFactory), blockListEditorWidget_(0), eventController_(eventController), remainingRequests_(0), uiEventStream_(uiEventStream) {
+BlockListController::BlockListController(ClientBlockListManager* blockListManager, UIEventStream* uiEventStream, BlockListEditorWidgetFactory* blockListEditorWidgetFactory, EventController* eventController) : blockListManager_(blockListManager), blockListEditorWidgetFactory_(blockListEditorWidgetFactory), blockListEditorWidget_(nullptr), eventController_(eventController), remainingRequests_(0), uiEventStream_(uiEventStream) {
     uiEventStream->onUIEvent.connect(boost::bind(&BlockListController::handleUIEvent, this, _1));
     blockListManager_->getBlockList()->onItemAdded.connect(boost::bind(&BlockListController::handleBlockListChanged, this));
     blockListManager_->getBlockList()->onItemRemoved.connect(boost::bind(&BlockListController::handleBlockListChanged, this));
@@ -56,8 +56,8 @@ void BlockListController::blockListDifferences(const std::vector<JID> &newBlockL
 void BlockListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
     // handle UI dialog
     boost::shared_ptr<RequestBlockListDialogUIEvent> requestDialogEvent = boost::dynamic_pointer_cast<RequestBlockListDialogUIEvent>(rawEvent);
-    if (requestDialogEvent != NULL) {
-        if (blockListEditorWidget_ == NULL) {
+    if (requestDialogEvent != nullptr) {
+        if (blockListEditorWidget_ == nullptr) {
             blockListEditorWidget_ = blockListEditorWidgetFactory_->createBlockListEditorWidget();
             blockListEditorWidget_->onSetNewBlockList.connect(boost::bind(&BlockListController::handleSetNewBlockList, this, _1));
         }
@@ -70,7 +70,7 @@ void BlockListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
 
     // handle block state change
     boost::shared_ptr<RequestChangeBlockStateUIEvent> changeStateEvent = boost::dynamic_pointer_cast<RequestChangeBlockStateUIEvent>(rawEvent);
-    if (changeStateEvent != NULL) {
+    if (changeStateEvent != nullptr) {
         if (changeStateEvent->getBlockState() == RequestChangeBlockStateUIEvent::Blocked) {
             GenericRequest<BlockPayload>::ref blockRequest = blockListManager_->createBlockJIDRequest(changeStateEvent->getContact());
             blockRequest->onResponse.connect(boost::bind(&BlockListController::handleBlockResponse, this, blockRequest, _1, _2, std::vector<JID>(1, changeStateEvent->getContact()), false));

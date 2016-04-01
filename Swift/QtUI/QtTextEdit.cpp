@@ -29,7 +29,7 @@
 
 namespace Swift {
 
-QtTextEdit::QtTextEdit(SettingsProvider* settings, QWidget* parent) : QTextEdit(parent), checker_(NULL), highlighter_(NULL) {
+QtTextEdit::QtTextEdit(SettingsProvider* settings, QWidget* parent) : QTextEdit(parent), checker_(nullptr), highlighter_(nullptr) {
     connect(this, SIGNAL(textChanged()), this, SLOT(handleTextChanged()));
     settings_ = settings;
 #ifdef HAVE_SPELLCHECKER
@@ -182,9 +182,9 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
 void QtTextEdit::setUpSpellChecker()
 {
     delete highlighter_;
-    highlighter_ = NULL;
+    highlighter_ = nullptr;
     delete checker_;
-    checker_ = NULL;
+    checker_ = nullptr;
     if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
         std::string dictPath = settings_->getSetting(SettingConstants::DICT_PATH);
         std::string dictFile = settings_->getSetting(SettingConstants::DICT_FILE);

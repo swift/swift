@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -97,7 +97,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 
     connect(tabs_, SIGNAL(currentChanged(int)), this, SLOT(handleTabChanged(int)));
 
-    tabBarCombo_ = NULL;
+    tabBarCombo_ = nullptr;
     if (settings_->getSetting(QtUISettingConstants::USE_SCREENREADER)) {
         tabs_->tabBar()->hide();
         tabBarCombo_ = new QComboBox(this);

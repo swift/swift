@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -17,7 +23,7 @@
 namespace Swift {
 
 UnixProxyProvider::UnixProxyProvider() :
-    gconfProxyProvider(0),
+    gconfProxyProvider(nullptr),
     environmentProxyProvider()
 {
 #if defined(HAVE_GCONF)

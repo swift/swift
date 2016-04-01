@@ -38,7 +38,7 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabsBase(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(NULL), loginWindow(NULL), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabsBase(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(nullptr), loginWindow(nullptr), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
     chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
     historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
     this->tabs = dynamic_cast<QtChatTabs*>(tabsBase);

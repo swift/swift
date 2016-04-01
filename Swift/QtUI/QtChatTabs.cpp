@@ -33,7 +33,7 @@
 #include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
 
 namespace Swift {
-QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode) : QWidget(), singleWindow_(singleWindow), settingsProvider_(settingsProvider), trellisMode_(trellisMode), dynamicGrid_(NULL), gridSelectionDialog_(NULL) {
+QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode) : QWidget(), singleWindow_(singleWindow), settingsProvider_(settingsProvider), trellisMode_(trellisMode), dynamicGrid_(nullptr), gridSelectionDialog_(nullptr) {
 #ifndef Q_OS_MAC
     setWindowIcon(QIcon(":/logo-chat-16.png"));
 #else

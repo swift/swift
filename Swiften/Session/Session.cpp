@@ -22,9 +22,9 @@ Session::Session(
             payloadParserFactories(payloadParserFactories),
             payloadSerializers(payloadSerializers),
             xmlParserFactory(xmlParserFactory),
-            xmppLayer(NULL),
-            connectionLayer(NULL),
-            streamStack(0),
+            xmppLayer(nullptr),
+            connectionLayer(nullptr),
+            streamStack(nullptr),
             finishing(false) {
 }
 

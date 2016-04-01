@@ -154,11 +154,11 @@ ChatsManager::ChatsManager(
     chatWindowFactory_ = chatWindowFactory;
     nickResolver_ = nickResolver;
     presenceOracle_ = presenceOracle;
-    avatarManager_ = NULL;
+    avatarManager_ = nullptr;
     serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
     presenceSender_ = presenceSender;
     uiEventStream_ = uiEventStream;
-    mucBookmarkManager_ = NULL;
+    mucBookmarkManager_ = nullptr;
     profileSettings_ = profileSettings;
     presenceOracle_->onPresenceChange.connect(boost::bind(&ChatsManager::handlePresenceChange, this, _1));
     uiEventConnection_ = uiEventStream_->onUIEvent.connect(boost::bind(&ChatsManager::handleUIEvent, this, _1));
@@ -168,7 +168,7 @@ ChatsManager::ChatsManager(
     chatListWindow_->onRecentActivated.connect(boost::bind(&ChatsManager::handleRecentActivated, this, _1));
     chatListWindow_->onClearRecentsRequested.connect(boost::bind(&ChatsManager::handleClearRecentsRequested, this));
 
-    joinMUCWindow_ = NULL;
+    joinMUCWindow_ = nullptr;
     mucSearchController_ = new MUCSearchController(jid_, mucSearchWindowFactory, iqRouter, profileSettings_);
     mucSearchController_->onMUCSelected.connect(boost::bind(&ChatsManager::handleMUCSelectedAfterSearch, this, _1));
     ftOverview_->onNewFileTransferController.connect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
@@ -239,7 +239,7 @@ void ChatsManager::saveRecents() {
 void ChatsManager::handleClearRecentsRequested() {
     recentChats_.clear();
     saveRecents();
-    handleUnreadCountChanged(NULL);
+    handleUnreadCountChanged(nullptr);
 }
 
 void ChatsManager::handleJIDAddedToRoster(const JID &jid) {
@@ -340,7 +340,7 @@ void ChatsManager::loadRecents() {
             prependRecent(chat);
         }
     }
-    handleUnreadCountChanged(NULL);
+    handleUnreadCountChanged(nullptr);
 }
 
 void ChatsManager::setupBookmarks() {
@@ -419,7 +419,7 @@ void ChatsManager::handleChatActivity(const JID& jid, const std::string& activit
     ChatListWindow::Chat chat = createChatListChatItem(jid, activity, privateMessage);
     /* FIXME: handle nick changes */
     appendRecent(chat);
-    handleUnreadCountChanged(NULL);
+    handleUnreadCountChanged(nullptr);
     saveRecents();
 }
 
@@ -744,7 +744,7 @@ ChatController* ChatsManager::getChatControllerOrCreate(const JID &contact) {
 ChatController* ChatsManager::getChatControllerIfExists(const JID &contact, bool rebindIfNeeded) {
     if (chatControllers_.find(contact) == chatControllers_.end()) {
         if (mucRegistry_->isMUC(contact.toBare())) {
-            return NULL;
+            return nullptr;
         }
         //Need to look for an unbound window to bind first
         JID bare(contact.toBare());
@@ -766,7 +766,7 @@ ChatController* ChatsManager::getChatControllerIfExists(const JID &contact, bool
                     }
                 }
             }
-            return NULL;
+            return nullptr;
         }
     }
     return chatControllers_[contact];
@@ -807,8 +807,8 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
             muc->setCreateAsReservedIfNew();
         }
 
-        MUCController* controller = NULL;
-        SingleChatWindowFactoryAdapter* chatWindowFactoryAdapter = NULL;
+        MUCController* controller = nullptr;
+        SingleChatWindowFactoryAdapter* chatWindowFactoryAdapter = nullptr;
         if (reuseChatwindow) {
             chatWindowFactoryAdapter = new SingleChatWindowFactoryAdapter(reuseChatwindow);
         }

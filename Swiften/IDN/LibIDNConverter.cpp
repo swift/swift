@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@ namespace {
             case IDNConverter::SASLPrep: return stringprep_saslprep;
         }
         assert(false);
-        return 0;
+        return nullptr;
     }
 
     template<typename StringType, typename ContainerType>

@@ -24,7 +24,7 @@ namespace Swift {
                         service.getDomain().c_str(),
                         &BonjourResolveServiceQuery::handleServiceResolvedStatic, this);
                 if (result != kDNSServiceErr_NoError) {
-                    sdRef = NULL;
+                    sdRef = nullptr;
                 }
             }
 

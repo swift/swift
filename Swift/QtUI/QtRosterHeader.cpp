@@ -27,7 +27,7 @@
 #include <Swift/QtUI/Roster/RosterTooltip.h>
 
 namespace Swift {
-QtRosterHeader::QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent) : QWidget(parent), statusEdit_(NULL) {
+QtRosterHeader::QtRosterHeader(SettingsProvider* settings, StatusCache* statusCache, QWidget* parent) : QWidget(parent), statusEdit_(nullptr) {
     QHBoxLayout* topLayout = new QHBoxLayout();
     topLayout->setSpacing(3);
     topLayout->setContentsMargins(4,4,4,4);

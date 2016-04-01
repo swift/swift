@@ -19,7 +19,7 @@
 namespace Swift {
 
 QtVCardTelephoneField::QtVCardTelephoneField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Telephone")), telephoneLineEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Telephone")), telephoneLineEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

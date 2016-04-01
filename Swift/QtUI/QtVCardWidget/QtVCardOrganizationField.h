@@ -29,7 +29,7 @@ class QtVCardOrganizationField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Organization"), UNLIMITED_INSTANCES, QtVCardOrganizationField)
 
-        QtVCardOrganizationField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardOrganizationField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardOrganizationField();
 
         virtual bool isEmpty() const;

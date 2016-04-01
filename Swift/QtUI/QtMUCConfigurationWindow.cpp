@@ -25,7 +25,7 @@ QtMUCConfigurationWindow::QtMUCConfigurationWindow(Form::ref form) : closed_(fal
     //label->setText(tr("Room configuration"));
     //layout->addWidget(label);
 
-    formWidget_ = NULL;
+    formWidget_ = nullptr;
     formWidget_ = new QtFormWidget(form, this);
     layout->addWidget(formWidget_);
 

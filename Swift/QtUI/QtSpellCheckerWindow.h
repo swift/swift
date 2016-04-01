@@ -21,7 +21,7 @@ namespace Swift {
     class QtSpellCheckerWindow : public QDialog, protected Ui::QtSpellCheckerWindow {
         Q_OBJECT
         public:
-            QtSpellCheckerWindow(SettingsProvider* settings, QWidget* parent = NULL);
+            QtSpellCheckerWindow(SettingsProvider* settings, QWidget* parent = nullptr);
         public slots:
             void handleChecker(bool state);
             void handleCancel();

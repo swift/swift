@@ -19,10 +19,10 @@ namespace Swift {
         public:
             BonjourBrowseQuery(boost::shared_ptr<BonjourQuerier> q, EventLoop* eventLoop) : BonjourQuery(q, eventLoop) {
                 DNSServiceErrorType result = DNSServiceBrowse(
-                        &sdRef, 0, 0, "_presence._tcp", 0,
+                        &sdRef, 0, 0, "_presence._tcp", nullptr,
                         &BonjourBrowseQuery::handleServiceDiscoveredStatic, this);
                 if (result != kDNSServiceErr_NoError) {
-                    sdRef = NULL;
+                    sdRef = nullptr;
                 }
             }
 

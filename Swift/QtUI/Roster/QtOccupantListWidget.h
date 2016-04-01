@@ -18,7 +18,7 @@ class SettingsProvider;
 class QtOccupantListWidget : public QtTreeWidget {
     Q_OBJECT
     public:
-        QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent = NULL);
+        QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent = nullptr);
         virtual ~QtOccupantListWidget();
         void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
         boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;

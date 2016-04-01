@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ namespace Swift {
 Roster::Roster(bool sortByStatus, bool fullJIDMapping) : blockingSupported_(false) {
     sortByStatus_ = sortByStatus;
     fullJIDMapping_ = fullJIDMapping;
-    root_ = new GroupRosterItem("Dummy-Root", NULL, sortByStatus_);
+    root_ = new GroupRosterItem("Dummy-Root", nullptr, sortByStatus_);
     root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_));
 }
 

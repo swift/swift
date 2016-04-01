@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -118,7 +118,7 @@ bool QtDNDTabBar::event(QEvent* event) {
             QMouseEvent* finishMoveEvent = new QMouseEvent (QEvent::MouseMove, mouseEvent->pos (), Qt::NoButton, Qt::NoButton, Qt::NoModifier);
             QTabBar::event(finishMoveEvent);
             delete finishMoveEvent;
-            finishMoveEvent = NULL;
+            finishMoveEvent = nullptr;
 
             // start drag
             QDrag* drag = new QDrag(this);

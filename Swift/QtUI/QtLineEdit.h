@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,7 +12,7 @@ namespace Swift {
     class QtLineEdit : public QLineEdit {
         Q_OBJECT
         public:
-            QtLineEdit(QWidget* parent = NULL);
+            QtLineEdit(QWidget* parent = nullptr);
         signals:
             void escapePressed();
         protected:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,7 +47,7 @@ BOSHSessionStream::BOSHSessionStream(const URL& boshURL,
 
     boost::mt19937 random;
     boost::uniform_int<unsigned long long> dist(0, (1LL<<53) - 1);
-    random.seed(static_cast<unsigned int>(time(NULL)));
+    random.seed(static_cast<unsigned int>(time(nullptr)));
     unsigned long long initialRID = boost::variate_generator<boost::mt19937&, boost::uniform_int<unsigned long long> >(random, dist)();
 
     connectionPool = new BOSHConnectionPool(boshURL, resolver, connectionFactory, xmlParserFactory, tlsContextFactory, timerFactory, eventLoop, to, initialRID, boshHTTPConnectProxyURL, boshHTTPConnectProxyAuthID, boshHTTPConnectProxyAuthPassword, tlsOptions, trafficFilter);
@@ -74,13 +74,13 @@ BOSHSessionStream::~BOSHSessionStream() {
     connectionPool->onBOSHDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
     connectionPool->onBOSHDataWritten.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
     delete connectionPool;
-    connectionPool = NULL;
+    connectionPool = nullptr;
     xmppLayer->onStreamStart.disconnect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
     xmppLayer->onElement.disconnect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
     xmppLayer->onError.disconnect(boost::bind(&BOSHSessionStream::handleXMPPError, this));
     xmppLayer->onWriteData.disconnect(boost::bind(&BOSHSessionStream::handleXMPPLayerDataWritten, this, _1));
     delete xmppLayer;
-    xmppLayer = NULL;
+    xmppLayer = nullptr;
 }
 
 void BOSHSessionStream::open() {

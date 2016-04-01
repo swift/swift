@@ -21,9 +21,9 @@ namespace Swift {
     class FreehandLineItem : public QGraphicsItem {
     public:
         enum {Type = UserType + 1};
-        FreehandLineItem(QGraphicsItem* parent = 0);
+        FreehandLineItem(QGraphicsItem* parent = nullptr);
         QRectF boundingRect() const;
-        void paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/ = 0);
+        void paint(QPainter* painter, const QStyleOptionGraphicsItem* /*option*/, QWidget* /*widget*/ = nullptr);
         void setStartPoint(QPointF point);
         void lineTo(QPointF point);
         bool collidesWithPath(const QPainterPath& path, Qt::ItemSelectionMode /*mode*/ = Qt::IntersectsItemShape) const;

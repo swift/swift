@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ SafeByteArray CompressRequestSerializer::serialize(boost::shared_ptr<ToplevelEle
 }
 
 bool CompressRequestSerializer::canSerialize(boost::shared_ptr<ToplevelElement> element) const {
-    return boost::dynamic_pointer_cast<CompressRequest>(element) != 0;
+    return boost::dynamic_pointer_cast<CompressRequest>(element) != nullptr;
 }
 
 }

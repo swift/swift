@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -177,7 +177,7 @@ void QtChatListWindow::dragEnterEvent(QDragEnterEvent *event) {
 
 void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
     QModelIndex index = indexAt(event->pos());
-    ChatListItem* baseItem = index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : NULL;
+    ChatListItem* baseItem = index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : nullptr;
     contextMenuItem_ = baseItem;
 
     foreach(QAction* action, onlineOnlyActions_) {
@@ -203,7 +203,7 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
         const ChatListWindow::Chat& chat = recentItem->getChat();
         if (chat.isMUC) {
             QMenu mucRecentsMenu;
-            QAction* bookmarkAction = NULL;
+            QAction* bookmarkAction = nullptr;
             const ChatListMUCItem* mucItem = model_->getChatListMUCItem(chat.jid);
             if (mucItem) {
                 contextMenuItem_ = mucItem;

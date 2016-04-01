@@ -27,7 +27,7 @@ class QtVCardInternetEMailField : public QtVCardGeneralField, public QtVCardHome
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("E-Mail"), UNLIMITED_INSTANCES, QtVCardInternetEMailField)
 
-        QtVCardInternetEMailField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardInternetEMailField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardInternetEMailField();
 
         virtual bool isEmpty() const;

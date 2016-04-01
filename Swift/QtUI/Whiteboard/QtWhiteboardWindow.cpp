@@ -182,14 +182,14 @@ namespace Swift {
 
     void QtWhiteboardWindow::showColorDialog()
     {
-        QColor color = QColorDialog::getColor(graphicsView->getLineColor(), 0, "Select pen color", QColorDialog::ShowAlphaChannel);
+        QColor color = QColorDialog::getColor(graphicsView->getLineColor(), nullptr, "Select pen color", QColorDialog::ShowAlphaChannel);
         if(color.isValid())
             graphicsView->setLineColor(color);
     }
 
     void QtWhiteboardWindow::showBrushColorDialog()
     {
-        QColor color = QColorDialog::getColor(graphicsView->getBrushColor(), 0, "Select brush color", QColorDialog::ShowAlphaChannel);
+        QColor color = QColorDialog::getColor(graphicsView->getBrushColor(), nullptr, "Select brush color", QColorDialog::ShowAlphaChannel);
         if(color.isValid())
             graphicsView->setBrushColor(color);
     }
@@ -258,7 +258,7 @@ namespace Swift {
     void QtWhiteboardWindow::handleLastItemChanged(QGraphicsItem* item, int pos, GView::Type type) {
         WhiteboardElement::ref el;
         QGraphicsLineItem* lineItem = qgraphicsitem_cast<QGraphicsLineItem*>(item);
-        if (lineItem != 0) {
+        if (lineItem != nullptr) {
             QLine line = lineItem->line().toLine();
             QColor color = lineItem->pen().color();
             WhiteboardLineElement::ref element = boost::make_shared<WhiteboardLineElement>(line.x1()+lineItem->pos().x(), line.y1()+lineItem->pos().y(), line.x2()+lineItem->pos().x(), line.y2()+lineItem->pos().y());
@@ -270,7 +270,7 @@ namespace Swift {
         }
 
         FreehandLineItem* freehandLineItem = qgraphicsitem_cast<FreehandLineItem*>(item);
-        if (freehandLineItem != 0) {
+        if (freehandLineItem != nullptr) {
             WhiteboardFreehandPathElement::ref element = boost::make_shared<WhiteboardFreehandPathElement>();
             QColor color = freehandLineItem->pen().color();
             std::vector<std::pair<int, int> > points;
@@ -290,7 +290,7 @@ namespace Swift {
         }
 
         QGraphicsRectItem* rectItem = qgraphicsitem_cast<QGraphicsRectItem*>(item);
-        if (rectItem != 0) {
+        if (rectItem != nullptr) {
             QRectF rect = rectItem->rect();
             WhiteboardRectElement::ref element = boost::make_shared<WhiteboardRectElement>(rect.x()+item->pos().x(), rect.y()+item->pos().y(), rect.width(), rect.height());
             QColor penColor = rectItem->pen().color();
@@ -305,7 +305,7 @@ namespace Swift {
         }
 
         QGraphicsTextItem* textItem = qgraphicsitem_cast<QGraphicsTextItem*>(item);
-        if (textItem != 0) {
+        if (textItem != nullptr) {
             QPointF point = textItem->pos();
             WhiteboardTextElement::ref element = boost::make_shared<WhiteboardTextElement>(point.x(), point.y());
             element->setText(textItem->toPlainText().toStdString());

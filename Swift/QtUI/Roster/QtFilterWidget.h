@@ -28,7 +28,7 @@ class QtClosableLineEdit;
 class QtFilterWidget : public QWidget {
     Q_OBJECT
     public:
-        QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventStream* eventStream, QBoxLayout* layout = 0);
+        QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventStream* eventStream, QBoxLayout* layout = nullptr);
         virtual ~QtFilterWidget();
 
     protected:

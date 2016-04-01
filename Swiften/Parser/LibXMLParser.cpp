@@ -81,7 +81,7 @@ LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client), p(new P
     p->handler_.warning = &handleWarning;
     p->handler_.error = &handleError;
 
-    p->context_ = xmlCreatePushParserCtxt(&p->handler_, this, 0, 0, 0);
+    p->context_ = xmlCreatePushParserCtxt(&p->handler_, this, nullptr, 0, nullptr);
     xmlCtxtUseOptions(p->context_, XML_PARSE_NOENT);
     assert(p->context_);
 }

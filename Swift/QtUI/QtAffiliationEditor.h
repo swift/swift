@@ -20,7 +20,7 @@ namespace Swift {
     class QtAffiliationEditor : public QDialog {
         Q_OBJECT
         public:
-            QtAffiliationEditor(QWidget* parent = NULL);
+            QtAffiliationEditor(QWidget* parent = nullptr);
             ~QtAffiliationEditor();
             void setAffiliations(MUCOccupant::Affiliation, const std::vector<JID>& jids);
             const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& getChanges() const;

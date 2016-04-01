@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@
 
 namespace Swift {
 
-QtFileTransferListWidget::QtFileTransferListWidget() : fileTransferOverview(0) {
+QtFileTransferListWidget::QtFileTransferListWidget() : fileTransferOverview(nullptr) {
     QVBoxLayout* layout = new QVBoxLayout(this);
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
@@ -58,7 +58,7 @@ QtFileTransferListWidget::QtFileTransferListWidget() : fileTransferOverview(0) {
 QtFileTransferListWidget::~QtFileTransferListWidget() {
     if (fileTransferOverview) {
         fileTransferOverview->onFileTransferListChanged.disconnect(boost::bind(&QtFileTransferListWidget::handleFileTransferListChanged, this));
-        fileTransferOverview = NULL;
+        fileTransferOverview = nullptr;
     }
     delete itemModel;
 }
@@ -89,7 +89,7 @@ void QtFileTransferListWidget::activate() {
 void QtFileTransferListWidget::setFileTransferOverview(FileTransferOverview *overview) {
     if (fileTransferOverview) {
         fileTransferOverview->onFileTransferListChanged.disconnect(boost::bind(&QtFileTransferListWidget::handleFileTransferListChanged, this));
-        fileTransferOverview = NULL;
+        fileTransferOverview = nullptr;
     }
     if (overview) {
         fileTransferOverview = overview;

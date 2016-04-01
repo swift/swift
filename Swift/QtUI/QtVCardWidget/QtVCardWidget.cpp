@@ -227,8 +227,8 @@ VCard::ref QtVCardWidget::getVCard() {
     vcard->clearAddressLabels();
 
 
-    QtVCardBirthdayField* bdayField = NULL;
-    QtVCardDescriptionField* descriptionField = NULL;
+    QtVCardBirthdayField* bdayField = nullptr;
+    QtVCardDescriptionField* descriptionField = nullptr;
 
     foreach(QtVCardGeneralField* field, fields) {
         QtVCardInternetEMailField* emailField;
@@ -310,7 +310,7 @@ VCard::ref QtVCardWidget::getVCard() {
 }
 
 void QtVCardWidget::addField() {
-    QAction* action = NULL;
+    QAction* action = nullptr;
     if ((action = dynamic_cast<QAction*>(sender()))) {
         boost::shared_ptr<QtVCardFieldInfo> fieldInfo = actionFieldInfo[action];
         QWidget* newField = fieldInfo->createFieldInstance(this, ui->cardFields, true);
@@ -325,7 +325,7 @@ void QtVCardWidget::addField() {
 
 void QtVCardWidget::removeField(QtVCardGeneralField *field) {
     int sameFields = 0;
-    QtVCardGeneralField* fieldToChange = NULL;
+    QtVCardGeneralField* fieldToChange = nullptr;
     foreach (QtVCardGeneralField* vcardField, fields) {
         if ((vcardField != field) && (typeid(*vcardField) == typeid(*field))) {
             sameFields++;
@@ -361,7 +361,7 @@ int QtVCardWidget::fieldTypeInstances(boost::shared_ptr<QtVCardFieldInfo> fieldT
 void layoutDeleteChildren(QLayout *layout) {
     while(layout->count() > 0) {
         QLayoutItem* child;
-        if ((child = layout->takeAt(0)) != 0) {
+        if ((child = layout->takeAt(0)) != nullptr) {
             if (child->layout()) {
                 layoutDeleteChildren(child->layout());
             }
@@ -403,7 +403,7 @@ void QtVCardWidget::clearEmptyFields() {
 void QtVCardWidget::appendField(QtVCardGeneralField *field) {
     connect(field, SIGNAL(deleteField(QtVCardGeneralField*)), SLOT(removeField(QtVCardGeneralField*)));
 
-    QtVCardGeneralField* fieldToChange = NULL;
+    QtVCardGeneralField* fieldToChange = nullptr;
     foreach (QtVCardGeneralField* vcardField, fields) {
         if (typeid(*vcardField) == typeid(*field)) {
             fieldToChange = vcardField;

@@ -13,7 +13,7 @@ namespace Swift {
 BoostIOServiceThread::BoostIOServiceThread(boost::shared_ptr<boost::asio::io_service> ioService) {
     if (!!ioService) {
         ioService_ = ioService;
-        thread_ = NULL;
+        thread_ = nullptr;
     }
     else {
         ioService_ = boost::make_shared<boost::asio::io_service>();

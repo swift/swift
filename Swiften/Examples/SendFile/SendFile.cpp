@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,7 @@ static int exitCode = 2;
 
 class FileSender {
     public:
-    FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file) : jid(jid), password(password), recipient(recipient), file(file), tracer(NULL) {
+    FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file) : jid(jid), password(password), recipient(recipient), file(file), tracer(nullptr) {
             client = new Swift::Client(jid, password, &networkFactories);
             client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
             client->onDisconnected.connect(boost::bind(&FileSender::handleDisconnected, this, _1));

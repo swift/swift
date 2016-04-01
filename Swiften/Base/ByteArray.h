@@ -33,12 +33,12 @@ namespace Swift {
 
     template<typename T, typename A>
     static const T* vecptr(const std::vector<T, A>& v) {
-        return v.empty() ? NULL : &v[0];
+        return v.empty() ? nullptr : &v[0];
     }
 
     template<typename T, typename A>
     static T* vecptr(std::vector<T, A>& v) {
-        return v.empty() ? NULL : &v[0];
+        return v.empty() ? nullptr : &v[0];
     }
 
     SWIFTEN_API std::string byteArrayToString(const ByteArray& b);

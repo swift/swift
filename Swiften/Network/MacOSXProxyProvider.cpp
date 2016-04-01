@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,13 +29,13 @@ using namespace Swift;
 
 #ifndef SWIFTEN_PLATFORM_IPHONE
 static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabledKey, CFStringRef hostKey, CFStringRef portKey) {
-    CFNumberRef numberValue = NULL;
+    CFNumberRef numberValue = nullptr;
     HostAddressPort ret = HostAddressPort(HostAddress(), 0);
 
     if(CFDictionaryGetValueIfPresent(dict, reinterpret_cast<const void*> (enabledKey), reinterpret_cast<const void**> (&numberValue)) == true) {
         const int i = 0;
         CFNumberRef zero = CFNumberCreate(kCFAllocatorDefault, kCFNumberIntType, &i);
-        CFComparisonResult result = CFNumberCompare(numberValue, zero, NULL);
+        CFComparisonResult result = CFNumberCompare(numberValue, zero, nullptr);
         CFRelease(zero);
 
         if(result != kCFCompareEqualTo) {
@@ -44,12 +44,12 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
 
             try {
                 CFNumberRef numberValue = reinterpret_cast<CFNumberRef> (CFDictionaryGetValue(dict, portKey));
-                if(numberValue != NULL) {
+                if(numberValue != nullptr) {
                     CFNumberGetValue(numberValue, kCFNumberIntType, &port);
                 }
 
                 CFStringRef stringValue = reinterpret_cast<CFStringRef> (CFDictionaryGetValue(dict, hostKey));
-                if(stringValue != NULL) {
+                if(stringValue != nullptr) {
                     std::vector<char> buffer;
                      // length must be +1 for the ending zero; and the Docu of CFStringGetCString tells it like
                     // if the string is toby the length must be at least 5.
@@ -82,8 +82,8 @@ MacOSXProxyProvider::MacOSXProxyProvider() {
 HostAddressPort MacOSXProxyProvider::getHTTPConnectProxy() const {
     HostAddressPort result;
 #ifndef SWIFTEN_PLATFORM_IPHONE
-    CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
-    if(proxies != NULL) {
+    CFDictionaryRef proxies = SCDynamicStoreCopyProxies(nullptr);
+    if(proxies != nullptr) {
         result = getFromDictionary(proxies, kSCPropNetProxiesHTTPEnable, kSCPropNetProxiesHTTPProxy, kSCPropNetProxiesHTTPPort);
         CFRelease(proxies);
     }
@@ -94,8 +94,8 @@ HostAddressPort MacOSXProxyProvider::getHTTPConnectProxy() const {
 HostAddressPort MacOSXProxyProvider::getSOCKS5Proxy() const {
     HostAddressPort result;
 #ifndef SWIFTEN_PLATFORM_IPHONE
-    CFDictionaryRef proxies = SCDynamicStoreCopyProxies(NULL);
-    if(proxies != NULL) {
+    CFDictionaryRef proxies = SCDynamicStoreCopyProxies(nullptr);
+    if(proxies != nullptr) {
         result = getFromDictionary(proxies, kSCPropNetProxiesSOCKSEnable, kSCPropNetProxiesSOCKSProxy, kSCPropNetProxiesSOCKSPort);
         CFRelease(proxies);
     }

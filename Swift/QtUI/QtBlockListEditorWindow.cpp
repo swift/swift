@@ -73,7 +73,7 @@ class QtJIDValidatedItemDelegate : public QItemDelegate {
         }
 };
 
-QtBlockListEditorWindow::QtBlockListEditorWindow() : QWidget(), ui(new Ui::QtBlockListEditorWindow), removeItemDelegate(0), editItemDelegate(0) {
+QtBlockListEditorWindow::QtBlockListEditorWindow() : QWidget(), ui(new Ui::QtBlockListEditorWindow), removeItemDelegate(nullptr), editItemDelegate(nullptr) {
     ui->setupUi(this);
 
     freshBlockListTemplate = tr("Double-click to add contact");
@@ -163,7 +163,7 @@ void QtBlockListEditorWindow::setCurrentBlockList(const std::vector<JID> &blocke
         item->setFlags(item->flags() | Qt::ItemIsEditable);
         ui->blockListTreeWidget->addTopLevelItem(item);
     }
-    handleItemChanged(0,0);
+    handleItemChanged(nullptr,0);
 }
 
 void QtBlockListEditorWindow::setBusy(bool isBusy) {

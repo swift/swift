@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,10 +19,10 @@
 
 namespace Swift {
 
-BoostConnectionServer::BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(NULL) {
+BoostConnectionServer::BoostConnectionServer(int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
 }
 
-BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(NULL) {
+BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int port, boost::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
 }
 
 void BoostConnectionServer::start() {
@@ -70,7 +70,7 @@ void BoostConnectionServer::stop(boost::optional<Error> e) {
     if (acceptor_) {
         acceptor_->close();
         delete acceptor_;
-        acceptor_ = NULL;
+        acceptor_ = nullptr;
     }
     eventLoop->postEvent(boost::bind(boost::ref(onStopped), e), shared_from_this());
 }

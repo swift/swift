@@ -24,7 +24,7 @@ QtCloseButton::QtCloseButton(QWidget *parent) : QAbstractButton(parent) {
 }
 
 QSize QtCloseButton::sizeHint() const {
-    return QSize(style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, 0, 0), style()->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, 0, 0));
+    return QSize(style()->pixelMetric(QStyle::PM_TabCloseIndicatorWidth, nullptr, nullptr), style()->pixelMetric(QStyle::PM_TabCloseIndicatorHeight, nullptr, nullptr));
 }
 
 bool QtCloseButton::event(QEvent *e) {

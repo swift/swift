@@ -13,14 +13,14 @@
 
 namespace Swift {
 
-FileWriteBytestream::FileWriteBytestream(const boost::filesystem::path& file) : file(file), stream(NULL) {
+FileWriteBytestream::FileWriteBytestream(const boost::filesystem::path& file) : file(file), stream(nullptr) {
 }
 
 FileWriteBytestream::~FileWriteBytestream() {
     if (stream) {
         stream->close();
         delete stream;
-        stream = NULL;
+        stream = nullptr;
     }
 }
 
@@ -45,7 +45,7 @@ void FileWriteBytestream::close() {
     if (stream) {
         stream->close();
         delete stream;
-        stream = NULL;
+        stream = nullptr;
     }
 }
 

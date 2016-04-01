@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-InBandRegistrationPayloadParser::InBandRegistrationPayloadParser() : level(TopLevel), formParser(NULL)  {
+InBandRegistrationPayloadParser::InBandRegistrationPayloadParser() : level(TopLevel), formParser(nullptr)  {
     formParserFactory = new FormParserFactory();
 }
 
@@ -54,7 +54,7 @@ void InBandRegistrationPayloadParser::handleEndElement(const std::string& elemen
         if (formParser) {
             getPayloadInternal()->setForm(formParser->getPayloadInternal());
             delete formParser;
-            formParser = NULL;
+            formParser = nullptr;
         }
         else if (element == "registered") {
             getPayloadInternal()->setRegistered(true);

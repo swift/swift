@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,8 +16,8 @@
 
 namespace Swift {
 
-ChatListModel::ChatListModel() : whiteboards_(NULL) {
-    root_ = new ChatListGroupItem("", NULL, false);
+ChatListModel::ChatListModel() : whiteboards_(nullptr) {
+    root_ = new ChatListGroupItem("", nullptr, false);
     mucBookmarks_ = new ChatListGroupItem(tr("Bookmarked Rooms"), root_);
     recents_ = new ChatListGroupItem(tr("Recent Chats"), root_, false);
 #ifdef SWIFT_EXPERIMENTAL_WB
@@ -106,7 +106,7 @@ void ChatListModel::setRecents(const std::list<ChatListWindow::Chat>& recents) {
 QMimeData* ChatListModel::mimeData(const QModelIndexList& indexes) const {
     QMimeData* data = QAbstractItemModel::mimeData(indexes);
     ChatListRecentItem *item = dynamic_cast<ChatListRecentItem*>(getItemForIndex(indexes.first()));
-    if (item == NULL) {
+    if (item == nullptr) {
         return data;
     }
 
@@ -132,7 +132,7 @@ QMimeData* ChatListModel::mimeData(const QModelIndexList& indexes) const {
 }
 
 const ChatListMUCItem* ChatListModel::getChatListMUCItem(const JID& roomJID) const {
-    const ChatListMUCItem* mucItem = NULL;
+    const ChatListMUCItem* mucItem = nullptr;
     for (int i = 0; i < mucBookmarks_->rowCount(); i++) {
         ChatListMUCItem* item = dynamic_cast<ChatListMUCItem*>(mucBookmarks_->item(i));
         if (item->getBookmark().getRoom() == roomJID) {
@@ -148,7 +148,7 @@ int ChatListModel::columnCount(const QModelIndex& /*parent*/) const {
 }
 
 ChatListItem* ChatListModel::getItemForIndex(const QModelIndex& index) const {
-    return index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : NULL;
+    return index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : nullptr;
 }
 
 QVariant ChatListModel::data(const QModelIndex& index, int role) const {
@@ -175,7 +175,7 @@ QModelIndex ChatListModel::parent(const QModelIndex& index) const {
 }
 
 int ChatListModel::rowCount(const QModelIndex& parentIndex) const {
-    ChatListGroupItem* parent = NULL;
+    ChatListGroupItem* parent = nullptr;
     if (parentIndex.isValid()) {
         parent = dynamic_cast<ChatListGroupItem*>(static_cast<ChatListItem*>(parentIndex.internalPointer()));
     } else {

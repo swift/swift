@@ -26,7 +26,7 @@ namespace Swift {
 
     class SWIFTEN_API VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
         public:
-            VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
+            VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = nullptr);
 
             boost::optional<std::string> getAvatarHash(const JID&) const;
 

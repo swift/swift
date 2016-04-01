@@ -49,9 +49,9 @@ SecureTransportCertificate::SecureTransportCertificate(SecCertificateRef certifi
 
 
 SecureTransportCertificate::SecureTransportCertificate(const ByteArray& der) {
-    CFDataRef derData = CFDataCreateWithBytesNoCopy(NULL, der.data(), static_cast<CFIndex>(der.size()), NULL);
+    CFDataRef derData = CFDataCreateWithBytesNoCopy(nullptr, der.data(), static_cast<CFIndex>(der.size()), nullptr);
     // certificate will take ownership of derData and free it on its release.
-    SecCertificateRef certificate = SecCertificateCreateWithData(NULL, derData);
+    SecCertificateRef certificate = SecCertificateCreateWithData(nullptr, derData);
     if (certificate) {
         certificateHandle_ = boost::shared_ptr<SecCertificate>(certificate, CFRelease);
         parse();
@@ -64,10 +64,10 @@ SecureTransportCertificate::~SecureTransportCertificate() {
 
 void SecureTransportCertificate::parse() {
     assert(certificateHandle_);
-    CFErrorRef error = NULL;
+    CFErrorRef error = nullptr;
 
     // The SecCertificateCopyValues function is not part of the iOS Secure Transport API.
-    CFDictionaryRef valueDict = SecCertificateCopyValues(certificateHandle_.get(), 0, &error);
+    CFDictionaryRef valueDict = SecCertificateCopyValues(certificateHandle_.get(), nullptr, &error);
     if (valueDict) {
         // Handle subject.
         CFStringRef subject = SecCertificateCopySubjectSummary(certificateHandle_.get());
@@ -78,7 +78,7 @@ void SecureTransportCertificate::parse() {
         }
 
         // Handle a single Common Name.
-        CFStringRef commonName = NULL;
+        CFStringRef commonName = nullptr;
         OSStatus error = SecCertificateCopyCommonName(certificateHandle_.get(), &commonName);
         if (!error && commonName) {
             NSString* commonNameStr = bridge_cast<NSString*>(commonName);

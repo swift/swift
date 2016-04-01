@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,7 @@ namespace Swift {
 class QtDNDTabBar : public QTabBar {
     Q_OBJECT
     public:
-        explicit QtDNDTabBar(QWidget* parent = 0);
+        explicit QtDNDTabBar(QWidget* parent = nullptr);
         virtual ~QtDNDTabBar();
 
         int getDragIndex() const;

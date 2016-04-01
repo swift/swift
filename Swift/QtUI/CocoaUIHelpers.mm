@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #include "CocoaUIHelpers.h"
 
 #include <boost/shared_ptr.hpp>
@@ -26,8 +32,8 @@ void CocoaUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::
     foreach(Certificate::ref cert, chain) {
         // convert chain to SecCertificateRef
         ByteArray certAsDER = cert->toDER();
-        boost::shared_ptr<boost::remove_pointer<CFDataRef>::type> certData(CFDataCreate(NULL, certAsDER.data(), certAsDER.size()), CFRelease);
-        boost::shared_ptr<OpaqueSecCertificateRef> macCert(SecCertificateCreateWithData(NULL, certData.get()), CFRelease);
+        boost::shared_ptr<boost::remove_pointer<CFDataRef>::type> certData(CFDataCreate(nullptr, certAsDER.data(), certAsDER.size()), CFRelease);
+        boost::shared_ptr<OpaqueSecCertificateRef> macCert(SecCertificateCreateWithData(nullptr, certData.get()), CFRelease);
 
         // add to NSMutable array
         [certificates addObject: (id)macCert.get()];
@@ -36,7 +42,7 @@ void CocoaUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::
 
     SFCertificatePanel* panel = [[SFCertificatePanel alloc] init];
     //[panel setPolicies:(id)policies.get()];
-    [panel beginSheetForWindow:parentWindow modalDelegate:nil didEndSelector:NULL contextInfo:NULL certificates:certificates showGroup:YES];
+    [panel beginSheetForWindow:parentWindow modalDelegate:nil didEndSelector:nullptr contextInfo:nullptr certificates:certificates showGroup:YES];
     [certificates release];
 }
 

@@ -45,7 +45,7 @@ namespace Swift {
     class LabelModel : public QAbstractListModel {
         Q_OBJECT
         public:
-            LabelModel(QObject* parent = NULL) : QAbstractListModel(parent) {}
+            LabelModel(QObject* parent = nullptr) : QAbstractListModel(parent) {}
 
             virtual int rowCount(const QModelIndex& /*index*/) const {
                 return static_cast<int>(availableLabels_.size());

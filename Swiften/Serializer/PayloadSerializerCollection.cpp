@@ -29,7 +29,7 @@ PayloadSerializer* PayloadSerializerCollection::getPayloadSerializer(boost::shar
     std::vector<PayloadSerializer*>::const_iterator i = std::find_if(
             serializers_.begin(), serializers_.end(),
             boost::bind(&PayloadSerializer::canSerialize, _1, payload));
-    return (i != serializers_.end() ? *i : NULL);
+    return (i != serializers_.end() ? *i : nullptr);
 }
 
 }

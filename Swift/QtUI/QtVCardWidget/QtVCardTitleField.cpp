@@ -21,7 +21,7 @@
 namespace Swift {
 
 QtVCardTitleField::QtVCardTitleField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Title"), false, false), titleLineEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Title"), false, false), titleLineEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

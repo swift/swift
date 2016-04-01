@@ -22,7 +22,7 @@
 namespace Swift {
 
 QtVCardDescriptionField::QtVCardDescriptionField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Description"), false, false), descriptionPlainTextEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Description"), false, false), descriptionPlainTextEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

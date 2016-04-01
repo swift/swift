@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -96,7 +96,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
 
     handleShowOfflineToggled(settings_->getSetting(SettingConstants::SHOW_OFFLINE));
 
-    ownContact_ = boost::make_shared<ContactRosterItem>(myJID_.toBare(), myJID_.toBare(), nickManager_->getOwnNick(), static_cast<GroupRosterItem*>(0));
+    ownContact_ = boost::make_shared<ContactRosterItem>(myJID_.toBare(), myJID_.toBare(), nickManager_->getOwnNick(), static_cast<GroupRosterItem*>(nullptr));
     ownContact_->setVCard(vcardManager_->getVCard(myJID_.toBare()));
     ownContact_->setAvatarPath(pathToString(avatarManager_->getAvatarPath(myJID_.toBare())));
     mainWindow_->setMyContactRosterItem(ownContact_);
@@ -110,7 +110,7 @@ RosterController::~RosterController() {
     delete offlineFilter_;
     delete expandiness_;
 
-    mainWindow_->setRosterModel(NULL);
+    mainWindow_->setRosterModel(nullptr);
     if (mainWindow_->canDelete()) {
         delete mainWindow_;
     }

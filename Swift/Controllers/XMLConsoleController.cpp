@@ -11,7 +11,7 @@
 
 namespace Swift {
 
-XMLConsoleController::XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory) : xmlConsoleWidgetFactory(xmlConsoleWidgetFactory), xmlConsoleWidget(NULL) {
+XMLConsoleController::XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory) : xmlConsoleWidgetFactory(xmlConsoleWidgetFactory), xmlConsoleWidget(nullptr) {
     uiEventStream->onUIEvent.connect(boost::bind(&XMLConsoleController::handleUIEvent, this, _1));
 }
 
@@ -21,8 +21,8 @@ XMLConsoleController::~XMLConsoleController() {
 
 void XMLConsoleController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
     boost::shared_ptr<RequestXMLConsoleUIEvent> event = boost::dynamic_pointer_cast<RequestXMLConsoleUIEvent>(rawEvent);
-    if (event != NULL) {
-        if (xmlConsoleWidget == NULL) {
+    if (event != nullptr) {
+        if (xmlConsoleWidget == nullptr) {
             xmlConsoleWidget = xmlConsoleWidgetFactory->createXMLConsoleWidget();
         }
         xmlConsoleWidget->show();

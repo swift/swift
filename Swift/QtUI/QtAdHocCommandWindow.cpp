@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ const int FormLayoutIndex = 1;
 
 namespace Swift {
 QtAdHocCommandWindow::QtAdHocCommandWindow(boost::shared_ptr<OutgoingAdHocCommandSession> command) : command_(command) {
-    formWidget_ = NULL;
+    formWidget_ = nullptr;
 
     setAttribute(Qt::WA_DeleteOnClose);
     command->onNextStageReceived.connect(boost::bind(&QtAdHocCommandWindow::handleNextStageReceived, this, _1));
@@ -142,7 +142,7 @@ void QtAdHocCommandWindow::setForm(Form::ref form) {
 void QtAdHocCommandWindow::setNoForm(bool andHide) {
     form_.reset();
     delete formWidget_;
-    formWidget_ = NULL;
+    formWidget_ = nullptr;
     resize(minimumSize());
     setVisible(!andHide);
 }

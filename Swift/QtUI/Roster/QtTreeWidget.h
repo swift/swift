@@ -26,7 +26,7 @@ class QtTreeWidget : public QTreeView {
     public:
         enum MessageTarget {MessageDefaultJID, MessageDisplayJID};
 
-        QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent = 0);
+        QtTreeWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget messageTarget, QWidget* parent = nullptr);
         ~QtTreeWidget();
         void show();
         QtTreeWidgetItem* getRoot();

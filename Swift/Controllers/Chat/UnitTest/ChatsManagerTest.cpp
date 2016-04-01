@@ -95,7 +95,7 @@ public:
         joinMUCWindowFactory_ = mocks_->InterfaceMock<JoinMUCWindowFactory>();
         xmppRoster_ = new XMPPRosterImpl();
         mucRegistry_ = new MUCRegistry();
-        nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, NULL, mucRegistry_);
+        nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, nullptr, mucRegistry_);
         presenceOracle_ = new PresenceOracle(stanzaChannel_, xmppRoster_);
         serverDiscoInfo_ = boost::make_shared<DiscoInfo>();
         presenceSender_ = new StanzaChannelPresenceSender(stanzaChannel_);
@@ -124,7 +124,7 @@ public:
         vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
         mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
-        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, NULL, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, NULL, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_);
+        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, nullptr, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_);
 
         manager_->setAvatarManager(avatarManager_);
     }
@@ -386,7 +386,7 @@ public:
         manager_->handleIncomingMessage(message);
         Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
         CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
-        CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
+        CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != nullptr);
 
         xmppRoster_->removeContact(messageJID);
 
@@ -416,7 +416,7 @@ public:
 
         CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
         Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
-        CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
+        CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != nullptr);
     }
 
     /**
@@ -729,7 +729,7 @@ public:
 
         CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
         Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
-        CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != 0);
+        CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != nullptr);
     }
 
     void testChatControllerHighlightingNotificationTesting() {

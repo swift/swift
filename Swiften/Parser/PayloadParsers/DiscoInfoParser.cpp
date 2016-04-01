@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-DiscoInfoParser::DiscoInfoParser() : level_(TopLevel), formParser_(NULL) {
+DiscoInfoParser::DiscoInfoParser() : level_(TopLevel), formParser_(nullptr) {
 }
 
 void DiscoInfoParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
@@ -47,7 +47,7 @@ void DiscoInfoParser::handleEndElement(const std::string& element, const std::st
     if (level_ == PayloadLevel && formParser_) {
         getPayloadInternal()->addExtension(formParser_->getPayloadInternal());
         delete formParser_;
-        formParser_ = NULL;
+        formParser_ = nullptr;
     }
 }
 

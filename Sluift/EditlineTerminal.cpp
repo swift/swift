@@ -22,7 +22,7 @@
 
 using namespace Swift;
 
-static EditlineTerminal* globalInstance = NULL;
+static EditlineTerminal* globalInstance = nullptr;
 
 static int completionStart = -1;
 static int completionEnd = -1;
@@ -50,7 +50,7 @@ static char* getCompletions(const char*, int state) {
         }
     }
     if (boost::numeric_cast<size_t>(state) >= completions.size()) {
-        return 0;
+        return nullptr;
     }
     return strdup(completions[boost::numeric_cast<size_t>(state)].c_str());
 }

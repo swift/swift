@@ -84,7 +84,7 @@ public:
         directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
         uiEventStream_ = new UIEventStream();
         avatarManager_ = new NullAvatarManager();
-        TimerFactory* timerFactory = NULL;
+        TimerFactory* timerFactory = nullptr;
         window_ = new MockChatWindow();
         mucRegistry_ = new MUCRegistry();
         entityCapsProvider_ = new DummyEntityCapsProvider();
@@ -97,7 +97,7 @@ public:
         vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
         mucBookmarkManager_ = new MUCBookmarkManager(iqRouter_);
-        controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, NULL, NULL, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, NULL, vcardManager_, mucBookmarkManager_);
+        controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_);
     }
 
     void tearDown() {

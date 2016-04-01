@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,8 +12,8 @@ namespace Swift {
     class QtElidingLabel : public QLabel {
         Q_OBJECT
     public:
-        QtElidingLabel(QWidget* parent = NULL, Qt::WindowFlags f = 0);
-        QtElidingLabel(const QString &text, QWidget* parent = NULL, Qt::WindowFlags f = 0);
+        QtElidingLabel(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::Widget);
+        QtElidingLabel(const QString &text, QWidget* parent = nullptr, Qt::WindowFlags f = Qt::Widget);
         void setText(const QString& text);
         virtual ~QtElidingLabel();
 

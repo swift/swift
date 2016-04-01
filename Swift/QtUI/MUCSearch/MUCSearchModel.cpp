@@ -60,7 +60,7 @@ QModelIndex MUCSearchModel::parent(const QModelIndex& index) const {
         return QModelIndex();
     }
 
-    MUCSearchServiceItem* parent = NULL;
+    MUCSearchServiceItem* parent = nullptr;
     if (MUCSearchRoomItem* roomItem = dynamic_cast<MUCSearchRoomItem*>(item)) {
         parent = roomItem->getParent();
     }

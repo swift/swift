@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -57,7 +57,7 @@ class PresenceNotifierTest : public CppUnit::TestFixture {
             user2 = JID("user2@foo.com/baz");
             avatarManager = new DummyAvatarManager();
             roster = new XMPPRosterImpl();
-            nickResolver = new NickResolver(JID("foo@bar.com"), roster, NULL, mucRegistry);
+            nickResolver = new NickResolver(JID("foo@bar.com"), roster, nullptr, mucRegistry);
             presenceOracle = new PresenceOracle(stanzaChannel, roster);
             timerFactory = new DummyTimerFactory();
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -322,7 +322,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 
         PoolRef createTestling() {
             // make_shared is limited to 9 arguments; instead new is used here.
-            PoolRef pool = PoolRef(new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(NULL), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""), TLSOptions()));
+            PoolRef pool = PoolRef(new BOSHConnectionPool(boshURL, resolver, connectionFactory, &parserFactory, static_cast<TLSContextFactory*>(nullptr), timerFactory, eventLoop, to, initialRID, URL(), SafeString(""), SafeString(""), TLSOptions()));
             pool->open();
             pool->onXMPPDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleXMPPDataRead, this, _1));
             pool->onBOSHDataRead.connect(boost::bind(&BOSHConnectionPoolTest::handleBOSHDataRead, this, _1));

@@ -43,7 +43,7 @@ static PrepCache resourcePrepCache;
 
 static const std::list<char> escapedChars = boost::assign::list_of(' ')('"')('&')('\'')('/')('<')('>')('@')(':');
 
-static IDNConverter* idnConverter = NULL;
+static IDNConverter* idnConverter = nullptr;
 
 #ifndef SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER
 namespace {

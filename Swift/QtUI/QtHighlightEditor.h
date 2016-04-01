@@ -27,7 +27,7 @@ namespace Swift {
         Q_OBJECT
 
         public:
-            QtHighlightEditor(QtSettingsProvider* settings, QWidget* parent = NULL);
+            QtHighlightEditor(QtSettingsProvider* settings, QWidget* parent = nullptr);
             virtual ~QtHighlightEditor();
 
             virtual void show();

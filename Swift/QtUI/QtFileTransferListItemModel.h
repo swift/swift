@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ class FileTransferOverview;
 class QtFileTransferListItemModel : public QAbstractItemModel {
     Q_OBJECT
 public:
-    explicit QtFileTransferListItemModel(QObject *parent = 0);
+    explicit QtFileTransferListItemModel(QObject *parent = nullptr);
     virtual ~QtFileTransferListItemModel();
 
     void setFileTransferOverview(FileTransferOverview*);

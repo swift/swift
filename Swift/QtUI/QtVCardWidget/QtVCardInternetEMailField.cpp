@@ -24,7 +24,7 @@
 namespace Swift {
 
 QtVCardInternetEMailField::QtVCardInternetEMailField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("E-Mail")), emailLineEdit(NULL), emailLabel(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("E-Mail")), emailLineEdit(nullptr), emailLabel(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

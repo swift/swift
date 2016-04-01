@@ -111,7 +111,7 @@ namespace Swift {
 
         void visit(WhiteboardPolygonElement& element) {
             QGraphicsPolygonItem* item = qgraphicsitem_cast<QGraphicsPolygonItem*>(graphicsView_->getItem(P2QSTRING(element.getID())));
-            if (item == 0 && type_ == GView::New) {
+            if (item == nullptr && type_ == GView::New) {
                 item = new QGraphicsPolygonItem();
                 QString id = P2QSTRING(element.getID());
                 item->setData(100, id);

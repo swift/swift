@@ -21,7 +21,7 @@
 namespace Swift {
 
 QtVCardRoleField::QtVCardRoleField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Role"), false, false), roleLineEdit(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Role"), false, false), roleLineEdit(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 

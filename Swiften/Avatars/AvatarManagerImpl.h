@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@ namespace Swift {
 
     class AvatarManagerImpl : public AvatarManager {
         public:
-            AvatarManagerImpl(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
+            AvatarManagerImpl(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = nullptr);
             virtual ~AvatarManagerImpl();
 
             virtual boost::filesystem::path getAvatarPath(const JID&) const;

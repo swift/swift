@@ -19,7 +19,7 @@
 #include <QAction>
 
 namespace Swift {
-QtSystemTray::QtSystemTray() : QObject(), statusType_(StatusShow::None), trayMenu_(0), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/connecting.mng"), unreadMessages_(false), connecting_(false) {
+QtSystemTray::QtSystemTray() : QObject(), statusType_(StatusShow::None), trayMenu_(nullptr), onlineIcon_(":icons/online.png"), awayIcon_(":icons/away.png"), dndIcon_(":icons/dnd.png"), offlineIcon_(":icons/offline.png"), newMessageIcon_(":icons/new-chat.png"), throbberMovie_(":/icons/connecting.mng"), unreadMessages_(false), connecting_(false) {
     trayIcon_ = new QSystemTrayIcon(offlineIcon_);
     trayIcon_->setToolTip("Swift");
     connect(trayIcon_, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(handleIconActivated(QSystemTrayIcon::ActivationReason)));

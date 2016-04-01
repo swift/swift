@@ -69,7 +69,7 @@ void ChatControllerBase::handleLogCleared() {
 
 ChatWindow* ChatControllerBase::detachChatWindow() {
     ChatWindow* chatWindow = chatWindow_;
-    chatWindow_ = NULL;
+    chatWindow_ = nullptr;
     return chatWindow;
 }
 

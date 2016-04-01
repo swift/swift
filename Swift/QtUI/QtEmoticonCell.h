@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <map>
@@ -21,7 +27,7 @@ namespace Swift {
     class QtEmoticonCell : public QLabel {
         Q_OBJECT
         public:
-            QtEmoticonCell(const QString emoticonAsText, QString filePath, QWidget* parent = 0);
+            QtEmoticonCell(const QString emoticonAsText, QString filePath, QWidget* parent = nullptr);
             ~QtEmoticonCell();
             virtual void mousePressEvent(QMouseEvent* event);
 

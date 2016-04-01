@@ -29,7 +29,7 @@ SluiftClient::SluiftClient(
         SimpleEventLoop* eventLoop) :
             networkFactories(networkFactories),
             eventLoop(eventLoop),
-            tracer(NULL) {
+            tracer(nullptr) {
     client = new Client(jid, password, networkFactories);
     client->setAlwaysTrustCertificates();
     client->onDisconnected.connect(boost::bind(&SluiftClient::handleDisconnected, this, _1));
@@ -64,7 +64,7 @@ void SluiftClient::setTraceEnabled(bool b) {
     }
     else if (!b && tracer) {
         delete tracer;
-        tracer = NULL;
+        tracer = nullptr;
     }
 }
 

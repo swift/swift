@@ -14,7 +14,7 @@
 
 namespace Swift {
 
-QtVCardHomeWork::QtVCardHomeWork() : tagComboBox(0) {
+QtVCardHomeWork::QtVCardHomeWork() : tagComboBox(nullptr) {
 }
 
 QtVCardHomeWork::~QtVCardHomeWork() {

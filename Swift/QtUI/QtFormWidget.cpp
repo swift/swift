@@ -103,7 +103,7 @@ QListWidget* QtFormWidget::createList(FormField::ref field) {
 }
 
 QWidget* QtFormWidget::createWidget(FormField::ref field, const FormField::Type type, const size_t index) {
-    QWidget* widget = NULL;
+    QWidget* widget = nullptr;
     if (type == FormField::BooleanType) {
         QCheckBox* checkWidget = new QCheckBox(this);
         checkWidget->setCheckState(field->getBoolValue() ? Qt::Checked : Qt::Unchecked);
@@ -226,7 +226,7 @@ void QtFormWidget::setEditable(bool editable) {
         return;
     }
     foreach (boost::shared_ptr<FormField> field, form_->getFields()) {
-        QWidget* widget = NULL;
+        QWidget* widget = nullptr;
         if (field) {
             widget = fields_[field->getName()];
         }

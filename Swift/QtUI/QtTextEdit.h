@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
     class QtTextEdit : public QTextEdit {
         Q_OBJECT
     public:
-        QtTextEdit(SettingsProvider* settings, QWidget* parent = 0);
+        QtTextEdit(SettingsProvider* settings, QWidget* parent = nullptr);
         virtual ~QtTextEdit();
         virtual QSize sizeHint() const;
 

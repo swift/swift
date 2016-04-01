@@ -19,7 +19,7 @@ namespace Swift {
 class QtFormWidget : public QWidget {
     Q_OBJECT
     public:
-        QtFormWidget(Form::ref form, QWidget* parent = NULL);
+        QtFormWidget(Form::ref form, QWidget* parent = nullptr);
         virtual ~QtFormWidget();
         Form::ref getCompletedForm();
         void setEditable(bool editable);

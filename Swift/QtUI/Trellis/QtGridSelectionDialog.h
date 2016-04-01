@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ namespace Swift {
             Q_PROPERTY(QSize minGridSize READ getMinGridSize WRITE setMinGridSize NOTIFY minGridSizeChanged)
             Q_PROPERTY(QSize maxGridSize READ getMaxGridSize WRITE setMaxGridSize NOTIFY maxGridSizeChanged)
         public:
-            explicit QtGridSelectionDialog(QWidget* parent = 0);
+            explicit QtGridSelectionDialog(QWidget* parent = nullptr);
 
             virtual QSize sizeHint() const;
 

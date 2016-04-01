@@ -18,7 +18,7 @@ namespace Swift {
 
     class SWIFTEN_API VCardAvatarManager : public AvatarProvider {
         public:
-            VCardAvatarManager(VCardManager*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = NULL);
+            VCardAvatarManager(VCardManager*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = nullptr);
 
             boost::optional<std::string> getAvatarHash(const JID&) const;
 

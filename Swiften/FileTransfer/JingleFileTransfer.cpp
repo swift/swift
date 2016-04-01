@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2015 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ JingleFileTransfer::JingleFileTransfer(
             session(session),
             target(target),
             transporterFactory(transporterFactory),
-            transporter(NULL),
+            transporter(nullptr),
             ourCandidateSelectFinished(false),
             theirCandidateSelectFinished(false) {
 
@@ -229,7 +229,7 @@ void JingleFileTransfer::removeTransporter() {
         remoteTransportCandidateSelectFinishedConnection.release();
         proxyActivatedConnection.release();
         delete transporter;
-        transporter = NULL;
+        transporter = nullptr;
     }
 }
 

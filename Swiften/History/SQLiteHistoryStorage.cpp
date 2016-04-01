@@ -29,7 +29,7 @@ inline std::string getEscapedString(const std::string& s) {
 
 namespace Swift {
 
-SQLiteHistoryStorage::SQLiteHistoryStorage(const boost::filesystem::path& file) : db_(0) {
+SQLiteHistoryStorage::SQLiteHistoryStorage(const boost::filesystem::path& file) : db_(nullptr) {
     thread_ = new boost::thread(boost::bind(&SQLiteHistoryStorage::run, this));
 
     sqlite3_open(pathToString(file).c_str(), &db_);
@@ -38,13 +38,13 @@ SQLiteHistoryStorage::SQLiteHistoryStorage(const boost::filesystem::path& file) 
     }
 
     char* errorMessage;
-    int result = sqlite3_exec(db_, "CREATE TABLE IF NOT EXISTS messages('message' STRING, 'fromBare' INTEGER, 'fromResource' STRING, 'toBare' INTEGER, 'toResource' STRING, 'type' INTEGER, 'time' INTEGER, 'offset' INTEGER)", 0, 0, &errorMessage);
+    int result = sqlite3_exec(db_, "CREATE TABLE IF NOT EXISTS messages('message' STRING, 'fromBare' INTEGER, 'fromResource' STRING, 'toBare' INTEGER, 'toResource' STRING, 'type' INTEGER, 'time' INTEGER, 'offset' INTEGER)", nullptr, nullptr, &errorMessage);
     if (result != SQLITE_OK) {
         std::cerr << "SQL Error: " << errorMessage << std::endl;
         sqlite3_free(errorMessage);
     }
 
-    result = sqlite3_exec(db_, "CREATE TABLE IF NOT EXISTS jids('id' INTEGER PRIMARY KEY ASC AUTOINCREMENT, 'jid' STRING UNIQUE NOT NULL)", 0, 0, &errorMessage);
+    result = sqlite3_exec(db_, "CREATE TABLE IF NOT EXISTS jids('id' INTEGER PRIMARY KEY ASC AUTOINCREMENT, 'jid' STRING UNIQUE NOT NULL)", nullptr, nullptr, &errorMessage);
     if (result != SQLITE_OK) {
         std::cerr << "SQL Error: " << errorMessage << std::endl;
         sqlite3_free(errorMessage);
@@ -69,7 +69,7 @@ void SQLiteHistoryStorage::addMessage(const HistoryMessage& message) {
                     boost::lexical_cast<std::string>(secondsSinceEpoch) + ", " +
                     boost::lexical_cast<std::string>(message.getOffset()) + ")";
     char* errorMessage;
-    int result = sqlite3_exec(db_, statement.c_str(), 0, 0, &errorMessage);
+    int result = sqlite3_exec(db_, statement.c_str(), nullptr, nullptr, &errorMessage);
     if (result != SQLITE_OK) {
         std::cerr << "SQL Error: " << errorMessage << std::endl;
         sqlite3_free(errorMessage);
@@ -112,7 +112,7 @@ std::vector<HistoryMessage> SQLiteHistoryStorage::getMessagesFromDate(const JID&
                 " AND time<" + boost::lexical_cast<std::string>(upperBound) + ")";
     }
 
-    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, NULL);
+    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, nullptr);
     if (r != SQLITE_OK) {
         std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
     }
@@ -171,7 +171,7 @@ long long SQLiteHistoryStorage::getIDForJID(const JID& jid) {
 long long SQLiteHistoryStorage::addJID(const JID& jid) {
     std::string statement = std::string("INSERT INTO jids('jid') VALUES('") + getEscapedString(jid.toString()) + "')";
     char* errorMessage;
-    int result = sqlite3_exec(db_, statement.c_str(), 0, 0, &errorMessage);
+    int result = sqlite3_exec(db_, statement.c_str(), nullptr, nullptr, &errorMessage);
     if (result != SQLITE_OK) {
         std::cerr << "SQL Error: " << errorMessage << std::endl;
         sqlite3_free(errorMessage);
@@ -183,7 +183,7 @@ boost::optional<JID> SQLiteHistoryStorage::getJIDFromID(long long id) const {
     boost::optional<JID> result;
     sqlite3_stmt* selectStatement;
     std::string selectQuery("SELECT jid FROM jids WHERE id=" + boost::lexical_cast<std::string>(id));
-    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, NULL);
+    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, nullptr);
     if (r != SQLITE_OK) {
         std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
     }
@@ -199,7 +199,7 @@ boost::optional<long long> SQLiteHistoryStorage::getIDFromJID(const JID& jid) co
     boost::optional<long long> result;
     sqlite3_stmt* selectStatement;
     std::string selectQuery("SELECT id FROM jids WHERE jid='" + jid.toString() + "'");
-    long long r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, NULL);
+    long long r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, nullptr);
     if (r != SQLITE_OK) {
         std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
     }
@@ -232,7 +232,7 @@ ContactsMap SQLiteHistoryStorage::getContacts(const JID& selfJID, HistoryMessage
         query += " AND message LIKE '%" + getEscapedString(keyword) + "%'";
     }
 
-    int r = sqlite3_prepare(db_, query.c_str(), boost::numeric_cast<int>(query.size()), &selectStatement, NULL);
+    int r = sqlite3_prepare(db_, query.c_str(), boost::numeric_cast<int>(query.size()), &selectStatement, nullptr);
     if (r != SQLITE_OK) {
         std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
     }
@@ -311,7 +311,7 @@ boost::gregorian::date SQLiteHistoryStorage::getNextDateWithLogs(const JID& self
     selectQuery += " AND time" + (reverseOrder ? std::string("<") : std::string(">")) + boost::lexical_cast<std::string>(timeStamp);
     selectQuery += " ORDER BY time " + (reverseOrder ? std::string("DESC") : std::string("ASC")) + " LIMIT 1";
 
-    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, NULL);
+    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, nullptr);
     if (r != SQLITE_OK) {
         std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
     }
@@ -362,7 +362,7 @@ boost::posix_time::ptime SQLiteHistoryStorage::getLastTimeStampFromMUC(const JID
                 boost::lexical_cast<std::string>(*selfID) + " AND fromBare=" +
                 boost::lexical_cast<std::string>(*mucID) + ") ORDER BY time DESC LIMIT 1";
 
-    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, NULL);
+    int r = sqlite3_prepare(db_, selectQuery.c_str(), boost::numeric_cast<int>(selectQuery.size()), &selectStatement, nullptr);
     if (r != SQLITE_OK) {
         std::cout << "Error: " << sqlite3_errmsg(db_) << std::endl;
     }

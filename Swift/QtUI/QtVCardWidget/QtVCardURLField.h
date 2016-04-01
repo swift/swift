@@ -26,7 +26,7 @@ class QtVCardURLField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("URL"), UNLIMITED_INSTANCES, QtVCardURLField)
 
-        QtVCardURLField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardURLField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardURLField();
 
         virtual bool isEmpty() const;

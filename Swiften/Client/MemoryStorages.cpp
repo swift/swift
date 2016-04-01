@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ MemoryStorages::MemoryStorages(CryptoProvider* crypto) {
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
     historyStorage = new SQLiteHistoryStorage(":memory:");
 #else
-    historyStorage = NULL;
+    historyStorage = nullptr;
 #endif
 }
 
@@ -57,7 +57,7 @@ HistoryStorage* MemoryStorages::getHistoryStorage() const {
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
     return historyStorage;
 #else
-    return NULL;
+    return nullptr;
 #endif
 }
 

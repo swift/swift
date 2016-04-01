@@ -95,7 +95,7 @@ class PayloadParserFactoryCollectionTest : public CppUnit::TestFixture
             virtual bool canParse(const std::string& e, const std::string&, const AttributeMap&) const {
                 return element.empty() ? true : element == e;
             }
-            virtual PayloadParser* createPayloadParser() { return NULL; }
+            virtual PayloadParser* createPayloadParser() { return nullptr; }
             std::string element;
         };
 };

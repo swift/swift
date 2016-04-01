@@ -187,7 +187,7 @@ MUCSearchRoomItem* QtMUCSearchWindow::getSelectedRoom() const {
         }
     }
     if (lstIndex.isEmpty()) {
-        return NULL;
+        return nullptr;
     }
     else {
         return dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(lstIndex.first().internalPointer()));

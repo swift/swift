@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-SearchPayloadParser::SearchPayloadParser() : level(TopLevel), formParser(NULL)  {
+SearchPayloadParser::SearchPayloadParser() : level(TopLevel), formParser(nullptr)  {
     formParserFactory = new FormParserFactory();
 }
 
@@ -62,7 +62,7 @@ void SearchPayloadParser::handleEndElement(const std::string& element, const std
         if (formParser) {
             getPayloadInternal()->setForm(formParser->getPayloadInternal());
             delete formParser;
-            formParser = NULL;
+            formParser = nullptr;
         }
         else if (element == "item") {
             assert(currentItem);

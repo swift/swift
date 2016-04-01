@@ -419,7 +419,7 @@ SLUIFT_LUA_FUNCTION(iTunes, get_current_track) {
  * Module registration
  ******************************************************************************/
 
-static const luaL_Reg sluift_functions[] = { {NULL, NULL} };
+static const luaL_Reg sluift_functions[] = { {nullptr, nullptr} };
 
 SLUIFT_API int luaopen_sluift(lua_State* L) {
     // Initialize & store the module table

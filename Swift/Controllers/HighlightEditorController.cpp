@@ -23,7 +23,7 @@
 namespace Swift {
 
 HighlightEditorController::HighlightEditorController(UIEventStream* uiEventStream, HighlightEditorWindowFactory* highlightEditorWindowFactory, HighlightManager* highlightManager)
-: highlightEditorWindowFactory_(highlightEditorWindowFactory), highlightEditorWindow_(NULL), highlightManager_(highlightManager), contactSuggester_(0)
+: highlightEditorWindowFactory_(highlightEditorWindowFactory), highlightEditorWindow_(nullptr), highlightManager_(highlightManager), contactSuggester_(nullptr)
 {
     uiEventStream->onUIEvent.connect(boost::bind(&HighlightEditorController::handleUIEvent, this, _1));
 }
@@ -31,7 +31,7 @@ HighlightEditorController::HighlightEditorController(UIEventStream* uiEventStrea
 HighlightEditorController::~HighlightEditorController()
 {
     delete highlightEditorWindow_;
-    highlightEditorWindow_ = NULL;
+    highlightEditorWindow_ = nullptr;
 }
 
 void HighlightEditorController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent)

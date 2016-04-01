@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
     class QtDynamicGridLayout : public QWidget {
         Q_OBJECT
     public:
-        explicit QtDynamicGridLayout(QWidget* parent = 0, bool enableDND = false);
+        explicit QtDynamicGridLayout(QWidget* parent = nullptr, bool enableDND = false);
         virtual ~QtDynamicGridLayout();
 
         QSize getDimension() const;

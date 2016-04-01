@@ -154,7 +154,7 @@ MUCController::MUCController (
     if (stanzaChannel->isAvailable()) {
         MUCController::setOnline(true);
     }
-    if (avatarManager_ != NULL) {
+    if (avatarManager_ != nullptr) {
         avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
     }
     MUCController::handleBareJIDCapsChanged(muc->getJID());
@@ -177,13 +177,13 @@ MUCController::MUCController (
 
 MUCController::~MUCController() {
     eventStream_->onUIEvent.disconnect(boost::bind(&MUCController::handleUIEvent, this, _1));
-    chatWindow_->setRosterModel(NULL);
+    chatWindow_->setRosterModel(nullptr);
     delete rosterVCardProvider_;
     delete roster_;
     if (loginCheckTimer_) {
         loginCheckTimer_->stop();
     }
-    chatWindow_->setTabComplete(NULL);
+    chatWindow_->setTabComplete(nullptr);
     delete completer_;
 }
 
@@ -465,7 +465,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
             onActivity("");
         }
     }
-    if (avatarManager_ != NULL) {
+    if (avatarManager_ != nullptr) {
         handleAvatarChanged(jid);
     }
 }
@@ -780,7 +780,7 @@ void MUCController::handleOccupantNicknameChanged(const std::string& oldNickname
     std::string groupName(roleToGroupName(role));
     roster_->addContact(newJID, realJID, newNickname, groupName, avatarManager_->getAvatarPath(newJID));
     roster_->applyOnItems(SetMUC(newJID, role, affiliation));
-    if (avatarManager_ != NULL) {
+    if (avatarManager_ != nullptr) {
         handleAvatarChanged(newJID);
     }
 

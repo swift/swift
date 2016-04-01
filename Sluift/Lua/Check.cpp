@@ -40,7 +40,7 @@ int Lua::checkIntNumber(lua_State* L, int arg) {
 }
 
 std::string Lua::checkString(lua_State* L, int arg) {
-    const char *s = lua_tolstring(L, arg, NULL);
+    const char *s = lua_tolstring(L, arg, nullptr);
     if (!s) {
         throw Lua::Exception(getArgTypeError(L, arg, LUA_TSTRING));
     }

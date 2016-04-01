@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@ namespace Swift {
                         hostname.c_str(),
                         &BonjourResolveHostnameQuery::handleHostnameResolvedStatic, this);
                 if (result != kDNSServiceErr_NoError) {
-                    sdRef = NULL;
+                    sdRef = nullptr;
                 }
             }
 

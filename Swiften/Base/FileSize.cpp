@@ -11,7 +11,7 @@
 namespace Swift {
 
 std::string formatSize(const boost::uintmax_t bytes) {
-    static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", NULL};
+    static const char *siPrefix[] = {"k", "M", "G", "T", "P", "E", "Z", "Y", nullptr};
     int power = 0;
     double engBytes = bytes;
     while (engBytes >= 1000) {

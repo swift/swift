@@ -26,7 +26,7 @@ QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvi
     qtOnlySettings_ = qtSettings;
     settings_ = settings;
     tabs_ = tabs;
-    theme_ = NULL;
+    theme_ = nullptr;
     QtChatTabs* fullTabs = dynamic_cast<QtChatTabs*>(tabs_);
     if (splitter) {
         assert(fullTabs && "Netbook mode and no-tabs interface is not supported!");

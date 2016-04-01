@@ -60,7 +60,7 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
       timeout.tv_sec = 10;
       timeout.tv_usec = 0;
 
-      select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
+      select(FD_SETSIZE, &fds, nullptr, nullptr, &timeout);
       r = readnatpmpresponseorretry(&p->natpmp, &response);
     } while (false /*r == NATPMP_TRYAGAIN*/);
 
@@ -98,7 +98,7 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, i
         timeout.tv_sec = 10;
         timeout.tv_usec = 0;
 
-        select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
+        select(FD_SETSIZE, &fds, nullptr, nullptr, &timeout);
         r = readnatpmpresponseorretry(&p->natpmp, &response);
     } while(false /*r == NATPMP_TRYAGAIN*/);
 
@@ -126,7 +126,7 @@ bool NATPMPInterface::removePortForward(const NATPortMapping& mapping) {
       FD_ZERO(&fds);
       FD_SET(p->natpmp.s, &fds);
       getnatpmprequesttimeout(&p->natpmp, &timeout);
-      select(FD_SETSIZE, &fds, NULL, NULL, &timeout);
+      select(FD_SETSIZE, &fds, nullptr, nullptr, &timeout);
       r = readnatpmpresponseorretry(&p->natpmp, &response);
     } while(r == NATPMP_TRYAGAIN);
 

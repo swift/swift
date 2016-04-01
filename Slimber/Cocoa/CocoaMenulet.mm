@@ -44,7 +44,7 @@ void CocoaMenulet::clear() {
 
 void CocoaMenulet::addItem(const std::string& name, const std::string& icon) {
     NSMenuItem* item = [[NSMenuItem alloc] initWithTitle: std2NSString(name)
-        action: NULL keyEquivalent: @""];
+        action: nullptr keyEquivalent: @""];
     if (!icon.empty()) {
         NSString* path = [[NSBundle mainBundle] pathForResource: std2NSString(icon) ofType:@"png"];
         NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];

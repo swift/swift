@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@ EventModel::~EventModel() {
 }
 
 QtEvent* EventModel::getItem(int row) const {
-    QtEvent* event = NULL;
+    QtEvent* event = nullptr;
     if (row < activeEvents_.size()) {
         event = activeEvents_[row];
     }

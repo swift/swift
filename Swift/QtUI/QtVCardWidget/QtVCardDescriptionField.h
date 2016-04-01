@@ -27,7 +27,7 @@ class QtVCardDescriptionField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Description"), 1, QtVCardDescriptionField)
 
-        QtVCardDescriptionField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardDescriptionField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardDescriptionField();
 
         virtual bool isEmpty() const;

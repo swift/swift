@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@
 namespace Swift {
 
 QtVCardAddressLabelField::QtVCardAddressLabelField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Address Label")), addressLabelPlainTextEdit(NULL), deliveryTypeLabel(NULL), domesticRadioButton(NULL), internationalRadioButton(NULL), buttonGroup(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Address Label")), addressLabelPlainTextEdit(nullptr), deliveryTypeLabel(nullptr), domesticRadioButton(nullptr), internationalRadioButton(nullptr), buttonGroup(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 
@@ -97,7 +97,7 @@ void QtVCardAddressLabelField::handleEditibleChanged(bool isEditable) {
     addressLabelPlainTextEdit->setReadOnly(!isEditable);
     addressLabelPlainTextEdit->setStyleSheet(isEditable ? "" : "QPlainTextEdit { background: transparent; }");
 
-    deliveryTypeLabel->setText(buttonGroup->checkedButton() == 0 ? "" : buttonGroup->checkedButton()->text());
+    deliveryTypeLabel->setText(buttonGroup->checkedButton() == nullptr ? "" : buttonGroup->checkedButton()->text());
     deliveryTypeLabel->setVisible(!isEditable);
 
     domesticRadioButton->setVisible(isEditable);

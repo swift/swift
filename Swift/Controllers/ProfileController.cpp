@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-ProfileController::ProfileController(VCardManager* vcardManager, ProfileWindowFactory* profileWindowFactory, UIEventStream* uiEventStream) : vcardManager(vcardManager), profileWindowFactory(profileWindowFactory), uiEventStream(uiEventStream), available(true), profileWindow(NULL), gettingVCard(false) {
+ProfileController::ProfileController(VCardManager* vcardManager, ProfileWindowFactory* profileWindowFactory, UIEventStream* uiEventStream) : vcardManager(vcardManager), profileWindowFactory(profileWindowFactory), uiEventStream(uiEventStream), available(true), profileWindow(nullptr), gettingVCard(false) {
     uiEventStream->onUIEvent.connect(boost::bind(&ProfileController::handleUIEvent, this, _1));
 }
 
@@ -92,7 +92,7 @@ void ProfileController::handleOwnVCardChanged(VCard::ref vcard) {
 }
 
 void ProfileController::handleProfileWindowAboutToBeClosed(const JID&) {
-    profileWindow = NULL;
+    profileWindow = nullptr;
 }
 
 void ProfileController::setAvailable(bool b) {

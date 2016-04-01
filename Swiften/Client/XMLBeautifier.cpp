@@ -21,7 +21,7 @@
 
 namespace Swift {
 
-XMLBeautifier::XMLBeautifier(bool indention, bool coloring) : doIndention(indention), doColoring(coloring), intLevel(0), parser(NULL), lastWasStepDown(false) {
+XMLBeautifier::XMLBeautifier(bool indention, bool coloring) : doIndention(indention), doColoring(coloring), intLevel(0), parser(nullptr), lastWasStepDown(false) {
     factory = new PlatformXMLParserFactory();
 }
 

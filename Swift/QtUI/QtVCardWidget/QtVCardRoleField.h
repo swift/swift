@@ -26,7 +26,7 @@ class QtVCardRoleField : public QtVCardGeneralField {
     public:
         GENERIC_QT_VCARD_FIELD_INFO(tr("Role"), UNLIMITED_INSTANCES, QtVCardRoleField)
 
-        QtVCardRoleField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
+        QtVCardRoleField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
         virtual ~QtVCardRoleField();
 
         virtual bool isEmpty() const;

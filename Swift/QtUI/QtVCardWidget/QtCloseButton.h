@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QAbstractButton>
@@ -13,7 +19,7 @@ namespace Swift {
     class QtCloseButton : public QAbstractButton {
             Q_OBJECT
         public:
-            explicit QtCloseButton(QWidget *parent = 0);
+            explicit QtCloseButton(QWidget *parent = nullptr);
             virtual QSize sizeHint() const;
 
         protected:

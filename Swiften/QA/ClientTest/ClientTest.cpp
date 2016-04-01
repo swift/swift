@@ -22,7 +22,7 @@ using namespace Swift;
 static SimpleEventLoop eventLoop;
 static BoostNetworkFactories networkFactories(&eventLoop);
 
-static Client* client = 0;
+static Client* client = nullptr;
 static bool rosterReceived = false;
 enum TestStage {
     FirstConnect,

@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-FileTransferListController::FileTransferListController(UIEventStream* uiEventStream, FileTransferListWidgetFactory* fileTransferListWidgetFactory) : fileTransferListWidgetFactory(fileTransferListWidgetFactory), fileTransferListWidget(NULL), fileTransferOverview(0) {
+FileTransferListController::FileTransferListController(UIEventStream* uiEventStream, FileTransferListWidgetFactory* fileTransferListWidgetFactory) : fileTransferListWidgetFactory(fileTransferListWidgetFactory), fileTransferListWidget(nullptr), fileTransferOverview(nullptr) {
     uiEventStream->onUIEvent.connect(boost::bind(&FileTransferListController::handleUIEvent, this, _1));
 }
 
@@ -36,8 +36,8 @@ void FileTransferListController::setFileTransferOverview(FileTransferOverview *o
 
 void FileTransferListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
     boost::shared_ptr<RequestFileTransferListUIEvent> event = boost::dynamic_pointer_cast<RequestFileTransferListUIEvent>(rawEvent);
-    if (event != NULL) {
-        if (fileTransferListWidget == NULL) {
+    if (event != nullptr) {
+        if (fileTransferListWidget == nullptr) {
             fileTransferListWidget = fileTransferListWidgetFactory->createFileTransferListWidget();
             if (fileTransferOverview) {
                 fileTransferListWidget->setFileTransferOverview(fileTransferOverview);

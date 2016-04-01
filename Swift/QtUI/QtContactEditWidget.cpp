@@ -20,7 +20,7 @@
 
 namespace Swift {
 
-QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups, QWidget* parent) : QWidget(parent), nameRadioButton_(NULL), groups_(NULL) {
+QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups, QWidget* parent) : QWidget(parent), nameRadioButton_(nullptr), groups_(nullptr) {
     QBoxLayout* layout = new QVBoxLayout(this);
     setContentsMargins(0,0,0,0);
     layout->setContentsMargins(0,0,0,0);
@@ -116,7 +116,7 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
     throbberLabel_->hide();
 
     // remove old suggestions except for the user input text field
-    QLayoutItem* suggestionItem = NULL;
+    QLayoutItem* suggestionItem = nullptr;
     while ((suggestionItem = suggestionsLayout_->itemAt(0)) && suggestionItem->widget() != name_) {
         QWidget* suggestionWidget = suggestionItem->widget();
         suggestionsLayout_->removeWidget(suggestionWidget);
@@ -131,7 +131,7 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
     nameRadioButton_ = new QRadioButton(tr("Name:"), this);
     suggestionsLayout_->insertWidget(nameLayout_->count(), nameRadioButton_);
 
-    QRadioButton* suggestedRadioButton = 0;
+    QRadioButton* suggestedRadioButton = nullptr;
     QList<QRadioButton*> radioButtons = findChildren<QRadioButton*>();
     foreach (QRadioButton* candidate, radioButtons) {
         if (candidate->text() == name_->text()) {
@@ -169,7 +169,7 @@ void QtContactEditWidget::clear() {
         delete layoutItem->widget();
         delete layoutItem;
     }
-    nameRadioButton_ = NULL;
+    nameRadioButton_ = nullptr;
 }
 
 }

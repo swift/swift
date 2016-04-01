@@ -27,7 +27,7 @@ namespace Swift {
     {
         Q_OBJECT
     public:
-        TextDialog(QGraphicsTextItem* item, QWidget* parent = 0);
+        TextDialog(QGraphicsTextItem* item, QWidget* parent = nullptr);
 
     private:
         QGraphicsTextItem* item;

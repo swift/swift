@@ -177,7 +177,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 }
 
 FullPayloadParserFactoryCollection::~FullPayloadParserFactoryCollection() {
-    setDefaultFactory(NULL);
+    setDefaultFactory(nullptr);
     delete defaultFactory_;
     foreach(shared_ptr<PayloadParserFactory> factory, factories_) {
         removeFactory(factory.get());

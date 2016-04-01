@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -37,7 +37,7 @@ class QtVCardGeneralField : public QWidget {
         Q_PROPERTY(bool empty READ isEmpty)
 
     public:
-        explicit QtVCardGeneralField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false, int row = 0, QString label = QString(),
+        explicit QtVCardGeneralField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false, int row = 0, QString label = QString(),
                                         bool preferrable = true, bool taggable = true);
         virtual ~QtVCardGeneralField();
 

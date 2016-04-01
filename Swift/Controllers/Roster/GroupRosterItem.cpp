@@ -99,7 +99,7 @@ void GroupRosterItem::removeAll() {
  */
 ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
     std::vector<RosterItem*>::iterator it = children_.begin();
-    ContactRosterItem* removed = NULL;
+    ContactRosterItem* removed = nullptr;
     while (it != children_.end()) {
         ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(*it);
         if (contact && contact->getJID() == jid) {
@@ -125,7 +125,7 @@ ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
 
 GroupRosterItem* GroupRosterItem::removeGroupChild(const std::string& groupName) {
     std::vector<RosterItem*>::iterator it = children_.begin();
-    GroupRosterItem* removed = NULL;
+    GroupRosterItem* removed = nullptr;
     while (it != children_.end()) {
         GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
         if (group && group->getDisplayName() == groupName) {

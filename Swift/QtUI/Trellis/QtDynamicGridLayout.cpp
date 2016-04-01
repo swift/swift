@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-QtDynamicGridLayout::QtDynamicGridLayout(QWidget* parent, bool enableDND) : QWidget(parent), dndEnabled_(enableDND), movingTab_(NULL) {
+QtDynamicGridLayout::QtDynamicGridLayout(QWidget* parent, bool enableDND) : QWidget(parent), dndEnabled_(enableDND), movingTab_(nullptr) {
     gridLayout_ = new QGridLayout(this);
     setContentsMargins(0,0,0,0);
     setDimensions(QSize(1,1));
@@ -44,7 +44,7 @@ int QtDynamicGridLayout::addTab(QtTabbable* tab, const QString& title) {
     lastPos = QPoint(qMin(lastPos.x(), gridLayout_->columnCount() - 1), qMin(lastPos.y(), gridLayout_->rowCount() - 1));
 
     QLayoutItem* item = gridLayout_->itemAtPosition(lastPos.y(), lastPos.x());
-    QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(item ? item->widget() : 0);
+    QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(item ? item->widget() : nullptr);
     if (tabWidget) {
         tabWidget->addTab(tab, title);
     }
@@ -66,7 +66,7 @@ int QtDynamicGridLayout::count() const {
 }
 
 QWidget* QtDynamicGridLayout::widget(int index) const {
-    QWidget* widgetAtIndex = NULL;
+    QWidget* widgetAtIndex = nullptr;
     for (int y = 0; y < gridLayout_->rowCount(); y++) {
         for (int x = 0; x < gridLayout_->columnCount(); x++) {
             QLayoutItem* layoutItem = gridLayout_->itemAtPosition(y, x);
@@ -171,13 +171,13 @@ bool QtDynamicGridLayout::eventFilter(QObject* object, QEvent* event) {
 }
 
 QWidget* QtDynamicGridLayout::currentWidget() const {
-    QWidget* current = NULL;
+    QWidget* current = nullptr;
     current = focusWidget();
     while (current && !dynamic_cast<QtTabbable*>(current)) {
         if (current->parentWidget()) {
             current = current->parentWidget();
         } else {
-            current = NULL;
+            current = nullptr;
             break;
         }
     }
@@ -218,14 +218,14 @@ QtTabWidget* QtDynamicGridLayout::indexToTabWidget(int index, int& tabIndex) {
                     if (index < 0) {
                         qWarning() << "Called QtDynamicGridLayout::setCurrentIndex with index out of bounds: index = " << index;
                         tabIndex = -1;
-                        return NULL;
+                        return nullptr;
                     }
                 }
             }
         }
     }
     tabIndex = -1;
-    return NULL;
+    return nullptr;
 }
 
 bool QtDynamicGridLayout::isDNDEnabled() const {
@@ -458,9 +458,9 @@ void QtDynamicGridLayout::updateTabPositions() {
 
 void QtDynamicGridLayout::moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex) {
 #if QT_VERSION >= 0x040500
-    SWIFT_LOG_ASSERT(movingTab_ == NULL, error) << std::endl;
+    SWIFT_LOG_ASSERT(movingTab_ == nullptr, error) << std::endl;
     movingTab_ = qobject_cast<QtTabbable*>(tabWidget->widget(oldIndex));
-    SWIFT_LOG_ASSERT(movingTab_ != NULL, error) << std::endl;
+    SWIFT_LOG_ASSERT(movingTab_ != nullptr, error) << std::endl;
 
     if (movingTab_) {
         // Install event filter that filters out events issued during the internal movement of the
@@ -472,7 +472,7 @@ void QtDynamicGridLayout::moveTab(QtTabWidget* tabWidget, int oldIndex, int newI
         qApp->removeEventFilter(this);
         SWIFT_LOG_ASSERT(movingTab_ == tabWidget->widget(newIndex), error) << std::endl;
     }
-    movingTab_ = NULL;
+    movingTab_ = nullptr;
     tabWidget->widget(newIndex)->setFocus();
 #else
 #warning Qt 4.5 or later is needed. Trying anyway, some things will be disabled.

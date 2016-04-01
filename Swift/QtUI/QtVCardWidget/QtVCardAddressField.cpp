@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@
 namespace Swift {
 
 QtVCardAddressField::QtVCardAddressField(QWidget* parent, QGridLayout *layout, bool editable) :
-    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Address")), streetLineEdit(NULL), poboxLineEdit(NULL), addressextLineEdit(NULL), cityLineEdit(NULL), pocodeLineEdit(NULL), regionLineEdit(NULL), countryLineEdit(NULL), textFieldGridLayout(NULL), textFieldGridLayoutItem(NULL), deliveryTypeLabel(NULL), domesticRadioButton(NULL), internationalRadioButton(NULL), buttonGroup(NULL) {
+    QtVCardGeneralField(parent, layout, editable, layout->rowCount(), tr("Address")), streetLineEdit(nullptr), poboxLineEdit(nullptr), addressextLineEdit(nullptr), cityLineEdit(nullptr), pocodeLineEdit(nullptr), regionLineEdit(nullptr), countryLineEdit(nullptr), textFieldGridLayout(nullptr), textFieldGridLayoutItem(nullptr), deliveryTypeLabel(nullptr), domesticRadioButton(nullptr), internationalRadioButton(nullptr), buttonGroup(nullptr) {
     connect(this, SIGNAL(editableChanged(bool)), SLOT(handleEditibleChanged(bool)));
 }
 
@@ -164,7 +164,7 @@ void QtVCardAddressField::handleEditibleChanged(bool isEditable) {
     regionLineEdit->setEditable(isEditable);
     countryLineEdit->setEditable(isEditable);
 
-    deliveryTypeLabel->setText(buttonGroup->checkedButton() == 0 ? "" : buttonGroup->checkedButton()->text());
+    deliveryTypeLabel->setText(buttonGroup->checkedButton() == nullptr ? "" : buttonGroup->checkedButton()->text());
     deliveryTypeLabel->setVisible(!isEditable);
 
     domesticRadioButton->setVisible(isEditable);

@@ -19,7 +19,7 @@
 
 namespace Swift {
 
-BonjourQuerier::BonjourQuerier(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), thread(0) {
+BonjourQuerier::BonjourQuerier(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), thread(nullptr) {
     int fds[2];
     int result = pipe(fds);
     assert(result == 0);
@@ -83,7 +83,7 @@ void BonjourQuerier::stop() {
         interruptSelect();
         thread->join();
         delete thread;
-        thread = NULL;
+        thread = nullptr;
         stopRequested = false;
     }
 }
@@ -113,7 +113,7 @@ void BonjourQuerier::run() {
             }
         }
 
-        if (select(maxSocket+1, &fdSet, NULL, NULL, 0) <= 0) {
+        if (select(maxSocket+1, &fdSet, nullptr, nullptr, nullptr) <= 0) {
             continue;
         }
 
