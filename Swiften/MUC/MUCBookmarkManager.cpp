@@ -65,9 +65,9 @@ bool MUCBookmarkManager::containsEquivalent(const std::vector<MUCBookmark>& list
 
 void MUCBookmarkManager::replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark) {
     if (!ready_) return;
-    for (size_t i = 0; i < bookmarks_.size(); i++) {
-        if (bookmarks_[i] == oldBookmark) {
-            bookmarks_[i] = newBookmark;
+    for (auto& bookmark : bookmarks_) {
+        if (bookmark == oldBookmark) {
+            bookmark = newBookmark;
             flush();
             onBookmarkRemoved(oldBookmark);
             onBookmarkAdded(newBookmark);

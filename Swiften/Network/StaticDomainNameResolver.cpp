@@ -25,9 +25,9 @@ namespace {
                 return;
             }
             std::vector<DomainNameServiceQuery::Result> results;
-            for(StaticDomainNameResolver::ServicesCollection::const_iterator i = resolver->getServices().begin(); i != resolver->getServices().end(); ++i) {
-                if (i->first == service) {
-                    results.push_back(i->second);
+            for(const auto& i : resolver->getServices()) {
+                if (i.first == service) {
+                    results.push_back(i.second);
                 }
             }
             eventLoop->postEvent(boost::bind(&ServiceQuery::emitOnResult, shared_from_this(), results), owner);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -90,13 +90,13 @@ std::vector<std::string> String::split(const std::string& s, char c) {
     assert((c & 0x80) == 0);
     std::vector<std::string> result;
     std::string accumulator;
-    for (size_t i = 0; i < s.size(); ++i) {
-        if (s[i] == c) {
+    for (char i : s) {
+        if (i == c) {
             result.push_back(accumulator);
             accumulator = "";
         }
         else {
-            accumulator += s[i];
+            accumulator += i;
         }
     }
     result.push_back(accumulator);

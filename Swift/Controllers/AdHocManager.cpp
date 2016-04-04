@@ -33,8 +33,8 @@ AdHocManager::AdHocManager(const JID& jid, AdHocCommandWindowFactory* factory, I
 
 AdHocManager::~AdHocManager() {
     uiEventStream_->onUIEvent.disconnect(boost::bind(&AdHocManager::handleUIEvent, this, _1));
-    for (size_t i = 0; i < controllers_.size(); ++i) {
-        controllers_[i]->onDeleting.disconnect(boost::bind(&AdHocManager::removeController, this, controllers_[i]));
+    for (auto& controller : controllers_) {
+        controller->onDeleting.disconnect(boost::bind(&AdHocManager::removeController, this, controller));
     }
 }
 

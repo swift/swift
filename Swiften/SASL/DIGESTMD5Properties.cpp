@@ -48,8 +48,8 @@ DIGESTMD5Properties DIGESTMD5Properties::parse(const ByteArray& data) {
     bool inKey = true;
     ByteArray currentKey;
     ByteArray currentValue;
-    for (size_t i = 0; i < data.size(); ++i) {
-        char c = static_cast<char>(data[i]);
+    for (unsigned char i : data) {
+        char c = static_cast<char>(i);
         if (inKey) {
             if (c == '=') {
                 inKey = false;

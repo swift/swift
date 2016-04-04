@@ -72,8 +72,8 @@ namespace Swift {
 
             template<typename T>
             std::shared_ptr<T> getDescription() const {
-                for (size_t i = 0; i < descriptions.size(); ++i) {
-                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(descriptions[i]));
+                for (const auto& description : descriptions) {
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(description));
                     if (result) {
                         return result;
                     }
@@ -83,8 +83,8 @@ namespace Swift {
 
             template<typename T>
             std::shared_ptr<T> getTransport() const {
-                for (size_t i = 0; i < transports.size(); ++i) {
-                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(transports[i]));
+                for (const auto& transport : transports) {
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(transport));
                     if (result) {
                         return result;
                     }

@@ -86,9 +86,9 @@ bool QtContactListWidget::isFull() const {
 void QtContactListWidget::updateContacts(const std::vector<Contact::ref>& contactUpdates) {
     std::vector<Contact::ref> contacts = contactListModel_->getList();
     foreach(const Contact::ref& contactUpdate, contactUpdates) {
-        for(size_t n = 0; n < contacts.size(); n++) {
-            if (contactUpdate->jid == contacts[n]->jid) {
-                contacts[n] = contactUpdate;
+        for(auto& contact : contacts) {
+            if (contactUpdate->jid == contact->jid) {
+                contact = contactUpdate;
                 break;
             }
         }

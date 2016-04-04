@@ -80,8 +80,8 @@ class FileTransferTest {
 
             size_t size = 1024 + boost::numeric_cast<size_t>(randGen.generateRandomInteger(1024 * 10));
             sendData_.resize(size);
-            for (size_t n = 0; n < sendData_.size(); n++) {
-                sendData_[n] = boost::numeric_cast<unsigned char>(randGen.generateRandomInteger(255));
+            for (unsigned char& n : sendData_) {
+                n = boost::numeric_cast<unsigned char>(randGen.generateRandomInteger(255));
             }
 
             std::ofstream outfile(sendFilePath_.native().c_str(), std::ios::out | std::ios::binary);

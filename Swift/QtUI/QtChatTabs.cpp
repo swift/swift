@@ -228,7 +228,7 @@ void QtChatTabs::handleRequestedNextTab() {
 void QtChatTabs::handleRequestedActiveTab() {
     QtTabbable::AlertType types[] = {QtTabbable::WaitingActivity, QtTabbable::ImpendingActivity};
     bool finished = false;
-    for (int j = 0; j < 2; j++) {
+    for (auto& type : types) {
         bool looped = false;
         for (int i = dynamicGrid_->currentIndex() + 1; !finished && i != dynamicGrid_->currentIndex(); i++) {
             if (i >= dynamicGrid_->count()) {
@@ -238,7 +238,7 @@ void QtChatTabs::handleRequestedActiveTab() {
                 looped = true;
                 i = 0;
             }
-            if (qobject_cast<QtTabbable*>(dynamicGrid_->widget(i))->getWidgetAlertState() == types[j]) {
+            if (qobject_cast<QtTabbable*>(dynamicGrid_->widget(i))->getWidgetAlertState() == type) {
                 dynamicGrid_->setCurrentIndex(i);
                 finished = true;
                 break;

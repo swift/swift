@@ -62,8 +62,8 @@ namespace Swift {
             template<typename T>
             std::vector< std::shared_ptr<T> > getAllQueriesEverRun() const {
                 std::vector< std::shared_ptr<T> > result;
-                for (QueryList::const_iterator i = allQueriesEverRun.begin(); i != allQueriesEverRun.end(); ++i) {
-                    if (std::shared_ptr<T> resultQuery = std::dynamic_pointer_cast<T>(*i)) {
+                for (const auto& i : allQueriesEverRun) {
+                    if (std::shared_ptr<T> resultQuery = std::dynamic_pointer_cast<T>(i)) {
                         result.push_back(resultQuery);
                     }
                 }
@@ -74,8 +74,8 @@ namespace Swift {
             template<typename T>
             std::vector< std::shared_ptr<T> > getQueries() const {
                 std::vector< std::shared_ptr<T> > result;
-                for (QueryList::const_iterator i = runningQueries.begin(); i != runningQueries.end(); ++i) {
-                    if (std::shared_ptr<T> resultQuery = std::dynamic_pointer_cast<T>(*i)) {
+                for (const auto& runningQuerie : runningQueries) {
+                    if (std::shared_ptr<T> resultQuery = std::dynamic_pointer_cast<T>(runningQuerie)) {
                         result.push_back(resultQuery);
                     }
                 }

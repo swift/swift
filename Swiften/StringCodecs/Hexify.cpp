@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,8 +27,8 @@ std::string Hexify::hexify(const ByteArray& data) {
     std::ostringstream result;
     result << std::hex;
 
-    for (unsigned int i = 0; i < data.size(); ++i) {
-        result << std::setw(2) << std::setfill('0') << boost::numeric_cast<unsigned int>(static_cast<unsigned char>(data[i]));
+    for (unsigned char i : data) {
+        result << std::setw(2) << std::setfill('0') << boost::numeric_cast<unsigned int>(static_cast<unsigned char>(i));
     }
     return std::string(result.str());
 }

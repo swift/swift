@@ -183,8 +183,8 @@ bool GroupRosterItem::itemLessThanWithStatus(const RosterItem* left, const Roste
 
 void GroupRosterItem::setDisplayed(RosterItem* item, bool displayed) {
     bool found = false;
-    for (size_t i = 0; i < displayedChildren_.size(); i++) {
-        if (displayedChildren_[i] == item) {
+    for (auto& i : displayedChildren_) {
+        if (i == item) {
             found = true;
         }
     }
@@ -211,8 +211,8 @@ void GroupRosterItem::handleChildrenChanged(GroupRosterItem* group) {
     size_t oldSize = getDisplayedChildren().size();
     if (group->getDisplayedChildren().size() > 0) {
         bool found = false;
-        for (size_t i = 0; i < displayedChildren_.size(); i++) {
-            if (displayedChildren_[i] == group) {
+        for (auto& i : displayedChildren_) {
+            if (i == group) {
                 found = true;
             }
         }

@@ -30,8 +30,8 @@ namespace Swift {
             }
 
             template<typename T> T* getLayer() {
-                for (size_t i = 0; i < layers_.size(); ++i) {
-                    T* layer = dynamic_cast<T*>(layers_[i]);
+                for (auto& i : layers_) {
+                    T* layer = dynamic_cast<T*>(i);
                     if (layer) {
                         return layer;
                     }

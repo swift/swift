@@ -58,9 +58,9 @@ boost::optional<boost::posix_time::ptime> Stanza::getTimestamp() const {
 
 boost::optional<boost::posix_time::ptime> Stanza::getTimestampFrom(const JID& jid) const {
     std::vector< std::shared_ptr<Delay> > delays = getPayloads<Delay>();
-    for (size_t i = 0; i < delays.size(); ++i) {
-        if (delays[i]->getFrom() == jid) {
-            return delays[i]->getStamp();
+    for (auto& delay : delays) {
+        if (delay->getFrom() == jid) {
+            return delay->getStamp();
         }
     }
     return getTimestamp();

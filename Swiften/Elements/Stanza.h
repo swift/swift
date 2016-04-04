@@ -33,8 +33,8 @@ namespace Swift {
 
             template<typename T>
             std::shared_ptr<T> getPayload() const {
-                for (size_t i = 0; i < payloads_.size(); ++i) {
-                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payloads_[i]));
+                for (const auto& payload : payloads_) {
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payload));
                     if (result) {
                         return result;
                     }
@@ -45,8 +45,8 @@ namespace Swift {
             template<typename T>
             std::vector< std::shared_ptr<T> > getPayloads() const {
                 std::vector< std::shared_ptr<T> > results;
-                for (size_t i = 0; i < payloads_.size(); ++i) {
-                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payloads_[i]));
+                for (const auto& payload : payloads_) {
+                    std::shared_ptr<T> result(std::dynamic_pointer_cast<T>(payload));
                     if (result) {
                         results.push_back(result);
                     }

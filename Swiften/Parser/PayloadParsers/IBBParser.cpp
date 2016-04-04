@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,8 +58,7 @@ void IBBParser::handleEndElement(const std::string& element, const std::string&)
     if (level == TopLevel) {
         if (element == "data") {
             std::vector<char> data;
-            for (size_t i = 0; i < currentText.size(); ++i) {
-                char c = currentText[i];
+            for (char c : currentText) {
                 if ((c >= 48 && c <= 122) || c == 47 || c == 43) {
                     data.push_back(c);
                 }

@@ -23,9 +23,9 @@ namespace Swift {
             virtual std::string serializePayload(std::shared_ptr<BLOCK_ELEMENT> payload)    const {
                 XMLElement element(tag, "urn:xmpp:blocking");
                 const std::vector<JID>& items = payload->getItems();
-                for (std::vector<JID>::const_iterator i = items.begin(); i != items.end(); ++i) {
+                for (const auto& i : items) {
                     std::shared_ptr<XMLElement> item = std::make_shared<XMLElement>("item");
-                    item->setAttribute("jid", *i);
+                    item->setAttribute("jid", i);
                     element.addNode(item);
                 }
                 return element.serialize();

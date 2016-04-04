@@ -557,9 +557,9 @@ void QtUserSearchWindow::clearForm() {
     fieldsPage_->fetchingThrobber_->movie()->start();
     fieldsPage_->fetchingLabel_->show();
     QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
-    for (int i = 0; i < 8; i++) {
-        legacySearchWidgets[i]->hide();
-        if (QLineEdit* edit = qobject_cast<QLineEdit*>(legacySearchWidgets[i])) {
+    for (auto& legacySearchWidget : legacySearchWidgets) {
+        legacySearchWidget->hide();
+        if (QLineEdit* edit = qobject_cast<QLineEdit*>(legacySearchWidget)) {
             edit->clear();
         }
     }

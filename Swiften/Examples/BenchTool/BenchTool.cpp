@@ -53,14 +53,14 @@ int main(int, char**) {
         clients.push_back(client);
     }
 
-    for (size_t i = 0; i < clients.size(); ++i) {
-        clients[i]->connect();
+    for (auto& client : clients) {
+        client->connect();
     }
 
     eventLoop.run();
 
-    for (size_t i = 0; i < clients.size(); ++i) {
-        delete clients[i];
+    for (auto& client : clients) {
+        delete client;
     }
 
     return 0;

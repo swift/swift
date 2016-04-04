@@ -55,11 +55,10 @@ void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 
     QMenu* menu = page()->createStandardContextMenu();
     QList<QAction*> actions(menu->actions());
-    for (int i = 0; i < actions.size(); ++i) {
-        QAction* action = actions.at(i);
+    for (auto action : actions) {
         bool removeAction = true;
-        for(size_t j = 0; j < filteredActions.size(); ++j) {
-            if (action == pageAction(filteredActions[j])) {
+        for(auto& filteredAction : filteredActions) {
+            if (action == pageAction(filteredAction)) {
                 removeAction = false;
                 break;
             }

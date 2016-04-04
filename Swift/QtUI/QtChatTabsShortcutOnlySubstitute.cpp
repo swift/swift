@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -64,14 +64,14 @@ void QtChatTabsShortcutOnlySubstitute::handleRequestedActiveTab() {
 
     QList<QtTabbable*> tabs = tabbableWindows();
 
-    for (int j = 0; j < 2; j++) {
+    for (auto& type : types) {
         int startIndex = tabs.indexOf(senderTab);
         int currentIndex = startIndex;
 
         do {
             currentIndex = (currentIndex + 1) % tabs.size();
             QtTabbable* currentTab = tabs.at(currentIndex);
-            if (currentTab->getWidgetAlertState() == types[j]) {
+            if (currentTab->getWidgetAlertState() == type) {
                 currentTab->activateWindow();
                 return;
             }

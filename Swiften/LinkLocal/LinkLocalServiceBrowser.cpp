@@ -87,8 +87,8 @@ void LinkLocalServiceBrowser::unregisterService() {
 
 std::vector<LinkLocalService> LinkLocalServiceBrowser::getServices() const {
     std::vector<LinkLocalService> result;
-    for (ServiceMap::const_iterator i = services.begin(); i != services.end(); ++i) {
-        result.push_back(LinkLocalService(i->first, i->second));
+    for (const auto& service : services) {
+        result.push_back(LinkLocalService(service.first, service.second));
     }
     return result;
 }

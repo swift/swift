@@ -88,29 +88,29 @@ int main(int argc, char* argv[]) {
     bool inPlace = !boost::filesystem::exists(topInstallPath / "include" / "Swiften" / "Swiften.h");
 
     // Replace "#" variables with the correct path
-    for(size_t i = 0; i < libs.size(); ++i) {
+    for(auto & i : libs) {
         if (inPlace) {
-            std::string lib = libs[i];
+            std::string lib = i;
             boost::replace_all(lib, "#", pathToString(topSourcePath));
-            libs[i] = lib;
+            i = lib;
         }
         else {
-            std::string lib = libs[i];
+            std::string lib = i;
             boost::replace_all(lib, "#", pathToString(topInstallPath / "lib"));
             boost::erase_all(lib, "/Swiften");
-            libs[i] = lib;
+            i = lib;
         }
     }
-    for(size_t i = 0; i < cflags.size(); ++i) {
+    for(auto & i : cflags) {
         if (inPlace) {
-            std::string cflag = cflags[i];
+            std::string cflag = i;
             boost::replace_all(cflag, "#", pathToString(topSourcePath));
-            cflags[i] = cflag;
+            i = cflag;
         }
         else {
-            std::string cflag = cflags[i];
+            std::string cflag = i;
             boost::replace_all(cflag, "#", pathToString(topInstallPath / "include"));
-            cflags[i] = cflag;
+            i = cflag;
         }
     }
 

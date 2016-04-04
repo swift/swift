@@ -22,8 +22,8 @@ SystemTrayController::SystemTrayController(EventController* eventController, Sys
 void SystemTrayController::handleEventQueueLengthChange(int /*length*/) {
     EventList events = eventController_->getEvents();
     bool found = false;
-    for (EventList::iterator it = events.begin(); it != events.end(); ++it) {
-        if (std::dynamic_pointer_cast<MessageEvent>(*it)) {
+    for (auto& event : events) {
+        if (std::dynamic_pointer_cast<MessageEvent>(event)) {
             found = true;
             break;
         }

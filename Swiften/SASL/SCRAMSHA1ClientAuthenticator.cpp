@@ -21,15 +21,15 @@ namespace Swift {
 
 static std::string escape(const std::string& s) {
     std::string result;
-    for (size_t i = 0; i < s.size(); ++i) {
-        if (s[i] == ',') {
+    for (char i : s) {
+        if (i == ',') {
             result += "=2C";
         }
-        else if (s[i] == '=') {
+        else if (i == '=') {
             result += "=3D";
         }
         else {
-            result += s[i];
+            result += i;
         }
     }
     return result;

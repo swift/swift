@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,12 +12,12 @@
 std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s) {
     std::ios::fmtflags oldFlags = os.flags();
     os << std::hex;
-    for (Swift::ByteArray::const_iterator i = s.begin(); i != s.end(); ++i) {
-        if (*i >= 32 && *i < 127) {
-            os << *i;
+    for (unsigned char i : s) {
+        if (i >= 32 && i < 127) {
+            os << i;
         }
         else {
-            os << "\\x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
+            os << "\\x" << static_cast<unsigned int>(static_cast<unsigned char>(i));
         }
     }
     os << std::endl;
@@ -28,12 +28,12 @@ std::ostream& operator<<(std::ostream& os, const Swift::ByteArray& s) {
 std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s) {
     std::ios::fmtflags oldFlags = os.flags();
     os << std::hex;
-    for (Swift::SafeByteArray::const_iterator i = s.begin(); i != s.end(); ++i) {
-        if (*i >= 32 && *i < 127) {
-            os << *i;
+    for (unsigned char i : s) {
+        if (i >= 32 && i < 127) {
+            os << i;
         }
         else {
-            os << "\\x" << static_cast<unsigned int>(static_cast<unsigned char>(*i));
+            os << "\\x" << static_cast<unsigned int>(static_cast<unsigned char>(i));
         }
     }
     os << std::endl;
@@ -42,16 +42,16 @@ std::ostream& operator<<(std::ostream& os, const Swift::SafeByteArray& s) {
 }
 
 std::ostream& operator<<(std::ostream& os, const std::vector<int>& s) {
-    for (std::vector<int>::const_iterator i = s.begin(); i != s.end(); ++i) {
-        os << *i << " ";
+    for (int i : s) {
+        os << i << " ";
     }
     os << std::endl;
     return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const std::vector<size_t>& s) {
-    for (std::vector<size_t>::const_iterator i = s.begin(); i != s.end(); ++i) {
-        os << *i << " ";
+    for (size_t i : s) {
+        os << i << " ";
     }
     os << std::endl;
     return os;

@@ -107,9 +107,9 @@ void QtTextEdit::replaceMisspelledWord(const QString& word, int cursorPosition) 
 
 PositionPair QtTextEdit::getWordFromCursor(int cursorPosition) {
     PositionPairList misspelledPositions = highlighter_->getMisspelledPositions();
-    for (PositionPairList::iterator it = misspelledPositions.begin(); it != misspelledPositions.end(); ++it) {
-        if (cursorPosition >= boost::get<0>(*it) && cursorPosition <= boost::get<1>(*it)) {
-            return *it;
+    for (auto& misspelledPosition : misspelledPositions) {
+        if (cursorPosition >= boost::get<0>(misspelledPosition) && cursorPosition <= boost::get<1>(misspelledPosition)) {
+            return misspelledPosition;
         }
     }
     return boost::make_tuple(-1,-1);
@@ -134,9 +134,9 @@ void QtTextEdit::contextMenuEvent(QContextMenuEvent* event) {
     if (result == settingsAction) {
         spellCheckerSettingsWindow();
     }
-    for (std::vector<QAction*>::iterator it = replaceWordActions_.begin(); it != replaceWordActions_.end(); ++it) {
-        if (*it == result) {
-            replaceMisspelledWord((*it)->text(), cursor.position());
+    for (auto& replaceWordAction : replaceWordActions_) {
+        if (replaceWordAction == result) {
+            replaceMisspelledWord(replaceWordAction->text(), cursor.position());
         }
     }
 #else
@@ -167,8 +167,8 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
             menu->insertAction(insertPoint, noSuggestions);
         }
         else {
-            for (std::vector<std::string>::iterator it = wordList.begin(); it != wordList.end(); ++it) {
-                QAction* wordAction = new QAction(it->c_str(), menu);
+            for (auto& word : wordList) {
+                QAction* wordAction = new QAction(word.c_str(), menu);
                 menu->insertAction(insertPoint, wordAction);
                 replaceWordActions_.push_back(wordAction);
             }

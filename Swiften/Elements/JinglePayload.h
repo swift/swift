@@ -124,8 +124,8 @@ namespace Swift {
             template<typename T>
             const std::vector<std::shared_ptr<T> > getPayloads() const {
                 std::vector<std::shared_ptr<T> > matched_payloads;
-                for (std::vector<std::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
-                    std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(*i);
+                for (const auto& payload : payloads) {
+                    std::shared_ptr<T> result = std::dynamic_pointer_cast<T>(payload);
                     if (result) {
                         matched_payloads.push_back(result);
                     }
@@ -138,8 +138,8 @@ namespace Swift {
             template<typename T>
             const std::shared_ptr<T> getPayload() const {
                 std::shared_ptr<T> result;
-                for (std::vector<std::shared_ptr<Payload> >::const_iterator i = payloads.begin(); i != payloads.end(); ++i) {
-                    result = std::dynamic_pointer_cast<T>(*i);
+                for (const auto& payload : payloads) {
+                    result = std::dynamic_pointer_cast<T>(payload);
                     if (result) {
                         return result;
                     }

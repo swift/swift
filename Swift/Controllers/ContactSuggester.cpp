@@ -74,8 +74,8 @@ bool ContactSuggester::fuzzyMatch(std::string text, std::string match) {
     std::string lowerMatch = match;
     boost::algorithm::to_lower(lowerMatch);
     size_t lastMatch = 0;
-    for (size_t i = 0; i < lowerMatch.length(); ++i) {
-        size_t where = lowerText.find_first_of(lowerMatch[i], lastMatch);
+    for (char i : lowerMatch) {
+        size_t where = lowerText.find_first_of(i, lastMatch);
         if (where == std::string::npos) {
             return false;
         }
