@@ -9,6 +9,8 @@
 #include <set>
 #include <string>
 
+#include <Swiften/JID/JID.h>
+
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {

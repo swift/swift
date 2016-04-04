@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>

@@ -10,12 +10,13 @@
  * See the COPYING file for more information.
  */
 
+#include <Swiften/Network/UnboundDomainNameResolver.h>
+
 #include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
 
-#include <UnboundDomainNameResolver.h>
 #include <arpa/inet.h>
 #include <ldns/ldns.h>
 #include <unbound.h>

@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <memory>
+
 namespace Swift {
     class WhiteboardSession;
     class WhiteboardWindow;

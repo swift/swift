@@ -55,17 +55,17 @@ namespace Swift {
             virtual void setFileTransferProgress(std::string, const int /*percentageDone*/);
             virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState /*state*/, const std::string& /*msg*/ = "");
             virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool /*direct*/, bool /*isImpromptu*/, bool /*isContinuation*/);
-            virtual std::string addWhiteboardRequest(const QString& /*contact*/, bool /*senderIsSelf*/) {return "";};
-            virtual void setWhiteboardSessionStatus(const std::string& /*id*/, const ChatWindow::WhiteboardSessionState /*state*/) {};
-            virtual void setMessageReceiptState(const std::string& /*id*/, ChatWindow::ReceiptState /*state*/) {};
+            virtual std::string addWhiteboardRequest(const QString& /*contact*/, bool /*senderIsSelf*/) {return "";}
+            virtual void setWhiteboardSessionStatus(const std::string& /*id*/, const ChatWindow::WhiteboardSessionState /*state*/) {}
+            virtual void setMessageReceiptState(const std::string& /*id*/, ChatWindow::ReceiptState /*state*/) {}
 
-            virtual void showEmoticons(bool /*show*/) {};
-            virtual void addLastSeenLine() {};
+            virtual void showEmoticons(bool /*show*/) {}
+            virtual void addLastSeenLine() {}
 
         public slots:
-            virtual void resizeFont(int /*fontSizeSteps*/) {};
+            virtual void resizeFont(int /*fontSizeSteps*/) {}
             virtual void scrollToBottom();
-            virtual void handleKeyPressEvent(QKeyEvent* /*event*/) {};
+            virtual void handleKeyPressEvent(QKeyEvent* /*event*/) {}
             virtual void fileTransferAccept();
             virtual void fileTransferReject();
             virtual void fileTransferFinish();

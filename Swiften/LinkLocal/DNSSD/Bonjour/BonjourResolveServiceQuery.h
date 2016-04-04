@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>

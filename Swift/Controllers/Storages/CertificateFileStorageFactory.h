@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <Swiften/JID/JID.h>
+
 #include <Swift/Controllers/Storages/CertificateFileStorage.h>
 #include <Swift/Controllers/Storages/CertificateStorageFactory.h>
 

@@ -7,6 +7,8 @@
 #pragma once
 
 #include <map>
+#include <set>
+#include <string>
 
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 

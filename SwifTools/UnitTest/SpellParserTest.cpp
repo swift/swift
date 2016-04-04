@@ -27,7 +27,7 @@ class SpellParserTest : public CppUnit::TestFixture {
     public:
         SpellParserTest() {
             parser_ = new SpellParser();
-        };
+        }
         void tearDown() {
             position_.clear();
         }
