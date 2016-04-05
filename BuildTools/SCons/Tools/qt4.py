@@ -285,7 +285,7 @@ def generate(env):
 		QT4_UICFLAGS = CLVar(''),
 		QT4_MOCFROMHFLAGS = CLVar(''),
 		QT4_MOCFROMCXXFLAGS = CLVar('-i'),
-		QT4_QRCFLAGS = '',
+		QT4_QRCFLAGS = '--compress 9 --threshold 5',
 
 		# suffixes/prefixes for the headers / sources to generate
 		QT4_UISUFFIX = '.ui',
