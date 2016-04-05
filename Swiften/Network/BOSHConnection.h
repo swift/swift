@@ -81,14 +81,14 @@ namespace Swift {
             std::vector<Certificate::ref> getPeerCertificateChain() const;
             CertificateVerificationError::ref getPeerCertificateVerificationError() const;
 
-            boost::signal<void (bool /* error */)> onConnectFinished;
-            boost::signal<void (bool /* error */)> onDisconnected;
-            boost::signal<void (BOSHError::ref)> onSessionTerminated;
-            boost::signal<void (const std::string& /*sid*/, size_t /*requests*/)> onSessionStarted;
-            boost::signal<void (const SafeByteArray&)> onXMPPDataRead;
-            boost::signal<void (const SafeByteArray&)> onBOSHDataRead;
-            boost::signal<void (const SafeByteArray&)> onBOSHDataWritten;
-            boost::signal<void (const std::string&)> onHTTPError;
+            boost::signals2::signal<void (bool /* error */)> onConnectFinished;
+            boost::signals2::signal<void (bool /* error */)> onDisconnected;
+            boost::signals2::signal<void (BOSHError::ref)> onSessionTerminated;
+            boost::signals2::signal<void (const std::string& /*sid*/, size_t /*requests*/)> onSessionStarted;
+            boost::signals2::signal<void (const SafeByteArray&)> onXMPPDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onBOSHDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onBOSHDataWritten;
+            boost::signals2::signal<void (const std::string&)> onHTTPError;
 
         private:
             friend class ::BOSHConnectionTest;

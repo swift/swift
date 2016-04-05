@@ -9,7 +9,7 @@
 #include <memory>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
@@ -22,8 +22,8 @@ namespace Swift {
             ~EventController();
 
             void handleIncomingEvent(std::shared_ptr<StanzaEvent> sourceEvent);
-            boost::signal<void (int)> onEventQueueLengthChange;
-            boost::signal<void (std::shared_ptr<StanzaEvent>)> onEventQueueEventAdded;
+            boost::signals2::signal<void (int)> onEventQueueLengthChange;
+            boost::signals2::signal<void (std::shared_ptr<StanzaEvent>)> onEventQueueEventAdded;
             const EventList& getEvents() const {return events_;}
             void disconnectAll();
             void clear();

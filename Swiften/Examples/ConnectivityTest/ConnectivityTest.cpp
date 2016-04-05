@@ -28,7 +28,7 @@ static BoostNetworkFactories networkFactories(&eventLoop);
 static Client* client = nullptr;
 static JID recipient;
 static int exitCode = CANNOT_CONNECT;
-static boost::bsignals::connection errorConnection;
+static boost::signals2::connection errorConnection;
 
 static void handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> /*info*/, ErrorPayload::ref error) {
     if (!error) {

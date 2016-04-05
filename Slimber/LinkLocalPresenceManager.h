@@ -9,7 +9,8 @@
 #include <memory>
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/JID/JID.h>
 
@@ -19,7 +20,7 @@ namespace Swift {
     class RosterPayload;
     class Presence;
 
-    class LinkLocalPresenceManager : public boost::bsignals::trackable {
+    class LinkLocalPresenceManager : public boost::signals2::trackable {
         public:
             LinkLocalPresenceManager(LinkLocalServiceBrowser*);
 
@@ -28,8 +29,8 @@ namespace Swift {
 
             boost::optional<LinkLocalService> getServiceForJID(const JID&) const;
 
-            boost::signal<void (std::shared_ptr<RosterPayload>)> onRosterChanged;
-            boost::signal<void (std::shared_ptr<Presence>)> onPresenceChanged;
+            boost::signals2::signal<void (std::shared_ptr<RosterPayload>)> onRosterChanged;
+            boost::signals2::signal<void (std::shared_ptr<Presence>)> onPresenceChanged;
 
         private:
             void handleServiceAdded(const LinkLocalService&);

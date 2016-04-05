@@ -8,9 +8,10 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/TLS/TLSOptions.h>
 

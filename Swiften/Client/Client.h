@@ -169,7 +169,7 @@ namespace Swift {
             /**
              * This signal is emitted when a JID changes presence.
              */
-            boost::signal<void (std::shared_ptr<Presence>)> onPresenceChange;
+            boost::signals2::signal<void (std::shared_ptr<Presence>)> onPresenceChange;
 
         private:
             Storages* getStorages() const;

@@ -11,7 +11,8 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>

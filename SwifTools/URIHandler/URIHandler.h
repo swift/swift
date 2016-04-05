@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class URIHandler {
@@ -16,6 +16,6 @@ namespace Swift {
             URIHandler();
             virtual ~URIHandler();
 
-            boost::signal<void (const std::string&)> onURI;
+            boost::signals2::signal<void (const std::string&)> onURI;
     };
 }

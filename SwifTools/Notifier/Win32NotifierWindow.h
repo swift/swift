@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 //#include <windows.h>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class Win32NotifierWindow {
@@ -17,6 +17,6 @@ namespace Swift {
 
             virtual HWND getID() const = 0;
 
-            boost::signal<void (MSG*)> onMessageReceived;
+            boost::signals2::signal<void (MSG*)> onMessageReceived;
     };
 }

@@ -54,7 +54,7 @@ namespace Swift {
             std::shared_ptr<SOCKS5BytestreamClientSession> createSOCKS5BytestreamClientSession(HostAddressPort addressPort, const std::string& destAddr);
 
         public:
-            boost::signal<void ()> onDiscoveredProxiesChanged;
+            boost::signals2::signal<void ()> onDiscoveredProxiesChanged;
 
         private:
             void handleProxiesFound(std::vector<S5BProxyRequest::ref> proxyHosts);

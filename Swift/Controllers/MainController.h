@@ -11,7 +11,8 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Elements/CapsInfo.h>

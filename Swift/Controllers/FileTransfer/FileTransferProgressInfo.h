@@ -13,8 +13,7 @@
 #pragma once
 
 #include <boost/cstdint.hpp>
-
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
 
@@ -26,7 +25,7 @@ public:
     void setBytesProcessed(int processedBytes);
 
     int getPercentage() const;
-    boost::signal<void (int)> onProgressPercentage;
+    boost::signals2::signal<void (int)> onProgressPercentage;
 
 private:
     boost::uintmax_t completeBytes;

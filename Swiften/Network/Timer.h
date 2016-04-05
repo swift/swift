@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     /**
@@ -36,6 +37,6 @@ namespace Swift {
             /**
              * Emitted when the timer expires.
              */
-            boost::signal<void ()> onTick;
+            boost::signals2::signal<void ()> onTick;
     };
 }

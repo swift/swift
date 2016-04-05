@@ -8,8 +8,9 @@
 
 #include <map>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -25,7 +26,7 @@ namespace Swift {
      * This information is provided in the form of service discovery
      * information.
      */
-    class SWIFTEN_API EntityCapsManager : public EntityCapsProvider, public boost::bsignals::trackable {
+    class SWIFTEN_API EntityCapsManager : public EntityCapsProvider, public boost::signals2::trackable {
         public:
             EntityCapsManager(CapsProvider*, StanzaChannel*);
 

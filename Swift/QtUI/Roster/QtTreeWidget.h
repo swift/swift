@@ -39,7 +39,7 @@ class QtTreeWidget : public QTreeView {
         void setOnline(bool isOnline);
 
     public:
-        boost::signal<void (RosterItem*)> onSomethingSelectedChanged;
+        boost::signals2::signal<void (RosterItem*)> onSomethingSelectedChanged;
 
     private slots:
         void handleItemActivated(const QModelIndex&);

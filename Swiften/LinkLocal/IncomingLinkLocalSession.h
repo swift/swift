@@ -8,8 +8,9 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Session/Session.h>
@@ -30,7 +31,7 @@ namespace Swift {
                     PayloadSerializerCollection* payloadSerializers,
                     XMLParserFactory* xmlParserFactory);
 
-            boost::signal<void ()> onSessionStarted;
+            boost::signals2::signal<void ()> onSessionStarted;
 
         private:
             void handleElement(std::shared_ptr<ToplevelElement>);

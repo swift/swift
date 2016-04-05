@@ -13,7 +13,7 @@
 #include <Sspi.h>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {

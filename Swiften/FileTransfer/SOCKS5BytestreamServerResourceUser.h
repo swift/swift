@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
 
@@ -20,14 +21,14 @@ class SWIFTEN_API SOCKS5BytestreamServerResourceUser {
 
         bool isInitialized() const;
 
-        boost::signal<void (bool /* success */)> onSuccessfulInitialized;
+        boost::signals2::signal<void (bool /* success */)> onSuccessfulInitialized;
 
     private:
         void handleServerManagerInitialized(bool successfulInitialize);
 
     private:
         SOCKS5BytestreamServerManager* s5bServerManager_;
-        boost::bsignals::scoped_connection onInitializedConnection_;
+        boost::signals2::scoped_connection onInitializedConnection_;
 };
 
 }

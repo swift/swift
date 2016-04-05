@@ -11,7 +11,8 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -92,7 +93,7 @@ namespace Swift {
             void openSearchWindow();
 
         public:
-            boost::signal<void (const JID&)> onMUCSelected;
+            boost::signals2::signal<void (const JID&)> onMUCSelected;
 
         private:
             void handleSearchService(const JID& jid);

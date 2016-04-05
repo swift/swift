@@ -14,7 +14,7 @@
 
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class WhiteboardSession;

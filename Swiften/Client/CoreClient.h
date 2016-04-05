@@ -9,9 +9,10 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
 #include <Swiften/Entity/Entity.h>
@@ -149,13 +150,13 @@ namespace Swift {
              * If the connection was due to a non-recoverable error, the type
              * of error will be passed as a parameter.
              */
-            boost::signal<void (const boost::optional<ClientError>&)> onDisconnected;
+            boost::signals2::signal<void (const boost::optional<ClientError>&)> onDisconnected;
 
             /**
              * Emitted when the client is connected and authenticated,
              * and stanzas can be sent.
              */
-            boost::signal<void ()> onConnected;
+            boost::signals2::signal<void ()> onConnected;
 
             /**
              * Emitted when the client receives data.
@@ -163,7 +164,7 @@ namespace Swift {
              * This signal is emitted before the XML data is parsed,
              * so this data is unformatted.
              */
-            boost::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataRead;
 
             /**
              * Emitted when the client sends data.
@@ -171,17 +172,17 @@ namespace Swift {
              * This signal is emitted after the XML was serialized, and
              * is unformatted.
              */
-            boost::signal<void (const SafeByteArray&)> onDataWritten;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataWritten;
 
             /**
              * Emitted when a message is received.
              */
-            boost::signal<void (std::shared_ptr<Message>)> onMessageReceived;
+            boost::signals2::signal<void (std::shared_ptr<Message>)> onMessageReceived;
 
             /**
              * Emitted when a presence stanza is received.
              */
-            boost::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
+            boost::signals2::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
 
             /**
              * Emitted when the server acknowledges receipt of a
@@ -189,7 +190,7 @@ namespace Swift {
              *
              * \see getStreamManagementEnabled()
              */
-            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
+            boost::signals2::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
 
         protected:
             std::shared_ptr<ClientSession> getSession() const {

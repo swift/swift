@@ -11,9 +11,9 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/optional/optional_fwd.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/EventLoop/EventOwner.h>
 #include <Swiften/Network/BoostConnection.h>
 #include <Swiften/Network/ConnectionServer.h>
@@ -37,7 +37,7 @@ namespace Swift {
 
             virtual HostAddressPort getAddressPort() const;
 
-            boost::signal<void (boost::optional<Error>)> onStopped;
+            boost::signals2::signal<void (boost::optional<Error>)> onStopped;
 
         private:
             BoostConnectionServer(int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);

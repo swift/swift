@@ -18,11 +18,11 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>

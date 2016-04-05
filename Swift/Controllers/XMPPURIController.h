@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class URIHandler;
@@ -20,8 +20,8 @@ namespace Swift {
             XMPPURIController(URIHandler* uriHandler, UIEventStream* uiEventStream);
             ~XMPPURIController();
 
-            boost::signal<void (const JID&)> onStartChat;
-            boost::signal<void (const JID&)> onJoinMUC;
+            boost::signals2::signal<void (const JID&)> onStartChat;
+            boost::signals2::signal<void (const JID&)> onJoinMUC;
 
         private:
             void handleURI(const std::string&);

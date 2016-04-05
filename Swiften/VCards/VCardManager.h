@@ -9,9 +9,9 @@
 #include <set>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
@@ -22,7 +22,7 @@ namespace Swift {
     class JID;
     class VCardStorage;
 
-    class SWIFTEN_API VCardManager : public boost::bsignals::trackable {
+    class SWIFTEN_API VCardManager : public boost::signals2::trackable {
         public:
             VCardManager(const JID& ownJID, IQRouter* iqRouter, VCardStorage* vcardStorage);
             ~VCardManager();
@@ -41,19 +41,19 @@ namespace Swift {
             /**
              * The JID will always be bare.
              */
-            boost::signal<void (const JID&, VCard::ref)> onVCardChanged;
+            boost::signals2::signal<void (const JID&, VCard::ref)> onVCardChanged;
 
             /**
              * Emitted when we received an error on looking up a vCard.
              */
-            boost::signal<void (const JID&, ErrorPayload::ref)> onVCardRetrievalError;
+            boost::signals2::signal<void (const JID&, ErrorPayload::ref)> onVCardRetrievalError;
 
             /**
              * Emitted when our own vcard changes.
              *
              * onVCardChanged will also be emitted.
              */
-            boost::signal<void (VCard::ref)> onOwnVCardChanged;
+            boost::signals2::signal<void (VCard::ref)> onOwnVCardChanged;
 
         private:
             void handleVCardReceived(const JID& from, VCard::ref, ErrorPayload::ref);

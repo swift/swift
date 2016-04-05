@@ -26,7 +26,7 @@ static Client* client = nullptr;
 static JID recipient;
 static std::string messageBody;
 static int exitCode = 2;
-static boost::bsignals::connection errorConnection;
+static boost::signals2::connection errorConnection;
 
 
 static void handleConnected() {

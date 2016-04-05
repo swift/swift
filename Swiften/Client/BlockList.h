@@ -8,8 +8,9 @@
 
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
@@ -30,8 +31,8 @@ namespace Swift {
             bool isBlocked(const JID& jid) const;
 
         public:
-            boost::signal<void ()> onStateChanged;
-            boost::signal<void (const JID&)> onItemAdded;
-            boost::signal<void (const JID&)> onItemRemoved;
+            boost::signals2::signal<void ()> onStateChanged;
+            boost::signals2::signal<void (const JID&)> onItemAdded;
+            boost::signals2::signal<void (const JID&)> onItemRemoved;
     };
 }

@@ -53,7 +53,7 @@ fi
 	serialization/version.hpp \
 	serialization/split_member.hpp \
 	serialization/optional.hpp \
-	signals.hpp \
+	signals2.hpp \
 	thread.hpp \
 	unordered_map.hpp \
 	uuid/uuid.hpp \
@@ -62,13 +62,17 @@ fi
 	variant.hpp \
 	spirit/include/lex_lexertl.hpp \
 	typeof/incr_registration_group.hpp \
+	atomic \
+	system/src/error_code.cpp \
+	phoenix/support/detail/iterate.hpp \
+	type_traits.hpp \
 	$TARGET_DIR
 cp $1/LICENSE_1_0.txt $TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config
 rm -rf $TARGET_DIR/libs/smart_ptr
 
-LIBS="date_time regex system thread signals filesystem program_options serialization archive"
+LIBS="date_time regex system thread signals2 filesystem program_options serialization archive atomic"
 for lib in $LIBS; do
 	rm -rf $TARGET_DIR/libs/$lib/build $TARGET_DIR/libs/$lib/*.doc $TARGET_DIR/libs/$lib/src/*.doc $TARGET_DIR/libs/$lib/src/CMakeLists.txt $TARGET_DIR/libs/$lib/test
 done

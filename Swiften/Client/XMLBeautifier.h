@@ -16,8 +16,9 @@
 #include <stack>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Parser/XMLParser.h>
 #include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/XMLParserFactory.h>

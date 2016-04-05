@@ -13,6 +13,7 @@
 #include <Swift/Controllers/HighlightManager.h>
 
 #include <cassert>
+#include <sstream>
 
 #include <boost/algorithm/string.hpp>
 #include <boost/archive/text_iarchive.hpp>

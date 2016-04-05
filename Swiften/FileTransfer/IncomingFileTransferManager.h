@@ -8,8 +8,9 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
 
@@ -28,7 +29,7 @@ namespace Swift {
                     CryptoProvider* crypto);
             virtual ~IncomingFileTransferManager();
 
-            boost::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
+            boost::signals2::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
 
         private:
             bool handleIncomingJingleSession(

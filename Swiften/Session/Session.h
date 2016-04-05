@@ -9,10 +9,10 @@
 #include <memory>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
@@ -64,10 +64,10 @@ namespace Swift {
                 return remoteJID;
             }
 
-            boost::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
-            boost::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
-            boost::signal<void (const SafeByteArray&)> onDataWritten;
-            boost::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signals2::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
+            boost::signals2::signal<void (const boost::optional<SessionError>&)> onSessionFinished;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataWritten;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataRead;
 
         protected:
             void setRemoteJID(const JID& j) {

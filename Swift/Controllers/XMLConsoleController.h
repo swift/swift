@@ -9,9 +9,9 @@
 #include <memory>
 
 #include <boost/bind.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 

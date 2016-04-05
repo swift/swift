@@ -15,10 +15,9 @@
 #include <vector>
 
 #include <boost/bind.hpp>
+#include <boost/signals2.hpp>
 
 #include <QAbstractItemModel>
-
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <Swift/Controllers/Contact.h>
 

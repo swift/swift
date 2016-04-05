@@ -67,11 +67,11 @@ public:
 
     HostAddressPort getAddressPort() const;
 
-    boost::signal<void (bool /*error*/)> onSessionReady;
+    boost::signals2::signal<void (bool /*error*/)> onSessionReady;
 
-    boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-    boost::signal<void (size_t)> onBytesSent;
-    // boost::signal<void (size_t)> onBytesReceived;
+    boost::signals2::signal<void (boost::optional<FileTransferError>)> onFinished;
+    boost::signals2::signal<void (size_t)> onBytesSent;
+    // boost::signals2::signal<void (size_t)> onBytesReceived;
 
 private:
     void process();
@@ -103,10 +103,10 @@ private:
 
     Timer::ref weFailedTimeout;
 
-    boost::bsignals::scoped_connection connectFinishedConnection;
-    boost::bsignals::scoped_connection dataWrittenConnection;
-    boost::bsignals::scoped_connection dataReadConnection;
-    boost::bsignals::scoped_connection disconnectedConnection;
+    boost::signals2::scoped_connection connectFinishedConnection;
+    boost::signals2::scoped_connection dataWrittenConnection;
+    boost::signals2::scoped_connection dataReadConnection;
+    boost::signals2::scoped_connection disconnectedConnection;
 };
 
 }

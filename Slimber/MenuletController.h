@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <boost/signal.hpp>
+#include <boost/signals2.hpp>
 
 class Menulet;
 
@@ -26,7 +26,7 @@ class MenuletController {
         void setXMPPStatus(const std::string& message, Status status);
         void setUserNames(const std::vector<std::string>&);
 
-        boost::signal<void ()> onRestartRequested;
+        boost::signals2::signal<void ()> onRestartRequested;
 
     private:
         void update();

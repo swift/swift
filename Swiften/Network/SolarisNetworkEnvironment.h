@@ -14,7 +14,8 @@
 
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Network/NetworkEnvironment.h>
 #include <Swiften/Network/NetworkInterface.h>
 

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,7 @@
 
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 
@@ -33,8 +33,8 @@ public:
     void clearFinished();
     bool isClearable() const;
 
-    boost::signal<void (FileTransferController*)> onNewFileTransferController;
-    boost::signal<void ()> onFileTransferListChanged;
+    boost::signals2::signal<void (FileTransferController*)> onNewFileTransferController;
+    boost::signals2::signal<void ()> onFileTransferListChanged;
 
 private:
     void handleIncomingFileTransfer(IncomingFileTransfer::ref transfer);

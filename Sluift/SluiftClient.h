@@ -89,14 +89,14 @@ namespace Swift {
 
             template<typename REQUEST_TYPE>
             Sluift::Response sendRequest(REQUEST_TYPE request, int timeout) {
-                boost::signals::scoped_connection c = request->onResponse.connect(
+                boost::signals2::scoped_connection c = request->onResponse.connect(
                         boost::bind(&SluiftClient::handleRequestResponse, this, _1, _2));
                 return doSendRequest(request, timeout);
             }
 
             template<typename REQUEST_TYPE>
             Sluift::Response sendVoidRequest(REQUEST_TYPE request, int timeout) {
-                boost::signals::scoped_connection c = request->onResponse.connect(
+                boost::signals2::scoped_connection c = request->onResponse.connect(
                         boost::bind(&SluiftClient::handleRequestResponse, this, std::shared_ptr<Payload>(), _1));
                 return doSendRequest(request, timeout);
             }

@@ -56,8 +56,8 @@ public:
     int getProgress() const;
     boost::uintmax_t getSize() const;
 
-    boost::signal<void ()> onStateChanged;
-    boost::signal<void ()> onProgressChange;
+    boost::signals2::signal<void ()> onStateChanged;
+    boost::signals2::signal<void ()> onProgressChange;
 
 private:
     void handleFileTransferStateChange(FileTransfer::State);

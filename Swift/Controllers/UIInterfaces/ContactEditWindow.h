@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class JID;
@@ -29,7 +29,7 @@ namespace Swift {
             virtual void show() = 0;
             virtual void hide() = 0;
 
-            boost::signal<void ()> onRemoveContactRequest;
-            boost::signal<void (const std::string& /* name */, const std::set<std::string>& /* groups */)> onChangeContactRequest;
+            boost::signals2::signal<void ()> onRemoveContactRequest;
+            boost::signals2::signal<void (const std::string& /* name */, const std::set<std::string>& /* groups */)> onChangeContactRequest;
     };
 }

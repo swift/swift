@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/IBBReceiveSession.h>
 #include <Swiften/FileTransfer/TransportSession.h>
 
@@ -23,8 +24,8 @@ class SWIFTEN_API IBBReceiveTransportSession : public TransportSession {
 
     private:
         std::shared_ptr<IBBReceiveSession> session;
-        boost::bsignals::scoped_connection finishedConnection;
-        boost::bsignals::scoped_connection bytesSentConnection;
+        boost::signals2::scoped_connection finishedConnection;
+        boost::signals2::scoped_connection bytesSentConnection;
 };
 
 }

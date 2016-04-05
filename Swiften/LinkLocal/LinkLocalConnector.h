@@ -9,8 +9,9 @@
 #include <memory>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/LinkLocal/LinkLocalService.h>
 #include <Swiften/Network/Connection.h>
 
@@ -47,7 +48,7 @@ namespace Swift {
                 return connection;
             }
 
-            boost::signal<void (bool)> onConnectFinished;
+            boost::signals2::signal<void (bool)> onConnectFinished;
 
         private:
             void handleHostnameResolved(const boost::optional<HostAddress>& address);
@@ -57,9 +58,9 @@ namespace Swift {
             LinkLocalService service;
             std::shared_ptr<DNSSDQuerier> querier;
             std::shared_ptr<DNSSDResolveHostnameQuery> resolveQuery;
-            boost::bsignals::connection resolveQueryHostNameResolvedConnection;
+            boost::signals2::connection resolveQueryHostNameResolvedConnection;
             std::shared_ptr<Connection> connection;
-            boost::bsignals::connection connectionConnectFinishedConnection;
+            boost::signals2::connection connectionConnectFinishedConnection;
             std::vector<std::shared_ptr<ToplevelElement> > queuedElements;
     };
 }

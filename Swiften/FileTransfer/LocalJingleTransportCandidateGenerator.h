@@ -14,9 +14,10 @@
 
 #include <Swiften/FileTransfer/LocalJingleTransportCandidateGenerator.h>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxyFinder.h>
@@ -43,7 +44,7 @@ namespace Swift {
             virtual void start();
             virtual void stop();
 
-            boost::signal<void (const std::vector<JingleS5BTransportPayload::Candidate>&)> onLocalTransportCandidatesGenerated;
+            boost::signals2::signal<void (const std::vector<JingleS5BTransportPayload::Candidate>&)> onLocalTransportCandidatesGenerated;
 
         private:
             void handleS5BServerInitialized(bool success);

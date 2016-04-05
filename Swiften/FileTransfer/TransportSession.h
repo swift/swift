@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
@@ -19,7 +20,7 @@ namespace Swift {
             virtual void start() = 0;
             virtual void stop() = 0;
 
-            boost::signal<void (size_t)> onBytesSent;
-            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+            boost::signals2::signal<void (size_t)> onBytesSent;
+            boost::signals2::signal<void (boost::optional<FileTransferError>)> onFinished;
     };
 }

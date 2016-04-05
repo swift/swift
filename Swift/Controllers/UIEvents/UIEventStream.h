@@ -8,14 +8,14 @@
 
 #include <memory>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swift/Controllers/UIEvents/UIEvent.h>
 
 namespace Swift {
     class UIEventStream {
         public:
-            boost::signal<void (std::shared_ptr<UIEvent>)> onUIEvent;
+            boost::signals2::signal<void (std::shared_ptr<UIEvent>)> onUIEvent;
 
             void send(std::shared_ptr<UIEvent> event) {
                 onUIEvent(event);

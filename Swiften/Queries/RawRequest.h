@@ -9,8 +9,9 @@
 #include <memory>
 #include <typeinfo>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/RawXMLPayload.h>
 #include <Swiften/Queries/Request.h>
@@ -27,7 +28,7 @@ namespace Swift {
                 return ref(new RawRequest(type, recipient, data, router));
             }
 
-            boost::signal<void (const std::string&)> onResponse;
+            boost::signals2::signal<void (const std::string&)> onResponse;
 
         private:
             RawRequest(IQ::Type type, const JID& receiver, const std::string& data, IQRouter* router) : Request(type, receiver, std::make_shared<RawXMLPayload>(data), router) {

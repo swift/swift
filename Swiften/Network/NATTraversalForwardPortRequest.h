@@ -12,8 +12,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/NATPortMapping.h>
 
 namespace Swift {
@@ -24,6 +25,6 @@ namespace Swift {
             virtual void start() = 0;
             virtual void stop() = 0;
 
-            boost::signal<void (boost::optional<NATPortMapping>)> onResult;
+            boost::signals2::signal<void (boost::optional<NATPortMapping>)> onResult;
     };
 }

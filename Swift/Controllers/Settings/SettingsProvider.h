@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
 
@@ -65,7 +65,7 @@ class SettingsProvider {
         /**
          * Emitted when a setting is changed.
          */
-        boost::signal<void (const std::string& /*Setting's Path*/)> onSettingChanged;
+        boost::signals2::signal<void (const std::string& /*Setting's Path*/)> onSettingChanged;
 };
 
 }

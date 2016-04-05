@@ -9,7 +9,8 @@
 #include <memory>
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/JID/JID.h>
@@ -43,9 +44,9 @@ namespace Swift {
             virtual void setStreamEncryptionStatus(bool tlsInPlaceAndValid) = 0;
             virtual void openCertificateDialog(const std::vector<Certificate::ref>& chain) = 0;
 
-            boost::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
-            boost::signal<void ()> onSignOutRequest;
-            boost::signal<void ()> onShowCertificateRequest;
+            boost::signals2::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
+            boost::signals2::signal<void ()> onSignOutRequest;
+            boost::signals2::signal<void ()> onShowCertificateRequest;
 
         private:
             bool canDelete_;

@@ -8,7 +8,8 @@
 
 #include <memory>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/Elements/VCard.h>
 
 namespace Swift {
@@ -29,7 +30,7 @@ namespace Swift {
             virtual void show() = 0;
             virtual void hide() = 0;
 
-            boost::signal<void (VCard::ref)> onVCardChangeRequest;
-            boost::signal<void (const JID&)> onWindowAboutToBeClosed;
+            boost::signals2::signal<void (VCard::ref)> onVCardChangeRequest;
+            boost::signals2::signal<void (const JID&)> onWindowAboutToBeClosed;
     };
 }

@@ -59,8 +59,8 @@ namespace Swift {
                 return clientConnectionPort;
             }
 
-            boost::signal<void (bool)> onSelfConnected;
-            boost::signal<void (boost::optional<ServerError>)> onStopped;
+            boost::signals2::signal<void (bool)> onSelfConnected;
+            boost::signals2::signal<void (boost::optional<ServerError>)> onStopped;
 
         private:
             void stop(boost::optional<ServerError>);
@@ -113,12 +113,12 @@ namespace Swift {
             LinkLocalPresenceManager* presenceManager;
             bool stopping;
             std::shared_ptr<BoostConnectionServer> serverFromClientConnectionServer;
-            std::vector<boost::bsignals::connection> serverFromClientConnectionServerSignalConnections;
+            std::vector<boost::signals2::connection> serverFromClientConnectionServerSignalConnections;
             std::shared_ptr<ServerFromClientSession> serverFromClientSession;
             std::shared_ptr<Presence> lastPresence;
             JID selfJID;
             std::shared_ptr<BoostConnectionServer> serverFromNetworkConnectionServer;
-            std::vector<boost::bsignals::connection> serverFromNetworkConnectionServerSignalConnections;
+            std::vector<boost::signals2::connection> serverFromNetworkConnectionServerSignalConnections;
             std::vector< std::shared_ptr<Session> > linkLocalSessions;
             std::vector< std::shared_ptr<LinkLocalConnector> > connectors;
             std::vector< std::shared_ptr<SessionTracer> > tracers;

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,8 +15,8 @@
 #include <vector>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/History/HistoryMessage.h>
 #include <Swiften/History/HistoryStorage.h>
 
@@ -37,7 +37,7 @@ namespace Swift {
 
             boost::posix_time::ptime getLastTimeStampFromMUC(const JID& selfJID, const JID& mucJID);
 
-            boost::signal<void (const HistoryMessage&)> onNewMessage;
+            boost::signals2::signal<void (const HistoryMessage&)> onNewMessage;
 
         private:
             HistoryStorage* localHistory_;

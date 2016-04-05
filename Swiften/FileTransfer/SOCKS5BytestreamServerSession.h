@@ -8,8 +8,9 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
@@ -48,8 +49,8 @@ namespace Swift {
 
             HostAddressPort getAddressPort() const;
 
-            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-            boost::signal<void (unsigned long long)> onBytesSent;
+            boost::signals2::signal<void (boost::optional<FileTransferError>)> onFinished;
+            boost::signals2::signal<void (unsigned long long)> onBytesSent;
 
             const std::string& getStreamID() const {
                 return streamID;
@@ -74,10 +75,10 @@ namespace Swift {
             std::shared_ptr<WriteBytestream> writeBytestream;
             bool waitingForData;
 
-            boost::bsignals::connection disconnectedConnection;
-            boost::bsignals::connection dataReadConnection;
-            boost::bsignals::connection dataWrittenConnection;
-            boost::bsignals::connection dataAvailableConnection;
+            boost::signals2::connection disconnectedConnection;
+            boost::signals2::connection dataReadConnection;
+            boost::signals2::connection dataWrittenConnection;
+            boost::signals2::connection dataAvailableConnection;
 
     };
 }

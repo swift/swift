@@ -9,8 +9,9 @@
 #include <memory>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/NATPortMapping.h>
 
@@ -65,8 +66,8 @@ namespace Swift {
             void handleForwardPortResult(boost::optional<NATPortMapping> mapping);
             void handleUnforwardPortResult(boost::optional<bool> result);
 
-            boost::signal<void (bool /* success */)> onInitialized;
-            boost::signal<void (bool /* success */)> onPortForwardingSetup;
+            boost::signals2::signal<void (bool /* success */)> onInitialized;
+            boost::signals2::signal<void (bool /* success */)> onPortForwardingSetup;
 
         private:
             friend class SOCKS5BytestreamServerInitializeRequest;

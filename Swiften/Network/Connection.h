@@ -8,9 +8,10 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     class HostAddressPort;
@@ -36,9 +37,9 @@ namespace Swift {
             virtual HostAddressPort getRemoteAddress() const = 0;
 
         public:
-            boost::signal<void (bool /* error */)> onConnectFinished;
-            boost::signal<void (const boost::optional<Error>&)> onDisconnected;
-            boost::signal<void (std::shared_ptr<SafeByteArray>)> onDataRead;
-            boost::signal<void ()> onDataWritten;
+            boost::signals2::signal<void (bool /* error */)> onConnectFinished;
+            boost::signals2::signal<void (const boost::optional<Error>&)> onDisconnected;
+            boost::signals2::signal<void (std::shared_ptr<SafeByteArray>)> onDataRead;
+            boost::signals2::signal<void ()> onDataWritten;
     };
 }

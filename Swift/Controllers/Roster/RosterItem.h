@@ -9,7 +9,7 @@
 #include <memory>
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
 class GroupRosterItem;
@@ -17,7 +17,7 @@ class RosterItem {
     public:
         RosterItem(const std::string& name, GroupRosterItem* parent);
         virtual ~RosterItem();
-        boost::signal<void ()> onDataChanged;
+        boost::signals2::signal<void ()> onDataChanged;
         GroupRosterItem* getParent() const;
         void setDisplayName(const std::string& name);
         const std::string& getDisplayName() const;

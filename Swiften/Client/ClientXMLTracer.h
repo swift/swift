@@ -24,7 +24,7 @@ namespace Swift {
         private:
             XMLBeautifier *beautifier;
             bool bosh;
-            boost::bsignals::scoped_connection onDataReadConnection;
-            boost::bsignals::scoped_connection onDataWrittenConnection;
+            boost::signals2::scoped_connection onDataReadConnection;
+            boost::signals2::scoped_connection onDataWrittenConnection;
     };
 }

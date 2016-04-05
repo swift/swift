@@ -7,8 +7,8 @@
 #pragma once
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddress.h>
 
 namespace Swift {
@@ -19,6 +19,6 @@ namespace Swift {
             virtual void run() = 0;
             virtual void finish() = 0;
 
-            boost::signal<void (const boost::optional<HostAddress>&)> onHostnameResolved;
+            boost::signals2::signal<void (const boost::optional<HostAddress>&)> onHostnameResolved;
     };
 }

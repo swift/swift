@@ -14,8 +14,8 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/filesystem/path.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/StatusShow.h>
@@ -77,7 +77,7 @@ class ContactRosterItem : public RosterItem {
         VCard::ref getVCard() const;
         void setVCard(VCard::ref vcard);
 
-        boost::signal<void ()> onVCardRequested;
+        boost::signals2::signal<void ()> onVCardRequested;
 
     private:
         JID jid_;

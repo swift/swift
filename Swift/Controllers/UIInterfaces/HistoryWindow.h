@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swift/Controllers/Roster/Roster.h>
@@ -23,12 +29,12 @@ namespace Swift {
             virtual std::string getSearchBoxText() = 0;
             virtual boost::gregorian::date getLastVisibleDate() = 0;
 
-            boost::signal<void (RosterItem*)> onSelectedContactChanged;
-            boost::signal<void (const std::string&)> onReturnPressed;
-            boost::signal<void (const boost::gregorian::date&)> onScrollReachedTop;
-            boost::signal<void (const boost::gregorian::date&)> onScrollReachedBottom;
-            boost::signal<void ()> onPreviousButtonClicked;
-            boost::signal<void ()> onNextButtonClicked;
-            boost::signal<void (const boost::gregorian::date&)> onCalendarClicked;
+            boost::signals2::signal<void (RosterItem*)> onSelectedContactChanged;
+            boost::signals2::signal<void (const std::string&)> onReturnPressed;
+            boost::signals2::signal<void (const boost::gregorian::date&)> onScrollReachedTop;
+            boost::signals2::signal<void (const boost::gregorian::date&)> onScrollReachedBottom;
+            boost::signals2::signal<void ()> onPreviousButtonClicked;
+            boost::signals2::signal<void ()> onNextButtonClicked;
+            boost::signals2::signal<void (const boost::gregorian::date&)> onCalendarClicked;
     };
 }

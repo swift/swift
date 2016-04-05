@@ -11,8 +11,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Parser/AttributeMap.h>
 
 namespace Swift {

@@ -8,8 +8,9 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Queries/IQChannel.h>
@@ -24,9 +25,9 @@ namespace Swift {
             virtual bool getStreamManagementEnabled() const = 0;
             virtual std::vector<Certificate::ref> getPeerCertificateChain() const = 0;
 
-            boost::signal<void (bool /* isAvailable */)> onAvailableChanged;
-            boost::signal<void (std::shared_ptr<Message>)> onMessageReceived;
-            boost::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
-            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
+            boost::signals2::signal<void (bool /* isAvailable */)> onAvailableChanged;
+            boost::signals2::signal<void (std::shared_ptr<Message>)> onMessageReceived;
+            boost::signals2::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
+            boost::signals2::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
     };
 }

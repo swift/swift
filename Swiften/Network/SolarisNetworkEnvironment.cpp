@@ -21,6 +21,7 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <net/if.h>
 #include <sys/socket.h>
@@ -28,7 +29,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NetworkInterface.h>
 

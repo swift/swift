@@ -24,7 +24,7 @@ namespace Swift {
     class CachingDomainNameResolver;
     class EventLoop;
 
-    class SWIFTEN_API BOSHConnectionPool : public boost::bsignals::trackable {
+    class SWIFTEN_API BOSHConnectionPool : public boost::signals2::trackable {
         public:
             BOSHConnectionPool(const URL& boshURL, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, XMLParserFactory* parserFactory, TLSContextFactory* tlsFactory, TimerFactory* timerFactory, EventLoop* eventLoop, const std::string& to, unsigned long long initialRID, const URL& boshHTTPConnectProxyURL, const SafeString& boshHTTPConnectProxyAuthID, const SafeString& boshHTTPConnectProxyAuthPassword, const TLSOptions& tlsOptions, std::shared_ptr<HTTPTrafficFilter> trafficFilter = std::shared_ptr<HTTPTrafficFilter>());
             ~BOSHConnectionPool();
@@ -41,11 +41,11 @@ namespace Swift {
             std::vector<Certificate::ref> getPeerCertificateChain() const;
             std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
-            boost::signal<void (BOSHError::ref)> onSessionTerminated;
-            boost::signal<void ()> onSessionStarted;
-            boost::signal<void (const SafeByteArray&)> onXMPPDataRead;
-            boost::signal<void (const SafeByteArray&)> onBOSHDataRead;
-            boost::signal<void (const SafeByteArray&)> onBOSHDataWritten;
+            boost::signals2::signal<void (BOSHError::ref)> onSessionTerminated;
+            boost::signals2::signal<void ()> onSessionStarted;
+            boost::signals2::signal<void (const SafeByteArray&)> onXMPPDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onBOSHDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onBOSHDataWritten;
 
         private:
             void handleDataRead(const SafeByteArray& data);

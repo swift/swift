@@ -71,7 +71,7 @@ namespace Swift {
             std::vector<ChatListWindow::Chat> getRecentChats() const;
             virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
 
-            boost::signal<void (bool supportsImpromptu)> onImpromptuMUCServiceDiscovered;
+            boost::signals2::signal<void (bool supportsImpromptu)> onImpromptuMUCServiceDiscovered;
 
         private:
             class SingleChatWindowFactoryAdapter : public ChatWindowFactory {
@@ -156,7 +156,7 @@ namespace Swift {
             std::shared_ptr<DiscoInfo> serverDiscoInfo_;
             ChatListWindow* chatListWindow_;
             JoinMUCWindow* joinMUCWindow_;
-            boost::bsignals::scoped_connection uiEventConnection_;
+            boost::signals2::scoped_connection uiEventConnection_;
             bool useDelayForLatency_;
             TimerFactory* timerFactory_;
             MUCRegistry* mucRegistry_;

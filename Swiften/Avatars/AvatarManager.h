@@ -7,10 +7,10 @@
 #pragma once
 
 #include <boost/filesystem/path.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     class JID;
@@ -22,6 +22,6 @@ namespace Swift {
             virtual ByteArray getAvatar(const JID&) const = 0;
             virtual boost::filesystem::path getAvatarPath(const JID&) const = 0;
 
-            boost::signal<void (const JID&)> onAvatarChanged;
+            boost::signals2::signal<void (const JID&)> onAvatarChanged;
     };
 }

@@ -16,12 +16,12 @@
 #include <string>
 #include <vector>
 
+#include <boost/signals2.hpp>
 #include <boost/variant.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/SimpleIDGenerator.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Jingle/JingleContentID.h>

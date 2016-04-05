@@ -8,9 +8,10 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/PubSub.h>
 #include <Swiften/Elements/PubSubAffiliations.h>
@@ -47,6 +48,6 @@ namespace Swift {
             SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
                     SWIFTEN_PUBSUBMANAGER_DECLARE_CREATE_REQUEST)
 
-            boost::signal<void (const JID&, const std::shared_ptr<PubSubEventPayload>)> onEvent;
+            boost::signals2::signal<void (const JID&, const std::shared_ptr<PubSubEventPayload>)> onEvent;
     };
 }

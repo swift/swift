@@ -10,10 +10,10 @@
 #include <memory>
 #include <string>
 
-#include <boost/signals/connection.hpp>
+#include <boost/signals2.hpp>
+#include <boost/signals2/connection.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
 #include <Swiften/Elements/MUCOccupant.h>
@@ -119,7 +119,7 @@ namespace Swift {
             std::map<std::string, MUCOccupant> occupants;
             bool joinSucceeded_;
             bool joinComplete_;
-            boost::bsignals::scoped_connection scopedConnection_;
+            boost::signals2::scoped_connection scopedConnection_;
             boost::posix_time::ptime joinSince_;
             bool createAsReservedIfNew;
             bool unlocking;

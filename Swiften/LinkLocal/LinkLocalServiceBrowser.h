@@ -12,9 +12,9 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDQuerier.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDRegisterQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveServiceQuery.h>
@@ -49,11 +49,11 @@ namespace Swift {
                 return querier;
             }
 
-            boost::signal<void (const LinkLocalService&)> onServiceAdded;
-            boost::signal<void (const LinkLocalService&)> onServiceChanged;
-            boost::signal<void (const LinkLocalService&)> onServiceRemoved;
-            boost::signal<void (const DNSSDServiceID&)> onServiceRegistered;
-            boost::signal<void (bool)> onStopped;
+            boost::signals2::signal<void (const LinkLocalService&)> onServiceAdded;
+            boost::signals2::signal<void (const LinkLocalService&)> onServiceChanged;
+            boost::signals2::signal<void (const LinkLocalService&)> onServiceRemoved;
+            boost::signals2::signal<void (const DNSSDServiceID&)> onServiceRegistered;
+            boost::signals2::signal<void (bool)> onStopped;
 
         private:
             void handleServiceAdded(const DNSSDServiceID&);

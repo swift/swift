@@ -14,9 +14,10 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardOperation.h>
 #include <Swiften/JID/JID.h>
@@ -41,11 +42,11 @@ namespace Swift {
         const JID& getTo() const;
 
     public:
-        boost::signal< void(const WhiteboardElement::ref element)> onElementReceived;
-        boost::signal< void(const WhiteboardOperation::ref operation)> onOperationReceived;
-        boost::signal< void(const JID& contact)> onSessionTerminated;
-        boost::signal< void(const JID& contact)> onRequestAccepted;
-        boost::signal< void(const JID& contact)> onRequestRejected;
+        boost::signals2::signal< void(const WhiteboardElement::ref element)> onElementReceived;
+        boost::signals2::signal< void(const WhiteboardOperation::ref operation)> onOperationReceived;
+        boost::signals2::signal< void(const JID& contact)> onSessionTerminated;
+        boost::signals2::signal< void(const JID& contact)> onRequestAccepted;
+        boost::signals2::signal< void(const JID& contact)> onRequestRejected;
 
     private:
         virtual void handleIncomingOperation(WhiteboardOperation::ref operation) = 0;

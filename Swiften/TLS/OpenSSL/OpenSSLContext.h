@@ -7,11 +7,11 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
+#include <boost/signals2.hpp>
 
 #include <openssl/ssl.h>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/TLSContext.h>
 

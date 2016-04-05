@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
@@ -21,7 +21,7 @@ class QtOccupantListWidget : public QtTreeWidget {
         QtOccupantListWidget(UIEventStream* eventStream, SettingsProvider* settings, MessageTarget privateMessageTarget, QWidget* parent = nullptr);
         virtual ~QtOccupantListWidget();
         void setAvailableOccupantActions(const std::vector<ChatWindow::OccupantAction>& actions);
-        boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
+        boost::signals2::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
     protected:
         void contextMenuEvent(QContextMenuEvent* event);
     private:

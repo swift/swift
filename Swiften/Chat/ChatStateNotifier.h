@@ -8,8 +8,9 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/JID/JID.h>

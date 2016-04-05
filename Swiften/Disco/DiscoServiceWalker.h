@@ -11,8 +11,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -47,13 +48,13 @@ namespace Swift {
             }
 
             /** Emitted for each service found. */
-            boost::signal<void(const JID&, std::shared_ptr<DiscoInfo>)> onServiceFound;
+            boost::signals2::signal<void(const JID&, std::shared_ptr<DiscoInfo>)> onServiceFound;
 
             /** Emitted when walking is aborted. */
-            boost::signal<void()> onWalkAborted;
+            boost::signals2::signal<void()> onWalkAborted;
 
             /** Emitted when walking is complete.*/
-            boost::signal<void()> onWalkComplete;
+            boost::signals2::signal<void()> onWalkComplete;
 
         private:
             void walkNode(const JID& jid);

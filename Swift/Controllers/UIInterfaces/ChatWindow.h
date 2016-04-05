@@ -13,9 +13,9 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/Tristate.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MUCOccupant.h>
@@ -218,40 +218,40 @@ namespace Swift {
              */
             virtual void showRoomConfigurationForm(Form::ref) = 0;
 
-            boost::signal<void ()> onClosed;
-            boost::signal<void ()> onAllMessagesRead;
-            boost::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
-            boost::signal<void ()> onSendCorrectionMessageRequest;
-            boost::signal<void ()> onUserTyping;
-            boost::signal<void ()> onUserCancelsTyping;
-            boost::signal<void ()> onAlertButtonClicked;
-            boost::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
-            boost::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
-            boost::signal<void (const std::string&)> onChangeSubjectRequest;
-            boost::signal<void ()> onBookmarkRequest;
-            boost::signal<void (Form::ref)> onConfigureRequest;
-            boost::signal<void ()> onDestroyRequest;
-            boost::signal<void (const std::vector<JID>&)> onInviteToChat;
-            boost::signal<void ()> onConfigurationFormCancelled;
-            boost::signal<void ()> onGetAffiliationsRequest;
-            boost::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;
-            boost::signal<void (const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes)> onChangeAffiliationsRequest;
-            boost::signal<void ()> onLogCleared;
+            boost::signals2::signal<void ()> onClosed;
+            boost::signals2::signal<void ()> onAllMessagesRead;
+            boost::signals2::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
+            boost::signals2::signal<void ()> onSendCorrectionMessageRequest;
+            boost::signals2::signal<void ()> onUserTyping;
+            boost::signals2::signal<void ()> onUserCancelsTyping;
+            boost::signals2::signal<void ()> onAlertButtonClicked;
+            boost::signals2::signal<void (ContactRosterItem*)> onOccupantSelectionChanged;
+            boost::signals2::signal<void (ChatWindow::OccupantAction, ContactRosterItem*)> onOccupantActionSelected;
+            boost::signals2::signal<void (const std::string&)> onChangeSubjectRequest;
+            boost::signals2::signal<void ()> onBookmarkRequest;
+            boost::signals2::signal<void (Form::ref)> onConfigureRequest;
+            boost::signals2::signal<void ()> onDestroyRequest;
+            boost::signals2::signal<void (const std::vector<JID>&)> onInviteToChat;
+            boost::signals2::signal<void ()> onConfigurationFormCancelled;
+            boost::signals2::signal<void ()> onGetAffiliationsRequest;
+            boost::signals2::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;
+            boost::signals2::signal<void (const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes)> onChangeAffiliationsRequest;
+            boost::signals2::signal<void ()> onLogCleared;
 
             // File transfer related
-            boost::signal<void (std::string /* id */)> onFileTransferCancel;
-            boost::signal<void (std::string /* id */, std::string /* description */)> onFileTransferStart;
-            boost::signal<void (std::string /* id */, std::string /* path */)> onFileTransferAccept;
-            boost::signal<void (std::string /* path */)> onSendFileRequest;
+            boost::signals2::signal<void (std::string /* id */)> onFileTransferCancel;
+            boost::signals2::signal<void (std::string /* id */, std::string /* description */)> onFileTransferStart;
+            boost::signals2::signal<void (std::string /* id */, std::string /* path */)> onFileTransferAccept;
+            boost::signals2::signal<void (std::string /* path */)> onSendFileRequest;
 
             //Whiteboard related
-            boost::signal<void ()> onWhiteboardSessionAccept;
-            boost::signal<void ()> onWhiteboardSessionCancel;
-            boost::signal<void ()> onWhiteboardWindowShow;
+            boost::signals2::signal<void ()> onWhiteboardSessionAccept;
+            boost::signals2::signal<void ()> onWhiteboardSessionCancel;
+            boost::signals2::signal<void ()> onWhiteboardWindowShow;
 
             // Blocking Command related
-            boost::signal<void ()> onBlockUserRequest;
-            boost::signal<void ()> onUnblockUserRequest;
+            boost::signals2::signal<void ()> onBlockUserRequest;
+            boost::signals2::signal<void ()> onUnblockUserRequest;
     };
 }
 

@@ -12,7 +12,8 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
@@ -44,12 +45,12 @@ class Roster {
         std::set<JID> getJIDs() const;
 
         std::vector<RosterFilter*> getFilters() {return filters_;}
-        boost::signal<void (GroupRosterItem*)> onChildrenChanged;
-        boost::signal<void (GroupRosterItem*)> onGroupAdded;
-        boost::signal<void (RosterItem*)> onDataChanged;
-        boost::signal<void (JID&)> onVCardUpdateRequested;
-        boost::signal<void (RosterFilter* filter)> onFilterAdded;
-        boost::signal<void (RosterFilter* filter)> onFilterRemoved;
+        boost::signals2::signal<void (GroupRosterItem*)> onChildrenChanged;
+        boost::signals2::signal<void (GroupRosterItem*)> onGroupAdded;
+        boost::signals2::signal<void (RosterItem*)> onDataChanged;
+        boost::signals2::signal<void (JID&)> onVCardUpdateRequested;
+        boost::signals2::signal<void (RosterFilter* filter)> onFilterAdded;
+        boost::signals2::signal<void (RosterFilter* filter)> onFilterRemoved;
         GroupRosterItem* getGroup(const std::string& groupName);
         void setBlockingSupported(bool isSupported);
 

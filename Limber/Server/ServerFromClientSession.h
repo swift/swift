@@ -9,8 +9,9 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Session/Session.h>
@@ -38,7 +39,7 @@ namespace Swift {
                     XMLParserFactory* xmlParserFactory,
                     UserRegistry* userRegistry);
 
-            boost::signal<void ()> onSessionStarted;
+            boost::signals2::signal<void ()> onSessionStarted;
             void setAllowSASLEXTERNAL();
 
         private:

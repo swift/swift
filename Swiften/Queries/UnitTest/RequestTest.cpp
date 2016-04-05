@@ -66,7 +66,7 @@ class RequestTest : public CppUnit::TestFixture {
                 }
 
             public:
-                boost::signal<void (std::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
+                boost::signals2::signal<void (std::shared_ptr<Payload>, ErrorPayload::ref)> onResponse;
         };
 
     public:

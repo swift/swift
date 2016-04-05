@@ -13,7 +13,7 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/Network/Timer.h>
@@ -43,7 +43,7 @@ namespace Swift {
             const std::string& getSmartCardReaderName() const;
 
         public:
-            boost::signal<void ()> onCertificateCardRemoved;
+            boost::signals2::signal<void ()> onCertificateCardRemoved;
 
         private:
             void setUri (const std::string& capiUri);

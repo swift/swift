@@ -206,7 +206,7 @@ if env.get("boost_includedir", None) :
 		boost_flags["CPPFLAGS"] = [("-isystem", env["boost_includedir"])]
 boost_conf_env.MergeFlags(boost_flags)
 conf = Configure(boost_conf_env)
-boostLibs = [("signals", None), ("system", "system/system_error.hpp"), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("serialization", "archive/text_oarchive.hpp"), ("date_time", "date_time/date.hpp")]
+boostLibs = [("signals2", None), ("system", "system/system_error.hpp"), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("serialization", "archive/text_oarchive.hpp"), ("date_time", "date_time/date.hpp")]
 allLibsPresent = True
 libNames = []
 for (lib, header) in boostLibs :
@@ -226,14 +226,12 @@ for (lib, header) in boostLibs :
 				break
 		libNames.append(libName)
 if allLibsPresent :
-	boost_flags["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
 	env["BOOST_FLAGS"] = boost_flags
 	if env["PLATFORM"] != "win32" :
 		env["BOOST_FLAGS"].update({"LIBS": libNames})
 	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
 		# FIXME: Remove this workaround when UUID is available in most distros
 		env["BOOST_BUNDLED_UUID_ONLY"] = True
-		env["BOOST_FLAGS"]["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
 elif not env.get("boost_bundled_enable", True) :
 	print "Error: Boost not found and boost_bundled_enable is false"
 	Exit(1)

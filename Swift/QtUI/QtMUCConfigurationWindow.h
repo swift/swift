@@ -6,11 +6,12 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <QLabel>
 #include <QPushButton>
 #include <QWidget>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Form.h>
 
 class QBoxLayout;
@@ -23,8 +24,8 @@ namespace Swift {
         public:
             QtMUCConfigurationWindow(Form::ref form);
             virtual ~QtMUCConfigurationWindow();
-            boost::signal<void (Form::ref)> onFormComplete;
-            boost::signal<void ()> onFormCancelled;
+            boost::signals2::signal<void (Form::ref)> onFormComplete;
+            boost::signals2::signal<void ()> onFormCancelled;
         private slots:
             void handleCancelClicked();
             void handleOKClicked();

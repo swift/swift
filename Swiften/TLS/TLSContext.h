@@ -8,9 +8,10 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 #include <Swiften/TLS/CertificateWithKey.h>
@@ -36,9 +37,9 @@ namespace Swift {
             virtual ByteArray getFinishMessage() const = 0;
 
         public:
-            boost::signal<void (const SafeByteArray&)> onDataForNetwork;
-            boost::signal<void (const SafeByteArray&)> onDataForApplication;
-            boost::signal<void (std::shared_ptr<TLSError>)> onError;
-            boost::signal<void ()> onConnected;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataForNetwork;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataForApplication;
+            boost::signals2::signal<void (std::shared_ptr<TLSError>)> onError;
+            boost::signals2::signal<void ()> onConnected;
     };
 }

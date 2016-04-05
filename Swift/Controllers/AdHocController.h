@@ -19,7 +19,7 @@ class AdHocController {
 public:
     AdHocController(AdHocCommandWindowFactory* factory, std::shared_ptr<OutgoingAdHocCommandSession> command);
     ~AdHocController();
-    boost::signal<void ()> onDeleting;
+    boost::signals2::signal<void ()> onDeleting;
     void setOnline(bool online);
 private:
     void handleWindowClosed();

@@ -41,7 +41,7 @@ namespace Swift {
                 return remoteAddress;
             }
 
-            boost::signal<void (const SafeByteArray&)> onDataSent;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataSent;
 
             EventLoop* eventLoop;
             HostAddressPort localAddress;

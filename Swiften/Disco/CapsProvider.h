@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/DiscoInfo.h>
 
@@ -20,6 +21,6 @@ namespace Swift {
 
             virtual DiscoInfo::ref getCaps(const std::string&) const = 0;
 
-            boost::signal<void (const std::string&)> onCapsAvailable;
+            boost::signals2::signal<void (const std::string&)> onCapsAvailable;
     };
 }

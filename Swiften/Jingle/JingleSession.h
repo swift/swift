@@ -11,10 +11,10 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Listenable.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/JID/JID.h>
 

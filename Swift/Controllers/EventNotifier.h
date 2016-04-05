@@ -8,7 +8,8 @@
 
 #include <memory>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
@@ -29,7 +30,7 @@ namespace Swift {
             EventNotifier(EventController* eventController, Notifier* notifier, AvatarManager* avatarManager, NickResolver* nickResolver);
             ~EventNotifier();
 
-            boost::signal<void (const JID&)> onNotificationActivated;
+            boost::signals2::signal<void (const JID&)> onNotificationActivated;
 
         private:
             void handleEventAdded(std::shared_ptr<StanzaEvent>);

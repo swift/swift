@@ -25,12 +25,12 @@ class GroupRosterItem : public RosterItem {
         GroupRosterItem* removeGroupChild(const std::string& group);
         void removeAll();
         void setDisplayed(RosterItem* item, bool displayed);
-        boost::signal<void ()> onChildrenChanged;
+        boost::signals2::signal<void ()> onChildrenChanged;
         static bool itemLessThanWithStatus(const RosterItem* left, const RosterItem* right);
         static bool itemLessThanWithoutStatus(const RosterItem* left, const RosterItem* right);
         void setExpanded(bool expanded);
         bool isExpanded() const;
-        boost::signal<void (bool)> onExpandedChanged;
+        boost::signals2::signal<void (bool)> onExpandedChanged;
         void setManualSort(const std::string& manualSortValue);
         virtual const std::string& getSortableDisplayName() const;
     private:

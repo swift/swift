@@ -10,10 +10,10 @@
 #include <memory>
 #include <string>
 
-#include <boost/signals/connection.hpp>
+#include <boost/signals2.hpp>
+#include <boost/signals2/connection.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
 #include <Swiften/Elements/MUCOccupant.h>
@@ -78,23 +78,23 @@ namespace Swift {
             virtual void setPassword(const boost::optional<std::string>& password) = 0;
 
         public:
-            boost::signal<void (const std::string& /*nick*/)> onJoinComplete;
-            boost::signal<void (ErrorPayload::ref)> onJoinFailed;
-            boost::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Role)> onRoleChangeFailed;
-            boost::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Affiliation)> onAffiliationChangeFailed;
-            boost::signal<void (ErrorPayload::ref)> onConfigurationFailed;
-            boost::signal<void (ErrorPayload::ref)> onAffiliationListFailed;
-            boost::signal<void (Presence::ref)> onOccupantPresenceChange;
-            boost::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
-            boost::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
-            boost::signal<void (const MUCOccupant&)> onOccupantJoined;
-            boost::signal<void (const std::string& /*oldNickname*/, const std::string& /*newNickname*/ )> onOccupantNicknameChanged;
-            boost::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
-            boost::signal<void (Form::ref)> onConfigurationFormReceived;
-            boost::signal<void (MUCOccupant::Affiliation, const std::vector<JID>&)> onAffiliationListReceived;
-            boost::signal<void ()> onUnlocked;
-            /* boost::signal<void (const MUCInfo&)> onInfoResult; */
-            /* boost::signal<void (const blah&)> onItemsResult; */
+            boost::signals2::signal<void (const std::string& /*nick*/)> onJoinComplete;
+            boost::signals2::signal<void (ErrorPayload::ref)> onJoinFailed;
+            boost::signals2::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Role)> onRoleChangeFailed;
+            boost::signals2::signal<void (ErrorPayload::ref, const JID&, MUCOccupant::Affiliation)> onAffiliationChangeFailed;
+            boost::signals2::signal<void (ErrorPayload::ref)> onConfigurationFailed;
+            boost::signals2::signal<void (ErrorPayload::ref)> onAffiliationListFailed;
+            boost::signals2::signal<void (Presence::ref)> onOccupantPresenceChange;
+            boost::signals2::signal<void (const std::string&, const MUCOccupant& /*now*/, const MUCOccupant::Role& /*old*/)> onOccupantRoleChanged;
+            boost::signals2::signal<void (const std::string&, const MUCOccupant::Affiliation& /*new*/, const MUCOccupant::Affiliation& /*old*/)> onOccupantAffiliationChanged;
+            boost::signals2::signal<void (const MUCOccupant&)> onOccupantJoined;
+            boost::signals2::signal<void (const std::string& /*oldNickname*/, const std::string& /*newNickname*/ )> onOccupantNicknameChanged;
+            boost::signals2::signal<void (const MUCOccupant&, LeavingType, const std::string& /*reason*/)> onOccupantLeft;
+            boost::signals2::signal<void (Form::ref)> onConfigurationFormReceived;
+            boost::signals2::signal<void (MUCOccupant::Affiliation, const std::vector<JID>&)> onAffiliationListReceived;
+            boost::signals2::signal<void ()> onUnlocked;
+            /* boost::signals2::signal<void (const MUCInfo&)> onInfoResult; */
+            /* boost::signals2::signal<void (const blah&)> onItemsResult; */
 
     };
 }

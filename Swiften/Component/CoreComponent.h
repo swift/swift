@@ -9,10 +9,11 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Component/ComponentConnector.h>
 #include <Swiften/Component/ComponentError.h>
 #include <Swiften/Component/ComponentSession.h>
@@ -73,13 +74,13 @@ namespace Swift {
             }
 
         public:
-            boost::signal<void (const ComponentError&)> onError;
-            boost::signal<void ()> onConnected;
-            boost::signal<void (const SafeByteArray&)> onDataRead;
-            boost::signal<void (const SafeByteArray&)> onDataWritten;
+            boost::signals2::signal<void (const ComponentError&)> onError;
+            boost::signals2::signal<void ()> onConnected;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataWritten;
 
-            boost::signal<void (std::shared_ptr<Message>)> onMessageReceived;
-            boost::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
+            boost::signals2::signal<void (std::shared_ptr<Message>)> onMessageReceived;
+            boost::signals2::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
 
         private:
             void handleConnectorFinished(std::shared_ptr<Connection>);

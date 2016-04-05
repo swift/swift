@@ -9,11 +9,11 @@
 #include <memory>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/TLS/Certificate.h>
@@ -74,12 +74,12 @@ namespace Swift {
 
             virtual ByteArray getTLSFinishMessage() const = 0;
 
-            boost::signal<void (const ProtocolHeader&)> onStreamStartReceived;
-            boost::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
-            boost::signal<void (std::shared_ptr<Error>)> onClosed;
-            boost::signal<void ()> onTLSEncrypted;
-            boost::signal<void (const SafeByteArray&)> onDataRead;
-            boost::signal<void (const SafeByteArray&)> onDataWritten;
+            boost::signals2::signal<void (const ProtocolHeader&)> onStreamStartReceived;
+            boost::signals2::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
+            boost::signals2::signal<void (std::shared_ptr<Error>)> onClosed;
+            boost::signals2::signal<void ()> onTLSEncrypted;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataWritten;
 
         protected:
             CertificateWithKey::ref getTLSCertificate() const {

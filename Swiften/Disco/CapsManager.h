@@ -9,8 +9,9 @@
 #include <map>
 #include <set>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Disco/CapsProvider.h>
 #include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -24,7 +25,7 @@ namespace Swift {
     class CapsStorage;
     class CryptoProvider;
 
-    class SWIFTEN_API CapsManager : public CapsProvider, public boost::bsignals::trackable {
+    class SWIFTEN_API CapsManager : public CapsProvider, public boost::signals2::trackable {
         public:
             CapsManager(CapsStorage*, StanzaChannel*, IQRouter*, CryptoProvider*);
 

@@ -12,20 +12,22 @@
 
 #include <Swiften/Network/UnixNetworkEnvironment.h>
 
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
+
 #include <boost/optional.hpp>
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <boost/signals2.hpp>
+
 #include <arpa/inet.h>
 #include <net/if.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
 #ifndef __ANDROID__
 #include <ifaddrs.h>
 #endif
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NetworkInterface.h>
 

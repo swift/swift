@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swift/Controllers/HighlightRule.h>
 
@@ -60,7 +60,7 @@ namespace Swift {
             void storeSettings();
             void loadSettings();
 
-            boost::signal<void (const HighlightAction&)> onHighlight;
+            boost::signals2::signal<void (const HighlightAction&)> onHighlight;
 
         private:
             void handleSettingChanged(const std::string& settingPath);
@@ -73,7 +73,7 @@ namespace Swift {
             bool storingSettings_;
 
             std::shared_ptr<HighlightManager::HighlightRulesList> rules_;
-            boost::bsignals::scoped_connection handleSettingChangedConnection_;
+            boost::signals2::scoped_connection handleSettingChangedConnection_;
     };
 
     typedef std::shared_ptr<const HighlightManager::HighlightRulesList> HighlightRulesListPtr;

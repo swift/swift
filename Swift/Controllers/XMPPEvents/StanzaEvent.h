@@ -9,8 +9,7 @@
 #include <memory>
 
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class StanzaEvent {
@@ -20,7 +19,7 @@ namespace Swift {
             void conclude() {concluded_ = true; onConclusion();}
             /** Do not call this directly from outside the class.
              * If you connect to this signal, you *must* disconnect from it manually. */
-            boost::signal<void()> onConclusion;
+            boost::signals2::signal<void()> onConclusion;
             bool getConcluded() {return concluded_;}
             boost::posix_time::ptime getTime() {return time_;}
         private:

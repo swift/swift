@@ -16,9 +16,9 @@
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileReadBytestream.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/FileTransfer/OutgoingJingleFileTransfer.h>

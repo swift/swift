@@ -10,8 +10,9 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
 
@@ -26,7 +27,7 @@ namespace Swift {
 
             std::string jidToNick(const JID& jid);
 
-            boost::signal<void (const JID&, const std::string& /*previousNick*/)> onNickChanged;
+            boost::signals2::signal<void (const JID&, const std::string& /*previousNick*/)> onNickChanged;
 
         private:
             void handleVCardReceived(const JID& jid, VCard::ref vCard);

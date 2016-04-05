@@ -9,7 +9,8 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
@@ -21,6 +22,6 @@ namespace Swift {
             virtual void setMUC(const std::string& nick) = 0;
             virtual void show() = 0;
 
-            boost::signal<void ()> onSearchMUC;
+            boost::signals2::signal<void ()> onSearchMUC;
     };
 }

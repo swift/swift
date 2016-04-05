@@ -11,9 +11,9 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
@@ -69,30 +69,30 @@ namespace Swift {
             /**
              * Emitted when the given JID is added to the roster.
              */
-            boost::signal<void (const JID&)> onJIDAdded;
+            boost::signals2::signal<void (const JID&)> onJIDAdded;
 
             /**
              * Emitted when the given JID is removed from the roster.
              */
-            boost::signal<void (const JID&)> onJIDRemoved;
+            boost::signals2::signal<void (const JID&)> onJIDRemoved;
 
             /**
              * Emitted when the name or the groups of the roster item with the
              * given JID changes.
              */
-            boost::signal<void (const JID&, const std::string&, const std::vector<std::string>&)> onJIDUpdated;
+            boost::signals2::signal<void (const JID&, const std::string&, const std::vector<std::string>&)> onJIDUpdated;
 
             /**
              * Emitted when the roster is reset (e.g. due to logging in/logging out).
              * After this signal is emitted, the roster is empty. It will be repopulated through
              * onJIDAdded and onJIDRemoved events.
              */
-            boost::signal<void ()> onRosterCleared;
+            boost::signals2::signal<void ()> onRosterCleared;
 
             /**
              * Emitted after the last contact of the initial roster request response
              * was added.
              */
-            boost::signal<void ()> onInitialRosterPopulated;
+            boost::signals2::signal<void ()> onInitialRosterPopulated;
     };
 }

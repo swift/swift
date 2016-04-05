@@ -37,7 +37,7 @@ elif env.get("BOOST_BUNDLED", False) :
 	if env["SCONS_STAGE"] == "flags" :
 		env["BOOST_FLAGS"] = {
 				"CPPFLAGS": cppflags,
-				"CPPDEFINES": cppdefines + ['BOOST_SIGNALS_NO_DEPRECATION_WARNING'],
+				"CPPDEFINES": cppdefines,
 				"LIBPATH": [Dir(".")],
 				"LIBS": ["Swiften_Boost"]
 			}
@@ -70,11 +70,6 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/date_time/src/posix_time/posix_time_types.cpp",
 				"src/libs/system/src/error_code.cpp",
 				"src/libs/thread/src/tss_null.cpp",
-				"src/libs/signals/src/connection.cpp",
-				"src/libs/signals/src/named_slot_map.cpp",
-				"src/libs/signals/src/signal_base.cpp",
-				"src/libs/signals/src/slot.cpp",
-				"src/libs/signals/src/trackable.cpp",
 				"src/libs/filesystem/src/codecvt_error_category.cpp",
 				"src/libs/filesystem/src/operations.cpp",
 				"src/libs/filesystem/src/path.cpp",

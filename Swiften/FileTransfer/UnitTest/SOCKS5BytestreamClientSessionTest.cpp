@@ -296,7 +296,7 @@ private:
                 onDataSent(data);
             }
 
-            boost::signal<void (const SafeByteArray&)> onDataSent;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataSent;
 
             EventLoop* eventLoop;
             boost::optional<HostAddressPort> hostAddressPort;

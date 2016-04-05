@@ -1,11 +1,15 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#pragma once
+
 #include <vector>
-#include <Swiften/Base/boost_bsignals.h>
+
+#include <boost/signals2.hpp>
+
 #include <Swift/Controllers/Contact.h>
 
 namespace Swift {
@@ -21,7 +25,7 @@ public:
     virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions) = 0;
 
 public:
-    boost::signal<void (const std::string&)> onContactSuggestionsRequested;
+    boost::signals2::signal<void (const std::string&)> onContactSuggestionsRequested;
 };
 
 }

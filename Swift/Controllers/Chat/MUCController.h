@@ -11,10 +11,10 @@
 #include <set>
 #include <string>
 
-#include <boost/signals/connection.hpp>
+#include <boost/signals2.hpp>
+#include <boost/signals2/connection.hpp>
 
 #include <Swiften/Base/Override.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/Message.h>
@@ -56,10 +56,10 @@ namespace Swift {
         public:
             MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
             virtual ~MUCController();
-            boost::signal<void ()> onUserLeft;
-            boost::signal<void ()> onUserJoined;
-            boost::signal<void ()> onImpromptuConfigCompleted;
-            boost::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
+            boost::signals2::signal<void ()> onUserLeft;
+            boost::signals2::signal<void ()> onUserJoined;
+            boost::signals2::signal<void ()> onImpromptuConfigCompleted;
+            boost::signals2::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
             virtual void setOnline(bool online) SWIFTEN_OVERRIDE;
             virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
             void rejoin();
@@ -156,7 +156,7 @@ namespace Swift {
             bool lastWasPresence_;
             bool shouldJoinOnReconnect_;
             bool doneGettingHistory_;
-            boost::bsignals::scoped_connection avatarChangedConnection_;
+            boost::signals2::scoped_connection avatarChangedConnection_;
             std::shared_ptr<Timer> loginCheckTimer_;
             std::set<std::string> currentOccupants_;
             std::vector<NickJoinPart> joinParts_;
@@ -171,15 +171,15 @@ namespace Swift {
             std::string lastJoinMessageUID_;
 
             ClientBlockListManager* clientBlockListManager_;
-            boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
-            boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
-            boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
+            boost::signals2::scoped_connection blockingOnStateChangedConnection_;
+            boost::signals2::scoped_connection blockingOnItemAddedConnection_;
+            boost::signals2::scoped_connection blockingOnItemRemovedConnection_;
 
             boost::optional<ChatWindow::AlertID> blockedContactAlert_;
 
             MUCBookmarkManager* mucBookmarkManager_;
-            boost::bsignals::scoped_connection mucBookmarkManagerBookmarkAddedConnection_;
-            boost::bsignals::scoped_connection mucBookmarkManagerBookmarkRemovedConnection_;
+            boost::signals2::scoped_connection mucBookmarkManagerBookmarkAddedConnection_;
+            boost::signals2::scoped_connection mucBookmarkManagerBookmarkRemovedConnection_;
     };
 }
 

@@ -14,9 +14,9 @@
 
 #include <boost/bind.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/FileSize.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>

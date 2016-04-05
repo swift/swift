@@ -10,10 +10,10 @@
 #include <memory>
 #include <string>
 
-#include <boost/signals/connection.hpp>
+#include <boost/signals2.hpp>
+#include <boost/signals2/connection.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MUCAdminPayload.h>
 #include <Swiften/Elements/MUCOccupant.h>

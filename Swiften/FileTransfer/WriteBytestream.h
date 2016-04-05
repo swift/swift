@@ -9,8 +9,9 @@
 #include <memory>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     class SWIFTEN_API WriteBytestream {
@@ -26,6 +27,6 @@ namespace Swift {
              */
             virtual bool write(const std::vector<unsigned char>&) = 0;
 
-            boost::signal<void (const std::vector<unsigned char>&)> onWrite;
+            boost::signals2::signal<void (const std::vector<unsigned char>&)> onWrite;
     };
 }

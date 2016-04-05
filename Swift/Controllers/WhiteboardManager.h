@@ -36,10 +36,10 @@ namespace Swift {
         WhiteboardWindow* createNewWhiteboardWindow(const JID& contact, WhiteboardSession::ref session);
 
     public:
-        boost::signal< void (const JID&, bool senderIsSelf)> onSessionRequest;
-        boost::signal< void (const JID&)> onSessionTerminate;
-        boost::signal< void (const JID&)> onRequestAccepted;
-        boost::signal< void (const JID&)> onRequestRejected;
+        boost::signals2::signal< void (const JID&, bool senderIsSelf)> onSessionRequest;
+        boost::signals2::signal< void (const JID&)> onSessionTerminate;
+        boost::signals2::signal< void (const JID&)> onRequestAccepted;
+        boost::signals2::signal< void (const JID&)> onRequestRejected;
 
     private:
         void handleUIEvent(std::shared_ptr<UIEvent> event);
@@ -58,7 +58,7 @@ namespace Swift {
         WhiteboardWindowFactory* whiteboardWindowFactory_;
         UIEventStream* uiEventStream_;
         NickResolver* nickResolver_;
-        boost::bsignals::scoped_connection uiEventConnection_;
+        boost::signals2::scoped_connection uiEventConnection_;
         WhiteboardSessionManager* whiteboardSessionManager_;
     };
 }

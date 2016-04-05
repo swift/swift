@@ -9,8 +9,9 @@
 #include <memory>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     class SWIFTEN_API ReadBytestream {
@@ -26,7 +27,7 @@ namespace Swift {
             virtual bool isFinished() const = 0;
 
         public:
-            boost::signal<void ()> onDataAvailable;
-            boost::signal<void (const std::vector<unsigned char>&)> onRead;
+            boost::signals2::signal<void ()> onDataAvailable;
+            boost::signals2::signal<void (const std::vector<unsigned char>&)> onRead;
     };
 }

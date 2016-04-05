@@ -10,8 +10,9 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Command.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/JID/JID.h>
@@ -66,12 +67,12 @@ namespace Swift {
             /**
              * Emitted when the form for the next stage is available.
              */
-            boost::signal<void (Command::ref)> onNextStageReceived;
+            boost::signals2::signal<void (Command::ref)> onNextStageReceived;
 
             /**
              * Emitted on error.
              */
-            boost::signal<void (ErrorPayload::ref)> onError;
+            boost::signals2::signal<void (ErrorPayload::ref)> onError;
 
             /**
              * Get the state of a given action.
@@ -93,6 +94,6 @@ namespace Swift {
             bool isMultiStage_;
             std::string sessionID_;
             std::map<Command::Action, ActionState> actionStates_;
-            boost::bsignals::connection connection_;
+            boost::signals2::connection connection_;
     };
 }

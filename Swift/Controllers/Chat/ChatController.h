@@ -105,9 +105,9 @@ namespace Swift {
             std::string lastWbID_;
 
             ClientBlockListManager* clientBlockListManager_;
-            boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
-            boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
-            boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
+            boost::signals2::scoped_connection blockingOnStateChangedConnection_;
+            boost::signals2::scoped_connection blockingOnItemAddedConnection_;
+            boost::signals2::scoped_connection blockingOnItemRemovedConnection_;
 
             boost::optional<ChatWindow::AlertID> deliveryReceiptAlert_;
             boost::optional<ChatWindow::AlertID> blockedContactAlert_;

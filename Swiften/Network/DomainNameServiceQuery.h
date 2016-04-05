@@ -11,9 +11,9 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/DomainNameResolveError.h>
 
 namespace Swift {
@@ -36,6 +36,6 @@ namespace Swift {
             virtual void run() = 0;
             static void sortResults(std::vector<DomainNameServiceQuery::Result>& queries, RandomGenerator& generator);
 
-            boost::signal<void (const std::vector<Result>&)> onResult;
+            boost::signals2::signal<void (const std::vector<Result>&)> onResult;
     };
 }

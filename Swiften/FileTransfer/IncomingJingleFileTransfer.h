@@ -122,8 +122,8 @@ namespace Swift {
             std::map<std::string, ByteArray> hashes;
             FileTransferOptions options;
 
-            boost::bsignals::scoped_connection writeStreamDataReceivedConnection;
-            boost::bsignals::scoped_connection waitOnHashTimerTickedConnection;
-            boost::bsignals::connection transferFinishedConnection;
+            boost::signals2::scoped_connection writeStreamDataReceivedConnection;
+            boost::signals2::scoped_connection waitOnHashTimerTickedConnection;
+            boost::signals2::connection transferFinishedConnection;
     };
 }

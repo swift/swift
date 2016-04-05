@@ -9,8 +9,9 @@
 #include <memory>
 #include <set>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Avatars/AvatarManager.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Network/Timer.h>
@@ -31,7 +32,7 @@ namespace Swift {
 
             void setInitialQuietPeriodMS(int ms);
 
-            boost::signal<void (const JID&)> onNotificationActivated;
+            boost::signals2::signal<void (const JID&)> onNotificationActivated;
 
         private:
             void handlePresenceReceived(std::shared_ptr<Presence>);

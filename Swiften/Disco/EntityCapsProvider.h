@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/JID/JID.h>
 
@@ -29,6 +30,6 @@ namespace Swift {
             /**
              * Emitted when the capabilities of a JID changes.
              */
-            boost::signal<void (const JID&)> onCapsChanged;
+            boost::signals2::signal<void (const JID&)> onCapsChanged;
     };
 }

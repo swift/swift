@@ -9,9 +9,9 @@
 #include <memory>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/IBB.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
@@ -47,8 +47,8 @@ namespace Swift {
                 this->blockSize = blockSize;
             }
 
-            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
-            boost::signal<void (size_t)> onBytesSent;
+            boost::signals2::signal<void (boost::optional<FileTransferError>)> onFinished;
+            boost::signals2::signal<void (size_t)> onBytesSent;
 
         private:
             void handleIBBResponse(IBB::ref, ErrorPayload::ref);

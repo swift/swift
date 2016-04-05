@@ -15,7 +15,7 @@ namespace Swift {
     class TimerFactory;
     class Timer;
 
-    class ActualIdleDetector : public IdleDetector, public boost::bsignals::trackable {
+    class ActualIdleDetector : public IdleDetector, public boost::signals2::trackable {
         public:
             ActualIdleDetector(IdleQuerier*, TimerFactory*, int refreshRateMilliseconds);
             ~ActualIdleDetector();

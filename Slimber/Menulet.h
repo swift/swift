@@ -8,7 +8,7 @@
 
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 class Menulet {
     public:
@@ -22,5 +22,5 @@ class Menulet {
         virtual void addSeparator() = 0;
         virtual void setIcon(const std::string&) = 0;
 
-        boost::signal<void ()> onRestartClicked;
+        boost::signals2::signal<void ()> onRestartClicked;
 };

@@ -123,7 +123,7 @@ void Server::stop(boost::optional<ServerError> e) {
 
     if (serverFromNetworkConnectionServer) {
         serverFromNetworkConnectionServer->stop();
-        foreach(boost::bsignals::connection& connection, serverFromNetworkConnectionServerSignalConnections) {
+        foreach(boost::signals2::connection& connection, serverFromNetworkConnectionServerSignalConnections) {
             connection.disconnect();
         }
         serverFromNetworkConnectionServerSignalConnections.clear();
@@ -131,7 +131,7 @@ void Server::stop(boost::optional<ServerError> e) {
     }
     if (serverFromClientConnectionServer) {
         serverFromClientConnectionServer->stop();
-        foreach(boost::bsignals::connection& connection, serverFromClientConnectionServerSignalConnections) {
+        foreach(boost::signals2::connection& connection, serverFromClientConnectionServerSignalConnections) {
             connection.disconnect();
         }
         serverFromClientConnectionServerSignalConnections.clear();

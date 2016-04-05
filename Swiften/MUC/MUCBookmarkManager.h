@@ -10,9 +10,9 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/Storage.h>
 #include <Swiften/MUC/MUCBookmark.h>
@@ -31,12 +31,12 @@ namespace Swift {
             const std::vector<MUCBookmark>& getBookmarks() const;
 
         public:
-            boost::signal<void (const MUCBookmark&)> onBookmarkAdded;
-            boost::signal<void (const MUCBookmark&)> onBookmarkRemoved;
+            boost::signals2::signal<void (const MUCBookmark&)> onBookmarkAdded;
+            boost::signals2::signal<void (const MUCBookmark&)> onBookmarkRemoved;
             /**
              * When server bookmarks are ready to be used (request response has been received).
              */
-            boost::signal<void ()> onBookmarksReady;
+            boost::signals2::signal<void ()> onBookmarksReady;
 
         private:
             bool containsEquivalent(const std::vector<MUCBookmark>& list, const MUCBookmark& bookmark);

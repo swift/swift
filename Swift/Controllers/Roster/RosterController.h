@@ -10,8 +10,9 @@
 #include <set>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Avatars/AvatarManager.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/RosterPayload.h>
@@ -53,8 +54,8 @@ namespace Swift {
             void showRosterWindow();
             void setJID(const JID& jid) { myJID_ = jid; }
             MainWindow* getWindow() {return mainWindow_;}
-            boost::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
-            boost::signal<void ()> onSignOutRequest;
+            boost::signals2::signal<void (StatusShow::Type, const std::string&)> onChangeStatusRequest;
+            boost::signals2::signal<void ()> onSignOutRequest;
             void handleOwnVCardChanged(VCard::ref vcard);
             void handleAvatarChanged(const JID& jid);
             void handlePresenceChanged(Presence::ref presence);
@@ -115,11 +116,11 @@ namespace Swift {
             RosterVCardProvider* rosterVCardProvider_;
             std::shared_ptr<ContactRosterItem> ownContact_;
 
-            boost::bsignals::scoped_connection blockingOnStateChangedConnection_;
-            boost::bsignals::scoped_connection blockingOnItemAddedConnection_;
-            boost::bsignals::scoped_connection blockingOnItemRemovedConnection_;
-            boost::bsignals::scoped_connection changeStatusConnection_;
-            boost::bsignals::scoped_connection signOutConnection_;
-            boost::bsignals::scoped_connection uiEventConnection_;
+            boost::signals2::scoped_connection blockingOnStateChangedConnection_;
+            boost::signals2::scoped_connection blockingOnItemAddedConnection_;
+            boost::signals2::scoped_connection blockingOnItemRemovedConnection_;
+            boost::signals2::scoped_connection changeStatusConnection_;
+            boost::signals2::scoped_connection signOutConnection_;
+            boost::signals2::scoped_connection uiEventConnection_;
     };
 }

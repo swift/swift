@@ -6,12 +6,12 @@
 
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/signals2.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileWriteBytestream.h>
 
 using namespace Swift;

@@ -9,9 +9,9 @@
 #include <memory>
 
 #include <boost/optional/optional_fwd.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/IBB.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
@@ -42,7 +42,7 @@ namespace Swift {
                 return to;
             }
 
-            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+            boost::signals2::signal<void (boost::optional<FileTransferError>)> onFinished;
 
         private:
             bool handleSetRequest(const JID& from, const JID& to, const std::string& id, IBB::ref payload);

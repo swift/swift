@@ -14,9 +14,9 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
@@ -47,7 +47,7 @@ namespace Swift {
     class ChatMessageParser;
     class AutoAcceptMUCInviteDecider;
 
-    class ChatControllerBase : public boost::bsignals::trackable {
+    class ChatControllerBase : public boost::signals2::trackable {
         public:
             virtual ~ChatControllerBase();
             void showChatWindow();
@@ -61,15 +61,15 @@ namespace Swift {
             void setEnabled(bool enabled);
             virtual void setToJID(const JID& jid) {toJID_ = jid;}
             /** Used for determining when something is recent.*/
-            boost::signal<void (const std::string& /*activity*/)> onActivity;
-            boost::signal<void ()> onUnreadCountChanged;
-            boost::signal<void ()> onWindowClosed;
+            boost::signals2::signal<void (const std::string& /*activity*/)> onActivity;
+            boost::signals2::signal<void ()> onUnreadCountChanged;
+            boost::signals2::signal<void ()> onWindowClosed;
             int getUnreadCount();
             const JID& getToJID() {return toJID_;}
             void handleCapsChanged(const JID& jid);
             void setCanStartImpromptuChats(bool supportsImpromptu);
             virtual ChatWindow* detachChatWindow();
-            boost::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
+            boost::signals2::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
         protected:
             ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);

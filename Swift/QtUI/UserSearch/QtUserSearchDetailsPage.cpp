@@ -7,11 +7,11 @@
 #include <Swift/QtUI/UserSearch/QtUserSearchDetailsPage.h>
 
 #include <boost/bind.hpp>
+#include <boost/signals2.hpp>
 
 #include <QLabel>
 #include <QVBoxLayout>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 
 #include <Swift/QtUI/QtContactEditWidget.h>

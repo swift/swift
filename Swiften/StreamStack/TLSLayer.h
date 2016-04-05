@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
@@ -40,8 +41,8 @@ namespace Swift {
             }
 
         public:
-            boost::signal<void (std::shared_ptr<TLSError>)> onError;
-            boost::signal<void ()> onConnected;
+            boost::signals2::signal<void (std::shared_ptr<TLSError>)> onError;
+            boost::signals2::signal<void ()> onConnected;
 
         private:
             TLSContext* context;

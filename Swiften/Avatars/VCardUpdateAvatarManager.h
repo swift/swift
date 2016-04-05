@@ -23,7 +23,7 @@ namespace Swift {
     class VCardManager;
     class CryptoProvider;
 
-    class SWIFTEN_API VCardUpdateAvatarManager : public AvatarProvider, public boost::bsignals::trackable {
+    class SWIFTEN_API VCardUpdateAvatarManager : public AvatarProvider, public boost::signals2::trackable {
         public:
             VCardUpdateAvatarManager(VCardManager*, StanzaChannel*, AvatarStorage*, CryptoProvider* crypto, MUCRegistry* = nullptr);
 

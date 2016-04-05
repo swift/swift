@@ -8,8 +8,9 @@
 
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     class SWIFTEN_API NickManager {
@@ -19,6 +20,6 @@ namespace Swift {
             virtual std::string getOwnNick() const = 0;
             virtual void setOwnNick(const std::string& nick) = 0;
 
-            boost::signal<void (const std::string&)> onOwnNickChanged;
+            boost::signals2::signal<void (const std::string&)> onOwnNickChanged;
     };
 }

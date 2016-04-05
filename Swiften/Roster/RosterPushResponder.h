@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Queries/SetResponder.h>
 
@@ -17,7 +18,7 @@ namespace Swift {
             RosterPushResponder(IQRouter* router) : SetResponder<RosterPayload>(router) {}
 
         public:
-            boost::signal<void (std::shared_ptr<RosterPayload>)> onRosterReceived;
+            boost::signals2::signal<void (std::shared_ptr<RosterPayload>)> onRosterReceived;
 
         private:
             virtual bool handleSetRequest(const JID& from, const JID&, const std::string& id, std::shared_ptr<RosterPayload> payload) {

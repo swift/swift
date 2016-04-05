@@ -10,8 +10,9 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/DomainNameResolveError.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -23,7 +24,7 @@ namespace Swift {
     class ConnectionFactory;
     class TimerFactory;
 
-    class SWIFTEN_API ComponentConnector : public boost::bsignals::trackable, public std::enable_shared_from_this<ComponentConnector> {
+    class SWIFTEN_API ComponentConnector : public boost::signals2::trackable, public std::enable_shared_from_this<ComponentConnector> {
         public:
             typedef std::shared_ptr<ComponentConnector> ref;
 
@@ -36,7 +37,7 @@ namespace Swift {
             void start();
             void stop();
 
-            boost::signal<void (std::shared_ptr<Connection>)> onConnectFinished;
+            boost::signals2::signal<void (std::shared_ptr<Connection>)> onConnectFinished;
 
         private:
             ComponentConnector(const std::string& hostname, int port, DomainNameResolver*, ConnectionFactory*, TimerFactory*);

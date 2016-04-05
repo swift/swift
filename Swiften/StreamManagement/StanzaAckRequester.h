@@ -9,8 +9,9 @@
 #include <deque>
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
@@ -22,8 +23,8 @@ namespace Swift {
             void handleAckReceived(unsigned int handledStanzasCount);
 
         public:
-            boost::signal<void ()> onRequestAck;
-            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
+            boost::signals2::signal<void ()> onRequestAck;
+            boost::signals2::signal<void (std::shared_ptr<Stanza>)> onStanzaAcked;
 
         private:
             friend class StanzaAckRequesterTest;

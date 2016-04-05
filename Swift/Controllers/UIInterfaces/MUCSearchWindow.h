@@ -10,8 +10,8 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/Chat/MUCSearchController.h>
@@ -29,7 +29,7 @@ namespace Swift {
 
             virtual void show() = 0;
 
-            boost::signal<void (const JID&)> onSearchService;
-            boost::signal<void (const boost::optional<JID>&)> onFinished;
+            boost::signals2::signal<void (const JID&)> onSearchService;
+            boost::signals2::signal<void (const boost::optional<JID>&)> onFinished;
     };
 }

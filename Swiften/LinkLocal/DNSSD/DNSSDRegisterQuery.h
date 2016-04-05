@@ -7,9 +7,9 @@
 #pragma once
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDServiceID.h>
 
 namespace Swift {
@@ -21,6 +21,6 @@ namespace Swift {
             virtual void unregisterService() = 0;
             virtual void updateServiceInfo(const ByteArray& info) = 0;
 
-            boost::signal<void (boost::optional<DNSSDServiceID>)> onRegisterFinished;
+            boost::signals2::signal<void (boost::optional<DNSSDServiceID>)> onRegisterFinished;
     };
 }

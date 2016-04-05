@@ -9,8 +9,9 @@
 #include <memory>
 #include <vector>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransfer.h>
@@ -88,8 +89,8 @@ namespace Swift {
 
             std::shared_ptr<TransportSession> transportSession;
 
-            boost::bsignals::scoped_connection localTransportCandidatesGeneratedConnection;
-            boost::bsignals::scoped_connection remoteTransportCandidateSelectFinishedConnection;
-            boost::bsignals::scoped_connection proxyActivatedConnection;
+            boost::signals2::scoped_connection localTransportCandidatesGeneratedConnection;
+            boost::signals2::scoped_connection remoteTransportCandidateSelectFinishedConnection;
+            boost::signals2::scoped_connection proxyActivatedConnection;
     };
 }

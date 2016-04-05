@@ -9,9 +9,9 @@
 #include <memory>
 
 #include <boost/optional/optional_fwd.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
 
@@ -33,6 +33,6 @@ namespace Swift {
 
             virtual void stop() = 0;
 
-            boost::signal<void (std::shared_ptr<Connection>)> onNewConnection;
+            boost::signals2::signal<void (std::shared_ptr<Connection>)> onNewConnection;
     };
 }

@@ -12,10 +12,10 @@
 #include <vector>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
-#include <Swiften/Base/boost_bsignals.h>
 
 namespace Swift {
     class Connection;
@@ -33,7 +33,7 @@ namespace Swift {
             void start();
             void stop();
 
-            boost::signal<void (std::shared_ptr<Connection>, std::shared_ptr<Error>)> onConnectFinished;
+            boost::signals2::signal<void (std::shared_ptr<Connection>, std::shared_ptr<Error>)> onConnectFinished;
 
         private:
             void finish(std::shared_ptr<Connection> connection, std::shared_ptr<Error>);

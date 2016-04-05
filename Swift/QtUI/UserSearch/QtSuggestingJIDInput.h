@@ -12,10 +12,10 @@
 
 #pragma once
 
+#include <boost/signals2.hpp>
+
 #include <QLineEdit>
 #include <QTreeView>
-
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <Swift/Controllers/Contact.h>
 
@@ -37,7 +37,7 @@ class QtSuggestingJIDInput : public QLineEdit {
 
         void clear();
 
-        boost::signal<void (const Contact::ref&)> onUserSelected;
+        boost::signals2::signal<void (const Contact::ref&)> onUserSelected;
 
     signals:
         void editingDone();

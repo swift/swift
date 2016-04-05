@@ -14,8 +14,9 @@
 
 #include <map>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -39,7 +40,7 @@ namespace Swift {
         WhiteboardSession::ref requestSession(const JID& to);
 
     public:
-        boost::signal< void (IncomingWhiteboardSession::ref)> onSessionRequest;
+        boost::signals2::signal< void (IncomingWhiteboardSession::ref)> onSessionRequest;
 
     private:
         JID getFullJID(const JID& bareJID);

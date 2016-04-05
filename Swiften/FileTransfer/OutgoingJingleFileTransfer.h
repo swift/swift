@@ -116,8 +116,8 @@ namespace Swift {
 
             Timer::ref waitForRemoteTermination;
 
-            boost::bsignals::connection processedBytesConnection;
-            boost::bsignals::connection transferFinishedConnection;
+            boost::signals2::connection processedBytesConnection;
+            boost::signals2::connection transferFinishedConnection;
     };
 
 }

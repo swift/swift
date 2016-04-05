@@ -8,8 +8,9 @@
 
 #include <memory>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/PrivateStorage.h>
 #include <Swiften/Queries/Request.h>
@@ -39,6 +40,6 @@ namespace Swift {
             }
 
         public:
-            boost::signal<void (std::shared_ptr<PAYLOAD_TYPE>, ErrorPayload::ref)> onResponse;
+            boost::signals2::signal<void (std::shared_ptr<PAYLOAD_TYPE>, ErrorPayload::ref)> onResponse;
     };
 }

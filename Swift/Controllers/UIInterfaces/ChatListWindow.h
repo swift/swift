@@ -12,8 +12,8 @@
 #include <set>
 
 #include <boost/filesystem/path.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/MUC/MUCBookmark.h>
@@ -93,9 +93,9 @@ namespace Swift {
             virtual void clearBookmarks() = 0;
             virtual void setOnline(bool isOnline) = 0;
 
-            boost::signal<void (const MUCBookmark&)> onMUCBookmarkActivated;
-            boost::signal<void (const Chat&)> onRecentActivated;
-            boost::signal<void (const JID&)> onWhiteboardActivated;
-            boost::signal<void ()> onClearRecentsRequested;
+            boost::signals2::signal<void (const MUCBookmark&)> onMUCBookmarkActivated;
+            boost::signals2::signal<void (const Chat&)> onRecentActivated;
+            boost::signals2::signal<void (const JID&)> onWhiteboardActivated;
+            boost::signals2::signal<void ()> onClearRecentsRequested;
     };
 }

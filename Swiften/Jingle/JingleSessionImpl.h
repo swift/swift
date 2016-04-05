@@ -44,7 +44,7 @@ namespace Swift {
         private:
             IQRouter *iqRouter;
             JID peerJID;
-            typedef std::map<RequestRef, boost::bsignals::connection > RequestsMap;
+            typedef std::map<RequestRef, boost::signals2::connection > RequestsMap;
             RequestsMap pendingRequests;
     };
 }

@@ -9,9 +9,9 @@
 #include <vector>
 
 #include <boost/optional/optional_fwd.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 
 namespace Swift {
@@ -53,8 +53,8 @@ namespace Swift {
             virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
                     std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) = 0;
 
-            boost::signal<void (const std::string& /* sessionID */, const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string& /* dstAddr */)> onLocalCandidatesGenerated;
-            boost::signal<void (const std::string& /* sessionID */, const boost::optional<JingleS5BTransportPayload::Candidate>&)> onRemoteCandidateSelectFinished;
-            boost::signal<void (const std::string& /* sessionID */, std::shared_ptr<ErrorPayload>)> onProxyActivated;
+            boost::signals2::signal<void (const std::string& /* sessionID */, const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string& /* dstAddr */)> onLocalCandidatesGenerated;
+            boost::signals2::signal<void (const std::string& /* sessionID */, const boost::optional<JingleS5BTransportPayload::Candidate>&)> onRemoteCandidateSelectFinished;
+            boost::signals2::signal<void (const std::string& /* sessionID */, std::shared_ptr<ErrorPayload>)> onProxyActivated;
     };
 }

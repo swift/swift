@@ -9,7 +9,8 @@
 #include <string>
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/Chat/UserSearchController.h>
@@ -45,12 +46,12 @@ namespace Swift {
 
             virtual void show() = 0;
 
-            boost::signal<void (const JID&)> onFormRequested;
-            boost::signal<void (std::shared_ptr<SearchPayload>, const JID&)> onSearchRequested;
-            boost::signal<void (const JID&)> onNameSuggestionRequested;
-            boost::signal<void (const std::string&)> onContactSuggestionsRequested;
-            boost::signal<void (const std::vector<JID>&)> onJIDUpdateRequested;
-            boost::signal<void (const std::vector<JID>&)> onJIDAddRequested;
-            boost::signal<void (const JID&)> onJIDEditFieldChanged;
+            boost::signals2::signal<void (const JID&)> onFormRequested;
+            boost::signals2::signal<void (std::shared_ptr<SearchPayload>, const JID&)> onSearchRequested;
+            boost::signals2::signal<void (const JID&)> onNameSuggestionRequested;
+            boost::signals2::signal<void (const std::string&)> onContactSuggestionsRequested;
+            boost::signals2::signal<void (const std::vector<JID>&)> onJIDUpdateRequested;
+            boost::signals2::signal<void (const std::vector<JID>&)> onJIDAddRequested;
+            boost::signals2::signal<void (const JID&)> onJIDEditFieldChanged;
     };
 }

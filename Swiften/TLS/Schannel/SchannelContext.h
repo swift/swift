@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swiften/TLS/TLSContext.h>
 #include <Swiften/TLS/Schannel/SchannelUtil.h>

@@ -9,8 +9,9 @@
 #include <map>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/JID/JID.h>
 
@@ -34,9 +35,9 @@ namespace Swift {
              * received. This is useful when the subscriber adds extensions to
              * the request.
              */
-            boost::signal<void (const JID&, const std::string&, Presence::ref)> onPresenceSubscriptionRequest;
+            boost::signals2::signal<void (const JID&, const std::string&, Presence::ref)> onPresenceSubscriptionRequest;
 
-            boost::signal<void (const JID&, const std::string&)> onPresenceSubscriptionRevoked;
+            boost::signals2::signal<void (const JID&, const std::string&)> onPresenceSubscriptionRevoked;
 
         private:
             void handleIncomingPresence(Presence::ref presence);

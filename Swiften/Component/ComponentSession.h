@@ -9,9 +9,10 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/JID/JID.h>
@@ -56,9 +57,9 @@ namespace Swift {
             void sendStanza(std::shared_ptr<Stanza>);
 
         public:
-            boost::signal<void ()> onInitialized;
-            boost::signal<void (std::shared_ptr<Swift::Error>)> onFinished;
-            boost::signal<void (std::shared_ptr<Stanza>)> onStanzaReceived;
+            boost::signals2::signal<void ()> onInitialized;
+            boost::signals2::signal<void (std::shared_ptr<Swift::Error>)> onFinished;
+            boost::signals2::signal<void (std::shared_ptr<Stanza>)> onStanzaReceived;
 
         private:
             ComponentSession(const JID& jid, const std::string& secret, std::shared_ptr<SessionStream>, CryptoProvider*);

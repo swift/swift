@@ -10,7 +10,8 @@
 #include <memory>
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>

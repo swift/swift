@@ -8,7 +8,7 @@
 
 #include <memory>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class IdleDetector {
@@ -28,7 +28,7 @@ namespace Swift {
                 return idle;
             }
 
-            boost::signal<void (bool /* isIdle */)> onIdleChanged;
+            boost::signals2::signal<void (bool /* isIdle */)> onIdleChanged;
 
             void setIdle(bool b) {
                 if (b != idle) {

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <boost/noncopyable.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Compress/ZLibCompressor.h>
 #include <Swiften/Compress/ZLibDecompressor.h>
 #include <Swiften/Compress/ZLibException.h>
@@ -43,7 +43,7 @@ namespace Swift {
             }
 
         public:
-            boost::signal<void ()> onError;
+            boost::signals2::signal<void ()> onError;
 
         private:
             ZLibCompressor compressor_;

@@ -16,9 +16,9 @@
 
 #include <boost/cstdint.hpp>
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/FileTransferError.h>
 
 namespace Swift {
@@ -72,9 +72,9 @@ namespace Swift {
             }
 
         public:
-            boost::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
-            boost::signal<void (const State&)> onStateChanged;
-            boost::signal<void (boost::optional<FileTransferError>)> onFinished;
+            boost::signals2::signal<void (size_t /* proccessedBytes */)> onProcessedBytes;
+            boost::signals2::signal<void (const State&)> onStateChanged;
+            boost::signals2::signal<void (boost::optional<FileTransferError>)> onFinished;
 
         protected:
             void setState(const State& state);

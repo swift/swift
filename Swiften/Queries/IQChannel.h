@@ -9,8 +9,9 @@
 #include <memory>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/IQ.h>
 
 namespace Swift {
@@ -23,6 +24,6 @@ namespace Swift {
 
             virtual bool isAvailable() const = 0;
 
-            boost::signal<void (std::shared_ptr<IQ>)> onIQReceived;
+            boost::signals2::signal<void (std::shared_ptr<IQ>)> onIQReceived;
     };
 }

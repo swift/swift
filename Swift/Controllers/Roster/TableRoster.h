@@ -10,8 +10,8 @@
 #include <vector>
 
 #include <boost/filesystem/path.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/JID/JID.h>
 
@@ -61,7 +61,7 @@ namespace Swift {
 
             const Item& getItem(const Index&) const;
 
-            boost::signal<void (const Update&)> onUpdate;
+            boost::signals2::signal<void (const Update&)> onUpdate;
 
         private:
             void handleUpdateTimerTick();

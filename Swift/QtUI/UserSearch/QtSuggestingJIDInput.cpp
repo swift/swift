@@ -13,13 +13,12 @@
 #include <Swift/QtUI/UserSearch/QtSuggestingJIDInput.h>
 
 #include <boost/bind.hpp>
+#include <boost/signals2.hpp>
 
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QKeyEvent>
-
-#include <Swiften/Base/boost_bsignals.h>
 
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 

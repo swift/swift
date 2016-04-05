@@ -4,10 +4,10 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
-#include <boost/smart_ptr.hpp>
 
 #include <QA/Checker/IO.h>
 

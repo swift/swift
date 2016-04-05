@@ -15,9 +15,9 @@
 #include <memory>
 
 #include <boost/bind.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>

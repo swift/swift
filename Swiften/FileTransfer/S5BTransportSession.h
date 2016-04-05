@@ -7,9 +7,9 @@
 #pragma once
 
 #include <boost/bind.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/FileTransfer/ReadBytestream.h>
 #include <Swiften/FileTransfer/TransportSession.h>
 #include <Swiften/FileTransfer/WriteBytestream.h>
@@ -62,8 +62,8 @@ class SWIFTEN_API S5BTransportSession : public TransportSession {
         std::shared_ptr<ReadBytestream> readStream;
         std::shared_ptr<WriteBytestream> writeStream;
 
-        boost::bsignals::scoped_connection finishedConnection;
-        boost::bsignals::scoped_connection bytesSentConnection;
+        boost::signals2::scoped_connection finishedConnection;
+        boost::signals2::scoped_connection bytesSentConnection;
 };
 
 }

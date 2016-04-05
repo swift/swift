@@ -10,7 +10,8 @@
 #include <memory>
 #include <string>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/XMPPEvents/StanzaEvent.h>
@@ -22,8 +23,8 @@ namespace Swift {
             virtual ~SubscriptionRequestEvent(){}
             const JID& getJID() const {return jid_;}
             const std::string& getReason() const {return reason_;}
-            boost::signal<void()> onAccept;
-            boost::signal<void()> onDecline;
+            boost::signals2::signal<void()> onAccept;
+            boost::signals2::signal<void()> onDecline;
             void accept() {
                 onAccept();
                 conclude();

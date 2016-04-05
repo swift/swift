@@ -14,7 +14,8 @@
 
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
+
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
@@ -34,7 +35,7 @@ namespace Swift {
 
             virtual std::vector<JID> getCurrentBlockList() const = 0;
 
-            boost::signal<void (const std::vector<JID>& /* blockedJID */)> onSetNewBlockList;
+            boost::signals2::signal<void (const std::vector<JID>& /* blockedJID */)> onSetNewBlockList;
     };
 
 }

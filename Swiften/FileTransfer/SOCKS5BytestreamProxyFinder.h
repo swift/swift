@@ -36,7 +36,7 @@ class SWIFTEN_API SOCKS5BytestreamProxyFinder {
         void start();
         void stop();
 
-        boost::signal<void(std::vector<std::shared_ptr<S5BProxyRequest> >)> onProxiesFound;
+        boost::signals2::signal<void(std::vector<std::shared_ptr<S5BProxyRequest> >)> onProxiesFound;
 
     private:
         void sendBytestreamQuery(const JID&);

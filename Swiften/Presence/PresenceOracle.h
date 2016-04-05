@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,8 +9,9 @@
 #include <map>
 #include <string>
 
+#include <boost/signals2.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
@@ -60,7 +61,7 @@ namespace Swift {
             Presence::ref getAccountPresence(const JID& jid) const;
 
         public:
-            boost::signal<void (Presence::ref)> onPresenceChange;
+            boost::signals2::signal<void (Presence::ref)> onPresenceChange;
 
         private:
             void handleIncomingPresence(Presence::ref presence);

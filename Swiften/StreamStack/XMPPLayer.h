@@ -9,10 +9,10 @@
 #include <memory>
 
 #include <boost/noncopyable.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/Elements/ToplevelElement.h>
 #include <Swiften/Parser/XMPPParserClient.h>
@@ -50,11 +50,11 @@ namespace Swift {
             void writeDataInternal(const SafeByteArray& data);
 
         public:
-            boost::signal<void (const ProtocolHeader&)> onStreamStart;
-            boost::signal<void (std::shared_ptr<ToplevelElement>)> onElement;
-            boost::signal<void (const SafeByteArray&)> onWriteData;
-            boost::signal<void (const SafeByteArray&)> onDataRead;
-            boost::signal<void ()> onError;
+            boost::signals2::signal<void (const ProtocolHeader&)> onStreamStart;
+            boost::signals2::signal<void (std::shared_ptr<ToplevelElement>)> onElement;
+            boost::signals2::signal<void (const SafeByteArray&)> onWriteData;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signals2::signal<void ()> onError;
 
         private:
             void handleStreamStart(const ProtocolHeader&);

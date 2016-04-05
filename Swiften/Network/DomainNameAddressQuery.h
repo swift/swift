@@ -9,8 +9,8 @@
 #include <memory>
 
 #include <boost/optional.hpp>
+#include <boost/signals2.hpp>
 
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/DomainNameResolveError.h>
 #include <Swiften/Network/HostAddress.h>
 
@@ -23,6 +23,6 @@ namespace Swift {
 
             virtual void run() = 0;
 
-            boost::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
+            boost::signals2::signal<void (const std::vector<HostAddress>&, boost::optional<DomainNameResolveError>)> onResult;
     };
 }

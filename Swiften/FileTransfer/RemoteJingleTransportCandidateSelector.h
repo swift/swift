@@ -39,7 +39,7 @@ namespace Swift {
             virtual void startSelectingCandidate();
             virtual void stopSelectingCandidate();
 
-            boost::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, std::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
+            boost::signals2::signal<void (const boost::optional<JingleS5BTransportPayload::Candidate>&, std::shared_ptr<SOCKS5BytestreamClientSession>)> onCandidateSelectFinished;
 
         private:
             void tryNextCandidate();
@@ -54,7 +54,7 @@ namespace Swift {
                 std::vector<JingleS5BTransportPayload::Candidate>,
                 JingleS5BTransportPayload::CompareCandidate> candidates;
             std::shared_ptr<SOCKS5BytestreamClientSession> s5bSession;
-            boost::bsignals::connection sessionReadyConnection;
+            boost::signals2::connection sessionReadyConnection;
             JingleS5BTransportPayload::Candidate lastCandidate;
             std::string socks5DstAddr;
             FileTransferOptions options;
