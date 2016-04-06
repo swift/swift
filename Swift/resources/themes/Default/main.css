@@ -54,7 +54,7 @@ body {
 }
 
 .unread {
-    height: 15px;
+    height: 30px;
     border-top: solid 1px #ffd180;
     margin-top: -6px;
     margin-bottom: -15px;
