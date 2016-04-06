@@ -38,6 +38,7 @@ body {
     top: 0;
     left: 0;
     margin-bottom: 10px;
+    overflow-wrap: break-word; /* Allow breaking of long words (e.g. URLs) to prevent overflow. */
     /*margin-top: -2px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
 }
 
