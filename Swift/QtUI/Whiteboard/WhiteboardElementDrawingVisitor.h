@@ -12,12 +12,12 @@
 
 #pragma once
 
-#include <Swiften/ELements/Whiteboard/WhiteboardRectElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardElementVisitor.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardEllipseElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardFreehandPathElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardLineElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardPolygonElement.h>
+#include <Swiften/Elements/Whiteboard/WhiteboardRectElement.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardTextElement.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
