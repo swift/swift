@@ -129,7 +129,7 @@ void QtWebKitChatView::addMessageBottom(std::shared_ptr<ChatSnippet> snippet) {
 
 void QtWebKitChatView::addMessageTop(std::shared_ptr<ChatSnippet> /* snippet */) {
     // TODO: Implement this in a sensible manner later.
-    assert(false);
+    SWIFT_LOG(error) << "Not yet implemented!" << std::endl;
 }
 
 void QtWebKitChatView::addToDOM(std::shared_ptr<ChatSnippet> snippet) {
@@ -468,7 +468,7 @@ int QtWebKitChatView::getSnippetPositionByDate(const QDate& date) {
 
 void QtWebKitChatView::resetTopInsertPoint() {
     // TODO: Implement or refactor later.
-    assert(false);
+    SWIFT_LOG(error) << "Not yet implemented!" << std::endl;
 }
 
 std::string QtWebKitChatView::addMessage(

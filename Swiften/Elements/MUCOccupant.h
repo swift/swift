@@ -25,6 +25,8 @@ namespace Swift {
             MUCOccupant(const MUCOccupant& other);
             ~MUCOccupant();
 
+            MUCOccupant& operator=(MUCOccupant other);
+
             std::string getNick() const;
             Role getRole() const;
             Affiliation getAffiliation() const;
