@@ -7,9 +7,9 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include <boost/asio/io_service.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/Event.h>
@@ -30,6 +30,6 @@ namespace Swift {
             std::shared_ptr<boost::asio::io_service> ioService_;
 
             bool isEventInASIOEventLoop_;
-            boost::recursive_mutex isEventInASIOEventLoopMutex_;
+            std::recursive_mutex isEventInASIOEventLoopMutex_;
     };
 }

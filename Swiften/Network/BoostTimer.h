@@ -7,11 +7,11 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include <boost/asio/deadline_timer.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/scoped_ptr.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventOwner.h>
@@ -42,7 +42,7 @@ namespace Swift {
             int timeout;
             std::shared_ptr<boost::asio::io_service> ioService;
             boost::scoped_ptr<boost::asio::deadline_timer> timer;
-            boost::mutex timerMutex;
+            std::mutex timerMutex;
             EventLoop* eventLoop;
             bool shuttingDown;
     };

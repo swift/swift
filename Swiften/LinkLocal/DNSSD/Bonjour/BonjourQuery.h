@@ -7,8 +7,7 @@
 #pragma once
 
 #include <memory>
-
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 #include <dns_sd.h>
 
@@ -35,7 +34,7 @@ namespace Swift {
         protected:
             EventLoop* eventLoop;
             std::shared_ptr<BonjourQuerier> querier;
-            mutable boost::mutex sdRefMutex;
+            mutable std::mutex sdRefMutex;
             DNSServiceRef sdRef;
     };
 }

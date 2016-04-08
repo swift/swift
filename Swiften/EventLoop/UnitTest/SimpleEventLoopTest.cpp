@@ -4,8 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <thread>
+
 #include <boost/bind.hpp>
-#include <boost/thread.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -30,7 +31,7 @@ class SimpleEventLoopTest : public CppUnit::TestFixture {
 
         void testRun() {
             SimpleEventLoop testling;
-            boost::thread thread(boost::bind(&SimpleEventLoopTest::runIncrementingThread, this, &testling));
+            std::thread thread(boost::bind(&SimpleEventLoopTest::runIncrementingThread, this, &testling));
             testling.run();
 
             CPPUNIT_ASSERT_EQUAL(10, counter_);

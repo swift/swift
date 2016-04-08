@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@ SimpleEventLoop::~SimpleEventLoop() {
 void SimpleEventLoop::doRun(bool breakAfterEvents) {
     while (isRunning_) {
         {
-            boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+            std::unique_lock<std::mutex> lock(eventAvailableMutex_);
             while (!eventAvailable_) {
                 eventAvailableCondition_.wait(lock);
             }
@@ -49,7 +49,7 @@ void SimpleEventLoop::doStop() {
 
 void SimpleEventLoop::eventPosted() {
     {
-        boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+        std::unique_lock<std::mutex> lock(eventAvailableMutex_);
         eventAvailable_ = true;
     }
     eventAvailableCondition_.notify_one();

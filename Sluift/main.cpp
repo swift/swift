@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 #include <lua.hpp>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Platform.h>

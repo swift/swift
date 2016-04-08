@@ -8,9 +8,8 @@
 
 #include <list>
 #include <memory>
-
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread.hpp>
+#include <mutex>
+#include <thread>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourQuery.h>
@@ -46,11 +45,11 @@ namespace Swift {
         private:
             EventLoop* eventLoop;
             bool stopRequested;
-            boost::thread* thread;
-            boost::mutex runningQueriesMutex;
+            std::thread* thread;
+            std::mutex runningQueriesMutex;
             std::list< std::shared_ptr<BonjourQuery> > runningQueries;
             int interruptSelectReadSocket;
             int interruptSelectWriteSocket;
-            boost::condition_variable runningQueriesAvailableEvent;
+            std::condition_variable runningQueriesAvailableEvent;
     };
 }

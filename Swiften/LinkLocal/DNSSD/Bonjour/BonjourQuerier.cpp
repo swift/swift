@@ -51,7 +51,7 @@ std::shared_ptr<DNSSDResolveHostnameQuery> BonjourQuerier::createResolveHostname
 
 void BonjourQuerier::addRunningQuery(std::shared_ptr<BonjourQuery> query) {
     {
-        boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
+        std::lock_guard<std::mutex> lock(runningQueriesMutex);
         runningQueries.push_back(query);
     }
     runningQueriesAvailableEvent.notify_one();
@@ -60,7 +60,7 @@ void BonjourQuerier::addRunningQuery(std::shared_ptr<BonjourQuery> query) {
 
 void BonjourQuerier::removeRunningQuery(std::shared_ptr<BonjourQuery> query) {
     {
-        boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
+        std::lock_guard<std::mutex> lock(runningQueriesMutex);
         erase(runningQueries, query);
     }
 }
@@ -72,7 +72,7 @@ void BonjourQuerier::interruptSelect() {
 
 void BonjourQuerier::start() {
     assert(!thread);
-    thread = new boost::thread(boost::bind(&BonjourQuerier::run, shared_from_this()));
+    thread = new std::thread(boost::bind(&BonjourQuerier::run, shared_from_this()));
 }
 
 void BonjourQuerier::stop() {
@@ -93,7 +93,7 @@ void BonjourQuerier::run() {
         fd_set fdSet;
         int maxSocket;
         {
-            boost::unique_lock<boost::mutex> lock(runningQueriesMutex);
+            std::unique_lock<std::mutex> lock(runningQueriesMutex);
             if (runningQueries.empty()) {
                 runningQueriesAvailableEvent.wait(lock);
                 if (runningQueries.empty()) {
@@ -123,7 +123,7 @@ void BonjourQuerier::run() {
         }
 
         {
-            boost::lock_guard<boost::mutex> lock(runningQueriesMutex);
+            std::lock_guard<std::mutex> lock(runningQueriesMutex);
             foreach(std::shared_ptr<BonjourQuery> query, runningQueries) {
                 if (FD_ISSET(query->getSocketID(), &fdSet)) {
                     query->processResult();

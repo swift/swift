@@ -7,9 +7,9 @@
 #pragma once
 
 #include <list>
+#include <mutex>
 
 #include <boost/function.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/Event.h>
@@ -65,7 +65,7 @@ namespace Swift {
             unsigned int nextEventID_;
             std::list<Event> events_;
             bool handlingEvents_;
-            boost::recursive_mutex eventsMutex_;
-            boost::recursive_mutex removeEventsMutex_;
+            std::recursive_mutex eventsMutex_;
+            std::recursive_mutex removeEventsMutex_;
     };
 }

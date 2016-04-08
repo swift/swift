@@ -30,7 +30,7 @@ inline std::string getEscapedString(const std::string& s) {
 namespace Swift {
 
 SQLiteHistoryStorage::SQLiteHistoryStorage(const boost::filesystem::path& file) : db_(nullptr) {
-    thread_ = new boost::thread(boost::bind(&SQLiteHistoryStorage::run, this));
+    thread_ = new std::thread(boost::bind(&SQLiteHistoryStorage::run, this));
 
     sqlite3_open(pathToString(file).c_str(), &db_);
     if (!db_) {

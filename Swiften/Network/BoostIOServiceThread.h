@@ -7,9 +7,9 @@
 #pragma once
 
 #include <memory>
+#include <thread>
 
 #include <boost/asio/io_service.hpp>
-#include <boost/thread/thread.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -36,6 +36,6 @@ namespace Swift {
 
         private:
             std::shared_ptr<boost::asio::io_service> ioService_;
-            boost::thread* thread_;
+            std::thread* thread_;
     };
 }

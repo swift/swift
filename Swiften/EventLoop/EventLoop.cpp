@@ -8,12 +8,12 @@
 
 #include <algorithm>
 #include <cassert>
+#include <vector>
 
 #include <boost/bind.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/optional.hpp>
-#include <boost/thread/locks.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
@@ -49,11 +49,11 @@ void EventLoop::handleNextEvents() {
     bool callEventPosted = handlingEvents_;
     if (!handlingEvents_) {
         handlingEvents_ = true;
-        boost::recursive_mutex::scoped_lock lock(removeEventsMutex_);
+        std::unique_lock<std::recursive_mutex> lock(removeEventsMutex_);
         {
             std::vector<Event> nextEvents;
             {
-                boost::recursive_mutex::scoped_lock lock(eventsMutex_);
+                std::unique_lock<std::recursive_mutex> lock(eventsMutex_);
                 for (int n = 0; ((n < eventsBatched) && !events_.empty()); n++) {
                     nextEvents.push_back(events_.front());
                     events_.pop_front();
@@ -78,7 +78,7 @@ void EventLoop::postEvent(boost::function<void ()> callback, std::shared_ptr<Eve
     Event event(owner, callback);
     bool callEventPosted = false;
     {
-        boost::recursive_mutex::scoped_lock lock(eventsMutex_);
+        std::unique_lock<std::recursive_mutex> lock(eventsMutex_);
 
         callEventPosted = events_.empty();
 
@@ -92,8 +92,11 @@ void EventLoop::postEvent(boost::function<void ()> callback, std::shared_ptr<Eve
 }
 
 void EventLoop::removeEventsFromOwner(std::shared_ptr<EventOwner> owner) {
-    boost::recursive_mutex::scoped_lock removeLock(removeEventsMutex_);
-    boost::recursive_mutex::scoped_lock lock(eventsMutex_);
+    std::unique_lock<std::recursive_mutex> removeLock(removeEventsMutex_, std::defer_lock);
+    std::unique_lock<std::recursive_mutex> eventsLock(eventsMutex_, std::defer_lock);
+
+    std::lock(removeLock, eventsLock);
+
     events_.remove_if(lambda::bind(&Event::owner, lambda::_1) == owner);
 }
 

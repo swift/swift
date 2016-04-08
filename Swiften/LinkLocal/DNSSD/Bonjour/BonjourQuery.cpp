@@ -18,12 +18,12 @@ BonjourQuery::~BonjourQuery() {
 }
 
 void BonjourQuery::processResult() {
-    boost::lock_guard<boost::mutex> lock(sdRefMutex);
+    std::lock_guard<std::mutex> lock(sdRefMutex);
     DNSServiceProcessResult(sdRef);
 }
 
 int BonjourQuery::getSocketID() const {
-    boost::lock_guard<boost::mutex> lock(sdRefMutex);
+    std::lock_guard<std::mutex> lock(sdRefMutex);
     return DNSServiceRefSockFD(sdRef);
 }
 

@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/thread.hpp>
+#include <mutex>
 
 #include <QCoreApplication>
 #include <QEvent>
@@ -24,7 +24,7 @@ namespace Swift {
 
         protected:
             virtual void eventPosted() {
-                boost::recursive_mutex::scoped_lock lock(isEventInQtEventLoopMutex_);
+                std::unique_lock<std::recursive_mutex> lock(isEventInQtEventLoopMutex_);
                 if (!isEventInQtEventLoop_) {
                     isEventInQtEventLoop_ = true;
                     QCoreApplication::postEvent(this, new Event());
@@ -35,7 +35,7 @@ namespace Swift {
                 Event* event = dynamic_cast<Event*>(qevent);
                 if (event) {
                     {
-                        boost::recursive_mutex::scoped_lock lock(isEventInQtEventLoopMutex_);
+                        std::unique_lock<std::recursive_mutex> lock(isEventInQtEventLoopMutex_);
                         isEventInQtEventLoop_ = false;
                     }
                     handleNextEvents();
@@ -54,6 +54,6 @@ namespace Swift {
             };
 
             bool isEventInQtEventLoop_;
-            boost::recursive_mutex isEventInQtEventLoopMutex_;
+            std::recursive_mutex isEventInQtEventLoopMutex_;
     };
 }

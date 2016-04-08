@@ -12,7 +12,7 @@
 
 #include <string>
 #ifdef SWIFTEN_CACHE_JID_PREP
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 #include <boost/unordered_map.hpp>
 #endif
 #include <boost/assign/list_of.hpp>
@@ -35,7 +35,7 @@ using namespace Swift;
 #ifdef SWIFTEN_CACHE_JID_PREP
 typedef boost::unordered_map<std::string, std::string> PrepCache;
 
-static boost::mutex namePrepCacheMutex;
+static std::mutex namePrepCacheMutex;
 static PrepCache nodePrepCache;
 static PrepCache domainPrepCache;
 static PrepCache resourcePrepCache;
@@ -189,7 +189,7 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
     domain_ = idnConverter->getStringPrepared(domain, IDNConverter::NamePrep);
     resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
 #else
-    boost::mutex::scoped_lock lock(namePrepCacheMutex);
+    std::unique_lock<std::mutex> lock(namePrepCacheMutex);
 
     std::pair<PrepCache::iterator, bool> r;
 

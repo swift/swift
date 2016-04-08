@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,12 +27,12 @@ void DummyEventLoop::processEvents() {
 }
 
 bool DummyEventLoop::hasEvents() {
-    boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
+    std::lock_guard<std::mutex> lock(hasEventsMutex_);
     return hasEvents_;
 }
 
 void DummyEventLoop::eventPosted() {
-    boost::lock_guard<boost::mutex> lock(hasEventsMutex_);
+    std::lock_guard<std::mutex> lock(hasEventsMutex_);
     hasEvents_ = true;
 }
 

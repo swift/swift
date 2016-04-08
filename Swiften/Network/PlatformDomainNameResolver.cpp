@@ -6,29 +6,28 @@
 
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 
-// Putting this early on, because some system types conflict with thread
-#include <Swiften/Network/PlatformDomainNameServiceQuery.h>
-
-#include <string>
-#include <vector>
-#include <boost/bind.hpp>
-#include <boost/thread.hpp>
 #include <algorithm>
-
+#include <mutex>
 #include <string>
-#include <Swiften/IDN/IDNConverter.h>
-#include <Swiften/Network/HostAddress.h>
+#include <thread>
+#include <vector>
+
+#include <boost/bind.hpp>
+
 #include <Swiften/EventLoop/EventLoop.h>
-#include <Swiften/Network/HostAddressPort.h>
+#include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
 #include <Swiften/Network/PlatformDomainNameAddressQuery.h>
+#include <Swiften/Network/PlatformDomainNameServiceQuery.h>
 
 using namespace Swift;
 
 namespace Swift {
 
 PlatformDomainNameResolver::PlatformDomainNameResolver(IDNConverter* idnConverter, EventLoop* eventLoop) : idnConverter(idnConverter), eventLoop(eventLoop), stopRequested(false) {
-    thread = new boost::thread(boost::bind(&PlatformDomainNameResolver::run, this));
+    thread = new std::thread(boost::bind(&PlatformDomainNameResolver::run, this));
 }
 
 PlatformDomainNameResolver::~PlatformDomainNameResolver() {
@@ -55,7 +54,7 @@ void PlatformDomainNameResolver::run() {
     while (!stopRequested) {
         PlatformDomainNameQuery::ref query;
         {
-            boost::unique_lock<boost::mutex> lock(queueMutex);
+            std::unique_lock<std::mutex> lock(queueMutex);
             while (queue.empty()) {
                 queueNonEmpty.wait(lock);
             }
@@ -72,7 +71,7 @@ void PlatformDomainNameResolver::run() {
 
 void PlatformDomainNameResolver::addQueryToQueue(PlatformDomainNameQuery::ref query) {
     {
-        boost::lock_guard<boost::mutex> lock(queueMutex);
+        std::lock_guard<std::mutex> lock(queueMutex);
         queue.push_back(query);
     }
     queueNonEmpty.notify_one();

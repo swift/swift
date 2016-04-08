@@ -13,10 +13,10 @@
 #include <Swiften/Network/BOSHConnection.h>
 
 #include <string>
+#include <thread>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Concat.h>

@@ -30,7 +30,7 @@ SingleThreadedEventLoop::~SingleThreadedEventLoop() {
 }
 
 void SingleThreadedEventLoop::waitForEvents() {
-    boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+    std::unique_lock<std::mutex> lock(eventAvailableMutex_);
     while (!eventAvailable_ && !shouldShutDown_) {
         eventAvailableCondition_.wait(lock);
     }
@@ -41,20 +41,20 @@ void SingleThreadedEventLoop::waitForEvents() {
 
 void SingleThreadedEventLoop::handleEvents() {
     {
-        boost::lock_guard<boost::mutex> lock(eventAvailableMutex_);
+        std::lock_guard<std::mutex> lock(eventAvailableMutex_);
         eventAvailable_ = false;
     }
     handleNextEvents();
 }
 
 void SingleThreadedEventLoop::stop() {
-    boost::unique_lock<boost::mutex> lock(eventAvailableMutex_);
+    std::unique_lock<std::mutex> lock(eventAvailableMutex_);
     shouldShutDown_ = true;
     eventAvailableCondition_.notify_one();
 }
 
 void SingleThreadedEventLoop::eventPosted() {
-    boost::lock_guard<boost::mutex> lock(eventAvailableMutex_);
+    std::lock_guard<std::mutex> lock(eventAvailableMutex_);
     eventAvailable_ = true;
     eventAvailableCondition_.notify_one();
 }

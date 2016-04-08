@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/thread.hpp>
+#include <mutex>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
@@ -23,6 +23,6 @@ namespace Swift {
 
         private:
             bool isEventInCocoaEventLoop_;
-            boost::recursive_mutex isEventInCocoaEventLoopMutex_;
+            std::recursive_mutex isEventInCocoaEventLoopMutex_;
     };
 }

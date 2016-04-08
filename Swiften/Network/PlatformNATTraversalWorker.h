@@ -12,13 +12,13 @@
 
 #pragma once
 
+#include <condition_variable>
 #include <deque>
+#include <mutex>
+#include <thread>
 
 #include <boost/logic/tribool.hpp>
 #include <boost/optional.hpp>
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Atomic.h>
@@ -61,10 +61,10 @@ namespace Swift {
         private:
             EventLoop* eventLoop;
             Atomic<bool> stopRequested;
-            boost::thread* thread;
+            std::thread* thread;
             std::deque<std::shared_ptr<PlatformNATTraversalRequest> > queue;
-            boost::mutex queueMutex;
-            boost::condition_variable queueNonEmpty;
+            std::mutex queueMutex;
+            std::condition_variable queueNonEmpty;
 
             NullNATTraversalInterface* nullNATTraversalInterface;
             mutable boost::logic::tribool natPMPSupported;

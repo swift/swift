@@ -8,6 +8,8 @@
 
 #include <memory>
 
+#include <boost/bind.hpp>
+
 namespace Swift {
 
 BoostIOServiceThread::BoostIOServiceThread(std::shared_ptr<boost::asio::io_service> ioService) {
@@ -17,7 +19,7 @@ BoostIOServiceThread::BoostIOServiceThread(std::shared_ptr<boost::asio::io_servi
     }
     else {
         ioService_ = std::make_shared<boost::asio::io_service>();
-        thread_ = new boost::thread(boost::bind(&BoostIOServiceThread::doRun, this));
+        thread_ = new std::thread(boost::bind(&BoostIOServiceThread::doRun, this));
     }
 }
 

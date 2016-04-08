@@ -1,25 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Base/sleep.h>
 
-#include <boost/thread.hpp>
-#include <boost/version.hpp>
+#include <chrono>
+#include <thread>
 
 namespace Swift {
 
 void sleep(unsigned int msecs) {
-    boost::xtime xt;
-#if BOOST_VERSION >= 105000
-    boost::xtime_get(&xt, boost::TIME_UTC_);
-#else
-    boost::xtime_get(&xt, boost::TIME_UTC);
-#endif
-    xt.nsec += msecs*1000000;
-    boost::thread::sleep(xt);
+    std::this_thread::sleep_for(std::chrono::milliseconds(msecs));
 }
 
 }

@@ -6,9 +6,10 @@
 
 #pragma once
 
+#include <thread>
+
 #include <boost/filesystem/path.hpp>
 #include <boost/optional.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/History/HistoryStorage.h>
@@ -38,6 +39,6 @@ namespace Swift {
             boost::optional<long long> getIDFromJID(const JID& jid) const;
 
             sqlite3* db_;
-            boost::thread* thread_;
+            std::thread* thread_;
     };
 }

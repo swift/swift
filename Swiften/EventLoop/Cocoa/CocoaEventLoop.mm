@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,14 +20,14 @@ CocoaEventLoop::~CocoaEventLoop() {
 
 void CocoaEventLoop::handleNextCocoaEvent() {
     {
-        boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
+        std::unique_lock<std::recursive_mutex> lock(isEventInCocoaEventLoopMutex_);
         isEventInCocoaEventLoop_ = false;
     }
     handleNextEvents();
 }
 
 void CocoaEventLoop::eventPosted() {
-    boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
+    std::unique_lock<std::recursive_mutex> lock(isEventInCocoaEventLoopMutex_);
     if (!isEventInCocoaEventLoop_) {
         isEventInCocoaEventLoop_ = true;
 

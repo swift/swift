@@ -6,8 +6,9 @@
 
 #pragma once
 
+#include <mutex>
+
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -43,7 +44,7 @@ namespace Swift {
             }
 
             void updateServiceInfo(const ByteArray& txtRecord) {
-                boost::lock_guard<boost::mutex> lock(sdRefMutex);
+                std::lock_guard<std::mutex> lock(sdRefMutex);
                 DNSServiceUpdateRecord(sdRef, nullptr, 0, boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 0);
             }
 

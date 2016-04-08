@@ -69,7 +69,6 @@ elif env.get("BOOST_BUNDLED", False) :
 				"src/libs/date_time/src/gregorian/gregorian_types.cpp",
 				"src/libs/date_time/src/posix_time/posix_time_types.cpp",
 				"src/libs/system/src/error_code.cpp",
-				"src/libs/thread/src/tss_null.cpp",
 				"src/libs/filesystem/src/codecvt_error_category.cpp",
 				"src/libs/filesystem/src/operations.cpp",
 				"src/libs/filesystem/src/path.cpp",
@@ -148,18 +147,6 @@ elif env.get("BOOST_BUNDLED", False) :
 			sources += [
 					"src/libs/program_options/src/parsers.cpp",
 				]
-
-		if env["PLATFORM"] != "win32" :
-			sources += [
-					"src/libs/thread/src/pthread/once.cpp",
-					"src/libs/thread/src/pthread/once_atomic.cpp",
-					"src/libs/thread/src/pthread/thread.cpp"]
-		else :
-			sources += [
-					"win32_stubs.cpp",
-					"src/libs/thread/src/win32/thread.cpp",
-					"src/libs/thread/src/win32/tss_dll.cpp",
-					"src/libs/thread/src/win32/tss_pe.cpp"]
 
 		myenv.MergeFlags(myenv["BOOST_FLAGS"])
 		myenv.StaticLibrary("Swiften_Boost", sources)

@@ -1,16 +1,15 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <condition_variable>
 #include <deque>
-
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread.hpp>
+#include <mutex>
+#include <thread>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Atomic.h>
@@ -41,9 +40,9 @@ namespace Swift {
             IDNConverter* idnConverter;
             EventLoop* eventLoop;
             Atomic<bool> stopRequested;
-            boost::thread* thread;
+            std::thread* thread;
             std::deque<PlatformDomainNameQuery::ref> queue;
-            boost::mutex queueMutex;
-            boost::condition_variable queueNonEmpty;
+            std::mutex queueMutex;
+            std::condition_variable queueNonEmpty;
     };
 }

@@ -7,10 +7,10 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
@@ -73,10 +73,10 @@ namespace Swift {
             std::shared_ptr<boost::asio::io_service> ioService;
             boost::asio::ip::tcp::socket socket_;
             std::shared_ptr<SafeByteArray> readBuffer_;
-            boost::mutex writeMutex_;
+            std::mutex writeMutex_;
             bool writing_;
             SafeByteArray writeQueue_;
             bool closeSocketAfterNextWrite_;
-            boost::mutex readCloseMutex_;
+            std::mutex readCloseMutex_;
     };
 }

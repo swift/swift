@@ -10,10 +10,10 @@
  * See the COPYING file for more information.
  */
 
-#include "PlatformNATTraversalWorker.h"
+#include <Swiften/Network/PlatformNATTraversalWorker.h>
 
 #include <memory>
-#include <memory>
+
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
@@ -134,7 +134,7 @@ class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemov
 PlatformNATTraversalWorker::PlatformNATTraversalWorker(EventLoop* eventLoop) : eventLoop(eventLoop), stopRequested(false), natPMPSupported(boost::logic::indeterminate), natPMPInterface(nullptr), miniUPnPSupported(boost::logic::indeterminate), miniUPnPInterface(nullptr) {
     nullNATTraversalInterface = new NullNATTraversalInterface();
     // FIXME: This should be done from start(), and the current start() should be an internal method
-    thread = new boost::thread(boost::bind(&PlatformNATTraversalWorker::start, this));
+    thread = new std::thread(boost::bind(&PlatformNATTraversalWorker::start, this));
 }
 
 PlatformNATTraversalWorker::~PlatformNATTraversalWorker() {
@@ -194,7 +194,7 @@ void PlatformNATTraversalWorker::start() {
     while (!stopRequested) {
         PlatformNATTraversalRequest::ref request;
         {
-            boost::unique_lock<boost::mutex> lock(queueMutex);
+            std::unique_lock<std::mutex> lock(queueMutex);
             while (queue.empty()) {
                 queueNonEmpty.wait(lock);
             }
@@ -215,7 +215,7 @@ void PlatformNATTraversalWorker::stop() {
 
 void PlatformNATTraversalWorker::addRequestToQueue(PlatformNATTraversalRequest::ref request) {
     {
-        boost::lock_guard<boost::mutex> lock(queueMutex);
+        std::lock_guard<std::mutex> lock(queueMutex);
         queue.push_back(request);
     }
     queueNonEmpty.notify_one();

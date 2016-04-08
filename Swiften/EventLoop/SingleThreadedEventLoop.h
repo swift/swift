@@ -12,10 +12,9 @@
 
 #pragma once
 
+#include <condition_variable>
+#include <mutex>
 #include <vector>
-
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
 
 #include <Swiften/EventLoop/EventLoop.h>
 
@@ -61,7 +60,7 @@ namespace Swift {
             bool shouldShutDown_;
 
             bool eventAvailable_;
-            boost::mutex eventAvailableMutex_;
-            boost::condition_variable eventAvailableCondition_;
+            std::mutex eventAvailableMutex_;
+            std::condition_variable eventAvailableCondition_;
     };
 }

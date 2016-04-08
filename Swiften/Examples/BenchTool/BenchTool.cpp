@@ -5,9 +5,9 @@
  */
 
 #include <iostream>
+#include <thread>
 
 #include <boost/bind.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Client/Client.h>

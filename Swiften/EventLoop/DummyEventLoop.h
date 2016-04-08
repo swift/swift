@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,7 @@
 #pragma once
 
 #include <deque>
-
-#include <boost/thread/locks.hpp>
-#include <boost/thread/mutex.hpp>
+#include <mutex>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -28,6 +26,6 @@ namespace Swift {
 
         private:
             bool hasEvents_;
-            boost::mutex hasEventsMutex_;
+            std::mutex hasEventsMutex_;
     };
 }

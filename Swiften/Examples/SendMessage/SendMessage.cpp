@@ -5,9 +5,9 @@
  */
 
 #include <iostream>
+#include <thread>
 
 #include <boost/bind.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>

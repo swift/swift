@@ -6,8 +6,8 @@
 
 #pragma once
 
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
+#include <condition_variable>
+#include <mutex>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -41,7 +41,7 @@ namespace Swift {
             bool isRunning_;
 
             bool eventAvailable_;
-            boost::mutex eventAvailableMutex_;
-            boost::condition_variable eventAvailableCondition_;
+            std::mutex eventAvailableMutex_;
+            std::condition_variable eventAvailableCondition_;
     };
 }

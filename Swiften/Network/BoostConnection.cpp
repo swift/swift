@@ -8,13 +8,13 @@
 
 #include <algorithm>
 #include <memory>
+#include <mutex>
 #include <string>
 
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/ByteArray.h>
@@ -76,7 +76,7 @@ void BoostConnection::disconnect() {
     // Mac OS X apparently exhibits a problem where closing a socket during a write could potentially go into uninterruptable sleep.
     // See e.g. http://bugs.python.org/issue7401
     // We therefore wait until any pending write finishes, which hopefully should fix our hang on exit during close().
-    boost::lock_guard<boost::mutex> lock(writeMutex_);
+    std::lock_guard<std::mutex> lock(writeMutex_);
     if (writing_) {
         closeSocketAfterNextWrite_ = true;
     } else {
@@ -85,14 +85,14 @@ void BoostConnection::disconnect() {
 }
 
 void BoostConnection::closeSocket() {
-    boost::lock_guard<boost::mutex> lock(readCloseMutex_);
+    std::lock_guard<std::mutex> lock(readCloseMutex_);
     boost::system::error_code errorCode;
     socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, errorCode);
     socket_.close();
 }
 
 void BoostConnection::write(const SafeByteArray& data) {
-    boost::lock_guard<boost::mutex> lock(writeMutex_);
+    std::lock_guard<std::mutex> lock(writeMutex_);
     if (!writing_) {
         writing_ = true;
         doWrite(data);
@@ -120,7 +120,7 @@ void BoostConnection::handleConnectFinished(const boost::system::error_code& err
 
 void BoostConnection::doRead() {
     readBuffer_ = std::make_shared<SafeByteArray>(BUFFER_SIZE);
-    boost::lock_guard<boost::mutex> lock(readCloseMutex_);
+    std::lock_guard<std::mutex> lock(readCloseMutex_);
     socket_.async_read_some(
             boost::asio::buffer(*readBuffer_),
             boost::bind(&BoostConnection::handleSocketRead, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
@@ -153,7 +153,7 @@ void BoostConnection::handleDataWritten(const boost::system::error_code& error) 
         eventLoop->postEvent(boost::bind(boost::ref(onDisconnected), WriteError), shared_from_this());
     }
     {
-        boost::lock_guard<boost::mutex> lock(writeMutex_);
+        std::lock_guard<std::mutex> lock(writeMutex_);
         if (writeQueue_.empty()) {
             writing_ = false;
             if (closeSocketAfterNextWrite_) {

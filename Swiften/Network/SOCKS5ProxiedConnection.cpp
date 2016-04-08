@@ -13,9 +13,9 @@
 #include <Swiften/Network/SOCKS5ProxiedConnection.h>
 
 #include <iostream>
+#include <thread>
 
 #include <boost/bind.hpp>
-#include <boost/thread.hpp>
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Log.h>

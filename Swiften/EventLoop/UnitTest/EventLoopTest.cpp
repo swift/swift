@@ -4,8 +4,9 @@
  * See the COPYING file for more information.
  */
 
+#include <thread>
+
 #include <boost/bind.hpp>
-#include <boost/thread.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
