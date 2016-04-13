@@ -23,7 +23,10 @@ namespace Swift {
                 return "id";
             }
 
-            virtual std::string addAction(const ChatMessage& /*message*/, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {return "id";}
+            virtual std::string addAction(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
+                lastAddedActionBody_ =bodyFromMessage(message);
+                return "id";
+            }
 
             virtual std::string addSystemMessage(const ChatMessage& message, Direction /*direction*/) {
                 lastAddedSystemMessage_ = message;
@@ -102,6 +105,7 @@ namespace Swift {
 
             std::string name_;
             std::string lastMessageBody_;
+            std::string lastAddedActionBody_;
             ChatMessage lastAddedPresence_;
             ChatMessage lastReplacedMessage_;
             ChatMessage lastAddedSystemMessage_;

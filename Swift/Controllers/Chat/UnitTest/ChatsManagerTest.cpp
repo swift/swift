@@ -80,6 +80,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testLocalMUCServiceDiscoveryResetOnDisconnect);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
+    CPPUNIT_TEST(testChatControllerMeMessageHandling);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -801,6 +802,20 @@ public:
         CPPUNIT_ASSERT_EQUAL(1, handledHighlightActions_);
         CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.getAction().getSoundFile()) != soundsPlayed_.end());
         CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.getAction().getSoundFile()) != soundsPlayed_.end());
+    }
+
+    void testChatControllerMeMessageHandling() {
+        JID messageJID("testling@test.com/resource1");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        std::shared_ptr<Message> message(new Message());
+        message->setFrom(messageJID);
+        std::string body("/me is feeling delighted.");
+        message->setBody(body);
+        manager_->handleIncomingMessage(message);
+        CPPUNIT_ASSERT_EQUAL(std::string("is feeling delighted."), window->lastAddedActionBody_);
     }
 
 private:

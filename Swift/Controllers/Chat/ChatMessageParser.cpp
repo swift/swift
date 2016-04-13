@@ -13,6 +13,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include <Swiften/Base/Regex.h>
+#include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>
 
 #include <SwifTools/Linkify.h>
@@ -28,6 +29,11 @@ namespace Swift {
     ChatWindow::ChatMessage ChatMessageParser::parseMessageBody(const std::string& body, const std::string& nick, bool senderIsSelf) {
         ChatWindow::ChatMessage parsedMessage;
         std::string remaining = body;
+        if (boost::starts_with(body, "/me ")) {
+           remaining = String::getSplittedAtFirst(body, ' ').second;
+           parsedMessage.setIsMeCommand(true);
+        }
+
         /* Parse one, URLs */
         while (!remaining.empty()) {
             bool found = false;
@@ -131,8 +137,7 @@ namespace Swift {
                     newMessage.append(part);
                 }
             }
-            parsedMessage = newMessage;
-
+            parsedMessage.setParts(newMessage.getParts());
         }
         return parsedMessage;
     }

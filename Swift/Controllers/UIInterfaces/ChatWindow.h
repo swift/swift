@@ -45,15 +45,21 @@ namespace Swift {
             class ChatMessage {
                 public:
                     ChatMessage() {}
+
                     ChatMessage(const std::string& text) {
                         append(std::make_shared<ChatTextMessagePart>(text));
                     }
+
                     void append(const std::shared_ptr<ChatMessagePart>& part) {
                         parts_.push_back(part);
                     }
 
                     const std::vector<std::shared_ptr<ChatMessagePart> >& getParts() const {
                         return parts_;
+                    }
+
+                    void setParts(const std::vector<std::shared_ptr<ChatMessagePart> >& parts) {
+                        parts_ = parts;
                     }
 
                     void setFullMessageHighlightAction(const HighlightAction& action) {
@@ -65,21 +71,17 @@ namespace Swift {
                     }
 
                     bool isMeCommand() const {
-                        bool isMeCommand = false;
-                        if (!parts_.empty()) {
-                            std::shared_ptr<ChatTextMessagePart> textPart = std::dynamic_pointer_cast<ChatTextMessagePart>(parts_[0]);
-                            if (textPart) {
-                                if (boost::starts_with(textPart->text, "/me ")) {
-                                    isMeCommand = true;
-                                }
-                            }
-                        }
-                        return isMeCommand;
+                        return isMeCommand_;
+                    }
+
+                    void setIsMeCommand(bool isMeCommand) {
+                        isMeCommand_ = isMeCommand;
                     }
 
                 private:
                     std::vector<std::shared_ptr<ChatMessagePart> > parts_;
                     HighlightAction fullMessageHighlightAction_;
+                    bool isMeCommand_ = false;
             };
 
             class ChatTextMessagePart : public ChatMessagePart {

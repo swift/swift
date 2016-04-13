@@ -17,7 +17,6 @@
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Client/StanzaChannel.h>
@@ -209,12 +208,7 @@ bool ChatControllerBase::hasOpenWindow() const {
 
 ChatWindow::ChatMessage ChatControllerBase::buildChatWindowChatMessage(const std::string& message, bool senderIsSelf, const HighlightAction& fullMessageHighlightAction) {
     ChatWindow::ChatMessage chatMessage;
-    if (boost::starts_with(message, "/me ")) {
-        chatMessage = chatMessageParser_->parseMessageBody(String::getSplittedAtFirst(message, ' ').second);
-    }
-    else {
-        chatMessage = chatMessageParser_->parseMessageBody(message, highlighter_->getNick(), senderIsSelf);
-    }
+    chatMessage = chatMessageParser_->parseMessageBody(message, highlighter_->getNick(), senderIsSelf);
     chatMessage.setFullMessageHighlightAction(fullMessageHighlightAction);
     return chatMessage;
 }
