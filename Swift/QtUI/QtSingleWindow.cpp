@@ -67,11 +67,11 @@ void QtSingleWindow::insertAtFront(QWidget* widget) {
 
 void QtSingleWindow::handleGeometryChanged() {
     settings_->getQSettings()->setValue(SINGLE_WINDOW_GEOMETRY, saveGeometry());
-
 }
 
-void QtSingleWindow::resizeEvent(QResizeEvent*) {
+void QtSingleWindow::resizeEvent(QResizeEvent* event) {
     handleGeometryChanged();
+    QSplitter::resizeEvent(event);
 }
 
 void QtSingleWindow::moveEvent(QMoveEvent*) {
