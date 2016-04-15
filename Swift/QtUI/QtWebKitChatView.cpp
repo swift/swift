@@ -84,7 +84,6 @@ QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStr
     }
     webView_->setPage(webPage_);
     connect(webPage_, SIGNAL(selectionChanged()), SLOT(copySelectionToClipboard()));
-    connect(webPage_, SIGNAL(scrollRequested(int, int, const QRect&)), SLOT(handleScrollRequested(int, int, const QRect&)));
 
     viewReady_ = false;
     isAtBottom_ = true;
@@ -93,7 +92,7 @@ QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStr
     jsBridge = new QtChatWindowJSBridge();
     addToJSEnvironment("chatwindow", jsBridge);
     connect(jsBridge, SIGNAL(buttonClicked(QString,QString,QString,QString,QString,QString)), this, SLOT(handleHTMLButtonClicked(QString,QString,QString,QString,QString,QString)));
-
+    connect(jsBridge, SIGNAL(verticalScrollBarPositionChanged(double)), this, SLOT(handleVerticalScrollBarPositionChanged(double)));
 }
 
 QtWebKitChatView::~QtWebKitChatView() {
@@ -253,7 +252,9 @@ void QtWebKitChatView::displayReceiptInfo(const QString& id, bool showIt) {
 }
 
 void QtWebKitChatView::rememberScrolledToBottom() {
-    isAtBottom_ = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) >= (webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical) - 1);
+    if (webPage_) {
+        isAtBottom_ = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) >= (webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical) - 1);
+    }
 }
 
 void QtWebKitChatView::scrollToBottom() {
@@ -339,6 +340,11 @@ void QtWebKitChatView::resetView() {
     scrollToBottom();
 
     connect(webPage_->mainFrame(), SIGNAL(contentsSizeChanged(const QSize&)), this, SLOT(handleFrameSizeChanged()), Qt::UniqueConnection);
+
+    // Hooking up to scroll bar update, because Qt does not provide a way to retrieve accurate scroll bar updates from C++ directly.
+    QWebElement body = document_.findFirst("body");
+    assert(!body.isNull());
+    body.setAttribute("onscroll", "chatwindow.verticalScrollBarPositionChanged(document.body.scrollTop / (document.body.scrollHeight - window.innerHeight))");
 }
 
 static QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
@@ -443,20 +449,6 @@ void QtWebKitChatView::askDesktopToOpenFile(const QString& filename) {
     QFileInfo fileInfo(filename);
     if (fileInfo.exists() && fileInfo.isFile()) {
         QDesktopServices::openUrl(QUrl::fromLocalFile(filename));
-    }
-}
-
-void QtWebKitChatView::handleScrollRequested(int, int dy, const QRect&) {
-    rememberScrolledToBottom();
-
-    int pos = webPage_->mainFrame()->scrollBarValue(Qt::Vertical) - dy;
-    emit scrollRequested(pos);
-
-    if (pos == 0) {
-        emit scrollReachedTop();
-    }
-    else if (pos == webPage_->mainFrame()->scrollBarMaximum(Qt::Vertical)) {
-        emit scrollReachedBottom();
     }
 }
 
@@ -588,6 +580,16 @@ QString QtWebKitChatView::buildChatWindowButton(const QString& name, const QStri
     Q_ASSERT(regex.exactMatch(id));
     QString html = QString("<input id='%2' type='submit' value='%1' onclick='chatwindow.buttonClicked(\"%2\", \"%3\", \"%4\", \"%5\", \"%6\", \"%7\");' />").arg(name).arg(id).arg(encodeButtonArgument(arg1)).arg(encodeButtonArgument(arg2)).arg(encodeButtonArgument(arg3)).arg(encodeButtonArgument(arg4)).arg(encodeButtonArgument(arg5));
     return html;
+}
+
+void QtWebKitChatView::resizeEvent(QResizeEvent* event) {
+    // This code ensures that if the user is scrolled all to the bottom of a chat view,
+    // the view stays scrolled to the bottom if the view is resized or if the message
+    // input widget becomes multi line.
+    if (isAtBottom_) {
+        scrollToBottom();
+    }
+    QWidget::resizeEvent(event);
 }
 
 std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
@@ -788,6 +790,16 @@ void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgume
     }
 }
 
+void QtWebKitChatView::handleVerticalScrollBarPositionChanged(double position) {
+    rememberScrolledToBottom();
+    if (position == 0) {
+        emit scrollReachedTop();
+    }
+    else if (position == 1) {
+        emit scrollReachedBottom();
+    }
+}
+
 void QtWebKitChatView::addErrorMessage(const ChatWindow::ChatMessage& errorMessage) {
     if (window_->isWidgetSelected()) {
         window_->onAllMessagesRead();
@@ -967,10 +979,5 @@ ChatSnippet::Direction QtWebKitChatView::getActualDirection(const ChatWindow::Ch
         return ChatSnippet::getDirection(message);
     }
 }
-
-// void QtWebKitChatView::setShowEmoticons(bool value) {
-//     showEmoticons_ = value;
-// }
-
 
 }

@@ -124,8 +124,8 @@ namespace Swift {
             void handleViewLoadFinished(bool);
             void handleFrameSizeChanged();
             void handleClearRequested();
-            void handleScrollRequested(int dx, int dy, const QRect& rectToScroll);
             void handleHTMLButtonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
+            void handleVerticalScrollBarPositionChanged(double position);
 
         private:
             enum PreviousMessageKind {
@@ -158,6 +158,9 @@ namespace Swift {
             QString getHighlightSpanStart(const HighlightAction& highlight);
             QString chatMessageToHTML(const ChatWindow::ChatMessage& message);
             static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
+
+        protected:
+            void resizeEvent(QResizeEvent* event) SWIFTEN_OVERRIDE;
 
         private:
             void headerEncode();

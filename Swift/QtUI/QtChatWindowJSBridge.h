@@ -27,6 +27,7 @@ public:
     virtual ~QtChatWindowJSBridge();
 signals:
     void buttonClicked(QString id, QString arg1, QString arg2, QString arg3, QString arg4, QString arg5);
+    void verticalScrollBarPositionChanged(double scrollbarPosition);
 };
 
 }
