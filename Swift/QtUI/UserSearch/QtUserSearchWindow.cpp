@@ -15,8 +15,6 @@
 #include <QMovie>
 #include <QWizardPage>
 
-#include <Swiften/Base/Log.h>
-
 #include <Swift/Controllers/UIEvents/AddContactUIEvent.h>
 #include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
@@ -433,7 +431,7 @@ void QtUserSearchWindow::addContacts(const std::vector<Contact::ref>& contacts) 
                 contactVector_.push_back(newContact);
             }
         }
-        if (!supportsImpromptu_ && contactVector_.size() > 1) {
+        if (type_ != InviteToChat && !supportsImpromptu_ && contactVector_.size() > 1) {
             contactVector_.resize(1); /* can't chat with more than one user */
         }
         firstMultiJIDPage_->contactList_->setList(contactVector_);
