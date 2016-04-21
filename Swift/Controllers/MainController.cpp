@@ -15,7 +15,6 @@
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientBlockListManager.h>
@@ -180,7 +179,7 @@ MainController::MainController(
     ClientOptions cachedOptions;
     bool eagle = settings_->getSetting(SettingConstants::FORGET_PASSWORDS);
     if (!eagle) {
-        foreach (std::string profile, settings->getAvailableProfiles()) {
+        for (auto&& profile : settings->getAvailableProfiles()) {
             ProfileSettingsProvider profileSettings(profile, settings);
             std::string password = profileSettings.getStringSetting("pass");
             std::string certificate = profileSettings.getStringSetting("certificate");
@@ -349,7 +348,7 @@ void MainController::handleConnected() {
         showProfileController_ = new ShowProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
         ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
         fileTransferListController_->setFileTransferOverview(ftOverview_);
-        rosterController_ = new RosterController(boundJID_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), ftOverview_, client_->getClientBlockListManager(), client_->getVCardManager());
+        rosterController_ = new RosterController(boundJID_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), client_->getClientBlockListManager(), client_->getVCardManager());
         rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
         rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
         rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&MainController::handleShowCertificateRequest, this));

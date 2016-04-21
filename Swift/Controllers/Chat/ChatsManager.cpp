@@ -24,6 +24,7 @@
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/DiscoServiceWalker.h>
+#include <Swiften/Disco/FeatureOracle.h>
 #include <Swiften/Elements/CarbonsReceived.h>
 #include <Swiften/Elements/CarbonsSent.h>
 #include <Swiften/Elements/ChatState.h>
@@ -59,6 +60,7 @@
 #include <Swift/Controllers/UIEvents/RemoveMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestJoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/ChatListWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
@@ -199,6 +201,7 @@ ChatsManager::~ChatsManager() {
     roster_->onJIDRemoved.disconnect(boost::bind(&ChatsManager::handleJIDRemovedFromRoster, this, _1));
     roster_->onJIDUpdated.disconnect(boost::bind(&ChatsManager::handleJIDUpdatedInRoster, this, _1));
     roster_->onRosterCleared.disconnect(boost::bind(&ChatsManager::handleRosterCleared, this));
+    ftOverview_->onNewFileTransferController.disconnect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
     delete joinMUCWindow_;
     for (JIDChatControllerPair controllerPair : chatControllers_) {
         delete controllerPair.second;
@@ -560,6 +563,24 @@ void ChatsManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
     std::shared_ptr<AddMUCBookmarkUIEvent> addMUCBookmarkEvent = std::dynamic_pointer_cast<AddMUCBookmarkUIEvent>(event);
     if (addMUCBookmarkEvent) {
         mucBookmarkManager_->addBookmark(addMUCBookmarkEvent->getBookmark());
+        return;
+    }
+    std::shared_ptr<SendFileUIEvent> sendFileEvent = std::dynamic_pointer_cast<SendFileUIEvent>(event);
+    if (sendFileEvent) {
+        JID fileReceiver = sendFileEvent->getJID();
+        if (fileReceiver.isBare()) {
+            // See if there is a chat controller for a conversation with a bound
+            // full JID. Check if this JID supports file transfer and use it instead
+            // of the bare JID.
+            ChatController* controller = getChatControllerIfExists(fileReceiver, false);
+            if (controller) {
+                JID controllerJID = controller->getToJID();
+                if (!controllerJID.isBare() && (FeatureOracle(entityCapsProvider_, presenceOracle_).isFileTransferSupported(controllerJID) == Yes)) {
+                    fileReceiver = controllerJID;
+                }
+            }
+        }
+        ftOverview_->sendFile(fileReceiver, sendFileEvent->getFilename());
         return;
     }
 

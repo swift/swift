@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,7 +10,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/Roster/XMPPRoster.h>
@@ -101,11 +100,10 @@ std::vector<Presence::ref> PresenceOracle::getAllPresence(const JID& bareJID) co
     if (i == entries_.end()) {
         return results;
     }
-    PresenceMap presenceMap = i->second;
-    PresenceMap::const_iterator j = presenceMap.begin();
-    for (; j != presenceMap.end(); ++j) {
-        Presence::ref current = j->second;
-        results.push_back(current);
+    for (const auto& jidPresence : i->second) {
+        if (jidPresence.second) {
+            results.push_back(jidPresence.second);
+        }
     }
     return results;
 }
@@ -153,7 +151,7 @@ Presence::ref PresenceOracle::getActivePresence(const std::vector<Presence::ref>
     PresenceAccountPriorityQueue away;
     PresenceAccountPriorityQueue offline;
 
-    foreach(Presence::ref presence, presences) {
+    for (auto&& presence : presences) {
         switch (presence->getShow()) {
             case StatusShow::Online:
                 online.push(presence);
@@ -200,18 +198,15 @@ Presence::ref PresenceOracle::getHighestPriorityPresence(const JID& bareJID) con
     if (i == entries_.end()) {
         return Presence::ref();
     }
-    PresenceMap presenceMap = i->second;
-    PresenceMap::const_iterator j = presenceMap.begin();
     Presence::ref highest;
-    for (; j != presenceMap.end(); ++j) {
-        Presence::ref current = j->second;
+    for (const auto& jidPresence : i->second) {
+        Presence::ref current = jidPresence.second;
         if (!highest
                 || current->getPriority() > highest->getPriority()
                 || (current->getPriority() == highest->getPriority()
                         && StatusShow::typeToAvailabilityOrdering(current->getShow()) > StatusShow::typeToAvailabilityOrdering(highest->getShow()))) {
             highest = current;
         }
-
     }
     return highest;
 }

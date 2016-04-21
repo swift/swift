@@ -68,6 +68,11 @@ namespace Swift {
                 payloads_.insert(payloads_.end(), begin, end);
             }
 
+            template<typename Container>
+            void addPayloads(const Container& container) {
+                payloads_.insert(payloads_.end(), std::begin(container), std::end(container));
+            }
+
             void updatePayload(std::shared_ptr<Payload> payload);
 
             void removePayloadOfSameType(std::shared_ptr<Payload>);

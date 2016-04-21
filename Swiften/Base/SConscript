@@ -1,23 +1,23 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
+            "BoostRandomGenerator.cpp",
             "ByteArray.cpp",
             "DateTime.cpp",
-            "SafeByteArray.cpp",
-            "SafeAllocator.cpp",
             "Error.cpp",
+            "FileSize.cpp",
+            "IDGenerator.cpp",
             "Log.cpp",
             "LogSerializers.cpp",
             "Path.cpp",
             "Paths.cpp",
-            "String.cpp",
-            "IDGenerator.cpp",
-            "SimpleIDGenerator.cpp",
             "RandomGenerator.cpp",
-            "BoostRandomGenerator.cpp",
-            "sleep.cpp",
-            "URL.cpp",
             "Regex.cpp",
-            "FileSize.cpp"
+            "SafeAllocator.cpp",
+            "SafeByteArray.cpp",
+            "SimpleIDGenerator.cpp",
+            "String.cpp",
+            "URL.cpp",
+            "sleep.cpp",
         ])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

@@ -27,8 +27,8 @@ namespace Swift {
     class ClientBlockListManager;
     class EntityCapsProvider;
     class EventController;
+    class FeatureOracle;
     class FileTransferManager;
-    class FileTransferOverview;
     class IQRouter;
     class MainWindow;
     class MainWindowFactory;
@@ -49,7 +49,7 @@ namespace Swift {
 
     class RosterController {
         public:
-            RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
+            RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
             ~RosterController();
             void showRosterWindow();
             void setJID(const JID& jid) { myJID_ = jid; }
@@ -111,10 +111,10 @@ namespace Swift {
             SettingsProvider* settings_;
             UIEventStream* uiEventStream_;
             EntityCapsProvider* entityCapsManager_;
-            FileTransferOverview* ftOverview_;
             ClientBlockListManager* clientBlockListManager_;
             RosterVCardProvider* rosterVCardProvider_;
             std::shared_ptr<ContactRosterItem> ownContact_;
+            std::unique_ptr<FeatureOracle> featureOracle_;
 
             boost::signals2::scoped_connection blockingOnStateChangedConnection_;
             boost::signals2::scoped_connection blockingOnItemAddedConnection_;

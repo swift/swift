@@ -19,8 +19,8 @@
 #include <Swiften/Base/BoostFilesystemVersion.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Disco/FeatureOracle.h>
 #include <Swiften/Elements/JingleFileTransferFileInfo.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/FileTransfer/DefaultFileTransferTransporterFactory.h>
@@ -99,28 +99,6 @@ void FileTransferManagerImpl::stop() {
     s5bServerManager->stop();
 }
 
-boost::optional<JID> FileTransferManagerImpl::highestPriorityJIDSupportingFileTransfer(const JID& bareJID) {
-    JID fullReceipientJID;
-    int priority = INT_MIN;
-
-    //getAllPresence(bareJID) gives you all presences for the bare JID (i.e. all resources) Isode Limited. @ 11:11
-    std::vector<Presence::ref> presences = presenceOracle->getAllPresence(bareJID);
-
-    //iterate over them
-    foreach(Presence::ref pres, presences) {
-        if (pres->getPriority() > priority) {
-            // look up caps from the jid
-            DiscoInfo::ref info = capsProvider->getCaps(pres->getFrom());
-            if (isSupportedBy(info)) {
-                priority = pres->getPriority();
-                fullReceipientJID = pres->getFrom();
-            }
-        }
-    }
-
-    return fullReceipientJID.isValid() ? boost::optional<JID>(fullReceipientJID) : boost::optional<JID>();
-}
-
 OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
         const JID& to,
         const boost::filesystem::path& filepath,
@@ -155,9 +133,10 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
     JID receipient = to;
 
     if(receipient.isBare()) {
-        boost::optional<JID> fullJID = highestPriorityJIDSupportingFileTransfer(receipient);
-        if (fullJID.is_initialized()) {
-            receipient = fullJID.get();
+        auto featureOracle = FeatureOracle(capsProvider, presenceOracle);
+        JID fullJID = featureOracle.getMostAvailableClientForFileTrasfer(receipient);
+        if (!fullJID.toString().empty()) {
+            receipient = fullJID;
         } else {
             return OutgoingFileTransfer::ref();
         }

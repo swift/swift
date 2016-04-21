@@ -47,8 +47,6 @@ namespace Swift {
                     std::shared_ptr<ReadBytestream> bytestream,
                     const FileTransferOptions& = FileTransferOptions()) = 0;
 
-            static bool isSupportedBy(const DiscoInfo::ref info);
-
             boost::signals2::signal<void (IncomingFileTransfer::ref)> onIncomingFileTransfer;
     };
 }

@@ -17,6 +17,7 @@
 #include <Swiften/Client/NickManager.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/Disco/FeatureOracle.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/JID/JID.h>
@@ -30,7 +31,6 @@
 #include <Swiften/Roster/XMPPRosterItem.h>
 #include <Swiften/VCards/VCardManager.h>
 
-#include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ItemOperations/AppearOffline.h>
@@ -49,7 +49,6 @@
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
 #include <Swift/Controllers/UIEvents/RenameGroupUIEvent.h>
 #include <Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h>
-#include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/MainWindow.h>
 #include <Swift/Controllers/UIInterfaces/MainWindowFactory.h>
 #include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
@@ -61,9 +60,8 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, FileTransferOverview* fileTransferOverview, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager)
-    : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), vcardManager_(vcardManager), avatarManager_(avatarManager), nickManager_(nickManager), nickResolver_(nickResolver), presenceOracle_(presenceOracle), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), ftOverview_(fileTransferOverview), clientBlockListManager_(clientBlockListManager) {
-    assert(fileTransferOverview);
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager)
+    : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), vcardManager_(vcardManager), avatarManager_(avatarManager), nickManager_(nickManager), nickResolver_(nickResolver), presenceOracle_(presenceOracle), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), clientBlockListManager_(clientBlockListManager) {
     iqRouter_ = iqRouter;
     subscriptionManager_ = subscriptionManager;
     eventController_ = eventController;
@@ -80,6 +78,8 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
     xmppRoster_->onRosterCleared.connect(boost::bind(&RosterController::handleRosterCleared, this));
     subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
     uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
+
+    featureOracle_ = std::unique_ptr<FeatureOracle>(new FeatureOracle(entityCapsManager_, presenceOracle_));
 
     vcardManager_->onOwnVCardChanged.connect(boost::bind(&RosterController::handleOwnVCardChanged, this, _1));
     avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));
@@ -267,9 +267,6 @@ void RosterController::handleUIEvent(std::shared_ptr<UIEvent> event) {
             }
         }
     }
-    else if (std::shared_ptr<SendFileUIEvent> sendFileEvent = std::dynamic_pointer_cast<SendFileUIEvent>(event)) {
-        ftOverview_->sendFile(sendFileEvent->getJID(), sendFileEvent->getFilename());
-    }
 }
 
 void RosterController::setContactGroups(const JID& jid, const std::vector<std::string>& groups) {
@@ -396,17 +393,14 @@ std::set<std::string> RosterController::getGroups() const {
 }
 
 void RosterController::handleOnCapsChanged(const JID& jid) {
-    DiscoInfo::ref info = entityCapsManager_->getCaps(jid);
-    if (info) {
-        std::set<ContactRosterItem::Feature> features;
-        if (FileTransferManager::isSupportedBy(info)) {
-            features.insert(ContactRosterItem::FileTransferFeature);
-        }
-        if (info->hasFeature(DiscoInfo::WhiteboardFeature)) {
-            features.insert(ContactRosterItem::WhiteboardFeature);
-        }
-        roster_->applyOnItems(SetAvailableFeatures(jid, features));
+    std::set<ContactRosterItem::Feature> features;
+    if (featureOracle_->isFileTransferSupported(jid.toBare()) == Tristate::Yes || featureOracle_->isFileTransferSupported(jid.toBare()) == Tristate::Maybe) {
+        features.insert(ContactRosterItem::FileTransferFeature);
     }
+    if (featureOracle_->isWhiteboardSupported(jid.toBare()) == Tristate::Yes) {
+        features.insert(ContactRosterItem::WhiteboardFeature);
+    }
+    roster_->applyOnItems(SetAvailableFeatures(jid, features));
 }
 
 }

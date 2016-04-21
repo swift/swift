@@ -1,10 +1,13 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
+
+#include <unordered_map>
+#include <unordered_set>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Tristate.h>
@@ -27,16 +30,19 @@ class SWIFTEN_API FeatureOracle {
         Tristate isFileTransferSupported(const JID& jid);
         Tristate isMessageReceiptsSupported(const JID& jid);
         Tristate isMessageCorrectionSupported(const JID& jid);
+        Tristate isWhiteboardSupported(const JID& jid);
+
+        JID getMostAvailableClientForFileTrasfer(const JID& bareJID);
 
     private:
         /**
          * @brief getDiscoResultForJID returns a  shared reference to a DiscoInfo representing features supported by the jid.
-         * @param jid The JID to return the DiscoInfo::ref for.
-         * @return DiscoResult::ref
+         * @param jid The JID to return an std::unordered_map<std::string, Tristate> for.
+         * @return std::unordered_map<std::string, Tristate>
          */
-        DiscoInfo::ref getDiscoResultForJID(const JID& jid);
+        std::unordered_map<std::string, Tristate> getFeaturesForJID(const JID& jid);
 
-        Tristate isFeatureSupported(const JID& jid, const std::string& feature);
+        Tristate isFeatureSupported(const std::unordered_map<std::string, Tristate>& supportedFeatures, const std::string& feature);
 
     private:
         EntityCapsProvider* capsProvider_;
