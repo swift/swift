@@ -17,7 +17,6 @@
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
@@ -129,12 +128,11 @@ void ChatControllerBase::setAvailableServerFeatures(std::shared_ptr<DiscoInfo> i
 void ChatControllerBase::handleAllMessagesRead() {
     if (!unreadMessages_.empty()) {
         targetedUnreadMessages_.clear();
-        foreach (std::shared_ptr<StanzaEvent> stanzaEvent, unreadMessages_) {
+        for (std::shared_ptr<StanzaEvent> stanzaEvent : unreadMessages_) {
             stanzaEvent->conclude();
         }
         unreadMessages_.clear();
-        chatWindow_->setUnreadMessageCount(0);
-        onUnreadCountChanged();
+        updateMessageCount();
     }
 }
 
@@ -219,7 +217,7 @@ void ChatControllerBase::handleHighlightActions(const ChatWindow::ChatMessage& c
         highlighter_->handleHighlightAction(chatMessage.getFullMessageHighlightAction());
         playedSounds.insert(chatMessage.getFullMessageHighlightAction().getSoundFile());
     }
-    foreach(std::shared_ptr<ChatWindow::ChatMessagePart> part, chatMessage.getParts()) {
+    for (std::shared_ptr<ChatWindow::ChatMessagePart> part : chatMessage.getParts()) {
         std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightMessage = std::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part);
         if (highlightMessage && highlightMessage->action.playSound()) {
             if (playedSounds.find(highlightMessage->action.getSoundFile()) == playedSounds.end()) {
@@ -228,6 +226,11 @@ void ChatControllerBase::handleHighlightActions(const ChatWindow::ChatMessage& c
             }
         }
     }
+}
+
+void ChatControllerBase::updateMessageCount() {
+    chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
+    onUnreadCountChanged();
 }
 
 std::string ChatControllerBase::addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, const std::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time) {
@@ -330,8 +333,7 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
         logMessage(body, from, selfJID_, timeStamp, true);
     }
     chatWindow_->show();
-    chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
-    onUnreadCountChanged();
+    updateMessageCount();
     postHandleIncomingMessage(messageEvent, chatMessage);
 }
 
@@ -377,8 +379,7 @@ std::string ChatControllerBase::getErrorMessage(std::shared_ptr<ErrorPayload> er
 void ChatControllerBase::handleGeneralMUCInvitation(MUCInviteEvent::ref event) {
     unreadMessages_.push_back(event);
     chatWindow_->show();
-    chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
-    onUnreadCountChanged();
+    updateMessageCount();
     chatWindow_->addMUCInvitation(senderDisplayNameFromMessage(event->getInviter()), event->getRoomJID(), event->getReason(), event->getPassword(), event->getDirect(), event->getImpromptu());
     eventController_->handleIncomingEvent(event);
 }

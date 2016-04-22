@@ -14,7 +14,6 @@
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Chat/ChatStateTracker.h>
@@ -44,6 +43,7 @@
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
+#include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
 
 namespace Swift {
 
@@ -346,9 +346,8 @@ void ChatController::handleStanzaAcked(std::shared_ptr<Stanza> stanza) {
 
 void ChatController::setOnline(bool online) {
     if (!online) {
-        std::map<std::shared_ptr<Stanza>, std::string>::iterator it = unackedStanzas_.begin();
-        for ( ; it != unackedStanzas_.end(); ++it) {
-            chatWindow_->setAckState(it->second, ChatWindow::Failed);
+        for (auto& stanzaIdPair : unackedStanzas_) {
+            chatWindow_->setAckState(stanzaIdPair.second, ChatWindow::Failed);
         }
         unackedStanzas_.clear();
 
@@ -365,6 +364,18 @@ void ChatController::handleNewFileTransferController(FileTransferController* ftc
     std::string ftID = ftc->setChatWindow(chatWindow_, nick);
     ftControllers[ftID] = ftc;
     lastWasPresence_ = false;
+
+    if (ftc->isIncoming()) {
+        auto incomingFileTransferEvent = std::make_shared<IncomingFileTransferEvent>(ftc->getOtherParty());
+        if (hasOpenWindow()) {
+            incomingFileTransferEvent->conclude();
+        }
+        else {
+            unreadMessages_.push_back(incomingFileTransferEvent);
+            updateMessageCount();
+        }
+        eventController_->handleIncomingEvent(incomingFileTransferEvent);
+    }
 }
 
 void ChatController::handleWhiteboardSessionRequest(bool senderIsSelf) {
