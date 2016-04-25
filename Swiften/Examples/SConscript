@@ -3,12 +3,12 @@ Import("swiften_env")
 myenv = swiften_env.Clone()
 
 SConscript(dirs = [
-	"SendMessage",
-	"SendFile",
-	"ConnectivityTest",
-	"LinkLocalTool",
-	"NetworkTool",
-	"ParserTester",
-	"BenchTool",
-	"MUCListAndJoin",
+    "SendMessage",
+    "SendFile",
+    "ConnectivityTest",
+    "LinkLocalTool",
+    "NetworkTool",
+    "ParserTester",
+    "BenchTool",
+    "MUCListAndJoin",
 ])

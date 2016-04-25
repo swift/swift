@@ -1,40 +1,40 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
-			"Certificate.cpp",
-			"CertificateFactory.cpp",
-			"CertificateTrustChecker.cpp",
-			"ServerIdentityVerifier.cpp",
-			"TLSContext.cpp",
-			"TLSContextFactory.cpp",
-		])
-		
+            "Certificate.cpp",
+            "CertificateFactory.cpp",
+            "CertificateTrustChecker.cpp",
+            "ServerIdentityVerifier.cpp",
+            "TLSContext.cpp",
+            "TLSContextFactory.cpp",
+        ])
+
 myenv = swiften_env.Clone()
 if myenv.get("HAVE_OPENSSL", 0) :
-	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
-	objects += myenv.SwiftenObject([
-			"OpenSSL/OpenSSLContext.cpp",
-			"OpenSSL/OpenSSLCertificate.cpp",
-			"OpenSSL/OpenSSLContextFactory.cpp",
-		])
-	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
+    myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
+    objects += myenv.SwiftenObject([
+            "OpenSSL/OpenSSLContext.cpp",
+            "OpenSSL/OpenSSLCertificate.cpp",
+            "OpenSSL/OpenSSLContextFactory.cpp",
+        ])
+    myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
 elif myenv.get("HAVE_SCHANNEL", 0) :
-	swiften_env.Append(LIBS = ["Winscard"])
-	objects += myenv.SwiftenObject([
-			"CAPICertificate.cpp",
-			"Schannel/SchannelContext.cpp",
-			"Schannel/SchannelCertificate.cpp",
-			"Schannel/SchannelContextFactory.cpp",
-		])
-	myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
+    swiften_env.Append(LIBS = ["Winscard"])
+    objects += myenv.SwiftenObject([
+            "CAPICertificate.cpp",
+            "Schannel/SchannelContext.cpp",
+            "Schannel/SchannelCertificate.cpp",
+            "Schannel/SchannelContextFactory.cpp",
+        ])
+    myenv.Append(CPPDEFINES = "HAVE_SCHANNEL")
 elif myenv.get("HAVE_SECURETRANSPORT", 0) :
-	#swiften_env.Append(LIBS = ["Winscard"])
-	objects += myenv.SwiftenObject([
-			"SecureTransport/SecureTransportContext.mm",
-			"SecureTransport/SecureTransportCertificate.mm",
-			"SecureTransport/SecureTransportContextFactory.cpp",
-		])
-	myenv.Append(CPPDEFINES = "HAVE_SECURETRANSPORT")
+    #swiften_env.Append(LIBS = ["Winscard"])
+    objects += myenv.SwiftenObject([
+            "SecureTransport/SecureTransportContext.mm",
+            "SecureTransport/SecureTransportCertificate.mm",
+            "SecureTransport/SecureTransportContextFactory.cpp",
+        ])
+    myenv.Append(CPPDEFINES = "HAVE_SECURETRANSPORT")
 
 objects += myenv.SwiftenObject(["PlatformTLSFactories.cpp"])
 

@@ -1,7 +1,7 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
-			"VCardManager.cpp",
-			"VCardStorage.cpp",
-		])
+            "VCardManager.cpp",
+            "VCardStorage.cpp",
+        ])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

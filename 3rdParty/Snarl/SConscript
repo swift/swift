@@ -5,14 +5,14 @@ Import("env")
 ################################################################################
 
 if env.get("HAVE_SNARL", False) :
-	if env["SCONS_STAGE"] == "flags" :
-		env["SNARL_FLAGS"] = {
-				"CPPPATH": [Dir(".")],
-				"LIBPATH": [Dir(".")],
-				"LIBS": ["Snarl"],
-			}
+    if env["SCONS_STAGE"] == "flags" :
+        env["SNARL_FLAGS"] = {
+                "CPPPATH": [Dir(".")],
+                "LIBPATH": [Dir(".")],
+                "LIBS": ["Snarl"],
+            }
 
-	elif env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
-		myenv.StaticLibrary("Snarl", ["SnarlInterface.cpp"], CPPPATH = ["."])
+    elif env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+        myenv.StaticLibrary("Snarl", ["SnarlInterface.cpp"], CPPPATH = ["."])

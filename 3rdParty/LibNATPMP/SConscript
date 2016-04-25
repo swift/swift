@@ -8,49 +8,49 @@ if env.get("LIBNATPMP_BUNDLED", False) :
 # Module flags
 ################################################################################
 
-	if env["SCONS_STAGE"] == "flags" :
-		env["HAVE_LIBNATPMP"] = True
-		env["LIBNATPMP_FLAGS"] = {
-				"LIBPATH": [Dir(".")],
-				"INTERNAL_CPPDEFINES": ["STATICLIB"],
-			}
-		if os.path.basename(env["CC"]) in ("clang", "gcc") :
-			env["LIBNATPMP_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibNATPMP/src/libnatpmp"]})
-		else :
-			env["LIBNATPMP_FLAGS"].update({"CPPPATH": [Dir("src/libnatpmp")]})
-		#if env["PLATFORM"] == "win32" :
-		#	env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
-		#	if env["MSVC_VERSION"][:3] == "9.0" :
-		#		env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/VC2008")]
+    if env["SCONS_STAGE"] == "flags" :
+        env["HAVE_LIBNATPMP"] = True
+        env["LIBNATPMP_FLAGS"] = {
+                "LIBPATH": [Dir(".")],
+                "INTERNAL_CPPDEFINES": ["STATICLIB"],
+            }
+        if os.path.basename(env["CC"]) in ("clang", "gcc") :
+            env["LIBNATPMP_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibNATPMP/src/libnatpmp"]})
+        else :
+            env["LIBNATPMP_FLAGS"].update({"CPPPATH": [Dir("src/libnatpmp")]})
+        #if env["PLATFORM"] == "win32" :
+        #   env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
+        #   if env["MSVC_VERSION"][:3] == "9.0" :
+        #       env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/VC2008")]
 
 ################################################################################
 # Build
 ################################################################################
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.Append(CPPPATH = ["src"])
-		# Remove warn flags
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.Append(CPPPATH = ["src"])
+        # Remove warn flags
+        myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
-		myenv.Append(CCFLAGS = ["-DNDEBUG", "-DSTATICLIB"])
-		
-		#if myenv["PLATFORM"] != "win32":
-		#	myenv.Append(CCFLAGS = ["-DMINIUPNPC_SET_SOCKET_TIMEOUT"])
-		
-		if myenv["PLATFORM"] == "darwin":
-			myenv.Append(CCFLAGS = ["-DMACOSX", "-D_DARWIN_C_SOURCE"])
-		
-		if myenv["PLATFORM"] == "win32":
-			myenv.Append(CCFLAGS = ["-DWIN32"])
+        myenv.Append(CCFLAGS = ["-DNDEBUG", "-DSTATICLIB"])
 
-		src_files = [
-				"src/libnatpmp/getgateway.c",
-				"src/libnatpmp/natpmp.c",
-				"src/libnatpmp/natpmpc.c",
-			]	
-		
-		if myenv["PLATFORM"] == "win32":
-			src_files += ["src/libnatpmp/wingettimeofday.c"]
-		
-		env["LIBNATPMP_OBJECTS"] = myenv.SwiftenObject(src_files)
+        #if myenv["PLATFORM"] != "win32":
+        #   myenv.Append(CCFLAGS = ["-DMINIUPNPC_SET_SOCKET_TIMEOUT"])
+
+        if myenv["PLATFORM"] == "darwin":
+            myenv.Append(CCFLAGS = ["-DMACOSX", "-D_DARWIN_C_SOURCE"])
+
+        if myenv["PLATFORM"] == "win32":
+            myenv.Append(CCFLAGS = ["-DWIN32"])
+
+        src_files = [
+                "src/libnatpmp/getgateway.c",
+                "src/libnatpmp/natpmp.c",
+                "src/libnatpmp/natpmpc.c",
+            ]
+
+        if myenv["PLATFORM"] == "win32":
+            src_files += ["src/libnatpmp/wingettimeofday.c"]
+
+        env["LIBNATPMP_OBJECTS"] = myenv.SwiftenObject(src_files)

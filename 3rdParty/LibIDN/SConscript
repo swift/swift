@@ -8,67 +8,67 @@ if env.get("LIBIDN_BUNDLED", False) :
 # Module flags
 ################################################################################
 
-	if env["SCONS_STAGE"] == "flags" :
-		env["LIBIDN_FLAGS"] = {
-				"CPPDEFINES": ["LIBIDN_STATIC"],
-			}
-		if os.path.basename(env["CC"]) in ("clang", "gcc") :
-			env["LIBIDN_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibIDN/src"]})
-		else :
-			env["LIBIDN_FLAGS"].update({"CPPPATH": [Dir("src")]})
+    if env["SCONS_STAGE"] == "flags" :
+        env["LIBIDN_FLAGS"] = {
+                "CPPDEFINES": ["LIBIDN_STATIC"],
+            }
+        if os.path.basename(env["CC"]) in ("clang", "gcc") :
+            env["LIBIDN_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibIDN/src"]})
+        else :
+            env["LIBIDN_FLAGS"].update({"CPPPATH": [Dir("src")]})
 
-		if env["PLATFORM"] == "win32" :
-			env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
-			if float(env["MSVC_VERSION"]) < 14:
-				env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/stdbool")]
-			if env["MSVC_VERSION"][:3] == "9.0" :
-				env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/VC2008")]
+        if env["PLATFORM"] == "win32" :
+            env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32")]
+            if float(env["MSVC_VERSION"]) < 14:
+                env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/stdbool")]
+            if env["MSVC_VERSION"][:3] == "9.0" :
+                env["LIBIDN_FLAGS"]["CPPPATH"] += [Dir("stubs/win32/VC2008")]
 
 ################################################################################
 # Build
 ################################################################################
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
 
-		# Remove warn flags
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+        # Remove warn flags
+        myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
-		# Check for strcasecmp() or replacement
-		conf = Configure(conf_env)
-		if not conf.CheckFunc('strcasecmp') :
-			if conf.CheckFunc("stricmp") :
-				myenv.Append(CPPDEFINES = [("strcasecmp", "stricmp")])
-			else :
-				print "Error: Cannot find strcasecmp() or stricmp()"
-				Exit(1)
-		if not conf.CheckFunc('strncasecmp') :
-			if conf.CheckFunc("strnicmp") :
-				myenv.Append(CPPDEFINES = [("strncasecmp", "strnicmp")])
-			else :
-				print "Error: Cannot find strncasecmp() or strnicmp()"
-				Exit(1)
-		conf.Finish()
+        # Check for strcasecmp() or replacement
+        conf = Configure(conf_env)
+        if not conf.CheckFunc('strcasecmp') :
+            if conf.CheckFunc("stricmp") :
+                myenv.Append(CPPDEFINES = [("strcasecmp", "stricmp")])
+            else :
+                print "Error: Cannot find strcasecmp() or stricmp()"
+                Exit(1)
+        if not conf.CheckFunc('strncasecmp') :
+            if conf.CheckFunc("strnicmp") :
+                myenv.Append(CPPDEFINES = [("strncasecmp", "strnicmp")])
+            else :
+                print "Error: Cannot find strncasecmp() or strnicmp()"
+                Exit(1)
+        conf.Finish()
 
-		myenv.Append(CPPDEFINES = ["LIBIDN_STATIC", "HAVE_CONFIG_H"])
-		myenv.Append(CPPPATH = ["src", "stubs", "src/gl"])
-		if myenv["PLATFORM"] == "win32" :
-			myenv.Append(CPPPATH = "stubs/win32")
-			if float(env["MSVC_VERSION"]) < 14:
-				myenv.Append(CPPPATH = "stubs/win32/stdbool")
-			if myenv["MSVC_VERSION"][:3] == "9.0" :
-				myenv.Append(CPPPATH = "stubs/win32/VC2008")
+        myenv.Append(CPPDEFINES = ["LIBIDN_STATIC", "HAVE_CONFIG_H"])
+        myenv.Append(CPPPATH = ["src", "stubs", "src/gl"])
+        if myenv["PLATFORM"] == "win32" :
+            myenv.Append(CPPPATH = "stubs/win32")
+            if float(env["MSVC_VERSION"]) < 14:
+                myenv.Append(CPPPATH = "stubs/win32/stdbool")
+            if myenv["MSVC_VERSION"][:3] == "9.0" :
+                myenv.Append(CPPPATH = "stubs/win32/VC2008")
 
-		env["LIBIDN_OBJECTS"] = myenv.SwiftenObject([
-				"src/stringprep.c",
-				"src/profiles.c",
-				"src/rfc3454.c",
-				"src/punycode.c",
-				"src/idna.c",
-				"src/toutf8.c",
-				"src/nfkc.c",
-				"src/gl/c-ctype.c",
-				"src/gl/c-strcasecmp.c",
-				"src/gl/c-strncasecmp.c",
-				"src/gl/unistr/u8-check.c"
-			])
+        env["LIBIDN_OBJECTS"] = myenv.SwiftenObject([
+                "src/stringprep.c",
+                "src/profiles.c",
+                "src/rfc3454.c",
+                "src/punycode.c",
+                "src/idna.c",
+                "src/toutf8.c",
+                "src/nfkc.c",
+                "src/gl/c-ctype.c",
+                "src/gl/c-strcasecmp.c",
+                "src/gl/c-strncasecmp.c",
+                "src/gl/unistr/u8-check.c"
+            ])

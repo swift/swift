@@ -4,18 +4,18 @@ Import("env")
 
 env["BUILD_SLIMBER"] = True
 if env["PLATFORM"] == "win32" :
-	if not env.get("HAVE_BONJOUR") and "Slimber" in env["PROJECTS"] :
-		env["PROJECTS"].remove("Slimber")
+    if not env.get("HAVE_BONJOUR") and "Slimber" in env["PROJECTS"] :
+        env["PROJECTS"].remove("Slimber")
 elif env["PLATFORM"] != "darwin" :
-	if not env.get("HAVE_AVAHI", False) and "Slimber" in env["PROJECTS"] :
-		env["PROJECTS"].remove("Slimber")
+    if not env.get("HAVE_AVAHI", False) and "Slimber" in env["PROJECTS"] :
+        env["PROJECTS"].remove("Slimber")
 
 if not "Slimber" in env["PROJECTS"] and env["SCONS_STAGE"] == "flags" :
-		print "Bonjour missing. Not building Slimber."
+        print "Bonjour missing. Not building Slimber."
 
 if not env.get("HAVE_QT", False) and "Slimber" in env["PROJECTS"] :
-	print "Qt missing. Not building Slimber."
-	env["PROJECTS"].remove("Slimber")
+    print "Qt missing. Not building Slimber."
+    env["PROJECTS"].remove("Slimber")
 
 if "Slimber" in env["PROJECTS"] :
 
@@ -23,42 +23,42 @@ if "Slimber" in env["PROJECTS"] :
 # Flags
 ################################################################################
 
-	if env["SCONS_STAGE"] == "flags" :
-		env["SLIMBER_FLAGS"] = {
-				"LIBPATH": [Dir(".")],
-				"LIBS": ["Slimber"]
-			}
+    if env["SCONS_STAGE"] == "flags" :
+        env["SLIMBER_FLAGS"] = {
+                "LIBPATH": [Dir(".")],
+                "LIBS": ["Slimber"]
+            }
 
 ################################################################################
 # Build
 ################################################################################
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.UseFlags(env["LIMBER_FLAGS"])
-		myenv.MergeFlags(env["BOOST_FLAGS"])
-		myenv.MergeFlags(env["SWIFTEN_FLAGS"])
-		myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
-		myenv.StaticLibrary("Slimber", [
-				"LinkLocalPresenceManager.cpp",
-				"FileVCardCollection.cpp",
-				"VCardCollection.cpp",
-				"Server.cpp",
-				"MainController.cpp",
-				"MenuletController.cpp",
-				"Menulet.cpp"
-			])
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.UseFlags(env["LIMBER_FLAGS"])
+        myenv.MergeFlags(env["BOOST_FLAGS"])
+        myenv.MergeFlags(env["SWIFTEN_FLAGS"])
+        myenv.MergeFlags(env["SWIFTEN_DEP_FLAGS"])
+        myenv.StaticLibrary("Slimber", [
+                "LinkLocalPresenceManager.cpp",
+                "FileVCardCollection.cpp",
+                "VCardCollection.cpp",
+                "Server.cpp",
+                "MainController.cpp",
+                "MenuletController.cpp",
+                "Menulet.cpp"
+            ])
 
 
-		env["SLIMBER_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
+        env["SLIMBER_VERSION"] = "0.9.9." + datetime.date.today().strftime("%Y%m%d")
 
-		env.Append(UNITTEST_SOURCES = [
-				File("UnitTest/LinkLocalPresenceManagerTest.cpp"),
-				File("UnitTest/MenuletControllerTest.cpp")
-			])
+        env.Append(UNITTEST_SOURCES = [
+                File("UnitTest/LinkLocalPresenceManagerTest.cpp"),
+                File("UnitTest/MenuletControllerTest.cpp")
+            ])
 
-		SConscript("CLI/SConscript")
-		if env["PLATFORM"] == "darwin" :
-			SConscript("Cocoa/SConscript")
-		else :
-			SConscript("Qt/SConscript")
+        SConscript("CLI/SConscript")
+        if env["PLATFORM"] == "darwin" :
+            SConscript("Cocoa/SConscript")
+        else :
+            SConscript("Qt/SConscript")

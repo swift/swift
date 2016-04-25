@@ -1,4 +1,4 @@
 SConscript(dirs = [
-		"Checker", 
-		"UnitTest"
-	])
+        "Checker",
+        "UnitTest"
+    ])

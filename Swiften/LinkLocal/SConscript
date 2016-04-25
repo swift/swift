@@ -4,39 +4,39 @@ myenv = swiften_env.Clone()
 myenv.MergeFlags(swiften_env.get("BONJOUR_FLAGS", ""))
 
 sources = [
-		"DNSSD/DNSSDBrowseQuery.cpp",
-		"DNSSD/DNSSDQuerier.cpp",
-		"DNSSD/DNSSDRegisterQuery.cpp",
-		"DNSSD/DNSSDResolveHostnameQuery.cpp",
-		"DNSSD/DNSSDResolveServiceQuery.cpp",
-		"DNSSD/DNSSDServiceID.cpp",
-		"DNSSD/Fake/FakeDNSSDQuerier.cpp",
-		"DNSSD/Fake/FakeDNSSDQuery.cpp",
-		"DNSSD/PlatformDNSSDQuerierFactory.cpp",
-		"IncomingLinkLocalSession.cpp",
-		"LinkLocalConnector.cpp",
-		"LinkLocalService.cpp",
-		"LinkLocalServiceBrowser.cpp",
-		"LinkLocalServiceInfo.cpp",
-		"OutgoingLinkLocalSession.cpp",
-	]
+        "DNSSD/DNSSDBrowseQuery.cpp",
+        "DNSSD/DNSSDQuerier.cpp",
+        "DNSSD/DNSSDRegisterQuery.cpp",
+        "DNSSD/DNSSDResolveHostnameQuery.cpp",
+        "DNSSD/DNSSDResolveServiceQuery.cpp",
+        "DNSSD/DNSSDServiceID.cpp",
+        "DNSSD/Fake/FakeDNSSDQuerier.cpp",
+        "DNSSD/Fake/FakeDNSSDQuery.cpp",
+        "DNSSD/PlatformDNSSDQuerierFactory.cpp",
+        "IncomingLinkLocalSession.cpp",
+        "LinkLocalConnector.cpp",
+        "LinkLocalService.cpp",
+        "LinkLocalServiceBrowser.cpp",
+        "LinkLocalServiceInfo.cpp",
+        "OutgoingLinkLocalSession.cpp",
+    ]
 
 if myenv.get("HAVE_BONJOUR", 0) :
-	myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
-	sources += [
-			"DNSSD/Bonjour/BonjourQuerier.cpp",
-			"DNSSD/Bonjour/BonjourQuery.cpp",
-		]
+    myenv.Append(CPPDEFINES = "HAVE_BONJOUR")
+    sources += [
+            "DNSSD/Bonjour/BonjourQuerier.cpp",
+            "DNSSD/Bonjour/BonjourQuery.cpp",
+        ]
 elif myenv.get("HAVE_AVAHI", 0) :
-	myenv.Append(CPPDEFINES = ["HAVE_AVAHI"])
-	sources += [
-			"DNSSD/Avahi/AvahiQuerier.cpp",
-			"DNSSD/Avahi/AvahiQuery.cpp",
-			"DNSSD/Avahi/AvahiResolveHostnameQuery.cpp",
-			"DNSSD/Avahi/AvahiResolveServiceQuery.cpp",
-			"DNSSD/Avahi/AvahiRegisterQuery.cpp",
-			"DNSSD/Avahi/AvahiBrowseQuery.cpp",
-		]
+    myenv.Append(CPPDEFINES = ["HAVE_AVAHI"])
+    sources += [
+            "DNSSD/Avahi/AvahiQuerier.cpp",
+            "DNSSD/Avahi/AvahiQuery.cpp",
+            "DNSSD/Avahi/AvahiResolveHostnameQuery.cpp",
+            "DNSSD/Avahi/AvahiResolveServiceQuery.cpp",
+            "DNSSD/Avahi/AvahiRegisterQuery.cpp",
+            "DNSSD/Avahi/AvahiBrowseQuery.cpp",
+        ]
 
 objects = myenv.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

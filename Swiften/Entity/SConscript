@@ -1,6 +1,6 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
-			"Entity.cpp",
-		])
+            "Entity.cpp",
+        ])
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])

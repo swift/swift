@@ -3,14 +3,14 @@ Import("swiften_env")
 myenv = swiften_env.Clone()
 
 sources = [
-		"HighLayer.cpp",
-		"LowLayer.cpp",
-		"StreamStack.cpp",
-		"ConnectionLayer.cpp",
-		"TLSLayer.cpp",
-		"WhitespacePingLayer.cpp",
-		"XMPPLayer.cpp",
-	]
+        "HighLayer.cpp",
+        "LowLayer.cpp",
+        "StreamStack.cpp",
+        "ConnectionLayer.cpp",
+        "TLSLayer.cpp",
+        "WhitespacePingLayer.cpp",
+        "XMPPLayer.cpp",
+    ]
 
 objects = myenv.SwiftenObject(sources)
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
