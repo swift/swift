@@ -565,9 +565,11 @@ for line in build_lines :
     elif tool == 'rcc':
         out, flags = extract_binary_flag("-o", flags)
         name, flags = extract_binary_flag("-name", flags)
+        compress, flags = extract_binary_flag("--compress", flags)
+        threshold, flags = extract_binary_flag("--threshold", flags)
         files, flags = extract_non_flags(flags)
         deps = list(set(get_dependencies(out, ninja.targets)) - set(files))
-        ninja.build(out, 'rcc', files, deps = sorted(deps), name = name, rccflags = flags)
+        ninja.build(out, 'rcc', files, deps = sorted(deps), name = name, rccflags = ["--compress", compress, "--threshold", threshold])
 
     ############################################################
     # OS X tools
