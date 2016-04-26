@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -90,30 +90,30 @@ QtHighlightEditor::~QtHighlightEditor()
 {
 }
 
-std::string formatShortDescription(const HighlightRule &rule)
+QString QtHighlightEditor::formatShortDescription(const HighlightRule &rule)
 {
-    const std::string chatOrRoom = (rule.getMatchChat() ? "chat" : "room");
+    const QString chatOrRoom = (rule.getMatchChat() ? tr("chat") : tr("room"));
 
     std::vector<std::string> senders = rule.getSenders();
     std::vector<std::string> keywords = rule.getKeywords();
 
     if (senders.empty() && keywords.empty() && !rule.getNickIsKeyword()) {
-        return std::string("All ") + chatOrRoom + " messages.";
+        return tr("All %1 messages.").arg(chatOrRoom);
     }
 
     if (rule.getNickIsKeyword()) {
-        return std::string("All ") + chatOrRoom + " messages that mention my name.";
+        return tr("All %1 messages that mention my name.").arg(chatOrRoom);
     }
 
     if (!senders.empty()) {
-        return std::string("All ") + chatOrRoom + " messages from " + senders[0] + ".";
+        return tr("All %1 messages from %2.").arg(chatOrRoom, P2QSTRING(senders[0]));
     }
 
     if (!keywords.empty()) {
-        return std::string("All ") + chatOrRoom + " messages mentioning the keyword '" + keywords[0] + "'.";
+        return tr("All %1 messages mentioning the keyword '%2'.").arg(chatOrRoom, P2QSTRING(keywords[0]));
     }
 
-    return "Unknown Rule";
+    return tr("Unknown Rule");
 }
 
 void QtHighlightEditor::show()
@@ -177,7 +177,7 @@ void QtHighlightEditor::onNewButtonClicked()
     newRule.setMatchMUC(true);
     highlightManager_->insertRule(row, newRule);
     QListWidgetItem *item = new QListWidgetItem();
-    item->setText(P2QSTRING(formatShortDescription(newRule)));
+    item->setText(formatShortDescription(newRule));
     QFont font;
     font.setItalic(true);
     item->setFont(font);
@@ -246,7 +246,7 @@ void QtHighlightEditor::onCurrentRowChanged(int currentRow)
             QFont font;
             font.setItalic(true);
             ui_.listWidget->currentItem()->setFont(font);
-            ui_.listWidget->currentItem()->setText(P2QSTRING(formatShortDescription(rule)));
+            ui_.listWidget->currentItem()->setText(formatShortDescription(rule));
         }
     }
 
@@ -323,7 +323,7 @@ void QtHighlightEditor::widgetClick()
     HighlightRule rule = ruleFromDialog();
 
     if (ui_.listWidget->currentItem()) {
-        ui_.listWidget->currentItem()->setText(P2QSTRING(formatShortDescription(rule)));
+        ui_.listWidget->currentItem()->setText(formatShortDescription(rule));
     }
 }
 
@@ -358,7 +358,7 @@ void QtHighlightEditor::handleContactSuggestionRequested(const QString& text)
 
 void QtHighlightEditor::selectSoundFile()
 {
-    QString path = QFileDialog::getOpenFileName(this, tr("Select sound file..."), QString(), "Sounds (*.wav)");
+    QString path = QFileDialog::getOpenFileName(this, tr("Select sound file..."), QString(), tr("Sounds (*.wav)"));
     ui_.soundFile->setText(path);
 }
 
@@ -385,7 +385,7 @@ void QtHighlightEditor::populateList()
     for (size_t i = 0; i < rules->getSize(); ++i) {
         const HighlightRule& rule = rules->getRule(i);
         QListWidgetItem *item = new QListWidgetItem();
-        item->setText(P2QSTRING(formatShortDescription(rule)));
+        item->setText(formatShortDescription(rule));
         ui_.listWidget->addItem(item);
     }
 }

@@ -55,6 +55,7 @@ namespace Swift {
             void onResetToDefaultRulesClicked();
 
         private:
+            QString formatShortDescription(const HighlightRule &rule);
             void handleOnUserSelected(const Contact::ref& contact);
             void populateList();
             void selectRow(int row);
@@ -64,6 +65,7 @@ namespace Swift {
             void updateResetToDefaultRulesVisibility();
             void moveRowFromTo(int fromRow, int toRow);
 
+        private:
             Ui::QtHighlightEditor ui_;
             QtSettingsProvider* settings_;
             HighlightManager* highlightManager_;
