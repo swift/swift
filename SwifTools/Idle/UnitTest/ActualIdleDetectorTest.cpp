@@ -4,12 +4,13 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
 
@@ -51,7 +52,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
         }
 
         void testHandleTick_Idle() {
-            std::auto_ptr<ActualIdleDetector> testling(createDetector());
+            std::unique_ptr<ActualIdleDetector> testling(createDetector());
             testling->setIdleTimeSeconds(15);
             querier->idleTime = 15;
 
@@ -62,7 +63,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
         }
 
         void testHandleTick_Idle_AlreadyIdle() {
-            std::auto_ptr<ActualIdleDetector> testling(createDetector());
+            std::unique_ptr<ActualIdleDetector> testling(createDetector());
             testling->setIdleTimeSeconds(15);
             querier->idleTime = 15;
             timerFactory->updateTime(15000);
@@ -75,7 +76,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
         }
 
         void testHandleTick_NotIdle() {
-            std::auto_ptr<ActualIdleDetector> testling(createDetector());
+            std::unique_ptr<ActualIdleDetector> testling(createDetector());
             testling->setIdleTimeSeconds(15);
             querier->idleTime = 15;
             timerFactory->updateTime(15000);
@@ -89,7 +90,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
         }
 
         void testHandleTick_NotIdle_AlreadyNotIdle() {
-            std::auto_ptr<ActualIdleDetector> testling(createDetector());
+            std::unique_ptr<ActualIdleDetector> testling(createDetector());
             testling->setIdleTimeSeconds(15);
             querier->idleTime = 5;
 
@@ -150,7 +151,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
             MockTimerFactory() {}
 
             void updateTime(int milliseconds) {
-                foreach(std::shared_ptr<MockTimer> timer, timers) {
+                for (std::shared_ptr<MockTimer> timer : timers) {
                     timer->updateTime(milliseconds);
                 }
             }

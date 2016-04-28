@@ -4,6 +4,7 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <sstream>
 
 #include <boost/algorithm/string.hpp>
@@ -57,7 +58,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
         }
 
         void testSetVCard_LargeFilename() {
-            std::auto_ptr<VCardFileStorage> testling(createTestling());
+            std::unique_ptr<VCardFileStorage> testling(createTestling());
             VCard::ref vcard(new VCard());
             vcard->setFullName("Alice In Wonderland");
 
@@ -83,7 +84,7 @@ class VCardFileStorageTest : public CppUnit::TestFixture {
         }
 
         void testGetVCard_LargeFilename() {
-            std::auto_ptr<VCardFileStorage> testling(createTestling());
+            std::unique_ptr<VCardFileStorage> testling(createTestling());
             VCard::ref vcard(new VCard());
             vcard->setFullName("Alice In Wonderland");
 
