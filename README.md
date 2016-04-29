@@ -1,6 +1,6 @@
 # Swift - An elegant, secure, adaptable and intuitive XMPP Client
 ## Quick Start
-Simply run `./scons Swift` on Linux/Mac or `scons.bat Swift` on Windows to build Swift.
+Simply run `./scons Swift` on Linux, or `./scons Swift qt=/Users/username/Qt_installation_path/Qt/5.4.2/5.4/clang_64` on Mac OS X or `scons.bat Swift qt=C:\path\to\qt` on Windows to build Swift.
 
 This document only covers the general structure, project dependencies and building the Swift GUI application.
 More detailed information on building components, development, testing and packaging can be found in DEVELOPMENT.md.
@@ -29,6 +29,7 @@ to easy development. Third party dependencies not included are listed below:
 
 * OpenSSL is required when building Swiften on Linux or Android
 * Qt 5 is required by Swift; **Qt up to version Qt 5.5 is supported**
+* Python (2.5 <= version < 3)
 
 ## General Build Instructions
 The Swift projects use the SCons build system for build configuration and Build
@@ -36,7 +37,7 @@ execution. SCons is one of the included third party dependencies.
 
 To build all Swift components simply run SCons. On Mac OS X and Linux you run the `./scons` command. On Windows you run the `scons.bat` command in a Visual Studio developer shell.
 
-On multi-processor systems, i.e. most desktop and server machines, you can use the `-j NUMBER_OF_PARALLEL_TASKS` flag to speed up build time.
+On multi-processor systems, i.e. most desktop and server machines, you can use the `-j NUMBER_OF_PARALLEL_TASKS` flag, or pass the `max_jobs=1` to the `scons` command to speed up build time. The `max_jobs=1` argument will set the number of parallel tasks to the number of CPU cores available. Note that each parallel task increases the memory requirements for the overall build process.
 
 ## Platform Specific Instructions
 ### Mac OS X
