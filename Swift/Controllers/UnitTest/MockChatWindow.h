@@ -19,12 +19,12 @@ namespace Swift {
             virtual ~MockChatWindow();
 
             virtual std::string addMessage(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
-                lastMessageBody_ = bodyFromMessage(message);
+                lastAddedMessage_ = message;
                 return "id";
             }
 
             virtual std::string addAction(const ChatMessage& message, const std::string& /*senderName*/, bool /*senderIsSelf*/, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
-                lastAddedActionBody_ =bodyFromMessage(message);
+                lastAddedAction_ = message;
                 return "id";
             }
 
@@ -94,18 +94,27 @@ namespace Swift {
             virtual void setBookmarkState(RoomBookmarkState) {}
 
             static std::string bodyFromMessage(const ChatMessage& message) {
+                std::string body;
                 std::shared_ptr<ChatTextMessagePart> text;
+                std::shared_ptr<ChatHighlightingMessagePart> highlight;
                 foreach (std::shared_ptr<ChatMessagePart> part, message.getParts()) {
                     if ((text = std::dynamic_pointer_cast<ChatTextMessagePart>(part))) {
-                        return text->text;
+                        body += text->text;
+                    }
+                    else if ((highlight = std::dynamic_pointer_cast<ChatHighlightingMessagePart>(part))) {
+                        body += highlight->text;
                     }
                 }
-                return "";
+                return body;
+            }
+
+            void resetLastMessages() {
+                lastAddedMessage_ = lastAddedAction_ = lastAddedPresence_ = lastReplacedMessage_ = lastAddedSystemMessage_ = ChatMessage();
             }
 
             std::string name_;
-            std::string lastMessageBody_;
-            std::string lastAddedActionBody_;
+            ChatMessage lastAddedMessage_;
+            ChatMessage lastAddedAction_;
             ChatMessage lastAddedPresence_;
             ChatMessage lastReplacedMessage_;
             ChatMessage lastAddedSystemMessage_;

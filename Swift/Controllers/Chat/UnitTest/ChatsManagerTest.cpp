@@ -25,6 +25,7 @@
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/MUC/MUCManager.h>
@@ -81,6 +82,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
     CPPUNIT_TEST(testChatControllerMeMessageHandling);
+    CPPUNIT_TEST(testChatControllerMeMessageHandlingInMUC);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -88,9 +90,7 @@ public:
         mocks_ = new MockRepository();
         jid_ = JID("test@test.com/resource");
         stanzaChannel_ = new DummyStanzaChannel();
-        iqChannel_ = new DummyIQChannel();
-        iqRouter_ = new IQRouter(iqChannel_);
-//        capsProvider_ = new DummyCapsProvider();
+        iqRouter_ = new IQRouter(stanzaChannel_);
         eventController_ = new EventController();
         chatWindowFactory_ = mocks_->InterfaceMock<ChatWindowFactory>();
         joinMUCWindowFactory_ = mocks_->InterfaceMock<JoinMUCWindowFactory>();
@@ -116,6 +116,7 @@ public:
         wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsProvider_);
         wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
         highlightManager_ = new HighlightManager(settings_);
+        highlightManager_->resetToDefaultRulesList();
         handledHighlightActions_ = 0;
         soundsPlayed_.clear();
         highlightManager_->onHighlight.connect(boost::bind(&ChatsManagerTest::handleHighlightAction, this, _1));
@@ -132,7 +133,6 @@ public:
 
     void tearDown() {
         delete highlightManager_;
-        //delete chatListWindowFactory
         delete profileSettings_;
         delete avatarManager_;
         delete manager_;
@@ -149,10 +149,9 @@ public:
         delete presenceOracle_;
         delete nickResolver_;
         delete mucRegistry_;
+        delete iqRouter_;
         delete stanzaChannel_;
         delete eventController_;
-        delete iqRouter_;
-        delete iqChannel_;
         delete uiEventStream_;
         delete mucManager_;
         delete xmppRoster_;
@@ -173,7 +172,7 @@ public:
         std::string body("This is a legible message. >HEH@)oeueu");
         message->setBody(body);
         manager_->handleIncomingMessage(message);
-        CPPUNIT_ASSERT_EQUAL(body, window->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
     }
 
     void testSecondOpenWindowIncoming() {
@@ -187,7 +186,7 @@ public:
         std::string body1("This is a legible message. >HEH@)oeueu");
         message1->setBody(body1);
         manager_->handleIncomingMessage(message1);
-        CPPUNIT_ASSERT_EQUAL(body1, window1->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(body1, MockChatWindow::bodyFromMessage(window1->lastAddedMessage_));
 
         JID messageJID2("testling@test.com/resource2");
 
@@ -199,7 +198,7 @@ public:
         std::string body2("This is a legible message. .cmaulm.chul");
         message2->setBody(body2);
         manager_->handleIncomingMessage(message2);
-        CPPUNIT_ASSERT_EQUAL(body2, window1->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(body2, MockChatWindow::bodyFromMessage(window1->lastAddedMessage_));
     }
 
     void testFirstOpenWindowOutgoing() {
@@ -225,7 +224,7 @@ public:
         std::string body("This is a legible message. mjuga3089gm8G(*>M)@*(");
         message->setBody(body);
         manager_->handleIncomingMessage(message);
-        CPPUNIT_ASSERT_EQUAL(body, window->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
     }
 
     void testSecondWindow() {
@@ -261,7 +260,7 @@ public:
         std::string messageBody1("This is a legible message.");
         message1->setBody(messageBody1);
         manager_->handleIncomingMessage(message1);
-        CPPUNIT_ASSERT_EQUAL(messageBody1, window->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(messageBody1, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
 
         std::shared_ptr<Presence> jid1Online(new Presence());
         jid1Online->setFrom(JID(fullJIDString1));
@@ -275,7 +274,7 @@ public:
         std::string messageBody2("This is another legible message.");
         message2->setBody(messageBody2);
         manager_->handleIncomingMessage(message2);
-        CPPUNIT_ASSERT_EQUAL(messageBody2, window->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(messageBody2, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
     }
 
     /**
@@ -362,14 +361,14 @@ public:
         std::string body3("This is a legible message3.");
         message3->setBody(body3);
         manager_->handleIncomingMessage(message3);
-        CPPUNIT_ASSERT_EQUAL(body3, window1->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(body3, MockChatWindow::bodyFromMessage(window1->lastAddedMessage_));
 
         std::shared_ptr<Message> message2b(new Message());
         message2b->setFrom(messageJID2);
         std::string body2b("This is a legible message2b.");
         message2b->setBody(body2b);
         manager_->handleIncomingMessage(message2b);
-        CPPUNIT_ASSERT_EQUAL(body2b, window1->lastMessageBody_);
+        CPPUNIT_ASSERT_EQUAL(body2b, MockChatWindow::bodyFromMessage(window1->lastAddedMessage_));
     }
 
     /**
@@ -385,15 +384,15 @@ public:
 
         std::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
         manager_->handleIncomingMessage(message);
-        Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
-        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
+        Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(1);
+        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->countSentStanzaOfType<Message>());
         CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != nullptr);
 
         xmppRoster_->removeContact(messageJID);
 
         message->setID("2");
         manager_->handleIncomingMessage(message);
-        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
+        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->countSentStanzaOfType<Message>());
     }
 
     /**
@@ -409,14 +408,14 @@ public:
         std::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
         manager_->handleIncomingMessage(message);
 
-        CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->sentStanzas.size());
+        CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->countSentStanzaOfType<Message>());
 
         xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), RosterItemPayload::Both);
         message->setID("2");
         manager_->handleIncomingMessage(message);
 
-        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
-        Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
+        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->countSentStanzaOfType<Message>());
+        Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(1);
         CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != nullptr);
     }
 
@@ -469,8 +468,8 @@ public:
         window->onSendMessageRequest("hello there", false);
 
         // A bare message is send because no resources is bound.
-        CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(0)->getTo());
-        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(0)->getPayload<DeliveryReceiptRequest>());
+        CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(1)->getTo());
+        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
 
         // Two resources respond with message receipts.
         foreach(const JID& senderJID, senderResource) {
@@ -479,7 +478,7 @@ public:
             receiptReply->setTo(ownJID);
 
             std::shared_ptr<DeliveryReceipt> receipt = std::make_shared<DeliveryReceipt>();
-            receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(0)->getID());
+            receipt->setReceivedID(stanzaChannel_->getStanzaAtIndex<Message>(1)->getID());
             receiptReply->addPayload(receipt);
             manager_->handleIncomingMessage(receiptReply);
         }
@@ -514,7 +513,7 @@ public:
         window->onSendMessageRequest("great to hear.", false);
 
         // The chat session is bound to the full JID of the first resource.
-        CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(2)->getTo());
+        CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(3)->getTo());
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(2)->getPayload<DeliveryReceiptRequest>());
 
         // Receive random receipt from second sender resource.
@@ -545,8 +544,8 @@ public:
         window->onSendMessageRequest("okay", false);
 
         // The chat session is now bound to the full JID of the second resource.
-        CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(4)->getTo());
-        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(4)->getPayload<DeliveryReceiptRequest>());
+        CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(5)->getTo());
+        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(5)->getPayload<DeliveryReceiptRequest>());
     }
 
     void testChatControllerFullJIDBindingOnTypingAndNotActive() {
@@ -584,8 +583,8 @@ public:
         window->onSendMessageRequest("hello there", false);
 
         // A bare message is send because no resources is bound.
-        CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(0)->getTo());
-        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(0)->getPayload<DeliveryReceiptRequest>());
+        CPPUNIT_ASSERT_EQUAL(sender, stanzaChannel_->getStanzaAtIndex<Message>(1)->getTo());
+        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
 
         // Two resources respond with message receipts.
         foreach(const JID& senderJID, senderResource) {
@@ -632,8 +631,8 @@ public:
         window->onSendMessageRequest("great to hear.", false);
 
         // The chat session is now bound to the full JID of the first resource due to its recent composing message.
-        CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(2)->getTo());
-        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(2)->getPayload<DeliveryReceiptRequest>());
+        CPPUNIT_ASSERT_EQUAL(senderResource[0], stanzaChannel_->getStanzaAtIndex<Message>(3)->getTo());
+        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(3)->getPayload<DeliveryReceiptRequest>());
 
         // Reply with a message including a CSN from the other resource.
         reply = std::make_shared<Message>();
@@ -649,8 +648,8 @@ public:
         window->onSendMessageRequest("ping.", false);
 
         // The chat session is now bound to the full JID of the second resource due to its recent composing message.
-        CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(3)->getTo());
-        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(3)->getPayload<DeliveryReceiptRequest>());
+        CPPUNIT_ASSERT_EQUAL(senderResource[1], stanzaChannel_->getStanzaAtIndex<Message>(4)->getTo());
+        CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(4)->getPayload<DeliveryReceiptRequest>());
     }
 
     void testChatControllerPMPresenceHandling() {
@@ -697,14 +696,14 @@ public:
 
         CPPUNIT_ASSERT_EQUAL(false, window->impromptuMUCSupported_);
 
-        std::shared_ptr<IQ> infoRequest= iqChannel_->iqs_[1];
+        std::shared_ptr<IQ> infoRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[1]);
         std::shared_ptr<IQ> infoResponse = IQ::createResult(infoRequest->getFrom(), infoRequest->getTo(), infoRequest->getID());
 
         DiscoInfo info;
         info.addIdentity(DiscoInfo::Identity("Shakespearean Chat Service", "conference", "text"));
         info.addFeature("http://jabber.org/protocol/muc");
         infoResponse->addPayload(std::make_shared<DiscoInfo>(info));
-        iqChannel_->onIQReceived(infoResponse);
+        stanzaChannel_->onIQReceived(infoResponse);
 
         CPPUNIT_ASSERT_EQUAL(true, window->impromptuMUCSupported_);
         manager_->setOnline(false);
@@ -722,14 +721,14 @@ public:
         std::shared_ptr<Message> message = makeDeliveryReceiptTestMessage(messageJID, "1");
         manager_->handleIncomingMessage(message);
 
-        CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->sentStanzas.size());
+        CPPUNIT_ASSERT_EQUAL(st(0), stanzaChannel_->countSentStanzaOfType<Message>());
 
         xmppRoster_->addContact(messageJID, "foo", std::vector<std::string>(), to);
         message->setID("2");
         manager_->handleIncomingMessage(message);
 
-        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->sentStanzas.size());
-        Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(0);
+        CPPUNIT_ASSERT_EQUAL(st(1), stanzaChannel_->countSentStanzaOfType<Message>());
+        Stanza::ref stanzaContactOnRoster = stanzaChannel_->getStanzaAtIndex<Stanza>(1);
         CPPUNIT_ASSERT(stanzaContactOnRoster->getPayload<DeliveryReceipt>() != nullptr);
     }
 
@@ -815,7 +814,73 @@ public:
         std::string body("/me is feeling delighted.");
         message->setBody(body);
         manager_->handleIncomingMessage(message);
-        CPPUNIT_ASSERT_EQUAL(std::string("is feeling delighted."), window->lastAddedActionBody_);
+        CPPUNIT_ASSERT_EQUAL(std::string("is feeling delighted."), window->bodyFromMessage(window->lastAddedAction_));
+    }
+
+    void testChatControllerMeMessageHandlingInMUC() {
+        JID mucJID("mucroom@rooms.test.com");
+        std::string nickname = "toodles";
+
+        // add highlight rule for 'foo'
+        HighlightRule fooHighlight;
+        fooHighlight.setKeywords({"foo"});
+        fooHighlight.setMatchMUC(true);
+        fooHighlight.getAction().setTextBackground("green");
+        highlightManager_->insertRule(0, fooHighlight);
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
+
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(mucJID, boost::optional<std::string>(), nickname));
+
+        auto genRemoteMUCPresence = [=]() {
+            auto presence = Presence::create();
+            presence->setFrom(mucJID.withResource(nickname));
+            presence->setTo(jid_);
+            return presence;
+        };
+
+        {
+            auto presence = genRemoteMUCPresence();
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addStatusCode(110);
+            userPayload->addItem(MUCItem(MUCOccupant::Owner, jid_, MUCOccupant::Moderator));
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+
+        {
+            auto presence = genRemoteMUCPresence();
+            presence->setFrom(mucJID.withResource("someDifferentNickname"));
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addItem(MUCItem(MUCOccupant::Member, JID("foo@bar.com"), MUCOccupant::Moderator));
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+
+        window->onSendMessageRequest("/me sends a test message with foo", false);
+
+        window->resetLastMessages();
+        {
+            Message::ref mucMirrored = std::make_shared<Message>();
+            mucMirrored->setFrom(mucJID.withResource(nickname));
+            mucMirrored->setTo(jid_);
+            mucMirrored->setType(Message::Groupchat);
+            mucMirrored->setBody("/me sends a test message with foo");
+            manager_->handleIncomingMessage(mucMirrored);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("sends a test message with foo"), window->bodyFromMessage(window->lastAddedAction_));
+
+        window->resetLastMessages();
+        {
+            Message::ref mucMirrored = std::make_shared<Message>();
+            mucMirrored->setFrom(mucJID.withResource("someDifferentNickname"));
+            mucMirrored->setTo(jid_);
+            mucMirrored->setType(Message::Groupchat);
+            mucMirrored->setBody("/me says hello with a test message with foo and foo");
+            manager_->handleIncomingMessage(mucMirrored);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("says hello with a test message with foo and foo"), window->bodyFromMessage(window->lastAddedAction_));
     }
 
 private:
@@ -843,7 +908,6 @@ private:
     JID jid_;
     ChatsManager* manager_;
     DummyStanzaChannel* stanzaChannel_;
-    DummyIQChannel* iqChannel_;
     IQRouter* iqRouter_;
     EventController* eventController_;
     ChatWindowFactory* chatWindowFactory_;

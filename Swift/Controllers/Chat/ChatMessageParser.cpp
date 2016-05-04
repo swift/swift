@@ -14,7 +14,6 @@
 
 #include <Swiften/Base/Regex.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 
 #include <SwifTools/Linkify.h>
 
@@ -68,13 +67,12 @@ namespace Swift {
         return parsedMessage;
     }
 
-    ChatWindow::ChatMessage ChatMessageParser::emoticonHighlight(const ChatWindow::ChatMessage& message)
-    {
+    ChatWindow::ChatMessage ChatMessageParser::emoticonHighlight(const ChatWindow::ChatMessage& message) {
         ChatWindow::ChatMessage parsedMessage = message;
 
         std::string regexString;
         /* Parse two, emoticons */
-        foreach (StringPair emoticon, emoticons_) {
+        for (StringPair emoticon : emoticons_) {
             /* Construct a regexp that finds an instance of any of the emoticons inside a group
              * at the start or end of the line, or beside whitespace.
              */
@@ -91,7 +89,7 @@ namespace Swift {
             boost::regex emoticonRegex(regexString);
 
             ChatWindow::ChatMessage newMessage;
-            foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
+            for (std::shared_ptr<ChatWindow::ChatMessagePart> part : parsedMessage.getParts()) {
                 std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
                 if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
                     try {
@@ -142,8 +140,7 @@ namespace Swift {
         return parsedMessage;
     }
 
-    ChatWindow::ChatMessage ChatMessageParser::splitHighlight(const ChatWindow::ChatMessage& message, const std::string& nick)
-    {
+    ChatWindow::ChatMessage ChatMessageParser::splitHighlight(const ChatWindow::ChatMessage& message, const std::string& nick) {
         ChatWindow::ChatMessage parsedMessage = message;
 
         for (size_t i = 0; i < highlightRules_->getSize(); ++i) {
@@ -156,9 +153,9 @@ namespace Swift {
                 continue; /* do not try to highlight text, if no highlight color is specified */
             }
             const std::vector<boost::regex> keywordRegex = rule.getKeywordRegex(nick);
-            foreach(const boost::regex& regex, keywordRegex) {
+            for (const boost::regex& regex : keywordRegex) {
                 ChatWindow::ChatMessage newMessage;
-                foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, parsedMessage.getParts()) {
+                for (std::shared_ptr<ChatWindow::ChatMessagePart> part : parsedMessage.getParts()) {
                     std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
                     if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
                         try {
@@ -191,7 +188,7 @@ namespace Swift {
                         newMessage.append(part);
                     }
                 }
-                parsedMessage = newMessage;
+                parsedMessage.setParts(newMessage.getParts());
             }
         }
 

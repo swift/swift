@@ -79,6 +79,16 @@ namespace Swift {
                 return std::dynamic_pointer_cast<T>(sentStanzas[index]);
             }
 
+            template<typename T> size_t countSentStanzaOfType() {
+                size_t count = 0;
+                for (auto& stanza : sentStanzas) {
+                    if (std::dynamic_pointer_cast<T>(stanza)) {
+                        count++;
+                    }
+                }
+                return count;
+            }
+
             std::vector<Certificate::ref> getPeerCertificateChain() const {
                 return std::vector<Certificate::ref>();
             }
