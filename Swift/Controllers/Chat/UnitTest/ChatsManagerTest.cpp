@@ -89,6 +89,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
     CPPUNIT_TEST(testChatControllerMeMessageHandling);
+	CPPUNIT_TEST(testRestartingMUCComponentCrash);
     CPPUNIT_TEST(testChatControllerMeMessageHandlingInMUC);
 
     // Carbons tests
@@ -820,6 +821,54 @@ public:
         message->setBody(body);
         manager_->handleIncomingMessage(message);
         CPPUNIT_ASSERT_EQUAL(std::string("is feeling delighted."), window->bodyFromMessage(window->lastAddedAction_));
+    }
+
+   void testRestartingMUCComponentCrash() {
+        JID mucJID = JID("teaparty@rooms.wonderland.lit");
+        JID self = JID("girl@wonderland.lit/rabbithole");
+        std::string nick = "aLiCe";
+
+        MockChatWindow* window;
+
+        auto genRemoteMUCPresence = [=]() {
+            auto presence = Presence::create();
+            presence->setFrom(mucJID.withResource(nick));
+            presence->setTo(self);
+            return presence;
+        };
+
+        // User rejoins.
+        window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
+
+        // Join room
+        {
+            auto joinRoomEvent = std::make_shared<JoinMUCUIEvent>(mucJID, boost::optional<std::string>(), nick);
+            uiEventStream_->send(joinRoomEvent);
+        }
+
+        {
+            auto firstPresence = genRemoteMUCPresence();
+            firstPresence->setType(Presence::Unavailable);
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addItem(MUCItem(MUCOccupant::Owner, MUCOccupant::NoRole));
+            firstPresence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(firstPresence);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("Couldn't enter room: Unable to enter this room."), MockChatWindow::bodyFromMessage(window->lastAddedErrorMessage_));
+
+        {
+            auto presence = genRemoteMUCPresence();
+            presence->setType(Presence::Unavailable);
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addStatusCode(303);
+            auto item = MUCItem(MUCOccupant::Owner, self, MUCOccupant::Moderator);
+            item.nick = nick;
+            userPayload->addItem(item);
+            userPayload->addStatusCode(110);
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
     }
 
     void testChatControllerMeMessageHandlingInMUC() {

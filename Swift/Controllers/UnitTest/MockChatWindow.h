@@ -40,7 +40,9 @@ namespace Swift {
                 lastAddedPresence_ = message;
             }
 
-            virtual void addErrorMessage(const ChatMessage& /*message*/) {}
+            virtual void addErrorMessage(const ChatMessage& message) {
+                lastAddedErrorMessage_ = message;
+            }
             virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
             virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
             virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour /*timestampBehaviour*/) {
@@ -134,6 +136,7 @@ namespace Swift {
             ChatMessage lastReplacedMessage_;
             ChatMessage lastAddedSystemMessage_;
             ChatMessage lastReplacedSystemMessage_;
+			ChatMessage lastAddedErrorMessage_;
             JID lastMUCInvitationJID_;
             std::vector<SecurityLabelsCatalog::Item> labels_;
             bool labelsEnabled_;

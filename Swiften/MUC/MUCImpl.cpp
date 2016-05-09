@@ -10,7 +10,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/CapsInfo.h>
 #include <Swiften/Elements/Form.h>
@@ -138,7 +137,7 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
     }
 
     MUCUserPayload::ref mucPayload;
-    foreach (MUCUserPayload::ref payload, presence->getPayloads<MUCUserPayload>()) {
+    for (MUCUserPayload::ref payload : presence->getPayloads<MUCUserPayload>()) {
         if (!payload->getItems().empty() || !payload->getStatusCodes().empty()) {
             mucPayload = payload;
         }
@@ -148,11 +147,10 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
     // (i.e. we start getting non-error presence from the MUC) or not
     if (!joinSucceeded_) {
         if (presence->getType() == Presence::Error) {
-            std::string reason;
             onJoinFailed(presence->getPayload<ErrorPayload>());
             return;
         }
-        else {
+        else if (presence->getType() == Presence::Available) {
             joinSucceeded_ = true;
             presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
             if (presenceSender->getLastSentUndirectedPresence() && !isEqualExceptID(**(presenceSender->getLastSentUndirectedPresence()), *joinRequestPresence_)) {
@@ -161,6 +159,10 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
                 latestPresence->setTo(ownMUCJID);
                 presenceSender->sendPresence(latestPresence);
             }
+        }
+        else if (presence->getType() == Presence::Unavailable) {
+            onJoinFailed(std::shared_ptr<ErrorPayload>());
+            return;
         }
     }
 
@@ -188,19 +190,21 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
             if (std::dynamic_pointer_cast<MUCDestroyPayload>(mucPayload->getPayload())) {
                 type = LeaveDestroy;
             }
-            else foreach (MUCUserPayload::StatusCode status, mucPayload->getStatusCodes()) {
-                if (status.code == 307) {
-                    type = LeaveKick;
-                }
-                else if (status.code == 301) {
-                    type = LeaveBan;
-                }
-                else if (status.code == 321) {
-                    type = LeaveNotMember;
-                }
-                else if (status.code == 303) {
-                    if (mucPayload->getItems().size() == 1) {
-                        newNickname = mucPayload->getItems()[0].nick;
+            else {
+                for (MUCUserPayload::StatusCode status : mucPayload->getStatusCodes()) {
+                    if (status.code == 307) {
+                        type = LeaveKick;
+                    }
+                    else if (status.code == 301) {
+                        type = LeaveBan;
+                    }
+                    else if (status.code == 321) {
+                        type = LeaveNotMember;
+                    }
+                    else if (status.code == 303) {
+                        if (mucPayload->getItems().size() == 1) {
+                            newNickname = mucPayload->getItems()[0].nick;
+                        }
                     }
                 }
             }
@@ -254,50 +258,53 @@ void MUCImpl::handleIncomingPresence(Presence::ref presence) {
             onOccupantJoined(result.first->second);
         }
         onOccupantPresenceChange(presence);
-    }
-    if (mucPayload && !joinComplete_) {
-        bool isLocked = false;
-        foreach (MUCUserPayload::StatusCode status, mucPayload->getStatusCodes()) {
-            if (status.code == 110) {
-                /* Simply knowing this is your presence is enough, 210 doesn't seem to be necessary. */
-                joinComplete_ = true;
-                if (ownMUCJID != presence->getFrom()) {
-                    presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-                    ownMUCJID = presence->getFrom();
-                    presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
+
+        if (mucPayload && !joinComplete_) {
+            bool isLocked = false;
+            for (MUCUserPayload::StatusCode status : mucPayload->getStatusCodes()) {
+                if (status.code == 110) {
+                    /* Simply knowing this is your presence is enough, 210 doesn't seem to be necessary. */
+                    joinComplete_ = true;
+                    if (ownMUCJID != presence->getFrom()) {
+                        presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+                        ownMUCJID = presence->getFrom();
+                        presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
+                    }
+                }
+                // MUC status 201: a new room has been created
+                if (status.code == 201) {
+                    isLocked = true;
+                    /* Room is created and locked */
+                    /* Currently deal with this by making an instant room */
+                    if (ownMUCJID != presence->getFrom()) {
+                        presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+                        ownMUCJID = presence->getFrom();
+                        presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
+                    }
+                    if (createAsReservedIfNew) {
+                        unlocking = true;
+                        requestConfigurationForm();
+                    }
+                    else {
+                        // Accept default room configuration and create an instant room http://xmpp.org/extensions/xep-0045.html#createroom-instant
+                        MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
+                        presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
+                        mucPayload->setPayload(std::make_shared<Form>(Form::SubmitType));
+                        std::shared_ptr< GenericRequest<MUCOwnerPayload> > request = std::make_shared< GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
+                        request->onResponse.connect(boost::bind(&MUCImpl::handleCreationConfigResponse, this, _1, _2));
+                        request->send();
+                    }
                 }
             }
-            // MUC status 201: a new room has been created
-            if (status.code == 201) {
-                isLocked = true;
-                /* Room is created and locked */
-                /* Currently deal with this by making an instant room */
-                if (ownMUCJID != presence->getFrom()) {
-                    presenceSender->removeDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-                    ownMUCJID = presence->getFrom();
-                    presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::AndSendPresence);
-                }
-                if (createAsReservedIfNew) {
-                    unlocking = true;
-                    requestConfigurationForm();
-                }
-                else {
-                    // Accept default room configuration and create an instant room http://xmpp.org/extensions/xep-0045.html#createroom-instant
-                    MUCOwnerPayload::ref mucPayload(new MUCOwnerPayload());
-                    presenceSender->addDirectedPresenceReceiver(ownMUCJID, DirectedPresenceSender::DontSendPresence);
-                    mucPayload->setPayload(std::make_shared<Form>(Form::SubmitType));
-                    std::shared_ptr< GenericRequest<MUCOwnerPayload> > request = std::make_shared< GenericRequest<MUCOwnerPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
-                    request->onResponse.connect(boost::bind(&MUCImpl::handleCreationConfigResponse, this, _1, _2));
-                    request->send();
-                }
+
+            if (joinComplete_ && !isLocked) {
+                assert(hasOccupant(getOwnNick()));
+                onJoinComplete(getOwnNick());
             }
-        }
-        if (joinComplete_ && !isLocked) {
-            onJoinComplete(getOwnNick());
-        }
-        if (!isLocked && !isUnlocked_ && (presence->getFrom() == ownMUCJID)) {
-            isUnlocked_ = true;
-            onUnlocked();
+            if (!isLocked && !isUnlocked_ && (presence->getFrom() == ownMUCJID)) {
+                isUnlocked_ = true;
+                onUnlocked();
+            }
         }
     }
 }
@@ -377,7 +384,7 @@ void MUCImpl::handleAffiliationListResponse(MUCAdminPayload::ref payload, ErrorP
     }
     else {
         std::vector<JID> jids;
-        foreach (MUCItem item, payload->getItems()) {
+        for (MUCItem item : payload->getItems()) {
             if (item.realJID) {
                 jids.push_back(*item.realJID);
             }
