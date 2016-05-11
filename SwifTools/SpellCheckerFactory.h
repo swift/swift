@@ -28,6 +28,6 @@ namespace Swift {
     class SpellCheckerFactory {
         public:
             SpellCheckerFactory();
-            SpellChecker* createSpellChecker(const std::string& dictFile);
+            SpellChecker* createSpellChecker();
     };
 }

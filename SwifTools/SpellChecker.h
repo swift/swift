@@ -14,24 +14,28 @@
 
 #include <vector>
 
-#include <boost/algorithm/string.hpp>
-#include <boost/tuple/tuple.hpp>
-
 #include <SwifTools/SpellParser.h>
 
 namespace Swift {
     class SpellChecker {
         public:
             SpellChecker() {
-                parser_ = new SpellParser();
             }
+
             virtual ~SpellChecker() {
-                delete parser_;
             }
+
+            virtual bool isAutomaticallyDetectingLanguage() = 0;
+
+            virtual void setActiveLanguage(const std::string& language) = 0;
+            virtual std::string activeLanguage() const = 0;
+            virtual std::vector<std::string> supportedLanguages() const = 0;
+
             virtual bool isCorrect(const std::string& word) = 0;
             virtual void getSuggestions(const std::string& word, std::vector<std::string>& list) = 0;
             virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions) = 0;
+
         protected:
-            SpellParser *parser_;
+            SpellParser parser_;
     };
 }

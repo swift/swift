@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,9 +58,7 @@ namespace Swift {
              */
             static const SettingsProvider::Setting<std::string> HIGHLIGHT_RULES;
             static const SettingsProvider::Setting<bool> SPELL_CHECKER;
-            static const SettingsProvider::Setting<std::string> DICT_PATH;
-            static const SettingsProvider::Setting<std::string> PERSONAL_DICT_PATH;
-            static const SettingsProvider::Setting<std::string> DICT_FILE;
+            static const SettingsProvider::Setting<std::string> SPELL_CHECKER_LANGUAGE;
             /**
              * The #INVITE_AUTO_ACCEPT_MODE setting specifies how to handle invites to chat rooms.
              *

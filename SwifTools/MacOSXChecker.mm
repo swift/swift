@@ -13,6 +13,7 @@
 #include <SwifTools/MacOSXChecker.h>
 
 #include <algorithm>
+#include <cassert>
 
 #include <boost/algorithm/string.hpp>
 
@@ -31,6 +32,21 @@ MacOSXChecker::~MacOSXChecker() {
 bool MacOSXChecker::isCorrect(const std::string& /*word*/) {
     // No content since it doesn't seem to be used anywhere.
     return false;
+}
+
+bool MacOSXChecker::isAutomaticallyDetectingLanguage() {
+    return true;
+}
+
+void MacOSXChecker::setActiveLanguage(const std::string& /*language*/) {
+    assert(false);
+}
+
+std::string MacOSXChecker::activeLanguage() const {
+    assert(false);
+}
+std::vector<std::string> MacOSXChecker::supportedLanguages() const {
+    assert(false);
 }
 
 void MacOSXChecker::getSuggestions(const std::string& word, std::vector<std::string>& list) {

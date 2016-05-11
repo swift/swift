@@ -179,17 +179,17 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
 
 
 #ifdef HAVE_SPELLCHECKER
-void QtTextEdit::setUpSpellChecker()
-{
+void QtTextEdit::setUpSpellChecker() {
     delete highlighter_;
     highlighter_ = nullptr;
     delete checker_;
     checker_ = nullptr;
     if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
-        std::string dictPath = settings_->getSetting(SettingConstants::DICT_PATH);
-        std::string dictFile = settings_->getSetting(SettingConstants::DICT_FILE);
-        checker_ = SpellCheckerFactory().createSpellChecker(dictPath + dictFile);
+        checker_ = SpellCheckerFactory().createSpellChecker();
         if (checker_) {
+            if (!checker_->isAutomaticallyDetectingLanguage()) {
+                checker_->setActiveLanguage(settings_->getSetting(SettingConstants::SPELL_CHECKER_LANGUAGE));
+            }
             highlighter_ = new QtSpellCheckHighlighter(document(), checker_);
         }
         else {
@@ -213,12 +213,18 @@ void QtTextEdit::spellCheckerSettingsWindow() {
         spellCheckerWindow_->raise();
         spellCheckerWindow_->activateWindow();
     }
+    if (checker_) {
+        spellCheckerWindow_->setAutomaticallyIdentifiesLanguage(checker_->isAutomaticallyDetectingLanguage());
+        if (!checker_->isAutomaticallyDetectingLanguage()) {
+            spellCheckerWindow_->setSupportedLanguages(checker_->supportedLanguages());
+            spellCheckerWindow_->setActiveLanguage(checker_->activeLanguage());
+        }
+    }
 }
 
 void QtTextEdit::handleSettingChanged(const std::string& settings) {
-    if (settings == SettingConstants::SPELL_CHECKER.getKey()
-        || settings == SettingConstants::DICT_PATH.getKey()
-        || settings == SettingConstants::DICT_FILE.getKey()) {
+    if (settings == SettingConstants::SPELL_CHECKER.getKey() ||
+        settings == SettingConstants::SPELL_CHECKER_LANGUAGE.getKey()) {
 #ifdef HAVE_SPELLCHECKER
         setUpSpellChecker();
         if (highlighter_) {

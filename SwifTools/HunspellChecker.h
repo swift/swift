@@ -12,10 +12,13 @@
 
 #pragma once
 
+#include <memory>
+#include <string>
+#include <unordered_map>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/optional.hpp>
 
 #include <SwifTools/SpellChecker.h>
 
@@ -24,12 +27,31 @@ class Hunspell;
 namespace Swift {
     class HunspellChecker : public SpellChecker {
         public:
-            HunspellChecker(const char* affix_path, const char* dict_path);
+            HunspellChecker();
             virtual ~HunspellChecker();
+
+            virtual bool isAutomaticallyDetectingLanguage();
+
+            virtual void setActiveLanguage(const std::string& language);
+            virtual std::string activeLanguage() const;
+            virtual std::vector<std::string> supportedLanguages() const;
+
             virtual bool isCorrect(const std::string& word);
             virtual void getSuggestions(const std::string& word, std::vector<std::string>& list);
             virtual void checkFragment(const std::string& fragment, PositionPairList& misspelledPositions);
+
         private:
-            Hunspell* speller_;
+            struct Dictionary {
+                std::string dicPath;
+                std::string affPath;
+            };
+
+            std::unordered_map<std::string, Dictionary> detectedDictionaries() const;
+            std::vector<std::string> hunspellDictionaryPaths() const;
+
+        private:
+            std::unique_ptr<Hunspell> speller_;
+            boost::optional<std::string> activeLangauge_;
+
     };
 }

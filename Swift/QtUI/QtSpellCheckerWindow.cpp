@@ -18,6 +18,8 @@
 #include <QStringList>
 #include <QTimer>
 
+#include <Swiften/Base/Log.h>
+
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 
@@ -38,7 +40,6 @@ QtSpellCheckerWindow::QtSpellCheckerWindow(SettingsProvider* settings, QWidget* 
     connect(ui_.spellChecker, SIGNAL(toggled(bool)), this, SLOT(handleChecker(bool)));
     connect(ui_.cancel, SIGNAL(clicked()), this, SLOT(handleCancel()));
     connect(ui_.apply, SIGNAL(clicked()), this, SLOT(handleApply()));
-    connect(ui_.pathButton, SIGNAL(clicked()), this, SLOT(handlePathButton()));
     setFromSettings();
 }
 
@@ -48,14 +49,32 @@ void QtSpellCheckerWindow::shrinkWindow() {
 
 void QtSpellCheckerWindow::setFromSettings() {
     ui_.spellChecker->setChecked(settings_->getSetting(SettingConstants::SPELL_CHECKER));
-    ui_.pathContent->setText(P2QSTRING(settings_->getSetting(SettingConstants::DICT_PATH)));
-    ui_.currentLanguageValue->setText(P2QSTRING(settings_->getSetting(SettingConstants::DICT_FILE)));
-    std::string currentPath = settings_->getSetting(SettingConstants::DICT_PATH);
-    QString filename = "*.dic";
-    QDir dictDirectory = QDir(P2QSTRING(currentPath));
-    QStringList files = dictDirectory.entryList(QStringList(filename), QDir::Files);
-    showFiles(files);
     setEnabled(settings_->getSetting(SettingConstants::SPELL_CHECKER));
+}
+
+void QtSpellCheckerWindow::setSupportedLanguages(const std::vector<std::string>& languages) {
+    languageItems_.clear();
+    ui_.languageView->clear();
+    for (const auto& shortLang : languages) {
+        auto locale = QLocale(P2QSTRING(shortLang));
+        auto label = QString("%1 ( %2 )").arg(locale.nativeLanguageName(), locale.nativeCountryName());
+
+        QListWidgetItem* item = new QListWidgetItem(label);
+        item->setData(Qt::UserRole, P2QSTRING(shortLang));
+        languageItems_[shortLang] = item;
+        ui_.languageView->addItem(item);
+    }
+}
+
+void QtSpellCheckerWindow::setActiveLanguage(const std::string& language) {
+    SWIFT_LOG_ASSERT(languageItems_.find(language) != languageItems_.end(), warning) << "Language '" << language << "' is not available." << std::endl;
+    if (languageItems_.find(language) != languageItems_.end()) {
+        languageItems_[language]->setSelected(true);
+    }
+}
+
+void QtSpellCheckerWindow::setAutomaticallyIdentifiesLanguage(bool isAutomaticallyIdentifying) {
+    ui_.languageView->setHidden(isAutomaticallyIdentifying);
 }
 
 void QtSpellCheckerWindow::handleChecker(bool state) {
@@ -63,12 +82,6 @@ void QtSpellCheckerWindow::handleChecker(bool state) {
 }
 
 void QtSpellCheckerWindow::setEnabled(bool state) {
-    ui_.pathContent->setEnabled(state);
-    ui_.languageView->setEnabled(state);
-    ui_.pathButton->setEnabled(state);
-    ui_.pathLabel->setEnabled(state);
-    ui_.currentLanguage->setEnabled(state);
-    ui_.currentLanguageValue->setEnabled(state);
     ui_.language->setEnabled(state);
 }
 
@@ -76,47 +89,13 @@ void QtSpellCheckerWindow::handleApply() {
     settings_->storeSetting(SettingConstants::SPELL_CHECKER, ui_.spellChecker->isChecked());
     QList<QListWidgetItem* > selectedLanguage = ui_.languageView->selectedItems();
     if (!selectedLanguage.empty()) {
-        settings_->storeSetting(SettingConstants::DICT_FILE, Q2PSTRING((selectedLanguage.first())->text()));
+        settings_->storeSetting(SettingConstants::SPELL_CHECKER_LANGUAGE, Q2PSTRING(selectedLanguage.first()->data(Qt::UserRole).toString()));
     }
     this->done(0);
 }
 
 void QtSpellCheckerWindow::handleCancel() {
     this->done(0);
-}
-
-void QtSpellCheckerWindow::handlePathButton() {
-    std::string currentPath = settings_->getSetting(SettingConstants::DICT_PATH);
-    QString dirpath = QFileDialog::getExistingDirectory(this, tr("Dictionary Path"), P2QSTRING(currentPath));
-    if (dirpath != P2QSTRING(currentPath)) {
-        ui_.languageView->clear();
-        settings_->storeSetting(SettingConstants::DICT_FILE, "");
-        ui_.currentLanguageValue->setText(" ");
-    }
-    if (!dirpath.isEmpty()) {
-        if (!dirpath.endsWith("/")) {
-            dirpath.append("/");
-        }
-        settings_->storeSetting(SettingConstants::DICT_PATH, Q2PSTRING(dirpath));
-        QDir dictDirectory = QDir(dirpath);
-        ui_.pathContent->setText(dirpath);
-        QString filename = "*.dic";
-        QStringList files = dictDirectory.entryList(QStringList(filename), QDir::Files);
-        showFiles(files);
-    }
-}
-
-void QtSpellCheckerWindow::handlePersonalPathButton() {
-    std::string currentPath = settings_->getSetting(SettingConstants::PERSONAL_DICT_PATH);
-    QString filename = QFileDialog::getOpenFileName(this, tr("Select Personal Dictionary"), P2QSTRING(currentPath), tr("(*.dic"));
-    settings_->storeSetting(SettingConstants::PERSONAL_DICT_PATH, Q2PSTRING(filename));
-}
-
-void QtSpellCheckerWindow::showFiles(const QStringList& files) {
-    ui_.languageView->clear();
-    for (int i = 0; i < files.size(); ++i) {
-        ui_.languageView->insertItem(i, files[i]);
-    }
 }
 
 }

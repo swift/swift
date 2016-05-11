@@ -48,7 +48,7 @@ vars.Add("openssl_libnames", "Comma-separated openssl library names to override 
 vars.Add("openssl_include", "Location of OpenSSL include files (if not under (openssl)/include)", None)
 vars.Add("openssl_libdir", "Location of OpenSSL library files (if not under (openssl)/lib)", None)
 vars.Add(PackageVariable("hunspell_prefix", "Hunspell location", False))
-vars.Add(BoolVariable("hunspell_enable", "Build with Hunspell support", False))
+vars.Add(BoolVariable("hunspell_enable", "Build with Hunspell support", True))
 vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("boost_bundled_enable", "Allow use of bundled Boost as last resort", "true"))
