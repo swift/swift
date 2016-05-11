@@ -4,15 +4,14 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubRetractSerializer.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
+
 #include <memory>
 
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubItemSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;
@@ -32,7 +31,9 @@ std::string PubSubRetractSerializer::serializePayload(std::shared_ptr<PubSubRetr
     foreach(std::shared_ptr<PubSubItem> item, payload->getItems()) {
         element.addNode(std::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
     }
-    element.setAttribute("notify", payload->isNotify() ? "true" : "false");
+    if (payload->isNotify().is_initialized()) {
+        element.setAttribute("notify", payload->isNotify().get() ? "true" : "false");
+    }
     return element.serialize();
 }
 

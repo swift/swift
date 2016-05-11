@@ -4,15 +4,12 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Parser/PayloadParsers/PubSubRetractParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParsers/PubSubItemParser.h>
 
 using namespace Swift;
@@ -29,7 +26,11 @@ void PubSubRetractParser::handleStartElement(const std::string& element, const s
             getPayloadInternal()->setNode(*attributeValue);
         }
         if (boost::optional<std::string> attributeValue = attributes.getAttributeValue("notify")) {
-            getPayloadInternal()->setNotify(*attributeValue == "true" ? true : false);
+            boost::optional<bool> notify;
+            if (attributeValue.is_initialized()) {
+                notify = (attributeValue.get() == "true" || attributeValue.get() == "1") ? true : false;
+            }
+            getPayloadInternal()->setNotify(notify);
         }
     }
 

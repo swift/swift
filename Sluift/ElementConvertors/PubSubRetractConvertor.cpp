@@ -75,8 +75,10 @@ void PubSubRetractConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubSub
         }
         lua_setfield(L, -2, "items");
     }
-    lua_pushboolean(L, payload->isNotify());
-    lua_setfield(L, -2, "notify");
+    if (payload->isNotify().is_initialized()) {
+        lua_pushboolean(L, payload->isNotify().get_value_or(false));
+        lua_setfield(L, -2, "notify");
+    }
 }
 
 boost::optional<LuaElementConvertor::Documentation> PubSubRetractConvertor::getDocumentation() const {

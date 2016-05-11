@@ -10,8 +10,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubItem.h>
 #include <Swiften/Elements/PubSubPayload.h>
@@ -44,11 +45,11 @@ namespace Swift {
                 this->items.push_back(value);
             }
 
-            bool isNotify() const {
+            boost::optional<bool> isNotify() const {
                 return notify;
             }
 
-            void setNotify(bool value) {
+            void setNotify(const boost::optional<bool>& value) {
                 this->notify = value ;
             }
 
@@ -56,6 +57,6 @@ namespace Swift {
         private:
             std::string node;
             std::vector< std::shared_ptr<PubSubItem> > items;
-            bool notify;
+            boost::optional<bool> notify;
     };
 }
