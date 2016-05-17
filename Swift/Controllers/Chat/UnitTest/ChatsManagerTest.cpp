@@ -25,6 +25,7 @@
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
@@ -83,6 +84,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
     CPPUNIT_TEST(testChatControllerMeMessageHandling);
     CPPUNIT_TEST(testChatControllerMeMessageHandlingInMUC);
+    CPPUNIT_TEST(testPresenceChangeDoesNotReplaceMUCInvite);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -103,7 +105,6 @@ public:
         directedPresenceSender_ = new DirectedPresenceSender(presenceSender_);
         mucManager_ = new MUCManager(stanzaChannel_, iqRouter_, directedPresenceSender_, mucRegistry_);
         uiEventStream_ = new UIEventStream();
-//        entityCapsManager_ = new EntityCapsManager(capsProvider_, stanzaChannel_);
         entityCapsProvider_ = new DummyEntityCapsProvider();
         chatListWindowFactory_ = mocks_->InterfaceMock<ChatListWindowFactory>();
         mucSearchWindowFactory_ = mocks_->InterfaceMock<MUCSearchWindowFactory>();
@@ -189,9 +190,6 @@ public:
         CPPUNIT_ASSERT_EQUAL(body1, MockChatWindow::bodyFromMessage(window1->lastAddedMessage_));
 
         JID messageJID2("testling@test.com/resource2");
-
-        //MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-        //mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
         std::shared_ptr<Message> message2(new Message());
         message2->setFrom(messageJID2);
@@ -331,9 +329,6 @@ public:
         manager_->handleIncomingMessage(message1);
 
         JID messageJID2("testling@test.com/resource2");
-
-        //MockChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
-        //mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID2, uiEventStream_).Return(window2);
 
         std::shared_ptr<Message> message2(new Message());
         message2->setFrom(messageJID2);
@@ -881,6 +876,49 @@ public:
             manager_->handleIncomingMessage(mucMirrored);
         }
         CPPUNIT_ASSERT_EQUAL(std::string("says hello with a test message with foo and foo"), window->bodyFromMessage(window->lastAddedAction_));
+    }
+
+    void testPresenceChangeDoesNotReplaceMUCInvite() {
+        JID messageJID("testling@test.com/resource1");
+
+        auto generateIncomingPresence = [=](Presence::Type type) {
+            auto presence = std::make_shared<Presence>();
+            presence->setType(type);
+            presence->setFrom(messageJID);
+            presence->setTo(jid_);
+            return presence;
+        };
+
+        stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Available));
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        std::shared_ptr<Message> message(new Message());
+        message->setFrom(messageJID);
+        std::string body("This is a legible message. >HEH@)oeueu");
+        message->setBody(body);
+        manager_->handleIncomingMessage(message);
+        CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        auto incomingMUCInvite = std::make_shared<Message>();
+        incomingMUCInvite->setFrom(messageJID);
+
+        auto invitePayload = std::make_shared<MUCInvitationPayload>();
+        invitePayload->setJID("room@muc.service.com");
+        incomingMUCInvite->addPayload(invitePayload);
+
+        stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Unavailable));
+        stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Available));
+
+        window->resetLastMessages();
+
+        manager_->handleIncomingMessage(incomingMUCInvite);
+        CPPUNIT_ASSERT_EQUAL(JID("room@muc.service.com"), window->lastMUCInvitationJID_);
+
+        stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Unavailable));
+        CPPUNIT_ASSERT_EQUAL(std::string(""), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string("testling@test.com has gone offline."), MockChatWindow::bodyFromMessage(window->lastAddedPresence_));
     }
 
 private:

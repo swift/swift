@@ -97,6 +97,7 @@ void ChatControllerBase::handleDayChangeTick() {
     dateChangeTimer_->stop();
     boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
     chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The day is now %1%")) % std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10))), ChatWindow::DefaultDirection);
+    lastWasPresence_ = false;
     dayTicked();
     createDayChangeTimer();
 }
@@ -382,6 +383,7 @@ void ChatControllerBase::handleGeneralMUCInvitation(MUCInviteEvent::ref event) {
     updateMessageCount();
     chatWindow_->addMUCInvitation(senderDisplayNameFromMessage(event->getInviter()), event->getRoomJID(), event->getReason(), event->getPassword(), event->getDirect(), event->getImpromptu());
     eventController_->handleIncomingEvent(event);
+    lastWasPresence_ = false;
 }
 
 void ChatControllerBase::handleMUCInvitation(Message::ref message) {

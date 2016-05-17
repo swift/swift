@@ -90,7 +90,6 @@ namespace Swift {
             ChatStateTracker* chatStateTracker_;
             std::string myLastMessageUIID_;
             bool isInMUC_;
-            bool lastWasPresence_;
             std::string lastStatusChangeString_;
             std::map<std::shared_ptr<Stanza>, std::string> unackedStanzas_;
             std::map<std::string, std::string> requestedReceipts_;

@@ -138,5 +138,6 @@ namespace Swift {
             std::shared_ptr<ChatMessageParser> chatMessageParser_;
             AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
             UIEventStream* eventStream_;
+            bool lastWasPresence_ = false;
     };
 }

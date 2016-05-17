@@ -153,7 +153,6 @@ namespace Swift {
             TabComplete* completer_;
             bool parting_;
             bool joined_;
-            bool lastWasPresence_;
             bool shouldJoinOnReconnect_;
             bool doneGettingHistory_;
             boost::signals2::scoped_connection avatarChangedConnection_;

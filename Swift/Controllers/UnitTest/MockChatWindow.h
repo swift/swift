@@ -43,7 +43,9 @@ namespace Swift {
             virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour /*timestampBehaviour*/) {
                 lastReplacedMessage_ = message;
             }
-            virtual void replaceSystemMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const TimestampBehaviour /*timestampBehaviour*/) {}
+            virtual void replaceSystemMessage(const ChatMessage& message, const std::string& /*id*/, const TimestampBehaviour /*timestampBehaviour*/) {
+                lastReplacedSystemMessage_ = message;
+            }
 
             // File transfer related stuff
             virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/) { return nullptr; }
@@ -77,7 +79,9 @@ namespace Swift {
             void setAvailableOccupantActions(const std::vector<OccupantAction>&/* actions*/) {}
             void setSubject(const std::string& /*subject*/) {}
             virtual void showRoomConfigurationForm(Form::ref) {}
-            virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool = true, bool = false, bool = false) {}
+            virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& jid, const std::string& /*reason*/, const std::string& /*password*/, bool = true, bool = false, bool = false) {
+                lastMUCInvitationJID_ = jid;
+            }
 
             virtual std::string addWhiteboardRequest(bool) {return "";}
             virtual void setWhiteboardSessionStatus(std::string, const ChatWindow::WhiteboardSessionState){}
@@ -109,7 +113,7 @@ namespace Swift {
             }
 
             void resetLastMessages() {
-                lastAddedMessage_ = lastAddedAction_ = lastAddedPresence_ = lastReplacedMessage_ = lastAddedSystemMessage_ = ChatMessage();
+                lastAddedMessage_ = lastAddedAction_ = lastAddedPresence_ = lastReplacedMessage_ = lastAddedSystemMessage_ = lastReplacedSystemMessage_ = ChatMessage();
             }
 
             std::string name_;
@@ -118,6 +122,8 @@ namespace Swift {
             ChatMessage lastAddedPresence_;
             ChatMessage lastReplacedMessage_;
             ChatMessage lastAddedSystemMessage_;
+            ChatMessage lastReplacedSystemMessage_;
+            JID lastMUCInvitationJID_;
             std::vector<SecurityLabelsCatalog::Item> labels_;
             bool labelsEnabled_;
             bool impromptuMUCSupported_;
