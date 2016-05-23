@@ -549,7 +549,7 @@ std::string QtWebKitChatView::addMessage(
 
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
 
-    QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
+    QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
     std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), direction));
 
@@ -624,7 +624,7 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, boo
 
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasFileTransfer, senderName, senderIsSelf);
 
-    QString qAvatarPath = "qrc:/icons/avatar.png";
+    QString qAvatarPath = "qrc:/icons/avatar.svg";
     std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::universal_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
 
@@ -658,7 +658,7 @@ std::string QtWebKitChatView::addWhiteboardRequest(const QString& contact, bool 
                 buildChatWindowButton(tr("Accept"), ButtonWhiteboardSessionAcceptRequest, wb_id) +
             "</div>";
     }
-    QString qAvatarPath = "qrc:/icons/avatar.png";
+    QString qAvatarPath = "qrc:/icons/avatar.svg";
     std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(contact), B2QDATE(boost::posix_time::second_clock::universal_time()), qAvatarPath, false, false, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
     previousMessageWasSelf_ = false;
@@ -919,7 +919,7 @@ void QtWebKitChatView::addMUCInvitation(const std::string& senderName, const JID
 
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMUCInvite, senderName, false);
 
-    QString qAvatarPath = "qrc:/icons/avatar.png";
+    QString qAvatarPath = "qrc:/icons/avatar.svg";
 
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::universal_time()), qAvatarPath, false, appendToPrevious, theme_, id, ChatSnippet::getDirection(message)));
     previousMessageWasSelf_ = false;

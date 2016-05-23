@@ -119,7 +119,7 @@ void QtRosterHeader::setAvatar(const QString& path) {
         avatar.load(scaledAvatarPath);
     }
     else {
-        avatar = QPixmap(":/icons/avatar.png").scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        avatar = QPixmap(":/icons/avatar.svg").scaled(avatarSize_, avatarSize_, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     avatarLabel_->setPixmap(avatar);
 }

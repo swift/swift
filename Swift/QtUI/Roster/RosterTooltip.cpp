@@ -85,7 +85,7 @@ QString RosterTooltip::buildDetailedTooltip(ContactRosterItem* contact, QtScaled
         contact->onVCardRequested();
     }
 
-    QString scaledAvatarPath = cachedImageScaler->getScaledAvatarPath(P2QSTRING(contact->getAvatarPath().empty() ? ":/icons/avatar.png" : pathToString(contact->getAvatarPath())));
+    QString scaledAvatarPath = cachedImageScaler->getScaledAvatarPath(P2QSTRING(contact->getAvatarPath().empty() ? ":/icons/avatar.svg" : pathToString(contact->getAvatarPath())));
 
     QString bareJID = contact->getDisplayJID().toString().empty() ? "" : "( " + P2QSTRING(contact->getDisplayJID().toString()) + " )";
 

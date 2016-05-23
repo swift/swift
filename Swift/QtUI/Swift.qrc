@@ -16,7 +16,7 @@
 		<file alias="icons/warn.png">../resources/icons/warn.png</file>
 		<file alias="icons/check.png">../resources/icons/check.png</file>
 		<file alias="icons/throbber.gif">../resources/icons/throbber.gif</file>
-		<file alias="icons/avatar.png">../resources/icons/avatar.png</file>
+		<file alias="icons/avatar.svg">../resources/icons/avatar.svg</file>
 		<file alias="icons/no-avatar.png">../resources/icons/no-avatar.png</file>
 		<file alias="icons/tray-standard.png">../resources/icons/tray-standard.png</file>
 		<file alias="icons/new-chat.png">../resources/icons/new-chat.png</file>

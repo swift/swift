@@ -45,7 +45,7 @@ void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem
         }
     }
     if (!compact && avatarPixmap.isNull()) {
-        avatarPixmap = QPixmap(":/icons/avatar.png").scaled(avatarRegion.height(), avatarRegion.width(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+        avatarPixmap = QPixmap(":/icons/avatar.svg").scaled(avatarRegion.height(), avatarRegion.width(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
 
     if (!compact) {
