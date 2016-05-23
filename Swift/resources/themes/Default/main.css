@@ -148,12 +148,15 @@ body {
 .myavatar img {
     border-radius: 50%;
     height: 32px;
+    position: relative;
+    left: -1px;
 }
 
 .otheravatar img {
     border-radius: 50%;
     height: 32px;
-    margin-left: -1px;
+    position: relative;
+    left: -1px;
 }
 
 .myright {
