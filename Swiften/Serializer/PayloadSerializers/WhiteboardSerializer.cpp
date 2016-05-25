@@ -12,11 +12,11 @@
 
 #include <Swiften/Serializer/PayloadSerializers/WhiteboardSerializer.h>
 
-#include <iostream>
 #include <memory>
 
 #include <boost/lexical_cast.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardDeleteOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardInsertOperation.h>
 #include <Swiften/Elements/Whiteboard/WhiteboardUpdateOperation.h>
@@ -199,7 +199,7 @@ namespace Swift {
             case WhiteboardPayload::SessionTerminate:
                 return "session-terminate";
             case WhiteboardPayload::UnknownType:
-                std::cerr << "Warning: Serializing unknown action value." << std::endl;
+                SWIFT_LOG(warning) << "Serializing unknown action value." << std::endl;
                 return "";
         }
         assert(false);

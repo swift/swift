@@ -7,7 +7,6 @@
 #include <Swiften/Parser/XMPPParser.h>
 
 #include <cassert>
-#include <iostream>
 #include <string>
 
 #include <Swiften/Elements/ProtocolHeader.h>

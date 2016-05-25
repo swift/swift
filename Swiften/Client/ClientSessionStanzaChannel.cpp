@@ -6,9 +6,9 @@
 
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
 
-#include <iostream>
-
 #include <boost/bind.hpp>
+
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -49,7 +49,7 @@ std::string ClientSessionStanzaChannel::getNewIQID() {
 
 void ClientSessionStanzaChannel::send(std::shared_ptr<Stanza> stanza) {
     if (!isAvailable()) {
-        std::cerr << "Warning: Client: Trying to send a stanza while disconnected." << std::endl;
+        SWIFT_LOG(warning) << "Client: Trying to send a stanza while disconnected." << std::endl;
         return;
     }
     session->sendStanza(stanza);

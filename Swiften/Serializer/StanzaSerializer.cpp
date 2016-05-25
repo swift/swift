@@ -6,10 +6,10 @@
 
 #include <Swiften/Serializer/StanzaSerializer.h>
 
-#include <iostream>
 #include <sstream>
 #include <typeinfo>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
@@ -53,7 +53,7 @@ SafeByteArray StanzaSerializer::serialize(std::shared_ptr<ToplevelElement> eleme
             serializedPayloads += serializer->serialize(payload);
         }
         else {
-            std::cerr << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
+            SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
         }
     }
     if (!serializedPayloads.empty()) {

@@ -6,8 +6,6 @@
 
 #include <Swiften/Component/ComponentConnector.h>
 
-#include <iostream>
-
 #include <boost/bind.hpp>
 
 #include <Swiften/Network/ConnectionFactory.h>

@@ -6,9 +6,10 @@
 
 #include <Sluift/ElementConvertors/DefaultElementConvertor.h>
 
-#include <iostream>
 #include <string>
 #include <typeinfo>
+
+#include <Swiften/Base/Log.h>
 
 using namespace Swift;
 
@@ -19,7 +20,7 @@ DefaultElementConvertor::~DefaultElementConvertor() {
 }
 
 std::shared_ptr<Element> DefaultElementConvertor::convertFromLua(lua_State*, int, const std::string& type) {
-    std::cerr << "Warning: Unable to convert type '" << type << "'" << std::endl;
+    SWIFT_LOG(warning) << "Unable to convert type '" << type << "'" << std::endl;
     return std::shared_ptr<Element>();
 }
 

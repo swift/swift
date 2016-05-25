@@ -6,7 +6,6 @@
 
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 
-#include <iostream>
 #include <memory>
 #include <string>
 

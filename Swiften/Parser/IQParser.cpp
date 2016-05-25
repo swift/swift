@@ -6,9 +6,9 @@
 
 #include <Swiften/Parser/IQParser.h>
 
-#include <iostream>
-
 #include <boost/optional.hpp>
+
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -32,7 +32,7 @@ void IQParser::handleStanzaAttributes(const AttributeMap& attributes) {
             getStanzaGeneric()->setType(IQ::Error);
         }
         else {
-            std::cerr << "Unknown IQ type: " << *type << std::endl;
+            SWIFT_LOG(warning) << "Unknown IQ type: " << *type << std::endl;
             getStanzaGeneric()->setType(IQ::Get);
         }
     }

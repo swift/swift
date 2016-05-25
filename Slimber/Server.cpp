@@ -6,11 +6,11 @@
 
 #include <Slimber/Server.h>
 
-#include <iostream>
 #include <string>
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/IQ.h>
@@ -306,7 +306,7 @@ void Server::handleLinkLocalElementReceived(std::shared_ptr<ToplevelElement> ele
 
 void Server::handleConnectFinished(std::shared_ptr<LinkLocalConnector> connector, bool error) {
     if (error) {
-        std::cerr << "Error connecting" << std::endl;
+        SWIFT_LOG(warning) << "Error connecting" << std::endl;
         // TODO: Send back queued stanzas
     }
     else {

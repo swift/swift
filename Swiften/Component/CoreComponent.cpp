@@ -6,11 +6,10 @@
 
 #include <Swiften/Component/CoreComponent.h>
 
-#include <iostream>
-
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Component/ComponentSessionStanzaChannel.h>
 #include <Swiften/Network/Connector.h>
@@ -34,7 +33,7 @@ CoreComponent::CoreComponent(const JID& jid, const std::string& secret, NetworkF
 
 CoreComponent::~CoreComponent() {
     if (session_ || connection_) {
-        std::cerr << "Warning: Component not disconnected properly" << std::endl;
+        SWIFT_LOG(warning) << "Component not disconnected properly" << std::endl;
     }
     delete iqRouter_;
 

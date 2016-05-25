@@ -6,9 +6,9 @@
 
 #include <Swiften/Parser/PresenceParser.h>
 
-#include <iostream>
-
 #include <boost/optional.hpp>
+
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -41,7 +41,7 @@ void PresenceParser::handleStanzaAttributes(const AttributeMap& attributes) {
             getStanzaGeneric()->setType(Presence::Error);
         }
         else {
-            std::cerr << "Unknown Presence type: " << *type << std::endl;
+            SWIFT_LOG(error) << "Unknown Presence type: " << *type << std::endl;
             getStanzaGeneric()->setType(Presence::Available);
         }
     }

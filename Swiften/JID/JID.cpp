@@ -8,7 +8,6 @@
 
 #include <vector>
 #include <list>
-#include <iostream>
 
 #include <string>
 #ifdef SWIFTEN_CACHE_JID_PREP
@@ -19,7 +18,6 @@
 #include <boost/algorithm/string/find_format.hpp>
 #include <boost/algorithm/string/finder.hpp>
 #include <boost/optional.hpp>
-#include <iostream>
 #include <sstream>
 
 #include <Swiften/Base/String.h>

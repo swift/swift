@@ -7,8 +7,6 @@
 
 #include <Swiften/Parser/Tree/ParserElement.h>
 
-#include <iostream>
-
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 

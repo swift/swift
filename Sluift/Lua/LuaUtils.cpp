@@ -7,7 +7,6 @@
 #include <Sluift/Lua/LuaUtils.h>
 
 #include <cassert>
-#include <iostream>
 #include <sstream>
 
 #include <boost/algorithm/string/trim.hpp>

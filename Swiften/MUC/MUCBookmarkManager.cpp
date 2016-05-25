@@ -6,7 +6,6 @@
 
 #include <Swiften/MUC/MUCBookmarkManager.h>
 
-#include <iostream>
 #include <memory>
 
 #include <boost/bind.hpp>

@@ -6,7 +6,6 @@
 
 #include <Sluift/ElementConvertors/DOMElementConvertor.h>
 
-#include <iostream>
 #include <memory>
 
 #include <lua.hpp>

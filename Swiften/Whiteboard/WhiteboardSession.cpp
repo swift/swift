@@ -12,7 +12,6 @@
 
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 
-#include <iostream>
 #include <memory>
 
 #include <Swiften/Elements/ErrorPayload.h>

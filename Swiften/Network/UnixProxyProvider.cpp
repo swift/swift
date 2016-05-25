@@ -10,12 +10,9 @@
  * See the COPYING file for more information.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>
+#include <Swiften/Network/UnixProxyProvider.h>
 
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Network/UnixProxyProvider.h>
 #if defined(HAVE_GCONF)
 #  include "Swiften/Network/GConfProxyProvider.h"
 #endif

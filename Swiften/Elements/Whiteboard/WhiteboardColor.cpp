@@ -14,7 +14,6 @@
 
 #include <cstdio>
 #include <iomanip>
-#include <iostream>
 #include <sstream>
 
 #include <Swiften/Base/String.h>

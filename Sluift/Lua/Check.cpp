@@ -6,7 +6,6 @@
 
 #include <Sluift/Lua/Check.h>
 
-#include <iostream>
 #include <sstream>
 
 #include <boost/numeric/conversion/cast.hpp>

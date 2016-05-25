@@ -4,8 +4,6 @@
  * See the COPYING file for more information.
  */
 
-#include <iostream>
-
 #include <boost/assign/list_of.hpp>
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>

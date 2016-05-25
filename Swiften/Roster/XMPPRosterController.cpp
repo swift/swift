@@ -6,10 +6,9 @@
 
 #include <Swiften/Roster/XMPPRosterController.h>
 
-#include <iostream>
-
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -68,7 +67,7 @@ void XMPPRosterController::handleRosterReceived(std::shared_ptr<RosterPayload> r
                 xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
             }
             else {
-                std::cerr << "ERROR: Stored invalid roster item" << std::endl;
+                SWIFT_LOG(error) << "Stored invalid roster item" << std::endl;
             }
         }
     }

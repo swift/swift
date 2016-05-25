@@ -8,13 +8,13 @@
 
 #include <cassert>
 #include <cstring>
-#include <iostream>
 #include <string>
 
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <libxml/parser.h>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Parser/XMLParserClient.h>
 
 namespace Swift {
@@ -28,7 +28,7 @@ static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*
     AttributeMap attributeValues;
     if (nbDefaulted != 0) {
         // Just because i don't understand what this means yet :-)
-        std::cerr << "Unexpected nbDefaulted on XML element" << std::endl;
+        SWIFT_LOG(error) << "Unexpected nbDefaulted on XML element" << std::endl;
     }
     for (int i = 0; i < nbAttributes*5; i += 5) {
         std::string attributeNS = "";

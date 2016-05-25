@@ -6,10 +6,9 @@
 
 #include <SwifTools/Application/ApplicationPathProvider.h>
 
-#include <iostream>
-
 #include <boost/filesystem.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/Paths.h>
 #include <Swiften/Base/foreach.h>
 
@@ -27,7 +26,7 @@ boost::filesystem::path ApplicationPathProvider::getProfileDir(const std::string
         boost::filesystem::create_directory(result);
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what() << std::endl;
     }
     return result;
 }

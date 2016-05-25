@@ -5,7 +5,6 @@
  */
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
-#include <iostream>
 #include <map>
 
 #include <Swiften/Base/foreach.h>

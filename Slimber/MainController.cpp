@@ -6,8 +6,6 @@
 
 #include <Slimber/MainController.h>
 
-#include <iostream>
-
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 

@@ -7,7 +7,6 @@
 #include <Swiften/Parser/StanzaParser.h>
 
 #include <cassert>
-#include <iostream>
 
 #include <boost/optional.hpp>
 

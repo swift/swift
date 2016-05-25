@@ -6,7 +6,6 @@
 
 #include <Slimber/MenuletController.h>
 
-#include <iostream>
 #include <string>
 
 #include <Swiften/Base/foreach.h>

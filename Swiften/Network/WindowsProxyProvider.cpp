@@ -16,15 +16,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <iostream>
-
 #include <boost/lexical_cast.hpp>
 
 #include <windows.h>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
-#include <Swiften/Base/log.h>
 
 namespace Swift {
 
@@ -86,7 +84,7 @@ HostAddressPort WindowsProxyProvider::getAsHostAddressPort(std::string proxy) {
         ret = HostAddressPort(HostAddress(tmp.first), port);
     }
     catch(...) {
-            std::cerr << "Exception occured while parsing windows proxy \"getHostAddressPort\"." << std::endl;
+            SWIFT_LOG(error) << "Exception occured while parsing windows proxy \"getHostAddressPort\"." << std::endl;
     }
 
     return ret;

@@ -6,12 +6,11 @@
 
 #include <Swiften/Entity/PayloadPersister.h>
 
-#include <iostream>
-
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
 #include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Parser/PayloadParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadParserTester.h>
@@ -35,7 +34,7 @@ void PayloadPersister::savePayload(std::shared_ptr<Payload> payload, const boost
         file.close();
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what() << std::endl;
     }
 }
 
@@ -51,7 +50,7 @@ std::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem::
         }
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what() << std::endl;
     }
     return std::shared_ptr<Payload>();
 }

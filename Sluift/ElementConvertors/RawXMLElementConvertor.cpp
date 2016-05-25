@@ -6,7 +6,6 @@
 
 #include <Sluift/ElementConvertors/RawXMLElementConvertor.h>
 
-#include <iostream>
 #include <memory>
 
 #include <lua.hpp>

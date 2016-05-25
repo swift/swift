@@ -7,7 +7,6 @@
 #include <Swiften/Parser/PayloadParsers/MUCItemParser.h>
 
 #include <cassert>
-#include <iostream>
 
 #include <boost/lexical_cast.hpp>
 

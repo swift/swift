@@ -6,10 +6,9 @@
 
 #include <Swiften/Disco/CapsManager.h>
 
-#include <iostream>
-
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/CapsInfoGenerator.h>
 #include <Swiften/Disco/CapsStorage.h>
@@ -54,7 +53,7 @@ void CapsManager::handleDiscoInfoReceived(const JID& from, const std::string& ha
     requestedDiscoInfos.erase(hash);
     if (error || !discoInfo || CapsInfoGenerator("", crypto).generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
         if (warnOnInvalidHash && !error &&  discoInfo) {
-            std::cerr << "Warning: Caps from " << from.toString() << " do not verify" << std::endl;
+            SWIFT_LOG(warning) << "Caps from " << from.toString() << " do not verify" << std::endl;
         }
         failingCaps.insert(std::make_pair(from, hash));
         std::map<std::string, std::set< std::pair<JID, std::string> > >::iterator i = fallbacks.find(hash);

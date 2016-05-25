@@ -6,9 +6,9 @@
 
 #include <SwifTools/Application/MacOSXApplicationPathProvider.h>
 
-#include <iostream>
-
 #include <mach-o/dyld.h>
+
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
@@ -23,7 +23,7 @@ boost::filesystem::path MacOSXApplicationPathProvider::getDataDir() const {
         boost::filesystem::create_directory(result);
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what() << std::endl;
     }
     return result;
 }

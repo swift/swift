@@ -6,10 +6,9 @@
 
 #include <Swiften/StreamManagement/StanzaAckRequester.h>
 
-#include <iostream>
-
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Elements/Message.h>
 
 namespace Swift {
@@ -31,7 +30,7 @@ void StanzaAckRequester::handleAckReceived(unsigned int handledStanzasCount) {
     unsigned int i = lastHandledStanzasCount;
     while (i != handledStanzasCount) {
         if (unackedStanzas.empty()) {
-            std::cerr << "Warning: Server acked more stanzas than we sent" << std::endl;
+            SWIFT_LOG(warning) << "Server acked more stanzas than we sent" << std::endl;
             break;
         }
         std::shared_ptr<Stanza> ackedStanza = unackedStanzas.front();

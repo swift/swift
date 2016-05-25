@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/ExpatParser.h>
 
-#include <iostream>
 #include <string>
+
 #include <expat.h>
+
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/String.h>

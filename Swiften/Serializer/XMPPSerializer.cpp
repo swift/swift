@@ -7,11 +7,11 @@
 #include <Swiften/Serializer/XMPPSerializer.h>
 
 #include <cassert>
-#include <iostream>
 #include <memory>
 
 #include <boost/bind.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Serializer/AuthChallengeSerializer.h>
@@ -90,7 +90,7 @@ SafeByteArray XMPPSerializer::serializeElement(std::shared_ptr<ToplevelElement> 
         return (*i)->serialize(element);
     }
     else {
-        std::cerr << "Could not find serializer for " << typeid(*(element.get())).name() << std::endl;
+        SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(element.get())).name() << std::endl;
         return createSafeByteArray("");
     }
 }
