@@ -16,7 +16,6 @@
 #include <QWizardPage>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 
 #include <Swift/Controllers/UIEvents/AddContactUIEvent.h>
 #include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
@@ -108,7 +107,9 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
             bool remote = firstMultiJIDPage_->byRemoteSearch_->isChecked();
             setFirstPage();
             firstMultiJIDPage_->byRemoteSearch_->setChecked(remote);
-            firstMultiJIDPage_->service_->setEditText(P2QSTRING(server.toString()));
+            if (remote) {
+                firstMultiJIDPage_->service_->setEditText(P2QSTRING(server.toString()));
+            }
         }
     }
     else if (page == 4) {
@@ -142,14 +143,14 @@ void QtUserSearchWindow::handleAccepted() {
                 break;
             }
 
-            foreach(Contact::ref contact, contactVector_) {
+            for (Contact::ref contact : contactVector_) {
                 jids.push_back(contact->jid);
             }
 
             eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, JID(), Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
         case InviteToChat:
-            foreach(Contact::ref contact, contactVector_) {
+            for (Contact::ref contact : contactVector_) {
                 jids.push_back(contact->jid);
             }
             eventStream_->send(std::make_shared<InviteToMUCUIEvent>(roomJID_, jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
@@ -272,7 +273,7 @@ JID QtUserSearchWindow::getContactJID() const {
 
             Form::FormItem item = dynamic_cast<QtFormResultItemModel*>(model_)->getForm()->getItems().at(row);
             JID fallbackJid;
-            foreach(FormField::ref field, item) {
+            for (FormField::ref field : item) {
                 if (field->getType() == FormField::JIDSingleType) {
                     jid = JID(field->getJIDSingleValue());
                     break;
@@ -318,13 +319,13 @@ void QtUserSearchWindow::show() {
 void QtUserSearchWindow::addSavedServices(const std::vector<JID>& services) {
     if (type_ == AddContact) {
         firstPage_->service_->clear();
-        foreach (JID jid, services) {
+        for (auto&& jid : services) {
             firstPage_->service_->addItem(P2QSTRING(jid.toString()));
         }
         firstPage_->service_->clearEditText();
     } else {
         firstMultiJIDPage_->service_->clear();
-        foreach (JID jid, services) {
+        for (auto&& jid : services) {
             firstMultiJIDPage_->service_->addItem(P2QSTRING(jid.toString()));
         }
         firstMultiJIDPage_->service_->clearEditText();
@@ -375,7 +376,7 @@ void QtUserSearchWindow::setContactSuggestions(const std::vector<Contact::ref>& 
 }
 
 void QtUserSearchWindow::setJIDs(const std::vector<JID> &jids) {
-    foreach(JID jid, jids) {
+    for (auto&& jid : jids) {
         addSearchedJIDToList(std::make_shared<Contact>("", jid, StatusShow::None, ""));
     }
     onJIDUpdateRequested(jids);
@@ -391,7 +392,7 @@ std::string QtUserSearchWindow::getReason() const {
 
 std::vector<JID> QtUserSearchWindow::getJIDs() const {
     std::vector<JID> jids;
-    foreach (Contact::ref contact, contactVector_) {
+    for (Contact::ref contact : contactVector_) {
         jids.push_back(contact->jid);
     }
     return jids;
@@ -413,9 +414,9 @@ void QtUserSearchWindow::updateContacts(const std::vector<Contact::ref>& contact
 void QtUserSearchWindow::addContacts(const std::vector<Contact::ref>& contacts) {
     if (type_ != AddContact) {
         /* prevent duplicate JIDs from appearing in the contact list */
-        foreach (Contact::ref newContact, contacts) {
+        for (Contact::ref newContact : contacts) {
             bool found = false;
-            foreach (Contact::ref oldContact, contactVector_) {
+            for (Contact::ref oldContact : contactVector_) {
                 if (newContact->jid == oldContact->jid) {
                     found = true;
                     break;
@@ -557,7 +558,7 @@ void QtUserSearchWindow::clearForm() {
     fieldsPage_->fetchingThrobber_->movie()->start();
     fieldsPage_->fetchingLabel_->show();
     QWidget* legacySearchWidgets[8] = {fieldsPage_->nickInputLabel_, fieldsPage_->nickInput_, fieldsPage_->firstInputLabel_, fieldsPage_->firstInput_, fieldsPage_->lastInputLabel_, fieldsPage_->lastInput_, fieldsPage_->emailInputLabel_, fieldsPage_->emailInput_};
-    for (auto& legacySearchWidget : legacySearchWidgets) {
+    for (auto&& legacySearchWidget : legacySearchWidgets) {
         legacySearchWidget->hide();
         if (QLineEdit* edit = qobject_cast<QLineEdit*>(legacySearchWidget)) {
             edit->clear();
