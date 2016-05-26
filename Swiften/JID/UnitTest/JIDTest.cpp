@@ -15,6 +15,7 @@ class JIDTest : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(JIDTest);
         CPPUNIT_TEST(testConstructorWithString);
+        CPPUNIT_TEST(testConstructorWithString_Empty);
         CPPUNIT_TEST(testConstructorWithString_NoResource);
         CPPUNIT_TEST(testConstructorWithString_NoNode);
         CPPUNIT_TEST(testConstructorWithString_EmptyResource);
@@ -74,6 +75,11 @@ class JIDTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT_EQUAL(std::string("baz"), testling.getResource());
             CPPUNIT_ASSERT(!testling.isBare());
             CPPUNIT_ASSERT(testling.isValid());
+        }
+
+        void testConstructorWithString_Empty() {
+            JID testling("");
+            CPPUNIT_ASSERT_EQUAL(false, testling.isValid());
         }
 
         void testConstructorWithString_NoResource() {

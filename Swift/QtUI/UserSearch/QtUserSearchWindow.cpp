@@ -164,14 +164,20 @@ void QtUserSearchWindow::handleContactSuggestionRequested(const QString& text) {
 }
 
 void QtUserSearchWindow::addContact() {
-    if (!!firstMultiJIDPage_->jid_->getContact()) {
-        contactVector_.push_back(firstMultiJIDPage_->jid_->getContact());
+    auto contactToAdd = firstMultiJIDPage_->jid_->getContact();
+    if (!!contactToAdd) {
+        contactVector_.push_back(contactToAdd);
         firstMultiJIDPage_->jid_->clear();
     }
+
     firstMultiJIDPage_->contactList_->setList(contactVector_);
     firstMultiJIDPage_->emitCompletenessCheck();
     if (type_ == ChatToContact) {
         firstMultiJIDPage_->groupBox->setEnabled(supportsImpromptu_ ? 1 : (contactVector_.size() < 1));
+    }
+
+    if (!!contactToAdd && contactToAdd->jid.isValid() && contactToAdd->statusType == StatusShow::None) {
+        onJIDUpdateRequested({contactToAdd->jid});
     }
 }
 
