@@ -314,6 +314,7 @@ void QtUserSearchWindow::show() {
         setWarning(boost::optional<std::string>());
     }
     QWidget::show();
+    raise();
 }
 
 void QtUserSearchWindow::addSavedServices(const std::vector<JID>& services) {
