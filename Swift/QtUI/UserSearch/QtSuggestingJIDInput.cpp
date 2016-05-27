@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QKeyEvent>
+#include <QtGlobal>
 
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 
@@ -204,6 +205,11 @@ void QtSuggestingJIDInput::hidePopup() {
 
     // Give focus back to input widget because the hide() call passes the focus to the wrong widget.
     setFocus();
+#if defined(Q_WS_MAC)
+    // This workaround is needed on OS X, to bring the dialog containing this widget back to the front after
+    // the popup is hidden. Ubuntu 16.04 and Windows 8 do not have this issue.
+    window()->raise();
+#endif
 }
 
 }
