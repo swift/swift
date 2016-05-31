@@ -307,6 +307,7 @@ if env["PLATFORM"] == "posix" and platform.machine() in ["x86_64", "amd64"] :
 # Warnings
 if env["PLATFORM"] == "win32" :
     env.Append(CXXFLAGS = ["/wd4068"])
+    env.Append(CXXFLAGS = ["/wd4503"]) # Disable 'decorated name length exceeded, name was truncated' warning
     if not env.get("allow_warnings", "False") :
         env.Append(CXXFLAGS = ["/WX"])
 elif env["PLATFORM"] == "hpux" :
