@@ -36,6 +36,8 @@ libflags = replaceSwiftenPath(" ".join([
 config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
 
 config_env = env.Clone()
+config_env.Append(CPPDEFINES = ["SWIFTEN_STATIC"])
+
 # Create a local copy of Paths.cpp to avoid a Swiften dependency
 config_env.Install(".", [
     "#/Swiften/Base/Paths.cpp",
