@@ -307,6 +307,8 @@ if env["PLATFORM"] == "posix" and platform.machine() in ["x86_64", "amd64"] :
 # Warnings
 if env["PLATFORM"] == "win32" :
     env.Append(CXXFLAGS = ["/wd4068"])
+    if not env.get("allow_warnings", "False") :
+        env.Append(CXXFLAGS = ["/WX"])
 elif env["PLATFORM"] == "hpux" :
     # HP-UX gives a flood of minor warnings if this is enabled
     #env.Append(CXXFLAGS = ["+w"])
