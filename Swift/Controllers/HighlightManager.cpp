@@ -65,7 +65,7 @@ void HighlightManager::handleSettingChanged(const std::string& settingPath) {
 std::string HighlightManager::rulesToString() const {
     std::stringstream stream;
     boost::archive::text_oarchive archive(stream);
-    archive << rules_->list_;
+    archive & rules_->list_;
     return stream.str();
 }
 

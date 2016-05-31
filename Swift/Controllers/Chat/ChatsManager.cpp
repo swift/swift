@@ -230,7 +230,7 @@ void ChatsManager::saveRecents() {
 
     recentsLimited.erase(std::remove_if(recentsLimited.begin(), recentsLimited.end(), RemoveRecent::ifPrivateMessage), recentsLimited.end());
 
-    oa << recentsLimited;
+    oa & recentsLimited;
     std::string serializedStr = Base64::encode(createByteArray(serializeStream.str()));
     profileSettings_->storeString(RECENT_CHATS, serializedStr);
 }
