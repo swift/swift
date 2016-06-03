@@ -6,6 +6,6 @@ export SWIFT_DEBUILD_FLAGS="-S"
 
 ./package.sh
 
-for arch in i386 amd64; do
+for arch in amd64; do
 	pbuilder-dist sid $arch build *.dsc
 done
