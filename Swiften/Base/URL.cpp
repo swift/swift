@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Base/URL.h>
 
+#include <algorithm>
 #include <iostream>
 
 namespace Swift {
@@ -62,18 +63,39 @@ URL URL::fromString(const std::string& urlString) {
 
         std::string host;
         boost::optional<int> port;
-        colonIndex = hostAndPort.find(':');
-        if (colonIndex != std::string::npos) {
-            host = unescape(hostAndPort.substr(0, colonIndex));
-            try {
-                port = boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1));
+        if (hostAndPort[0] == '[') {
+            // handle IPv6 address literals
+            size_t addressEndIndex = hostAndPort.find(']');
+            if (addressEndIndex != std::string::npos) {
+                host = hostAndPort.substr(1, addressEndIndex - 1);
+                colonIndex = hostAndPort.find(':', addressEndIndex);
+                if (colonIndex != std::string::npos) {
+                    try {
+                        port = boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1));
+                    }
+                    catch (const boost::bad_lexical_cast&) {
+                        return URL();
+                    }
+                }
             }
-            catch (const boost::bad_lexical_cast&) {
+            else {
                 return URL();
             }
         }
         else {
-            host = unescape(hostAndPort);
+            colonIndex = hostAndPort.find(':');
+            if (colonIndex != std::string::npos) {
+                host = unescape(hostAndPort.substr(0, colonIndex));
+                try {
+                    port = boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1));
+                }
+                catch (const boost::bad_lexical_cast&) {
+                    return URL();
+                }
+            }
+            else {
+                host = unescape(hostAndPort);
+            }
         }
 
         if (port) {
@@ -102,7 +124,12 @@ std::string URL::toString() const {
         }
         result += "@";
     }
-    result += host;
+    if (host.find(':') != std::string::npos) {
+        result += "[" + host + "]";
+    }
+    else {
+        result += host;
+    }
     if (port) {
         result += ":";
         result += boost::lexical_cast<std::string>(*port);
