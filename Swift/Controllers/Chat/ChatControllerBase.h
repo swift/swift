@@ -54,6 +54,7 @@ namespace Swift {
             void activateChatWindow();
             bool hasOpenWindow() const;
             virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info);
+            virtual void handleIncomingOwnMessage(std::shared_ptr<Message> /*message*/) {}
             void handleIncomingMessage(std::shared_ptr<MessageEvent> message);
             std::string addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time);
             void replaceMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& id, const boost::posix_time::ptime& time);

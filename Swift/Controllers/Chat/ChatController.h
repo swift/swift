@@ -40,6 +40,7 @@ namespace Swift {
             virtual void handleWhiteboardStateChange(const ChatWindow::WhiteboardSessionState state);
             virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/) SWIFTEN_OVERRIDE;
             virtual ChatWindow* detachChatWindow() SWIFTEN_OVERRIDE;
+            virtual void handleIncomingOwnMessage(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
 
         protected:
             virtual void cancelReplaces() SWIFTEN_OVERRIDE;

@@ -122,6 +122,7 @@ namespace Swift {
             void setReconnectTimer();
             void resetPendingReconnects();
             void resetCurrentError();
+            void enableMessageCarbons();
 
             void performLoginFromCachedCredentials();
             void reconnectAfterError();
@@ -195,5 +196,6 @@ namespace Swift {
             HighlightManager* highlightManager_;
             HighlightEditorController* highlightEditorController_;
             std::map<std::string, std::string> emoticons_;
+            boost::signals2::connection enableCarbonsRequestHandlerConnection_;
     };
 }

@@ -312,6 +312,12 @@ void ChatController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     }
 }
 
+void ChatController::handleIncomingOwnMessage(std::shared_ptr<Message> message) {
+    if (!message->getBody().get_value_or("").empty()) {
+        postSendMessage(message->getBody().get_value_or(""), message);
+        handleStanzaAcked(message);
+    }
+}
 
 void ChatController::postSendMessage(const std::string& body, std::shared_ptr<Stanza> sentStanza) {
     std::shared_ptr<Replace> replace = sentStanza->getPayload<Replace>();

@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/optional.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
@@ -17,6 +16,9 @@ namespace Swift {
     class Stanza;
 
     class SWIFTEN_API Forwarded : public Payload {
+        public:
+            typedef std::shared_ptr<Forwarded> ref;
+
         public:
             virtual ~Forwarded();
 

@@ -7,13 +7,13 @@
 #include <Swift/Controllers/MainController.h>
 
 #include <cstdlib>
+#include <memory>
 
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
-#include <memory>
-#include <memory>
 
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
@@ -35,6 +35,7 @@
 #include <Swiften/Network/NetworkFactories.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Presence/PresenceSender.h>
+#include <Swiften/Queries/Requests/EnableCarbonsRequest.h>
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/StringCodecs/Hexify.h>
 #include <Swiften/VCards/GetVCardRequest.h>
@@ -802,7 +803,24 @@ void MainController::handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> in
             rosterController_->getWindow()->setBlockingCommandAvailable(true);
             rosterController_->initBlockingCommand();
         }
+        if (info->hasFeature(DiscoInfo::MessageCarbonsFeature)) {
+            enableMessageCarbons();
+        }
     }
+}
+
+void MainController::enableMessageCarbons() {
+    auto enableCarbonsRequest = EnableCarbonsRequest::create(client_->getIQRouter());
+    enableCarbonsRequestHandlerConnection_ = enableCarbonsRequest->onResponse.connect([&](Payload::ref /*payload*/, ErrorPayload::ref error) {
+        if (error) {
+            SWIFT_LOG(warning) << "Failed to enable carbons." << std::endl;
+        }
+        else {
+            SWIFT_LOG(debug) << "Successfully enabled carbons." << std::endl;
+        }
+        enableCarbonsRequestHandlerConnection_.disconnect();
+    });
+    enableCarbonsRequest->send();
 }
 
 void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {

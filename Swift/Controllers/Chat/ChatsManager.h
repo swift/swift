@@ -67,7 +67,7 @@ namespace Swift {
             void setAvatarManager(AvatarManager* avatarManager);
             void setOnline(bool enabled);
             void setServerDiscoInfo(std::shared_ptr<DiscoInfo> info);
-            void handleIncomingMessage(std::shared_ptr<Message> message);
+            void handleIncomingMessage(std::shared_ptr<Message> incomingMessage);
             std::vector<ChatListWindow::Chat> getRecentChats() const;
             virtual std::vector<Contact::ref> getContacts(bool withMUCNicks);
 
@@ -105,6 +105,7 @@ namespace Swift {
             void handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf);
             void handleWhiteboardStateChange(const JID& contact, const ChatWindow::WhiteboardSessionState state);
             boost::optional<ChatListWindow::Chat> removeExistingChat(const ChatListWindow::Chat& chat);
+            bool messageCausesSessionBinding(std::shared_ptr<Message> message);
             void cleanupPrivateMessageRecents();
             void appendRecent(const ChatListWindow::Chat& chat);
             void prependRecent(const ChatListWindow::Chat& chat);

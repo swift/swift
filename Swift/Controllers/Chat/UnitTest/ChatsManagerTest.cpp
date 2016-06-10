@@ -23,8 +23,11 @@
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
+#include <Swiften/Elements/CarbonsReceived.h>
+#include <Swiften/Elements/CarbonsSent.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
@@ -80,11 +83,18 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
     CPPUNIT_TEST(testChatControllerPMPresenceHandling);
     CPPUNIT_TEST(testLocalMUCServiceDiscoveryResetOnDisconnect);
+    CPPUNIT_TEST(testPresenceChangeDoesNotReplaceMUCInvite);
+
+    // Highlighting tests
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
     CPPUNIT_TEST(testChatControllerMeMessageHandling);
     CPPUNIT_TEST(testChatControllerMeMessageHandlingInMUC);
-    CPPUNIT_TEST(testPresenceChangeDoesNotReplaceMUCInvite);
+
+    // Carbons tests
+    CPPUNIT_TEST(testCarbonsForwardedIncomingMessageToSecondResource);
+    CPPUNIT_TEST(testCarbonsForwardedOutgoingMessageFromSecondResource);
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -919,6 +929,104 @@ public:
         stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Unavailable));
         CPPUNIT_ASSERT_EQUAL(std::string(""), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
         CPPUNIT_ASSERT_EQUAL(std::string("testling@test.com has gone offline."), MockChatWindow::bodyFromMessage(window->lastAddedPresence_));
+    }
+
+    template <typename CarbonsType>
+    Message::ref createCarbonsMessage(std::shared_ptr<CarbonsType> carbons, std::shared_ptr<Message> forwardedMessage) {
+        auto messageWrapper = std::make_shared<Message>();
+        messageWrapper->setFrom(jid_.toBare());
+        messageWrapper->setTo(jid_);
+        messageWrapper->setType(Message::Chat);
+
+        messageWrapper->addPayload(carbons);
+        auto forwarded = std::make_shared<Forwarded>();
+        carbons->setForwarded(forwarded);
+        forwarded->setStanza(forwardedMessage);
+        return messageWrapper;
+    }
+
+    void testCarbonsForwardedIncomingMessageToSecondResource() {
+        JID messageJID("testling@test.com/resource1");
+        JID jid2 = jid_.toBare().withResource("someOtherResource");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        std::shared_ptr<Message> message(new Message());
+        message->setFrom(messageJID);
+        std::string body("This is a legible message. >HEH@)oeueu");
+        message->setBody(body);
+        manager_->handleIncomingMessage(message);
+        CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        // incoming carbons message from another resource
+        {
+            auto originalMessage = std::make_shared<Message>();
+            originalMessage->setFrom(messageJID);
+            originalMessage->setTo(jid2);
+            originalMessage->setType(Message::Chat);
+            std::string forwardedBody = "Some further text.";
+            originalMessage->setBody(forwardedBody);
+
+            auto messageWrapper = createCarbonsMessage(std::make_shared<CarbonsReceived>(), originalMessage);
+
+            manager_->handleIncomingMessage(messageWrapper);
+
+            CPPUNIT_ASSERT_EQUAL(forwardedBody, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+            CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
+        }
+    }
+
+    void testCarbonsForwardedOutgoingMessageFromSecondResource() {
+        JID messageJID("testling@test.com/resource1");
+        JID jid2 = jid_.toBare().withResource("someOtherResource");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        std::shared_ptr<Message> message(new Message());
+        message->setFrom(messageJID);
+        std::string body("This is a legible message. >HEH@)oeueu");
+        message->setBody(body);
+        manager_->handleIncomingMessage(message);
+        CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        // incoming carbons message from another resource
+        {
+            auto originalMessage = std::make_shared<Message>();
+            originalMessage->setFrom(jid2);
+            originalMessage->setTo(messageJID);
+            originalMessage->setType(Message::Chat);
+            originalMessage->setID("abcdefg123456");
+            std::string forwardedBody = "Some text my other resource sent.";
+            originalMessage->setBody(forwardedBody);
+            originalMessage->addPayload(std::make_shared<DeliveryReceiptRequest>());
+
+            auto messageWrapper = createCarbonsMessage(std::make_shared<CarbonsSent>(), originalMessage);
+
+            manager_->handleIncomingMessage(messageWrapper);
+
+            CPPUNIT_ASSERT_EQUAL(forwardedBody, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+            CPPUNIT_ASSERT_EQUAL(true, window->lastAddedMessageSenderIsSelf_);
+            CPPUNIT_ASSERT_EQUAL(size_t(1), window->receiptChanges_.size());
+            CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptRequested, window->receiptChanges_[0].second);
+        }
+
+        // incoming carbons message for the received delivery receipt to the other resource
+        {
+            auto originalMessage = std::make_shared<Message>();
+            originalMessage->setFrom(messageJID);
+            originalMessage->setTo(jid2);
+            originalMessage->setType(Message::Chat);
+            originalMessage->addPayload(std::make_shared<DeliveryReceipt>("abcdefg123456"));
+
+            auto messageWrapper = createCarbonsMessage(std::make_shared<CarbonsReceived>(), originalMessage);
+
+            manager_->handleIncomingMessage(messageWrapper);
+
+            CPPUNIT_ASSERT_EQUAL(size_t(2), window->receiptChanges_.size());
+            CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptReceived, window->receiptChanges_[1].second);
+        }
     }
 
 private:

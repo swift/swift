@@ -35,6 +35,7 @@ namespace Swift {
             static const std::string MessageDeliveryReceiptsFeature;
             static const std::string WhiteboardFeature;
             static const std::string BlockingCommandFeature;
+            static const std::string MessageCarbonsFeature;
 
             class Identity {
                 public:

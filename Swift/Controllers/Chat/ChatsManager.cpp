@@ -24,9 +24,12 @@
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/DiscoServiceWalker.h>
+#include <Swiften/Elements/CarbonsReceived.h>
+#include <Swiften/Elements/CarbonsSent.h>
 #include <Swiften/Elements/ChatState.h>
 #include <Swiften/Elements/DeliveryReceipt.h>
 #include <Swiften/Elements/DeliveryReceiptRequest.h>
+#include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/MUC/MUCBookmarkManager.h>
@@ -333,7 +336,7 @@ void ChatsManager::loadRecents() {
             return;
         }
 
-        foreach(ChatListWindow::Chat chat, recentChats) {
+        for (auto chat : recentChats) {
             chat.statusType = StatusShow::None;
             chat = updateChatStatusAndAvatarHelper(chat);
             prependRecent(chat);
@@ -865,13 +868,49 @@ void ChatsManager::handleUserNicknameChanged(MUCController* mucController, const
     }
 }
 
-void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> message) {
-    JID jid = message->getFrom();
+bool ChatsManager::messageCausesSessionBinding(std::shared_ptr<Message> message) {
+    bool causesRebind = false;
+    ChatState::ref chatState = message->getPayload<ChatState>();
+    if (!message->getBody().get_value_or("").empty() || (chatState && chatState->getChatState() == ChatState::Composing)) {
+        causesRebind = true;
+    }
+    return causesRebind;
+}
+
+void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> incomingMessage) {
+    std::shared_ptr<Message> message = incomingMessage;
+    if (message->getFrom().toBare() == jid_.toBare()) {
+        CarbonsReceived::ref carbonsReceived;
+        CarbonsSent::ref carbonsSent;
+        Forwarded::ref forwarded;
+        Message::ref forwardedMessage;
+        if ((carbonsReceived = incomingMessage->getPayload<CarbonsReceived>()) &&
+            (forwarded = carbonsReceived->getForwarded()) &&
+            (forwardedMessage = std::dynamic_pointer_cast<Message>(forwarded->getStanza()))) {
+            message = forwardedMessage;
+        }
+        else if ((carbonsSent = incomingMessage->getPayload<CarbonsSent>()) &&
+                 (forwarded = carbonsSent->getForwarded()) &&
+                 (forwardedMessage = std::dynamic_pointer_cast<Message>(forwarded->getStanza()))) {
+            JID toJID = forwardedMessage->getTo();
+
+            ChatController* controller = getChatControllerOrCreate(toJID);
+            if (controller) {
+                controller->handleIncomingOwnMessage(forwardedMessage);
+            }
+            else {
+                SWIFT_LOG(error) << "Carbons message ignored." << std::endl;
+            }
+            return;
+        }
+    }
+    JID fromJID = message->getFrom();
+
     std::shared_ptr<MessageEvent> event(new MessageEvent(message));
     bool isInvite = !!message->getPayload<MUCInvitationPayload>();
     bool isMediatedInvite = (message->getPayload<MUCUserPayload>() && message->getPayload<MUCUserPayload>()->getInvite());
     if (isMediatedInvite) {
-        jid = (*message->getPayload<MUCUserPayload>()->getInvite()).from;
+        fromJID = (*message->getPayload<MUCUserPayload>()->getInvite()).from;
     }
     if (!event->isReadable() && !message->getPayload<ChatState>() && !message->getPayload<DeliveryReceipt>() && !message->getPayload<DeliveryReceiptRequest>() && !isInvite && !isMediatedInvite && !message->hasSubject()) {
         return;
@@ -879,7 +918,7 @@ void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> message) {
 
     // Try to deliver it to a MUC
     if (message->getType() == Message::Groupchat || message->getType() == Message::Error /*|| (isInvite && message->getType() == Message::Normal)*/) {
-        std::map<JID, MUCController*>::iterator i = mucControllers_.find(jid.toBare());
+        std::map<JID, MUCController*>::iterator i = mucControllers_.find(fromJID.toBare());
         if (i != mucControllers_.end()) {
             i->second->handleIncomingMessage(event);
             return;
@@ -895,10 +934,10 @@ void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> message) {
     if (invite && autoAcceptMUCInviteDecider_->isAutoAcceptedInvite(message->getFrom(), invite)) {
         if (invite->getIsContinuation()) {
             // check for existing chat controller for the from JID
-            ChatController* controller = getChatControllerIfExists(jid);
+            ChatController* controller = getChatControllerIfExists(fromJID);
             if (controller) {
                 ChatWindow* window = controller->detachChatWindow();
-                chatControllers_.erase(jid);
+                chatControllers_.erase(fromJID);
                 delete controller;
                 handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true, window);
                 return;
@@ -914,18 +953,12 @@ void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> message) {
         /* Only route such messages if a window exists, don't open new windows for them.*/
 
         // Do not bind a controller to a full JID, for delivery receipts or chat state notifications.
-        bool bindControllerToJID = false;
-        ChatState::ref chatState = message->getPayload<ChatState>();
-        if (!message->getBody().get_value_or("").empty() || (chatState && chatState->getChatState() == ChatState::Composing)) {
-            bindControllerToJID = true;
-        }
-
-        ChatController* controller = getChatControllerIfExists(jid, bindControllerToJID);
+        ChatController* controller = getChatControllerIfExists(fromJID, messageCausesSessionBinding(message));
         if (controller) {
             controller->handleIncomingMessage(event);
         }
     } else {
-        getChatControllerOrCreate(jid)->handleIncomingMessage(event);
+        getChatControllerOrCreate(fromJID)->handleIncomingMessage(event);
     }
 }
 
