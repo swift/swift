@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,16 +30,16 @@ void UserLocationParser::handleEndElement(const std::string& element, const std:
     if (level == 1) {
         try {
             if (element == "accuracy") {
-                getPayloadInternal()->setAccuracy(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setAccuracy(boost::lexical_cast<double>(currentText));
             }
             else if (element == "alt") {
-                getPayloadInternal()->setAltitude(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setAltitude(boost::lexical_cast<double>(currentText));
             }
             else if (element == "area") {
                 getPayloadInternal()->setArea(currentText);
             }
             else if (element == "bearing") {
-                getPayloadInternal()->setBearing(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setBearing(boost::lexical_cast<double>(currentText));
             }
             else if (element == "building") {
                 getPayloadInternal()->setBuilding(currentText);
@@ -57,19 +57,19 @@ void UserLocationParser::handleEndElement(const std::string& element, const std:
                 getPayloadInternal()->setDescription(currentText);
             }
             else if (element == "error") {
-                getPayloadInternal()->setError(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setError(boost::lexical_cast<double>(currentText));
             }
             else if (element == "floor") {
                 getPayloadInternal()->setFloor(currentText);
             }
             else if (element == "lat") {
-                getPayloadInternal()->setLatitude(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setLatitude(boost::lexical_cast<double>(currentText));
             }
             else if (element == "locality") {
                 getPayloadInternal()->setLocality(currentText);
             }
             else if (element == "lon") {
-                getPayloadInternal()->setLongitude(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setLongitude(boost::lexical_cast<double>(currentText));
             }
             else if (element == "postalcode") {
                 getPayloadInternal()->setPostalCode(currentText);
@@ -81,7 +81,7 @@ void UserLocationParser::handleEndElement(const std::string& element, const std:
                 getPayloadInternal()->setRoom(currentText);
             }
             else if (element == "speed") {
-                getPayloadInternal()->setSpeed(boost::lexical_cast<float>(currentText));
+                getPayloadInternal()->setSpeed(boost::lexical_cast<double>(currentText));
             }
             else if (element == "street") {
                 getPayloadInternal()->setStreet(currentText);

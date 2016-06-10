@@ -31,11 +31,11 @@ namespace Swift {
                 this->area = value ;
             }
 
-            const boost::optional< float >& getAltitude() const {
+            const boost::optional< double >& getAltitude() const {
                 return altitude;
             }
 
-            void setAltitude(const boost::optional< float >& value) {
+            void setAltitude(const boost::optional< double >& value) {
                 this->altitude = value ;
             }
 
@@ -47,19 +47,19 @@ namespace Swift {
                 this->locality = value ;
             }
 
-            const boost::optional< float >& getLatitude() const {
+            const boost::optional< double >& getLatitude() const {
                 return latitude;
             }
 
-            void setLatitude(const boost::optional< float >& value) {
+            void setLatitude(const boost::optional< double >& value) {
                 this->latitude = value ;
             }
 
-            const boost::optional< float >& getAccuracy() const {
+            const boost::optional< double >& getAccuracy() const {
                 return accuracy;
             }
 
-            void setAccuracy(const boost::optional< float >& value) {
+            void setAccuracy(const boost::optional< double >& value) {
                 this->accuracy = value ;
             }
 
@@ -135,19 +135,19 @@ namespace Swift {
                 this->uri = value ;
             }
 
-            const boost::optional< float >& getLongitude() const {
+            const boost::optional< double >& getLongitude() const {
                 return longitude;
             }
 
-            void setLongitude(const boost::optional< float >& value) {
+            void setLongitude(const boost::optional< double >& value) {
                 this->longitude = value ;
             }
 
-            const boost::optional< float >& getError() const {
+            const boost::optional< double >& getError() const {
                 return error;
             }
 
-            void setError(const boost::optional< float >& value) {
+            void setError(const boost::optional< double >& value) {
                 this->error = value ;
             }
 
@@ -159,11 +159,11 @@ namespace Swift {
                 this->postalCode = value ;
             }
 
-            const boost::optional< float >& getBearing() const {
+            const boost::optional< double >& getBearing() const {
                 return bearing;
             }
 
-            void setBearing(const boost::optional< float >& value) {
+            void setBearing(const boost::optional< double >& value) {
                 this->bearing = value ;
             }
 
@@ -191,21 +191,21 @@ namespace Swift {
                 this->street = value ;
             }
 
-            const boost::optional< float >& getSpeed() const {
+            const boost::optional< double >& getSpeed() const {
                 return speed;
             }
 
-            void setSpeed(const boost::optional< float >& value) {
+            void setSpeed(const boost::optional< double >& value) {
                 this->speed = value ;
             }
 
 
         private:
             boost::optional< std::string > area;
-            boost::optional< float > altitude;
+            boost::optional< double > altitude;
             boost::optional< std::string > locality;
-            boost::optional< float > latitude;
-            boost::optional< float > accuracy;
+            boost::optional< double > latitude;
+            boost::optional< double > accuracy;
             boost::optional< std::string > description;
             boost::optional< std::string > countryCode;
             boost::optional< boost::posix_time::ptime > timestamp;
@@ -215,13 +215,13 @@ namespace Swift {
             boost::optional< std::string > country;
             boost::optional< std::string > region;
             boost::optional< std::string > uri;
-            boost::optional< float > longitude;
-            boost::optional< float > error;
+            boost::optional< double > longitude;
+            boost::optional< double > error;
             boost::optional< std::string > postalCode;
-            boost::optional< float > bearing;
+            boost::optional< double > bearing;
             boost::optional< std::string > text;
             boost::optional< std::string > datum;
             boost::optional< std::string > street;
-            boost::optional< float > speed;
+            boost::optional< double > speed;
     };
 }

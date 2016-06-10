@@ -87,9 +87,14 @@ int main(int, char **) {
 
     // lambda test
     auto someFunction = [](int i){ i = i * i; };
+    someFunction(2);
 
     // nullptr test
     double* fooDouble = nullptr;
+    double bazDouble = 8.0;
+    fooDouble = &bazDouble;
+    bazDouble = *fooDouble;
+
     return 0;
 }
 """, '.cpp')

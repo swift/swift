@@ -46,10 +46,10 @@ class UserLocationParserTest : public CppUnit::TestFixture
             UserLocation* payload = dynamic_cast<UserLocation*>(parser.getPayload().get());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT_EQUAL(std::string("Barbaric"), payload->getArea().get());
-            CPPUNIT_ASSERT_EQUAL(5.75F, payload->getAltitude().get());
+            CPPUNIT_ASSERT_EQUAL(5.75, payload->getAltitude().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Near"), payload->getLocality().get());
-            CPPUNIT_ASSERT_EQUAL(1.670F, payload->getLatitude().get());
-            CPPUNIT_ASSERT_EQUAL(0.95F, payload->getAccuracy().get());
+            CPPUNIT_ASSERT_EQUAL(1.670, payload->getLatitude().get());
+            CPPUNIT_ASSERT_EQUAL(0.95, payload->getAccuracy().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Nice"), payload->getDescription().get());
             CPPUNIT_ASSERT_EQUAL(std::string("+91"), payload->getCountryCode().get());
             CPPUNIT_ASSERT_EQUAL(std::string("2015-06-11T20:55:50Z"), dateTimeToString(payload->getTimestamp().get()));
@@ -59,14 +59,14 @@ class UserLocationParserTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT_EQUAL(std::string("USA"), payload->getCountry().get());
             CPPUNIT_ASSERT_EQUAL(std::string("NewSode"), payload->getRegion().get());
             CPPUNIT_ASSERT_EQUAL(std::string("URIs"), payload->getURI().get());
-            CPPUNIT_ASSERT_EQUAL(6.7578F, payload->getLongitude().get());
-            CPPUNIT_ASSERT_EQUAL(5.66F, payload->getError().get());
+            CPPUNIT_ASSERT_EQUAL(6.7578, payload->getLongitude().get());
+            CPPUNIT_ASSERT_EQUAL(5.66, payload->getError().get());
             CPPUNIT_ASSERT_EQUAL(std::string("67"), payload->getPostalCode().get());
-            CPPUNIT_ASSERT_EQUAL(12.89F, payload->getBearing().get());
+            CPPUNIT_ASSERT_EQUAL(12.89, payload->getBearing().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Hello"), payload->getText().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Datee"), payload->getDatum().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Highway"), payload->getStreet().get());
-            CPPUNIT_ASSERT_EQUAL(56.77F, payload->getSpeed().get());
+            CPPUNIT_ASSERT_EQUAL(56.77, payload->getSpeed().get());
         }
 
         void testParse_with_Some_variables() {
@@ -83,10 +83,10 @@ class UserLocationParserTest : public CppUnit::TestFixture
             UserLocation* payload = dynamic_cast<UserLocation*>(parser.getPayload().get());
             CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT_EQUAL(std::string("Barbaric"), payload->getArea().get());
-            CPPUNIT_ASSERT_EQUAL(5.75F, payload->getAltitude().get());
+            CPPUNIT_ASSERT_EQUAL(5.75, payload->getAltitude().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Near"), payload->getLocality().get());
             CPPUNIT_ASSERT(!payload->getLatitude());
-            CPPUNIT_ASSERT_EQUAL(0.95F, payload->getAccuracy().get());
+            CPPUNIT_ASSERT_EQUAL(0.95, payload->getAccuracy().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Nice"), payload->getDescription().get());
             CPPUNIT_ASSERT_EQUAL(std::string("+91"), payload->getCountryCode().get());
             CPPUNIT_ASSERT_EQUAL(std::string("2015-06-11T20:55:50Z"), dateTimeToString(payload->getTimestamp().get()));
@@ -96,10 +96,10 @@ class UserLocationParserTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT(!payload->getCountry());
             CPPUNIT_ASSERT_EQUAL(std::string("NewSode"), payload->getRegion().get());
             CPPUNIT_ASSERT_EQUAL(std::string("URIs"), payload->getURI().get());
-            CPPUNIT_ASSERT_EQUAL(6.7578F, payload->getLongitude().get());
-            CPPUNIT_ASSERT_EQUAL(5.66F, payload->getError().get());
+            CPPUNIT_ASSERT_EQUAL(6.7578, payload->getLongitude().get());
+            CPPUNIT_ASSERT_EQUAL(5.66, payload->getError().get());
             CPPUNIT_ASSERT_EQUAL(std::string("67"), payload->getPostalCode().get());
-            CPPUNIT_ASSERT_EQUAL(12.89F, payload->getBearing().get());
+            CPPUNIT_ASSERT_EQUAL(12.89, payload->getBearing().get());
             CPPUNIT_ASSERT_EQUAL(std::string("Hello"), payload->getText().get());
             CPPUNIT_ASSERT(!payload->getDatum());
             CPPUNIT_ASSERT(!payload->getStreet());

@@ -33,10 +33,10 @@ class UserLocationSerializerTest : public CppUnit::TestFixture {
             UserLocationSerializer testling(&serializers);
             std::shared_ptr<UserLocation> userLocation(new UserLocation());
             userLocation->setArea(boost::optional<std::string>("Barbaric"));
-            userLocation->setAltitude(5.75F);
+            userLocation->setAltitude(5.75);
             userLocation->setLocality(boost::optional<std::string>("Near"));
-            userLocation->setLatitude(boost::optional<float>(5.75F));
-            userLocation->setAccuracy(5.75F);
+            userLocation->setLatitude(boost::optional<double>(5.75));
+            userLocation->setAccuracy(5.75);
             userLocation->setDescription(boost::optional<std::string>("Nice"));
             userLocation->setCountryCode(boost::optional<std::string>("+91"));
             userLocation->setTimestamp(stringToDateTime("2015-06-11T20:55:50Z"));
@@ -46,14 +46,14 @@ class UserLocationSerializerTest : public CppUnit::TestFixture {
             userLocation->setCountry(boost::optional<std::string>("USA"));
             userLocation->setRegion(boost::optional<std::string>("NewSode"));
             userLocation->setURI(boost::optional<std::string>("URIs"));
-            userLocation->setLongitude(5.75F);
-            userLocation->setError(5.75F);
+            userLocation->setLongitude(5.75);
+            userLocation->setError(5.75);
             userLocation->setPostalCode(boost::optional<std::string>("67"));
-            userLocation->setBearing(5.75F);
+            userLocation->setBearing(5.75);
             userLocation->setText(boost::optional<std::string>("Hello"));
             userLocation->setDatum(boost::optional<std::string>("Datee"));
             userLocation->setStreet(boost::optional<std::string>("Highway"));
-            userLocation->setSpeed(5.75F);
+            userLocation->setSpeed(5.75);
 
             std::string expectedResult =
                                 "<geoloc xmlns=\"http://jabber.org/protocol/geoloc\">"
@@ -72,19 +72,19 @@ class UserLocationSerializerTest : public CppUnit::TestFixture {
             UserLocationSerializer testling(&serializers);
             std::shared_ptr<UserLocation> userLocation(new UserLocation());
             userLocation->setArea(boost::optional<std::string>("Barbaric"));
-            userLocation->setAltitude(5.75F);
+            userLocation->setAltitude(5.75);
             userLocation->setLocality(boost::optional<std::string>("Near"));
-            userLocation->setAccuracy(5.75F);
+            userLocation->setAccuracy(5.75);
             userLocation->setDescription(boost::optional<std::string>("Nice"));
             userLocation->setCountryCode(boost::optional<std::string>("+91"));
             userLocation->setTimestamp(stringToDateTime("2015-06-11T20:55:50Z"));
             userLocation->setFloor(boost::optional<std::string>("3"));
             userLocation->setRegion(boost::optional<std::string>("NewSode"));
             userLocation->setURI(boost::optional<std::string>("URIs"));
-            userLocation->setLongitude(5.75F);
-            userLocation->setError(5.75F);
+            userLocation->setLongitude(5.75);
+            userLocation->setError(5.75);
             userLocation->setPostalCode(boost::optional<std::string>("67"));
-            userLocation->setBearing(5.75F);
+            userLocation->setBearing(5.75);
             userLocation->setText(boost::optional<std::string>("Hello"));
 
             std::string expectedResult =

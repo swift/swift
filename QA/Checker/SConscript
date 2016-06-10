@@ -1,13 +1,19 @@
+import os
+
 Import("env")
 
 if env["TEST"] :
     if env["SCONS_STAGE"] == "flags" :
             env["CHECKER_FLAGS"] = {
-                    "CPPPATH" : ["#/3rdParty/HippoMocks"],
                     "LIBS": ["Checker"],
                     "LIBPATH": [Dir(".")],
                     "LINKFLAGS": env["PLATFORM"] == "win32" and ["/SUBSYSTEM:CONSOLE"] or []
                 }
+
+            if os.path.basename(env["CC"]) in ("clang", "gcc"):
+                env["CHECKER_FLAGS"]["CPPFLAGS"] = ["-isystem" + Dir("#/3rdParty/HippoMocks").abspath]
+            else :
+                env["CHECKER_FLAGS"]["CPPPATH"] = ["#/3rdParty/HippoMocks"]
 
     if env["SCONS_STAGE"] == "build" :
             checker_env = env.Clone()

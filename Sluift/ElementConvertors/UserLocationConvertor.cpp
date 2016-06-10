@@ -8,8 +8,6 @@
 
 #include <memory>
 
-#include <boost/numeric/conversion/cast.hpp>
-
 #include <lua.hpp>
 
 #include <Swiften/Base/DateTime.h>
@@ -32,7 +30,7 @@ std::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State*
     lua_pop(L, 1);
     lua_getfield(L, -1, "altitude");
     if (lua_isnumber(L, -1)) {
-        result->setAltitude(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setAltitude(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "locality");
@@ -42,12 +40,12 @@ std::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State*
     lua_pop(L, 1);
     lua_getfield(L, -1, "latitude");
     if (lua_isnumber(L, -1)) {
-        result->setLatitude(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setLatitude(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "accuracy");
     if (lua_isnumber(L, -1)) {
-        result->setAccuracy(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setAccuracy(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "description");
@@ -97,12 +95,12 @@ std::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State*
     lua_pop(L, 1);
     lua_getfield(L, -1, "longitude");
     if (lua_isnumber(L, -1)) {
-        result->setLongitude(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setLongitude(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "error");
     if (lua_isnumber(L, -1)) {
-        result->setError(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setError(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "postal_code");
@@ -112,7 +110,7 @@ std::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State*
     lua_pop(L, 1);
     lua_getfield(L, -1, "bearing");
     if (lua_isnumber(L, -1)) {
-        result->setBearing(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setBearing(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     lua_getfield(L, -1, "text");
@@ -132,7 +130,7 @@ std::shared_ptr<UserLocation> UserLocationConvertor::doConvertFromLua(lua_State*
     lua_pop(L, 1);
     lua_getfield(L, -1, "speed");
     if (lua_isnumber(L, -1)) {
-        result->setSpeed(boost::numeric_cast<float>(lua_tonumber(L, -1)));
+        result->setSpeed(lua_tonumber(L, -1));
     }
     lua_pop(L, 1);
     return result;
