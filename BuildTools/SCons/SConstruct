@@ -436,8 +436,7 @@ if env["experimental_ft"] :
         libminiupnpc_flags["CPPPATH"] = [env["libminiupnpc_includedir"]]
     libminiupnpc_conf_env.MergeFlags(libminiupnpc_flags)
     conf = Configure(libminiupnpc_conf_env)
-    if conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) and False :
-        # ^ False because APIs aren't stable
+    if conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) :
         env["HAVE_LIBMINIUPNPC"] = 1
         env["LIBMINIUPNPC_FLAGS"] = { "LIBS": ["miniupnpc"] }
         env["LIBMINIUPNPC_FLAGS"].update(libminiupnpc_flags)
@@ -457,8 +456,7 @@ if env["experimental_ft"] :
         libnatpmp_flags["CPPPATH"] = [env["libnatpmp_includedir"]]
     libnatpmp_conf_env.MergeFlags(libnatpmp_flags)
     conf = Configure(libnatpmp_conf_env)
-    if conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) and False:
-        # ^ False because APIs aren't stable
+    if conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) :
         env["HAVE_LIBNATPMP"] = 1
         env["LIBNATPMP_FLAGS"] = { "LIBS": ["natpmp"] }
         env["LIBNATPMP_FLAGS"].update(libnatpmp_flags)
