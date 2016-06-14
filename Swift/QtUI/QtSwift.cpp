@@ -6,49 +6,49 @@
 
 #include <Swift/QtUI/QtSwift.h>
 
-#include <string>
 #include <map>
+#include <string>
 
 #include <boost/bind.hpp>
 
-#include <QFile>
-#include <QMessageBox>
 #include <QApplication>
+#include <QFile>
 #include <QMap>
+#include <QMessageBox>
 #include <qdebug.h>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/Platform.h>
-#include <Swiften/Elements/Presence.h>
-#include <Swiften/Client/Client.h>
 #include <Swiften/Base/Paths.h>
+#include <Swiften/Base/Platform.h>
+#include <Swiften/Client/Client.h>
+#include <Swiften/Elements/Presence.h>
 #include <Swiften/TLS/TLSContextFactory.h>
 
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 #include <SwifTools/AutoUpdater/AutoUpdater.h>
 #include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
 
-#include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
-#include <Swift/Controllers/Storages/FileStoragesFactory.h>
-#include <Swift/Controllers/Settings/XMLSettingsProvider.h>
-#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/MainController.h>
 #include <Swift/Controllers/ApplicationInfo.h>
 #include <Swift/Controllers/BuildVersion.h>
+#include <Swift/Controllers/MainController.h>
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
+#include <Swift/Controllers/Settings/XMLSettingsProvider.h>
 #include <Swift/Controllers/StatusCache.h>
+#include <Swift/Controllers/Storages/CertificateFileStorageFactory.h>
+#include <Swift/Controllers/Storages/FileStoragesFactory.h>
 
-#include <Swift/QtUI/QtLoginWindow.h>
-#include <Swift/QtUI/QtChatTabsBase.h>
 #include <Swift/QtUI/QtChatTabs.h>
+#include <Swift/QtUI/QtChatTabsBase.h>
 #include <Swift/QtUI/QtChatTabsShortcutOnlySubstitute.h>
-#include <Swift/QtUI/QtSystemTray.h>
+#include <Swift/QtUI/QtChatWindowFactory.h>
+#include <Swift/QtUI/QtLoginWindow.h>
+#include <Swift/QtUI/QtSingleWindow.h>
 #include <Swift/QtUI/QtSoundPlayer.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtSystemTray.h>
 #include <Swift/QtUI/QtUIFactory.h>
-#include <Swift/QtUI/QtChatWindowFactory.h>
-#include <Swift/QtUI/QtSingleWindow.h>
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include <Swift/QtUI/WindowsNotifier.h>
@@ -96,7 +96,6 @@ po::options_description QtSwift::getOptionsDescription() {
         ("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
         ("start-minimized", "Don't show the login/roster window at startup")
         ("enable-jid-adhocs", "Enable AdHoc commands to custom JID's.")
-        ("trellis", "Enable support for trellis layout")
 #if QT_VERSION >= 0x040800
         ("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
 #endif
@@ -178,7 +177,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
         tabs_ = new QtChatTabsShortcutOnlySubstitute();
     }
     else {
-        tabs_ = new QtChatTabs(splitter_ != nullptr, settingsHierachy_, options.count("trellis"));
+        tabs_ = new QtChatTabs(splitter_ != nullptr, settingsHierachy_, true);
     }
     bool startMinimized = options.count("start-minimized") > 0;
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
@@ -259,14 +258,14 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
 QtSwift::~QtSwift() {
     delete autoUpdater_;
-    foreach (QtUIFactory* factory, uiFactories_) {
+    for (auto* factory : uiFactories_) {
         delete factory;
     }
-    foreach (MainController* controller, mainControllers_) {
+    for (auto* controller : mainControllers_) {
         delete controller;
     }
     delete notifier_;
-    foreach (QtSystemTray* tray, systemTrays_) {
+    for (auto* tray : systemTrays_) {
         delete tray;
     }
     delete tabs_;
