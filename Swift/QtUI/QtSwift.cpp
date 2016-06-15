@@ -13,6 +13,7 @@
 
 #include <QApplication>
 #include <QFile>
+#include <QFontDatabase>
 #include <QMap>
 #include <QMessageBox>
 #include <qdebug.h>
@@ -170,6 +171,36 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     if (options.count("debug")) {
         Log::setLogLevel(Swift::Log::debug);
     }
+
+    // Load fonts
+    std::vector<std::string> fontNames = {
+        "themes/Default/Lato2OFL/Lato-Black.ttf",
+        "themes/Default/Lato2OFL/Lato-BlackItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Bold.ttf",
+        "themes/Default/Lato2OFL/Lato-BoldItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Hairline.ttf",
+        "themes/Default/Lato2OFL/Lato-HairlineItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Heavy.ttf",
+        "themes/Default/Lato2OFL/Lato-HeavyItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Italic.ttf",
+        "themes/Default/Lato2OFL/Lato-Light.ttf",
+        "themes/Default/Lato2OFL/Lato-LightItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Medium.ttf",
+        "themes/Default/Lato2OFL/Lato-MediumItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Regular.ttf",
+        "themes/Default/Lato2OFL/Lato-Semibold.ttf",
+        "themes/Default/Lato2OFL/Lato-SemiboldItalic.ttf",
+        "themes/Default/Lato2OFL/Lato-Thin.ttf",
+        "themes/Default/Lato2OFL/Lato-ThinItalic.ttf"
+    };
+
+    for (auto&& fontName : fontNames) {
+        std::string fontPath = std::string(":/") + fontName;
+        int error = QFontDatabase::addApplicationFont(P2QSTRING(fontPath));
+        assert((error != -1) && "Failed to load font.");
+    }
+
+    QApplication::setFont(QFont("Lato"));
 
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
     tabs_ = nullptr;
