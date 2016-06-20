@@ -73,5 +73,8 @@ On Unix/Linux SCons will use `pkg-config` to determine the compiler and linker f
 
 Note: The Qt that comes with your Linux distribution might not be up to date and may have issues with some desktop environments.
 
-### Building Swift
+#### Building Swift
 To build Swift, simply open a terminal, go to the project root and run `./scons Swift`. Afterwards you can start Swift by running `./Swift/QtUI/swift-im`.
+
+#### Installing Swift
+To install Swift on the system (e.g. in the `/usr/local` directory), run `./scons SWIFT_INSTALLDIR=/usr/local /usr/local` in the Swift project folder.
