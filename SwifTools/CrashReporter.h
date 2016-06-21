@@ -14,7 +14,7 @@
 namespace Swift {
     class CrashReporter {
         public:
-            CrashReporter(const boost::filesystem::path& path);
+            CrashReporter(const boost::filesystem::path& path, const std::string& dumpPrefix);
 
         private:
             struct Private;

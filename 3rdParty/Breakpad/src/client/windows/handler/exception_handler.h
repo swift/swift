@@ -188,6 +188,12 @@ class ExceptionHandler {
     UpdateNextID();  // Necessary to put dump_path_ in next_minidump_path_.
   }
 
+  void set_dump_filename_prefix(const wstring& dump_prefix) {
+    dump_filename_prefix_ = dump_prefix;
+    dump_filename_prefix_c_ = dump_filename_prefix_.c_str();
+    UpdateNextID();
+  }
+
   // Requests that a previously reported crash be uploaded.
   bool RequestUpload(DWORD crash_id);
 
@@ -313,6 +319,9 @@ class ExceptionHandler {
   // argument to the constructor, or set_dump_path.
   wstring dump_path_;
 
+  // The filename prefix used for the minidump files.
+  wstring dump_filename_prefix_;
+
   // The basename of the next minidump to be written, without the extension.
   wstring next_minidump_id_;
 
@@ -327,6 +336,7 @@ class ExceptionHandler {
   // should be equivalent to the lifetimes of the associated wstring, provided
   // that the wstrings are not altered.
   const wchar_t* dump_path_c_;
+  const wchar_t* dump_filename_prefix_c_;
   const wchar_t* next_minidump_id_c_;
   const wchar_t* next_minidump_path_c_;
 

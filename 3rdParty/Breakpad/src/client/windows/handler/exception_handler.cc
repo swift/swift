@@ -124,6 +124,7 @@ void ExceptionHandler::Initialize(const wstring& dump_path,
   callback_ = callback;
   callback_context_ = callback_context;
   dump_path_c_ = NULL;
+  dump_filename_prefix_c_ = NULL;
   next_minidump_id_c_ = NULL;
   next_minidump_path_c_ = NULL;
   dbghelp_module_ = NULL;
@@ -217,6 +218,7 @@ void ExceptionHandler::Initialize(const wstring& dump_path,
 
     // set_dump_path calls UpdateNextID.  This sets up all of the path and id
     // strings, and their equivalent c_str pointers.
+    set_dump_filename_prefix(wstring());
     set_dump_path(dump_path);
   }
 
@@ -914,8 +916,8 @@ void ExceptionHandler::UpdateNextID() {
   next_minidump_id_c_ = next_minidump_id_.c_str();
 
   wchar_t minidump_path[MAX_PATH];
-  swprintf(minidump_path, MAX_PATH, L"%s\\%s.dmp",
-           dump_path_c_, next_minidump_id_c_);
+  swprintf(minidump_path, MAX_PATH, L"%s\\%s%s.dmp",
+           dump_path_c_, dump_filename_prefix_c_, next_minidump_id_c_);
 
   // remove when VC++7.1 is no longer supported
   minidump_path[MAX_PATH - 1] = L'\0';

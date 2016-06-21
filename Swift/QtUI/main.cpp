@@ -4,10 +4,13 @@
  * See the COPYING file for more information.
  */
 
-#include <stdlib.h>
-
+#include <cstdlib>
 #include <iostream>
+#include <locale>
+#include <memory>
+#include <sstream>
 
+#include <boost/date_time/gregorian/gregorian.hpp>
 #include <boost/program_options.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
@@ -35,7 +38,15 @@
 int main(int argc, char* argv[]) {
     Swift::PlatformApplicationPathProvider applicationPathProvider(SWIFT_APPLICATION_NAME);
 
-    Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes");
+    // Set crash report prefix to include date and version.
+    std::stringstream prefix;
+    auto outputFacet = std::unique_ptr<boost::gregorian::date_facet>(new boost::gregorian::date_facet());
+    outputFacet->format("%Y-%m-%d");
+    prefix.imbue(std::locale(std::locale::classic(), outputFacet.get()));
+
+    prefix << buildVersion << "_" << boost::gregorian::date(boost::gregorian::day_clock::local_day()) << "_";
+
+    Swift::CrashReporter crashReporter(applicationPathProvider.getDataDir() / "crashes", prefix.str());
 
 #if QT_VERSION < 0x050000
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));

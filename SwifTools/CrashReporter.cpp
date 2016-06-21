@@ -5,9 +5,10 @@
  */
 
 #include <Swiften/Base/Log.h>
-#include <SwifTools/CrashReporter.h>
 #include <Swiften/Base/Platform.h>
 #include <Swiften/Base/Path.h>
+
+#include <SwifTools/CrashReporter.h>
 
 #if defined(HAVE_BREAKPAD)
 
@@ -38,7 +39,7 @@ struct CrashReporter::Private {
     std::shared_ptr<google_breakpad::ExceptionHandler> handler;
 };
 
-CrashReporter::CrashReporter(const boost::filesystem::path& path) {
+CrashReporter::CrashReporter(const boost::filesystem::path& path, const std::string& dumpPrefix) {
     // Create the path that will contain the crash dumps
     if (!boost::filesystem::exists(path)) {
         try {
@@ -61,6 +62,7 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path) {
                 handleDump,
                 (void*) 0,
                 google_breakpad::ExceptionHandler::HANDLER_ALL));
+    p->handler->set_dump_filename_prefix(std::wstring(dumpPrefix.begin(), dumpPrefix.end()));
 // Turning it off for Mac, because it doesn't really help us
 //#elif defined(SWIFTEN_PLATFORM_MACOSX)
 //    p->handler = std::make_shared<google_breakpad::ExceptionHandler>(pathToString(path), (google_breakpad::ExceptionHandler::FilterCallback) 0, handleDump, (void*) 0, true, (const char*) 0);
@@ -73,7 +75,7 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path) {
 
 // Dummy implementation
 namespace Swift {
-    CrashReporter::CrashReporter(const boost::filesystem::path&) {}
+    CrashReporter::CrashReporter(const boost::filesystem::path&, const std::string&) {}
 }
 
 #endif
