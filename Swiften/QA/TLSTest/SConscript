@@ -20,6 +20,7 @@ if env["TEST"] :
 
     tester = myenv.Program("TLSTest", [
             "CertificateTest.cpp",
-            "CertificateErrorTest.cpp"
+            # Reenable if either http://www.tls-o-matic.com/ is fixed or we have setup a replacement.
+            #"CertificateErrorTest.cpp"
         ])
     myenv.Test(tester, "system")
