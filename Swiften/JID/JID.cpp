@@ -6,23 +6,21 @@
 
 #define SWIFTEN_CACHE_JID_PREP
 
-#include <vector>
-#include <list>
-
+#include <sstream>
 #include <string>
+#include <vector>
+
 #ifdef SWIFTEN_CACHE_JID_PREP
 #include <mutex>
-#include <boost/unordered_map.hpp>
+#include <unordered_map>
 #endif
-#include <boost/assign/list_of.hpp>
-#include <boost/algorithm/string/find_format.hpp>
-#include <boost/algorithm/string/finder.hpp>
+
 #include <boost/optional.hpp>
-#include <sstream>
 
 #include <Swiften/Base/String.h>
-#include <Swiften/JID/JID.h>
 #include <Swiften/IDN/IDNConverter.h>
+#include <Swiften/JID/JID.h>
+
 #ifndef SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER
 #include <memory>
 #include <Swiften/IDN/PlatformIDNConverter.h>
@@ -31,7 +29,7 @@
 using namespace Swift;
 
 #ifdef SWIFTEN_CACHE_JID_PREP
-typedef boost::unordered_map<std::string, std::string> PrepCache;
+typedef std::unordered_map<std::string, std::string> PrepCache;
 
 static std::mutex namePrepCacheMutex;
 static PrepCache nodePrepCache;
@@ -39,7 +37,7 @@ static PrepCache domainPrepCache;
 static PrepCache resourcePrepCache;
 #endif
 
-static const std::list<char> escapedChars = boost::assign::list_of(' ')('"')('&')('\'')('/')('<')('>')('@')(':');
+static const std::vector<char> escapedChars = {' ', '"', '&', '\'', '/', '<', '>', '@', ':'};
 
 static IDNConverter* idnConverter = nullptr;
 
@@ -66,67 +64,6 @@ static bool getEscapeSequenceValue(const std::string& sequence, unsigned char& v
     value = static_cast<unsigned char>(v);
     return (!s.fail() && !s.bad() && (value == 0x5C || std::find(escapedChars.begin(), escapedChars.end(), value) != escapedChars.end()));
 }
-
-// Disabling this code for now, since GCC4.5+boost1.42 (on ubuntu) seems to
-// result in a bug. Replacing it with naive code.
-#if 0
-struct UnescapedCharacterFinder {
-    template<typename Iterator>    boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
-        for (; begin != end; ++begin) {
-            if (std::find(escapedChars.begin(), escapedChars.end(), *begin) != escapedChars.end()) {
-                return boost::iterator_range<Iterator>(begin, begin + 1);
-            }
-            else if (*begin == '\\') {
-                // Check if we have an escaped dissalowed character sequence
-                Iterator innerBegin = begin + 1;
-                if (innerBegin != end && innerBegin + 1 != end) {
-                    Iterator innerEnd = innerBegin + 2;
-                    unsigned char value;
-                    if (getEscapeSequenceValue(std::string(innerBegin, innerEnd), value)) {
-                        return boost::iterator_range<Iterator>(begin, begin + 1);
-                    }
-                }
-            }
-        }
-        return boost::iterator_range<Iterator>(end, end);
-    }
-};
-
-struct UnescapedCharacterFormatter {
-    template<typename FindResult>    std::string operator()(const FindResult& match) const {
-        std::ostringstream s;
-        s << '\\' << std::hex << static_cast<int>(*match.begin());
-        return s.str();
-    }
-};
-
-struct EscapedCharacterFinder {
-    template<typename Iterator>    boost::iterator_range<Iterator> operator()(Iterator begin, Iterator end) {
-        for (; begin != end; ++begin) {
-            if (*begin == '\\') {
-                Iterator innerEnd = begin + 1;
-                for (size_t i = 0; i < 2 && innerEnd != end; ++i, ++innerEnd) {
-                }
-                unsigned char value;
-                if (getEscapeSequenceValue(std::string(begin + 1, innerEnd), value)) {
-                    return boost::iterator_range<Iterator>(begin, innerEnd);
-                }
-            }
-        }
-        return boost::iterator_range<Iterator>(end, end);
-    }
-};
-
-struct EscapedCharacterFormatter {
-    template<typename FindResult>    std::string operator()(const FindResult& match) const {
-        unsigned char value;
-        if (getEscapeSequenceValue(std::string(match.begin() + 1, match.end()), value)) {
-            return std::string(reinterpret_cast<const char*>(&value), 1);
-        }
-        return boost::copy_range<std::string>(match);
-    }
-};
-#endif
 
 namespace Swift {
 
@@ -179,6 +116,11 @@ void JID::initializeFromString(const std::string& jid) {
 
 void JID::nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource) {
     if (domain.empty() || !idnConverter->getIDNAEncoded(domain)) {
+        valid_ = false;
+        return;
+    }
+
+    if (hasResource_ && resource.empty()) {
         valid_ = false;
         return;
     }
@@ -286,7 +228,6 @@ std::string JID::getEscapedNode(const std::string& node) {
         result += *i;
     }
     return result;
-    //return boost::find_format_all_copy(node, UnescapedCharacterFinder(), UnescapedCharacterFormatter());
 }
 
 std::string JID::getUnescapedNode() const {
@@ -307,7 +248,6 @@ std::string JID::getUnescapedNode() const {
         ++j;
     }
     return result;
-    //return boost::find_format_all_copy(node_, EscapedCharacterFinder(), EscapedCharacterFormatter());
 }
 
 void JID::setIDNConverter(IDNConverter* converter) {

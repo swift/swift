@@ -95,7 +95,7 @@ class JIDTest : public CppUnit::TestFixture
         void testConstructorWithString_EmptyResource() {
             JID testling("bar/");
 
-            CPPUNIT_ASSERT(testling.isValid());
+            CPPUNIT_ASSERT(!testling.isValid());
             CPPUNIT_ASSERT(!testling.isBare());
         }
 
@@ -212,8 +212,7 @@ class JIDTest : public CppUnit::TestFixture
             JID testling("bar/");
 
             CPPUNIT_ASSERT_EQUAL(std::string(""), testling.toBare().getNode());
-            CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.toBare().getDomain());
-            CPPUNIT_ASSERT(testling.toBare().isBare());
+            CPPUNIT_ASSERT(!testling.isValid());
         }
 
         void testToString() {
@@ -237,7 +236,7 @@ class JIDTest : public CppUnit::TestFixture
         void testToString_EmptyResource() {
             JID testling("foo@bar/");
 
-            CPPUNIT_ASSERT_EQUAL(std::string("foo@bar/"), testling.toString());
+            CPPUNIT_ASSERT_EQUAL(false, testling.isValid());
         }
 
         void testCompare_SmallerNode() {
@@ -300,14 +299,14 @@ class JIDTest : public CppUnit::TestFixture
             JID testling1("x@y/");
             JID testling2("x@y");
 
-            CPPUNIT_ASSERT_EQUAL(1, testling1.compare(testling2, JID::WithResource));
+            CPPUNIT_ASSERT_EQUAL(-1, testling1.compare(testling2, JID::WithResource));
         }
 
         void testCompare_EmptyResourceAndNoResource() {
             JID testling1("x@y");
             JID testling2("x@y/");
 
-            CPPUNIT_ASSERT_EQUAL(-1, testling1.compare(testling2, JID::WithResource));
+            CPPUNIT_ASSERT_EQUAL(1, testling1.compare(testling2, JID::WithResource));
         }
 
         void testEquals() {
@@ -359,9 +358,17 @@ class JIDTest : public CppUnit::TestFixture
         }
 
         void testHasResource_NoResource() {
-            JID testling("x@y");
+            {
+                JID testling("x@y");
 
-            CPPUNIT_ASSERT(testling.isBare());
+                CPPUNIT_ASSERT(testling.isBare());
+                CPPUNIT_ASSERT_EQUAL(true, testling.isValid());
+            }
+
+            {
+                JID testling("node@domain/");
+                CPPUNIT_ASSERT_EQUAL(false, testling.isValid());
+            }
         }
 
         void testGetEscapedNode() {
