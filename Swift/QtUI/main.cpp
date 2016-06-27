@@ -40,9 +40,11 @@ int main(int argc, char* argv[]) {
 
     // Set crash report prefix to include date and version.
     std::stringstream prefix;
-    auto outputFacet = std::unique_ptr<boost::gregorian::date_facet>(new boost::gregorian::date_facet());
+
+    // This date_facet will be cleaned up by the stringstream.
+    auto outputFacet = new boost::gregorian::date_facet();
     outputFacet->format("%Y-%m-%d");
-    prefix.imbue(std::locale(std::locale::classic(), outputFacet.get()));
+    prefix.imbue(std::locale(std::locale::classic(), outputFacet));
 
     prefix << buildVersion << "_" << boost::gregorian::date(boost::gregorian::day_clock::local_day()) << "_";
 
