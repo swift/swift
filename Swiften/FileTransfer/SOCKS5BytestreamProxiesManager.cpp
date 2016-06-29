@@ -102,6 +102,7 @@ std::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::g
             i->second->stop();
         }
     }
+    SWIFT_LOG_ASSERT(activeSession, warning) << "No active session with matching ID found." << std::endl;
 
     proxySessions_.erase(sessionID);
 

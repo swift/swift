@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,16 +13,10 @@ namespace Swift {
 
 class SWIFTEN_API FailingTransportSession : public TransportSession {
     public:
-        virtual ~FailingTransportSession() {
-        }
+        virtual ~FailingTransportSession();
 
-        virtual void start() SWIFTEN_OVERRIDE {
-            assert(false);
-            onFinished(FileTransferError(FileTransferError::PeerError));
-        }
-
-        virtual void stop() SWIFTEN_OVERRIDE {
-        }
+        virtual void start() SWIFTEN_OVERRIDE;
+        virtual void stop() SWIFTEN_OVERRIDE;
 };
 
 }

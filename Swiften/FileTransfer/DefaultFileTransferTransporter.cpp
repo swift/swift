@@ -204,8 +204,12 @@ std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCan
     std::shared_ptr<TransportSession> transportSession;
     if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
         SOCKS5BytestreamClientSession::ref proxySession = s5bProxy->getProxySessionAndCloseOthers(candidate.jid, getLocalCandidateSOCKS5DstAddr());
-        assert(proxySession);
-        transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
+        if (proxySession) {
+            transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
+        }
+        else {
+            SWIFT_LOG(error) << "Failed obtaining proxy session with candidate JID " << candidate.jid << " and dstAddr " << getLocalCandidateSOCKS5DstAddr() << "." << std::endl;
+        }
     }
 
     if (!transportSession) {
@@ -227,8 +231,12 @@ std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCan
     std::shared_ptr<TransportSession> transportSession;
     if (candidate.type == JingleS5BTransportPayload::Candidate::ProxyType) {
         SOCKS5BytestreamClientSession::ref proxySession = s5bProxy->getProxySessionAndCloseOthers(candidate.jid, getLocalCandidateSOCKS5DstAddr());
-        assert(proxySession);
-        transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
+        if (proxySession) {
+            transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
+        }
+        else {
+            SWIFT_LOG(error) << "Failed obtaining proxy session with candidate JID " << candidate.jid << " and dstAddr " << getLocalCandidateSOCKS5DstAddr() << "." << std::endl;
+        }
     }
 
     if (!transportSession) {
