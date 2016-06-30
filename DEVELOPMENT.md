@@ -35,6 +35,11 @@ Note: The unit and integration tests are build targets. When passing specific bu
 ### Mac OS X
 The Mac OS X package consists of a disk image (.dmg) file containing an independently deployable **Swift.app** application bundle.
 
+For creating the Mac OS X package, i.e. the disk image, simply call `./scons.sh dist=1`. To additionally code sign the **Swift.app** application
+bundle, append `codesign_identity="Developer ID Application: Something here"` with your developer certificate identity to the `scons` command.
+
+**WARNING: Code signing has not been tested with third-party signed certificates yet!**
+
 ### Windows
 The Windows package consist of a Widnows Installer (.msi) file. This is generated using the Windows Installer XML Toolset.
 

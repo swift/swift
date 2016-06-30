@@ -368,7 +368,7 @@ if env["PLATFORM"] == "darwin" :
     commonResources[""] = commonResources.get("", []) + ["#/Swift/resources/MacOSX/Swift.icns"]
     app = myenv.AppBundle("Swift", version = myenv["SWIFT_VERSION"], resources = commonResources, frameworks = frameworks, handlesXMPPURIs = True)
     if env["DIST"] :
-        myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR"])
+        myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dmg"], [app], ["Swift/Packaging/MacOSX/package.sh " + app.path + " Swift/Packaging/MacOSX/Swift.dmg.gz $TARGET $QTDIR " + "\"$CODE_SIGN_IDENTITY\""])
         dsym = myenv.Command(["Swift-${SWIFT_VERSION}.dSYM"], ["Swift"], ["dsymutil -o ${TARGET} ${SOURCE}"])
         myenv.Command(["#/Packages/Swift/Swift-${SWIFT_VERSION}.dSYM.zip"], dsym, ["cd ${SOURCE.dir} && zip -r ${TARGET.abspath} ${SOURCE.name}"])
 
