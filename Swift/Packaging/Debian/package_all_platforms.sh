@@ -24,7 +24,7 @@ export SWIFT_FORCE_LUCID="yep"
 unset SWIFT_FORCE_LUCID
 ./package.sh
 
-for distro in trusty wily jessie sid; do
+for distro in trusty xenial jessie sid; do
 	for arch in amd64; do
 		pbuilder-dist $distro $arch build *.dsc
 	done
