@@ -564,7 +564,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
             self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
             self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
             self.AppendUnique(CPPFLAGS="-iframework$QTDIR/lib")
-            self.AppendUnique(LINKFLAGS="-L$QTDIR/lib") #TODO clean!
+            self.Append(LINKFLAGS="-Wl,-rpath,$QTDIR/lib")
 
         # FIXME: Phonon Hack
         if version == '4' :
