@@ -312,7 +312,7 @@ commonResources = {
 }
 
 myenv["TEXTFILESUFFIX"] = ""
-myenv.MyTextfile(target = "COPYING", source = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty")], LINESEPARATOR = "\n\n========\n\n\n")
+myenv.MyTextfile(target = "COPYING", source = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty"), myenv.File("../../COPYING.dependencies")], LINESEPARATOR = "\n\n========\n\n\n")
 
 ################################################################################
 # Translation
