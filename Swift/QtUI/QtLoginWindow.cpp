@@ -82,9 +82,8 @@ QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* set
     layout->addStretch(2);
 
     QLabel* logo = new QLabel(this);
-    logo->setPixmap(QPixmap(":/logo-shaded-text.256.png"));
-    logo->setScaledContents(true);
-    logo->setFixedSize(192,192);
+    QIcon swiftWithTextLogo = QIcon(":/logo-shaded-text.png");
+    logo->setPixmap(swiftWithTextLogo.pixmap(QSize(192,192)));
 
     QWidget *logoWidget = new QWidget(this);
     QHBoxLayout *logoLayout = new QHBoxLayout();
