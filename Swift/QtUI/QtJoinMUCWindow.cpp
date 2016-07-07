@@ -69,6 +69,7 @@ void QtJoinMUCWindow::setMUC(const std::string& nick) {
 void QtJoinMUCWindow::show() {
     QWidget::show();
     QWidget::activateWindow();
+    QWidget::raise();
     ui.password->setText("");
 }
 
