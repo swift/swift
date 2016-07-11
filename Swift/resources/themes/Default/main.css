@@ -7,6 +7,13 @@ body {
     padding: 0;
 }
 
+/* This turns the insert marker element into a vertical fill.
+ * This way the colored side bar is expanded to the full height of the view. */
+#insert {
+    display: table-row;
+    height: 100%;
+}
+
 .container {
     height: 100%;
     width:  100%;
@@ -15,29 +22,19 @@ body {
     /*margin-left: 20%; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
     /*margin-top: 75px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
     position: absolute;
+  display: table;
 }
-
-/* Left side colour block*/
-
-.colour-block {
-    /* This is needed so the grey sidebar stays fixed relative to the view and not the page when scrolling. */
-    /* This also seems to have noticible negative performance side-effects when scrolling. */
-    position: fixed;
-    height: 100%;
-    width: 175px;
-    background-color: #595959;
-}
-
 /* Holds all user and message content */
 
 .message-block {
+    display: table;
+    border: 0px solid black;
+    border-spacing: 0;
     height: 100%;
     width: 100%;
-    position: absolute;
     z-index: 10;
     top: 0;
     left: 0;
-    margin-bottom: 10px;
     overflow-wrap: break-word; /* Allow breaking of long words (e.g. URLs) to prevent overflow. */
     /*margin-top: -2px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
 }
@@ -45,8 +42,11 @@ body {
 /* Individual message */
 
 .message {
+    display: table-row;
+    border: inherit;
     width: 100%;
     margin-top: 10px;
+    border-top: 0.2em solid transparent;
 }
 
 .additional {
@@ -55,7 +55,9 @@ body {
 
 .unread {
     height: 30px;
-    border-top: solid 1px #ffd180;
+    display: table-row;
+    border: inherit;
+    /*width: 100%;*/
     margin-top: -6px;
     margin-bottom: -15px;
     margin-left: 190px;
@@ -68,7 +70,9 @@ body {
     font-size: 75%;
     text-transform: uppercase;
     color: #ffd180;
-    /* color: #ffd180; */
+    border-top: solid 1px #ffd180;
+    margin-left: 20px;
+    margin-right: 20px;;
 }
 
 /* Left column content */
@@ -78,10 +82,14 @@ body {
 }
 
 .user {
-    width: 175px;
+    display: table-cell;
+    border: inherit;
     text-align: center;
-    float: left;
     margin-top: 2px;
+    width: 175px;
+    max-width: 175px;
+    min-width: 175px;
+    background-color: #595959;
 }
 
 .time {
@@ -197,40 +205,52 @@ body {
 }
 
 /* Right column content */
+.message:not(.additional) {
+    border-top: 1.2em solid transparent; /* Workaround for table rows not having a padding. */
+}
 
 .message:not(.additional) .text {
     min-height: 32px;
 }
 
 .text {
+    display: table-cell;
+    border: inherit;
     margin-left: 175px;
     font-size: 14px;
     color: #595959;
+    vertical-align: top;
+}
+
+.text a {
+    word-break: break-all; /* Break long URLs at any point. */
 }
 
 .myusername {
     color: #92c47e;
     margin-left: 20px;
     font-weight: 700;
+    margin-top: 0px;
+    margin-bottom: 0.2em;
 }
 
 .otherusername {
     color: #6eb6ce;
     margin-left: 20px;
     font-weight: 700;
+    margin-top: 0px;
 }
 
 .message-content {
     margin-left: 20px;
-    margin-top: -11px;
     margin-right: 20px;
-    margin-bottom: 18px;
 }
 
 .system-message {
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 18px;
+    margin-top: 0px;
+    margin-bottom: 0px;
     color: #aaa;
     font-style: italic;
 }
