@@ -20,20 +20,14 @@ namespace Swift {
 
 WindowsNotifier::WindowsNotifier(const std::string& name, const boost::filesystem::path& icon, QSystemTrayIcon* tray) : tray(tray) {
     notifierWindow = new QtWin32NotifierWindow();
-    snarlNotifier = new SnarlNotifier(name, notifierWindow, icon);
     connect(tray, SIGNAL(messageClicked()), SLOT(handleMessageClicked()));
 }
 
 WindowsNotifier::~WindowsNotifier() {
-    delete snarlNotifier;
     delete notifierWindow;
 }
 
 void WindowsNotifier::showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback) {
-    if (snarlNotifier->isAvailable()) {
-        snarlNotifier->showMessage(type, subject, description, picture, callback);
-        return;
-    }
     std::vector<Notifier::Type> defaultTypes = getDefaultTypes();
     if (std::find(defaultTypes.begin(), defaultTypes.end(), type) == defaultTypes.end()) {
         return;

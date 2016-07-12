@@ -317,10 +317,6 @@ if env["PLATFORM"] == "darwin" :
         env["GROWL_FRAMEWORK"] = "/Library/Frameworks/Growl.framework"
     conf.Finish()
 
-# Snarl
-if env["PLATFORM"] == "win32" :
-    env["HAVE_SNARL"] = True
-
 # LibXML
 conf = Configure(conf_env, custom_tests = {"CheckVersion": CheckVersion})
 if env.get("try_libxml", True) and conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :

@@ -17,11 +17,5 @@ elif myenv["PLATFORM"] == "darwin" :
             "NotificationCenterNotifierDelegate.mm",
         ]
 
-if swiftools_env.get("HAVE_SNARL", False) :
-    myenv.MergeFlags(myenv["SNARL_FLAGS"])
-    sources += [
-            "SnarlNotifier.cpp",
-        ]
-
 objects = myenv.StaticObject(sources)
 swiftools_env.Append(SWIFTOOLS_OBJECTS = objects)

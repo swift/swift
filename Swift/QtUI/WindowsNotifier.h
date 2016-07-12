@@ -11,11 +11,12 @@
 #include <QObject>
 
 #include <SwifTools/Notifier/Notifier.h>
-#include <SwifTools/Notifier/SnarlNotifier.h>
 
 class QSystemTrayIcon;
 
 namespace Swift {
+    class Win32NotifierWindow;
+
     class WindowsNotifier : public QObject, public Notifier {
             Q_OBJECT
 
@@ -32,7 +33,6 @@ namespace Swift {
         private:
             QSystemTrayIcon* tray;
             Win32NotifierWindow* notifierWindow;
-            SnarlNotifier* snarlNotifier;
             boost::function<void()> lastCallback;
     };
 }

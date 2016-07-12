@@ -43,9 +43,6 @@ if myenv.get("HAVE_GROWL", False) :
     myenv.Append(CPPDEFINES = ["HAVE_GROWL"])
 if myenv["swift_mobile"] :
     myenv.Append(CPPDEFINES = ["SWIFT_MOBILE"])
-if myenv.get("HAVE_SNARL", False) :
-    myenv.UseFlags(myenv["SNARL_FLAGS"])
-    myenv.Append(CPPDEFINES = ["HAVE_SNARL"])
 if myenv.get("HAVE_HUNSPELL", True):
     myenv.Append(CPPDEFINES = ["HAVE_HUNSPELL"])
     myenv.UseFlags(myenv["HUNSPELL_FLAGS"])
