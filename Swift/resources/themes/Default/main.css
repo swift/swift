@@ -226,19 +226,19 @@ body {
     word-break: break-all; /* Break long URLs at any point. */
 }
 
-.myusername {
-    color: #92c47e;
+.username {
     margin-left: 20px;
     font-weight: 700;
     margin-top: 0px;
     margin-bottom: 0.2em;
 }
 
+.myusername {
+    color: #92c47e;
+}
+
 .otherusername {
     color: #6eb6ce;
-    margin-left: 20px;
-    font-weight: 700;
-    margin-top: 0px;
 }
 
 .message-content {
