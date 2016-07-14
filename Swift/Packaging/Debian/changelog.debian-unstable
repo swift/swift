@@ -1,4 +1,4 @@
-swift-im (3.0.1-1) unstable; urgency=low
+swift-im (3.0.2-1) unstable; urgency=low
 
   * New upstream release
   * Allow compiling with newer boosts. Closes: 810839, 822131
