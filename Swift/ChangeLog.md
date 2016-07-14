@@ -1,5 +1,5 @@
-4.0-in-progress
----------------
+4.0-beta1
+---------
 - Support for message carbons (XEP-0280)
 - Improved spell checker support on Linux
 - Enabled trellis mode as a default feature, allowing several tiled chats windows to be shown at once
