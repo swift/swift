@@ -6,6 +6,7 @@
 
 #include <Swiften/Parser/SerializingParser.h>
 
+#include <cassert>
 #include <memory>
 
 #include <Swiften/Base/foreach.h>

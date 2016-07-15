@@ -6,6 +6,8 @@
 
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParser.h>
 
+#include <cassert>
+
 #include <Swiften/Parser/SerializingParser.h>
 
 namespace Swift {

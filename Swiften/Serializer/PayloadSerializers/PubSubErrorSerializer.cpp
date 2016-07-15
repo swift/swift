@@ -6,6 +6,8 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubErrorSerializer.h>
 
+#include <cassert>
+
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 

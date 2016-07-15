@@ -6,6 +6,7 @@
 
 #include <Swiften/Parser/PayloadParsers/SecurityLabelsCatalogParser.h>
 
+#include <cassert>
 #include <memory>
 
 #include <Swiften/Parser/PayloadParsers/SecurityLabelParser.h>
