@@ -4,20 +4,16 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Parser/PayloadParsers/PubSubOwnerConfigureParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 using namespace Swift;
 
-PubSubOwnerConfigureParser::PubSubOwnerConfigureParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubOwnerConfigureParser::PubSubOwnerConfigureParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubOwnerConfigureParser::~PubSubOwnerConfigureParser() {

@@ -4,19 +4,17 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/UserTuneSerializer.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <boost/lexical_cast.hpp>
+
 #include <memory>
 
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <boost/lexical_cast.hpp>
+
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 using namespace Swift;
 
-UserTuneSerializer::UserTuneSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+UserTuneSerializer::UserTuneSerializer(PayloadSerializerCollection* /*serializers*/) {
 }
 
 UserTuneSerializer::~UserTuneSerializer() {

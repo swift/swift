@@ -22,11 +22,5 @@ namespace Swift {
             virtual ~PubSubEventPurgeSerializer();
 
             virtual std::string serializePayload(std::shared_ptr<PubSubEventPurge>) const SWIFTEN_OVERRIDE;
-
-        private:
-
-
-        private:
-            PayloadSerializerCollection* serializers;
     };
 }

@@ -4,15 +4,16 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
+
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubPublishSerializer.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
+
 #include <memory>
 
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubItemSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;

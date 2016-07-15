@@ -4,20 +4,18 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/UserLocationSerializer.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
-#include <Swiften/Base/DateTime.h>
-#include <boost/lexical_cast.hpp>
+
 #include <memory>
 
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
+#include <boost/lexical_cast.hpp>
+
+#include <Swiften/Base/DateTime.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 using namespace Swift;
 
-UserLocationSerializer::UserLocationSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+UserLocationSerializer::UserLocationSerializer(PayloadSerializerCollection* /*serializers*/) {
 }
 
 UserLocationSerializer::~UserLocationSerializer() {

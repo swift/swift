@@ -1,24 +1,20 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
 
 #include <Swiften/Parser/PayloadParsers/PubSubEventSubscriptionParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Parser/EnumParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 using namespace Swift;
 
-PubSubEventSubscriptionParser::PubSubEventSubscriptionParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubEventSubscriptionParser::PubSubEventSubscriptionParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubEventSubscriptionParser::~PubSubEventSubscriptionParser() {
@@ -46,8 +42,6 @@ void PubSubEventSubscriptionParser::handleStartElement(const std::string& elemen
                 getPayloadInternal()->setExpiry(stringToDateTime(*attributeValue));
         }
     }
-
-
 
     if (level >= 1 && currentPayloadParser) {
         currentPayloadParser->handleStartElement(element, ns, attributes);

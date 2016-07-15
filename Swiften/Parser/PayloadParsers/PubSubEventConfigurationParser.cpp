@@ -4,20 +4,16 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Parser/PayloadParsers/PubSubEventConfigurationParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 using namespace Swift;
 
-PubSubEventConfigurationParser::PubSubEventConfigurationParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubEventConfigurationParser::PubSubEventConfigurationParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubEventConfigurationParser::~PubSubEventConfigurationParser() {

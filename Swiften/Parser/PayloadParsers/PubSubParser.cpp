@@ -4,28 +4,26 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
+
 
 #include <Swiften/Parser/PayloadParsers/PubSubParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
-#include <Swiften/Parser/PayloadParsers/PubSubSubscriptionParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubConfigureParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubDefaultParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubCreateParser.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParsers/PubSubAffiliationsParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubConfigureParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubCreateParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubDefaultParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubItemsParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubOptionsParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubPublishParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubOptionsParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubSubscribeParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubUnsubscribeParser.h>
-#include <Swiften/Parser/PayloadParsers/PubSubItemsParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubRetractParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubSubscribeParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubSubscriptionParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubSubscriptionsParser.h>
+#include <Swiften/Parser/PayloadParsers/PubSubUnsubscribeParser.h>
 
 using namespace Swift;
 

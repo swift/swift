@@ -1,23 +1,19 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
 
 #include <Swiften/Parser/PayloadParsers/PubSubDefaultParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/EnumParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
 
 using namespace Swift;
 
-PubSubDefaultParser::PubSubDefaultParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubDefaultParser::PubSubDefaultParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubDefaultParser::~PubSubDefaultParser() {
@@ -34,8 +30,6 @@ void PubSubDefaultParser::handleStartElement(const std::string& element, const s
             }
         }
     }
-
-
 
     if (level >= 1 && currentPayloadParser) {
         currentPayloadParser->handleStartElement(element, ns, attributes);

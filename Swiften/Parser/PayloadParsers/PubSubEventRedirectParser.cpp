@@ -1,23 +1,18 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
 
 #include <Swiften/Parser/PayloadParsers/PubSubEventRedirectParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
-
 
 using namespace Swift;
 
-PubSubEventRedirectParser::PubSubEventRedirectParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubEventRedirectParser::PubSubEventRedirectParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubEventRedirectParser::~PubSubEventRedirectParser() {
@@ -29,8 +24,6 @@ void PubSubEventRedirectParser::handleStartElement(const std::string& element, c
             getPayloadInternal()->setURI(*attributeValue);
         }
     }
-
-
 
     if (level >= 1 && currentPayloadParser) {
         currentPayloadParser->handleStartElement(element, ns, attributes);

@@ -27,7 +27,6 @@ namespace Swift {
             virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE;
 
         private:
-            PayloadParserFactoryCollection* parsers;
             int level;
             std::shared_ptr<PayloadParser> currentPayloadParser;
     };

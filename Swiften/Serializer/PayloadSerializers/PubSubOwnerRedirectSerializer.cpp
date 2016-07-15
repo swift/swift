@@ -4,18 +4,13 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerRedirectSerializer.h>
+
 #include <Swiften/Serializer/XML/XMLElement.h>
-
-
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
-
 
 using namespace Swift;
 
-PubSubOwnerRedirectSerializer::PubSubOwnerRedirectSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+PubSubOwnerRedirectSerializer::PubSubOwnerRedirectSerializer(PayloadSerializerCollection* /*serializers*/) {
 }
 
 PubSubOwnerRedirectSerializer::~PubSubOwnerRedirectSerializer() {
@@ -29,5 +24,3 @@ std::string PubSubOwnerRedirectSerializer::serializePayload(std::shared_ptr<PubS
     element.setAttribute("uri", payload->getURI());
     return element.serialize();
 }
-
-

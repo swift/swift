@@ -4,16 +4,15 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
+
 
 #include <Swiften/Parser/PayloadParsers/PubSubSubscriptionParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
-#include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/EnumParser.h>
+#include <Swiften/Parser/PayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParsers/PubSubSubscribeOptionsParser.h>
 
 using namespace Swift;

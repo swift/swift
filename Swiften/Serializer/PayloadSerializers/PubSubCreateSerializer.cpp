@@ -4,18 +4,13 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubCreateSerializer.h>
+
 #include <Swiften/Serializer/XML/XMLElement.h>
-
-
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
-
 
 using namespace Swift;
 
-PubSubCreateSerializer::PubSubCreateSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+PubSubCreateSerializer::PubSubCreateSerializer(PayloadSerializerCollection* /*serializers*/) {
 }
 
 PubSubCreateSerializer::~PubSubCreateSerializer() {

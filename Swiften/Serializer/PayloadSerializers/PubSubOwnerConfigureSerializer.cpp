@@ -4,19 +4,17 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerConfigureSerializer.h>
-#include <Swiften/Serializer/XML/XMLElement.h>
+
 #include <memory>
 
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
+#include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
 using namespace Swift;
 
-PubSubOwnerConfigureSerializer::PubSubOwnerConfigureSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+PubSubOwnerConfigureSerializer::PubSubOwnerConfigureSerializer(PayloadSerializerCollection* /*serializers*/) {
 }
 
 PubSubOwnerConfigureSerializer::~PubSubOwnerConfigureSerializer() {
@@ -33,5 +31,3 @@ std::string PubSubOwnerConfigureSerializer::serializePayload(std::shared_ptr<Pub
     element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
     return element.serialize();
 }
-
-

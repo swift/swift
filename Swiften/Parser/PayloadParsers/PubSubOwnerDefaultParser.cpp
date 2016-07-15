@@ -4,28 +4,22 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Parser/PayloadParsers/PubSubOwnerDefaultParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 using namespace Swift;
 
-PubSubOwnerDefaultParser::PubSubOwnerDefaultParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubOwnerDefaultParser::PubSubOwnerDefaultParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubOwnerDefaultParser::~PubSubOwnerDefaultParser() {
 }
 
 void PubSubOwnerDefaultParser::handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-
-
     if (level == 1) {
         if (element == "x" && ns == "jabber:x:data") {
             currentPayloadParser = std::make_shared<FormParser>();

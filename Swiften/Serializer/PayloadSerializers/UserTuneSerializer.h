@@ -22,11 +22,5 @@ namespace Swift {
             virtual ~UserTuneSerializer();
 
             virtual std::string serializePayload(std::shared_ptr<UserTune>) const SWIFTEN_OVERRIDE;
-
-        private:
-
-
-        private:
-            PayloadSerializerCollection* serializers;
     };
 }

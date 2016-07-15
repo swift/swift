@@ -4,18 +4,13 @@
  * See the COPYING file for more information.
  */
 
-#pragma clang diagnostic ignored "-Wunused-private-field"
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubUnsubscribeSerializer.h>
+
 #include <Swiften/Serializer/XML/XMLElement.h>
-
-
-#include <Swiften/Serializer/PayloadSerializerCollection.h>
-
 
 using namespace Swift;
 
-PubSubUnsubscribeSerializer::PubSubUnsubscribeSerializer(PayloadSerializerCollection* serializers) : serializers(serializers) {
+PubSubUnsubscribeSerializer::PubSubUnsubscribeSerializer(PayloadSerializerCollection* /*serializers*/) {
 }
 
 PubSubUnsubscribeSerializer::~PubSubUnsubscribeSerializer() {
@@ -35,5 +30,3 @@ std::string PubSubUnsubscribeSerializer::serializePayload(std::shared_ptr<PubSub
     }
     return element.serialize();
 }
-
-

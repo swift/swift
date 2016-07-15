@@ -22,11 +22,5 @@ namespace Swift {
             virtual ~UserLocationSerializer();
 
             virtual std::string serializePayload(std::shared_ptr<UserLocation>) const SWIFTEN_OVERRIDE;
-
-        private:
-
-
-        private:
-            PayloadSerializerCollection* serializers;
     };
 }

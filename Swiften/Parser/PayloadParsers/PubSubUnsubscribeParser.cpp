@@ -1,23 +1,18 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
-
-#pragma clang diagnostic ignored "-Wunused-private-field"
 
 #include <Swiften/Parser/PayloadParsers/PubSubUnsubscribeParser.h>
 
 #include <boost/optional.hpp>
 
-
-#include <Swiften/Parser/PayloadParserFactoryCollection.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
-
 
 using namespace Swift;
 
-PubSubUnsubscribeParser::PubSubUnsubscribeParser(PayloadParserFactoryCollection* parsers) : parsers(parsers), level(0) {
+PubSubUnsubscribeParser::PubSubUnsubscribeParser(PayloadParserFactoryCollection* /*parsers*/) : level(0) {
 }
 
 PubSubUnsubscribeParser::~PubSubUnsubscribeParser() {

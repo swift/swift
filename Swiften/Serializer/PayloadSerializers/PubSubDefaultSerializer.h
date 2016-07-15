@@ -25,8 +25,5 @@ namespace Swift {
 
         private:
             static std::string serializeType(PubSubDefault::Type);
-
-        private:
-            PayloadSerializerCollection* serializers;
     };
 }

@@ -22,11 +22,5 @@ namespace Swift {
             virtual ~PubSubOwnerDefaultSerializer();
 
             virtual std::string serializePayload(std::shared_ptr<PubSubOwnerDefault>) const SWIFTEN_OVERRIDE;
-
-        private:
-
-
-        private:
-            PayloadSerializerCollection* serializers;
     };
 }
