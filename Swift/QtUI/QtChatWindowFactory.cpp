@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,12 +8,13 @@
 
 #include <QDesktopWidget>
 
-#include <qdebug.h>
+#include <SwifTools/EmojiMapper.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtChatTabsBase.h>
 #include <Swift/QtUI/QtChatTheme.h>
 #include <Swift/QtUI/QtChatWindow.h>
+#include <Swift/QtUI/QtEmojisSelector.h>
 #include <Swift/QtUI/QtSingleWindow.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
@@ -22,7 +23,7 @@ namespace Swift {
 static const QString SPLITTER_STATE = "mucSplitterState";
 static const QString CHAT_TABS_GEOMETRY = "chatTabsGeometry";
 
-QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath, const std::map<std::string, std::string>& emoticons) : themePath_(themePath), emoticons_(emoticons) {
+QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath) : themePath_(themePath) {
     qtOnlySettings_ = qtSettings;
     settings_ = settings;
     tabs_ = tabs;
@@ -53,7 +54,8 @@ ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStre
         }
     }
 
-    QtChatWindow* chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), theme_, eventStream, settings_, emoticons_);
+    QtChatWindow* chatWindow = new QtChatWindow(P2QSTRING(contact.toString()), theme_, eventStream, settings_, qtOnlySettings_);
+
     connect(chatWindow, SIGNAL(splitterMoved()), this, SLOT(handleSplitterMoved()));
     connect(this, SIGNAL(changeSplitterState(QByteArray)), chatWindow, SLOT(handleChangeSplitterState(QByteArray)));
 

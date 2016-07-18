@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,6 +19,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFontMetrics>
 #include <QInputDialog>
 #include <QLabel>
 #include <QLineEdit>
@@ -46,11 +47,12 @@
 #include <Swift/Controllers/UIEvents/SendFileUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 
+#include <SwifTools/EmojiMapper.h>
 #include <SwifTools/TabComplete.h>
 
 #include <Swift/QtUI/QtAddBookmarkWindow.h>
 #include <Swift/QtUI/QtEditBookmarkWindow.h>
-#include <Swift/QtUI/QtEmoticonsGrid.h>
+#include <Swift/QtUI/QtEmojisSelector.h>
 #include <Swift/QtUI/QtPlainChatView.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
@@ -62,8 +64,7 @@
 
 namespace Swift {
 
-QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, const std::map<std::string, std::string>& emoticons) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false), roomBookmarkState_(RoomNotBookmarked) {
-    settings_ = settings;
+QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QtSettingsProvider* qtOnlySettings) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), settings_(settings), qtOnlySettings_(qtOnlySettings), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false), roomBookmarkState_(RoomNotBookmarked) {
     unreadCount_ = 0;
     isOnline_ = true;
     completer_ = nullptr;
@@ -145,17 +146,13 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 
     connect(input_, SIGNAL(receivedFocus()), this, SLOT(handleTextInputReceivedFocus()));
     connect(input_, SIGNAL(lostFocus()), this, SLOT(handleTextInputLostFocus()));
-    QPushButton* emoticonsButton_ = new QPushButton(this);
-    emoticonsButton_->setIcon(QIcon(":/emoticons/smile.png"));
-    connect(emoticonsButton_, SIGNAL(clicked()), this, SLOT(handleEmoticonsButtonClicked()));
-
-    emoticonsMenu_ = new QMenu(this);
-    QtEmoticonsGrid* emoticonsGrid = new QtEmoticonsGrid(emoticons, emoticonsMenu_);
-    connect(emoticonsGrid, SIGNAL(emoticonClicked(QString)), this, SLOT(handleEmoticonClicked(QString)));
+    QPushButton* emojisButton_ = new QPushButton(this);
+    emojisButton_->setText("\xF0\x9F\x98\x83");
+    connect(emojisButton_, SIGNAL(clicked()), this, SLOT(handleEmojisButtonClicked()));
 
     // using an extra layout to work around Qt margin glitches on OS X
     QHBoxLayout* actionLayout = new QHBoxLayout();
-    actionLayout->addWidget(emoticonsButton_);
+    actionLayout->addWidget(emojisButton_);
     actionLayout->addWidget(actionButton_);
 
     inputBarLayout->addLayout(actionLayout);
@@ -663,15 +660,31 @@ void QtChatWindow::setSubject(const std::string& subject) {
     subject_->setCursorPosition(0);
 }
 
-void QtChatWindow::handleEmoticonsButtonClicked() {
-    emoticonsMenu_->adjustSize();
-    QSize menuSize = emoticonsMenu_->size();
-    emoticonsMenu_->exec(QPoint(QCursor::pos().x() - menuSize.width(), QCursor::pos().y() - menuSize.height()));
+void QtChatWindow::handleEmojisButtonClicked() {
+    // Create QtEmojisSelector and QMenu
+    emojisGrid_ = new QtEmojisSelector(qtOnlySettings_->getQSettings());
+    auto emojisLayout = new QVBoxLayout();
+    emojisLayout->setContentsMargins(style()->pixelMetric(QStyle::PM_MenuHMargin),style()->pixelMetric(QStyle::PM_MenuVMargin),
+                                     style()->pixelMetric(QStyle::PM_MenuHMargin),style()->pixelMetric(QStyle::PM_MenuVMargin));
+    emojisLayout->addWidget(emojisGrid_);
+    emojisMenu_ = std::unique_ptr<QMenu>(new QMenu());
+    emojisMenu_->setLayout(emojisLayout);
+    emojisMenu_->adjustSize();
+
+    connect(emojisGrid_, SIGNAL(emojiClicked(QString)), this, SLOT(handleEmojiClicked(QString)));
+
+    QSize menuSize = emojisMenu_->size();
+    emojisMenu_->exec(QPoint(QCursor::pos().x() - menuSize.width(), QCursor::pos().y() - menuSize.height()));
 }
 
-void QtChatWindow::handleEmoticonClicked(QString emoticonAsText) {
-    input_->textCursor().insertText(emoticonAsText);
-    input_->setFocus();
+void QtChatWindow::handleEmojiClicked(QString emoji) {
+    if (isVisible()) {
+        input_->textCursor().insertText(emoji);
+        input_->setFocus();
+        // The next line also deletes the emojisGrid_, as it was added to the
+        // layout of the emojisMenu_.
+        emojisMenu_.reset();
+    }
 }
 
 void QtChatWindow::handleTextInputReceivedFocus() {

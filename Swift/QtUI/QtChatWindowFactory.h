@@ -1,21 +1,23 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <map>
-#include <string>
-
+#include <QMenu>
 #include <QObject>
 #include <QSplitter>
+#include <QVBoxLayout>
 
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 
+#include <SwifTools/EmojiMapper.h>
+
+#include <Swift/QtUI/QtEmojisSelector.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
 
 namespace Swift {
@@ -27,7 +29,7 @@ namespace Swift {
     class QtChatWindowFactory : public QObject, public ChatWindowFactory {
         Q_OBJECT
         public:
-            QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath, const std::map<std::string, std::string>& emoticons);
+            QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath);
             ~QtChatWindowFactory();
             ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
         signals:
@@ -41,7 +43,5 @@ namespace Swift {
             QtSettingsProvider* qtOnlySettings_;
             QtChatTabsBase* tabs_;
             QtChatTheme* theme_;
-            std::map<std::string, std::string> emoticons_;
     };
 }
-

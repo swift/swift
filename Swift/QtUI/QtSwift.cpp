@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,6 +29,7 @@
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 #include <SwifTools/AutoUpdater/AutoUpdater.h>
 #include <SwifTools/AutoUpdater/PlatformAutoUpdaterFactory.h>
+#include <SwifTools/EmojiMapper.h>
 
 #include <Swift/Controllers/ApplicationInfo.h>
 #include <Swift/Controllers/BuildVersion.h>
@@ -228,7 +229,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
     storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
     certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory(), networkFactories_.getCryptoProvider());
-    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, ":/themes/Default/", emoticons);
+    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, ":/themes/Default/");
     soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
     // Ugly, because the dock depends on the tray, but the temporary
@@ -324,6 +325,7 @@ QtSwift::~QtSwift() {
         delete tray;
     }
     delete tabs_;
+    delete chatWindowFactory_;
     delete splitter_;
     delete settingsHierachy_;
     delete qtSettings_;
@@ -332,7 +334,6 @@ QtSwift::~QtSwift() {
     delete uriHandler_;
     delete dock_;
     delete soundPlayer_;
-    delete chatWindowFactory_;
     delete certificateStorageFactory_;
     delete storagesFactory_;
     delete applicationPathProvider_;

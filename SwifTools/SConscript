@@ -20,6 +20,7 @@ if env["SCONS_STAGE"] == "build" :
     swiftools_env.UseFlags(swiftools_env["BOOST_FLAGS"])
 
     sources = [
+            "EmojiMapper.cpp",
             "Idle/IdleDetector.cpp",
             "Idle/ActualIdleDetector.cpp",
             "Idle/IdleQuerier.cpp",
