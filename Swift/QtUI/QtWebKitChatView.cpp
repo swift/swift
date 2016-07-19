@@ -329,11 +329,7 @@ void QtWebKitChatView::resetView() {
     connect(webView_, SIGNAL(loadFinished(bool)), &syncLoop, SLOT(quit()));
     webPage_->mainFrame()->setHtml(pageHTML);
     while (!viewReady_) {
-        QTimer t;
-        t.setSingleShot(true);
-        connect(&t, SIGNAL(timeout()), &syncLoop, SLOT(quit()));
-        t.start(50);
-        syncLoop.exec();
+        syncLoop.processEvents(QEventLoop::AllEvents, 50);
     }
     document_ = webPage_->mainFrame()->documentElement();
 
