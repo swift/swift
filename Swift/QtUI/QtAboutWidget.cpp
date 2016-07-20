@@ -51,6 +51,10 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
     QPushButton* licenseButton = new QPushButton(tr("View License"), this);
     mainLayout->addWidget(licenseButton);
     connect(licenseButton, SIGNAL(clicked()), this, SLOT(handleLicenseClicked()));
+
+    QPushButton* changelogButton = new QPushButton(tr("View Changes"), this);
+    mainLayout->addWidget(changelogButton);
+    connect(changelogButton, SIGNAL(clicked()), this, SLOT(handleChangelogClicked()));
 #else
     // Some Linux desktops have dialog window decorations without close window buttons.
     // This code adds a dedicated button to close the about window dialog.
@@ -60,6 +64,10 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
     QPushButton* licenseButton = new QPushButton(tr("View License"), this);
     buttonLayout->addWidget(licenseButton);
     connect(licenseButton, SIGNAL(clicked()), this, SLOT(handleLicenseClicked()));
+
+    QPushButton* changelogButton = new QPushButton(tr("View Changes"), this);
+    buttonLayout->addWidget(changelogButton);
+    connect(changelogButton, SIGNAL(clicked()), this, SLOT(handleChangelogClicked()));
 
     buttonLayout->addItem(new QSpacerItem(20,20));
 
@@ -71,10 +79,18 @@ QtAboutWidget::QtAboutWidget() : QDialog() {
 }
 
 void QtAboutWidget::handleLicenseClicked() {
+    openPlainTextWindow(":/COPYING");
+}
+
+void QtAboutWidget::handleChangelogClicked() {
+    openPlainTextWindow(":/ChangeLog.md");
+}
+
+void QtAboutWidget::openPlainTextWindow(const QString& path) {
     QTextEdit* text = new QTextEdit();
     text->setAttribute(Qt::WA_DeleteOnClose);
     text->setReadOnly(true);
-    QFile file(":/COPYING");
+    QFile file(path);
     file.open(QIODevice::ReadOnly);
     QTextStream in(&file);
     in.setCodec("UTF-8");
