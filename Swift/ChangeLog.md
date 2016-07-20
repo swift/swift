@@ -1,13 +1,13 @@
-4.0-beta1
----------
+4.0-beta1 ( 2016-07-15 )
+------------------------
 - Support for message carbons (XEP-0280)
 - Improved spell checker support on Linux
 - Enabled trellis mode as a default feature, allowing several tiled chats windows to be shown at once
 - New chat theme including a new font
 - And assorted smaller features and usability enhancements
 
-3.0
----
+3.0 ( 2016-02-24 )
+------------------
 - File transfer and Mac Notification Center issues fixed
 - Fix connection to servers with invalid or untrusted certificates on OS/X
 - Support for the Notification Center on OS X
@@ -35,8 +35,8 @@
 - And assorted smaller features and usability enhancements.
 
 
-3.0-beta1
----------
+3.0-beta1 ( 2015-02-23 )
+------------------------
 - Allow toggling of a more compact roster display.
 - Remember status settings and provide quick access to them with searching of recent selections in the status setter.
 
@@ -44,8 +44,8 @@
 ---
 - Fixed potential crash when using proxies on Mac OS X.
 
-2.0-beta2
----------
+2.0-beta2 ( 2012-10-07 )
+------------------------
 - Enable auto-completion of nicknames that don't start with a letter.
 - Generate crash dumps on Windows.
 - Connection timeouts are now on each connection separately, instead of on the complete connection process.
@@ -65,8 +65,8 @@
 Thanks to Tobias Markmann.
 
 
-2.0-beta1
----------
+2.0-beta1 ( 2012-04-29 )
+------------------------
 - Windows packages are now built in Microsoft Installer's ".msi" format. Please 
   uninstall any older NSIS-based Swift packages before upgrading to this release.
 - Suitable names will now be suggested from the contact's vcard when adding/editing their roster entry.
@@ -92,6 +92,6 @@ Thanks to Tobias Markmann, Jan Kaluza, Thilo Cestonaro, Arnt Gulbrandsen, Vlad V
 Yoann Blein, Catalin Badea, Pavol Babincak, Mateusz Piekos, Alexey Melnikov and Soren Dreijer.
 
 
-1.0
----
+1.0 ( 2011-04-18 )
+------------------
 - Initial release.

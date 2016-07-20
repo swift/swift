@@ -1,5 +1,5 @@
-4.0-beta1
----------
+4.0-beta1 ( 2016-07-15 )
+------------------------
 - Moved code-base to C++11
     - Use C++11 threading instead of Boost.Thread library
     - Use C++11 smart pointers instead of Boost's
