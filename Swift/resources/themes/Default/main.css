@@ -220,10 +220,11 @@ body {
     font-size: 14px;
     color: #595959;
     vertical-align: top;
-}
 
-.text a {
-    word-break: break-all; /* Break long URLs at any point. */
+    /* Break long URLs at any point. */
+    word-break: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .username {
