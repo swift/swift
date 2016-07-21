@@ -516,8 +516,11 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
                 test_conf.Finish()
                 raise Exception('Qt installation is missing packages. The following are required: %s' % modules_str)
                 return
-            test_conf.env.ParseConfig("pkg-config --cflags --libs " + modules_str)
-            self.AppendUnique(LIBS=test_conf.env["LIBS"], LIBPATH=test_conf.env["LIBPATH"], CPPPATH=test_conf.env["CPPPATH"])
+
+            def parse_conf_as_system(env, cmd, unique=1):
+                return env.MergeFlags(cmd.replace("-I/", include_flag + "/"), unique)
+
+            test_conf.env.ParseConfig("pkg-config --cflags --libs " + modules_str, parse_conf_as_system)
             self["QT4_MOCCPPPATH"] = self["CPPPATH"]
             test_conf.Finish()
             return
