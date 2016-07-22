@@ -35,7 +35,11 @@ struct MiniUPnPInterface::Private {
 MiniUPnPInterface::MiniUPnPInterface() : p(std::make_shared<Private>()) {
     p->isValid = false;
     int error = 0;
+#if MINIUPNPC_API_VERSION > 14
+    p->deviceList = upnpDiscover(1500 /* timeout in ms */, nullptr, nullptr, 0, 0 /* do IPv6? */, 2 /* default TTL */, &error);
+#else
     p->deviceList = upnpDiscover(1500 /* timeout in ms */, nullptr, nullptr, 0, 0 /* do IPv6? */, &error);
+#endif
     if (!p->deviceList) {
         return;
     }
