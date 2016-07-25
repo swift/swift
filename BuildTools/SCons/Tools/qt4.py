@@ -209,7 +209,7 @@ def _detect(env):
         moc = env.WhereIs('moc-qt4') or env.WhereIs('moc4') or env.WhereIs('moc')
     if moc:
         # Test whether the moc command we found is real, or whether it is just the qtchooser dummy.
-        p = subprocess.Popen([moc, "-v"], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen([moc, "-v"], shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env["ENV"])
         p.communicate()
         if p.returncode == 0:
             import sys
