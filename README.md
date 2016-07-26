@@ -1,4 +1,7 @@
 # Swift - An elegant, secure, adaptable and intuitive XMPP Client
+
+__NOTE: Please download any releases from https://swift.im/releases.html, or as a Git checkout. The tarballs provided by GitHub will not build correctly.__
+
 ## Quick Start
 Simply run `./scons Swift` on Linux, or `./scons Swift qt=/Users/username/Qt_installation_path/Qt/5.4.2/5.4/clang_64` on Mac OS X or `scons.bat Swift qt=C:\path\to\qt` on Windows to build Swift.
 
