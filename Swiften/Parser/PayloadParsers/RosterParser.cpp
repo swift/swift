@@ -6,6 +6,8 @@
 
 #include <Swiften/Parser/PayloadParsers/RosterParser.h>
 
+#include <cassert>
+
 #include <boost/optional.hpp>
 
 #include <Swiften/Parser/SerializingParser.h>

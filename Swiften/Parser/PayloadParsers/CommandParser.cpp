@@ -6,6 +6,8 @@
 
 #include <Swiften/Parser/PayloadParsers/CommandParser.h>
 
+#include <cassert>
+
 #include <boost/cast.hpp>
 
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
