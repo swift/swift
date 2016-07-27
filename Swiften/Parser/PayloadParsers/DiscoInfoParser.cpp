@@ -6,6 +6,8 @@
 
 #include <Swiften/Parser/PayloadParsers/DiscoInfoParser.h>
 
+#include <cassert>
+
 #include <boost/optional.hpp>
 
 #include <Swiften/Parser/PayloadParsers/FormParser.h>

@@ -6,6 +6,8 @@
 
 #include <Swiften/Parser/PayloadParsers/VCardParser.h>
 
+#include <cassert>
+
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Parser/SerializingParser.h>

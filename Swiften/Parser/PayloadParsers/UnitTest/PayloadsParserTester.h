@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cassert>
+
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Parser/PayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>

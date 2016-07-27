@@ -9,6 +9,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/cast.hpp>
 
+#include <cassert>
+
 #include <Swiften/Parser/PayloadParsers/FormParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 #include <Swiften/Base/foreach.h>
