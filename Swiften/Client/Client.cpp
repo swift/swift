@@ -6,32 +6,34 @@
 
 #include <Swiften/Client/Client.h>
 
-#include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
-#include <Swiften/Roster/XMPPRosterImpl.h>
-#include <Swiften/Roster/XMPPRosterController.h>
+#include <Swiften/Avatars/AvatarManagerImpl.h>
+#include <Swiften/Base/SafeString.h>
+#include <Swiften/Client/ClientBlockListManager.h>
+#include <Swiften/Client/ClientSession.h>
+#include <Swiften/Client/MemoryStorages.h>
+#include <Swiften/Client/NickManagerImpl.h>
+#include <Swiften/Client/NickResolver.h>
+#include <Swiften/Disco/CapsManager.h>
+#include <Swiften/Disco/ClientDiscoManager.h>
+#include <Swiften/Disco/EntityCapsManager.h>
+#include <Swiften/FileTransfer/FileTransferManagerImpl.h>
+#include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/MUC/MUCManager.h>
+#include <Swiften/MUC/MUCRegistry.h>
+#include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Presence/StanzaChannelPresenceSender.h>
-#include <Swiften/Presence/DirectedPresenceSender.h>
-#include <Swiften/MUC/MUCRegistry.h>
-#include <Swiften/MUC/MUCManager.h>
-#include <Swiften/PubSub/PubSubManagerImpl.h>
-#include <Swiften/Client/MemoryStorages.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swiften/VCards/VCardManager.h>
-#include <Swiften/Avatars/AvatarManagerImpl.h>
-#include <Swiften/Disco/CapsManager.h>
-#include <Swiften/Disco/EntityCapsManager.h>
-#include <Swiften/Disco/ClientDiscoManager.h>
-#include <Swiften/Client/NickResolver.h>
 #include <Swiften/Presence/SubscriptionManager.h>
+#include <Swiften/PubSub/PubSubManagerImpl.h>
+#include <Swiften/Queries/Responders/SoftwareVersionResponder.h>
+#include <Swiften/Roster/XMPPRosterController.h>
+#include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
-#include <Swiften/Client/NickManagerImpl.h>
-#include <Swiften/Client/ClientSession.h>
-#include <Swiften/Jingle/JingleSessionManager.h>
-#include <Swiften/Network/NetworkFactories.h>
-#include <Swiften/FileTransfer/FileTransferManagerImpl.h>
+#include <Swiften/VCards/VCardManager.h>
+#include <Swiften/VCards/VCardManager.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
-#include <Swiften/Client/ClientBlockListManager.h>
+
 #ifndef SWIFT_EXPERIMENTAL_FT
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #endif

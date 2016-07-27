@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,6 +36,7 @@ namespace Swift {
              * \param iqRouter the router on which requests will be answered
              * \param presenceSender the presence sender to which all outgoing presence
              *   (with caps information) will be sent.
+             * \param crypto the crypto provider used for cryptographic hash computations.
              */
             ClientDiscoManager(IQRouter* iqRouter, PresenceSender* presenceSender, CryptoProvider* crypto);
             ~ClientDiscoManager();

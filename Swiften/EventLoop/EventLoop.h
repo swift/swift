@@ -30,13 +30,13 @@ namespace Swift {
 
             /**
              * The \ref postEvent method allows events to be added to the event queue of the \ref EventLoop.
-             * An optional \ref EventOwner can be passed, allowing later removal of events that have not yet been
+             * An optional \ref EventOwner can be passed as \p owner, allowing later removal of events that have not yet been
              * executed using the \ref removeEventsFromOwner method.
              */
             void postEvent(boost::function<void ()> event, std::shared_ptr<EventOwner> owner = std::shared_ptr<EventOwner>());
 
             /**
-             * The \ref removeEventsFromOwner method removes all events from the specified \ref owner from the
+             * The \ref removeEventsFromOwner method removes all events from the specified \p owner from the
              * event queue.
              */
             void removeEventsFromOwner(std::shared_ptr<EventOwner> owner);

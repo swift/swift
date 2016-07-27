@@ -199,7 +199,6 @@ namespace Swift {
             /**
              * Set an alert on the window.
              * @param alertText Description of alert (required).
-             * @param buttonText Button text to use (optional, no button is shown if empty).
              * @return A handle to the alert message.
              */
             virtual AlertID addAlert(const std::string& alertText) = 0;

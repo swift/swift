@@ -7,38 +7,38 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/SafeString.h>
 #include <Swiften/Client/CoreClient.h>
 
 namespace Swift {
-    class SoftwareVersionResponder;
-    class BlindCertificateTrustChecker;
-    class XMPPRoster;
-    class XMPPRosterImpl;
-    class MUCManager;
-    class XMPPRosterController;
-    class PresenceOracle;
-    class PresenceSender;
-    class DirectedPresenceSender;
-    class StanzaChannelPresenceSender;
-    class MUCRegistry;
-    class Storages;
-    class MemoryStorages;
-    class VCardManager;
     class AvatarManager;
+    class BlindCertificateTrustChecker;
     class CapsManager;
+    class ClientBlockListManager;
+    class ClientDiscoManager;
+    class DirectedPresenceSender;
     class EntityCapsManager;
     class EntityCapsProvider;
-    class NickResolver;
-    class SubscriptionManager;
-    class ClientDiscoManager;
-    class NickManager;
+    class FileTransferManager;
     class FileTransferManager;
     class JingleSessionManager;
-    class FileTransferManager;
-    class WhiteboardSessionManager;
-    class ClientBlockListManager;
+    class MUCManager;
+    class MUCRegistry;
+    class MemoryStorages;
+    class NickManager;
+    class NickResolver;
+    class PresenceOracle;
+    class PresenceSender;
     class PubSubManager;
+    class SafeString;
+    class SoftwareVersionResponder;
+    class StanzaChannelPresenceSender;
+    class Storages;
+    class SubscriptionManager;
+    class VCardManager;
+    class WhiteboardSessionManager;
+    class XMPPRoster;
+    class XMPPRosterController;
+    class XMPPRosterImpl;
 
     /**
      * Provides the core functionality for writing XMPP client software.
@@ -51,6 +51,11 @@ namespace Swift {
             /**
              * Constructs a client for the given JID with the given password.
              *
+             * \param jid The JID to be used for the login. If only a bare 
+             *    JID is give the server will be asked to generate a resource.
+             * \param password The password used for login given as a \ref SafeString.
+             * \param networkFactories The network factories that are used
+             *    to handle any network related tasks.
              * \param storages The interfaces for storing cache information etc. If
              *    this is NULL,
              *    all data will be stored in memory (and be lost on shutdown)
