@@ -1,3 +1,7 @@
+4.0-in-progress
+---------------
+- Handle sessions being closed by the server
+
 4.0-beta1 ( 2016-07-15 )
 ------------------------
 - Moved code-base to C++11

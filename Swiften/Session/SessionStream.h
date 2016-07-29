@@ -75,6 +75,7 @@ namespace Swift {
             virtual ByteArray getTLSFinishMessage() const = 0;
 
             boost::signals2::signal<void (const ProtocolHeader&)> onStreamStartReceived;
+            boost::signals2::signal<void ()> onStreamEndReceived;
             boost::signals2::signal<void (std::shared_ptr<ToplevelElement>)> onElementReceived;
             boost::signals2::signal<void (std::shared_ptr<Error>)> onClosed;
             boost::signals2::signal<void ()> onTLSEncrypted;

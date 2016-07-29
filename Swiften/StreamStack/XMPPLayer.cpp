@@ -86,6 +86,7 @@ void XMPPLayer::handleElement(std::shared_ptr<ToplevelElement> stanza) {
 }
 
 void XMPPLayer::handleStreamEnd() {
+    onStreamEnd();
 }
 
 void XMPPLayer::resetParser() {

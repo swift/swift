@@ -51,6 +51,7 @@ namespace Swift {
 
         public:
             boost::signals2::signal<void (const ProtocolHeader&)> onStreamStart;
+            boost::signals2::signal<void ()> onStreamEnd;
             boost::signals2::signal<void (std::shared_ptr<ToplevelElement>)> onElement;
             boost::signals2::signal<void (const SafeByteArray&)> onWriteData;
             boost::signals2::signal<void (const SafeByteArray&)> onDataRead;

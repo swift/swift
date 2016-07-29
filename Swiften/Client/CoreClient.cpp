@@ -154,12 +154,13 @@ void CoreClient::connect(const ClientOptions& o) {
 }
 
 void CoreClient::bindSessionToStream() {
-    session_ = ClientSession::create(jid_, sessionStream_, networkFactories->getIDNConverter(), networkFactories->getCryptoProvider());
+    session_ = ClientSession::create(jid_, sessionStream_, networkFactories->getIDNConverter(), networkFactories->getCryptoProvider(), networkFactories->getTimerFactory());
     session_->setCertificateTrustChecker(certificateTrustChecker);
     session_->setUseStreamCompression(options.useStreamCompression);
     session_->setAllowPLAINOverNonTLS(options.allowPLAINWithoutTLS);
     session_->setSingleSignOn(options.singleSignOn);
     session_->setAuthenticationPort(options.manualPort);
+    session_->setSessionShutdownTimeout(options.sessionShutdownTimeoutInMilliseconds);
     switch(options.useTLS) {
         case ClientOptions::UseTLSWhenAvailable:
             session_->setUseTLS(ClientSession::UseTLSWhenAvailable);
@@ -271,6 +272,9 @@ void CoreClient::handleSessionFinished(std::shared_ptr<Error> error) {
                     clientError = ClientError(ClientError::ClientCertificateError);
                     break;
                 case ClientSession::Error::StreamError:
+                    clientError = ClientError(ClientError::StreamError);
+                    break;
+                case ClientSession::Error::StreamEndError:
                     clientError = ClientError(ClientError::StreamError);
                     break;
             }

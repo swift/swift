@@ -33,7 +33,7 @@ namespace Swift {
             virtual std::vector<Certificate::ref> getPeerCertificateChain() const;
 
             bool isAvailable() const {
-                return session && session->getState() == ClientSession::Initialized;
+                return session && session->getState() == ClientSession::State::Initialized;
             }
 
         private:

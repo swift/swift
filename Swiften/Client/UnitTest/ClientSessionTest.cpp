@@ -10,6 +10,8 @@
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
 
+#include <Swiften/Base/Debug.h>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -34,6 +36,7 @@
 #include <Swiften/Elements/TLSProceed.h>
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/IDN/PlatformIDNConverter.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/TLS/BlindCertificateTrustChecker.h>
 #include <Swiften/TLS/SimpleCertificate.h>
@@ -59,6 +62,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testStreamManagement_Failed);
         CPPUNIT_TEST(testUnexpectedChallenge);
         CPPUNIT_TEST(testFinishAcksStanzas);
+
+        CPPUNIT_TEST(testServerInitiatedSessionClose);
+        CPPUNIT_TEST(testClientInitiatedSessionClose);
+        CPPUNIT_TEST(testTimeoutOnShutdown);
+
         /*
         CPPUNIT_TEST(testResourceBind);
         CPPUNIT_TEST(testResourceBind_ChangeResource);
@@ -77,6 +85,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         void setUp() {
             crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
             idnConverter = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+            timerFactory = std::make_shared<DummyTimerFactory>();
             server = std::make_shared<MockSessionStream>();
             sessionFinishedReceived = false;
             needCredentials = false;
@@ -92,7 +101,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
             session->start();
             server->breakConnection();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -103,7 +112,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamStart();
             server->sendStreamError();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -136,7 +149,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendTLSFailure();
 
             CPPUNIT_ASSERT(!server->tlsEncrypted);
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -151,7 +168,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendTLSProceed();
             server->breakTLS();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -167,10 +184,12 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendTLSProceed();
             CPPUNIT_ASSERT(server->tlsEncrypted);
             server->onTLSEncrypted();
+            server->close();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
+            CPPUNIT_ASSERT(std::dynamic_pointer_cast<CertificateVerificationError>(sessionFinishedError));
             CPPUNIT_ASSERT_EQUAL(CertificateVerificationError::InvalidServerIdentity, std::dynamic_pointer_cast<CertificateVerificationError>(sessionFinishedError)->getType());
         }
 
@@ -181,7 +200,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamStart();
             server->sendEmptyStreamFeatures();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -193,7 +216,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamStart();
             server->sendStreamFeaturesWithPLAINAuthentication();
             CPPUNIT_ASSERT(needCredentials);
-            CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForCredentials, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::WaitingForCredentials, session->getState());
             session->sendCredentials(createSafeByteArray("mypass"));
             server->receiveAuthRequest("PLAIN");
             server->sendAuthSuccess();
@@ -209,12 +232,16 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamStart();
             server->sendStreamFeaturesWithPLAINAuthentication();
             CPPUNIT_ASSERT(needCredentials);
-            CPPUNIT_ASSERT_EQUAL(ClientSession::WaitingForCredentials, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::WaitingForCredentials, session->getState());
             session->sendCredentials(createSafeByteArray("mypass"));
             server->receiveAuthRequest("PLAIN");
             server->sendAuthFailure();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -227,7 +254,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamStart();
             server->sendStreamFeaturesWithPLAINAuthentication();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -240,8 +271,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->receiveStreamStart();
             server->sendStreamStart();
             server->sendStreamFeaturesWithMultipleAuthentication();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -253,7 +287,12 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamStart();
             server->sendStreamFeaturesWithUnknownAuthentication();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            server->close();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -281,7 +320,11 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendChallenge();
             server->sendChallenge();
 
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
             CPPUNIT_ASSERT(sessionFinishedReceived);
             CPPUNIT_ASSERT(sessionFinishedError);
         }
@@ -305,7 +348,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT(session->getStreamManagementEnabled());
             // TODO: Test if the requesters & responders do their work
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Initialized, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Initialized, session->getState());
 
             session->finish();
         }
@@ -328,7 +371,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->sendStreamManagementFailed();
 
             CPPUNIT_ASSERT(!session->getStreamManagementEnabled());
-            CPPUNIT_ASSERT_EQUAL(ClientSession::Initialized, session->getState());
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Initialized, session->getState());
 
             session->finish();
         }
@@ -345,9 +388,44 @@ class ClientSessionTest : public CppUnit::TestFixture {
             server->receiveAck(3);
         }
 
+        void testServerInitiatedSessionClose() {
+            std::shared_ptr<ClientSession> session(createSession());
+            initializeSession(session);
+
+            server->onStreamEndReceived();
+            server->close();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+        }
+
+        void testClientInitiatedSessionClose() {
+            std::shared_ptr<ClientSession> session(createSession());
+            initializeSession(session);
+
+            session->finish();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+
+            server->onStreamEndReceived();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
+        }
+
+        void testTimeoutOnShutdown() {
+            std::shared_ptr<ClientSession> session(createSession());
+            initializeSession(session);
+
+            session->finish();
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finishing, session->getState());
+            CPPUNIT_ASSERT_EQUAL(true, server->receivedEvents.back().footer);
+            timerFactory->setTime(60000);
+
+            CPPUNIT_ASSERT_EQUAL(ClientSession::State::Finished, session->getState());
+            CPPUNIT_ASSERT(sessionFinishedReceived);
+        }
+
     private:
         std::shared_ptr<ClientSession> createSession() {
-            std::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get(), crypto.get());
+            std::shared_ptr<ClientSession> session = ClientSession::create(JID("me@foo.com"), server, idnConverter.get(), crypto.get(), timerFactory.get());
             session->onFinished.connect(boost::bind(&ClientSessionTest::handleSessionFinished, this, _1));
             session->onNeedCredentials.connect(boost::bind(&ClientSessionTest::handleSessionNeedCredentials, this));
             session->setAllowPLAINOverNonTLS(true);
@@ -631,6 +709,7 @@ class ClientSessionTest : public CppUnit::TestFixture {
         std::shared_ptr<Error> sessionFinishedError;
         BlindCertificateTrustChecker* blindCertificateTrustChecker;
         std::shared_ptr<CryptoProvider> crypto;
+        std::shared_ptr<DummyTimerFactory> timerFactory;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ClientSessionTest);

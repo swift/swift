@@ -10,6 +10,7 @@
 #include <memory>
 
 #include <Swiften/Client/ClientError.h>
+#include <Swiften/Client/ClientSession.h>
 #include <Swiften/Serializer/PayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 #include <Swiften/Serializer/XMPPSerializer.h>
@@ -136,5 +137,54 @@ std::ostream& operator<<(std::ostream& os, Swift::Element* ele) {
         return os;
     }
     os << "Element(Unknown)";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, Swift::ClientSession::State state) {
+    using CS = Swift::ClientSession;
+    switch (state) {
+        case CS::State::Initial:
+            os << "ClientSession::State::Initial";
+            break;
+        case CS::State::WaitingForStreamStart:
+            os << "ClientSession::State::WaitingForStreamStart";
+            break;
+        case CS::State::Negotiating:
+            os << "ClientSession::State::Negotiating";
+            break;
+        case CS::State::Compressing:
+            os << "ClientSession::State::Compressing";
+            break;
+        case CS::State::WaitingForEncrypt:
+            os << "ClientSession::State::WaitingForEncrypt";
+            break;
+        case CS::State::Encrypting:
+            os << "ClientSession::State::Encrypting";
+            break;
+        case CS::State::WaitingForCredentials:
+            os << "ClientSession::State::WaitingForCredentials";
+            break;
+        case CS::State::Authenticating:
+            os << "ClientSession::State::Authenticating";
+            break;
+        case CS::State::EnablingSessionManagement:
+            os << "ClientSession::State::EnablingSessionManagement";
+            break;
+        case CS::State::BindingResource:
+            os << "ClientSession::State::BindingResource";
+            break;
+        case CS::State::StartingSession:
+            os << "ClientSession::State::StartingSession";
+            break;
+        case CS::State::Initialized:
+            os << "ClientSession::State::Initialized";
+            break;
+        case CS::State::Finishing:
+            os << "ClientSession::State::Finishing";
+            break;
+        case CS::State::Finished:
+            os << "ClientSession::State::Finished";
+            break;
+    }
     return os;
 }

@@ -40,6 +40,7 @@ BasicSessionStream::BasicSessionStream(
             tlsOptions_(tlsOptions) {
     xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
     xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
+    xmppLayer->onStreamEnd.connect(boost::bind(&BasicSessionStream::handleStreamEndReceived, this));
     xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
     xmppLayer->onError.connect(boost::bind(&BasicSessionStream::handleXMPPError, this));
     xmppLayer->onDataRead.connect(boost::bind(&BasicSessionStream::handleDataRead, this, _1));
@@ -68,6 +69,7 @@ BasicSessionStream::~BasicSessionStream() {
     delete connectionLayer;
 
     xmppLayer->onStreamStart.disconnect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
+    xmppLayer->onStreamEnd.disconnect(boost::bind(&BasicSessionStream::handleStreamEndReceived, this));
     xmppLayer->onElement.disconnect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
     xmppLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleXMPPError, this));
     xmppLayer->onDataRead.disconnect(boost::bind(&BasicSessionStream::handleDataRead, this, _1));
@@ -169,6 +171,10 @@ void BasicSessionStream::resetXMPPParser() {
 
 void BasicSessionStream::handleStreamStartReceived(const ProtocolHeader& header) {
     onStreamStartReceived(header);
+}
+
+void BasicSessionStream::handleStreamEndReceived() {
+    onStreamEndReceived();
 }
 
 void BasicSessionStream::handleElementReceived(std::shared_ptr<ToplevelElement> element) {

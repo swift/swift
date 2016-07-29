@@ -73,6 +73,7 @@ namespace Swift {
             void handleTLSConnected();
             void handleTLSError(std::shared_ptr<TLSError>);
             void handleStreamStartReceived(const ProtocolHeader&);
+            void handleStreamEndReceived();
             void handleElementReceived(std::shared_ptr<ToplevelElement>);
             void handleDataRead(const SafeByteArray& data);
             void handleDataWritten(const SafeByteArray& data);
