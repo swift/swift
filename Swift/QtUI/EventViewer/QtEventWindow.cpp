@@ -9,12 +9,13 @@
 #include <QBoxLayout>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QtDebug>
+#include <QTreeView>
 
 #include <Swiften/Base/Platform.h>
 
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
 #include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
@@ -99,7 +100,7 @@ void QtEventWindow::handleItemActivated(const QModelIndex& item) {
             errorEvent->conclude();
         }
         QMessageBox msgBox;
-        msgBox.setText(model_->data(item, Qt::DisplayRole).toString());
+        msgBox.setText(event->data(Qt::DisplayRole).toString());
         msgBox.exec();
     }
 
