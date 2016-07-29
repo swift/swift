@@ -146,10 +146,10 @@ QColor RosterModel::getTextColor(RosterItem* item) const {
     int color = 0;
     if (contact) {
         switch (contact->getStatusShow()) {
-            case StatusShow::Online: color = 0x000000; break;
+            case StatusShow::Online: color = 0x595959; break;
             case StatusShow::Away: color = 0x336699; break;
             case StatusShow::XA: color = 0x336699; break;
-            case StatusShow::FFC: color = 0x000000; break;
+            case StatusShow::FFC: color = 0x595959; break;
             case StatusShow::DND: color = 0x990000; break;
             case StatusShow::None: color = 0x7F7F7F;break;
         }

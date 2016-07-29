@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/ChatList/ChatListMUCItem.h>
 
+#include <QColor>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -21,8 +23,8 @@ QVariant ChatListMUCItem::data(int role) const {
     switch (role) {
         case Qt::DisplayRole: return P2QSTRING(bookmark_.getName());
         case DetailTextRole: return P2QSTRING(bookmark_.getRoom().toString());
-            /*case Qt::TextColorRole: return textColor_;
-        case Qt::BackgroundColorRole: return backgroundColor_;
+        case Qt::TextColorRole: return QColor(89,89,89);
+        /*case Qt::BackgroundColorRole: return backgroundColor_;
         case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
         case StatusTextRole: return statusText_;
         case AvatarRole: return avatar_;

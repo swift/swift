@@ -12,6 +12,8 @@
 
 #include <Swift/QtUI/ChatList/ChatListWhiteboardItem.h>
 
+#include <QColor>
+
 #include <Swiften/Base/Path.h>
 
 #include <Swift/QtUI/QtResourceHelper.h>
@@ -30,10 +32,11 @@ namespace Swift {
         switch (role) {
         case Qt::DisplayRole: return P2QSTRING(chat_.chatName);
         case DetailTextRole: return P2QSTRING(chat_.activity);
-            /*case Qt::TextColorRole: return textColor_;
-              case Qt::BackgroundColorRole: return backgroundColor_;
-              case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
-              case StatusTextRole: return statusText_;*/
+        case Qt::TextColorRole: return QColor(89,89,89);
+        /*case Qt::TextColorRole: return textColor_;
+        case Qt::BackgroundColorRole: return backgroundColor_;
+        case Qt::ToolTipRole: return isContact() ? toolTipString() : QVariant();
+        case StatusTextRole: return statusText_;*/
         case AvatarRole: return QVariant(P2QSTRING(pathToString(chat_.avatarPath)));
         case PresenceIconRole: return getPresenceIcon();
         default: return QVariant();

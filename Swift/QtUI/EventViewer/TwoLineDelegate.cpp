@@ -6,11 +6,16 @@
 
 #include <Swift/QtUI/EventViewer/TwoLineDelegate.h>
 
-#include <QDebug>
+#include <QColor>
 #include <QPainter>
 #include <QPen>
 
 namespace Swift {
+
+namespace {
+    const QColor secondLineColor = QColor(160,160,160);
+}
+
 TwoLineDelegate::TwoLineDelegate(int firstRole, int secondRole, bool wrap) {
     firstRole_ = firstRole;
     secondRole_ = secondRole;
@@ -51,7 +56,7 @@ void TwoLineDelegate::paint(QPainter* painter, const QStyleOptionViewItem& optio
     DelegateCommons::drawElidedText(painter, nameRegion, event->data(firstRole_).toString());
 
     painter->setFont(common_.detailFont);
-    painter->setPen(QPen(QColor(160,160,160)));
+    painter->setPen(QPen(secondLineColor));
 
     QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
     DelegateCommons::drawElidedText(painter, detailRegion, event->data(secondRole_).toString());

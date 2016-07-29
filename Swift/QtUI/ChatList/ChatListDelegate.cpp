@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/ChatList/ChatListDelegate.h>
 
+#include <QColor>
 #include <QPainter>
 #include <QPen>
 
@@ -17,6 +18,10 @@
 #include <Swift/QtUI/Roster/GroupItemDelegate.h>
 
 namespace Swift {
+
+namespace {
+    const QColor secondLineColor = QColor(160,160,160);
+}
 
 ChatListDelegate::ChatListDelegate(bool compact) : compact_(compact) {
     groupDelegate_ = new GroupItemDelegate();
@@ -102,7 +107,7 @@ void ChatListDelegate::paintMUC(QPainter* painter, const QStyleOptionViewItem& o
     DelegateCommons::drawElidedText(painter, nameRegion, item->data(Qt::DisplayRole).toString());
 
     painter->setFont(common_.detailFont);
-    painter->setPen(QPen(QColor(160,160,160)));
+    painter->setPen(QPen(secondLineColor));
 
     QRect detailRegion(textRegion.adjusted(0, nameHeight, 0, 0));
     DelegateCommons::drawElidedText(painter, detailRegion, item->data(ChatListMUCItem::DetailTextRole).toString());
