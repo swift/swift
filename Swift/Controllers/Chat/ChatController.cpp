@@ -12,7 +12,6 @@
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
@@ -33,6 +32,7 @@
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/StatusUtil.h>
+#include <Swift/Controllers/Translator.h>
 #include <Swift/Controllers/UIEvents/AcceptWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/CancelWhiteboardSessionUIEvent.h>
 #include <Swift/Controllers/UIEvents/InviteToMUCUIEvent.h>
@@ -74,7 +74,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
     }
     Idle::ref idle;
     if (theirPresence && (idle = theirPresence->getPayload<Idle>())) {
-        startMessage += str(format(QT_TRANSLATE_NOOP("", ", who has been idle since %1%")) % dateTimeToLocalString(idle->getSince()));
+        startMessage += str(format(QT_TRANSLATE_NOOP("", ", who has been idle since %1%")) % Swift::Translator::getInstance()->ptimeToHumanReadableString(idle->getSince()));
     }
     startMessage += ": " + statusShowTypeToFriendlyName(theirPresence ? theirPresence->getShow() : StatusShow::None);
     if (theirPresence && !theirPresence->getStatus().empty()) {
@@ -466,7 +466,7 @@ std::string ChatController::getStatusChangeString(std::shared_ptr<Presence> pres
     }
     Idle::ref idle;
     if ((idle = presence->getPayload<Idle>())) {
-        response += str(format(QT_TRANSLATE_NOOP("", " and has been idle since %1%")) % dateTimeToLocalString(idle->getSince()));
+        response += str(format(QT_TRANSLATE_NOOP("", " and has been idle since %1%")) % Swift::Translator::getInstance()->ptimeToHumanReadableString(idle->getSince()));
     }
 
     if (!response.empty()) {

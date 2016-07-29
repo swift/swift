@@ -11,6 +11,7 @@
 #include <Swiften/Base/DateTime.h>
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/Idle.h>
+#include <Swiften/Elements/Presence.h>
 
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
@@ -34,7 +35,7 @@ StatusShow::Type ContactRosterItem::getSimplifiedStatusShow() const {
     switch (presence_ ? presence_->getShow() : StatusShow::None) {
         case StatusShow::Online: return StatusShow::Online;
         case StatusShow::Away: return StatusShow::Away;
-         case StatusShow::XA: return StatusShow::Away;
+        case StatusShow::XA: return StatusShow::Away;
         case StatusShow::FFC: return StatusShow::Online;
         case StatusShow::DND: return StatusShow::DND;
         case StatusShow::None: return StatusShow::None;
@@ -48,22 +49,41 @@ std::string ContactRosterItem::getStatusText() const {
 }
 
 std::string ContactRosterItem::getIdleText() const {
-    Idle::ref idle = presence_ ? presence_->getPayload<Idle>() : Idle::ref();
-    if (!idle || idle->getSince().is_not_a_date_time()) {
+    boost::posix_time::ptime idleTime = getIdle();
+    if (idleTime.is_not_a_date_time()) {
         return "";
     } else {
-        return dateTimeToLocalString(idle->getSince());
+        return dateTimeToLocalString(idleTime);
+    }
+}
+
+boost::posix_time::ptime ContactRosterItem::getIdle() const {
+    Idle::ref idle = presence_ ? presence_->getPayload<Idle>() : Idle::ref();
+    if (idle) {
+        return idle->getSince();
+    }
+    else {
+        return boost::posix_time::not_a_date_time;
     }
 }
 
 std::string ContactRosterItem::getOfflineSinceText() const {
+    boost::posix_time::ptime offlineSince = getOfflineSince();
+    if (!offlineSince.is_not_a_date_time()) {
+        return dateTimeToLocalString(offlineSince);
+    }
+    return "";
+}
+
+boost::posix_time::ptime ContactRosterItem::getOfflineSince() const {
+    boost::posix_time::ptime offlineSince = boost::posix_time::not_a_date_time;
     if (presence_ && presence_->getType() == Presence::Unavailable) {
         boost::optional<boost::posix_time::ptime> delay = presence_->getTimestamp();
         if (delay) {
-            return dateTimeToLocalString(*delay);
+            offlineSince = delay.get();
         }
     }
-    return "";
+    return offlineSince;
 }
 
 void ContactRosterItem::setAvatarPath(const boost::filesystem::path& path) {

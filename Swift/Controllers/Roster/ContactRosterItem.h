@@ -17,7 +17,6 @@
 #include <boost/signals2.hpp>
 
 #include <Swiften/Elements/MUCOccupant.h>
-#include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/Elements/VCard.h>
 #include <Swiften/JID/JID.h>
@@ -27,6 +26,8 @@
 namespace Swift {
 
 class GroupRosterItem;
+class Presence;
+
 class ContactRosterItem : public RosterItem {
     public:
         enum Feature {
@@ -49,7 +50,9 @@ class ContactRosterItem : public RosterItem {
         StatusShow::Type getSimplifiedStatusShow() const;
         std::string getStatusText() const;
         std::string getIdleText() const;
+        boost::posix_time::ptime getIdle() const;
         std::string getOfflineSinceText() const;
+        boost::posix_time::ptime getOfflineSince() const;
         void setAvatarPath(const boost::filesystem::path& path);
         const boost::filesystem::path& getAvatarPath() const;
         const JID& getJID() const;
@@ -82,7 +85,6 @@ class ContactRosterItem : public RosterItem {
     private:
         JID jid_;
         JID displayJID_;
-        boost::posix_time::ptime lastAvailableTime_;
         boost::filesystem::path avatarPath_;
         std::shared_ptr<Presence> presence_;
         std::vector<std::string> groups_;

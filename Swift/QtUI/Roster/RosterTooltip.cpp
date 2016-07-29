@@ -20,6 +20,7 @@
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/StatusUtil.h>
+#include <Swift/Controllers/Translator.h>
 
 #include <Swift/QtUI/QtResourceHelper.h>
 #include <Swift/QtUI/QtScaledAvatarCache.h>
@@ -93,15 +94,17 @@ QString RosterTooltip::buildDetailedTooltip(ContactRosterItem* contact, QtScaled
 
     QString statusMessage = contact->getStatusText().empty() ? QObject::tr("(No message)") : P2QSTRING(contact->getStatusText());
 
-    QString idleString = P2QSTRING(contact->getIdleText());
-    if (!idleString.isEmpty()) {
-        idleString = QObject::tr("Idle since %1").arg(idleString);
+    boost::posix_time::ptime idleTime = contact->getIdle();
+    QString idleString;
+    if (!idleTime.is_not_a_date_time()) {
+        idleString = QObject::tr("Idle since %1").arg(P2QSTRING(Swift::Translator::getInstance()->ptimeToHumanReadableString(idleTime)));
         idleString = htmlEscape(idleString) + "<br/>";
     }
 
-    QString lastSeen = P2QSTRING(contact->getOfflineSinceText());
-    if (!lastSeen.isEmpty()) {
-        lastSeen = QObject::tr("Last seen %1").arg(lastSeen);
+    boost::posix_time::ptime lastSeenTime = contact->getOfflineSince();
+    QString lastSeen;
+    if (!lastSeenTime.is_not_a_date_time()) {
+        lastSeen = QObject::tr("Last seen %1").arg(P2QSTRING(Swift::Translator::getInstance()->ptimeToHumanReadableString(lastSeenTime)));
         lastSeen = htmlEscape(lastSeen) + "<br/>";
     }
 
