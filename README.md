@@ -18,13 +18,16 @@ connected XMPP client.
 * SwiftTools: A collection of utilities for Swift.
 
 ## Supported Platforms
+Swift is known to work on Windows, Mac OS X, Linux and other Unix-like systems. However, we do not test the whole range of operating systems, especailly the huge amount of Linux and Unix-like systems.
+Swiften further has support for Android and iOS.
+
+Platforms we officially test our releases on are listed below. We only test on default configurations and default desktops environments on Linux distributions.
+
 * Swift
-    * Windows 7 and later
-    * Mac OS X 10.10 and later
-    * Linux distributions. We usually test on default Ubuntu and Debian installations.
-* Swiften (same as above)
-    * Android
-    * iOS
+    * Windows 7 to Windows 10
+    * Mac OS X 10.10 and Mac OS X 10.11
+    * Ubuntu 14.04 ( Trusty Tahr ) and Ubuntu 16.04 ( Xenial Xerus )
+    * Debian 8 ( jessie )
 
 ## External Dependencies
 The Swift repository includes some third party dependencies in the 3rdParty directory
