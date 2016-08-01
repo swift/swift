@@ -12,7 +12,6 @@
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/NickManager.h>
@@ -141,7 +140,7 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
     std::vector<std::string> groups = xmppRoster_->getGroupsForJID(jid);
     std::string name = nickResolver_->jidToNick(jid);
     if (!groups.empty()) {
-        foreach(const std::string& group, groups) {
+        for (const auto& group : groups) {
             roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid));
         }
     }
@@ -152,7 +151,7 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
 }
 
 void RosterController::applyAllPresenceTo(const JID& jid) {
-    foreach (Presence::ref presence, presenceOracle_->getAllPresence(jid)) {
+    for (auto&& presence : presenceOracle_->getAllPresence(jid)) {
         roster_->applyOnItems(SetPresence(presence));
     }
 }
@@ -179,12 +178,12 @@ void RosterController::handleOnJIDUpdated(const JID& jid, const std::string& old
     if (groups.empty()) {
         groups.push_back(contactsGroup);
     }
-    foreach(const std::string& group, groups) {
+    for (const auto& group : groups) {
         if (std::find(oldGroups.begin(), oldGroups.end(), group) == oldGroups.end()) {
             roster_->addContact(jid, jid, name, group, avatarManager_->getAvatarPath(jid));
         }
     }
-    foreach(const std::string& group, oldGroups) {
+    for (const auto& group : oldGroups) {
         if (std::find(groups.begin(), groups.end(), group) == groups.end()) {
             roster_->removeContactFromGroup(jid, group);
             if (roster_->getGroup(group)->getChildren().size() == 0) {
@@ -203,7 +202,7 @@ void RosterController::handleSettingChanged(const std::string& settingPath) {
 
 void RosterController::handleBlockingStateChanged() {
     if (clientBlockListManager_->getBlockList()->getState() == BlockList::Available) {
-        foreach(const JID& jid, clientBlockListManager_->getBlockList()->getItems()) {
+        for (const auto& jid : clientBlockListManager_->getBlockList()->getItems()) {
             roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsBlocked));
         }
     }
@@ -256,7 +255,7 @@ void RosterController::handleUIEvent(std::shared_ptr<UIEvent> event) {
         if (group == QT_TRANSLATE_NOOP("", "Contacts")) {
             group = "";
         }
-        foreach(XMPPRosterItem& item, items) {
+        for (auto& item : items) {
             std::vector<std::string> groups = item.getGroups();
             if ( (group.empty() && groups.empty()) || std::find(groups.begin(), groups.end(), group) != groups.end()) {
                 groups.erase(std::remove(groups.begin(), groups.end(), group), groups.end());
@@ -269,7 +268,6 @@ void RosterController::handleUIEvent(std::shared_ptr<UIEvent> event) {
         }
     }
     else if (std::shared_ptr<SendFileUIEvent> sendFileEvent = std::dynamic_pointer_cast<SendFileUIEvent>(event)) {
-        //TODO add send file dialog to ChatView of receipient jid
         ftOverview_->sendFile(sendFileEvent->getJID(), sendFileEvent->getFilename());
     }
 }
@@ -298,7 +296,7 @@ void RosterController::initBlockingCommand() {
     blockingOnItemRemovedConnection_ = blockList->onItemRemoved.connect(boost::bind(&RosterController::handleBlockingItemRemoved, this, _1));
     roster_->setBlockingSupported(true);
     if (blockList->getState() == BlockList::Available) {
-        foreach(const JID& jid, blockList->getItems()) {
+        for (const auto& jid : blockList->getItems()) {
             roster_->applyOnItems(SetBlockingState(jid, ContactRosterItem::IsBlocked));
         }
     }

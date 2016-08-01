@@ -975,6 +975,9 @@ void ChatsManager::handleMUCBookmarkActivated(const MUCBookmark& mucBookmark) {
 void ChatsManager::handleNewFileTransferController(FileTransferController* ftc) {
     ChatController* chatController = getChatControllerOrCreate(ftc->getOtherParty());
     chatController->handleNewFileTransferController(ftc);
+    if (!ftc->isIncoming()) {
+        chatController->activateChatWindow();
+    }
 }
 
 void ChatsManager::handleWhiteboardSessionRequest(const JID& contact, bool senderIsSelf) {
