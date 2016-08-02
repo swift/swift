@@ -104,7 +104,12 @@ vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for D
 vars.Add(BoolVariable("check_headers", "Independently build compilation units for all Swiften headers for detecting missing dependencies.", "no"))
 vars.Add("win_target_arch", "Target architecture for Windows builds. x86 for 32-bit (default) or x86_64 for 64-bit.", "x86")
 vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
+
+# Code Signing Options
 vars.Add("codesign_identity", "macOS code signing identity to be passed to codesign when building the distribution package. Must match the Commen Name of the Subject of the code signing certificate.", "")
+vars.Add("signtool_key_pfx", "The keyfile (.pfx) that will be used to sign the Windows installer.", None)
+vars.Add("signtool_timestamp_url", "The timestamp server that will be queried for a signed time stamp in the signing process.", None)
+
 
 ################################################################################
 # Set up default build & configure environment
@@ -374,6 +379,9 @@ if env["PLATFORM"] == "hpux" :
 # Code signing
 if env["PLATFORM"] == "darwin" :
     env["CODE_SIGN_IDENTITY"] = env["codesign_identity"]
+if env["PLATFORM"] == "win32" :
+    env["SIGNTOOL_KEY_PFX"] = env.get("signtool_key_pfx", None)
+    env["SIGNTOOL_TIMESTAMP_URL"] = env.get("signtool_timestamp_url", None)
 
 # Testing
 env["TEST_TYPE"] = env["test"]

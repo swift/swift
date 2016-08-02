@@ -447,7 +447,12 @@ if env["PLATFORM"] == "win32" :
             myenv.WiX_Heat('..\\Packaging\\WiX\\gen_files.wxs', windowsBundleFiles + copying)
             myenv.WiX_Candle('..\\Packaging\\WiX\\Swift.wixobj', '..\\Packaging\\WiX\\Swift.wxs')
             myenv.WiX_Candle('..\\Packaging\\WiX\\gen_files.wixobj', '..\\Packaging\\WiX\\gen_files.wxs')
-            myenv.WiX_Light('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
+            lightTask = myenv.WiX_Light('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
+            if myenv.get("SIGNTOOL_KEY_PFX", None) and myenv.get("SIGNTOOL_TIMESTAMP_URL", None) :
+                def signToolAction(target = None, source = None, env = None):
+                    env.Execute('signtool.exe sign /fd SHA256 /f "${SIGNTOOL_KEY_PFX}" /t "${SIGNTOOL_TIMESTAMP_URL}" ' + str(target[0]))
+
+                myenv.AddPostAction(lightTask, signToolAction)
 
             if myenv["debug"] :
                 myenv.InstallAs('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.pdb', "Swift.pdb")

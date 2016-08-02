@@ -59,6 +59,9 @@ scons
 scons dist=1
 ```
 
+To sign the resulting MSI file, append the `signtool_key_pfx` and `signtool_timestamp_url` parameters to the `scons dist=1` programm call, e.g.
+`scons dist=1 signtool_key_pfx=C:\Users\Swift\SwiftSPC.pfx signtool_timestamp_url=http://timestamp.verisign.com/scripts/timstamp.dll`.
+
 Notes:
 - The settings `debug = 1` and `optimize = 1` are **strictly required** if you use a precompiled Qt release from the Qt Project; otherwise you will get linker errors
 - On 64-bit Windows it's "Program Files (x86)" instead of "Program Files" in the
