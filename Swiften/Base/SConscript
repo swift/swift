@@ -7,6 +7,7 @@ objects = swiften_env.SwiftenObject([
             "SafeAllocator.cpp",
             "Error.cpp",
             "Log.cpp",
+            "LogSerializers.cpp",
             "Path.cpp",
             "Paths.cpp",
             "String.cpp",
