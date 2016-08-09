@@ -10,10 +10,10 @@ then
     SYSTEM_DISTRO=$(lsb_release -i -s)
     if [ "$SYSTEM_DISTRO" == "Debian" ]
     then
-        sudo apt-get install pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools libminiupnpc-dev libnatpmp-dev libhunspell-dev
+        sudo apt-get install pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools qt5-image-formats-plugins libqt5svg5 libminiupnpc-dev libnatpmp-dev libhunspell-dev
     elif [ "$SYSTEM_DISTRO" == "Ubuntu" ]
     then
-        sudo apt-get install pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools libhunspell-dev
+        sudo apt-get install pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools qt5-image-formats-plugins libqt5svg5 libhunspell-dev
     elif [ "$SYSTEM_DISTRO" == "Arch" ]
     then
         sudo pacman -S qt5-base qt5-x11extras qt5-webkit qt5-multimedia qt5-tools hunspell
