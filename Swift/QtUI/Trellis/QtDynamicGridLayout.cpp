@@ -70,7 +70,7 @@ QWidget* QtDynamicGridLayout::widget(int index) const {
     for (int y = 0; y < gridLayout_->rowCount(); y++) {
         for (int x = 0; x < gridLayout_->columnCount(); x++) {
             QLayoutItem* layoutItem = gridLayout_->itemAtPosition(y, x);
-            QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(layoutItem->widget());
+            QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(layoutItem ? layoutItem->widget() : nullptr);
             if (tabWidget) {
                 if (index < tabWidget->count()) {
                     widgetAtIndex = tabWidget->widget(index);
@@ -108,7 +108,7 @@ int QtDynamicGridLayout::indexOf(const QWidget* widget) const {
 }
 
 void QtDynamicGridLayout::handleApplicationFocusChanged(QWidget*, QWidget* newFocus) {
-    if (movingTab_) {
+    if (movingTab_ || resizing_) {
         return;
     }
 
@@ -188,14 +188,16 @@ QWidget* QtDynamicGridLayout::currentWidget() const {
 }
 
 void QtDynamicGridLayout::setCurrentWidget(QWidget* widget) {
-    for (int y = 0; y < gridLayout_->rowCount(); y++) {
-        for (int x = 0; x < gridLayout_->columnCount(); x++) {
-            QLayoutItem* layoutItem = gridLayout_->itemAtPosition(y, x);
-            QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(layoutItem->widget());
-            if (tabWidget) {
-                for (int n = 0; n < tabWidget->count(); n++) {
-                    if (tabWidget->widget(n) == widget) {
-                        tabWidget->setCurrentWidget(widget);
+    if (widget) {
+        for (int y = 0; y < gridLayout_->rowCount(); y++) {
+            for (int x = 0; x < gridLayout_->columnCount(); x++) {
+                QLayoutItem* layoutItem = gridLayout_->itemAtPosition(y, x);
+                QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(layoutItem->widget());
+                if (tabWidget) {
+                    for (int n = 0; n < tabWidget->count(); n++) {
+                        if (tabWidget->widget(n) == widget) {
+                            tabWidget->setCurrentWidget(widget);
+                        }
                     }
                 }
             }
@@ -245,11 +247,14 @@ QSize QtDynamicGridLayout::getDimension() const {
 }
 
 void QtDynamicGridLayout::setDimensions(const QSize& dim) {
+    resizing_ = true;
     assert(dim.width() > 0 && dim.height() > 0);
     setUpdatesEnabled(false);
 
+    QWidget* restoredWidget = currentWidget();
+
     QGridLayout* oldLayout = dynamic_cast<QGridLayout*>(layout());
-    QGridLayout* newLayout = new QGridLayout;
+    QGridLayout* newLayout = new QGridLayout(this);
     newLayout->setSpacing(4);
     newLayout->setContentsMargins(0,0,0,0);
 
@@ -310,6 +315,9 @@ void QtDynamicGridLayout::setDimensions(const QSize& dim) {
     delete layout();
     setLayout(newLayout);
     gridLayout_ = newLayout;
+
+    resizing_ = false;
+    setCurrentWidget(restoredWidget);
 }
 
 void QtDynamicGridLayout::moveCurrentTabRight() {

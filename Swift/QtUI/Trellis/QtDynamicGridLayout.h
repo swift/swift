@@ -76,5 +76,6 @@ namespace Swift {
         bool dndEnabled_;
         QHash<QString, QPoint> tabPositions_;
         QtTabbable* movingTab_;
+        bool resizing_ = false;
     };
 }
