@@ -248,11 +248,8 @@ if env["debug"] :
             env["PDB"] = '${TARGET.base}.pdb'
         if env["set_iterator_debug_level"] :
             env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
-        if env["optimize"] :
-            env.Append(LINKFLAGS = ["/OPT:NOREF"])
-            env.Append(CCFLAGS = ["/MD"])
-        else :
-            env.Append(CCFLAGS = ["/MDd"])
+        env.Append(LINKFLAGS = ["/OPT:NOREF"])
+        env.Append(CCFLAGS = ["/MD"])
     else :
         env.Append(CCFLAGS = ["-g"])
 elif env["PLATFORM"] == "win32" :
