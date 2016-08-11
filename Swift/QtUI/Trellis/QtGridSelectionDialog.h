@@ -42,6 +42,7 @@ namespace Swift {
             void showEvent(QShowEvent* event);
             void hideEvent(QHideEvent* event);
             void leaveEvent(QEvent *event);
+            bool event(QEvent* event);
 
         private:
             int padding;
@@ -53,5 +54,7 @@ namespace Swift {
             QSize currentGridSize;
             QSize minGridSize;
             QSize maxGridSize;
+
+            const QString descriptionText;
     };
 }

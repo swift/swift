@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
 
+#include <QApplication>
+#include <QCursor>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QStyle>
@@ -15,22 +17,29 @@
 
 namespace Swift {
 
-QtGridSelectionDialog::QtGridSelectionDialog(QWidget* parent) : QWidget(parent) {
-    frameSize = QSize(23,23) * 2;
+QtGridSelectionDialog::QtGridSelectionDialog(QWidget* parent) : QWidget(parent), descriptionText(tr("Select the number of rows and columns for your layout. You can change the size by moving the mouse or cursor keys.")) {
+    frameSize = QSize(28,28) * 2;
     maxGridSize = QSize(7,7);
     minGridSize = QSize(1,1);
     currentGridSize = QSize(1,1);
     padding = 4;
     setWindowFlags(Qt::FramelessWindowHint);
     setCursor(Qt::SizeAllCursor);
-    horizontalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin) * 2;
-    verticalMargin = style()->pixelMetric(QStyle::PM_MenuVMargin) * 2;
+    horizontalMargin = style()->pixelMetric(QStyle::PM_LayoutLeftMargin);
+    verticalMargin = style()->pixelMetric(QStyle::PM_LayoutBottomMargin);
 }
 
 QSize QtGridSelectionDialog::sizeHint() const {
     // PM_MenuVMargin | frameSize | ( padding | frameSize ) * | PM_MenuVMargin
     int width = horizontalMargin + frameSize.width() + (padding + frameSize.width()) * (currentGridSize.width() - 1) + horizontalMargin;
     int height = verticalMargin + frameSize.height() + (padding + frameSize.height()) * (currentGridSize.height() - 1) + verticalMargin;
+
+    // Add space for descriptive centered text below.
+    auto fontMetrics = QFontMetrics(QApplication::font());
+    auto descriptionBB = fontMetrics.boundingRect(QRect(0,0,width - 2*horizontalMargin,1000), Qt::TextWordWrap, descriptionText, 0, 0);
+
+    height += descriptionBB.height() + descriptionBB.y();
+
     return QSize(width, height);
 }
 
@@ -82,7 +91,10 @@ void QtGridSelectionDialog::keyReleaseEvent(QKeyEvent* event) {
         }
         if (minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize) != currentGridSize) {
             currentGridSize = minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize);
-            resize(sizeHint());
+
+            QSize newSizeHint = sizeHint();
+            resize(newSizeHint);
+            QCursor::setPos(mapToGlobal(QPoint(newSizeHint.width(), newSizeHint.height()) - QPoint(frameSize.width() / 2, frameSize.height() / 2)));
         }
     }
 }
@@ -95,18 +107,30 @@ void QtGridSelectionDialog::mousePressEvent(QMouseEvent*) {
 void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
     QPainter painter(this);
     QStyleOptionMenuItem option;
-    option.state = QStyle::State_Enabled | QStyle::State_Selected;
+    option.state = QStyle::State_Enabled | QStyle::State_Selected | QStyle::State_Sunken;
     option.menuRect = QRect(QPoint(0,0), frameSize);
+
+    // draw grid
     for (int x = 0; x < currentGridSize.width(); x++) {
         for (int y = 0; y < currentGridSize.height(); y++) {
             int xPos = horizontalMargin + (x * (frameSize.width() + padding));
             int yPos = verticalMargin + (y * (frameSize.height() + padding));
             option.menuRect.moveTo(QPoint(xPos, yPos));
             option.rect = option.menuRect;
-            style()->drawControl(QStyle::CE_MenuItem, &option, &painter, nullptr);
+            style()->drawControl(QStyle::CE_MenuBarItem, &option, &painter, nullptr);
         }
     }
 
+    // draw description text
+    auto fontMetrics = QFontMetrics(QApplication::font());
+    auto descriptionBB = fontMetrics.boundingRect(QRect(0,0, width() - 2 * horizontalMargin,0), Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap, descriptionText, 0, 0);
+
+    QStyleOption opt;
+    int textY = verticalMargin + (currentGridSize.height() * (frameSize.height() + padding));
+    int textX = (size().width() - descriptionBB.width()) / 2;
+    style()->drawItemText(&painter, QRect(textX, textY, descriptionBB.width(), descriptionBB.height()), Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap, opt.palette, true, descriptionText, foregroundRole());
+
+    // draw size grip at bottom right corner;
     QStyleOptionSizeGrip sizeGripOption;
     sizeGripOption.init(this);
     sizeGripOption.corner = Qt::BottomRightCorner;
@@ -152,6 +176,15 @@ void QtGridSelectionDialog::leaveEvent(QEvent *) {
         currentGridSize = minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize);
         resize(sizeHint());
     }
+}
+
+bool QtGridSelectionDialog::event(QEvent* event) {
+    // Hide the window when it becomes a non-top-level window.
+    if (event->type() == QEvent::WindowDeactivate) {
+        hide();
+        return true;
+    }
+    return QWidget::event(event);
 }
 
 }
