@@ -57,6 +57,8 @@ else
 	find $DIRNAME/3rdParty -depth -empty -type d -exec rmdir {} \;
 	rm -rf $DIRNAME/3rdParty/SCons
 	rm -rf $DIRNAME/Swift/Packaging/Debian
+	rm -rf $DIRNAME/BuildTools/DocBook/Fonts
+	rm -rf $DIRNAME/BuildTools/Git/Hooks/commit-msg
 
 	# Initialize the build version
 	echo $VERSION > $DIRNAME/VERSION.swift
