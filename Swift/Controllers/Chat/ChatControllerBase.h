@@ -101,6 +101,11 @@ namespace Swift {
                 return false;
             }
 
+            /**
+             * What JID should be used for last message correction (XEP-0308) tracking.
+             */
+            virtual JID messageCorrectionJID(const JID& fromJID) = 0;
+
         private:
             IDGenerator idGenerator_;
             std::string lastSentMessageStanzaID_;

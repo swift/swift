@@ -6,9 +6,11 @@
 
 #pragma once
 
+#include <map>
 #include <memory>
 #include <ostream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include <boost/optional.hpp>
@@ -40,8 +42,30 @@ std::ostream& operator<<(std::ostream& stream, const std::vector<T>& vec) {
         for (auto end = std::end(vec); it != end; ++it) {
             stream << ", " << *it;
         }
-     }
+    }
     stream << "]";
+    return stream;
+}
+
+template <typename KEY, typename VALUE>
+std::ostream& operator<<(std::ostream& stream, const std::pair<KEY, VALUE>& pair) {
+    stream << pair.first << ":" << pair.second;
+    return stream;
+}
+
+template <typename KEY, typename VALUE>
+std::ostream& operator<<(std::ostream& stream, const std::map<KEY, VALUE>& map) {
+    stream << "{";
+    if (!map.empty()) {
+        auto it = std::begin(map);
+        stream << *it;
+
+        ++it;
+        for (auto end = std::end(map); it != end; ++it) {
+            stream << ", " << *it;
+        }
+    }
+    stream << "}";
     return stream;
 }
 

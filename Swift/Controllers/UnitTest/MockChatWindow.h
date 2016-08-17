@@ -43,10 +43,14 @@ namespace Swift {
             virtual void addErrorMessage(const ChatMessage& message) {
                 lastAddedErrorMessage_ = message;
             }
-            virtual void replaceMessage(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
+
+            virtual void replaceMessage(const ChatMessage& message, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {
+                lastReplacedMessage_ = message;
+            }
+
             virtual void replaceWithAction(const ChatMessage& /*message*/, const std::string& /*id*/, const boost::posix_time::ptime& /*time*/) {}
             virtual void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour /*timestampBehaviour*/) {
-                lastReplacedMessage_ = message;
+                lastReplacedLastMessage_ = message;
             }
             virtual void replaceSystemMessage(const ChatMessage& message, const std::string& /*id*/, const TimestampBehaviour /*timestampBehaviour*/) {
                 lastReplacedSystemMessage_ = message;
@@ -124,7 +128,7 @@ namespace Swift {
             }
 
             void resetLastMessages() {
-                lastAddedMessage_ = lastAddedAction_ = lastAddedPresence_ = lastReplacedMessage_ = lastAddedSystemMessage_ = lastReplacedSystemMessage_ = ChatMessage();
+                lastAddedMessage_ = lastAddedAction_ = lastAddedPresence_ = lastReplacedLastMessage_ = lastAddedSystemMessage_ = lastReplacedSystemMessage_ = ChatMessage();
                 lastAddedMessageSenderName_ = lastAddedActionSenderName_ = "";
                 lastAddedMessageSenderIsSelf_ = lastAddedActionSenderIsSelf_ = false;
             }
@@ -138,6 +142,7 @@ namespace Swift {
             bool lastAddedActionSenderIsSelf_ = false;
             ChatMessage lastAddedPresence_;
             ChatMessage lastReplacedMessage_;
+            ChatMessage lastReplacedLastMessage_;
             ChatMessage lastAddedSystemMessage_;
             ChatMessage lastReplacedSystemMessage_;
             ChatMessage lastAddedErrorMessage_;

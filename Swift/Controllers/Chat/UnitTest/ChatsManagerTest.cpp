@@ -137,6 +137,11 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testCarbonsForwardedOutgoingMessageFromSecondResource);
     CPPUNIT_TEST(testCarbonsForwardedIncomingDuplicates);
 
+
+    // Message correction tests
+    CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceBySameResource);
+    CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceByOtherResource);
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -217,7 +222,6 @@ public:
         delete chatListWindow_;
         delete mocks_;
         delete settings_;
-
     }
 
     void testFirstOpenWindowIncoming() {
@@ -732,7 +736,7 @@ public:
         presence->setShow(StatusShow::None);
         presence->setType(Presence::Unavailable);
         stanzaChannel_->onPresenceReceived(presence);
-        CPPUNIT_ASSERT_EQUAL(std::string("participantA has gone offline."), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string("participantA has gone offline."), MockChatWindow::bodyFromMessage(window->lastReplacedLastMessage_));
     }
 
     void testChatControllerMucPmUnavailableErrorHandling() {
@@ -1097,7 +1101,7 @@ public:
         CPPUNIT_ASSERT_EQUAL(JID("room@muc.service.com"), window->lastMUCInvitationJID_);
 
         stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Unavailable));
-        CPPUNIT_ASSERT_EQUAL(std::string(""), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string(""), MockChatWindow::bodyFromMessage(window->lastReplacedLastMessage_));
         CPPUNIT_ASSERT_EQUAL(std::string("testling@test.com has gone offline."), MockChatWindow::bodyFromMessage(window->lastAddedPresence_));
     }
 
@@ -1134,7 +1138,7 @@ public:
             stanzaChannel_->onPresenceReceived(presence);
         }
         CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname has entered the room."), window->bodyFromMessage(window->lastAddedPresence_));
-        CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastReplacedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastReplacedLastMessage_));
         window->resetLastMessages();
 
         {
@@ -1145,7 +1149,7 @@ public:
             stanzaChannel_->onPresenceReceived(presence);
         }
         CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastAddedPresence_));
-        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname and Romeo have entered the room"), window->bodyFromMessage(window->lastReplacedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname and Romeo have entered the room"), window->bodyFromMessage(window->lastReplacedLastMessage_));
         window->resetLastMessages();
 
         {
@@ -1165,7 +1169,7 @@ public:
             stanzaChannel_->onPresenceReceived(presence);
         }
         CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastAddedPresence_));
-        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname, Romeo and Juliet have entered the room"), window->bodyFromMessage(window->lastReplacedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname, Romeo and Juliet have entered the room"), window->bodyFromMessage(window->lastReplacedLastMessage_));
     }
 
     template <typename CarbonsType>
@@ -1265,21 +1269,21 @@ public:
             CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptReceived, window->receiptChanges_[1].second);
         }
     }
-
+    
     void testCarbonsForwardedIncomingDuplicates() {
         JID messageJID("testling@test.com/resource1");
         JID jid2 = jid_.toBare().withResource("someOtherResource");
-
+        
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
-
+        
         std::shared_ptr<Message> message(new Message());
         message->setFrom(messageJID);
         std::string body("This is a legible message. >HEH@)oeueu");
         message->setBody(body);
         manager_->handleIncomingMessage(message);
         CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
-
+        
         // incoming carbons message from another resource and duplicate of it
         {
             auto originalMessage = std::make_shared<Message>();
@@ -1289,20 +1293,72 @@ public:
             originalMessage->setType(Message::Chat);
             std::string forwardedBody = "Some further text.";
             originalMessage->setBody(forwardedBody);
-
+            
             auto messageWrapper = createCarbonsMessage(std::make_shared<CarbonsReceived>(), originalMessage);
-
+            
             manager_->handleIncomingMessage(messageWrapper);
-
+            
             CPPUNIT_ASSERT_EQUAL(forwardedBody, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
             CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
             window->resetLastMessages();
-
+            
             messageWrapper = createCarbonsMessage(std::make_shared<CarbonsReceived>(), originalMessage);
             manager_->handleIncomingMessage(messageWrapper);
             CPPUNIT_ASSERT_EQUAL(std::string(), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
             CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
         }
+    }
+
+    void testChatControllerMessageCorrectionReplaceBySameResource() {
+        JID messageJID("testling@test.com/resource1");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        auto message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text before edit");
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text after edit");
+        message->addPayload(std::make_shared<Replace>("someID"));
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text after edit"), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+    }
+
+    void testChatControllerMessageCorrectionReplaceByOtherResource() {
+        JID messageJID("testling@test.com/resource1");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        auto message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text before edit");
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        message = std::make_shared<Message>();
+        message->setFrom(messageJID.toBare().withResource("resource2"));
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text after edit");
+        message->addPayload(std::make_shared<Replace>("someID"));
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text after edit"), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
     }
 
 private:

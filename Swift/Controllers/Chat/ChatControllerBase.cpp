@@ -279,10 +279,10 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
         if (replace) {
             // Should check if the user has a previous message
             std::map<JID, std::string>::iterator lastMessage;
-            lastMessage = lastMessagesUIID_.find(from);
+            lastMessage = lastMessagesUIID_.find(messageCorrectionJID(from));
             if (lastMessage != lastMessagesUIID_.end()) {
                 chatMessage = buildChatWindowChatMessage(body, senderHighlightNameFromMessage(from), senderIsSelf);
-                replaceMessage(chatMessage, lastMessagesUIID_[from], timeStamp);
+                replaceMessage(chatMessage, lastMessagesUIID_[messageCorrectionJID(from)], timeStamp);
             }
         }
         else {
@@ -298,7 +298,7 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
 }
 
 void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
-    lastMessagesUIID_[from] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp);
+    lastMessagesUIID_[messageCorrectionJID(from)] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp);
 }
 
 std::string ChatControllerBase::getErrorMessage(std::shared_ptr<ErrorPayload> error) {

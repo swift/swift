@@ -85,6 +85,7 @@ namespace Swift {
             virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
             virtual void cancelReplaces() SWIFTEN_OVERRIDE;
             virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
+            virtual JID messageCorrectionJID(const JID& fromJID) SWIFTEN_OVERRIDE;
 
         private:
             void setAvailableRoomActions(const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Role& role);

@@ -1078,6 +1078,10 @@ void MUCController::logMessage(const std::string& message, const JID& fromJID, c
     }
 }
 
+JID MUCController::messageCorrectionJID(const JID& fromJID) {
+    return fromJID;
+}
+
 void MUCController::addRecentLogs() {
     if (!historyController_) {
         return;

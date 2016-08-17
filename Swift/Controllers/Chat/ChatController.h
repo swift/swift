@@ -48,6 +48,7 @@ namespace Swift {
             virtual JID getBaseJID() SWIFTEN_OVERRIDE;
             virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
             virtual bool shouldIgnoreMessage(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+            virtual JID messageCorrectionJID(const JID& fromJID) SWIFTEN_OVERRIDE;
 
         private:
             void handlePresenceChange(std::shared_ptr<Presence> newPresence);
