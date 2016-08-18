@@ -11,9 +11,7 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QStyle>
-#include <QStyleOptionFrame>
-#include <QStyleOptionMenuItem>
-#include <QStyleOptionSizeGrip>
+#include <QStyleOption>
 
 namespace Swift {
 
@@ -106,18 +104,16 @@ void QtGridSelectionDialog::mousePressEvent(QMouseEvent*) {
 
 void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
     QPainter painter(this);
-    QStyleOptionMenuItem option;
-    option.state = QStyle::State_Enabled | QStyle::State_Selected | QStyle::State_Sunken;
-    option.menuRect = QRect(QPoint(0,0), frameSize);
-
     // draw grid
+    QRect gridCell = QRect(QPoint(0,0), frameSize);
+    painter.setBrush(palette().highlight());
+    painter.setPen(Qt::NoPen);
     for (int x = 0; x < currentGridSize.width(); x++) {
         for (int y = 0; y < currentGridSize.height(); y++) {
             int xPos = horizontalMargin + (x * (frameSize.width() + padding));
             int yPos = verticalMargin + (y * (frameSize.height() + padding));
-            option.menuRect.moveTo(QPoint(xPos, yPos));
-            option.rect = option.menuRect;
-            style()->drawControl(QStyle::CE_MenuBarItem, &option, &painter, nullptr);
+            gridCell.moveTo(QPoint(xPos, yPos));
+            painter.drawRect(gridCell);
         }
     }
 
@@ -126,15 +122,10 @@ void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
     auto descriptionBB = fontMetrics.boundingRect(QRect(0,0, width() - 2 * horizontalMargin,0), Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap, descriptionText, 0, 0);
 
     QStyleOption opt;
+    opt.initFrom(this);
     int textY = verticalMargin + (currentGridSize.height() * (frameSize.height() + padding));
     int textX = (size().width() - descriptionBB.width()) / 2;
     style()->drawItemText(&painter, QRect(textX, textY, descriptionBB.width(), descriptionBB.height()), Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap, opt.palette, true, descriptionText, foregroundRole());
-
-    // draw size grip at bottom right corner;
-    QStyleOptionSizeGrip sizeGripOption;
-    sizeGripOption.init(this);
-    sizeGripOption.corner = Qt::BottomRightCorner;
-    style()->drawControl(QStyle::CE_SizeGrip, &sizeGripOption, &painter, this);
 }
 
 void QtGridSelectionDialog::showEvent(QShowEvent*) {
