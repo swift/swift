@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/QtTabWidget.h>
 
+#include <Swift/QtUI/Trellis/QtDNDTabBar.h>
+
 namespace Swift {
 
 QtTabWidget::QtTabWidget(QWidget* parent) : QTabWidget(parent) {
@@ -22,5 +24,26 @@ QTabBar* QtTabWidget::tabBar() {
 
 void QtTabWidget::setTabBar(QTabBar* tabBar) {
     QTabWidget::setTabBar(tabBar);
+    if (dynamic_cast<QtDNDTabBar*>(tabBar)) {
+        setAcceptDrops(true);
+    }
+    else {
+        setAcceptDrops(false);
+    }
 }
+
+void QtTabWidget::dragEnterEvent(QDragEnterEvent* event) {
+    QtDNDTabBar* dndTabBar = dynamic_cast<QtDNDTabBar*>(tabBar());
+    if (dndTabBar) {
+        dndTabBar->dragEnterEvent(event);
+    }
+}
+
+void QtTabWidget::dropEvent(QDropEvent* event) {
+    QtDNDTabBar* dndTabBar = dynamic_cast<QtDNDTabBar*>(tabBar());
+    if (dndTabBar) {
+        dndTabBar->dropEvent(event);
+    }
+}
+
 }

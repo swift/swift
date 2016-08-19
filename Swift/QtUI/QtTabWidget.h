@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,5 +17,9 @@ namespace Swift {
 
             QTabBar* tabBar();
             void setTabBar(QTabBar* tabBar);
+
+        protected:
+            virtual void dragEnterEvent(QDragEnterEvent* event);
+            virtual void dropEvent(QDropEvent* event);
     };
 }
