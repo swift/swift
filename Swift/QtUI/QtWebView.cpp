@@ -11,6 +11,7 @@
 
 #include <QFocusEvent>
 #include <QKeyEvent>
+#include <QKeySequence>
 #include <QMenu>
 
 #include <Swiften/Base/Log.h>
@@ -29,6 +30,16 @@ QtWebView::QtWebView(QWidget* parent) : QWebView(parent), fontSizeIsMinimal(fals
 void QtWebView::keyPressEvent(QKeyEvent* event) {
     Qt::KeyboardModifiers modifiers = event->modifiers();
     int key = event->key();
+    if (event->matches(QKeySequence::ZoomIn)) {
+        event->accept();
+        emit fontGrowRequested();
+        return;
+    }
+    if (event->matches(QKeySequence::ZoomOut)) {
+        event->accept();
+        emit fontShrinkRequested();
+        return;
+    }
     if (modifiers == Qt::ShiftModifier && (key == Qt::Key_PageUp || key == Qt::Key_PageDown)) {
         modifiers = Qt::NoModifier;
     }
@@ -70,8 +81,9 @@ void QtWebView::contextMenuEvent(QContextMenuEvent* ev) {
 
     // Add our own custom actions
     menu->addAction(tr("Clear"), this, SIGNAL(clearRequested()));
-    menu->addAction(tr("Increase font size"), this, SIGNAL(fontGrowRequested()));
+    menu->addAction(tr("Increase font size"), this, SIGNAL(fontGrowRequested()), QKeySequence(QKeySequence::ZoomIn));
     QAction* shrink = new QAction(tr("Decrease font size"), this);
+    shrink->setShortcut(QKeySequence(QKeySequence::ZoomOut));
     shrink->setEnabled(!fontSizeIsMinimal);
     connect(shrink, SIGNAL(triggered()), this, SIGNAL(fontShrinkRequested()));
     menu->addAction(shrink);

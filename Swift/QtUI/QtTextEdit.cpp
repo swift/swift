@@ -12,6 +12,7 @@
 
 #include <QApplication>
 #include <QKeyEvent>
+#include <QKeySequence>
 #include <QMenu>
 #include <QTextDocument>
 
@@ -60,6 +61,8 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
                || (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
                || (key == Qt::Key_A && modifiers == Qt::AltModifier)
                || (key == Qt::Key_Tab)
+               || (event->matches(QKeySequence::ZoomIn))
+               || (event->matches(QKeySequence::ZoomOut))
     ) {
         emit unhandledKeyPressEvent(event);
     }
