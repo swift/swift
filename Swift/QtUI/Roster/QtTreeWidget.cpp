@@ -10,6 +10,7 @@
 
 #include <boost/bind.hpp>
 
+#include <QFont>
 #include <QLabel>
 #include <QMimeData>
 #include <QObject>
@@ -59,6 +60,10 @@ QtTreeWidget::QtTreeWidget(UIEventStream* eventStream, SettingsProvider* setting
     connect(this, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleClicked(const QModelIndex&)));
 
     settings_->onSettingChanged.connect(boost::bind(&QtTreeWidget::handleSettingChanged, this, _1));
+
+    QFont lato = font();
+    lato.setFamily("Lato");
+    setFont(lato);
 }
 
 QtTreeWidget::~QtTreeWidget() {

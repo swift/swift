@@ -200,8 +200,6 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
         assert((error != -1) && "Failed to load font.");
     }
 
-    QApplication::setFont(QFont("Lato"));
-
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
     tabs_ = nullptr;
     if (options.count("no-tabs") && !splitter_) {
