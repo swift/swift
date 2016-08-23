@@ -2,7 +2,6 @@
 
 body {
     font-family: 'Lato', sans-serif;
-    font-size: 14px;
     margin: 0;
     padding: 0;
 }
@@ -72,7 +71,7 @@ body {
     color: #ffd180;
     border-top: solid 1px #ffd180;
     margin-left: 20px;
-    margin-right: 20px;;
+    margin-right: 20px;
 }
 
 /* Left column content */
@@ -104,7 +103,7 @@ body {
     margin-bottom: 1px;
     margin-right: 10px;
     color: #f9f9f9;
-    font-size: 10px;
+    font-size: 80%;
     font-weight: 300;
 }
 
@@ -119,7 +118,7 @@ body {
     margin-bottom: 1px;
     margin-right: 10px;
     color: #f9f9f9;
-    font-size: 10px;
+    font-size: 80%;
     font-weight: 300;
 }
 
@@ -217,7 +216,6 @@ body {
     display: table-cell;
     border: inherit;
     margin-left: 175px;
-    font-size: 14px;
     color: #595959;
     vertical-align: top;
 

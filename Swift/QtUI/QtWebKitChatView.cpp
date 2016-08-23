@@ -19,6 +19,7 @@
 #include <QTimer>
 #include <QVBoxLayout>
 #include <QWebFrame>
+#include <QWebSettings>
 #include <QtDebug>
 
 #include <Swiften/Base/FileSize.h>
@@ -48,6 +49,10 @@ const QString QtWebKitChatView::ButtonFileTransferSendRequest = QString("filetra
 const QString QtWebKitChatView::ButtonFileTransferAcceptRequest = QString("filetransfer-acceptrequest");
 const QString QtWebKitChatView::ButtonFileTransferOpenFile = QString("filetransfer-openfile");
 const QString QtWebKitChatView::ButtonMUCInvite = QString("mucinvite");
+
+namespace {
+    const double minimalFontScaling = 0.8;
+}
 
 QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll) : QtChatView(parent), window_(window), eventStream_(eventStream), fontSizeSteps_(0), disableAutoScroll_(disableAutoScroll), previousMessageKind_(PreviosuMessageWasNone), previousMessageWasSelf_(false), showEmoticons_(false), insertingLastLine_(false), idCounter_(0) {
     theme_ = theme;
@@ -301,14 +306,14 @@ void QtWebKitChatView::decreaseFontSize() {
 
 void QtWebKitChatView::resizeFont(int fontSizeSteps) {
     fontSizeSteps_ = fontSizeSteps;
-    double size = 1.0 + 0.2 * fontSizeSteps_;
+    double size = minimalFontScaling + 0.2 * fontSizeSteps_;
     QString sizeString(QString().setNum(size, 'g', 3) + "em");
 
     // Set the font size in the <style id="text-resize-style"> element in the theme <head> element.
     QWebElement resizableTextStyle = document_.findFirst("style#text-resize-style");
     assert(!resizableTextStyle.isNull());
     resizableTextStyle.setInnerXml(QString("span.swift_resizable { font-size: %1;}").arg(sizeString));
-    webView_->setFontSizeIsMinimal(size == 1.0);
+    webView_->setFontSizeIsMinimal(size == minimalFontScaling);
 }
 
 void QtWebKitChatView::resetView() {
@@ -341,6 +346,8 @@ void QtWebKitChatView::resetView() {
     QWebElement body = document_.findFirst("body");
     assert(!body.isNull());
     body.setAttribute("onscroll", "chatwindow.verticalScrollBarPositionChanged(document.body.scrollTop / (document.body.scrollHeight - window.innerHeight))");
+
+    webView_->settings()->setFontSize(QWebSettings::DefaultFontSize, QApplication::font().pointSize());
 }
 
 static QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
