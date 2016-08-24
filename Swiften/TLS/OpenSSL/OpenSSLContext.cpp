@@ -68,7 +68,7 @@ OpenSSLContext::OpenSSLContext() : state_(Start), context_(0), handle_(0), readB
         }
     }
 #elif !defined(SWIFTEN_PLATFORM_MACOSX)
-    SSL_CTX_load_verify_locations(context_, NULL, "/etc/ssl/certs");
+    SSL_CTX_set_default_verify_paths(context_);
 #elif defined(SWIFTEN_PLATFORM_MACOSX) && !defined(SWIFTEN_PLATFORM_IPHONE)
     // On Mac OS X 10.5 (OpenSSL < 0.9.8), OpenSSL does not automatically look in the system store.
     // On Mac OS X 10.6 (OpenSSL >= 0.9.8), OpenSSL *does* look in the system store to determine trust.
