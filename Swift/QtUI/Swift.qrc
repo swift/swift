@@ -44,7 +44,7 @@
 		<file alias="icons/star-unchecked.png">../resources/icons/star-unchecked2.png</file>
 		<file alias="icons/zzz.png">../resources/icons/zzz.png</file>
 		<file alias="icons/stop.png">../resources/icons/stop.png</file>
-		<file alias="icons/delivery-successful.png">../resources/icons/delivery-successful.png</file>
-		<file alias="icons/delivery-failure.png">../resources/icons/delivery-failure.png</file>
+		<file alias="icons/delivery-success.svg">../resources/icons/delivery-success.svg</file>
+		<file alias="icons/delivery-failure.svg">../resources/icons/delivery-failure.svg</file>
 	</qresource>
 </RCC>

@@ -253,3 +253,8 @@ body {
     color: #aaa;
     font-style: italic;
 }
+
+/* receipt */
+span.swift_receipt > img {
+    height: 12px;
+}

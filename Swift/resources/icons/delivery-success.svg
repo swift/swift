@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="500"
+   height="500"
+   viewBox="0 0 132.29166 132.29167"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91+devel+osxmenu r12922"
+   enable-background="new"
+   sodipodi:docname="delivery-success.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4240"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#ffffff;stroke-width:1pt;stroke-opacity:1;fill:#ffffff;fill-opacity:1"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.6379971"
+     inkscape:cx="228.3272"
+     inkscape:cy="79.364707"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     showguides="false"
+     inkscape:guide-bbox="true"
+     inkscape:snap-to-guides="true"
+     inkscape:snap-grids="true"
+     inkscape:window-width="1680"
+     inkscape:window-height="1001"
+     inkscape:window-x="0"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4978"
+       spacingx="8.8194442"
+       dotted="false"
+       spacingy="8.8194435" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-164.70832)">
+    <image
+       y="164.70833"
+       x="0"
+       id="image4230"
+       xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABHNCSVQICAgIfAhkiAAAAAlwSFlz AAAN1wAADdcBQiibeAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAE8SURB VCiRldLPK8NxHMfx5/s7W323KZvt4oIoEafdOFgOLvQt5YIU4WZ/AsKfMEdX/8D8ujGrCTWF4sJc /EjK0Wn2cpgJjfI+vt+PPu/erz4miUqZpQ8XZ4U8kyUAZCoYlkn1rqxDBZok1vLLTeJtAyxJzVLW 8E3M9y09OGD2Nwaw5IcxX+Pg4hxY6jfa4DZSKpcoq9xyctd/7wh5v+GoG2e0Z4bhznEMQ8hzqge6 /hBe1yQRNwZAxI0x0j2F6w9x83KFECZL1FVfa4120BxpJx6eZv96k2TbMMFAmIPiNhePJ59bHZkK AJdPp+Rudwn6wwx1jhEK1JMr7nD+BctUcAzLVBtnD0fs32whRK64y9nj8fessIxJWDq/sPc11mgw zsvr848IlE31rQ44IBm+CVC2OqqFP4zsv1/jHWTgiOVi5zoNAAAAAElFTkSuQmCC "
+       preserveAspectRatio="none"
+       height="132.29167"
+       width="132.29167"
+       style="display:none;opacity:1;image-rendering:optimizeSpeed"
+       inkscape:label="image4230" />
+    <circle
+       style="display:inline;opacity:1;fill:#92c47e;fill-opacity:1;stroke:#ffffff;stroke-width:3;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path4233"
+       cx="66.145836"
+       cy="230.85417"
+       r="65.603951" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#ffffff;stroke-width:13.22916698;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 30.868059,226.44444 26.458333,26.45833 44.097218,-44.09722"
+       id="path4982"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>
