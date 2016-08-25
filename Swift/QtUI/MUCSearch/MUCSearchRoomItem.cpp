@@ -6,16 +6,24 @@
 
 #include <Swift/QtUI/MUCSearch/MUCSearchRoomItem.h>
 
+#include <memory>
+
 #include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
 
 namespace Swift {
-MUCSearchRoomItem::MUCSearchRoomItem(const QString& node, MUCSearchServiceItem* parent) : parent_(parent), node_(node) {
-    parent_->addRoom(this);
+
+MUCSearchRoomItem::MUCSearchRoomItem(const QString& node) : node_(node) {
+
 }
 
-MUCSearchServiceItem* MUCSearchRoomItem::getParent() {
-    return parent_;
+void MUCSearchRoomItem::setParent(std::shared_ptr<MUCSearchServiceItem> parent) {
+    parent_ = parent;
 }
+
+std::shared_ptr<MUCSearchServiceItem> MUCSearchRoomItem::getParent() {
+    return parent_.lock();
+}
+
 QVariant MUCSearchRoomItem::data(int role) {
     switch (role) {
         case Qt::DisplayRole: return QVariant(node_);

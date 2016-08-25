@@ -6,12 +6,13 @@
 
 #include <Swift/QtUI/MUCSearch/QtMUCSearchWindow.h>
 
+#include <memory>
+#include <vector>
+
 #include <QMovie>
 #include <QPushButton>
 #include <QScrollBar>
 #include <QTimer>
-
-#include <qdebug.h>
 
 #include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
@@ -38,6 +39,8 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
     ui_.results_->setRootIsDecorated(true);
     ui_.results_->setAnimated(true);
     ui_.results_->setAlternatingRowColors(true);
+    ui_.results_->setSortingEnabled(true);
+    ui_.results_->sortByColumn(0, Qt::AscendingOrder);
     connect(ui_.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));
     connect(ui_.service_, SIGNAL(activated(const QString&)), this, SLOT(handleSearch(const QString&)));
     connect(ui_.results_->selectionModel(), SIGNAL(selectionChanged (const QItemSelection&, const QItemSelection&)), this, SLOT(handleSelectionChanged (const QItemSelection&, const QItemSelection&)));
@@ -86,7 +89,7 @@ void QtMUCSearchWindow::updateThrobberPosition() {
 
 void QtMUCSearchWindow::addSavedServices(const std::list<JID>& services) {
     ui_.service_->clear();
-    foreach (const JID& jid, services) {
+    for (const auto& jid : services) {
         ui_.service_->addItem(P2QSTRING(jid.toString()));
     }
     if (!services.empty()) {
@@ -127,14 +130,18 @@ void QtMUCSearchWindow::clearList() {
 
 void QtMUCSearchWindow::addService(const MUCService& service) {
     updateThrobberPosition();
-    MUCSearchServiceItem* serviceItem = new MUCSearchServiceItem(P2QSTRING(service.getJID().toString()));
+    auto serviceItem = std::make_shared<MUCSearchServiceItem>(P2QSTRING(service.getJID().toString()));
     if (service.getRooms().size() > 0) {
-        foreach (MUCService::MUCRoom room, service.getRooms()) {
-            new MUCSearchRoomItem(P2QSTRING(room.getNode()), serviceItem);
+        std::vector<std::shared_ptr<MUCSearchItem>> rooms;
+        for (auto&& room : service.getRooms()) {
+            if (!room.getNode().empty()) {
+                rooms.push_back(std::make_shared<MUCSearchRoomItem>(P2QSTRING(room.getNode())));
+            }
         }
+        serviceItem->addRooms(rooms);
     }
     else {
-        new MUCSearchEmptyItem(serviceItem);
+        serviceItem->addRoom(std::make_shared<MUCSearchEmptyItem>());
     }
     model_->addService(serviceItem);
     ui_.results_->expandAll();

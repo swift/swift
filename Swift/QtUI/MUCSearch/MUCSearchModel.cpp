@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/MUCSearch/MUCSearchModel.h>
 
+#include <memory>
+
 #include <Swift/QtUI/MUCSearch/MUCSearchEmptyItem.h>
 
 namespace Swift {
@@ -14,13 +16,19 @@ MUCSearchModel::MUCSearchModel() {
 }
 
 void MUCSearchModel::clear() {
-    emit layoutAboutToBeChanged();
+    // We need to reset the model, so that model indices containing raw pointers
+    // to MUCSearchServiceItems are invalaidated before we delete the
+    // MUCSearchServiceItems.
+    emit beginResetModel();
     services_.clear();
-    emit layoutChanged();
+    emit endResetModel();
 }
 
-void MUCSearchModel::addService(MUCSearchServiceItem* service) {
+void MUCSearchModel::addService(std::shared_ptr<MUCSearchServiceItem> service) {
     emit layoutAboutToBeChanged();
+    if (sortOrder_) {
+        service->setSorting(*sortOrder_);
+    }
     services_.push_back(service);
     emit layoutChanged();
 }
@@ -42,10 +50,8 @@ QModelIndex MUCSearchModel::index(int row, int column, const QModelIndex & paren
         MUCSearchServiceItem* parentItem = static_cast<MUCSearchServiceItem*>(parent.internalPointer());
         return row < parentItem->rowCount() ? createIndex(row, column, parentItem->getItem(row)) : QModelIndex();
     } else {
-        return row < services_.size() ? createIndex(row, column, services_[row]) : QModelIndex();
+        return row < services_.size() ? createIndex(row, column, services_[row].get()) : QModelIndex();
     }
-
-
 }
 
 QModelIndex MUCSearchModel::parent(const QModelIndex& index) const {
@@ -60,7 +66,7 @@ QModelIndex MUCSearchModel::parent(const QModelIndex& index) const {
         return QModelIndex();
     }
 
-    MUCSearchServiceItem* parent = nullptr;
+    std::shared_ptr<MUCSearchServiceItem> parent;
     if (MUCSearchRoomItem* roomItem = dynamic_cast<MUCSearchRoomItem*>(item)) {
         parent = roomItem->getParent();
     }
@@ -69,7 +75,7 @@ QModelIndex MUCSearchModel::parent(const QModelIndex& index) const {
     }
     if (parent) {
         int row = services_.indexOf(parent);
-        return createIndex(row, 1, parent);
+        return createIndex(row, 1, parent.get());
     }
     else {
         return QModelIndex();
@@ -85,6 +91,15 @@ int MUCSearchModel::rowCount(const QModelIndex& parentIndex) const {
     }
     else {
         return 0;
+    }
+}
+
+void MUCSearchModel::sort(int column, Qt::SortOrder order) {
+    sortOrder_ = order;
+    if (column == 0) {
+        for (auto&& serviceItem : services_) {
+            serviceItem->setSorting(*sortOrder_);
+        }
     }
 }
 

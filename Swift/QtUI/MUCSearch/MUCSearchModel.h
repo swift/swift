@@ -8,8 +8,10 @@
 
 #include <memory>
 
+#include <boost/optional.hpp>
+
 #include <QAbstractItemModel>
-#include <QList>
+#include <QVector>
 
 #include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
 
@@ -19,17 +21,17 @@ namespace Swift {
         public:
             MUCSearchModel();
             void clear();
-            void addService(MUCSearchServiceItem* service);
+            void addService(std::shared_ptr<MUCSearchServiceItem> service);
             int columnCount(const QModelIndex& parent = QModelIndex()) const;
             QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
             QModelIndex index(int row, int column, const QModelIndex & parent = QModelIndex()) const;
             QModelIndex parent(const QModelIndex& index) const;
             int rowCount(const QModelIndex& parent = QModelIndex()) const;
-//            ChatListItem* getItemForIndex(const QModelIndex& index) const;
+            virtual void sort(int column, Qt::SortOrder order = Qt::AscendingOrder);
+
         private:
-//            ChatListGroupItem* mucBookmarks_;
-//            ChatListGroupItem* root_;
-            QList<MUCSearchServiceItem*> services_;
+            QVector<std::shared_ptr<MUCSearchServiceItem>> services_;
+            boost::optional<Qt::SortOrder> sortOrder_;
     };
 
 }

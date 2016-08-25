@@ -6,18 +6,23 @@
 
 #include <Swift/QtUI/MUCSearch/MUCSearchEmptyItem.h>
 
+#include <memory>
+
 #include <QColor>
 #include <QFont>
 
 #include <Swift/QtUI/MUCSearch/MUCSearchServiceItem.h>
 
 namespace Swift {
-MUCSearchEmptyItem::MUCSearchEmptyItem(MUCSearchServiceItem* parent) : parent(parent) {
-    parent->addRoom(this);
+MUCSearchEmptyItem::MUCSearchEmptyItem() {
 }
 
-MUCSearchServiceItem* MUCSearchEmptyItem::getParent() {
-    return parent;
+void MUCSearchEmptyItem::setParent(std::shared_ptr<MUCSearchServiceItem> parent) {
+    parent_ = parent;
+}
+
+std::shared_ptr<MUCSearchServiceItem> MUCSearchEmptyItem::getParent() {
+    return parent_.lock();
 }
 
 QVariant MUCSearchEmptyItem::data(int role) {

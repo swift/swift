@@ -13,7 +13,6 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Disco/DiscoServiceWalker.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
@@ -48,7 +47,7 @@ void MUCSearchController::openSearchWindow() {
 
 void MUCSearchController::loadSavedServices() {
     savedServices_.clear();
-    foreach (std::string stringItem, String::split(settings_->getStringSetting(SEARCHED_SERVICES), '\n')) {
+    for (auto&& stringItem : String::split(settings_->getStringSetting(SEARCHED_SERVICES), '\n')) {
         savedServices_.push_back(JID(stringItem));
     }
 }
@@ -59,7 +58,7 @@ void MUCSearchController::addToSavedServices(const JID& jid) {
 
     std::string collapsed;
     int i = 0;
-    foreach (JID jidItem, savedServices_) {
+    for (auto&& jidItem : savedServices_) {
         if (i >= 15) {
             break;
         }
@@ -104,7 +103,7 @@ void MUCSearchController::handleSearchService(const JID& jid) {
 void MUCSearchController::handleDiscoServiceFound(const JID& jid, std::shared_ptr<DiscoInfo> info) {
     bool isMUC = false;
     std::string name;
-    foreach (DiscoInfo::Identity identity, info->getIdentities()) {
+    for (auto&& identity : info->getIdentities()) {
             if ((identity.getCategory() == "directory"
                 && identity.getType() == "chatroom")
                 || (identity.getCategory() == "conference"
@@ -152,7 +151,7 @@ void MUCSearchController::handleRoomsItemsResponse(std::shared_ptr<DiscoItems> i
         return;
     }
     serviceDetails_[jid].clearRooms();
-    foreach (DiscoItems::Item item, items->getItems()) {
+    for (auto&& item : items->getItems()) {
         serviceDetails_[jid].addRoom(MUCService::MUCRoom(item.getJID().getNode(), item.getName(), -1));
     }
     serviceDetails_[jid].setComplete(true);
@@ -166,7 +165,7 @@ void MUCSearchController::handleDiscoError(const JID& jid, ErrorPayload::ref err
 
 void MUCSearchController::refreshView() {
     window_->clearList();
-    foreach (JID jid, services_) {
+    for (auto&& jid : services_) {
         window_->addService(serviceDetails_[jid]);
     }
 }

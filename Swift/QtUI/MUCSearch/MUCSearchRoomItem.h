@@ -6,18 +6,22 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swift/QtUI/MUCSearch/MUCSearchItem.h>
 
 namespace Swift {
     class MUCSearchServiceItem;
     class MUCSearchRoomItem : public MUCSearchItem {
         public:
-            MUCSearchRoomItem(const QString& node, MUCSearchServiceItem* parent);
-            MUCSearchServiceItem* getParent();
+            MUCSearchRoomItem(const QString& node);
+            void setParent(std::shared_ptr<MUCSearchServiceItem> parent);
+            std::shared_ptr<MUCSearchServiceItem> getParent();
             QVariant data(int role);
             QString getNode() const {return node_;}
+
         private:
-            MUCSearchServiceItem* parent_;
+            std::weak_ptr<MUCSearchServiceItem> parent_;
             QString node_;
     };
 }
