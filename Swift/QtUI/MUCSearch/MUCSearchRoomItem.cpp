@@ -16,7 +16,7 @@ MUCSearchRoomItem::MUCSearchRoomItem(const QString& node) : node_(node) {
 
 }
 
-void MUCSearchRoomItem::setParent(std::shared_ptr<MUCSearchServiceItem> parent) {
+void MUCSearchRoomItem::setParent(std::weak_ptr<MUCSearchServiceItem> parent) {
     parent_ = parent;
 }
 

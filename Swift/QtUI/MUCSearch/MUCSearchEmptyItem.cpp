@@ -17,7 +17,7 @@ namespace Swift {
 MUCSearchEmptyItem::MUCSearchEmptyItem() {
 }
 
-void MUCSearchEmptyItem::setParent(std::shared_ptr<MUCSearchServiceItem> parent) {
+void MUCSearchEmptyItem::setParent(std::weak_ptr<MUCSearchServiceItem> parent) {
     parent_ = parent;
 }
 

@@ -15,7 +15,7 @@ namespace Swift {
     class MUCSearchRoomItem : public MUCSearchItem {
         public:
             MUCSearchRoomItem(const QString& node);
-            void setParent(std::shared_ptr<MUCSearchServiceItem> parent);
+            void setParent(std::weak_ptr<MUCSearchServiceItem> parent);
             std::shared_ptr<MUCSearchServiceItem> getParent();
             QVariant data(int role);
             QString getNode() const {return node_;}

@@ -17,7 +17,7 @@ class MUCSearchServiceItem;
 class MUCSearchItem {
         public:
             virtual ~MUCSearchItem() {}
-            virtual void setParent(std::shared_ptr<MUCSearchServiceItem>) { }
+            virtual void setParent(std::weak_ptr<MUCSearchServiceItem>) { }
             virtual QVariant data(int role) = 0;
     };
 }

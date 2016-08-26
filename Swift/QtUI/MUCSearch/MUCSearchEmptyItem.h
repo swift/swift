@@ -17,7 +17,7 @@ namespace Swift {
         public:
             MUCSearchEmptyItem();
 
-            void setParent(std::shared_ptr<MUCSearchServiceItem> parent);
+            void setParent(std::weak_ptr<MUCSearchServiceItem> parent);
             std::shared_ptr<MUCSearchServiceItem> getParent();
 
             QVariant data(int role);
