@@ -2704,7 +2704,7 @@ If you choose to defer this choice, you will be asked again when you next login.
         <location filename="../QtUI/QtAboutWidget.cpp" line="49"/>
         <location filename="../QtUI/QtAboutWidget.cpp" line="50"/>
         <source>TRANSLATION_AUTHOR</source>
-        <translation>Isratine Citizen</translation>
+        <translation>Hebrew Translation Team</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAboutWidget.cpp" line="52"/>
