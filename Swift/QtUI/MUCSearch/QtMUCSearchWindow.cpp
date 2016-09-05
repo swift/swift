@@ -12,6 +12,7 @@
 #include <QMovie>
 #include <QPushButton>
 #include <QScrollBar>
+#include <QSortFilterProxyModel>
 #include <QTimer>
 
 #include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
@@ -20,6 +21,7 @@
 #include <Swift/QtUI/MUCSearch/MUCSearchDelegate.h>
 #include <Swift/QtUI/MUCSearch/MUCSearchEmptyItem.h>
 #include <Swift/QtUI/MUCSearch/MUCSearchModel.h>
+#include <Swift/QtUI/MUCSearch/QtLeafSortFilterProxyModel.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -30,10 +32,12 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
     setWindowIcon(QIcon(":/logo-icon-16.png"));
 #endif
     setModal(true);
-    ui_.filter_->hide();
     model_ = new MUCSearchModel();
+    sortFilterProxyModel_ = new QtLeafSortFilterProxyModel(this);
+    sortFilterProxyModel_->setSourceModel(model_);
+    sortFilterProxyModel_->setDynamicSortFilter(true);
     delegate_ = new MUCSearchDelegate();
-    ui_.results_->setModel(model_);
+    ui_.results_->setModel(sortFilterProxyModel_);
     ui_.results_->setItemDelegate(delegate_);
     ui_.results_->setHeaderHidden(true);
     ui_.results_->setRootIsDecorated(true);
@@ -41,7 +45,7 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
     ui_.results_->setAlternatingRowColors(true);
     ui_.results_->setSortingEnabled(true);
     ui_.results_->sortByColumn(0, Qt::AscendingOrder);
-    connect(ui_.searchButton, SIGNAL(clicked()), this, SLOT(handleSearch()));
+    connect(ui_.searchButton_, SIGNAL(clicked()), this, SLOT(handleSearch()));
     connect(ui_.service_, SIGNAL(activated(const QString&)), this, SLOT(handleSearch(const QString&)));
     connect(ui_.results_->selectionModel(), SIGNAL(selectionChanged (const QItemSelection&, const QItemSelection&)), this, SLOT(handleSelectionChanged (const QItemSelection&, const QItemSelection&)));
     connect(ui_.results_, SIGNAL(activated(const QModelIndex&)), this, SLOT(handleActivated(const QModelIndex&)));
@@ -50,6 +54,7 @@ QtMUCSearchWindow::QtMUCSearchWindow() {
     connect(ui_.okButton, SIGNAL(clicked()), this, SLOT(accept()));
     ui_.okButton->setEnabled(false);
     connect(ui_.cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+    connect(ui_.filter_, SIGNAL(textChanged(const QString&)), this, SLOT(handleFilterStringChanged(const QString&)));
 
     throbber_ = new QLabel(tr("Searching"), ui_.results_);
     throbber_->setMovie(new QMovie(":/icons/throbber.gif", QByteArray(), throbber_));
@@ -104,7 +109,7 @@ void QtMUCSearchWindow::handleActivated(const QModelIndex& index) {
     if (!index.isValid()) {
         return;
     }
-    if (dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(index.internalPointer()))) {
+    if (dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(sortFilterProxyModel_->mapToSource(index).internalPointer()))) {
         accept();
     }
 }
@@ -119,7 +124,12 @@ void QtMUCSearchWindow::handleSearch(const QString& service) {
     }
 }
 
+void QtMUCSearchWindow::handleFilterStringChanged(const QString& filterString) {
+    sortFilterProxyModel_->setFilterRegExp(filterString);
+}
+
 void QtMUCSearchWindow::show() {
+    ui_.filter_->clear();
     QWidget::show();
     QWidget::activateWindow();
 }
@@ -197,7 +207,7 @@ MUCSearchRoomItem* QtMUCSearchWindow::getSelectedRoom() const {
         return nullptr;
     }
     else {
-        return dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(lstIndex.first().internalPointer()));
+        return dynamic_cast<MUCSearchRoomItem*>(static_cast<MUCSearchItem*>(sortFilterProxyModel_->mapToSource(lstIndex.first()).internalPointer()));
     }
 }
 

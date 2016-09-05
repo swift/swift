@@ -10,6 +10,8 @@
 
 #include <Swift/QtUI/MUCSearch/ui_QtMUCSearchWindow.h>
 
+class QSortFilterProxyModel;
+
 namespace Swift {
     class MUCSearchModel;
     class MUCSearchDelegate;
@@ -36,6 +38,7 @@ namespace Swift {
         private slots:
             void handleSearch();
             void handleSearch(const QString&);
+            void handleFilterStringChanged(const QString&);
             void handleActivated(const QModelIndex& index);
             void updateThrobberPosition();
             void handleSelectionChanged (const QItemSelection&, const QItemSelection&);
@@ -47,5 +50,6 @@ namespace Swift {
             MUCSearchDelegate* delegate_;
             QLabel* throbber_;
             bool hasHadScrollBars_;
+            QSortFilterProxyModel* sortFilterProxyModel_ = nullptr;
     };
 }
