@@ -9,6 +9,8 @@
 - Redesigned keyword highlighing
 - Support for unicode emojis on macOS
 - Improvements to font size handling in the chat theme
+- Fix UX issues in trellis mode
+- Improve date formatting
 - And assorted smaller features and usability enhancements
 
 4.0-beta2 ( 2016-07-20 )
