@@ -107,6 +107,14 @@ int main(int argc, char* argv[]) {
     QtTranslator swiftTranslator;
     Swift::Translator::setInstance(&swiftTranslator);
 
+#if QT_VERSION < 0x050501
+    /*  According to Qt documenation, Qt is suppsoed to set the applications layout
+     *  direction based on the translatable QT_LAYOUT_DIRECTION string. There is a
+     *  bug in Qt prior version 5.5.1, i.e. QTBUG-43447, thus we set the layout
+     *  direction manually based on the tranlsated QT_LAYOUT_DIRECTION string.
+     */
+    app.setLayoutDirection(QGuiApplication::tr("QT_LAYOUT_DIRECTION") == QLatin1String("RTL") ? Qt::RightToLeft : Qt::LeftToRight);
+#endif
 
     Swift::QtSwift swift(vm);
     int result = app.exec();

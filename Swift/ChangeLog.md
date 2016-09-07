@@ -1,3 +1,7 @@
+4.0-in-progress
+---------------
+- Fix UI layout issue for translations that require right-to-left (RTL) layout
+
 4.0-beta2 ( 2016-07-20 )
 ------------------------
 - Fix Swift bug introduced in 4.0-beta1 that results in the UI sometimes getting stuck during login
