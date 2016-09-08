@@ -843,6 +843,13 @@ std::string QtChatWindow::getID() const {
     return id_;
 }
 
+void QtChatWindow::setEmphasiseFocus(bool emphasise) {
+    input_->setAttribute(Qt::WA_MacShowFocusRect, emphasise);
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+    input_->setEmphasiseFocus(emphasise);
+#endif
+}
+
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {
     if (mucConfigurationWindow_) {
         delete mucConfigurationWindow_.data();

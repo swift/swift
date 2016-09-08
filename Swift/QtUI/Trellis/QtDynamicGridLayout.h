@@ -70,6 +70,7 @@ namespace Swift {
     private:
         void moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex);
         QtTabWidget* createDNDTabWidget(QWidget* parent);
+        void updateEmphasiseFocusOnTabs();
 
     private:
         QGridLayout *gridLayout_;

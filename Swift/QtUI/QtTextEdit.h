@@ -26,6 +26,7 @@ namespace Swift {
         QtTextEdit(SettingsProvider* settings, QWidget* parent = nullptr);
         virtual ~QtTextEdit();
         virtual QSize sizeHint() const;
+        void setEmphasiseFocus(bool emphasise);
 
     signals:
         void wordCorrected(QString& word);
@@ -52,6 +53,7 @@ namespace Swift {
         void setUpSpellChecker();
         void spellCheckerSettingsWindow();
         PositionPair getWordFromCursor(int cursorPosition);
+        void updateEmphasisedFocus();
 
     private:
         SpellChecker* checker_;
@@ -59,5 +61,6 @@ namespace Swift {
         std::vector<QAction*> replaceWordActions_;
         SettingsProvider* settings_;
         QPointer<QtSpellCheckerWindow> spellCheckerWindow_;
+        bool emphasiseFocus_ = false;
     };
 }

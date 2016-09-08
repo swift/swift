@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,6 +20,7 @@ namespace Swift {
             virtual AlertType getWidgetAlertState() {return NoActivity;}
             virtual int getCount() {return 0;}
             virtual std::string getID() const = 0;
+            virtual void setEmphasiseFocus(bool /*emphasise*/) {}
 
         protected:
             QtTabbable();

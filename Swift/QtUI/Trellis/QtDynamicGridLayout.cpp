@@ -48,6 +48,7 @@ int QtDynamicGridLayout::addTab(QtTabbable* tab, const QString& title) {
     if (tabWidget) {
         tabWidget->addTab(tab, title);
     }
+    tab->setEmphasiseFocus(getDimension().width() > 1 || getDimension().height() > 1);
     return tabWidget ? indexOf(tab) : -1;
 }
 
@@ -318,6 +319,25 @@ void QtDynamicGridLayout::setDimensions(const QSize& dim) {
 
     resizing_ = false;
     setCurrentWidget(restoredWidget);
+
+    updateEmphasiseFocusOnTabs();
+}
+
+void QtDynamicGridLayout::updateEmphasiseFocusOnTabs() {
+    const auto currentDimensions = getDimension();
+
+    for (int y = 0; y < gridLayout_->rowCount(); y++) {
+        for (int x = 0; x < gridLayout_->columnCount(); x++) {
+            QLayoutItem* layoutItem = gridLayout_->itemAtPosition(y, x);
+            QtTabWidget* tabWidget = dynamic_cast<QtTabWidget*>(layoutItem->widget());
+            assert(tabWidget);
+            for (int index = 0; index < tabWidget->count(); index++) {
+                QtTabbable* tab = dynamic_cast<QtTabbable*>(tabWidget->widget(index));
+                assert(tab);
+                tab->setEmphasiseFocus(currentDimensions.height() > 1 || currentDimensions.width() > 1);
+            }
+        }
+    }
 }
 
 void QtDynamicGridLayout::moveCurrentTabRight() {

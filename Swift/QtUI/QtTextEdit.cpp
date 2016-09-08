@@ -17,7 +17,6 @@
 #include <QTextDocument>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 
 #include <Swift/Controllers/SettingConstants.h>
 
@@ -81,14 +80,36 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
     }
 }
 
+void QtTextEdit::setEmphasiseFocus(bool emphasise) {
+    emphasiseFocus_ = emphasise;
+    updateEmphasisedFocus();
+}
+
+void QtTextEdit::updateEmphasisedFocus() {
+    if (emphasiseFocus_) {
+        if (hasFocus()) {
+            setStyleSheet("border: 2px solid palette(highlight);");
+        }
+        else {
+            setStyleSheet("");
+        }
+    }
+    else {
+        setStyleSheet("");
+    }
+    handleTextChanged();
+}
+
 void QtTextEdit::focusInEvent(QFocusEvent* event) {
     receivedFocus();
     QTextEdit::focusInEvent(event);
+    updateEmphasisedFocus();
 }
 
 void QtTextEdit::focusOutEvent(QFocusEvent* event) {
     lostFocus();
     QTextEdit::focusOutEvent(event);
+    updateEmphasisedFocus();
 }
 
 void QtTextEdit::handleTextChanged() {

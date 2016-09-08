@@ -134,6 +134,7 @@ namespace Swift {
             virtual void showBookmarkWindow(const MUCBookmark& bookmark);
             virtual void setBookmarkState(RoomBookmarkState bookmarkState);
             virtual std::string getID() const;
+            virtual void setEmphasiseFocus(bool emphasise);
 
         public slots:
             void handleChangeSplitterState(QByteArray state);
