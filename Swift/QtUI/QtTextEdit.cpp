@@ -82,34 +82,41 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
 
 void QtTextEdit::setEmphasiseFocus(bool emphasise) {
     emphasiseFocus_ = emphasise;
-    updateEmphasisedFocus();
+    updateStyleSheet();
 }
 
-void QtTextEdit::updateEmphasisedFocus() {
+void QtTextEdit::setCorrectionHighlight(bool correctionHighlight) {
+    correctionHighlight_ = correctionHighlight;
+    updateStyleSheet();
+}
+
+void QtTextEdit::updateStyleSheet() {
+    QString newStyleSheet;
+
+    if (correctionHighlight_) {
+        newStyleSheet += "background: rgb(255, 255, 153); color: black;";
+    }
+
     if (emphasiseFocus_) {
         if (hasFocus()) {
-            setStyleSheet("border: 2px solid palette(highlight);");
-        }
-        else {
-            setStyleSheet("");
+            newStyleSheet += "border: 2px solid palette(highlight);";
         }
     }
-    else {
-        setStyleSheet("");
-    }
+
+    setStyleSheet(newStyleSheet);
     handleTextChanged();
 }
 
 void QtTextEdit::focusInEvent(QFocusEvent* event) {
     receivedFocus();
     QTextEdit::focusInEvent(event);
-    updateEmphasisedFocus();
+    updateStyleSheet();
 }
 
 void QtTextEdit::focusOutEvent(QFocusEvent* event) {
     lostFocus();
     QTextEdit::focusOutEvent(event);
-    updateEmphasisedFocus();
+    updateStyleSheet();
 }
 
 void QtTextEdit::handleTextChanged() {

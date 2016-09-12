@@ -311,7 +311,7 @@ void QtChatWindow::beginCorrection() {
     cursor.endEditBlock();
     isCorrection_ = true;
     correctingLabel_->show();
-    input_->setStyleSheet(alertStyleSheet_);
+    input_->setCorrectionHighlight(true);
     labelsWidget_->setEnabled(false);
 }
 
@@ -325,7 +325,7 @@ void QtChatWindow::cancelCorrection() {
     cursor.removeSelectedText();
     isCorrection_ = false;
     correctingLabel_->hide();
-    input_->setStyleSheet(qApp->styleSheet());
+    input_->setCorrectionHighlight(false);
     labelsWidget_->setEnabled(true);
 }
 
@@ -844,10 +844,7 @@ std::string QtChatWindow::getID() const {
 }
 
 void QtChatWindow::setEmphasiseFocus(bool emphasise) {
-    input_->setAttribute(Qt::WA_MacShowFocusRect, emphasise);
-#ifdef SWIFTEN_PLATFORM_WINDOWS
     input_->setEmphasiseFocus(emphasise);
-#endif
 }
 
 void QtChatWindow::showRoomConfigurationForm(Form::ref form) {

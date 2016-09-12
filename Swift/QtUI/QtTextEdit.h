@@ -9,7 +9,6 @@
 #include <QPointer>
 #include <QTextEdit>
 
-#include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 
 #include <SwifTools/SpellParser.h>
@@ -26,7 +25,9 @@ namespace Swift {
         QtTextEdit(SettingsProvider* settings, QWidget* parent = nullptr);
         virtual ~QtTextEdit();
         virtual QSize sizeHint() const;
+
         void setEmphasiseFocus(bool emphasise);
+        void setCorrectionHighlight(bool coorectionHighlight);
 
     signals:
         void wordCorrected(QString& word);
@@ -53,7 +54,7 @@ namespace Swift {
         void setUpSpellChecker();
         void spellCheckerSettingsWindow();
         PositionPair getWordFromCursor(int cursorPosition);
-        void updateEmphasisedFocus();
+        void updateStyleSheet();
 
     private:
         SpellChecker* checker_;
@@ -62,5 +63,6 @@ namespace Swift {
         SettingsProvider* settings_;
         QPointer<QtSpellCheckerWindow> spellCheckerWindow_;
         bool emphasiseFocus_ = false;
+        bool correctionHighlight_ = false;
     };
 }
