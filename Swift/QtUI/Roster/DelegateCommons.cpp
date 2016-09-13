@@ -13,10 +13,6 @@
 
 namespace Swift {
 
-namespace {
-    const QColor secondLineColor = QColor(160,160,160);
-}
-
 void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, const QString& text, int flags) {
     QString adjustedText(painter->fontMetrics().elidedText(text, Qt::ElideRight, region.width(), Qt::TextShowMnemonic));
     painter->setClipRect(region);
@@ -27,11 +23,14 @@ void DelegateCommons::drawElidedText(QPainter* painter, const QRect& region, con
 void DelegateCommons::paintContact(QPainter* painter, const QStyleOptionViewItem& option, const QColor& nameColor, const QString& avatarPath, const QIcon& presenceIcon, const QString& name, const QString& statusText, bool isIdle, int unreadCount, bool compact) const {
     painter->save();
     QRect fullRegion(option.rect);
+    QPen secondLineColor;
     if ( option.state & QStyle::State_Selected ) {
         painter->fillRect(fullRegion, option.palette.highlight());
         painter->setPen(option.palette.highlightedText().color());
+        secondLineColor = painter->pen().color().darker(125);
     } else {
         painter->setPen(QPen(nameColor));
+        secondLineColor = painter->pen().color().lighter();
     }
 
     QRect presenceIconRegion(QPoint(farLeftMargin, fullRegion.top()), QSize(presenceIconWidth, fullRegion.height() - verticalMargin));
