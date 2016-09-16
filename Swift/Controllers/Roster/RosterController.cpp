@@ -384,9 +384,7 @@ void RosterController::handlePresenceChanged(Presence::ref presence) {
         ownContact_->applyPresence(presence);
         mainWindow_->setMyContactRosterItem(ownContact_);
     }
-    else {
-        handleIncomingPresence(presence);
-    }
+    handleIncomingPresence(presence);
 }
 
 boost::optional<XMPPRosterItem> RosterController::getItem(const JID& jid) const {

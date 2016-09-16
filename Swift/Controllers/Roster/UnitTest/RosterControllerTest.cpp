@@ -9,7 +9,6 @@
 
 #include <Swiften/Avatars/NullAvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/DummyNickManager.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
@@ -61,6 +60,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testNotHighestPresence);
         CPPUNIT_TEST(testUnavailablePresence);
         CPPUNIT_TEST(testRemoveResultsInUnavailablePresence);
+        CPPUNIT_TEST(testOwnContactInRosterPresence);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -146,7 +146,6 @@ class RosterControllerTest : public CppUnit::TestFixture {
         ContactRosterItem* item2 = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[1])->getChildren()[0]);
         CPPUNIT_ASSERT(item2);
         CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item2->getStatusText());
-
     }
 
     void testHighestPresence() {
@@ -354,8 +353,27 @@ class RosterControllerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(Presence::Unavailable, presenceOracle_->getAllPresence("test@testdomain.com")[0]->getType());
         }
 
+        void testOwnContactInRosterPresence() {
+            std::vector<std::string> groups;
+            groups.push_back("testGroup1");
+            groups.push_back("testGroup2");
+            JID from = jid_;
+            xmppRoster_->addContact(from.toBare(), "name", groups, RosterItemPayload::Both);
+            Presence::ref presence(new Presence());
+            presence->setFrom(from);
+            presence->setPriority(2);
+            presence->setStatus("So totally here");
+            stanzaChannel_->onPresenceReceived(presence);
+            ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[0])->getChildren()[0]);
+            CPPUNIT_ASSERT(item);
+            CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item->getStatusText());
+            ContactRosterItem* item2 = dynamic_cast<ContactRosterItem*>(dynamic_cast<GroupRosterItem*>(CHILDREN[1])->getChildren()[0]);
+            CPPUNIT_ASSERT(item2);
+            CPPUNIT_ASSERT_EQUAL(presence->getStatus(), item2->getStatusText());
+        }
+
         void assertVectorsEqual(const std::vector<std::string>& v1, const std::vector<std::string>& v2, int line) {
-            foreach (const std::string& entry, v1) {
+            for (const auto& entry : v1) {
                 if (std::find(v2.begin(), v2.end(), entry) == v2.end()) {
                     std::stringstream stream;
                     stream <<    "Couldn't find " << entry << " in v2 (line " << line << ")";
