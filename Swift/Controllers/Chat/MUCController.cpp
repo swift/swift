@@ -587,12 +587,22 @@ void MUCController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> messa
     }
 }
 
-void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) {
+void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) {
     if (from.isBare()) {
         chatWindow_->addSystemMessage(message, ChatWindow::DefaultDirection);
     }
     else {
-        ChatControllerBase::addMessageHandleIncomingMessage(from, message, senderIsSelf, label, time);
+        lastMessagesIDs_[from] = {messageID, addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), time)};
+    }
+}
+
+void MUCController::handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& /*idToReplace*/, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
+    auto lastMessage = lastMessagesIDs_.find(from);
+    if (lastMessage != lastMessagesIDs_.end()) {
+        replaceMessage(message, lastMessage->second.idInWindow, timeStamp);
+    }
+    else {
+        addMessageHandleIncomingMessage(from, message, messageID, senderIsSelf, label, timeStamp);
     }
 }
 

@@ -56,6 +56,8 @@ namespace Swift {
             virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
             virtual void postSendMessage(const std::string &body, std::shared_ptr<Stanza> sentStanza) SWIFTEN_OVERRIDE;
             virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) SWIFTEN_OVERRIDE;
+            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) SWIFTEN_OVERRIDE;
+            virtual void handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) SWIFTEN_OVERRIDE;
             virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
             virtual void preSendMessageRequest(std::shared_ptr<Message>) SWIFTEN_OVERRIDE;
             virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;

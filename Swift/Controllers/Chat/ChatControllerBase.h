@@ -48,6 +48,13 @@ namespace Swift {
 
     class ChatControllerBase : public boost::signals2::trackable {
         public:
+            class StreamWindowMessageIDPair {
+                public:
+                    std::string idInStream;
+                    std::string idInWindow;
+            };
+
+        public:
             virtual ~ChatControllerBase();
             void showChatWindow();
             void activateChatWindow();
@@ -82,7 +89,8 @@ namespace Swift {
             virtual std::string senderHighlightNameFromMessage(const JID& from) = 0;
             virtual bool isIncomingMessageFromMe(std::shared_ptr<Message>) = 0;
             virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent>) {}
-            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time);
+            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) = 0;
+            virtual void handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& chatMessage, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) = 0;
             virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage&) {}
             virtual void preSendMessageRequest(std::shared_ptr<Message>) {}
             virtual bool isFromContact(const JID& from);
@@ -128,7 +136,7 @@ namespace Swift {
             ChatWindow* chatWindow_;
             JID toJID_;
             bool labelsEnabled_;
-            std::map<JID, std::string> lastMessagesUIID_;
+            std::map<JID, StreamWindowMessageIDPair> lastMessagesIDs_;
             PresenceOracle* presenceOracle_;
             AvatarManager* avatarManager_;
             bool useDelayForLatency_;

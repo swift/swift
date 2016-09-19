@@ -540,6 +540,20 @@ boost::optional<boost::posix_time::ptime> ChatController::getMessageTimestamp(st
     return message->getTimestamp();
 }
 
+void ChatController::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
+    lastMessagesIDs_[from.toBare()] = {messageID, addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp)};
+}
+
+void ChatController::handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
+    auto lastMessage = lastMessagesIDs_.find(from.toBare());
+    if ((lastMessage != lastMessagesIDs_.end()) && (lastMessage->second.idInStream == idToReplace)) {
+        replaceMessage(message, lastMessage->second.idInWindow, timeStamp);
+    }
+    else {
+        addMessageHandleIncomingMessage(from, message, messageID, senderIsSelf, label, timeStamp);
+    }
+}
+
 void ChatController::logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool /* isIncoming */) {
     HistoryMessage::Type type;
     if (mucRegistry_->isMUC(fromJID.toBare()) || mucRegistry_->isMUC(toJID.toBare())) {

@@ -33,6 +33,7 @@
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/MUC/MUCManager.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Presence/StanzaChannelPresenceSender.h>
@@ -41,7 +42,6 @@
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
-#include <Swiften/Network/DummyTimerFactory.h>
 
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatsManager.h>
@@ -139,8 +139,11 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 
 
     // Message correction tests
+    CPPUNIT_TEST(testChatControllerMessageCorrectionCorrectReplaceID);
+    CPPUNIT_TEST(testChatControllerMessageCorrectionIncorrectReplaceID);
     CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceBySameResource);
     CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceByOtherResource);
+    CPPUNIT_TEST(testMUCControllerMessageCorrectionNoIDMatchRequired);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1309,6 +1312,73 @@ public:
         }
     }
 
+    /**
+     * This test case ensures correct handling of the ideal case where the replace
+     * message refers to a message with a known ID. This results in the last
+     * message being replaced.
+     */
+    void testChatControllerMessageCorrectionCorrectReplaceID() {
+        JID messageJID("testling@test.com/resource1");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        auto message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text before edit");
+        message->setID("someID");
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text after edit");
+        message->addPayload(std::make_shared<Replace>("someID"));
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string("text after edit"), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+    }
+
+    /**
+     * This test case ensures correct handling of the case where the replace
+     * message refers to a message with a unknown ID. The replace message should
+     * be treated like a non-repalce message in this case, with no replacement
+     * occuring.
+     */
+    void testChatControllerMessageCorrectionIncorrectReplaceID() {
+        JID messageJID("testling@test.com/resource1");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        auto message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text before edit");
+        message->setID("someID");
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        message = std::make_shared<Message>();
+        message->setFrom(messageJID);
+        message->setTo(jid_);
+        message->setType(Message::Chat);
+        message->setBody("text after failed edit");
+        message->addPayload(std::make_shared<Replace>("wrongID"));
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(std::string("text after failed edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+        CPPUNIT_ASSERT_EQUAL(std::string(""), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+    }
+
     void testChatControllerMessageCorrectionReplaceBySameResource() {
         JID messageJID("testling@test.com/resource1");
 
@@ -1320,6 +1390,7 @@ public:
         message->setTo(jid_);
         message->setType(Message::Chat);
         message->setBody("text before edit");
+        message->setID("someID");
         manager_->handleIncomingMessage(message);
 
         CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
@@ -1346,6 +1417,7 @@ public:
         message->setTo(jid_);
         message->setType(Message::Chat);
         message->setBody("text before edit");
+        message->setID("someID");
         manager_->handleIncomingMessage(message);
 
         CPPUNIT_ASSERT_EQUAL(std::string("text before edit"), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
@@ -1360,6 +1432,77 @@ public:
 
         CPPUNIT_ASSERT_EQUAL(std::string("text after edit"), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
     }
+
+    void testMUCControllerMessageCorrectionNoIDMatchRequired() {
+        JID mucJID("SomeMUCRoom@test.com");
+        manager_->setOnline(true);
+
+        // Open chat window to a sender.
+        MockChatWindow* window = new MockChatWindow();
+
+        std::vector<JID> jids;
+        jids.emplace_back("foo@test.com");
+        jids.emplace_back("bar@test.com");
+
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
+
+        auto nickname = std::string("SomeNickName");
+        // Join room
+        {
+            auto joinRoomEvent = std::make_shared<JoinMUCUIEvent>(mucJID, boost::optional<std::string>(), nickname);
+            uiEventStream_->send(joinRoomEvent);
+        }
+
+        auto genRemoteMUCPresence = [=]() {
+            auto presence = Presence::create();
+            presence->setFrom(mucJID.withResource(nickname));
+            presence->setTo(jid_);
+            return presence;
+        };
+
+        {
+            auto presence = genRemoteMUCPresence();
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addStatusCode(110);
+            userPayload->addItem(MUCItem(MUCOccupant::Owner, jid_, MUCOccupant::Moderator));
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+
+        {
+            auto presence = genRemoteMUCPresence();
+            presence->setFrom(mucJID.withResource("someDifferentNickname"));
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addItem(MUCItem(MUCOccupant::Member, JID("foo@bar.com"), MUCOccupant::Moderator));
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+
+        {
+            Message::ref mucMirrored = std::make_shared<Message>();
+            mucMirrored->setFrom(mucJID.withResource(nickname));
+            mucMirrored->setTo(jid_);
+            mucMirrored->setType(Message::Groupchat);
+            mucMirrored->setID("fooBlaID_1");
+            mucMirrored->setBody("Some misssssspelled message.");
+            manager_->handleIncomingMessage(mucMirrored);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("Some misssssspelled message."), window->bodyFromMessage(window->lastAddedMessage_));
+
+        // Replace message with non-matching ID
+        {
+            Message::ref mucMirrored = std::make_shared<Message>();
+            mucMirrored->setFrom(mucJID.withResource(nickname));
+            mucMirrored->setTo(jid_);
+            mucMirrored->setType(Message::Groupchat);
+            mucMirrored->setID("fooBlaID_3");
+            mucMirrored->setBody("Some correctly spelled message.");
+            mucMirrored->addPayload(std::make_shared<Replace>("fooBlaID_2"));
+            manager_->handleIncomingMessage(mucMirrored);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("Some correctly spelled message."), window->bodyFromMessage(window->lastReplacedMessage_));
+    }
+
 
 private:
     std::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {

@@ -276,18 +276,12 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
 
         std::shared_ptr<Replace> replace = message->getPayload<Replace>();
         bool senderIsSelf = isIncomingMessageFromMe(message);
+        chatMessage = buildChatWindowChatMessage(body, senderHighlightNameFromMessage(from), senderIsSelf);
         if (replace) {
-            // Should check if the user has a previous message
-            std::map<JID, std::string>::iterator lastMessage;
-            lastMessage = lastMessagesUIID_.find(messageCorrectionJID(from));
-            if (lastMessage != lastMessagesUIID_.end()) {
-                chatMessage = buildChatWindowChatMessage(body, senderHighlightNameFromMessage(from), senderIsSelf);
-                replaceMessage(chatMessage, lastMessagesUIID_[messageCorrectionJID(from)], timeStamp);
-            }
+            handleIncomingReplaceMessage(from, chatMessage, message->getID(), replace->getID(), senderIsSelf, label, timeStamp);
         }
         else {
-            chatMessage = buildChatWindowChatMessage(body, senderHighlightNameFromMessage(from), senderIsSelf);
-            addMessageHandleIncomingMessage(from, chatMessage, senderIsSelf, label, timeStamp);
+            addMessageHandleIncomingMessage(from, chatMessage, message->getID(), senderIsSelf, label, timeStamp);
         }
 
         logMessage(body, from, selfJID_, timeStamp, true);
@@ -295,10 +289,6 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
     chatWindow_->show();
     updateMessageCount();
     postHandleIncomingMessage(messageEvent, chatMessage);
-}
-
-void ChatControllerBase::addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) {
-    lastMessagesUIID_[messageCorrectionJID(from)] = addMessage(message, senderDisplayNameFromMessage(from), senderIsSelf, label, avatarManager_->getAvatarPath(from), timeStamp);
 }
 
 std::string ChatControllerBase::getErrorMessage(std::shared_ptr<ErrorPayload> error) {
