@@ -91,7 +91,6 @@ std::shared_ptr<Command> CommandConvertor::doConvertFromLua(lua_State* L) {
     lua_getfield(L, -1, "available_actions");
     if (!lua_isnil(L, -1)) {
         Lua::checkType(L, -1, LUA_TTABLE);
-        lua_pushnil(L);
         for (lua_pushnil(L); lua_next(L, -2) != 0; ) {
             result->addAvailableAction(convertActionFromString(Lua::checkString(L, -1)));
             lua_pop(L, 1);
@@ -102,7 +101,6 @@ std::shared_ptr<Command> CommandConvertor::doConvertFromLua(lua_State* L) {
     lua_getfield(L, -1, "notes");
     if (!lua_isnil(L, -1)) {
         Lua::checkType(L, -1, LUA_TTABLE);
-        lua_pushnil(L);
         for (lua_pushnil(L); lua_next(L, -2) != 0; ) {
             Lua::checkType(L, -1, LUA_TTABLE);
             std::string note;
