@@ -287,9 +287,7 @@ namespace {
         if (!payload->getInstructions().empty()) {
             result["instructions"] = Lua::valueRef(payload->getInstructions());
         }
-        if (!payload->getFields().empty()) {
-            result["fields"] = valueRef(convertFieldListToLua(payload->getFields()));
-        }
+        result["fields"] = valueRef(convertFieldListToLua(payload->getFields()));
         if (!payload->getReportedFields().empty()) {
             result["reported_fields"] = valueRef(convertFieldListToLua(payload->getReportedFields()));
         }
