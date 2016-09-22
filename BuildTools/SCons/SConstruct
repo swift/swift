@@ -289,7 +289,7 @@ if env.get("try_gconf", True) and env["PLATFORM"] != "win32" and env["PLATFORM"]
 env["HAVE_SPARKLE"] = 0
 if env["PLATFORM"] == "darwin" :
     sparkle_flags = {
-            "FRAMEWORKPATH": ["/Library/Frameworks"],
+            "FRAMEWORKPATH": ["3rdParty/Sparkle/Sparkle-1.14.0"],
             "FRAMEWORKS": ["Sparkle"]
         }
     sparkle_env = conf_env.Clone()
@@ -298,8 +298,13 @@ if env["PLATFORM"] == "darwin" :
     if conf.CheckObjCHeader("Sparkle/Sparkle.h") :
         env["HAVE_SPARKLE"] = 1
         env["SPARKLE_FLAGS"] = sparkle_flags
-        env["SPARKLE_FRAMEWORK"] = "/Library/Frameworks/Sparkle.framework"
+        env["SPARKLE_FRAMEWORK"] = Dir("../../3rdParty/Sparkle/Sparkle-1.14.0/Sparkle.framework")
     conf.Finish()
+
+    if env.get("sparkle_public_dsa_key", None) != None :
+        env["SWIFT_SPARKLE_PUBLIC_DSA_KEY"] = File(env.get("sparkle_public_dsa_key"))
+    else :
+        env["SWIFT_SPARKLE_PUBLIC_DSA_KEY"] = None
 
 # Growl
 env["HAVE_GROWL"] = 0

@@ -21,6 +21,7 @@ namespace Swift {
 class CocoaUIHelpers {
 public:
     static void displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain);
+    static void sendCocoaApplicationWillTerminateNotification();
 };
 
 }

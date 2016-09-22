@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
+
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class AutoUpdater {
@@ -12,5 +14,14 @@ namespace Swift {
             virtual ~AutoUpdater();
 
             virtual void checkForUpdates() = 0;
+            virtual bool recommendRestartToUpdate() = 0;
+
+        public:
+            /**
+             * Emit this signal if a new version of the software has been downloaded
+             * and the user needs to be notified so they can quit the app and start
+             * the newer version.
+             */
+            boost::signals2::signal<void()> onSuggestRestartToUserToUpdate;
     };
 }

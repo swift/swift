@@ -77,12 +77,16 @@
 #include <Swift/QtUI/QtDBUSURIHandler.h>
 #endif
 
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+#include <Swift/QtUI/CocoaUIHelpers.h>
+#endif
+
 namespace Swift{
 
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-//#define SWIFT_APPCAST_URL "http://swift.im/appcast/swift-mac-dev.xml"
+#define SWIFT_APPCAST_URL "https://swift.im/appcast/swift-mac-dev.xml"
 #else
-//#define SWIFT_APPCAST_URL ""
+#define SWIFT_APPCAST_URL ""
 #endif
 
 po::options_description QtSwift::getOptionsDescription() {
@@ -277,12 +281,14 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
         mainControllers_.push_back(mainController);
     }
 
+    connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(handleAboutToQuit()));
 
-    // PlatformAutoUpdaterFactory autoUpdaterFactory;
-    // if (autoUpdaterFactory.isSupported()) {
-    //     autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
-    //     autoUpdater_->checkForUpdates();
-    // }
+    PlatformAutoUpdaterFactory autoUpdaterFactory;
+    if (autoUpdaterFactory.isSupported()) {
+        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
+        autoUpdater_->checkForUpdates();
+        autoUpdater_->onSuggestRestartToUserToUpdate.connect(boost::bind(&QtSwift::handleRecommendRestartToInstallUpdate, this));
+    }
 }
 
 QtSwift::~QtSwift() {
@@ -310,6 +316,18 @@ QtSwift::~QtSwift() {
     delete certificateStorageFactory_;
     delete storagesFactory_;
     delete applicationPathProvider_;
+}
+
+void QtSwift::handleAboutToQuit() {
+#if defined(SWIFTEN_PLATFORM_MACOSX)
+    // This is required so Sparkle knows about the application shutting down
+    // and can update the application in background.
+     CocoaUIHelpers::sendCocoaApplicationWillTerminateNotification();
+#endif
+}
+
+void QtSwift::handleRecommendRestartToInstallUpdate() {
+    notifier_->showMessage(Notifier::SystemMessage, Q2PSTRING(tr("Swift Update Available")), Q2PSTRING(tr("Restart Swift now or later to update to the new Swift version")), "", [](){});
 }
 
 }

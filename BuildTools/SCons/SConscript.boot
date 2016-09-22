@@ -110,6 +110,9 @@ vars.Add("codesign_identity", "macOS code signing identity to be passed to codes
 vars.Add("signtool_key_pfx", "The keyfile (.pfx) that will be used to sign the Windows installer.", None)
 vars.Add("signtool_timestamp_url", "The timestamp server that will be queried for a signed time stamp in the signing process.", None)
 
+# Automatic Software Update Options
+vars.Add(PathVariable("sparkle_public_dsa_key", "Optional path to a public DSA key used to verify Sparkle software updates. Without specifiying this option, the app needs to be code signed for Sparkle to work.", None, PathVariable.PathIsFile))
+
 
 ################################################################################
 # Set up default build & configure environment

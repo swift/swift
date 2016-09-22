@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -59,9 +59,15 @@ namespace Swift {
             QtSwift(const po::variables_map& options);
             static po::options_description getOptionsDescription();
             ~QtSwift();
+
+        private slots:
+            void handleAboutToQuit();
+            void handleRecommendRestartToInstallUpdate();
+
         private:
             XMLSettingsProvider* loadSettingsFile(const QString& fileName);
             void loadEmoticonsFile(const QString& fileName, std::map<std::string, std::string>& emoticons);
+
         private:
             QtEventLoop clientMainThreadCaller_;
             PlatformTLSFactories tlsFactories_;

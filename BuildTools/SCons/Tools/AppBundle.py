@@ -1,7 +1,7 @@
 import SCons.Util, os.path
 
 def generate(env) :
-    def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}, handlesXMPPURIs = False) :
+    def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}, handlesXMPPURIs = False, sparklePublicDSAKey = None) :
         bundleDir = bundle + ".app"
         bundleContentsDir = bundleDir + "/Contents"
         resourcesDir = bundleContentsDir + "/Resources"
@@ -44,6 +44,11 @@ def generate(env) :
                 </array>
         </dict>
 </array>\n"""
+
+        if sparklePublicDSAKey :
+            plist += "<key>SUPublicDSAKeyFile</key>"
+            plist += "<string>" + sparklePublicDSAKey.name.encode("utf-8") + "</string>"
+            env.Install(resourcesDir, sparklePublicDSAKey)
         plist += """</dict>
     </plist>
     """

@@ -50,7 +50,7 @@ if env["SCONS_STAGE"] == "build" :
     if swiftools_env.get("HAVE_SPARKLE", 0) :
         swiftools_env.UseFlags(swiftools_env["SPARKLE_FLAGS"])
         swiftools_env.Append(CPPDEFINES = ["HAVE_SPARKLE"])
-        sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
+        sources += ["AutoUpdater/SparkleAutoUpdater.mm", "AutoUpdater/SparkleAutoUpdaterDelegate.mm"]
 
     if swiftools_env["PLATFORM"] == "win32" :
         sources += ["Idle/WindowsIdleQuerier.cpp"]

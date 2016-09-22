@@ -46,4 +46,8 @@ void CocoaUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::
     [certificates release];
 }
 
+void CocoaUIHelpers::sendCocoaApplicationWillTerminateNotification() {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"NSApplicationWillTerminateNotification" object:nil];
+}
+
 }
