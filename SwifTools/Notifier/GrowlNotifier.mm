@@ -32,8 +32,7 @@ class GrowlNotifier::Private {
         boost::intrusive_ptr<GrowlNotifierDelegate> delegate;
 };
 
-GrowlNotifier::GrowlNotifier(const std::string& name) {
-    p = std::make_shared<Private>();
+GrowlNotifier::GrowlNotifier(const std::string& name) : p(new Private()){
     p->delegate = boost::intrusive_ptr<GrowlNotifierDelegate>([[GrowlNotifierDelegate alloc] init], false);
     p->delegate.get().notifier = this;
     p->delegate.get().name = std2NSString(name);

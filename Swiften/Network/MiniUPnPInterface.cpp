@@ -32,7 +32,7 @@ struct MiniUPnPInterface::Private {
     IGDdatas data;
 };
 
-MiniUPnPInterface::MiniUPnPInterface() : p(std::make_shared<Private>()) {
+MiniUPnPInterface::MiniUPnPInterface() : p(new Private()) {
     p->isValid = false;
     int error = 0;
 #if MINIUPNPC_API_VERSION > 14

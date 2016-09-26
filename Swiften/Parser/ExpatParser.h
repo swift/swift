@@ -25,6 +25,6 @@ namespace Swift {
 
         private:
             struct Private;
-            std::shared_ptr<Private> p;
+            const std::unique_ptr<Private> p;
     };
 }

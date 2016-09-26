@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <SwifTools/Notifier/Notifier.h>
@@ -32,7 +33,7 @@ public:
 
 private:
     class Private;
-    std::shared_ptr<Private> p;
+    const std::unique_ptr<Private> p;
 };
 
 }

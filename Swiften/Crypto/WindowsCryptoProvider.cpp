@@ -190,8 +190,7 @@ namespace {
     }
 }
 
-WindowsCryptoProvider::WindowsCryptoProvider() {
-    p = std::make_shared<Private>();
+WindowsCryptoProvider::WindowsCryptoProvider() : p(new Private()){
     if (!CryptAcquireContext(&p->context, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT)) {
         assert(false);
     }

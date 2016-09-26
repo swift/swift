@@ -21,9 +21,7 @@ class SparkleAutoUpdater::Private {
         bool restartToUpdate = false;
 };
 
-SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) {
-    d = new Private;
-
+SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) : d(new Private()) {
     d->updater = [SUUpdater sharedUpdater];
     [d->updater retain];
 
@@ -45,7 +43,6 @@ SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) {
 
 SparkleAutoUpdater::~SparkleAutoUpdater() {
     [d->updater release];
-    delete d;
     SWIFT_LOG(warning) << std::endl;
 }
 

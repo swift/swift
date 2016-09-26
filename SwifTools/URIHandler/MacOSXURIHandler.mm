@@ -44,14 +44,12 @@ class MacOSXURIHandler::Private {
         MacOSXURIEventHandler* eventHandler;
 };
 
-MacOSXURIHandler::MacOSXURIHandler() {
-    p = new Private();
+MacOSXURIHandler::MacOSXURIHandler() : p(new Private()) {
     p->eventHandler = [[MacOSXURIEventHandler alloc] initWithHandler: this];
 }
 
 MacOSXURIHandler::~MacOSXURIHandler() {
     [p->eventHandler release];
-    delete p;
 }
 
 void MacOSXURIHandler::start() {

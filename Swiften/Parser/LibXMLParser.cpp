@@ -8,6 +8,7 @@
 
 #include <cassert>
 #include <cstring>
+#include <memory>
 #include <string>
 
 #include <boost/numeric/conversion/cast.hpp>

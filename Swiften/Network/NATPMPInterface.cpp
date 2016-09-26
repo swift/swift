@@ -30,7 +30,7 @@ struct NATPMPInterface::Private {
     natpmp_t natpmp;
 };
 
-NATPMPInterface::NATPMPInterface() : p(std::make_shared<Private>()) {
+NATPMPInterface::NATPMPInterface() : p(new Private()) {
     initnatpmp(&p->natpmp, 0, 0);
 }
 

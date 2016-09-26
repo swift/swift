@@ -39,8 +39,7 @@ class NotificationCenterNotifier::Private {
         boost::intrusive_ptr<NotificationCenterNotifierDelegate> delegate;
 };
 
-NotificationCenterNotifier::NotificationCenterNotifier() {
-    p = std::make_shared<Private>();
+NotificationCenterNotifier::NotificationCenterNotifier() : p(new Private()) {
     p->delegate = boost::intrusive_ptr<NotificationCenterNotifierDelegate>([[NotificationCenterNotifierDelegate alloc] init], false);
     [p->delegate.get() setNotifier: this];
 

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 
@@ -20,6 +22,6 @@ namespace Swift {
 
         protected:
             struct Private;
-            std::shared_ptr<Private> p;
+            const std::unique_ptr<Private> p;
     };
 }

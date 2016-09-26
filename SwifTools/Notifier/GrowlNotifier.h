@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/filesystem/fstream.hpp>
 
 #include <SwifTools/Notifier/Notifier.h>
@@ -36,6 +38,6 @@ namespace Swift {
 
         private:
             class Private;
-            std::shared_ptr<Private> p;
+            const std::unique_ptr<Private> p;
     };
 }

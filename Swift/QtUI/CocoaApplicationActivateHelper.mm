@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/CocoaApplicationActivateHelper.h>
 
+#include <memory>
+
 #include <boost/function.hpp>
 
 #include <QApplication>
@@ -31,8 +33,7 @@ struct CocoaApplicationActivateHelper::Private {
     bool initialized;
 };
 
-CocoaApplicationActivateHelper::CocoaApplicationActivateHelper() {
-    p = new Private();
+CocoaApplicationActivateHelper::CocoaApplicationActivateHelper() : p(new Private()) {
     p->delegate = [[CocoaApplicationActivateHelperDelegate alloc] init];
     p->initialized = false;
     qApp->installEventFilter(this);
@@ -41,7 +42,6 @@ CocoaApplicationActivateHelper::CocoaApplicationActivateHelper() {
 CocoaApplicationActivateHelper::~CocoaApplicationActivateHelper() {
     [[NSAppleEventManager sharedAppleEventManager] removeEventHandlerForEventClass:kCoreEventClass andEventID:kAEReopenApplication];
     [p->delegate release];
-    delete p;
 }
 
 bool CocoaApplicationActivateHelper::eventFilter(QObject* object, QEvent* event) {

@@ -25,7 +25,7 @@ struct ITunesInterface::Private {
     iTunesApplication* iTunes;
 };
 
-ITunesInterface::ITunesInterface() : p(std::make_shared<Private>()) {
+ITunesInterface::ITunesInterface() : p(new Private()) {
 }
 
 ITunesInterface::~ITunesInterface() {

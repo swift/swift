@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
+
+#include <memory>
 
 #include <SwifTools/URIHandler/URIHandler.h>
 
@@ -19,6 +21,6 @@ namespace Swift {
 
         private:
             class Private;
-            Private* p;
+            const std::unique_ptr<Private> p;
     };
 }

@@ -22,7 +22,7 @@ namespace Swift {
 static const size_t CHUNK_SIZE = 1024; // If you change this, also change the unittest
 
 
-ZLibCodecompressor::ZLibCodecompressor() : p(std::make_shared<Private>()) {
+ZLibCodecompressor::ZLibCodecompressor() : p(new Private()) {
     memset(&p->stream, 0, sizeof(z_stream));
     p->stream.zalloc = Z_NULL;
     p->stream.zfree = Z_NULL;

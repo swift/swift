@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <memory>
 #include <string>
 
 #include <SwifTools/AutoUpdater/AutoUpdater.h>
@@ -27,6 +28,6 @@ namespace Swift {
 
         private:
             class Private;
-            Private* d;
+            const unique_ptr<Private> d;
     };
 }
