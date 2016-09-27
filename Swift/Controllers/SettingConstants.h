@@ -102,5 +102,11 @@ namespace Swift {
              * log in the user; else not.
              */
             static const SettingsProvider::Setting<bool> SINGLE_SIGN_ON;
+            /**
+             * The #ENABLE_SOFTWARE_UPDATES settings specifies, whether Swift
+             * should automatically check for software updates in regular
+             * intervals and install them automatically.
+             */
+            static const SettingsProvider::Setting<bool> ENABLE_SOFTWARE_UPDATES;
     };
 }

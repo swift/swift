@@ -284,7 +284,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(handleAboutToQuit()));
 
     PlatformAutoUpdaterFactory autoUpdaterFactory;
-    if (autoUpdaterFactory.isSupported()) {
+    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(SettingConstants::ENABLE_SOFTWARE_UPDATES)) {
         autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
         autoUpdater_->checkForUpdates();
         autoUpdater_->onSuggestRestartToUserToUpdate.connect(boost::bind(&QtSwift::handleRecommendRestartToInstallUpdate, this));

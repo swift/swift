@@ -27,4 +27,6 @@ const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_SIZE
 const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_POSITIONS("trellisGridPositions", "");
 const SettingsProvider::Setting<bool> SettingConstants::DISCONNECT_ON_CARD_REMOVAL("disconnectOnCardRemoval", true);
 const SettingsProvider::Setting<bool> SettingConstants::SINGLE_SIGN_ON("singleSignOn", false);
+const SettingsProvider::Setting<bool> SettingConstants::ENABLE_SOFTWARE_UPDATES("enableSoftwareUpdates", true);
+
 }

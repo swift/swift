@@ -28,6 +28,6 @@ namespace Swift {
 
         private:
             class Private;
-            const unique_ptr<Private> d;
+            const std::unique_ptr<Private> d;
     };
 }

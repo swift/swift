@@ -43,7 +43,6 @@ SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) : d(new Private()
 
 SparkleAutoUpdater::~SparkleAutoUpdater() {
     [d->updater release];
-    SWIFT_LOG(warning) << std::endl;
 }
 
 void SparkleAutoUpdater::checkForUpdates() {
