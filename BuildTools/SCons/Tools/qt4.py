@@ -566,7 +566,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
         if len(self["QTDIR"]) > 0 :
             self.AppendUnique(LIBPATH=[os.path.join('$QTDIR','lib')])
             self.AppendUnique(LINKFLAGS="-F$QTDIR/lib")
-            self.AppendUnique(CPPFLAGS="-iframework$QTDIR/lib")
+            self.AppendUnique(CPPFLAGS=["-iframework$QTDIR/lib", include_flag + os.path.join("$QTDIR", "include")])
             self.Append(LINKFLAGS="-Wl,-rpath,$QTDIR/lib")
 
         # FIXME: Phonon Hack
@@ -579,9 +579,9 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
                 self.AppendUnique(LIBPATH=[os.path.join("$QTDIR","lib")])
             else :
                 if len(self["QTDIR"]) > 0 :
-                    self.Append(CPPFLAGS = [include_flag + os.path.join("$QTDIR", "lib", module + ".framework", "Versions", version, "Headers")])
+                    self.Append(CPPFLAGS = [include_flag + os.path.join("$QTDIR", "lib", module + ".framework", "Headers")])
                 else :
-                    self.Append(CPPFLAGS = [include_flag + os.path.join("/Library/Frameworks", module + ".framework", "Versions", version, "Headers")])
+                    self.Append(CPPFLAGS = [include_flag + os.path.join("/Library/Frameworks", module + ".framework", "Headers")])
                 self.Append(LINKFLAGS=['-framework', module])
         if 'QtOpenGL' in modules:
             self.AppendUnique(LINKFLAGS="-F/System/Library/Frameworks")
