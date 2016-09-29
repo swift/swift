@@ -11,6 +11,9 @@ namespace Swift {
 SimpleIDGenerator::SimpleIDGenerator() {
 }
 
+SimpleIDGenerator::~SimpleIDGenerator() {
+}
+
 std::string SimpleIDGenerator::generateID() {
     bool carry = true;
     size_t i = 0;

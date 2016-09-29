@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,8 @@ namespace Swift {
     class SWIFTEN_API IDGenerator {
         public:
             IDGenerator();
+            virtual ~IDGenerator();
 
-            std::string generateID();
+            virtual std::string generateID();
     };
 }

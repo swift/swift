@@ -17,6 +17,7 @@ namespace Swift {
     class SWIFTEN_API PayloadParserFactoryCollection {
         public:
             PayloadParserFactoryCollection();
+            virtual ~PayloadParserFactoryCollection();
 
             void addFactory(PayloadParserFactory* factory);
             void removeFactory(PayloadParserFactory* factory);

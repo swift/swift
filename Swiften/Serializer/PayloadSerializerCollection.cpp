@@ -17,6 +17,9 @@ namespace Swift {
 PayloadSerializerCollection::PayloadSerializerCollection() {
 }
 
+PayloadSerializerCollection::~PayloadSerializerCollection() {
+}
+
 void PayloadSerializerCollection::addSerializer(PayloadSerializer* serializer) {
     serializers_.push_back(serializer);
 }

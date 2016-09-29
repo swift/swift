@@ -15,10 +15,10 @@
 namespace Swift {
     class PayloadSerializer;
 
-
     class SWIFTEN_API PayloadSerializerCollection {
         public:
             PayloadSerializerCollection();
+            virtual ~PayloadSerializerCollection();
 
             void addSerializer(PayloadSerializer* factory);
             void removeSerializer(PayloadSerializer* factory);

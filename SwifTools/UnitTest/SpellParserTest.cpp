@@ -10,6 +10,8 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/algorithm/string.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
@@ -26,7 +28,6 @@ class SpellParserTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
     public:
         SpellParserTest() {
-            parser_ = new SpellParser();
         }
         void tearDown() {
             position_.clear();
@@ -50,7 +51,7 @@ class SpellParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(26, boost::get<1>(position_.back()));
         }
     private:
-        SpellParser *parser_;
+        const std::unique_ptr<SpellParser> parser_ = std::unique_ptr<SpellParser>(new SpellParser());
         PositionPairList position_;
 };
 

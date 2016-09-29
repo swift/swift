@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,7 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
+#include <Swiften/Base/Override.h>
 
 namespace Swift {
 
@@ -21,8 +22,9 @@ namespace Swift {
     class SWIFTEN_API SimpleIDGenerator : public IDGenerator {
         public:
             SimpleIDGenerator();
+            ~SimpleIDGenerator();
 
-            std::string generateID();
+            std::string generateID() SWIFTEN_OVERRIDE;
 
         private:
             std::string currentID;
