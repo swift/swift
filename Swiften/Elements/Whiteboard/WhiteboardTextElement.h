@@ -64,7 +64,7 @@ namespace Swift {
 
     private:
         int x_, y_;
-        int size_;
+        int size_ = 0;
         std::string text_;
         WhiteboardColor color_;
     };

@@ -76,6 +76,6 @@ namespace Swift {
         int cx_, cy_, rx_, ry_;
         WhiteboardColor penColor_;
         WhiteboardColor brushColor_;
-        int penWidth_;
+        int penWidth_ = 0;
     };
 }

@@ -39,6 +39,6 @@ namespace Swift {
 
     private:
         WhiteboardElement::ref element_;
-        int newPos_;
+        int newPos_ = 0;
     };
 }

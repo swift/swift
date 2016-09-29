@@ -68,7 +68,7 @@ namespace Swift {
         private:
             Ui::QtHighlightEditor ui_;
             QtSettingsProvider* settings_;
-            HighlightManager* highlightManager_;
+            HighlightManager* highlightManager_ = nullptr;
             QtSuggestingJIDInput* jid_;
             int previousRow_;
         };

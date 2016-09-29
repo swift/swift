@@ -4,6 +4,7 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
@@ -36,8 +37,8 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         void setUp() {
             crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 
-            stanzaChannel = new DummyStanzaChannel();
-            capsProvider = new DummyCapsProvider();
+            stanzaChannel = std::unique_ptr<DummyStanzaChannel>(new DummyStanzaChannel());
+            capsProvider = std::unique_ptr<DummyCapsProvider>(new DummyCapsProvider());
 
             user1 = JID("user1@bar.com/bla");
             discoInfo1 = std::make_shared<DiscoInfo>();
@@ -50,11 +51,6 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
             capsInfo2 = std::make_shared<CapsInfo>(CapsInfoGenerator("http://node2.im", crypto.get()).generateCapsInfo(*discoInfo2.get()));
             user3 = JID("user3@foo.com/baz");
             legacyCapsInfo = std::make_shared<CapsInfo>("http://swift.im", "ver1", "");
-        }
-
-        void tearDown() {
-            delete capsProvider;
-            delete stanzaChannel;
         }
 
         void testReceiveKnownHash() {
@@ -140,7 +136,7 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
 
     private:
         std::shared_ptr<EntityCapsManager> createManager() {
-            std::shared_ptr<EntityCapsManager> manager(new EntityCapsManager(capsProvider, stanzaChannel));
+            std::shared_ptr<EntityCapsManager> manager(new EntityCapsManager(capsProvider.get(), stanzaChannel.get()));
             manager->onCapsChanged.connect(boost::bind(&EntityCapsManagerTest::handleCapsChanged, this, _1));
             return manager;
         }
@@ -177,8 +173,8 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         };
 
     private:
-        DummyStanzaChannel* stanzaChannel;
-        DummyCapsProvider* capsProvider;
+        std::unique_ptr<DummyStanzaChannel> stanzaChannel;
+        std::unique_ptr<DummyCapsProvider> capsProvider;
         JID user1;
         std::shared_ptr<DiscoInfo> discoInfo1;
         std::shared_ptr<CapsInfo> capsInfo1;

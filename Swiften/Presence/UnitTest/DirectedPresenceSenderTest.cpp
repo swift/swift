@@ -4,6 +4,8 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -27,17 +29,12 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            channel = new DummyStanzaChannel();
+            channel = std::unique_ptr<DummyStanzaChannel>(new DummyStanzaChannel());
             testPresence = std::make_shared<Presence>();
             testPresence->setStatus("Foo");
             secondTestPresence = std::make_shared<Presence>();
             secondTestPresence->setStatus("Bar");
-            stanzaChannelPresenceSender = new StanzaChannelPresenceSender(channel);
-        }
-
-        void tearDown() {
-            delete stanzaChannelPresenceSender;
-            delete channel;
+            stanzaChannelPresenceSender = std::unique_ptr<StanzaChannelPresenceSender>(new StanzaChannelPresenceSender(channel.get()));
         }
 
         void testSendPresence() {
@@ -140,12 +137,12 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 
     private:
         DirectedPresenceSender* createPresenceSender() {
-            return new DirectedPresenceSender(stanzaChannelPresenceSender);
+            return new DirectedPresenceSender(stanzaChannelPresenceSender.get());
         }
 
     private:
-        DummyStanzaChannel* channel;
-        StanzaChannelPresenceSender* stanzaChannelPresenceSender;
+        std::unique_ptr<DummyStanzaChannel> channel;
+        std::unique_ptr<StanzaChannelPresenceSender> stanzaChannelPresenceSender;
         std::shared_ptr<Presence> testPresence;
         std::shared_ptr<Presence> secondTestPresence;
 };

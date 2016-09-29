@@ -69,7 +69,7 @@ namespace Swift {
 
             std::map<HistoryMessage::Type, ContactsMap> contacts_;
             ContactRosterItem* selectedItem_;
-            HistoryMessage::Type selectedItemType_;
+            HistoryMessage::Type selectedItemType_ = HistoryMessage::Chat;
             boost::gregorian::date currentResultDate_;
     };
 }

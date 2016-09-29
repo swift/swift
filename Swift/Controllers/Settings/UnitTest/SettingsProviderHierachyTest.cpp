@@ -4,6 +4,8 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
@@ -29,17 +31,11 @@ public:
     SettingsProviderHierachyTest() : setting1("somekey", 42) {}
 
     void setUp() {
-        bottom = new DummySettingsProvider();
-        top = new DummySettingsProvider();
-        testling = new SettingsProviderHierachy();
-        testling->addProviderToTopOfStack(bottom);
-        testling->addProviderToTopOfStack(top);
-    }
-
-    void tearDown() {
-        delete testling;
-        delete top;
-        delete bottom;
+        bottom = std::unique_ptr<DummySettingsProvider>(new DummySettingsProvider());
+        top = std::unique_ptr<DummySettingsProvider>(new DummySettingsProvider());
+        testling = std::unique_ptr<SettingsProviderHierachy>(new SettingsProviderHierachy());
+        testling->addProviderToTopOfStack(bottom.get());
+        testling->addProviderToTopOfStack(top.get());
     }
 
     void testEmpty() {
@@ -82,9 +78,9 @@ public:
         CPPUNIT_ASSERT_EQUAL(17, testling->getSetting(setting1));
     }
 private:
-    SettingsProviderHierachy* testling;
-    DummySettingsProvider* bottom;
-    DummySettingsProvider* top;
+    std::unique_ptr<SettingsProviderHierachy> testling;
+    std::unique_ptr<DummySettingsProvider> bottom;
+    std::unique_ptr<DummySettingsProvider> top;
     SettingsProvider::Setting<int> setting1;
 };
 

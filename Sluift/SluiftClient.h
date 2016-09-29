@@ -123,10 +123,10 @@ namespace Swift {
             Client* client;
             ClientOptions options;
             ClientXMLTracer* tracer;
-            bool rosterReceived;
+            bool rosterReceived = false;
             std::deque<Event> pendingEvents;
             boost::optional<ClientError> disconnectedError;
-            bool requestResponseReceived;
+            bool requestResponseReceived = false;
             std::shared_ptr<Payload> requestResponse;
             std::shared_ptr<ErrorPayload> requestError;
     };

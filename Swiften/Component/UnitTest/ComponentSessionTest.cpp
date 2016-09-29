@@ -214,7 +214,7 @@ class ComponentSessionTest : public CppUnit::TestFixture {
         };
 
         std::shared_ptr<MockSessionStream> server;
-        bool sessionFinishedReceived;
+        bool sessionFinishedReceived = false;
         std::shared_ptr<Error> sessionFinishedError;
         std::shared_ptr<CryptoProvider> crypto;
 };

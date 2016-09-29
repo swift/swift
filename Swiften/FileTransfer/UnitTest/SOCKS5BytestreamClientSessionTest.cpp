@@ -59,9 +59,9 @@ public:
         crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         destination = "092a44d859d19c9eed676b551ee80025903351c2";
         randomGen.seed(static_cast<unsigned int>(time(nullptr)));
-        eventLoop = new DummyEventLoop();
-        timerFactory = new DummyTimerFactory();
-        connection = std::make_shared<MockeryConnection>(failingPorts, true, eventLoop);
+        eventLoop = std::unique_ptr<DummyEventLoop>(new DummyEventLoop());
+        timerFactory = std::unique_ptr<DummyTimerFactory>(new DummyTimerFactory());
+        connection = std::make_shared<MockeryConnection>(failingPorts, true, eventLoop.get());
         //connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
         //stream1 = std::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg")));
 //        connection->onDataRead.connect(boost::bind(&SOCKS5BytestreamClientSessionTest::handleDataRead, this, _1));
@@ -69,15 +69,13 @@ public:
 
     void tearDown() {
         //connection.reset();
-        delete timerFactory;
-        delete eventLoop;
     }
 
     void testForSessionReady() {
         TestHelper helper;
         connection->onDataSent.connect(boost::bind(&TestHelper::handleConnectionDataWritten, &helper, _1));
 
-        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory);
+        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory.get());
         clientSession->onSessionReady.connect(boost::bind(&TestHelper::handleSessionReady, &helper, _1));
 
         clientSession->start();
@@ -103,7 +101,7 @@ public:
         TestHelper helper;
         connection->onDataSent.connect(boost::bind(&TestHelper::handleConnectionDataWritten, &helper, _1));
 
-        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory);
+        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory.get());
         clientSession->onSessionReady.connect(boost::bind(&TestHelper::handleSessionReady, &helper, _1));
 
         clientSession->start();
@@ -123,7 +121,7 @@ public:
         TestHelper helper;
         connection->onDataSent.connect(boost::bind(&TestHelper::handleConnectionDataWritten, &helper, _1));
 
-        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory);
+        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory.get());
         clientSession->onSessionReady.connect(boost::bind(&TestHelper::handleSessionReady, &helper, _1));
 
         clientSession->start();
@@ -150,7 +148,7 @@ public:
         TestHelper helper;
         connection->onDataSent.connect(boost::bind(&TestHelper::handleConnectionDataWritten, &helper, _1));
 
-        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory);
+        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory.get());
         clientSession->onSessionReady.connect(boost::bind(&TestHelper::handleSessionReady, &helper, _1));
 
         clientSession->start();
@@ -178,7 +176,7 @@ public:
         TestHelper helper;
         connection->onDataSent.connect(boost::bind(&TestHelper::handleConnectionDataWritten, &helper, _1));
 
-        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory);
+        SOCKS5BytestreamClientSession::ref clientSession = std::make_shared<SOCKS5BytestreamClientSession>(connection, destinationAddressPort, destination, timerFactory.get());
         clientSession->onSessionReady.connect(boost::bind(&TestHelper::handleSessionReady, &helper, _1));
 
         clientSession->start();
@@ -202,8 +200,6 @@ public:
 
         CPPUNIT_ASSERT_EQUAL(createByteArray(vecptr(transferData), transferData.size()), helper.unprocessedInput);
     }
-
-
 
 private:
     static ByteArray generateRandomByteArray(size_t len) {
@@ -308,8 +304,8 @@ private:
 private:
     HostAddressPort destinationAddressPort;
     std::string destination;
-    DummyEventLoop* eventLoop;
-    DummyTimerFactory* timerFactory;
+    std::unique_ptr<DummyEventLoop> eventLoop;
+    std::unique_ptr<DummyTimerFactory> timerFactory;
     std::shared_ptr<MockeryConnection> connection;
     const std::vector<HostAddressPort> failingPorts;
     std::shared_ptr<CryptoProvider> crypto;

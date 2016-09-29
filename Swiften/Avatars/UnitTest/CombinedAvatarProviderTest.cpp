@@ -4,6 +4,7 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <string>
 
 #include <boost/bind.hpp>
@@ -47,18 +48,13 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            avatarProvider1 = new DummyAvatarProvider();
-            avatarProvider2 = new DummyAvatarProvider();
+            avatarProvider1 = std::unique_ptr<DummyAvatarProvider>(new DummyAvatarProvider());
+            avatarProvider2 = std::unique_ptr<DummyAvatarProvider>(new DummyAvatarProvider());
             user1 = JID("user1@bar.com/bla");
             user2 = JID("user2@foo.com/baz");
             avatarHash1 = "ABCDEFG";
             avatarHash2 = "XYZU";
             avatarHash3 = "IDGH";
-        }
-
-        void tearDown() {
-            delete avatarProvider1;
-            delete avatarProvider2;
         }
 
         void testGetAvatarWithNoAvatarProviderReturnsEmpty() {
@@ -71,7 +67,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         void testGetAvatarWithSingleAvatarProvider() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider1->avatars[user1] = avatarHash1;
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
 
             boost::optional<std::string> hash = testling->getAvatarHash(user1);
             CPPUNIT_ASSERT(hash);
@@ -82,8 +78,8 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider2->avatars[user1] = avatarHash2;
-            testling->addProvider(avatarProvider1);
-            testling->addProvider(avatarProvider2);
+            testling->addProvider(avatarProvider1.get());
+            testling->addProvider(avatarProvider2.get());
 
             boost::optional<std::string> hash = testling->getAvatarHash(user1);
             CPPUNIT_ASSERT(hash);
@@ -93,8 +89,8 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         void testGetAvatarWithMultipleAvatarProviderAndFailingFirstProviderReturnsSecondAvatar() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider2->avatars[user1] = avatarHash2;
-            testling->addProvider(avatarProvider1);
-            testling->addProvider(avatarProvider2);
+            testling->addProvider(avatarProvider1.get());
+            testling->addProvider(avatarProvider2.get());
 
             boost::optional<std::string> hash = testling->getAvatarHash(user1);
             CPPUNIT_ASSERT(hash);
@@ -103,7 +99,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testProviderUpdateTriggersChange() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
 
@@ -113,8 +109,8 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testProviderUpdateWithoutChangeDoesNotTriggerChange() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
-            testling->addProvider(avatarProvider2);
+            testling->addProvider(avatarProvider1.get());
+            testling->addProvider(avatarProvider2.get());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
             changes.clear();
@@ -127,7 +123,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testProviderSecondUpdateTriggersChange() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
             changes.clear();
@@ -141,7 +137,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testProviderUpdateWithAvatarDisappearingTriggersChange() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
             changes.clear();
@@ -154,7 +150,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testProviderUpdateAfterAvatarDisappearedTriggersChange() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider1->onAvatarChanged(user1);
             avatarProvider1->avatars.clear();
@@ -170,7 +166,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testProviderUpdateAfterGetDoesNotTriggerChange() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
             avatarProvider1->avatars[user1] = avatarHash1;
 
             testling->getAvatarHash(user1);
@@ -181,9 +177,9 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
         void testRemoveProviderDisconnectsUpdates() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
-            testling->addProvider(avatarProvider1);
-            testling->addProvider(avatarProvider2);
-            testling->removeProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
+            testling->addProvider(avatarProvider2.get());
+            testling->removeProvider(avatarProvider1.get());
             avatarProvider1->avatars[user1] = avatarHash1;
             avatarProvider2->avatars[user1] = avatarHash2;
             avatarProvider1->onAvatarChanged(user1);
@@ -194,7 +190,7 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
         void testProviderUpdateBareJIDAfterGetFullJID() {
             std::shared_ptr<CombinedAvatarProvider> testling(createProvider());
             avatarProvider1->useBare = true;
-            testling->addProvider(avatarProvider1);
+            testling->addProvider(avatarProvider1.get());
 
             avatarProvider1->avatars[user1.toBare()] = avatarHash1;
             testling->getAvatarHash(user1);
@@ -366,8 +362,8 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
             std::vector<JID> mucs_;
         };
 
-        DummyAvatarProvider* avatarProvider1;
-        DummyAvatarProvider* avatarProvider2;
+        std::unique_ptr<DummyAvatarProvider> avatarProvider1;
+        std::unique_ptr<DummyAvatarProvider> avatarProvider2;
         JID user1;
         JID user2;
         std::string avatarHash1;

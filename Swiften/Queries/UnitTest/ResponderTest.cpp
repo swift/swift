@@ -32,18 +32,17 @@ class ResponderTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            channel_ = new DummyIQChannel();
-            router_ = new IQRouter(channel_);
+            channel_ = std::unique_ptr<DummyIQChannel>(new DummyIQChannel());
+            router_ = std::unique_ptr<IQRouter>(new IQRouter(channel_.get()));
             payload_ = std::make_shared<SoftwareVersion>("foo");
         }
 
         void tearDown() {
-            delete router_;
-            delete channel_;
+            router_.reset();
         }
 
         void testConstructor() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             channel_->onIQReceived(createRequest(IQ::Set));
 
@@ -51,7 +50,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testStart() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             testling.start();
             channel_->onIQReceived(createRequest(IQ::Set));
@@ -60,7 +59,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testStop() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             testling.start();
             testling.stop();
@@ -70,7 +69,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleIQ_Set() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             CPPUNIT_ASSERT(dynamic_cast<IQHandler*>(&testling)->handleIQ(createRequest(IQ::Set)));
 
@@ -80,7 +79,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleIQ_Get() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             CPPUNIT_ASSERT(dynamic_cast<IQHandler*>(&testling)->handleIQ(createRequest(IQ::Get)));
 
@@ -90,7 +89,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleIQ_Error() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(createRequest(IQ::Error)));
 
@@ -99,7 +98,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleIQ_Result() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(createRequest(IQ::Result)));
 
@@ -108,7 +107,7 @@ class ResponderTest : public CppUnit::TestFixture {
         }
 
         void testHandleIQ_NoPayload() {
-            MyResponder testling(router_);
+            MyResponder testling(router_.get());
 
             CPPUNIT_ASSERT(!dynamic_cast<IQHandler*>(&testling)->handleIQ(std::make_shared<IQ>(IQ::Get)));
 
@@ -150,8 +149,8 @@ class ResponderTest : public CppUnit::TestFixture {
         };
 
     private:
-        IQRouter* router_;
-        DummyIQChannel* channel_;
+        std::unique_ptr<IQRouter> router_;
+        std::unique_ptr<DummyIQChannel> channel_;
         std::shared_ptr<SoftwareVersion> payload_;
 };
 

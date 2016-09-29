@@ -29,7 +29,7 @@ namespace Swift {
 
 typedef std::pair<std::string, MUCOccupant> StringMUCOccupantPair;
 
-MUCImpl::MUCImpl(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry), createAsReservedIfNew(false), unlocking(false), isUnlocked_(false) {
+MUCImpl::MUCImpl(StanzaChannel* stanzaChannel, IQRouter* iqRouter, DirectedPresenceSender* presenceSender, const JID &muc, MUCRegistry* mucRegistry) : ownMUCJID(muc), stanzaChannel(stanzaChannel), iqRouter_(iqRouter), presenceSender(presenceSender), mucRegistry(mucRegistry) {
     scopedConnection_ = stanzaChannel->onPresenceReceived.connect(boost::bind(&MUCImpl::handleIncomingPresence, this, _1));
 }
 

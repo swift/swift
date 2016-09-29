@@ -157,7 +157,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
         }
 
     private:
-        int acksRequested;
+        int acksRequested = 0;
         std::vector< std::shared_ptr<Stanza> > ackedStanzas;
 };
 

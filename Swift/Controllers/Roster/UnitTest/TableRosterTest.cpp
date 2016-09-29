@@ -13,10 +13,11 @@ std::ostream& operator<<(std::ostream& os, const Swift::TableRoster::Index& i) {
     return os;
 }
 
+#include <memory>
+
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <memory>
 #include <boost/variant.hpp>
 
 #include <Swiften/Network/DummyTimerFactory.h>
@@ -33,15 +34,10 @@ class TableRosterTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            timerFactory = new DummyTimerFactory();
-            roster = new Roster();
+            timerFactory = std::unique_ptr<DummyTimerFactory>(new DummyTimerFactory());
+            roster = std::unique_ptr<Roster>(new Roster());
             jid1 = JID("jid1@example.com");
             jid2 = JID("jid2@example.com");
-        }
-
-        void tearDown() {
-            delete roster;
-            delete timerFactory;
         }
 
         void testAddContact_EmptyRoster() {
@@ -73,7 +69,7 @@ class TableRosterTest : public CppUnit::TestFixture {
         }
 
         TableRoster* createTestling() {
-            TableRoster* result = new TableRoster(roster, timerFactory, 10);
+            TableRoster* result = new TableRoster(roster.get(), timerFactory.get(), 10);
             result->onUpdate.connect(boost::bind(&TableRosterTest::handleUpdate, this, _1));
             return result;
         }
@@ -83,8 +79,8 @@ class TableRosterTest : public CppUnit::TestFixture {
         }
 
     private:
-        DummyTimerFactory* timerFactory;
-        Roster* roster;
+        std::unique_ptr<DummyTimerFactory> timerFactory;
+        std::unique_ptr<Roster> roster;
         JID jid1;
         JID jid2;
         std::vector<TableRoster::Update> updates;

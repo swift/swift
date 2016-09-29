@@ -54,6 +54,6 @@ namespace Swift {
     private:
         std::string id_;
         std::string parentID_;
-        int pos_;
+        int pos_ = 0;
     };
 }

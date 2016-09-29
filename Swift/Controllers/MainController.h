@@ -187,7 +187,7 @@ namespace Swift {
             int timeBeforeNextReconnect_;
             Timer::ref reconnectTimer_;
             StatusTracker* statusTracker_;
-            bool myStatusLooksOnline_;
+            bool myStatusLooksOnline_ = false;
             bool quitRequested_;
             bool offlineRequested_;
             static const int SecondsToWaitBeforeForceQuitting;

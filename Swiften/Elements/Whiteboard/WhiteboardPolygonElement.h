@@ -67,6 +67,6 @@ namespace Swift {
         std::vector<Point> points_;
         WhiteboardColor penColor_;
         WhiteboardColor brushColor_;
-        int penWidth_;
+        int penWidth_ = 0;
     };
 }

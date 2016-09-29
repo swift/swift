@@ -14,7 +14,7 @@
 namespace Swift {
     class MockChatWindow : public ChatWindow {
         public:
-            MockChatWindow() : labelsEnabled_(false), impromptuMUCSupported_(false) {}
+            MockChatWindow() {}
             virtual ~MockChatWindow();
 
             virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
@@ -128,21 +128,21 @@ namespace Swift {
             std::string name_;
             ChatMessage lastAddedMessage_;
             std::string lastAddedMessageSenderName_;
-            bool lastAddedMessageSenderIsSelf_;
+            bool lastAddedMessageSenderIsSelf_ = false;
             ChatMessage lastAddedAction_;
             std::string lastAddedActionSenderName_;
-            bool lastAddedActionSenderIsSelf_;
+            bool lastAddedActionSenderIsSelf_ = false;
             ChatMessage lastAddedPresence_;
             ChatMessage lastReplacedMessage_;
             ChatMessage lastAddedSystemMessage_;
             ChatMessage lastReplacedSystemMessage_;
-			ChatMessage lastAddedErrorMessage_;
+            ChatMessage lastAddedErrorMessage_;
             JID lastMUCInvitationJID_;
             std::vector<SecurityLabelsCatalog::Item> labels_;
-            bool labelsEnabled_;
-            bool impromptuMUCSupported_;
+            bool labelsEnabled_ = false;
+            bool impromptuMUCSupported_ = false;
             SecurityLabelsCatalog::Item label_;
-            Roster* roster_;
+            Roster* roster_ = nullptr;
             std::vector<std::pair<std::string, ReceiptState>> receiptChanges_;
     };
 }

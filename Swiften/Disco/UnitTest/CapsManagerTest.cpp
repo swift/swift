@@ -4,6 +4,7 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
 #include <vector>
 
 #include <boost/bind.hpp>
@@ -46,9 +47,9 @@ class CapsManagerTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-            stanzaChannel = new DummyStanzaChannel();
-            iqRouter = new IQRouter(stanzaChannel);
-            storage = new CapsMemoryStorage();
+            stanzaChannel = std::unique_ptr<DummyStanzaChannel>(new DummyStanzaChannel());
+            iqRouter = std::unique_ptr<IQRouter>(new IQRouter(stanzaChannel.get()));
+            storage = std::unique_ptr<CapsMemoryStorage>(new CapsMemoryStorage());
             user1 = JID("user1@bar.com/bla");
             discoInfo1 = std::make_shared<DiscoInfo>();
             discoInfo1->addFeature("http://swift.im/feature1");
@@ -63,9 +64,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
         }
 
         void tearDown() {
-            delete storage;
-            delete iqRouter;
-            delete stanzaChannel;
+            iqRouter.reset();
         }
 
         void testReceiveNewHashRequestsDisco() {
@@ -251,7 +250,7 @@ class CapsManagerTest : public CppUnit::TestFixture {
 
     private:
         std::shared_ptr<CapsManager> createManager() {
-            std::shared_ptr<CapsManager> manager(new CapsManager(storage, stanzaChannel, iqRouter, crypto.get()));
+            std::shared_ptr<CapsManager> manager(new CapsManager(storage.get(), stanzaChannel.get(), iqRouter.get(), crypto.get()));
             manager->setWarnOnInvalidHash(false);
             //manager->onCapsChanged.connect(boost::bind(&CapsManagerTest::handleCapsChanged, this, _1));
             return manager;
@@ -273,9 +272,9 @@ class CapsManagerTest : public CppUnit::TestFixture {
         }
 
     private:
-        DummyStanzaChannel* stanzaChannel;
-        IQRouter* iqRouter;
-        CapsStorage* storage;
+        std::unique_ptr<DummyStanzaChannel> stanzaChannel;
+        std::unique_ptr<IQRouter> iqRouter;
+        std::unique_ptr<CapsStorage> storage;
         std::vector<JID> changes;
         JID user1;
         std::shared_ptr<DiscoInfo> discoInfo1;

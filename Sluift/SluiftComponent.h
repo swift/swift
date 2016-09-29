@@ -102,7 +102,7 @@ namespace Swift {
             ComponentXMLTracer* tracer;
             std::deque<Event> pendingEvents;
             boost::optional<ComponentError> disconnectedError;
-            bool requestResponseReceived;
+            bool requestResponseReceived = false;
             std::shared_ptr<Payload> requestResponse;
             std::shared_ptr<ErrorPayload> requestError;
     };

@@ -117,13 +117,13 @@ namespace Swift {
             DirectedPresenceSender* presenceSender;
             MUCRegistry* mucRegistry;
             std::map<std::string, MUCOccupant> occupants;
-            bool joinSucceeded_;
-            bool joinComplete_;
+            bool joinSucceeded_ = false;
+            bool joinComplete_ = false;
             boost::signals2::scoped_connection scopedConnection_;
             boost::posix_time::ptime joinSince_;
-            bool createAsReservedIfNew;
-            bool unlocking;
-            bool isUnlocked_;
+            bool createAsReservedIfNew = false;
+            bool unlocking = false;
+            bool isUnlocked_ = false;
             boost::optional<std::string> password;
             Presence::ref joinRequestPresence_;
     };

@@ -4,6 +4,8 @@
  * See the COPYING file for more information.
  */
 
+#include <memory>
+
 #include <boost/bind.hpp>
 
 #include <QA/Checker/IO.h>
@@ -32,14 +34,9 @@ class CertificateTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            pathProvider = new PlatformApplicationPathProvider("FileReadBytestreamTest");
+            pathProvider = std::unique_ptr<PlatformApplicationPathProvider>(new PlatformApplicationPathProvider("FileReadBytestreamTest"));
             readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt"));
-            certificateFactory = new CERTIFICATE_FACTORY();
-        }
-
-        void tearDown() {
-            delete certificateFactory;
-            delete pathProvider;
+            certificateFactory = std::unique_ptr<CertificateFactory>(new CERTIFICATE_FACTORY());
         }
 
         void testConstructFromDER() {
@@ -92,9 +89,9 @@ class CertificateTest : public CppUnit::TestFixture {
         }
 
     private:
-        PlatformApplicationPathProvider* pathProvider;
+        std::unique_ptr<PlatformApplicationPathProvider> pathProvider;
         ByteArray certificateData;
-        CertificateFactory* certificateFactory;
+        std::unique_ptr<CertificateFactory> certificateFactory;
 };
 
 #ifdef HAVE_OPENSSL

@@ -98,7 +98,7 @@ namespace Swift {
             UIEventStream* eventStream_;
 
             Tristate contactSupportsReceipts_;
-            bool receivingPresenceFromUs_;
+            bool receivingPresenceFromUs_ = false;
             bool userWantsReceipts_;
             std::map<std::string, FileTransferController*> ftControllers;
             SettingsProvider* settings_;

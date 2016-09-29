@@ -76,7 +76,6 @@ namespace Swift {
         QHBoxLayout* fillLayout;
         ColorWidget* strokeColor;
         ColorWidget* fillColor;
-        QWidget* widget;
         QPushButton* moveUpButton;
         QPushButton* moveDownButton;
         QSpinBox* widthBox;

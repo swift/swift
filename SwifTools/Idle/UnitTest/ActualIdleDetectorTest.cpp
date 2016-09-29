@@ -30,14 +30,9 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            querier = new MockIdleQuerier();
-            timerFactory = new MockTimerFactory();
+            querier = std::unique_ptr<MockIdleQuerier>(new MockIdleQuerier());
+            timerFactory = std::unique_ptr<MockTimerFactory>(new MockTimerFactory());
             idleEvents.clear();
-        }
-
-        void tearDown() {
-            delete timerFactory;
-            delete querier;
         }
 
         void testDestructor()  {
@@ -101,7 +96,7 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
 
     private:
         ActualIdleDetector* createDetector() {
-            ActualIdleDetector* detector = new ActualIdleDetector(querier, timerFactory, 10);
+            ActualIdleDetector* detector = new ActualIdleDetector(querier.get(), timerFactory.get(), 10);
             detector->onIdleChanged.connect(boost::bind(&ActualIdleDetectorTest::handleIdle, this, _1));
             return detector;
         }
@@ -165,8 +160,8 @@ class ActualIdleDetectorTest : public CppUnit::TestFixture {
             std::vector<std::shared_ptr<MockTimer> > timers;
         };
 
-        MockIdleQuerier* querier;
-        MockTimerFactory* timerFactory;
+        std::unique_ptr<MockIdleQuerier> querier;
+        std::unique_ptr<MockTimerFactory> timerFactory;
         std::vector<bool> idleEvents;
 };
 

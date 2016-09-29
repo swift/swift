@@ -78,7 +78,7 @@ namespace Swift {
             enum { Start, Initializing, Initialized } state;
             SOCKS5BytestreamServer* server;
             std::shared_ptr<ConnectionServer> connectionServer;
-            int connectionServerPort;
+            int connectionServerPort = -1;
 
             std::shared_ptr<NATTraversalGetPublicIPRequest> getPublicIPRequest;
             std::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest;

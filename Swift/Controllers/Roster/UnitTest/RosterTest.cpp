@@ -30,11 +30,7 @@ class RosterTest : public CppUnit::TestFixture {
             jid1_ = JID("a@b.c");
             jid2_ = JID("b@c.d");
             jid3_ = JID("c@d.e");
-            roster_ = new Roster();
-        }
-
-        void tearDown() {
-            delete roster_;
+            roster_ = std::unique_ptr<Roster>(new Roster());
         }
 
         void testGetGroup() {
@@ -136,7 +132,7 @@ class RosterTest : public CppUnit::TestFixture {
         }
 
     private:
-        Roster *roster_;
+        std::unique_ptr<Roster> roster_;
         JID jid1_;
         JID jid2_;
         JID jid3_;

@@ -34,17 +34,16 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            channel = new DummyIQChannel();
-            router = new IQRouter(channel);
+            channel = std::unique_ptr<DummyIQChannel>(new DummyIQChannel());
+            router = std::unique_ptr<IQRouter>(new IQRouter(channel.get()));
         }
 
         void tearDown() {
-            delete router;
-            delete channel;
+            router.reset();
         }
 
         void testSend() {
-            GetPrivateStorageRequest<MyPayload>::ref request = GetPrivateStorageRequest<MyPayload>::create(router);
+            GetPrivateStorageRequest<MyPayload>::ref request = GetPrivateStorageRequest<MyPayload>::create(router.get());
             request->send();
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(channel->iqs_.size()));
@@ -57,7 +56,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
         }
 
         void testHandleResponse() {
-            GetPrivateStorageRequest<MyPayload>::ref testling = GetPrivateStorageRequest<MyPayload>::create(router);
+            GetPrivateStorageRequest<MyPayload>::ref testling = GetPrivateStorageRequest<MyPayload>::create(router.get());
             testling->onResponse.connect(boost::bind(&GetPrivateStorageRequestTest::handleResponse, this, _1, _2));
             testling->send();
             channel->onIQReceived(createResponse("test-id", "foo"));
@@ -67,7 +66,7 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
         }
 
         void testHandleResponse_Error() {
-            GetPrivateStorageRequest<MyPayload>::ref testling = GetPrivateStorageRequest<MyPayload>::create(router);
+            GetPrivateStorageRequest<MyPayload>::ref testling = GetPrivateStorageRequest<MyPayload>::create(router.get());
             testling->onResponse.connect(boost::bind(&GetPrivateStorageRequestTest::handleResponse, this, _1, _2));
             testling->send();
             channel->onIQReceived(createError("test-id"));
@@ -102,8 +101,8 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
         }
 
     private:
-        IQRouter* router;
-        DummyIQChannel* channel;
+        std::unique_ptr<IQRouter> router;
+        std::unique_ptr<DummyIQChannel> channel;
         std::vector< ErrorPayload > errors;
         std::vector< std::shared_ptr<Payload> > responses;
 };

@@ -59,6 +59,6 @@ namespace Swift {
     private:
         std::vector<Point> points_;
         WhiteboardColor color_;
-        int penWidth_;
+        int penWidth_ = 0;
     };
 }

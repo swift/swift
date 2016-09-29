@@ -68,13 +68,13 @@ class QtTreeWidget : public QTreeView {
 
     private:
         RosterModel* model_;
-        Roster* roster_;
+        Roster* roster_ = nullptr;
         RosterDelegate* delegate_;
-        QtTreeWidgetItem* treeRoot_;
+        QtTreeWidgetItem* treeRoot_ = nullptr;
         SettingsProvider* settings_;
-        bool tooltipShown_;
+        bool tooltipShown_ = false;
         MessageTarget messageTarget_;
-        bool isOnline_;
+        bool isOnline_ = false;
 };
 
 }

@@ -29,7 +29,7 @@ namespace Swift {
         private:
             std::shared_ptr<boost::asio::io_service> ioService_;
 
-            bool isEventInASIOEventLoop_;
+            bool isEventInASIOEventLoop_ = false;
             std::recursive_mutex isEventInASIOEventLoopMutex_;
     };
 }
