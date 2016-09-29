@@ -262,11 +262,23 @@ void SecureTransportContext::verifyServerCertificate() {
                 verificationError_ = std::make_shared<CertificateVerificationError>(CertificateVerificationError::UnknownError);
             }
             break;
-        case kSecTrustResultOtherError:
+        case kSecTrustResultInvalid:
             verificationError_ = std::make_shared<CertificateVerificationError>(CertificateVerificationError::UnknownError);
             break;
-        default:
-            SWIFT_LOG(warning) << "Unhandled trust result " << trustResult << "." << std::endl;
+        case kSecTrustResultConfirm:
+            // TODO: Confirmation from the user is required before proceeding.
+            verificationError_ = std::make_shared<CertificateVerificationError>(CertificateVerificationError::UnknownError);
+            break;
+        case kSecTrustResultDeny:
+            // The user specified that the certificate should not be trusted.
+            verificationError_ =  std::make_shared<CertificateVerificationError>(CertificateVerificationError::Untrusted);
+            break;
+        case kSecTrustResultFatalTrustFailure:
+            // Trust denied; no simple fix is available.
+            verificationError_ = std::make_shared<CertificateVerificationError>(CertificateVerificationError::UnknownError);
+            break;
+        case kSecTrustResultOtherError:
+            verificationError_ = std::make_shared<CertificateVerificationError>(CertificateVerificationError::UnknownError);
             break;
     }
 
