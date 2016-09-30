@@ -50,7 +50,7 @@ static QPixmap cropToBiggestCenteredSquare(const QPixmap& input) {
 
 QString QtScaledAvatarCache::getScaledAvatarPath(const QString& path) {
     QFileInfo avatarFile(path);
-    if (avatarFile.exists()) {
+    if (avatarFile.exists() && !avatarFile.absolutePath().startsWith(":/")) {
         QString cacheSubPath = QString("ScaledAvatarCacheV%1/%2").arg(QString::number(QT_SCALED_AVATAR_CACHE_VERSION), QString::number(size));
         if (!avatarFile.dir().mkpath(cacheSubPath)) {
             SWIFT_LOG(error) << "avatarFile.dir(): " << Q2PSTRING(avatarFile.dir().absolutePath()) << std::endl;
