@@ -7,7 +7,6 @@
 #include <Swiften/Network/HostAddress.h>
 
 #include <cassert>
-#include <stdexcept>
 #include <string>
 
 #include <boost/array.hpp>
@@ -15,6 +14,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/foreach.h>
+#include <Swiften/Base/Log.h>
 
 static boost::asio::ip::address localhost4 = boost::asio::ip::address(boost::asio::ip::address_v4::loopback());
 static boost::asio::ip::address localhost6 = boost::asio::ip::address(boost::asio::ip::address_v6::loopback());
@@ -25,10 +25,10 @@ HostAddress::HostAddress() {
 }
 
 HostAddress::HostAddress(const std::string& address) {
-    try {
-        address_ = boost::asio::ip::address::from_string(address);
-    }
-    catch (const std::exception&) {
+    boost::system::error_code errorCode;
+    address_ = boost::asio::ip::address::from_string(address, errorCode);
+    if (errorCode) {
+        SWIFT_LOG(warning) << "error: " << errorCode.message() << std::endl;
     }
 }
 
@@ -54,7 +54,15 @@ HostAddress::HostAddress(const boost::asio::ip::address& address) : address_(add
 }
 
 std::string HostAddress::toString() const {
-    return address_.to_string();
+    std::string addressString;
+    boost::system::error_code errorCode;
+
+    addressString = address_.to_string(errorCode);
+    if (errorCode) {
+        SWIFT_LOG(debug) << "error: " << errorCode.message() << std::endl;
+    }
+
+    return addressString;
 }
 
 bool HostAddress::isValid() const {
