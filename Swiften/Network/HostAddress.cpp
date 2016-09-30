@@ -7,13 +7,9 @@
 #include <Swiften/Network/HostAddress.h>
 
 #include <cassert>
+#include <cstring>
 #include <string>
 
-#include <boost/array.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
 
 static boost::asio::ip::address localhost4 = boost::asio::ip::address(boost::asio::ip::address_v4::loopback());
@@ -36,16 +32,12 @@ HostAddress::HostAddress(const unsigned char* address, size_t length) {
     assert(length == 4 || length == 16);
     if (length == 4) {
         boost::asio::ip::address_v4::bytes_type data;
-        for (size_t i = 0; i < length; ++i) {
-            data[i] = address[i];
-        }
+        std::memcpy(data.data(), address, length);
         address_ = boost::asio::ip::address(boost::asio::ip::address_v4(data));
     }
     else {
         boost::asio::ip::address_v6::bytes_type data;
-        for (size_t i = 0; i < length; ++i) {
-            data[i] = address[i];
-        }
+        std::memcpy(data.data(), address, length);
         address_ = boost::asio::ip::address(boost::asio::ip::address_v6(data));
     }
 }
