@@ -6,11 +6,9 @@
 
 #pragma once
 
-#include <iostream>
 #include <list>
 #include <string>
 #include <utility>
-#include <vector>
 
 #include <boost/filesystem/path.hpp>
 
@@ -18,6 +16,7 @@
 
 namespace Swift {
     class ApplicationPathProvider;
+
     class StatusCache {
         public:
             typedef std::pair<std::string, StatusShow::Type> PreviousStatus;
@@ -27,9 +26,11 @@ namespace Swift {
 
             std::vector<PreviousStatus> getMatches(const std::string& substring, size_t maxCount) const;
             void addRecent(const std::string& text, StatusShow::Type type);
+
         private:
             void saveRecents();
             void loadRecents();
+
         private:
             boost::filesystem::path path_;
             std::list<PreviousStatus> previousStatuses_;
