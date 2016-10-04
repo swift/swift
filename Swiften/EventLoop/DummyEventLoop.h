@@ -6,8 +6,7 @@
 
 #pragma once
 
-#include <deque>
-#include <mutex>
+#include <atomic>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/EventLoop/EventLoop.h>
@@ -25,7 +24,6 @@ namespace Swift {
             virtual void eventPosted();
 
         private:
-            bool hasEvents_;
-            std::mutex hasEventsMutex_;
+            std::atomic<bool> hasEvents_ = ATOMIC_VAR_INIT(false);
     };
 }

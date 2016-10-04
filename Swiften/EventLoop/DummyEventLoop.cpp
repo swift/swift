@@ -6,16 +6,16 @@
 
 #include <Swiften/EventLoop/DummyEventLoop.h>
 
-#include <iostream>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
-DummyEventLoop::DummyEventLoop() : hasEvents_(false) {
+DummyEventLoop::DummyEventLoop() {
 }
 
 DummyEventLoop::~DummyEventLoop() {
     if (hasEvents()) {
-        std::cerr << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
+        SWIFT_LOG(warning) << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
     }
 }
 
@@ -27,12 +27,10 @@ void DummyEventLoop::processEvents() {
 }
 
 bool DummyEventLoop::hasEvents() {
-    std::lock_guard<std::mutex> lock(hasEventsMutex_);
     return hasEvents_;
 }
 
 void DummyEventLoop::eventPosted() {
-    std::lock_guard<std::mutex> lock(hasEventsMutex_);
     hasEvents_ = true;
 }
 
