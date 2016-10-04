@@ -12,7 +12,7 @@
 #include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/HostAddressPort.h>
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 
 namespace Swift {
 	class SWIFTEN_API ConnectionServer {

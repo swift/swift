@@ -7,7 +7,7 @@
 #pragma once
 
 #include <boost/shared_ptr.hpp>
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/boost_bsignals.h>

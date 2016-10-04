@@ -7,7 +7,7 @@
 #pragma once
 
 #include <string>
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 #include <Sluift/Completer.h>
 #include <Swiften/Base/Override.h>
 

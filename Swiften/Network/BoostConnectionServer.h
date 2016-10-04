@@ -16,7 +16,7 @@
 #include <Swiften/Network/BoostConnection.h>
 #include <Swiften/Network/ConnectionServer.h>
 #include <Swiften/EventLoop/EventOwner.h>
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 
 namespace Swift {
 	class SWIFTEN_API BoostConnectionServer : public ConnectionServer, public EventOwner, public boost::enable_shared_from_this<BoostConnectionServer> {

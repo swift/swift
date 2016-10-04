@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/Base/API.h>
