@@ -101,7 +101,7 @@ void QtVCardWidget::setEditable(bool editable) {
 
     ui->photoAndName->setProperty("editable", QVariant(editable));
 
-    foreach(QtVCardGeneralField* field, fields) {
+    for (auto field : fields) {
         field->setEditable(editable);
     }
     toolButton->setVisible(editable);
@@ -121,7 +121,7 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
     ui->photoAndName->setSuffix(P2QSTRING(vcard->getSuffix()));
     ui->photoAndName->setAvatar(vcard->getPhoto(), vcard->getPhotoType());
 
-    foreach (const VCard::EMailAddress& address, vcard->getEMailAddresses()) {
+    for (const auto& address : vcard->getEMailAddresses()) {
         if (address.isInternet) {
             QtVCardInternetEMailField* internetEmailField = new QtVCardInternetEMailField(this, ui->cardFields);
             internetEmailField->initialize();
@@ -130,21 +130,21 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
         }
     }
 
-    foreach (const VCard::Telephone& telephone, vcard->getTelephones()) {
+    for (const auto& telephone : vcard->getTelephones()) {
         QtVCardTelephoneField* telField = new QtVCardTelephoneField(this, ui->cardFields);
         telField->initialize();
         telField->setTelephone(telephone);
         appendField(telField);
     }
 
-    foreach (const VCard::Address& address, vcard->getAddresses()) {
+    for (const auto& address : vcard->getAddresses()) {
         QtVCardAddressField* addressField = new QtVCardAddressField(this, ui->cardFields);
         addressField->initialize();
         addressField->setAddress(address);
         appendField(addressField);
     }
 
-    foreach (const VCard::AddressLabel& label, vcard->getAddressLabels()) {
+    for (const auto& label : vcard->getAddressLabels()) {
         QtVCardAddressLabelField* addressLabelField = new QtVCardAddressLabelField(this, ui->cardFields);
         addressLabelField->initialize();
         addressLabelField->setAddressLabel(label);
@@ -158,7 +158,7 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
         appendField(bdayField);
     }
 
-    foreach (const JID& jid, vcard->getJIDs()) {
+    for (const auto& jid : vcard->getJIDs()) {
         QtVCardJIDField* jidField = new QtVCardJIDField(this, ui->cardFields);
         jidField->initialize();
         jidField->setJID(jid);
@@ -172,28 +172,28 @@ void QtVCardWidget::setVCard(VCard::ref vcard) {
         appendField(descField);
     }
 
-    foreach (const VCard::Organization& org, vcard->getOrganizations()) {
+    for (const auto& org : vcard->getOrganizations()) {
         QtVCardOrganizationField* orgField = new QtVCardOrganizationField(this, ui->cardFields);
         orgField->initialize();
         orgField->setOrganization(org);
         appendField(orgField);
     }
 
-    foreach (const std::string& role, vcard->getRoles()) {
+    for (const auto& role : vcard->getRoles()) {
         QtVCardRoleField* roleField = new QtVCardRoleField(this, ui->cardFields);
         roleField->initialize();
         roleField->setRole(role);
         appendField(roleField);
     }
 
-    foreach (const std::string& title, vcard->getTitles()) {
+    for (const auto& title : vcard->getTitles()) {
         QtVCardTitleField* titleField = new QtVCardTitleField(this, ui->cardFields);
         titleField->initialize();
         titleField->setTitle(title);
         appendField(titleField);
     }
 
-    foreach (const std::string& url, vcard->getURLs()) {
+    for (const auto& url : vcard->getURLs()) {
         QtVCardURLField* urlField = new QtVCardURLField(this, ui->cardFields);
         urlField->initialize();
         urlField->setURL(url);
@@ -230,7 +230,7 @@ VCard::ref QtVCardWidget::getVCard() {
     QtVCardBirthdayField* bdayField = nullptr;
     QtVCardDescriptionField* descriptionField = nullptr;
 
-    foreach(QtVCardGeneralField* field, fields) {
+    for (auto field : fields) {
         QtVCardInternetEMailField* emailField;
         if ((emailField = dynamic_cast<QtVCardInternetEMailField*>(field))) {
             vcard->addEMailAddress(emailField->getInternetEMailAddress());
@@ -317,16 +317,16 @@ void QtVCardWidget::addField() {
         QtVCardGeneralField* newGeneralField = dynamic_cast<QtVCardGeneralField*>(newField);
         if (newGeneralField) {
             newGeneralField->initialize();
+            appendField(newGeneralField);
+            relayoutToolButton();
         }
-        appendField(newGeneralField);
-        relayoutToolButton();
     }
 }
 
 void QtVCardWidget::removeField(QtVCardGeneralField *field) {
     int sameFields = 0;
     QtVCardGeneralField* fieldToChange = nullptr;
-    foreach (QtVCardGeneralField* vcardField, fields) {
+    for (auto vcardField : fields) {
         if ((vcardField != field) && (typeid(*vcardField) == typeid(*field))) {
             sameFields++;
             fieldToChange = vcardField;
@@ -376,7 +376,7 @@ void layoutDeleteChildren(QLayout *layout) {
 }
 
 void QtVCardWidget::clearFields() {
-    foreach(QtVCardGeneralField* field, fields) {
+    for (auto field : fields) {
         delete field;
     }
     fields.clear();
@@ -387,7 +387,7 @@ void QtVCardWidget::clearFields() {
 
 void QtVCardWidget::clearEmptyFields() {
     std::vector<QtVCardGeneralField*> items_to_remove;
-    foreach (QtVCardGeneralField* field, fields) {
+    for (auto field : fields) {
         if (field->property("empty").isValid() && field->property("empty").toBool()) {
             ui->cardFields->removeWidget(field);
             items_to_remove.push_back(field);
@@ -395,7 +395,7 @@ void QtVCardWidget::clearEmptyFields() {
         }
     }
 
-    foreach(QtVCardGeneralField* field, items_to_remove) {
+    for (auto field : items_to_remove) {
         fields.remove(field);
     }
 }
@@ -404,7 +404,7 @@ void QtVCardWidget::appendField(QtVCardGeneralField *field) {
     connect(field, SIGNAL(deleteField(QtVCardGeneralField*)), SLOT(removeField(QtVCardGeneralField*)));
 
     QtVCardGeneralField* fieldToChange = nullptr;
-    foreach (QtVCardGeneralField* vcardField, fields) {
+    for (auto vcardField : fields) {
         if (typeid(*vcardField) == typeid(*field)) {
             fieldToChange = vcardField;
             break;
