@@ -12,9 +12,6 @@
 
 #include <Swiften/Network/SOCKS5ProxiedConnection.h>
 
-#include <iostream>
-#include <thread>
-
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/ByteArray.h>
@@ -82,7 +79,7 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByte
                         return;
                     }
                     catch(...) {
-                        std::cerr << "exception caught" << std::endl;
+                        SWIFT_LOG(error) << "exception caught" << std::endl;
                     }
                     write(socksConnect);
                     break;
@@ -116,7 +113,7 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByte
             setProxyInitializeFinished(true);
         }
         else {
-            std::cerr << "SOCKS Proxy returned an error: " << std::hex << (*data)[1] << std::endl;
+            SWIFT_LOG(error) << "SOCKS Proxy returned an error: " << std::hex << (*data)[1] << std::endl;
             setProxyInitializeFinished(false);
         }
     }
