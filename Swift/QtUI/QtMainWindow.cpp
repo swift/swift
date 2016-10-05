@@ -6,9 +6,10 @@
 
 #include <Swift/QtUI/QtMainWindow.h>
 
+#include <memory>
+
 #include <boost/bind.hpp>
 #include <boost/optional.hpp>
-#include <memory>
 
 #include <QAction>
 #include <QBoxLayout>
@@ -357,7 +358,7 @@ void QtMainWindow::setMyStatusType(StatusShow::Type type) {
     const bool online = (type != StatusShow::None);
     treeWidget_->setOnline(online);
     chatListWindow_->setOnline(online);
-    foreach (QAction *action, onlineOnlyActions_) {
+    for (auto action : onlineOnlyActions_) {
         action->setEnabled(online);
     }
     serverAdHocMenu_->setEnabled(online);
@@ -392,18 +393,19 @@ void QtMainWindow::openCertificateDialog(const std::vector<Certificate::ref>& ch
 void QtMainWindow::handleAdHocActionTriggered(bool /*checked*/) {
     QAction* action = qobject_cast<QAction*>(sender());
     assert(action);
+    assert(serverAdHocCommandActions_.indexOf(action) >= 0);
     DiscoItems::Item command = serverAdHocCommands_[serverAdHocCommandActions_.indexOf(action)];
     uiEventStream_->send(std::make_shared<RequestAdHocUIEvent>(command));
 }
 
 void QtMainWindow::setAvailableAdHocCommands(const std::vector<DiscoItems::Item>& commands) {
     serverAdHocCommands_ = commands;
-    foreach (QAction* action, serverAdHocCommandActions_) {
+    for (auto action : serverAdHocCommandActions_) {
         delete action;
     }
     serverAdHocMenu_->clear();
     serverAdHocCommandActions_.clear();
-    foreach (DiscoItems::Item command, commands) {
+    for (const auto& command : commands) {
         QAction* action = new QAction(P2QSTRING(command.getName()), this);
         connect(action, SIGNAL(triggered(bool)), this, SLOT(handleAdHocActionTriggered(bool)));
         serverAdHocMenu_->addAction(action);

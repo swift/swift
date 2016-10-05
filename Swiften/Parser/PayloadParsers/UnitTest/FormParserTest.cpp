@@ -33,6 +33,7 @@ class FormParserTest : public CppUnit::TestFixture {
                 ));
 
             Form* payload = dynamic_cast<Form*>(parser.getPayload().get());
+            CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT_EQUAL(std::string("Bot Configuration"), payload->getTitle());
             CPPUNIT_ASSERT_EQUAL(std::string("Hello!\nFill out this form to configure your new bot!"), payload->getInstructions());
             CPPUNIT_ASSERT_EQUAL(Form::SubmitType, payload->getType());
@@ -65,6 +66,7 @@ class FormParserTest : public CppUnit::TestFixture {
                 "</x>"));
 
             Form* payload = dynamic_cast<Form*>(parser.getPayload().get());
+            CPPUNIT_ASSERT(payload);
             CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(payload->getFields().size()));
             // PAGE ONE - parsing of element types
             CPPUNIT_ASSERT_EQUAL(std::string("P1"), payload->getPages()[0]->getLabel());
@@ -126,6 +128,7 @@ class FormParserTest : public CppUnit::TestFixture {
                     "</x>"));
 
             Form* payload = dynamic_cast<Form*>(parser.getPayload().get());
+            CPPUNIT_ASSERT(payload);
 
             CPPUNIT_ASSERT_EQUAL(10, static_cast<int>(payload->getFields().size()));
             CPPUNIT_ASSERT_EQUAL(std::string("jabber:bot"), payload->getFields()[0]->getValues()[0]);
