@@ -21,6 +21,7 @@ testSystems = [
     "bento/debian-8.5",
     "bento/opensuse-leap-42.1",
     "bento/fedora-24",
+    "Sabayon/spinbase-amd64"
 ]
 
 progressBar = tqdm(testSystems)
@@ -40,7 +41,7 @@ Vagrant.configure("2") do |config|
     config.ssh.insert_key = false
 
     config.vm.provider "virtualbox" do |v|
-        v.memory = 3072
+        v.memory = 4096
         v.cpus = 2
     end
 
@@ -48,6 +49,10 @@ Vagrant.configure("2") do |config|
     # on the target system for some features.
     if config.vm.box.include? "fedora"
         config.vm.provision "shell", inline: "sudo dnf install -y python2 python2-dnf libselinux-python"
+    end
+
+    if config.vm.box.include? "Sabayon"
+        config.vm.provision "shell", inline: "sudo equo update && sudo env ACCEPT_LICENSE=* equo install dev-vcs/git sys-apps/lsb-release"
     end
 
     config.vm.synced_folder "../..", "/home/vagrant/swift-host", type: "rsync"

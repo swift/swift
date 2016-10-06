@@ -25,6 +25,9 @@ then
     then
         sudo dnf groups install "C Development Tools and Libraries"
         sudo dnf install openssl-devel qt5-qtbase-devel qt5-linguist qt5-qtwebkit-devel qt5-qtmultimedia-devel qt5-qtx11extras-devel qt5-qtsvg-devel hunspell-devel
+    elif [ "$SYSTEM_DISTRO" == "Sabayon" ]
+    then
+        sudo -E equo install sys-devel/autoconf sys-devel/automake sys-devel/gcc sys-devel/g++ virtual/os-headers virtual/pkgconfig sys-libs/glibc dev-qt/linguist-tools dev-qt/qtcore dev-qt/qtmultimedia dev-qt/qtdbus dev-qt/qtgui dev-qt/qtimageformats dev-qt/qtsvg dev-qt/qtwebkit dev-qt/qtwidgets dev-qt/qtx11extras dev-libs/openssl net-libs/miniupnpc net-libs/libnatpmp app-text/hunspell
     else
         echo "Unsupported Linux distribution."
     fi

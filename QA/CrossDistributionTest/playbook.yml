@@ -21,11 +21,13 @@
   - name: Clone git from host working directory
     git: repo=/home/vagrant/swift-host dest=/home/vagrant/swift
 
-  - name: 'Install Swift dependencies'
+  - name: 'Install Swift dependencies for openSUSE Leap'
     shell: ./BuildTools/InstallSwiftDependencies.sh --non-interactive chdir=/home/vagrant/swift
     become: true
     when: ansible_distribution == 'openSUSE Leap'
   - name: 'Install Swift dependencies'
+    environment:
+      ACCEPT_LICENSE: '*'
     shell: yes | ./BuildTools/InstallSwiftDependencies.sh chdir=/home/vagrant/swift
     become: true
     when: ansible_distribution != 'openSUSE Leap'
