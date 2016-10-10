@@ -74,6 +74,14 @@ myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
 myenv.Append(CPPPATH = ["."])
 
+# Qt requires applications to be build with the -fPIC flag on some 32-bit Linux distributions.
+if env["PLATFORM"] == "posix" :
+	testEnv = myenv.Clone()
+	conf = Configure(testEnv)
+	if conf.CheckDeclaration("QT_REDUCE_RELOCATIONS", "#include <QtCore/qconfig.h>") and conf.CheckDeclaration("__i386__"):
+		myenv.AppendUnique(CXXFLAGS = "-fPIC")
+	testEnv = conf.Finish()
+
 if env["PLATFORM"] == "win32" :
 	#myenv.Append(LINKFLAGS = ["/SUBSYSTEM:CONSOLE"])
 	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
