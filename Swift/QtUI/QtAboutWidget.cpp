@@ -16,7 +16,10 @@
 #include <QVBoxLayout>
 #include <QtGlobal>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/Platform.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
 
@@ -91,14 +94,18 @@ void QtAboutWidget::openPlainTextWindow(const QString& path) {
     text->setAttribute(Qt::WA_DeleteOnClose);
     text->setReadOnly(true);
     QFile file(path);
-    file.open(QIODevice::ReadOnly);
-    QTextStream in(&file);
-    in.setCodec("UTF-8");
-    text->setPlainText(in.readAll());
-    file.close();
-    text->resize(500, 600);
-    text->show();
-    text->activateWindow();
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&file);
+        in.setCodec("UTF-8");
+        text->setPlainText(in.readAll());
+        file.close();
+        text->resize(500, 600);
+        text->show();
+        text->activateWindow();
+    }
+    else {
+        SWIFT_LOG(error) << "Failed to open " << Q2PSTRING(path) << "." << std::endl;
+    }
 }
 
 }
