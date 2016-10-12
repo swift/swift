@@ -60,13 +60,15 @@ class Roster {
         void filterGroup(GroupRosterItem* item);
         void filterContact(ContactRosterItem* contact, GroupRosterItem* group);
         void filterAll();
-        GroupRosterItem* root_;
+
+    private:
         std::vector<RosterFilter*> filters_;
         typedef std::map<JID, std::vector<ContactRosterItem*> > ItemMap;
         ItemMap itemMap_;
         bool fullJIDMapping_;
         bool sortByStatus_;
-        bool blockingSupported_;
+        bool blockingSupported_ = false;
+        const std::unique_ptr<GroupRosterItem> root_;
 };
 
 }

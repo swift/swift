@@ -7,12 +7,12 @@
 #include <Swift/Controllers/Roster/Roster.h>
 
 #include <deque>
+#include <memory>
 #include <set>
 #include <string>
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
@@ -22,16 +22,12 @@
 
 namespace Swift {
 
-Roster::Roster(bool sortByStatus, bool fullJIDMapping) : blockingSupported_(false) {
-    sortByStatus_ = sortByStatus;
-    fullJIDMapping_ = fullJIDMapping;
-    root_ = new GroupRosterItem("Dummy-Root", nullptr, sortByStatus_);
-    root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_));
+Roster::Roster(bool sortByStatus, bool fullJIDMapping) : fullJIDMapping_(fullJIDMapping), sortByStatus_(sortByStatus), root_(std::unique_ptr<GroupRosterItem>(new GroupRosterItem("Dummy-Root", nullptr, sortByStatus_))) {
+    root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_.get()));
 }
 
 Roster::~Roster() {
     std::deque<RosterItem*> queue;
-    queue.push_back(root_);
     while (!queue.empty()) {
         RosterItem* item = *queue.begin();
         queue.pop_front();
@@ -48,14 +44,14 @@ Roster::~Roster() {
 }
 
 GroupRosterItem* Roster::getRoot() const {
-    return root_;
+    return root_.get();
 }
 
 std::set<JID> Roster::getJIDs() const {
     std::set<JID> jids;
 
     std::deque<RosterItem*> queue;
-    queue.push_back(root_);
+    queue.push_back(root_.get());
     while (!queue.empty()) {
         RosterItem* item = *queue.begin();
         queue.pop_front();
@@ -74,13 +70,13 @@ std::set<JID> Roster::getJIDs() const {
 }
 
 GroupRosterItem* Roster::getGroup(const std::string& groupName) {
-    foreach (RosterItem *item, root_->getChildren()) {
+    for (auto* item : root_->getChildren()) {
         GroupRosterItem *group = dynamic_cast<GroupRosterItem*>(item);
         if (group && group->getDisplayName() == groupName) {
             return group;
         }
     }
-    GroupRosterItem* group = new GroupRosterItem(groupName, root_, sortByStatus_);
+    GroupRosterItem* group = new GroupRosterItem(groupName, root_.get(), sortByStatus_);
     root_->addChild(group);
     group->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, group));
     group->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, group));
@@ -89,8 +85,8 @@ GroupRosterItem* Roster::getGroup(const std::string& groupName) {
 
 void Roster::setBlockingSupported(bool isSupported) {
     if (!blockingSupported_) {
-        foreach(ItemMap::value_type i, itemMap_) {
-            foreach(ContactRosterItem* item, i.second) {
+        for (auto i : itemMap_) {
+            for (auto* item : i.second) {
                 item->setBlockState(ContactRosterItem::IsUnblocked);
             }
         }
@@ -121,7 +117,7 @@ void Roster::addContact(const JID& jid, const JID& displayJID, const std::string
     group->addChild(item);
     ItemMap::iterator i = itemMap_.insert(std::make_pair(fullJIDMapping_ ? jid : jid.toBare(), std::vector<ContactRosterItem*>())).first;
     if (!i->second.empty()) {
-        foreach (const std::string& existingGroup, i->second[0]->getGroups()) {
+        for (const auto& existingGroup : i->second[0]->getGroups()) {
             item->addGroup(existingGroup);
         }
     }
@@ -129,7 +125,7 @@ void Roster::addContact(const JID& jid, const JID& displayJID, const std::string
     item->onDataChanged.connect(boost::bind(&Roster::handleDataChanged, this, item));
     filterContact(item, group);
 
-    foreach (ContactRosterItem* item, i->second) {
+    for (auto* item : i->second) {
         item->addGroup(groupName);
     }
 }
@@ -143,8 +139,8 @@ struct JIDEqualsTo {
 void Roster::removeAll() {
     root_->removeAll();
     itemMap_.clear();
-    onChildrenChanged(root_);
-    onDataChanged(root_);
+    onChildrenChanged(root_.get());
+    onDataChanged(root_.get());
 }
 
 void Roster::removeContact(const JID& jid) {
@@ -177,7 +173,7 @@ void Roster::removeContactFromGroup(const JID& jid, const std::string& groupName
     }
 
     if (itemIt != itemMap_.end()) {
-        foreach (ContactRosterItem* item, itemIt->second) {
+        for (auto* item : itemIt->second) {
             item->removeGroup(groupName);
         }
     }
@@ -187,7 +183,8 @@ void Roster::removeContactFromGroup(const JID& jid, const std::string& groupName
 void Roster::applyOnItems(const RosterItemOperation& operation) {
     if (operation.requiresLookup()) {
         applyOnItem(operation, operation.lookupJID());
-    } else {
+    }
+    else {
         applyOnAllItems(operation);
     }
 }
@@ -197,7 +194,7 @@ void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
     if (i == itemMap_.end()) {
         return;
     }
-    foreach (ContactRosterItem* item, i->second) {
+    for (auto* item : i->second) {
         operation(item);
         filterContact(item, item->getParent());
     }
@@ -205,7 +202,7 @@ void Roster::applyOnItem(const RosterItemOperation& operation, const JID& jid) {
 
 void Roster::applyOnAllItems(const RosterItemOperation& operation) {
     std::deque<RosterItem*> queue;
-    queue.push_back(root_);
+    queue.push_back(root_.get());
     while (!queue.empty()) {
         RosterItem* item = *queue.begin();
         queue.pop_front();
@@ -238,7 +235,7 @@ void Roster::removeFilter(RosterFilter* filter) {
 void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {
     size_t oldDisplayedSize = group->getDisplayedChildren().size();
     bool hide = true;
-    foreach (RosterFilter *filter, filters_) {
+    for (auto* filter : filters_) {
         hide &= (*filter)(contact);
     }
     group->setDisplayed(contact, filters_.empty() || !hide);
@@ -249,7 +246,7 @@ void Roster::filterContact(ContactRosterItem* contact, GroupRosterItem* group) {
 }
 
 void Roster::filterGroup(GroupRosterItem* group) {
-    foreach (RosterItem* child, group->getChildren()) {
+    for (auto* child : group->getChildren()) {
         ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(child);
         if (contact) {
             filterContact(contact, group);
@@ -259,7 +256,7 @@ void Roster::filterGroup(GroupRosterItem* group) {
 
 void Roster::filterAll() {
     std::deque<RosterItem*> queue;
-    queue.push_back(root_);
+    queue.push_back(root_.get());
     while (!queue.empty()) {
         RosterItem *item = *queue.begin();
         queue.pop_front();
