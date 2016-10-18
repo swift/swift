@@ -1,4 +1,5 @@
 import SCons.Util, os.path
+from datetime import date
 
 def generate(env) :
     def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}, handlesXMPPURIs = False, sparklePublicDSAKey = None) :
@@ -20,7 +21,7 @@ def generate(env) :
                 "CFBundleVersion" : version,
                 "CFBundleIconFile" : bundle,
                 "NSPrincipalClass" : "NSApplication",
-                "NSHumanReadableCopyright" : "(c) 2010 Swift Development Team.\nAll Rights Reserved."
+                "NSHumanReadableCopyright" : "(c) 2010-%d Isode Ltd.\nAll Rights Reserved." % date.today().year
             }
         infoDict.update(info)
 
