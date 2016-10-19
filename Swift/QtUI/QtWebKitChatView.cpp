@@ -8,6 +8,7 @@
 
 #include <QApplication>
 #include <QDesktopServices>
+#include <QDesktopWidget>
 #include <QEventLoop>
 #include <QFile>
 #include <QFileDialog>
@@ -347,7 +348,11 @@ void QtWebKitChatView::resetView() {
     assert(!body.isNull());
     body.setAttribute("onscroll", "chatwindow.verticalScrollBarPositionChanged(document.body.scrollTop / (document.body.scrollHeight - window.innerHeight))");
 
-    webView_->settings()->setFontSize(QWebSettings::DefaultFontSize, QApplication::font().pointSize());
+    // Adjust web view default 96 DPI setting to screen DPI.
+    // For more information see https://webkit.org/blog/57/css-units/
+    webView_->setZoomFactor(QApplication::desktop()->screen()->logicalDpiX() / 96.0);
+
+    body.setStyleProperty("font-size", QString("%1pt").arg(QApplication::font().pointSize()));
 }
 
 static QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
