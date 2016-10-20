@@ -17,11 +17,8 @@ body {
     height: 100%;
     width:  100%;
     background-color: #fff;
-    /*border: solid 1px #595959; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
-    /*margin-left: 20%; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
-    /*margin-top: 75px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
     position: absolute;
-  display: table;
+    display: table;
 }
 /* Holds all user and message content */
 
@@ -35,7 +32,6 @@ body {
     top: 0;
     left: 0;
     overflow-wrap: break-word; /* Allow breaking of long words (e.g. URLs) to prevent overflow. */
-    /*margin-top: -2px; /* REMOVE THIS LINE. FOR DISPLAY PURPOSE ONLY. */
 }
 
 /* Individual message */
@@ -77,7 +73,7 @@ body {
 /* Left column content */
 
 :not(.additional) > .user {
-    height: 32px;
+    height: 2.5em;
 }
 
 .user {
@@ -92,7 +88,7 @@ body {
 }
 
 .time {
-    height: 32px;
+    height: 2.5em;
     width: 103px;
     float: left;
     text-align: right;
@@ -133,20 +129,20 @@ body {
 }
 
 .myavatar {
-    height: 32px;
-    width: 32px;
+    height: 2.5em;
+    width: 2.5em;
     display: inline-block;
-    margin:0 auto;
+    margin: 0 auto;
     background-color: #92c47e;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
 }
 
 .otheravatar {
-    height: 32px;
-    width: 32px;
+    height: 2.5em;
+    width: 2.5em;
     display: inline-block;
-    margin:0 auto;
+    margin: 0 auto;
     background-color: #6eb6ce;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
@@ -154,52 +150,52 @@ body {
 
 .myavatar img {
     border-radius: 50%;
-    height: 32px;
+    height: 2.5em;
     position: relative;
     left: -1px;
 }
 
 .otheravatar img {
     border-radius: 50%;
-    height: 32px;
+    height: 2.5em;
     position: relative;
     left: -1px;
 }
 
 .myright {
-    float:right;
-    width:40px;
-    height: 32px;
+    float: right;
+    width: 1.65em;
+    height: 2.5em;
     background: #92c47e;
 }
 
 .otherright {
-    float:right;
-    width:40px;
-    height: 32px;
+    float: right;
+    width: 1.65em;
+    height: 2.5em;
     background: #6eb6ce;
 }
 
 :not(.additional) > div > .systemavatar {
-    height: 32px;
+    height: 2.5em;
 }
 
 .systemavatar {
-    width: 32px;
+    width: 2.5em;
     display: inline-block;
-    margin:0 auto;
+    margin: 0 auto;
     background-color: #595959;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
 }
 
 :not(.additional) > div > .systemright {
-    height: 32px;
+    height: 2.5em;
 }
 
 .systemright {
-    float:right;
-    width: 40px;
+    float: right;
+    width: 1.65em;
     background: #595959;
 }
 
@@ -209,7 +205,7 @@ body {
 }
 
 .message:not(.additional) .text {
-    min-height: 32px;
+    min-height: 2.5em;
 }
 
 .text {
