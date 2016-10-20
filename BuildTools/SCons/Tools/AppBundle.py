@@ -3,6 +3,8 @@ from datetime import date
 
 def generate(env) :
     def createAppBundle(env, bundle, version = "1.0", resources = [], frameworks = [], info = {}, handlesXMPPURIs = False, sparklePublicDSAKey = None) :
+        env.Tool("InstallWithSymLinks", toolpath = ["#/BuildTools/SCons/Tools"])
+
         bundleDir = bundle + ".app"
         bundleContentsDir = bundleDir + "/Contents"
         resourcesDir = bundleContentsDir + "/Resources"
@@ -59,7 +61,7 @@ def generate(env) :
             env.Install(os.path.join(resourcesDir, target), resource)
 
         for framework in frameworks :
-            env.Install(frameworksDir, framework)
+            env.InstallWithSymLinks(frameworksDir, framework)
 
         return env.Dir(bundleDir)
 
