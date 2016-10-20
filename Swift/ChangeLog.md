@@ -1,6 +1,7 @@
 4.0-in-progress
 ---------------
 - Fix UI layout issue for translations that require right-to-left (RTL) layout
+- macOS releases are now code-signed with a key from Apple, so they can be run without Gatekeeper trust warnings
 
 4.0-beta2 ( 2016-07-20 )
 ------------------------
