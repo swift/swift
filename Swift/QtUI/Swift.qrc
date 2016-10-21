@@ -46,5 +46,6 @@
 		<file alias="icons/stop.png">../resources/icons/stop.png</file>
 		<file alias="icons/delivery-success.svg">../resources/icons/delivery-success.svg</file>
 		<file alias="icons/delivery-failure.svg">../resources/icons/delivery-failure.svg</file>
+		<file alias="icons/delivery-warning.svg">../resources/icons/delivery-warning.svg</file>
 	</qresource>
 </RCC>

@@ -962,7 +962,7 @@ void QtWebKitChatView::setMessageReceiptState(const std::string& id, ChatWindow:
             xml = "<img src='qrc:/icons/delivery-success.svg' title='" + tr("The receipt for this message has been received.") + "'/>";
             break;
         case ChatWindow::ReceiptRequested:
-            xml = "<img src='qrc:/icons/warn.png' title='" + tr("The receipt for this message has not yet been received. The recipient(s) might not have received this message.") + "'/>";
+            xml = "<img src='qrc:/icons/delivery-warning.svg' title='" + tr("The receipt for this message has not yet been received. The recipient(s) might not have received this message.") + "'/>";
             break;
         case ChatWindow::ReceiptFailed:
             xml = "<img src='qrc:/icons/delivery-failure.svg' title='" + tr("Failed to transmit message to the receipient(s).") + "'/>";
