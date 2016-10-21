@@ -79,53 +79,30 @@ body {
 .user {
     display: table-cell;
     border: inherit;
-    text-align: center;
     margin-top: 2px;
-    width: 175px;
-    max-width: 175px;
-    min-width: 175px;
+    text-align: right;
+    width:     4.6em;
+    max-width: 4.6em;
+    min-width: 4.6em;
     background-color: #595959;
 }
 
-.time {
-    height: 2.5em;
-    width: 103px;
-    float: left;
-    text-align: right;
-}
-
-.time p {
-    margin-top: 3px;
-    margin-bottom: 1px;
-    margin-right: 10px;
-    color: #f9f9f9;
+div.time {
+    color: #ffffff;
     font-size: 80%;
     font-weight: 300;
-}
 
-.time-additional {
-    width: 103px;
-    float: left;
+    float: right;
+    background-color: #595959;
+    border-top-left-radius: 3ex 3ex;
+    border-bottom-left-radius: 3ex 3ex;
+    /* min-width: 50px; */
     text-align: right;
-}
-
-.time-additional p {
-    margin-top: 0px;
-    margin-bottom: 1px;
-    margin-right: 10px;
-    color: #f9f9f9;
-    font-size: 80%;
-    font-weight: 300;
-}
-
-.time img {
-    margin-right: 10px;
-    height: 10px;
-}
-
-.time-additional img {
-    margin-right: 10px;
-    height: 10px;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.05ex;
+    padding-bottom: 0.05ex;
+    margin-left: 0.5em;
 }
 
 .myavatar {
@@ -164,14 +141,14 @@ body {
 
 .myright {
     float: right;
-    width: 1.65em;
+    width: 1.05em;    /* myuser width/2 - ( other avatar width/2) = 1.05em*/
     height: 2.5em;
     background: #92c47e;
 }
 
 .otherright {
     float: right;
-    width: 1.65em;
+    width: 1.05em;    /* myuser width/2 - ( other avatar width/2) = 1.05em*/
     height: 2.5em;
     background: #6eb6ce;
 }
@@ -195,7 +172,7 @@ body {
 
 .systemright {
     float: right;
-    width: 1.65em;
+    width: 1.05em;    /* myuser width/2 - ( other avatar width/2) = 1.05em*/
     background: #595959;
 }
 
@@ -211,7 +188,6 @@ body {
 .text {
     display: table-cell;
     border: inherit;
-    margin-left: 175px;
     color: #595959;
     vertical-align: top;
 
