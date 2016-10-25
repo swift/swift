@@ -84,8 +84,7 @@ To build with Sparkle support, simply download Sparkle-1.14.0 and extract it to
 `3rdParty/Sparkle/Sparkle-1.14.0`. SCons will pick it up during configuration
 and build Swift with Sparkle support.
 
-The appcast URL is specified as a compile time preprocessor variable `SWIFT_APPCAST_URL`
-in `Swift/QtUI/QtSwift.cpp`
+The appcast URLs are specified in `Swift/QtUI/SwiftUpdateFeeds.h`.
 
 ## Building Swiften for Android
 This section describes how to build Swiften for Android. It can then be used from any Android native code. This guide has been tested on OS X and Linux.
