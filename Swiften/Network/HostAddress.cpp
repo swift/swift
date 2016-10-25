@@ -24,7 +24,7 @@ HostAddress::HostAddress(const std::string& address) {
     boost::system::error_code errorCode;
     address_ = boost::asio::ip::address::from_string(address, errorCode);
     if (errorCode) {
-        SWIFT_LOG(warning) << "error: " << errorCode.message() << std::endl;
+        SWIFT_LOG(warning) << "error: " << errorCode.message() << " (" << errorCode << ")" << ", " << "address: " << address << std::endl;
     }
 }
 
