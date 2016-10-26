@@ -11,7 +11,7 @@ if swiftools_env.get("HAVE_GROWL", False) :
             "GrowlNotifier.mm",
             "GrowlNotifierDelegate.mm",
         ]
-elif myenv["PLATFORM"] == "darwin" :
+elif myenv["PLATFORM"] == "darwin" and myenv["target"] == "native" :
     sources += [
             "NotificationCenterNotifier.mm",
             "NotificationCenterNotifierDelegate.mm",
