@@ -11,6 +11,8 @@
 #include <Swiften/Base/foreach.h>
 
 #include <Sluift/ElementConvertors/BodyConvertor.h>
+#include <Sluift/ElementConvertors/CarbonsReceivedConvertor.h>
+#include <Sluift/ElementConvertors/CarbonsSentConvertor.h>
 #include <Sluift/ElementConvertors/CommandConvertor.h>
 #include <Sluift/ElementConvertors/DOMElementConvertor.h>
 #include <Sluift/ElementConvertors/DefaultElementConvertor.h>
@@ -63,6 +65,8 @@ LuaElementConvertors::LuaElementConvertors() {
     convertors.push_back(std::make_shared<MAMResultConvertor>(this));
     convertors.push_back(std::make_shared<MAMQueryConvertor>(this));
     convertors.push_back(std::make_shared<MAMFinConvertor>(this));
+    convertors.push_back(std::make_shared<CarbonsReceivedConvertor>(this));
+    convertors.push_back(std::make_shared<CarbonsSentConvertor>(this));
     convertors.push_back(std::make_shared<DOMElementConvertor>());
     convertors.push_back(std::make_shared<RawXMLElementConvertor>());
     convertors.push_back(std::make_shared<DefaultElementConvertor>());

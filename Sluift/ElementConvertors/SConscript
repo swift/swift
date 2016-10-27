@@ -48,6 +48,8 @@ convertors = [
     env.File("MAMResultConvertor.cpp"),
     env.File("MAMQueryConvertor.cpp"),
     env.File("MAMFinConvertor.cpp"),
+    env.File("CarbonsReceivedConvertor.cpp"),
+    env.File("CarbonsSentConvertor.cpp"),
     env.File("SubjectConvertor.cpp"),
     env.File("IsodeIQDelegationConvertor.cpp")
 ]

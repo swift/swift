@@ -12,7 +12,6 @@
 #include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/ClientDiscoManager.h>
 #include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Elements/MAMQuery.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/RawXMLPayload.h>
@@ -487,6 +486,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
             Lua::Table result = boost::assign::map_list_of
                 ("type", std::make_shared<Lua::Value>(std::string("message")))
                 ("from", std::make_shared<Lua::Value>(message->getFrom().toString()))
+                ("to", std::make_shared<Lua::Value>(message->getTo().toString()))
                 ("body", std::make_shared<Lua::Value>(message->getBody().get_value_or("")))
                 ("message_type", std::make_shared<Lua::Value>(MessageConvertor::convertMessageTypeToString(message->getType())));
             Lua::pushValue(L, result);
@@ -499,6 +499,7 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
             Lua::Table result = boost::assign::map_list_of
                 ("type", std::make_shared<Lua::Value>(std::string("presence")))
                 ("from", std::make_shared<Lua::Value>(presence->getFrom().toString()))
+                ("to", std::make_shared<Lua::Value>(presence->getTo().toString()))
                 ("status", std::make_shared<Lua::Value>(presence->getStatus()))
                 ("presence_type", std::make_shared<Lua::Value>(PresenceConvertor::convertPresenceTypeToString(presence->getType())));
             Lua::pushValue(L, result);
