@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include <QObject>
 #include <QPointer>
 
@@ -14,21 +16,20 @@
 class QSplitter;
 
 namespace Swift {
-    class QtSettingsProvider;
-    class SettingsProviderHierachy;
-    class QtChatTabsBase;
     class QtChatTabs;
-    class QtSystemTray;
+    class QtChatTabsBase;
+    class QtChatTheme;
+    class QtChatWindow;
+    class QtChatWindowFactory;
     class QtLoginWindow;
     class QtMainWindow;
-    class QtChatTheme;
-    class QtChatWindowFactory;
-    class QtChatWindow;
-    class TimerFactory;
-    class historyWindow_;
-    class WhiteboardSession;
-    class StatusCache;
+    class QtSettingsProvider;
     class QtSingleWindow;
+    class QtSystemTray;
+    class SettingsProviderHierachy;
+    class StatusCache;
+    class TimerFactory;
+    class WhiteboardSession;
 
     class QtUIFactory : public QObject, public UIFactory {
             Q_OBJECT

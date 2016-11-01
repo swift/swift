@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/QtUIFactory.h>
 
+#include <algorithm>
+
 #include <QSplitter>
 
 #include <Swiften/Whiteboard/WhiteboardSession.h>
@@ -120,19 +122,15 @@ MUCSearchWindow* QtUIFactory::createMUCSearchWindow() {
 
 ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eventStream) {
     QtChatWindow* window = dynamic_cast<QtChatWindow*>(chatWindowFactory->createChatWindow(contact, eventStream));
+
+    // remove already closed and thereby deleted chat windows
+    chatWindows.erase(std::remove_if(chatWindows.begin(), chatWindows.end(),
+        [](QPointer<QtChatWindow>& window) {
+            return window.isNull();
+        }), chatWindows.end());
+
     chatWindows.push_back(window);
-    std::vector<QPointer<QtChatWindow> > deletions;
-    foreach (QPointer<QtChatWindow> existingWindow, chatWindows) {
-        if (existingWindow.isNull()) {
-            deletions.push_back(existingWindow);
-        } else {
-            connect(window, SIGNAL(fontResized(int)), existingWindow, SLOT(handleFontResized(int)));
-            connect(existingWindow, SIGNAL(fontResized(int)), window, SLOT(handleFontResized(int)));
-        }
-    }
-    foreach (QPointer<QtChatWindow> deletedWindow, deletions) {
-        chatWindows.erase(std::remove(chatWindows.begin(), chatWindows.end(), deletedWindow), chatWindows.end());
-    }
+
     connect(window, SIGNAL(fontResized(int)), this, SLOT(handleChatWindowFontResized(int)));
     window->handleFontResized(chatFontSize);
     return window;
@@ -141,6 +139,13 @@ ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eve
 void QtUIFactory::handleChatWindowFontResized(int size) {
     chatFontSize = size;
     settings->storeSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE, size);
+
+    // resize font in other chat windows
+    for (auto&& existingWindow : chatWindows) {
+        if (!existingWindow.isNull()) {
+            existingWindow->handleFontResized(size);
+        }
+    }
 }
 
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) {
