@@ -1,10 +1,15 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/StringCodecs/Base64.h>
+
+#include <stddef.h>
+
+#include <Swiften/Base/ByteArray.h>
+#include <Swiften/Base/SafeByteArray.h>
 
 #pragma clang diagnostic ignored "-Wconversion"
 

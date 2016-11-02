@@ -7,7 +7,6 @@
 #pragma once
 
 #include <string>
-#include <vector>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
