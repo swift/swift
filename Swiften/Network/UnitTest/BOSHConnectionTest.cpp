@@ -193,7 +193,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
     private:
 
         BOSHConnection::ref createTestling() {
-            resolver->addAddress("wonderland.lit", HostAddress("127.0.0.1"));
+            resolver->addAddress("wonderland.lit", HostAddress::fromString("127.0.0.1").get());
             Connector::ref connector = Connector::create("wonderland.lit", 5280, boost::optional<std::string>(), resolver, connectionFactory, timerFactory);
             BOSHConnection::ref c = BOSHConnection::create(URL("http", "wonderland.lit", 5280, "/http-bind"), connector, &parserFactory, tlsContextFactory, TLSOptions());
             c->onConnectFinished.connect(boost::bind(&BOSHConnectionTest::handleConnectFinished, this, _1));

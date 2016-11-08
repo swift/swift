@@ -18,7 +18,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamClientSession.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/DomainNameAddressQuery.h>
@@ -37,8 +36,8 @@ SOCKS5BytestreamProxiesManager::~SOCKS5BytestreamProxiesManager() {
         proxyFinder_->stop();
     }
 
-    foreach (const ProxySessionsMap::value_type& sessionsForID, proxySessions_) {
-        foreach (const ProxyJIDClientSessionVector::value_type& session, sessionsForID.second) {
+    for (const auto& sessionsForID : proxySessions_) {
+        for (const auto& session : sessionsForID.second) {
             session.second->onSessionReady.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this,sessionsForID.first, session.first, session.second, _1));
             session.second->onFinished.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, sessionsForID.first, session.first, session.second, _1));
         }
@@ -47,7 +46,7 @@ SOCKS5BytestreamProxiesManager::~SOCKS5BytestreamProxiesManager() {
 
 void SOCKS5BytestreamProxiesManager::addS5BProxy(S5BProxyRequest::ref proxy) {
     if (proxy) {
-        SWIFT_LOG_ASSERT(HostAddress(proxy->getStreamHost().get().host).isValid(), warning) << std::endl;
+        SWIFT_LOG_ASSERT(HostAddress::fromString(proxy->getStreamHost().get().host), warning) << std::endl;
         if (!localS5BProxies_) {
             localS5BProxies_ = std::vector<S5BProxyRequest::ref>();
         }
@@ -67,17 +66,19 @@ void SOCKS5BytestreamProxiesManager::connectToProxies(const std::string& session
     ProxyJIDClientSessionVector clientSessions;
 
     if (localS5BProxies_) {
-        foreach(S5BProxyRequest::ref proxy, localS5BProxies_.get()) {
-            std::shared_ptr<Connection> conn = connectionFactory_->createConnection();
-
-            HostAddressPort addressPort = HostAddressPort(proxy->getStreamHost().get().host, proxy->getStreamHost().get().port);
-            SWIFT_LOG_ASSERT(addressPort.isValid(), warning) << std::endl;
-            std::shared_ptr<SOCKS5BytestreamClientSession> session = std::make_shared<SOCKS5BytestreamClientSession>(conn, addressPort, sessionID, timerFactory_);
-            JID proxyJid = proxy->getStreamHost().get().jid;
-            clientSessions.push_back(std::pair<JID, std::shared_ptr<SOCKS5BytestreamClientSession> >(proxyJid, session));
-            session->onSessionReady.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this,sessionID, proxyJid, session, _1));
-            session->onFinished.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, sessionID, proxyJid, session, _1));
-            session->start();
+        for (auto&& proxy : localS5BProxies_.get()) {
+            auto proxyHostAddress = HostAddress::fromString(proxy->getStreamHost().get().host);
+            if (proxyHostAddress) {
+                std::shared_ptr<Connection> conn = connectionFactory_->createConnection();
+                HostAddressPort addressPort = HostAddressPort(proxyHostAddress.get(), proxy->getStreamHost().get().port);
+                SWIFT_LOG_ASSERT(addressPort.isValid(), warning) << std::endl;
+                std::shared_ptr<SOCKS5BytestreamClientSession> session = std::make_shared<SOCKS5BytestreamClientSession>(conn, addressPort, sessionID, timerFactory_);
+                JID proxyJid = proxy->getStreamHost().get().jid;
+                clientSessions.push_back(std::pair<JID, std::shared_ptr<SOCKS5BytestreamClientSession> >(proxyJid, session));
+                session->onSessionReady.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionReady, this,sessionID, proxyJid, session, _1));
+                session->onFinished.connect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxySessionFinished, this, sessionID, proxyJid, session, _1));
+                session->start();
+            }
         }
     }
 
@@ -116,9 +117,10 @@ std::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::c
 
 void SOCKS5BytestreamProxiesManager::handleProxiesFound(std::vector<S5BProxyRequest::ref> proxyHosts) {
     proxyFinder_->onProxiesFound.disconnect(boost::bind(&SOCKS5BytestreamProxiesManager::handleProxiesFound, this, _1));
-    foreach(S5BProxyRequest::ref proxy, proxyHosts) {
+    for (auto&& proxy : proxyHosts) {
         if (proxy) {
-            if (HostAddress(proxy->getStreamHost().get().host).isValid()) {
+            auto proxyHostAddress = HostAddress::fromString(proxy->getStreamHost().get().host);
+            if (proxyHostAddress) {
                 addS5BProxy(proxy);
                 onDiscoveredProxiesChanged();
             }
@@ -146,7 +148,7 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
         }
         else {
             // generate proxy per returned address
-            foreach (const HostAddress& address, addresses) {
+            for (const auto& address : addresses) {
                 S5BProxyRequest::StreamHost streamHost = proxy->getStreamHost().get();
                 S5BProxyRequest::ref proxyForAddress = std::make_shared<S5BProxyRequest>(*proxy);
                 streamHost.host = address.toString();

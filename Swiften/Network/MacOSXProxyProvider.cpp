@@ -16,8 +16,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <boost/numeric/conversion/cast.hpp>
 #include <utility>
+
+#include <boost/numeric/conversion/cast.hpp>
 
 #ifndef SWIFTEN_PLATFORM_IPHONE
 #include <SystemConfiguration/SystemConfiguration.h>
@@ -67,7 +68,7 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
             }
 
             if(host != "" && port != 0) {
-                ret = HostAddressPort(HostAddress(host), port);
+                ret = HostAddressPort(HostAddress::fromString(host).get(), port);
             }
         }
     }

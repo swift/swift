@@ -26,7 +26,7 @@ ProxiedConnection::ProxiedConnection(
             timerFactory_(timerFactory),
             proxyHost_(proxyHost),
             proxyPort_(proxyPort),
-            server_(HostAddressPort(HostAddress("0.0.0.0"), 0)) {
+            server_(HostAddressPort(HostAddress::fromString("0.0.0.0").get(), 0)) {
     connected_ = false;
 }
 

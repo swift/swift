@@ -30,6 +30,7 @@ void Connector::start() {
     assert(!serviceQuery);
     assert(!timer);
     queriedAllServices = false;
+    auto hostAddress = HostAddress::fromString(hostname);
     if (timeoutMilliseconds > 0) {
         timer = timerFactory->createTimer(timeoutMilliseconds);
         timer->onTick.connect(boost::bind(&Connector::handleTimeout, shared_from_this()));
@@ -39,10 +40,10 @@ void Connector::start() {
         serviceQuery->onResult.connect(boost::bind(&Connector::handleServiceQueryResult, shared_from_this(), _1));
         serviceQuery->run();
     }
-    else if (HostAddress(hostname).isValid()) {
+    else if (hostAddress) {
         // hostname is already a valid address; skip name lookup.
         foundSomeDNS = true;
-        addressQueryResults.push_back(HostAddress(hostname));
+        addressQueryResults.push_back(hostAddress.get());
         tryNextAddress();
     } else {
         queryAddress(hostname);

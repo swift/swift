@@ -142,7 +142,7 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
             waitForResults();
 
             CPPUNIT_ASSERT(!addressQueryError);
-            CPPUNIT_ASSERT(std::find(addressQueryResult.begin(), addressQueryResult.end(), HostAddress("127.0.0.1")) != addressQueryResult.end());
+            CPPUNIT_ASSERT(std::find(addressQueryResult.begin(), addressQueryResult.end(), HostAddress::fromString("127.0.0.1").get()) != addressQueryResult.end());
         }
 
         void testResolveAddress_Parallel() {

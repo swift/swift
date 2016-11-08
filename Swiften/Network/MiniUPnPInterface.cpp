@@ -69,7 +69,7 @@ boost::optional<HostAddress> MiniUPnPInterface::getPublicIP() {
         return boost::optional<HostAddress>();
     }
     else {
-        return HostAddress(std::string(externalIPAddress));
+        return HostAddress::fromString(std::string(externalIPAddress));
     }
 }
 

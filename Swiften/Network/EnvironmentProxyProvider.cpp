@@ -50,7 +50,7 @@ HostAddressPort EnvironmentProxyProvider::getFromEnv(const char* envVarName, std
         address = address.substr(0, address.find(':'));
     }
 
-    return HostAddressPort(HostAddress(address), port);
+    return HostAddressPort(HostAddress::fromString(address).get_value_or(HostAddress()), port);
 }
 
 }

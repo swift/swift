@@ -17,7 +17,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServer.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerPortForwardingUser.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerResourceUser.h>
@@ -88,8 +87,8 @@ std::vector<HostAddressPort> SOCKS5BytestreamServerManager::getHostAddressPorts(
     std::vector<HostAddressPort> result;
     if (connectionServer) {
         std::vector<NetworkInterface> networkInterfaces = networkEnvironment->getNetworkInterfaces();
-        foreach (const NetworkInterface& networkInterface, networkInterfaces) {
-            foreach (const HostAddress& address, networkInterface.getAddresses()) {
+        for (const auto& networkInterface : networkInterfaces) {
+            for (const auto& address : networkInterface.getAddresses()) {
                 result.push_back(HostAddressPort(address, connectionServerPort));
             }
         }
@@ -118,7 +117,7 @@ void SOCKS5BytestreamServerManager::initialize() {
         int port;
         for (port = LISTEN_PORTS_BEGIN; port < LISTEN_PORTS_END; ++port) {
             SWIFT_LOG(debug) << "Trying to start server on port " << port << std::endl;
-            connectionServer = connectionServerFactory->createConnectionServer(HostAddress("::"), port);
+            connectionServer = connectionServerFactory->createConnectionServer(HostAddress::fromString("::").get(), port);
             boost::optional<ConnectionServer::Error> error = connectionServer->tryStart();
             if (!error) {
                 break;

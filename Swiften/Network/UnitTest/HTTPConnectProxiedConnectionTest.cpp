@@ -18,7 +18,6 @@
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/EventLoop/DummyEventLoop.h>
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/ConnectionFactory.h>
@@ -65,8 +64,7 @@ namespace {
 
                 int statusCode = boost::lexical_cast<int>(statusLineFields[1]);
                 if (statusCode == 407) {
-                    typedef std::pair<std::string, std::string> StrPair;
-                    foreach (const StrPair& field, response) {
+                    for (const auto& field : response) {
                         if (to_lower(field.first) == to_lower("Proxy-Authenticate")) {
                             if (field.second.size() >= 6 && field.second.substr(0, 6) == " NTLM ") {
                                 filterResponseReturn.push_back(std::pair<std::string, std::string>("Proxy-Authorization", "NTLM TlRMTVNTUAADAAAAGAAYAHIAAAAYABgAigAAABIAEgBIAAAABgAGAFoAAAASABIVNTUAADAAYAAAABAAEACiAAAANYKI4gUBKAoAAAAPTABBAEIAUwBNAE8ASwBFADMAXwBxAGEATABBAEIAUwBNAE8ASwBFADMA0NKq8HYYhj8AAAAAAAAAAAAAAAAAAAAAOIiih3mR+AkyM4r99sy1mdFonCu2ILODro1WTTrJ4b4JcXEzUBA2Ig=="));
@@ -108,8 +106,8 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
         void setUp() {
             proxyHost = "doo.bah";
             proxyPort = 1234;
-            proxyHostAddress = HostAddressPort(HostAddress("1.1.1.1"), proxyPort);
-            host = HostAddressPort(HostAddress("2.2.2.2"), 2345);
+            proxyHostAddress = HostAddressPort(HostAddress::fromString("1.1.1.1").get(), proxyPort);
+            host = HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345);
             eventLoop = new DummyEventLoop();
             resolver = new StaticDomainNameResolver(eventLoop);
             resolver->addAddress(proxyHost, proxyHostAddress.getAddress());
@@ -148,14 +146,14 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
         void testConnect_SendsConnectRequest() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
 
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n\r\n"), connectionFactory->connections[0]->dataWritten);
         }
 
         void testConnect_ReceiveConnectResponse() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 200 Connection established\r\n\r\n"));
             eventLoop->processEvents();
@@ -167,7 +165,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testConnect_ReceiveConnectChunkedResponse() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 "));
             eventLoop->processEvents();
@@ -182,7 +180,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testConnect_ReceiveMalformedConnectResponse() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("FLOOP"));
             eventLoop->processEvents();
@@ -194,7 +192,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testConnect_ReceiveErrorConnectResponse() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 401 Unauthorized\r\n\r\n"));
             eventLoop->processEvents();
@@ -206,7 +204,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testConnect_ReceiveDataAfterConnect() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 200 Connection established\r\n\r\n"));
             eventLoop->processEvents();
 
@@ -217,7 +215,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testWrite_AfterConnect() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 200 Connection established\r\n\r\n"));
             eventLoop->processEvents();
             connectionFactory->connections[0]->dataWritten.clear();
@@ -229,7 +227,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testDisconnect_AfterConnectRequest() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             testling->disconnect();
 
@@ -240,7 +238,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
 
         void testDisconnect_AfterConnect() {
             HTTPConnectProxiedConnection::ref testling(createTestling());
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
             connectionFactory->connections[0]->onDataRead(createSafeByteArrayRef("HTTP/1.0 200 Connection established\r\n\r\n"));
             eventLoop->processEvents();
 
@@ -257,7 +255,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
             std::shared_ptr<ExampleHTTPTrafficFilter> httpTrafficFilter = std::make_shared<ExampleHTTPTrafficFilter>();
 
             testling->setHTTPTrafficFilter(httpTrafficFilter);
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             // set a default response so the server response is answered by the traffic filter
             httpTrafficFilter->filterResponseReturn.clear();
@@ -298,7 +296,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
             std::shared_ptr<ProxyAuthenticationHTTPTrafficFilter> httpTrafficFilter = std::make_shared<ProxyAuthenticationHTTPTrafficFilter>();
             testling->setHTTPTrafficFilter(httpTrafficFilter);
 
-            connect(testling, HostAddressPort(HostAddress("2.2.2.2"), 2345));
+            connect(testling, HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345));
 
             // First HTTP CONNECT request assumes the proxy will work.
             CPPUNIT_ASSERT_EQUAL(createByteArray("CONNECT 2.2.2.2:2345 HTTP/1.1\r\n"

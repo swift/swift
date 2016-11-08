@@ -22,7 +22,8 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
+#include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 namespace Swift {
 
@@ -47,7 +48,7 @@ WindowsProxyProvider::WindowsProxyProvider()
         if(result == ERROR_SUCCESS) {
             std::vector<std::string> proxies = String::split(byteArrayToString(dataBuffer), ';');
             std::pair<std::string, std::string> protocolAndProxy;
-            foreach(std::string proxy, proxies) {
+            for(auto&& proxy : proxies) {
                 if(proxy.find('=') != std::string::npos) {
                     protocolAndProxy = String::getSplittedAtFirst(proxy, '=');
                     SWIFT_LOG(debug) << "Found proxy: " << protocolAndProxy.first << " => " << protocolAndProxy.second << std::endl;
@@ -81,10 +82,10 @@ HostAddressPort WindowsProxyProvider::getAsHostAddressPort(std::string proxy) {
         // .c_str() is needed as tmp.second can include a \0 char which will end in an exception of the lexical cast.
         // with .c_str() the \0 will not be part of the string which is to be casted
         port = boost::lexical_cast<int> (tmp.second.c_str());
-        ret = HostAddressPort(HostAddress(tmp.first), port);
+        ret = HostAddressPort(HostAddress::fromString(tmp.first).get(), port);
     }
     catch(...) {
-            SWIFT_LOG(error) << "Exception occured while parsing windows proxy \"getHostAddressPort\"." << std::endl;
+        SWIFT_LOG(error) << "Exception occured while parsing windows proxy \"getHostAddressPort\"." << std::endl;
     }
 
     return ret;
@@ -99,17 +100,20 @@ bool WindowsProxyProvider::proxyEnabled(HKEY hKey) const {
     DWORD data = 0;
     ByteArray dataBuffer;
 
-    if(hKey == INVALID_HANDLE_VALUE)
+    if(hKey == INVALID_HANDLE_VALUE) {
         return ret;
+    }
 
     result = RegQueryValueEx(hKey, "ProxyEnable", NULL, &dataType, NULL, &dataSize);
-    if(result != ERROR_SUCCESS)
+    if(result != ERROR_SUCCESS) {
         return ret;
+    }
 
     dataBuffer.resize(dataSize);
     result = RegQueryValueEx(hKey, "ProxyEnable", NULL, &dataType, reinterpret_cast<BYTE*>(vecptr(dataBuffer)), &dataSize);
-    if(result != ERROR_SUCCESS)
+    if(result != ERROR_SUCCESS) {
         return ret;
+    }
 
     for(size_t t = 0; t < dataBuffer.size(); t++) {
         data += static_cast<int> (dataBuffer[t]) * pow(256, static_cast<double>(t));

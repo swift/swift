@@ -20,14 +20,6 @@ namespace Swift {
 HostAddress::HostAddress() {
 }
 
-HostAddress::HostAddress(const std::string& address) {
-    boost::system::error_code errorCode;
-    address_ = boost::asio::ip::address::from_string(address, errorCode);
-    if (errorCode) {
-        SWIFT_LOG(warning) << "error: " << errorCode.message() << " (" << errorCode << ")" << ", " << "address: " << address << std::endl;
-    }
-}
-
 HostAddress::HostAddress(const unsigned char* address, size_t length) {
     assert(length == 4 || length == 16);
     if (length == 4) {
@@ -67,6 +59,16 @@ boost::asio::ip::address HostAddress::getRawAddress() const {
 
 bool HostAddress::isLocalhost() const {
     return address_ == localhost4 || address_ == localhost6;
+}
+
+boost::optional<HostAddress> HostAddress::fromString(const std::string& addressString) {
+    boost::optional<HostAddress> hostAddress;
+    boost::system::error_code errorCode;
+    boost::asio::ip::address address = boost::asio::ip::address::from_string(addressString, errorCode);
+    if (!errorCode) {
+        hostAddress = HostAddress(address);
+    }
+    return hostAddress;
 }
 
 }

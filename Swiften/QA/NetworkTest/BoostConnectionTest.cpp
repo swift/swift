@@ -53,14 +53,18 @@ class BoostConnectionTest : public CppUnit::TestFixture {
         void testDestructor() {
             {
                 BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
-                testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
+                auto hostAddress = HostAddress::fromString(getenv("SWIFT_NETWORK_TEST_IPV4"));
+                CPPUNIT_ASSERT_EQUAL(true, hostAddress.is_initialized());
+                testling->connect(HostAddressPort(hostAddress.get(), 5222));
             }
         }
 
         void testDestructor_PendingEvents() {
             {
                 BoostConnection::ref testling(BoostConnection::create(boostIOServiceThread_->getIOService(), eventLoop_));
-                testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
+                auto hostAddress = HostAddress::fromString(getenv("SWIFT_NETWORK_TEST_IPV4"));
+                CPPUNIT_ASSERT_EQUAL(true, hostAddress.is_initialized());
+                testling->connect(HostAddressPort(hostAddress.get(), 5222));
                 while (!eventLoop_->hasEvents()) {
                     Swift::sleep(10);
                 }
@@ -75,7 +79,9 @@ class BoostConnectionTest : public CppUnit::TestFixture {
             testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
             testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
             testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-            testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
+            auto hostAddress = HostAddress::fromString(getenv("SWIFT_NETWORK_TEST_IPV4"));
+            CPPUNIT_ASSERT_EQUAL(true, hostAddress.is_initialized());
+            testling->connect(HostAddressPort(hostAddress.get(), 5222));
 
             boost::posix_time::ptime start = second_clock::local_time();
             while (receivedData_.empty() && ((second_clock::local_time() - start) < seconds(60)))  {
@@ -93,7 +99,9 @@ class BoostConnectionTest : public CppUnit::TestFixture {
             testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::doWrite, this, testling.get()));
             testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
             testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-            testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV6")), 5222));
+            auto hostAddress = HostAddress::fromString(getenv("SWIFT_NETWORK_TEST_IPV6"));
+            CPPUNIT_ASSERT_EQUAL(true, hostAddress.is_initialized());
+            testling->connect(HostAddressPort(hostAddress.get(), 5222));
 
             boost::posix_time::ptime start = second_clock::local_time();
             while (receivedData_.empty() && ((second_clock::local_time() - start) < seconds(60)))  {
@@ -110,7 +118,10 @@ class BoostConnectionTest : public CppUnit::TestFixture {
             testling->onConnectFinished.connect(boost::bind(&BoostConnectionTest::handleConnectFinished, this));
             testling->onDataRead.connect(boost::bind(&BoostConnectionTest::handleDataRead, this, _1));
             testling->onDisconnected.connect(boost::bind(&BoostConnectionTest::handleDisconnected, this));
-            testling->connect(HostAddressPort(HostAddress(getenv("SWIFT_NETWORK_TEST_IPV4")), 5222));
+
+            auto hostAddress = HostAddress::fromString(getenv("SWIFT_NETWORK_TEST_IPV4"));
+            CPPUNIT_ASSERT_EQUAL(true, hostAddress.is_initialized());
+            testling->connect(HostAddressPort(hostAddress.get(), 5222));
             while (!connectFinished_) {
                 boostIOService_->run_one();
                 eventLoop_->processEvents();

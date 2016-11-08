@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -520,14 +520,14 @@ class JingleParserTest : public CppUnit::TestFixture {
             candidate = s5bPayload->getCandidates()[0];
             CPPUNIT_ASSERT_EQUAL(std::string("hft54dqy"), candidate.cid);
             CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.lit/orchard"), candidate.jid);
-            CPPUNIT_ASSERT(HostAddressPort(HostAddress("192.168.4.1"), 5086) == candidate.hostPort);
+            CPPUNIT_ASSERT(HostAddressPort(HostAddress::fromString("192.168.4.1").get(), 5086) == candidate.hostPort);
             CPPUNIT_ASSERT_EQUAL(8257636, candidate.priority);
             CPPUNIT_ASSERT_EQUAL(JingleS5BTransportPayload::Candidate::DirectType, candidate.type);
 
             candidate = s5bPayload->getCandidates()[1];
             CPPUNIT_ASSERT_EQUAL(std::string("hutr46fe"), candidate.cid);
             CPPUNIT_ASSERT_EQUAL(JID("romeo@montague.lit/orchard"), candidate.jid);
-            CPPUNIT_ASSERT(HostAddressPort(HostAddress("24.24.24.1"), 5087) == candidate.hostPort);
+            CPPUNIT_ASSERT(HostAddressPort(HostAddress::fromString("24.24.24.1").get(), 5087) == candidate.hostPort);
             CPPUNIT_ASSERT_EQUAL(8258636, candidate.priority);
             CPPUNIT_ASSERT_EQUAL(JingleS5BTransportPayload::Candidate::DirectType, candidate.type);
         }
@@ -594,21 +594,21 @@ class JingleParserTest : public CppUnit::TestFixture {
             candidate = s5bPayload->getCandidates()[0];
             CPPUNIT_ASSERT_EQUAL(std::string("ht567dq"), candidate.cid);
             CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.lit/balcony"), candidate.jid);
-            CPPUNIT_ASSERT(HostAddressPort(HostAddress("192.169.1.10"), 6539) == candidate.hostPort);
+            CPPUNIT_ASSERT(HostAddressPort(HostAddress::fromString("192.169.1.10").get(), 6539) == candidate.hostPort);
             CPPUNIT_ASSERT_EQUAL(8257636, candidate.priority);
             CPPUNIT_ASSERT_EQUAL(JingleS5BTransportPayload::Candidate::DirectType, candidate.type);
 
             candidate = s5bPayload->getCandidates()[1];
             CPPUNIT_ASSERT_EQUAL(std::string("hr65dqyd"), candidate.cid);
             CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.lit/balcony"), candidate.jid);
-            CPPUNIT_ASSERT(HostAddressPort(HostAddress("134.102.201.180"), 16453) == candidate.hostPort);
+            CPPUNIT_ASSERT(HostAddressPort(HostAddress::fromString("134.102.201.180").get(), 16453) == candidate.hostPort);
             CPPUNIT_ASSERT_EQUAL(7929856, candidate.priority);
             CPPUNIT_ASSERT_EQUAL(JingleS5BTransportPayload::Candidate::AssistedType, candidate.type);
 
             candidate = s5bPayload->getCandidates()[2];
             CPPUNIT_ASSERT_EQUAL(std::string("grt654q2"), candidate.cid);
             CPPUNIT_ASSERT_EQUAL(JID("juliet@capulet.lit/balcony"), candidate.jid);
-            CPPUNIT_ASSERT(HostAddressPort(HostAddress("2001:638:708:30c9:219:d1ff:fea4:a17d"), 6539) == candidate.hostPort);
+            CPPUNIT_ASSERT(HostAddressPort(HostAddress::fromString("2001:638:708:30c9:219:d1ff:fea4:a17d").get(), 6539) == candidate.hostPort);
             CPPUNIT_ASSERT_EQUAL(8257606, candidate.priority);
             CPPUNIT_ASSERT_EQUAL(JingleS5BTransportPayload::Candidate::DirectType, candidate.type);
         }

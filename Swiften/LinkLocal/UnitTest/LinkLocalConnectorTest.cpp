@@ -44,7 +44,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         void testConnect() {
             std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
-            querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
+            querier->setAddress("rabbithole.local", HostAddress::fromString("192.168.1.1").get());
 
             testling->connect();
             eventLoop->processEvents();
@@ -72,7 +72,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         void testConnect_UnableToConnect() {
             std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
-            querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
+            querier->setAddress("rabbithole.local", HostAddress::fromString("192.168.1.1").get());
             connection->setError(Connection::ReadError);
 
             testling->connect();
@@ -92,7 +92,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 
             testling->cancel();
             eventLoop->processEvents();
-            querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
+            querier->setAddress("rabbithole.local", HostAddress::fromString("192.168.1.1").get());
             eventLoop->processEvents();
 
             CPPUNIT_ASSERT(FakeConnection::Disconnected == connection->state);
@@ -101,7 +101,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         void testCancel_DuringConnect() {
             std::shared_ptr<LinkLocalConnector>
                     testling(createConnector("rabbithole.local", 1234));
-            querier->setAddress("rabbithole.local", HostAddress("192.168.1.1"));
+            querier->setAddress("rabbithole.local", HostAddress::fromString("192.168.1.1").get());
             connection->setDelayConnect();
             testling->connect();
             eventLoop->processEvents();

@@ -25,10 +25,10 @@ class HostAddressTest : public CppUnit::TestFixture {
 
     public:
         void testConstructor() {
-            HostAddress testling("192.168.1.254");
+            auto testling = HostAddress::fromString("192.168.1.254");
 
-            CPPUNIT_ASSERT_EQUAL(std::string("192.168.1.254"), testling.toString());
-            CPPUNIT_ASSERT(testling.isValid());
+            CPPUNIT_ASSERT_EQUAL(std::string("192.168.1.254"), testling->toString());
+            CPPUNIT_ASSERT(testling->isValid());
         }
 
         void testConstructor_Invalid() {
@@ -38,9 +38,9 @@ class HostAddressTest : public CppUnit::TestFixture {
         }
 
         void testConstructor_InvalidString() {
-            HostAddress testling("invalid");
+            auto testling = HostAddress::fromString("invalid");
 
-            CPPUNIT_ASSERT(!testling.isValid());
+            CPPUNIT_ASSERT(!testling);
         }
 
         void testToString() {

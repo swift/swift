@@ -69,7 +69,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
             boshDataRead.clear();
             boshDataWritten.clear();
             resolver = new StaticDomainNameResolver(eventLoop);
-            resolver->addAddress(to, HostAddress("127.0.0.1"));
+            resolver->addAddress(to, HostAddress::fromString("127.0.0.1").get());
             timerFactory = new DummyTimerFactory();
         }
 
@@ -234,7 +234,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
 
         void testSession() {
             to = "prosody.doomsong.co.uk";
-            resolver->addAddress("prosody.doomsong.co.uk", HostAddress("127.0.0.1"));
+            resolver->addAddress("prosody.doomsong.co.uk", HostAddress::fromString("127.0.0.1").get());
             path = "/http-bind/";
             boshURL = URL("http", to, 5280, path);
 

@@ -34,7 +34,7 @@ class ChainedConnectorTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             error.reset();
-            host = HostAddressPort(HostAddress("1.1.1.1"), 1234);
+            host = HostAddressPort(HostAddress::fromString("1.1.1.1").get(), 1234);
             eventLoop = new DummyEventLoop();
             resolver = new StaticDomainNameResolver(eventLoop);
             resolver->addXMPPClientService("foo.com", host);

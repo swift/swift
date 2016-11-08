@@ -3,11 +3,13 @@
  * All rights reserved.
  * See the COPYING file for more information.
  */
+
 #pragma once
 
 #include <string>
 
 #include <boost/asio/ip/address.hpp>
+#include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>
 
@@ -15,7 +17,6 @@ namespace Swift {
     class SWIFTEN_API HostAddress {
         public:
             HostAddress();
-            HostAddress(const std::string&);
             HostAddress(const unsigned char* address, size_t length);
             HostAddress(const boost::asio::ip::address& address);
 
@@ -28,6 +29,8 @@ namespace Swift {
 
             bool isValid() const;
             bool isLocalhost() const;
+
+            static boost::optional<HostAddress> fromString(const std::string& addressString);
 
         private:
             boost::asio::ip::address address_;

@@ -379,7 +379,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 
             JingleS5BTransportPayload::Candidate candidate1;
             candidate1.cid = "hft54dqy";
-            candidate1.hostPort = HostAddressPort(HostAddress("192.168.4.1"), 5086);
+            candidate1.hostPort = HostAddressPort(HostAddress::fromString("192.168.4.1").get(), 5086);
             candidate1.jid = JID("romeo@montague.lit/orchard");
             candidate1.priority = 8257636;
             candidate1.type = JingleS5BTransportPayload::Candidate::DirectType;
@@ -387,7 +387,7 @@ class JingleSerializersTest : public CppUnit::TestFixture {
 
             JingleS5BTransportPayload::Candidate candidate2;
             candidate2.cid = "hutr46fe";
-            candidate2.hostPort = HostAddressPort(HostAddress("24.24.24.1"), 5087);
+            candidate2.hostPort = HostAddressPort(HostAddress::fromString("24.24.24.1").get(), 5087);
             candidate2.jid = JID("romeo@montague.lit/orchard");
             candidate2.priority = 8258636;
             candidate2.type = JingleS5BTransportPayload::Candidate::DirectType;

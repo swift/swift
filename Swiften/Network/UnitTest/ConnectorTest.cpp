@@ -43,9 +43,9 @@ class ConnectorTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            host1 = HostAddressPort(HostAddress("1.1.1.1"), 1234);
-            host2 = HostAddressPort(HostAddress("2.2.2.2"), 2345);
-            host3 = HostAddressPort(HostAddress("3.3.3.3"), 5222);
+            host1 = HostAddressPort(HostAddress::fromString("1.1.1.1").get(), 1234);
+            host2 = HostAddressPort(HostAddress::fromString("2.2.2.2").get(), 2345);
+            host3 = HostAddressPort(HostAddress::fromString("3.3.3.3").get(), 5222);
             eventLoop = new DummyEventLoop();
             resolver = new StaticDomainNameResolver(eventLoop);
             connectionFactory = new MockConnectionFactory(eventLoop);
@@ -122,8 +122,8 @@ class ConnectorTest : public CppUnit::TestFixture {
         void testConnect_FirstAddressHostFails() {
             Connector::ref testling(createConnector());
 
-            HostAddress address1("1.1.1.1");
-            HostAddress address2("2.2.2.2");
+            auto address1 = HostAddress::fromString("1.1.1.1").get();
+            auto address2 = HostAddress::fromString("2.2.2.2").get();
             resolver->addXMPPClientService("foo.com", "host-foo.com", 1234);
             resolver->addAddress("host-foo.com", address1);
             resolver->addAddress("host-foo.com", address2);
@@ -245,10 +245,10 @@ class ConnectorTest : public CppUnit::TestFixture {
             Connector::ref testling(createConnector());
             testling->setTimeoutMilliseconds(10);
 
+            auto address2 = HostAddress::fromString("2.2.2.2").get();
+
             resolver->addXMPPClientService("foo.com", "host-foo.com", 1234);
-            HostAddress address1("1.1.1.1");
-            resolver->addAddress("host-foo.com", address1);
-            HostAddress address2("2.2.2.2");
+            resolver->addAddress("host-foo.com", HostAddress::fromString("1.1.1.1").get());
             resolver->addAddress("host-foo.com", address2);
 
             connectionFactory->isResponsive = false;

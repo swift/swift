@@ -53,7 +53,7 @@ class SOCKS5BytestreamClientSessionTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
 public:
-    SOCKS5BytestreamClientSessionTest() : destinationAddressPort(HostAddressPort(HostAddress("127.0.0.1"), 8888)) {}
+    SOCKS5BytestreamClientSessionTest() : destinationAddressPort(HostAddressPort(HostAddress::fromString("127.0.0.1").get(), 8888)) {}
 
     void setUp() {
         crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());

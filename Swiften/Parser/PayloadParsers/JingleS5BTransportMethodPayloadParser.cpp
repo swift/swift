@@ -44,7 +44,7 @@ namespace Swift {
                 try {
                     port = boost::lexical_cast<int>(attributes.getAttributeValue("port").get_value_or("-1"));
                 } catch(boost::bad_lexical_cast &) { }
-                candidate.hostPort = HostAddressPort(HostAddress(attributes.getAttributeValue("host").get_value_or("")), port);
+                candidate.hostPort = HostAddressPort(HostAddress::fromString(attributes.getAttributeValue("host").get_value_or("")).get_value_or(HostAddress()), port);
                 candidate.jid = JID(attributes.getAttributeValue("jid").get_value_or(""));
                 int priority = -1;
                 try {
@@ -70,8 +70,6 @@ namespace Swift {
 
     void JingleS5BTransportMethodPayloadParser::handleEndElement(const std::string&, const std::string&) {
         --level;
-
-
     }
 
     void JingleS5BTransportMethodPayloadParser::handleCharacterData(const std::string&) {

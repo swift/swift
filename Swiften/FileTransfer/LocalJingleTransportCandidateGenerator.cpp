@@ -18,7 +18,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamProxiesManager.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerManager.h>
@@ -140,7 +139,7 @@ void LocalJingleTransportCandidateGenerator::emitOnLocalTransportCandidatesGener
     if (options_.isDirectAllowed()) {
         // get direct candidates
         std::vector<HostAddressPort> directCandidates = s5bServerManager->getHostAddressPorts();
-        foreach(HostAddressPort addressPort, directCandidates) {
+        for(auto&& addressPort : directCandidates) {
             if (addressPort.getAddress().getRawAddress().is_v6() &&
                 addressPort.getAddress().getRawAddress().to_v6().is_link_local()) {
                 continue;
@@ -158,7 +157,7 @@ void LocalJingleTransportCandidateGenerator::emitOnLocalTransportCandidatesGener
     if (options_.isAssistedAllowed()) {
         // get assissted candidates
         std::vector<HostAddressPort> assisstedCandidates = s5bServerManager->getAssistedHostAddressPorts();
-        foreach(HostAddressPort addressPort, assisstedCandidates) {
+        for (auto&& addressPort : assisstedCandidates) {
             JingleS5BTransportPayload::Candidate candidate;
             candidate.type = JingleS5BTransportPayload::Candidate::AssistedType;
             candidate.jid = ownJID;
@@ -170,17 +169,18 @@ void LocalJingleTransportCandidateGenerator::emitOnLocalTransportCandidatesGener
     }
 
     if (options_.isProxiedAllowed() && s5bProxy->getOrDiscoverS5BProxies().is_initialized()) {
-        foreach(S5BProxyRequest::ref proxy, s5bProxy->getOrDiscoverS5BProxies().get()) {
+        for (auto&& proxy : s5bProxy->getOrDiscoverS5BProxies().get()) {
             if (proxy->getStreamHost()) { // FIXME: Added this test, because there were cases where this wasn't initialized. Investigate this. (Remko)
                 JingleS5BTransportPayload::Candidate candidate;
                 candidate.type = JingleS5BTransportPayload::Candidate::ProxyType;
                 candidate.jid = (*proxy->getStreamHost()).jid;
-                HostAddress address = (*proxy->getStreamHost()).host;
-                assert(address.isValid());
-                candidate.hostPort = HostAddressPort(address, (*proxy->getStreamHost()).port);
-                candidate.priority = 65536 * 10 + LOCAL_PREFERENCE;
-                candidate.cid = idGenerator->generateID();
-                candidates.push_back(candidate);
+                auto address = HostAddress::fromString((*proxy->getStreamHost()).host);
+                if (address) {
+                    candidate.hostPort = HostAddressPort(address.get(), (*proxy->getStreamHost()).port);
+                    candidate.priority = 65536 * 10 + LOCAL_PREFERENCE;
+                    candidate.cid = idGenerator->generateID();
+                    candidates.push_back(candidate);
+                }
             }
         }
     }
