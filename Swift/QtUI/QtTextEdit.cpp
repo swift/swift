@@ -18,13 +18,12 @@
 
 #include <Swiften/Base/Log.h>
 
-#include <Swift/Controllers/SettingConstants.h>
-
 #include <SwifTools/SpellChecker.h>
 #include <SwifTools/SpellCheckerFactory.h>
 
 #include <Swift/QtUI/QtSpellCheckerWindow.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/QtUI/QtUtilities.h>
 
 namespace Swift {
@@ -215,18 +214,18 @@ void QtTextEdit::setUpSpellChecker() {
     highlighter_ = nullptr;
     delete checker_;
     checker_ = nullptr;
-    if (settings_->getSetting(SettingConstants::SPELL_CHECKER)) {
+    if (settings_->getSetting(QtUISettingConstants::SPELL_CHECKER)) {
         checker_ = SpellCheckerFactory().createSpellChecker();
         if (checker_) {
             if (!checker_->isAutomaticallyDetectingLanguage()) {
-                checker_->setActiveLanguage(settings_->getSetting(SettingConstants::SPELL_CHECKER_LANGUAGE));
+                checker_->setActiveLanguage(settings_->getSetting(QtUISettingConstants::SPELL_CHECKER_LANGUAGE));
             }
             highlighter_ = new QtSpellCheckHighlighter(document(), checker_);
         }
         else {
             // Spellchecking is not working, as we did not get a valid checker from the factory. Disable spellchecking.
             SWIFT_LOG(warning) << "Spellchecking is currently misconfigured in Swift (e.g. missing dictionary or broken dictionary file). Disable spellchecking." << std::endl;
-            settings_->storeSetting(SettingConstants::SPELL_CHECKER, false);
+            settings_->storeSetting(QtUISettingConstants::SPELL_CHECKER, false);
         }
 
     }
@@ -254,8 +253,8 @@ void QtTextEdit::spellCheckerSettingsWindow() {
 }
 
 void QtTextEdit::handleSettingChanged(const std::string& settings) {
-    if (settings == SettingConstants::SPELL_CHECKER.getKey() ||
-        settings == SettingConstants::SPELL_CHECKER_LANGUAGE.getKey()) {
+    if (settings == QtUISettingConstants::SPELL_CHECKER.getKey() ||
+        settings == QtUISettingConstants::SPELL_CHECKER_LANGUAGE.getKey()) {
 #ifdef HAVE_SPELLCHECKER
         setUpSpellChecker();
         if (highlighter_) {

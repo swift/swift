@@ -20,9 +20,6 @@
 
 #include <Swiften/Base/Log.h>
 
-#include <Swift/Controllers/SettingConstants.h>
-#include <Swift/Controllers/Settings/SettingsProvider.h>
-
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 
@@ -48,8 +45,8 @@ void QtSpellCheckerWindow::shrinkWindow() {
 }
 
 void QtSpellCheckerWindow::setFromSettings() {
-    ui_.spellChecker->setChecked(settings_->getSetting(SettingConstants::SPELL_CHECKER));
-    setEnabled(settings_->getSetting(SettingConstants::SPELL_CHECKER));
+    ui_.spellChecker->setChecked(settings_->getSetting(QtUISettingConstants::SPELL_CHECKER));
+    setEnabled(settings_->getSetting(QtUISettingConstants::SPELL_CHECKER));
 }
 
 void QtSpellCheckerWindow::setSupportedLanguages(const std::vector<std::string>& languages) {
@@ -86,10 +83,10 @@ void QtSpellCheckerWindow::setEnabled(bool state) {
 }
 
 void QtSpellCheckerWindow::handleApply() {
-    settings_->storeSetting(SettingConstants::SPELL_CHECKER, ui_.spellChecker->isChecked());
+    settings_->storeSetting(QtUISettingConstants::SPELL_CHECKER, ui_.spellChecker->isChecked());
     QList<QListWidgetItem* > selectedLanguage = ui_.languageView->selectedItems();
     if (!selectedLanguage.empty()) {
-        settings_->storeSetting(SettingConstants::SPELL_CHECKER_LANGUAGE, Q2PSTRING(selectedLanguage.first()->data(Qt::UserRole).toString()));
+        settings_->storeSetting(QtUISettingConstants::SPELL_CHECKER_LANGUAGE, Q2PSTRING(selectedLanguage.first()->data(Qt::UserRole).toString()));
     }
     this->done(0);
 }

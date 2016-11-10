@@ -50,6 +50,7 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtSystemTray.h>
 #include <Swift/QtUI/QtUIFactory.h>
+#include <Swift/QtUI/QtUISettingConstants.h>
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include <Swift/QtUI/WindowsNotifier.h>
@@ -284,7 +285,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(handleAboutToQuit()));
 
     PlatformAutoUpdaterFactory autoUpdaterFactory;
-    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(SettingConstants::ENABLE_SOFTWARE_UPDATES)) {
+    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)) {
         autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
         autoUpdater_->checkForUpdates();
         autoUpdater_->onSuggestRestartToUserToUpdate.connect(boost::bind(&QtSwift::handleRecommendRestartToInstallUpdate, this));

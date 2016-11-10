@@ -57,8 +57,6 @@ namespace Swift {
              * Its value is a Boost serialized representation.
              */
             static const SettingsProvider::Setting<std::string> HIGHLIGHT_RULES;
-            static const SettingsProvider::Setting<bool> SPELL_CHECKER;
-            static const SettingsProvider::Setting<std::string> SPELL_CHECKER_LANGUAGE;
             /**
              * The #INVITE_AUTO_ACCEPT_MODE setting specifies how to handle invites to chat rooms.
              *
@@ -70,20 +68,6 @@ namespace Swift {
              *   already allowed to see the user's presence status or from a contact of user's domain.
              */
             static const SettingsProvider::Setting<std::string> INVITE_AUTO_ACCEPT_MODE;
-            /**
-             * The #TRELLIS_GRID_SIZE setting specifies the dimensions of the grid used for the trellis
-             * layout.
-             *
-             * Its value is a Qt serialized representation.
-             */
-            static const SettingsProvider::Setting<std::string> TRELLIS_GRID_SIZE;
-            /**
-             * The #TRELLIS_GRID_POSITIONS setting specifies where conversations to contacts or rooms go
-             * in the trellis grid.
-             *
-             * Its value is a Qt serialized representation.
-             */
-            static const SettingsProvider::Setting<std::string> TRELLIS_GRID_POSITIONS;
             /**
              * The #DISCONNECT_ON_CARD_REMOVAL setting
              * specifies whether or not to sign out the user when
@@ -102,11 +86,5 @@ namespace Swift {
              * log in the user; else not.
              */
             static const SettingsProvider::Setting<bool> SINGLE_SIGN_ON;
-            /**
-             * The #ENABLE_SOFTWARE_UPDATES settings specifies, whether Swift
-             * should automatically check for software updates in regular
-             * intervals and install them automatically.
-             */
-            static const SettingsProvider::Setting<bool> ENABLE_SOFTWARE_UPDATES;
     };
 }

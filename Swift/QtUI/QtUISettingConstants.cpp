@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,4 +17,9 @@ const SettingsProvider::Setting<int> QtUISettingConstants::HISTORYWINDOW_FONT_SI
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_EMOTICONS("showEmoticons", true);
 const SettingsProvider::Setting<bool> QtUISettingConstants::USE_PLAIN_CHATS("plainChats", false);
 const SettingsProvider::Setting<bool> QtUISettingConstants::USE_SCREENREADER("screenreader", false);
+const SettingsProvider::Setting<bool> QtUISettingConstants::SPELL_CHECKER("spellChecker", false);
+const SettingsProvider::Setting<std::string> QtUISettingConstants::SPELL_CHECKER_LANGUAGE("spellCheckerLanguage", "en_US");
+const SettingsProvider::Setting<std::string> QtUISettingConstants::TRELLIS_GRID_SIZE("trellisGridSize", "");
+const SettingsProvider::Setting<std::string> QtUISettingConstants::TRELLIS_GRID_POSITIONS("trellisGridPositions", "");
+const SettingsProvider::Setting<bool> QtUISettingConstants::ENABLE_SOFTWARE_UPDATES("enableSoftwareUpdates", true);
 }

@@ -20,13 +20,8 @@ const SettingsProvider::Setting<bool> SettingConstants::SHOW_OFFLINE("showOfflin
 const SettingsProvider::Setting<std::string> SettingConstants::EXPANDED_ROSTER_GROUPS("GroupExpandiness", "");
 const SettingsProvider::Setting<bool> SettingConstants::PLAY_SOUNDS("playSounds", true);
 const SettingsProvider::Setting<std::string> SettingConstants::HIGHLIGHT_RULES("highlightRules", "@");
-const SettingsProvider::Setting<bool> SettingConstants::SPELL_CHECKER("spellChecker", false);
-const SettingsProvider::Setting<std::string> SettingConstants::SPELL_CHECKER_LANGUAGE("spellCheckerLanguage", "en_US");
 const SettingsProvider::Setting<std::string> SettingConstants::INVITE_AUTO_ACCEPT_MODE("inviteAutoAcceptMode", "presence");
-const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_SIZE("trellisGridSize", "");
-const SettingsProvider::Setting<std::string> SettingConstants::TRELLIS_GRID_POSITIONS("trellisGridPositions", "");
 const SettingsProvider::Setting<bool> SettingConstants::DISCONNECT_ON_CARD_REMOVAL("disconnectOnCardRemoval", true);
 const SettingsProvider::Setting<bool> SettingConstants::SINGLE_SIGN_ON("singleSignOn", false);
-const SettingsProvider::Setting<bool> SettingConstants::ENABLE_SOFTWARE_UPDATES("enableSoftwareUpdates", true);
 
 }
