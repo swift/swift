@@ -442,7 +442,7 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 
 void QtLoginWindow::handleAbout() {
     if (!aboutDialog_) {
-        aboutDialog_ = new QtAboutWidget();
+        aboutDialog_ = new QtAboutWidget(settings_);
         aboutDialog_->show();
     }
     else {

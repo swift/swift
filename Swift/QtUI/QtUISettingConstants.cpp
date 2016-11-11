@@ -6,6 +6,8 @@
 
 #include <Swift/QtUI/QtUISettingConstants.h>
 
+#include <Swift/QtUI/SwiftUpdateFeeds.h>
+
 namespace Swift {
 
 const SettingsProvider::Setting<bool> QtUISettingConstants::COMPACT_ROSTER("compactRoster", false);
@@ -22,4 +24,6 @@ const SettingsProvider::Setting<std::string> QtUISettingConstants::SPELL_CHECKER
 const SettingsProvider::Setting<std::string> QtUISettingConstants::TRELLIS_GRID_SIZE("trellisGridSize", "");
 const SettingsProvider::Setting<std::string> QtUISettingConstants::TRELLIS_GRID_POSITIONS("trellisGridPositions", "");
 const SettingsProvider::Setting<bool> QtUISettingConstants::ENABLE_SOFTWARE_UPDATES("enableSoftwareUpdates", true);
+const SettingsProvider::Setting<std::string> QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL("softwareUpdateChannel", UpdateFeeds::StableChannel);
+
 }

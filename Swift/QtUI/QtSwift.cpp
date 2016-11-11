@@ -51,6 +51,7 @@
 #include <Swift/QtUI/QtSystemTray.h>
 #include <Swift/QtUI/QtUIFactory.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
+#include <Swift/QtUI/SwiftUpdateFeeds.h>
 
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
 #include <Swift/QtUI/WindowsNotifier.h>
@@ -83,12 +84,6 @@
 #endif
 
 namespace Swift{
-
-#if defined(SWIFTEN_PLATFORM_MACOSX)
-#define SWIFT_APPCAST_URL "https://swift.im/appcast/swift-mac-dev.xml"
-#else
-#define SWIFT_APPCAST_URL ""
-#endif
 
 po::options_description QtSwift::getOptionsDescription() {
     po::options_description result("Options");
@@ -138,6 +133,22 @@ void QtSwift::loadEmoticonsFile(const QString& fileName, std::map<std::string, s
                 emoticons[Q2PSTRING(tokens[0])] = Q2PSTRING(emoticonFile);
             }
         }
+    }
+}
+
+const std::string& QtSwift::updateChannelToFeed(const std::string& channel) {
+    static const std::string invalidChannel;
+    if (channel == UpdateFeeds::StableChannel) {
+        return UpdateFeeds::StableAppcastFeed;
+    }
+    else if (channel == UpdateFeeds::TestingChannel) {
+        return UpdateFeeds::TestingAppcastFeed;
+    }
+    else if (channel == UpdateFeeds::DevelopmentChannel) {
+        return UpdateFeeds::DevelopmentAppcastFeed;
+    }
+    else {
+        return invalidChannel;
     }
 }
 
@@ -285,10 +296,18 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(handleAboutToQuit()));
 
     PlatformAutoUpdaterFactory autoUpdaterFactory;
-    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)) {
-        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(SWIFT_APPCAST_URL);
+    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)
+        && !settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
+        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
         autoUpdater_->checkForUpdates();
         autoUpdater_->onSuggestRestartToUserToUpdate.connect(boost::bind(&QtSwift::handleRecommendRestartToInstallUpdate, this));
+
+        settingsHierachy_->onSettingChanged.connect([&](const std::string& path) {
+            if (path == QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL.getKey()) {
+                autoUpdater_->setAppcastFeed(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
+                autoUpdater_->checkForUpdates();
+            }
+        });
     }
 }
 
@@ -328,7 +347,7 @@ void QtSwift::handleAboutToQuit() {
 }
 
 void QtSwift::handleRecommendRestartToInstallUpdate() {
-    notifier_->showMessage(Notifier::SystemMessage, Q2PSTRING(tr("Swift Update Available")), Q2PSTRING(tr("Restart Swift now or later to update to the new Swift version")), "", [](){});
+    notifier_->showMessage(Notifier::SystemMessage, Q2PSTRING(tr("Swift Update Available")), Q2PSTRING(tr("Restart Swift to update to the new Swift version.")), "", [](){});
 }
 
 }

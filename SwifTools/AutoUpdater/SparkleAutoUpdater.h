@@ -20,9 +20,10 @@ namespace Swift {
      */
     class SparkleAutoUpdater : public AutoUpdater {
         public:
-            SparkleAutoUpdater(const std::string& url);
+            SparkleAutoUpdater(const std::string& appcastFeed);
             ~SparkleAutoUpdater();
 
+            void setAppcastFeed(const std::string& appcastFeed);
             void checkForUpdates();
             bool recommendRestartToUpdate();
 

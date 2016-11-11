@@ -21,7 +21,7 @@ class SparkleAutoUpdater::Private {
         bool restartToUpdate = false;
 };
 
-SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) : d(new Private()) {
+SparkleAutoUpdater::SparkleAutoUpdater(const std::string& appcastFeed) : d(new Private()) {
     d->updater = [SUUpdater sharedUpdater];
     [d->updater retain];
 
@@ -37,12 +37,17 @@ SparkleAutoUpdater::SparkleAutoUpdater(const std::string& url) : d(new Private()
     [d->updater setUpdateCheckInterval: 86400];
     [d->updater setAutomaticallyDownloadsUpdates: true];
 
-    NSURL* nsurl = [NSURL URLWithString: std2NSString(url)];
+    NSURL* nsurl = [NSURL URLWithString: std2NSString(appcastFeed)];
     [d->updater setFeedURL: nsurl];
 }
 
 SparkleAutoUpdater::~SparkleAutoUpdater() {
     [d->updater release];
+}
+
+void SparkleAutoUpdater::setAppcastFeed(const std::string& appcastFeed) {
+    NSURL* nsurl = [NSURL URLWithString: std2NSString(appcastFeed)];
+    [d->updater setFeedURL: nsurl];
 }
 
 void SparkleAutoUpdater::checkForUpdates() {

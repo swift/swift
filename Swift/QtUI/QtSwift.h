@@ -67,6 +67,7 @@ namespace Swift {
         private:
             XMLSettingsProvider* loadSettingsFile(const QString& fileName);
             void loadEmoticonsFile(const QString& fileName, std::map<std::string, std::string>& emoticons);
+            static const std::string& updateChannelToFeed(const std::string& channel);
 
         private:
             QtEventLoop clientMainThreadCaller_;

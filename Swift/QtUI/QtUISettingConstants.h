@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <Swift/Controllers/Settings/SettingsProvider.h>
 
 namespace Swift {
@@ -37,10 +39,15 @@ namespace Swift {
              */
             static const SettingsProvider::Setting<std::string> TRELLIS_GRID_POSITIONS;
             /**
-             * The #ENABLE_SOFTWARE_UPDATES settings specifies, whether Swift
+             * The #ENABLE_SOFTWARE_UPDATES setting specifies, whether Swift
              * should automatically check for software updates in regular
              * intervals and install them automatically.
              */
             static const SettingsProvider::Setting<bool> ENABLE_SOFTWARE_UPDATES;
+            /**
+             * The #SOFTWARE_UPDATE_CHANNEL setting defines what update channel
+             * Swift uses to check for, and receive, updates.
+             */
+            static const SettingsProvider::Setting<std::string> SOFTWARE_UPDATE_CHANNEL;
     };
 }

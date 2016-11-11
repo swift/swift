@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <boost/signals2.hpp>
 
 namespace Swift {
@@ -13,6 +15,7 @@ namespace Swift {
         public:
             virtual ~AutoUpdater();
 
+            virtual void setAppcastFeed(const std::string& appcastFeed) = 0;
             virtual void checkForUpdates() = 0;
             virtual bool recommendRestartToUpdate() = 0;
 

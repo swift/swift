@@ -199,6 +199,7 @@ sources = [
     "QtURLValidator.cpp",
     "QtResourceHelper.cpp",
     "QtSpellCheckHighlighter.cpp",
+    "QtUpdateFeedSelectionDialog.cpp",
     "Trellis/QtDynamicGridLayout.cpp",
     "Trellis/QtDNDTabBar.cpp",
     "Trellis/QtGridSelectionDialog.cpp"
@@ -299,6 +300,7 @@ myenv.Uic4("QtConnectionSettings.ui")
 myenv.Uic4("QtHighlightEditor.ui")
 myenv.Uic4("QtBlockListEditorWindow.ui")
 myenv.Uic4("QtSpellCheckerWindow.ui")
+myenv.Uic4("QtUpdateFeedSelectionDialog.ui")
 myenv.Qrc("DefaultTheme.qrc")
 myenv.Qrc("Swift.qrc")
 
