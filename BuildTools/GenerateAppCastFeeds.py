@@ -116,6 +116,7 @@ def writeAppcastFile(filename, title, description, regexPattern, appcastURL, rel
 parser = argparse.ArgumentParser(description='Generate stable/testing/development appcast feeds for Sparkle updater.')
 parser.add_argument('downloadsFolder', type=str, help="e.g. /Users/foo/website/downloads/")
 parser.add_argument('downloadsURL', type=str, help="e.g. https://swift.im/downloads/")
+parser.add_argument('outputFolder', type=str, help="e.g. /Users/foo/website/downloads/")
 
 args = parser.parse_args()
 
@@ -130,19 +131,19 @@ automaticReleases.extend(getReleaseFilesInDevelopmentFolder(developmentMacPath, 
 automaticReleases.sort(key=lambda release: release.date, reverse=True)
 
 
-writeAppcastFile(filename=os.path.join(args.downloadsFolder, "swift-stable-appcast-mac.xml"),
+writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-stable-appcast-mac.xml"),
     title="Swift Stable Releases",
     description="",
     regexPattern="^Swift\-\d+(\.\d+)?(\.\d+)?$",
     appcastURL=urlparse.urljoin(args.downloadsURL, "swift-stable-appcast-mac.xml"),
     releases=manualReleases)
-writeAppcastFile(filename=os.path.join(args.downloadsFolder, "swift-testing-appcast-mac.xml"),
+writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-testing-appcast-mac.xml"),
     title="Swift Testing Releases",
     description="",
     regexPattern="^Swift\-\d+(\.\d+)?(\.\d+)?(beta\d+)?(rc\d+)?$",
     appcastURL=urlparse.urljoin(args.downloadsURL, "swift-testing-appcast-mac.xml"),
     releases=manualReleases)
-writeAppcastFile(filename=os.path.join(args.downloadsFolder, "swift-development-appcast-mac.xml"),
+writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-development-appcast-mac.xml"),
     title="Swift Development Releases",
     description="",
     regexPattern="^Swift\-\d+(\.\d+)?(\.\d+)?(alpha)?(beta\d+)?(rc\d+)?(-dev\d+)?$",
