@@ -16,8 +16,10 @@ import urlparse
 
 class Release:
     def __init__(self, version, absoluteURL, sizeInBytes, date):
-        self.version = version
-        self.shortVersion = version.split('-', 1)[1]
+        # This is the version string used for update detection.
+        self.fullVersion = version.split('-', 1)[1]
+        # This is a human readable version string, only used for presentation.
+        self.presentationVersion = version
         self.url = absoluteURL
         self.sizeInBytes = sizeInBytes
         self.date = date
@@ -26,10 +28,10 @@ class Release:
         self.dateString = eut.formatdate(dateTimestamp)
 
     def __str__(self):
-        return "Release(%s, %s, %s, %s)" % (self.version, self.url, self.sizeInBytes, self.date)
+        return "Release(%s, %s, %s, %s)" % (self.fullVersion, self.url, self.sizeInBytes, self.date)
 
     def __repr__(self):
-        return "Release(%s, %s, %s, %s)" % (self.version, self.url, self.sizeInBytes, self.date)
+        return "Release(%s, %s, %s, %s)" % (self.fullVersion, self.url, self.sizeInBytes, self.date)
 
 def getReleaseFromAbsoluteFilePath(absolutePath, downloadsFolder, releasesURL):
     version = os.path.splitext(absolutePath.split('/')[-1])[0]
@@ -84,18 +86,18 @@ def writeAppcastFile(filename, title, description, regexPattern, appcastURL, rel
     <description>{{ description }}</description>
     <language>en</language>
     {% for item in releases %}<item>
-        <title>Swift version {{ item.version }}</title>
+        <title>Swift version {{ item.fullVersion }}</title>
             <pubDate>{{ item.dateString }}</pubDate>
             <enclosure url="{{ item.url }}"
-                sparkle:version="{{ item.version }}"
-                sparkle:shortVersionString="{{ item.shortVersion }}"
+                sparkle:version="{{ item.fullVersion }}"
+                sparkle:shortVersionString="{{ item.presentationVersion }}"
                 length="{{ item.sizeInBytes }}"
                 type="application/octet-stream" />
     </item>
     {% endfor %}</channel>
 </rss>''')
 
-    matchingReleases = [i for i in releases if re.match(regexPattern, i.version)]
+    matchingReleases = [i for i in releases if re.match(regexPattern, i.fullVersion)]
     matchingReleases = matchingReleases[:2] # only include the first two matches in the appcast
 
     appcastContent = template.render(title=title, appcast_url=appcastURL, description=description, releases=matchingReleases)
@@ -134,18 +136,18 @@ automaticReleases.sort(key=lambda release: release.date, reverse=True)
 writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-stable-appcast-mac.xml"),
     title="Swift Stable Releases",
     description="",
-    regexPattern="^Swift\-\d+(\.\d+)?(\.\d+)?$",
+    regexPattern="^\d+(\.\d+)?(\.\d+)?$",
     appcastURL=urlparse.urljoin(args.downloadsURL, "swift-stable-appcast-mac.xml"),
     releases=manualReleases)
 writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-testing-appcast-mac.xml"),
     title="Swift Testing Releases",
     description="",
-    regexPattern="^Swift\-\d+(\.\d+)?(\.\d+)?(beta\d+)?(rc\d+)?$",
+    regexPattern="^\d+(\.\d+)?(\.\d+)?(beta\d+)?(rc\d+)?$",
     appcastURL=urlparse.urljoin(args.downloadsURL, "swift-testing-appcast-mac.xml"),
     releases=manualReleases)
 writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-development-appcast-mac.xml"),
     title="Swift Development Releases",
     description="",
-    regexPattern="^Swift\-\d+(\.\d+)?(\.\d+)?(alpha)?(beta\d+)?(rc\d+)?(-dev\d+)?$",
+    regexPattern="^\d+(\.\d+)?(\.\d+)?(alpha)?(beta\d+)?(rc\d+)?(-dev\d+)?$",
     appcastURL=urlparse.urljoin(args.downloadsURL, "swift-development-appcast-mac.xml"),
     releases=automaticReleases)

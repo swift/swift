@@ -51,7 +51,7 @@ void SparkleAutoUpdater::setAppcastFeed(const std::string& appcastFeed) {
 }
 
 void SparkleAutoUpdater::checkForUpdates() {
-    //[d->updater resetUpdateCycle]; // This is useful for testing to force a check ot start.
+    [d->updater resetUpdateCycle];
     [d->updater checkForUpdatesInBackground];
 }
 
