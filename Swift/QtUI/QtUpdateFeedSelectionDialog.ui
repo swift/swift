@@ -86,7 +86,7 @@
    <item>
     <widget class="QLabel" name="developmentDescriptionLabel">
      <property name="text">
-      <string>This release channel includes our stable releases, beta releases, release candidates and development releases. The development releases are not thoroughly tested and might contained bugs.</string>
+      <string>This release channel includes our stable releases, beta releases, release candidates and development releases. The development releases are not thoroughly tested and might contain bugs.</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignJustify|Qt::AlignTop</set>
