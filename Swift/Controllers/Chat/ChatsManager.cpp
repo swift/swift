@@ -937,8 +937,18 @@ void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> incomingMessag
         return;
     }
 
-    // Try to deliver it to a MUC
-    if (message->getType() == Message::Groupchat || message->getType() == Message::Error /*|| (isInvite && message->getType() == Message::Normal)*/) {
+    // Try to deliver MUC errors to a MUC PM window if a suitable window is open.
+    if (message->getType() == Message::Error) {
+        auto controller = getChatControllerIfExists(fromJID, messageCausesSessionBinding(message));
+        if (controller) {
+            controller->handleIncomingMessage(event);
+            return;
+        }
+    }
+
+    // Try to deliver it to a MUC.
+    if (message->getType() == Message::Groupchat || message->getType() == Message::Error) {
+        // Try to deliver it to a MUC room.
         std::map<JID, MUCController*>::iterator i = mucControllers_.find(fromJID.toBare());
         if (i != mucControllers_.end()) {
             i->second->handleIncomingMessage(event);

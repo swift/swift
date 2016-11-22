@@ -69,7 +69,11 @@ namespace Swift {
             virtual void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels) {labels_ = labels;}
             virtual void setSecurityLabelsEnabled(bool enabled) {labelsEnabled_ = enabled;}
             virtual void setUnreadMessageCount(int /*count*/) {}
-            virtual void convertToMUC(MUCType /*mucType*/) {}
+
+            virtual void convertToMUC(MUCType mucType) {
+                mucType_ = mucType;
+            }
+
             virtual void setSecurityLabelsError() {}
             virtual SecurityLabelsCatalog::Item getSelectedSecurityLabel() {return label_;}
             virtual void setOnline(bool /*online*/) {}
@@ -144,6 +148,7 @@ namespace Swift {
             SecurityLabelsCatalog::Item label_;
             Roster* roster_ = nullptr;
             std::vector<std::pair<std::string, ReceiptState>> receiptChanges_;
+            boost::optional<MUCType> mucType_;
     };
 }
 

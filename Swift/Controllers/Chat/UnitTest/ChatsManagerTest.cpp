@@ -81,9 +81,12 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerPresenceAccessUpdatedOnSubscriptionChangeToFrom);
     CPPUNIT_TEST(testChatControllerFullJIDBindingOnMessageAndNotReceipt);
     CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
-    CPPUNIT_TEST(testChatControllerPMPresenceHandling);
     CPPUNIT_TEST(testLocalMUCServiceDiscoveryResetOnDisconnect);
     CPPUNIT_TEST(testPresenceChangeDoesNotReplaceMUCInvite);
+
+    // MUC PM Tests
+    CPPUNIT_TEST(testChatControllerPMPresenceHandling);
+    CPPUNIT_TEST(testChatControllerMucPmUnavailableErrorHandling);
 
     // Highlighting tests
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
@@ -190,7 +193,7 @@ public:
     void testSecondOpenWindowIncoming() {
         JID messageJID1("testling@test.com/resource1");
 
-        MockChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        MockChatWindow* window1 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1, uiEventStream_).Return(window1);
 
         std::shared_ptr<Message> message1(new Message());
@@ -213,7 +216,7 @@ public:
     void testFirstOpenWindowOutgoing() {
         std::string messageJIDString("testling@test.com");
 
-        ChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        ChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString), uiEventStream_).Return(window);
 
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString)));
@@ -224,7 +227,7 @@ public:
         std::string bareJIDString("testling@test.com");
         std::string fullJIDString("testling@test.com/resource1");
 
-        MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString), uiEventStream_).Return(window);
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(bareJIDString)));
 
@@ -238,12 +241,12 @@ public:
 
     void testSecondWindow() {
         std::string messageJIDString1("testling1@test.com");
-        ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        ChatWindow* window1 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1), uiEventStream_).Return(window1);
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString1)));
 
         std::string messageJIDString2("testling2@test.com");
-        ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        ChatWindow* window2 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString2)));
@@ -260,7 +263,7 @@ public:
         std::string fullJIDString1("testling@test.com/resource1");
         std::string fullJIDString2("testling@test.com/resource2");
 
-        MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(bareJIDString), uiEventStream_).Return(window);
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(bareJIDString)));
 
@@ -297,18 +300,18 @@ public:
 
 
         std::string messageJIDString1("testling@test.com/1");
-        ChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        ChatWindow* window1 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString1), uiEventStream_).Return(window1);
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString1)));
 
         std::string messageJIDString2("testling@test.com/2");
-        ChatWindow* window2 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        ChatWindow* window2 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString2), uiEventStream_).Return(window2);
 
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString2)));
 
         std::string messageJIDString3("testling@test.com/3");
-        ChatWindow* window3 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        ChatWindow* window3 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID(messageJIDString3), uiEventStream_).Return(window3);
 
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(JID(messageJIDString3)));
@@ -331,7 +334,7 @@ public:
     void testNoDuplicateUnbind() {
         JID messageJID1("testling@test.com/resource1");
 
-        MockChatWindow* window1 = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        MockChatWindow* window1 = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID1, uiEventStream_).Return(window1);
 
         std::shared_ptr<Message> message1(new Message());
@@ -407,7 +410,7 @@ public:
     void testChatControllerPresenceAccessUpdatedOnAddToRoster() {
         JID messageJID("testling@test.com/resource1");
 
-        MockChatWindow* window = new MockChatWindow();//mocks_->InterfaceMock<ChatWindow>();
+        MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
         settings_->storeSetting(SettingConstants::REQUEST_DELIVERYRECEIPTS, true);
 
@@ -686,6 +689,50 @@ public:
         presence->setType(Presence::Unavailable);
         stanzaChannel_->onPresenceReceived(presence);
         CPPUNIT_ASSERT_EQUAL(std::string("participantA has gone offline."), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
+    }
+
+    void testChatControllerMucPmUnavailableErrorHandling() {
+        auto mucJID = JID("test@rooms.test.com");
+        auto participantA = mucJID.withResource("participantA");
+        auto participantB = mucJID.withResource("participantB");
+
+        auto mucWindow = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(mucWindow);
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(mucJID, participantB.getResource()));
+        CPPUNIT_ASSERT_EQUAL(true, mucWindow->mucType_.is_initialized());
+
+        auto window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(participantA, uiEventStream_).Return(window);
+        uiEventStream_->send(std::make_shared<RequestChatUIEvent>(participantA));
+        CPPUNIT_ASSERT_EQUAL(false, window->mucType_.is_initialized());
+
+        Presence::ref presence = Presence::create();
+        presence->setFrom(participantA);
+        presence->setShow(StatusShow::Online);
+        stanzaChannel_->onPresenceReceived(presence);
+        CPPUNIT_ASSERT_EQUAL(std::string("participantA has become available."), MockChatWindow::bodyFromMessage(window->lastAddedPresence_));
+
+        // send message to participantA
+        auto messageBody = std::string("message body to send");
+        window->onSendMessageRequest(messageBody, false);
+        auto sendMessageStanza = stanzaChannel_->getStanzaAtIndex<Message>(2);
+        CPPUNIT_ASSERT_EQUAL(messageBody, *sendMessageStanza->getBody());
+
+        // receive reply with error
+        auto messageErrorReply = std::make_shared<Message>();
+        messageErrorReply->setID(stanzaChannel_->getNewIQID());
+        messageErrorReply->setType(Message::Error);
+        messageErrorReply->setFrom(participantA);
+        messageErrorReply->setTo(jid_);
+        messageErrorReply->addPayload(std::make_shared<ErrorPayload>(ErrorPayload::ItemNotFound, ErrorPayload::Cancel, "Recipient not in room"));
+
+        auto lastMUCWindowErrorMessageBeforeError = MockChatWindow::bodyFromMessage(mucWindow->lastAddedErrorMessage_);
+        manager_->handleIncomingMessage(messageErrorReply);
+
+        // assert that error is not routed to MUC window
+        CPPUNIT_ASSERT_EQUAL(lastMUCWindowErrorMessageBeforeError,  MockChatWindow::bodyFromMessage(mucWindow->lastAddedErrorMessage_));
+        // assert that error is routed to PM
+        CPPUNIT_ASSERT_EQUAL(std::string("This user could not be found in the room."), MockChatWindow::bodyFromMessage(window->lastAddedErrorMessage_));
     }
 
     void testLocalMUCServiceDiscoveryResetOnDisconnect() {

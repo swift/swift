@@ -270,7 +270,13 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
     std::string body = optionalBody.get_value_or("");
     if (message->isError()) {
         if (!message->getTo().getResource().empty()) {
-            std::string errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
+            std::string errorMessage;
+            if (message->getPayload<Swift::ErrorPayload>()->getCondition() == ErrorPayload::ItemNotFound) {
+                errorMessage = QT_TRANSLATE_NOOP("", "This user could not be found in the room.");
+            }
+            else {
+                errorMessage = str(format(QT_TRANSLATE_NOOP("", "Couldn't send message: %1%")) % getErrorMessage(message->getPayload<ErrorPayload>()));
+            }
             chatWindow_->addErrorMessage(chatMessageParser_->parseMessageBody(errorMessage));
         }
     }
