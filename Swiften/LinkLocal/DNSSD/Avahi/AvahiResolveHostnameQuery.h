@@ -8,8 +8,6 @@
 
 #include <string>
 
-#include <netinet/in.h>
-
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/Avahi/AvahiQuery.h>
 #include <Swiften/LinkLocal/DNSSD/DNSSDResolveHostnameQuery.h>
