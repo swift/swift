@@ -13,7 +13,6 @@
 #include <Swift/Controllers/ContactsFromXMPPRoster.h>
 
 #include <Swiften/Avatars/AvatarManager.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Roster/XMPPRoster.h>
 #include <Swiften/Roster/XMPPRosterItem.h>
@@ -29,7 +28,7 @@ ContactsFromXMPPRoster::~ContactsFromXMPPRoster() {
 std::vector<Contact::ref> ContactsFromXMPPRoster::getContacts(bool /*withMUCNicks*/) {
     std::vector<Contact::ref> results;
     std::vector<XMPPRosterItem> rosterItems = roster_->getItems();
-    foreach(const XMPPRosterItem& rosterItem, rosterItems) {
+    for (const auto& rosterItem : rosterItems) {
         Contact::ref contact = std::make_shared<Contact>(rosterItem.getName().empty() ? rosterItem.getJID().toString() : rosterItem.getName(), rosterItem.getJID(), StatusShow::None,"");
         contact->statusType = presenceOracle_->getAccountPresence(contact->jid) ? presenceOracle_->getAccountPresence(contact->jid)->getShow() : StatusShow::None;
         contact->avatarPath = avatarManager_->getAvatarPath(contact->jid);

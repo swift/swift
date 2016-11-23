@@ -10,7 +10,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Queries/Requests/GetPrivateStorageRequest.h>
 #include <Swiften/Queries/Requests/SetPrivateStorageRequest.h>
@@ -36,12 +35,12 @@ void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payloa
     storage = payload;
 
     std::vector<MUCBookmark> receivedBookmarks;
-    foreach (Storage::Room room, payload->getRooms()) {
+    for (const auto& room : payload->getRooms()) {
         receivedBookmarks.push_back(MUCBookmark(room));
     }
 
     std::vector<MUCBookmark> newBookmarks;
-    foreach (const MUCBookmark& oldBookmark, bookmarks_) {
+    for (const auto& oldBookmark : bookmarks_) {
         if (containsEquivalent(receivedBookmarks, oldBookmark)) {
             newBookmarks.push_back(oldBookmark);
         } else {
@@ -49,7 +48,7 @@ void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payloa
         }
     }
 
-    foreach (const MUCBookmark& newBookmark, receivedBookmarks) {
+    for (const auto& newBookmark : receivedBookmarks) {
         if (!containsEquivalent(bookmarks_, newBookmark)) {
             newBookmarks.push_back(newBookmark);
             onBookmarkAdded(newBookmark);
@@ -102,7 +101,7 @@ void MUCBookmarkManager::flush() {
     }
     // Update the storage element
     storage->clearRooms();
-    foreach(const MUCBookmark& bookmark, bookmarks_) {
+    for (const auto& bookmark : bookmarks_) {
         storage->addRoom(bookmark.toStorage());
     }
 

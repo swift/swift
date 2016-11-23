@@ -18,7 +18,6 @@
 #include <boost/signals2.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/Network/ConnectionFactory.h>
@@ -39,7 +38,7 @@ RemoteJingleTransportCandidateSelector::~RemoteJingleTransportCandidateSelector(
 
 void RemoteJingleTransportCandidateSelector::addCandidates(
         const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
-    foreach(JingleS5BTransportPayload::Candidate c,  candidates) {
+    for (auto&& c : candidates) {
         this->candidates.push(c);
     }
 }

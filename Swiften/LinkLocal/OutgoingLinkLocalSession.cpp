@@ -8,7 +8,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/ProtocolHeader.h>
 #include <Swiften/Elements/StreamFeatures.h>
@@ -35,7 +34,7 @@ void OutgoingLinkLocalSession::handleSessionStarted() {
 }
 
 void OutgoingLinkLocalSession::handleStreamStart(const ProtocolHeader&) {
-    foreach(const std::shared_ptr<ToplevelElement>& stanza, queuedElements_) {
+    for (const auto& stanza : queuedElements_) {
         sendElement(stanza);
     }
     queuedElements_.clear();

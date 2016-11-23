@@ -9,7 +9,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Queries/IQChannel.h>
 #include <Swiften/Queries/IQHandler.h>
@@ -53,7 +52,7 @@ void IQRouter::handleIQ(std::shared_ptr<IQ> iq) {
 }
 
 void IQRouter::processPendingRemoves() {
-    foreach(std::shared_ptr<IQHandler> handler, queuedRemoves_) {
+    for (auto&& handler : queuedRemoves_) {
         erase(handlers_, handler);
     }
     queuedRemoves_.clear();

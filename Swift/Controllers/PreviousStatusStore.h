@@ -14,6 +14,7 @@
 
 namespace Swift {
     typedef std::pair<StatusShow::Type, std::string> TypeStringPair;
+
     class PreviousStatusStore {
         public:
             PreviousStatusStore();

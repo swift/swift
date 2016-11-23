@@ -90,7 +90,7 @@ void QtVCardAddressField::setupContentWidgets() {
 }
 
 void QtVCardAddressField::customCleanup() {
-    foreach(QWidget* widget, textFields) {
+    for (auto widget : textFields) {
         widget->hide();
         textFieldGridLayout->removeWidget(widget);
     }
@@ -170,7 +170,7 @@ void QtVCardAddressField::handleEditibleChanged(bool isEditable) {
     domesticRadioButton->setVisible(isEditable);
     internationalRadioButton->setVisible(isEditable);
 
-    foreach (QWidget* widget, textFields) {
+    for (auto widget : textFields) {
         QtResizableLineEdit* lineEdit;
         if ((lineEdit = dynamic_cast<QtResizableLineEdit*>(widget))) {
             lineEdit->setVisible(isEditable ? true : !lineEdit->text().isEmpty());

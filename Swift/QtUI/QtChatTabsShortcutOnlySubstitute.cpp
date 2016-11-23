@@ -12,7 +12,6 @@
 #include <QShortcut>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 
 #include <Swift/QtUI/QtTabbable.h>
 
@@ -95,7 +94,7 @@ QList<QtTabbable*> QtChatTabsShortcutOnlySubstitute::tabbableWindows() const {
     QList<QWidget*> windows = qApp->topLevelWidgets();
 
     QList<QtTabbable*> tabbables;
-    foreach(QWidget* topLevelWidget, windows) {
+    for (auto topLevelWidget : windows) {
         QtTabbable* tabbable = dynamic_cast<QtTabbable*>(topLevelWidget);
         if (tabbable) {
             tabbables << tabbable;

@@ -19,10 +19,10 @@ EventModel::EventModel() {
 }
 
 EventModel::~EventModel() {
-    foreach (QtEvent* event, activeEvents_) {
+    for (auto event : activeEvents_) {
         delete event;
     }
-    foreach (QtEvent* event, inactiveEvents_) {
+    for (auto event : inactiveEvents_) {
         delete event;
     }
 }

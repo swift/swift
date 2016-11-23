@@ -17,7 +17,6 @@
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>

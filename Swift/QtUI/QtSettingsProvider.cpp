@@ -77,7 +77,7 @@ void QtSettingsProvider::storeSetting(const Setting<int>& setting, const int& se
 std::vector<std::string> QtSettingsProvider::getAvailableProfiles() {
     std::vector<std::string> profiles;
     QVariant profilesVariant = settings_.value("profileList");
-    foreach(QString profileQString, profilesVariant.toStringList()) {
+    for (const auto& profileQString : profilesVariant.toStringList()) {
         profiles.push_back(std::string(profileQString.toUtf8()));
     }
     return profiles;
@@ -92,7 +92,7 @@ void QtSettingsProvider::createProfile(const std::string& profile) {
 
 void QtSettingsProvider::removeProfile(const std::string& profile) {
     QString profileStart(QString(profile.c_str()) + ":");
-    foreach (QString key, settings_.allKeys()) {
+    for (auto&& key : settings_.allKeys()) {
         if (key.startsWith(profileStart)) {
             settings_.remove(key);
         }

@@ -6,10 +6,8 @@
 
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerAffiliationsSerializer.h>
 
-#include <cassert>
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerAffiliationSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -29,7 +27,7 @@ std::string PubSubOwnerAffiliationsSerializer::serializePayload(std::shared_ptr<
     }
     XMLElement element("affiliations", "http://jabber.org/protocol/pubsub#owner");
     element.setAttribute("node", payload->getNode());
-    foreach(std::shared_ptr<PubSubOwnerAffiliation> item, payload->getAffiliations()) {
+    for (const auto& item : payload->getAffiliations()) {
         element.addNode(std::make_shared<XMLRawTextNode>(PubSubOwnerAffiliationSerializer(serializers).serialize(item)));
     }
     return element.serialize();

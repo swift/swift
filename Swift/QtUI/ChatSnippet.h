@@ -11,8 +11,6 @@
 #include <QDateTime>
 #include <QString>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 #include <Swift/QtUI/QtChatTheme.h>

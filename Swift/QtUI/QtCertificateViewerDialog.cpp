@@ -18,8 +18,6 @@
 #include <QStringList>
 #include <QTreeWidgetItem>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/QtUI/ui_QtCertificateViewerDialog.h>
 
 namespace Swift {
@@ -43,7 +41,7 @@ void QtCertificateViewerDialog::setCertificateChain(const std::vector<Certificat
 
     // convert Swift certificate chain to qt certificate chain (root goes first)
     currentChain.clear();
-    foreach(Certificate::ref cert, chain) {
+    for (auto&& cert : chain) {
         ByteArray certAsDer = cert->toDER();
         QByteArray dataArray(reinterpret_cast<const char*>(certAsDer.data()), certAsDer.size());
         currentChain.push_front(QSslCertificate(dataArray, QSsl::Der));
@@ -125,8 +123,8 @@ void QtCertificateViewerDialog::setCertificateDetails(const QSslCertificate& cer
 #endif
     if (!altNames.empty()) {
         ADD_SECTION(tr("Alternate Subject Names"));
-        foreach (const SANTYPE &type, altNames.uniqueKeys()) {
-            foreach (QString name, altNames.values(type)) {
+        for (const auto& type : altNames.uniqueKeys()) {
+            for (auto&& name : altNames.values(type)) {
                 if (type == QSsl::EmailEntry) {
                     ADD_FIELD(tr("E-mail Address"), name);
                 } else {

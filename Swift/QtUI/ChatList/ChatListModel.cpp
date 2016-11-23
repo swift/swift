@@ -96,7 +96,7 @@ void ChatListModel::setRecents(const std::list<ChatListWindow::Chat>& recents) {
     recents_->clear();
     endRemoveRows();
     beginInsertRows(recentsIndex_, 0, recents.size());
-    foreach (const ChatListWindow::Chat chat, recents) {
+    for (const auto& chat : recents) {
         recents_->addItem(new ChatListRecentItem(chat, recents_));
 //whiteboards_->addItem(new ChatListRecentItem(chat, whiteboards_));
     }
@@ -121,8 +121,7 @@ QMimeData* ChatListModel::mimeData(const QModelIndexList& indexes) const {
         }
         dataStream << P2QSTRING(chat.jid.toString());
     } else {
-        typedef std::map<std::string, JID> JIDMap;
-        foreach (const JIDMap::value_type& jid, chat.impromptuJIDs) {
+         for (const auto& jid : chat.impromptuJIDs) {
             dataStream << P2QSTRING(jid.second.toString());
         }
     }

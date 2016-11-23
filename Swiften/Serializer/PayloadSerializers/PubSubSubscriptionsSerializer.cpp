@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubSubscriptionSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -30,7 +29,7 @@ std::string PubSubSubscriptionsSerializer::serializePayload(std::shared_ptr<PubS
     if (payload->getNode()) {
         element.setAttribute("node", *payload->getNode());
     }
-    foreach(std::shared_ptr<PubSubSubscription> item, payload->getSubscriptions()) {
+    for (const auto& item : payload->getSubscriptions()) {
         element.addNode(std::make_shared<XMLRawTextNode>(PubSubSubscriptionSerializer(serializers).serialize(item)));
     }
     return element.serialize();

@@ -8,8 +8,6 @@
 
 #include <QList>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/QtUI/ChatList/ChatListItem.h>
 
 namespace Swift {
@@ -24,12 +22,11 @@ namespace Swift {
             int row(ChatListItem* item) {return items_.indexOf(item);}
             QVariant data(int role) const {return (role == Qt::DisplayRole) ? name_ : QVariant();}
             void clear() {
-                foreach (ChatListItem* item, items_) {
+                for (auto item : items_) {
                     delete item;
                 }
                 items_.clear();
             }
-
 
         private:
             static bool pointerItemLessThan(const ChatListItem* first, const ChatListItem* second) {

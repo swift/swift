@@ -13,14 +13,13 @@
 #include "CocoaUIHelpers.h"
 
 #include <memory>
+
 #include <boost/type_traits.hpp>
 
 #include <Cocoa/Cocoa.h>
 
 #include <Security/Security.h>
 #include <SecurityInterface/SFCertificatePanel.h>
-
-#include <Swiften/Base/foreach.h>
 
 #pragma GCC diagnostic ignored "-Wold-style-cast"
 
@@ -29,7 +28,7 @@ namespace Swift {
 void CocoaUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain) {
     NSWindow* parentWindow = [((NSView*)parent->winId()) window];
     NSMutableArray* certificates = [[NSMutableArray alloc] init];
-    foreach(Certificate::ref cert, chain) {
+    for (auto&& cert : chain) {
         // convert chain to SecCertificateRef
         ByteArray certAsDER = cert->toDER();
         std::shared_ptr<boost::remove_pointer<CFDataRef>::type> certData(CFDataCreate(nullptr, certAsDER.data(), certAsDER.size()), CFRelease);
@@ -38,7 +37,6 @@ void CocoaUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::
         // add to NSMutable array
         [certificates addObject: (id)macCert.get()];
     }
-
 
     SFCertificatePanel* panel = [[SFCertificatePanel alloc] init];
     //[panel setPolicies:(id)policies.get()];

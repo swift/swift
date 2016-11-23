@@ -12,8 +12,6 @@
 
 #include <lua.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Sluift/LuaElementConvertors.h>
 
 using namespace Swift;
@@ -77,7 +75,7 @@ void PubSubEventItemConvertor::doConvertToLua(lua_State* L, std::shared_ptr<PubS
         lua_createtable(L, boost::numeric_cast<int>(payload->getData().size()), 0);
         {
             int i = 0;
-            foreach(std::shared_ptr<Payload> item, payload->getData()) {
+            for (auto&& item : payload->getData()) {
                 if (convertors->convertToLua(L, item) > 0) {
                     lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
                     ++i;

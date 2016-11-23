@@ -16,8 +16,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 SingleThreadedEventLoop::SingleThreadedEventLoop()
@@ -35,8 +33,9 @@ void SingleThreadedEventLoop::waitForEvents() {
         eventAvailableCondition_.wait(lock);
     }
 
-    if (shouldShutDown_)
+    if (shouldShutDown_) {
         throw EventLoopCanceledException();
+    }
 }
 
 void SingleThreadedEventLoop::handleEvents() {

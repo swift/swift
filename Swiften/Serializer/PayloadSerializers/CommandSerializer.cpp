@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -50,14 +49,14 @@ std::string CommandSerializer::serializePayload(std::shared_ptr<Command> command
             actions += " execute='" + executeAction + "'";
         }
         actions += ">";
-        foreach (Command::Action action, command->getAvailableActions()) {
+        for (const auto& action : command->getAvailableActions()) {
             actions += "<" + actionToString(action) + "/>";
         }
         actions += "</actions>";
         commandElement.addNode(std::make_shared<XMLRawTextNode>(actions));
     }
 
-    foreach (Command::Note note, command->getNotes()) {
+    for (const auto& note : command->getNotes()) {
         std::shared_ptr<XMLElement> noteElement(new XMLElement("note"));
         std::string type;
         switch (note.type) {

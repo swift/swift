@@ -4,18 +4,21 @@
  * See the COPYING file for more information.
  */
 
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <lua.hpp>
-#include <Swiften/Base/foreach.h>
-#include <Swiften/Base/Platform.h>
+
+#include <boost/assign/list_of.hpp>
+#include <boost/numeric/conversion/cast.hpp>
+#include <boost/program_options.hpp>
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
-#include <boost/program_options.hpp>
 #include <boost/version.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-#include <boost/assign/list_of.hpp>
+
+#include <lua.hpp>
+
+#include <Swiften/Base/Platform.h>
+
 #include <Sluift/globals.h>
 #include <Sluift/Console.h>
 #include <Sluift/StandardTerminal.h>
@@ -87,7 +90,7 @@ static void runScript(lua_State* L, const std::string& script, const std::vector
 
     // Load file
     checkResult(L, luaL_loadfile(L, script.c_str()));
-    foreach (const std::string& scriptArgument, scriptArguments) {
+    for (const auto& scriptArgument : scriptArguments) {
         lua_pushstring(L, scriptArgument.c_str());
     }
     checkResult(L, Console::call(L, boost::numeric_cast<int>(scriptArguments.size()), false));
@@ -163,7 +166,7 @@ int main(int argc, char* argv[]) {
             lua_getglobal(L, "sluift");
             std::vector<std::string> globalImports = boost::assign::list_of
                 ("help")("with");
-            foreach (const std::string& globalImport, globalImports) {
+            for (const auto& globalImport : globalImports) {
                 lua_getfield(L, -1, globalImport.c_str());
                 lua_setglobal(L, globalImport.c_str());
             }

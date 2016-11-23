@@ -12,7 +12,6 @@
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/StreamType.h>
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/StreamStack/CompressionLayer.h>

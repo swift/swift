@@ -11,7 +11,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/Connector.h>
 

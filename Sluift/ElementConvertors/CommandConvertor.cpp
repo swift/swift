@@ -12,8 +12,6 @@
 
 #include <lua.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Sluift/Lua/Check.h>
 #include <Sluift/Lua/Value.h>
 #include <Sluift/LuaElementConvertors.h>
@@ -154,7 +152,7 @@ void CommandConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Command> pay
 
     if (!payload->getNotes().empty()) {
         std::vector<Lua::Value> notes;
-        foreach (const Command::Note& note, payload->getNotes()) {
+        for (const auto& note : payload->getNotes()) {
             Lua::Table noteTable;
             if (!note.note.empty()) {
                 noteTable["note"] = Lua::valueRef(note.note);
@@ -179,7 +177,7 @@ void CommandConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Command> pay
 
     if (!payload->getAvailableActions().empty()) {
         std::vector<Lua::Value> availableActions;
-        foreach (const Command::Action& action, payload->getAvailableActions()) {
+        for (const auto& action : payload->getAvailableActions()) {
             if (action != Command::NoAction) {
                 availableActions.push_back(convertActionToString(action));
             }

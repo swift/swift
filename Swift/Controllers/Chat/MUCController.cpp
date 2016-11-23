@@ -11,10 +11,10 @@
 #include <boost/bind.hpp>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/range/adaptor/reversed.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Base/Tristate.h>
 #include <Swiften/Client/BlockList.h>
@@ -238,7 +238,7 @@ void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction a
 void MUCController::handleBareJIDCapsChanged(const JID& /*jid*/) {
     Tristate support = Yes;
     bool any = false;
-    foreach (const std::string& nick, currentOccupants_) {
+    for (const auto& nick : currentOccupants_) {
         DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_.toBare().toString() + "/" + nick);
         if (disco && disco->hasFeature(DiscoInfo::MessageCorrectionFeature)) {
             any = true;
@@ -295,9 +295,8 @@ bool MUCController::isImpromptu() const {
 
 std::map<std::string, JID> MUCController::getParticipantJIDs() const {
     std::map<std::string, JID> participants;
-    typedef std::pair<std::string, MUCOccupant> MUCOccupantPair;
     std::map<std::string, MUCOccupant> occupants = muc_->getOccupants();
-    foreach(const MUCOccupantPair& occupant, occupants) {
+    for (const auto& occupant : occupants) {
         if (occupant.first != nick_) {
             participants[occupant.first] = occupant.second.getRealJID().is_initialized() ? occupant.second.getRealJID().get().toBare() : JID();
         }
@@ -306,7 +305,7 @@ std::map<std::string, JID> MUCController::getParticipantJIDs() const {
 }
 
 void MUCController::sendInvites(const std::vector<JID>& jids, const std::string& reason) const {
-    foreach (const JID& jid, jids) {
+    for (const auto& jid : jids) {
         muc_->invitePerson(jid, reason, isImpromptu_);
     }
 }
@@ -859,7 +858,7 @@ std::string MUCController::concatenateListOfNames(const std::vector<NickJoinPart
 std::string MUCController::generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu) {
     std::vector<NickJoinPart> sorted[4];
     std::string eventStrings[4];
-    foreach (NickJoinPart event, joinParts) {
+    for (const auto& event : joinParts) {
         sorted[event.type].push_back(event);
     }
     std::string result;
@@ -937,7 +936,7 @@ void MUCController::handleBookmarkRequest() {
 
     // Check for existing bookmark for this room and, if it exists, use it instead.
     std::vector<MUCBookmark> bookmarks = mucBookmarkManager_->getBookmarks();
-    foreach (const MUCBookmark& bookmark, bookmarks) {
+    for (const auto& bookmark : bookmarks) {
         if (bookmark.getRoom() == jid.toBare()) {
             roomBookmark = bookmark;
             break;
@@ -1001,7 +1000,7 @@ void MUCController::handleInvitePersonToThisMUCRequest(const std::vector<JID>& j
 void MUCController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     std::shared_ptr<InviteToMUCUIEvent> inviteEvent = std::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
     if (inviteEvent && inviteEvent->getRoom() == muc_->getJID()) {
-        foreach (const JID& jid, inviteEvent->getInvites()) {
+        for (const auto& jid : inviteEvent->getInvites()) {
             muc_->invitePerson(jid, inviteEvent->getReason(), isImpromptu_);
         }
     }
@@ -1014,16 +1013,14 @@ void MUCController::handleGetAffiliationsRequest() {
     muc_->requestAffiliationList(MUCOccupant::Outcast);
 }
 
-typedef std::pair<MUCOccupant::Affiliation, JID> AffiliationChangePair;
-
 void MUCController::handleChangeAffiliationsRequest(const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes) {
     std::set<JID> addedJIDs;
-    foreach (const AffiliationChangePair& change, changes) {
+    for (const auto& change : changes) {
         if (change.first != MUCOccupant::NoAffiliation) {
             addedJIDs.insert(change.second);
         }
     }
-    foreach (const AffiliationChangePair& change, changes) {
+    for (const auto& change : changes) {
         if (change.first != MUCOccupant::NoAffiliation || addedJIDs.find(change.second) == addedJIDs.end()) {
             muc_->changeAffiliation(change.second, change.first);
         }
@@ -1070,7 +1067,7 @@ void MUCController::addRecentLogs() {
 
     joinContext_ = historyController_->getMUCContext(selfJID_, toJID_, lastActivity_);
 
-    foreach (const HistoryMessage& message, joinContext_) {
+    for (const auto& message : joinContext_) {
         bool senderIsSelf = nick_ == message.getFromJID().getResource();
 
         // the chatWindow uses utc timestamps
@@ -1083,7 +1080,7 @@ void MUCController::checkDuplicates(std::shared_ptr<Message> newMessage) {
     JID jid = newMessage->getFrom();
     boost::optional<boost::posix_time::ptime> time = newMessage->getTimestamp();
 
-    reverse_foreach (const HistoryMessage& message, joinContext_) {
+    for (const auto& message : boost::adaptors::reverse(joinContext_)) {
         boost::posix_time::ptime messageTime = message.getTime() - boost::posix_time::hours(message.getOffset());
         if (time && time < messageTime) {
             break;
@@ -1112,7 +1109,7 @@ Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigura
     Form::ref result = std::make_shared<Form>(Form::SubmitType);
     std::string impromptuConfigs[] = { "muc#roomconfig_enablelogging", "muc#roomconfig_persistentroom", "muc#roomconfig_publicroom", "muc#roomconfig_whois"};
     std::set<std::string> impromptuConfigsMissing(impromptuConfigs, impromptuConfigs + 4);
-    foreach (std::shared_ptr<FormField> field, roomConfigurationForm->getFields()) {
+    for (const auto& field : roomConfigurationForm->getFields()) {
         std::shared_ptr<FormField> resultField;
         if (field->getName() == "muc#roomconfig_enablelogging") {
             resultField = std::make_shared<FormField>(FormField::BooleanType, "0");
@@ -1138,7 +1135,7 @@ Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigura
         }
     }
 
-    foreach (const std::string& config, impromptuConfigsMissing) {
+    for (const auto& config : impromptuConfigsMissing) {
         if (config == "muc#roomconfig_publicroom") {
             chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "This server doesn't support hiding your chat from other users.")), ChatWindow::DefaultDirection);
         } else if (config == "muc#roomconfig_whois") {
@@ -1151,12 +1148,11 @@ Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigura
 
 void MUCController::setImpromptuWindowTitle() {
     std::string title;
-    typedef std::pair<std::string, MUCOccupant> StringMUCOccupantPair;
     std::map<std::string, MUCOccupant> occupants = muc_->getOccupants();
     if (occupants.size() <= 1) {
         title = QT_TRANSLATE_NOOP("", "Empty Chat");
     } else {
-        foreach (StringMUCOccupantPair pair, occupants) {
+        for (const auto& pair : occupants) {
             if (pair.first != nick_) {
                 title += (title.empty() ? "" : ", ") + pair.first;
             }

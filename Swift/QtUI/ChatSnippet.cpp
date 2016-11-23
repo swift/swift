@@ -48,7 +48,7 @@ QString ChatSnippet::directionToCSS(Direction direction) {
 ChatSnippet::Direction ChatSnippet::getDirection(const ChatWindow::ChatMessage& message) {
     std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
     std::string text = "";
-    foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
+    for (auto&& part : message.getParts()) {
         if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
             text = textPart->text;
             break;

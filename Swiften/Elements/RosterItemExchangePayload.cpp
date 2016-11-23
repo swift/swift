@@ -12,8 +12,6 @@
 
 #include <Swiften/Elements/RosterItemExchangePayload.h>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 RosterItemExchangePayload::Item::Item(Action action) : action(action) {

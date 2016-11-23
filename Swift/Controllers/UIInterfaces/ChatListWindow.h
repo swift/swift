@@ -14,7 +14,6 @@
 #include <boost/filesystem/path.hpp>
 #include <boost/signals2.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/MUC/MUCBookmark.h>
 
@@ -31,11 +30,11 @@ namespace Swift {
                         if (impromptuJIDs.empty()) {
                             return jid.toBare() == other.jid.toBare()
                                     && isMUC == other.isMUC;
-                        } else { /* compare the chat occupant lists */
-                            typedef std::map<std::string, JID> JIDMap;
-                            foreach (const JIDMap::value_type& jid, impromptuJIDs) {
+                        }
+                        else { /* compare the chat occupant lists */
+                            for (const auto& jid : impromptuJIDs) {
                                 bool found = false;
-                                foreach (const JIDMap::value_type& otherJID, other.impromptuJIDs) {
+                                for (const auto& otherJID : other.impromptuJIDs) {
                                     if (jid.second.toBare() == otherJID.second.toBare()) {
                                         found = true;
                                         break;
@@ -58,9 +57,8 @@ namespace Swift {
                         avatarPath = path;
                     }
                     std::string getImpromptuTitle() const {
-                        typedef std::pair<std::string, JID> StringJIDPair;
                         std::string title;
-                        foreach(StringJIDPair pair, impromptuJIDs) {
+                        for (auto& pair : impromptuJIDs) {
                             if (title.empty()) {
                                 title += pair.first;
                             } else {

@@ -14,7 +14,6 @@
 #include <Swiften/Base/BoostRandomGenerator.h>
 #include <Swiften/Base/Debug.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>

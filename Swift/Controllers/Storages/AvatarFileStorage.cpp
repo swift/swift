@@ -12,7 +12,6 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/StringCodecs/Hexify.h>
 

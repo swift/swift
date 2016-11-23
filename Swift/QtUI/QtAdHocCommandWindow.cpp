@@ -104,7 +104,7 @@ void QtAdHocCommandWindow::handleCompleteClicked() {
 
 void QtAdHocCommandWindow::handleNextStageReceived(Command::ref command) {
     QString notes;
-    foreach (Command::Note note, command->getNotes()) {
+    for (const auto& note : command->getNotes()) {
         if (!notes.isEmpty()) {
             notes += "\n";
         }
@@ -152,7 +152,7 @@ typedef std::pair<Command::Action, QPushButton*> ActionButton;
 void QtAdHocCommandWindow::setAvailableActions(Command::ref /*commandResult*/) {
     okButton_->show();
     okButton_->setEnabled(true);
-    foreach (ActionButton pair, actions_) {
+    for (auto&& pair : actions_) {
         OutgoingAdHocCommandSession::ActionState state = command_->getActionState(pair.first);
         if (state & OutgoingAdHocCommandSession::Present) {
             okButton_->hide();

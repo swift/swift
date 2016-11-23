@@ -8,7 +8,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/IDN/IDNConverter.h>
 
 namespace Swift {
@@ -30,7 +29,7 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
     }
     // DNS names
     std::vector<std::string> dnsNames = certificate->getDNSNames();
-    foreach (const std::string& dnsName, dnsNames) {
+    for (const auto& dnsName : dnsNames) {
         if (matchesDomain(dnsName)) {
             return true;
         }
@@ -39,7 +38,7 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 
     // SRV names
     std::vector<std::string> srvNames = certificate->getSRVNames();
-    foreach (const std::string& srvName, srvNames) {
+    for (const auto& srvName : srvNames) {
         // Only match SRV names that begin with the service; this isn't required per
         // spec, but we're being purist about this.
         if (boost::starts_with(srvName, "_xmpp-client.") && matchesDomain(srvName.substr(std::string("_xmpp-client.").size(), srvName.npos))) {
@@ -50,7 +49,7 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
 
     // XmppAddr
     std::vector<std::string> xmppAddresses = certificate->getXMPPAddresses();
-    foreach (const std::string& xmppAddress, xmppAddresses) {
+    for (const auto& xmppAddress : xmppAddresses) {
         if (matchesAddress(xmppAddress)) {
             return true;
         }
@@ -60,7 +59,7 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
     // CommonNames. Only check this if there was no SAN (according to spec).
     if (!hasSAN) {
         std::vector<std::string> commonNames = certificate->getCommonNames();
-        foreach (const std::string& commonName, commonNames) {
+        for (const auto& commonName : commonNames) {
             if (matchesDomain(commonName)) {
                 return true;
             }

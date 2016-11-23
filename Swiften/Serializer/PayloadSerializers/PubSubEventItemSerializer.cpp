@@ -4,13 +4,10 @@
  * See the COPYING file for more information.
  */
 
-
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubEventItemSerializer.h>
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -34,7 +31,7 @@ std::string PubSubEventItemSerializer::serializePayload(std::shared_ptr<PubSubEv
     if (payload->getPublisher()) {
         element.setAttribute("publisher", *payload->getPublisher());
     }
-    foreach(std::shared_ptr<Payload> item, payload->getData()) {
+    for (const auto& item : payload->getData()) {
         element.addNode(std::make_shared<XMLRawTextNode>(serializers->getPayloadSerializer(item)->serialize(item)));
     }
     if (payload->getID()) {

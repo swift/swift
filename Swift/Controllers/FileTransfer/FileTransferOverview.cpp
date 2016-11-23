@@ -17,7 +17,6 @@
 #include <boost/signals2.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 
 namespace Swift {
@@ -30,7 +29,7 @@ FileTransferOverview::FileTransferOverview(FileTransferManager* ftm) : fileTrans
 FileTransferOverview::~FileTransferOverview() {
     onNewFileTransferController.disconnect(boost::bind(&FileTransferOverview::handleNewFileTransferController, this, _1));
     fileTransferManager->onIncomingFileTransfer.disconnect(boost::bind(&FileTransferOverview::handleIncomingFileTransfer, this, _1));
-    foreach(FileTransferController* controller, fileTransfers) {
+    for (auto controller : fileTransfers) {
         controller->onStateChanged.disconnect(boost::bind(&FileTransferOverview::handleFileTransferStateChanged, this));
     }
 }
@@ -78,7 +77,7 @@ void FileTransferOverview::clearFinished() {
 
 bool FileTransferOverview::isClearable() const {
     bool isClearable = false;
-    foreach (FileTransferController* controller, fileTransfers) {
+    for (auto controller : fileTransfers) {
         if(controller->getState().type == FileTransfer::State::Finished
             || controller->getState().type == FileTransfer::State::Failed
             || controller->getState().type == FileTransfer::State::Canceled) {

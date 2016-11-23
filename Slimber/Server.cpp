@@ -6,13 +6,13 @@
 
 #include <Slimber/Server.h>
 
+#include <cassert>
 #include <string>
 
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/RosterPayload.h>
@@ -111,11 +111,11 @@ void Server::stop(boost::optional<ServerError> e) {
         serverFromClientSession->finishSession();
     }
     serverFromClientSession.reset();
-    foreach(std::shared_ptr<Session> session, linkLocalSessions) {
+    for (auto&& session : linkLocalSessions) {
         session->finishSession();
     }
     linkLocalSessions.clear();
-    foreach(std::shared_ptr<LinkLocalConnector> connector, connectors) {
+    for (auto&& connector : connectors) {
         connector->cancel();
     }
     connectors.clear();
@@ -123,7 +123,7 @@ void Server::stop(boost::optional<ServerError> e) {
 
     if (serverFromNetworkConnectionServer) {
         serverFromNetworkConnectionServer->stop();
-        foreach(boost::signals2::connection& connection, serverFromNetworkConnectionServerSignalConnections) {
+        for (auto&& connection : serverFromNetworkConnectionServerSignalConnections) {
             connection.disconnect();
         }
         serverFromNetworkConnectionServerSignalConnections.clear();
@@ -131,7 +131,7 @@ void Server::stop(boost::optional<ServerError> e) {
     }
     if (serverFromClientConnectionServer) {
         serverFromClientConnectionServer->stop();
-        foreach(boost::signals2::connection& connection, serverFromClientConnectionServerSignalConnections) {
+        for (auto&& connection : serverFromClientConnectionServerSignalConnections) {
             connection.disconnect();
         }
         serverFromClientConnectionServerSignalConnections.clear();
@@ -218,7 +218,7 @@ void Server::handleElementReceived(std::shared_ptr<ToplevelElement> element, std
                 if (iq->getType() == IQ::Get) {
                     session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), presenceManager->getRoster()));
                     rosterRequested = true;
-                    foreach(const std::shared_ptr<Presence> presence, presenceManager->getAllPresence()) {
+                    for (const auto& presence : presenceManager->getAllPresence()) {
                         session->sendElement(presence);
                     }
                 }
@@ -314,7 +314,7 @@ void Server::handleConnectFinished(std::shared_ptr<LinkLocalConnector> connector
                 new OutgoingLinkLocalSession(
                     selfJID, connector->getService().getJID(), connector->getConnection(),
                     &payloadParserFactories, &payloadSerializers, &xmlParserFactory));
-        foreach(const std::shared_ptr<ToplevelElement> element, connector->getQueuedElements()) {
+        for (const auto& element : connector->getQueuedElements()) {
             outgoingSession->queueElement(element);
         }
         registerLinkLocalSession(outgoingSession);
@@ -333,7 +333,7 @@ void Server::registerLinkLocalSession(std::shared_ptr<Session> session) {
 }
 
 std::shared_ptr<Session> Server::getLinkLocalSessionForJID(const JID& jid) {
-    foreach(const std::shared_ptr<Session> session, linkLocalSessions) {
+    for (const auto& session : linkLocalSessions) {
         if (session->getRemoteJID() == jid) {
             return session;
         }
@@ -342,7 +342,7 @@ std::shared_ptr<Session> Server::getLinkLocalSessionForJID(const JID& jid) {
 }
 
 std::shared_ptr<LinkLocalConnector> Server::getLinkLocalConnectorForJID(const JID& jid) {
-    foreach(const std::shared_ptr<LinkLocalConnector> connector, connectors) {
+    for (const auto& connector : connectors) {
         if (connector->getService().getJID() == jid) {
             return connector;
         }

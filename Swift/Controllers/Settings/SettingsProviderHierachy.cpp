@@ -1,20 +1,20 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/Log.h>
+
 namespace Swift {
 
 SettingsProviderHierachy::~SettingsProviderHierachy() {
 }
 
 bool SettingsProviderHierachy::hasSetting(const std::string& key) {
-    foreach (SettingsProvider* provider, providers_) {
+    for (auto provider : providers_) {
         if (provider->hasSetting(key)) {
             return true;
         }
@@ -24,7 +24,7 @@ bool SettingsProviderHierachy::hasSetting(const std::string& key) {
 
 std::string SettingsProviderHierachy::getSetting(const Setting<std::string>& setting) {
     std::string value = setting.getDefaultValue();
-    foreach (SettingsProvider* provider, providers_) {
+    for (auto provider : providers_) {
         std::string providerSetting = provider->getSetting(setting);
         if (provider->hasSetting(setting.getKey())) {
             value = providerSetting;
@@ -44,7 +44,7 @@ void SettingsProviderHierachy::storeSetting(const Setting<std::string>& setting,
 
 bool SettingsProviderHierachy::getSetting(const Setting<bool>& setting) {
     bool value = setting.getDefaultValue();
-    foreach (SettingsProvider* provider, providers_) {
+    for (auto provider : providers_) {
         bool providerSetting = provider->getSetting(setting);
         if (provider->hasSetting(setting.getKey())) {
             value = providerSetting;
@@ -64,7 +64,7 @@ void SettingsProviderHierachy::storeSetting(const Setting<bool>& setting, const 
 
 int SettingsProviderHierachy::getSetting(const Setting<int>& setting) {
     int value = setting.getDefaultValue();
-    foreach (SettingsProvider* provider, providers_) {
+    for (auto provider : providers_) {
         int providerSetting = provider->getSetting(setting);
         if (provider->hasSetting(setting.getKey())) {
             value = providerSetting;
@@ -97,7 +97,7 @@ void SettingsProviderHierachy::removeProfile(const std::string& profile) {
 
 bool SettingsProviderHierachy::getIsSettingFinal(const std::string& settingPath) {
     bool isFinal = false;
-    foreach (SettingsProvider* provider, providers_) {
+    for (auto provider : providers_) {
         isFinal |= provider->getIsSettingFinal(settingPath);
     }
     return isFinal;

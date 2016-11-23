@@ -41,9 +41,9 @@ namespace Swift {
         private:
             QString doubleAmpersand(const std::string& name) const;
             std::string singleAmpersand(const QString& name) const;
+
         private:
-            typedef std::map<std::string, QCheckBox*> CheckBoxMap;
-            CheckBoxMap checkBoxes_;
+            std::map<std::string, QCheckBox*> checkBoxes_;
             QHBoxLayout* nameLayout_;
             QHBoxLayout* suggestionsLayout_;
             QRadioButton* nameRadioButton_;

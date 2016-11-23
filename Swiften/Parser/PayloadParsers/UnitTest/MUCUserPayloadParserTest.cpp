@@ -7,7 +7,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/MUCDestroyPayload.h>
 #include <Swiften/Parser/PayloadParsers/MUCUserPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/UnitTest/PayloadsParserTester.h>
@@ -36,7 +35,7 @@ class MUCUserPayloadParserTest : public CppUnit::TestFixture
 
             MUCUserPayload::ref payload = std::dynamic_pointer_cast<MUCUserPayload>(parser.getPayload());
 
-            foreach (MUCUserPayload::StatusCode status, payload->getStatusCodes()) {
+            for (const auto& status : payload->getStatusCodes()) {
                 if (status.code == 110) found110 = true;
                 if (status.code == 210) found210 = true;
             }

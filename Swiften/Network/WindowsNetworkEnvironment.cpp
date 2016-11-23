@@ -22,7 +22,6 @@
 #include <winsock2.h>
 
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NetworkInterface.h>
 
@@ -65,8 +64,8 @@ std::vector<NetworkInterface> WindowsNetworkEnvironment::getNetworkInterfaces() 
         }
     }
 
-    for (std::map<std::string,NetworkInterface>::const_iterator i = interfaces.begin(); i != interfaces.end(); ++i) {
-        result.push_back(i->second);
+    for (const auto& interface : interfaces) {
+        result.push_back(interface.second);
     }
     return result;
 }

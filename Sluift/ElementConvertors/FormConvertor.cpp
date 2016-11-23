@@ -14,8 +14,6 @@
 
 #include <lua.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Sluift/Lua/Check.h>
 #include <Sluift/Lua/Value.h>
 
@@ -105,7 +103,7 @@ namespace {
         }
         if (!field->getOptions().empty()) {
             Lua::Array options;
-            foreach(const FormField::Option& option, field->getOptions()) {
+            for (const auto& option : field->getOptions()) {
                 Lua::Table luaOption = boost::assign::map_list_of
                     ("label", Lua::valueRef(option.label))
                     ("value", Lua::valueRef(option.value));
@@ -118,7 +116,7 @@ namespace {
 
     Lua::Array convertFieldListToLua(const std::vector< std::shared_ptr<FormField> >& fieldList) {
         Lua::Array fields;
-        foreach(std::shared_ptr<FormField> field, fieldList) {
+        for (auto&& field : fieldList) {
             fields.push_back(convertFieldToLua(field));
         }
         return fields;
@@ -245,7 +243,7 @@ namespace {
 
         lua_getfield(L, -1, "fields");
         if (lua_istable(L, -1)) {
-            foreach (std::shared_ptr<FormField> formField, convertFieldListFromLua(L)) {
+            for (auto&& formField : convertFieldListFromLua(L)) {
                 result->addField(formField);
             }
         }
@@ -253,7 +251,7 @@ namespace {
 
         lua_getfield(L, -1, "reported_fields");
         if (lua_istable(L, -1)) {
-            foreach (std::shared_ptr<FormField> formField, convertFieldListFromLua(L)) {
+            for (auto&& formField : convertFieldListFromLua(L)) {
                 result->addReportedField(formField);
             }
         }
@@ -294,7 +292,7 @@ namespace {
 
         if (!payload->getItems().empty()) {
             Lua::Array luaItems;
-            foreach(const Form::FormItem& item, payload->getItems()) {
+            for (const auto& item : payload->getItems()) {
                 if (!item.empty()) {
                     luaItems.push_back(convertFieldListToLua(item));
                 }
@@ -322,7 +320,7 @@ namespace {
         form->clearReportedFields();
         std::vector< std::shared_ptr<FormField> > fields(form->getFields());
         form->clearFields();
-        foreach (std::shared_ptr<FormField> field, fields) {
+        for (auto&& field : fields) {
             if (field->getType() == FormField::FixedType) {
                 continue;
             }

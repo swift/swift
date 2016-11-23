@@ -23,8 +23,6 @@
 #include <boost/regex.hpp>
 #include <boost/serialization/vector.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/Controllers/Highlighter.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/SettingsProvider.h>

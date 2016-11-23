@@ -9,7 +9,6 @@
 #include <cassert>
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
@@ -20,7 +19,7 @@ SerializingParser::SerializingParser() {
 void SerializingParser::handleStartElement(const std::string& tag, const std::string&  ns, const AttributeMap& attributes) {
     std::shared_ptr<XMLElement> element = std::make_shared<XMLElement>(tag, ns);
     // FIXME: Ignoring attribute namespace
-    foreach (const AttributeMap::Entry& e, attributes.getEntries()) {
+    for (const auto& e : attributes.getEntries()) {
         element->setAttribute(e.getAttribute().getName(), e.getValue());
     }
 

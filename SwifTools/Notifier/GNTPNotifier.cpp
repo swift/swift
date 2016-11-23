@@ -15,7 +15,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/ConnectionFactory.h>
 
 namespace Swift {
@@ -29,7 +28,7 @@ GNTPNotifier::GNTPNotifier(const std::string& name, const boost::filesystem::pat
     message << "Notifications-Count: " << getAllTypes().size() << "\r\n";
     std::vector<Notifier::Type> defaultTypes = getDefaultTypes();
     std::vector<Notifier::Type> allTypes = getAllTypes();
-    foreach(Notifier::Type type, allTypes) {
+    for (const auto& type : allTypes) {
         message << "\r\n";
         message << "Notification-Name: " << typeToString(type) << "\r\n";
         message << "Notification-Enabled: " << (std::find(defaultTypes.begin(), defaultTypes.end(), type) == defaultTypes.end() ? "false" : "true") << "\r\n";

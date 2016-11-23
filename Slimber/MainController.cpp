@@ -9,7 +9,6 @@
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/LinkLocal/DNSSD/PlatformDNSSDQuerierFactory.h>
 #include <Swiften/LinkLocal/LinkLocalService.h>
 #include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
@@ -88,7 +87,7 @@ void MainController::handleSelfConnected(bool b) {
 
 void MainController::handleServicesChanged() {
     std::vector<std::string> names;
-    foreach(const LinkLocalService& service, linkLocalServiceBrowser->getServices()) {
+    for (const auto& service : linkLocalServiceBrowser->getServices()) {
         std::string description = service.getDescription();
         if (description != service.getName()) {
             description += " (" + service.getName() + ")";

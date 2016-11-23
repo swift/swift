@@ -144,7 +144,7 @@ void QtStatusWidget::generateList() {
     QString text = statusEdit_->text();
     newStatusText_ = text;
     menu_->clear();
-    foreach (StatusShow::Type type, icons_.keys()) {
+    for (const auto& type : icons_.keys()) {
         QListWidgetItem* item = new QListWidgetItem(text == "" ? getNoMessage() : text, menu_);
         item->setIcon(icons_[type]);
         item->setToolTip(P2QSTRING(statusShowTypeToFriendlyName(type)) + ": " + item->text());
@@ -152,7 +152,7 @@ void QtStatusWidget::generateList() {
         item->setData(Qt::UserRole, QVariant(type));
     }
     std::vector<StatusCache::PreviousStatus> previousStatuses = statusCache_->getMatches(Q2PSTRING(text), 8);
-    foreach (StatusCache::PreviousStatus savedStatus, previousStatuses) {
+    for (const auto& savedStatus : previousStatuses) {
         if (savedStatus.first.empty() || std::find_if(allTypes_.begin(), allTypes_.end(),
                     savedStatus.second == lambda::_1 && savedStatus.first == lambda::bind(&statusShowTypeToFriendlyName, lambda::_1)) != allTypes_.end()) {
             continue;
@@ -163,7 +163,7 @@ void QtStatusWidget::generateList() {
         item->setStatusTip(item->toolTip());
         item->setData(Qt::UserRole, QVariant(savedStatus.second));
     }
-    foreach (StatusShow::Type type, icons_.keys()) {
+    for (const auto& type : icons_.keys()) {
         if (Q2PSTRING(text) == statusShowTypeToFriendlyName(type)) {
             continue;
         }
@@ -203,7 +203,7 @@ void QtStatusWidget::handleClicked() {
     if (x + width > screenWidth) {
         x = screenWidth - width;
     }
-    //foreach (StatusShow::Type type, allTypes_) {
+    //for (StatusShow::Type type : allTypes_) {
     //    if (statusEdit_->text() == P2QSTRING(statusShowTypeToFriendlyName(type))) {
             statusEdit_->setText("");
     //    }

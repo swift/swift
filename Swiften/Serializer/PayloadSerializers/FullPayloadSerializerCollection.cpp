@@ -6,7 +6,6 @@
 
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/UnblockPayload.h>
@@ -165,13 +164,13 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
 
     serializers_.push_back(new IsodeIQDelegationSerializer(this));
 
-    foreach(PayloadSerializer* serializer, serializers_) {
+    for (auto serializer : serializers_) {
         addSerializer(serializer);
     }
 }
 
 FullPayloadSerializerCollection::~FullPayloadSerializerCollection() {
-    foreach(PayloadSerializer* serializer, serializers_) {
+    for (auto serializer : serializers_) {
         removeSerializer(serializer);
         delete serializer;
     }

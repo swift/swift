@@ -24,7 +24,6 @@
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/ConnectionFactory.h>
 #include <Swiften/Network/HTTPTrafficFilter.h>
 #include <Swiften/Network/HostAddressPort.h>
@@ -68,8 +67,7 @@ void HTTPConnectProxiedConnection::initializeProxy() {
         append(data, createSafeByteArray("\r\n"));
     }
     else if (!nextHTTPRequestHeaders_.empty()) {
-        typedef std::pair<std::string, std::string> StringPair;
-        foreach(const StringPair& headerField, nextHTTPRequestHeaders_) {
+        for (const auto& headerField : nextHTTPRequestHeaders_) {
             append(data, createSafeByteArray(headerField.first));
             append(data, createSafeByteArray(": "));
             append(data, createSafeByteArray(headerField.second));
@@ -101,11 +99,10 @@ void HTTPConnectProxiedConnection::parseHTTPHeader(const std::string& data, std:
 }
 
 void HTTPConnectProxiedConnection::sendHTTPRequest(const std::string& statusLine, const std::vector<std::pair<std::string, std::string> >& headerFields) {
-    typedef std::pair<std::string, std::string> HTTPHeaderField;
     std::stringstream request;
 
     request << statusLine << "\r\n";
-    foreach (const HTTPHeaderField& field, headerFields) {
+    for (const auto& field : headerFields) {
         request << field.first << ":" << field.second << "\r\n";
     }
     request << "\r\n";

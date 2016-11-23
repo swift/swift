@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -36,7 +35,7 @@ std::string SecurityLabelSerializer::serializePayload(std::shared_ptr<SecurityLa
     labelElement->addNode(std::make_shared<XMLRawTextNode>(label->getLabel()));
     element.addNode(labelElement);
 
-    foreach(const std::string& equivalentLabel, label->getEquivalentLabels()) {
+    for (const auto& equivalentLabel : label->getEquivalentLabels()) {
         std::shared_ptr<XMLElement> equivalentLabelElement(new XMLElement("equivalentlabel"));
         equivalentLabelElement->addNode(std::make_shared<XMLRawTextNode>(equivalentLabel));
         element.addNode(equivalentLabelElement);

@@ -50,7 +50,7 @@ void QtTagComboBox::addTag(const QString &id, const QString &label) {
 
 void QtTagComboBox::setTag(const QString &id, bool value) {
     QList<QAction*> tagActions = editMenu->actions();
-    foreach(QAction* action, tagActions) {
+    for (auto action : tagActions) {
         if (action->data() == id) {
             action->setChecked(value);
             updateDisplayItem();
@@ -61,7 +61,7 @@ void QtTagComboBox::setTag(const QString &id, bool value) {
 
 bool QtTagComboBox::isTagSet(const QString &id) const {
     QList<QAction*> tagActions = editMenu->actions();
-    foreach(QAction* action, tagActions) {
+    for (auto action : tagActions) {
         if (action->data() == id) {
             return action->isChecked();
         }
@@ -94,7 +94,7 @@ bool QtTagComboBox::event(QEvent* event) {
 void QtTagComboBox::updateDisplayItem() {
     QList<QAction*> tagActions = editMenu->actions();
     QString text = "";
-    foreach(QAction* action, tagActions) {
+    for (auto action : tagActions) {
         if (action->isChecked()) {
             if (text != "") {
                 text += ", ";

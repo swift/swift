@@ -14,15 +14,13 @@
 
 #include <set>
 
-#include <QPushButton>
+#include <boost/range/adaptor/reversed.hpp>
 
-#include <Swiften/Base/foreach.h>
+#include <QPushButton>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-
-typedef std::map<std::string, std::string> EmoticonsMap; // Without this typedef compiler complains when using foreach
 
 QtEmoticonsGrid::QtEmoticonsGrid(const std::map<std::string, std::string>& emoticons, QWidget* parent) : QGridLayout(parent) {
     makeUniqueEmoticonsMap(emoticons);
@@ -31,7 +29,7 @@ QtEmoticonsGrid::QtEmoticonsGrid(const std::map<std::string, std::string>& emoti
     int row = 0;
     int column = 0;
 
-    foreach(EmoticonsMap::value_type emoticon, uniqueEmoticons_) {
+    for (auto&& emoticon : uniqueEmoticons_) {
         QtEmoticonCell* newCell = new QtEmoticonCell(P2QSTRING(emoticon.first), P2QSTRING(emoticon.second));
         addWidget(newCell, row, column);
         connect(newCell, SIGNAL(emoticonClicked(QString)), this, SLOT(emoticonClickedSlot(QString)));
@@ -50,7 +48,7 @@ QtEmoticonsGrid::~QtEmoticonsGrid() {
 
 void QtEmoticonsGrid::makeUniqueEmoticonsMap(const std::map<std::string, std::string>& emoticons) {
     std::set<std::string> paths;
-    reverse_foreach(EmoticonsMap::value_type emoticon, emoticons) {
+    for (auto&& emoticon : boost::adaptors::reverse(emoticons)) {
         if (paths.find(emoticon.second) == paths.end()) {
             uniqueEmoticons_.insert(emoticon);
             paths.insert(emoticon.second);

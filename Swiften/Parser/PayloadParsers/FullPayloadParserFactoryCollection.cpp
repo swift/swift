@@ -6,7 +6,6 @@
 
 #include <Swiften/Parser/PayloadParsers/FullPayloadParserFactoryCollection.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/BlockListPayload.h>
 #include <Swiften/Elements/BlockPayload.h>
 #include <Swiften/Elements/UnblockPayload.h>
@@ -167,7 +166,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<GenericPayloadParserFactory2<CarbonsSentParser> >("sent", "urn:xmpp:carbons:2", this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<CarbonsPrivateParser> >("private", "urn:xmpp:carbons:2"));
 
-    foreach(std::shared_ptr<PayloadParserFactory> factory, factories_) {
+    for (auto& factory : factories_) {
         addFactory(factory.get());
     }
     defaultFactory_ = new RawXMLPayloadParserFactory();
@@ -177,7 +176,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
 FullPayloadParserFactoryCollection::~FullPayloadParserFactoryCollection() {
     setDefaultFactory(nullptr);
     delete defaultFactory_;
-    foreach(std::shared_ptr<PayloadParserFactory> factory, factories_) {
+    for (auto& factory : factories_) {
         removeFactory(factory.get());
     }
 }

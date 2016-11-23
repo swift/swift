@@ -8,14 +8,12 @@
 
 #include <stdlib.h>
 
-#include <iostream>
-
 #include <boost/algorithm/string.hpp>
 
 #include <unistd.h>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
@@ -26,7 +24,7 @@ UnixApplicationPathProvider::UnixApplicationPathProvider(const std::string& name
     if (xdgDataDirs) {
         std::vector<std::string> dataDirs = String::split(xdgDataDirs, ':');
         if (!dataDirs.empty()) {
-            foreach(const std::string& dir, dataDirs) {
+            for (const auto& dir : dataDirs) {
                 resourceDirs.push_back(boost::filesystem::path(dir) / "swift");
             }
             return;
@@ -56,7 +54,7 @@ boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {
         boost::filesystem::create_directories(dataPath);
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        std::cerr << "ERROR: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "file system error: " << e.what() << std::endl;
     }
     return dataPath;
 }

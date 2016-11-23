@@ -9,7 +9,6 @@
 #include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/ClientDiscoManager.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/Message.h>
@@ -185,7 +184,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 
     SluiftClient* client = getClient(L);
     Lua::Table contactsTable;
-    foreach(const XMPPRosterItem& item, client->getRoster(getGlobalTimeout(L))) {
+    for (const auto& item : client->getRoster(getGlobalTimeout(L))) {
         std::string subscription;
         switch(item.getSubscription()) {
             case RosterItemPayload::None: subscription = "none"; break;

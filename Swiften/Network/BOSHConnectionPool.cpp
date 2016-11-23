@@ -12,7 +12,6 @@
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/SafeString.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/CachingDomainNameResolver.h>
 #include <Swiften/Network/HTTPConnectProxiedConnectionFactory.h>
 
@@ -40,13 +39,13 @@ BOSHConnectionPool::BOSHConnectionPool(const URL& boshURL, DomainNameResolver* r
 BOSHConnectionPool::~BOSHConnectionPool() {
     /* Don't do a normal close here. Instead kill things forcibly, as close() or writeFooter() will already have been called */
     std::vector<BOSHConnection::ref> connectionCopies = connections;
-    foreach (BOSHConnection::ref connection, connectionCopies) {
+    for (auto&& connection : connectionCopies) {
         if (connection) {
             destroyConnection(connection);
             connection->disconnect();
         }
     }
-    foreach (ConnectionFactory* factory, myConnectionFactories) {
+    for (auto factory : myConnectionFactories) {
         delete factory;
     }
     delete resolver;
@@ -116,7 +115,7 @@ void BOSHConnectionPool::close() {
     else {
         pendingTerminate = true;
         std::vector<BOSHConnection::ref> connectionCopies = connections;
-        foreach (BOSHConnection::ref connection, connectionCopies) {
+        for (auto&& connection : connectionCopies) {
             if (connection) {
                 connection->disconnect();
             }
@@ -157,7 +156,7 @@ void BOSHConnectionPool::handleConnectFinished(bool error, BOSHConnection::ref c
 
 BOSHConnection::ref BOSHConnectionPool::getSuitableConnection() {
     BOSHConnection::ref suitableConnection;
-    foreach (BOSHConnection::ref connection, connections) {
+    for (auto&& connection : connections) {
         if (connection->isReadyToSend()) {
             suitableConnection = connection;
             break;
@@ -187,7 +186,7 @@ void BOSHConnectionPool::tryToSendQueuedData() {
             rid++;
             suitableConnection->setRID(rid);
             SafeByteArray data;
-            foreach (const SafeByteArray& datum, dataQueue) {
+            for (const auto& datum : dataQueue) {
                 data.insert(data.end(), datum.begin(), datum.end());
             }
             suitableConnection->write(data);
@@ -204,7 +203,7 @@ void BOSHConnectionPool::tryToSendQueuedData() {
     if (!pendingTerminate) {
         /* Ensure there's always a session waiting to read data for us */
         bool pending = false;
-        foreach (BOSHConnection::ref connection, connections) {
+        for (auto&& connection : connections) {
             if (connection && !connection->isReadyToSend()) {
                 pending = true;
             }

@@ -13,8 +13,6 @@ extern "C" {
     #include <lualib.h>
 }
 
-#include <Swiften/Base/foreach.h>
-
 using namespace Swift;
 using namespace Swift::Lua;
 
@@ -49,7 +47,7 @@ namespace {
 
         void operator()(const std::map<std::string, std::shared_ptr<Value> >& table) const {
             lua_createtable(state, 0, boost::numeric_cast<int>(table.size()));
-            for(const auto& i : table) {
+            for (const auto& i : table) {
                 boost::apply_visitor(PushVisitor(state), *i.second);
                 lua_setfield(state, -2, i.first.c_str());
             }

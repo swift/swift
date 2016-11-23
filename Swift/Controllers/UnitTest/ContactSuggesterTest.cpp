@@ -12,8 +12,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/Controllers/ContactSuggester.h>
 
 using namespace Swift;
@@ -55,9 +53,9 @@ public:
         std::vector<Contact::ref> contacts;
         std::vector<std::string> words = wordList();
         std::vector<StatusShow::Type> statuses = statusList();
-        foreach (const std::string& name, words) {
-            foreach (const std::string& jid, words) {
-                foreach (const StatusShow::Type& status, statuses) {
+        for (const auto& name : words) {
+            for (const auto& jid : words) {
+                for (const auto& status : statuses) {
                     contacts.push_back(std::make_shared<Contact>(name, jid, status, ""));
                 }
             }
@@ -68,7 +66,7 @@ public:
     /* a = a */
     bool isReflexive(const boost::function<bool (const Contact::ref&, const Contact::ref&)>& comparitor) {
         std::vector<Contact::ref> contacts = contactList();
-        foreach (const Contact::ref& a, contacts) {
+        for (const auto& a : contacts) {
             if (!comparitor(a, a)) {
                 return false;
             }
@@ -79,8 +77,8 @@ public:
     /* a = b -> b = a */
     bool isSymmetric(const boost::function<bool (const Contact::ref&, const Contact::ref&)>& comparitor) {
         std::vector<Contact::ref> contacts = contactList();
-        foreach (const Contact::ref& a, contacts) {
-            foreach (const Contact::ref& b, contacts) {
+        for (const auto& a : contacts) {
+            for (const auto& b : contacts) {
                 if (comparitor(a, b)) {
                     if (!comparitor(b, a)) {
                         return false;
@@ -94,9 +92,9 @@ public:
     /* a = b && b = c -> a = c */
     bool isTransitive(const boost::function<bool (const Contact::ref&, const Contact::ref&)>& comparitor) {
         std::vector<Contact::ref> contacts = contactList();
-        foreach (const Contact::ref& a, contacts) {
-            foreach (const Contact::ref& b, contacts) {
-                foreach (const Contact::ref& c, contacts) {
+        for (const auto& a : contacts) {
+            for (const auto& b : contacts) {
+                for (const auto& c : contacts) {
                     if (comparitor(a, b) && comparitor(b, c)) {
                         if (!comparitor(a, c)) {
                             return false;
@@ -120,7 +118,7 @@ public:
 
     void sortTest() {
         std::vector<std::string> words = wordList();
-        foreach (const std::string& word, words) {
+        for (const auto& word : words) {
             CPPUNIT_ASSERT(isTransitive(boost::bind(Contact::sortPredicate, _1, _2, word)));
         }
     }

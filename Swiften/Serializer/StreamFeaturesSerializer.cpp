@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
@@ -26,7 +25,7 @@ SafeByteArray StreamFeaturesSerializer::serialize(std::shared_ptr<ToplevelElemen
     }
     if (!streamFeatures->getCompressionMethods().empty()) {
         std::shared_ptr<XMLElement> compressionElement(new XMLElement("compression", "http://jabber.org/features/compress"));
-        foreach(const std::string& method, streamFeatures->getCompressionMethods()) {
+        for (const auto& method : streamFeatures->getCompressionMethods()) {
             std::shared_ptr<XMLElement> methodElement(new XMLElement("method"));
             methodElement->addNode(std::make_shared<XMLTextNode>(method));
             compressionElement->addNode(methodElement);
@@ -35,7 +34,7 @@ SafeByteArray StreamFeaturesSerializer::serialize(std::shared_ptr<ToplevelElemen
     }
     if (!streamFeatures->getAuthenticationMechanisms().empty()) {
         std::shared_ptr<XMLElement> mechanismsElement(new XMLElement("mechanisms", "urn:ietf:params:xml:ns:xmpp-sasl"));
-        foreach(const std::string& mechanism, streamFeatures->getAuthenticationMechanisms()) {
+        for (const auto& mechanism : streamFeatures->getAuthenticationMechanisms()) {
             std::shared_ptr<XMLElement> mechanismElement(new XMLElement("mechanism"));
             mechanismElement->addNode(std::make_shared<XMLTextNode>(mechanism));
             mechanismsElement->addNode(mechanismElement);

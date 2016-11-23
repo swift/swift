@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleContentPayload.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
@@ -41,7 +40,7 @@ std::string JinglePayloadSerializer::serializePayload(std::shared_ptr<JinglePayl
 
     std::vector<std::shared_ptr<Payload> > payloads = payload->getPayloads();
     if (!payloads.empty()) {
-        foreach(std::shared_ptr<Payload> subPayload, payloads) {
+        for (auto&& subPayload : payloads) {
             PayloadSerializer* serializer = serializers->getPayloadSerializer(subPayload);
             if (serializer) {
                 jinglePayload.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(subPayload)));

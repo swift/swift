@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubItemSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
@@ -28,7 +27,7 @@ std::string PubSubRetractSerializer::serializePayload(std::shared_ptr<PubSubRetr
     }
     XMLElement element("retract", "http://jabber.org/protocol/pubsub");
     element.setAttribute("node", payload->getNode());
-    foreach(std::shared_ptr<PubSubItem> item, payload->getItems()) {
+    for (const auto& item : payload->getItems()) {
         element.addNode(std::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
     }
     if (payload->isNotify().is_initialized()) {

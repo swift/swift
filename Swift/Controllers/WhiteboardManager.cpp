@@ -14,7 +14,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
@@ -25,8 +24,6 @@
 #include <Swift/Controllers/UIEvents/ShowWhiteboardUIEvent.h>
 
 namespace Swift {
-    typedef std::pair<JID, WhiteboardWindow*> JIDWhiteboardWindowPair;
-
     WhiteboardManager::WhiteboardManager(WhiteboardWindowFactory* whiteboardWindowFactory, UIEventStream* uiEventStream, NickResolver* nickResolver, WhiteboardSessionManager* whiteboardSessionManager) : whiteboardWindowFactory_(whiteboardWindowFactory), uiEventStream_(uiEventStream), nickResolver_(nickResolver), whiteboardSessionManager_(whiteboardSessionManager) {
 
 #ifdef SWIFT_EXPERIMENTAL_WB
@@ -36,7 +33,7 @@ namespace Swift {
     }
 
     WhiteboardManager::~WhiteboardManager() {
-        foreach (JIDWhiteboardWindowPair whiteboardWindowPair, whiteboardWindows_) {
+        for (auto&& whiteboardWindowPair : whiteboardWindows_) {
             delete whiteboardWindowPair.second;
         }
     }

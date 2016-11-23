@@ -80,7 +80,7 @@ QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bo
 }
 
 QtChatTabs::~QtChatTabs() {
-    foreach (QShortcut* shortcut, shortcuts_) {
+    for (auto shortcut : shortcuts_) {
         delete shortcut;
     }
 

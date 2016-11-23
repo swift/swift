@@ -11,7 +11,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Queries/IQRouter.h>
 
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
@@ -58,7 +57,7 @@ void AdHocManager::setServerDiscoInfo(std::shared_ptr<DiscoInfo> info) {
 }
 
 void AdHocManager::setOnline(bool online) {
-    foreach (std::shared_ptr<AdHocController> controller, controllers_) {
+    for (auto&& controller : controllers_) {
         controller->setOnline(online);
     }
 }
@@ -66,7 +65,7 @@ void AdHocManager::setOnline(bool online) {
 void AdHocManager::handleServerDiscoItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
     std::vector<DiscoItems::Item> commands;
     if (!error) {
-        foreach (DiscoItems::Item item, items->getItems()) {
+        for (const auto& item : items->getItems()) {
             if (item.getNode() != "http://isode.com/xmpp/commands#test") {
                 commands.push_back(item);
             }

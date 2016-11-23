@@ -6,8 +6,6 @@
 
 #include <Swiften/Presence/DirectedPresenceSender.h>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 DirectedPresenceSender::DirectedPresenceSender(PresenceSender* sender) : sender(sender) {
@@ -22,7 +20,7 @@ void DirectedPresenceSender::sendPresence(std::shared_ptr<Presence> presence) {
 
     if (!presence->getTo().isValid()) {
         std::shared_ptr<Presence> presenceCopy(new Presence(*presence));
-        foreach(const JID& jid, directedPresenceReceivers) {
+        for (const auto& jid : directedPresenceReceivers) {
             presenceCopy->setTo(jid);
             sender->sendPresence(presenceCopy);
         }

@@ -37,7 +37,7 @@ const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& QtAffiliationEdito
 
 void QtAffiliationEditor::handleCurrentIndexChanged(int index) {
     ui_.list->clear();
-    foreach (const JID& jid, affiliations_[affiliationFromIndex(index)]) {
+    for (const auto& jid : affiliations_[affiliationFromIndex(index)]) {
         ui_.list->addItem(P2QSTRING(jid.toString()));
     }
 }

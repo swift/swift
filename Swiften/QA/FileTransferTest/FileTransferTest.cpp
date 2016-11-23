@@ -13,7 +13,6 @@
 #include <Swiften/Base/BoostRandomGenerator.h>
 #include <Swiften/Base/Debug.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
@@ -346,7 +345,7 @@ int main(int argc, char** argv) {
             std::vector<std::string> configurations;
             std::string configs_env = std::string(getenv("SWIFT_FILETRANSFERTEST_CONFIG"));
             boost::split(configurations, configs_env, boost::is_any_of("|"));
-            foreach(const std::string& config, configurations) {
+            for (const auto& config : configurations) {
                 std::vector<std::string> split_config;
                 boost::split(split_config, config, boost::is_any_of(":"));
                 assert(split_config.size() == 2);
@@ -360,8 +359,7 @@ int main(int argc, char** argv) {
                 }
             }
 
-            typedef std::pair<int, int> IntPair;
-            foreach(IntPair failedTest, failedTestPairs) {
+            for (auto&& failedTest : failedTestPairs) {
                 std::cout << "Failed test: " << "( " << failedTest.first << ", " << failedTest.second << ") " << std::endl;
             }
         }
@@ -377,8 +375,7 @@ int main(int argc, char** argv) {
                 }
             }
 
-            typedef std::pair<int, int> IntPair;
-            foreach(IntPair failedTest, failedTestPairs) {
+            for (auto&& failedTest : failedTestPairs) {
                 std::cout << "Failed test: " << "( " << failedTest.first << ", " << failedTest.second << ") " << std::endl;
             }
         }

@@ -100,7 +100,7 @@ bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
 
 void QtFilterWidget::popAllFilters() {
     std::vector<RosterFilter*> filters = treeView_->getRoster()->getFilters();
-    foreach(RosterFilter* filter, filters) {
+    for (auto filter : filters) {
         filters_.push_back(filter);
         treeView_->getRoster()->removeFilter(filter);
     }
@@ -111,7 +111,7 @@ void QtFilterWidget::popAllFilters() {
 void QtFilterWidget::pushAllFilters() {
     treeView_->getRoster()->onFilterAdded.disconnect(boost::bind(&QtFilterWidget::handleFilterAdded, this, _1));
     treeView_->getRoster()->onFilterRemoved.disconnect(boost::bind(&QtFilterWidget::handleFilterRemoved, this, _1));
-    foreach(RosterFilter* filter, filters_) {
+    for (auto filter : filters_) {
         treeView_->getRoster()->addFilter(filter);
     }
     filters_.clear();

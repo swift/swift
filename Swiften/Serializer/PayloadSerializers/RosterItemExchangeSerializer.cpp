@@ -14,7 +14,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -26,7 +25,7 @@ RosterItemExchangeSerializer::RosterItemExchangeSerializer() : GenericPayloadSer
 
 std::string RosterItemExchangeSerializer::serializePayload(std::shared_ptr<RosterItemExchangePayload> roster)  const {
     XMLElement queryElement("x", "http://jabber.org/protocol/rosterx");
-    foreach(const RosterItemExchangePayload::Item& item, roster->getItems()) {
+    for (const auto& item : roster->getItems()) {
         std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("jid", item.getJID());
         itemElement->setAttribute("name", item.getName());
@@ -37,7 +36,7 @@ std::string RosterItemExchangeSerializer::serializePayload(std::shared_ptr<Roste
             case RosterItemExchangePayload::Item::Delete: itemElement->setAttribute("action", "delete"); break;
         }
 
-        foreach(const std::string& group, item.getGroups()) {
+        for (const auto& group : item.getGroups()) {
             std::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
             groupElement->addNode(std::make_shared<XMLTextNode>(group));
             itemElement->addNode(groupElement);

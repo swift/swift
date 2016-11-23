@@ -11,7 +11,6 @@
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
@@ -52,33 +51,33 @@ std::string FormSerializer::serializePayload(std::shared_ptr<Form> form)  const 
     if (!form->getInstructions().empty()) {
         multiLineify(form->getInstructions(), "instructions", formElement);
     }
-    foreach(std::shared_ptr<FormPage> page, form->getPages()) {
+    for (const auto& page : form->getPages()) {
         formElement->addNode(pageToXML(page));
     }
-    foreach(std::shared_ptr<FormField> field, form->getFields()) {
+    for (const auto& field : form->getFields()) {
         formElement->addNode(fieldToXML(field, true));
     }
     if (!form->getReportedFields().empty()) {
         std::shared_ptr<XMLElement> reportedElement(new XMLElement("reported"));
-        foreach(FormField::ref field, form->getReportedFields()) {
+        for (const auto& field : form->getReportedFields()) {
             reportedElement->addNode(fieldToXML(field, true));
         }
         formElement->addNode(reportedElement);
     }
 
-    foreach(Form::FormItem item, form->getItems()) {
+    for (const auto& item : form->getItems()) {
         std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
-        foreach(FormField::ref field, item) {
+        for (const auto& field : item) {
             itemElement->addNode(fieldToXML(field, false));
         }
         formElement->addNode(itemElement);
     }
 
-    foreach(const FormText::text text, form->getTextElements()) {
+    for (const auto& text : form->getTextElements()) {
         formElement->addNode(textToXML(text));
     }
 
-    foreach (std::shared_ptr<FormField> field, fields_) {
+    for (const auto& field : fields_) {
         formElement->addNode(fieldToXML(field,true));
     }
 
@@ -103,17 +102,18 @@ std::shared_ptr<XMLElement> FormSerializer::pageToXML(std::shared_ptr<FormPage> 
     if (!page->getLabel().empty()) {
         pageElement->setAttribute("label", page->getLabel());
     }
-    foreach(const FormText::text text, page->getTextElements()) {
+    for (const auto& text : page->getTextElements()) {
         pageElement->addNode(textToXML(text));
     }
-    foreach (const std::shared_ptr<FormField> field, page->getFields()) {
+    for (const auto& field : page->getFields()) {
         pageElement->addNode(fieldRefToXML(field->getName()));
         fields_.push_back(field);
     }
-    foreach(const FormReportedRef::ref reportedRef, page->getReportedRefs()) {
+    for (const auto& reportedRef: page->getReportedRefs()) {
+        (void)reportedRef;
         pageElement->addNode(std::make_shared<XMLElement>("reportedref"));
     }
-    foreach(const FormSection::section section, page->getChildSections()) {
+    for (const auto& section : page->getChildSections()) {
         pageElement->addNode(sectionToXML(section));
     }
     return pageElement;
@@ -124,17 +124,18 @@ std::shared_ptr<XMLElement> FormSerializer::sectionToXML(std::shared_ptr<FormSec
     if (!section->getLabel().empty()) {
         sectionElement->setAttribute("label", section->getLabel());
     }
-    foreach(const FormText::text text, section->getTextElements()) {
+    for (const auto& text : section->getTextElements()) {
         sectionElement->addNode(textToXML(text));
     }
-    foreach(const std::shared_ptr<FormField> field, section->getFields()) {
+    for (const auto& field : section->getFields()) {
         sectionElement->addNode(fieldRefToXML(field->getName()));
         fields_.push_back(field);
     }
-    foreach(const FormReportedRef::ref reportedRef, section->getReportedRefs()) {
+    for (const auto& reportedRef : section->getReportedRefs()) {
+        (void)reportedRef;
         sectionElement->addNode(std::make_shared<XMLElement>("reportedref"));
     }
-    foreach(const FormSection::section childSection, section->getChildSections()) {
+    for (const auto& childSection : section->getChildSections()) {
         sectionElement->addNode(sectionToXML(childSection));
     }
     return sectionElement;
@@ -175,13 +176,13 @@ std::shared_ptr<XMLElement> FormSerializer::fieldToXML(std::shared_ptr<FormField
     if (!fieldType.empty() && withTypeAttribute) {
         fieldElement->setAttribute("type", fieldType);
     }
-    foreach (const std::string& value, field->getValues()) {
+    for (const auto& value : field->getValues()) {
         std::shared_ptr<XMLElement> valueElement = std::make_shared<XMLElement>("value");
         valueElement->addNode(std::make_shared<XMLTextNode>(value));
         fieldElement->addNode(valueElement);
     }
 
-    foreach (const FormField::Option& option, field->getOptions()) {
+    for (const auto& option : field->getOptions()) {
         std::shared_ptr<XMLElement> optionElement(new XMLElement("option"));
         if (!option.label.empty()) {
             optionElement->setAttribute("label", option.label);
@@ -199,7 +200,7 @@ void FormSerializer::multiLineify(const std::string& text, const std::string& el
     std::string unRdText(text);
     erase(unRdText, '\r');
     std::vector<std::string> lines = String::split(unRdText, '\n');
-    foreach (std::string line, lines) {
+    for (const auto& line : lines) {
         std::shared_ptr<XMLElement> lineElement(new XMLElement(elementName));
         lineElement->addNode(std::make_shared<XMLTextNode>(line));
         element->addNode(lineElement);

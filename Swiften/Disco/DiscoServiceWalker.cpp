@@ -9,7 +9,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
@@ -28,10 +27,10 @@ void DiscoServiceWalker::beginWalk() {
 void DiscoServiceWalker::endWalk() {
     if (active_) {
         SWIFT_LOG(debug) << "Ending walk to " << service_ << std::endl;
-        foreach (GetDiscoInfoRequest::ref request, pendingDiscoInfoRequests_) {
+        for (auto&& request : pendingDiscoInfoRequests_) {
             request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, request));
         }
-        foreach (GetDiscoItemsRequest::ref request, pendingDiscoItemsRequests_) {
+        for (auto&& request : pendingDiscoItemsRequests_) {
             request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, request));
         }
         active_ = false;
@@ -65,7 +64,7 @@ void DiscoServiceWalker::handleDiscoInfoResponse(std::shared_ptr<DiscoInfo> info
     }
 
     bool couldContainServices = false;
-    foreach (DiscoInfo::Identity identity, info->getIdentities()) {
+    for (const auto& identity : info->getIdentities()) {
         if (identity.getCategory() == "server") {
             couldContainServices = true;
         }
@@ -98,7 +97,7 @@ void DiscoServiceWalker::handleDiscoItemsResponse(std::shared_ptr<DiscoItems> it
         handleDiscoError(request->getReceiver(), error);
         return;
     }
-    foreach (DiscoItems::Item item, items->getItems()) {
+    for (auto&& item : items->getItems()) {
         if (item.getNode().empty()) {
             /* Don't look at noded items. It's possible that this will exclude some services,
              * but I've never seen one in the wild, and it's an easy fix for not looping.

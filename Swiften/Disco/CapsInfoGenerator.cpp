@@ -8,7 +8,6 @@
 
 #include <algorithm>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/FormField.h>
@@ -30,28 +29,28 @@ CapsInfo CapsInfoGenerator::generateCapsInfo(const DiscoInfo& discoInfo) const {
 
     std::vector<DiscoInfo::Identity> identities(discoInfo.getIdentities());
     std::sort(identities.begin(), identities.end());
-    foreach (const DiscoInfo::Identity& identity, identities) {
+    for (const auto& identity : identities) {
         serializedCaps += identity.getCategory() + "/" + identity.getType() + "/" + identity.getLanguage() + "/" + identity.getName() + "<";
     }
 
     std::vector<std::string> features(discoInfo.getFeatures());
     std::sort(features.begin(), features.end());
-    foreach (const std::string& feature, features) {
+    for (const auto& feature : features) {
         serializedCaps += feature + "<";
     }
 
-    foreach(Form::ref extension, discoInfo.getExtensions()) {
+    for (const auto& extension : discoInfo.getExtensions()) {
         serializedCaps += extension->getFormType() + "<";
         std::vector<FormField::ref> fields(extension->getFields());
         std::sort(fields.begin(), fields.end(), &compareFields);
-        foreach(FormField::ref field, fields) {
+        for (const auto& field : fields) {
             if (field->getName() == "FORM_TYPE") {
                 continue;
             }
             serializedCaps += field->getName() + "<";
             std::vector<std::string> values(field->getValues());
             std::sort(values.begin(), values.end());
-            foreach(const std::string& value, values) {
+            for (const auto& value : values) {
                 serializedCaps += value + "<";
             }
         }

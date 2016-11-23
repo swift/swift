@@ -16,7 +16,6 @@
 #include <memory>
 #include <string>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferFileInfoSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLNode.h>

@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
@@ -20,7 +19,7 @@ StorageSerializer::StorageSerializer() : GenericPayloadSerializer<Storage>() {
 std::string StorageSerializer::serializePayload(std::shared_ptr<Storage> storage)    const {
     XMLElement storageElement("storage", "storage:bookmarks");
 
-    foreach(const Storage::Room& room, storage->getRooms()) {
+    for (const auto& room : storage->getRooms()) {
         std::shared_ptr<XMLElement> conferenceElement(new XMLElement("conference"));
         conferenceElement->setAttribute("name", room.name);
         conferenceElement->setAttribute("jid", room.jid);
@@ -38,7 +37,7 @@ std::string StorageSerializer::serializePayload(std::shared_ptr<Storage> storage
         storageElement.addNode(conferenceElement);
     }
 
-    foreach(const Storage::URL& url, storage->getURLs()) {
+    for (const auto& url : storage->getURLs()) {
         std::shared_ptr<XMLElement> urlElement(new XMLElement("url"));
         urlElement->setAttribute("name", url.name);
         urlElement->setAttribute("url", url.url);

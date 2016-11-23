@@ -14,7 +14,6 @@
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientSession.h>
 #include <Swiften/Client/ClientSessionStanzaChannel.h>
 #include <Swiften/Network/ChainedConnector.h>
@@ -443,7 +442,7 @@ void CoreClient::purgePassword() {
 void CoreClient::resetConnector() {
     connector_->onConnectFinished.disconnect(boost::bind(&CoreClient::handleConnectorFinished, this, _1, _2));
     connector_.reset();
-    foreach(ConnectionFactory* f, proxyConnectionFactories) {
+    for (auto f : proxyConnectionFactories) {
         delete f;
     }
     proxyConnectionFactories.clear();

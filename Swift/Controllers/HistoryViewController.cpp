@@ -12,9 +12,10 @@
 
 #include <Swift/Controllers/HistoryViewController.h>
 
+#include <boost/range/adaptor/reversed.hpp>
+
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/NickResolver.h>
 #include <Swiften/History/HistoryMessage.h>
 
@@ -124,7 +125,7 @@ void HistoryViewController::handleSelectedContactChanged(RosterItem* newContact)
 
     historyWindow_->setDate(currentResultDate_);
 
-    foreach (const HistoryMessage& message, messages) {
+    for (const auto& message : messages) {
         addNewMessage(message, false);
     }
 }
@@ -203,7 +204,7 @@ void HistoryViewController::handleScrollReachedTop(const boost::gregorian::date&
 
     std::vector<HistoryMessage> messages = historyController_->getMessagesFromPreviousDate(selfJID_, selectedItem_->getJID(), selectedItemType_, date);
 
-    foreach (const HistoryMessage& message, messages) {
+    for (const auto& message : messages) {
         addNewMessage(message, true);
     }
     historyWindow_->resetConversationViewTopInsertPoint();
@@ -216,7 +217,7 @@ void HistoryViewController::handleScrollReachedBottom(const boost::gregorian::da
 
     std::vector<HistoryMessage> messages = historyController_->getMessagesFromNextDate(selfJID_, selectedItem_->getJID(), selectedItemType_, date);
 
-    foreach (const HistoryMessage& message, messages) {
+    for (const auto& message : messages) {
         addNewMessage(message, false);
     }
 }
@@ -237,7 +238,7 @@ void HistoryViewController::handleNextButtonClicked() {
     std::vector<HistoryMessage> messages = historyController_->getMessagesFromDate(selfJID_, selectedItem_->getJID(), selectedItemType_, currentResultDate_);
     historyWindow_->setDate(currentResultDate_);
 
-    foreach (const HistoryMessage& message, messages) {
+    for (const auto& message : messages) {
         addNewMessage(message, false);
     }
 }
@@ -258,7 +259,7 @@ void HistoryViewController::handlePreviousButtonClicked() {
     std::vector<HistoryMessage> messages = historyController_->getMessagesFromDate(selfJID_, selectedItem_->getJID(), selectedItemType_, currentResultDate_);
     historyWindow_->setDate(currentResultDate_);
 
-    foreach (const HistoryMessage& message, messages) {
+    for (const auto& message : messages) {
         addNewMessage(message, false);
     }
 }
@@ -280,7 +281,7 @@ void HistoryViewController::handleCalendarClicked(const boost::gregorian::date& 
         newDate = date;
     }
     else if (date < currentResultDate_) {
-        foreach(const boost::gregorian::date& current, contacts_[selectedItemType_][selectedItem_->getJID()]) {
+        for (const auto& current : contacts_[selectedItemType_][selectedItem_->getJID()]) {
             if (current > date) {
                 newDate = current;
                 break;
@@ -288,7 +289,7 @@ void HistoryViewController::handleCalendarClicked(const boost::gregorian::date& 
         }
     }
     else {
-        reverse_foreach(const boost::gregorian::date& current, contacts_[selectedItemType_][selectedItem_->getJID()]) {
+        for (const auto& current : boost::adaptors::reverse(contacts_[selectedItemType_][selectedItem_->getJID()])) {
             if (current < date) {
                 newDate = current;
                 break;
@@ -306,7 +307,7 @@ void HistoryViewController::handleCalendarClicked(const boost::gregorian::date& 
     std::vector<HistoryMessage> messages = historyController_->getMessagesFromDate(selfJID_, selectedItem_->getJID(), selectedItemType_, currentResultDate_);
     historyWindow_->setDate(currentResultDate_);
 
-    foreach (const HistoryMessage& message, messages) {
+    for (const auto& message : messages) {
         addNewMessage(message, false);
     }
 }
@@ -347,7 +348,7 @@ Presence::ref HistoryViewController::getPresence(const JID& jid, bool isMUC) {
         return presence;
     }
 
-    foreach (Presence::ref presence, mucPresence) {
+    for (auto&& presence : mucPresence) {
         if (presence.get() && presence->getFrom() == jid) {
             return presence;
         }

@@ -6,8 +6,6 @@
 
 #include <Sluift/Lua/FunctionRegistry.h>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Sluift/Lua/Exception.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/globals.h>
@@ -44,7 +42,7 @@ void FunctionRegistry::createFunctionTable(lua_State* L, const std::string& type
 }
 
 void FunctionRegistry::addFunctionsToTable(lua_State* L, const std::string& type) {
-    foreach(const Registration& registration, registrations) {
+    for (const auto& registration : registrations) {
         if (registration.type == type) {
             lua_pushcclosure(L, registration.function, 0);
             if (!registration.helpDescription.empty()) {

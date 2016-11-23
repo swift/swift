@@ -11,7 +11,6 @@
 #include <QShortcut>
 
 #include <Swiften/Base/Platform.h>
-#include <Swiften/Base/foreach.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtUtilities.h>

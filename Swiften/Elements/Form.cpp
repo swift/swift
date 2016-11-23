@@ -6,8 +6,6 @@
 
 #include <Swiften/Elements/Form.h>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 std::string Form::getFormType() const {
@@ -19,7 +17,7 @@ std::string Form::getFormType() const {
 }
 
 FormField::ref Form::getField(const std::string& name) const {
-    foreach(FormField::ref field, fields_) {
+    for (const auto& field : fields_) {
         if (field->getName() == name) {
             return field;
         }
@@ -45,7 +43,7 @@ const std::vector<Form::FormItem>& Form::getItems() const {
 
 void Form::clearEmptyTextFields() {
     std::vector<FormField::ref> populatedFields;
-    foreach (FormField::ref field, fields_) {
+    for (const auto& field : fields_) {
         if (field->getType() == FormField::TextSingleType) {
             if (!field->getTextSingleValue().empty()) {
                 populatedFields.push_back(field);

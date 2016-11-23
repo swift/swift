@@ -12,7 +12,6 @@
 #include <boost/cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
 
@@ -104,11 +103,11 @@ void TableRoster::handleUpdateTimerTick() {
     // Get a model for the new roster
     std::vector<Section> newSections;
     if (model) {
-        foreach(RosterItem* item, model->getRoot()->getDisplayedChildren()) {
+        for (auto item : model->getRoot()->getDisplayedChildren()) {
             if (GroupRosterItem* groupItem = boost::polymorphic_downcast<GroupRosterItem*>(item)) {
                 //std::cerr << "* " << groupItem->getDisplayName() << std::endl;
                 Section section(groupItem->getDisplayName());
-                foreach(RosterItem* groupChildItem, groupItem->getDisplayedChildren()) {
+                for (auto groupChildItem : groupItem->getDisplayedChildren()) {
                     if (ContactRosterItem* contact = boost::polymorphic_downcast<ContactRosterItem*>(groupChildItem)) {
                         //std::cerr << "  - " << contact->getDisplayJID() << std::endl;
                         section.items.push_back(Item(contact->getDisplayName(), contact->getStatusText(), contact->getDisplayJID(), contact->getStatusShow(), contact->getAvatarPath()));

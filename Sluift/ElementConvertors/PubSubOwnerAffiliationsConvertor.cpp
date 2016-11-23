@@ -12,8 +12,6 @@
 
 #include <lua.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Sluift/LuaElementConvertors.h>
 
 using namespace Swift;
@@ -58,7 +56,7 @@ void PubSubOwnerAffiliationsConvertor::doConvertToLua(lua_State* L, std::shared_
     if (!payload->getAffiliations().empty()) {
         {
             int i = 0;
-            foreach(std::shared_ptr<PubSubOwnerAffiliation> item, payload->getAffiliations()) {
+            for (auto&& item : payload->getAffiliations()) {
                 if (convertors->convertToLuaUntyped(L, item) > 0) {
                     lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
                     ++i;

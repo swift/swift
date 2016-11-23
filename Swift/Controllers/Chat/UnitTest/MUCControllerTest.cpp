@@ -11,7 +11,6 @@
 #include <hippomocks.h>
 
 #include <Swiften/Avatars/NullAvatarManager.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Client/NickResolver.h>
@@ -371,8 +370,7 @@ public:
         occupants.insert(occupant_map::value_type("Ernie", MUCOccupant("Ernie", MUCOccupant::Participant, MUCOccupant::Owner)));
 
         /* populate the MUC with fake users */
-        typedef const std::pair<std::string,MUCOccupant> occupantIterator;
-        foreach(occupantIterator &occupant, occupants) {
+        for (auto&& occupant : occupants) {
             muc_->insertOccupant(occupant.second);
         }
 
@@ -387,7 +385,7 @@ public:
         alterations.push_back(MUCOccupant("Remko", MUCOccupant::NoRole, MUCOccupant::NoAffiliation));
         alterations.push_back(MUCOccupant("Ernie", MUCOccupant::Visitor, MUCOccupant::Outcast));
 
-        foreach(const MUCOccupant& alteration, alterations) {
+        for (const auto& alteration : alterations) {
             /* perform an alteration to a user's role and affiliation */
             occupant_map::iterator occupant = occupants.find(alteration.getNick());
             CPPUNIT_ASSERT(occupant != occupants.end());
@@ -506,10 +504,10 @@ public:
     void testRoleAffiliationStatesVerify(const std::map<std::string, MUCOccupant> &occupants) {
         /* verify that the roster is in sync */
         GroupRosterItem* group = window_->getRosterModel()->getRoot();
-        foreach(RosterItem* rosterItem, group->getChildren()) {
+        for (auto rosterItem : group->getChildren()) {
             GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(rosterItem);
             CPPUNIT_ASSERT(child);
-            foreach(RosterItem* childItem, child->getChildren()) {
+            for (auto childItem : child->getChildren()) {
                 ContactRosterItem* item = dynamic_cast<ContactRosterItem*>(childItem);
                 CPPUNIT_ASSERT(item);
                 std::map<std::string, MUCOccupant>::const_iterator occupant = occupants.find(item->getJID().getResource());

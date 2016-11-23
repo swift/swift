@@ -18,7 +18,6 @@
 #include <QVBoxLayout>
 
 #include <Swiften/Base/FileSize.h>
-#include <Swiften/Base/foreach.h>
 
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
@@ -45,7 +44,7 @@ QtPlainChatView::~QtPlainChatView() {
 
 QString chatMessageToString(const ChatWindow::ChatMessage& message) {
     QString result;
-    foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
+    for (auto&& part : message.getParts()) {
         std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
         std::shared_ptr<ChatWindow::ChatURIMessagePart> uriPart;
         std::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart;

@@ -8,7 +8,6 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Payload.h>
@@ -75,7 +74,7 @@ namespace Swift {
                     lua_createtable(L, boost::numeric_cast<int>(stanza->getPayloads().size()), 0);
                     {
                         int i = 0;
-                        foreach(const std::shared_ptr<Payload> &item, stanza->getPayloads()) {
+                        for (const auto& item : stanza->getPayloads()) {
                             if (convertors->convertToLua(L, item) > 0) {
                                 lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
                                 ++i;

@@ -16,7 +16,6 @@
 #include <stack>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 
 namespace Swift {
@@ -99,7 +98,7 @@ void XMLBeautifier::handleStartElement(const std::string& element, const std::st
         buffer << "\"" << (doColoring ? styleNamespace(ns) : ns) << "\"";
     }
     if (!attributes.getEntries().empty()) {
-        foreach(AttributeMap::Entry entry, attributes.getEntries()) {
+        for (const auto& entry : attributes.getEntries()) {
             buffer << " ";
             buffer << (doColoring ? styleAttribute(entry.getAttribute().getName()) : entry.getAttribute().getName());
             buffer << "=";

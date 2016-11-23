@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -23,7 +22,7 @@ std::string DiscoInfoSerializer::serializePayload(std::shared_ptr<DiscoInfo> dis
     if (!discoInfo->getNode().empty()) {
         queryElement.setAttribute("node", discoInfo->getNode());
     }
-    foreach(const DiscoInfo::Identity& identity, discoInfo->getIdentities()) {
+    for (const auto& identity : discoInfo->getIdentities()) {
         std::shared_ptr<XMLElement> identityElement(new XMLElement("identity"));
         if (!identity.getLanguage().empty()) {
             identityElement->setAttribute("xml:lang", identity.getLanguage());
@@ -33,12 +32,12 @@ std::string DiscoInfoSerializer::serializePayload(std::shared_ptr<DiscoInfo> dis
         identityElement->setAttribute("type", identity.getType());
         queryElement.addNode(identityElement);
     }
-    foreach(const std::string& feature, discoInfo->getFeatures()) {
+    for (const auto& feature : discoInfo->getFeatures()) {
         std::shared_ptr<XMLElement> featureElement(new XMLElement("feature"));
         featureElement->setAttribute("var", feature);
         queryElement.addNode(featureElement);
     }
-    foreach(const Form::ref extension, discoInfo->getExtensions()) {
+    for (const auto& extension : discoInfo->getExtensions()) {
         queryElement.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(extension)));
     }
     return queryElement.serialize();

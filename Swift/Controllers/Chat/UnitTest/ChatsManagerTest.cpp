@@ -89,7 +89,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
     CPPUNIT_TEST(testChatControllerMeMessageHandling);
-	CPPUNIT_TEST(testRestartingMUCComponentCrash);
+    CPPUNIT_TEST(testRestartingMUCComponentCrash);
     CPPUNIT_TEST(testChatControllerMeMessageHandlingInMUC);
 
     // Carbons tests
@@ -455,7 +455,7 @@ public:
 
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(sender));
 
-        foreach(const JID& senderJID, senderResource) {
+        for (const auto& senderJID : senderResource) {
             // The sender supports delivery receipts.
             DiscoInfo::ref disco = std::make_shared<DiscoInfo>();
             disco->addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
@@ -478,7 +478,7 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
 
         // Two resources respond with message receipts.
-        foreach(const JID& senderJID, senderResource) {
+        for (const auto& senderJID : senderResource) {
             Message::ref receiptReply = std::make_shared<Message>();
             receiptReply->setFrom(senderJID);
             receiptReply->setTo(ownJID);
@@ -497,7 +497,7 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
 
         // Two resources respond with message receipts.
-        foreach(const JID& senderJID, senderResource) {
+        for (const auto& senderJID : senderResource) {
             Message::ref receiptReply = std::make_shared<Message>();
             receiptReply->setFrom(senderJID);
             receiptReply->setTo(ownJID);
@@ -570,7 +570,7 @@ public:
 
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(sender));
 
-        foreach(const JID& senderJID, senderResource) {
+        for (const auto& senderJID : senderResource) {
             // The sender supports delivery receipts.
             DiscoInfo::ref disco = std::make_shared<DiscoInfo>();
             disco->addFeature(DiscoInfo::MessageDeliveryReceiptsFeature);
@@ -593,7 +593,7 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
 
         // Two resources respond with message receipts.
-        foreach(const JID& senderJID, senderResource) {
+        for (const auto& senderJID : senderResource) {
             Message::ref reply = std::make_shared<Message>();
             reply->setFrom(senderJID);
             reply->setTo(ownJID);
@@ -612,7 +612,7 @@ public:
         CPPUNIT_ASSERT(stanzaChannel_->getStanzaAtIndex<Message>(1)->getPayload<DeliveryReceiptRequest>());
 
         // Two resources respond with message receipts.
-        foreach(const JID& senderJID, senderResource) {
+        for (const auto& senderJID : senderResource) {
             Message::ref receiptReply = std::make_shared<Message>();
             receiptReply->setFrom(senderJID);
             receiptReply->setTo(ownJID);

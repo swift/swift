@@ -9,7 +9,6 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/Idle.h>
 #include <Swiften/Elements/Presence.h>
 

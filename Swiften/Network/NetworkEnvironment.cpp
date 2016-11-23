@@ -6,7 +6,6 @@
 
 #include <Swiften/Network/NetworkEnvironment.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/HostAddress.h>
 #include <Swiften/Network/NetworkInterface.h>
 
@@ -17,9 +16,9 @@ NetworkEnvironment::~NetworkEnvironment() {
 
 HostAddress NetworkEnvironment::getLocalAddress() const {
     std::vector<NetworkInterface> networkInterfaces = getNetworkInterfaces();
-    foreach (const NetworkInterface& iface, networkInterfaces) {
+    for (const auto& iface : networkInterfaces) {
         if (!iface.isLoopback()) {
-            foreach (const HostAddress& address, iface.getAddresses()) {
+            for (const auto& address : iface.getAddresses()) {
                 if (address.getRawAddress().is_v4()) {
                     return address;
                 }

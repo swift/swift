@@ -20,7 +20,6 @@
 #include <QStyledItemDelegate>
 #include <QValidator>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/JID/JID.h>
 
@@ -158,7 +157,7 @@ void QtBlockListEditorWindow::applyChanges() {
 void QtBlockListEditorWindow::setCurrentBlockList(const std::vector<JID> &blockedJIDs) {
     ui->blockListTreeWidget->clear();
 
-    foreach(const JID& jid, blockedJIDs) {
+    for (const auto& jid : blockedJIDs) {
         QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(P2QSTRING(jid.toString())) << "");
         item->setFlags(item->flags() | Qt::ItemIsEditable);
         ui->blockListTreeWidget->addTopLevelItem(item);

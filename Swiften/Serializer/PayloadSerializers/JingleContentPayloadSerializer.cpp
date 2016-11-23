@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleFileTransferDescriptionSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleIBBTransportPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/JingleS5BTransportPayloadSerializer.h>
@@ -38,7 +37,7 @@ std::string JingleContentPayloadSerializer::serializePayload(std::shared_ptr<Jin
         JingleFileTransferDescriptionSerializer ftSerializer;
         JingleFileTransferDescription::ref filetransfer;
 
-        foreach(JingleDescription::ref desc, payload->getDescriptions()) {
+        for (auto&& desc : payload->getDescriptions()) {
             if ((filetransfer = std::dynamic_pointer_cast<JingleFileTransferDescription>(desc))) {
                 payloadXML.addNode(std::make_shared<XMLRawTextNode>(ftSerializer.serializePayload(filetransfer)));
             }
@@ -54,7 +53,7 @@ std::string JingleContentPayloadSerializer::serializePayload(std::shared_ptr<Jin
         JingleS5BTransportPayloadSerializer s5bSerializer;
         JingleS5BTransportPayload::ref s5b;
 
-        foreach(JingleTransportPayload::ref transport, payload->getTransports()) {
+        for (auto&& transport : payload->getTransports()) {
             if ((ibb = std::dynamic_pointer_cast<JingleIBBTransportPayload>(transport))) {
                 payloadXML.addNode(std::make_shared<XMLRawTextNode>(ibbSerializer.serializePayload(ibb)));
             } else if ((s5b = std::dynamic_pointer_cast<JingleS5BTransportPayload>(transport))) {

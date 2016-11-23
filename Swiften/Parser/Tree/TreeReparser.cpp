@@ -11,7 +11,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Parser/PayloadParser.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
@@ -31,7 +30,7 @@ std::shared_ptr<Payload> TreeReparser::parseTree(ParserElement::ref root, Payloa
         if (current.second) {
             stack.push_back(ElementState(current.first, false));
             parser->handleStartElement(current.first->getName(), current.first->getNamespace(), current.first->getAttributes());
-            foreach(ParserElement::ref child, current.first->getAllChildren()) {
+            for (const auto& child : current.first->getAllChildren()) {
                 stack.push_back(ElementState(child, true));
             }
         } else {

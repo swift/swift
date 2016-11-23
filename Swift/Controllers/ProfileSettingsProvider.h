@@ -1,16 +1,16 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/foreach.h>
-
-#include <Swift/Controllers/Settings/SettingsProvider.h>
+#include <string>
 
 namespace Swift {
+
+class SettingsProvider;
 
 class ProfileSettingsProvider {
     public:
@@ -25,6 +25,8 @@ class ProfileSettingsProvider {
 
     private:
         std::string profileSettingPath(const std::string &settingPath);
+
+    private:
         SettingsProvider* provider_;
         std::string profile_;
 };

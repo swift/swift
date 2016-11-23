@@ -176,7 +176,7 @@ void QtHistoryWindow::handleScrollRequested(int pos) {
     }
 
     QDate currentDate;
-    foreach (const QDate& date, dates_) {
+    for (const auto& date : dates_) {
         int snippetPosition = conversation_->getSnippetPositionByDate(date);
         if (snippetPosition <= pos) {
             currentDate = date;

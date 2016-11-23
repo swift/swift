@@ -10,7 +10,6 @@
 #include <memory>
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -54,7 +53,7 @@ std::string StreamInitiationSerializer::serializePayload(std::shared_ptr<StreamI
         Form::ref form(new Form(Form::FormType));
         FormField::ref field = std::make_shared<FormField>(FormField::ListSingleType);
         field->setName("stream-method");
-        foreach(const std::string& method, streamInitiation->getProvidedMethods()) {
+        for (const auto& method : streamInitiation->getProvidedMethods()) {
             field->addOption(FormField::Option("", method));
         }
         form->addField(field);

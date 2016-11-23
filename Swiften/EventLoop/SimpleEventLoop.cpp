@@ -8,8 +8,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 SimpleEventLoop::SimpleEventLoop() : isRunning_(true), eventAvailable_(false) {

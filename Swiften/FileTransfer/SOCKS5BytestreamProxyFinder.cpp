@@ -17,7 +17,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -38,8 +37,7 @@ void SOCKS5BytestreamProxyFinder::start() {
 }
 
 void SOCKS5BytestreamProxyFinder::stop() {
-    typedef std::shared_ptr<GenericRequest<S5BProxyRequest> > S5BProxyRequestGenericRequest;
-    foreach (S5BProxyRequestGenericRequest requester, pendingRequests) {
+    for (auto&& requester : pendingRequests) {
         requester->onResponse.disconnect(boost::bind(&SOCKS5BytestreamProxyFinder::handleProxyResponse, this, requester, _1, _2));
     }
 

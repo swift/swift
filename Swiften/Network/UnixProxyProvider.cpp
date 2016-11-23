@@ -12,7 +12,6 @@
 
 #include <Swiften/Network/UnixProxyProvider.h>
 
-#include <Swiften/Base/foreach.h>
 #if defined(HAVE_GCONF)
 #  include "Swiften/Network/GConfProxyProvider.h"
 #endif

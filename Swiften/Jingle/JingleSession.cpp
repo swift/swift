@@ -7,11 +7,10 @@
 #include <Swiften/Jingle/JingleSession.h>
 
 #include <algorithm>
+#include <cassert>
 #include <memory>
 
 #include <boost/function.hpp>
-
-#include <Swiften/Base/foreach.h>
 
 using namespace Swift;
 

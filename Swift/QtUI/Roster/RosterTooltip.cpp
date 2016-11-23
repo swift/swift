@@ -122,7 +122,7 @@ QString RosterTooltip::buildVCardSummary(VCard::ref vcard) {
 
     // star | name | content
     QString currentBlock;
-    foreach (const VCard::Telephone& tel, vcard->getTelephones()) {
+    for (const auto& tel : vcard->getTelephones()) {
         QString type = tel.isFax ? QObject::tr("Fax") : QObject::tr("Telephone");
         QString field = buildVCardField(tel.isPreferred, type, htmlEscape(P2QSTRING(tel.number)));
         if (tel.isPreferred) {
@@ -134,7 +134,7 @@ QString RosterTooltip::buildVCardSummary(VCard::ref vcard) {
     summary += currentBlock;
 
     currentBlock = "";
-    foreach (const VCard::EMailAddress& mail, vcard->getEMailAddresses()) {
+    for (const auto& mail : vcard->getEMailAddresses()) {
         QString field = buildVCardField(mail.isPreferred, QObject::tr("E-Mail"), htmlEscape(P2QSTRING(mail.address)));
         if (mail.isPreferred) {
             currentBlock = field;
@@ -145,14 +145,14 @@ QString RosterTooltip::buildVCardSummary(VCard::ref vcard) {
     summary += currentBlock;
 
     currentBlock = "";
-    foreach (const VCard::Organization& org, vcard->getOrganizations()) {
+    for (const auto& org : vcard->getOrganizations()) {
         QString field = buildVCardField(false, QObject::tr("Organization"), htmlEscape(P2QSTRING(org.name)));
         currentBlock += field;
     }
     summary += currentBlock;
 
     currentBlock = "";
-    foreach(const std::string& title, vcard->getTitles()) {
+    for (const auto& title : vcard->getTitles()) {
         QString field = buildVCardField(false, QObject::tr("Title"), htmlEscape(P2QSTRING(title)));
         currentBlock += field;
     }

@@ -14,7 +14,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 
@@ -40,13 +39,13 @@ BlockListController::~BlockListController() {
 }
 
 void BlockListController::blockListDifferences(const std::vector<JID> &newBlockList, std::vector<JID> &jidsToUnblock, std::vector<JID> &jidsToBlock) const {
-    foreach (const JID& jid, blockListBeforeEdit) {
+    for (const auto& jid : blockListBeforeEdit) {
         if (std::find(newBlockList.begin(), newBlockList.end(), jid) == newBlockList.end()) {
             jidsToUnblock.push_back(jid);
         }
     }
 
-    foreach (const JID& jid, newBlockList) {
+    for (const auto& jid : newBlockList) {
         if (std::find(blockListBeforeEdit.begin(), blockListBeforeEdit.end(), jid) == blockListBeforeEdit.end()) {
             jidsToBlock.push_back(jid);
         }
@@ -169,13 +168,13 @@ void BlockListController::handleBlockListChanged() {
         blockListDifferences(blockListEditorWidget_->getCurrentBlockList(), jidsToUnblock, jidsToBlock);
         blockListBeforeEdit = blockListManager_->getBlockList()->getItems();
 
-        foreach (const JID& jid, jidsToBlock) {
+        for (const auto& jid : jidsToBlock) {
             if (std::find(blockListBeforeEdit.begin(), blockListBeforeEdit.end(), jid) == blockListBeforeEdit.end()) {
                 blockListBeforeEdit.push_back(jid);
             }
         }
 
-        foreach (const JID& jid, jidsToUnblock) {
+        for (const auto& jid : jidsToUnblock) {
             blockListBeforeEdit.erase(std::remove(blockListBeforeEdit.begin(), blockListBeforeEdit.end(), jid), blockListBeforeEdit.end());
         }
 

@@ -11,8 +11,6 @@
 #include <boost/bind.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
 #include <Swift/Controllers/XMPPEvents/IncomingFileTransferEvent.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
@@ -25,7 +23,7 @@ EventController::EventController() {
 }
 
 EventController::~EventController() {
-    foreach(std::shared_ptr<StanzaEvent> event, events_) {
+    for (auto&& event : events_) {
         event->onConclusion.disconnect(boost::bind(&EventController::handleEventConcluded, this, event));
     }
 }
@@ -40,7 +38,7 @@ void EventController::handleIncomingEvent(std::shared_ptr<StanzaEvent> sourceEve
     /* If it's a duplicate subscription request, remove the previous request first */
     if (subscriptionEvent) {
         EventList existingEvents(events_);
-        foreach(std::shared_ptr<StanzaEvent> existingEvent, existingEvents) {
+        for (auto&& existingEvent : existingEvents) {
             std::shared_ptr<SubscriptionRequestEvent> existingSubscriptionEvent = std::dynamic_pointer_cast<SubscriptionRequestEvent>(existingEvent);
             if (existingSubscriptionEvent) {
                 if (existingSubscriptionEvent->getJID() == subscriptionEvent->getJID()) {

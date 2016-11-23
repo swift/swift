@@ -51,7 +51,7 @@ QtContactEditWidget::QtContactEditWidget(const std::set<std::string>& allGroups,
     groupsArea->setWidget(groups);
     QVBoxLayout* scrollLayout = new QVBoxLayout(groups);
 
-    foreach (std::string group, allGroups) {
+    for (const auto& group : allGroups) {
         QString groupName = doubleAmpersand(group);
         QCheckBox* check = new QCheckBox(groups);
         check->setText(groupName);
@@ -79,7 +79,7 @@ void QtContactEditWidget::setName(const std::string& name) {
 std::string QtContactEditWidget::getName() const {
     std::string name = Q2PSTRING(name_->text());
     QList<QRadioButton*> buttons = findChildren<QRadioButton*>();
-    foreach(const QRadioButton* button, buttons) {
+    for (const auto button : buttons) {
         if (button->isChecked()) {
             if (button == nameRadioButton_) {
                 name = Q2PSTRING(name_->text());
@@ -93,14 +93,14 @@ std::string QtContactEditWidget::getName() const {
 }
 
 void QtContactEditWidget::setSelectedGroups(const std::vector<std::string>& groups) {
-    foreach (std::string group, groups) {
+    for  (auto&& group : groups) {
         checkBoxes_[group]->setCheckState(Qt::Checked);
     }
 }
 
 std::set<std::string> QtContactEditWidget::getSelectedGroups() const {
     std::set<std::string> groups;
-    foreach(const CheckBoxMap::value_type& group, checkBoxes_) {
+    for (const auto& group : checkBoxes_) {
         if (group.second->checkState() == Qt::Checked) {
             groups.insert(group.first);
         }
@@ -124,7 +124,7 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
     }
 
     // populate new suggestions
-    foreach(const std::string& name, suggestions) {
+    for (const auto& name : suggestions) {
         suggestionsLayout_->insertWidget(nameLayout_->count() - 2, new QRadioButton(doubleAmpersand(name), this));
     }
 
@@ -133,7 +133,7 @@ void QtContactEditWidget::setNameSuggestions(const std::vector<std::string>& sug
 
     QRadioButton* suggestedRadioButton = nullptr;
     QList<QRadioButton*> radioButtons = findChildren<QRadioButton*>();
-    foreach (QRadioButton* candidate, radioButtons) {
+    for (auto candidate : radioButtons) {
         if (candidate->text() == name_->text()) {
             suggestedRadioButton = candidate;
             break;

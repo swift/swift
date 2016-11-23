@@ -8,7 +8,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParserFactoryCollection.h>
@@ -17,7 +16,7 @@
 namespace Swift {
 
 void MUCUserPayloadParser::handleTree(ParserElement::ref root) {
-    foreach (ParserElement::ref child, root->getAllChildren()) {
+    for (const auto& child : root->getAllChildren()) {
         if (child->getName() == "item" && child->getNamespace() == root->getNamespace()) {
             MUCItem item = MUCItemParser::itemFromTree(child);
             getPayloadInternal()->addItem(item);

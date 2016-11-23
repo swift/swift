@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Storages/CertificateMemoryStorage.h>
-
-#include <Swiften/Base/foreach.h>
 
 using namespace Swift;
 
@@ -14,7 +12,7 @@ CertificateMemoryStorage::CertificateMemoryStorage() {
 }
 
 bool CertificateMemoryStorage::hasCertificate(Certificate::ref certificate) const {
-    foreach(Certificate::ref storedCert, certificates) {
+    for (auto&& storedCert : certificates) {
         if (storedCert->toDER() == certificate->toDER()) {
             return true;
         }

@@ -11,7 +11,6 @@
 #include <unistd.h>
 
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourBrowseQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourRegisterQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Bonjour/BonjourResolveHostnameQuery.h>
@@ -106,7 +105,7 @@ void BonjourQuerier::run() {
             maxSocket = interruptSelectReadSocket;
             FD_SET(interruptSelectReadSocket, &fdSet);
 
-            foreach(const std::shared_ptr<BonjourQuery>& query, runningQueries) {
+            for (const auto& query : runningQueries) {
                 int socketID = query->getSocketID();
                 maxSocket = std::max(maxSocket, socketID);
                 FD_SET(socketID, &fdSet);
@@ -124,7 +123,7 @@ void BonjourQuerier::run() {
 
         {
             std::lock_guard<std::mutex> lock(runningQueriesMutex);
-            foreach(std::shared_ptr<BonjourQuery> query, runningQueries) {
+            for (auto&& query : runningQueries) {
                 if (FD_ISSET(query->getSocketID(), &fdSet)) {
                     query->processResult();
                 }

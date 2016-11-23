@@ -10,7 +10,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
@@ -22,7 +21,7 @@ BytestreamsSerializer::BytestreamsSerializer() {
 std::string BytestreamsSerializer::serializePayload(std::shared_ptr<Bytestreams> bytestreams)    const {
     XMLElement queryElement("query", "http://jabber.org/protocol/bytestreams");
     queryElement.setAttribute("sid", bytestreams->getStreamID());
-    foreach(const Bytestreams::StreamHost& streamHost, bytestreams->getStreamHosts()) {
+    for (const auto& streamHost : bytestreams->getStreamHosts()) {
         std::shared_ptr<XMLElement> streamHostElement(new XMLElement("streamhost"));
         streamHostElement->setAttribute("host", streamHost.host);
         streamHostElement->setAttribute("jid", streamHost.jid.toString());

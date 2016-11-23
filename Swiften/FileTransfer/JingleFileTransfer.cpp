@@ -9,7 +9,6 @@
 #include <boost/typeof/typeof.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/FileTransfer/FileTransferTransporter.h>
 #include <Swiften/JID/JID.h>
@@ -39,7 +38,7 @@ JingleFileTransfer::~JingleFileTransfer() {
 
 void JingleFileTransfer::fillCandidateMap(CandidateMap& map, const std::vector<JingleS5BTransportPayload::Candidate>& candidates) {
     map.clear();
-    foreach (JingleS5BTransportPayload::Candidate candidate, candidates) {
+    for (auto&& candidate : candidates) {
         map[candidate.cid] = candidate;
     }
 }

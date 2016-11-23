@@ -24,7 +24,6 @@
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
@@ -215,7 +214,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
         s5bTransport->setSessionID(s5bSessionID);
         s5bTransport->setMode(JingleS5BTransportPayload::TCPMode);
         s5bTransport->setDstAddr(dstAddr);
-        foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
+        for (auto&& candidate : candidates) {
             s5bTransport->addCandidate(candidate);
             SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString() << std::endl;
         }

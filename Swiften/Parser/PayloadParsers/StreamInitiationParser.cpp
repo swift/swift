@@ -13,8 +13,6 @@
 
 #include <Swiften/Parser/PayloadParsers/FormParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
-#include <Swiften/Base/foreach.h>
-
 
 #define FILE_TRANSFER_NS "http://jabber.org/protocol/si/profile/file-transfer"
 #define FEATURE_NEG_NS "http://jabber.org/protocol/feature-neg"
@@ -93,7 +91,7 @@ void StreamInitiationParser::handleEndElement(const std::string& element, const 
                 FormField::ref field = std::dynamic_pointer_cast<FormField>(form->getField("stream-method"));
                 if (field) {
                     if (form->getType() == Form::FormType) {
-                        foreach (const FormField::Option& option, field->getOptions()) {
+                        for (const auto& option : field->getOptions()) {
                             getPayloadInternal()->addProvidedMethod(option.value);
                         }
                     }

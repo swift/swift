@@ -19,8 +19,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 void WinUIHelpers::displayCertificateChainAsSheet(QWidget* parent, const std::vector<Certificate::ref>& chain) {

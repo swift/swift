@@ -8,8 +8,6 @@
 
 #include <string>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Slimber/Menulet.h>
 
 MenuletController::MenuletController(Menulet* menulet) :
@@ -41,7 +39,7 @@ void MenuletController::update() {
     else {
         menulet->setIcon("UsersOnline");
         menulet->addItem("Online users:");
-        foreach(const std::string& user, linkLocalUsers) {
+        for (const auto& user : linkLocalUsers) {
             menulet->addItem(std::string("  ") + user);
         }
     }

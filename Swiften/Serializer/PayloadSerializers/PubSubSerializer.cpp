@@ -4,13 +4,10 @@
  * See the COPYING file for more information.
  */
 
-
-
 #include <Swiften/Serializer/PayloadSerializers/PubSubSerializer.h>
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializerCollection.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubAffiliationsSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubConfigureSerializer.h>
@@ -52,7 +49,7 @@ std::string PubSubSerializer::serializePayload(std::shared_ptr<PubSub> payload) 
     }
     XMLElement element("pubsub", "http://jabber.org/protocol/pubsub");
     std::shared_ptr<PubSubPayload> p = payload->getPayload();
-    foreach(std::shared_ptr<PayloadSerializer> serializer, pubsubSerializers) {
+    for (const auto& serializer : pubsubSerializers) {
         if (serializer->canSerialize(p)) {
             element.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(p)));
             if (std::shared_ptr<PubSubCreate> create = std::dynamic_pointer_cast<PubSubCreate>(p)) {

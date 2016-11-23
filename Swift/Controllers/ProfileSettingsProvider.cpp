@@ -6,13 +6,15 @@
 
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 
+#include <Swift/Controllers/Settings/SettingsProvider.h>
+
 namespace Swift {
 
 ProfileSettingsProvider::ProfileSettingsProvider(const std::string& profile, SettingsProvider* provider) :
     profile_(profile) {
     provider_ = provider;
     bool found = false;
-    foreach (std::string existingProfile, provider->getAvailableProfiles()) {
+    for (const auto& existingProfile : provider->getAvailableProfiles()) {
         if (existingProfile == profile) {
             found = true;
         }

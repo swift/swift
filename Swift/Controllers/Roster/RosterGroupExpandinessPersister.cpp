@@ -11,7 +11,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/String.h>
-#include <Swiften/Base/foreach.h>
 
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/SettingConstants.h>
@@ -45,7 +44,7 @@ void RosterGroupExpandinessPersister::handleExpandedChanged(GroupRosterItem* gro
 
 void RosterGroupExpandinessPersister::save() {
     std::string setting;
-    foreach (const std::string& group, collapsed_) {
+    for (const auto& group : collapsed_) {
         if (!setting.empty()) {
             setting += "\n";
         }

@@ -10,8 +10,6 @@
 
 #include <boost/algorithm/string.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 void TabComplete::addWord(const std::string& word) {
@@ -43,7 +41,7 @@ std::string TabComplete::completeWord(const std::string& word) {
     } else {
         lastShort_ = boost::to_lower_copy(word);
         lastCompletionCandidates_.clear();
-        foreach (std::string candidate, words_) {
+        for (auto&& candidate : words_) {
             if (boost::starts_with(boost::to_lower_copy(candidate), boost::to_lower_copy(word))) {
                 lastCompletionCandidates_.push_back(candidate);
             }

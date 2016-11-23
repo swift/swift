@@ -9,7 +9,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Queries/IQRouter.h>
 #include <Swiften/Roster/GetRosterRequest.h>
@@ -51,7 +50,7 @@ void XMPPRosterController::requestRoster() {
 
 void XMPPRosterController::handleRosterReceived(std::shared_ptr<RosterPayload> rosterPayload, bool initial, std::shared_ptr<RosterPayload> previousRoster) {
     if (rosterPayload) {
-        foreach(const RosterItemPayload& item, rosterPayload->getItems()) {
+        for (const auto& item : rosterPayload->getItems()) {
             //Don't worry about the updated case, the XMPPRoster sorts that out.
             if (item.getSubscription() == RosterItemPayload::Remove) {
                 xmppRoster_->removeContact(item.getJID());
@@ -62,7 +61,7 @@ void XMPPRosterController::handleRosterReceived(std::shared_ptr<RosterPayload> r
     }
     else if (previousRoster) {
         // The cached version hasn't changed; emit all items
-        foreach(const RosterItemPayload& item, previousRoster->getItems()) {
+        for (const auto& item : previousRoster->getItems()) {
             if (item.getSubscription() != RosterItemPayload::Remove) {
                 xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
             }
@@ -83,7 +82,7 @@ void XMPPRosterController::saveRoster(const std::string& version) {
     std::vector<XMPPRosterItem> items = xmppRoster_->getItems();
     std::shared_ptr<RosterPayload> roster(new RosterPayload());
     roster->setVersion(version);
-    foreach(const XMPPRosterItem& item, items) {
+    for (const auto& item : items) {
         roster->addItem(RosterItemPayload(item.getJID(), item.getName(), item.getSubscription(), item.getGroups()));
     }
     rosterStorage_->setRoster(roster);

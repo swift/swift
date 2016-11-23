@@ -12,8 +12,6 @@
 
 #include <Swift/Controllers/Highlighter.h>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/Controllers/HighlightManager.h>
 
 namespace Swift {

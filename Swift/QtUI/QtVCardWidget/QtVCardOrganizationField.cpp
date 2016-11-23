@@ -78,7 +78,7 @@ bool QtVCardOrganizationField::isEmpty() const {
 void QtVCardOrganizationField::setOrganization(const VCard::Organization& organization) {
     organizationLineEdit->setText(P2QSTRING(organization.name));
     unitsTreeWidget->clear();
-    foreach(std::string unit, organization.units) {
+    for (const auto& unit : organization.units) {
         QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(P2QSTRING(unit)) << "");
         item->setFlags(item->flags() | Qt::ItemIsEditable);
         unitsTreeWidget->addTopLevelItem(item);
@@ -134,7 +134,7 @@ void QtVCardOrganizationField::handleRowsRemoved(const QModelIndex&, int, int) {
 void QtVCardOrganizationField::guaranteeEmptyRow() {
     bool hasEmptyRow = false;
     QList<QTreeWidgetItem*> rows = unitsTreeWidget->findItems("", Qt::MatchFixedString);
-    foreach(QTreeWidgetItem* row, rows) {
+    for (auto row : rows) {
         if (row->text(0).isEmpty()) {
             hasEmptyRow = true;
         }

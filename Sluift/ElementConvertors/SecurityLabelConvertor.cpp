@@ -12,8 +12,6 @@
 
 #include <lua.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 using namespace Swift;
 
 SecurityLabelConvertor::SecurityLabelConvertor() :
@@ -69,7 +67,7 @@ void SecurityLabelConvertor::doConvertToLua(lua_State* L, std::shared_ptr<Securi
         lua_createtable(L, boost::numeric_cast<int>(payload->getEquivalentLabels().size()), 0);
         {
             int i = 0;
-            foreach(const std::string& item, payload->getEquivalentLabels()) {
+            for (const auto& item : payload->getEquivalentLabels()) {
                 lua_pushstring(L, item.c_str());
                 lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
                 ++i;

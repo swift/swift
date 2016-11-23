@@ -121,7 +121,7 @@ QGridLayout* QtVCardGeneralField::getGridLayout() const {
 
 void QtVCardGeneralField::handleCloseButtonClicked() {
     customCleanup();
-    foreach(QWidget* widget, childWidgets) {
+    for (auto widget : childWidgets) {
         widget->hide();
         layout->removeWidget(widget);
     }

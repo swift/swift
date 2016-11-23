@@ -156,7 +156,7 @@ void QtProfileWindow::handleAdjustSizeTimeout() {
     // Force recaluclation of all layout geometry in children widgets.
     // This is required on Windows to have the correct size even on first show.
     QList<QWidget *> children = findChildren<QWidget*>();
-    foreach(QWidget* child, children) {
+    for (auto child : children) {
         child->updateGeometry();
     }
 

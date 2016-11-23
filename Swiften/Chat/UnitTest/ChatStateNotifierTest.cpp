@@ -9,7 +9,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
@@ -142,7 +141,7 @@ public:
 
         int getComposingCount() const {
             int result = 0;
-            foreach(std::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
+            for (auto&& stanza : stanzaChannel->sentStanzas) {
                 if (stanza->getPayload<ChatState>() && stanza->getPayload<ChatState>()->getChatState() == ChatState::Composing) {
                     result++;
                 }
@@ -152,7 +151,7 @@ public:
 
         int getActiveCount() const {
             int result = 0;
-            foreach(std::shared_ptr<Stanza> stanza, stanzaChannel->sentStanzas) {
+            for (auto&& stanza : stanzaChannel->sentStanzas) {
                 if (stanza->getPayload<ChatState>() && stanza->getPayload<ChatState>()->getChatState() == ChatState::Active) {
                     result++;
                 }

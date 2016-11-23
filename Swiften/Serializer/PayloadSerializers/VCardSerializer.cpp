@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -47,7 +46,7 @@ std::string VCardSerializer::serializePayload(std::shared_ptr<VCard> vcard)  con
         }
         queryElement.addNode(nameElement);
     }
-    foreach(const VCard::EMailAddress& emailAddress, vcard->getEMailAddresses()) {
+    for (const auto& emailAddress : vcard->getEMailAddresses()) {
         std::shared_ptr<XMLElement> emailElement(new XMLElement("EMAIL"));
         emailElement->addNode(std::make_shared<XMLElement>("USERID", "", emailAddress.address));
         if (emailAddress.isHome) {
@@ -84,7 +83,7 @@ std::string VCardSerializer::serializePayload(std::shared_ptr<VCard> vcard)  con
         queryElement.addNode(std::make_shared<XMLElement>("BDAY", "", dateTimeToString(vcard->getBirthday())));
     }
 
-    foreach(const VCard::Telephone& telephone, vcard->getTelephones()) {
+    for (const auto& telephone : vcard->getTelephones()) {
         std::shared_ptr<XMLElement> telElement(new XMLElement("TEL"));
         telElement->addNode(std::make_shared<XMLElement>("NUMBER", "", telephone.number));
         if (telephone.isHome) {
@@ -129,7 +128,7 @@ std::string VCardSerializer::serializePayload(std::shared_ptr<VCard> vcard)  con
         queryElement.addNode(telElement);
     }
 
-    foreach(const VCard::Address& address, vcard->getAddresses()) {
+    for (const auto& address : vcard->getAddresses()) {
         std::shared_ptr<XMLElement> adrElement = std::make_shared<XMLElement>("ADR");
         if (!address.poBox.empty()) {
             adrElement->addNode(std::make_shared<XMLElement>("POBOX", "", address.poBox));
@@ -177,10 +176,10 @@ std::string VCardSerializer::serializePayload(std::shared_ptr<VCard> vcard)  con
         queryElement.addNode(adrElement);
     }
 
-    foreach(const VCard::AddressLabel& addressLabel, vcard->getAddressLabels()) {
+    for (const auto& addressLabel : vcard->getAddressLabels()) {
         std::shared_ptr<XMLElement> labelElement = std::make_shared<XMLElement>("LABEL");
 
-        foreach(const std::string& line, addressLabel.lines) {
+        for (const auto& line : addressLabel.lines) {
             labelElement->addNode(std::make_shared<XMLElement>("LINE", "", line));
         }
 
@@ -208,7 +207,7 @@ std::string VCardSerializer::serializePayload(std::shared_ptr<VCard> vcard)  con
         queryElement.addNode(labelElement);
     }
 
-    foreach(const JID& jid, vcard->getJIDs()) {
+    for (const auto& jid : vcard->getJIDs()) {
         queryElement.addNode(std::make_shared<XMLElement>("JID", "", jid.toString()));
     }
 
@@ -216,28 +215,28 @@ std::string VCardSerializer::serializePayload(std::shared_ptr<VCard> vcard)  con
         queryElement.addNode(std::make_shared<XMLElement>("DESC", "", vcard->getDescription()));
     }
 
-    foreach(const VCard::Organization& org, vcard->getOrganizations()) {
+    for (const auto& org : vcard->getOrganizations()) {
         std::shared_ptr<XMLElement> orgElement = std::make_shared<XMLElement>("ORG");
         if (!org.name.empty()) {
             orgElement->addNode(std::make_shared<XMLElement>("ORGNAME", "", org.name));
         }
         if (!org.units.empty()) {
-            foreach(const std::string& unit, org.units) {
+            for (const auto& unit : org.units) {
                 orgElement->addNode(std::make_shared<XMLElement>("ORGUNIT", "", unit));
             }
         }
         queryElement.addNode(orgElement);
     }
 
-    foreach(const std::string& title, vcard->getTitles()) {
+    for (const auto& title : vcard->getTitles()) {
         queryElement.addNode(std::make_shared<XMLElement>("TITLE", "", title));
     }
 
-    foreach(const std::string& role, vcard->getRoles()) {
+    for (const auto& role : vcard->getRoles()) {
         queryElement.addNode(std::make_shared<XMLElement>("ROLE", "", role));
     }
 
-    foreach(const std::string& url, vcard->getURLs()) {
+    for (const auto& url : vcard->getURLs()) {
         queryElement.addNode(std::make_shared<XMLElement>("URL", "", url));
     }
 

@@ -6,7 +6,6 @@
 
 #include <Swiften/Serializer/XML/XMLElement.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 
 namespace Swift {
@@ -23,14 +22,13 @@ XMLElement::XMLElement(const std::string& tag, const std::string& xmlns, const s
 std::string XMLElement::serialize() {
     std::string result;
     result += "<" + tag_;
-    typedef std::pair<std::string,std::string> Pair;
-    foreach(const Pair& p, attributes_) {
+    for (const auto& p : attributes_) {
         result += " " + p.first + "=\"" + p.second + "\"";
     }
 
     if (!childNodes_.empty()) {
         result += ">";
-        foreach (std::shared_ptr<XMLNode> node, childNodes_) {
+        for (auto& node : childNodes_) {
             result += node->serialize();
         }
         result += "</" + tag_ + ">";

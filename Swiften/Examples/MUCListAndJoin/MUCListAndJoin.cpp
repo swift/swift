@@ -9,7 +9,6 @@
 
 #include <boost/optional.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
@@ -47,7 +46,7 @@ static void handleRoomsItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPay
 
     int roomCount = 0;
     cout << "List of rooms at " << mucJID.toString() << endl;
-    foreach (DiscoItems::Item item, items->getItems()) {
+    for (auto&& item : items->getItems()) {
         roomCount++;
         cout << "\t" << roomCount << ". " << item.getJID().getNode() << " - " << item.getName() << std::endl;
         if (roomCount == 1) {

@@ -25,7 +25,6 @@ fi
 	date_time/local_time/local_time.hpp \
 	date_time/c_local_time_adjustor.hpp \
 	date_time/gregorian/gregorian_types.hpp \
-	foreach.hpp \
 	filesystem.hpp \
 	filesystem/fstream.hpp \
 	format.hpp \
@@ -41,8 +40,6 @@ fi
 	random/uniform_int.hpp \
 	regex.hpp \
 	scope_exit.hpp \
-	shared_ptr.hpp \
-	smart_ptr/make_shared.hpp \
 	serialization/serialization.hpp \
 	serialization/vector.hpp \
 	serialization/list.hpp \
@@ -66,6 +63,7 @@ fi
 	system/src/error_code.cpp \
 	phoenix/support/detail/iterate.hpp \
 	type_traits.hpp \
+	range/adaptor/reversed.hpp \
 	$TARGET_DIR
 cp $1/LICENSE_1_0.txt $TARGET_DIR
 

@@ -73,7 +73,7 @@ QtSubscriptionRequestWindow::~QtSubscriptionRequestWindow() {
 }
 
 QtSubscriptionRequestWindow* QtSubscriptionRequestWindow::getWindow(std::shared_ptr<SubscriptionRequestEvent> event, QWidget* parent) {
-    foreach (QtSubscriptionRequestWindow* window, windows_) {
+    for (auto window : windows_) {
         if (window->getEvent() == event) {
             return window;
         }

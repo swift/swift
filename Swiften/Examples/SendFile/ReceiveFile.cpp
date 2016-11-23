@@ -11,7 +11,6 @@
 #include <boost/filesystem.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Disco/ClientDiscoManager.h>
@@ -56,7 +55,8 @@ class FileReceiver {
         }
 
         void stop() {
-            foreach(const IncomingFileTransfer::ref transfer, incomingFileTransfers) {
+            for (const auto& transfer : incomingFileTransfers) {
+                (void)transfer;
                 //transfer->stop();
             }
             client->disconnect();

@@ -11,7 +11,6 @@
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -54,7 +53,7 @@ std::string JingleFileTransferFileInfoSerializer::serializePayload(std::shared_p
         fileElement.addNode(std::make_shared<XMLElement>("size", "", boost::lexical_cast<std::string>(fileInfo->getSize())));
     }
 
-    foreach (JingleFileTransferFileInfo::HashElementMap::value_type hashElement, fileInfo->getHashes()) {
+    for (const auto& hashElement : fileInfo->getHashes()) {
         std::shared_ptr<XMLElement> hash = std::make_shared<XMLElement>("hash", "urn:xmpp:hashes:1", Base64::encode(hashElement.second));
         hash->setAttribute("algo", hashElement.first);
         fileElement.addNode(hash);

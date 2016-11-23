@@ -11,7 +11,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/FileTransfer/FailingTransportSession.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
@@ -295,7 +294,7 @@ void DefaultFileTransferTransporter::closeLocalSession() {
     s5bRegistry->setHasBytestream(getSOCKS5DstAddr(), false);
     if (s5bServerManager->getServer()) {
         std::vector<std::shared_ptr<SOCKS5BytestreamServerSession> > serverSessions = s5bServerManager->getServer()->getSessions(getSOCKS5DstAddr());
-        foreach(std::shared_ptr<SOCKS5BytestreamServerSession> session, serverSessions) {
+        for (auto&& session : serverSessions) {
             session->stop();
         }
     }

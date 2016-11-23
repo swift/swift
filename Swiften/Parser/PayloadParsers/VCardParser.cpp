@@ -9,7 +9,6 @@
 #include <cassert>
 
 #include <Swiften/Base/DateTime.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Parser/SerializingParser.h>
 #include <Swiften/StringCodecs/Base64.h>
 
@@ -282,7 +281,7 @@ void VCardParser::handleCharacterData(const std::string& text) {
 
 std::string VCardParser::getElementHierarchy() const {
     std::string result;
-    foreach(const std::string& element, elementStack_) {
+    for (const auto& element : elementStack_) {
         result += "/" + element;
     }
     return result;

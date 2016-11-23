@@ -6,8 +6,6 @@
 
 #include <Swift/Controllers/PreviousStatusStore.h>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 PreviousStatusStore::PreviousStatusStore() {
@@ -31,7 +29,7 @@ std::vector<TypeStringPair> PreviousStatusStore::exactMatchSuggestions(StatusSho
 
 std::vector<TypeStringPair> PreviousStatusStore::getSuggestions(const std::string& message) {
     std::vector<TypeStringPair> suggestions;
-    foreach (TypeStringPair status, store_) {
+    for (auto&& status : store_) {
         if (status.second == message) {
             suggestions.clear();
             suggestions.push_back(status);

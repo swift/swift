@@ -8,7 +8,6 @@
 
 #include <algorithm>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/Timer.h>
 
 namespace Swift {
@@ -49,7 +48,7 @@ std::shared_ptr<Timer> DummyTimerFactory::createTimer(int milliseconds) {
 
 void DummyTimerFactory::setTime(int time) {
     assert(time > currentTime);
-    foreach(std::shared_ptr<DummyTimer> timer, timers) {
+    for (auto&& timer : timers) {
         if (timer->getAlarmTime() > currentTime && timer->getAlarmTime() <= time && timer->isRunning) {
             timer->onTick();
         }

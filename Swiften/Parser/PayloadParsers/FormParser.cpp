@@ -7,8 +7,6 @@
 
 #include <map>
 
-#include <Swiften/Base/foreach.h>
-
 namespace Swift {
 
 FormParser::FormParser() : level_(TopLevel), parsingItem_(false), parsingReported_(false), parsingOption_(false), hasReportedRef_(false){
@@ -190,15 +188,15 @@ void FormParser::handleEndElement(const std::string& element, const std::string&
             }
             else {
                 if (currentPages_.size() > 0) {
-                    foreach (std::shared_ptr<FormPage> page, currentPages_) {
-                        foreach (std::string pageRef, page->getFieldRefs()) {
+                    for (const auto& page : currentPages_) {
+                        for (const auto& pageRef : page->getFieldRefs()) {
                             if (pageRef == currentField_->getName()) {
                                 page->addField(currentField_);
                             }
                         }
                     }
-                    foreach (std::shared_ptr<FormSection> section, currentSections_) {
-                        foreach (std::string sectionRef, section->getFieldRefs()) {
+                    for (const auto& section : currentSections_) {
+                        for (const auto& sectionRef : section->getFieldRefs()) {
                             if (sectionRef == currentField_->getName()) {
                                 section->addField(currentField_);
                             }

@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Roster/XMPPRosterImpl.h>
-
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
@@ -78,7 +76,7 @@ RosterItemPayload::Subscription XMPPRosterImpl::getSubscriptionStateForJID(const
 
 std::vector<XMPPRosterItem> XMPPRosterImpl::getItems() const {
     std::vector<XMPPRosterItem> result;
-    foreach(const RosterMap::value_type& entry, entries_) {
+    for (const auto& entry : entries_) {
         result.push_back(entry.second);
     }
     return result;
@@ -96,7 +94,7 @@ boost::optional<XMPPRosterItem> XMPPRosterImpl::getItem(const JID& jid) const {
 
 std::set<std::string> XMPPRosterImpl::getGroups() const {
     std::set<std::string> result;
-    foreach(const RosterMap::value_type& entry, entries_) {
+    for (const auto& entry : entries_) {
         std::vector<std::string> groups = entry.second.getGroups();
         result.insert(groups.begin(), groups.end());
     }

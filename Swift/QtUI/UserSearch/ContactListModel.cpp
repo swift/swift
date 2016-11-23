@@ -15,7 +15,6 @@
 #include <QMimeData>
 
 #include <Swiften/Base/Path.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/StatusShow.h>
 
 #include <Swift/QtUI/QtResourceHelper.h>

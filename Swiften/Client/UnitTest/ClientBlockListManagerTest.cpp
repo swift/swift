@@ -15,7 +15,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Client/StanzaChannel.h>
@@ -171,7 +170,7 @@ class ClientBlockListManagerTest : public CppUnit::TestFixture {
 
             // build IQ response
             std::shared_ptr<BlockListPayload> responsePayload = std::make_shared<BlockListPayload>();
-            foreach(const JID& jid, blockedJids) {
+            for (const auto& jid : blockedJids) {
                 responsePayload->addItem(jid);
             }
 

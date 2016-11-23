@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,6 @@
 #include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/Regex.h>
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 
@@ -45,11 +44,11 @@ boost::regex HighlightRule::regexFromString(const std::string & s) const
 void HighlightRule::updateRegex() const
 {
     keywordRegex_.clear();
-    foreach (const std::string & k, keywords_) {
+    for (const auto& k : keywords_) {
         keywordRegex_.push_back(regexFromString(k));
     }
     senderRegex_.clear();
-    foreach (const std::string & s, senders_) {
+    for (const auto& s : senders_) {
         senderRegex_.push_back(regexFromString(s));
     }
 }
@@ -79,7 +78,7 @@ bool HighlightRule::isMatch(const std::string& body, const std::string& sender, 
 
             // check if a keyword matches
             if (!matchesKeyword && !keywords_.empty()) {
-                foreach (const boost::regex &keyword, keywordRegex_) {
+                for (const auto& keyword : keywordRegex_) {
                     if (boost::regex_search(body, keyword)) {
                         matchesKeyword = true;
                         break;
@@ -88,7 +87,7 @@ bool HighlightRule::isMatch(const std::string& body, const std::string& sender, 
             }
         }
 
-        foreach (const boost::regex & rx, senderRegex_) {
+        for (const auto& rx : senderRegex_) {
             if (boost::regex_search(sender, rx)) {
                 matchesSender = true;
                 break;

@@ -8,7 +8,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/LinkLocal/LinkLocalServiceBrowser.h>
@@ -25,7 +24,7 @@ LinkLocalPresenceManager::LinkLocalPresenceManager(LinkLocalServiceBrowser* brow
 }
 
 boost::optional<LinkLocalService> LinkLocalPresenceManager::getServiceForJID(const JID& j) const {
-    foreach(const LinkLocalService& service, browser->getServices()) {
+    for (const auto& service : browser->getServices()) {
         if (service.getJID() == j) {
             return service;
         }
@@ -52,7 +51,7 @@ void LinkLocalPresenceManager::handleServiceRemoved(const LinkLocalService& serv
 
 std::shared_ptr<RosterPayload> LinkLocalPresenceManager::getRoster() const {
     std::shared_ptr<RosterPayload> roster(new RosterPayload());
-    foreach(const LinkLocalService& service, browser->getServices()) {
+    for (const auto& service : browser->getServices()) {
         roster->addItem(getRosterItem(service));
     }
     return roster;
@@ -60,14 +59,14 @@ std::shared_ptr<RosterPayload> LinkLocalPresenceManager::getRoster() const {
 
 std::vector<std::shared_ptr<Presence> > LinkLocalPresenceManager::getAllPresence() const {
     std::vector<std::shared_ptr<Presence> > result;
-    foreach(const LinkLocalService& service, browser->getServices()) {
+    for (const auto& service : browser->getServices()) {
         result.push_back(getPresence(service));
     }
     return result;
 }
 
 RosterItemPayload LinkLocalPresenceManager::getRosterItem(const LinkLocalService& service) const {
- return RosterItemPayload(service.getJID(), getRosterName(service), RosterItemPayload::Both);
+    return RosterItemPayload(service.getJID(), getRosterName(service), RosterItemPayload::Both);
 }
 
 std::string LinkLocalPresenceManager::getRosterName(const LinkLocalService& service) const {

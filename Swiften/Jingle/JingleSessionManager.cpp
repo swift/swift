@@ -8,7 +8,6 @@
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Jingle/IncomingJingleSessionHandler.h>
 #include <Swiften/Jingle/JingleResponder.h>
 
@@ -44,7 +43,7 @@ void JingleSessionManager::registerOutgoingSession(const JID& initiator, JingleS
 
 void JingleSessionManager::handleIncomingSession(const JID& initiator, const JID& recipient, JingleSessionImpl::ref session, const std::vector<JingleContentPayload::ref>& contents) {
     sessions.insert(std::make_pair(JIDSession(initiator, session->getID()), session));
-    foreach (IncomingJingleSessionHandler* handler, incomingSessionHandlers) {
+    for (auto handler : incomingSessionHandlers) {
         if (handler->handleIncomingJingleSession(session, contents, recipient)) {
             return;
         }

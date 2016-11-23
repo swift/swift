@@ -10,7 +10,6 @@
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 
 namespace Swift {
 

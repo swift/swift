@@ -11,7 +11,6 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
 #include <Swiften/StringCodecs/Base64.h>

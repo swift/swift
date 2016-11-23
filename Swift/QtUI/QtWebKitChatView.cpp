@@ -499,7 +499,7 @@ QString QtWebKitChatView::getHighlightSpanStart(const HighlightAction& highlight
 
 QString QtWebKitChatView::chatMessageToHTML(const ChatWindow::ChatMessage& message) {
     QString result;
-    foreach (std::shared_ptr<ChatWindow::ChatMessagePart> part, message.getParts()) {
+    for (const auto& part : message.getParts()) {
         std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
         std::shared_ptr<ChatWindow::ChatURIMessagePart> uriPart;
         std::shared_ptr<ChatWindow::ChatEmoticonMessagePart> emoticonPart;

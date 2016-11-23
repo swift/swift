@@ -53,7 +53,7 @@ void RosterModel::reLayout() {
     if (!roster_) {
         return;
     }
-    foreach (RosterItem* item, roster_->getRoot()->getDisplayedChildren()) {
+    for (auto item : roster_->getRoot()->getDisplayedChildren()) {
         GroupRosterItem* child = dynamic_cast<GroupRosterItem*>(item);
         if (!child) continue;
         emit itemExpanded(index(child), child->isExpanded());

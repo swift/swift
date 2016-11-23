@@ -17,7 +17,6 @@
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLNode.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -35,7 +34,7 @@ std::string JingleS5BTransportPayloadSerializer::serializePayload(std::shared_pt
         payloadXML.setAttribute("dstaddr", payload->getDstAddr());
     }
 
-    foreach(JingleS5BTransportPayload::Candidate candidate, payload->getCandidates()) {
+    for (const auto& candidate : payload->getCandidates()) {
         std::shared_ptr<XMLElement> candidateXML = std::make_shared<XMLElement>("candidate");
         candidateXML->setAttribute("cid", candidate.cid);
         candidateXML->setAttribute("host", candidate.hostPort.getAddress().toString());

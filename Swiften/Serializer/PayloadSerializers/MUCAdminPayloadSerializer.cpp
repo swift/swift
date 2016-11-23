@@ -9,7 +9,6 @@
 #include <memory>
 #include <sstream>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCItemSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -21,7 +20,7 @@ MUCAdminPayloadSerializer::MUCAdminPayloadSerializer() : GenericPayloadSerialize
 
 std::string MUCAdminPayloadSerializer::serializePayload(std::shared_ptr<MUCAdminPayload> payload)  const {
     XMLElement mucElement("query", "http://jabber.org/protocol/muc#admin");
-    foreach (const MUCItem& item, payload->getItems()) {
+    for (const auto& item : payload->getItems()) {
         mucElement.addNode(MUCItemSerializer::itemToElement(item));
     }
     return mucElement.serialize();

@@ -15,7 +15,6 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/VCards/VCardManager.h>
 
 #include <Swift/Controllers/UIEvents/ShowProfileForRosterItemUIEvent.h>
@@ -30,8 +29,7 @@ ShowProfileController::ShowProfileController(VCardManager* vcardManager, Profile
 }
 
 ShowProfileController::~ShowProfileController() {
-    typedef std::pair<JID, ProfileWindow*> JIDProfileWindowPair;
-    foreach(const JIDProfileWindowPair& jidWndPair, openedProfileWindows) {
+    for (const auto& jidWndPair : openedProfileWindows) {
         jidWndPair.second->onWindowAboutToBeClosed.disconnect(boost::bind(&ShowProfileController::handleProfileWindowAboutToBeClosed, this, _1));
         delete jidWndPair.second;
     }

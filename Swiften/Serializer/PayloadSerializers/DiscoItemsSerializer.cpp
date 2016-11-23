@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
@@ -21,7 +20,7 @@ std::string DiscoItemsSerializer::serializePayload(std::shared_ptr<DiscoItems> d
     if (!discoItems->getNode().empty()) {
         queryElement.setAttribute("node", discoItems->getNode());
     }
-    foreach(const DiscoItems::Item& item, discoItems->getItems()) {
+    for (const auto& item : discoItems->getItems()) {
         std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("name", item.getName());
         itemElement->setAttribute("jid", item.getJID());

@@ -9,7 +9,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamRegistry.h>
 #include <Swiften/FileTransfer/SOCKS5BytestreamServerSession.h>
@@ -30,7 +29,7 @@ void SOCKS5BytestreamServer::start() {
 
 void SOCKS5BytestreamServer::stop() {
     connectionServer->onNewConnection.disconnect(boost::bind(&SOCKS5BytestreamServer::handleNewConnection, this, _1));
-    foreach (std::shared_ptr<SOCKS5BytestreamServerSession> session, sessions) {
+    for (auto&& session : sessions) {
         session->onFinished.disconnect(boost::bind(&SOCKS5BytestreamServer::handleSessionFinished, this, session));
         session->stop();
     }
@@ -52,7 +51,7 @@ HostAddressPort SOCKS5BytestreamServer::getAddressPort() const {
 std::vector< std::shared_ptr<SOCKS5BytestreamServerSession> > SOCKS5BytestreamServer::getSessions(
         const std::string& streamID) const {
     std::vector< std::shared_ptr<SOCKS5BytestreamServerSession> > result;
-    foreach (std::shared_ptr<SOCKS5BytestreamServerSession> session, sessions) {
+    for (auto&& session : sessions) {
         if (session->getStreamID() == streamID) {
             result.push_back(session);
         }

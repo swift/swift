@@ -17,7 +17,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -80,7 +79,7 @@ namespace Swift {
         std::vector<Presence::ref> presences = presenceOracle_->getAllPresence(bareJID);
 
         //iterate over them
-        foreach(Presence::ref pres, presences) {
+        for (const auto& pres : presences) {
             if (pres->getPriority() > priority) {
                 // look up caps from the jid
                 DiscoInfo::ref info = capsProvider_->getCaps(pres->getFrom());

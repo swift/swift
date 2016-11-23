@@ -10,7 +10,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/Delay.h>
 
 namespace Swift {
@@ -23,7 +22,7 @@ Stanza::~Stanza() {
 }
 
 void Stanza::updatePayload(std::shared_ptr<Payload> payload) {
-    foreach (std::shared_ptr<Payload>& i, payloads_) {
+    for (auto&& i : payloads_) {
         if (typeid(*i.get()) == typeid(*payload.get())) {
             i = payload;
             return;
@@ -43,7 +42,7 @@ void Stanza::removePayloadOfSameType(std::shared_ptr<Payload> payload) {
 }
 
 std::shared_ptr<Payload> Stanza::getPayloadOfSameType(std::shared_ptr<Payload> payload) const {
-    foreach (const std::shared_ptr<Payload>& i, payloads_) {
+    for (const auto& i : payloads_) {
         if (typeid(*i.get()) == typeid(*payload.get())) {
             return i;
         }

@@ -23,7 +23,6 @@
 #include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/ContactProvider.h>
@@ -55,7 +54,7 @@ bool ContactSuggester::matchContact(const std::string& search, const Contact::re
 std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& search, bool withMUCNicks) const {
     std::vector<Contact::ref> results;
 
-    foreach(ContactProvider* provider, contactProviders_) {
+    for (auto provider : contactProviders_) {
         append(results, provider->getContacts(withMUCNicks));
     }
 

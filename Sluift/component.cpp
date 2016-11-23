@@ -9,7 +9,6 @@
 #include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/MAMQuery.h>
 #include <Swiften/Elements/Message.h>

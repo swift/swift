@@ -16,7 +16,6 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 
 namespace lambda = boost::lambda;
 
@@ -61,7 +60,7 @@ void EventLoop::handleNextEvents() {
                 callEventPosted = !events_.empty();
             }
             if (!nextEvents.empty()) {
-                foreach (const Event& event, nextEvents) {
+                for (const auto& event : nextEvents) {
                     invokeCallback(event);
                 }
             }

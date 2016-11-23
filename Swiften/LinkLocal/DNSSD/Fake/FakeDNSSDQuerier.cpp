@@ -11,7 +11,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Algorithm.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/EventLoop/EventLoop.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDBrowseQuery.h>
 #include <Swiften/LinkLocal/DNSSD/Fake/FakeDNSSDRegisterQuery.h>
@@ -49,14 +48,14 @@ void FakeDNSSDQuerier::addRunningQuery(std::shared_ptr<FakeDNSSDQuery> query) {
     runningQueries.push_back(query);
     allQueriesEverRun.push_back(query);
     if (std::shared_ptr<FakeDNSSDBrowseQuery> browseQuery = std::dynamic_pointer_cast<FakeDNSSDBrowseQuery>(query)) {
-        foreach(const DNSSDServiceID& service, services) {
+        for (const auto& service : services) {
             eventLoop->postEvent(boost::bind(boost::ref(browseQuery->onServiceAdded), service), shared_from_this());
         }
     }
     else if (std::shared_ptr<FakeDNSSDResolveServiceQuery> resolveQuery = std::dynamic_pointer_cast<FakeDNSSDResolveServiceQuery>(query)) {
-        for(ServiceInfoMap::const_iterator i = serviceInfo.begin(); i != serviceInfo.end(); ++i) {
-            if (i->first == resolveQuery->service) {
-                eventLoop->postEvent(boost::bind(boost::ref(resolveQuery->onServiceResolved), i->second), shared_from_this());
+        for (const auto& i : serviceInfo) {
+            if (i.first == resolveQuery->service) {
+                eventLoop->postEvent(boost::bind(boost::ref(resolveQuery->onServiceResolved), i.second), shared_from_this());
             }
         }
     }
@@ -81,7 +80,7 @@ void FakeDNSSDQuerier::removeRunningQuery(std::shared_ptr<FakeDNSSDQuery> query)
 
 void FakeDNSSDQuerier::addService(const DNSSDServiceID& id) {
     services.insert(id);
-    foreach(const std::shared_ptr<FakeDNSSDBrowseQuery>& query, getQueries<FakeDNSSDBrowseQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDBrowseQuery>()) {
         eventLoop->postEvent(boost::bind(boost::ref(query->onServiceAdded), id), shared_from_this());
     }
 }
@@ -89,7 +88,7 @@ void FakeDNSSDQuerier::addService(const DNSSDServiceID& id) {
 void FakeDNSSDQuerier::removeService(const DNSSDServiceID& id) {
     services.erase(id);
     serviceInfo.erase(id);
-    foreach(const std::shared_ptr<FakeDNSSDBrowseQuery>& query, getQueries<FakeDNSSDBrowseQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDBrowseQuery>()) {
         eventLoop->postEvent(boost::bind(boost::ref(query->onServiceRemoved), id), shared_from_this());
     }
 }
@@ -99,7 +98,7 @@ void FakeDNSSDQuerier::setServiceInfo(const DNSSDServiceID& id, const DNSSDResol
     if (!r.second) {
         r.first->second = info;
     }
-    foreach(const std::shared_ptr<FakeDNSSDResolveServiceQuery>& query, getQueries<FakeDNSSDResolveServiceQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDResolveServiceQuery>()) {
         if (query->service == id) {
             eventLoop->postEvent(boost::bind(boost::ref(query->onServiceResolved), info), shared_from_this());
         }
@@ -107,7 +106,7 @@ void FakeDNSSDQuerier::setServiceInfo(const DNSSDServiceID& id, const DNSSDResol
 }
 
 bool FakeDNSSDQuerier::isServiceRegistered(const std::string& name, int port, const ByteArray& info) {
-    foreach(const std::shared_ptr<FakeDNSSDRegisterQuery>& query, getQueries<FakeDNSSDRegisterQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDRegisterQuery>()) {
         if (query->name == name && query->port == port && query->info == info) {
             return true;
         }
@@ -116,20 +115,20 @@ bool FakeDNSSDQuerier::isServiceRegistered(const std::string& name, int port, co
 }
 
 void FakeDNSSDQuerier::setBrowseError() {
-    foreach(const std::shared_ptr<FakeDNSSDBrowseQuery>& query, getQueries<FakeDNSSDBrowseQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDBrowseQuery>()) {
         eventLoop->postEvent(boost::ref(query->onError), shared_from_this());
     }
 }
 
 void FakeDNSSDQuerier::setRegisterError() {
-    foreach(const std::shared_ptr<FakeDNSSDRegisterQuery>& query, getQueries<FakeDNSSDRegisterQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDRegisterQuery>()) {
         eventLoop->postEvent(boost::bind(boost::ref(query->onRegisterFinished), boost::optional<DNSSDServiceID>()), shared_from_this());
     }
 }
 
 void FakeDNSSDQuerier::setAddress(const std::string& hostname, boost::optional<HostAddress> address) {
     addresses[hostname] = address;
-    foreach(const std::shared_ptr<FakeDNSSDResolveHostnameQuery>& query, getQueries<FakeDNSSDResolveHostnameQuery>()) {
+    for (const auto& query : getQueries<FakeDNSSDResolveHostnameQuery>()) {
         if (query->hostname == hostname) {
             eventLoop->postEvent(boost::bind(
                     boost::ref(query->onHostnameResolved), address), shared_from_this());

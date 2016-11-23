@@ -6,8 +6,6 @@
 
 #include <Swift/QtUI/QtSingleWindow.h>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
 
@@ -45,7 +43,7 @@ void QtSingleWindow::handleTabsTitleChanged(const QString& title) {
 void QtSingleWindow::handleSplitterMoved(int, int) {
     QList<QVariant> variantValues;
     QList<int> intValues = sizes();
-    foreach (int value, intValues) {
+    for (const auto& value : intValues) {
         variantValues.append(QVariant(value));
     }
     settings_->getQSettings()->setValue(SINGLE_WINDOW_SPLITS, QVariant(variantValues));
@@ -54,7 +52,7 @@ void QtSingleWindow::handleSplitterMoved(int, int) {
 void QtSingleWindow::restoreSplitters() {
     QList<QVariant> variantValues = settings_->getQSettings()->value(SINGLE_WINDOW_SPLITS).toList();
     QList<int> intValues;
-    foreach (QVariant value, variantValues) {
+    for (auto&& value : variantValues) {
         intValues.append(value.toInt());
     }
     setSizes(intValues);

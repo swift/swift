@@ -8,7 +8,6 @@
 
 #include <boost/bind.hpp>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/StreamStack/LowLayer.h>
 #include <Swiften/StreamStack/StreamLayer.h>
 #include <Swiften/StreamStack/XMPPLayer.h>

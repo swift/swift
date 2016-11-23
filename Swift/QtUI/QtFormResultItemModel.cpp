@@ -14,8 +14,6 @@
 
 #include <boost/algorithm/string/join.hpp>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -73,7 +71,7 @@ const std::string QtFormResultItemModel::getFieldValue(const Form::FormItem& ite
     // determine field name
     std::string name = formResult_->getReportedFields().at(column)->getName();
 
-    foreach(FormField::ref field, item) {
+    for (auto&& field : item) {
         if (field->getName() == name) {
             std::string delimiter = "";
             if (field->getType() == FormField::TextMultiType) {

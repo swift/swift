@@ -12,7 +12,6 @@
 #include <boost/bind.hpp>
 
 #include <Swiften/Base/Log.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Elements/JingleFileTransferDescription.h>
 #include <Swiften/Elements/JingleFileTransferHash.h>
 #include <Swiften/Elements/JingleIBBTransportPayload.h>
@@ -130,7 +129,7 @@ void IncomingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
     transport->setSessionID(s5bSessionID);
     transport->setMode(JingleS5BTransportPayload::TCPMode);
     transport->setDstAddr(dstAddr);
-    foreach(JingleS5BTransportPayload::Candidate candidate, candidates) {
+    for (auto&& candidate : candidates) {
         transport->addCandidate(candidate);
     }
     session->sendAccept(getContentID(), initialContent->getDescriptions()[0], transport);
@@ -197,7 +196,7 @@ void IncomingJingleFileTransfer::checkIfAllDataReceived() {
     if (receivedBytes == getFileSizeInBytes()) {
         SWIFT_LOG(debug) << "All data received." << std::endl;
         bool hashInfoAvailable = false;
-        foreach(const JingleFileTransferFileInfo::HashElementMap::value_type& hashElement, hashes) {
+        for (const auto& hashElement : hashes) {
             hashInfoAvailable |= !hashElement.second.empty();
         }
 

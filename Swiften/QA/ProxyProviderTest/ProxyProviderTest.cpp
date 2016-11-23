@@ -12,7 +12,6 @@
 
 #include <iostream>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Network/PlatformProxyProvider.h>
 
 using namespace Swift;

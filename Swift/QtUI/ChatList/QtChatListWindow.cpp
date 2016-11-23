@@ -180,7 +180,7 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
     ChatListItem* baseItem = index.isValid() ? static_cast<ChatListItem*>(index.internalPointer()) : nullptr;
     contextMenuItem_ = baseItem;
 
-    foreach(QAction* action, onlineOnlyActions_) {
+    for (auto action : onlineOnlyActions_) {
         action->setEnabled(isOnline_);
     }
 

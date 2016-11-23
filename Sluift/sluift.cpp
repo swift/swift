@@ -16,7 +16,6 @@
 #include <lua.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/sleep.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>
@@ -461,7 +460,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
     lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
     std::vector<std::string> coreLibExports = boost::assign::list_of
         ("tprint")("disco")("help")("get_help")("copy")("with")("read_file")("create_form");
-    foreach (const std::string& coreLibExport, coreLibExports) {
+    for (const auto& coreLibExport : coreLibExports) {
         lua_getfield(L, -1, coreLibExport.c_str());
         lua_setfield(L, -3, coreLibExport.c_str());
     }
@@ -470,7 +469,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
     // Load client metatable
     lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
     std::vector<std::string> tables = boost::assign::list_of("Client");
-    foreach(const std::string& table, tables) {
+    for (const auto& table : tables) {
         lua_getfield(L, -1, table.c_str());
         Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, table);
         lua_pop(L, 1);
@@ -480,7 +479,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
     // Load component metatable
     lua_rawgeti(L, LUA_REGISTRYINDEX, Sluift::globals.coreLibIndex);
     std::vector<std::string> comp_tables = boost::assign::list_of("Component");
-    foreach(const std::string& table, comp_tables) {
+    for (const auto& table : comp_tables) {
         lua_getfield(L, -1, table.c_str());
         Lua::FunctionRegistry::getInstance().addFunctionsToTable(L, table);
         lua_pop(L, 1);
@@ -488,7 +487,7 @@ SLUIFT_API int luaopen_sluift(lua_State* L) {
     lua_pop(L, 1);
 
     // Register documentation for all elements
-    foreach (std::shared_ptr<LuaElementConvertor> convertor, Sluift::globals.elementConvertor.getConvertors()) {
+    for (auto&& convertor : Sluift::globals.elementConvertor.getConvertors()) {
         boost::optional<LuaElementConvertor::Documentation> documentation = convertor->getDocumentation();
         if (documentation) {
             Lua::registerClassHelp(L, documentation->className, documentation->description);

@@ -6,7 +6,6 @@
 
 #include <Swift/Controllers/ChatMessageSummarizer.h>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Base/format.h>
 
 #include <Swift/Controllers/Intl.h>
@@ -18,7 +17,7 @@ string ChatMessageSummarizer::getSummary(const string& current, const vector<Unr
     vector<UnreadPair> others;
     int currentUnread = 0;
     int otherCount = 0;
-    foreach (UnreadPair unread, unreads) {
+    for (const auto& unread : unreads) {
         if (unread.first == current) {
             currentUnread += unread.second;
         } else {

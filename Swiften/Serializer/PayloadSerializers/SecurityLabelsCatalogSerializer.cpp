@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/SecurityLabelSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -29,7 +28,7 @@ std::string SecurityLabelsCatalogSerializer::serializePayload(std::shared_ptr<Se
     if (!catalog->getDescription().empty()) {
         element.setAttribute("desc", catalog->getDescription());
     }
-    foreach (const SecurityLabelsCatalog::Item& item, catalog->getItems()) {
+    for (const auto& item : catalog->getItems()) {
         std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("selector", item.getSelector());
         if (item.getIsDefault()) {

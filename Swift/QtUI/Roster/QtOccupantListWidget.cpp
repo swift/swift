@@ -50,7 +50,7 @@ void QtOccupantListWidget::contextMenuEvent(QContextMenuEvent* event) {
         }
         else {
             std::map<QAction*, ChatWindow::OccupantAction> actions;
-            foreach (ChatWindow::OccupantAction availableAction, availableOccupantActions_) {
+            for (const auto& availableAction : availableOccupantActions_) {
                 QString text = "Error: missing string";
                 switch (availableAction) {
                     case ChatWindow::Kick: text = tr("Kick user"); break;

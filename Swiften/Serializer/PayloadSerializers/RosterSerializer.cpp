@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
@@ -23,7 +22,7 @@ std::string RosterSerializer::serializePayload(std::shared_ptr<RosterPayload> ro
     if (roster->getVersion()) {
         queryElement.setAttribute("ver", *roster->getVersion());
     }
-    foreach(const RosterItemPayload& item, roster->getItems()) {
+    for (const auto& item : roster->getItems()) {
         std::shared_ptr<XMLElement> itemElement(new XMLElement("item"));
         itemElement->setAttribute("jid", item.getJID());
         itemElement->setAttribute("name", item.getName());
@@ -40,7 +39,7 @@ std::string RosterSerializer::serializePayload(std::shared_ptr<RosterPayload> ro
             itemElement->setAttribute("ask", "subscribe");
         }
 
-        foreach(const std::string& group, item.getGroups()) {
+        for (const auto& group : item.getGroups()) {
             std::shared_ptr<XMLElement> groupElement(new XMLElement("group"));
             groupElement->addNode(std::make_shared<XMLTextNode>(group));
             itemElement->addNode(groupElement);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,7 +29,7 @@ void QtSpellCheckHighlighter::highlightBlock(const QString& text) {
     spellingErrorFormat.setUnderlineColor(QColor(Qt::red));
     spellingErrorFormat.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
 
-    foreach (PositionPair position, misspelledPositions_) {
+    for (auto&& position : misspelledPositions_) {
         setFormat(boost::get<0>(position), boost::get<1>(position) - boost::get<0>(position), spellingErrorFormat);
     };
 }

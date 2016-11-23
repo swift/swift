@@ -20,8 +20,6 @@
 
 #include <qdebug.h>
 
-#include <Swiften/Base/foreach.h>
-
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -43,7 +41,7 @@ QtFormWidget::QtFormWidget(Form::ref form, QWidget* parent) : QWidget(parent), f
     QGridLayout* layout = new QGridLayout(scroll);
     const std::vector<Form::FormItem> items = form->getItems();
     if (items.empty()) { /* single item forms */
-        foreach (FormField::ref field, form->getFields()) {
+        for (auto&& field : form->getFields()) {
             QWidget* widget = createWidget(field, field->getType(), 0);
             if (widget) {
                 layout->addWidget(new QLabel(field->getLabel().c_str(), this), row, 0);
@@ -80,12 +78,12 @@ QListWidget* QtFormWidget::createList(FormField::ref field) {
     std::vector<bool> selected;
     /* if this is an editable form, use the 'options' list, otherwise use the 'values' list */
     if (form_->getType() != Form::FormType) {
-        foreach (const std::string& value, field->getValues()) {
+        for (const auto& value : field->getValues()) {
             listWidget->addItem(P2QSTRING(value));
             selected.push_back(false);
         }
     } else {
-        foreach (FormField::Option option, field->getOptions()) {
+        for (auto&& option : field->getOptions()) {
             listWidget->addItem(option.label.c_str());
             if (field->getType() == FormField::ListSingleType) {
                 selected.push_back(!field->getValues().empty() && option.value == field->getValues()[0]);
@@ -157,7 +155,7 @@ QWidget* QtFormWidget::createWidget(FormField::ref field, const FormField::Type 
 
 Form::ref QtFormWidget::getCompletedForm() {
     Form::ref result(new Form(Form::SubmitType));
-    foreach (std::shared_ptr<FormField> field, form_->getFields()) {
+    for (auto&& field : form_->getFields()) {
         std::shared_ptr<FormField> resultField = std::make_shared<FormField>(field->getType());
         if (field->getType() == FormField::BooleanType) {
             resultField->setBoolValue(qobject_cast<QCheckBox*>(fields_[field->getName()])->checkState() == Qt::Checked);
@@ -191,14 +189,14 @@ Form::ref QtFormWidget::getCompletedForm() {
             QString string = widget->toPlainText();
             if (!string.isEmpty()) {
                 QStringList lines = string.split("\n");
-                foreach (QString line, lines) {
+                for (auto&& line : lines) {
                     resultField->addValue(Q2PSTRING(line));
                 }
             }
         }
         if (field->getType() == FormField::ListMultiType) {
             QListWidget* listWidget = qobject_cast<QListWidget*>(fields_[field->getName()]);
-            foreach (QListWidgetItem* item, listWidget->selectedItems()) {
+            for (auto item : listWidget->selectedItems()) {
                 resultField->addValue(field->getOptions()[listWidget->row(item)].value);
             }
         }
@@ -226,7 +224,7 @@ void QtFormWidget::setEditable(bool editable) {
     if (!form_) {
         return;
     }
-    foreach (std::shared_ptr<FormField> field, form_->getFields()) {
+    for (auto&& field : form_->getFields()) {
         QWidget* widget = nullptr;
         if (field) {
             widget = fields_[field->getName()];

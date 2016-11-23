@@ -8,7 +8,6 @@
 
 #include <memory>
 
-#include <Swiften/Base/foreach.h>
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
@@ -41,7 +40,7 @@ std::string SearchPayloadSerializer::serializePayload(std::shared_ptr<SearchPayl
         searchElement.addNode(XMLElement::ref(new XMLElement("email", "", *searchPayload->getEMail())));
     }
 
-    foreach(const SearchPayload::Item& item, searchPayload->getItems()) {
+    for (const auto& item : searchPayload->getItems()) {
         XMLElement::ref itemElement(new XMLElement("item"));
         itemElement->setAttribute("jid", item.jid);
         itemElement->addNode(XMLElement::ref(new XMLElement("first", "", item.first)));

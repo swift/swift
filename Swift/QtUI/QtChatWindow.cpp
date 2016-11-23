@@ -386,7 +386,7 @@ void QtChatWindow::setAvailableSecurityLabels(const std::vector<SecurityLabelsCa
     int i = 0;
     int defaultIndex = 0;
     labelsWidget_->setModel(labelModel_);
-    foreach (SecurityLabelsCatalog::Item label, labels) {
+    for (const auto& label : labels) {
         if (label.getIsDefault()) {
             defaultIndex = i;
             break;
@@ -712,8 +712,7 @@ void QtChatWindow::handleActionButtonClicked() {
 
     }
     else {
-        foreach(ChatWindow::RoomAction availableAction, availableRoomActions_)
-        {
+        for (auto&& availableAction : availableRoomActions_) {
             if (impromptu_) {
                 // hide options we don't need in impromptu chats
                 if (availableAction == ChatWindow::ChangeSubject ||

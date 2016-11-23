@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,6 @@
 #include <Swiften/Client/BlockListImpl.h>
 
 #include <algorithm>
-
-#include <Swiften/Base/foreach.h>
 
 using namespace Swift;
 
@@ -18,14 +16,14 @@ BlockListImpl::BlockListImpl() : state(Init) {
 
 void BlockListImpl::setItems(const std::vector<JID>& newItems) {
     // JIDs which are in the current list but not in the new list, are removed.
-    foreach (const JID& jid, items) {
+    for (const auto& jid : items) {
         if (std::find(newItems.begin(), newItems.end(), jid) == newItems.end()) {
             onItemRemoved(jid);
         }
     }
 
     // JIDs which are in the new list but not in the current list, are added.
-    foreach (const JID& jid, newItems) {
+    for (const auto& jid : newItems) {
         if (std::find(items.begin(), items.end(), jid) == items.end()) {
             onItemAdded(jid);
         }
@@ -56,14 +54,14 @@ void BlockListImpl::setState(State state) {
 }
 
 void BlockListImpl::addItems(const std::vector<JID>& items) {
-    foreach (const JID& item, items) {
+    for (const auto& item : items) {
         addItem(item);
     }
 }
 
 void BlockListImpl::removeItems(const std::vector<JID>& items) {
     std::vector<JID> itemsToRemove = items;
-    foreach (const JID& item, itemsToRemove) {
+    for (const auto& item : itemsToRemove) {
         removeItem(item);
     }
 }
