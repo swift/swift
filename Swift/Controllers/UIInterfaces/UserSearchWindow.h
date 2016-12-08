@@ -35,6 +35,7 @@ namespace Swift {
             virtual void prepopulateJIDAndName(const JID& jid, const std::string& name) = 0;
             virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions) = 0;
             virtual void setJIDs(const std::vector<JID>&) = 0;
+            virtual void setOriginator(const JID& originator) = 0;
             virtual void setRoomJID(const JID& roomJID) = 0;
             virtual std::string getReason() const = 0;
             virtual std::vector<JID> getJIDs() const = 0;

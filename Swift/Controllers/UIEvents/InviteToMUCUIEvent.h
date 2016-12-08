@@ -24,11 +24,11 @@ namespace Swift {
         public:
             typedef std::shared_ptr<InviteToMUCUIEvent> ref;
 
-            InviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite, const std::string& reason) : room_(room), invite_(JIDsToInvite), reason_(reason) {
+            InviteToMUCUIEvent(const JID& originator, const std::vector<JID>& JIDsToInvite, const std::string& reason) : originator_(originator), invite_(JIDsToInvite), reason_(reason) {
             }
 
-            const JID& getRoom() const {
-                return room_;
+            const JID& getOriginator() const {
+                return originator_;
             }
 
             const std::vector<JID> getInvites() const {
@@ -40,7 +40,7 @@ namespace Swift {
             }
 
         private:
-            JID room_;
+            JID originator_;
             std::vector<JID> invite_;
             std::string reason_;
     };

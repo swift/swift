@@ -145,13 +145,13 @@ void QtUserSearchWindow::handleAccepted() {
                 jids.push_back(contact->jid);
             }
 
-            eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, JID(), Q2PSTRING(firstMultiJIDPage_->reason_->text())));
+            eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
         case InviteToChat:
             for (Contact::ref contact : contactVector_) {
                 jids.push_back(contact->jid);
             }
-            eventStream_->send(std::make_shared<InviteToMUCUIEvent>(roomJID_, jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
+            eventStream_->send(std::make_shared<InviteToMUCUIEvent>(originatorJID_, jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
     }
 }
@@ -385,6 +385,10 @@ void QtUserSearchWindow::setJIDs(const std::vector<JID> &jids) {
         addSearchedJIDToList(std::make_shared<Contact>("", jid, StatusShow::None, ""));
     }
     onJIDUpdateRequested(jids);
+}
+
+void QtUserSearchWindow::setOriginator(const JID& originator) {
+    originatorJID_ = originator;
 }
 
 void QtUserSearchWindow::setRoomJID(const JID& roomJID) {

@@ -29,12 +29,22 @@ namespace Swift {
                 NotImpromptu
             };
 
-            RequestInviteToMUCUIEvent(const JID& room, const std::vector<JID>& JIDsToInvite, ImpromptuMode impromptu) : room_(room), invite_(JIDsToInvite) {
+            /**
+             * @brief RequestInviteToMUCUIEvent
+             * @param originator This can be a MUC JID if the user wants to invite
+             *          people to an existing MUC, or a contact JID if this is the
+             *          start of an impromptu group chat.
+             * @param JIDsToInvite This is a std::vector of JIDs which are prefilled
+             *          in the invite dialog.
+             * @param impromptu This flag indicates whether it is a normal MUC invite
+             *          or an impromptu MUC invite.
+             */
+            RequestInviteToMUCUIEvent(const JID& originator, const std::vector<JID>& JIDsToInvite, ImpromptuMode impromptu) : originator_(originator), invite_(JIDsToInvite) {
                 isImpromptu_ = impromptu == Impromptu;
             }
 
-            const JID& getRoom() const {
-                return room_;
+            const JID& getOriginator() const {
+                return originator_;
             }
 
             const std::vector<JID> getInvites() const {
@@ -46,7 +56,7 @@ namespace Swift {
             }
 
         private:
-            JID room_;
+            JID originator_;
             std::vector<JID> invite_;
             bool isImpromptu_;
     };

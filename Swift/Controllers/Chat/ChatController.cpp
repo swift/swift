@@ -297,7 +297,7 @@ void ChatController::handleUnblockUserRequest() {
 }
 
 void ChatController::handleInviteToChat(const std::vector<JID>& droppedJIDs) {
-    std::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(toJID_.toBare(), droppedJIDs, RequestInviteToMUCUIEvent::Impromptu));
+    std::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(getToJID(), droppedJIDs, RequestInviteToMUCUIEvent::Impromptu));
     eventStream_->send(event);
 }
 
@@ -307,7 +307,7 @@ void ChatController::handleWindowClosed() {
 
 void ChatController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     std::shared_ptr<InviteToMUCUIEvent> inviteEvent = std::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
-    if (inviteEvent && inviteEvent->getRoom() == toJID_.toBare()) {
+    if (inviteEvent && inviteEvent->getOriginator() == getToJID()) {
         onConvertToMUC(detachChatWindow(), inviteEvent->getInvites(), inviteEvent->getReason());
     }
 }

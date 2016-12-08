@@ -47,6 +47,7 @@ namespace Swift {
             virtual void prepopulateJIDAndName(const JID& jid, const std::string& name);
             virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions);
             virtual void setJIDs(const std::vector<JID> &jids);
+            virtual void setOriginator(const JID& originator);
             virtual void setRoomJID(const JID &roomJID);
             virtual std::string getReason() const;
             virtual std::vector<JID> getJIDs() const;
@@ -97,6 +98,7 @@ namespace Swift {
             QtUserSearchDetailsPage* detailsPage_;
             JID myServer_;
             JID roomJID_;
+            JID originatorJID_;
             int lastPage_;
             std::vector<Contact::ref> contactVector_;
             SettingsProvider* settings_;

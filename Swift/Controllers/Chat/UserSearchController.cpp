@@ -81,7 +81,7 @@ void UserSearchController::setCanInitiateImpromptuMUC(bool supportsImpromptu) {
 void UserSearchController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     bool handle = false;
     std::shared_ptr<RequestAddUserDialogUIEvent> addUserRequest = std::shared_ptr<RequestAddUserDialogUIEvent>();
-    RequestInviteToMUCUIEvent::ref inviteToMUCRequest = RequestInviteToMUCUIEvent::ref();
+    auto inviteToMUCRequest = RequestInviteToMUCUIEvent::ref();
     switch (type_) {
         case AddContact:
             if ((addUserRequest = std::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event))) {
@@ -109,10 +109,11 @@ void UserSearchController::handleUIEvent(std::shared_ptr<UIEvent> event) {
             if (!name.empty() && jid.isValid()) {
                 window_->prepopulateJIDAndName(jid, name);
             }
-        } else if (inviteToMUCRequest) {
+        }
+        else if (inviteToMUCRequest) {
             window_->setCanSupplyDescription(!inviteToMUCRequest->isImpromptu());
             window_->setJIDs(inviteToMUCRequest->getInvites());
-            window_->setRoomJID(inviteToMUCRequest->getRoom());
+            window_->setOriginator(inviteToMUCRequest->getOriginator());
         }
         return;
     }

@@ -7,6 +7,7 @@
 #include <Swift/Controllers/Chat/MUCController.h>
 
 #include <algorithm>
+#include <memory>
 
 #include <boost/bind.hpp>
 #include <boost/regex.hpp>
@@ -993,13 +994,12 @@ void MUCController::handleDestroyRoomRequest() {
 
 void MUCController::handleInvitePersonToThisMUCRequest(const std::vector<JID>& jidsToInvite) {
     RequestInviteToMUCUIEvent::ImpromptuMode mode = isImpromptu_ ? RequestInviteToMUCUIEvent::Impromptu : RequestInviteToMUCUIEvent::NotImpromptu;
-    std::shared_ptr<UIEvent> event(new RequestInviteToMUCUIEvent(muc_->getJID(), jidsToInvite, mode));
-    eventStream_->send(event);
+    eventStream_->send(std::make_shared<RequestInviteToMUCUIEvent>(getToJID(), jidsToInvite, mode));
 }
 
 void MUCController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     std::shared_ptr<InviteToMUCUIEvent> inviteEvent = std::dynamic_pointer_cast<InviteToMUCUIEvent>(event);
-    if (inviteEvent && inviteEvent->getRoom() == muc_->getJID()) {
+    if (inviteEvent && inviteEvent->getOriginator() == muc_->getJID()) {
         for (const auto& jid : inviteEvent->getInvites()) {
             muc_->invitePerson(jid, inviteEvent->getReason(), isImpromptu_);
         }
