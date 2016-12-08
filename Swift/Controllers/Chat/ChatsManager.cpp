@@ -587,7 +587,7 @@ void ChatsManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
     std::shared_ptr<CreateImpromptuMUCUIEvent> createImpromptuMUCEvent = std::dynamic_pointer_cast<CreateImpromptuMUCUIEvent>(event);
     if (createImpromptuMUCEvent) {
         assert(!localMUCServiceJID_.toString().empty());
-        // create new muc
+        // The room JID is random for new impromptu rooms, or a predefined JID for impromptu rooms resumed from the 'Recent chats' list.
         JID roomJID = createImpromptuMUCEvent->getRoomJID().toString().empty() ? JID(idGenerator_.generateID(), localMUCServiceJID_) : createImpromptuMUCEvent->getRoomJID();
 
         // join muc

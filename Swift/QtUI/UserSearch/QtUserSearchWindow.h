@@ -10,6 +10,8 @@
 
 #include <QWizard>
 
+#include <Swiften/Base/Override.h>
+
 #include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 
 #include <Swift/QtUI/UserSearch/ui_QtUserSearchWizard.h>
@@ -33,37 +35,37 @@ namespace Swift {
             QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider);
             virtual ~QtUserSearchWindow();
 
-            virtual void addSavedServices(const std::vector<JID>& services);
+            virtual void addSavedServices(const std::vector<JID>& services) SWIFTEN_OVERRIDE;
 
-            virtual void clear();
-            virtual void show();
-            virtual void setResults(const std::vector<UserSearchResult>& results);
-            virtual void setResultsForm(Form::ref results);
-            virtual void setSelectedService(const JID& jid);
-            virtual void setServerSupportsSearch(bool error);
-            virtual void setSearchError(bool error);
-            virtual void setSearchFields(std::shared_ptr<SearchPayload> fields);
-            virtual void setNameSuggestions(const std::vector<std::string>& suggestions);
-            virtual void prepopulateJIDAndName(const JID& jid, const std::string& name);
-            virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions);
-            virtual void setJIDs(const std::vector<JID> &jids);
-            virtual void setOriginator(const JID& originator);
-            virtual void setRoomJID(const JID &roomJID);
-            virtual std::string getReason() const;
-            virtual std::vector<JID> getJIDs() const;
-            virtual void setCanStartImpromptuChats(bool supportsImpromptu);
-            virtual void updateContacts(const std::vector<Contact::ref> &contacts);
-            virtual void addContacts(const std::vector<Contact::ref>& contacts);
-            virtual void setCanSupplyDescription(bool allowed);
-            virtual void setWarning(const boost::optional<std::string>& message);
+            virtual void clear() SWIFTEN_OVERRIDE;
+            virtual void show() SWIFTEN_OVERRIDE;
+            virtual void setResults(const std::vector<UserSearchResult>& results) SWIFTEN_OVERRIDE;
+            virtual void setResultsForm(Form::ref results) SWIFTEN_OVERRIDE;
+            virtual void setSelectedService(const JID& jid) SWIFTEN_OVERRIDE;
+            virtual void setServerSupportsSearch(bool error) SWIFTEN_OVERRIDE;
+            virtual void setSearchError(bool error) SWIFTEN_OVERRIDE;
+            virtual void setSearchFields(std::shared_ptr<SearchPayload> fields) SWIFTEN_OVERRIDE;
+            virtual void setNameSuggestions(const std::vector<std::string>& suggestions) SWIFTEN_OVERRIDE;
+            virtual void prepopulateJIDAndName(const JID& jid, const std::string& name) SWIFTEN_OVERRIDE;
+            virtual void setContactSuggestions(const std::vector<Contact::ref>& suggestions) SWIFTEN_OVERRIDE;
+            virtual void setJIDs(const std::vector<JID> &jids) SWIFTEN_OVERRIDE;
+            virtual void setOriginator(const JID& originator) SWIFTEN_OVERRIDE;
+            virtual void setRoomJID(const JID &roomJID) SWIFTEN_OVERRIDE;
+            virtual std::string getReason() const SWIFTEN_OVERRIDE;
+            virtual std::vector<JID> getJIDs() const SWIFTEN_OVERRIDE;
+            virtual void setCanStartImpromptuChats(bool supportsImpromptu) SWIFTEN_OVERRIDE;
+            virtual void updateContacts(const std::vector<Contact::ref> &contacts) SWIFTEN_OVERRIDE;
+            virtual void addContacts(const std::vector<Contact::ref>& contacts) SWIFTEN_OVERRIDE;
+            virtual void setCanSupplyDescription(bool allowed) SWIFTEN_OVERRIDE;
+            virtual void setWarning(const boost::optional<std::string>& message) SWIFTEN_OVERRIDE;
 
         protected:
-            virtual int nextId() const;
+            virtual int nextId() const SWIFTEN_OVERRIDE;
 
         private slots:
             void handleFirstPageRadioChange();
-            virtual void handleCurrentChanged(int);
-            virtual void handleAccepted();
+            void handleCurrentChanged(int);
+            void handleAccepted();
             void handleContactSuggestionRequested(const QString& text);
             void addContact();
             void handleAddViaSearch();
