@@ -22,7 +22,7 @@ QtTabbable::QtTabbable() : QWidget() {
 }
 
 QtTabbable::~QtTabbable() {
-    emit windowClosing();
+
 }
 
 bool QtTabbable::isWidgetSelected() {
@@ -63,6 +63,11 @@ bool QtTabbable::event(QEvent* event) {
         }
     }
     return QWidget::event(event);
+}
+
+void QtTabbable::closeEvent(QCloseEvent* event) {
+    emit windowClosing();
+    event->accept();
 }
 
 }

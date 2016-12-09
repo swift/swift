@@ -16,6 +16,7 @@ namespace Swift {
         public:
             enum AlertType {NoActivity, WaitingActivity, ImpendingActivity};
             virtual ~QtTabbable();
+
             bool isWidgetSelected();
             virtual AlertType getWidgetAlertState() {return NoActivity;}
             virtual int getCount() {return 0;}
@@ -24,7 +25,8 @@ namespace Swift {
 
         protected:
             QtTabbable();
-            bool event(QEvent* event);
+            virtual bool event(QEvent* event);
+            virtual void closeEvent(QCloseEvent* event);
 
         signals:
             void titleUpdated();
