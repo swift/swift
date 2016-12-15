@@ -1,3 +1,14 @@
+swift-im (3.0.4-1) unstable; urgency=low
+
+  * New upstream release
+  * Allow compiling with newer boosts. Closes: 810839, 822131
+  * Switch to Qt5 instead of Qt4. Closes: 784532, 745807
+  * Fix some platform detection in build system. Closes: 757554
+  * Rewrite rules file with dh sequencer.
+  * Drop -dbg package.
+
+ -- Kevin Smith <kevin@kismith.co.uk>  Fri, 03 Jun 2016 15:56:20 +0100
+
 swift-im (2.0+dev6-1) unstable; urgency=low
 
   * Update from upstream.
@@ -12,7 +23,7 @@ swift-im (2.0+dev5-1) unstable; urgency=low
 
   * Update from upstream.
   * Compiles with boost >= 1.50.0; will build on sid again. Closes: #713725
-  * Include dependencies for libswiften so that other packages 
+  * Include dependencies for libswiften so that other packages
     can depend on it. Closes: #714902
 
  -- Kevin Smith <kevin@kismith.co.uk>  Mon, 12 Aug 2013 16:18:09 -0000
@@ -31,4 +42,3 @@ swift-im (2.0~beta1+dev26-1) unstable; urgency=low
   * Thanks to Olly Betts <olly@survex.com>
 
  -- Kevin Smith <kevin@kismith.co.uk>  Wed, 25 Apr 2012 09:55:52 -0000
-

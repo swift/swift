@@ -9,7 +9,7 @@
 #include <iosfwd>
 #include <string>
 
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 
 #include <Swiften/Base/API.h>
 

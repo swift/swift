@@ -203,6 +203,13 @@ if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
     else:
         env["ENV"]["QT_SELECT"] = "qt4"
 
+# Set QT_SELECT variable to enable building on systems that have Qt4 and Qt5 installed and use qtselect
+if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
+    if env["qt5"] :
+        env["ENV"]["QT_SELECT"] = "qt5"
+    else:
+        env["ENV"]["QT_SELECT"] = "qt4"
+
 # Check whether we are running inside scan-build, and override compiler if so
 if "CCC_ANALYZER_HTML" in os.environ :
     for key, value in os.environ.items() :

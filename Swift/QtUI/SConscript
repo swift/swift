@@ -71,6 +71,16 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 
 myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
+myenv.Append(CPPPATH = ["."])
+
+# Qt requires applications to be build with the -fPIC flag on some 32-bit Linux distributions.
+if env["PLATFORM"] == "posix" :
+    testEnv = myenv.Clone()
+    conf = Configure(testEnv)
+    if conf.CheckDeclaration("QT_REDUCE_RELOCATIONS", "#include <QtCore/qconfig.h>") and conf.CheckDeclaration("__i386__"):
+        myenv.AppendUnique(CXXFLAGS = "-fPIC")
+    testEnv = conf.Finish()
+
 if env["PLATFORM"] == "win32" :
     #myenv.Append(LINKFLAGS = ["/SUBSYSTEM:CONSOLE"])
     myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
@@ -313,7 +323,7 @@ commonResources = {
 }
 
 myenv["TEXTFILESUFFIX"] = ""
-myenv.MyTextfile(target = "COPYING", source = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty")], LINESEPARATOR = "\n\n========\n\n\n")
+myenv.MyTextfile(target = "COPYING", source = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty"), myenv.File("../../COPYING.dependencies")], LINESEPARATOR = "\n\n========\n\n\n")
 
 ################################################################################
 # Translation

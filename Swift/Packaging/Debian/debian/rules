@@ -2,52 +2,26 @@
 
 #export DH_VERBOSE=1
 export PYTHONDONTWRITEBYTECODE=1
+export QT_SELECT=qt5
 
 SCONS_FLAGS=V=1 qt5=1 optimize=1 debug=1 allow_warnings=1 swiften_dll=1 docbook_xsl=/usr/share/xml/docbook/stylesheet/docbook-xsl docbook_xml=/usr/share/xml/docbook/schema/dtd/4.5 linkflags="$(shell dpkg-buildflags --get LDFLAGS)" ccflags="$(shell dpkg-buildflags --get CPPFLAGS) $(shell dpkg-buildflags --get CFLAGS)"
+SCONS_INSTALL_BASE=$(CURDIR)/debian/tmp
+SCONS_INSTALL_FLAGS=SWIFT_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr SWIFTEN_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr
+SWIFT_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr SWIFTEN_INSTALLDIR=$(SCONS_INSTALL_BASE)/usr
 
-clean: 
-	dh_testdir
+%:
+	dh $@
+
+override_dh_clean:
 	dh_clean
-	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) SWIFT_INSTALLDIR=$(CURDIR)/debian/tmp/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/tmp/usr -c
+	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) $(SCONS_INSTALL_FLAGS) -c
 	-rm -rf .scon*
 	-rm -rf config.log
 
-configure:
+override_dh_configure:
 
-build: configure
-	dh_testdir
+override_dh_auto_build:
 	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) Swift Swiften
 
-install: build
-	dh_testroot
-	dh_prep  
-	dh_installdirs
-	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) SWIFT_INSTALLDIR=$(CURDIR)/debian/tmp/usr SWIFTEN_INSTALLDIR=$(CURDIR)/debian/tmp/usr $(CURDIR)/debian/tmp
-	mkdir -p $(CURDIR)/debian/tmp/usr/share/lintian/overrides
-	cp debian/binary-overrides/* $(CURDIR)/debian/tmp/usr/share/lintian/overrides/
-
-binary-indep: install
-binary-arch: install
-	dh_testdir
-	dh_testroot
-	dh_install --sourcedir=debian/tmp
-	dh_installchangelogs 
-	dh_installdocs
-	dh_installmenu
-	dh_installman -a
-	dh_link
-	dh_strip --dbg-package=swift-im-dbg
-	dh_compress
-	dh_fixperms
-	dh_makeshlibs
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-binary: binary-indep binary-arch
-
-build-arch: build
-build-indep: build
-.PHONY: build clean binary-indep binary-arch binary install configure build-arch build-indep
+override_dh_auto_install:
+	scons $(SCONS_FLAGS) $(SCONS_EXTRA_FLAGS) $(SCONS_INSTALL_FLAGS) $(SCONS_INSTALL_BASE)

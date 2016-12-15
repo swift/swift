@@ -10,7 +10,7 @@
 
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 #include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>

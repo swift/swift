@@ -11,7 +11,7 @@
 #include <vector>
 
 #include <boost/date_time/posix_time/ptime.hpp>
-#include <boost/optional/optional_fwd.hpp>
+#include <boost/optional/optional.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ToplevelElement.h>
