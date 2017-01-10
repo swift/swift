@@ -6,52 +6,38 @@
 
 #include <boost/lexical_cast.hpp>
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <gtest/gtest.h>
 
 #include <Swiften/Base/ByteArray.h>
 
 using namespace Swift;
 
-class ByteArrayTest : public CppUnit::TestFixture {
-        CPPUNIT_TEST_SUITE(ByteArrayTest);
-        CPPUNIT_TEST(testGetData_NoData);
-        CPPUNIT_TEST(testToString);
-        CPPUNIT_TEST(testToString_NullTerminated);
-        CPPUNIT_TEST(testToString_TwoNullTerminated);
-        CPPUNIT_TEST(testToString_AllNull);
-        CPPUNIT_TEST_SUITE_END();
+TEST(ByteArrayTest, testGetData_NoData) {
+    ByteArray testling;
 
-    public:
-        void testGetData_NoData() {
-            ByteArray testling;
+    ASSERT_EQ(reinterpret_cast<const char*>(NULL), reinterpret_cast<const char*>(vecptr(testling)));
+}
 
-            CPPUNIT_ASSERT_EQUAL(reinterpret_cast<const char*>(NULL), reinterpret_cast<const char*>(vecptr(testling)));
-        }
+TEST(ByteArrayTest, testToString) {
+    ByteArray testling(createByteArray("abcde"));
 
-        void testToString() {
-            ByteArray testling(createByteArray("abcde"));
+    ASSERT_EQ(std::string("abcde"), byteArrayToString(testling));
+}
 
-            CPPUNIT_ASSERT_EQUAL(std::string("abcde"), byteArrayToString(testling));
-        }
+TEST(ByteArrayTest, testToString_NullTerminated) {
+    ByteArray testling(createByteArray("abcde\0", 6));
 
-        void testToString_NullTerminated() {
-            ByteArray testling(createByteArray("abcde\0", 6));
+    ASSERT_EQ(std::string("abcde"), byteArrayToString(testling));
+}
 
-            CPPUNIT_ASSERT_EQUAL(std::string("abcde"), byteArrayToString(testling));
-        }
+TEST(ByteArrayTest, testToString_TwoNullTerminated) {
+    ByteArray testling(createByteArray("abcde\0\0", 7));
 
-        void testToString_TwoNullTerminated() {
-            ByteArray testling(createByteArray("abcde\0\0", 7));
+    ASSERT_EQ(std::string("abcde"), byteArrayToString(testling));
+}
 
-            CPPUNIT_ASSERT_EQUAL(std::string("abcde"), byteArrayToString(testling));
-        }
+TEST(ByteArrayTest, testToString_AllNull) {
+    ByteArray testling(createByteArray("\0\0", 2));
 
-        void testToString_AllNull() {
-            ByteArray testling(createByteArray("\0\0", 2));
-
-            CPPUNIT_ASSERT_EQUAL(std::string(""), byteArrayToString(testling));
-        }
-};
-
-CPPUNIT_TEST_SUITE_REGISTRATION(ByteArrayTest);
+    ASSERT_EQ(std::string(""), byteArrayToString(testling));
+}

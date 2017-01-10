@@ -9,6 +9,7 @@ if env["TEST"] :
     myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
     myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
     myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+    myenv.MergeFlags(myenv["GOOGLETEST_FLAGS"])
 
     if myenv.get("HAVE_OPENSSL", 0) :
         myenv.Append(CPPDEFINES = "HAVE_OPENSSL")

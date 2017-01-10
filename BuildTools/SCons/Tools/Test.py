@@ -11,7 +11,7 @@ def generate(env) :
 
             # Special support for unittest checker
             if is_checker and env.get("checker_report", False) :
-                params = " --xml > " + os.path.join(target[0].dir.path, "checker-report.xml")
+                params = " --xml"
 
             ignore_prefix = ""
             if env.get("TEST_IGNORE_RESULT", False) :

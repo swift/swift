@@ -48,7 +48,8 @@ Swift/QtUI/swift-im
 Swift/QtUI/swift
 Swift/QtUI/COPYING
 Swift/QtUI/DefaultTheme.qrc
-checker-report.xml
+*-report.cppunit.xml
+*-report.gtest.xml
 /VERSION.*
 cppcheck.log
 /build

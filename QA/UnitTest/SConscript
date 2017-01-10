@@ -16,6 +16,7 @@ if env["TEST"] :
         myenv.UseFlags(env.get("LIMBER_FLAGS",""))
         myenv.UseFlags(env.get("SWIFTEN_FLAGS",""))
         myenv.UseFlags(env.get("CPPUNIT_FLAGS",""))
+        myenv.UseFlags(env.get("GOOGLETEST_FLAGS", ""))
         myenv.UseFlags(env.get("SWIFTEN_DEP_FLAGS", ""))
         if env.get("HAVE_LIBXML") :
             myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])

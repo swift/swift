@@ -4,7 +4,12 @@
  * See the COPYING file for more information.
  */
 
+#include <cstdlib>
+#include <fstream>
 #include <string>
+#include <sstream>
+
+#include <gtest/gtest.h>
 
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TextOutputter.h>
@@ -39,9 +44,32 @@ int main(int argc, char* argv[]) {
             testsToRun.push_back(param);
         }
     }
+
     if (testsToRun.empty()) {
         testsToRun.push_back("");
     }
+
+    // generate output filenames for XML test output
+    std::string gtestOutputFilename;
+    std::string cppunitOutputFilename;
+
+    if (outputXML) {
+        auto programName = std::string(argv[0]);
+
+        std::stringstream outFileStringStreamGTest("");
+        outFileStringStreamGTest << "xml:" << programName << "-report.gtest.xml";
+        gtestOutputFilename = outFileStringStreamGTest.str();
+
+        std::stringstream outFileStringStreamCppUnit("");
+        outFileStringStreamCppUnit << programName << "-report.cppunit.xml";
+        cppunitOutputFilename = outFileStringStreamCppUnit.str();
+    }
+
+    if (outputXML && (std::getenv("GTEST_OUTPUT") == nullptr)) {
+        ::testing::GTEST_FLAG(output) = gtestOutputFilename;
+    }
+
+    ::testing::InitGoogleTest(&argc, argv);
 
     // Set up the listeners
     CppUnit::TestResult controller;
@@ -75,13 +103,25 @@ int main(int argc, char* argv[]) {
 
     // Output the results
     if (outputXML) {
-        CppUnit::XmlOutputter outputter(&result, std::cout);
-        outputter.write();
+        std::ofstream cppUnitXUnitOutputFile;
+        cppUnitXUnitOutputFile.open(cppunitOutputFilename, std::ofstream::out | std::ofstream::trunc);
+        if (cppUnitXUnitOutputFile.is_open()) {
+            CppUnit::XmlOutputter outputter(&result, cppUnitXUnitOutputFile);
+            outputter.write();
+        }
+        else {
+            std::cerr << "Failed to overwrite " << cppunitOutputFilename << " output file." << std::endl;
+            return 1;
+        }
     }
     else {
         CppUnit::TextOutputter outputter(&result, std::cerr);
         outputter.write();
     }
 
-    return result.wasSuccessful() ? 0 : 1;
+    auto googleTestWasSuccessful = RUN_ALL_TESTS() == 0 ? true : false;
+
+    auto cppUnitWasSuccessful = result.wasSuccessful() ? true : false;
+
+    return (googleTestWasSuccessful && cppUnitWasSuccessful) ? 0 : 1;
 }

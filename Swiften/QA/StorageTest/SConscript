@@ -8,6 +8,7 @@ if env["TEST"] :
     myenv.MergeFlags(myenv["SWIFTOOLS_FLAGS"])
     myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
     myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+    myenv.MergeFlags(myenv["GOOGLETEST_FLAGS"])
     myenv.MergeFlags(myenv["BOOST_FLAGS"])
     myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
     myenv.MergeFlags(myenv.get("EXPAT_FLAGS", {}))
