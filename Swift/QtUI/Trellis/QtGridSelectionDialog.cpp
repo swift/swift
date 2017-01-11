@@ -87,6 +87,10 @@ void QtGridSelectionDialog::keyReleaseEvent(QKeyEvent* event) {
             hide();
             setCurrentGridSize(currentGridSize);
         }
+        else if (event->key() == Qt::Key_Escape) {
+            hide();
+        }
+
         if (minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize) != currentGridSize) {
             currentGridSize = minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize);
 
