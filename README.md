@@ -34,8 +34,10 @@ The Swift repository includes some third party dependencies in the 3rdParty dire
 to easy development. Third party dependencies not included are listed below:
 
 * OpenSSL is required when building Swiften on Linux or Android
-* Qt 5 is required by Swift; **Qt up to version Qt 5.5 is supported**
 * Python (2.5 <= version < 3)
+* Qt 5 and QtWebKit is required by Swift. Depending on platform, architecture, and compiler/IDE, you have the following options to fulfill this dependency:
+  * download and install the [official binary Qt 5.5 release](http://download.qt.io/archive/qt/5.5/5.5.1/) if it is available for your platform/architecture/compiler
+  * download and install the latest [official binary Qt 5.7 release](http://download.qt.io/archive/qt/5.7/) **and** download the *matching* [Qt WebKit Technology Preview release for Qt 5.7](https://github.com/annulen/webkit/releases/) and copy/merge the folders with the matching folders of the previously installed Qt 5.7 installation
 
 ## General Build Instructions
 The Swift projects use the SCons build system for build configuration and Build
@@ -66,7 +68,11 @@ A binary release of Qt can be obtained from https://www.qt.io/download-open-sour
 
 #### Building Swift
 
-From the 'Visual C++' 'Programs' group, launch the Visual C++ command prompt, go to your checked out Swift directory and run `scons.bat qt=C:\path\to\qt Swift` to build Swift.
+Open a Developer Command Prompt. Depending on Windows version and Visual Studio version, this can be found in the **Visual C++ Programs group**, launch the **Visual C++ command prompt**, or search for **Developer Command Prompt for VS2015** in the Windows start menu in more recent versions of Windows.
+
+In the open command prompt add the **Qt installation bin folder** to the `PATH` environment variable, by running `set PATH=C:\path\to\qt\msvc2015\bin;%PATH%`. The Qt path is just an example; adjust it to your local installation.
+
+Afterwards, in the command prompt, go to your checked out Swift directory and run `scons.bat qt=C:\path\to\qt Swift` to build Swift. If you want to build a 64-bit version of Swift, **this requires to have 64-bit versions of all dependencies**, attach `win_target_arch=x64_64` to the previous `scons` command line. 
 
 To start Swift, simply change to `Swift/QtUI` and run `Swift.exe`.
 
