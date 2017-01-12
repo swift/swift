@@ -19,6 +19,7 @@
 #include <QTabBar>
 #include <QTabWidget>
 #include <QtGlobal>
+#include <QWindow>
 
 #include <Swiften/Base/Log.h>
 
@@ -372,9 +373,16 @@ void QtChatTabs::flash() {
 void QtChatTabs::handleOpenLayoutChangeDialog() {
     disconnect(gridSelectionDialog_, SIGNAL(currentGridSizeChanged(QSize)), dynamicGrid_, SLOT(setDimensions(QSize)));
     gridSelectionDialog_->setCurrentGridSize(dynamicGrid_->getDimension());
-    gridSelectionDialog_->move(QCursor::pos());
+
+    int screen = QApplication::desktop()->screenNumber(QCursor::pos());
+    QPoint center = QApplication::desktop()->screenGeometry(screen).center();
+    gridSelectionDialog_->move(center);
+
     connect(gridSelectionDialog_, SIGNAL(currentGridSizeChanged(QSize)), dynamicGrid_, SLOT(setDimensions(QSize)));
     gridSelectionDialog_->show();
+
+    QPoint pos(gridSelectionDialog_->getFrameSize().width() / 2, gridSelectionDialog_->getFrameSize().height() / 2);
+    QCursor::setPos(gridSelectionDialog_->windowHandle()->screen(), gridSelectionDialog_->mapToGlobal(QPoint(gridSelectionDialog_->width(), gridSelectionDialog_->height()) - pos));
 }
 
 void QtChatTabs::storeTabPositions() {

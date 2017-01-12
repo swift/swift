@@ -29,6 +29,8 @@ namespace Swift {
             void setMaxGridSize(const QSize& size);
             QSize getMaxGridSize() const;
 
+            QSize getFrameSize() const;
+
         signals:
             void currentGridSizeChanged(QSize);
             void minGridSizeChanged(QSize);
