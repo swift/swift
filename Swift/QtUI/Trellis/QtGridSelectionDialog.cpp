@@ -135,7 +135,11 @@ void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
 void QtGridSelectionDialog::showEvent(QShowEvent*) {
     int xPos = horizontalMargin + frameSize.width() + (padding + frameSize.width()) * (currentGridSize.width() - 1) - frameSize.width()/2;
     int yPos = verticalMargin + frameSize.height() + (padding + frameSize.height()) * (currentGridSize.height() - 1) - frameSize.height()/2;
-    QCursor::setPos(mapToGlobal(QPoint(xPos, yPos)));
+    // Apply the above offset to the global cursor position (which was positioned at a known position before showing the widget):
+    QPoint pos = QCursor::pos();
+    pos.rx() += xPos;
+    pos.ry() += yPos;
+    QCursor::setPos(pos);
     setMouseTracking(true);
 }
 
