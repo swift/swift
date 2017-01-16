@@ -137,6 +137,11 @@ else :
     env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
     env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
 
+if env["PLATFORM"] == "win32" and env["qt"] :
+    # This adds Qt's binary directory at the end of the PATH variable, so that
+    # windeployqt.exe is automatically detected and used in WindowsBundle.py.
+    os.environ["PATH"] =  env['ENV']['PATH'] + ";" + env['qt'] + "\\bin"
+
 Help(vars.GenerateHelpText(env))
 
 # Workaround for missing Visual Studio 2012 support in SCons
