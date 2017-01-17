@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,6 +9,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
@@ -37,6 +38,8 @@ SluiftClient::SluiftClient(
     client->onPresenceReceived.connect(boost::bind(&SluiftClient::handleIncomingPresence, this, _1));
     client->getPubSubManager()->onEvent.connect(boost::bind(&SluiftClient::handleIncomingPubSubEvent, this, _1, _2));
     client->getRoster()->onInitialRosterPopulated.connect(boost::bind(&SluiftClient::handleInitialRosterPopulated, this));
+    client->getClientBlockListManager()->getBlockList()->onItemAdded.connect(boost::bind(&SluiftClient::handleIncomingBlockEvent, this, _1));
+    client->getClientBlockListManager()->getBlockList()->onItemRemoved.connect(boost::bind(&SluiftClient::handleIncomingUnblockEvent, this, _1));
 }
 
 SluiftClient::~SluiftClient() {
@@ -46,12 +49,14 @@ SluiftClient::~SluiftClient() {
 
 void SluiftClient::connect() {
     rosterReceived = false;
+    blockListReceived = false;
     disconnectedError = boost::optional<ClientError>();
     client->connect(options);
 }
 
 void SluiftClient::connect(const std::string& host, int port) {
     rosterReceived = false;
+    blockListReceived = false;
     options.manualHostname = host;
     options.manualPort = port;
     disconnectedError = boost::optional<ClientError>();
@@ -126,6 +131,26 @@ boost::optional<SluiftClient::Event> SluiftClient::getNextEvent(
     }
 }
 
+std::vector<JID> SluiftClient::getBlockList(int timeout) {
+    Watchdog watchdog(timeout, networkFactories->getTimerFactory());
+    if (!blockListReceived) {
+        // If we haven't requested it yet, request it for the first time
+        client->getClientBlockListManager()->requestBlockList();
+
+        // Wait for new events
+        while (!watchdog.getTimedOut() && client->getClientBlockListManager()->getBlockList()->getState() != BlockList::Available) {
+            eventLoop->runUntilEvents();
+        }
+
+        // Throw an error if we're timed out
+        if (watchdog.getTimedOut()) {
+            throw Lua::Exception("Timeout while requesting blocklist");
+        }
+    }
+    blockListReceived = true;
+    return client->getClientBlockListManager()->getBlockList()->getItems();
+}
+
 std::vector<XMPPRosterItem> SluiftClient::getRoster(int timeout) {
     Watchdog watchdog(timeout, networkFactories->getTimerFactory());
     if (!rosterReceived) {
@@ -159,6 +184,14 @@ void SluiftClient::handleIncomingPresence(std::shared_ptr<Presence> stanza) {
 
 void SluiftClient::handleIncomingPubSubEvent(const JID& from, std::shared_ptr<PubSubEventPayload> event) {
     pendingEvents.push_back(Event(from, event));
+}
+
+void SluiftClient::handleIncomingBlockEvent(const JID& item) {
+    pendingEvents.push_back(Event(item, Event::BlockEventType));
+}
+
+void SluiftClient::handleIncomingUnblockEvent(const JID& item) {
+    pendingEvents.push_back(Event(item, Event::UnblockEventType));
 }
 
 void SluiftClient::handleInitialRosterPopulated() {

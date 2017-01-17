@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -201,6 +201,24 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         contactsTable[item.getJID().toString()] = std::make_shared<Lua::Value>(itemTable);
     }
     pushValue(L, contactsTable);
+    Lua::registerTableToString(L, -1);
+    return 1;
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+        Client, get_block_list,
+        "Returns a table of all the items in the blocking list.",
+        "self\n",
+        ""
+) {
+    Sluift::globals.eventLoop.runOnce();
+    SluiftClient* client = getClient(L);
+    lua_newtable(L);
+    int i = 0;
+    for (const auto& item : client->getBlockList(getGlobalTimeout(L))) {
+        lua_pushstring(L, item.toString().c_str());
+        lua_rawseti(L, -2, boost::numeric_cast<int>(++i));
+    }
     Lua::registerTableToString(L, -1);
     return 1;
 }
@@ -518,6 +536,23 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
             lua_pushvalue(L, -3);
             lua_call(L, 1, 0);
             lua_pop(L, 1);
+            break;
+        }
+        case SluiftClient::Event::BlockEventType: {
+            Lua::Table result = boost::assign::map_list_of
+                ("type", std::make_shared<Lua::Value>(std::string("block")))
+                ("jid",  std::make_shared<Lua::Value>(event.item.toString()));
+            Lua::pushValue(L, result);
+            Lua::registerTableToString(L, -1);
+            break;
+        }
+        case SluiftClient::Event::UnblockEventType: {
+            Lua::Table result = boost::assign::map_list_of
+                ("type", std::make_shared<Lua::Value>(std::string("unblock")))
+                ("jid",  std::make_shared<Lua::Value>(event.item.toString()));
+            Lua::pushValue(L, result);
+            Lua::registerTableToString(L, -1);
+            break;
         }
     }
 }

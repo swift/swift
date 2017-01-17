@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,6 +13,7 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Client/Client.h>
+#include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/ClientError.h>
 #include <Swiften/Client/ClientOptions.h>
 #include <Swiften/Elements/IQ.h>
@@ -42,13 +43,15 @@ namespace Swift {
                 enum Type {
                     MessageType,
                     PresenceType,
-                    PubSubEventType
+                    PubSubEventType,
+                    BlockEventType,
+                    UnblockEventType
                 };
 
                 Event(std::shared_ptr<Message> stanza) : type(MessageType), stanza(stanza) {}
                 Event(std::shared_ptr<Presence> stanza) : type(PresenceType), stanza(stanza) {}
                 Event(const JID& from, std::shared_ptr<PubSubEventPayload> payload) : type(PubSubEventType), from(from), pubsubEvent(payload) {}
-
+                Event(const JID& item, Type type) : type(type), item(item) {}
                 Type type;
 
                 // Message & Presence
@@ -57,6 +60,9 @@ namespace Swift {
                 // PubSubEvent
                 JID from;
                 std::shared_ptr<PubSubEventPayload> pubsubEvent;
+
+                // Blocklist
+                JID item;
             };
 
             SluiftClient(
@@ -106,6 +112,7 @@ namespace Swift {
             boost::optional<SluiftClient::Event> getNextEvent(int timeout,
                     boost::function<bool (const Event&)> condition = 0);
             std::vector<XMPPRosterItem> getRoster(int timeout);
+            std::vector<JID> getBlockList(int timeout);
 
         private:
             Sluift::Response doSendRequest(std::shared_ptr<Request> request, int timeout);
@@ -113,6 +120,8 @@ namespace Swift {
             void handleIncomingMessage(std::shared_ptr<Message> stanza);
             void handleIncomingPresence(std::shared_ptr<Presence> stanza);
             void handleIncomingPubSubEvent(const JID& from, std::shared_ptr<PubSubEventPayload> event);
+            void handleIncomingBlockEvent(const JID& item);
+            void handleIncomingUnblockEvent(const JID& item);
             void handleInitialRosterPopulated();
             void handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error);
             void handleDisconnected(const boost::optional<ClientError>& error);
@@ -124,6 +133,7 @@ namespace Swift {
             ClientOptions options;
             ClientXMLTracer* tracer;
             bool rosterReceived = false;
+            bool blockListReceived = false;
             std::deque<Event> pendingEvents;
             boost::optional<ClientError> disconnectedError;
             bool requestResponseReceived = false;
