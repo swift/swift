@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <cstdint>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -21,6 +22,8 @@ namespace Swift {
             SWIFTEN_API std::pair<std::string, std::string> getSplittedAtFirst(const std::string&, char c);
             SWIFTEN_API std::vector<std::string> split(const std::string&, char c);
             SWIFTEN_API void replaceAll(std::string&, char c, const std::string& s);
+            SWIFTEN_API bool isValidXMPPCharacter(std::uint32_t codepoint);
+            SWIFTEN_API std::string sanitizeXMPPString(const std::string& input);
 
             inline bool beginsWith(const std::string& s, char c) {
                 return s.size() > 0 && s[0] == c;
