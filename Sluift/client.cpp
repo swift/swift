@@ -224,6 +224,52 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
 }
 
 SLUIFT_LUA_FUNCTION_WITH_HELP(
+        Client, add_block,
+        "Adds a user or domain to the blocking list.",
+        "self\n",
+        "jid  the JID of the user or domain to add to the blocking list\n"
+
+) {
+    SluiftClient* client = getClient(L);
+    JID jid(Lua::checkString(L, 2));
+    int timeout = getGlobalTimeout(L);
+
+    std::shared_ptr<BlockPayload> payload = std::make_shared<BlockPayload>(std::vector<JID>(1, jid));
+    return client->sendRequest(
+        std::make_shared< GenericRequest<BlockPayload> >(IQ::Set, JID(), payload, client->getClient()->getIQRouter()), timeout).convertToLuaResult(L);
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+        Client, remove_block,
+        "Removes a user or domain from the blocking list.",
+        "self\n",
+        "jid  the JID of the user or domain to remove from the blocking list\n"
+
+) {
+    SluiftClient* client = getClient(L);
+    JID jid(Lua::checkString(L, 2));
+    int timeout = getGlobalTimeout(L);
+
+    std::shared_ptr<UnblockPayload> payload = std::make_shared<UnblockPayload>(std::vector<JID>(1, jid));
+    return client->sendRequest(
+        std::make_shared< GenericRequest<UnblockPayload> >(IQ::Set, JID(), payload, client->getClient()->getIQRouter()), timeout).convertToLuaResult(L);
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
+        Client, remove_all_block,
+        "Removes all users and domains from the blocking list.",
+        "self\n",
+        ""
+) {
+    SluiftClient* client = getClient(L);
+    int timeout = getGlobalTimeout(L);
+
+    std::shared_ptr<UnblockPayload> payload = std::make_shared<UnblockPayload>(std::vector<JID>());
+    return client->sendRequest(
+        std::make_shared< GenericRequest<UnblockPayload> >(IQ::Set, JID(), payload, client->getClient()->getIQRouter()), timeout).convertToLuaResult(L);
+}
+
+SLUIFT_LUA_FUNCTION_WITH_HELP(
         Client, send_message,
         "Send a message.",
         "self\n"
