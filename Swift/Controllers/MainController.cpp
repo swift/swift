@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -57,8 +57,8 @@
 #include <Swift/Controllers/EventWindowController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/FileTransferListController.h>
-#include <Swift/Controllers/HighlightEditorController.h>
-#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/Highlighting/HighlightEditorController.h>
+#include <Swift/Controllers/Highlighting/HighlightManager.h>
 #include <Swift/Controllers/HistoryController.h>
 #include <Swift/Controllers/HistoryViewController.h>
 #include <Swift/Controllers/Intl.h>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -746,7 +746,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
     assert(chatControllers_.find(contact) == chatControllers_.end());
-    std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), false); /* a message parser that knows this is a chat (not a room/MUC) */
+    std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getConfiguration(), ChatMessageParser::Mode::Chat); /* a message parser that knows this is a chat (not a room/MUC) */
     ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, autoAcceptMUCInviteDecider_);
     chatControllers_[contact] = controller;
     controller->setAvailableServerFeatures(serverDiscoInfo_);
@@ -835,8 +835,8 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
         if (reuseChatwindow) {
             chatWindowFactoryAdapter = new SingleChatWindowFactoryAdapter(reuseChatwindow);
         }
-        std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getRules(), true); /* a message parser that knows this is a room/MUC (not a chat) */
-        controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_, mucBookmarkManager_);
+        std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getConfiguration(), ChatMessageParser::Mode::GroupChat); /* a message parser that knows this is a room/MUC (not a chat) */
+        controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_, mucBookmarkManager_);
         if (chatWindowFactoryAdapter) {
             /* The adapters are only passed to chat windows, which are deleted in their
              * controllers' dtor, which are deleted in ChatManager's dtor. The adapters

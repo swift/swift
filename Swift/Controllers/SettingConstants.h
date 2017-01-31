@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -57,6 +57,13 @@ namespace Swift {
              * Its value is a Boost serialized representation.
              */
             static const SettingsProvider::Setting<std::string> HIGHLIGHT_RULES;
+            /**
+             * The #HIGHLIGHT_RULES_V2 setting specifies the second version of highlight configuration
+             * rules, incompatible to old highlight rules.
+             *
+             * Its value is a Boost serialized representation.
+             */
+            static const SettingsProvider::Setting<std::string> HIGHLIGHT_RULES_V2;
             /**
              * The #INVITE_AUTO_ACCEPT_MODE setting specifies how to handle invites to chat rooms.
              *

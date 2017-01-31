@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,17 +42,14 @@ void EventNotifier::handleEventAdded(std::shared_ptr<StanzaEvent> event) {
     }
     if (std::shared_ptr<MessageEvent> messageEvent = std::dynamic_pointer_cast<MessageEvent>(event)) {
         JID jid = messageEvent->getStanza()->getFrom();
-        std::string title = nickResolver->jidToNick(jid);
         if (!messageEvent->getStanza()->isError() && !messageEvent->getStanza()->getBody().get_value_or("").empty()) {
             JID activationJID = jid;
             if (messageEvent->getStanza()->getType() == Message::Groupchat) {
                 activationJID = jid.toBare();
             }
-            std::string messageText = messageEvent->getStanza()->getBody().get_value_or("");
-            if (boost::starts_with(messageText, "/me ")) {
-                messageText = "*" + String::getSplittedAtFirst(messageText, ' ').second + "*";
+            for (const auto& notification : messageEvent->getNotifications()) {
+                notifier->showMessage(Notifier::IncomingMessage, notification.title, notification.message, avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, activationJID));
             }
-            notifier->showMessage(Notifier::IncomingMessage, title, messageText, avatarManager->getAvatarPath(jid), boost::bind(&EventNotifier::handleNotificationActivated, this, activationJID));
         }
     }
     else if(std::shared_ptr<SubscriptionRequestEvent> subscriptionEvent = std::dynamic_pointer_cast<SubscriptionRequestEvent>(event)) {

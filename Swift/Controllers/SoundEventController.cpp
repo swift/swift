@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,7 @@
 
 #include <boost/bind.hpp>
 
-#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/Highlighting/HighlightManager.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/SoundPlayer.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
@@ -37,8 +37,8 @@ void SoundEventController::handleEventQueueEventAdded(std::shared_ptr<StanzaEven
 }
 
 void SoundEventController::handleHighlight(const HighlightAction& action) {
-    if (playSounds_ && action.playSound()) {
-        soundPlayer_->playSound(SoundPlayer::MessageReceived, action.getSoundFile());
+    if (playSounds_ && action.getSoundFilePath()) {
+        soundPlayer_->playSound(SoundPlayer::MessageReceived, action.getSoundFilePath().get_value_or(""));
     }
 }
 

@@ -23,7 +23,7 @@
 #include <Swift/QtUI/QtChatWindowFactory.h>
 #include <Swift/QtUI/QtContactEditWindow.h>
 #include <Swift/QtUI/QtFileTransferListWidget.h>
-#include <Swift/QtUI/QtHighlightEditor.h>
+#include <Swift/QtUI/QtHighlightNotificationConfigDialog.h>
 #include <Swift/QtUI/QtHistoryWindow.h>
 #include <Swift/QtUI/QtJoinMUCWindow.h>
 #include <Swift/QtUI/QtLoginWindow.h>
@@ -169,7 +169,7 @@ WhiteboardWindow* QtUIFactory::createWhiteboardWindow(std::shared_ptr<Whiteboard
 }
 
 HighlightEditorWindow* QtUIFactory::createHighlightEditorWindow() {
-    return new QtHighlightEditor(qtOnlySettings);
+    return new QtHighlightNotificationConfigDialog(qtOnlySettings);
 }
 
 BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {

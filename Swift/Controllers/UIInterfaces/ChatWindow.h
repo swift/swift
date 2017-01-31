@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@
 #include <Swiften/Elements/SecurityLabelsCatalog.h>
 #include <Swiften/MUC/MUCBookmark.h>
 
-#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/Highlighting/HighlightManager.h>
 
 namespace Swift {
     class AvatarManager;
@@ -62,12 +62,36 @@ namespace Swift {
                         parts_ = parts;
                     }
 
-                    void setFullMessageHighlightAction(const HighlightAction& action) {
-                        fullMessageHighlightAction_ = action;
+                    void setHighlightActionSender(const HighlightAction& action) {
+                        highlightActionSender_ = action;
                     }
 
-                    const HighlightAction& getFullMessageHighlightAction() const {
-                        return fullMessageHighlightAction_;
+                    const HighlightAction& getHighlightActionSender() const {
+                        return highlightActionSender_;
+                    }
+
+                    void setHighlightActionOwnMention(const HighlightAction& action) {
+                        highlightActionOwnMention_ = action;
+                    }
+
+                    const HighlightAction& getHighlightActionOwnMention() const {
+                        return highlightActionOwnMention_;
+                    }
+
+                    void setHighlightActionGroupMessage(const HighlightAction& action) {
+                        highlightActionGroupMessage_ = action;
+                    }
+
+                    const HighlightAction& getHighlightActionGroupMessage() const {
+                        return highlightActionGroupMessage_;
+                    }
+
+                    void setHighlightActonDirectMessage(const HighlightAction& action) {
+                        highlightActionDirectMessage_ = action;
+                    }
+
+                    const HighlightAction& getHighlightActionDirectMessage() const {
+                        return highlightActionDirectMessage_;
                     }
 
                     bool isMeCommand() const {
@@ -80,7 +104,10 @@ namespace Swift {
 
                 private:
                     std::vector<std::shared_ptr<ChatMessagePart> > parts_;
-                    HighlightAction fullMessageHighlightAction_;
+                    HighlightAction highlightActionSender_;
+                    HighlightAction highlightActionOwnMention_;
+                    HighlightAction highlightActionGroupMessage_;
+                    HighlightAction highlightActionDirectMessage_;
                     bool isMeCommand_ = false;
             };
 

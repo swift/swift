@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -131,7 +131,7 @@ public:
         wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsProvider_);
         wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
         highlightManager_ = new HighlightManager(settings_);
-        highlightManager_->resetToDefaultRulesList();
+        highlightManager_->resetToDefaultConfiguration();
         handledHighlightActions_ = 0;
         soundsPlayed_.clear();
         highlightManager_->onHighlight.connect(boost::bind(&ChatsManagerTest::handleHighlightAction, this, _1));
@@ -786,24 +786,17 @@ public:
     }
 
     void testChatControllerHighlightingNotificationTesting() {
-        HighlightRule keywordRuleA;
-        keywordRuleA.setMatchChat(true);
-        std::vector<std::string> keywordsA;
-        keywordsA.push_back("Romeo");
-        keywordRuleA.setKeywords(keywordsA);
-        keywordRuleA.getAction().setTextColor("yellow");
-        keywordRuleA.getAction().setPlaySound(true);
-        highlightManager_->insertRule(0, keywordRuleA);
+        HighlightConfiguration::KeywordHightlight keywordRuleA;
+        keywordRuleA.keyword = "Romeo";
+        keywordRuleA.action.setFrontColor(boost::optional<std::string>("yellow"));
+        keywordRuleA.action.setSoundFilePath(boost::optional<std::string>(""));
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordRuleA);
 
-        HighlightRule keywordRuleB;
-        keywordRuleB.setMatchChat(true);
-        std::vector<std::string> keywordsB;
-        keywordsB.push_back("Juliet");
-        keywordRuleB.setKeywords(keywordsB);
-        keywordRuleB.getAction().setTextColor("green");
-        keywordRuleB.getAction().setPlaySound(true);
-        keywordRuleB.getAction().setSoundFile("/tmp/someotherfile.wav");
-        highlightManager_->insertRule(0, keywordRuleB);
+        HighlightConfiguration::KeywordHightlight keywordRuleB;
+        keywordRuleB.keyword = "Juliet";
+        keywordRuleB.action.setFrontColor(boost::optional<std::string>("green"));
+        keywordRuleB.action.setSoundFilePath(boost::optional<std::string>("/tmp/someotherfile.wav"));
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordRuleB);
 
         JID messageJID = JID("testling@test.com");
 
@@ -817,28 +810,22 @@ public:
         manager_->handleIncomingMessage(message);
 
         CPPUNIT_ASSERT_EQUAL(2, handledHighlightActions_);
-        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.getAction().getSoundFile()) != soundsPlayed_.end());
-        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.getAction().getSoundFile()) != soundsPlayed_.end());
+        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
+        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
     }
 
     void testChatControllerHighlightingNotificationDeduplicateSounds() {
-        HighlightRule keywordRuleA;
-        keywordRuleA.setMatchChat(true);
-        std::vector<std::string> keywordsA;
-        keywordsA.push_back("Romeo");
-        keywordRuleA.setKeywords(keywordsA);
-        keywordRuleA.getAction().setTextColor("yellow");
-        keywordRuleA.getAction().setPlaySound(true);
-        highlightManager_->insertRule(0, keywordRuleA);
+        auto keywordRuleA = HighlightConfiguration::KeywordHightlight();
+        keywordRuleA.keyword = "Romeo";
+        keywordRuleA.action.setFrontColor(boost::optional<std::string>("yellow"));
+        keywordRuleA.action.setSoundFilePath(boost::optional<std::string>(""));
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordRuleA);
 
-        HighlightRule keywordRuleB;
-        keywordRuleB.setMatchChat(true);
-        std::vector<std::string> keywordsB;
-        keywordsB.push_back("Juliet");
-        keywordRuleB.setKeywords(keywordsB);
-        keywordRuleB.getAction().setTextColor("green");
-        keywordRuleB.getAction().setPlaySound(true);
-        highlightManager_->insertRule(0, keywordRuleB);
+        auto keywordRuleB = HighlightConfiguration::KeywordHightlight();
+        keywordRuleB.keyword = "Juliet";
+        keywordRuleB.action.setFrontColor(boost::optional<std::string>("green"));
+        keywordRuleB.action.setSoundFilePath(boost::optional<std::string>(""));
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordRuleB);
 
         JID messageJID = JID("testling@test.com");
 
@@ -852,8 +839,8 @@ public:
         manager_->handleIncomingMessage(message);
 
         CPPUNIT_ASSERT_EQUAL(1, handledHighlightActions_);
-        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.getAction().getSoundFile()) != soundsPlayed_.end());
-        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.getAction().getSoundFile()) != soundsPlayed_.end());
+        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
+        CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
     }
 
     void testChatControllerMeMessageHandling() {
@@ -922,12 +909,13 @@ public:
         JID mucJID("mucroom@rooms.test.com");
         std::string nickname = "toodles";
 
+        //highlightManager_->resetToDefaultConfiguration();
+
         // add highlight rule for 'foo'
-        HighlightRule fooHighlight;
-        fooHighlight.setKeywords({"foo"});
-        fooHighlight.setMatchMUC(true);
-        fooHighlight.getAction().setTextBackground("green");
-        highlightManager_->insertRule(0, fooHighlight);
+        HighlightConfiguration::KeywordHightlight keywordHighlight;
+        keywordHighlight.keyword = "foo";
+        keywordHighlight.action.setBackColor(boost::optional<std::string>("green"));
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordHighlight);
 
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
@@ -1141,8 +1129,8 @@ private:
 
     void handleHighlightAction(const HighlightAction& action) {
         handledHighlightActions_++;
-        if (action.playSound()) {
-            soundsPlayed_.insert(action.getSoundFile());
+        if (action.getSoundFilePath()) {
+            soundsPlayed_.insert(action.getSoundFilePath().get_value_or(""));
         }
     }
 

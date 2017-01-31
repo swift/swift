@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -94,18 +94,20 @@ public:
         highlightManager_ = new HighlightManager(settings_);
         muc_ = std::make_shared<MockMUC>(mucJID_);
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
-        chatMessageParser_ = std::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getRules(), true);
+        chatMessageParser_ = std::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getConfiguration(), ChatMessageParser::Mode::GroupChat);
         vcardStorage_ = new VCardMemoryStorage(crypto_.get());
         vcardManager_ = new VCardManager(self_, iqRouter_, vcardStorage_);
+        nickResolver_ = new NickResolver(self_, xmppRoster_, vcardManager_, mucRegistry_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
         mucBookmarkManager_ = new MUCBookmarkManager(iqRouter_);
-        controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_);
+        controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_);
     }
 
     void tearDown() {
         delete controller_;
         delete mucBookmarkManager_;
         delete clientBlockListManager_;
+        delete nickResolver_;
         delete vcardManager_;
         delete vcardStorage_;
         delete highlightManager_;
@@ -592,7 +594,7 @@ private:
     ChatWindowFactory* chatWindowFactory_;
     UserSearchWindowFactory* userSearchWindowFactory_;
     MUCController* controller_;
-//    NickResolver* nickResolver_;
+    NickResolver* nickResolver_;
     PresenceOracle* presenceOracle_;
     AvatarManager* avatarManager_;
     StanzaChannelPresenceSender* presenceSender_;

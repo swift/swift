@@ -5,12 +5,12 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include <Swift/Controllers/HighlightEditorController.h>
+#include <Swift/Controllers/Highlighting/HighlightEditorController.h>
 
 #include <boost/bind.hpp>
 

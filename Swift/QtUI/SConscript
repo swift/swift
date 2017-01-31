@@ -145,9 +145,9 @@ sources = [
     "QtContactEditWindow.cpp",
     "QtContactEditWidget.cpp",
     "QtSingleWindow.cpp",
-    "QtHighlightEditor.cpp",
     "QtColorToolButton.cpp",
     "QtClosableLineEdit.cpp",
+    "QtHighlightNotificationConfigDialog.cpp",
     "ChatSnippet.cpp",
     "MessageSnippet.cpp",
     "SystemMessageSnippet.cpp",
@@ -216,7 +216,10 @@ sources = [
     "QtUpdateFeedSelectionDialog.cpp",
     "Trellis/QtDynamicGridLayout.cpp",
     "Trellis/QtDNDTabBar.cpp",
-    "Trellis/QtGridSelectionDialog.cpp"
+    "Trellis/QtGridSelectionDialog.cpp",
+    "QtCheckBoxStyledItemDelegate.cpp",
+    "QtColorSelectionStyledItemDelegate.cpp",
+    "QtSoundSelectionStyledItemDelegate.cpp"
 ]
 
 if env["PLATFORM"] == "win32" :
@@ -311,7 +314,7 @@ myenv.Uic4("QtAffiliationEditor.ui")
 myenv.Uic4("QtJoinMUCWindow.ui")
 myenv.Uic4("QtHistoryWindow.ui")
 myenv.Uic4("QtConnectionSettings.ui")
-myenv.Uic4("QtHighlightEditor.ui")
+myenv.Uic4("QtHighlightNotificationConfigDialog.ui")
 myenv.Uic4("QtBlockListEditorWindow.ui")
 myenv.Uic4("QtSpellCheckerWindow.ui")
 myenv.Uic4("QtUpdateFeedSelectionDialog.ui")

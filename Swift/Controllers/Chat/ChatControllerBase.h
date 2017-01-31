@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,24 +28,25 @@
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Queries/IQRouter.h>
 
-#include <Swift/Controllers/HighlightManager.h>
+#include <Swift/Controllers/Highlighting/HighlightManager.h>
 #include <Swift/Controllers/HistoryController.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 #include <Swift/Controllers/XMPPEvents/MessageEvent.h>
 
 namespace Swift {
-    class IQRouter;
-    class StanzaChannel;
-    class ChatWindowFactory;
+    class AutoAcceptMUCInviteDecider;
     class AvatarManager;
-    class UIEventStream;
-    class EventController;
+    class ChatMessageParser;
+    class ChatWindowFactory;
     class EntityCapsProvider;
+    class EventController;
     class HighlightManager;
     class Highlighter;
-    class ChatMessageParser;
-    class AutoAcceptMUCInviteDecider;
+    class IQRouter;
+    class NickResolver;
+    class StanzaChannel;
+    class UIEventStream;
 
     class ChatControllerBase : public boost::signals2::trackable {
         public:
@@ -73,7 +74,7 @@ namespace Swift {
             boost::signals2::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
         protected:
-            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 
             /**
              * Pass the Message appended, and the stanza used to send it.
@@ -96,8 +97,7 @@ namespace Swift {
             /** JID any iq for account should go to - bare except for PMs */
             virtual JID getBaseJID();
             virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) = 0;
-            ChatWindow::ChatMessage buildChatWindowChatMessage(const std::string& message, bool senderIsSelf, const HighlightAction& fullMessageHighlightAction);
-            void handleHighlightActions(const ChatWindow::ChatMessage& chatMessage);
+            ChatWindow::ChatMessage buildChatWindowChatMessage(const std::string& message, const std::string& senderName, bool senderIsSelf);
             void updateMessageCount();
 
         private:

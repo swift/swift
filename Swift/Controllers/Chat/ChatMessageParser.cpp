@@ -1,16 +1,18 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 
+#include <algorithm>
 #include <memory>
 #include <utility>
 #include <vector>
 
 #include <boost/algorithm/string.hpp>
+#include <boost/regex.hpp>
 
 #include <Swiften/Base/Regex.h>
 #include <Swiften/Base/String.h>
@@ -19,14 +21,14 @@
 
 namespace Swift {
 
-    ChatMessageParser::ChatMessageParser(const std::map<std::string, std::string>& emoticons, HighlightRulesListPtr highlightRules, bool mucMode)
-    : emoticons_(emoticons), highlightRules_(highlightRules), mucMode_(mucMode) {
+    ChatMessageParser::ChatMessageParser(const std::map<std::string, std::string>& emoticons, std::shared_ptr<HighlightConfiguration> highlightConfiguration, Mode mode) : emoticons_(emoticons), highlightConfiguration_(highlightConfiguration), mode_(mode) {
     }
 
     typedef std::pair<std::string, std::string> StringPair;
 
-    ChatWindow::ChatMessage ChatMessageParser::parseMessageBody(const std::string& body, const std::string& nick, bool senderIsSelf) {
+    ChatWindow::ChatMessage ChatMessageParser::parseMessageBody(const std::string& body, const std::string& senderNickname, bool senderIsSelf) {
         ChatWindow::ChatMessage parsedMessage;
+
         std::string remaining = body;
         if (boost::starts_with(body, "/me ")) {
            remaining = String::getSplittedAtFirst(body, ' ').second;
@@ -60,8 +62,12 @@ namespace Swift {
         parsedMessage = emoticonHighlight(parsedMessage);
 
         if (!senderIsSelf) { /* do not highlight our own messsages */
-            /* do word-based color highlighting */
-            parsedMessage = splitHighlight(parsedMessage, nick);
+            // Highlight keywords and own mentions.
+            parsedMessage = splitHighlight(parsedMessage);
+
+            // Highlight full message events like, specific sender, general
+            // incoming group message, or general incoming direct message.
+            parsedMessage = fullMessageHighlight(parsedMessage, senderNickname);
         }
 
         return parsedMessage;
@@ -89,7 +95,7 @@ namespace Swift {
             boost::regex emoticonRegex(regexString);
 
             ChatWindow::ChatMessage newMessage;
-            for (std::shared_ptr<ChatWindow::ChatMessagePart> part : parsedMessage.getParts()) {
+            for (const auto& part : parsedMessage.getParts()) {
                 std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
                 if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
                     try {
@@ -137,61 +143,122 @@ namespace Swift {
             }
             parsedMessage.setParts(newMessage.getParts());
         }
+
         return parsedMessage;
     }
 
-    ChatWindow::ChatMessage ChatMessageParser::splitHighlight(const ChatWindow::ChatMessage& message, const std::string& nick) {
+    ChatWindow::ChatMessage ChatMessageParser::splitHighlight(const ChatWindow::ChatMessage& message) {
+        auto keywordToRegEx = [](const std::string& keyword, bool matchCaseSensitive) {
+            std::string escaped = Regex::escape(keyword);
+            boost::regex::flag_type flags = boost::regex::normal;
+            if (!matchCaseSensitive) {
+                flags |= boost::regex::icase;
+            }
+            return boost::regex("\\b" + escaped + "\\b", flags);
+        };
+
+        auto highlightKeywordInChatMessage = [&](const ChatWindow::ChatMessage& message, const std::string& keyword, bool matchCaseSensitive, const HighlightAction& action) {
+            ChatWindow::ChatMessage resultMessage;
+
+            for (const auto& part : message.getParts()) {
+                std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
+                if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
+                    try {
+                        boost::match_results<std::string::const_iterator> match;
+                        const std::string& text = textPart->text;
+                        std::string::const_iterator start = text.begin();
+                        while (regex_search(start, text.end(), match, keywordToRegEx(keyword, matchCaseSensitive))) {
+                            std::string::const_iterator matchStart = match[0].first;
+                            std::string::const_iterator matchEnd = match[0].second;
+                            if (start != matchStart) {
+                                /* If we're skipping over plain text since the previous emoticon, record it as plain text */
+                                resultMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
+                            }
+                            std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart = std::make_shared<ChatWindow::ChatHighlightingMessagePart>();
+                            highlightPart->text = match.str();
+                            highlightPart->action = action;
+                            resultMessage.append(highlightPart);
+                            start = matchEnd;
+                        }
+                        if (start != text.end()) {
+                            /* If there's plain text after the last emoticon, record it */
+                            resultMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
+                        }
+                    }
+                    catch (std::runtime_error) {
+                        /* Basically too expensive to compute the regex results and it gave up, so pass through as text */
+                        resultMessage.append(part);
+                    }
+                } else {
+                    resultMessage.append(part);
+                }
+            }
+            return resultMessage;
+        };
+
         ChatWindow::ChatMessage parsedMessage = message;
 
-        for (size_t i = 0; i < highlightRules_->getSize(); ++i) {
-            const HighlightRule& rule = highlightRules_->getRule(i);
-            if (rule.getMatchMUC() && !mucMode_) {
-                continue; /* this rule only applies to MUC's, and this is a CHAT */
-            } else if (rule.getMatchChat() && mucMode_) {
-                continue; /* this rule only applies to CHAT's, and this is a MUC */
-            } else if (rule.getAction().getTextBackground().empty() && rule.getAction().getTextColor().empty()) {
-                continue; /* do not try to highlight text, if no highlight color is specified */
-            }
-            const std::vector<boost::regex> keywordRegex = rule.getKeywordRegex(nick);
-            for (const boost::regex& regex : keywordRegex) {
-                ChatWindow::ChatMessage newMessage;
-                for (std::shared_ptr<ChatWindow::ChatMessagePart> part : parsedMessage.getParts()) {
-                    std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;
-                    if ((textPart = std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(part))) {
-                        try {
-                            boost::match_results<std::string::const_iterator> match;
-                            const std::string& text = textPart->text;
-                            std::string::const_iterator start = text.begin();
-                            while (regex_search(start, text.end(), match, regex)) {
-                                std::string::const_iterator matchStart = match[0].first;
-                                std::string::const_iterator matchEnd = match[0].second;
-                                if (start != matchStart) {
-                                    /* If we're skipping over plain text since the previous emoticon, record it as plain text */
-                                    newMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, matchStart)));
-                                }
-                                std::shared_ptr<ChatWindow::ChatHighlightingMessagePart> highlightPart = std::make_shared<ChatWindow::ChatHighlightingMessagePart>();
-                                highlightPart->text = match.str();
-                                highlightPart->action = rule.getAction();
-                                newMessage.append(highlightPart);
-                                start = matchEnd;
-                            }
-                            if (start != text.end()) {
-                                /* If there's plain text after the last emoticon, record it */
-                                newMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
-                            }
-                        }
-                        catch (std::runtime_error) {
-                            /* Basically too expensive to compute the regex results and it gave up, so pass through as text */
-                            newMessage.append(part);
-                        }
-                    } else {
-                        newMessage.append(part);
-                    }
+        // detect mentions of own nickname
+        HighlightAction ownMentionKeywordAction = highlightConfiguration_->ownMentionAction;
+        ownMentionKeywordAction.setSoundFilePath(boost::optional<std::string>());
+        ownMentionKeywordAction.setSystemNotificationEnabled(false);
+        if (!getNick().empty() && !highlightConfiguration_->ownMentionAction.isEmpty()) {
+            auto nicknameHighlightedMessage = highlightKeywordInChatMessage(parsedMessage, nick_, false, ownMentionKeywordAction);
+            auto highlightedParts = nicknameHighlightedMessage.getParts();
+            auto ownNicknamePart = std::find_if(highlightedParts.begin(), highlightedParts.end(), [&](std::shared_ptr<ChatWindow::ChatMessagePart>& part){
+                auto highlightPart = std::dynamic_pointer_cast<ChatWindow::ChatHighlightingMessagePart>(part);
+                if (highlightPart && highlightPart->text == nick_) {
+                    return true;
                 }
-                parsedMessage.setParts(newMessage.getParts());
+                return false;
+            });
+            if (ownNicknamePart != highlightedParts.end()) {
+                parsedMessage.setHighlightActionOwnMention(highlightConfiguration_->ownMentionAction);
             }
+            parsedMessage.setParts(nicknameHighlightedMessage.getParts());
+        }
+
+        // detect keywords
+        for (const auto& keywordHighlight : highlightConfiguration_->keywordHighlights) {
+            if (keywordHighlight.keyword.empty() || keywordHighlight.action.isEmpty()) {
+                continue;
+            }
+            auto newMessage = highlightKeywordInChatMessage(parsedMessage, keywordHighlight.keyword, keywordHighlight.matchCaseSensitive, keywordHighlight.action);
+            parsedMessage.setParts(newMessage.getParts());
         }
 
         return parsedMessage;
+    }
+
+    ChatWindow::ChatMessage ChatMessageParser::fullMessageHighlight(const ChatWindow::ChatMessage& parsedMessage, const std::string& sender) {
+        auto fullHighlightedMessage = parsedMessage;
+
+        // contact highlighting
+        for (const auto& contactHighlight : highlightConfiguration_->contactHighlights) {
+            if (sender == contactHighlight.name) {
+                fullHighlightedMessage.setHighlightActionSender(contactHighlight.action);
+                break;
+            }
+        }
+
+        // general incoming messages
+        HighlightAction groupAction;
+        HighlightAction chatAction;
+
+        switch (mode_) {
+            case Mode::GroupChat:
+                groupAction.setSoundFilePath(highlightConfiguration_->playSoundOnIncomingGroupchatMessages ? boost::optional<std::string>("") : boost::optional<std::string>());
+                groupAction.setSystemNotificationEnabled(highlightConfiguration_->showNotificationOnIncomingGroupchatMessages);
+                fullHighlightedMessage.setHighlightActionGroupMessage(groupAction);
+                break;
+
+            case Mode::Chat:
+                chatAction.setSoundFilePath(highlightConfiguration_->playSoundOnIncomingDirectMessages ? boost::optional<std::string>("") : boost::optional<std::string>());
+                chatAction.setSystemNotificationEnabled(highlightConfiguration_->showNotificationOnIncomingDirectMessages);
+                fullHighlightedMessage.setHighlightActonDirectMessage(chatAction);
+                break;
+        }
+
+        return fullHighlightedMessage;
     }
 }

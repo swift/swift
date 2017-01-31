@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
-#include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Highlighting/Highlighter.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/StatusUtil.h>
@@ -51,7 +51,7 @@ namespace Swift {
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
  */
 ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider)
-    : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
+    : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, nickResolver, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
     isInMUC_ = isInMUC;
     lastWasPresence_ = false;
     chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
@@ -210,9 +210,10 @@ void ChatController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> mess
 }
 
 void ChatController::postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
+    highlighter_->handleSystemNotifications(chatMessage, messageEvent);
     eventController_->handleIncomingEvent(messageEvent);
     if (!messageEvent->getConcluded()) {
-        handleHighlightActions(chatMessage);
+        highlighter_->handleSoundNotifications(chatMessage);
     }
 }
 

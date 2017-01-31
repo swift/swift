@@ -34,7 +34,7 @@
 #include <SwifTools/TabComplete.h>
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
-#include <Swift/Controllers/Highlighter.h>
+#include <Swift/Controllers/Highlighting/Highlighter.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
@@ -80,6 +80,7 @@ MUCController::MUCController (
         StanzaChannel* stanzaChannel,
         IQRouter* iqRouter,
         ChatWindowFactory* chatWindowFactory,
+        NickResolver* nickResolver,
         PresenceOracle* presenceOracle,
         AvatarManager* avatarManager,
         UIEventStream* uiEventStream,
@@ -97,7 +98,7 @@ MUCController::MUCController (
         AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
         VCardManager* vcardManager,
         MUCBookmarkManager* mucBookmarkManager) :
-    ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
+    ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), nickResolver, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
     parting_ = true;
     joined_ = false;
     lastWasPresence_ = false;
@@ -134,8 +135,7 @@ MUCController::MUCController (
     muc_->onAffiliationListReceived.connect(boost::bind(&MUCController::handleAffiliationListReceived, this, _1, _2));
     muc_->onConfigurationFailed.connect(boost::bind(&MUCController::handleConfigurationFailed, this, _1));
     muc_->onConfigurationFormReceived.connect(boost::bind(&MUCController::handleConfigurationFormReceived, this, _1));
-    highlighter_->setMode(isImpromptu_ ? Highlighter::ChatMode : Highlighter::MUCMode);
-    highlighter_->setNick(nick_);
+    chatMessageParser_->setNick(nick_);
     if (timerFactory && stanzaChannel_->isAvailable()) {
         loginCheckTimer_ = std::shared_ptr<Timer>(timerFactory->createTimer(MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS));
         loginCheckTimer_->onTick.connect(boost::bind(&MUCController::handleJoinTimeoutTick, this));
@@ -593,10 +593,11 @@ void MUCController::postHandleIncomingMessage(std::shared_ptr<MessageEvent> mess
     std::shared_ptr<Message> message = messageEvent->getStanza();
     if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {
         if (messageTargetsMe(message) || isImpromptu_) {
+            highlighter_->handleSystemNotifications(chatMessage, messageEvent);
             eventController_->handleIncomingEvent(messageEvent);
         }
         if (!messageEvent->getConcluded()) {
-            handleHighlightActions(chatMessage);
+            highlighter_->handleSoundNotifications(chatMessage);
         }
     }
 }
@@ -1111,7 +1112,7 @@ void MUCController::checkDuplicates(std::shared_ptr<Message> newMessage) {
 
 void MUCController::setNick(const std::string& nick) {
     nick_ = nick;
-    highlighter_->setNick(nick_);
+    chatMessageParser_->setNick(nick);
 }
 
 Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigurationForm) {
