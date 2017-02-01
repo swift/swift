@@ -5,31 +5,35 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/GConfProxyProvider.h>
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 
 #include <iostream>
 
+export "C" {
 #include <gconf/gconf-client.h>
+}
 
 #include <Swiften/Base/Log.h>
 
 namespace Swift {
 
 GConfProxyProvider::GConfProxyProvider() {
+#if !GLIB_CHECK_VERSION(2,35,0)
     // Ensure static GLib initialization methods are called
     static bool glibInitialized = false;
     if (!glibInitialized) {
         g_type_init();
         glibInitialized = true;
     }
+#endif
 
     socksProxy = getFromGConf("/system/proxy/socks_host", "/system/proxy/socks_port");
     httpProxy = getFromGConf("/system/http_proxy/host", "/system/http_proxy/port");
@@ -60,7 +64,7 @@ HostAddressPort GConfProxyProvider::getFromGConf(const char* gcHost, const char*
     }
 
     g_object_unref(client);
-    return HostAddressPort(HostAddress(address), port);
+    return HostAddressPort(HostAddress::fromString(address).get_value_or(HostAddress()), port);
 }
 
 }
