@@ -32,11 +32,7 @@ QSize QtGridSelectionDialog::sizeHint() const {
     int width = horizontalMargin + frameSize.width() + (padding + frameSize.width()) * (currentGridSize.width() - 1) + horizontalMargin;
     int height = verticalMargin + frameSize.height() + (padding + frameSize.height()) * (currentGridSize.height() - 1) + verticalMargin;
 
-    // Add space for descriptive centered text below.
-    auto fontMetrics = QFontMetrics(QApplication::font());
-    auto descriptionBB = fontMetrics.boundingRect(QRect(0,0,width - 2*horizontalMargin,1000), Qt::TextWordWrap, descriptionText, 0, 0);
-
-    height += descriptionBB.height() + descriptionBB.y();
+    height += getDescriptionTextHeight(width);
 
     return QSize(width, height);
 }
@@ -72,6 +68,19 @@ QSize QtGridSelectionDialog::getFrameSize() const {
     return frameSize;
 }
 
+int QtGridSelectionDialog::getDescriptionTextHeight() const {
+    auto width = horizontalMargin + frameSize.width() + (padding + frameSize.width()) * (currentGridSize.width() - 1) + horizontalMargin;
+    return getDescriptionTextHeight(width);
+}
+
+int QtGridSelectionDialog::getDescriptionTextHeight(int width) const {
+    // Height of descriptive centered text below trellis
+    auto fontMetrics = QFontMetrics(QApplication::font());
+    auto descriptionBB = fontMetrics.boundingRect(QRect(0, 0, width - 2 * horizontalMargin, 1000), Qt::TextWordWrap, descriptionText, 0, 0);
+
+    return (descriptionBB.height() + descriptionBB.y());
+}
+
 void QtGridSelectionDialog::keyReleaseEvent(QKeyEvent* event) {
     if (event) {
         QSize newGridSize = currentGridSize;
@@ -100,7 +109,7 @@ void QtGridSelectionDialog::keyReleaseEvent(QKeyEvent* event) {
 
             QSize newSizeHint = sizeHint();
             resize(newSizeHint);
-            QCursor::setPos(mapToGlobal(QPoint(newSizeHint.width(), newSizeHint.height()) - QPoint(frameSize.width() / 2, frameSize.height() / 2)));
+            QCursor::setPos(mapToGlobal(QPoint(newSizeHint.width(), newSizeHint.height()- getDescriptionTextHeight()) - QPoint(frameSize.width() / 2, frameSize.height() / 2)));
         }
     }
 }
@@ -137,43 +146,42 @@ void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
 }
 
 void QtGridSelectionDialog::showEvent(QShowEvent*) {
-    setMouseTracking(true);
+    timerId = startTimer(1000 / 25);
 }
 
 void QtGridSelectionDialog::hideEvent(QHideEvent*) {
-    setMouseTracking(false);
+    killTimer(timerId);
 }
 
-void QtGridSelectionDialog::mouseMoveEvent(QMouseEvent*) {
-    QPoint diff = (frameGeometry().bottomRight() - QCursor::pos());
-    QSize newDimensions = currentGridSize;
-    if (diff.x() > frameSize.width() * 1.5) {
-        newDimensions -= QSize(diff.x() / (frameSize.width() * 1.5), 0);
-    }
-    if (diff.y() > frameSize.height() * 1.5) {
-        newDimensions -= QSize(0, diff.y() / (frameSize.height() * 1.5));
-    }
-    if (minGridSize.expandedTo(newDimensions).boundedTo(maxGridSize) != currentGridSize) {
-        currentGridSize = minGridSize.expandedTo(newDimensions).boundedTo(maxGridSize);
-        resize(sizeHint());
-    }
-}
+void QtGridSelectionDialog::timerEvent(QTimerEvent*) {
 
-void QtGridSelectionDialog::leaveEvent(QEvent *) {
-    QPoint diff = (frameGeometry().bottomRight() - QCursor::pos());
-    QSize newGridSize = currentGridSize;
-    if (diff.x() < 0) {
-        newGridSize += QSize(1,0);
-    }
-    if (diff.y() < 0) {
-        newGridSize += QSize(0,1);
-    }
+    const QPoint diff = QCursor::pos() - frameGeometry().topLeft() - QPoint(horizontalMargin, verticalMargin);
+    const auto toleranceFactor = 4; // Ratio of how far (1/tolerance) the mouse should move for the next frame to be plotted
+    // dx, dy - mouse position with respect to first top-left square
+    const auto dx = diff.x();
+    const auto dy = diff.y();
+    // width, height - dimension of each square with padding
+    const auto width = frameSize.width() + padding;
+    const auto height = frameSize.height() + padding;
+    // xThreshold, yThreshold - how far the mouse should be moved so that a new square is added or the existing one is hidden
+    const auto xThreshold = width / toleranceFactor;
+    const auto yThreshold = height / toleranceFactor;
+
+    const auto getSize = [](int length, int threshold, int delta) {
+        if (delta < length + threshold) {
+            return 1;
+        }
+        else {
+            return (delta + (length - threshold)) / length;
+        }
+    };
+    const QSize newGridSize(getSize(width, xThreshold, dx), getSize(height, yThreshold, dy));
+
     if (minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize) != currentGridSize) {
         currentGridSize = minGridSize.expandedTo(newGridSize).boundedTo(maxGridSize);
         resize(sizeHint());
     }
 }
-
 bool QtGridSelectionDialog::event(QEvent* event) {
     // Hide the window when it becomes a non-top-level window.
     if (event->type() == QEvent::WindowDeactivate) {

@@ -382,7 +382,7 @@ void QtChatTabs::handleOpenLayoutChangeDialog() {
     gridSelectionDialog_->show();
 
     QPoint pos(gridSelectionDialog_->getFrameSize().width() / 2, gridSelectionDialog_->getFrameSize().height() / 2);
-    QCursor::setPos(gridSelectionDialog_->windowHandle()->screen(), gridSelectionDialog_->mapToGlobal(QPoint(gridSelectionDialog_->width(), gridSelectionDialog_->height()) - pos));
+    QCursor::setPos(gridSelectionDialog_->windowHandle()->screen(), gridSelectionDialog_->mapToGlobal(QPoint(gridSelectionDialog_->width(), (gridSelectionDialog_->height() - gridSelectionDialog_->getDescriptionTextHeight())) - pos));
 }
 
 void QtChatTabs::storeTabPositions() {

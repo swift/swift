@@ -30,6 +30,7 @@ namespace Swift {
             QSize getMaxGridSize() const;
 
             QSize getFrameSize() const;
+            int getDescriptionTextHeight() const;
 
         signals:
             void currentGridSizeChanged(QSize);
@@ -39,17 +40,20 @@ namespace Swift {
         protected:
             void keyReleaseEvent(QKeyEvent* event);
             void mousePressEvent(QMouseEvent* event);
-            void mouseMoveEvent(QMouseEvent* event);
             void paintEvent(QPaintEvent* event);
             void showEvent(QShowEvent* event);
             void hideEvent(QHideEvent* event);
-            void leaveEvent(QEvent *event);
             bool event(QEvent* event);
+            void timerEvent(QTimerEvent* event);
+
+    private:
+        int getDescriptionTextHeight(int width) const;
 
         private:
             int padding;
             int horizontalMargin;
             int verticalMargin;
+            int timerId;
 
             QSize frameSize;
 
