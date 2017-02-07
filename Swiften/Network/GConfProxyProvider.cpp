@@ -17,7 +17,7 @@
 
 #include <iostream>
 
-export "C" {
+extern "C" {
 #include <gconf/gconf-client.h>
 }
 

@@ -48,6 +48,7 @@ void ProfileController::handleUIEvent(UIEvent::ref event) {
     gettingVCard = true;
     updateDialogStatus();
     vcardManager->requestOwnVCard();
+    profileWindow->setError("");
     profileWindow->show();
 }
 

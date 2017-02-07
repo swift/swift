@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,7 +74,6 @@ void QtProfileWindow::setEnabled(bool b) {
 
 void QtProfileWindow::setEditable(bool b) {
     ui->throbberLabel->setVisible(b);
-    ui->errorLabel->setVisible(b);
     ui->savePushButton->setVisible(b);
     ui->vcard->setEditable(b);
     updateTitle();
@@ -103,6 +102,7 @@ void QtProfileWindow::setError(const std::string& error) {
     else {
         ui->errorLabel->setText("");
     }
+    ui->errorLabel->setVisible(!error.empty());
 }
 
 void QtProfileWindow::show() {
