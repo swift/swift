@@ -87,7 +87,7 @@ MUCController::MUCController (
         TimerFactory* timerFactory,
         EventController* eventController,
         EntityCapsProvider* entityCapsProvider,
-        XMPPRoster* roster,
+        XMPPRoster* xmppRoster,
         HistoryController* historyController,
         MUCRegistry* mucRegistry,
         HighlightManager* highlightManager,
@@ -103,12 +103,12 @@ MUCController::MUCController (
     lastWasPresence_ = false;
     shouldJoinOnReconnect_ = true;
     doneGettingHistory_ = false;
-    xmppRoster_ = roster;
+    xmppRoster_ = xmppRoster;
 
-    roster_ = new Roster(false, true);
-    rosterVCardProvider_ = new RosterVCardProvider(roster_, vcardManager, JID::WithResource);
+    roster_ = std::unique_ptr<Roster>(new Roster(false, true));
+    rosterVCardProvider_ = new RosterVCardProvider(roster_.get(), vcardManager, JID::WithResource);
     completer_ = new TabComplete();
-    chatWindow_->setRosterModel(roster_);
+    chatWindow_->setRosterModel(roster_.get());
     chatWindow_->setTabComplete(completer_);
     chatWindow_->onClosed.connect(boost::bind(&MUCController::handleWindowClosed, this));
     chatWindow_->onOccupantSelectionChanged.connect(boost::bind(&MUCController::handleWindowOccupantSelectionChanged, this, _1));
@@ -179,7 +179,6 @@ MUCController::~MUCController() {
     eventStream_->onUIEvent.disconnect(boost::bind(&MUCController::handleUIEvent, this, _1));
     chatWindow_->setRosterModel(nullptr);
     delete rosterVCardProvider_;
-    delete roster_;
     if (loginCheckTimer_) {
         loginCheckTimer_->stop();
     }
@@ -764,6 +763,11 @@ void MUCController::handleOccupantNicknameChanged(const std::string& oldNickname
 
     // update contact
     roster_->removeContact(oldJID);
+    auto it = currentOccupants_.find(newNickname);
+    if (it != currentOccupants_.end()) {
+        roster_->removeContact(newJID);
+    }
+
     MUCOccupant occupant = muc_->getOccupant(newNickname);
 
     JID realJID;

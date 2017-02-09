@@ -62,6 +62,8 @@ class MUCControllerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testSubjectChangeIncorrectA);
     CPPUNIT_TEST(testSubjectChangeIncorrectB);
     CPPUNIT_TEST(testSubjectChangeIncorrectC);
+    CPPUNIT_TEST(testHandleOccupantNicknameChanged);
+    CPPUNIT_TEST(testHandleOccupantNicknameChangedRoster);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -499,6 +501,61 @@ public:
             controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
             CPPUNIT_ASSERT_EQUAL(std::string("Trying to enter room teaparty@rooms.wonderland.lit"), std::dynamic_pointer_cast<ChatWindow::ChatTextMessagePart>(window_->lastAddedSystemMessage_.getParts()[0])->text);
         }
+    }
+
+    void testHandleOccupantNicknameChanged() {
+        const auto occupantCount = [&](const std::string & nick) {
+            auto roster = window_->getRosterModel();
+            CPPUNIT_ASSERT(roster != nullptr);
+            const auto currentOccupantsJIDs = roster->getJIDs();
+            int count = 0;
+            for (auto & p : currentOccupantsJIDs) {
+                if (p.getResource() == nick) {
+                    ++count;
+                }
+            }
+            return count;
+        };
+
+        muc_->insertOccupant(MUCOccupant("TestUserOne", MUCOccupant::Participant, MUCOccupant::Owner));
+        muc_->insertOccupant(MUCOccupant("TestUserTwo", MUCOccupant::Participant, MUCOccupant::Owner));
+        muc_->insertOccupant(MUCOccupant("TestUserThree", MUCOccupant::Participant, MUCOccupant::Owner));
+
+        muc_->onOccupantNicknameChanged("TestUserOne", "TestUserTwo");
+
+        CPPUNIT_ASSERT_EQUAL(0, occupantCount("TestUserOne"));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserTwo"));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserThree"));
+    }
+
+    void testHandleOccupantNicknameChangedRoster() {
+        const auto occupantCount = [&](const std::string & nick) {
+            auto roster = window_->getRosterModel();
+            CPPUNIT_ASSERT(roster != nullptr);
+            const auto participants = roster->getGroup("Participants");
+            CPPUNIT_ASSERT(participants != nullptr);
+            const auto displayedParticipants = participants->getDisplayedChildren();
+            int count = 0;
+            for (auto & p : displayedParticipants) {
+                if (p->getDisplayName() == nick) {
+                    ++count;
+                }
+            }
+            return count;
+        };
+
+        muc_->insertOccupant(MUCOccupant("TestUserOne", MUCOccupant::Participant, MUCOccupant::Owner));
+        muc_->insertOccupant(MUCOccupant("TestUserTwo", MUCOccupant::Participant, MUCOccupant::Owner));
+        muc_->insertOccupant(MUCOccupant("TestUserThree", MUCOccupant::Participant, MUCOccupant::Owner));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserOne"));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserTwo"));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserThree"));
+
+        muc_->onOccupantNicknameChanged("TestUserOne", "TestUserTwo");
+
+        CPPUNIT_ASSERT_EQUAL(0, occupantCount("TestUserOne"));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserTwo"));
+        CPPUNIT_ASSERT_EQUAL(1, occupantCount("TestUserThree"));
     }
 
     void testRoleAffiliationStatesVerify(const std::map<std::string, MUCOccupant> &occupants) {

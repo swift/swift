@@ -54,7 +54,7 @@ namespace Swift {
 
     class MUCController : public ChatControllerBase {
         public:
-            MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* roster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
+            MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* xmppRoster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
             virtual ~MUCController();
             boost::signals2::signal<void ()> onUserLeft;
             boost::signals2::signal<void ()> onUserJoined;
@@ -148,7 +148,6 @@ namespace Swift {
             MUC::ref muc_;
             std::string nick_;
             std::string desiredNick_;
-            Roster* roster_;
             TabComplete* completer_;
             bool parting_;
             bool joined_;
@@ -161,6 +160,7 @@ namespace Swift {
             boost::posix_time::ptime lastActivity_;
             boost::optional<std::string> password_;
             XMPPRoster* xmppRoster_;
+            std::unique_ptr<Roster> roster_;
             std::vector<HistoryMessage> joinContext_;
             size_t renameCounter_;
             bool isImpromptu_;
