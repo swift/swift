@@ -1,5 +1,5 @@
 --[[
-	Copyright (c) 2013-2014 Isode Limited.
+	Copyright (c) 2013-2017 Isode Limited.
 	All rights reserved.
 	See the COPYING file for more information.
 --]]
@@ -757,7 +757,7 @@ register_help(Client.process_events)
 --	client:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
 --
 local get_set_shortcuts = {
-	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard', 'mam'},
+	get = {'software_version', 'disco_items', 'disco_info', 'xml', 'dom', 'vcard', 'mam'},
 	set = {'command', 'vcard', 'mam'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
