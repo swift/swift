@@ -64,6 +64,7 @@ class MUCControllerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testSubjectChangeIncorrectC);
     CPPUNIT_TEST(testHandleOccupantNicknameChanged);
     CPPUNIT_TEST(testHandleOccupantNicknameChangedRoster);
+    CPPUNIT_TEST(testHandleChangeSubjectRequest);
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -133,6 +134,27 @@ public:
         status->addStatusCode(code);
         presence->addPayload(status);
         stanzaChannel_->onPresenceReceived(presence);
+    }
+
+    void joinCompleted() {
+        std::string messageBody("test message");
+        window_->onSendMessageRequest(messageBody, false);
+        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
+        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
+        CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
+        CPPUNIT_ASSERT(message);
+        CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+
+        {
+            Message::ref message = std::make_shared<Message>();
+            message->setType(Message::Groupchat);
+            message->setTo(self_);
+            message->setFrom(mucJID_.withResource("SomeNickname"));
+            message->setID(iqChannel_->getNewIQID());
+            message->setSubject("Initial");
+
+            controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
+        }
     }
 
     void testAddressedToSelf() {
@@ -404,13 +426,7 @@ public:
     }
 
     void testSubjectChangeCorrect() {
-        std::string messageBody("test message");
-        window_->onSendMessageRequest(messageBody, false);
-        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
-        CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
-        CPPUNIT_ASSERT(message);
-        CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+        joinCompleted();
 
         {
             Message::ref message = std::make_shared<Message>();
@@ -429,13 +445,7 @@ public:
      * Test that message stanzas with subject element and non-empty body element do not cause a subject change.
      */
     void testSubjectChangeIncorrectA() {
-        std::string messageBody("test message");
-        window_->onSendMessageRequest(messageBody, false);
-        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
-        CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
-        CPPUNIT_ASSERT(message);
-        CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+        joinCompleted();
 
         {
             Message::ref message = std::make_shared<Message>();
@@ -455,13 +465,7 @@ public:
      * Test that message stanzas with subject element and thread element do not cause a subject change.
      */
     void testSubjectChangeIncorrectB() {
-        std::string messageBody("test message");
-        window_->onSendMessageRequest(messageBody, false);
-        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
-        CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
-        CPPUNIT_ASSERT(message);
-        CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+        joinCompleted();
 
         {
             Message::ref message = std::make_shared<Message>();
@@ -481,13 +485,7 @@ public:
      * Test that message stanzas with subject element and empty body element do not cause a subject change.
      */
     void testSubjectChangeIncorrectC() {
-        std::string messageBody("test message");
-        window_->onSendMessageRequest(messageBody, false);
-        std::shared_ptr<Stanza> rawStanza = stanzaChannel_->sentStanzas[stanzaChannel_->sentStanzas.size() - 1];
-        Message::ref message = std::dynamic_pointer_cast<Message>(rawStanza);
-        CPPUNIT_ASSERT(stanzaChannel_->isAvailable()); /* Otherwise will prevent sends. */
-        CPPUNIT_ASSERT(message);
-        CPPUNIT_ASSERT_EQUAL(messageBody, message->getBody().get_value_or(""));
+        joinCompleted();
 
         {
             Message::ref message = std::make_shared<Message>();
@@ -573,6 +571,13 @@ public:
                 CPPUNIT_ASSERT(item->getMUCAffiliation() == occupant->second.getAffiliation());
             }
         }
+    }
+
+    void testHandleChangeSubjectRequest() {
+        std::string testStr("New Subject");
+        CPPUNIT_ASSERT_EQUAL(std::string(""), muc_->newSubjectSet_);
+        window_->onChangeSubjectRequest(testStr);
+        CPPUNIT_ASSERT_EQUAL(testStr, muc_->newSubjectSet_);
     }
 
 private:

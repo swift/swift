@@ -104,6 +104,8 @@ MUCController::MUCController (
     shouldJoinOnReconnect_ = true;
     doneGettingHistory_ = false;
     xmppRoster_ = xmppRoster;
+    subject_ = "";
+    isInitialJoin_ = true;
 
     roster_ = std::unique_ptr<Roster>(new Roster(false, true));
     rosterVCardProvider_ = new RosterVCardProvider(roster_.get(), vcardManager, JID::WithResource);
@@ -559,9 +561,13 @@ void MUCController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> messa
     joined_ = true;
 
     if (message->hasSubject() && !message->getPayload<Body>() && !message->getPayload<Thread>()) {
-        chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % message->getSubject())), ChatWindow::DefaultDirection);
+        if (!isInitialJoin_) {
+            displaySubjectIfChanged(message->getSubject());
+        }
+        isInitialJoin_ = false;
         chatWindow_->setSubject(message->getSubject());
         doneGettingHistory_ = true;
+        subject_ = message->getSubject();
     }
 
     if (!doneGettingHistory_ && !message->getPayload<Delay>()) {
@@ -1213,6 +1219,18 @@ void MUCController::updateChatWindowBookmarkStatus(const boost::optional<MUCBook
     }
     else {
         chatWindow_->setBookmarkState(ChatWindow::RoomNotBookmarked);
+    }
+}
+
+void MUCController::displaySubjectIfChanged(const std::string& subject) {
+    if (subject_ != subject) {
+        if (!subject.empty()) {
+            chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject is now: %1%")) % subject)), ChatWindow::DefaultDirection);
+        }
+        else {
+            chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The room subject has been removed")))), ChatWindow::DefaultDirection);
+        }
+        subject_ = subject;
     }
 }
 

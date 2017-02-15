@@ -144,6 +144,8 @@ namespace Swift {
             void handleMUCBookmarkRemoved(const MUCBookmark& bookmark);
             void updateChatWindowBookmarkStatus(const boost::optional<MUCBookmark>& bookmark);
 
+            void displaySubjectIfChanged(const std::string& sucject);
+
         private:
             MUC::ref muc_;
             std::string nick_;
@@ -178,6 +180,9 @@ namespace Swift {
             MUCBookmarkManager* mucBookmarkManager_;
             boost::signals2::scoped_connection mucBookmarkManagerBookmarkAddedConnection_;
             boost::signals2::scoped_connection mucBookmarkManagerBookmarkRemovedConnection_;
+
+            std::string subject_;
+            bool isInitialJoin_;
     };
 }
 

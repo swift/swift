@@ -10,6 +10,7 @@ namespace Swift {
 
 MockMUC::MockMUC(const JID &muc)
 : ownMUCJID(muc)
+, newSubjectSet_("")
 {
 }
 
@@ -46,6 +47,9 @@ void MockMUC::changeOccupantRole(const JID &jid, MUCOccupant::Role newRole) {
         i->second = MUCOccupant(old.getNick(), newRole, old.getAffiliation());
         onOccupantRoleChanged(i->first, i->second, old.getRole());
     }
+}
+void MockMUC::changeSubject(const std::string& newSubject) {
+    newSubjectSet_ = newSubject;
 }
 
 }

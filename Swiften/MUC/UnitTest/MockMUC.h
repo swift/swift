@@ -72,7 +72,7 @@ namespace Swift {
             virtual void changeOccupantRole(const JID&, MUCOccupant::Role);
             virtual void requestAffiliationList(MUCOccupant::Affiliation) {}
             virtual void changeAffiliation(const JID&, MUCOccupant::Affiliation);
-            virtual void changeSubject(const std::string&) {}
+            virtual void changeSubject(const std::string&);
             virtual void requestConfigurationForm() {}
             virtual void configureRoom(Form::ref) {}
             virtual void cancelConfigureRoom() {}
@@ -94,5 +94,8 @@ namespace Swift {
         private:
             JID ownMUCJID;
             std::map<std::string, MUCOccupant> occupants_;
+
+        public:
+            std::string newSubjectSet_;
     };
 }
