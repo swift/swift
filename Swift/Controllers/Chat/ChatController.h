@@ -95,7 +95,6 @@ namespace Swift {
             std::map<std::shared_ptr<Stanza>, std::string> unackedStanzas_;
             std::map<std::string, std::string> requestedReceipts_;
             StatusShow::Type lastShownStatus_;
-            UIEventStream* eventStream_;
 
             Tristate contactSupportsReceipts_;
             bool receivingPresenceFromUs_ = false;

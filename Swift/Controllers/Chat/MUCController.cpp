@@ -103,7 +103,6 @@ MUCController::MUCController (
     lastWasPresence_ = false;
     shouldJoinOnReconnect_ = true;
     doneGettingHistory_ = false;
-    events_ = uiEventStream;
     xmppRoster_ = roster;
 
     roster_ = new Roster(false, true);
@@ -231,8 +230,8 @@ void MUCController::handleActionRequestedOnOccupant(ChatWindow::OccupantAction a
         case ChatWindow::MakeModerator: muc_->changeOccupantRole(mucJID, MUCOccupant::Moderator);break;
         case ChatWindow::MakeParticipant: muc_->changeOccupantRole(mucJID, MUCOccupant::Participant);break;
         case ChatWindow::MakeVisitor: muc_->changeOccupantRole(mucJID, MUCOccupant::Visitor);break;
-        case ChatWindow::AddContact: if (occupant.getRealJID()) events_->send(std::make_shared<RequestAddUserDialogUIEvent>(realJID, occupant.getNick()));break;
-        case ChatWindow::ShowProfile: events_->send(std::make_shared<ShowProfileForRosterItemUIEvent>(mucJID));break;
+        case ChatWindow::AddContact: if (occupant.getRealJID()) eventStream_->send(std::make_shared<RequestAddUserDialogUIEvent>(realJID, occupant.getNick()));break;
+        case ChatWindow::ShowProfile: eventStream_->send(std::make_shared<ShowProfileForRosterItemUIEvent>(mucJID));break;
     }
 }
 

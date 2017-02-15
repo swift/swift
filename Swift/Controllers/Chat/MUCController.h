@@ -146,7 +146,6 @@ namespace Swift {
 
         private:
             MUC::ref muc_;
-            UIEventStream* events_;
             std::string nick_;
             std::string desiredNick_;
             Roster* roster_;
