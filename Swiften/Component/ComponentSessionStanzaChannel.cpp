@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,15 @@
 #include <Swiften/Base/Log.h>
 
 namespace Swift {
+
+ComponentSessionStanzaChannel::~ComponentSessionStanzaChannel() {
+    if (session) {
+        session->onInitialized.disconnect(boost::bind(&ComponentSessionStanzaChannel::handleSessionInitialized, this));
+        session->onFinished.disconnect(boost::bind(&ComponentSessionStanzaChannel::handleSessionFinished, this, _1));
+        session->onStanzaReceived.disconnect(boost::bind(&ComponentSessionStanzaChannel::handleStanza, this, _1));
+        session.reset();
+    }
+}
 
 void ComponentSessionStanzaChannel::setSession(std::shared_ptr<ComponentSession> session) {
     assert(!this->session);
