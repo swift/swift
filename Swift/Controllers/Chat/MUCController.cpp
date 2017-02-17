@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -239,7 +239,7 @@ void MUCController::handleBareJIDCapsChanged(const JID& /*jid*/) {
     Tristate support = Yes;
     bool any = false;
     for (const auto& nick : currentOccupants_) {
-        DiscoInfo::ref disco = entityCapsProvider_->getCaps(toJID_.toBare().toString() + "/" + nick);
+        DiscoInfo::ref disco = entityCapsProvider_->getCapsCached(toJID_.toBare().toString() + "/" + nick);
         if (disco && disco->hasFeature(DiscoInfo::MessageCorrectionFeature)) {
             any = true;
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,6 +11,7 @@
 #include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/LRUCache.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -35,6 +36,8 @@ namespace Swift {
              */
             DiscoInfo::ref getCaps(const JID&) const;
 
+            DiscoInfo::ref getCapsCached(const JID&);
+
         private:
             void handlePresenceReceived(std::shared_ptr<Presence>);
             void handleStanzaChannelAvailableChanged(bool);
@@ -43,5 +46,6 @@ namespace Swift {
         private:
             CapsProvider* capsProvider;
             std::map<JID, std::string> caps;
+            LRUCache<std::string, DiscoInfo::ref, 64> lruDiscoCache;
     };
 }

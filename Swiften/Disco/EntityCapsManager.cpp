@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,6 +74,22 @@ DiscoInfo::ref EntityCapsManager::getCaps(const JID& jid) const {
         return capsProvider->getCaps(i->second);
     }
     return DiscoInfo::ref();
+}
+
+DiscoInfo::ref EntityCapsManager::getCapsCached(const JID& jid) {
+    DiscoInfo::ref result;
+    auto capsHit = caps.find(jid);
+    if (capsHit != caps.end()) {
+        result = lruDiscoCache.get(capsHit->second, [&](const std::string& capsHash) {
+            boost::optional<DiscoInfo::ref> fileCacheResult;
+            auto fileCacheDiscoInfo = capsProvider->getCaps(capsHash);
+            if (fileCacheDiscoInfo) {
+                fileCacheResult = fileCacheDiscoInfo;
+            }
+            return fileCacheResult;
+        }).get_value_or(DiscoInfo::ref());
+    }
+    return result;
 }
 
 }

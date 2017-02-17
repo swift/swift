@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,6 +26,8 @@ namespace Swift {
              * Returns the service discovery information of the given JID.
              */
             virtual DiscoInfo::ref getCaps(const JID&) const = 0;
+
+            virtual DiscoInfo::ref getCapsCached(const JID&) = 0;
 
             /**
              * Emitted when the capabilities of a JID changes.

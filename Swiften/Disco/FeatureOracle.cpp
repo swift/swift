@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -154,7 +154,7 @@ std::unordered_map<std::string, Tristate> FeatureOracle::getFeaturesForJID(const
         // Collect relevant disco info results and the set of features.
         for (auto&& presence : presenceOracle_->getAllPresence(jid)) {
             if (presence->getType() == Presence::Available) {
-                DiscoInfo::ref presenceDiscoInfo = capsProvider_->getCaps(presence->getFrom());
+                DiscoInfo::ref presenceDiscoInfo = capsProvider_->getCapsCached(presence->getFrom());
                 if (presenceDiscoInfo) {
                     onlineDiscoInfos.push_back(presenceDiscoInfo);
                     features.insert(presenceDiscoInfo->getFeatures().begin(), presenceDiscoInfo->getFeatures().end());
@@ -176,7 +176,7 @@ std::unordered_map<std::string, Tristate> FeatureOracle::getFeaturesForJID(const
     }
     else {
         // Return the disco result of the full JID.
-        auto discoInfo = capsProvider_->getCaps(jid);
+        auto discoInfo = capsProvider_->getCapsCached(jid);
         if (discoInfo) {
             for (auto&& feature : discoInfo->getFeatures()) {
                 supportedFeatures[feature] = Yes;

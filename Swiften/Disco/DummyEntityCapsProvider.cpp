@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,6 +14,10 @@ DiscoInfo::ref DummyEntityCapsProvider::getCaps(const JID& jid) const {
         return i->second;
     }
     return DiscoInfo::ref();
+}
+
+DiscoInfo::ref DummyEntityCapsProvider::getCapsCached(const JID& jid) {
+    return getCaps(jid);
 }
 
 }
