@@ -66,3 +66,13 @@ std::ostream& operator<<(std::ostream& stream, const Presence& presence) {
 }
 
 };
+
+::std::ostream& operator<<(::std::ostream& os, const boost::optional<std::string>& optStr) {
+    if (optStr.is_initialized()) {
+        return os << "boost::optional<std::string>(\"" << optStr.get() << "\")";
+    }
+    else {
+        return os << "boost::optional<std::string>()";
+    }
+}
+

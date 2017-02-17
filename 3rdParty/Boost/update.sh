@@ -31,6 +31,10 @@ fi
 	lambda/lambda.hpp \
 	lambda/bind.hpp \
 	logic/tribool.hpp \
+	multi_index_container.hpp \
+	multi_index/hashed_index.hpp \
+	multi_index/member.hpp \
+	multi_index/sequenced_index.hpp \
 	noncopyable.hpp \
 	numeric/conversion/cast.hpp \
 	optional.hpp \
@@ -70,7 +74,7 @@ cp $1/LICENSE_1_0.txt $TARGET_DIR
 rm -rf $TARGET_DIR/libs/config
 rm -rf $TARGET_DIR/libs/smart_ptr
 
-LIBS="date_time regex system thread signals2 filesystem program_options serialization archive atomic"
+LIBS="date_time regex system thread signals2 filesystem multi_index program_options serialization archive atomic"
 for lib in $LIBS; do
 	rm -rf $TARGET_DIR/libs/$lib/build $TARGET_DIR/libs/$lib/*.doc $TARGET_DIR/libs/$lib/src/*.doc $TARGET_DIR/libs/$lib/src/CMakeLists.txt $TARGET_DIR/libs/$lib/test
 done

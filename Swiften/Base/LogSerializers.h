@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
 namespace Swift {
 
 class Presence;
@@ -45,3 +47,6 @@ std::ostream& operator<<(std::ostream& stream, const std::vector<T>& vec) {
 std::ostream& operator<<(std::ostream& stream, const Presence& presence);
 
 };
+
+::std::ostream& operator<<(::std::ostream& os, const boost::optional<std::string>& optStr);
+
