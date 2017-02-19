@@ -116,6 +116,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerFullJIDBindingOnTypingAndNotActive);
     CPPUNIT_TEST(testLocalMUCServiceDiscoveryResetOnDisconnect);
     CPPUNIT_TEST(testPresenceChangeDoesNotReplaceMUCInvite);
+    CPPUNIT_TEST(testNotSplittingMUCPresenceJoinLeaveLinesOnChatStateNotifications);
 
     // MUC PM Tests
     CPPUNIT_TEST(testChatControllerPMPresenceHandling);
@@ -1093,6 +1094,73 @@ public:
         stanzaChannel_->onPresenceReceived(generateIncomingPresence(Presence::Unavailable));
         CPPUNIT_ASSERT_EQUAL(std::string(""), MockChatWindow::bodyFromMessage(window->lastReplacedMessage_));
         CPPUNIT_ASSERT_EQUAL(std::string("testling@test.com has gone offline."), MockChatWindow::bodyFromMessage(window->lastAddedPresence_));
+    }
+
+    void testNotSplittingMUCPresenceJoinLeaveLinesOnChatStateNotifications() {
+        JID mucJID("mucroom@rooms.test.com");
+        std::string nickname = "toodles";
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
+
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(mucJID, boost::optional<std::string>(), nickname));
+
+        auto genRemoteMUCPresence = [=]() {
+            auto presence = Presence::create();
+            presence->setFrom(mucJID.withResource(nickname));
+            presence->setTo(jid_);
+            return presence;
+        };
+
+        {
+            auto presence = genRemoteMUCPresence();
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            userPayload->addStatusCode(110);
+            userPayload->addItem(MUCItem(MUCOccupant::Owner, jid_, MUCOccupant::Moderator));
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+
+        {
+            auto presence = genRemoteMUCPresence();
+            presence->setFrom(mucJID.withResource("someDifferentNickname"));
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname has entered the room."), window->bodyFromMessage(window->lastAddedPresence_));
+        CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastReplacedMessage_));
+        window->resetLastMessages();
+
+        {
+            auto presence = genRemoteMUCPresence();
+            presence->setFrom(mucJID.withResource("Romeo"));
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastAddedPresence_));
+        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname and Romeo have entered the room"), window->bodyFromMessage(window->lastReplacedMessage_));
+        window->resetLastMessages();
+
+        {
+            auto message = std::make_shared<Message>();
+            message->setFrom(mucJID.withResource("Romeo"));
+            message->setTo(mucJID);
+            message->setType(Message::Groupchat);
+            message->addPayload(std::make_shared<ChatState>(ChatState::Composing));
+            manager_->handleIncomingMessage(message);
+        }
+
+        {
+            auto presence = genRemoteMUCPresence();
+            presence->setFrom(mucJID.withResource("Juliet"));
+            auto userPayload = std::make_shared<MUCUserPayload>();
+            presence->addPayload(userPayload);
+            stanzaChannel_->onPresenceReceived(presence);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string(), window->bodyFromMessage(window->lastAddedPresence_));
+        CPPUNIT_ASSERT_EQUAL(std::string("someDifferentNickname, Romeo and Juliet have entered the room"), window->bodyFromMessage(window->lastReplacedMessage_));
     }
 
     template <typename CarbonsType>

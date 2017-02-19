@@ -539,8 +539,14 @@ void MUCController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> messa
     if (messageEvent->getStanza()->getType() == Message::Groupchat) {
         lastActivity_ = boost::posix_time::microsec_clock::universal_time();
     }
-    clearPresenceQueue();
     std::shared_ptr<Message> message = messageEvent->getStanza();
+
+    // This avoids clearing join/leave queue for chat state notification messages
+    // which are not readable (e.g. have no body content).
+    if (!(!messageEvent->isReadable() && message->getPayload<ChatState>())) {
+        clearPresenceQueue();
+    }
+
     if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && messageTargetsMe(message) && !message->getPayload<Delay>() && messageEvent->isReadable()) {
         chatWindow_->flash();
     }
