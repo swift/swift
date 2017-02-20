@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -59,6 +59,10 @@ void QtTextEdit::keyPressEvent(QKeyEvent* event) {
                || (key == Qt::Key_Tab && modifiers == Qt::ControlModifier)
                || (key == Qt::Key_A && modifiers == Qt::AltModifier)
                || (key == Qt::Key_Tab)
+#ifdef SWIFTEN_PLATFORM_MACOSX
+               || (key == Qt::Key_Minus && (modifiers & Qt::ControlModifier))
+               || (key == Qt::Key_Equal && (modifiers & Qt::ControlModifier))
+#endif
                || (event->matches(QKeySequence::ZoomIn))
                || (event->matches(QKeySequence::ZoomOut))
     ) {

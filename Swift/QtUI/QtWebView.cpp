@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,12 +30,12 @@ QtWebView::QtWebView(QWidget* parent) : QWebView(parent), fontSizeIsMinimal(fals
 void QtWebView::keyPressEvent(QKeyEvent* event) {
     Qt::KeyboardModifiers modifiers = event->modifiers();
     int key = event->key();
-    if (event->matches(QKeySequence::ZoomIn)) {
+    if (event->matches(QKeySequence::ZoomIn) || (key == Qt::Key_Equal && (modifiers & Qt::ControlModifier))) {
         event->accept();
         emit fontGrowRequested();
         return;
     }
-    if (event->matches(QKeySequence::ZoomOut)) {
+    if (event->matches(QKeySequence::ZoomOut) || (key == Qt::Key_Minus && (modifiers & Qt::ControlModifier))) {
         event->accept();
         emit fontShrinkRequested();
         return;
