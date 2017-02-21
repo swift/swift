@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,7 +53,7 @@
 
 namespace Swift{
 
-QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings, TimerFactory* timerFactory) : QMainWindow(), settings_(settings), timerFactory_(timerFactory) {
+QtLoginWindow::QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings, TimerFactory* timerFactory, AutoUpdater* autoUpdater) : QMainWindow(), settings_(settings), timerFactory_(timerFactory), autoUpdater_(autoUpdater) {
     uiEventStream_ = uiEventStream;
 
     setWindowTitle("Swift");
@@ -442,7 +442,7 @@ void QtLoginWindow::handleCertficateChecked(bool checked) {
 
 void QtLoginWindow::handleAbout() {
     if (!aboutDialog_) {
-        aboutDialog_ = new QtAboutWidget(settings_);
+        aboutDialog_ = new QtAboutWidget(settings_, autoUpdater_);
         aboutDialog_->show();
     }
     else {

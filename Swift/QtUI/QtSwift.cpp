@@ -269,12 +269,27 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
         splitter_->show();
     }
 
+    PlatformAutoUpdaterFactory autoUpdaterFactory;
+    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)
+        && !settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
+        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
+        autoUpdater_->checkForUpdates();
+        autoUpdater_->onUpdateStateChanged.connect(boost::bind(&QtSwift::handleAutoUpdaterStateChanged, this, _1));
+
+        settingsHierachy_->onSettingChanged.connect([&](const std::string& path) {
+            if (path == QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL.getKey()) {
+                autoUpdater_->setAppcastFeed(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
+                autoUpdater_->checkForUpdates();
+            }
+        });
+    }
+
     for (int i = 0; i < numberOfAccounts; i++) {
         if (i > 0) {
             // Don't add the first tray (see note above)
             systemTrays_.push_back(new QtSystemTray());
         }
-        QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, startMinimized, !emoticons.empty(), enableAdHocCommandOnJID);
+        QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, autoUpdater_, startMinimized, !emoticons.empty(), enableAdHocCommandOnJID);
         uiFactories_.push_back(uiFactory);
         MainController* mainController = new MainController(
                 &clientMainThreadCaller_,
@@ -295,21 +310,6 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     }
 
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(handleAboutToQuit()));
-
-    PlatformAutoUpdaterFactory autoUpdaterFactory;
-    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)
-        && !settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
-        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
-        autoUpdater_->checkForUpdates();
-        autoUpdater_->onSuggestRestartToUserToUpdate.connect(boost::bind(&QtSwift::handleRecommendRestartToInstallUpdate, this));
-
-        settingsHierachy_->onSettingChanged.connect([&](const std::string& path) {
-            if (path == QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL.getKey()) {
-                autoUpdater_->setAppcastFeed(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
-                autoUpdater_->checkForUpdates();
-            }
-        });
-    }
 }
 
 QtSwift::~QtSwift() {
@@ -347,8 +347,21 @@ void QtSwift::handleAboutToQuit() {
 #endif
 }
 
-void QtSwift::handleRecommendRestartToInstallUpdate() {
-    notifier_->showMessage(Notifier::SystemMessage, Q2PSTRING(tr("Swift Update Available")), Q2PSTRING(tr("Restart Swift to update to the new Swift version.")), "", [](){});
+void QtSwift::handleAutoUpdaterStateChanged(AutoUpdater::State updatedState) {
+    switch (updatedState) {
+    case AutoUpdater::State::NotCheckedForUpdatesYet:
+        break;
+    case AutoUpdater::State::CheckingForUpdate:
+        break;
+    case AutoUpdater::State::DownloadingUpdate:
+        break;
+    case AutoUpdater::State::ErrorCheckingForUpdate:
+        break;
+    case AutoUpdater::State::NoUpdateAvailable:
+        break;
+    case AutoUpdater::State::RestartToInstallUpdate:
+        notifier_->showMessage(Notifier::SystemMessage, Q2PSTRING(tr("Swift Update Available")), Q2PSTRING(tr("Restart Swift to update to the new Swift version.")), "", [](){});
+    }
 }
 
 }

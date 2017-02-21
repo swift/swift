@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,7 @@
 #include <QFile>
 #include <QIcon>
 #include <QLabel>
+#include <QProgressBar>
 #include <QPushButton>
 #include <QTextEdit>
 #include <QTextStream>
@@ -19,6 +20,8 @@
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/Platform.h>
 
+#include <SwifTools/AutoUpdater/AutoUpdater.h>
+
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtUISettingConstants.h>
 #include <Swift/QtUI/QtUpdateFeedSelectionDialog.h>
@@ -26,7 +29,7 @@
 
 namespace Swift {
 
-QtAboutWidget::QtAboutWidget(SettingsProvider* settingsProvider) : QDialog(), settingsProvider_(settingsProvider) {
+QtAboutWidget::QtAboutWidget(SettingsProvider* settingsProvider, AutoUpdater* autoUpdater) : QDialog(), settingsProvider_(settingsProvider), autoUpdater_(autoUpdater) {
 #ifndef Q_OS_MAC
     setWindowTitle(QString(tr("About %1")).arg("Swift"));
 #endif
@@ -49,18 +52,32 @@ QtAboutWidget::QtAboutWidget(SettingsProvider* settingsProvider) : QDialog(), se
     versionLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
     mainLayout->addWidget(versionLabel);
 
-    settingsChangedConnection_ = settingsProvider_->onSettingChanged.connect([&](const std::string& path) {
-        if (path == QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL.getKey() || path == QtUISettingConstants::ENABLE_SOFTWARE_UPDATES.getKey()) {
-            updateUpdateInfoLabel();
-        }
-    });
+    if (autoUpdater_) {
+        settingsChangedConnection_ = settingsProvider_->onSettingChanged.connect([&](const std::string& path) {
+            if (path == QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL.getKey() || path == QtUISettingConstants::ENABLE_SOFTWARE_UPDATES.getKey()) {
+                updateUpdateInfo();
+            }
+        });
 
-    updateInfoLabel_ = new QLabel("", this);
-    updateInfoLabel_->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard | Qt::LinksAccessibleByMouse);
-    connect(updateInfoLabel_, SIGNAL(linkActivated(const QString &)), this, SLOT(handleChangeUpdateChannelClicked()));
-    mainLayout->addWidget(updateInfoLabel_);
+        autoUpdaterChangeConnection_ = autoUpdater_->onUpdateStateChanged.connect([&](AutoUpdater::State /*updatedState*/) {
+            updateUpdateInfo();
+        });
+    }
 
-    updateUpdateInfoLabel();
+    updateChannelInfoLabel_ = new QLabel("", this);
+    updateChannelInfoLabel_->setTextInteractionFlags(Qt::LinksAccessibleByKeyboard | Qt::LinksAccessibleByMouse);
+    connect(updateChannelInfoLabel_, SIGNAL(linkActivated(const QString &)), this, SLOT(handleChangeUpdateChannelClicked()));
+    mainLayout->addWidget(updateChannelInfoLabel_);
+
+    updateStateInfoLabel_ = new QLabel("", this);
+    mainLayout->addWidget(updateStateInfoLabel_);
+
+    updateProgressBar_ = new QProgressBar(this);
+    updateProgressBar_->setMinimum(0);
+    updateProgressBar_->setMaximum(0);
+    mainLayout->addWidget(updateProgressBar_);
+
+    updateUpdateInfo();
 
     if (QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR") != "TRANSLATION_AUTHOR") {
         mainLayout->addWidget(new QLabel(QString("<center><font size='-1'>") + QString(tr("Using the English translation by\n%1")).arg(QCoreApplication::translate("TRANSLATION_INFO", "TRANSLATION_AUTHOR")).replace("\n", "<br/>") + "</font></center>", this));
@@ -129,7 +146,12 @@ void QtAboutWidget::openPlainTextWindow(const QString& path) {
     }
 }
 
-void QtAboutWidget::updateUpdateInfoLabel() {
+void QtAboutWidget::updateUpdateInfo() {
+    updateChannelInfoLabel_->hide();
+    updateStateInfoLabel_->hide();
+    updateProgressBar_->hide();
+    // Currently auto updating is only supported on macOS.
+#ifdef SWIFTEN_PLATFORM_MACOSX
     if (settingsProvider_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)) {
         if (!settingsProvider_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
             QString updateFeedDescription;
@@ -147,17 +169,48 @@ void QtAboutWidget::updateUpdateInfoLabel() {
                 addUpdateFeedDialogLink = true;
             }
             auto updateFeedDialogLink = QString( addUpdateFeedDialogLink ? "<a href=\"#\">%1</a>" : "" ).arg(tr("Change the update channel."));
-            updateInfoLabel_->setText(QString("<center><font size='-1'>%1<br/>%2</font></center>").arg(updateFeedDescription, updateFeedDialogLink));
-            updateInfoLabel_->show();
-        }
-        else {
-            updateInfoLabel_->hide();
-        }
-    }
-    else {
-        updateInfoLabel_->hide();
-    }
+            updateChannelInfoLabel_->setText(QString("<center><font size='-1'>%1<br/>%2</font></center>").arg(updateFeedDescription, updateFeedDialogLink));
+            updateChannelInfoLabel_->show();
 
+            auto currentState = autoUpdater_->getCurrentState();
+            auto currentStateStringPattern = QString("<center><font size='-1'>%1</font></center>");
+            switch (currentState) {
+                case AutoUpdater::State::NotCheckedForUpdatesYet:
+                    // Simply not showing any current state info.
+                    break;
+                case AutoUpdater::State::CheckingForUpdate:
+                    updateStateInfoLabel_->setText(currentStateStringPattern.arg(tr("Checking for updates…")));
+                    updateStateInfoLabel_->show();
+                    updateProgressBar_->show();
+                    break;
+                case AutoUpdater::State::ErrorCheckingForUpdate:
+                    updateStateInfoLabel_->setText(currentStateStringPattern.arg(tr("Error checking for updates!")));
+                    updateStateInfoLabel_->show();
+                    break;
+                case AutoUpdater::State::NoUpdateAvailable:
+                    updateStateInfoLabel_->setText(currentStateStringPattern.arg(tr("Swift is up to date.")));
+                    updateStateInfoLabel_->show();
+                    break;
+                case AutoUpdater::State::DownloadingUpdate:
+                    updateStateInfoLabel_->setText(currentStateStringPattern.arg(tr("Downloading update…")));
+                    updateStateInfoLabel_->show();
+                    updateProgressBar_->show();
+                    break;
+                case AutoUpdater::State::RestartToInstallUpdate:
+                    updateStateInfoLabel_->setText(currentStateStringPattern.arg(tr("Update will be installed when you next restart Swift.")));
+                    updateStateInfoLabel_->show();
+                    break;
+            }
+        }
+    }
+#endif
+    setFixedSize(minimumSizeHint());
+}
+
+void QtAboutWidget::showEvent(QShowEvent*) {
+    if (autoUpdater_) {
+        autoUpdater_->checkForUpdates();
+    }
 }
 
 }

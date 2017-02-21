@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,10 @@ namespace Swift {
 
             void setAppcastFeed(const std::string& appcastFeed);
             void checkForUpdates();
-            bool recommendRestartToUpdate();
+            State getCurrentState();
+
+        private:
+            void setCurrentState(State updatedState);
 
         private:
             class Private;

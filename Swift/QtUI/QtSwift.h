@@ -1,29 +1,34 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/program_options/variables_map.hpp>
-#include <boost/program_options/options_description.hpp>
-
-#include <Swiften/TLS/PlatformTLSFactories.h>
-#include <Swiften/Network/BoostNetworkFactories.h>
 #include <string>
-#include "Swiften/Base/Platform.h"
-#include "Swiften/EventLoop/Qt/QtEventLoop.h"
-#include "QtSettingsProvider.h"
+
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/variables_map.hpp>
+
+#include <Swiften/Base/Platform.h>
+#include <Swiften/EventLoop/Qt/QtEventLoop.h>
+#include <Swiften/Network/BoostNetworkFactories.h>
+#include <Swiften/TLS/PlatformTLSFactories.h>
+
+#include <SwifTools/AutoUpdater/AutoUpdater.h>
+#include <SwifTools/Idle/ActualIdleDetector.h>
+#include <SwifTools/Idle/PlatformIdleQuerier.h>
+
+#include <Swift/QtUI/QtSettingsProvider.h>
+
 #if defined(SWIFTEN_PLATFORM_MACOSX)
-#include "SwifTools/Application/CocoaApplication.h"
-#include "CocoaApplicationActivateHelper.h"
+#include <SwifTools/Application/CocoaApplication.h>
+#include <CocoaApplicationActivateHelper.h>
 #endif
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
-#include "WindowsNotifier.h"
+#include <WindowsNotifier.h>
 #endif
-#include "SwifTools/Idle/PlatformIdleQuerier.h"
-#include "SwifTools/Idle/ActualIdleDetector.h"
 
 namespace po = boost::program_options;
 
@@ -35,7 +40,6 @@ namespace Swift {
     class Dock;
     class Notifier;
     class StoragesFactory;
-    class AutoUpdater;
     class ApplicationPathProvider;
     class AvatarStorage;
     class CapsStorage;
@@ -62,7 +66,7 @@ namespace Swift {
 
         private slots:
             void handleAboutToQuit();
-            void handleRecommendRestartToInstallUpdate();
+            void handleAutoUpdaterStateChanged(AutoUpdater::State updatedState);
 
         private:
             XMLSettingsProvider* loadSettingsFile(const QString& fileName);
@@ -88,7 +92,7 @@ namespace Swift {
             ApplicationPathProvider* applicationPathProvider_;
             StoragesFactory* storagesFactory_;
             CertificateStorageFactory* certificateStorageFactory_;
-            AutoUpdater* autoUpdater_;
+            AutoUpdater* autoUpdater_ = nullptr;
             Notifier* notifier_;
             StatusCache* statusCache_;
             PlatformIdleQuerier idleQuerier_;

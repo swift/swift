@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,6 +25,7 @@ class QToolButton;
 class QComboBox;
 
 namespace Swift {
+    class AutoUpdater;
     class SettingsProvider;
     class TimerFactory;
 
@@ -38,7 +39,7 @@ namespace Swift {
             };
 
         public:
-            QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings, TimerFactory* timerFactory);
+            QtLoginWindow(UIEventStream* uiEventStream, SettingsProvider* settings, TimerFactory* timerFactory, AutoUpdater* autoUpdater);
 
             void morphInto(MainWindow *mainWindow);
             virtual void loggedOut();
@@ -109,5 +110,6 @@ namespace Swift {
             QAction* highlightEditorAction_;
             TimerFactory* timerFactory_;
             ClientOptions currentOptions_;
+            AutoUpdater* autoUpdater_;
     };
 }

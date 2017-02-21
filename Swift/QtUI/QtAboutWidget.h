@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,15 +11,17 @@
 #include <QDialog>
 
 class QLabel;
+class QProgressBar;
 
 namespace Swift {
+    class AutoUpdater;
     class SettingsProvider;
 
     class QtAboutWidget : public QDialog {
             Q_OBJECT
 
         public:
-            QtAboutWidget(SettingsProvider* settings);
+            QtAboutWidget(SettingsProvider* settings, AutoUpdater* autoUpdater);
 
         private slots:
             void handleLicenseClicked();
@@ -28,11 +30,18 @@ namespace Swift {
 
         private:
             void openPlainTextWindow(const QString& path);
-            void updateUpdateInfoLabel();
+            void updateUpdateInfo();
+
+        protected:
+            void showEvent(QShowEvent*);
 
         private:
             SettingsProvider* settingsProvider_;
-            QLabel* updateInfoLabel_ = nullptr;
+            AutoUpdater* autoUpdater_;
+            QLabel* updateChannelInfoLabel_ = nullptr;
+            QLabel* updateStateInfoLabel_ = nullptr;
+            QProgressBar* updateProgressBar_ = nullptr;
             boost::signals2::scoped_connection settingsChangedConnection_;
+            boost::signals2::scoped_connection autoUpdaterChangeConnection_;
     };
 }

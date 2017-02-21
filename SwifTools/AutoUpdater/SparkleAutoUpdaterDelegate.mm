@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#import "SwifTools/AutoUpdater/SparkleAutoUpdaterDelegate.h"
+#import <SwifTools/AutoUpdater/SparkleAutoUpdaterDelegate.h>
 
 #include <string>
 
@@ -16,11 +16,12 @@ using namespace Swift;
 
 @implementation SparkleAutoUpdaterDelegate
 
-@synthesize updateDownloadFinished;
+@synthesize onNewUpdateState;
 
 - (void)updater:(SUUpdater *)updater didFinishLoadingAppcast:(SUAppcast *)appcast {
     (void)updater;
     (void)appcast;
+    onNewUpdateState(AutoUpdater::State::DownloadingUpdate);
 }
 
 - (void)updater:(SUUpdater *)updater didFindValidUpdate:(SUAppcastItem *)update {
@@ -35,6 +36,21 @@ using namespace Swift;
 
 - (void)updaterDidNotFindUpdate:(SUUpdater *)updater {
     (void)updater;
+    onNewUpdateState(AutoUpdater::State::NoUpdateAvailable);
+}
+
+- (void)updater:(SUUpdater *)updater willDownloadUpdate:(SUAppcastItem *)item withRequest:(NSMutableURLRequest *)request {
+    (void)updater;
+    (void)item;
+    (void)request;
+    onNewUpdateState(AutoUpdater::State::DownloadingUpdate);
+}
+
+- (void)updater:(SUUpdater *)updater failedToDownloadUpdate:(SUAppcastItem *)item error:(NSError *)error {
+    (void)updater;
+    (void)item;
+    SWIFT_LOG(error) << ns2StdString([error localizedDescription]) << std::endl;
+    onNewUpdateState(AutoUpdater::State::ErrorCheckingForUpdate);
 }
 
 - (void)updater:(SUUpdater *)updater willInstallUpdate:(SUAppcastItem *)update {
@@ -46,12 +62,18 @@ using namespace Swift;
     (void)updater;
     (void)item;
     (void)invocation;
-    updateDownloadFinished();
+    onNewUpdateState(AutoUpdater::State::RestartToInstallUpdate);
 }
 
 - (void)updater:(SUUpdater *)updater didAbortWithError:(NSError *)error {
     (void)updater;
-    SWIFT_LOG(error) << ns2StdString([error localizedDescription]) << std::endl;
+    if ([error code] == SUNoUpdateError) {
+        onNewUpdateState(AutoUpdater::State::NoUpdateAvailable);
+    }
+    else {
+        SWIFT_LOG(error) << ns2StdString([error localizedDescription]) << std::endl;
+        onNewUpdateState(AutoUpdater::State::ErrorCheckingForUpdate);
+    }
 }
 
 @end

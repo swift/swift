@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ class SparkleAutoUpdater::Private {
     public:
         SUUpdater* updater;
         boost::intrusive_ptr<SparkleAutoUpdaterDelegate> delegate;
-        bool restartToUpdate = false;
+        State currentState = State::NotCheckedForUpdatesYet;
 };
 
 SparkleAutoUpdater::SparkleAutoUpdater(const std::string& appcastFeed) : d(new Private()) {
@@ -26,9 +26,8 @@ SparkleAutoUpdater::SparkleAutoUpdater(const std::string& appcastFeed) : d(new P
     [d->updater retain];
 
     d->delegate = boost::intrusive_ptr<SparkleAutoUpdaterDelegate>([[SparkleAutoUpdaterDelegate alloc] init], false);
-    [d->delegate.get() setUpdateDownloadFinished: [&](){
-        d->restartToUpdate = true;
-        onSuggestRestartToUserToUpdate();
+    [d->delegate.get() setOnNewUpdateState: [&](AutoUpdater::State updatedState){
+        setCurrentState(updatedState);
     }];
     [d->updater setDelegate: d->delegate.get()];
 
@@ -37,8 +36,7 @@ SparkleAutoUpdater::SparkleAutoUpdater(const std::string& appcastFeed) : d(new P
     [d->updater setUpdateCheckInterval: 86400];
     [d->updater setAutomaticallyDownloadsUpdates: true];
 
-    NSURL* nsurl = [NSURL URLWithString: std2NSString(appcastFeed)];
-    [d->updater setFeedURL: nsurl];
+    setAppcastFeed(appcastFeed);
 }
 
 SparkleAutoUpdater::~SparkleAutoUpdater() {
@@ -51,12 +49,22 @@ void SparkleAutoUpdater::setAppcastFeed(const std::string& appcastFeed) {
 }
 
 void SparkleAutoUpdater::checkForUpdates() {
-    [d->updater resetUpdateCycle];
-    [d->updater checkForUpdatesInBackground];
+    if (!(getCurrentState() == State::CheckingForUpdate ||
+          getCurrentState() == State::DownloadingUpdate ||
+          getCurrentState() == State::RestartToInstallUpdate)) {
+        setCurrentState(State::CheckingForUpdate);
+        [d->updater resetUpdateCycle];
+        [d->updater checkForUpdatesInBackground];
+    }
 }
 
-bool SparkleAutoUpdater::recommendRestartToUpdate() {
-    return d->restartToUpdate;
+void SparkleAutoUpdater::setCurrentState(AutoUpdater::State updatedState) {
+    d->currentState = updatedState;
+    onUpdateStateChanged(d->currentState);
+}
+
+AutoUpdater::State SparkleAutoUpdater::getCurrentState() {
+    return d->currentState;
 }
 
 }

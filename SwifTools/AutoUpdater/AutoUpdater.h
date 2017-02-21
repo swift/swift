@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,11 +13,21 @@
 namespace Swift {
     class AutoUpdater {
         public:
+            enum class State {
+                NotCheckedForUpdatesYet,
+                NoUpdateAvailable,
+                CheckingForUpdate,
+                ErrorCheckingForUpdate,
+                DownloadingUpdate,
+                RestartToInstallUpdate
+            };
+
+        public:
             virtual ~AutoUpdater();
 
             virtual void setAppcastFeed(const std::string& appcastFeed) = 0;
             virtual void checkForUpdates() = 0;
-            virtual bool recommendRestartToUpdate() = 0;
+            virtual State getCurrentState() = 0;
 
         public:
             /**
@@ -25,6 +35,6 @@ namespace Swift {
              * and the user needs to be notified so they can quit the app and start
              * the newer version.
              */
-            boost::signals2::signal<void()> onSuggestRestartToUserToUpdate;
+            boost::signals2::signal<void(State)> onUpdateStateChanged;
     };
 }

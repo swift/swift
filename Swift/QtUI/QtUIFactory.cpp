@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,7 +40,7 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabsBase(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(nullptr), loginWindow(nullptr), statusCache(statusCache), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabsBase(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(nullptr), loginWindow(nullptr), statusCache(statusCache), autoUpdater(autoUpdater), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
     chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
     historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
     this->tabs = dynamic_cast<QtChatTabs*>(tabsBase);
@@ -87,7 +87,7 @@ MainWindow* QtUIFactory::createMainWindow(UIEventStream* eventStream) {
 }
 
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
-    loginWindow = new QtLoginWindow(eventStream, settings, timerFactory_);
+    loginWindow = new QtLoginWindow(eventStream, settings, timerFactory_, autoUpdater);
     if (netbookSplitter) {
         netbookSplitter->insertAtFront(loginWindow);
     }
