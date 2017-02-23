@@ -152,7 +152,7 @@ void QtAboutWidget::updateUpdateInfo() {
     updateProgressBar_->hide();
     // Currently auto updating is only supported on macOS.
 #ifdef SWIFTEN_PLATFORM_MACOSX
-    if (settingsProvider_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)) {
+    if (autoUpdater_ && settingsProvider_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)) {
         if (!settingsProvider_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
             QString updateFeedDescription;
             auto addUpdateFeedDialogLink = false;
