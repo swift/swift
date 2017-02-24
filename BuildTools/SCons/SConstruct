@@ -299,6 +299,7 @@ if env["PLATFORM"] == "darwin" :
         env["HAVE_SPARKLE"] = 1
         env["SPARKLE_FLAGS"] = sparkle_flags
         env["SPARKLE_FRAMEWORK"] = Dir("../../3rdParty/Sparkle/Sparkle-1.14.0/Sparkle.framework")
+        env["SPARKLE_COPYING"] = File("../../3rdParty/Sparkle/Sparkle-1.14.0/LICENSE")
     conf.Finish()
 
     if env.get("sparkle_public_dsa_key", None) != None :

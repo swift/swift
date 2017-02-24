@@ -326,8 +326,14 @@ commonResources = {
     "": ["#/Swift/resources/sounds"]
 }
 
+
+## COPYING file generation
 myenv["TEXTFILESUFFIX"] = ""
-myenv.MyTextfile(target = "COPYING", source = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty"), myenv.File("../../COPYING.dependencies")], LINESEPARATOR = "\n\n========\n\n\n")
+
+copying_files = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty"), myenv.File("../../COPYING.dependencies")]
+if env["PLATFORM"] == "darwin" and env["HAVE_SPARKLE"] :
+    copying_files.append(env["SPARKLE_COPYING"])
+myenv.MyTextfile(target = "COPYING", source = copying_files, LINESEPARATOR = "\n\n========\n\n\n")
 
 ################################################################################
 # Translation
