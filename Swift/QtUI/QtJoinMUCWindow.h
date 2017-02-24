@@ -8,6 +8,7 @@
 
 #include <string>
 
+#include <QDialog>
 #include <QValidator>
 
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindow.h>
@@ -53,7 +54,8 @@ namespace Swift {
             }
     };
 
-    class QtJoinMUCWindow : public QWidget, public JoinMUCWindow {
+        class QtJoinMUCWindow : public QDialog, public JoinMUCWindow {
+
             Q_OBJECT
         public:
             QtJoinMUCWindow(UIEventStream* uiEventStream);
