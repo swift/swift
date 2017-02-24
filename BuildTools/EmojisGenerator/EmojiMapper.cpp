@@ -69,8 +69,6 @@ namespace Swift {
             return shortnameToUnicode(":bulb:");
         } else if (category == "symbols") {
             return shortnameToUnicode(":heavy_division_sign:");
-        } else if (category == "regional") {
-            return shortnameToUnicode(":regional_indicator_a:");
         } else if (category == "flags") {
             return shortnameToUnicode(":flag_white:");
         }

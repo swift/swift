@@ -25,7 +25,11 @@ var byteArrayToCStringLiteral = function (byteArray) {
 
 var mapping = '';
 // Generate C++ mapping for shortnameUnicode_
-mapping += 'const std::unordered_map<std::string, std::string> EmojiMapper::shortnameUnicode = std::unordered_map<std::string, std::string>{' + _(emojis).filter(function(data) {
+mapping += 'const std::unordered_map<std::string, std::string> EmojiMapper::shortnameUnicode = std::unordered_map<std::string, std::string>{';
+mapping += _(emojis).filter(function(data) {
+    // Filter out regional category.
+    return data.category != 'regional';
+}).filter(function(data) {
     // Only use emojis with 2 or less codepoints, as Qt's harfbuzz version
     // has issues rendering those as a single glyph.
     return data.unicode.split("-").length < 3;
@@ -58,6 +62,9 @@ mapping += '    const std::unordered_map<std::string, std::string> EmojiMapper::
 // Generate C++ mapping for categories
 var CategoryMapping = new Map();
 _(emojis).filter(function(data) {
+    // Filter out regional category.
+    return data.category != 'regional';
+}).filter(function(data) {
     // Only use emojis with 2 or less codepoints, as Qt's harfbuzz version
     // has issues rendering those as a single glyph.
     return data.unicode.split("-").length < 3;
