@@ -6,6 +6,7 @@
 
 #include <SwifTools/EmojiMapper.h>
 
+#include <algorithm>
 #include <string>
 #include <unordered_map>
 
@@ -27,9 +28,21 @@ namespace Swift {
 
 
     std::vector<std::string> EmojiMapper::getCategories() {
-        std::vector<std::string> categories;
+        std::vector<std::string> categories = {
+            "people",
+            "nature",
+            "food",
+            "activity",
+            "travel",
+            "objects",
+            "symbols",
+            "flags"
+        };
+
         for (const auto& keyValuePair : emojisInCategory) {
-            categories.push_back(keyValuePair.first);
+            if (std::find(std::begin(categories), std::end(categories), keyValuePair.first) == std::end(categories)) {
+                categories.push_back(keyValuePair.first);
+            }
         }
         return categories;
     }
