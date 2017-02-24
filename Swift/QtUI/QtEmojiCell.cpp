@@ -21,7 +21,9 @@ namespace Swift {
         font.setBold(true);
         setFont(font);
 
-        setFixedWidth(fontMetrics().width("\xF0\x9F\x98\x83")+5);
+        const auto boundingRect = fontMetrics().boundingRect("\xF0\x9F\x98\x83");
+        setFixedWidth(qMax(boundingRect.width(), boundingRect.height()));
+        setFixedHeight(qMax(boundingRect.width(), boundingRect.height()));
 
         setFlat(true);
         setToolTip(shortname);

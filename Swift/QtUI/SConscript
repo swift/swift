@@ -96,6 +96,7 @@ myenv.WriteVal("DefaultTheme.qrc", myenv.Value(generateQRCTheme(myenv.Dir("#/Swi
 
 sources = [
     "main.cpp",
+    "FlowLayout.cpp",
     "QtAboutWidget.cpp",
     "QtSpellCheckerWindow.cpp",
     "QtAvatarWidget.cpp",

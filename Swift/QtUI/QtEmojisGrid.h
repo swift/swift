@@ -6,14 +6,15 @@
 
 #pragma once
 
-#include <QGridLayout>
 #include <QString>
 #include <QVector>
 
 #include <SwifTools/EmojiMapper.h>
 
+#include <Swift/QtUI/FlowLayout.h>
+
 namespace Swift {
-    class QtEmojisGrid : public QGridLayout {
+    class QtEmojisGrid : public FlowLayout {
         Q_OBJECT
         public:
             explicit QtEmojisGrid();

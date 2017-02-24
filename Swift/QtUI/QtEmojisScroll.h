@@ -6,13 +6,13 @@
 
 #pragma once
 
-#include <QGridLayout>
+#include <QLayout>
 #include <QWidget>
 
 namespace Swift {
     class QtEmojisScroll : public QWidget {
         Q_OBJECT
     public:
-        QtEmojisScroll(QGridLayout* emojiLayout, QWidget *parent = 0);
+        QtEmojisScroll(QLayout* emojiLayout, QWidget *parent = 0);
     };
 }

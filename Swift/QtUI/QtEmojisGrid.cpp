@@ -18,11 +18,13 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-QtEmojisGrid::QtEmojisGrid() {
+    static const int emojiCellSpacing = 2;
 
-}
+    QtEmojisGrid::QtEmojisGrid() : FlowLayout(0, emojiCellSpacing, emojiCellSpacing) {
 
-QtEmojisGrid::QtEmojisGrid(QString categoryName) {
+    }
+
+    QtEmojisGrid::QtEmojisGrid(QString categoryName) : FlowLayout(0, emojiCellSpacing, emojiCellSpacing) {
         auto category = EmojiMapper::categoryNameToEmojis(Q2PSTRING(categoryName));
 
         QVector<QString> categoryEmojis;
@@ -37,29 +39,17 @@ QtEmojisGrid::QtEmojisGrid(QString categoryName) {
     void QtEmojisGrid::setEmojis(const QVector<QString>& emojis) {
         clearEmojis();
 
-        int iEmoji = 0;
         for (const auto& unicodeEmoji : emojis) {
             QString shortname = QString::fromStdString(EmojiMapper::unicodeToShortname(Q2PSTRING(unicodeEmoji)));
-            QtEmojiCell* emoji = new QtEmojiCell(shortname, unicodeEmoji);
-            this->addWidget(emoji, iEmoji/6, iEmoji%6);
+            auto emoji = new QtEmojiCell(shortname, unicodeEmoji);
             connect(emoji, SIGNAL(emojiClicked(QString)), this, SIGNAL(onEmojiSelected(QString)));
-            iEmoji++;
+            addItem(new QWidgetItem(emoji));
         }
-        for (int index = 0; index < columnCount(); index++) {
-            auto layoutItem = itemAtPosition(0, index);
-            if (layoutItem) {
-                auto cellWidget = layoutItem->widget();
-                if (cellWidget) {
-                    setColumnMinimumWidth(index, cellWidget->width());
-                }
-            }
-        }
-        setSpacing(5);
     }
 
     void QtEmojisGrid::clearEmojis() {
         QLayoutItem* child = nullptr;
-        while ((child = this->takeAt(0)) != 0) {
+        while ((child = this->takeAt(0)) != nullptr) {
             if (child->widget()) {
                 child->widget()->hide();
                 removeWidget(child->widget());
