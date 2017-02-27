@@ -116,6 +116,7 @@ void QtWebKitChatView::handleClearRequested() {
     if (button == QMessageBox::Yes) {
         logCleared();
         resetView();
+        resizeFont(fontSizeSteps_);
     }
 }
 
