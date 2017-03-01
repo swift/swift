@@ -133,7 +133,7 @@ HighlightConfiguration QtHighlightNotificationConfigDialog::getHighlightConfigur
             action.setSoundFilePath(boost::optional<std::string>());
         }
         else {
-            action.setSoundFilePath(boost::optional<std::string>(soundFilePath));
+            action.setSoundFilePath(boost::optional<std::string>(""));
         }
 
         action.setSystemNotificationEnabled(item->data(startingColumn + 3, QtCheckBoxStyledItemDelegate::DATA_ROLE).toBool());

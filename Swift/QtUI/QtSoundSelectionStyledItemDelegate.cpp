@@ -83,24 +83,14 @@ bool QtSoundSelectionStyledItemDelegate::editorEvent(QEvent* event, QAbstractIte
             selectedAction->setCheckable(true);
             selectedAction->setChecked(true);
         }
-        auto chooseSoundFile = popUpMenu->addAction(tr("Choose sound file…"));
 
         selectedAction = popUpMenu->exec(mouseEvent->globalPos(), selectedAction);
 
         if (selectedAction == defaultSound) {
             model->setData(index, "defaultSound", Qt::EditRole);
         }
-        else if (customSoundFile && (selectedAction == customSoundFile)) {
-            model->setData(index, customSoundFile->text(), Qt::EditRole);
-        }
         else if (selectedAction == noSound) {
             model->setData(index, "", Qt::EditRole);
-        }
-        else if (selectedAction == chooseSoundFile) {
-            auto newPath = QFileDialog::getOpenFileName(0, tr("Choose notification sound file"), "", tr("WAV Files (*.wav)"));
-            if (!newPath.isEmpty()) {
-                model->setData(index, newPath, Qt::EditRole);
-            }
         }
 
         delete popUpMenu;
