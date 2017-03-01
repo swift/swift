@@ -592,8 +592,8 @@ void MUCController::addMessageHandleIncomingMessage(const JID& from, const ChatW
 void MUCController::postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) {
     std::shared_ptr<Message> message = messageEvent->getStanza();
     if (joined_ && messageEvent->getStanza()->getFrom().getResource() != nick_ && !message->getPayload<Delay>()) {
-        if (messageTargetsMe(message) || isImpromptu_) {
-            highlighter_->handleSystemNotifications(chatMessage, messageEvent);
+        highlighter_->handleSystemNotifications(chatMessage, messageEvent);
+        if (!messageEvent->getNotifications().empty()) {
             eventController_->handleIncomingEvent(messageEvent);
         }
         if (!messageEvent->getConcluded()) {

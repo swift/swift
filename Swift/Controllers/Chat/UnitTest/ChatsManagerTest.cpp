@@ -46,6 +46,7 @@
 #include <Swift/Controllers/Chat/ChatsManager.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/UnitTest/MockChatListWindow.h>
+#include <Swift/Controllers/EventNotifier.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
@@ -63,7 +64,39 @@
 #include <Swift/Controllers/WhiteboardManager.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
+#include <SwifTools/Notifier/Notifier.h>
+
 using namespace Swift;
+
+class DummyNotifier : public Notifier {
+    public:
+        virtual void showMessage(
+            Type type,
+            const std::string& subject,
+            const std::string& description,
+            const boost::filesystem::path& picture,
+            boost::function<void()> callback) {
+            notifications.push_back({type, subject, description, picture, callback});
+        }
+
+        /** Remove any pending callbacks. */
+        virtual void purgeCallbacks() {
+
+        }
+
+    public:
+        struct Notification {
+            Type type;
+            std::string subject;
+            std::string description;
+            boost::filesystem::path picture;
+            boost::function<void()> callback;
+        };
+
+    public:
+        std::vector<Notification> notifications;
+};
+
 
 class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(ChatsManagerTest);
@@ -91,6 +124,8 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     // Highlighting tests
     CPPUNIT_TEST(testChatControllerHighlightingNotificationTesting);
     CPPUNIT_TEST(testChatControllerHighlightingNotificationDeduplicateSounds);
+    CPPUNIT_TEST(testChatControllerHighlightingNotificationKeyword);
+
     CPPUNIT_TEST(testChatControllerMeMessageHandling);
     CPPUNIT_TEST(testRestartingMUCComponentCrash);
     CPPUNIT_TEST(testChatControllerMeMessageHandlingInMUC);
@@ -104,6 +139,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 public:
     void setUp() {
         mocks_ = new MockRepository();
+        notifier_ = std::unique_ptr<DummyNotifier>(new DummyNotifier());
         jid_ = JID("test@test.com/resource");
         stanzaChannel_ = new DummyStanzaChannel();
         iqRouter_ = new IQRouter(stanzaChannel_);
@@ -128,6 +164,7 @@ public:
         ftManager_ = new DummyFileTransferManager();
         ftOverview_ = new FileTransferOverview(ftManager_);
         avatarManager_ = new NullAvatarManager();
+        eventNotifier_ = new EventNotifier(eventController_, notifier_.get(), avatarManager_, nickResolver_);
         wbSessionManager_ = new WhiteboardSessionManager(iqRouter_, stanzaChannel_, presenceOracle_, entityCapsProvider_);
         wbManager_ = new WhiteboardManager(whiteboardWindowFactory_, uiEventStream_, nickResolver_, wbSessionManager_);
         highlightManager_ = new HighlightManager(settings_);
@@ -149,6 +186,7 @@ public:
     void tearDown() {
         delete highlightManager_;
         delete profileSettings_;
+        delete eventNotifier_;
         delete avatarManager_;
         delete manager_;
         delete clientBlockListManager_;
@@ -812,6 +850,7 @@ public:
         CPPUNIT_ASSERT_EQUAL(2, handledHighlightActions_);
         CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
         CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
+        CPPUNIT_ASSERT_EQUAL(size_t(1), notifier_->notifications.size());
     }
 
     void testChatControllerHighlightingNotificationDeduplicateSounds() {
@@ -841,6 +880,29 @@ public:
         CPPUNIT_ASSERT_EQUAL(1, handledHighlightActions_);
         CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleA.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
         CPPUNIT_ASSERT(soundsPlayed_.find(keywordRuleB.action.getSoundFilePath().get_value_or("")) != soundsPlayed_.end());
+        CPPUNIT_ASSERT_EQUAL(size_t(1), notifier_->notifications.size());
+    }
+
+    void testChatControllerHighlightingNotificationKeyword() {
+        auto keywordRuleA = HighlightConfiguration::KeywordHightlight();
+        keywordRuleA.keyword = "Swift";
+        keywordRuleA.action.setFrontColor(boost::optional<std::string>("yellow"));
+        keywordRuleA.action.setSoundFilePath(boost::optional<std::string>(""));
+        keywordRuleA.action.setSystemNotificationEnabled(true);
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordRuleA);
+
+        JID messageJID = JID("testling@test.com");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        std::shared_ptr<Message> message(new Message());
+        message->setFrom(messageJID);
+        std::string body("Let's see if the Swift highlight kicks off a system notification.");
+        message->setBody(body);
+        manager_->handleIncomingMessage(message);
+
+        CPPUNIT_ASSERT_EQUAL(size_t(2), notifier_->notifications.size());
     }
 
     void testChatControllerMeMessageHandling() {
@@ -917,6 +979,12 @@ public:
         keywordHighlight.action.setBackColor(boost::optional<std::string>("green"));
         highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordHighlight);
 
+        HighlightConfiguration::KeywordHightlight keywordHighlightNotification;
+        keywordHighlightNotification.keyword = "Swift";
+        keywordHighlightNotification.action.setBackColor(boost::optional<std::string>("green"));
+        keywordHighlightNotification.action.setSystemNotificationEnabled(true);
+        highlightManager_->getConfiguration()->keywordHighlights.push_back(keywordHighlightNotification);
+
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
 
@@ -970,6 +1038,18 @@ public:
             manager_->handleIncomingMessage(mucMirrored);
         }
         CPPUNIT_ASSERT_EQUAL(std::string("says hello with a test message with foo and foo"), window->bodyFromMessage(window->lastAddedAction_));
+
+        window->resetLastMessages();
+        {
+            Message::ref keywordMessage = std::make_shared<Message>();
+            keywordMessage->setFrom(mucJID.withResource("someOtherDifferentNickname"));
+            keywordMessage->setTo(jid_);
+            keywordMessage->setType(Message::Groupchat);
+            keywordMessage->setBody("Let's mention Swift and see what happens.");
+            manager_->handleIncomingMessage(keywordMessage);
+        }
+        CPPUNIT_ASSERT_EQUAL(std::string("Let's mention Swift and see what happens."), window->bodyFromMessage(window->lastAddedMessage_));
+        CPPUNIT_ASSERT_EQUAL(size_t(1), notifier_->notifications.size());
     }
 
     void testPresenceChangeDoesNotReplaceMUCInvite() {
@@ -1136,6 +1216,7 @@ private:
 
 private:
     JID jid_;
+    std::unique_ptr<DummyNotifier> notifier_;
     ChatsManager* manager_;
     DummyStanzaChannel* stanzaChannel_;
     IQRouter* iqRouter_;
@@ -1145,6 +1226,7 @@ private:
     NickResolver* nickResolver_;
     PresenceOracle* presenceOracle_;
     AvatarManager* avatarManager_;
+    EventNotifier* eventNotifier_;
     std::shared_ptr<DiscoInfo> serverDiscoInfo_;
     XMPPRosterImpl* xmppRoster_;
     PresenceSender* presenceSender_;

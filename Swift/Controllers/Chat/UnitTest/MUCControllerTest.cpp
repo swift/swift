@@ -92,6 +92,7 @@ public:
         entityCapsProvider_ = new DummyEntityCapsProvider();
         settings_ = new DummySettingsProvider();
         highlightManager_ = new HighlightManager(settings_);
+        highlightManager_->resetToDefaultConfiguration();
         muc_ = std::make_shared<MockMUC>(mucJID_);
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(muc_->getJID(), uiEventStream_).Return(window_);
         chatMessageParser_ = std::make_shared<ChatMessageParser>(std::map<std::string, std::string>(), highlightManager_->getConfiguration(), ChatMessageParser::Mode::GroupChat);
@@ -188,21 +189,24 @@ public:
         message->setBody("Hi " + boost::to_lower_copy(nick_) + ".");
         message->setType(Message::Groupchat);
         controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
-        CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
+
+        // The last message is ignored because self-mention highlights are matched case
+        // sensitive against the nickname.
+        CPPUNIT_ASSERT_EQUAL((size_t)3, eventController_->getEvents().size());
 
         message = Message::ref(new Message());
         message->setFrom(JID(muc_->getJID().toString() + "/other3"));
         message->setBody("Hi bert.");
         message->setType(Message::Groupchat);
         controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
-        CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
+        CPPUNIT_ASSERT_EQUAL((size_t)3, eventController_->getEvents().size());
 
         message = Message::ref(new Message());
         message->setFrom(JID(muc_->getJID().toString() + "/other2"));
         message->setBody("Hi " + boost::to_lower_copy(nick_) + "ie.");
         message->setType(Message::Groupchat);
         controller_->handleIncomingMessage(MessageEvent::ref(new MessageEvent(message)));
-        CPPUNIT_ASSERT_EQUAL((size_t)4, eventController_->getEvents().size());
+        CPPUNIT_ASSERT_EQUAL((size_t)3, eventController_->getEvents().size());
     }
 
     void testNotAddressedToSelf() {
