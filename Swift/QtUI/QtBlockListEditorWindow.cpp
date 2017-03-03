@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,6 +14,7 @@
 
 #include <boost/bind.hpp>
 
+#include <QClipboard>
 #include <QLineEdit>
 #include <QMovie>
 #include <QShortcut>
@@ -106,6 +107,25 @@ QtBlockListEditorWindow::QtBlockListEditorWindow() : QWidget(), ui(new Ui::QtBlo
     QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(freshBlockListTemplate) << "x");
     item->setFlags(item->flags() | Qt::ItemIsEditable);
     ui->blockListTreeWidget->addTopLevelItem(item);
+
+    // Allow pasting a newline seperated list of JIDs into the dialog.
+    auto pasteShortcut = new QShortcut(QKeySequence::Paste, this);
+    connect(pasteShortcut, &QShortcut::activated, [&](){
+        auto currentBlocklist = getCurrentBlockList();
+
+        auto clipboardText = QGuiApplication::clipboard()->text();
+        auto stringList = clipboardText.split("\n");
+        for (const auto& string : stringList) {
+            auto jid = JID(Q2PSTRING(string.trimmed()));
+            if (jid.isValid()) {
+                if (std::find(currentBlocklist.begin(), currentBlocklist.end(), jid) == currentBlocklist.end()) {
+                    currentBlocklist.push_back(jid);
+                }
+            }
+        }
+        setCurrentBlockList(currentBlocklist);
+    });
+
 }
 
 QtBlockListEditorWindow::~QtBlockListEditorWindow() {
@@ -157,8 +177,14 @@ void QtBlockListEditorWindow::applyChanges() {
 void QtBlockListEditorWindow::setCurrentBlockList(const std::vector<JID> &blockedJIDs) {
     ui->blockListTreeWidget->clear();
 
+    QStringList blockedStrings;
     for (const auto& jid : blockedJIDs) {
-        QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(P2QSTRING(jid.toString())) << "");
+        blockedStrings << P2QSTRING(jid.toString());
+    }
+    blockedStrings.sort();
+
+    for (const auto& jid : blockedStrings) {
+        QTreeWidgetItem* item = new QTreeWidgetItem(QStringList(jid) << "");
         item->setFlags(item->flags() | Qt::ItemIsEditable);
         ui->blockListTreeWidget->addTopLevelItem(item);
     }
