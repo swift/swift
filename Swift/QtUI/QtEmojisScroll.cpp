@@ -24,6 +24,9 @@ namespace Swift {
         this->setLayout(new QVBoxLayout);
         this->layout()->addWidget(scrollArea);
         this->layout()->setContentsMargins(0,0,0,0);
-        setMinimumHeight(emojiLayout->itemAt(0)->minimumSize().height() * 8);
+
+        if (emojiLayout->itemAt(0)) {
+            setMinimumHeight(emojiLayout->itemAt(0)->minimumSize().height() * 8);
+        }
     }
 }
