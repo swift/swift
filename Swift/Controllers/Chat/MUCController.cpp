@@ -386,7 +386,7 @@ void MUCController::handleJoinComplete(const std::string& nick) {
         joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
     }
     setNick(nick);
-    chatWindow_->replaceSystemMessage(chatMessageParser_->parseMessageBody(joinMessage), lastJoinMessageUID_, ChatWindow::UpdateTimestamp);
+    chatWindow_->replaceSystemMessage(chatMessageParser_->parseMessageBody(joinMessage, "", true), lastJoinMessageUID_, ChatWindow::UpdateTimestamp);
     lastJoinMessageUID_ = "";
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
