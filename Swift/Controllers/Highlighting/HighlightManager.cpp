@@ -50,8 +50,6 @@ HighlightConfiguration HighlightManager::getDefaultConfig() {
     HighlightConfiguration defaultConfiguration;
     defaultConfiguration.playSoundOnIncomingDirectMessages = true;
     defaultConfiguration.showNotificationOnIncomingDirectMessages = true;
-    defaultConfiguration.ownMentionAction.setFrontColor(std::string("black"));
-    defaultConfiguration.ownMentionAction.setBackColor(std::string("yellow"));
     defaultConfiguration.ownMentionAction.setSoundFilePath(std::string("/sounds/message-received.wav"));
     defaultConfiguration.ownMentionAction.setSystemNotificationEnabled(true);
     return defaultConfiguration;

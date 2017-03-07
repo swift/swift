@@ -483,15 +483,15 @@ std::string QtWebKitChatView::addMessage(
 }
 
 QString QtWebKitChatView::getHighlightSpanStart(const std::string& text, const std::string& background) {
-    QString ecsapeColor = QtUtilities::htmlEscape(P2QSTRING(text));
-    QString escapeBackground = QtUtilities::htmlEscape(P2QSTRING(background));
-    if (ecsapeColor.isEmpty()) {
-        ecsapeColor = "black";
+    QString ecsapeColor;
+    QString escapeBackground;
+    if (!text.empty()) {
+        ecsapeColor = QString("color: %1").arg(QtUtilities::htmlEscape(P2QSTRING(text)));
     }
-    if (escapeBackground.isEmpty()) {
-        escapeBackground = "yellow";
+    if (!background.empty()) {
+        escapeBackground = QString("background: %1").arg(QtUtilities::htmlEscape(P2QSTRING(background)));
     }
-    return QString("<span style=\"color: %1; background: %2\">").arg(ecsapeColor).arg(escapeBackground);
+    return QString("<span style=\"%1; %2;\">").arg(ecsapeColor).arg(escapeBackground);
 }
 
 QString QtWebKitChatView::getHighlightSpanStart(const HighlightAction& highlight) {
