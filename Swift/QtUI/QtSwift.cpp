@@ -229,7 +229,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
     storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
     certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory(), networkFactories_.getCryptoProvider());
-    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, ":/themes/Default/");
+    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, ":/themes/Default/", emoticons);
     soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
     // Ugly, because the dock depends on the tray, but the temporary

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,11 +20,16 @@ namespace Swift {
         public:
             QtEmojiCell(const QtEmojiCell& b);
             QtEmojiCell(QString shortname, QString text, QWidget* parent = nullptr);
+            QtEmojiCell(QIcon icon, QString text, QWidget* parent = nullptr);
             ~QtEmojiCell();
+
         signals:
             void emojiClicked(QString emojiAsText);
 
         private slots:
             void handleEmojiClicked();
+
+        private:
+            QString text_;
     };
 }

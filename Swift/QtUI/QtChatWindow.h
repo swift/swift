@@ -7,6 +7,7 @@
 #pragma once
 
 #include <map>
+#include <string>
 
 #include <QMap>
 #include <QMenu>
@@ -81,7 +82,7 @@ namespace Swift {
         Q_OBJECT
 
         public:
-            QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QtSettingsProvider* qtOnlySettings);
+            QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QtSettingsProvider* qtOnlySettings, const std::map<std::string, std::string>& emoticonsMap);
             virtual ~QtChatWindow();
             std::string addMessage(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
             std::string addAction(const ChatMessage& message, const std::string &senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time);
@@ -236,5 +237,6 @@ namespace Swift {
             RoomBookmarkState roomBookmarkState_;
             std::unique_ptr<QMenu> emojisMenu_;
             QPointer<QtEmojisSelector> emojisGrid_;
+            std::map<std::string, std::string> emoticonsMap_;
     };
 }

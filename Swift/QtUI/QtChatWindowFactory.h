@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+
 #include <QMenu>
 #include <QObject>
 #include <QSplitter>
@@ -29,7 +32,7 @@ namespace Swift {
     class QtChatWindowFactory : public QObject, public ChatWindowFactory {
         Q_OBJECT
         public:
-            QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath);
+            QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath, const std::map<std::string, std::string>& emoticonsMap);
             ~QtChatWindowFactory();
             ChatWindow* createChatWindow(const JID &contact, UIEventStream* eventStream);
         signals:
@@ -43,5 +46,6 @@ namespace Swift {
             QtSettingsProvider* qtOnlySettings_;
             QtChatTabsBase* tabs_;
             QtChatTheme* theme_;
+            std::map<std::string, std::string> emoticonsMap_;
     };
 }

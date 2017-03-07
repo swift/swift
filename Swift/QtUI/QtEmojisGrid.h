@@ -22,6 +22,7 @@ namespace Swift {
 
         protected:
             void setEmojis(const QVector<QString>& emojis);
+            void addEmoticon(QIcon icon, QString text);
 
         private:
             void clearEmojis();

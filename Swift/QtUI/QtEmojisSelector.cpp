@@ -9,17 +9,22 @@
 #include <QScrollArea>
 #include <QSettings>
 #include <QString>
+#include <QTabBar>
 #include <QWidget>
+
+#include <Swiften/Base/Platform.h>
 
 #include <SwifTools/EmojiMapper.h>
 
 #include <Swift/QtUI/QtEmojisGrid.h>
 #include <Swift/QtUI/QtEmojisScroll.h>
+#include <Swift/QtUI/QtEmoticonsGrid.h>
 #include <Swift/QtUI/QtRecentEmojisGrid.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-    QtEmojisSelector::QtEmojisSelector(QSettings* settings, QWidget* parent) : QTabWidget(parent), settings_(settings) {
+    QtEmojisSelector::QtEmojisSelector(QSettings* settings, const std::map<std::string, std::string>& emoticonsMap, QWidget* parent) : QTabWidget(parent), settings_(settings), emoticonsMap_(emoticonsMap) {
+#ifdef SWIFTEN_PLATFORM_MACOSX
         recentEmojisGrid_ = addRecentTab();
         connect(recentEmojisGrid_, SIGNAL(onEmojiSelected(QString)), this, SLOT(emojiClickedSlot(QString)));
 
@@ -31,10 +36,15 @@ namespace Swift {
         }
 
         loadSettings();
+#else
+        setupEmoticonsTab();
+#endif
     }
 
     QtEmojisSelector::~QtEmojisSelector() {
+#ifdef SWIFTEN_PLATFORM_MACOSX
         writeSettings();
+#endif
     }
 
     QtRecentEmojisGrid* QtEmojisSelector::addRecentTab() {
@@ -68,8 +78,18 @@ namespace Swift {
         settings_->setValue("currentEmojiTab", currentIndex());
     }
 
+    void QtEmojisSelector::setupEmoticonsTab() {
+        QtEmojisGrid* grid = new QtEmoticonsGrid(emoticonsMap_);
+        QtEmojisScroll* scroll = new QtEmojisScroll(grid);
+        QTabWidget::addTab(scroll, QIcon(":/emoticons/smile.png"),"");
+        connect(grid, SIGNAL(onEmojiSelected(QString)), this, SLOT(emojiClickedSlot(QString)));
+        tabBar()->hide();
+    }
+
     void QtEmojisSelector::emojiClickedSlot(QString emoji) {
-        recentEmojisGrid_->handleEmojiClicked(emoji);
+        if (recentEmojisGrid_) {
+            recentEmojisGrid_->handleEmojiClicked(emoji);
+        }
         emit emojiClicked(emoji);
     }
 }

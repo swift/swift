@@ -6,7 +6,9 @@
 
 #include <Swift/QtUI/QtChatWindow.h>
 
+#include <map>
 #include <memory>
+#include <string>
 
 #include <boost/cstdint.hpp>
 #include <boost/lexical_cast.hpp>
@@ -38,6 +40,7 @@
 #include <QUrl>
 
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/Platform.h>
 
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/Roster.h>
@@ -64,7 +67,7 @@
 
 namespace Swift {
 
-QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QtSettingsProvider* qtOnlySettings) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), settings_(settings), qtOnlySettings_(qtOnlySettings), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false), roomBookmarkState_(RoomNotBookmarked) {
+QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventStream* eventStream, SettingsProvider* settings, QtSettingsProvider* qtOnlySettings, const std::map<std::string, std::string>& emoticonsMap) : QtTabbable(), id_(Q2PSTRING(contact)), contact_(contact), nextAlertId_(0), eventStream_(eventStream), settings_(settings), qtOnlySettings_(qtOnlySettings), blockingState_(BlockingUnsupported), isMUC_(false), supportsImpromptuChat_(false), roomBookmarkState_(RoomNotBookmarked), emoticonsMap_(emoticonsMap) {
     unreadCount_ = 0;
     isOnline_ = true;
     completer_ = nullptr;
@@ -147,7 +150,12 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
     connect(input_, SIGNAL(receivedFocus()), this, SLOT(handleTextInputReceivedFocus()));
     connect(input_, SIGNAL(lostFocus()), this, SLOT(handleTextInputLostFocus()));
     QPushButton* emojisButton_ = new QPushButton(this);
+
+#ifdef SWIFTEN_PLATFORM_MACOSX
     emojisButton_->setText("\xF0\x9F\x98\x83");
+#else
+    emojisButton_->setIcon(QIcon(":/emoticons/smile.png"));
+#endif
     connect(emojisButton_, SIGNAL(clicked()), this, SLOT(handleEmojisButtonClicked()));
 
     // using an extra layout to work around Qt margin glitches on OS X
@@ -662,7 +670,7 @@ void QtChatWindow::setSubject(const std::string& subject) {
 
 void QtChatWindow::handleEmojisButtonClicked() {
     // Create QtEmojisSelector and QMenu
-    emojisGrid_ = new QtEmojisSelector(qtOnlySettings_->getQSettings());
+    emojisGrid_ = new QtEmojisSelector(qtOnlySettings_->getQSettings(), emoticonsMap_);
     auto emojisLayout = new QVBoxLayout();
     emojisLayout->setContentsMargins(style()->pixelMetric(QStyle::PM_MenuHMargin),style()->pixelMetric(QStyle::PM_MenuVMargin),
                                      style()->pixelMetric(QStyle::PM_MenuHMargin),style()->pixelMetric(QStyle::PM_MenuVMargin));

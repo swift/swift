@@ -10,6 +10,8 @@
 #include <QScrollArea>
 #include <QStyle>
 
+#include <Swiften/Base/Platform.h>
+
 #include <Swift/QtUI/QtEmojisGrid.h>
 #include <Swift/QtUI/QtRecentEmojisGrid.h>
 
@@ -26,7 +28,11 @@ namespace Swift {
         this->layout()->setContentsMargins(0,0,0,0);
 
         if (emojiLayout->itemAt(0)) {
+#ifdef SWIFTEN_PLATFORM_MACOSX
             setMinimumHeight(emojiLayout->itemAt(0)->minimumSize().height() * 8);
+#else
+            setMinimumHeight(emojiLayout->itemAt(0)->minimumSize().height() * 2);
+#endif
         }
     }
 }

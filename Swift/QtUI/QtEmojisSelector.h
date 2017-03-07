@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <map>
+#include <string>
+
 #include <QSettings>
 #include <QTabWidget>
 
@@ -17,7 +20,7 @@ namespace Swift {
 class QtEmojisSelector : public QTabWidget {
     Q_OBJECT
     public:
-        QtEmojisSelector(QSettings* settings, QWidget * parent = 0);
+        QtEmojisSelector(QSettings* settings, const std::map<std::string, std::string>& emoticonsMap, QWidget * parent = 0);
         ~QtEmojisSelector();
 
     public slots:
@@ -32,9 +35,12 @@ class QtEmojisSelector : public QTabWidget {
         void loadSettings();
         void writeSettings();
 
+        void setupEmoticonsTab();
+
     private:
         QSettings* settings_ = nullptr;
         QtRecentEmojisGrid* recentEmojisGrid_ = nullptr;
+        std::map<std::string, std::string> emoticonsMap_;
 };
 
 }

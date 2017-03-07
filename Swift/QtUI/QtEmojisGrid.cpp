@@ -47,6 +47,12 @@ namespace Swift {
         }
     }
 
+    void QtEmojisGrid::addEmoticon(QIcon icon, QString text) {
+        auto emoji = new QtEmojiCell(icon, text);
+        connect(emoji, SIGNAL(emojiClicked(QString)), this, SIGNAL(onEmojiSelected(QString)));
+        addItem(new QWidgetItem(emoji));
+    }
+
     void QtEmojisGrid::clearEmojis() {
         QLayoutItem* child = nullptr;
         while ((child = this->takeAt(0)) != nullptr) {

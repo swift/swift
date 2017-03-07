@@ -30,14 +30,27 @@ namespace Swift {
         connect(this, SIGNAL(clicked()), this, SLOT(handleEmojiClicked()));
     }
 
+    QtEmojiCell::QtEmojiCell(QIcon icon, QString text, QWidget* parent) : QPushButton(parent), text_(text) {
+        setIcon(icon);
+        setFlat(true);
+        connect(this, SIGNAL(clicked()), this, SLOT(handleEmojiClicked()));
+        setFixedSize(icon.availableSizes()[0] * 1.5);
+    }
+
     QtEmojiCell::QtEmojiCell(const QtEmojiCell& b) : QtEmojiCell(b.toolTip(), b.text()) {
+
     }
 
     QtEmojiCell::~QtEmojiCell() {
     }
 
     void QtEmojiCell::handleEmojiClicked () {
-        emit emojiClicked(text());
+        if (text_.isEmpty()) {
+            emit emojiClicked(text());
+        }
+        else {
+            emit emojiClicked(text_);
+        }
     }
 
 }

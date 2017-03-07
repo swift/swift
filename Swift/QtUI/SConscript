@@ -142,6 +142,7 @@ sources = [
     "QtEmojisScroll.cpp",
     "QtEmojisSelector.cpp",
     "QtRecentEmojisGrid.cpp",
+    "QtEmoticonsGrid.cpp",
     "QtContactEditWindow.cpp",
     "QtContactEditWidget.cpp",
     "QtSingleWindow.cpp",
