@@ -6,6 +6,7 @@
 
 #include <Swift/Controllers/Roster/Roster.h>
 
+#include <algorithm>
 #include <deque>
 #include <memory>
 #include <set>
@@ -222,12 +223,7 @@ void Roster::addFilter(RosterFilter* filter) {
 }
 
 void Roster::removeFilter(RosterFilter* filter) {
-    for (unsigned int i = 0; i < filters_.size(); i++) {
-        if (filters_[i] == filter) {
-            filters_.erase(filters_.begin() + i);
-            break;
-        }
-    }
+    filters_.erase(std::remove(filters_.begin(), filters_.end(), filter), filters_.end());
     filterAll();
     onFilterRemoved(filter);
 }
