@@ -240,7 +240,6 @@ JID QtTreeWidget::jidFromIndex(const QModelIndex& index) const {
     JID target;
     if (messageTarget_ == MessageDisplayJID) {
         target = JID(Q2PSTRING(index.data(DisplayJIDRole).toString()));
-        target = target.toBare();
     }
     if (!target.isValid()) {
         target = JID(Q2PSTRING(index.data(JIDRole).toString()));

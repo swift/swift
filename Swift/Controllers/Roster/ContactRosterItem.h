@@ -43,6 +43,14 @@ class ContactRosterItem : public RosterItem {
         };
 
     public:
+        /**
+        * @brief ContactRosterItem contains the information of a contact that is part of a XMPP Roster.
+        * @param jid The JabberID of the contact in the Roster entry.
+        * @param displayJID An alternate JID that is used instead of the JID this item represents. If not available, 
+        * an empty node should be passed. This parameter will be converted to a bare JID.
+        * @param name The name or nickname of the contact
+        * @param parent The roster group that the contact is a member of. The same JID may be in several roster groups, in which case they will have individual ContactRosterItems with the same JID.
+        */
         ContactRosterItem(const JID& jid, const JID& displayJID, const std::string& name, GroupRosterItem* parent);
         virtual ~ContactRosterItem();
 
