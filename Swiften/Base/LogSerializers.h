@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,6 +16,7 @@
 namespace Swift {
 
 class Presence;
+class BOSHError;
 
 template <typename T>
 std::ostream& operator<<(std::ostream& stream, const std::shared_ptr<T>& ptr) {
@@ -45,6 +46,8 @@ std::ostream& operator<<(std::ostream& stream, const std::vector<T>& vec) {
 }
 
 std::ostream& operator<<(std::ostream& stream, const Presence& presence);
+
+std::ostream& operator<<(std::ostream& stream, const BOSHError& boshError);
 
 };
 

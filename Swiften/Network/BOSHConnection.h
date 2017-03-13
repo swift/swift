@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -50,7 +50,7 @@ namespace Swift {
                 NoError};
 
             BOSHError(Type type) : SessionStream::SessionStreamError(SessionStream::SessionStreamError::ConnectionReadError), type(type) {}
-            Type getType() {return type;}
+            Type getType() const {return type;}
             typedef std::shared_ptr<BOSHError> ref;
 
         private:

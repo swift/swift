@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,7 @@
 #include <Swiften/Base/LogSerializers.h>
 
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/Network/BOSHConnection.h>
 
 namespace Swift {
 
@@ -62,6 +63,57 @@ std::ostream& operator<<(std::ostream& stream, const Presence& presence) {
     }
 
     stream << "Presence(" << "from: " << presence.getFrom() << ", to: " << presence.getTo() << ", type: " << typeString << ", status: " << showTypeString << ", priority: " << presence.getPriority() << ", '" << presence.getStatus() << "'" <<  " )";
+    return stream;
+}
+
+std::ostream& operator<<(std::ostream& stream, const BOSHError& boshError) {
+    std::string errorString;
+    switch (boshError.getType()) {
+        case BOSHError::BadRequest:
+            errorString = "BadRequest";
+            break;
+        case BOSHError::HostGone:
+            errorString = "HostGone";
+            break;
+        case BOSHError::HostUnknown:
+            errorString = "HostUnknown";
+            break;
+        case BOSHError::ImproperAddressing:
+            errorString = "ImproperAddressing";
+            break;
+        case BOSHError::InternalServerError:
+            errorString = "InternalServerError";
+            break;
+        case BOSHError::ItemNotFound:
+            errorString = "ItemNotFound";
+            break;
+        case BOSHError::OtherRequest:
+            errorString = "OtherRequest";
+            break;
+        case BOSHError::PolicyViolation:
+            errorString = "PolicyViolation";
+            break;
+        case BOSHError::RemoteConnectionFailed:
+            errorString = "RemoteConnectionFailed";
+            break;
+        case BOSHError::RemoteStreamError:
+            errorString = "RemoteStreamError";
+            break;
+        case BOSHError::SeeOtherURI:
+            errorString = "SeeOtherURI";
+            break;
+        case BOSHError::SystemShutdown:
+            errorString = "SystemShutdown";
+            break;
+        case BOSHError::UndefinedCondition:
+            errorString = "UndefinedCondition";
+            break;
+        case BOSHError::NoError:
+            errorString = "NoError";
+            break;
+    }
+
+    stream << "BOSHError( " << errorString << " )";
     return stream;
 }
 
