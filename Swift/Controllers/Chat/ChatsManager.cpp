@@ -67,7 +67,7 @@
 #include <Swift/Controllers/WhiteboardManager.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
-BOOST_CLASS_VERSION(Swift::ChatListWindow::Chat, 1)
+BOOST_CLASS_VERSION(Swift::ChatListWindow::Chat, 2)
 
 namespace boost {
 namespace serialization {
@@ -95,6 +95,9 @@ namespace serialization {
         ar & chat.impromptuJIDs;
         if (version > 0) {
             ar & chat.password;
+        }
+        if (version > 1) {
+            ar & chat.inviteesNames;
         }
     }
 }
@@ -402,6 +405,12 @@ ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const 
                 ChatListWindow::Chat chat = ChatListWindow::Chat(jid, jid.toString(), activity, unreadCount, type, boost::filesystem::path(), true, privateMessage, nick, password);
                 std::map<std::string, JID> participants = controller->getParticipantJIDs();
                 chat.impromptuJIDs = participants;
+
+                std::map<JID, std::string> participantsNames;
+                for (auto& i : invitees_[jid]) {
+                    participantsNames.emplace(i, roster_->getNameForJID(i));
+                }
+                chat.inviteesNames = participantsNames;
                 return chat;
             }
         }
@@ -488,7 +497,8 @@ void ChatsManager::cleanupPrivateMessageRecents() {
 void ChatsManager::appendRecent(const ChatListWindow::Chat& chat) {
     boost::optional<ChatListWindow::Chat> oldChat = removeExistingChat(chat);
     ChatListWindow::Chat mergedChat = chat;
-    if (oldChat && !oldChat->impromptuJIDs.empty()) {
+    if (oldChat) {
+        mergedChat.inviteesNames.insert(oldChat->inviteesNames.begin(), oldChat->inviteesNames.end());
         mergedChat.impromptuJIDs.insert(oldChat->impromptuJIDs.begin(), oldChat->impromptuJIDs.end());
     }
     recentChats_.push_front(mergedChat);
@@ -497,7 +507,8 @@ void ChatsManager::appendRecent(const ChatListWindow::Chat& chat) {
 void ChatsManager::prependRecent(const ChatListWindow::Chat& chat) {
     boost::optional<ChatListWindow::Chat> oldChat = removeExistingChat(chat);
     ChatListWindow::Chat mergedChat = chat;
-    if (oldChat && !oldChat->impromptuJIDs.empty()) {
+    if (oldChat) {
+        mergedChat.inviteesNames.insert(oldChat->inviteesNames.begin(), oldChat->inviteesNames.end());
         mergedChat.impromptuJIDs.insert(oldChat->impromptuJIDs.begin(), oldChat->impromptuJIDs.end());
     }
     recentChats_.push_back(mergedChat);
@@ -590,6 +601,10 @@ void ChatsManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
         // The room JID is random for new impromptu rooms, or a predefined JID for impromptu rooms resumed from the 'Recent chats' list.
         JID roomJID = createImpromptuMUCEvent->getRoomJID().toString().empty() ? JID(idGenerator_.generateID(), localMUCServiceJID_) : createImpromptuMUCEvent->getRoomJID();
 
+        std::vector<JID> missingJIDsToInvite = createImpromptuMUCEvent->getJIDs();
+        for (const JID& jid : missingJIDsToInvite) {
+            invitees_[roomJID].insert(jid);
+        }
         // join muc
         MUC::ref muc = handleJoinMUCRequest(roomJID, boost::optional<std::string>(), nickResolver_->jidToNick(jid_), false, true, true);
         mucControllers_[roomJID]->onImpromptuConfigCompleted.connect(boost::bind(&ChatsManager::finalizeImpromptuJoin, this, muc, createImpromptuMUCEvent->getJIDs(), createImpromptuMUCEvent->getReason(), boost::optional<JID>()));

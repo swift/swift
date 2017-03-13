@@ -9,6 +9,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <set>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -181,5 +182,7 @@ namespace Swift {
             AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
             IDGenerator idGenerator_;
             VCardManager* vcardManager_;
+
+            std::map<JID, std::set<JID>> invitees_;
     };
 }

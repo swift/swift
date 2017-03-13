@@ -11,9 +11,12 @@
 #include <memory>
 #include <set>
 
+
+#include <boost/algorithm/string/join.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/signals2.hpp>
 
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/Elements/StatusShow.h>
 #include <Swiften/MUC/MUCBookmark.h>
 
@@ -31,6 +34,9 @@ namespace Swift {
                             return jid.toBare() == other.jid.toBare()
                                     && isMUC == other.isMUC;
                         }
+                        if (chatName == other.chatName) {
+                            return true;
+                        }
                         else { /* compare the chat occupant lists */
                             for (const auto& jid : impromptuJIDs) {
                                 bool found = false;
@@ -44,7 +50,7 @@ namespace Swift {
                                     return false;
                                 }
                             }
-                            return true;
+                            return key_compare(inviteesNames, other.inviteesNames);
                         }
                     }
                     void setUnreadCount(int unread) {
@@ -57,15 +63,28 @@ namespace Swift {
                         avatarPath = path;
                     }
                     std::string getImpromptuTitle() const {
-                        std::string title;
-                        for (auto& pair : impromptuJIDs) {
-                            if (title.empty()) {
-                                title += pair.first;
-                            } else {
-                                title += ", " + pair.first;
+                        std::set<std::string> participants;
+                        std::map<JID, std::string> participantsMap;
+
+                        for (auto& pair : inviteesNames) {
+                            if (!pair.second.empty()) {
+                                participantsMap[pair.first] = pair.second;
+                            }
+                            else {
+                                participantsMap[pair.first] = pair.first.toString();
                             }
                         }
-                        return title;
+                        for (auto& pair : impromptuJIDs) {
+                            participantsMap[pair.second] = pair.first;
+                        }
+                        for (auto& participant : participantsMap) {
+                            participants.insert(participant.second);
+                        }
+                        return boost::algorithm::join(participants, ", ");
+                    }
+                    std::string getTitle() const {
+                        std::string title = getImpromptuTitle();
+                        return title.empty() ? chatName : title;
                     }
                     JID jid;
                     std::string chatName;
@@ -77,6 +96,7 @@ namespace Swift {
                     int unreadCount;
                     boost::filesystem::path avatarPath;
                     std::map<std::string, JID> impromptuJIDs;
+                    std::map<JID, std::string> inviteesNames;
                     bool isPrivateMessage;
             };
             virtual ~ChatListWindow();

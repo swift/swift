@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,7 @@
 namespace Swift {
     class DummyStanzaChannel : public StanzaChannel {
         public:
-            DummyStanzaChannel() : available_(true) {}
+            DummyStanzaChannel() {}
 
             virtual void sendStanza(std::shared_ptr<Stanza> stanza) {
                 sentStanzas.push_back(stanza);
@@ -37,7 +37,11 @@ namespace Swift {
             }
 
             virtual std::string getNewIQID() {
-                return "test-id";
+                std::string id = "test-id";
+                if (uniqueIDs_) {
+                    id += "-" + std::to_string(idCounter_++);
+                }
+                return id;
             }
 
             virtual bool isAvailable() const {
@@ -94,6 +98,8 @@ namespace Swift {
             }
 
             std::vector<std::shared_ptr<Stanza> > sentStanzas;
-            bool available_;
+            bool available_ = true;
+            bool uniqueIDs_ = false;
+            unsigned int idCounter_ = 0;
     };
 }

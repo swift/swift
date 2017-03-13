@@ -152,4 +152,12 @@ namespace Swift {
         private:
             V value;
     };
+
+    template <typename Map>
+    bool key_compare(Map const& lhs, Map const& rhs) {
+
+        auto pred = [](decltype(*lhs.begin()) a, decltype(a) b) { return a.first == b.first; };
+
+        return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
+    }
 }

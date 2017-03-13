@@ -16,6 +16,8 @@
 #include <Swiften/Avatars/AvatarMemoryStorage.h>
 #include <Swiften/Avatars/NullAvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/LogSerializers.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
@@ -52,6 +54,7 @@
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/DummySettingsProvider.h>
+#include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
@@ -66,6 +69,9 @@
 #include <Swift/Controllers/XMPPEvents/EventController.h>
 
 #include <SwifTools/Notifier/Notifier.h>
+
+#include <Swift/QtUI/QtSwiftUtil.h>
+#include <Swiften/MUC/UnitTest/MockMUC.h>
 
 using namespace Swift;
 
@@ -137,13 +143,15 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testCarbonsForwardedOutgoingMessageFromSecondResource);
     CPPUNIT_TEST(testCarbonsForwardedIncomingDuplicates);
 
-
     // Message correction tests
     CPPUNIT_TEST(testChatControllerMessageCorrectionCorrectReplaceID);
     CPPUNIT_TEST(testChatControllerMessageCorrectionIncorrectReplaceID);
     CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceBySameResource);
     CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceByOtherResource);
     CPPUNIT_TEST(testMUCControllerMessageCorrectionNoIDMatchRequired);
+
+    //Imptomptu test
+    CPPUNIT_TEST(testImpromptuChatTitle);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1501,6 +1509,69 @@ public:
             manager_->handleIncomingMessage(mucMirrored);
         }
         CPPUNIT_ASSERT_EQUAL(std::string("Some correctly spelled message."), window->bodyFromMessage(window->lastReplacedMessage_));
+    }
+
+    void testImpromptuChatTitle() {
+        stanzaChannel_->uniqueIDs_ = true;
+        JID mucJID("795B7BBE-9099-4A0D-81BA-C816F78E275C@test.com");
+        manager_->setOnline(true);
+
+        // Open chat window to a sender.
+        MockChatWindow* window = new MockChatWindow();
+        std::shared_ptr<IQ> infoRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[1]);
+        CPPUNIT_ASSERT(infoRequest);
+
+        std::shared_ptr<IQ> infoResponse = IQ::createResult(infoRequest->getFrom(), infoRequest->getTo(), infoRequest->getID());
+
+        DiscoInfo info;
+        info.addIdentity(DiscoInfo::Identity("Shakespearean Chat Service", "conference", "text"));
+        info.addFeature("http://jabber.org/protocol/muc");
+        infoResponse->addPayload(std::make_shared<DiscoInfo>(info));
+        stanzaChannel_->onIQReceived(infoResponse);
+
+        std::vector<JID> jids;
+        jids.emplace_back("foo@test.com");
+        jids.emplace_back("bar@test.com");
+
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
+        uiEventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, mucJID, ""));
+        CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), manager_->getRecentChats()[0].getTitle());
+
+        auto mucJoinPresence = std::dynamic_pointer_cast<Presence>(stanzaChannel_->sentStanzas[2]);
+        CPPUNIT_ASSERT(mucJoinPresence);
+
+        // MUC presence reply
+        auto mucResponse = Presence::create();
+        mucResponse->setTo(jid_);
+        mucResponse->setFrom(mucJoinPresence->getTo());
+        mucResponse->addPayload([]() {
+            auto mucUser = std::make_shared<MUCUserPayload>();
+            mucUser->addItem(MUCItem(MUCOccupant::Member, MUCOccupant::Participant));
+            mucUser->addStatusCode(MUCUserPayload::StatusCode(110));
+            mucUser->addStatusCode(MUCUserPayload::StatusCode(210));
+            return mucUser;
+        }());
+        stanzaChannel_->onPresenceReceived(mucResponse);
+
+        // Before people join the impromptu room, the title is based on names coming from Roster
+        CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), manager_->getRecentChats()[0].getTitle());
+
+        auto mucParticipantJoined = [&](const JID& jid) {
+            auto participantJoinedPresence = Presence::create();
+            participantJoinedPresence->setTo(jid_);
+            participantJoinedPresence->setFrom(mucJID.withResource(jid.toString()));
+            auto mucUser = std::make_shared<MUCUserPayload>();
+            mucUser->addItem(MUCItem(MUCOccupant::Member, MUCOccupant::Participant));
+            participantJoinedPresence->addPayload(mucUser);
+            return participantJoinedPresence;
+        };
+
+        for (const auto& participantJID : jids) {
+            stanzaChannel_->onPresenceReceived(mucParticipantJoined(participantJID));
+        }
+
+        // After people joined, the title is the list of participant nicknames or names coming from Roster (if nicknames are unavailable)
+        CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), manager_->getRecentChats()[0].getTitle());
     }
 
 
