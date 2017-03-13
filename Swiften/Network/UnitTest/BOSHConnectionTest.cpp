@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,6 +40,8 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testRead_Fragment);
     CPPUNIT_TEST(testHTTPRequest);
     CPPUNIT_TEST(testHTTPRequest_Empty);
+    CPPUNIT_TEST(testTerminate);
+    CPPUNIT_TEST(testTerminateWithAdditionalData);
     CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -52,6 +54,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
             connectFinished = false;
             disconnected = false;
             disconnectedError = false;
+            sessionTerminatedError.reset();
             dataRead.clear();
         }
 
@@ -190,6 +193,39 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(fullBody, response.substr(bodyPosition+4));
         }
 
+        void testTerminate() {
+            BOSHConnection::ref testling = createTestling();
+            testling->connect();
+            eventLoop->processEvents();
+            testling->startStream("localhost", 1);
+            std::string initial("<body xmlns=\"http://jabber.org/protocol/httpbind\" "
+                                    "condition=\"bad-request\" "
+                                    "type=\"terminate\">"
+                                "</body>");
+            readResponse(initial, connectionFactory->connections[0]);
+            CPPUNIT_ASSERT(sessionTerminatedError);
+            CPPUNIT_ASSERT_EQUAL(BOSHError::BadRequest, sessionTerminatedError->getType());
+            CPPUNIT_ASSERT_EQUAL(true, dataRead.empty());
+        }
+
+        // On a BOSH error no additional data may be emitted.
+        void testTerminateWithAdditionalData() {
+            BOSHConnection::ref testling = createTestling();
+            testling->connect();
+            eventLoop->processEvents();
+            testling->startStream("localhost", 1);
+            std::string initial("<body xmlns=\"http://jabber.org/protocol/httpbind\" "
+                                    "condition=\"bad-request\" "
+                                    "type=\"terminate\">"
+                                    "<text>an error message</text>"
+                                "</body>");
+            readResponse(initial, connectionFactory->connections[0]);
+            CPPUNIT_ASSERT(sessionTerminatedError);
+            CPPUNIT_ASSERT_EQUAL(BOSHError::BadRequest, sessionTerminatedError->getType());
+            CPPUNIT_ASSERT_EQUAL(true, dataRead.empty());
+        }
+
+
     private:
 
         BOSHConnection::ref createTestling() {
@@ -200,6 +236,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
             c->onDisconnected.connect(boost::bind(&BOSHConnectionTest::handleDisconnected, this, _1));
             c->onXMPPDataRead.connect(boost::bind(&BOSHConnectionTest::handleDataRead, this, _1));
             c->onSessionStarted.connect(boost::bind(&BOSHConnectionTest::handleSID, this, _1));
+            c->onSessionTerminated.connect(boost::bind(&BOSHConnectionTest::handleSessionTerminated, this, _1));
             c->setRID(42);
             return c;
         }
@@ -220,6 +257,10 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
 
         void handleSID(const std::string& s) {
             sid = s;
+        }
+
+        void handleSessionTerminated(BOSHError::ref error) {
+            sessionTerminatedError = error;
         }
 
         struct MockConnection : public Connection {
@@ -293,6 +334,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
         bool connectFinishedWithError;
         bool disconnected;
         bool disconnectedError;
+        BOSHError::ref sessionTerminatedError;
         ByteArray dataRead;
         PlatformXMLParserFactory parserFactory;
         StaticDomainNameResolver* resolver;

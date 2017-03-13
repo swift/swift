@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -296,6 +296,7 @@ void BOSHConnection::handleDataRead(std::shared_ptr<SafeByteArray> data) {
         if (parser.getBody()->attributes.getAttribute("type") == "terminate") {
             BOSHError::Type errorType = parseTerminationCondition(parser.getBody()->attributes.getAttribute("condition"));
             onSessionTerminated(errorType == BOSHError::NoError ? std::shared_ptr<BOSHError>() : std::make_shared<BOSHError>(errorType));
+            return;
         }
         buffer_.clear();
         if (waitingForStartResponse_) {
