@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -51,7 +51,7 @@ namespace Swift {
             virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, const ChatWindow::TimestampBehaviour /*timestampBehaviour*/);
             virtual void setAckState(const std::string& /*id*/, ChatWindow::AckState /*state*/);
 
-            virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/, const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/);
+            virtual std::string addFileTransfer(const std::string& /*senderName*/, const std::string& /*avatarPath*/, bool /*senderIsSelf*/, const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/);
             virtual void setFileTransferProgress(std::string, const int /*percentageDone*/);
             virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState /*state*/, const std::string& /*msg*/ = "");
             virtual void addMUCInvitation(const std::string& /*senderName*/, const JID& /*jid*/, const std::string& /*reason*/, const std::string& /*password*/, bool /*direct*/, bool /*isImpromptu*/, bool /*isContinuation*/);

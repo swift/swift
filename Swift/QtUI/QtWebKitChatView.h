@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -66,7 +66,7 @@ namespace Swift {
             virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour) SWIFTEN_OVERRIDE;
             virtual void setAckState(const std::string& id, ChatWindow::AckState state) SWIFTEN_OVERRIDE;
 
-            virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) SWIFTEN_OVERRIDE;
+            virtual std::string addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) SWIFTEN_OVERRIDE;
             virtual void setFileTransferProgress(std::string, const int percentageDone) SWIFTEN_OVERRIDE;
             virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState state, const std::string& msg = "") SWIFTEN_OVERRIDE;
             virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) SWIFTEN_OVERRIDE;

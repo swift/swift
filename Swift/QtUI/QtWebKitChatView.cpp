@@ -562,7 +562,7 @@ std::string QtWebKitChatView::addMessage(
 
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
 
-    QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
+    QString qAvatarPath = scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
     std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), direction));
 
@@ -601,7 +601,7 @@ void QtWebKitChatView::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
 }
 
-std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
+std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
     SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
     QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 
@@ -633,11 +633,9 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, boo
             "</div>";
     }
 
-    //addMessage(message, senderName, senderIsSelf, std::shared_ptr<SecurityLabel>(), "", boost::posix_time::second_clock::local_time());
-
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasFileTransfer, senderName, senderIsSelf);
-
-    QString qAvatarPath = "qrc:/icons/avatar.svg";
+    QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
+    QString qAvatarPath = scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
     std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::universal_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
 

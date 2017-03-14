@@ -180,7 +180,7 @@ namespace Swift {
             virtual void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) = 0;
 
             // File transfer related stuff
-            virtual std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) = 0;
+            virtual std::string addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) = 0;
             virtual void setFileTransferProgress(std::string, const int percentageDone) = 0;
             virtual void setFileTransferStatus(std::string, const FileTransferState state, const std::string& msg = "") = 0;
             virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct = true, bool isImpromptu = false, bool isContinuation = false) = 0;

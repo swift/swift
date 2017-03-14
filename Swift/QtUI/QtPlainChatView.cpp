@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -176,7 +176,7 @@ void QtPlainChatView::setAckState(const std::string& /*id*/, ChatWindow::AckStat
     }
 }
 
-std::string QtPlainChatView::addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description)
+std::string QtPlainChatView::addFileTransfer(const std::string& senderName, const std::string& /*avatarPath*/, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description)
 {
     const std::string ftId = "ft" + boost::lexical_cast<std::string>(idGenerator_++);
     const std::string sizeString = formatSize(sizeInBytes);

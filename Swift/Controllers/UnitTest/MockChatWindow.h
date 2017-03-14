@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,7 +53,7 @@ namespace Swift {
             }
 
             // File transfer related stuff
-            virtual std::string addFileTransfer(const std::string& /*senderName*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/) { return nullptr; }
+            virtual std::string addFileTransfer(const std::string& /*senderName*/, const std::string& /*avatarPath*/, bool /*senderIsSelf*/,const std::string& /*filename*/, const boost::uintmax_t /*sizeInBytes*/, const std::string& /*description*/) { return nullptr; }
             virtual void setFileTransferProgress(std::string /*id*/, const int /*alreadyTransferedBytes*/) { }
             virtual void setFileTransferStatus(std::string /*id*/, const FileTransferState /*state*/, const std::string& /*msg*/) { }
 

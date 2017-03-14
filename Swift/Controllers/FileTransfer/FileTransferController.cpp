@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,12 +47,12 @@ const JID &FileTransferController::getOtherParty() const {
     return otherParty;
 }
 
-std::string FileTransferController::setChatWindow(ChatWindow* wnd, std::string nickname) {
+std::string FileTransferController::setChatWindow(ChatWindow* wnd, const std::string& nickname, const std::string& avatarPath) {
     chatWindow = wnd;
     if (sending) {
-        uiID = wnd->addFileTransfer(QT_TRANSLATE_NOOP("", "me"), true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)), "");
+        uiID = wnd->addFileTransfer(QT_TRANSLATE_NOOP("", "me"), avatarPath, true, filename, boost::filesystem::file_size(boost::filesystem::path(filename)), "");
     } else {
-        uiID = wnd->addFileTransfer(nickname, false, filename, transfer->getFileSizeInBytes(), transfer->getDescription());
+        uiID = wnd->addFileTransfer(nickname, avatarPath, false, filename, transfer->getFileSizeInBytes(), transfer->getDescription());
     }
     return uiID;
 }

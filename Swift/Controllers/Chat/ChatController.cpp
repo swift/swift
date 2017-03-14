@@ -13,6 +13,7 @@
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/Path.h>
 #include <Swiften/Base/format.h>
 #include <Swiften/Chat/ChatStateNotifier.h>
 #include <Swiften/Chat/ChatStateTracker.h>
@@ -368,7 +369,15 @@ void ChatController::setOnline(bool online) {
 
 void ChatController::handleNewFileTransferController(FileTransferController* ftc) {
     std::string nick = senderDisplayNameFromMessage(ftc->getOtherParty());
-    std::string ftID = ftc->setChatWindow(chatWindow_, nick);
+    std::string avatarPath;
+    if (ftc->isIncoming()) {
+        avatarPath = pathToString(avatarManager_->getAvatarPath(ftc->getOtherParty()));
+    }
+    else {
+        avatarPath = pathToString(avatarManager_->getAvatarPath(selfJID_));
+    }
+
+    std::string ftID = ftc->setChatWindow(chatWindow_, nick, avatarPath);
     ftControllers[ftID] = ftc;
     lastWasPresence_ = false;
 

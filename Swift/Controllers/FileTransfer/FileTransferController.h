@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,7 +43,7 @@ public:
     FileTransferController(IncomingFileTransfer::ref transfer);
     ~FileTransferController();
 
-    std::string setChatWindow(ChatWindow*, std::string nickname);
+    std::string setChatWindow(ChatWindow*, const std::string& nickname, const std::string& avatarPath);
     void setReceipient(const JID& otherParty);
 
     void start(std::string& description);

@@ -94,7 +94,7 @@ namespace Swift {
             void replaceMessage(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time);
             void replaceWithAction(const ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time);
             // File transfer related stuff
-            std::string addFileTransfer(const std::string& senderName, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description);
+            std::string addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description);
             void setFileTransferProgress(std::string id, const int percentageDone);
             void setFileTransferStatus(std::string id, const FileTransferState state, const std::string& msg);
 
