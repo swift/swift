@@ -7,6 +7,7 @@
 #include <Swift/QtUI/QtAboutWidget.h>
 
 #include <QCoreApplication>
+#include <QDesktopServices>
 #include <QFile>
 #include <QIcon>
 #include <QLabel>
@@ -41,12 +42,19 @@ QtAboutWidget::QtAboutWidget(SettingsProvider* settingsProvider, AutoUpdater* au
     setLayout(mainLayout);
 
     QLabel* iconLabel = new QLabel(this);
-    iconLabel->setPixmap(QIcon(":/logo-shaded-text.256.png").pixmap(90, 90));
+    iconLabel->setPixmap(QIcon(":/logo-icon.svg").pixmap(90, 90));
     iconLabel->setAlignment(Qt::AlignHCenter);
     mainLayout->addWidget(iconLabel);
 
     QLabel* appNameLabel = new QLabel("<center><font size='+1'><b>" + QCoreApplication::applicationName() + "</b></font></center>", this);
     mainLayout->addWidget(appNameLabel);
+
+    auto websiteLabel = new QLabel("<center><font size='-1'><a href='https://swift.im/'>https://swift.im/</a></font></center>", this);
+    websiteLabel->setTextInteractionFlags(Qt::LinksAccessibleByMouse | Qt::LinksAccessibleByKeyboard);
+    connect(websiteLabel, &QLabel::linkActivated, [](){
+        QDesktopServices::openUrl(QUrl("https://swift.im/"));
+    });
+    mainLayout->addWidget(websiteLabel);
 
     QLabel* versionLabel = new QLabel((QString("<center><font size='-1'>") + tr("Version %1") + "</font></center><center><font size='-1'><br/>" + QString(tr("Built with Qt %2")) + QString("<br/>") + QString(tr("Running with Qt %3")) + "</font></center>").arg(QCoreApplication::applicationVersion()).arg(QT_VERSION_STR).arg(qVersion()));
     versionLabel->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextSelectableByKeyboard);
