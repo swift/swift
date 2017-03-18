@@ -126,7 +126,7 @@ BOSHBodyExtractor::BOSHBodyExtractor(XMLParserFactory* parserFactory, const Byte
 
     // Parse the body element
     BOSHBodyParserClient parserClient(this);
-    std::shared_ptr<XMLParser> parser(parserFactory->createXMLParser(&parserClient));
+    std::shared_ptr<XMLParser> parser(std::move(parserFactory->createXMLParser(&parserClient)));
     if (!parser->parse(std::string(
             reinterpret_cast<const char*>(vecptr(data)),
             boost::numeric_cast<size_t>(std::distance(data.begin(), i))))) {

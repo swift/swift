@@ -14,23 +14,19 @@
 
 namespace Swift {
 
-ClientXMLTracer::ClientXMLTracer(CoreClient* client, bool bosh) : bosh(bosh) {
+ClientXMLTracer::ClientXMLTracer(CoreClient* client, bool bosh) : bosh_(bosh) {
 #ifdef SWIFTEN_PLATFORM_WIN32
-    beautifier = new XMLBeautifier(true, false);
+    beautifier_ = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, false));
 #else
-    beautifier = new XMLBeautifier(true, true);
+    beautifier_ = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, true));
 #endif
-    onDataReadConnection = client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
-    onDataWrittenConnection = client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
-}
-
-ClientXMLTracer::~ClientXMLTracer() {
-    delete beautifier;
+    onDataReadConnection_ = client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
+    onDataWrittenConnection_ = client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));
 }
 
 void ClientXMLTracer::printData(char direction, const SafeByteArray& data) {
-    printLine(direction);
-    if (bosh) {
+    if (bosh_) {
+        printLine(direction);
         std::string line = byteArrayToString(ByteArray(data.begin(), data.end()));
 // Disabled because it swallows bits of XML (namespaces, if I recall)
 //        size_t endOfHTTP = line.find("\r\n\r\n");
@@ -42,7 +38,16 @@ void ClientXMLTracer::printData(char direction, const SafeByteArray& data) {
 //        }
     }
     else {
-        std::cerr << beautifier->beautify(byteArrayToString(ByteArray(data.begin(), data.end()))) << std::endl;
+        const auto& str = beautifier_->beautify(byteArrayToString(ByteArray(data.begin(), data.end())));
+
+        if (beautifier_->wasReset()) {
+            printLine(direction);
+        }
+        std::cerr << str;
+        if (beautifier_->getLevel() <= 1) {
+            std::cerr << std::endl;
+        }
+
     }
 }
 

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/SafeByteArray.h>
 #include <Swiften/Client/CoreClient.h>
@@ -15,16 +17,15 @@ namespace Swift {
     class SWIFTEN_API ClientXMLTracer {
         public:
             ClientXMLTracer(CoreClient* client, bool bosh = false);
-            ~ClientXMLTracer();
 
         private:
             void printData(char direction, const SafeByteArray& data);
             void printLine(char c);
 
         private:
-            XMLBeautifier *beautifier;
-            bool bosh;
-            boost::signals2::scoped_connection onDataReadConnection;
-            boost::signals2::scoped_connection onDataWrittenConnection;
+            std::unique_ptr<XMLBeautifier> beautifier_;
+            bool bosh_;
+            boost::signals2::scoped_connection onDataReadConnection_;
+            boost::signals2::scoped_connection onDataWrittenConnection_;
     };
 }

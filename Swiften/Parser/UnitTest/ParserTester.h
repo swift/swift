@@ -16,12 +16,7 @@ namespace Swift {
     template<typename ParserType>
     class ParserTester : public XMLParserClient {
         public:
-            ParserTester(ParserType* parser) : parser_(parser) {
-                xmlParser_ = PlatformXMLParserFactory().createXMLParser(this);
-            }
-
-            ~ParserTester() {
-                delete xmlParser_;
+            ParserTester(ParserType* parser) : xmlParser_(PlatformXMLParserFactory().createXMLParser(this)), parser_(parser) {
             }
 
             bool parse(const std::string& data) {
@@ -41,7 +36,7 @@ namespace Swift {
             }
 
         private:
-            XMLParser* xmlParser_;
+            std::unique_ptr<XMLParser> xmlParser_;
             ParserType* parser_;
     };
 }

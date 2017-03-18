@@ -42,7 +42,7 @@ namespace Swift {
             ElementParser* createElementParser(const std::string& element, const std::string& xmlns);
 
         private:
-            XMLParser* xmlParser_;
+            std::unique_ptr<XMLParser> xmlParser_;
             XMPPParserClient* client_;
             PayloadParserFactoryCollection* payloadParserFactories_;
             enum Level {

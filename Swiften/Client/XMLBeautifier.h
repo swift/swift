@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <memory>
 #include <sstream>
 #include <stack>
 #include <string>
@@ -27,10 +28,12 @@ namespace Swift {
 
 class SWIFTEN_API XMLBeautifier : public XMLParserClient {
 public:
+
     XMLBeautifier(bool indention, bool coloring);
-    virtual ~XMLBeautifier();
 
     std::string beautify(const std::string&);
+    bool wasReset() const;
+    int getLevel() const;
 
 private:
     void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
@@ -39,6 +42,7 @@ private:
 
 private:
     void indent();
+    void reset();
 
 private:
     std::string styleTag(const std::string& text) const;
@@ -47,16 +51,16 @@ private:
     std::string styleValue(const std::string& text) const;
 
 private:
-    bool doIndention;
-    bool doColoring;
+    const bool doIndention_;
+    const bool doColoring_;
 
-    int intLevel;
-    std::string inputBuffer;
-    std::stringstream buffer;
-    XMLParserFactory* factory;
-    XMLParser* parser;
+    std::unique_ptr<XMLParserFactory> factory_;
+    std::unique_ptr<XMLParser> parser_;
 
-    bool lastWasStepDown;
-    std::stack<std::string> parentNSs;
+    bool wasReset_ = true;
+    int intLevel_ = 0;
+    bool lastWasStepDown_ = false;
+    std::stringstream buffer_;
+    std::stack<std::string> parentNSs_;
 };
 }

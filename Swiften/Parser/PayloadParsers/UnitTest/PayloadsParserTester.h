@@ -22,10 +22,6 @@ namespace Swift {
                 xmlParser = PlatformXMLParserFactory().createXMLParser(this);
             }
 
-            ~PayloadsParserTester() {
-                delete xmlParser;
-            }
-
             bool parse(const std::string& data) {
                 return xmlParser->parse(data);
             }
@@ -60,7 +56,7 @@ namespace Swift {
             }
 
         private:
-            XMLParser* xmlParser;
+            std::unique_ptr<XMLParser> xmlParser;
             FullPayloadParserFactoryCollection factories;
             std::shared_ptr<PayloadParser> payloadParser;
             int level;

@@ -60,7 +60,6 @@ XMPPParser::XMPPParser(
 
 XMPPParser::~XMPPParser() {
     delete currentElementParser_;
-    delete xmlParser_;
 }
 
 bool XMPPParser::parse(const std::string& data) {
