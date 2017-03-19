@@ -41,6 +41,7 @@ namespace Swift {
             std::vector<Certificate::ref> getPeerCertificateChain() const;
             std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const;
 
+            boost::signals2::signal<void ()> onTLSConnectionEstablished;
             boost::signals2::signal<void (BOSHError::ref)> onSessionTerminated;
             boost::signals2::signal<void ()> onSessionStarted;
             boost::signals2::signal<void (const SafeByteArray&)> onXMPPDataRead;

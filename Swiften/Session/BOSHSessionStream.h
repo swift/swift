@@ -85,6 +85,7 @@ namespace Swift {
             void handlePoolBOSHDataRead(const SafeByteArray& data);
             void handlePoolBOSHDataWritten(const SafeByteArray& data);
             void handlePoolSessionTerminated(BOSHError::ref condition);
+            void handlePoolTLSEstablished();
 
         private:
             void fakeStreamHeaderReceipt();

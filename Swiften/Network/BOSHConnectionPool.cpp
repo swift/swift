@@ -142,6 +142,7 @@ void BOSHConnectionPool::handleConnectFinished(bool error, BOSHConnection::ref c
         }
         if (!pinnedCertificateChain_.empty()) {
             lastVerificationError_ = connection->getPeerCertificateVerificationError();
+            onTLSConnectionEstablished();
         }
 
         if (sid.empty()) {

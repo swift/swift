@@ -55,7 +55,7 @@ BOSHSessionStream::BOSHSessionStream(const URL& boshURL,
     connectionPool->onXMPPDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));
     connectionPool->onBOSHDataRead.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
     connectionPool->onBOSHDataWritten.connect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
-
+    connectionPool->onTLSConnectionEstablished.connect(boost::bind(&BOSHSessionStream::handlePoolTLSEstablished, this));
     xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType, true);
     xmppLayer->onStreamStart.connect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
     xmppLayer->onElement.connect(boost::bind(&BOSHSessionStream::handleElementReceived, this, _1));
@@ -72,6 +72,7 @@ BOSHSessionStream::~BOSHSessionStream() {
     connectionPool->onXMPPDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolXMPPDataRead, this, _1));
     connectionPool->onBOSHDataRead.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataRead, this, _1));
     connectionPool->onBOSHDataWritten.disconnect(boost::bind(&BOSHSessionStream::handlePoolBOSHDataWritten, this, _1));
+    connectionPool->onTLSConnectionEstablished.disconnect(boost::bind(&BOSHSessionStream::handlePoolTLSEstablished, this));
     delete connectionPool;
     connectionPool = nullptr;
     xmppLayer->onStreamStart.disconnect(boost::bind(&BOSHSessionStream::handleStreamStartReceived, this, _1));
@@ -176,6 +177,10 @@ void BOSHSessionStream::handlePoolSessionStarted() {
 
 void BOSHSessionStream::handlePoolSessionTerminated(BOSHError::ref error) {
     eventLoop->postEvent(boost::bind(&BOSHSessionStream::fakeStreamFooterReceipt, this, error), shared_from_this());
+}
+
+void BOSHSessionStream::handlePoolTLSEstablished() {
+    onTLSEncrypted();
 }
 
 void BOSHSessionStream::writeHeader(const ProtocolHeader& header) {

@@ -45,6 +45,8 @@
 #include <Swiften/SASL/PLAINClientAuthenticator.h>
 #include <Swiften/SASL/SCRAMSHA1ClientAuthenticator.h>
 #include <Swiften/Session/SessionStream.h>
+#include <Swiften/Session/BasicSessionStream.h>
+#include <Swiften/Session/BOSHSessionStream.h>
 #include <Swiften/StreamManagement/StanzaAckRequester.h>
 #include <Swiften/StreamManagement/StanzaAckResponder.h>
 #include <Swiften/TLS/CertificateTrustChecker.h>
@@ -430,7 +432,9 @@ void ClientSession::sendCredentials(const SafeByteArray& password) {
 }
 
 void ClientSession::handleTLSEncrypted() {
-    CHECK_STATE_OR_RETURN(State::Encrypting);
+    if (!std::dynamic_pointer_cast<BOSHSessionStream>(stream)) {
+        CHECK_STATE_OR_RETURN(State::Encrypting);
+    }
 
     std::vector<Certificate::ref> certificateChain = stream->getPeerCertificateChain();
     std::shared_ptr<CertificateVerificationError> verificationError = stream->getPeerCertificateVerificationError();
@@ -450,7 +454,9 @@ void ClientSession::handleTLSEncrypted() {
 
 void ClientSession::checkTrustOrFinish(const std::vector<Certificate::ref>& certificateChain, std::shared_ptr<CertificateVerificationError> error) {
     if (certificateTrustChecker && certificateTrustChecker->isCertificateTrusted(certificateChain)) {
-        continueAfterTLSEncrypted();
+        if (!std::dynamic_pointer_cast<BOSHSessionStream>(stream)) {
+            continueAfterTLSEncrypted();
+        }
     }
     else {
         finishSession(error);
@@ -476,9 +482,11 @@ void ClientSession::initiateShutdown(bool sendFooter) {
 }
 
 void ClientSession::continueAfterTLSEncrypted() {
-    state = State::WaitingForStreamStart;
-    stream->resetXMPPParser();
-    sendStreamHeader();
+    if (!std::dynamic_pointer_cast<BOSHSessionStream>(stream)) {
+        state = State::WaitingForStreamStart;
+        stream->resetXMPPParser();
+        sendStreamHeader();
+    }
 }
 
 void ClientSession::handleStreamClosed(std::shared_ptr<Swift::Error> streamError) {
@@ -536,7 +544,7 @@ void ClientSession::finishSession(std::shared_ptr<Swift::Error> error) {
         error_ = error;
     }
     else {
-        SWIFT_LOG(warning) << "Session finished twice";
+        SWIFT_LOG(warning) << "Session finished twice" << std::endl;
     }
     assert(stream->isOpen());
     if (stanzaAckResponder_) {
