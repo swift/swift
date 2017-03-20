@@ -113,6 +113,8 @@ div.time {
     background-color: #92c47e;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
+    position: relative;
+    left: 1px;
 }
 
 .otheravatar {
@@ -123,20 +125,22 @@ div.time {
     background-color: #6eb6ce;
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
+    position: relative;
+    left: 1px;
 }
 
 .myavatar img {
     border-radius: 50%;
     height: 2.5em;
     position: relative;
-    left: -1px;
+    left: -2px;
 }
 
 .otheravatar img {
     border-radius: 50%;
     height: 2.5em;
     position: relative;
-    left: -1px;
+    left: -2px;
 }
 
 .myright {
