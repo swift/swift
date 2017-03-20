@@ -11,7 +11,7 @@ then
     if [ "$SYSTEM_DISTRO" == "Debian" ]
     then
         sudo apt-get install build-essential pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools qt5-image-formats-plugins libqt5svg5-dev libminiupnpc-dev libnatpmp-dev libhunspell-dev
-    elif [ "$SYSTEM_DISTRO" == "Ubuntu" ]
+    elif [ "$SYSTEM_DISTRO" == "Ubuntu" ] || [ "$SYSTEM_DISTRO" == "LinuxMint" ]
     then
         sudo apt-get install build-essential pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools qt5-image-formats-plugins libqt5svg5-dev libminiupnpc-dev libnatpmp-dev libhunspell-dev
     elif [ "$SYSTEM_DISTRO" == "Arch" ]
