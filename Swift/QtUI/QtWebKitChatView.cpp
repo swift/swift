@@ -354,6 +354,14 @@ void QtWebKitChatView::resetView() {
     webView_->setZoomFactor(QApplication::desktop()->screen()->logicalDpiX() / 96.0);
 
     body.setStyleProperty("font-size", QString("%1pt").arg(QApplication::font().pointSize()));
+
+#ifdef Q_OS_WIN
+    // Fix for Swift-162
+    // Changing the font weight for windows in order for the fonts to display better.
+    // In the future, when we enable dpiawareness on windows, this can be reverted.
+    body.setStyleProperty("font-weight", QString("500"));
+#endif // Q_OS_WIN
+
 }
 
 static QWebElement findElementWithID(QWebElement document, QString elementName, QString id) {
