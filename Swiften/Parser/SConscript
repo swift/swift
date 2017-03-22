@@ -30,6 +30,7 @@ sources = [
         "PayloadParsers/CarbonsReceivedParser.cpp",
         "PayloadParsers/CarbonsSentParser.cpp",
         "PayloadParsers/ChatStateParser.cpp",
+        "PayloadParsers/ClientStateParser.cpp",
         "PayloadParsers/CapsInfoParser.cpp",
         "PayloadParsers/DiscoInfoParser.cpp",
         "PayloadParsers/DiscoItemsParser.cpp",
