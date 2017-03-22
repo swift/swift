@@ -23,6 +23,7 @@
 #include <Swiften/Parser/PayloadParsers/CarbonsReceivedParser.h>
 #include <Swiften/Parser/PayloadParsers/CarbonsSentParser.h>
 #include <Swiften/Parser/PayloadParsers/ChatStateParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/ClientStateParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/CommandParser.h>
 #include <Swiften/Parser/PayloadParsers/DelayParser.h>
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptParserFactory.h>
@@ -127,6 +128,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<VCardParser> >("vCard", "vcard-temp"));
     factories_.push_back(std::make_shared<PrivateStorageParserFactory>(this));
     factories_.push_back(std::make_shared<ChatStateParserFactory>());
+    factories_.push_back(std::make_shared<ClientStateParserFactory>());
     factories_.push_back(std::make_shared<MUCUserPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<MUCOwnerPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MUCInvitationPayloadParser> >("x", "jabber:x:conference"));

@@ -20,6 +20,7 @@
 #include <Swiften/Serializer/PayloadSerializers/CarbonsReceivedSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/CarbonsSentSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ChatStateSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/ClientStateSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/CommandSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/DelaySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/DeliveryReceiptRequestSerializer.h>
@@ -90,6 +91,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
     serializers_.push_back(new SubjectSerializer());
     serializers_.push_back(new ThreadSerializer());
     serializers_.push_back(new ChatStateSerializer());
+    serializers_.push_back(new ClientStateSerializer());
     serializers_.push_back(new PrioritySerializer());
     serializers_.push_back(new ErrorSerializer(this));
     serializers_.push_back(new RosterSerializer());
