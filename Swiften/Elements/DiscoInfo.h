@@ -22,6 +22,7 @@ namespace Swift {
             typedef std::shared_ptr<DiscoInfo> ref;
 
             static const std::string ChatStatesFeature;
+            static const std::string ClientStatesFeature;
             static const std::string SecurityLabelsFeature;
             static const std::string SecurityLabelsCatalogFeature;
             static const std::string JabberSearchFeature;
