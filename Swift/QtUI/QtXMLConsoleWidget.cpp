@@ -23,8 +23,13 @@ namespace Swift {
 
 QtXMLConsoleWidget::QtXMLConsoleWidget() {
     setWindowTitle(tr("Console"));
+    
+
 
     QVBoxLayout* layout = new QVBoxLayout(this);
+    XMLWindow = new QtXMLSenderWidget();
+    layout->addWidget(XMLWindow);
+    XMLWindow->hide(); // Only show this when check button is ticked.
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
 
@@ -40,20 +45,18 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     buttonLayout->setContentsMargins(10,0,20,0);
     buttonLayout->setSpacing(0);
 
+    debugenabled = new QCheckBox(tr("Manually enter XML"), bottom);
     enabled = new QCheckBox(tr("Trace input/output"), bottom);
     enabled->setChecked(true);
     buttonLayout->addWidget(enabled);
 
     buttonLayout->addStretch();
 
-
-
     QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
-    QPushButton* sendXMLButton = new QPushButton(tr("Send XML"), bottom);
     connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
-    connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(showWindow()));
+    connect(debugenabled, SIGNAL(toggled(bool)), this, SLOT(showWindow(bool)));
     buttonLayout->addWidget(clearButton);
-    buttonLayout->addWidget(sendXMLButton);
+    buttonLayout->addWidget(debugenabled);
     setWindowTitle(tr("Debug Console"));
     emit titleUpdated();
 }
@@ -61,9 +64,15 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 QtXMLConsoleWidget::~QtXMLConsoleWidget() {
 }
 
-void QtXMLConsoleWidget::showWindow() {
-    QtXMLSenderWidget* XMLWindow = new QtXMLSenderWidget();
-    XMLWindow->show();
+void QtXMLConsoleWidget::showWindow(bool showXMLSender) {
+    if(showXMLSender)
+    {
+        XMLWindow->show();
+    }
+    else
+    {
+        XMLWindow->hide();
+    }
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {

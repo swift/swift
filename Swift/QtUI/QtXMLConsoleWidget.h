@@ -29,9 +29,9 @@ namespace Swift {
             virtual void handleDataWritten(const SafeByteArray& data);
 
             virtual std::string getID() const;
-        
+
         public slots:
-            void showWindow();
+            void showWindow(bool showXMLSender);
 
         private:
             virtual void closeEvent(QCloseEvent* event);
@@ -42,5 +42,7 @@ namespace Swift {
         private:
             QTextEdit* textEdit;
             QCheckBox* enabled;
+            QCheckBox* debugenabled;
+            QWidget* XMLWindow;
     };
 }

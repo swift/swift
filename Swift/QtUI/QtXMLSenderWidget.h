@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2017 Barun Parruck.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,6 +15,8 @@ namespace Swift {
 	public:
 		QtXMLSenderWidget();
 		~QtXMLSenderWidget();
+	public slots:
+		std::string readXML();
 	private:
 		QTextEdit* textEdit;
 	};

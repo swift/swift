@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2017 Barun Parruck.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,7 +7,6 @@
 #include <Swift/QtUI/QtXMLSenderWidget.h>
 
 #include <string>
-#include <QString>
 
 #include <QPushButton>
 #include <QCloseEvent>
@@ -26,7 +25,7 @@ namespace Swift {
 		textEdit = new QTextEdit;
 		layout->addWidget(textEdit);
 		layout->addWidget(sendXMLButton);
-		connect(sendXMLButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
+		connect(sendXMLButton, SIGNAL(clicked()), textEdit, SLOT(readXML()));
 		this->resize(640,400);
 		this->setLayout(layout); // I'm aware that this is really shitty code.
 	};
@@ -35,4 +34,7 @@ namespace Swift {
 
 	}
 
+	std::string QtXMLSenderWidget::readXML() {
+		return textEdit->toPlainText().toStdString();
+	}
 }
