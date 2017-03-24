@@ -18,10 +18,13 @@
 namespace Swift {
     class StanzaChannel;
     class EntityCapsProvider;
+    class TimerFactory;
+    class Timer;
+
 
     class SWIFTEN_API ChatStateNotifier {
         public:
-            ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager);
+            ChatStateNotifier(StanzaChannel* stanzaChannel, const JID& contact, EntityCapsProvider* entityCapsManager, TimerFactory* timerFactory, int idleTimeInMilliSecs);
             ~ChatStateNotifier();
 
             void setContact(const JID& contact);
@@ -36,6 +39,7 @@ namespace Swift {
             void setContactIsOnline(bool online);
 
         private:
+            void userBecameIdleWhileTyping();
             bool contactShouldReceiveStates();
             void changeState(ChatState::ChatStateType type);
             void handleCapsChanged(const JID& contact);
@@ -48,5 +52,7 @@ namespace Swift {
             bool contactHasSentActive_;
             bool userIsTyping_;
             bool contactIsOnline_;
+            std::shared_ptr<Timer> idleTimer_;
+
     };
 }

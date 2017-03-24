@@ -41,6 +41,7 @@
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
 #include <Swiften/Whiteboard/WhiteboardSessionManager.h>
+#include <Swiften/Network/DummyTimerFactory.h>
 
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatsManager.h>
@@ -179,7 +180,8 @@ public:
         vcardManager_ = new VCardManager(jid_, iqRouter_, vcardStorage_);
         mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
-        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, nullptr, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_);
+        timerFactory_ = new DummyTimerFactory();
+        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, timerFactory_, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_);
 
         manager_->setAvatarManager(avatarManager_);
     }
@@ -190,6 +192,7 @@ public:
         delete eventNotifier_;
         delete avatarManager_;
         delete manager_;
+        delete timerFactory_;
         delete clientBlockListManager_;
         delete vcardManager_;
         delete vcardStorage_;
@@ -213,6 +216,7 @@ public:
         delete chatListWindow_;
         delete mocks_;
         delete settings_;
+
     }
 
     void testFirstOpenWindowIncoming() {
@@ -1322,6 +1326,8 @@ private:
     std::map<std::string, std::string> emoticons_;
     int handledHighlightActions_;
     std::set<std::string> soundsPlayed_;
+    DummyTimerFactory* timerFactory_;
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);

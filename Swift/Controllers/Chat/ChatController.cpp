@@ -55,7 +55,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
     : ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, contact, nickResolver, presenceOracle, avatarManager, useDelayForLatency, eventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), userWantsReceipts_(userWantsReceipts), settings_(settings), clientBlockListManager_(clientBlockListManager) {
     isInMUC_ = isInMUC;
     lastWasPresence_ = false;
-    chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider);
+    chatStateNotifier_ = new ChatStateNotifier(stanzaChannel, contact, entityCapsProvider, timerFactory, 20000);
     chatStateTracker_ = new ChatStateTracker();
     nickResolver_ = nickResolver;
     presenceOracle_->onPresenceChange.connect(boost::bind(&ChatController::handlePresenceChange, this, _1));
