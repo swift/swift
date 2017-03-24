@@ -29,6 +29,9 @@ namespace Swift {
             virtual void handleDataWritten(const SafeByteArray& data);
 
             virtual std::string getID() const;
+        
+        public slots:
+            void showWindow();
 
         private:
             virtual void closeEvent(QCloseEvent* event);

@@ -5,7 +5,7 @@
  */
 
 #include <Swift/QtUI/QtXMLConsoleWidget.h>
-
+#include <Swift/QtUI/QtXMLSenderWidget.h>
 #include <string>
 
 #include <QCheckBox>
@@ -46,15 +46,24 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 
     buttonLayout->addStretch();
 
-    QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
-    connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
-    buttonLayout->addWidget(clearButton);
 
+
+    QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
+    QPushButton* sendXMLButton = new QPushButton(tr("Send XML"), bottom);
+    connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
+    connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(showWindow()));
+    buttonLayout->addWidget(clearButton);
+    buttonLayout->addWidget(sendXMLButton);
     setWindowTitle(tr("Debug Console"));
     emit titleUpdated();
 }
 
 QtXMLConsoleWidget::~QtXMLConsoleWidget() {
+}
+
+void QtXMLConsoleWidget::showWindow() {
+    QtXMLSenderWidget* XMLWindow = new QtXMLSenderWidget();
+    XMLWindow->show();
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {
