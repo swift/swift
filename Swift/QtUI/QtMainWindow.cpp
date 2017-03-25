@@ -91,7 +91,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
     chatListWindow_ = new QtChatListWindow(uiEventStream_, settings_);
     connect(chatListWindow_, SIGNAL(onCountUpdated(int)), this, SLOT(handleChatCountUpdated(int)));
 
-    tabs_->addTab(chatListWindow_, tr("C&hats"));
+    tabs_->addTab(chatListWindow_, tr("&Chats"));
     tabs_->addTab(eventWindow_, tr("&Notices"));
 
     tabs_->setCurrentIndex(settings_->getSetting(QtUISettingConstants::CURRENT_ROSTER_TAB));
