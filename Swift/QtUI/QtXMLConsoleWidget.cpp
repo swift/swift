@@ -54,7 +54,9 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 
     QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
     connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
-    connect(debugenabled, SIGNAL(toggled(bool)), this, SLOT(showWindow(bool)));
+    connect(debugenabled, &QCheckBox::toggled, [&](bool showXMLSender) {
+        this->XMLWindow->setVisible(showXMLSender);
+    });
     buttonLayout->addWidget(clearButton);
     buttonLayout->addWidget(debugenabled);
     setWindowTitle(tr("Debug Console"));
@@ -62,17 +64,6 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 }
 
 QtXMLConsoleWidget::~QtXMLConsoleWidget() {
-}
-
-void QtXMLConsoleWidget::showWindow(bool showXMLSender) {
-    if(showXMLSender)
-    {
-        XMLWindow->show();
-    }
-    else
-    {
-        XMLWindow->hide();
-    }
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {

@@ -25,9 +25,9 @@ namespace Swift {
 		textEdit = new QTextEdit;
 		layout->addWidget(textEdit);
 		layout->addWidget(sendXMLButton);
-		connect(sendXMLButton, SIGNAL(clicked()), textEdit, SLOT(readXML()));
+		connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(readXML())); // Whats going wrong here?
 		this->resize(640,400);
-		this->setLayout(layout); // I'm aware that this is really shitty code.
+		this->setLayout(layout);
 	};
 
 	QtXMLSenderWidget::~QtXMLSenderWidget() {
