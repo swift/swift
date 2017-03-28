@@ -128,6 +128,7 @@ MUCController::MUCController (
     chatWindow_->onGetAffiliationsRequest.connect(boost::bind(&MUCController::handleGetAffiliationsRequest, this));
     chatWindow_->onChangeAffiliationsRequest.connect(boost::bind(&MUCController::handleChangeAffiliationsRequest, this, _1));
     chatWindow_->onUnblockUserRequest.connect(boost::bind(&MUCController::handleUnblockUserRequest, this));
+    chatWindow_->onContinuationsBroken.connect(boost::bind(&MUCController::addChatSystemMessage, this));
     muc_->onJoinComplete.connect(boost::bind(&MUCController::handleJoinComplete, this, _1));
     muc_->onJoinFailed.connect(boost::bind(&MUCController::handleJoinFailed, this, _1));
     muc_->onOccupantJoined.connect(boost::bind(&MUCController::handleOccupantJoined, this, _1));
@@ -381,14 +382,14 @@ void MUCController::handleJoinComplete(const std::string& nick) {
     receivedActivity();
     renameCounter_ = 0;
     joined_ = true;
-    std::string joinMessage;
     if (isImpromptu_) {
-        joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have joined the chat as %1%.")) % nick);
-    } else {
-        joinMessage = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
+        lastStartMessage_ = str(format(QT_TRANSLATE_NOOP("", "You have joined the chat as %1%.")) % nick);
+    }
+    else {
+        lastStartMessage_ = str(format(QT_TRANSLATE_NOOP("", "You have entered room %1% as %2%.")) % toJID_.toString() % nick);
     }
     setNick(nick);
-    chatWindow_->replaceSystemMessage(chatMessageParser_->parseMessageBody(joinMessage, "", true), lastJoinMessageUID_, ChatWindow::UpdateTimestamp);
+    chatWindow_->replaceSystemMessage(chatMessageParser_->parseMessageBody(lastStartMessage_, "", true), lastJoinMessageUID_, ChatWindow::UpdateTimestamp);
     lastJoinMessageUID_ = "";
 
 #ifdef SWIFT_EXPERIMENTAL_HISTORY
@@ -660,13 +661,16 @@ void MUCController::setOnline(bool online) {
             std::shared_ptr<BlockList> blockList = clientBlockListManager_->getBlockList();
             if (blockList && blockList->isBlocked(muc_->getJID())) {
                 handleBlockingStateChanged();
-                lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "You've blocked this room. To enter the room, first unblock it using the cog menu and try again")), ChatWindow::DefaultDirection);
+                lastStartMessage_ = QT_TRANSLATE_NOOP("", "You've blocked this room. To enter the room, first unblock it using the cog menu and try again");
+                lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(lastStartMessage_ ), ChatWindow::DefaultDirection);
             }
             else {
                 if (isImpromptu_) {
-                    lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(QT_TRANSLATE_NOOP("", "Trying to join chat")), ChatWindow::DefaultDirection);
+                    lastStartMessage_ = QT_TRANSLATE_NOOP("", "Trying to join chat");
+                    lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(lastStartMessage_), ChatWindow::DefaultDirection);
                 } else {
-                    lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString())), ChatWindow::DefaultDirection);
+                    lastStartMessage_ = str(format(QT_TRANSLATE_NOOP("", "Trying to enter room %1%")) % toJID_.toString());
+                    lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(lastStartMessage_), ChatWindow::DefaultDirection);
                 }
                 if (loginCheckTimer_) {
                     loginCheckTimer_->start();
@@ -1237,6 +1241,10 @@ void MUCController::displaySubjectIfChanged(const std::string& subject) {
         }
         subject_ = subject;
     }
+}
+
+void MUCController::addChatSystemMessage() {
+    lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(lastStartMessage_), ChatWindow::DefaultDirection);
 }
 
 }

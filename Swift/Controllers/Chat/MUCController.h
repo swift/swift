@@ -145,6 +145,7 @@ namespace Swift {
             void updateChatWindowBookmarkStatus(const boost::optional<MUCBookmark>& bookmark);
 
             void displaySubjectIfChanged(const std::string& sucject);
+            void addChatSystemMessage();
 
         private:
             MUC::ref muc_;
@@ -169,6 +170,7 @@ namespace Swift {
             bool isImpromptuAlreadyConfigured_;
             RosterVCardProvider* rosterVCardProvider_;
             std::string lastJoinMessageUID_;
+            std::string lastStartMessage_;
 
             ClientBlockListManager* clientBlockListManager_;
             boost::signals2::scoped_connection blockingOnStateChangedConnection_;

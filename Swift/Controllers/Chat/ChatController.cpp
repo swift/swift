@@ -86,6 +86,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
     chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
     startMessage += ".";
     chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(startMessage), ChatWindow::DefaultDirection);
+    chatWindow_->onContinuationsBroken.connect([this, startMessage]() { chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(startMessage), ChatWindow::DefaultDirection); });
     chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
     chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
     chatWindow_->onFileTransferStart.connect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
