@@ -7,6 +7,7 @@
 #include <Swift/Controllers/Chat/MUCController.h>
 
 #include <algorithm>
+#include <cassert>
 #include <memory>
 
 #include <boost/bind.hpp>
@@ -99,6 +100,8 @@ MUCController::MUCController (
         VCardManager* vcardManager,
         MUCBookmarkManager* mucBookmarkManager) :
     ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), nickResolver, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, timerFactory, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
+    assert(avatarManager_);
+
     parting_ = true;
     joined_ = false;
     lastWasPresence_ = false;
@@ -156,9 +159,8 @@ MUCController::MUCController (
     if (stanzaChannel->isAvailable()) {
         MUCController::setOnline(true);
     }
-    if (avatarManager_ != nullptr) {
-        avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
-    }
+    avatarChangedConnection_ = (avatarManager_->onAvatarChanged.connect(boost::bind(&MUCController::handleAvatarChanged, this, _1)));
+
     MUCController::handleBareJIDCapsChanged(muc->getJID());
     eventStream_->onUIEvent.connect(boost::bind(&MUCController::handleUIEvent, this, _1));
 
@@ -465,9 +467,7 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
             onActivity("");
         }
     }
-    if (avatarManager_ != nullptr) {
-        handleAvatarChanged(jid);
-    }
+    handleAvatarChanged(jid);
 }
 
 void MUCController::addPresenceMessage(const std::string& message) {
@@ -796,9 +796,7 @@ void MUCController::handleOccupantNicknameChanged(const std::string& oldNickname
     std::string groupName(roleToGroupName(role));
     roster_->addContact(newJID, realJID, newNickname, groupName, avatarManager_->getAvatarPath(newJID));
     roster_->applyOnItems(SetMUC(newJID, role, affiliation));
-    if (avatarManager_ != nullptr) {
-        handleAvatarChanged(newJID);
-    }
+    handleAvatarChanged(newJID);
 
     clearPresenceQueue();
     onUserNicknameChanged(oldNickname, newNickname);
