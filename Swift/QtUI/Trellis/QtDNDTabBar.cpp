@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -70,21 +70,19 @@ void QtDNDTabBar::dragEnterEvent(QDragEnterEvent* dragEnterEvent) {
 }
 
 void QtDNDTabBar::dropEvent(QDropEvent* dropEvent) {
-    QtDNDTabBar* sourceTabBar = dynamic_cast<QtDNDTabBar*>(dropEvent->source());
+    auto sourceTabBar = dynamic_cast<QtDNDTabBar*>(dropEvent->source());
     if (sourceTabBar && dropEvent->mimeData() && dropEvent->mimeData()->data("action") == QByteArray("application/tab-detach")) {
-        QtDNDTabBar* source = dynamic_cast<QtDNDTabBar*>(dropEvent->source());
-
         int targetTabIndex = tabAt(dropEvent->pos());
         QRect rect = tabRect(targetTabIndex);
         if (targetTabIndex >= 0 && (dropEvent->pos().x() - rect.left() - rect.width()/2 > 0)) {
             targetTabIndex++;
         }
 
-        QWidget* tab = source->getDragWidget();
+        QWidget* tab = sourceTabBar->getDragWidget();
         assert(tab);
         QTabWidget* targetTabWidget = dynamic_cast<QTabWidget*>(parentWidget());
 
-        QString tabText = source->getDragText();
+        QString tabText = sourceTabBar->getDragText();
 
         /*
          * When you add a widget to an empty QTabWidget, it's automatically made the current widget.
