@@ -11,10 +11,10 @@
 #include <boost/filesystem.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <Swiften/Base/BoostRandomGenerator.h>
 #include <Swiften/Base/Debug.h>
 #include <Swiften/Base/Log.h>
 #include <Swiften/Base/sleep.h>
+#include <Swiften/Base/StdRandomGenerator.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Disco/ClientDiscoManager.h>
@@ -38,7 +38,7 @@ static const std::string CLIENT_NODE = "http://swift.im";
 static std::shared_ptr<SimpleEventLoop> eventLoop;
 static std::shared_ptr<BoostNetworkFactories> networkFactories;
 
-BoostRandomGenerator randGen;
+StdRandomGenerator randGen;
 
 enum Candidate {
     InBandBytestream = 1,

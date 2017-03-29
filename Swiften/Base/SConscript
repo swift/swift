@@ -1,7 +1,6 @@
 Import("swiften_env")
 
 objects = swiften_env.SwiftenObject([
-            "BoostRandomGenerator.cpp",
             "ByteArray.cpp",
             "DateTime.cpp",
             "Error.cpp",
@@ -16,6 +15,7 @@ objects = swiften_env.SwiftenObject([
             "SafeAllocator.cpp",
             "SafeByteArray.cpp",
             "SimpleIDGenerator.cpp",
+            "StdRandomGenerator.cpp",
             "String.cpp",
             "URL.cpp",
             "sleep.cpp",

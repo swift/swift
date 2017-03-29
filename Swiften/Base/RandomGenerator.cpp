@@ -8,8 +8,6 @@
 
 namespace Swift {
 
-RandomGenerator::~RandomGenerator() {
-
-}
+RandomGenerator::~RandomGenerator() = default;
 
 }

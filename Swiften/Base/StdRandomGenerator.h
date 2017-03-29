@@ -1,25 +1,25 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/random/mersenne_twister.hpp>
+#include <random>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Override.h>
 #include <Swiften/Base/RandomGenerator.h>
 
 namespace Swift {
-    class SWIFTEN_API BoostRandomGenerator : public RandomGenerator {
+    class SWIFTEN_API StdRandomGenerator : public RandomGenerator {
         public:
-            BoostRandomGenerator();
+            StdRandomGenerator();
 
             int generateRandomInteger(int max) SWIFTEN_OVERRIDE;
 
         private:
-            boost::mt19937 generator;
+            std::mt19937 generator;
     };
 }

@@ -29,8 +29,8 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/EventLoop/EventLoop.h>
-#include <Swiften/Base/BoostRandomGenerator.h>
 #include <Swiften/Base/Log.h>
+#include <Swiften/Base/StdRandomGenerator.h>
 #include <Swiften/Network/PlatformDomainNameResolver.h>
 
 using namespace Swift;
@@ -172,7 +172,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
     }
 #endif
 
-    BoostRandomGenerator generator;
+    StdRandomGenerator generator;
     DomainNameServiceQuery::sortResults(records, generator);
     //std::cout << "Sending out " << records.size() << " SRV results " << std::endl;
     eventLoop->postEvent(boost::bind(boost::ref(onResult), records), shared_from_this());
