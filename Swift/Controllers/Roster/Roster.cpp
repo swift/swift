@@ -164,10 +164,10 @@ void Roster::removeContactFromGroup(const JID& jid, const std::string& groupName
     while (it != children.end()) {
         GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
         if (group && group->getDisplayName() == groupName) {
-            ContactRosterItem* deleted = group->removeChild(jid);
+            auto deleted = group->removeChild(jid);
             if (itemIt != itemMap_.end()) {
                 std::vector<ContactRosterItem*>& items = itemIt->second;
-                items.erase(std::remove(items.begin(), items.end(), deleted), items.end());
+                items.erase(std::remove(items.begin(), items.end(), deleted.get()), items.end());
             }
         }
         ++it;

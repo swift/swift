@@ -1,13 +1,14 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
+
+#include <memory>
+
 #include <boost/bind.hpp>
-//#include <boost/algorithm.hpp>
-#include <iostream>
 
 namespace Swift {
 
@@ -97,23 +98,22 @@ void GroupRosterItem::removeAll() {
  * Returns the removed item - but only if it's the only one, otherwise
  * the return result is undefined.
  */
-ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
-    std::vector<RosterItem*>::iterator it = children_.begin();
-    ContactRosterItem* removed = nullptr;
+std::unique_ptr<ContactRosterItem> GroupRosterItem::removeChild(const JID& jid) {
+    auto it = children_.begin();
+    std::unique_ptr<ContactRosterItem> removed;
     while (it != children_.end()) {
         ContactRosterItem* contact = dynamic_cast<ContactRosterItem*>(*it);
         if (contact && contact->getJID() == jid) {
             displayedChildren_.erase(std::remove(displayedChildren_.begin(), displayedChildren_.end(), contact), displayedChildren_.end());
-            removed = contact;
-            delete contact;
+            removed = std::unique_ptr<ContactRosterItem>(contact);
             it = children_.erase(it);
             continue;
         }
         GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
         if (group) {
-            ContactRosterItem* groupRemoved = group->removeChild(jid);
+            auto groupRemoved = group->removeChild(jid);
             if (groupRemoved) {
-                removed = groupRemoved;
+                removed = std::move(groupRemoved);
             }
         }
         ++it;
@@ -123,15 +123,14 @@ ContactRosterItem* GroupRosterItem::removeChild(const JID& jid) {
     return removed;
 }
 
-GroupRosterItem* GroupRosterItem::removeGroupChild(const std::string& groupName) {
+std::unique_ptr<GroupRosterItem> GroupRosterItem::removeGroupChild(const std::string& groupName) {
     std::vector<RosterItem*>::iterator it = children_.begin();
-    GroupRosterItem* removed = nullptr;
+    std::unique_ptr<GroupRosterItem> removed;
     while (it != children_.end()) {
         GroupRosterItem* group = dynamic_cast<GroupRosterItem*>(*it);
         if (group && group->getDisplayName() == groupName) {
             displayedChildren_.erase(std::remove(displayedChildren_.begin(), displayedChildren_.end(), group), displayedChildren_.end());
-            removed = group;
-            delete group;
+            removed = std::unique_ptr<GroupRosterItem>(group);
             it = children_.erase(it);
             continue;
         }
