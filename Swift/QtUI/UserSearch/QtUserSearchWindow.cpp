@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -81,7 +81,7 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
         firstMultiJIDPage_->reset();
     }
     resultsPage_->emitCompletenessCheck();
-    if (page == 1 && lastPage_ == 3) {
+    if (firstMultiJIDPage_ && page == 1 && lastPage_ == 3) {
         addSearchedJIDToList(getContact());
         setSecondPage();
     }
