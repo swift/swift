@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,11 +21,13 @@
 
 #include <Swiften/Base/Log.h>
 
+using Swift::Log;
+
 int main(int argc, char* argv[]) {
     bool verbose = false;
     bool outputXML = false;
 
-    Swift::Log::setLogLevel(Swift::Log::error);
+    Log::setLogLevel(Swift::Log::error);
 
     // Parse parameters
     std::vector<std::string> testsToRun;
@@ -69,6 +71,9 @@ int main(int argc, char* argv[]) {
         ::testing::GTEST_FLAG(output) = gtestOutputFilename;
     }
 
+    // Google Test might throw an exception in an anonymous namespace. Exiting
+    // due to uncaught execption is fine here.
+    // coverity[fun_call_w_exception]
     ::testing::InitGoogleTest(&argc, argv);
 
     // Set up the listeners
@@ -119,7 +124,13 @@ int main(int argc, char* argv[]) {
         outputter.write();
     }
 
-    auto googleTestWasSuccessful = RUN_ALL_TESTS() == 0 ? true : false;
+    auto googleTestWasSuccessful = false;
+    try {
+        googleTestWasSuccessful = RUN_ALL_TESTS() == 0 ? true : false;
+    } catch (const ::testing::internal::GoogleTestFailureException& e) {
+        googleTestWasSuccessful = false;
+        SWIFT_LOG(error) << "GoogleTestFailureException was thrown: " << e.what() << std::endl;
+    }
 
     auto cppUnitWasSuccessful = result.wasSuccessful() ? true : false;
 
