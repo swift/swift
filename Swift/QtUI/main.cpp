@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -89,8 +89,15 @@ int main(int argc, char* argv[]) {
     QTranslator qtTranslator;
     if (!someTranslationPath.empty()) {
 #if QT_VERSION >= 0x040800
+        std::string language;
         if (vm.count("language") > 0) {
-            qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + P2QSTRING(vm["language"].as<std::string>()), P2QSTRING(Swift::pathToString(someTranslationPath.parent_path())));
+            try {
+                language = vm["language"].as<std::string>();
+            } catch (const boost::bad_any_cast&) {
+            }
+        }
+        if (!language.empty()) {
+            qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + P2QSTRING(language), P2QSTRING(Swift::pathToString(someTranslationPath.parent_path())));
         }
         else {
             qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", P2QSTRING(Swift::pathToString(someTranslationPath)));
