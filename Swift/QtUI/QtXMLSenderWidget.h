@@ -12,11 +12,16 @@
 
 namespace Swift {
 	class QtXMLSenderWidget : public QWidget {
+		Q_OBJECT
+
 	public:
 		QtXMLSenderWidget();
 		~QtXMLSenderWidget();
-	public slots:
 		std::string readXML();
+	public slots:
+		virtual void sendXML();
+	signals:
+		void xmlSent(std::string data);
 	private:
 		QTextEdit* textEdit;
 	};

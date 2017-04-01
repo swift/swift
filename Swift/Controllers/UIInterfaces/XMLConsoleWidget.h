@@ -7,6 +7,7 @@
 #pragma once
 
 #include <Swiften/Base/SafeByteArray.h>
+#include <boost/signals2.hpp>
 
 namespace Swift {
     class XMLConsoleWidget {
@@ -15,8 +16,8 @@ namespace Swift {
 
             virtual void handleDataRead(const SafeByteArray& data) = 0;
             virtual void handleDataWritten(const SafeByteArray& data) = 0;
-
             virtual void show() = 0;
             virtual void activate() = 0;
+            boost::signals2::signal<void (std::string data)> onXMLSend;
     };
 }

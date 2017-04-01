@@ -57,6 +57,7 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     connect(debugenabled, &QCheckBox::toggled, [&](bool showXMLSender) {
         this->XMLWindow->setVisible(showXMLSender);
     });
+    connect(XMLWindow, SIGNAL(xmlSent(std::string)), this, SLOT(sendXML(std::string)));
     buttonLayout->addWidget(clearButton);
     buttonLayout->addWidget(debugenabled);
     setWindowTitle(tr("Debug Console"));
@@ -64,6 +65,10 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 }
 
 QtXMLConsoleWidget::~QtXMLConsoleWidget() {
+}
+
+void QtXMLConsoleWidget::sendXML(std::string data) {
+    onXMLSend(data);
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {

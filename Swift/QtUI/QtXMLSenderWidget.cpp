@@ -25,7 +25,7 @@ namespace Swift {
 		textEdit = new QTextEdit;
 		layout->addWidget(textEdit);
 		layout->addWidget(sendXMLButton);
-		connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(readXML())); // Whats going wrong here?
+		connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(sendXML()));
 		this->resize(640,400);
 		this->setLayout(layout);
 	};
@@ -33,7 +33,10 @@ namespace Swift {
 	QtXMLSenderWidget::~QtXMLSenderWidget() {
 
 	}
-
+	void QtXMLSenderWidget::sendXML() {
+		emit xmlSent(this->readXML());
+		textEdit->clear(); // is this desirable? Or should we add a separate clear button?
+	}
 	std::string QtXMLSenderWidget::readXML() {
 		return textEdit->toPlainText().toStdString();
 	}

@@ -223,6 +223,7 @@ MainController::MainController(
     } else {
         profileSettings_ = nullptr;
     }
+    xmlConsoleController_ ->setClient(client_);
 }
 
 MainController::~MainController() {

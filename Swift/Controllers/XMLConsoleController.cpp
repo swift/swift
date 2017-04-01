@@ -9,6 +9,8 @@
 #include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h>
 
+#include <string>
+
 namespace Swift {
 
 XMLConsoleController::XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory) : xmlConsoleWidgetFactory(xmlConsoleWidgetFactory), xmlConsoleWidget(nullptr) {
@@ -19,6 +21,7 @@ XMLConsoleController::~XMLConsoleController() {
     delete xmlConsoleWidget;
 }
 
+
 void XMLConsoleController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
     std::shared_ptr<RequestXMLConsoleUIEvent> event = std::dynamic_pointer_cast<RequestXMLConsoleUIEvent>(rawEvent);
     if (event != nullptr) {
@@ -27,6 +30,7 @@ void XMLConsoleController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
         }
         xmlConsoleWidget->show();
         xmlConsoleWidget->activate();
+        xmlConsoleWidget->onXMLSend.connect(boost::bind(&XMLConsoleController::sendXML, this, _1));
     }
 }
 
@@ -41,5 +45,11 @@ void XMLConsoleController::handleDataWritten(const SafeByteArray& data) {
         xmlConsoleWidget->handleDataWritten(data);
     }
 }
-
+void XMLConsoleController::setClient(std::shared_ptr<Client> client_)
+{
+    this->client_ = client_;
+}
+void XMLConsoleController::sendXML(std::string data){
+    client_->sendData(data);
+}
 }

@@ -30,6 +30,9 @@ namespace Swift {
 
             virtual std::string getID() const;
 
+        public slots:
+            virtual void sendXML(std::string data);
+
         private:
             virtual void closeEvent(QCloseEvent* event);
             virtual void showEvent(QShowEvent* event);
