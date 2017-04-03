@@ -97,6 +97,9 @@ namespace Swift {
             virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) = 0;
             ChatWindow::ChatMessage buildChatWindowChatMessage(const std::string& message, const std::string& senderName, bool senderIsSelf);
             void updateMessageCount();
+            virtual bool shouldIgnoreMessage(std::shared_ptr<Message> /* message */) {
+                return false;
+            }
 
         private:
             IDGenerator idGenerator_;

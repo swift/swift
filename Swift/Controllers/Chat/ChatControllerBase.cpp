@@ -212,6 +212,11 @@ bool ChatControllerBase::isFromContact(const JID& from) {
 }
 
 void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) {
+    std::shared_ptr<Message> message = messageEvent->getStanza();
+    if (shouldIgnoreMessage(message)) {
+        return;
+    }
+
     preHandleIncomingMessage(messageEvent);
     if (messageEvent->isReadable() && !messageEvent->getConcluded()) {
         unreadMessages_.push_back(messageEvent);
@@ -220,7 +225,6 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
         }
     }
 
-    std::shared_ptr<Message> message = messageEvent->getStanza();
     ChatWindow::ChatMessage chatMessage;
     boost::optional<std::string> optionalBody = message->getBody();
     std::string body = optionalBody.get_value_or("");

@@ -135,6 +135,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     // Carbons tests
     CPPUNIT_TEST(testCarbonsForwardedIncomingMessageToSecondResource);
     CPPUNIT_TEST(testCarbonsForwardedOutgoingMessageFromSecondResource);
+    CPPUNIT_TEST(testCarbonsForwardedIncomingDuplicates);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1262,6 +1263,45 @@ public:
 
             CPPUNIT_ASSERT_EQUAL(size_t(2), window->receiptChanges_.size());
             CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptReceived, window->receiptChanges_[1].second);
+        }
+    }
+
+    void testCarbonsForwardedIncomingDuplicates() {
+        JID messageJID("testling@test.com/resource1");
+        JID jid2 = jid_.toBare().withResource("someOtherResource");
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(messageJID, uiEventStream_).Return(window);
+
+        std::shared_ptr<Message> message(new Message());
+        message->setFrom(messageJID);
+        std::string body("This is a legible message. >HEH@)oeueu");
+        message->setBody(body);
+        manager_->handleIncomingMessage(message);
+        CPPUNIT_ASSERT_EQUAL(body, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+
+        // incoming carbons message from another resource and duplicate of it
+        {
+            auto originalMessage = std::make_shared<Message>();
+            originalMessage->setFrom(messageJID);
+            originalMessage->setTo(jid2);
+            originalMessage->setID("BDD82F0B-2523-48BF-B8CA-17B23A314BC2");
+            originalMessage->setType(Message::Chat);
+            std::string forwardedBody = "Some further text.";
+            originalMessage->setBody(forwardedBody);
+
+            auto messageWrapper = createCarbonsMessage(std::make_shared<CarbonsReceived>(), originalMessage);
+
+            manager_->handleIncomingMessage(messageWrapper);
+
+            CPPUNIT_ASSERT_EQUAL(forwardedBody, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+            CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
+            window->resetLastMessages();
+
+            messageWrapper = createCarbonsMessage(std::make_shared<CarbonsReceived>(), originalMessage);
+            manager_->handleIncomingMessage(messageWrapper);
+            CPPUNIT_ASSERT_EQUAL(std::string(), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
+            CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
         }
     }
 

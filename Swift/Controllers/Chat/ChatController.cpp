@@ -554,6 +554,18 @@ void ChatController::logMessage(const std::string& message, const JID& fromJID, 
     }
 }
 
+bool ChatController::shouldIgnoreMessage(std::shared_ptr<Message> message) {
+    if (!message->getID().empty()) {
+        if (message->getID() == lastHandledMessageID_) {
+            return true;
+        }
+        else {
+            lastHandledMessageID_ = message->getID();
+        }
+    }
+    return false;
+}
+
 ChatWindow* ChatController::detachChatWindow() {
     chatWindow_->onUserTyping.disconnect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
     chatWindow_->onUserCancelsTyping.disconnect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));

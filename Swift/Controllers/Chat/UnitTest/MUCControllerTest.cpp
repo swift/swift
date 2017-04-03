@@ -439,7 +439,7 @@ public:
             message->setType(Message::Groupchat);
             message->setTo(self_);
             message->setFrom(mucJID_.withResource("SomeNickname"));
-            message->setID(iqChannel_->getNewIQID());
+            message->setID("3FB99C56-7C92-4755-91B0-9C0098BC7AE0");
             message->setSubject("New Room Subject");
 
             controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
