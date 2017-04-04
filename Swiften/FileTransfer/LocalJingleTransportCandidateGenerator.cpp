@@ -168,7 +168,7 @@ void LocalJingleTransportCandidateGenerator::emitOnLocalTransportCandidatesGener
         }
     }
 
-    if (options_.isProxiedAllowed() && s5bProxy->getOrDiscoverS5BProxies().is_initialized()) {
+    if (options_.isProxiedAllowed() && s5bProxy && s5bProxy->getOrDiscoverS5BProxies().is_initialized()) {
         for (auto&& proxy : s5bProxy->getOrDiscoverS5BProxies().get()) {
             if (proxy->getStreamHost()) { // FIXME: Added this test, because there were cases where this wasn't initialized. Investigate this. (Remko)
                 JingleS5BTransportPayload::Candidate candidate;
