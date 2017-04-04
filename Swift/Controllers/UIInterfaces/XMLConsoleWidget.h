@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include <Swiften/Base/SafeByteArray.h>
 #include <boost/signals2.hpp>
+
+#include <Swiften/Base/SafeByteArray.h>
+
 
 namespace Swift {
     class XMLConsoleWidget {
