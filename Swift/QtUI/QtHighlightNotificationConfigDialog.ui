@@ -84,7 +84,7 @@
         </attribute>
         <column>
          <property name="text">
-          <string>User</string>
+          <string>Nickname</string>
          </property>
         </column>
         <column>
