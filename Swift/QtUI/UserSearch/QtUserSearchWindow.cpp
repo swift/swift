@@ -77,7 +77,7 @@ QtUserSearchWindow::~QtUserSearchWindow() {
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
     searchNext_ = false;
-    if (firstMultiJIDPage_) {
+    if (type_ != AddContact) {
         firstMultiJIDPage_->reset();
     }
     resultsPage_->emitCompletenessCheck();
@@ -121,7 +121,8 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 JID QtUserSearchWindow::getServerToSearch() {
     if (type_ == AddContact) {
         return firstPage_->byRemoteSearch_->isChecked() ? JID(Q2PSTRING(firstPage_->service_->currentText().trimmed())) : myServer_;
-    } else {
+    }
+    else {
         return firstMultiJIDPage_->byRemoteSearch_->isChecked() ? JID(Q2PSTRING(firstMultiJIDPage_->service_->currentText().trimmed())) : myServer_;
     }
 }
