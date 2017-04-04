@@ -128,7 +128,6 @@ sources = [
     "QtTabWidget.cpp",
     "QtTextEdit.cpp",
     "QtXMLConsoleWidget.cpp",
-    "QtXMLSenderWidget.cpp",
     "QtHistoryWindow.cpp",
     "QtFileTransferListWidget.cpp",
     "QtFileTransferListItemModel.cpp",

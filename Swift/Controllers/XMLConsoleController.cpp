@@ -9,8 +9,6 @@
 #include <Swift/Controllers/UIEvents/RequestXMLConsoleUIEvent.h>
 #include <Swift/Controllers/UIInterfaces/XMLConsoleWidgetFactory.h>
 
-#include <string>
-
 namespace Swift {
 
 XMLConsoleController::XMLConsoleController(UIEventStream* uiEventStream, XMLConsoleWidgetFactory* xmlConsoleWidgetFactory) : xmlConsoleWidgetFactory(xmlConsoleWidgetFactory), xmlConsoleWidget(nullptr) {
@@ -50,6 +48,8 @@ void XMLConsoleController::setClient(std::shared_ptr<Client> client_)
     this->client_ = client_;
 }
 void XMLConsoleController::sendXML(std::string data){
-    client_->sendData(data);
+    if(client_) {
+        client_->sendData(data);
+    }
 }
 }

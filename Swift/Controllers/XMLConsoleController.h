@@ -20,7 +20,6 @@ namespace Swift {
 
     class XMLConsoleWidgetFactory;
     class XMLConsoleWidget;
-    class Client;
 
     class XMLConsoleController {
         public:

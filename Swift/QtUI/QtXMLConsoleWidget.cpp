@@ -5,7 +5,7 @@
  */
 
 #include <Swift/QtUI/QtXMLConsoleWidget.h>
-#include <Swift/QtUI/QtXMLSenderWidget.h>
+
 #include <string>
 
 #include <QCheckBox>
@@ -23,13 +23,14 @@ namespace Swift {
 
 QtXMLConsoleWidget::QtXMLConsoleWidget() {
     setWindowTitle(tr("Console"));
-    
-
 
     QVBoxLayout* layout = new QVBoxLayout(this);
-    XMLWindow = new QtXMLSenderWidget();
-    layout->addWidget(XMLWindow);
-    XMLWindow->hide(); // Only show this when check button is ticked.
+    xmlWindow = new QTextEdit(this);
+    sendXMLButton = new QPushButton(tr("Send XML"),this);
+    layout->addWidget(xmlWindow);
+    layout->addWidget(sendXMLButton);
+    xmlWindow->hide(); // Only show this when check button is ticked.
+    sendXMLButton->hide();
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
 
@@ -45,7 +46,7 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     buttonLayout->setContentsMargins(10,0,20,0);
     buttonLayout->setSpacing(0);
 
-    debugenabled = new QCheckBox(tr("Manually enter XML"), bottom);
+    debugEnabled = new QCheckBox(tr("Manually enter XML"), bottom);
     enabled = new QCheckBox(tr("Trace input/output"), bottom);
     enabled->setChecked(true);
     buttonLayout->addWidget(enabled);
@@ -53,13 +54,15 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     buttonLayout->addStretch();
 
     QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
+
     connect(clearButton, SIGNAL(clicked()), textEdit, SLOT(clear()));
-    connect(debugenabled, &QCheckBox::toggled, [&](bool showXMLSender) {
-        this->XMLWindow->setVisible(showXMLSender);
+    connect(debugEnabled, &QCheckBox::toggled, [&](bool showXMLSender) {
+        xmlWindow->setVisible(showXMLSender);
+        sendXMLButton->setVisible(showXMLSender);
     });
-    connect(XMLWindow, SIGNAL(xmlSent(std::string)), this, SLOT(sendXML(std::string)));
+    connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(sendXML()));
     buttonLayout->addWidget(clearButton);
-    buttonLayout->addWidget(debugenabled);
+    buttonLayout->addWidget(debugEnabled);
     setWindowTitle(tr("Debug Console"));
     emit titleUpdated();
 }
@@ -67,8 +70,9 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
 QtXMLConsoleWidget::~QtXMLConsoleWidget() {
 }
 
-void QtXMLConsoleWidget::sendXML(std::string data) {
-    onXMLSend(data);
+void QtXMLConsoleWidget::sendXML() {
+    onXMLSend(xmlWindow->toPlainText().toStdString());
+    xmlWindow->clear();
 }
 
 void QtXMLConsoleWidget::showEvent(QShowEvent* event) {
