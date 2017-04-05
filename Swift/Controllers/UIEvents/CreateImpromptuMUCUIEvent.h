@@ -32,7 +32,7 @@ class CreateImpromptuMUCUIEvent : public UIEvent {
          *                  is used to recreate an old impromptu chat room.
          * @param reason
          */
-        CreateImpromptuMUCUIEvent(const std::vector<JID>& jids, const JID& roomJID = JID(), const std::string reason = "") : jids_(jids), roomJID_(roomJID), reason_(reason) { }
+        CreateImpromptuMUCUIEvent(const std::vector<JID>& jids, const JID& roomJID, const std::string reason) : jids_(jids), roomJID_(roomJID), reason_(reason) { }
 
         std::vector<JID> getJIDs() const { return jids_; }
         JID getRoomJID() const { return roomJID_; }

@@ -157,7 +157,7 @@ void QtUserSearchWindow::handleAccepted() {
                 jids.push_back(contact->jid);
             }
 
-            eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
+            eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, JID(), Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
         case Type::InviteToChat:
             for (Contact::ref contact : contactVector_) {
