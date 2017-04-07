@@ -29,11 +29,11 @@ namespace Swift {
         public:
             void handleDataRead(const SafeByteArray& data);
             void handleDataWritten(const SafeByteArray& data);
-            void setClient(std::shared_ptr<Client> client_);
+            void setClient(std::shared_ptr<Client> client);
 
         private:
             void handleUIEvent(std::shared_ptr<UIEvent> event);
-            void sendXML(std::string data);
+            void sendXML(const std::string& data);
         private:
             XMLConsoleWidgetFactory* xmlConsoleWidgetFactory;
             XMLConsoleWidget* xmlConsoleWidget;

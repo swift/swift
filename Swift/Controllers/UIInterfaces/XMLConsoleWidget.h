@@ -20,6 +20,6 @@ namespace Swift {
             virtual void handleDataWritten(const SafeByteArray& data) = 0;
             virtual void show() = 0;
             virtual void activate() = 0;
-            boost::signals2::signal<void (std::string data)> onXMLSend;
+            boost::signals2::signal<void (const std::string& data)> onXMLSend;
     };
 }

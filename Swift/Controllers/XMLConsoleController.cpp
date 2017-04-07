@@ -43,13 +43,15 @@ void XMLConsoleController::handleDataWritten(const SafeByteArray& data) {
         xmlConsoleWidget->handleDataWritten(data);
     }
 }
-void XMLConsoleController::setClient(std::shared_ptr<Client> client_)
-{
-    this->client_ = client_;
+
+void XMLConsoleController::setClient(std::shared_ptr<Client> client) {
+    client_ = client;
 }
-void XMLConsoleController::sendXML(std::string data){
+
+void XMLConsoleController::sendXML(const std::string& data){
     if(client_) {
         client_->sendData(data);
     }
 }
+
 }
