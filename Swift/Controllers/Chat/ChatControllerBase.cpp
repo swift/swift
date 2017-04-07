@@ -38,28 +38,22 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), timerFactory_(timerFactory), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
     chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
     chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
     chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
-    chatWindow_->onLogCleared.connect(boost::bind(&ChatControllerBase::handleLogCleared, this));
+    chatWindow_->onContinuationsBroken.connect(boost::bind(&ChatControllerBase::handleContinuationsBroken, this));
     entityCapsProvider_->onCapsChanged.connect(boost::bind(&ChatControllerBase::handleCapsChanged, this, _1));
     highlighter_ = highlightManager->createHighlighter(nickResolver);
     ChatControllerBase::setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
-    createDayChangeTimer();
 }
 
 ChatControllerBase::~ChatControllerBase() {
-    if (dateChangeTimer_) {
-        dateChangeTimer_->onTick.disconnect(boost::bind(&ChatControllerBase::handleDayChangeTick, this));
-        dateChangeTimer_->stop();
-    }
-
     delete highlighter_;
     delete chatWindow_;
 }
 
-void ChatControllerBase::handleLogCleared() {
+void ChatControllerBase::handleContinuationsBroken() {
     cancelReplaces();
 }
 
@@ -79,26 +73,6 @@ void ChatControllerBase::setCanStartImpromptuChats(bool supportsImpromptu) {
     if (chatWindow_) {
         chatWindow_->setCanInitiateImpromptuChats(supportsImpromptu);
     }
-}
-
-void ChatControllerBase::createDayChangeTimer() {
-    if (timerFactory_) {
-        boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-        boost::posix_time::ptime midnight(now.date() + boost::gregorian::days(1));
-        int millisecondsUntilMidnight = boost::numeric_cast<int>((midnight - now).total_milliseconds());
-        dateChangeTimer_ = timerFactory_->createTimer(millisecondsUntilMidnight);
-        dateChangeTimer_->onTick.connect(boost::bind(&ChatControllerBase::handleDayChangeTick, this));
-        dateChangeTimer_->start();
-    }
-}
-
-void ChatControllerBase::handleDayChangeTick() {
-    dateChangeTimer_->stop();
-    boost::posix_time::ptime now = boost::posix_time::second_clock::local_time();
-    chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(str(format(QT_TRANSLATE_NOOP("", "The day is now %1%")) % std::string(boost::posix_time::to_iso_extended_string(now)).substr(0,10))), ChatWindow::DefaultDirection);
-    lastWasPresence_ = false;
-    dayTicked();
-    createDayChangeTimer();
 }
 
 void ChatControllerBase::setEnabled(bool enabled) {

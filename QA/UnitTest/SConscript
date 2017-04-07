@@ -18,6 +18,7 @@ if env["TEST"] :
         myenv.UseFlags(env.get("CPPUNIT_FLAGS",""))
         myenv.UseFlags(env.get("GOOGLETEST_FLAGS", ""))
         myenv.UseFlags(env.get("SWIFTEN_DEP_FLAGS", ""))
+        myenv.UseFlags(env.get("SWIFT_QTUI_TEST_FLAGS", ""))
         if env.get("HAVE_LIBXML") :
             myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
         if env.get("HAVE_EXPAT") :

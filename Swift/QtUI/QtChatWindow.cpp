@@ -36,6 +36,7 @@
 #include <QTextDocument>
 #include <QTextEdit>
 #include <QTime>
+#include <QTimer>
 #include <QToolButton>
 #include <QUrl>
 
@@ -189,9 +190,20 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
     settings_->onSettingChanged.connect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
     messageLog_->showEmoticons(settings_->getSetting(QtUISettingConstants::SHOW_EMOTICONS));
     setMinimumSize(100, 100);
+
+    dayChangeTimer = new QTimer(this);
+    dayChangeTimer->setSingleShot(true);
+    connect(dayChangeTimer, &QTimer::timeout, [this](){
+        addSystemMessage(ChatMessage(Q2PSTRING(tr("The day is now %1").arg(QDateTime::currentDateTime().date().toString(Qt::SystemLocaleLongDate)))), ChatWindow::DefaultDirection);
+        onContinuationsBroken();
+        resetDayChangeTimer();
+    });
+
+    resetDayChangeTimer();
 }
 
 QtChatWindow::~QtChatWindow() {
+    dayChangeTimer->stop();
     settings_->onSettingChanged.disconnect(boost::bind(&QtChatWindow::handleSettingChanged, this, _1));
     if (mucConfigurationWindow_) {
         delete mucConfigurationWindow_.data();
@@ -206,7 +218,7 @@ void QtChatWindow::handleSettingChanged(const std::string& setting) {
 }
 
 void QtChatWindow::handleLogCleared() {
-    onLogCleared();
+    onContinuationsBroken();
 }
 
 void QtChatWindow::handleOccupantSelectionChanged(RosterItem* item) {
@@ -654,6 +666,12 @@ std::vector<JID> QtChatWindow::jidListFromQByteArray(const QByteArray& dataBytes
         invites.push_back(Q2PSTRING(jidString));
     }
     return invites;
+}
+
+void QtChatWindow::resetDayChangeTimer() {
+    assert(dayChangeTimer);
+    // Add a second so the handled is definitly called on the next day, and not multiple times exactly at midnight.
+    dayChangeTimer->start(QtUtilities::secondsToNextMidnight(QDateTime::currentDateTime()) * 1000 + 1000);
 }
 
 void QtChatWindow::setAvailableOccupantActions(const std::vector<OccupantAction>& actions) {

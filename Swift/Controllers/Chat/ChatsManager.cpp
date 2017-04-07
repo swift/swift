@@ -747,7 +747,7 @@ ChatController* ChatsManager::getChatControllerOrFindAnother(const JID &contact)
 ChatController* ChatsManager::createNewChatController(const JID& contact) {
     assert(chatControllers_.find(contact) == chatControllers_.end());
     std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getConfiguration(), ChatMessageParser::Mode::Chat); /* a message parser that knows this is a chat (not a room/MUC) */
-    ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, eventController_, timerFactory_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, autoAcceptMUCInviteDecider_);
+    ChatController* controller = new ChatController(jid_, stanzaChannel_, iqRouter_, chatWindowFactory_, contact, nickResolver_, presenceOracle_, avatarManager_, mucRegistry_->isMUC(contact.toBare()), useDelayForLatency_, uiEventStream_, timerFactory_, eventController_, entityCapsProvider_, userWantsReceipts_, settings_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, autoAcceptMUCInviteDecider_);
     chatControllers_[contact] = controller;
     controller->setAvailableServerFeatures(serverDiscoInfo_);
     controller->onActivity.connect(boost::bind(&ChatsManager::handleChatActivity, this, contact, _1, false));

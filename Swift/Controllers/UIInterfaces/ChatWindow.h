@@ -264,7 +264,7 @@ namespace Swift {
             boost::signals2::signal<void ()> onGetAffiliationsRequest;
             boost::signals2::signal<void (MUCOccupant::Affiliation, const JID&)> onSetAffiliationRequest;
             boost::signals2::signal<void (const std::vector<std::pair<MUCOccupant::Affiliation, JID> >& changes)> onChangeAffiliationsRequest;
-            boost::signals2::signal<void ()> onLogCleared;
+            boost::signals2::signal<void ()> onContinuationsBroken;
 
             // File transfer related
             boost::signals2::signal<void (std::string /* id */)> onFileTransferCancel;

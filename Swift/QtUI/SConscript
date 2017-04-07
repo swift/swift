@@ -71,6 +71,21 @@ if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
 
 myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
+
+## Qt related unit tests
+testQtEnv = env.Clone();
+testQtEnv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
+testQtEnv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
+env["SWIFT_QTUI_TEST_FLAGS"] = {
+    "CPPFLAGS": testQtEnv["CPPFLAGS"],
+    "LIBS": testQtEnv["LIBS"],
+    "LINKFLAGS": testQtEnv["LINKFLAGS"],
+}
+
+env.Append(UNITTEST_SOURCES = [
+    File("UnitTest/QtUtilitiesTest.cpp")
+])
+
 myenv.Append(CPPPATH = ["."])
 
 # Qt requires applications to be build with the -fPIC flag on some 32-bit Linux distributions.

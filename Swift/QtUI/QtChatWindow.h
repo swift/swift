@@ -192,6 +192,8 @@ namespace Swift {
 
             static std::vector<JID> jidListFromQByteArray(const QByteArray& dataBytes);
 
+            void resetDayChangeTimer();
+
         private:
             int unreadCount_;
             bool contactIsTyping_;
@@ -219,7 +221,7 @@ namespace Swift {
             bool tabCompletion_;
             UIEventStream* eventStream_;
             bool isOnline_;
-            QSplitter *logRosterSplitter_;
+            QSplitter* logRosterSplitter_;
             Tristate correctionEnabled_;
             Tristate fileTransferEnabled_;
             QString alertStyleSheet_;
@@ -238,5 +240,6 @@ namespace Swift {
             std::unique_ptr<QMenu> emojisMenu_;
             QPointer<QtEmojisSelector> emojisGrid_;
             std::map<std::string, std::string> emoticonsMap_;
+            QTimer* dayChangeTimer = nullptr;
     };
 }

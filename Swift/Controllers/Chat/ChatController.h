@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,18 +19,19 @@ namespace Swift {
     class AvatarManager;
     class ChatStateNotifier;
     class ChatStateTracker;
-    class NickResolver;
+    class ClientBlockListManager;
     class EntityCapsProvider;
     class FileTransferController;
-    class SettingsProvider;
-    class HistoryController;
     class HighlightManager;
-    class ClientBlockListManager;
+    class HistoryController;
+    class NickResolver;
+    class SettingsProvider;
+    class TimerFactory;
     class UIEvent;
 
     class ChatController : public ChatControllerBase {
         public:
-            ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
             virtual ~ChatController();
             virtual void setToJID(const JID& jid) SWIFTEN_OVERRIDE;
             virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;

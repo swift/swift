@@ -23,8 +23,6 @@
 #include <Swiften/Elements/Stanza.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/MUC/MUCRegistry.h>
-#include <Swiften/Network/Timer.h>
-#include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Presence/PresenceOracle.h>
 #include <Swiften/Queries/IQRouter.h>
 
@@ -74,7 +72,7 @@ namespace Swift {
             boost::signals2::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
         protected:
-            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, TimerFactory* timerFactory, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
 
             /**
              * Pass the Message appended, and the stanza used to send it.
@@ -103,16 +101,14 @@ namespace Swift {
         private:
             IDGenerator idGenerator_;
             std::string lastSentMessageStanzaID_;
-            void createDayChangeTimer();
 
             void handleSendMessageRequest(const std::string &body, bool isCorrectionMessage);
             void handleAllMessagesRead();
             void handleSecurityLabelsCatalogResponse(std::shared_ptr<SecurityLabelsCatalog>, ErrorPayload::ref error);
-            void handleDayChangeTick();
             void handleMUCInvitation(Message::ref message);
             void handleMediatedMUCInvitation(Message::ref message);
             void handleGeneralMUCInvitation(MUCInviteEvent::ref event);
-            void handleLogCleared();
+            void handleContinuationsBroken();
 
         protected:
             JID selfJID_;
@@ -129,8 +125,6 @@ namespace Swift {
             AvatarManager* avatarManager_;
             bool useDelayForLatency_;
             EventController* eventController_;
-            std::shared_ptr<Timer> dateChangeTimer_;
-            TimerFactory* timerFactory_;
             EntityCapsProvider* entityCapsProvider_;
             SecurityLabelsCatalog::Item lastLabel_;
             HistoryController* historyController_;

@@ -1,10 +1,10 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
-#include "QtUtilities.h"
+#include <Swift/QtUI/QtUtilities.h>
 
 #include <QtGui>
 #if defined (Q_OS_UNIX) && !defined(Q_OS_MAC)
@@ -14,8 +14,9 @@
 #endif
 #include <QTextDocument>
 #include <QWidget>
+#include <QDateTime>
 
-#include "Swift/Controllers/ApplicationInfo.h"
+#include <Swift/Controllers/ApplicationInfo.h>
 
 namespace QtUtilities {
 
@@ -40,6 +41,14 @@ QString htmlEscape(const QString& s) {
 #else
     return Qt::escape(s);
 #endif
+}
+
+long long secondsToNextMidnight(const QDateTime& currentTime) {
+    auto secondsToMidnight = 0ll;
+    auto nextMidnight = currentTime.addDays(1);
+    nextMidnight.setTime(QTime(0,0));
+    secondsToMidnight = currentTime.secsTo(nextMidnight);
+    return secondsToMidnight;
 }
 
 }
