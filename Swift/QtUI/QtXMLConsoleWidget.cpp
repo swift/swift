@@ -27,16 +27,16 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     QVBoxLayout* layout = new QVBoxLayout(this);
     xmlWindow = new QTextEdit(this);
     sendXMLButton = new QPushButton(tr("Send XML"),this);
-    layout->addWidget(xmlWindow);
-    layout->addWidget(sendXMLButton);
-    xmlWindow->hide(); // Only show this when check button is ticked.
-    sendXMLButton->hide();
     layout->setSpacing(0);
     layout->setContentsMargins(0,0,0,0);
 
     textEdit = new QTextEdit(this);
     textEdit->setReadOnly(true);
     layout->addWidget(textEdit);
+    layout->addWidget(xmlWindow);
+    layout->addWidget(sendXMLButton);
+    xmlWindow->hide(); // Only show this when check button is ticked.
+    sendXMLButton->hide();
 
     QWidget* bottom = new QWidget(this);
     layout->addWidget(bottom);
@@ -50,7 +50,7 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     enabled = new QCheckBox(tr("Trace input/output"), bottom);
     enabled->setChecked(true);
     buttonLayout->addWidget(enabled);
-
+    buttonLayout->addWidget(debugEnabled);
     buttonLayout->addStretch();
 
     QPushButton* clearButton = new QPushButton(tr("Clear"), bottom);
@@ -62,7 +62,6 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     });
     connect(sendXMLButton, SIGNAL(clicked()), this, SLOT(sendXML()));
     buttonLayout->addWidget(clearButton);
-    buttonLayout->addWidget(debugEnabled);
     setWindowTitle(tr("Debug Console"));
     emit titleUpdated();
 }
