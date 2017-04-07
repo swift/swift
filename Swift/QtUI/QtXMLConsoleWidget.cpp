@@ -46,7 +46,7 @@ QtXMLConsoleWidget::QtXMLConsoleWidget() {
     buttonLayout->setContentsMargins(10,0,20,0);
     buttonLayout->setSpacing(0);
 
-    debugEnabled = new QCheckBox(tr("Manually enter XML"), bottom);
+    debugEnabled = new QCheckBox(tr("Show XML Entry tools"), bottom);
     enabled = new QCheckBox(tr("Trace input/output"), bottom);
     enabled->setChecked(true);
     buttonLayout->addWidget(enabled);
