@@ -76,11 +76,10 @@ myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 testQtEnv = env.Clone();
 testQtEnv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 testQtEnv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
-env["SWIFT_QTUI_TEST_FLAGS"] = {
-    "CPPFLAGS": testQtEnv["CPPFLAGS"],
-    "LIBS": testQtEnv["LIBS"],
-    "LINKFLAGS": testQtEnv["LINKFLAGS"],
-}
+env["SWIFT_QTUI_TEST_FLAGS"] = {}
+for key in ["CCFLAGS", "CPPFLAGS", "CPPPATH", "CPPDEFINES", "LIBS", "LINKFLAGS", "LIBPATH"] :
+    if key in testQtEnv:
+        env["SWIFT_QTUI_TEST_FLAGS"][key] = testQtEnv[key]
 
 env.Append(UNITTEST_SOURCES = [
     File("UnitTest/QtUtilitiesTest.cpp")
