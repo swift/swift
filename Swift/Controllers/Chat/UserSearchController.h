@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ namespace Swift {
 
     class UserSearchController {
         public:
-            enum Type {AddContact, StartChat, InviteToChat};
+            enum class Type {AddContact, StartChat, InviteToChat};
             UserSearchController(Type type, const JID& jid, UIEventStream* uiEventStream, VCardManager* vcardManager, UserSearchWindowFactory* userSearchWindowFactory, IQRouter* iqRouter, RosterController* rosterController, ContactSuggester* contactSuggester, AvatarManager* avatarManager, PresenceOracle* presenceOracle, ProfileSettingsProvider* settings);
             ~UserSearchController();
 

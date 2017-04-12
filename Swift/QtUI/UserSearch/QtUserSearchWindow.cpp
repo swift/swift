@@ -34,7 +34,7 @@
 
 namespace Swift {
 
-QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(nullptr), firstMultiJIDPage_(nullptr), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
+QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider) : eventStream_(eventStream), type_(type), model_(nullptr), firstPage_(nullptr), firstMultiJIDPage_(nullptr), settings_(settingsProvider), searchNext_(false), supportsImpromptu_(false) {
     setupUi(this);
 #ifndef Q_OS_MAC
 #ifdef  Q_OS_WIN32
@@ -45,13 +45,13 @@ QtUserSearchWindow::QtUserSearchWindow(UIEventStream* eventStream, UserSearchWin
 #endif
     QString title;
     switch(type) {
-        case AddContact:
+        case Type::AddContact:
             title = tr("Add Contact");
             break;
-        case ChatToContact:
+        case Type::ChatToContact:
             title = tr("Chat to Users");
             break;
-        case InviteToChat:
+        case Type::InviteToChat:
             title = tr("Add Users to Chat");
             break;
     }
@@ -77,11 +77,22 @@ QtUserSearchWindow::~QtUserSearchWindow() {
 
 void QtUserSearchWindow::handleCurrentChanged(int page) {
     searchNext_ = false;
-    if (type_ != AddContact) {
+
+    // Check preconditions per type.
+    if (type_ == Type::AddContact) {
+        assert(firstPage_);
+        assert(!firstMultiJIDPage_);
+    }
+    else {
+        assert(!firstPage_);
+        assert(firstMultiJIDPage_);
+    }
+
+    if (type_ != Type::AddContact) {
         firstMultiJIDPage_->reset();
     }
     resultsPage_->emitCompletenessCheck();
-    if (firstMultiJIDPage_ && page == 1 && lastPage_ == 3) {
+    if (type_ != Type::AddContact && page == 1 && lastPage_ == 3) {
         addSearchedJIDToList(getContact());
         setSecondPage();
     }
@@ -97,7 +108,7 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
         JID server = getServerToSearch();
         handleSearch();
 
-        if (type_ == AddContact) {
+        if (type_ == Type::AddContact) {
             bool remote = firstPage_->byRemoteSearch_->isChecked();
             firstPage_->byRemoteSearch_->setChecked(remote);
             firstPage_->service_->setEditText(P2QSTRING(server.toString()));
@@ -119,7 +130,7 @@ void QtUserSearchWindow::handleCurrentChanged(int page) {
 }
 
 JID QtUserSearchWindow::getServerToSearch() {
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         return firstPage_->byRemoteSearch_->isChecked() ? JID(Q2PSTRING(firstPage_->service_->currentText().trimmed())) : myServer_;
     }
     else {
@@ -131,11 +142,11 @@ void QtUserSearchWindow::handleAccepted() {
     JID jid;
     std::vector<JID> jids;
     switch(type_) {
-        case AddContact:
+        case Type::AddContact:
             jid = getContactJID();
             eventStream_->send(std::make_shared<AddContactUIEvent>(jid, detailsPage_->getName(), detailsPage_->getSelectedGroups()));
             break;
-        case ChatToContact:
+        case Type::ChatToContact:
             if (contactVector_.size() == 1) {
                 std::shared_ptr<UIEvent> event(new RequestChatUIEvent(contactVector_[0]->jid));
                 eventStream_->send(event);
@@ -148,7 +159,7 @@ void QtUserSearchWindow::handleAccepted() {
 
             eventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, Q2PSTRING(firstMultiJIDPage_->reason_->text())));
             break;
-        case InviteToChat:
+        case Type::InviteToChat:
             for (Contact::ref contact : contactVector_) {
                 jids.push_back(contact->jid);
             }
@@ -171,7 +182,7 @@ void QtUserSearchWindow::addContact() {
 
     firstMultiJIDPage_->contactList_->setList(contactVector_);
     firstMultiJIDPage_->emitCompletenessCheck();
-    if (type_ == ChatToContact) {
+    if (type_ == Type::ChatToContact) {
         firstMultiJIDPage_->groupBox->setEnabled(supportsImpromptu_ ? 1 : (contactVector_.size() < 1));
     }
 
@@ -195,11 +206,11 @@ void QtUserSearchWindow::setWarning(const boost::optional<std::string>& message)
 }
 
 int QtUserSearchWindow::nextId() const {
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         switch (currentId()) {
-            case 1: return firstPage_->byJID_->isChecked() ? (type_ == AddContact ? 4 : -1) : 2;
+            case 1: return firstPage_->byJID_->isChecked() ? (type_ == Type::AddContact ? 4 : -1) : 2;
             case 2: return 3;
-            case 3: return type_ == AddContact ? 4 : -1;
+            case 3: return type_ == Type::AddContact ? 4 : -1;
             case 4: return -1;
             default: return -1;
         }
@@ -261,7 +272,7 @@ JID QtUserSearchWindow::getContactJID() const {
     JID jid;
 
     bool useSearchResult;
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         useSearchResult = !firstPage_->byJID_->isChecked();
     } else {
         useSearchResult = true;
@@ -315,7 +326,7 @@ void QtUserSearchWindow::handleOnSearchedJIDSelected(const Contact::ref& contact
 
 void QtUserSearchWindow::show() {
     clear();
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         setWarning(boost::optional<std::string>());
     }
     QWidget::show();
@@ -323,7 +334,7 @@ void QtUserSearchWindow::show() {
 }
 
 void QtUserSearchWindow::addSavedServices(const std::vector<JID>& services) {
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         firstPage_->service_->clear();
         for (auto&& jid : services) {
             firstPage_->service_->addItem(P2QSTRING(jid.toString()));
@@ -374,7 +385,7 @@ void QtUserSearchWindow::prepopulateJIDAndName(const JID& jid, const std::string
 }
 
 void QtUserSearchWindow::setContactSuggestions(const std::vector<Contact::ref>& suggestions) {
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         firstPage_->jid_->setSuggestions(suggestions);
     } else {
         firstMultiJIDPage_->jid_->setSuggestions(suggestions);
@@ -410,19 +421,19 @@ std::vector<JID> QtUserSearchWindow::getJIDs() const {
 
 void QtUserSearchWindow::setCanStartImpromptuChats(bool supportsImpromptu) {
     supportsImpromptu_ = supportsImpromptu;
-    if (type_ == ChatToContact) {
+    if (type_ == Type::ChatToContact) {
         firstMultiJIDPage_->contactList_->setMaximumNoOfContactsToOne(!supportsImpromptu_);
     }
 }
 
 void QtUserSearchWindow::updateContacts(const std::vector<Contact::ref>& contacts) {
-    if (type_ != AddContact) {
+    if (type_ != Type::AddContact) {
         firstMultiJIDPage_->contactList_->updateContacts(contacts);
     }
 }
 
 void QtUserSearchWindow::addContacts(const std::vector<Contact::ref>& contacts) {
-    if (type_ != AddContact) {
+    if (type_ != Type::AddContact) {
         /* prevent duplicate JIDs from appearing in the contact list */
         for (Contact::ref newContact : contacts) {
             bool found = false;
@@ -436,12 +447,12 @@ void QtUserSearchWindow::addContacts(const std::vector<Contact::ref>& contacts) 
                 contactVector_.push_back(newContact);
             }
         }
-        if (type_ != InviteToChat && !supportsImpromptu_ && contactVector_.size() > 1) {
+        if (type_ != Type::InviteToChat && !supportsImpromptu_ && contactVector_.size() > 1) {
             contactVector_.resize(1); /* can't chat with more than one user */
         }
         firstMultiJIDPage_->contactList_->setList(contactVector_);
         firstMultiJIDPage_->emitCompletenessCheck();
-        if (type_ == ChatToContact) {
+        if (type_ == Type::ChatToContact) {
             firstMultiJIDPage_->groupBox->setEnabled(supportsImpromptu_ ? true : (contactVector_.size() < 1));
         }
     }
@@ -459,7 +470,7 @@ void QtUserSearchWindow::handleAddViaSearch() {
 
 void QtUserSearchWindow::handleListChanged(std::vector<Contact::ref> list) {
     contactVector_ = list;
-    if (type_ == ChatToContact) {
+    if (type_ == Type::ChatToContact) {
         firstMultiJIDPage_->groupBox->setEnabled(supportsImpromptu_ ? 1 : (contactVector_.size() < 1));
     }
 }
@@ -509,7 +520,7 @@ void QtUserSearchWindow::setFirstPage(QString title) {
     if (page(1) != nullptr) {
         removePage(1);
     }
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         firstPage_ = new QtUserSearchFirstPage(type_, title.isEmpty() ? firstPage_->title() : title, settings_);
         connect(firstPage_->jid_, SIGNAL(textEdited(QString)), this, SLOT(handleContactSuggestionRequested(QString)));
         connect(firstPage_->jid_, SIGNAL(textEdited(QString)), this, SLOT(handleJIDEditingDone()), Qt::UniqueConnection);
@@ -554,7 +565,7 @@ void QtUserSearchWindow::setThirdPage() {
 #ifdef SWIFT_PLATFORM_MACOSX
     resultsPage_->results_->setAlternatingRowColors(true);
 #endif
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         connect(resultsPage_, SIGNAL(onUserTriggersContinue()), this, SLOT(next()));
     }
     else {
@@ -579,7 +590,7 @@ void QtUserSearchWindow::clearForm() {
 
 void QtUserSearchWindow::clear() {
     QString howText;
-    if (type_ == AddContact) {
+    if (type_ == Type::AddContact) {
         firstPage_->errorLabel_->setVisible(false);
         howText = QString(tr("How would you like to find the user to add?"));
         firstPage_->howLabel_->setText(howText);
@@ -589,9 +600,9 @@ void QtUserSearchWindow::clear() {
         contactVector_.clear();
         firstMultiJIDPage_->contactList_->setList(contactVector_);
         firstMultiJIDPage_->errorLabel_->setVisible(false);
-        if (type_ == ChatToContact) {
+        if (type_ == Type::ChatToContact) {
             howText = QString(tr("List of participants:"));
-        } else if (type_ == InviteToChat) {
+        } else if (type_ == Type::InviteToChat) {
             howText = QString(tr("Who do you want to invite to the chat?"));
         }
         firstMultiJIDPage_->howLabel_->setText(howText);
@@ -606,14 +617,14 @@ void QtUserSearchWindow::clear() {
 
 void QtUserSearchWindow::setError(const QString& error) {
     if (error.isEmpty()) {
-        if (type_ == AddContact) {
+        if (type_ == Type::AddContact) {
             firstPage_->errorLabel_->hide();
         } else {
             firstMultiJIDPage_->errorLabel_->hide();
         }
     }
     else {
-        if (type_ == AddContact) {
+        if (type_ == Type::AddContact) {
             firstPage_->errorLabel_->setText(QString("<font color='red'>%1</font>").arg(error));
             firstPage_->errorLabel_->show();
         } else {

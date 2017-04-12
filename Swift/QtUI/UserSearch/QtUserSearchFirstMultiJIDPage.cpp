@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,13 +29,13 @@ QtUserSearchFirstMultiJIDPage::QtUserSearchFirstMultiJIDPage(UserSearchWindow::T
     setTitle(title);
     QString introText = "";
     switch (type) {
-        case UserSearchWindow::AddContact:
+        case UserSearchWindow::Type::AddContact:
             introText = tr("Add another user to your contact list");
             break;
-        case UserSearchWindow::ChatToContact:
+        case UserSearchWindow::Type::ChatToContact:
             introText = tr("Chat to another user");
             break;
-        case UserSearchWindow::InviteToChat:
+        case UserSearchWindow::Type::InviteToChat:
             introText = tr("Invite contact to chat");
             break;
     }

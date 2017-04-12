@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -83,17 +83,17 @@ void UserSearchController::handleUIEvent(std::shared_ptr<UIEvent> event) {
     std::shared_ptr<RequestAddUserDialogUIEvent> addUserRequest = std::shared_ptr<RequestAddUserDialogUIEvent>();
     auto inviteToMUCRequest = RequestInviteToMUCUIEvent::ref();
     switch (type_) {
-        case AddContact:
+        case Type::AddContact:
             if ((addUserRequest = std::dynamic_pointer_cast<RequestAddUserDialogUIEvent>(event))) {
                 handle = true;
             }
             break;
-        case StartChat:
+        case Type::StartChat:
             if (std::dynamic_pointer_cast<RequestChatWithUserDialogUIEvent>(event)) {
                 handle = true;
             }
             break;
-        case InviteToChat:
+        case Type::InviteToChat:
             if ((inviteToMUCRequest = std::dynamic_pointer_cast<RequestInviteToMUCUIEvent>(event))) {
                 handle = true;
             }
@@ -241,7 +241,7 @@ void UserSearchController::handleContactSuggestionsRequested(std::string text) {
         }
 
         // remove contact suggestions which are already on the contact list in add-contact-mode
-        if (type_ == AddContact) {
+        if (type_ == Type::AddContact) {
             if (!found && !!rosterController_->getItem((*i)->jid)) {
                 found = true;
             }
@@ -327,16 +327,16 @@ void UserSearchController::handleDiscoWalkFinished() {
 
 void UserSearchController::initializeUserWindow() {
     if (!window_) {
-        UserSearchWindow::Type windowType = UserSearchWindow::AddContact;
+        auto windowType = UserSearchWindow::Type::AddContact;
         switch(type_) {
-            case AddContact:
-                windowType = UserSearchWindow::AddContact;
+            case Type::AddContact:
+                windowType = UserSearchWindow::Type::AddContact;
                 break;
-            case StartChat:
-                windowType = UserSearchWindow::ChatToContact;
+            case Type::StartChat:
+                windowType = UserSearchWindow::Type::ChatToContact;
                 break;
-            case InviteToChat:
-                windowType = UserSearchWindow::InviteToChat;
+            case Type::InviteToChat:
+                windowType = UserSearchWindow::Type::InviteToChat;
                 break;
         }
 

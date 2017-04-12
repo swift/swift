@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
 
     class UserSearchWindow {
         public:
-            enum Type {AddContact, ChatToContact, InviteToChat};
+            enum class Type {AddContact, ChatToContact, InviteToChat};
             virtual ~UserSearchWindow() {}
 
             virtual void clear() = 0;

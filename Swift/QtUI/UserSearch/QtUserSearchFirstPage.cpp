@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
 QtUserSearchFirstPage::QtUserSearchFirstPage(UserSearchWindow::Type type, const QString& title, SettingsProvider* settings) {
     setupUi(this);
     setTitle(title);
-    setSubTitle(QString(tr("%1. If you know their address you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::AddContact ? tr("Add another user to your contact list") : tr("Chat to another user")));
+    setSubTitle(QString(tr("%1. If you know their address you can enter it directly, or you can search for them.")).arg(type == UserSearchWindow::Type::AddContact ? tr("Add another user to your contact list") : tr("Chat to another user")));
     jid_ = new QtSuggestingJIDInput(this, settings);
     horizontalLayout_2->addWidget(jid_);
     jidWarning_ = new QLabel(this);
