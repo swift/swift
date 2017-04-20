@@ -13,6 +13,7 @@
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QFileDevice>
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QMessageBox>
