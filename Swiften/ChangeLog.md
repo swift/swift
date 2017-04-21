@@ -1,6 +1,9 @@
 4.0-in-progress
 ---------------
 - Handle sessions being closed by the server
+- Verify certificates when using HTTPS in BOSH connections
+- In memory caching of latest entity capabilites lookups
+- Fix several smaller leaks and other bugs
 
 4.0-beta1 ( 2016-07-15 )
 ------------------------

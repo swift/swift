@@ -5,6 +5,11 @@
 - Handle sessions being closed by the server
 - Fix Last Message Correction in multi client scenarios
 - Fix display of default avatar on Windows
+- Support for automatic software updates on macOS
+- Redesigned keyword highlighing
+- Support for unicode emojis on macOS
+- Improvements to font size handling in the chat theme
+- And assorted smaller features and usability enhancements
 
 4.0-beta2 ( 2016-07-20 )
 ------------------------
