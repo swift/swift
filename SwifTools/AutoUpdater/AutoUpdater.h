@@ -28,6 +28,7 @@ namespace Swift {
             virtual void setAppcastFeed(const std::string& appcastFeed) = 0;
             virtual void checkForUpdates() = 0;
             virtual State getCurrentState() = 0;
+            virtual bool applicationInstallationLocationWritable() = 0;
 
         public:
             /**

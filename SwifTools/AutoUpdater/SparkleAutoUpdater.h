@@ -21,11 +21,12 @@ namespace Swift {
     class SparkleAutoUpdater : public AutoUpdater {
         public:
             SparkleAutoUpdater(const std::string& appcastFeed);
-            ~SparkleAutoUpdater();
+            ~SparkleAutoUpdater() override;
 
-            void setAppcastFeed(const std::string& appcastFeed);
-            void checkForUpdates();
-            State getCurrentState();
+            void setAppcastFeed(const std::string& appcastFeed) override;
+            void checkForUpdates() override;
+            State getCurrentState() override;
+            bool applicationInstallationLocationWritable() override;
 
         private:
             void setCurrentState(State updatedState);
