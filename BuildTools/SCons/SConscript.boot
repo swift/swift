@@ -247,6 +247,9 @@ for flags_type in ["ccflags", "cxxflags", "linkflags"] :
 # where you need it
 env["OBJCCFLAGS"] = []
 
+if env["PLATFORM"] != "win32" :
+    env.AppendUnique(CCFLAGS=['-isystem', Dir('#').abspath + '/Backport/'])
+
 # Compile code as C++11
 if env["PLATFORM"] != "win32" :
     env.Append(CXXFLAGS = ["-std=c++11"])

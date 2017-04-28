@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-Roster::Roster(bool sortByStatus, bool fullJIDMapping) : fullJIDMapping_(fullJIDMapping), sortByStatus_(sortByStatus), root_(std::unique_ptr<GroupRosterItem>(new GroupRosterItem("Dummy-Root", nullptr, sortByStatus_))) {
+Roster::Roster(bool sortByStatus, bool fullJIDMapping) : fullJIDMapping_(fullJIDMapping), sortByStatus_(sortByStatus), root_(std::make_unique<GroupRosterItem>("Dummy-Root", nullptr, sortByStatus_)) {
     root_->onChildrenChanged.connect(boost::bind(&Roster::handleChildrenChanged, this, root_.get()));
 }
 

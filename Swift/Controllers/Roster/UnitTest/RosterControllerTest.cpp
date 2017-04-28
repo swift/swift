@@ -72,7 +72,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
             mainWindowFactory_ = new MockMainWindowFactory();
             mucRegistry_ = new MUCRegistry();
             crypto_ = PlatformCryptoProvider::create();
-            storages_ = std::unique_ptr<MemoryStorages>(new MemoryStorages(crypto_));
+            storages_ = std::make_unique<MemoryStorages>(crypto_);
             nickResolver_ = new NickResolver(jid_.toBare(), xmppRoster_, nullptr, mucRegistry_);
             channel_ = new DummyIQChannel();
             router_ = new IQRouter(channel_);
@@ -83,7 +83,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
             uiEventStream_ = new UIEventStream();
             settings_ = new DummySettingsProvider();
             nickManager_ = new DummyNickManager();
-            capsManager_ = std::unique_ptr<CapsManager>(new CapsManager(storages_->getCapsStorage(), stanzaChannel_, router_, crypto_));
+            capsManager_ = std::make_unique<CapsManager>(storages_->getCapsStorage(), stanzaChannel_, router_, crypto_);
             entityCapsManager_ = new EntityCapsManager(capsManager_.get(), stanzaChannel_);
             jingleSessionManager_ = new JingleSessionManager(router_);
 
@@ -92,7 +92,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
             vcardManager_ = new VCardManager(jid_, router_, vcardStorage_);
             rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, clientBlockListManager_, vcardManager_);
             mainWindow_ = mainWindowFactory_->last;
-            capsInfoGenerator_ = std::unique_ptr<CapsInfoGenerator>(new CapsInfoGenerator("", crypto_));
+            capsInfoGenerator_ = std::make_unique<CapsInfoGenerator>("", crypto_);
         }
 
         void tearDown() {

@@ -48,8 +48,8 @@ class CombinedAvatarProviderTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            avatarProvider1 = std::unique_ptr<DummyAvatarProvider>(new DummyAvatarProvider());
-            avatarProvider2 = std::unique_ptr<DummyAvatarProvider>(new DummyAvatarProvider());
+            avatarProvider1 = std::make_unique<DummyAvatarProvider>();
+            avatarProvider2 = std::make_unique<DummyAvatarProvider>();
             user1 = JID("user1@bar.com/bla");
             user2 = JID("user2@foo.com/baz");
             avatarHash1 = "ABCDEFG";

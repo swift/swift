@@ -693,7 +693,7 @@ void QtChatWindow::handleEmojisButtonClicked() {
     emojisLayout->setContentsMargins(style()->pixelMetric(QStyle::PM_MenuHMargin),style()->pixelMetric(QStyle::PM_MenuVMargin),
                                      style()->pixelMetric(QStyle::PM_MenuHMargin),style()->pixelMetric(QStyle::PM_MenuVMargin));
     emojisLayout->addWidget(emojisGrid_);
-    emojisMenu_ = std::unique_ptr<QMenu>(new QMenu());
+    emojisMenu_ = std::make_unique<QMenu>();
     emojisMenu_->setLayout(emojisLayout);
     emojisMenu_->adjustSize();
 

@@ -32,8 +32,8 @@ class ResponderTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            channel_ = std::unique_ptr<DummyIQChannel>(new DummyIQChannel());
-            router_ = std::unique_ptr<IQRouter>(new IQRouter(channel_.get()));
+            channel_ = std::make_unique<DummyIQChannel>();
+            router_ = std::make_unique<IQRouter>(channel_.get());
             payload_ = std::make_shared<SoftwareVersion>("foo");
         }
 

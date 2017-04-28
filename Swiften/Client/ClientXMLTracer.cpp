@@ -16,9 +16,9 @@ namespace Swift {
 
 ClientXMLTracer::ClientXMLTracer(CoreClient* client, bool bosh) : bosh_(bosh) {
 #ifdef SWIFTEN_PLATFORM_WIN32
-    beautifier_ = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, false));
+    beautifier_ = std::make_unique<XMLBeautifier>(true, false);
 #else
-    beautifier_ = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, true));
+    beautifier_ = std::make_unique<XMLBeautifier>(true, true);
 #endif
     onDataReadConnection_ = client->onDataRead.connect(boost::bind(&ClientXMLTracer::printData, this, '<', _1));
     onDataWrittenConnection_ = client->onDataWritten.connect(boost::bind(&ClientXMLTracer::printData, this, '>', _1));

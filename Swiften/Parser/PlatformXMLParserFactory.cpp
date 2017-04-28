@@ -22,9 +22,9 @@ PlatformXMLParserFactory::PlatformXMLParserFactory() {
 
 std::unique_ptr<XMLParser> PlatformXMLParserFactory::createXMLParser(XMLParserClient* client) {
 #ifdef HAVE_LIBXML
-    return std::unique_ptr<XMLParser>(new LibXMLParser(client));
+    return std::make_unique<LibXMLParser>(client);
 #else
-    return std::unique_ptr<XMLParser>(new ExpatParser(client));
+    return std::make_unique<ExpatParser>(client);
 #endif
 }
 

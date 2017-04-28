@@ -30,7 +30,7 @@ class RosterTest : public CppUnit::TestFixture {
             jid1_ = JID("a@b.c");
             jid2_ = JID("b@c.d");
             jid3_ = JID("c@d.e");
-            roster_ = std::unique_ptr<Roster>(new Roster());
+            roster_ = std::make_unique<Roster>();
         }
 
         void testGetGroup() {

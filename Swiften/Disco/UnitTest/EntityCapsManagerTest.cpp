@@ -37,8 +37,8 @@ class EntityCapsManagerTest : public CppUnit::TestFixture {
         void setUp() {
             crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
 
-            stanzaChannel = std::unique_ptr<DummyStanzaChannel>(new DummyStanzaChannel());
-            capsProvider = std::unique_ptr<DummyCapsProvider>(new DummyCapsProvider());
+            stanzaChannel = std::make_unique<DummyStanzaChannel>();
+            capsProvider = std::make_unique<DummyCapsProvider>();
 
             user1 = JID("user1@bar.com/bla");
             discoInfo1 = std::make_shared<DiscoInfo>();

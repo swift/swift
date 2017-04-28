@@ -30,8 +30,8 @@ class XMPPRosterImplTest : public CppUnit::TestFixture {
             jid1_ = JID("a@b.c");
             jid2_ = JID("b@c.d");
             jid3_ = JID("c@d.e");
-            roster_ = std::unique_ptr<XMPPRosterImpl>(new XMPPRosterImpl());
-            handler_ = std::unique_ptr<XMPPRosterSignalHandler>(new XMPPRosterSignalHandler(roster_.get()));
+            roster_ = std::make_unique<XMPPRosterImpl>();
+            handler_ = std::make_unique<XMPPRosterSignalHandler>(roster_.get());
             groups1_.push_back("bobs");
             groups1_.push_back("berts");
             groups2_.push_back("ernies");

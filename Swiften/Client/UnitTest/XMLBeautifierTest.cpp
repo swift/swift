@@ -15,7 +15,7 @@ namespace {
 }
 
 TEST(XMLBeautifierTest, testBeautify) {
-    auto beautifier = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, false));
+    auto beautifier = std::make_unique<XMLBeautifier>(true, false);
 
     ASSERT_EQ(FULL_FORMATTED_OUTPUT, beautifier->beautify("<list><el>aqq</el><el>bzz</el></list>"));
     ASSERT_TRUE(beautifier->wasReset());
@@ -26,7 +26,7 @@ TEST(XMLBeautifierTest, testBeautify) {
 }
 
 TEST(XMLBeautifierTest, testBeautifyMultipleChunks) {
-    auto beautifier = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, false));
+    auto beautifier = std::make_unique<XMLBeautifier>(true, false);
 
     auto result = beautifier->beautify("<list><el>aqq</el>");
     ASSERT_TRUE(beautifier->wasReset());
@@ -40,7 +40,7 @@ TEST(XMLBeautifierTest, testBeautifyMultipleChunks) {
 }
 
 TEST(XMLBeautifierTest, testBeautifyMultipleChunksMiddleElement) {
-    auto beautifier = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, false));
+    auto beautifier = std::make_unique<XMLBeautifier>(true, false);
 
     auto result = beautifier->beautify("<l");
     ASSERT_TRUE(beautifier->wasReset());
@@ -54,7 +54,7 @@ TEST(XMLBeautifierTest, testBeautifyMultipleChunksMiddleElement) {
 }
 
 TEST(XMLBeautifierTest, testBeautifyInvalidMultipleChunks) {
-    auto beautifier = std::unique_ptr<XMLBeautifier>(new XMLBeautifier(true, false));
+    auto beautifier = std::make_unique<XMLBeautifier>(true, false);
 
     ASSERT_EQ(std::string("<list>\n <el>aqq"), beautifier->beautify("<list><el>aqq<"));
     ASSERT_TRUE(beautifier->wasReset());

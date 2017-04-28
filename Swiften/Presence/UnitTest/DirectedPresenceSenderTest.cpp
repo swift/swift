@@ -29,12 +29,12 @@ class DirectedPresenceSenderTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            channel = std::unique_ptr<DummyStanzaChannel>(new DummyStanzaChannel());
+            channel = std::make_unique<DummyStanzaChannel>();
             testPresence = std::make_shared<Presence>();
             testPresence->setStatus("Foo");
             secondTestPresence = std::make_shared<Presence>();
             secondTestPresence->setStatus("Bar");
-            stanzaChannelPresenceSender = std::unique_ptr<StanzaChannelPresenceSender>(new StanzaChannelPresenceSender(channel.get()));
+            stanzaChannelPresenceSender = std::make_unique<StanzaChannelPresenceSender>(channel.get());
         }
 
         void testSendPresence() {

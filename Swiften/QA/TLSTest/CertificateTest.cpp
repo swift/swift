@@ -34,7 +34,7 @@ class CertificateTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            pathProvider = std::unique_ptr<PlatformApplicationPathProvider>(new PlatformApplicationPathProvider("FileReadBytestreamTest"));
+            pathProvider = std::make_unique<PlatformApplicationPathProvider>("FileReadBytestreamTest");
             readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt"));
             certificateFactory = std::unique_ptr<CertificateFactory>(new CERTIFICATE_FACTORY());
         }

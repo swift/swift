@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#pragma once
+
+#include_next <memory>
+
+
+#if __cplusplus < 201402L && !MSC_VER
+namespace std {
+
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique( Args&& ...args )
+{
+    return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+}
+
+}
+#endif
+

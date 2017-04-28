@@ -160,7 +160,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 public:
     void setUp() {
         mocks_ = new MockRepository();
-        notifier_ = std::unique_ptr<DummyNotifier>(new DummyNotifier());
+        notifier_ = std::make_unique<DummyNotifier>();
         jid_ = JID("test@test.com/resource");
         stanzaChannel_ = new DummyStanzaChannel();
         iqRouter_ = new IQRouter(stanzaChannel_);

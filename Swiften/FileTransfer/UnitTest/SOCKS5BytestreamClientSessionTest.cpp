@@ -59,8 +59,8 @@ public:
         crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
         destination = "092a44d859d19c9eed676b551ee80025903351c2";
         randomGen.seed(static_cast<unsigned int>(time(nullptr)));
-        eventLoop = std::unique_ptr<DummyEventLoop>(new DummyEventLoop());
-        timerFactory = std::unique_ptr<DummyTimerFactory>(new DummyTimerFactory());
+        eventLoop = std::make_unique<DummyEventLoop>();
+        timerFactory = std::make_unique<DummyTimerFactory>();
         connection = std::make_shared<MockeryConnection>(failingPorts, true, eventLoop.get());
         //connection->onDataSent.connect(boost::bind(&SOCKS5BytestreamServerSessionTest::handleDataWritten, this, _1));
         //stream1 = std::make_shared<ByteArrayReadBytestream>(createByteArray("abcdefg")));

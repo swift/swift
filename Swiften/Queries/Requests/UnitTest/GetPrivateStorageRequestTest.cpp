@@ -34,8 +34,8 @@ class GetPrivateStorageRequestTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            channel = std::unique_ptr<DummyIQChannel>(new DummyIQChannel());
-            router = std::unique_ptr<IQRouter>(new IQRouter(channel.get()));
+            channel = std::make_unique<DummyIQChannel>();
+            router = std::make_unique<IQRouter>(channel.get());
         }
 
         void tearDown() {

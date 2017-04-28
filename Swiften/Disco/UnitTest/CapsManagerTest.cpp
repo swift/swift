@@ -47,9 +47,9 @@ class CapsManagerTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             crypto = std::shared_ptr<CryptoProvider>(PlatformCryptoProvider::create());
-            stanzaChannel = std::unique_ptr<DummyStanzaChannel>(new DummyStanzaChannel());
-            iqRouter = std::unique_ptr<IQRouter>(new IQRouter(stanzaChannel.get()));
-            storage = std::unique_ptr<CapsMemoryStorage>(new CapsMemoryStorage());
+            stanzaChannel = std::make_unique<DummyStanzaChannel>();
+            iqRouter = std::make_unique<IQRouter>(stanzaChannel.get());
+            storage = std::make_unique<CapsMemoryStorage>();
             user1 = JID("user1@bar.com/bla");
             discoInfo1 = std::make_shared<DiscoInfo>();
             discoInfo1->addFeature("http://swift.im/feature1");

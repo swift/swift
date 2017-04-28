@@ -112,7 +112,7 @@ MUCController::MUCController (
     isInitialJoin_ = true;
     chatWindowTitle_ = "";
 
-    roster_ = std::unique_ptr<Roster>(new Roster(false, true));
+    roster_ = std::make_unique<Roster>(false, true);
     rosterVCardProvider_ = new RosterVCardProvider(roster_.get(), vcardManager, JID::WithResource);
     completer_ = new TabComplete();
     chatWindow_->setRosterModel(roster_.get());

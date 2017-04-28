@@ -79,7 +79,7 @@ RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, Avata
     subscriptionManager_->onPresenceSubscriptionRequest.connect(boost::bind(&RosterController::handleSubscriptionRequest, this, _1, _2));
     uiEventConnection_ = uiEventStream->onUIEvent.connect(boost::bind(&RosterController::handleUIEvent, this, _1));
 
-    featureOracle_ = std::unique_ptr<FeatureOracle>(new FeatureOracle(entityCapsManager_, presenceOracle_));
+    featureOracle_ = std::make_unique<FeatureOracle>(entityCapsManager_, presenceOracle_);
 
     vcardManager_->onOwnVCardChanged.connect(boost::bind(&RosterController::handleOwnVCardChanged, this, _1));
     avatarManager_->onAvatarChanged.connect(boost::bind(&RosterController::handleAvatarChanged, this, _1));

@@ -34,8 +34,8 @@ class TableRosterTest : public CppUnit::TestFixture {
 
     public:
         void setUp() {
-            timerFactory = std::unique_ptr<DummyTimerFactory>(new DummyTimerFactory());
-            roster = std::unique_ptr<Roster>(new Roster());
+            timerFactory = std::make_unique<DummyTimerFactory>();
+            roster = std::make_unique<Roster>();
             jid1 = JID("jid1@example.com");
             jid2 = JID("jid2@example.com");
         }
