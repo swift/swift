@@ -53,7 +53,7 @@ const QString QtWebKitChatView::ButtonFileTransferOpenFile = QString("filetransf
 const QString QtWebKitChatView::ButtonMUCInvite = QString("mucinvite");
 
 namespace {
-    const double minimalFontScaling = 0.8;
+    const double minimalFontScaling = 0.7;
 }
 
 QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll) : QtChatView(parent), window_(window), eventStream_(eventStream), fontSizeSteps_(0), disableAutoScroll_(disableAutoScroll), previousMessageKind_(PreviosuMessageWasNone), previousMessageWasSelf_(false), showEmoticons_(false), insertingLastLine_(false), idCounter_(0) {
@@ -309,7 +309,7 @@ void QtWebKitChatView::decreaseFontSize() {
 
 void QtWebKitChatView::resizeFont(int fontSizeSteps) {
     fontSizeSteps_ = fontSizeSteps;
-    double size = minimalFontScaling + 0.2 * fontSizeSteps_;
+    double size = minimalFontScaling + 0.1 * fontSizeSteps_;
     QString sizeString(QString().setNum(size, 'g', 3) + "em");
 
     // Set the font size in the <style id="text-resize-style"> element in the theme <head> element.
