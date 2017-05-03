@@ -64,7 +64,7 @@ TempDir: $APT_TEMP_DIR
 Allow: beta development release
 Multiple: Yes
 Cleanup: unused_files on_error
-Permit: older_version
+Permit: unused_files older_version
 EOM
 }
 
@@ -87,6 +87,12 @@ for full_distribution_path in $INCOMING_FOLDER/{debian,ubuntu}/*; do
 
 		write_reprepo_conf_distributions_to_file "${distro_reprepro_root}/conf/distributions"
 		write_reprepo_conf_incoming_to_file "${distro_reprepro_root}/conf/incoming" "$full_distribution_path"
+	fi
+
+	# This is workaround for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808558 
+	# and https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=843402
+	if [ "$distro_name/$distro_version" = "debian/sid" ]; then
+		sed -i '/dbgsym/ d' $full_distribution_path/*.changes
 	fi
 
 	echo "Process incoming packages for $distro_name/$distro_version"
