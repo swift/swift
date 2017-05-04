@@ -152,6 +152,7 @@ class ChatsManagerTest : public CppUnit::TestFixture {
 
     //Imptomptu test
     CPPUNIT_TEST(testImpromptuChatTitle);
+    CPPUNIT_TEST(testImpromptuChatWindowTitle);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1511,13 +1512,11 @@ public:
         CPPUNIT_ASSERT_EQUAL(std::string("Some correctly spelled message."), window->bodyFromMessage(window->lastReplacedMessage_));
     }
 
-    void testImpromptuChatTitle() {
+    void impromptuChatSetup(MockChatWindow* window) {
         stanzaChannel_->uniqueIDs_ = true;
         JID mucJID("795B7BBE-9099-4A0D-81BA-C816F78E275C@test.com");
         manager_->setOnline(true);
 
-        // Open chat window to a sender.
-        MockChatWindow* window = new MockChatWindow();
         std::shared_ptr<IQ> infoRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[1]);
         CPPUNIT_ASSERT(infoRequest);
 
@@ -1569,11 +1568,23 @@ public:
         for (const auto& participantJID : jids) {
             stanzaChannel_->onPresenceReceived(mucParticipantJoined(participantJID));
         }
+    }
 
+    void testImpromptuChatTitle() {
+        // Open a new chat window to a sender.
+        MockChatWindow* window = new MockChatWindow();
+        impromptuChatSetup(window);
         // After people joined, the title is the list of participant nicknames or names coming from Roster (if nicknames are unavailable)
         CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), manager_->getRecentChats()[0].getTitle());
     }
 
+    void testImpromptuChatWindowTitle() {
+        // Open a new chat window to a sender.
+        MockChatWindow* window = new MockChatWindow();
+        impromptuChatSetup(window);
+        // After people joined, the title of chat window is combined of participant nicknames or names coming from Roster (if nicknames are unavailable)
+        CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), window->name_);
+    }
 
 private:
     std::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {

@@ -875,6 +875,10 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
         }
         handleChatActivity(mucJID.toBare(), "", true);
     }
+    auto chatListWindowIter = std::find_if(recentChats_.begin(), recentChats_.end(), [&](const ChatListWindow::Chat& chatListWindow) { return mucJID == (chatListWindow.jid); });
+    if (chatListWindowIter != recentChats_.end()) {
+        mucControllers_[mucJID]->setChatWindowTitle(chatListWindowIter->getTitle());
+    }
 
     mucControllers_[mucJID]->showChatWindow();
     return muc;

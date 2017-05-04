@@ -73,6 +73,7 @@ namespace Swift {
             bool isImpromptu() const;
             std::map<std::string, JID> getParticipantJIDs() const;
             void sendInvites(const std::vector<JID>& jids, const std::string& reason) const;
+            void setChatWindowTitle(const std::string& title);
 
         protected:
             virtual void preSendMessageRequest(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
@@ -134,7 +135,6 @@ namespace Swift {
             void addRecentLogs();
             void checkDuplicates(std::shared_ptr<Message> newMessage);
             void setNick(const std::string& nick);
-            void setImpromptuWindowTitle();
             void handleRoomUnlocked();
             void configureAsImpromptuRoom(Form::ref form);
             Form::ref buildImpromptuRoomConfiguration(Form::ref roomConfigurationForm);
@@ -187,6 +187,7 @@ namespace Swift {
 
             std::string subject_;
             bool isInitialJoin_;
+            std::string chatWindowTitle_;
     };
 }
 

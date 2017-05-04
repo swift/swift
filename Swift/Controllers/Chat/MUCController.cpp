@@ -110,6 +110,7 @@ MUCController::MUCController (
     xmppRoster_ = xmppRoster;
     subject_ = "";
     isInitialJoin_ = true;
+    chatWindowTitle_ = "";
 
     roster_ = std::unique_ptr<Roster>(new Roster(false, true));
     rosterVCardProvider_ = new RosterVCardProvider(roster_.get(), vcardManager, JID::WithResource);
@@ -406,10 +407,6 @@ void MUCController::handleJoinComplete(const std::string& nick) {
         setAvailableRoomActions(occupant.getAffiliation(), occupant.getRole());
     }
     onUserJoined();
-
-    if (isImpromptu_) {
-        setImpromptuWindowTitle();
-    }
 }
 
 void MUCController::handleAvatarChanged(const JID& jid) {
@@ -464,7 +461,6 @@ void MUCController::handleOccupantJoined(const MUCOccupant& occupant) {
         }
 
         if (isImpromptu_) {
-            setImpromptuWindowTitle();
             onActivity("");
         }
     }
@@ -768,10 +764,6 @@ void MUCController::handleOccupantLeft(const MUCOccupant& occupant, MUC::Leaving
     }
     if (clearAfter) {
         clearPresenceQueue();
-    }
-
-    if (isImpromptu_) {
-        setImpromptuWindowTitle();
     }
 }
 
@@ -1178,21 +1170,6 @@ Form::ref MUCController::buildImpromptuRoomConfiguration(Form::ref roomConfigura
     return result;
 }
 
-void MUCController::setImpromptuWindowTitle() {
-    std::string title;
-    std::map<std::string, MUCOccupant> occupants = muc_->getOccupants();
-    if (occupants.size() <= 1) {
-        title = QT_TRANSLATE_NOOP("", "Empty Chat");
-    } else {
-        for (const auto& pair : occupants) {
-            if (pair.first != nick_) {
-                title += (title.empty() ? "" : ", ") + pair.first;
-            }
-        }
-    }
-    chatWindow_->setName(title);
-}
-
 void MUCController::handleRoomUnlocked() {
     // Handle buggy MUC implementations where the joined room already exists and is unlocked.
     // Configure the room again in this case.
@@ -1259,6 +1236,11 @@ void MUCController::displaySubjectIfChanged(const std::string& subject) {
 
 void MUCController::addChatSystemMessage() {
     lastJoinMessageUID_ = chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(lastStartMessage_), ChatWindow::DefaultDirection);
+}
+
+void MUCController::setChatWindowTitle(const std::string& title) {
+    chatWindowTitle_ = title;
+    chatWindow_->setName(chatWindowTitle_);
 }
 
 }

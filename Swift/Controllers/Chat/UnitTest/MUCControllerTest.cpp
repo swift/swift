@@ -65,6 +65,9 @@ class MUCControllerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testHandleOccupantNicknameChanged);
     CPPUNIT_TEST(testHandleOccupantNicknameChangedRoster);
     CPPUNIT_TEST(testHandleChangeSubjectRequest);
+
+    CPPUNIT_TEST(testNonImpromptuMUCWindowTitle);
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -584,6 +587,10 @@ public:
         CPPUNIT_ASSERT_EQUAL(std::string(""), muc_->newSubjectSet_);
         window_->onChangeSubjectRequest(testStr);
         CPPUNIT_ASSERT_EQUAL(testStr, muc_->newSubjectSet_);
+    }
+
+    void testNonImpromptuMUCWindowTitle() {
+        CPPUNIT_ASSERT_EQUAL(muc_->getJID().getNode(), window_->name_);
     }
 
 private:
