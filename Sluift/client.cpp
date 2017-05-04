@@ -96,20 +96,45 @@ static std::vector< std::shared_ptr<Payload> > getPayloadsFromTable(lua_State* L
     return result;
 }
 
+static void setOptions(lua_State* L, SluiftClient* client) {
+    Lua::checkType(L, 2, LUA_TTABLE);
+    lua_getfield(L, 2, "host");
+    if (!lua_isnil(L, -1)) {
+        client->getOptions().manualHostname = lua_tostring(L, -1);
+    }
+    lua_getfield(L, 2, "port");
+    if (!lua_isnil(L, -1)) {
+        client->getOptions().manualPort = boost::numeric_cast<int>(lua_tointeger(L, -1));
+    }
+    lua_getfield(L, 2, "ack");
+    if (!lua_isnil(L, -1)) {
+        client->getOptions().useAcks = lua_toboolean(L, -1);
+    }
+    lua_getfield(L, 2, "compress");
+    if (!lua_isnil(L, -1)) {
+        client->getOptions().useStreamCompression = lua_toboolean(L, -1);
+    }
+    lua_getfield(L, 2, "tls");
+    if (!lua_isnil(L, -1)) {
+        bool useTLS = lua_toboolean(L, -1);
+        client->getOptions().useTLS = (useTLS ? ClientOptions::UseTLSWhenAvailable : ClientOptions::NeverUseTLS);
+    }
+    lua_getfield(L, 2, "bosh_url");
+    if (!lua_isnil(L, -1)) {
+        client->getOptions().boshURL = URL::fromString(lua_tostring(L, -1));
+    }
+    lua_getfield(L, 2, "allow_plain_without_tls");
+    if (!lua_isnil(L, -1)) {
+        client->getOptions().allowPLAINWithoutTLS = lua_toboolean(L, -1);
+    }
+    lua_pushvalue(L, 1);
+}
+
+
 SLUIFT_LUA_FUNCTION(Client, async_connect) {
     SluiftClient* client = getClient(L);
-
-    std::string host = client->getOptions().manualHostname;
-    int port = client->getOptions().manualPort;
-    if (lua_istable(L, 2)) {
-        if (boost::optional<std::string> hostString = Lua::getStringField(L, 2, "host")) {
-            host = *hostString;
-        }
-        if (boost::optional<int> portInt = Lua::getIntField(L, 2, "port")) {
-            port = *portInt;
-        }
-    }
-    client->connect(host, port);
+    setOptions(L, client);
+    client->connect();
     return 0;
 }
 
@@ -486,37 +511,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         "allow_plain_without_tls  Allow PLAIN authentication without a TLS encrypted connection\n"
 ) {
     SluiftClient* client = getClient(L);
-    Lua::checkType(L, 2, LUA_TTABLE);
-    lua_getfield(L, 2, "host");
-    if (!lua_isnil(L, -1)) {
-        client->getOptions().manualHostname = lua_tostring(L, -1);
-    }
-    lua_getfield(L, 2, "port");
-    if (!lua_isnil(L, -1)) {
-        client->getOptions().manualPort = boost::numeric_cast<int>(lua_tointeger(L, -1));
-    }
-    lua_getfield(L, 2, "ack");
-    if (!lua_isnil(L, -1)) {
-        client->getOptions().useAcks = lua_toboolean(L, -1);
-    }
-    lua_getfield(L, 2, "compress");
-    if (!lua_isnil(L, -1)) {
-        client->getOptions().useStreamCompression = lua_toboolean(L, -1);
-    }
-    lua_getfield(L, 2, "tls");
-    if (!lua_isnil(L, -1)) {
-        bool useTLS = lua_toboolean(L, -1);
-        client->getOptions().useTLS = (useTLS ? ClientOptions::UseTLSWhenAvailable : ClientOptions::NeverUseTLS);
-    }
-    lua_getfield(L, 2, "bosh_url");
-    if (!lua_isnil(L, -1)) {
-        client->getOptions().boshURL = URL::fromString(lua_tostring(L, -1));
-    }
-    lua_getfield(L, 2, "allow_plain_without_tls");
-    if (!lua_isnil(L, -1)) {
-        client->getOptions().allowPLAINWithoutTLS = lua_toboolean(L, -1);
-    }
-    lua_pushvalue(L, 1);
+    setOptions(L, client);
     return 0;
 }
 
