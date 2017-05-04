@@ -39,8 +39,7 @@ static int exitCode = 2;
 
 class FileSender {
     public:
-    FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file) : jid(jid), password(password), recipient(recipient), file(file), tracer(nullptr) {
-            client = new Swift::Client(jid, password, &networkFactories);
+    FileSender(const JID& jid, const std::string& password, const JID& recipient, const boost::filesystem::path& file) : jid(jid), password(password), recipient(recipient), file(file), tracer(nullptr), client(std::unique_ptr<Swift::Client>(new Swift::Client(jid, password, &networkFactories))) {
             client->onConnected.connect(boost::bind(&FileSender::handleConnected, this));
             client->onDisconnected.connect(boost::bind(&FileSender::handleDisconnected, this, _1));
             //tracer = new ClientXMLTracer(client);
@@ -51,7 +50,6 @@ class FileSender {
             delete tracer;
             client->onDisconnected.disconnect(boost::bind(&FileSender::handleDisconnected, this, _1));
             client->onConnected.disconnect(boost::bind(&FileSender::handleConnected, this));
-            delete client;
         }
 
         void start() {
@@ -95,7 +93,6 @@ class FileSender {
 
         void handleFileTransferFinished(const boost::optional<FileTransferError>& error) {
             std::cout << "File transfer finished." << std::endl;
-            outgoingFileTransfer.reset();
             if (error) {
                 client->disconnect();
                 exit(-1);
@@ -118,8 +115,8 @@ class FileSender {
         std::string password;
         JID recipient;
         boost::filesystem::path file;
-        Client* client;
         ClientXMLTracer* tracer;
+        std::unique_ptr<Swift::Client> client;
 };
 
 
