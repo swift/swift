@@ -1063,8 +1063,9 @@ void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
         uiEventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(inviteJIDs, chat.jid, ""));
     }
     else if (chat.isMUC) {
+        bool isImpromptu = (!chat.inviteesNames.empty() || !chat.impromptuJIDs.empty());
         /* FIXME: This means that recents requiring passwords will just flat-out not work */
-        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick));
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick, false, false, isImpromptu));
     }
     else {
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(chat.jid));
