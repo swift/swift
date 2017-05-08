@@ -15,6 +15,7 @@
 #include <QKeySequence>
 #include <QMenu>
 #include <QTextDocument>
+#include <QMimeData>
 
 #include <Swiften/Base/Log.h>
 
@@ -177,6 +178,15 @@ void QtTextEdit::contextMenuEvent(QContextMenuEvent* event) {
     menu->exec(event->globalPos());
 #endif
     delete menu;
+}
+
+void QtTextEdit::dropEvent(QDropEvent* event) {
+    if (event->mimeData()->hasUrls()) {
+        itemDropped(event);
+    }
+    else {
+        QTextEdit::dropEvent(event);
+    }
 }
 
 void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)

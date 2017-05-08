@@ -150,6 +150,7 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
 
     connect(input_, SIGNAL(receivedFocus()), this, SLOT(handleTextInputReceivedFocus()));
     connect(input_, SIGNAL(lostFocus()), this, SLOT(handleTextInputLostFocus()));
+    connect(input_, SIGNAL(itemDropped(QDropEvent*)), this, SLOT(dropEvent(QDropEvent*)));
     QPushButton* emojisButton_ = new QPushButton(this);
 
 #ifdef SWIFTEN_PLATFORM_MACOSX

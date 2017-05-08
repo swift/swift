@@ -35,6 +35,7 @@ namespace Swift {
         void unhandledKeyPressEvent(QKeyEvent* event);
         void receivedFocus();
         void lostFocus();
+        void itemDropped(QDropEvent* event);
 
     public slots:
         void handleSettingChanged(const std::string& settings);
@@ -44,6 +45,7 @@ namespace Swift {
         virtual void focusInEvent(QFocusEvent* event);
         virtual void focusOutEvent(QFocusEvent* event);
         virtual void contextMenuEvent(QContextMenuEvent* event);
+        virtual void dropEvent(QDropEvent* event);
 
     private slots:
         void handleTextChanged();
