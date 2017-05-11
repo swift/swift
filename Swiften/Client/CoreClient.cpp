@@ -390,6 +390,10 @@ void CoreClient::sendPresence(std::shared_ptr<Presence> presence) {
 }
 
 void CoreClient::sendData(const std::string& data) {
+    if (!sessionStream_) {
+        SWIFT_LOG(warning) << "Client: Trying to send data while disconnected." << std::endl;
+        return;
+    }
     sessionStream_->writeData(data);
 }
 

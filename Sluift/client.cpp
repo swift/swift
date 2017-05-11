@@ -358,6 +358,9 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     }
     message->addPayloads(payloads.begin(), payloads.end());
     message->setType(type);
+    if (!getClient(L)->getClient()->isAvailable()) {
+        throw Lua::Exception("Trying to send message while client is offline.");
+    }
     getClient(L)->getClient()->sendMessage(message);
     return 0;
 }
@@ -403,7 +406,9 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         std::vector< std::shared_ptr<Payload> > payloads = getPayloadsFromTable(L, index);
         presence->addPayloads(payloads.begin(), payloads.end());
     }
-
+    if (!getClient(L)->getClient()->getPresenceSender()->isAvailable()) {
+        throw Lua::Exception("Trying to send presence while client is offline.");
+    }
     getClient(L)->getClient()->getPresenceSender()->sendPresence(presence);
     lua_pushvalue(L, 1);
     return 0;
@@ -489,7 +494,9 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         ""
 ) {
     Sluift::globals.eventLoop.runOnce();
-
+    if (!getClient(L)->getClient()->isAvailable()) {
+        throw Lua::Exception("Trying to send data while client is offline.");
+    }
     getClient(L)->getClient()->sendData(std::string(Lua::checkString(L, 2)));
     lua_pushvalue(L, 1);
     return 0;
