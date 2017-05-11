@@ -14,7 +14,7 @@ const SettingsProvider::Setting<bool> QtUISettingConstants::COMPACT_ROSTER("comp
 const SettingsProvider::Setting<std::string> QtUISettingConstants::CLICKTHROUGH_BANNER("clickthroughBanner", "");
 const SettingsProvider::Setting<int> QtUISettingConstants::CURRENT_ROSTER_TAB("currentRosterTab", 0);
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_NICK_IN_ROSTER_HEADER("showNickInRosterHeader", true);
-const SettingsProvider::Setting<int> QtUISettingConstants::CHATWINDOW_FONT_SIZE("chatWindowFontSize_V2", 3);
+const SettingsProvider::Setting<int> QtUISettingConstants::CHATWINDOW_FONT_SIZE("chatWindowFontSize_V3", 3);
 const SettingsProvider::Setting<int> QtUISettingConstants::HISTORYWINDOW_FONT_SIZE("historyWindowFontSize", 0);
 const SettingsProvider::Setting<bool> QtUISettingConstants::SHOW_EMOTICONS("showEmoticons", true);
 const SettingsProvider::Setting<bool> QtUISettingConstants::USE_PLAIN_CHATS("plainChats", false);
