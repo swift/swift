@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,13 +42,14 @@ QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventS
     layout->insertWidget(targetIndex, this);
 
     filterLineEdit_->installEventFilter(this);
-    treeView->installEventFilter(this);
+    treeView_->installEventFilter(this);
 
     sourceModel_ = treeView_->model();
 }
 
 QtFilterWidget::~QtFilterWidget() {
-
+    filterLineEdit_->removeEventFilter(this);
+    treeView_->removeEventFilter(this);
 }
 
 bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
