@@ -49,7 +49,13 @@ QtFilterWidget::QtFilterWidget(QWidget* parent, QtTreeWidget* treeView, UIEventS
 
 QtFilterWidget::~QtFilterWidget() {
     filterLineEdit_->removeEventFilter(this);
-    treeView_->removeEventFilter(this);
+    if (treeView_) {
+        treeView_->removeEventFilter(this);
+        if (treeView_->getRoster()) {
+            treeView_->getRoster()->onFilterAdded.disconnect(boost::bind(&QtFilterWidget::handleFilterAdded, this, _1));
+            treeView_->getRoster()->onFilterRemoved.disconnect(boost::bind(&QtFilterWidget::handleFilterRemoved, this, _1));
+        }
+    }
 }
 
 bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
