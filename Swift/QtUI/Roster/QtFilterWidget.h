@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,6 +15,7 @@
 #include <vector>
 
 #include <QBoxLayout>
+#include <QPointer>
 #include <QWidget>
 
 #include <Swift/Controllers/Roster/FuzzyRosterFilter.h>
@@ -46,7 +47,7 @@ class QtFilterWidget : public QWidget {
 
     private:
         QtClosableLineEdit* filterLineEdit_;
-        QtTreeWidget* treeView_;
+        QPointer<QtTreeWidget> treeView_;
         UIEventStream* eventStream_;
         std::vector<RosterFilter*> filters_;
         QAbstractItemModel* sourceModel_;

@@ -53,6 +53,10 @@ QtFilterWidget::~QtFilterWidget() {
 }
 
 bool QtFilterWidget::eventFilter(QObject*, QEvent* event) {
+    if (!treeView_) {
+        return false;
+    }
+
     if (event->type() == QEvent::KeyPress ||
         event->type() == QEvent::KeyRelease ||
         // InputMethodQuery got introduced in Qt 5.
@@ -119,6 +123,10 @@ void QtFilterWidget::pushAllFilters() {
 }
 
 void QtFilterWidget::updateRosterFilters() {
+    if (!treeView_) {
+        return;
+    }
+
     if (fuzzyRosterFilter_) {
         if (filterLineEdit_->text().isEmpty()) {
             // remove currently installed search filter and put old filters back
@@ -141,6 +149,10 @@ void QtFilterWidget::updateRosterFilters() {
 }
 
 void QtFilterWidget::updateSearchFilter() {
+    if (!treeView_) {
+        return;
+    }
+
     if (fuzzyRosterFilter_) {
         treeView_->getRoster()->removeFilter(fuzzyRosterFilter_);
         delete fuzzyRosterFilter_;
