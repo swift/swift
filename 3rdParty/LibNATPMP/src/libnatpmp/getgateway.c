@@ -1,7 +1,7 @@
-/* $Id: getgateway.c,v 1.24 2014/03/31 12:41:35 nanard Exp $ */
+/* $Id: getgateway.c,v 1.25 2014/04/22 10:28:57 nanard Exp $ */
 /* libnatpmp
 
-Copyright (c) 2007-2011, Thomas BERNARD
+Copyright (c) 2007-2014, Thomas BERNARD
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -65,13 +65,6 @@ POSSIBILITY OF SUCH DAMAGE.
 #undef USE_PROC_NET_ROUTE
 #define USE_SOCKET_ROUTE
 #undef USE_SYSCTL_NET_ROUTE
-#endif
-
-#if !defined(USE_PROC_NET_ROUTE) && !defined(USE_SOCKET_ROUTE) && !defined(USE_SYSCTL_NET_ROUTE) && !defined(WIN32)
-int getdefaultgateway(in_addr_t * addr)
-{
-	return -1;
-}
 #endif
 
 #ifdef WIN32
@@ -572,4 +565,9 @@ fail:
 }
 #endif /* #ifdef USE_HAIKU_CODE */
 
-
+#if !defined(USE_PROC_NET_ROUTE) && !defined(USE_SOCKET_ROUTE) && !defined(USE_SYSCTL_NET_ROUTE) && !defined(USE_WIN32_CODE) && !defined(USE_WIN32_CODE_2) && !defined(USE_HAIKU_CODE)
+int getdefaultgateway(in_addr_t * addr)
+{
+	return -1;
+}
+#endif
