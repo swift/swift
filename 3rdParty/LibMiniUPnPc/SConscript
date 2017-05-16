@@ -12,7 +12,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
         env["HAVE_LIBMINIUPNPC"] = True
         env["LIBMINIUPNPC_FLAGS"] = {
                 "LIBPATH": [Dir(".")],
-                "INTERNAL_CPPDEFINES": ["STATICLIB"],
+                "INTERNAL_CPPDEFINES": ["MINIUPNP_STATICLIB"],
             }
         if os.path.basename(env["CC"]) in ("clang", "gcc") :
             env["LIBMINIUPNPC_FLAGS"].update({"CPPFLAGS": ["-isystem" "3rdParty/LibMiniUPnPc/src/miniupnpc"]})
@@ -34,7 +34,7 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
         # Remove warn flags
         myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
 
-        myenv.Append(CCFLAGS = ["-DNDEBUG", "-DSTATICLIB"])
+        myenv.Append(CCFLAGS = ["-DNDEBUG", "-DMINIUPNP_STATICLIB"])
 
         if myenv["PLATFORM"] != "win32":
             myenv.Append(CCFLAGS = ["-DMINIUPNPC_SET_SOCKET_TIMEOUT"])
@@ -54,31 +54,37 @@ if env.get("LIBMINIUPNPC_BUNDLED", False) :
 
         myenv.WriteVal("src/miniupnpc/miniupnpcstrings.h", myenv.Value(
 """
-#ifndef __MINIUPNPCSTRINGS_H__
-#define __MINIUPNPCSTRINGS_H__
+#ifndef MINIUPNPCSTRINGS_H_INCLUDED
+#define MINIUPNPCSTRINGS_H_INCLUDED
 
 #define OS_STRING "$OS_STRING"
 #define MINIUPNPC_VERSION_STRING "1.9"
+
+#if 0
+/* according to "UPnP Device Architecture 1.0" */
+#define UPNP_VERSION_STRING "UPnP/1.0"
+#else
+/* according to "UPnP Device Architecture 1.1" */
+#define UPNP_VERSION_STRING "UPnP/1.1"
+#endif
 
 #endif
 """.replace("$OS_STRING", myenv["PLATFORM"])))
 
         miniupnpc_objects = [
-            "src/miniupnpc/igd_desc_parse.c",
-            "src/miniupnpc/miniupnpc.c",
-            "src/miniupnpc/minixml.c",
-            "src/miniupnpc/minisoap.c",
-            "src/miniupnpc/miniwget.c",
-            #"src/miniupnpc/upnpc.c",
-            "src/miniupnpc/upnpcommands.c",
-            "src/miniupnpc/upnpreplyparse.c",
-            "src/miniupnpc/upnperrors.c",
             "src/miniupnpc/connecthostport.c",
+            "src/miniupnpc/igd_desc_parse.c",
+            "src/miniupnpc/minisoap.c",
+            "src/miniupnpc/minissdpc.c",
+            "src/miniupnpc/miniupnpc.c",
+            "src/miniupnpc/miniwget.c",
+            "src/miniupnpc/minixml.c",
             "src/miniupnpc/portlistingparse.c",
-            "src/miniupnpc/receivedata.c"
+            "src/miniupnpc/receivedata.c",
+            "src/miniupnpc/upnpcommands.c",
+            "src/miniupnpc/upnpdev.c",
+            "src/miniupnpc/upnperrors.c",
+            "src/miniupnpc/upnpreplyparse.c",
             ]
-
-        if myenv["PLATFORM"] != "win32":
-            miniupnpc_objects.append("src/miniupnpc/minissdpc.c")
 
         env["LIBMINIUPNPC_OBJECTS"] = myenv.SwiftenObject(miniupnpc_objects)            
