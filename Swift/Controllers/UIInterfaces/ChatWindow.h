@@ -254,6 +254,7 @@ namespace Swift {
             boost::signals2::signal<void ()> onClosed;
             boost::signals2::signal<void ()> onAllMessagesRead;
             boost::signals2::signal<void (const std::string&, bool isCorrection)> onSendMessageRequest;
+            boost::signals2::signal<void (const std::string&)> onResendMessageRequest;
             boost::signals2::signal<void ()> onSendCorrectionMessageRequest;
             boost::signals2::signal<void ()> onUserTyping;
             boost::signals2::signal<void ()> onUserCancelsTyping;

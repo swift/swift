@@ -359,6 +359,7 @@ void ChatController::setOnline(bool online) {
     if (!online) {
         for (auto& stanzaIdPair : unackedStanzas_) {
             chatWindow_->setAckState(stanzaIdPair.second, ChatWindow::Failed);
+            failedStanzas_[stanzaIdPair.second] = stanzaIdPair.first;
         }
         unackedStanzas_.clear();
 

@@ -20,6 +20,8 @@
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
 #include <Swiften/Elements/Delay.h>
+#include <Swiften/Elements/DeliveryReceipt.h>
+#include <Swiften/Elements/DeliveryReceiptRequest.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
 #include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
@@ -44,6 +46,7 @@ ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaCha
     chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
     chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
     chatWindow_->onContinuationsBroken.connect(boost::bind(&ChatControllerBase::handleContinuationsBroken, this));
+    scopedConnectionResendMessage_ = chatWindow_->onResendMessageRequest.connect(boost::bind(&ChatControllerBase::handleResendMessageRequest, this, _1));
     entityCapsProvider_->onCapsChanged.connect(boost::bind(&ChatControllerBase::handleCapsChanged, this, _1));
     highlighter_ = highlightManager->createHighlighter(nickResolver);
     ChatControllerBase::setOnline(stanzaChannel->isAvailable() && iqRouter->isAvailable());
@@ -62,6 +65,7 @@ ChatWindow* ChatControllerBase::detachChatWindow() {
     chatWindow_->onContinuationsBroken.disconnect(boost::bind(&ChatControllerBase::handleContinuationsBroken, this));
     chatWindow_->onSendMessageRequest.disconnect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
     chatWindow_->onAllMessagesRead.disconnect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
+    scopedConnectionResendMessage_.disconnect();
     ChatWindow* chatWindow = chatWindow_;
     chatWindow_ = nullptr;
     return chatWindow;
@@ -395,6 +399,24 @@ void ChatControllerBase::handleMediatedMUCInvitation(Message::ref message) {
 
     MUCInviteEvent::ref inviteEvent = std::make_shared<MUCInviteEvent>(invite.from, from, reason, password, false, false);
     handleGeneralMUCInvitation(inviteEvent);
+}
+
+void ChatControllerBase::handleResendMessageRequest(const std::string& id) {
+    if (failedStanzas_.find(id) != failedStanzas_.end()) {
+        if (auto resendMsg = std::dynamic_pointer_cast<Message>(failedStanzas_[id])) {
+            stanzaChannel_->sendMessage(resendMsg);
+            if (stanzaChannel_->getStreamManagementEnabled()) {
+                chatWindow_->setAckState(id, ChatWindow::Pending);
+                unackedStanzas_[failedStanzas_[id]] = id;
+            }
+            if (resendMsg->getPayload<DeliveryReceiptRequest>()) {
+                requestedReceipts_[resendMsg->getID()] = id;
+                chatWindow_->setMessageReceiptState(id, ChatWindow::ReceiptRequested);
+            }
+            lastWasPresence_ = false;
+            failedStanzas_.erase(id);
+        }
+    }
 }
 
 }

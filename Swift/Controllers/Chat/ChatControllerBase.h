@@ -115,6 +115,7 @@ namespace Swift {
              * What JID should be used for last message correction (XEP-0308) tracking.
              */
             virtual JID messageCorrectionJID(const JID& fromJID) = 0;
+            virtual void handleResendMessageRequest(const std::string& id);
 
         private:
             IDGenerator idGenerator_;
@@ -155,6 +156,10 @@ namespace Swift {
             std::string roomSecurityMarking_;
             std::string previousMessageSecurityMarking_;
             SettingsProvider* settings_;
+            boost::signals2::scoped_connection scopedConnectionResendMessage_;
+            std::map<std::string, std::string> requestedReceipts_;
+            std::map<std::shared_ptr<Stanza>, std::string> unackedStanzas_;
+            std::map<std::string, std::shared_ptr<Stanza>> failedStanzas_;
             Chattables& chattables_;
     };
 }

@@ -42,6 +42,8 @@ namespace Swift {
             static const QString ButtonFileTransferAcceptRequest;
             static const QString ButtonFileTransferOpenFile;
             static const QString ButtonMUCInvite;
+            static const QString ButtonResendMessage;
+            static const QString ButtonResendPopup;
         public:
             QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, SettingsProvider* settings, bool disableAutoScroll = false);
             ~QtWebKitChatView() override;
@@ -157,6 +159,7 @@ namespace Swift {
             QString getHighlightSpanStart(const HighlightAction& highlight);
             QString chatMessageToHTML(const ChatWindow::ChatMessage& message);
             static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
+            static QString buildChatWindowPopupImageButton(const QString& title, const QString& path, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
 
         protected:
             void resizeEvent(QResizeEvent* event) override;

@@ -48,8 +48,12 @@ namespace Swift {
                 return available_;
             }
 
+            virtual void setStreamManagementEnabled(bool enable) {
+                streamManagement_ = enable;
+            }
+
             virtual bool getStreamManagementEnabled() const {
-                return false;
+                return streamManagement_;
             }
 
             template<typename T> bool isRequestAtIndex(size_t index, const JID& jid, IQ::Type type) {
@@ -101,5 +105,6 @@ namespace Swift {
             bool available_ = true;
             bool uniqueIDs_ = false;
             unsigned int idCounter_ = 0;
+            bool streamManagement_ = false;
     };
 }

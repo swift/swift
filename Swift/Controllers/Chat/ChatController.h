@@ -96,8 +96,6 @@ namespace Swift {
             std::string myLastMessageUIID_;
             bool isInMUC_;
             std::string lastStatusChangeString_;
-            std::map<std::shared_ptr<Stanza>, std::string> unackedStanzas_;
-            std::map<std::string, std::string> requestedReceipts_;
             StatusShow::Type lastShownStatus_;
 
             Tristate contactSupportsReceipts_;

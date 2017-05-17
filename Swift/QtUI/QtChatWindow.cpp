@@ -1054,4 +1054,11 @@ void QtChatWindow::handleFocusTimerTick() {
     focusTimer_.reset();
 }
 
+void QtChatWindow::resendMessage(const std::string& id) {
+    if (!isOnline_ || (blockingState_ == IsBlocked)) {
+        return;
+    }
+    onResendMessageRequest(id);
+}
+
 }

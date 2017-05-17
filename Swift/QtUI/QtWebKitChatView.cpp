@@ -53,6 +53,9 @@ const QString QtWebKitChatView::ButtonFileTransferSendRequest = QString("filetra
 const QString QtWebKitChatView::ButtonFileTransferAcceptRequest = QString("filetransfer-acceptrequest");
 const QString QtWebKitChatView::ButtonFileTransferOpenFile = QString("filetransfer-openfile");
 const QString QtWebKitChatView::ButtonMUCInvite = QString("mucinvite");
+const QString QtWebKitChatView::ButtonResendMessage = QString("resend-message");
+const QString QtWebKitChatView::ButtonResendPopup = QString("popup-resend");
+
 
 namespace {
     const double minimalFontScaling = 0.7;
@@ -606,6 +609,10 @@ QString QtWebKitChatView::buildChatWindowButton(const QString& name, const QStri
     return html;
 }
 
+QString QtWebKitChatView::buildChatWindowPopupImageButton(const QString& title, const QString& path, const QString& arg1, const QString& arg2, const QString& arg3, const QString& arg4, const QString& arg5) {
+    return QString("<div class=\"popup\" onclick='chatwindow.buttonClicked(\"%3\", \"%5\", \"6\", \"7\", \"8\", \"9\")' \"><img src='%1' title='%2'/><span class=\"popuptext\" id=\"resendPopup\" ><div class=\"resendButton\" onclick='chatwindow.buttonClicked(\"%4\", \"%5\", \"6\", \"7\", \"8\", \"9\")'>Resend</div></span></div>").arg(path).arg(title).arg(QtWebKitChatView::ButtonResendPopup).arg(QtWebKitChatView::ButtonResendMessage).arg(encodeButtonArgument(arg1)).arg(encodeButtonArgument(arg2)).arg(encodeButtonArgument(arg3)).arg(encodeButtonArgument(arg4)).arg(encodeButtonArgument(arg5));
+}
+
 void QtWebKitChatView::resizeEvent(QResizeEvent* event) {
     // This code ensures that if the user is scrolled all to the bottom of a chat view,
     // the view stays scrolled to the bottom if the view is resized or if the message
@@ -807,6 +814,20 @@ void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgume
         eventStream_->send(std::make_shared<JoinMUCUIEvent>(Q2PSTRING(roomJID), Q2PSTRING(password), boost::optional<std::string>(), false, false, isImpromptu.contains("true"), isContinuation.contains("true")));
         setMUCInvitationJoined(elementID);
     }
+    else if (id.startsWith(ButtonResendPopup)) {
+        QString chatID = arg1;
+        QWebElement message = document_.findFirst("#" + arg1);
+        if (!message.isNull()) {
+            QWebElement popuptext = message.findFirst("span#resendPopup.popuptext");
+            if (!popuptext.isNull()) {
+                popuptext.toggleClass("show");
+            }
+        }
+    }
+    else if (id.startsWith(ButtonResendMessage)) {
+        QString chatID = arg1;
+        window_->resendMessage(Q2PSTRING(chatID));
+    }
     else {
         SWIFT_LOG(debug) << "Unknown HTML button! ( " << Q2PSTRING(id) << " )" << std::endl;
     }
@@ -964,7 +985,9 @@ void QtWebKitChatView::setAckState(std::string const& id, ChatWindow::AckState s
             xml = "";
             displayReceiptInfo(P2QSTRING(id), true);
             break;
-        case ChatWindow::Failed: xml = "<img src='qrc:/icons/error.png' title='" + tr("This message may not have been transmitted.") + "'/>"; break;
+        case ChatWindow::Failed:
+            xml = buildChatWindowPopupImageButton(tr("This message may not have been sent. Click to resend."), "qrc:/icons/error.png", P2QSTRING(id));
+            break;
     }
     setAckXML(P2QSTRING(id), xml);
 }
