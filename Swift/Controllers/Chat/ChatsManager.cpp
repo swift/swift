@@ -435,6 +435,15 @@ void ChatsManager::handleChatActivity(const JID& jid, const std::string& activit
     appendRecent(chat);
     handleUnreadCountChanged(nullptr);
     saveRecents();
+
+    // Look up potential MUC controller and update title accordingly as people
+    // join impromptu chats.
+    if (mucControllers_.find(jid) != mucControllers_.end()) {
+        auto chatListWindowIter = std::find_if(recentChats_.begin(), recentChats_.end(), [&](const ChatListWindow::Chat& chatListWindow) { return jid == (chatListWindow.jid); });
+        if (chatListWindowIter != recentChats_.end() && (mucControllers_[jid]->isImpromptu() || !chatListWindowIter->impromptuJIDs.empty())) {
+            mucControllers_[jid]->setChatWindowTitle(chatListWindowIter->getTitle());
+        }
+    }
 }
 
 void ChatsManager::handleChatClosed(const JID& /*jid*/) {
@@ -875,8 +884,9 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
         }
         handleChatActivity(mucJID.toBare(), "", true);
     }
+
     auto chatListWindowIter = std::find_if(recentChats_.begin(), recentChats_.end(), [&](const ChatListWindow::Chat& chatListWindow) { return mucJID == (chatListWindow.jid); });
-    if (chatListWindowIter != recentChats_.end()) {
+    if (chatListWindowIter != recentChats_.end() && (mucControllers_[mucJID]->isImpromptu() || !chatListWindowIter->impromptuJIDs.empty())) {
         mucControllers_[mucJID]->setChatWindowTitle(chatListWindowIter->getTitle());
     }
 

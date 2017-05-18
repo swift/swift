@@ -150,9 +150,10 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testChatControllerMessageCorrectionReplaceByOtherResource);
     CPPUNIT_TEST(testMUCControllerMessageCorrectionNoIDMatchRequired);
 
-    //Imptomptu test
+    // Chat window title tests
     CPPUNIT_TEST(testImpromptuChatTitle);
     CPPUNIT_TEST(testImpromptuChatWindowTitle);
+    CPPUNIT_TEST(testStandardMUCChatWindowTitle);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1584,6 +1585,17 @@ public:
         impromptuChatSetup(window);
         // After people joined, the title of chat window is combined of participant nicknames or names coming from Roster (if nicknames are unavailable)
         CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), window->name_);
+    }
+
+    void testStandardMUCChatWindowTitle() {
+        JID mucJID("mucroom@rooms.test.com");
+        std::string nickname = "toodles";
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(mucJID, uiEventStream_).Return(window);
+
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(mucJID, boost::optional<std::string>(), nickname));
+        CPPUNIT_ASSERT_EQUAL(std::string("mucroom"), window->name_);
     }
 
 private:
