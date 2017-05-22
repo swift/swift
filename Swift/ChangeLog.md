@@ -1,5 +1,5 @@
-4.0-in-progress
----------------
+4.0-rc2 ( 2017-05-22 )
+----------------------
 - Fix regression in chat window titles for chat rooms
 
 4.0-rc1 ( 2017-05-17 )
