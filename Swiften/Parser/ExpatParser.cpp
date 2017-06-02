@@ -10,6 +10,8 @@
 #include <memory>
 #include <string>
 
+#include <cassert>
+
 #include <expat.h>
 
 #include <boost/numeric/conversion/cast.hpp>
