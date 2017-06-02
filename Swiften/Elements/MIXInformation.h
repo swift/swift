@@ -32,19 +32,7 @@ namespace Swift {
 
             MIXInformation() {}
 
-            Form::ref getForm() const { return form; }
-            void setForm(Form::ref f) { form = f; }
-
-            const Item& getItem() const {
-                return item;
-            }
-
-            void setItem(const Item& item) {
-                this->item = item;
-            }
-
         private:
-            Form::ref form;
             std::shared_ptr<Item> item;
 
     };
