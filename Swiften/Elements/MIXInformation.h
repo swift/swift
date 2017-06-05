@@ -6,34 +6,31 @@
 
 #pragma once
 
-#include <string>
+#include <memory>
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Form.h>
-#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-    class SWIFTEN_API MIXInformation : public Payload {
+    class SWIFTEN_API MIXInformation : public PubSubPayload {
         public:
-            typedef std::shared_ptr<MIXInformation> ref;
 
-            enum JIDVisibility {
-                Hidden,
-                Maybe,
-                Visible
-            };
+            MIXInformation();
 
-            struct Item {
-                std::string name;
-                std::string description;
-                JIDVisibility jidVisibility;
-                std::vector<JID> contacts;
-            };
+            virtual ~MIXInformation();
 
-            MIXInformation() {}
+            std::shared_ptr<Form> getData() const {
+                return data;
+            }
+
+            void setData(std::shared_ptr<Form> value) {
+                this->data = value ;
+            }
+
 
         private:
-            std::shared_ptr<Item> item;
-
+            std::shared_ptr<Form> data;
     };
 }
+
