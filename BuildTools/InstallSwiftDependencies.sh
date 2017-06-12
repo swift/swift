@@ -17,7 +17,7 @@ then
     elif [ "$SYSTEM_DISTRO" == "Arch" ]
     then
         sudo pacman -S qt5-base qt5-x11extras qt5-webkit qt5-multimedia qt5-tools qt5-svg hunspell
-    elif [ "$SYSTEM_DISTRO" == "openSUSE project" ] || [ "$SYSTEM_DISTRO" == "SUSE LINUX" ]
+    elif [ "$SYSTEM_DISTRO" == "openSUSE project" ] || [ "$SYSTEM_DISTRO" == "openSUSE" ] || [ "$SYSTEM_DISTRO" == "SUSE LINUX" ]
     then
         sudo zypper "$@" in --type pattern devel_basis
         sudo zypper "$@" in pkg-config libopenssl-devel libQt5Core-devel libQt5WebKit5-devel libQt5WebKitWidgets-devel libqt5-qtmultimedia-devel libqt5-qtx11extras-devel libqt5-qttools-devel libQt5Gui-devel libQt5Network-devel libQt5DBus-devel libQt5Svg-devel libQt5Svg5 python-xml hunspell-devel
