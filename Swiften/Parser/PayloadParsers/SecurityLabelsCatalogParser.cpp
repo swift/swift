@@ -34,7 +34,7 @@ void SecurityLabelsCatalogParser::handleStartElement(const std::string& element,
         currentItem_->setSelector(attributes.getAttribute("selector"));
         currentItem_->setIsDefault(attributes.getBoolAttribute("default", false));
     }
-    else if (level_ == LabelLevel) {
+    else if (level_ == LabelLevel && currentItem_) {
         assert(!labelParser_);
         if (labelParserFactory_->canParse(element, ns, attributes)) {
             labelParser_ = dynamic_cast<SecurityLabelParser*>(labelParserFactory_->createPayloadParser());
