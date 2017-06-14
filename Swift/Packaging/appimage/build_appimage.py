@@ -17,8 +17,10 @@
 #
 # The appimage will be for the same architecture as the host architecture.
 # Pass `--qt5=False` to the tool to build against legacy Qt4.
+#
+# To include newer libstdc++.so or similar libs in an AppImage, use -li parameters.
 
-from plumbum import local, FG, BG, colors, commands
+from plumbum import local, FG, BG, RETCODE, colors, commands
 import click
 import os
 import re
@@ -38,7 +40,8 @@ resources_dir = os.path.join(git_working_dir, "Swift/resources/")
 
 @click.command()
 @click.option('--qt5', default=True, type=bool, help='Build with Qt5.')
-def build_appimage(qt5):
+@click.option('--includelib', '-il', type=click.Path(), multiple=True, help='Copy extra library into AppImage.')
+def build_appimage(qt5, includelib):
     print(colors.bold & colors.info | "Switch to git working directory root " + git_working_dir)
     with local.cwd(git_working_dir):
 
@@ -53,7 +56,7 @@ def build_appimage(qt5):
 
         scons = local['./scons']
         print(colors.bold & colors.info | "Building Swift")
-        scons['qt5={}'.format("1" if qt5 else "0"), 'Swift'] & FG
+        scons['qt5={0}'.format("1" if qt5 else "0"), 'Swift'] & FG
 
         swift = local['./Swift/QtUI/swift-im']
         swift_version = swift('--version').strip()
@@ -76,7 +79,7 @@ def build_appimage(qt5):
 
         swift_install_dir = os.path.join(appdir_path, 'usr')
         print(colors.bold & colors.info | "Install Swift to AppDir")
-        scons['qt5={}'.format("1" if qt5 else "0"), 'Swift', 'SWIFT_INSTALLDIR=' + swift_install_dir , swift_install_dir] & FG
+        scons['qt5={0}'.format("1" if qt5 else "0"), 'Swift', 'SWIFT_INSTALLDIR=' + swift_install_dir , swift_install_dir] & FG
 
         print(colors.bold & colors.info | "Download dynamic lib exclude list from https://raw.githubusercontent.com/AppImage/AppImages/master/excludelist")
         local['wget']['--no-check-certificate', '-O', '/tmp/excludelist', 'https://raw.githubusercontent.com/AppImage/AppImages/master/excludelist'] & FG
@@ -117,6 +120,11 @@ def build_appimage(qt5):
                     for plugin_path in local.path(appdir_qt5_plugin_path) // "plugins/*/*.so":
                         copy_dependencies_into_appdir(excludelist, plugin_path, os.path.join(swift_install_dir, "lib"))
 
+        if includelib:
+            for includelib_path in includelib:
+                print(colors.bold & colors.info | "Copy " + includelib_path + " to AppDir.")
+                local['cp']('-v', '-L', includelib_path, os.path.join(swift_install_dir, "lib"))
+
         print(colors.bold & colors.info | "Download https://github.com/AppImage/AppImageKit/raw/appimagetool/master/resources/AppRun to " + os.path.join(appdir_path, 'AppRun'))
         local['wget']('--no-check-certificate', '-O', os.path.join(appdir_path, 'AppRun'), "https://github.com/AppImage/AppImageKit/raw/appimagetool/master/resources/AppRun")
         local['chmod']('+x', os.path.join(appdir_path, 'AppRun'))
@@ -132,7 +140,12 @@ def build_appimage(qt5):
         local['cp']('-v', '-L', os.path.join(resources_dir, "logo/logo-icon-32.xpm"), os.path.join(appdir_path, "swift.xpm"))
 
         print(colors.bold & colors.info | "Download appimagetool to /tmp/appimagetool and make it executable")
-        local['wget']['-O', '/tmp/appimagetool', 'https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-' + ("x86_64.AppImage" if swift_architecture_string == ".amd64": else "i686.AppImage")] & FG
+        appimage_url_suffix = ""
+        if swift_architecture_string == ".amd64":
+            appimage_url_suffix = "x86_64.AppImage"
+        else:
+            appimage_url_suffix = "i686.AppImage"
+        local['wget']['-O', '/tmp/appimagetool', 'https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-' + appimage_url_suffix] & FG
         local['chmod']['a+x', '/tmp/appimagetool']()
 
         local['mkdir']('-p', os.path.join(git_working_dir, "Packages/Swift"))
@@ -142,7 +155,9 @@ def build_appimage(qt5):
         print(colors.bold & colors.info | "Extract debug information from swift-im")
         local['objcopy']('--only-keep-debug', appdir_swift_im_binary, debug_symbol_path)
         local['strip']('-g', appdir_swift_im_binary)
-        local['objcopy']('--add-gnu-debuglink', debug_symbol_path, os.path.join(swift_install_dir, 'bin/swift-im'))
+        debuglink_retcode = local['objcopy']['--add-gnu-debuglink', debug_symbol_path, os.path.join(swift_install_dir, 'bin/swift-im')] & RETCODE
+        if debuglink_retcode != 0:
+            print(colors.bold & colors.warn | "Failed to create debuglink in binary.")
 
         print(colors.bold & colors.info | "Generate AppImage from Swift.AppDir")
         local['/tmp/appimagetool'][appdir_path, appimage_path] & FG
