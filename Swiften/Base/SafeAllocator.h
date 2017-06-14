@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,7 +12,7 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-    void secureZeroMemory(char* memory, size_t numberOfBytes);
+    SWIFTEN_API void secureZeroMemory(char* memory, size_t numberOfBytes);
 
     template<typename T>
     class SWIFTEN_API SafeAllocator : public std::allocator<T> {
