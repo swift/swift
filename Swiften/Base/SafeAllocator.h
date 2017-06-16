@@ -12,7 +12,7 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-    void secureZeroMemory(char* memory, size_t numberOfBytes);
+    SWIFTEN_API void secureZeroMemory(char* memory, size_t numberOfBytes);
 
     template<typename T>
     class SWIFTEN_API SafeAllocator : public std::allocator<T> {
