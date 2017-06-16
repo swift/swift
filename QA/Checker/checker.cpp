@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include <gtest/gtest.h>
+#include <QA/Checker/CppUnitTestResultPrinter.h>
 
 #include <cppunit/BriefTestProgressListener.h>
 #include <cppunit/TextOutputter.h>
@@ -126,6 +127,12 @@ int main(int argc, char* argv[]) {
 
     auto googleTestWasSuccessful = false;
     try {
+        if (!verbose) {
+            testing::UnitTest& unitTest = *testing::UnitTest::GetInstance();
+            testing::TestEventListeners& listeners = unitTest.listeners();
+            delete listeners.Release(listeners.default_result_printer());
+            listeners.Append(new testing::CppUnitTestResultPrinter);
+        }
         googleTestWasSuccessful = RUN_ALL_TESTS() == 0 ? true : false;
     } catch (const ::testing::internal::GoogleTestFailureException& e) {
         googleTestWasSuccessful = false;

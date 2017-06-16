@@ -21,4 +21,4 @@ if env["TEST"] :
             checker_env.UseFlags(env["BOOST_FLAGS"])
             checker_env.UseFlags(env["CPPUNIT_FLAGS"])
             checker_env.UseFlags(env["GOOGLETEST_FLAGS"])
-            checker_env.Library("Checker", ["checker.cpp", "IO.cpp"])
+            checker_env.Library("Checker", ["checker.cpp", "IO.cpp", "CppUnitTestResultPrinter.cpp"])
