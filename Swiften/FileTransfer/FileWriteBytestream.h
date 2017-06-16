@@ -19,7 +19,7 @@ namespace Swift {
             virtual ~FileWriteBytestream();
 
             virtual bool write(const std::vector<unsigned char>&);
-            void close();
+            virtual void close();
 
         private:
             boost::filesystem::path file;

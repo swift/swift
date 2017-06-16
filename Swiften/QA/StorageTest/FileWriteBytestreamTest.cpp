@@ -34,7 +34,7 @@ class FileWriteBytestreamTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(true, writeBytestream->write(createByteArray("Some data.")));
             CPPUNIT_ASSERT_EQUAL(true, onWriteWasCalled);
-
+            writeBytestream->close();
             boost::filesystem::remove(filename);
         }
 
