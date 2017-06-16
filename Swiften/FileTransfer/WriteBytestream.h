@@ -26,6 +26,7 @@ namespace Swift {
              * On success true is returned and \ref onWrite is called. On failure false is returned.
              */
             virtual bool write(const std::vector<unsigned char>&) = 0;
+            virtual void close() {}
 
             boost::signals2::signal<void (const std::vector<unsigned char>&)> onWrite;
     };
