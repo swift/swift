@@ -51,6 +51,7 @@
 #include <Swiften/Parser/PayloadParsers/MAMFinParser.h>
 #include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXParticipantParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCDestroyPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCInvitationPayloadParser.h>
@@ -129,6 +130,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<PrivateStorageParserFactory>(this));
     factories_.push_back(std::make_shared<ChatStateParserFactory>());
     factories_.push_back(std::make_shared<ClientStateParserFactory>());
+    factories_.push_back(std::make_shared<MIXParticipantParserFactory>(this));
     factories_.push_back(std::make_shared<MUCUserPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<MUCOwnerPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MUCInvitationPayloadParser> >("x", "jabber:x:conference"));
