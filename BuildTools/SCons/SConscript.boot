@@ -342,7 +342,7 @@ elif env["PLATFORM"] == "sunos" :
     #env.Append(CXXFLAGS = ["-z verbose"])
     pass
 else :
-    if os.path.basename(env["CXX"]) in ["clang", "clang++"] :
+    if os.path.basename(env["CXX"]).startswith(("clang", "clang++")) :
         env.Append(CXXFLAGS = [
             "-Weverything",
             "-Wno-unknown-warning-option", # To stay compatible between CLang versions
@@ -360,6 +360,10 @@ else :
             "-Wno-missing-variable-declarations", # Getting rid of CPPUnit warnings
             "-Wno-direct-ivar-access", # Obj-C code warning
             "-Wno-potentially-evaluated-expression", # Caused due to calling shared_ptr::get() inside typeid()
+
+            "-Wno-inconsistent-missing-destructor-override", # FIXME: fix source code issues regarding this warning later
+            "-Wno-shadow-field", # FIXME: fix source code issues regarding this warning later
+            "-Wno-unused-template", # FIXME: fix source code issues regarding this warning later
             ])
     else :
         env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls", "-Wno-unknown-pragmas"])

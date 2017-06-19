@@ -10,7 +10,7 @@ if env["TEST"] :
                     "LINKFLAGS": env["PLATFORM"] == "win32" and ["/SUBSYSTEM:CONSOLE"] or []
                 }
 
-            if os.path.basename(env["CC"]) in ("clang", "gcc"):
+            if os.path.basename(env["CC"]).startswith(("clang", "gcc")):
                 env["CHECKER_FLAGS"]["CPPFLAGS"] = ["-isystem" + Dir("#/3rdParty/HippoMocks").abspath]
             else :
                 env["CHECKER_FLAGS"]["CPPPATH"] = ["#/3rdParty/HippoMocks"]

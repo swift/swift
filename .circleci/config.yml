@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/swift
+    docker:
+      - image: debian:latest
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get -y update
+            apt-get -y install lsb-release locales python python3-setuptools python3-pip pkg-config libssl-dev qt5-default libqt5x11extras5-dev libqt5webkit5-dev qtmultimedia5-dev qttools5-dev-tools qt5-image-formats-plugins libqt5svg5-dev libminiupnpc-dev libnatpmp-dev libhunspell-dev g++-6 gcc-6 libboost-all-dev
+            pip3 -q install coala-bears[alldeps]
+      - run:
+          name: Version information
+          command: |
+            lsb_release -a
+            qmake --version
+      - run:
+          name: Check basic source code style
+          command: coala --non-interactive
+      - run:
+          name: Build and run unit tests
+          # Disable QtUtilitiesTest.testDSTawareness test because it fails on this system.
+          command: |
+            export GTEST_FILTER=-QtUtilitiesTest.testDSTawareness
+            ./scons test=unit max_jobs=0 allow_warnings=0 -j 2

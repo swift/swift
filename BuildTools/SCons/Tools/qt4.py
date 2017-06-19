@@ -477,7 +477,7 @@ def enable_modules(self, modules, debug=False, crosscompiling=False, version='4'
 
 
     include_flag = "-I"
-    if os.path.basename(self["CC"]) in ("gcc", "clang"):
+    if os.path.basename(self["CC"]).startswith(("gcc", "clang")):
         include_flag = "-isystem"
 
 

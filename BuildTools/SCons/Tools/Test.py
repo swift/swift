@@ -19,7 +19,7 @@ def generate(env) :
 
             # Set environment variables for running the test
             test_env = env.Clone()
-            for i in ["HOME", "PATH", "USERPROFILE", "APPDATA", "ASAN_OPTIONS", "LSAN_OPTIONS", "SWIFT_NETWORK_TEST_IPV4", "SWIFT_NETWORK_TEST_IPV6"]:
+            for i in ["HOME", "PATH", "USERPROFILE", "APPDATA", "GTEST_FILTER", "ASAN_OPTIONS", "LSAN_OPTIONS", "SWIFT_NETWORK_TEST_IPV4", "SWIFT_NETWORK_TEST_IPV6"]:
                 if os.environ.get(i, "") :
                     test_env["ENV"][i] = os.environ[i]
             if env["target"] == "android" :
