@@ -121,6 +121,12 @@ void OpenSSLContext::ensureLibraryInitialized() {
 
 void OpenSSLContext::connect() {
     handle_ = SSL_new(context_);
+    if (handle_ == nullptr) {
+        state_ = Error;
+        onError(std::make_shared<TLSError>());
+        return;
+    }
+
     // Ownership of BIOs is ransferred
     readBIO_ = BIO_new(BIO_s_mem());
     writeBIO_ = BIO_new(BIO_s_mem());
