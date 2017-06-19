@@ -72,6 +72,7 @@ sources = [
         "PayloadParsers/MIXCreateParser.cpp",
         "PayloadParsers/MIXJoinParser.cpp",
         "PayloadParsers/MIXSubscribeParser.cpp",
+        "PayloadParsers/MIXUserPreferenceParser.cpp",
         "PayloadParsers/MUCUserPayloadParser.cpp",
         "PayloadParsers/MUCAdminPayloadParser.cpp",
         "PayloadParsers/MUCOwnerPayloadParser.cpp",
