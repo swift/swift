@@ -51,7 +51,7 @@ namespace Swift {
             /**
              * Constructs a client for the given JID with the given password.
              *
-             * \param jid The JID to be used for the login. If only a bare 
+             * \param jid The JID to be used for the login. If only a bare
              *    JID is give the server will be asked to generate a resource.
              * \param password The password used for login given as a \ref SafeString.
              * \param networkFactories The network factories that are used

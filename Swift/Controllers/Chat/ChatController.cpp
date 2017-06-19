@@ -579,7 +579,7 @@ bool ChatController::shouldIgnoreMessage(std::shared_ptr<Message> message) {
     }
     return false;
 }
-    
+
 JID ChatController::messageCorrectionJID(const JID& fromJID) {
     return fromJID.toBare();
 }

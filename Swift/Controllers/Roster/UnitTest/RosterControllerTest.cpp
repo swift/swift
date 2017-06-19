@@ -61,7 +61,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testUnavailablePresence);
         CPPUNIT_TEST(testRemoveResultsInUnavailablePresence);
         CPPUNIT_TEST(testOwnContactInRosterPresence);
-		CPPUNIT_TEST(testMultiResourceFileTransferFeature);
+        CPPUNIT_TEST(testMultiResourceFileTransferFeature);
         CPPUNIT_TEST_SUITE_END();
 
     public:
