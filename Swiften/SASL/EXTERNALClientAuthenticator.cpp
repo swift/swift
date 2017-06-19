@@ -12,7 +12,13 @@ EXTERNALClientAuthenticator::EXTERNALClientAuthenticator() : ClientAuthenticator
 }
 
 boost::optional<SafeByteArray> EXTERNALClientAuthenticator::getResponse() const {
-    return boost::optional<SafeByteArray>();
+    const std::string& authorizationID = getAuthorizationID();
+
+    if (authorizationID.empty()) {
+        return boost::optional<SafeByteArray>();
+    } else {
+        return createSafeByteArray(authorizationID);
+    }
 }
 
 bool EXTERNALClientAuthenticator::setChallenge(const boost::optional<ByteArray>&) {

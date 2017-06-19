@@ -23,6 +23,7 @@ swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 env.Append(UNITTEST_SOURCES = [
             File("UnitTest/PLAINMessageTest.cpp"),
             File("UnitTest/PLAINClientAuthenticatorTest.cpp"),
+            File("UnitTest/EXTERNALClientAuthenticatorTest.cpp"),
             File("UnitTest/SCRAMSHA1ClientAuthenticatorTest.cpp"),
             File("UnitTest/DIGESTMD5PropertiesTest.cpp"),
             File("UnitTest/DIGESTMD5ClientAuthenticatorTest.cpp"),
