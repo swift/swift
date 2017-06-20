@@ -132,7 +132,7 @@ namespace Swift {
                         }
 
                     }
-                    catch (std::runtime_error) {
+                    catch (const std::runtime_error&) {
                         /* Basically too expensive to compute the regex results and it gave up, so pass through as text */
                         newMessage.append(part);
                     }
@@ -185,7 +185,7 @@ namespace Swift {
                             resultMessage.append(std::make_shared<ChatWindow::ChatTextMessagePart>(std::string(start, text.end())));
                         }
                     }
-                    catch (std::runtime_error) {
+                    catch (const std::runtime_error&) {
                         /* Basically too expensive to compute the regex results and it gave up, so pass through as text */
                         resultMessage.append(part);
                     }
