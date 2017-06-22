@@ -19,8 +19,8 @@ namespace boost {
     template<class T> class shared_ptr;
 }
 
-std::ostream& operator<<(std::ostream& os, const Swift::ClientError& error);
+SWIFTEN_API std::ostream& operator<<(std::ostream& os, const Swift::ClientError& error);
 
-std::ostream& operator<<(std::ostream& os, Swift::Element* ele);
+SWIFTEN_API std::ostream& operator<<(std::ostream& os, Swift::Element* ele);
 
-std::ostream& operator<<(std::ostream& os, Swift::ClientSession::State state);
+SWIFTEN_API std::ostream& operator<<(std::ostream& os, Swift::ClientSession::State state);
