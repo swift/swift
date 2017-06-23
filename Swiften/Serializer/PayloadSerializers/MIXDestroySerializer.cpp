@@ -24,7 +24,7 @@ std::string MIXDestroySerializer::serializePayload(std::shared_ptr<MIXDestroy> p
     if (!payload) {
         return "";
     }
-    XMLElement element("destroy", "urn:xmpp:mix:1");
+    XMLElement element("destroy", "urn:xmpp:mix:0");
     element.setAttribute("channel", payload->getChannel());
     return element.serialize();
 }

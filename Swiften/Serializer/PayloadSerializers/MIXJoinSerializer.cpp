@@ -25,7 +25,7 @@ std::string MIXJoinSerializer::serializePayload(std::shared_ptr<MIXJoin> payload
     if (!payload) {
         return "";
     }
-    XMLElement element("join", "urn:xmpp:mix:1");
+    XMLElement element("join", "urn:xmpp:mix:0");
     if (payload->getChannel()) {
         element.setAttribute("channel", *payload->getChannel());
     }

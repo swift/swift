@@ -54,6 +54,3 @@ TEST(MIXParticipantParserTest, XEP0369_Example27_ParticipantEmpty) {
     ASSERT_FALSE(payload->getNick());
     ASSERT_FALSE(payload->getJID());
 }
-
-
-

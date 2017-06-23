@@ -22,7 +22,7 @@ std::string MIXLeaveSerializer::serializePayload(std::shared_ptr<MIXLeave> paylo
     if (!payload) {
         return "";
     }
-    XMLElement element("leave", "urn:xmpp:mix:1");
+    XMLElement element("leave", "urn:xmpp:mix:0");
     if (payload->getChannel()) {
         element.setAttribute("channel", *payload->getChannel());
     }

@@ -16,6 +16,6 @@ TEST(MIXDestroySerializerTest, XEP0369_Example31) {
     auto destroy = std::make_shared<MIXDestroy>();
     destroy->setChannel(std::string("coven"));
 
-    std::string expectedResult = "<destroy channel=\"coven\" xmlns=\"urn:xmpp:mix:1\"/>";
+    std::string expectedResult = "<destroy channel=\"coven\" xmlns=\"urn:xmpp:mix:0\"/>";
     ASSERT_EQ(expectedResult, testling.serialize(destroy));
 }

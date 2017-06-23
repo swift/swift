@@ -24,7 +24,7 @@ std::string MIXUserPreferenceSerializer::serializePayload(std::shared_ptr<MIXUse
     if (!payload) {
         return "";
     }
-    XMLElement element("user-preference", "urn:xmpp:mix:1");
+    XMLElement element("user-preference", "urn:xmpp:mix:0");
     if(payload->getData()) {
         element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getData())));
     }

@@ -136,10 +136,10 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<ChatStateParserFactory>());
     factories_.push_back(std::make_shared<ClientStateParserFactory>());
     factories_.push_back(std::make_shared<MIXParticipantParserFactory>());
-    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXDestroyParser> >("destroy", "urn:xmpp:mix:1"));
-    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:1"));
-    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUserPreferenceParser> >("user-preference", "urn:xmpp:mix:1"));
-    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXLeaveParser> >("leave", "urn:xmpp:mix:1"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXDestroyParser> >("destroy", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUserPreferenceParser> >("user-preference", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXLeaveParser> >("leave", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<MUCUserPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<MUCOwnerPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MUCInvitationPayloadParser> >("x", "jabber:x:conference"));

@@ -14,7 +14,7 @@ TEST(MIXCreateSerializerTest, XEP0369_Example31) {
     MIXCreateSerializer testling;
 
     auto create = std::make_shared<MIXCreate>();
-    std::string expectedResult = "<create xmlns=\"urn:xmpp:mix:1\"/>";
+    std::string expectedResult = "<create xmlns=\"urn:xmpp:mix:0\"/>";
     ASSERT_EQ(expectedResult, testling.serialize(create));
 }
 
@@ -24,6 +24,6 @@ TEST(MIXCreateSerializerTest, XEP0369_Example66) {
     auto create = std::make_shared<MIXCreate>();
     create->setChannel(std::string("coven"));
 
-    std::string expectedResult = "<create channel=\"coven\" xmlns=\"urn:xmpp:mix:1\"/>";
+    std::string expectedResult = "<create channel=\"coven\" xmlns=\"urn:xmpp:mix:0\"/>";
     ASSERT_EQ(expectedResult, testling.serialize(create));
 }

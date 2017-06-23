@@ -16,7 +16,7 @@ TEST(MIXLeaveSerializerTest, XEP0369_Example33) {
     auto leave = std::shared_ptr<MIXLeave>(new MIXLeave());
     leave->setChannel(JID("coven@mix.shakespeare.example"));
 
-    std::string expectedResult = "<leave channel=\"coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:1\"/>";
+    std::string expectedResult = "<leave channel=\"coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:0\"/>";
     ASSERT_EQ(expectedResult, testling.serialize(leave));
 }
 
@@ -25,6 +25,6 @@ TEST(MIXLeaveSerializerTest, XEP0369_Example34) {
 
     auto leave = std::shared_ptr<MIXLeave>(new MIXLeave());
 
-    std::string expectedResult = "<leave xmlns=\"urn:xmpp:mix:1\"/>";
+    std::string expectedResult = "<leave xmlns=\"urn:xmpp:mix:0\"/>";
     ASSERT_EQ(expectedResult, testling.serialize(leave));
 }

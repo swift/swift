@@ -14,7 +14,7 @@ using namespace Swift;
 TEST(MIXUserPreferenceParserTest, XEP0369_Example31) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<user-preference xmlns='urn:xmpp:mix:1'/>"
+                "<user-preference xmlns='urn:xmpp:mix:0'/>"
                 ));
 
     auto payload = parser.getPayload<MIXUserPreference>();
@@ -26,10 +26,10 @@ TEST(MIXUserPreferenceParserTest, XEP0369_Example31) {
 TEST(MIXUserPreferenceParserTest, XEP0369_Example32) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<user-preference xmlns='urn:xmpp:mix:1'>"
+                "<user-preference xmlns='urn:xmpp:mix:0'>"
                     "<x xmlns='jabber:x:data' type='result'>"
                         "<field var='FORM_TYPE' type='hidden'>"
-                            "<value>urn:xmpp:mix:1</value>"
+                            "<value>urn:xmpp:mix:0</value>"
                         "</field>"
                         "<field var='JID Visibility'>"
                             "<value>never</value>"

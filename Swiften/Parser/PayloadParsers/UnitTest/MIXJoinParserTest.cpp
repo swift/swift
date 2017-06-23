@@ -14,7 +14,7 @@ using namespace Swift;
 TEST(MIXJoinParserTest, XEP0369_Example22) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<join xmlns=\"urn:xmpp:mix:1\" channel=\"coven@mix.shakespeare.example\">"
+                "<join xmlns=\"urn:xmpp:mix:0\" channel=\"coven@mix.shakespeare.example\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
@@ -41,7 +41,7 @@ TEST(MIXJoinParserTest, XEP0369_Example22) {
 TEST(MIXJoinParserTest, XEP0369_Example23) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<join xmlns=\"urn:xmpp:mix:1\">"
+                "<join xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
@@ -67,7 +67,7 @@ TEST(MIXJoinParserTest, XEP0369_Example23) {
 TEST(MIXJoinParserTest, XEP0369_Example24) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<join xmlns=\"urn:xmpp:mix:1\" jid=\"123456#coven@mix.shakespeare.example\">"
+                "<join xmlns=\"urn:xmpp:mix:0\" jid=\"123456#coven@mix.shakespeare.example\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
@@ -94,12 +94,12 @@ TEST(MIXJoinParserTest, XEP0369_Example24) {
 TEST(MIXJoinParserTest, XEP0369_Example29) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<join xmlns=\"urn:xmpp:mix:1\">"
+                "<join xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<x xmlns=\"jabber:x:data\" type=\"submit\">"
                         "<field var=\"FORM_TYPE\" type=\"hidden\">"
-                             "<value>urn:xmpp:mix:1</value>"
+                             "<value>urn:xmpp:mix:0</value>"
                         "</field>"
                         "<field var=\"JID Visibility\">"
                             "<value>never</value>"
@@ -130,12 +130,12 @@ TEST(MIXJoinParserTest, XEP0369_Example29) {
 TEST(MIXJoinParserTest, XEP0369_Example30) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-        "<join xmlns=\"urn:xmpp:mix:1\" jid=\"hag66@shakespeare.example\">"
+        "<join xmlns=\"urn:xmpp:mix:0\" jid=\"hag66@shakespeare.example\">"
             "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
             "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
             "<x xmlns=\"jabber:x:data\" type=\"result\">"
                 "<field var=\"FORM_TYPE\" type=\"hidden\">"
-                    "<value>urn:xmpp:mix:1</value>"
+                    "<value>urn:xmpp:mix:0</value>"
                 "</field>"
                 "<field var=\"JID Visibility\">"
                     "<value>never</value>"
