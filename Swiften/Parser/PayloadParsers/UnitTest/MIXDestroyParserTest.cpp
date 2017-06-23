@@ -14,7 +14,7 @@ using namespace Swift;
 TEST(MIXDestroyParserTest, XEP0369_Example70) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<destroy channel=\"coven\" xmlns=\"urn:xmpp:mix:1\"/>"
+                "<destroy channel=\"coven\" xmlns=\"urn:xmpp:mix:0\"/>"
                 ));
 
     auto payload = parser.getPayload<MIXDestroy>();

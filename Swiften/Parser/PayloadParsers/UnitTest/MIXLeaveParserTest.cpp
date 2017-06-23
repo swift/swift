@@ -13,7 +13,7 @@ using namespace Swift;
 
 TEST(MIXLeaveParserTest, XEP0369_Example33) {
     PayloadsParserTester parser;
-    ASSERT_TRUE(parser.parse("<leave xmlns=\"urn:xmpp:mix:1\" channel=\"coven@mix.shakespeare.example\"/>"));
+    ASSERT_TRUE(parser.parse("<leave xmlns=\"urn:xmpp:mix:0\" channel=\"coven@mix.shakespeare.example\"/>"));
 
     auto payload = parser.getPayload<MIXLeave>();
     ASSERT_TRUE(payload);
@@ -24,7 +24,7 @@ TEST(MIXLeaveParserTest, XEP0369_Example33) {
 
 TEST(MIXLeaveParserTest, XEP0369_Example34) {
     PayloadsParserTester parser;
-    ASSERT_TRUE(parser.parse("<leave xmlns=\"urn:xmpp:mix:1\"/>"));
+    ASSERT_TRUE(parser.parse("<leave xmlns=\"urn:xmpp:mix:0\"/>"));
 
     auto payload = parser.getPayload<MIXLeave>();
     ASSERT_TRUE(payload);

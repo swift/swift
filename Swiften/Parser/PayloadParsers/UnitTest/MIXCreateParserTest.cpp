@@ -14,7 +14,7 @@ using namespace Swift;
 TEST(MIXCreateParserTest, XEP0369_Example68) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<create xmlns=\"urn:xmpp:mix:1\"/>"
+                "<create xmlns=\"urn:xmpp:mix:0\"/>"
                 ));
 
     auto payload = parser.getPayload<MIXCreate>();
@@ -27,7 +27,7 @@ TEST(MIXCreateParserTest, XEP0369_Example68) {
 TEST(MIXCreateParserTest, XEP0369_Example66) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                "<create channel=\"coven\" xmlns=\"urn:xmpp:mix:1\"/>"
+                "<create channel=\"coven\" xmlns=\"urn:xmpp:mix:0\"/>"
                 ));
 
     auto payload = parser.getPayload<MIXCreate>();
@@ -42,10 +42,10 @@ TEST(MIXCreateParserTest, XEP0369_Example66) {
 TEST(MIXCreateParserTest, XEP0369_Example67) {
     PayloadsParserTester parser;
     ASSERT_TRUE(parser.parse(
-                 "<create channel=\"coven\" xmlns=\"urn:xmpp:mix:1\">"
+                 "<create channel=\"coven\" xmlns=\"urn:xmpp:mix:0\">"
                     "<x xmlns=\"jabber:x:data\" type=\"result\">"
                         "<field var=\"FORM_TYPE\" type=\"hidden\">"
-                            "<value>urn:xmpp:mix:1</value>"
+                            "<value>urn:xmpp:mix:0</value>"
                         "</field>"
                         "<field var=\"Owner\">"
                             "<value>hecate@shakespeare.lit</value>"

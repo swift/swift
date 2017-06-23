@@ -17,7 +17,7 @@ namespace Swift {
             }
 
             virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-                return element == "join" && ns == "urn:xmpp:mix:1";
+                return element == "join" && ns == "urn:xmpp:mix:0";
             }
 
             virtual PayloadParser* createPayloadParser() {

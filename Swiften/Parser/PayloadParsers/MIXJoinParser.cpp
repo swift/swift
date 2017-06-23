@@ -35,7 +35,7 @@ void MIXJoinParser::handleStartElement(const std::string& element, const std::st
     }
 
     if (level_ == 1) {
-        if (element == "subscribe" && ns == "urn:xmpp:mix:1") {
+        if (element == "subscribe" && ns == "urn:xmpp:mix:0") {
             currentPayloadParser_ = std::make_shared<MIXSubscribeParser>();
         }
         if (element == "x" && ns == "jabber:x:data") {
@@ -57,7 +57,7 @@ void MIXJoinParser::handleEndElement(const std::string& element, const std::stri
         }
 
         if (level_ == 1) {
-            if (element == "subscribe" && ns == "urn:xmpp:mix:1") {
+            if (element == "subscribe" && ns == "urn:xmpp:mix:0") {
                 getPayloadInternal()->addSubscription(std::dynamic_pointer_cast<MIXSubscribe>(currentPayloadParser_->getPayload()));
             }
             if (element == "x" && ns == "jabber:x:data") {
