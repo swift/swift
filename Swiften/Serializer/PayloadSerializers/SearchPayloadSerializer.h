@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,8 +12,6 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-    class PayloadSerializerCollection;
-
     class SWIFTEN_API SearchPayloadSerializer : public GenericPayloadSerializer<SearchPayload> {
         public:
             SearchPayloadSerializer();

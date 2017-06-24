@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Base/API.h>
@@ -11,8 +17,6 @@
 #include <Swiften/Parser/PayloadParsers/ClientStateParser.h>
 
 namespace Swift {
-    class PayloadParserFactoryCollection;
-
     class SWIFTEN_API ClientStateParserFactory : public PayloadParserFactory {
         public:
             ClientStateParserFactory() {

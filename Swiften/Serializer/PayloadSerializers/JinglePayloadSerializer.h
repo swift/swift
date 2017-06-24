@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,6 @@
 
 namespace Swift {
     class PayloadSerializerCollection;
-    class XMLElement;
 
     class SWIFTEN_API JinglePayloadSerializer : public GenericPayloadSerializer<JinglePayload> {
         public:

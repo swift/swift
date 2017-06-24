@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,8 +11,6 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-    class SerializingParser;
-
     class SWIFTEN_API VCardUpdateParser : public GenericPayloadParser<VCardUpdate> {
         public:
             VCardUpdateParser();

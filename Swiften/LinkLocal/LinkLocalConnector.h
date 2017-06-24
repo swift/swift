@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,13 +16,10 @@
 #include <Swiften/Network/Connection.h>
 
 namespace Swift {
-    class ConnectionFactory;
-    class HostAddress;
-    class ToplevelElement;
-    class PayloadParserFactoryCollection;
-    class PayloadSerializerCollection;
     class DNSSDQuerier;
     class DNSSDResolveHostnameQuery;
+    class HostAddress;
+    class ToplevelElement;
 
     class SWIFTEN_API LinkLocalConnector : public std::enable_shared_from_this<LinkLocalConnector> {
         public:

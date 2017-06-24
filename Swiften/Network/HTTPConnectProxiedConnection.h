@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,6 @@
 namespace Swift {
     class ConnectionFactory;
     class DomainNameResolver;
-    class EventLoop;
     class HTTPTrafficFilter;
     class TimerFactory;
 

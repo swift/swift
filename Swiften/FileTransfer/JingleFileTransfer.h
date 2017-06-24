@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,10 +19,6 @@
 #include <Swiften/Jingle/JingleContentID.h>
 
 namespace Swift {
-    class CryptoProvider;
-    class IQRouter;
-    class RemoteJingleTransportCandidateSelector;
-    class LocalJingleTransportCandidateGenerator;
     class JingleSession;
     class FileTransferTransporter;
     class FileTransferTransporterFactory;

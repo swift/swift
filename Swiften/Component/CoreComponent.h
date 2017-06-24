@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,11 +26,10 @@
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 namespace Swift {
-    class EventLoop;
+    class BasicSessionStream;
+    class ComponentSession;
     class IQRouter;
     class NetworkFactories;
-    class ComponentSession;
-    class BasicSessionStream;
 
     /**
      * The central class for communicating with an XMPP server as a component.

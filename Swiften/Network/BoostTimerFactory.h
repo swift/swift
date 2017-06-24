@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,6 @@
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
-    class BoostTimer;
     class EventLoop;
 
     class SWIFTEN_API BoostTimerFactory : public TimerFactory {

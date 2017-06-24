@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,9 +12,6 @@
 #include <Swiften/Parser/PayloadParser.h>
 
 namespace Swift {
-
-    class FormParser;
-
     /**
      * A generic payload parser for payloads of the given type.
      *

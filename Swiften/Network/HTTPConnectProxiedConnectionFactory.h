@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,9 +19,8 @@
 
 namespace Swift {
     class DomainNameResolver;
-    class TimerFactory;
-    class EventLoop;
     class HTTPTrafficFilter;
+    class TimerFactory;
 
     class SWIFTEN_API HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
         public:

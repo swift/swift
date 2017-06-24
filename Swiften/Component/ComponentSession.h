@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,6 @@
 #include <Swiften/Session/SessionStream.h>
 
 namespace Swift {
-    class ComponentAuthenticator;
     class CryptoProvider;
 
     class SWIFTEN_API ComponentSession : public std::enable_shared_from_this<ComponentSession> {

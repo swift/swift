@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,8 +14,6 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-    class PayloadParserFactoryCollection;
-
     class SWIFTEN_API ResultSetParser : public GenericPayloadParser<ResultSet> {
         public:
             ResultSetParser();

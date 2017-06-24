@@ -25,13 +25,6 @@
 #include <Swiften/Session/SessionStream.h>
 #include <Swiften/TLS/TLSError.h>
 
-namespace boost {
-    class thread;
-    namespace system {
-        class error_code;
-    }
-}
-
 class BOSHConnectionTest;
 
 namespace Swift {

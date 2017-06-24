@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,10 +13,6 @@
 namespace Swift {
     class ClientError;
     class Element;
-}
-
-namespace boost {
-    template<class T> class shared_ptr;
 }
 
 SWIFTEN_API std::ostream& operator<<(std::ostream& os, const Swift::ClientError& error);

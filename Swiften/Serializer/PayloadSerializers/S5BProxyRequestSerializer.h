@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,8 +22,6 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-    class PayloadSerializerCollection;
-
     class SWIFTEN_API S5BProxyRequestSerializer : public GenericPayloadSerializer<S5BProxyRequest> {
         public:
             virtual std::string serializePayload(std::shared_ptr<S5BProxyRequest> s5bProxyRequest) const {

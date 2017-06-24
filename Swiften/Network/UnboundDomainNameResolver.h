@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,6 @@ struct ub_result;
 namespace Swift {
     class EventLoop;
     class IDNConverter;
-    class TimerFactory;
 
     class UnboundDomainNameResolver;
     class UnboundQuery;

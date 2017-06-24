@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,7 +11,6 @@
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-    class PayloadSerializerCollection;
     class SWIFTEN_API MUCDestroyPayloadSerializer : public GenericPayloadSerializer<MUCDestroyPayload> {
         public:
             MUCDestroyPayloadSerializer();

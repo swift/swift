@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,22 +20,20 @@
 #include <Swiften/TLS/CertificateWithKey.h>
 
 namespace Swift {
+    class CertificateTrustChecker;
     class ChainedConnector;
-    class Message;
-    class Presence;
+    class ClientSession;
+    class ClientSessionStanzaChannel;
+    class Connection;
+    class ConnectionFactory;
     class Error;
     class IQRouter;
-    class TLSContextFactory;
-    class ConnectionFactory;
-    class Connection;
-    class TimerFactory;
-    class ClientSession;
-    class StanzaChannel;
-    class Stanza;
-    class SessionStream;
-    class CertificateTrustChecker;
+    class Message;
     class NetworkFactories;
-    class ClientSessionStanzaChannel;
+    class Presence;
+    class SessionStream;
+    class Stanza;
+    class StanzaChannel;
 
     /**
      * The central class for communicating with an XMPP server.

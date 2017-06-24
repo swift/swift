@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,17 +21,15 @@
 #include <Swiften/Jingle/JingleContentID.h>
 
 namespace Swift {
-    class JID;
-    class JingleSession;
-    class JingleContentPayload;
-    class FileTransferTransporter;
-    class FileTransferTransporterFactory;
-    class TimerFactory;
-    class Timer;
     class CryptoProvider;
+    class FileTransferTransporterFactory;
     class IncrementalBytestreamHashCalculator;
+    class JID;
+    class JingleContentPayload;
     class JingleFileTransferDescription;
-    class HashElement;
+    class JingleSession;
+    class Timer;
+    class TimerFactory;
 
     /**
      * @brief The IncomingJingleFileTransfer class contains the business logic for managing incoming

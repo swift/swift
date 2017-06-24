@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,10 +25,6 @@
 #include <Swiften/MUC/MUCRegistry.h>
 
 namespace Swift {
-    class StanzaChannel;
-    class IQRouter;
-    class DirectedPresenceSender;
-
     class SWIFTEN_API MockMUC : public MUC{
         public:
             typedef std::shared_ptr<MockMUC> ref;

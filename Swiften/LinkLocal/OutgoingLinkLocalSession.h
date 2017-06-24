@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,11 +16,10 @@
 #include <Swiften/Session/Session.h>
 
 namespace Swift {
-    class ConnectionFactory;
-    class XMLParserFactory;
-    class ToplevelElement;
     class PayloadParserFactoryCollection;
     class PayloadSerializerCollection;
+    class ToplevelElement;
+    class XMLParserFactory;
 
     class SWIFTEN_API OutgoingLinkLocalSession : public Session {
         public:

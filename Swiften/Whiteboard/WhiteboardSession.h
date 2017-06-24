@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,6 @@
 
 namespace Swift {
     class IQRouter;
-    class ErrorPayload;
     class WhiteboardPayload;
 
     class SWIFTEN_API WhiteboardSession {

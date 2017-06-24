@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,19 +9,18 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-    class TimerFactory;
     class ConnectionFactory;
-    class DomainNameResolver;
     class ConnectionServerFactory;
-    class NATTraverser;
-    class XMLParserFactory;
-    class TLSContextFactory;
-    class CertificateFactory;
-    class ProxyProvider;
+    class CryptoProvider;
+    class DomainNameResolver;
     class EventLoop;
     class IDNConverter;
+    class NATTraverser;
     class NetworkEnvironment;
-    class CryptoProvider;
+    class ProxyProvider;
+    class TLSContextFactory;
+    class TimerFactory;
+    class XMLParserFactory;
 
     /**
      * An interface collecting network factories.

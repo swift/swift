@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,8 +14,6 @@
 #include <Swiften/Base/IDGenerator.h>
 
 namespace Swift {
-    class SOCKS5BytestreamServerSession;
-
     class SWIFTEN_API SOCKS5BytestreamRegistry {
         public:
             SOCKS5BytestreamRegistry();

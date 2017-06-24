@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,6 @@
 
 namespace Swift {
     class SOCKS5BytestreamServerSession;
-    class CryptoProvider;
 
     class SWIFTEN_API SOCKS5BytestreamServer {
         public:

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,8 +17,6 @@
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptParser.h>
 
 namespace Swift {
-    class PayloadParserFactoryCollection;
-
     class SWIFTEN_API DeliveryReceiptParserFactory : public PayloadParserFactory {
         public:
             DeliveryReceiptParserFactory() {

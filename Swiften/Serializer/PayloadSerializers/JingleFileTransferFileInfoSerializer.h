@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,8 +12,6 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-    class PayloadSerializerCollection;
-
     class SWIFTEN_API JingleFileTransferFileInfoSerializer : public GenericPayloadSerializer<JingleFileTransferFileInfo> {
         public:
             JingleFileTransferFileInfoSerializer();

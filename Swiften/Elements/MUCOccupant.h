@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,8 +14,6 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-    class Client;
-
     class SWIFTEN_API MUCOccupant {
         public:
             enum Role {Moderator, Participant, Visitor, NoRole};

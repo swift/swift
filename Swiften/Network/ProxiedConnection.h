@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,13 +14,6 @@
 #include <Swiften/Network/Connection.h>
 #include <Swiften/Network/Connector.h>
 #include <Swiften/Network/HostAddressPort.h>
-
-namespace boost {
-    class thread;
-    namespace system {
-        class error_code;
-    }
-}
 
 namespace Swift {
     class ConnectionFactory;

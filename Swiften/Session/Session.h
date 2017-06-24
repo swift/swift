@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,8 +21,6 @@
 namespace Swift {
     class ProtocolHeader;
     class StreamStack;
-    class JID;
-    class Element;
     class PayloadParserFactoryCollection;
     class PayloadSerializerCollection;
     class XMPPLayer;
