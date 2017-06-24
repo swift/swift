@@ -55,6 +55,7 @@
 #include <Swiften/Parser/PayloadParsers/MIXCreateParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXDestroyParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXJoinParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/MIXPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXUserPreferenceParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXLeaveParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
@@ -139,6 +140,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXDestroyParser> >("destroy", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUserPreferenceParser> >("user-preference", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<MIXPayloadParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXLeaveParser> >("leave", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<MUCUserPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<MUCOwnerPayloadParserFactory>(this));
