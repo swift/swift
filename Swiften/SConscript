@@ -23,7 +23,7 @@ if env["SCONS_STAGE"] == "flags" :
     env["SWIFTEN_LIBRARY"] = "Swiften"
     env["SWIFTEN_LIBRARY_FILE"] = "Swiften"
     env["SWIFTEN_LIBRARY_ALIASES"] = []
-    
+
     if env["SWIFTEN_DLL"] :
         if env["PLATFORM"] == "win32" :
             env["SWIFTEN_LIBRARY"] = env.subst("Swiften${SWIFTEN_VERSION_MAJOR}")
@@ -65,7 +65,7 @@ if env["SCONS_STAGE"] == "flags" :
     if env.get("HAVE_SCHANNEL", 0) :
         dep_env.Append(LIBS = ["Winscard"])
 
-    for var, e in [("SWIFTEN_FLAGS", swiften_env), ("SWIFTEN_DEP_FLAGS", dep_env)] : 
+    for var, e in [("SWIFTEN_FLAGS", swiften_env), ("SWIFTEN_DEP_FLAGS", dep_env)] :
         env[var] = {
                 "CPPDEFINES": e.get("CPPDEFINES", []),
                 "CPPPATH": e.get("CPPPATH", []),
@@ -92,7 +92,7 @@ if env["SCONS_STAGE"] == "build" :
         if env.get(module + "_BUNDLED", False) :
             swiften_env.Append(SWIFTEN_OBJECTS = env.get(module + "_OBJECTS", []))
     swiften_env.UseFlags(swiften_env["PLATFORM_FLAGS"])
-    
+
     if swiften_env["SWIFTEN_DLL"] :
         swiften_env.AddMethod(lambda e,l,o : e.SharedLibrary(l,o), "SwiftenLibrary")
     else :
@@ -208,6 +208,7 @@ if env["SCONS_STAGE"] == "build" :
             "Serializer/PayloadSerializers/ErrorSerializer.cpp",
             "Serializer/PayloadSerializers/FullPayloadSerializerCollection.cpp",
             "Serializer/PayloadSerializers/MIXParticipantSerializer.cpp",
+            "Serializer/PayloadSerializers/MIXDestroySerializer.cpp",
             "Serializer/PayloadSerializers/MUCPayloadSerializer.cpp",
             "Serializer/PayloadSerializers/MUCUserPayloadSerializer.cpp",
             "Serializer/PayloadSerializers/MUCAdminPayloadSerializer.cpp",
@@ -276,7 +277,7 @@ if env["SCONS_STAGE"] == "build" :
             "Elements/Whiteboard/WhiteboardColor.cpp",
             "Whiteboard/WhiteboardTransformer.cpp",
         ]
-    
+
     elements = [
             "PubSub", "PubSubAffiliations", "PubSubAffiliation", "PubSubConfigure", "PubSubCreate", "PubSubDefault",
             "PubSubItems", "PubSubItem", "PubSubOptions", "PubSubPublish", "PubSubRetract", "PubSubSubscribeOptions",
@@ -294,7 +295,7 @@ if env["SCONS_STAGE"] == "build" :
     ]
     for element in elements :
         sources += [
-            "Elements/" + element + ".cpp", 
+            "Elements/" + element + ".cpp",
             "Serializer/PayloadSerializers/" + element + "Serializer.cpp",
             "Parser/PayloadParsers/" + element + "Parser.cpp",
         ]
@@ -432,6 +433,7 @@ if env["SCONS_STAGE"] == "build" :
             File("Parser/PayloadParsers/UnitTest/InBandRegistrationPayloadParserTest.cpp"),
             File("Parser/PayloadParsers/UnitTest/JingleParserTest.cpp"),
             File("Parser/PayloadParsers/UnitTest/MIXParticipantParserTest.cpp"),
+            File("Parser/PayloadParsers/UnitTest/MIXDestroyParserTest.cpp"),
             File("Parser/PayloadParsers/UnitTest/SearchPayloadParserTest.cpp"),
             File("Parser/PayloadParsers/UnitTest/SecurityLabelParserTest.cpp"),
             File("Parser/PayloadParsers/UnitTest/SecurityLabelsCatalogParserTest.cpp"),
@@ -512,6 +514,7 @@ if env["SCONS_STAGE"] == "build" :
             File("Serializer/PayloadSerializers/UnitTest/ReplaceSerializerTest.cpp"),
             File("Serializer/PayloadSerializers/UnitTest/MUCAdminPayloadSerializerTest.cpp"),
             File("Serializer/PayloadSerializers/UnitTest/MIXParticipantSerializerTest.cpp"),
+            File("Serializer/PayloadSerializers/UnitTest/MIXDestroySerializerTest.cpp"),
             File("Serializer/PayloadSerializers/UnitTest/JingleSerializersTest.cpp"),
             File("Serializer/PayloadSerializers/UnitTest/DeliveryReceiptSerializerTest.cpp"),
             File("Serializer/PayloadSerializers/UnitTest/IdleSerializerTest.cpp"),
@@ -545,7 +548,7 @@ if env["SCONS_STAGE"] == "build" :
             File("Whiteboard/UnitTest/WhiteboardServerTest.cpp"),
             File("Whiteboard/UnitTest/WhiteboardClientTest.cpp"),
         ])
-    
+
     # Generate the Swiften header
     def relpath(path, start) :
         i = len(os.path.commonprefix([path, start]))
