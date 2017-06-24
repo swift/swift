@@ -69,6 +69,7 @@ sources = [
         "PayloadParsers/DelayParser.cpp",
         "PayloadParsers/MIXParticipantParser.cpp",
         "PayloadParsers/MIXDestroyParser.cpp",
+        "PayloadParsers/MIXCreateParser.cpp",
         "PayloadParsers/MIXJoinParser.cpp",
         "PayloadParsers/MIXSubscribeParser.cpp",
         "PayloadParsers/MUCUserPayloadParser.cpp",
