@@ -50,6 +50,7 @@
 #include <Swiften/Serializer/PayloadSerializers/MIXParticipantSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXCreateSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXSetNickSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXUserPreferenceSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXLeaveSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCAdminPayloadSerializer.h>
@@ -164,6 +165,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
     serializers_.push_back(new MIXParticipantSerializer());
     serializers_.push_back(new MIXCreateSerializer());
     serializers_.push_back(new MIXPayloadSerializer());
+    serializers_.push_back(new MIXSetNickSerializer());
     serializers_.push_back(new MIXUserPreferenceSerializer());
     serializers_.push_back(new MIXLeaveSerializer());
     serializers_.push_back(new MIXJoinSerializer());

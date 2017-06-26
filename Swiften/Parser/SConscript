@@ -68,6 +68,7 @@ sources = [
         "PayloadParsers/VCardUpdateParser.cpp",
         "PayloadParsers/DelayParser.cpp",
         "PayloadParsers/MIXParticipantParser.cpp",
+        "PayloadParsers/MIXSetNickParser.cpp",
         "PayloadParsers/MIXDestroyParser.cpp",
         "PayloadParsers/MIXCreateParser.cpp",
         "PayloadParsers/MIXPayloadParser.cpp",
