@@ -53,6 +53,7 @@
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXParticipantParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXDestroyParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXJoinParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCDestroyPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCInvitationPayloadParser.h>
@@ -171,6 +172,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<GenericPayloadParserFactory2<CarbonsReceivedParser> >("received", "urn:xmpp:carbons:2", this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory2<CarbonsSentParser> >("sent", "urn:xmpp:carbons:2", this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<CarbonsPrivateParser> >("private", "urn:xmpp:carbons:2"));
+    factories_.push_back(std::make_shared<MIXJoinParserFactory>());
 
     for (auto& factory : factories_) {
         addFactory(factory.get());

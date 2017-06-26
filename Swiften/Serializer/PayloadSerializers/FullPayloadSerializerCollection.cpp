@@ -45,6 +45,8 @@
 #include <Swiften/Serializer/PayloadSerializers/MAMFinSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MAMQuerySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MAMResultSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXJoinSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXDestroySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXParticipantSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCAdminPayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MUCDestroyPayloadSerializer.h>
@@ -156,6 +158,8 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
     serializers_.push_back(new ResultSetSerializer());
     serializers_.push_back(new ForwardedSerializer(this));
     serializers_.push_back(new MIXParticipantSerializer());
+    serializers_.push_back(new MIXJoinSerializer());
+    serializers_.push_back(new MIXDestroySerializer());
     serializers_.push_back(new MAMResultSerializer(this));
     serializers_.push_back(new MAMQuerySerializer());
     serializers_.push_back(new MAMFinSerializer());
