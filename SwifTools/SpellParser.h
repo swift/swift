@@ -26,7 +26,7 @@ namespace Swift {
         ID_CHAR = 4
     };
 
-    typedef boost::tuple<int, int> PositionPair;
+    typedef boost::tuple<size_t, size_t> PositionPair;
     typedef std::vector<PositionPair > PositionPairList;
 
     class SpellParser{

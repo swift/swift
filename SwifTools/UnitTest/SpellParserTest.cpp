@@ -34,21 +34,21 @@ class SpellParserTest : public CppUnit::TestFixture {
         }
         void testSimpleCheckFragment() {
             parser_->check("fragment test", position_);
-            int size = position_.size();
-            CPPUNIT_ASSERT_EQUAL(2, size);
-            CPPUNIT_ASSERT_EQUAL(0, boost::get<0>(position_.front()));
-            CPPUNIT_ASSERT_EQUAL(8, boost::get<1>(position_.front()));
-            CPPUNIT_ASSERT_EQUAL(9, boost::get<0>(position_.back()));
-            CPPUNIT_ASSERT_EQUAL(13, boost::get<1>(position_.back()));
+            auto size = position_.size();
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), size);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), boost::get<0>(position_.front()));
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(8), boost::get<1>(position_.front()));
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(9), boost::get<0>(position_.back()));
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(13), boost::get<1>(position_.back()));
         }
         void testWWWCheckFragment() {
             parser_->check("www.link.com fragment test", position_);
-            int size = position_.size();
-            CPPUNIT_ASSERT_EQUAL(2, size);
-            CPPUNIT_ASSERT_EQUAL(13, boost::get<0>(position_.front()));
-            CPPUNIT_ASSERT_EQUAL(21, boost::get<1>(position_.front()));
-            CPPUNIT_ASSERT_EQUAL(22, boost::get<0>(position_.back()));
-            CPPUNIT_ASSERT_EQUAL(26, boost::get<1>(position_.back()));
+            auto size = position_.size();
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), size);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(13), boost::get<0>(position_.front()));
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(21), boost::get<1>(position_.front()));
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(22), boost::get<0>(position_.back()));
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(26), boost::get<1>(position_.back()));
         }
     private:
         const std::unique_ptr<SpellParser> parser_ = std::unique_ptr<SpellParser>(new SpellParser());

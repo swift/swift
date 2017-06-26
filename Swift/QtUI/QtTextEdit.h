@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <boost/optional.hpp>
+
 #include <QPointer>
 #include <QTextEdit>
 
@@ -52,10 +54,10 @@ namespace Swift {
 
     private:
         void addSuggestions(QMenu* menu, QContextMenuEvent* event);
-        void replaceMisspelledWord(const QString& word, int cursorPosition);
+        void replaceMisspelledWord(const QString& word, size_t cursorPosition);
         void setUpSpellChecker();
         void spellCheckerSettingsWindow();
-        PositionPair getWordFromCursor(int cursorPosition);
+        boost::optional<PositionPair> getWordFromCursor(size_t cursorPosition);
         void updateStyleSheet();
 
     private:

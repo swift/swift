@@ -69,7 +69,7 @@ void MacOSXChecker::checkFragment(const std::string& fragment, PositionPairList&
         if (range.location != NSNotFound) {
             if (range.location < nextLocation)
                 break;
-            misspelledPositions.push_back(PositionPair(static_cast<int>(range.location), static_cast<int>(range.location + range.length)));
+            misspelledPositions.push_back(PositionPair(range.location, range.location + range.length));
             nextLocation = range.location + range.length + 1;
         }
     } while (range.location != NSNotFound);

@@ -131,23 +131,25 @@ void QtTextEdit::handleTextChanged() {
     }
 }
 
-void QtTextEdit::replaceMisspelledWord(const QString& word, int cursorPosition) {
+void QtTextEdit::replaceMisspelledWord(const QString& word, size_t cursorPosition) {
     QTextCursor cursor = textCursor();
-    PositionPair wordPosition = getWordFromCursor(cursorPosition);
-    cursor.setPosition(boost::get<0>(wordPosition), QTextCursor::MoveAnchor);
-    cursor.setPosition(boost::get<1>(wordPosition), QTextCursor::KeepAnchor);
-    QTextCharFormat normalFormat;
-    cursor.insertText(word, normalFormat);
+    auto wordPosition = getWordFromCursor(cursorPosition);
+    if (wordPosition) {
+        cursor.setPosition(boost::get<0>(*wordPosition), QTextCursor::MoveAnchor);
+        cursor.setPosition(boost::get<1>(*wordPosition), QTextCursor::KeepAnchor);
+        QTextCharFormat normalFormat;
+        cursor.insertText(word, normalFormat);
+    }
 }
 
-PositionPair QtTextEdit::getWordFromCursor(int cursorPosition) {
+boost::optional<PositionPair> QtTextEdit::getWordFromCursor(size_t cursorPosition) {
     PositionPairList misspelledPositions = highlighter_->getMisspelledPositions();
     for (auto& misspelledPosition : misspelledPositions) {
         if (cursorPosition >= boost::get<0>(misspelledPosition) && cursorPosition <= boost::get<1>(misspelledPosition)) {
             return misspelledPosition;
         }
     }
-    return boost::make_tuple(-1,-1);
+    return boost::optional<PositionPair>(boost::make_tuple(-1,-1));
 }
 
 QSize QtTextEdit::sizeHint() const {
@@ -195,14 +197,14 @@ void QtTextEdit::addSuggestions(QMenu* menu, QContextMenuEvent* event)
     if (checker_ && highlighter_) {
         QAction* insertPoint = menu->actions().first();
         QTextCursor cursor = cursorForPosition(event->pos());
-        PositionPair wordPosition = getWordFromCursor(cursor.position());
-        if (boost::get<0>(wordPosition) < 0) {
+        auto wordPosition = getWordFromCursor(cursor.position());
+        if (!wordPosition) {
             // The click was executed outside a spellable word so no
             // suggestions are necessary
             return;
         }
-        cursor.setPosition(boost::get<0>(wordPosition), QTextCursor::MoveAnchor);
-        cursor.setPosition(boost::get<1>(wordPosition), QTextCursor::KeepAnchor);
+        cursor.setPosition(boost::get<0>(*wordPosition), QTextCursor::MoveAnchor);
+        cursor.setPosition(boost::get<1>(*wordPosition), QTextCursor::KeepAnchor);
         std::vector<std::string> wordList;
         checker_->getSuggestions(Q2PSTRING(cursor.selectedText()), wordList);
         if (wordList.size() == 0) {
