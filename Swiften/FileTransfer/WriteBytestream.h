@@ -28,5 +28,7 @@ namespace Swift {
             virtual bool write(const std::vector<unsigned char>&) = 0;
 
             boost::signals2::signal<void (const std::vector<unsigned char>&)> onWrite;
+
+            virtual void close() {};
     };
 }
