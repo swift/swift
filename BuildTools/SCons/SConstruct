@@ -268,6 +268,9 @@ if env.get("try_gconf", True) and env["PLATFORM"] != "win32" and env["PLATFORM"]
     if conf.CheckPKG("gconf-2.0") :
         gconf_bare_env = Environment()
         gconf_bare_env.ParseConfig('pkg-config --cflags gconf-2.0 gobject-2.0 --libs gconf-2.0 gobject-2.0')
+        if os.path.basename(env["CXX"]).startswith(("g++", "clang++")) :
+            gconf_bare_env["CCFLAGS"] = [("-isystem" + ccflag) for ccflag in gconf_bare_env["CPPPATH"]]
+            gconf_bare_env["CPPPATH"] = []
         gconf_flags = {
                 "LIBS": gconf_bare_env["LIBS"],
                 "CCFLAGS": gconf_bare_env["CCFLAGS"],
@@ -280,7 +283,7 @@ if env.get("try_gconf", True) and env["PLATFORM"] != "win32" and env["PLATFORM"]
             env["GCONF_FLAGS"] = {
                 "LIBS": gconf_env["LIBS"],
                 "CCFLAGS": gconf_env["CCFLAGS"],
-                "CPPPATH": gconf_env["CPPPATH"],
+                "CPPPATH": gconf_env.get("CPPPATH", []),
                 "CPPDEFINES": gconf_env.get("CPPDEFINES", []),
             }
     conf.Finish()

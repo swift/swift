@@ -13,6 +13,9 @@
 
 using namespace Swift;
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-member-function"
+
 namespace {
     class DBUSAdaptor: public QDBusAbstractAdaptor {
             Q_OBJECT
@@ -37,5 +40,7 @@ QtDBUSURIHandler::QtDBUSURIHandler() {
     connection.registerService("im.swift.Swift.URIHandler");
     connection.registerObject("/", this);
 }
+
+#pragma clang diagnostic pop
 
 #include "QtDBUSURIHandler.moc"

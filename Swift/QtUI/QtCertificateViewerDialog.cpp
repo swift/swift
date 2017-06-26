@@ -116,10 +116,8 @@ void QtCertificateViewerDialog::setCertificateDetails(const QSslCertificate& cer
 
 #if QT_VERSION < 0x050000
     QMultiMap<QSsl::AlternateNameEntryType, QString> altNames = cert.alternateSubjectNames();
-#define SANTYPE QSsl::AlternateNameEntryType
 #else
     QMultiMap<QSsl::AlternativeNameEntryType, QString> altNames = cert.subjectAlternativeNames();
-#define SANTYPE QSsl::AlternativeNameEntryType
 #endif
     if (!altNames.empty()) {
         ADD_SECTION(tr("Alternate Subject Names"));

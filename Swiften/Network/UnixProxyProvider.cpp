@@ -30,6 +30,8 @@ UnixProxyProvider::UnixProxyProvider() :
 UnixProxyProvider::~UnixProxyProvider() {
 #if defined(HAVE_GCONF)
     delete gconfProxyProvider;
+#else
+    (void)gconfProxyProvider;
 #endif
 }
 
