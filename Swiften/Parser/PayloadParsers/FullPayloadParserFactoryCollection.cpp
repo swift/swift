@@ -53,6 +53,7 @@
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXParticipantParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXDestroyParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXCreateParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCDestroyPayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCInvitationPayloadParser.h>
@@ -133,6 +134,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<ClientStateParserFactory>());
     factories_.push_back(std::make_shared<MIXParticipantParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXDestroyParser> >("destroy", "urn:xmpp:mix:1"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:1"));
     factories_.push_back(std::make_shared<MUCUserPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<MUCOwnerPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MUCInvitationPayloadParser> >("x", "jabber:x:conference"));
