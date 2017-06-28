@@ -290,7 +290,12 @@ void QtDynamicGridLayout::setDimensions(const QSize& dim) {
                     while(oldTabWidget->count()) {
                         QIcon icon = oldTabWidget->tabIcon(0);
                         QString text = oldTabWidget->tabText(0);
-                        newTabWidget->addTab(oldTabWidget->widget(0), icon, text);
+                        QWidget* movingTab = oldTabWidget->widget(0);
+                        //If handling was allowed, QtChatTabs::handleWidgetShown() would be triggered when newTabWidget has no tabs.
+                        //That would access indices of the gridLayout_ that are null because they have been migrated to the newLayout.
+                        movingTab->blockSignals(true);
+                        newTabWidget->addTab(movingTab, icon, text);
+                        movingTab->blockSignals(false);
                     }
                     delete oldTabWidget;
                 }
