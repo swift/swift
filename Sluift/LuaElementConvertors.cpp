@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,7 +53,7 @@ LuaElementConvertors::LuaElementConvertors() {
     convertors.push_back(std::make_shared<VCardUpdateConvertor>());
     convertors.push_back(std::make_shared<FormConvertor>());
     convertors.push_back(std::make_shared<SoftwareVersionConvertor>());
-    convertors.push_back(std::make_shared<DiscoInfoConvertor>());
+    convertors.push_back(std::make_shared<DiscoInfoConvertor>(this));
     convertors.push_back(std::make_shared<DiscoItemsConvertor>());
     convertors.push_back(std::make_shared<IQConvertor>(this));
     convertors.push_back(std::make_shared<PresenceConvertor>(this));

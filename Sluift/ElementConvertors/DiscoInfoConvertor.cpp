@@ -12,11 +12,15 @@
 
 #include <lua.hpp>
 
+#include <Swiften/Elements/Form.h>
+#include <Sluift/LuaElementConvertors.h>
 #include <Sluift/Lua/LuaUtils.h>
 
 using namespace Swift;
 
-DiscoInfoConvertor::DiscoInfoConvertor() : GenericLuaElementConvertor<DiscoInfo>("disco_info") {
+DiscoInfoConvertor::DiscoInfoConvertor(LuaElementConvertors* convertors) :
+        GenericLuaElementConvertor<DiscoInfo>("disco_info"),
+        convertors(convertors) {
 }
 
 DiscoInfoConvertor::~DiscoInfoConvertor() {
@@ -52,7 +56,17 @@ std::shared_ptr<DiscoInfo> DiscoInfoConvertor::doConvertFromLua(lua_State* L) {
     }
     lua_pop(L, 1);
 
-    // TODO: Extension
+    lua_getfield(L, -1, "extensions");
+    if (lua_istable(L, -1)) {
+        for (lua_pushnil(L); lua_next(L, -2); ) {
+            std::shared_ptr<Form> form = std::dynamic_pointer_cast<Form>(convertors->convertFromLuaUntyped(L, -1, "form"));
+            if (!!form) {
+                result->addExtension(form);
+            }
+            lua_pop(L, 1);
+        }
+    }
+    lua_pop(L, 1);
 
     return result;
 }
@@ -100,7 +114,16 @@ void DiscoInfoConvertor::doConvertToLua(lua_State* L, std::shared_ptr<DiscoInfo>
         lua_setfield(L, -2, "features");
     }
 
-    // TODO: Extension
+    const std::vector<Form::ref>& extensions = payload->getExtensions();
+    if (!extensions.empty()) {
+        lua_createtable(L, boost::numeric_cast<int>(extensions.size()), 0);
+        for (size_t i = 0; i < extensions.size(); ++i) {
+            if (convertors->convertToLuaUntyped(L, extensions[i]) > 0) {
+                lua_rawseti(L, -2, boost::numeric_cast<int>(i+1));
+            }
+        }
+        lua_setfield(L, -2, "extensions");
+    }
 }
 
 boost::optional<LuaElementConvertor::Documentation> DiscoInfoConvertor::getDocumentation() const {
@@ -115,5 +138,7 @@ boost::optional<LuaElementConvertor::Documentation> DiscoInfoConvertor::getDocum
             "  - `type`: string\n"
             "  - `language`: string\n"
             "- `features`: array(string)\n"
+            "- `extensions`: array(table)\n"
+            "-   `form`: string @{Form} (Optional)\n"
     );
 }
