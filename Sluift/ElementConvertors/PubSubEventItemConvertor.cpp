@@ -39,7 +39,7 @@ std::shared_ptr<PubSubEventItem> PubSubEventItemConvertor::doConvertFromLua(lua_
     lua_getfield(L, -1, "data");
     if (lua_type(L, -1) == LUA_TTABLE) {
         std::vector< std::shared_ptr<Payload> > items;
-        for(size_t i = 0; i < lua_objlen(L, -1); ++i) {
+        for(size_t i = 0; i < lua_rawlen(L, -1); ++i) {
             lua_pushnumber(L, i + 1);
             lua_gettable(L, -2);
             if (!lua_isnil(L, -1)) {

@@ -12,7 +12,22 @@
 #include <vector>
 
 #if LUA_VERSION_NUM < 502
-#define lua_pushglobaltable(L) lua_pushvalue(L, LUA_GLOBALSINDEX)
+#define lua_pushglobaltable(L)              lua_pushvalue(L, LUA_GLOBALSINDEX)
+#define lua_compare(L,idx1,idx2,LUA_OPEQ)   lua_equal(L,(idx1),(idx2))
+#define lua_rawlen(L, i)                    lua_objlen(L,(i))
+#endif
+#if LUA_VERSION_NUM >= 503
+#undef luaL_register
+#define luaL_register(L, n, l)  \
+    lua_getglobal( L, n );      \
+    if( lua_isnil( L, -1 ) )    \
+    {                           \
+        lua_pop( L, 1 );        \
+        lua_newtable( L );      \
+    }                           \
+    luaL_setfuncs( L, (l), 0 ); \
+    lua_pushvalue( L, -1 );     \
+    lua_setglobal( L, n );
 #endif
 
 namespace Swift {

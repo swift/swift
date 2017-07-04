@@ -29,7 +29,7 @@ namespace {
         lua_pushnil(L);
         for (lua_pushnil(L); lua_next(L, index) != 0; ) {
             lua_getfield(L, -1, "name");
-            if (lua_equal(L, -1, 2)) {
+            if (lua_compare(L, -1, 2, LUA_OPEQ)) {
                 lua_pop(L, 1);
                 return 1;
             }
@@ -44,7 +44,7 @@ namespace {
         if (lua_type(L, -1) == LUA_TTABLE) {
             for (lua_pushnil(L); lua_next(L, -2) != 0; ) {
                 lua_getfield(L, -1, "name");
-                if (lua_equal(L, -1, 2)) {
+                if (lua_compare(L, -1, 2, LUA_OPEQ)) {
                     lua_pushvalue(L, 3);
                     lua_setfield(L, -3, "value");
                     foundField = true;

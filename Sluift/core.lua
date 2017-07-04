@@ -6,7 +6,8 @@
 
 local sluift = select(1, ...)
 local _G = _G
-local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack, io = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, unpack, io
+local pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, io = pairs, ipairs, print, tostring, type, error, assert, next, rawset, xpcall, io
+local unpack = table.unpack or unpack
 local setmetatable, getmetatable = setmetatable, getmetatable
 local string = require "string"
 local table = require "table"

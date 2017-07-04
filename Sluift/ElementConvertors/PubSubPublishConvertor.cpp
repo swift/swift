@@ -34,7 +34,7 @@ std::shared_ptr<PubSubPublish> PubSubPublishConvertor::doConvertFromLua(lua_Stat
     lua_getfield(L, -1, "items");
     if (lua_type(L, -1) == LUA_TTABLE) {
         std::vector< std::shared_ptr<PubSubItem> > items;
-        for(size_t i = 0; i < lua_objlen(L, -1); ++i) {
+        for(size_t i = 0; i < lua_rawlen(L, -1); ++i) {
             lua_pushnumber(L, i + 1);
             lua_gettable(L, -2);
             if (!lua_isnil(L, -1)) {

@@ -33,7 +33,7 @@ std::shared_ptr<PubSubOwnerAffiliations> PubSubOwnerAffiliationsConvertor::doCon
     lua_pop(L, 1);
     if (lua_type(L, -1) == LUA_TTABLE) {
         std::vector< std::shared_ptr<PubSubOwnerAffiliation> > items;
-        for(size_t i = 0; i < lua_objlen(L, -1); ++i) {
+        for(size_t i = 0; i < lua_rawlen(L, -1); ++i) {
             lua_pushnumber(L, i + 1);
             lua_gettable(L, -2);
             if (!lua_isnil(L, -1)) {

@@ -701,7 +701,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         lua_getfield(L, 2, "groups");
         if (!lua_isnil(L, -1)) {
             if (lua_type(L, -1) == LUA_TTABLE) {
-                for (size_t i = 1; i <= lua_objlen(L, -1); ++i) {
+                for (size_t i = 1; i <= lua_rawlen(L, -1); ++i) {
                     lua_rawgeti(L, -1, boost::numeric_cast<int>(i));
                     const char* rawGroup = lua_tostring(L, -1);
                     if (rawGroup) {
