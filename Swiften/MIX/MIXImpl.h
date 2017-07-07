@@ -46,16 +46,34 @@ namespace Swift {
 
             virtual void updatePreferences(Form::ref form) override;
 
+            virtual void registerNick(const std::string& nick) override;
+
+            virtual void setNick(const std::string& nick) override;
+
+            virtual void requestSupportedFeatures() override;
+
+            virtual void requestSupportedNodes() override;
+
+            virtual void requestChannelInformation() override;
+
         private:
             void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
             void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
             void handleUpdateSubscriptionResponse(MIXUpdateSubscription::ref, ErrorPayload::ref);
             void handlePreferencesFormReceived(MIXUserPreference::ref, ErrorPayload::ref);
-            void handlePreferencesResultReceived(MIXUserPreference::ref /*payload*/, ErrorPayload::ref error);
+            void handlePreferencesResultReceived(MIXUserPreference::ref, ErrorPayload::ref);
+            void handleNickAssigned(MIXRegisterNick::ref, ErrorPayload::ref);
+            void handleNickUpdated(MIXSetNick::ref, ErrorPayload::ref);
+            void handleFeaturesReceived(DiscoInfo::ref, ErrorPayload::ref);
+            void handleSupportedNodesReceived(DiscoItems::ref, ErrorPayload::ref);
+            void handleChannelInformation(std::shared_ptr<PubSub> payload, ErrorPayload::ref error);
 
         private:
             JID ownJID_;
             JID channelJID_;
             IQRouter* iqRouter_;
+            DiscoInfo::ref supportedFeatures_;
+            std::vector<std::string> supportedNodes_;
+            Form::ref channelInformation_;
     };
 }
