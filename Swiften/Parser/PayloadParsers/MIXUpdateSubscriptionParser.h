@@ -15,17 +15,16 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/MIXSubscribe.h>
+#include <Swiften/Elements/MIXUpdateSubscription.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-    class PayloadParserFactoryCollection;
     class PayloadParser;
 
-    class SWIFTEN_API MIXSubscribeParser : public GenericPayloadParser<MIXSubscribe> {
+    class SWIFTEN_API MIXUpdateSubscriptionParser : public GenericPayloadParser<MIXUpdateSubscription> {
         public:
-            MIXSubscribeParser();
-            virtual ~MIXSubscribeParser() override;
+            MIXUpdateSubscriptionParser();
+            virtual ~MIXUpdateSubscriptionParser();
 
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) override;
             virtual void handleEndElement(const std::string& element, const std::string&) override;
