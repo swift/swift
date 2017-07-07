@@ -29,7 +29,7 @@ TEST(MIXJoinSerializerTest, XEP0369_Example22) {
     node4->setNode(std::string("urn:xmpp:mix:nodes:config"));
     join->addSubscription(node4);
 
-    std::string expectedResult = "<join channel=\"coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:1\">"
+    std::string expectedResult = "<join channel=\"coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
@@ -56,7 +56,7 @@ TEST(MIXJoinSerializerTest, XEP0369_Example23) {
     node4->setNode(std::string("urn:xmpp:mix:nodes:config"));
     join->addSubscription(node4);
 
-    std::string expectedResult = "<join xmlns=\"urn:xmpp:mix:1\">"
+    std::string expectedResult = "<join xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
@@ -84,7 +84,7 @@ TEST(MIXJoinSerializerTest, XEP0369_Example24) {
     node4->setNode(std::string("urn:xmpp:mix:nodes:config"));
     join->addSubscription(node4);
 
-    std::string expectedResult = "<join jid=\"123456#coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:1\">"
+    std::string expectedResult = "<join jid=\"123456#coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
@@ -110,7 +110,7 @@ TEST(MIXJoinSerializerTest, XEP0369_Example29) {
 
     std::shared_ptr<FormField> fieldType = std::make_shared<FormField>(FormField::HiddenType);
     fieldType->setName("FORM_TYPE");
-    fieldType->addValue("urn:xmpp:mix:1");
+    fieldType->addValue("urn:xmpp:mix:0");
     parameters->addField(fieldType);
 
     std::shared_ptr<FormField> fieldJIDVisibility = std::make_shared<FormField>();
@@ -120,12 +120,12 @@ TEST(MIXJoinSerializerTest, XEP0369_Example29) {
 
     join->setForm(parameters);
 
-    std::string expectedResult = "<join xmlns=\"urn:xmpp:mix:1\">"
+    std::string expectedResult = "<join xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<x type=\"submit\" xmlns=\"jabber:x:data\">"
                         "<field type=\"hidden\" var=\"FORM_TYPE\">"
-                             "<value>urn:xmpp:mix:1</value>"
+                             "<value>urn:xmpp:mix:0</value>"
                         "</field>"
                         "<field var=\"JID Visibility\">"
                             "<value>never</value>"
@@ -153,7 +153,7 @@ TEST(MIXJoinSerializerTest, XEP0369_Example30) {
 
     std::shared_ptr<FormField> fieldType = std::make_shared<FormField>(FormField::HiddenType);
     fieldType->setName("FORM_TYPE");
-    fieldType->addValue("urn:xmpp:mix:1");
+    fieldType->addValue("urn:xmpp:mix:0");
     parameters->addField(fieldType);
 
     std::shared_ptr<FormField> fieldJIDVisibility = std::make_shared<FormField>();
@@ -173,12 +173,12 @@ TEST(MIXJoinSerializerTest, XEP0369_Example30) {
 
     join->setForm(parameters);
 
-    std::string expectedResult = "<join jid=\"hag66@shakespeare.example\" xmlns=\"urn:xmpp:mix:1\">"
+    std::string expectedResult = "<join jid=\"hag66@shakespeare.example\" xmlns=\"urn:xmpp:mix:0\">"
                     "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                     "<x type=\"result\" xmlns=\"jabber:x:data\">"
                         "<field type=\"hidden\" var=\"FORM_TYPE\">"
-                             "<value>urn:xmpp:mix:1</value>"
+                             "<value>urn:xmpp:mix:0</value>"
                         "</field>"
                         "<field var=\"JID Visibility\">"
                             "<value>never</value>"

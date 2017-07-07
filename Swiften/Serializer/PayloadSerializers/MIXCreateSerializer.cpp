@@ -24,7 +24,7 @@ std::string MIXCreateSerializer::serializePayload(std::shared_ptr<MIXCreate> pay
     if (!payload) {
         return "";
     }
-    XMLElement element("create", "urn:xmpp:mix:1");
+    XMLElement element("create", "urn:xmpp:mix:0");
 
     if(payload->getChannel()) {
         element.setAttribute("channel", *payload->getChannel());

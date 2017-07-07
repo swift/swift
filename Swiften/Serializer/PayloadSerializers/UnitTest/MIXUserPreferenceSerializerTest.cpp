@@ -15,7 +15,7 @@ TEST(MIXUserPreferenceSerializerTest, XEP0369_Example31) {
     MIXUserPreferenceSerializer testling;
 
     auto userpreference = std::shared_ptr<MIXUserPreference>(new MIXUserPreference());
-    std::string expectedResult = "<user-preference xmlns=\"urn:xmpp:mix:1\"/>";
+    std::string expectedResult = "<user-preference xmlns=\"urn:xmpp:mix:0\"/>";
     ASSERT_EQ(expectedResult, testling.serialize(userpreference));
 }
 
@@ -28,7 +28,7 @@ TEST(MIXUserPreferenceSerializerTest, XEP0369_Example32) {
 
     std::shared_ptr<FormField> fieldType = std::make_shared<FormField>(FormField::HiddenType);
     fieldType->setName("FORM_TYPE");
-    fieldType->addValue("urn:xmpp:mix:1");
+    fieldType->addValue("urn:xmpp:mix:0");
     parameters->addField(fieldType);
 
     std::shared_ptr<FormField> fieldJIDVisibility = std::make_shared<FormField>();
@@ -48,10 +48,10 @@ TEST(MIXUserPreferenceSerializerTest, XEP0369_Example32) {
 
     userpreference->setData(parameters);
 
-    std::string expectedResult = "<user-preference xmlns=\"urn:xmpp:mix:1\">"
+    std::string expectedResult = "<user-preference xmlns=\"urn:xmpp:mix:0\">"
                                     "<x type=\"result\" xmlns=\"jabber:x:data\">"
                                         "<field type=\"hidden\" var=\"FORM_TYPE\">"
-                                             "<value>urn:xmpp:mix:1</value>"
+                                             "<value>urn:xmpp:mix:0</value>"
                                         "</field>"
                                         "<field var=\"JID Visibility\">"
                                             "<value>never</value>"
