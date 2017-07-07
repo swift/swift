@@ -16,24 +16,16 @@ TEST(MIXJoinSerializerTest, XEP0369_Example22) {
     auto join = std::make_shared<MIXJoin>();
     join->setChannel(JID("coven@mix.shakespeare.example"));
 
-    std::shared_ptr<MIXSubscribe> node1(new MIXSubscribe());
-    node1->setNode(std::string("urn:xmpp:mix:nodes:messages"));
-    join->addSubscription(node1);
-    std::shared_ptr<MIXSubscribe> node2(new MIXSubscribe());
-    node2->setNode(std::string("urn:xmpp:mix:nodes:presence"));
-    join->addSubscription(node2);
-    std::shared_ptr<MIXSubscribe> node3(new MIXSubscribe());
-    node3->setNode(std::string("urn:xmpp:mix:nodes:participants"));
-    join->addSubscription(node3);
-    std::shared_ptr<MIXSubscribe> node4(new MIXSubscribe());
-    node4->setNode(std::string("urn:xmpp:mix:nodes:config"));
-    join->addSubscription(node4);
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:messages"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:presence"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:participants"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:config"));
 
     std::string expectedResult = "<join channel=\"coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:0\">"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:config\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                 "</join>";
     ASSERT_EQ(expectedResult, testling.serialize(join));
 }
@@ -43,24 +35,16 @@ TEST(MIXJoinSerializerTest, XEP0369_Example23) {
 
     std::shared_ptr<MIXJoin> join(new MIXJoin());
 
-    std::shared_ptr<MIXSubscribe> node1(new MIXSubscribe());
-    node1->setNode(std::string("urn:xmpp:mix:nodes:messages"));
-    join->addSubscription(node1);
-    std::shared_ptr<MIXSubscribe> node2(new MIXSubscribe());
-    node2->setNode(std::string("urn:xmpp:mix:nodes:presence"));
-    join->addSubscription(node2);
-    std::shared_ptr<MIXSubscribe> node3(new MIXSubscribe());
-    node3->setNode(std::string("urn:xmpp:mix:nodes:participants"));
-    join->addSubscription(node3);
-    std::shared_ptr<MIXSubscribe> node4(new MIXSubscribe());
-    node4->setNode(std::string("urn:xmpp:mix:nodes:config"));
-    join->addSubscription(node4);
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:messages"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:presence"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:participants"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:config"));
 
     std::string expectedResult = "<join xmlns=\"urn:xmpp:mix:0\">"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:config\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                 "</join>";
     ASSERT_EQ(expectedResult, testling.serialize(join));
 }
@@ -71,24 +55,16 @@ TEST(MIXJoinSerializerTest, XEP0369_Example24) {
     std::shared_ptr<MIXJoin> join(new MIXJoin());
     join->setJID(JID("123456#coven@mix.shakespeare.example"));
 
-    std::shared_ptr<MIXSubscribe> node1(new MIXSubscribe());
-    node1->setNode(std::string("urn:xmpp:mix:nodes:messages"));
-    join->addSubscription(node1);
-    std::shared_ptr<MIXSubscribe> node2(new MIXSubscribe());
-    node2->setNode(std::string("urn:xmpp:mix:nodes:presence"));
-    join->addSubscription(node2);
-    std::shared_ptr<MIXSubscribe> node3(new MIXSubscribe());
-    node3->setNode(std::string("urn:xmpp:mix:nodes:participants"));
-    join->addSubscription(node3);
-    std::shared_ptr<MIXSubscribe> node4(new MIXSubscribe());
-    node4->setNode(std::string("urn:xmpp:mix:nodes:config"));
-    join->addSubscription(node4);
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:messages"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:presence"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:participants"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:config"));
 
     std::string expectedResult = "<join jid=\"123456#coven@mix.shakespeare.example\" xmlns=\"urn:xmpp:mix:0\">"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
-                    "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
                     "<subscribe node=\"urn:xmpp:mix:nodes:config\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:participants\"/>"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:presence\"/>"
                 "</join>";
     ASSERT_EQ(expectedResult, testling.serialize(join));
 }
@@ -98,12 +74,8 @@ TEST(MIXJoinSerializerTest, XEP0369_Example29) {
 
     std::shared_ptr<MIXJoin> join(new MIXJoin());
 
-    std::shared_ptr<MIXSubscribe> node1(new MIXSubscribe());
-    node1->setNode(std::string("urn:xmpp:mix:nodes:messages"));
-    join->addSubscription(node1);
-    std::shared_ptr<MIXSubscribe> node2(new MIXSubscribe());
-    node2->setNode(std::string("urn:xmpp:mix:nodes:presence"));
-    join->addSubscription(node2);
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:messages"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:presence"));
 
     std::shared_ptr<Form> parameters(std::make_shared<Form>());
     parameters->setType(Form::Type::SubmitType);
@@ -141,12 +113,8 @@ TEST(MIXJoinSerializerTest, XEP0369_Example30) {
     std::shared_ptr<MIXJoin> join(new MIXJoin());
     join->setJID(JID("hag66@shakespeare.example"));
 
-    std::shared_ptr<MIXSubscribe> node1(new MIXSubscribe());
-    node1->setNode(std::string("urn:xmpp:mix:nodes:messages"));
-    join->addSubscription(node1);
-    std::shared_ptr<MIXSubscribe> node2(new MIXSubscribe());
-    node2->setNode(std::string("urn:xmpp:mix:nodes:presence"));
-    join->addSubscription(node2);
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:messages"));
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:presence"));
 
     std::shared_ptr<Form> parameters(std::make_shared<Form>());
     parameters->setType(Form::Type::ResultType);

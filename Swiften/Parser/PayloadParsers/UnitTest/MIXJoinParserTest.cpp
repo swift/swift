@@ -30,12 +30,11 @@ TEST(MIXJoinParserTest, XEP0369_Example22) {
     ASSERT_FALSE(payload->getJID());
     ASSERT_FALSE(payload->getForm());
 
-    const std::vector<MIXSubscribe::ref> items = payload->getSubscriptions();
-    ASSERT_EQ(static_cast<size_t>(4), items.size());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:messages"), items[0]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:presence"), items[1]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:participants"), items[2]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:config"), items[3]->getNode());
+    ASSERT_EQ(static_cast<size_t>(4), payload->getSubscriptions().size());
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:presence")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:participants")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:config")));
 }
 
 TEST(MIXJoinParserTest, XEP0369_Example23) {
@@ -56,12 +55,11 @@ TEST(MIXJoinParserTest, XEP0369_Example23) {
     ASSERT_FALSE(payload->getJID());
     ASSERT_FALSE(payload->getForm());
 
-    const std::vector<MIXSubscribe::ref> items = payload->getSubscriptions();
-    ASSERT_EQ(static_cast<size_t>(4), items.size());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:messages"), items[0]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:presence"), items[1]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:participants"), items[2]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:config"), items[3]->getNode());
+    ASSERT_EQ(static_cast<size_t>(4), payload->getSubscriptions().size());
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:presence")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:participants")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:config")));
 }
 
 TEST(MIXJoinParserTest, XEP0369_Example24) {
@@ -83,12 +81,11 @@ TEST(MIXJoinParserTest, XEP0369_Example24) {
     ASSERT_EQ(JID("123456#coven@mix.shakespeare.example"), *payload->getJID());
     ASSERT_FALSE(payload->getForm());
 
-    const std::vector<MIXSubscribe::ref> items = payload->getSubscriptions();
-    ASSERT_EQ(static_cast<size_t>(4), items.size());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:messages"), items[0]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:presence"), items[1]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:participants"), items[2]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:config"), items[3]->getNode());
+    ASSERT_EQ(static_cast<size_t>(4), payload->getSubscriptions().size());
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:presence")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:participants")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:config")));
 }
 
 TEST(MIXJoinParserTest, XEP0369_Example29) {
@@ -112,10 +109,10 @@ TEST(MIXJoinParserTest, XEP0369_Example29) {
 
     ASSERT_FALSE(payload->getChannel());
     ASSERT_FALSE(payload->getJID());
-    const std::vector<MIXSubscribe::ref> items = payload->getSubscriptions();
-    ASSERT_EQ(static_cast<size_t>(2), items.size());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:messages"), items[0]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:presence"), items[1]->getNode());
+
+    ASSERT_EQ(static_cast<size_t>(2), payload->getSubscriptions().size());
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:presence")));
 
     ASSERT_TRUE(payload->getForm());
     ASSERT_EQ(Form::Type::SubmitType, payload->getForm()->getType());
@@ -156,10 +153,9 @@ TEST(MIXJoinParserTest, XEP0369_Example30) {
     ASSERT_TRUE(payload->getJID());
     ASSERT_EQ(JID("hag66@shakespeare.example"), *payload->getJID());
 
-    const std::vector<MIXSubscribe::ref> items = payload->getSubscriptions();
-    ASSERT_EQ(static_cast<size_t>(2), items.size());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:messages"), items[0]->getNode());
-    ASSERT_EQ(std::string("urn:xmpp:mix:nodes:presence"), items[1]->getNode());
+    ASSERT_EQ(static_cast<size_t>(2), payload->getSubscriptions().size());
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:presence")));
 
     ASSERT_TRUE(payload->getForm());
     ASSERT_EQ(Form::Type::ResultType, payload->getForm()->getType());

@@ -15,16 +15,16 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/MIXSubscribe.h>
+#include <Swiften/Elements/MIXUpdateSubscription.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
 
-    class SWIFTEN_API MIXSubscribeSerializer : public GenericPayloadSerializer<MIXSubscribe> {
+    class SWIFTEN_API MIXUpdateSubscriptionSerializer : public GenericPayloadSerializer<MIXUpdateSubscription> {
         public:
-            MIXSubscribeSerializer();
-            virtual ~MIXSubscribeSerializer() override;
+            MIXUpdateSubscriptionSerializer();
+            virtual ~MIXUpdateSubscriptionSerializer();
 
-            virtual std::string serializePayload(std::shared_ptr<MIXSubscribe>) const override;
+            virtual std::string serializePayload(std::shared_ptr<MIXUpdateSubscription>) const override;
     };
 }
