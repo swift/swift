@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
 class SWIFTEN_API IBBSendTransportSession : public TransportSession {
     public:
         IBBSendTransportSession(std::shared_ptr<IBBSendSession> session);
-        virtual ~IBBSendTransportSession();
+        virtual ~IBBSendTransportSession() SWIFTEN_OVERRIDE;
 
         virtual void start() SWIFTEN_OVERRIDE;
         virtual void stop() SWIFTEN_OVERRIDE;

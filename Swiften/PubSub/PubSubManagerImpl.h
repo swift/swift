@@ -24,7 +24,7 @@ namespace Swift {
     class SWIFTEN_API PubSubManagerImpl : public PubSubManager {
         public:
             PubSubManagerImpl(StanzaChannel* stanzaChannel, IQRouter* router);
-            virtual ~PubSubManagerImpl();
+            virtual ~PubSubManagerImpl() SWIFTEN_OVERRIDE;
 
             SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
                     SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST)

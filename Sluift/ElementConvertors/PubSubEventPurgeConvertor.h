@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
     class PubSubEventPurgeConvertor : public GenericLuaElementConvertor<PubSubEventPurge> {
         public:
             PubSubEventPurgeConvertor();
-            virtual ~PubSubEventPurgeConvertor();
+            virtual ~PubSubEventPurgeConvertor() SWIFTEN_OVERRIDE;
 
             virtual std::shared_ptr<PubSubEventPurge> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
             virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubEventPurge>) SWIFTEN_OVERRIDE;

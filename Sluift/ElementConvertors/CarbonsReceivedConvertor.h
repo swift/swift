@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
     class CarbonsReceivedConvertor : public GenericLuaElementConvertor<CarbonsReceived> {
         public:
             CarbonsReceivedConvertor(LuaElementConvertors* convertors);
-            virtual ~CarbonsReceivedConvertor();
+            virtual ~CarbonsReceivedConvertor() SWIFTEN_OVERRIDE;
 
             virtual std::shared_ptr<CarbonsReceived> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
             virtual void doConvertToLua(lua_State*, std::shared_ptr<CarbonsReceived>) SWIFTEN_OVERRIDE;

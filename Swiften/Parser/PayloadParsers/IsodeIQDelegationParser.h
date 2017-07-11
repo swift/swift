@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
     class SWIFTEN_API IsodeIQDelegationParser : public GenericPayloadParser<IsodeIQDelegation> {
         public:
             IsodeIQDelegationParser(PayloadParserFactoryCollection* parsers);
-            virtual ~IsodeIQDelegationParser();
+            virtual ~IsodeIQDelegationParser() SWIFTEN_OVERRIDE;
 
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
             virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;

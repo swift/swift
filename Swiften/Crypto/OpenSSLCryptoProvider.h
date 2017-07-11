@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,7 @@ namespace Swift {
     class OpenSSLCryptoProvider : public CryptoProvider {
         public:
             OpenSSLCryptoProvider();
-            ~OpenSSLCryptoProvider();
+            virtual ~OpenSSLCryptoProvider() SWIFTEN_OVERRIDE;
 
             virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
             virtual Hash* createMD5() SWIFTEN_OVERRIDE;

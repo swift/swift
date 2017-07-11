@@ -364,7 +364,6 @@ else :
             "-Wno-direct-ivar-access", # Obj-C code warning
             "-Wno-potentially-evaluated-expression", # Caused due to calling shared_ptr::get() inside typeid()
 
-            "-Wno-inconsistent-missing-destructor-override", # FIXME: fix source code issues regarding this warning later
             "-Wno-shadow-field", # FIXME: fix source code issues regarding this warning later
             "-Wno-unused-template", # FIXME: fix source code issues regarding this warning later
             ])

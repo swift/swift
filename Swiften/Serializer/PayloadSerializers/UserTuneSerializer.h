@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
     class SWIFTEN_API UserTuneSerializer : public GenericPayloadSerializer<UserTune> {
         public:
             UserTuneSerializer(PayloadSerializerCollection* serializers);
-            virtual ~UserTuneSerializer();
+            virtual ~UserTuneSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<UserTune>) const SWIFTEN_OVERRIDE;
     };

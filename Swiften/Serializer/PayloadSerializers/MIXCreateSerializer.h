@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <memory>
@@ -18,7 +24,7 @@ namespace Swift {
     class SWIFTEN_API MIXCreateSerializer : public GenericPayloadSerializer<MIXCreate> {
         public:
             MIXCreateSerializer();
-            virtual ~MIXCreateSerializer();
+            virtual ~MIXCreateSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<MIXCreate>) const SWIFTEN_OVERRIDE;
     };

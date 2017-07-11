@@ -46,7 +46,7 @@ namespace Swift {
                 const JingleFileTransferFileInfo&,
                 const FileTransferOptions&,
                 CryptoProvider*);
-            virtual ~OutgoingJingleFileTransfer();
+            virtual ~OutgoingJingleFileTransfer() SWIFTEN_OVERRIDE;
 
             virtual void start() SWIFTEN_OVERRIDE;
             virtual void cancel() SWIFTEN_OVERRIDE;

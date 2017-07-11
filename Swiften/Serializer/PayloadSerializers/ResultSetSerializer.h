@@ -17,7 +17,7 @@ namespace Swift {
     class SWIFTEN_API ResultSetSerializer : public GenericPayloadSerializer<ResultSet> {
         public:
             ResultSetSerializer();
-            virtual ~ResultSetSerializer();
+            virtual ~ResultSetSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<ResultSet>) const SWIFTEN_OVERRIDE;
     };

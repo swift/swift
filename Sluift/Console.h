@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ namespace Swift {
     class Console : public Completer {
         public:
             Console(lua_State* L, Terminal* terminal);
-            virtual ~Console();
+            virtual ~Console() SWIFTEN_OVERRIDE;
 
             void run();
 

@@ -15,7 +15,7 @@ namespace Swift {
     class SWIFTEN_API PubSubErrorSerializer : public GenericPayloadSerializer<PubSubError> {
         public:
             PubSubErrorSerializer();
-            virtual ~PubSubErrorSerializer();
+            virtual ~PubSubErrorSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<PubSubError>) const SWIFTEN_OVERRIDE;
 

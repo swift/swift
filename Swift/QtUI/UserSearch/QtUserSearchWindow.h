@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,7 +33,7 @@ namespace Swift {
         Q_OBJECT
         public:
             QtUserSearchWindow(UIEventStream* eventStream, UserSearchWindow::Type type, const std::set<std::string>& groups, SettingsProvider* settingsProvider);
-            virtual ~QtUserSearchWindow();
+            virtual ~QtUserSearchWindow() SWIFTEN_OVERRIDE;
 
             virtual void addSavedServices(const std::vector<JID>& services) SWIFTEN_OVERRIDE;
 

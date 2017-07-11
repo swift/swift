@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,12 +19,9 @@ namespace Swift {
     class SWIFTEN_API IsodeIQDelegationSerializer : public GenericPayloadSerializer<IsodeIQDelegation> {
         public:
             IsodeIQDelegationSerializer(PayloadSerializerCollection* serializers);
-            virtual ~IsodeIQDelegationSerializer();
+            virtual ~IsodeIQDelegationSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<IsodeIQDelegation>) const SWIFTEN_OVERRIDE;
-
-        private:
-
 
         private:
             PayloadSerializerCollection* serializers;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
     class MessageConvertor : public StanzaConvertor<Message> {
         public:
             MessageConvertor(LuaElementConvertors* convertors);
-            virtual ~MessageConvertor();
+            virtual ~MessageConvertor() SWIFTEN_OVERRIDE;
 
             virtual std::shared_ptr<Message> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
             virtual void doConvertToLua(lua_State*, std::shared_ptr<Message>) SWIFTEN_OVERRIDE;

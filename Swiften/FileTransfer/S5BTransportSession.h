@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -35,7 +35,7 @@ class SWIFTEN_API S5BTransportSession : public TransportSession {
             initialize();
         }
 
-        virtual ~S5BTransportSession() {
+        virtual ~S5BTransportSession() SWIFTEN_OVERRIDE {
         }
 
         virtual void start() SWIFTEN_OVERRIDE {

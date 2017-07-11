@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,12 +19,9 @@ namespace Swift {
     class SWIFTEN_API PubSubPublishSerializer : public GenericPayloadSerializer<PubSubPublish> {
         public:
             PubSubPublishSerializer(PayloadSerializerCollection* serializers);
-            virtual ~PubSubPublishSerializer();
+            virtual ~PubSubPublishSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<PubSubPublish>) const SWIFTEN_OVERRIDE;
-
-        private:
-
 
         private:
             PayloadSerializerCollection* serializers;

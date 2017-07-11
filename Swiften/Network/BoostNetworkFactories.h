@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,7 +24,7 @@ namespace Swift {
              * used for the construction of the BoostIOServiceThread.
              */
             BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService = std::shared_ptr<boost::asio::io_service>());
-            virtual ~BoostNetworkFactories();
+            virtual ~BoostNetworkFactories() SWIFTEN_OVERRIDE;
 
             virtual TimerFactory* getTimerFactory() const SWIFTEN_OVERRIDE {
                 return timerFactory;

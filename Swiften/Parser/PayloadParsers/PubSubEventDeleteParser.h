@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
     class SWIFTEN_API PubSubEventDeleteParser : public GenericPayloadParser<PubSubEventDelete> {
         public:
             PubSubEventDeleteParser(PayloadParserFactoryCollection* parsers);
-            virtual ~PubSubEventDeleteParser();
+            virtual ~PubSubEventDeleteParser() SWIFTEN_OVERRIDE;
 
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
             virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;

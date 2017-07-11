@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@ namespace Swift {
     class StatusConvertor : public GenericLuaElementConvertor<Status> {
         public:
             StatusConvertor();
-            virtual ~StatusConvertor();
+            virtual ~StatusConvertor() SWIFTEN_OVERRIDE;
 
             virtual std::shared_ptr<Status> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
             virtual void doConvertToLua(lua_State*, std::shared_ptr<Status>) SWIFTEN_OVERRIDE;

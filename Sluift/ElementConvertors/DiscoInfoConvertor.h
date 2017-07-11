@@ -17,7 +17,7 @@ namespace Swift {
     class DiscoInfoConvertor : public GenericLuaElementConvertor<DiscoInfo> {
         public:
             DiscoInfoConvertor(LuaElementConvertors* convertors);
-            virtual ~DiscoInfoConvertor();
+            virtual ~DiscoInfoConvertor() SWIFTEN_OVERRIDE;
 
             virtual std::shared_ptr<DiscoInfo> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
             virtual void doConvertToLua(lua_State*, std::shared_ptr<DiscoInfo>) SWIFTEN_OVERRIDE;

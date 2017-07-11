@@ -45,7 +45,7 @@ namespace Swift {
             static const QString ButtonMUCInvite;
         public:
             QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll = false);
-            ~QtWebKitChatView();
+            ~QtWebKitChatView() SWIFTEN_OVERRIDE;
 
             /** Add message to window.
              * @return id of added message (for acks).

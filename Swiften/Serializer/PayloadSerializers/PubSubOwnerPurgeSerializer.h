@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
     class SWIFTEN_API PubSubOwnerPurgeSerializer : public GenericPayloadSerializer<PubSubOwnerPurge> {
         public:
             PubSubOwnerPurgeSerializer(PayloadSerializerCollection* serializers);
-            virtual ~PubSubOwnerPurgeSerializer();
+            virtual ~PubSubOwnerPurgeSerializer() SWIFTEN_OVERRIDE;
 
             virtual std::string serializePayload(std::shared_ptr<PubSubOwnerPurge>) const SWIFTEN_OVERRIDE;
     };

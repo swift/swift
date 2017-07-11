@@ -32,7 +32,7 @@ namespace Swift {
     class ChatController : public ChatControllerBase {
         public:
             ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
-            virtual ~ChatController();
+            virtual ~ChatController() SWIFTEN_OVERRIDE;
             virtual void setToJID(const JID& jid) SWIFTEN_OVERRIDE;
             virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
             virtual void setOnline(bool online) SWIFTEN_OVERRIDE;

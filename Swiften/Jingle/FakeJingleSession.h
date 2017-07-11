@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -86,7 +86,7 @@ namespace Swift {
             typedef std::shared_ptr<FakeJingleSession> ref;
 
             FakeJingleSession(const JID& initiator, const std::string& id);
-            virtual ~FakeJingleSession();
+            virtual ~FakeJingleSession() SWIFTEN_OVERRIDE;
 
             virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
             virtual void sendTerminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
     class PresenceConvertor : public StanzaConvertor<Presence> {
         public:
             PresenceConvertor(LuaElementConvertors* convertors);
-            virtual ~PresenceConvertor();
+            virtual ~PresenceConvertor() SWIFTEN_OVERRIDE;
 
             virtual std::shared_ptr<Presence> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
             virtual void doConvertToLua(lua_State*, std::shared_ptr<Presence>) SWIFTEN_OVERRIDE;

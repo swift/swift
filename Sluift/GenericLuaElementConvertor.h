@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
             GenericLuaElementConvertor(const std::string& type) : type(type) {
             }
 
-            virtual ~GenericLuaElementConvertor() {}
+            virtual ~GenericLuaElementConvertor() SWIFTEN_OVERRIDE {}
 
             virtual std::shared_ptr<Element> convertFromLua(lua_State* L, int index, const std::string& payloadType) SWIFTEN_OVERRIDE {
                 if (payloadType == type) {

@@ -49,7 +49,7 @@ namespace Swift {
                 FileTransferTransporterFactory*,
                 TimerFactory*,
                 CryptoProvider*);
-            virtual ~IncomingJingleFileTransfer();
+            virtual ~IncomingJingleFileTransfer() SWIFTEN_OVERRIDE;
 
             virtual void accept(std::shared_ptr<WriteBytestream>, const FileTransferOptions& = FileTransferOptions()) SWIFTEN_OVERRIDE;
             virtual void cancel() SWIFTEN_OVERRIDE;

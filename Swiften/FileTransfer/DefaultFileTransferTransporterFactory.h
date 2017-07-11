@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,7 @@ namespace Swift {
                 TimerFactory*,
                 CryptoProvider*,
                 IQRouter*);
-            virtual ~DefaultFileTransferTransporterFactory();
+            virtual ~DefaultFileTransferTransporterFactory() SWIFTEN_OVERRIDE;
 
             virtual FileTransferTransporter* createInitiatorTransporter(
                     const JID& initiator, const JID& responder, const FileTransferOptions&) SWIFTEN_OVERRIDE;

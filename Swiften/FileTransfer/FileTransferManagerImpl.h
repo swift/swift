@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -65,7 +65,7 @@ namespace Swift {
                     NetworkEnvironment* networkEnvironment,
                     NATTraverser* natTraverser,
                     CryptoProvider* crypto);
-            virtual ~FileTransferManagerImpl();
+            virtual ~FileTransferManagerImpl() SWIFTEN_OVERRIDE;
 
             OutgoingFileTransfer::ref createOutgoingFileTransfer(
                     const JID& to,

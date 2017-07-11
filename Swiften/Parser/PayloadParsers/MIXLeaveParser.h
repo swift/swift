@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <memory>
@@ -18,7 +24,7 @@ namespace Swift {
     class SWIFTEN_API MIXLeaveParser : public GenericPayloadParser<MIXLeave> {
         public:
             MIXLeaveParser();
-            virtual ~MIXLeaveParser();
+            virtual ~MIXLeaveParser() SWIFTEN_OVERRIDE;
 
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
             virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;
