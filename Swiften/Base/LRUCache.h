@@ -19,9 +19,9 @@ namespace Swift {
 
 
 /**
- * The \ref LRUCache templaged class implements a lookup cache which removes
+ * The \ref LRUCache template class implements a lookup cache which removes
  * the least recently used cached item from the cache, if the cache size hits
- * the \ref MAX_SIZE limit.
+ * the \p MAX_SIZE limit.
  *
  * An example use is a cache for entity capabilities hash to DiscoInfo.
  */
@@ -32,9 +32,9 @@ public:
 
 public:
     /**
-     * Inserts the key/value pair in the front of the cache. If the \ref key
+     * Inserts the key/value pair in the front of the cache. If the \p key
      * already exists in the cache, it is moved to the front instead. If
-     * afterwards, the cahe size exceeds the \ref MAX_SIZE limit, the least
+     * afterwards, the cahe size exceeds the \p MAX_SIZE limit, the least
      * recently item is removed from the cache.
      */
     void insert(const KEY_TYPE& key, VALUE_TYPE value) {
@@ -48,11 +48,11 @@ public:
     }
 
     /**
-     * Looks up a cache entry based on the provided \ref key and moves it back
+     * Looks up a cache entry based on the provided \p key and moves it back
      * to the front of the cache. If there is no cache entry for the provided
-     * \ref key, an uninitialized \ref boost::optional is returned.
-     * If the optional \ref missFunction is provided, it is called on a cache miss.
-     * If the \ref missFunction returns an initialized \ref boost::optional, the
+     * \p key, an uninitialized \p boost::optional is returned.
+     * If the optional \p missFunction is provided, it is called on a cache miss.
+     * If the \p missFunction returns an initialized \p boost::optional, the
      * value is inserted in the cache.
      */
     boost::optional<VALUE_TYPE> get(const KEY_TYPE& key, cacheMissFunction missFunction = cacheMissFunction()) {
