@@ -14,7 +14,6 @@
 #include <boost/signals2.hpp>
 #include <boost/signals2/connection.hpp>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/MUCOccupant.h>
 #include <Swiften/Elements/Message.h>
@@ -55,13 +54,13 @@ namespace Swift {
     class MUCController : public ChatControllerBase {
         public:
             MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* xmppRoster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
-            virtual ~MUCController() SWIFTEN_OVERRIDE;
+            virtual ~MUCController() override;
             boost::signals2::signal<void ()> onUserLeft;
             boost::signals2::signal<void ()> onUserJoined;
             boost::signals2::signal<void ()> onImpromptuConfigCompleted;
             boost::signals2::signal<void (const std::string&, const std::string& )> onUserNicknameChanged;
-            virtual void setOnline(bool online) SWIFTEN_OVERRIDE;
-            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
+            virtual void setOnline(bool online) override;
+            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) override;
             void rejoin();
             static void appendToJoinParts(std::vector<NickJoinPart>& joinParts, const NickJoinPart& newEvent);
             static std::string generateJoinPartString(const std::vector<NickJoinPart>& joinParts, bool isImpromptu);
@@ -76,18 +75,18 @@ namespace Swift {
             void setChatWindowTitle(const std::string& title);
 
         protected:
-            virtual void preSendMessageRequest(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
-            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
-            virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
-            virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
-            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message> message) const SWIFTEN_OVERRIDE;
-            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent>) SWIFTEN_OVERRIDE;
-            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
-            virtual void handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) SWIFTEN_OVERRIDE;
-            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
-            virtual void cancelReplaces() SWIFTEN_OVERRIDE;
-            virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
-            virtual JID messageCorrectionJID(const JID& fromJID) SWIFTEN_OVERRIDE;
+            virtual void preSendMessageRequest(std::shared_ptr<Message> message) override;
+            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) override;
+            virtual std::string senderHighlightNameFromMessage(const JID& from) override;
+            virtual std::string senderDisplayNameFromMessage(const JID& from) override;
+            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message> message) const override;
+            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent>) override;
+            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& time) override;
+            virtual void handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) override;
+            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent>, const ChatWindow::ChatMessage& chatMessage) override;
+            virtual void cancelReplaces() override;
+            virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) override;
+            virtual JID messageCorrectionJID(const JID& fromJID) override;
 
         private:
             void setAvailableRoomActions(const MUCOccupant::Affiliation& affiliation, const MUCOccupant::Role& role);
@@ -116,9 +115,9 @@ namespace Swift {
             bool messageTargetsMe(std::shared_ptr<Message> message);
             void updateJoinParts();
             bool shouldUpdateJoinParts();
-            virtual void dayTicked() SWIFTEN_OVERRIDE { clearPresenceQueue(); }
+            virtual void dayTicked() override { clearPresenceQueue(); }
             void processUserPart();
-            virtual void handleBareJIDCapsChanged(const JID& jid) SWIFTEN_OVERRIDE;
+            virtual void handleBareJIDCapsChanged(const JID& jid) override;
             void handleConfigureRequest(Form::ref);
             void handleConfigurationFailed(ErrorPayload::ref);
             void handleConfigurationFormReceived(Form::ref);

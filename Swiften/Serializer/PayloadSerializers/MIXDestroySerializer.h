@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXDestroy.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -24,8 +23,8 @@ namespace Swift {
     class SWIFTEN_API MIXDestroySerializer : public GenericPayloadSerializer<MIXDestroy> {
         public:
             MIXDestroySerializer();
-            virtual ~MIXDestroySerializer() SWIFTEN_OVERRIDE;
+            virtual ~MIXDestroySerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<MIXDestroy>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MIXDestroy>) const override;
     };
 }

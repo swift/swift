@@ -4,10 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXSetNick.h>
 #include <Swiften/Parser/GenericPayloadTreeParser.h>
 
@@ -15,6 +20,6 @@ namespace Swift {
     class SWIFTEN_API MIXSetNickParser : public GenericPayloadTreeParser<MIXSetNick> {
         public:
             MIXSetNickParser() {}
-            virtual void handleTree(ParserElement::ref root) SWIFTEN_OVERRIDE;
+            virtual void handleTree(ParserElement::ref root) override;
     };
 }

@@ -7,7 +7,6 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
 #include <Swiften/Network/NetworkFactories.h>
 
@@ -24,13 +23,13 @@ namespace Swift {
              * used for the construction of the BoostIOServiceThread.
              */
             BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService = std::shared_ptr<boost::asio::io_service>());
-            virtual ~BoostNetworkFactories() SWIFTEN_OVERRIDE;
+            virtual ~BoostNetworkFactories() override;
 
-            virtual TimerFactory* getTimerFactory() const SWIFTEN_OVERRIDE {
+            virtual TimerFactory* getTimerFactory() const override {
                 return timerFactory;
             }
 
-            virtual ConnectionFactory* getConnectionFactory() const SWIFTEN_OVERRIDE {
+            virtual ConnectionFactory* getConnectionFactory() const override {
                 return connectionFactory;
             }
 
@@ -38,41 +37,41 @@ namespace Swift {
                 return &ioServiceThread;
             }
 
-            DomainNameResolver* getDomainNameResolver() const SWIFTEN_OVERRIDE {
+            DomainNameResolver* getDomainNameResolver() const override {
                 return domainNameResolver;
             }
 
-            ConnectionServerFactory* getConnectionServerFactory() const SWIFTEN_OVERRIDE {
+            ConnectionServerFactory* getConnectionServerFactory() const override {
                 return connectionServerFactory;
             }
 
-            NetworkEnvironment* getNetworkEnvironment() const SWIFTEN_OVERRIDE {
+            NetworkEnvironment* getNetworkEnvironment() const override {
                 return networkEnvironment;
             }
 
-            NATTraverser* getNATTraverser() const SWIFTEN_OVERRIDE {
+            NATTraverser* getNATTraverser() const override {
                 return natTraverser;
             }
 
-            virtual XMLParserFactory* getXMLParserFactory() const SWIFTEN_OVERRIDE {
+            virtual XMLParserFactory* getXMLParserFactory() const override {
                 return xmlParserFactory;
             }
 
-            virtual TLSContextFactory* getTLSContextFactory() const SWIFTEN_OVERRIDE;
+            virtual TLSContextFactory* getTLSContextFactory() const override;
 
-            virtual ProxyProvider* getProxyProvider() const SWIFTEN_OVERRIDE {
+            virtual ProxyProvider* getProxyProvider() const override {
                 return proxyProvider;
             }
 
-            virtual EventLoop* getEventLoop() const SWIFTEN_OVERRIDE {
+            virtual EventLoop* getEventLoop() const override {
                 return eventLoop;
             }
 
-            virtual IDNConverter* getIDNConverter() const SWIFTEN_OVERRIDE {
+            virtual IDNConverter* getIDNConverter() const override {
                 return idnConverter;
             }
 
-            virtual CryptoProvider* getCryptoProvider() const SWIFTEN_OVERRIDE {
+            virtual CryptoProvider* getCryptoProvider() const override {
                 return cryptoProvider;
             }
 

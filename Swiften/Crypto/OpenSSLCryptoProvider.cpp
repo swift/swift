@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,15 +31,15 @@ namespace {
             ~SHA1Hash() {
             }
 
-            virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const ByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const SafeByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual std::vector<unsigned char> getHash() SWIFTEN_OVERRIDE {
+            virtual std::vector<unsigned char> getHash() override {
                 assert(!finalized);
                 std::vector<unsigned char> result(SHA_DIGEST_LENGTH);
                 SHA1_Final(vecptr(result), &context);
@@ -72,15 +72,15 @@ namespace {
             ~MD5Hash() {
             }
 
-            virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const ByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const SafeByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual std::vector<unsigned char> getHash() SWIFTEN_OVERRIDE {
+            virtual std::vector<unsigned char> getHash() override {
                 assert(!finalized);
                 std::vector<unsigned char> result(MD5_DIGEST_LENGTH);
                 MD5_Final(vecptr(result), &context);

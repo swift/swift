@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,6 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/Crypto/PlatformCryptoProvider.h>

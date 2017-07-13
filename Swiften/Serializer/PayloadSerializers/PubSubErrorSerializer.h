@@ -7,7 +7,6 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/PubSubError.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -15,9 +14,9 @@ namespace Swift {
     class SWIFTEN_API PubSubErrorSerializer : public GenericPayloadSerializer<PubSubError> {
         public:
             PubSubErrorSerializer();
-            virtual ~PubSubErrorSerializer() SWIFTEN_OVERRIDE;
+            virtual ~PubSubErrorSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<PubSubError>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubError>) const override;
 
         private:
             static std::string serializeType(PubSubError::Type);

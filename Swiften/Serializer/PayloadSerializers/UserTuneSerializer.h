@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/UserTune.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,8 +18,8 @@ namespace Swift {
     class SWIFTEN_API UserTuneSerializer : public GenericPayloadSerializer<UserTune> {
         public:
             UserTuneSerializer(PayloadSerializerCollection* serializers);
-            virtual ~UserTuneSerializer() SWIFTEN_OVERRIDE;
+            virtual ~UserTuneSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<UserTune>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<UserTune>) const override;
     };
 }

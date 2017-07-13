@@ -6,19 +6,18 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
     class OpenSSLCryptoProvider : public CryptoProvider {
         public:
             OpenSSLCryptoProvider();
-            virtual ~OpenSSLCryptoProvider() SWIFTEN_OVERRIDE;
+            virtual ~OpenSSLCryptoProvider() override;
 
-            virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
-            virtual Hash* createMD5() SWIFTEN_OVERRIDE;
-            virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
-            virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
-            virtual bool isMD5AllowedForCrypto() const SWIFTEN_OVERRIDE;
+            virtual Hash* createSHA1() override;
+            virtual Hash* createMD5() override;
+            virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) override;
+            virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) override;
+            virtual bool isMD5AllowedForCrypto() const override;
     };
 }

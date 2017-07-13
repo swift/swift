@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Delay.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -15,9 +14,9 @@ namespace Swift {
     class DelayConvertor : public GenericLuaElementConvertor<Delay> {
         public:
             DelayConvertor();
-            virtual ~DelayConvertor() SWIFTEN_OVERRIDE;
+            virtual ~DelayConvertor() override;
 
-            virtual std::shared_ptr<Delay> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<Delay>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Delay> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Delay>) override;
     };
 }

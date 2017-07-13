@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Message.h>
 
 #include <Sluift/ElementConvertors/StanzaConvertor.h>
@@ -17,12 +16,12 @@ namespace Swift {
     class MessageConvertor : public StanzaConvertor<Message> {
         public:
             MessageConvertor(LuaElementConvertors* convertors);
-            virtual ~MessageConvertor() SWIFTEN_OVERRIDE;
+            virtual ~MessageConvertor() override;
 
-            virtual std::shared_ptr<Message> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<Message>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Message> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Message>) override;
 
-            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual boost::optional<Documentation> getDocumentation() const override;
 
             static std::string convertMessageTypeToString(Message::Type type);
             static Message::Type convertMessageTypeFromString(const std::string& type);

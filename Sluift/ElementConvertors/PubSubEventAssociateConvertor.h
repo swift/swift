@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/PubSubEventAssociate.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -17,10 +16,10 @@ namespace Swift {
     class PubSubEventAssociateConvertor : public GenericLuaElementConvertor<PubSubEventAssociate> {
         public:
             PubSubEventAssociateConvertor();
-            virtual ~PubSubEventAssociateConvertor() SWIFTEN_OVERRIDE;
+            virtual ~PubSubEventAssociateConvertor() override;
 
-            virtual std::shared_ptr<PubSubEventAssociate> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubEventAssociate>) SWIFTEN_OVERRIDE;
-            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<PubSubEventAssociate> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<PubSubEventAssociate>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
     };
 }

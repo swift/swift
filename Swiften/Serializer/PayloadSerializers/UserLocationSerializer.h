@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/UserLocation.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,8 +18,8 @@ namespace Swift {
     class SWIFTEN_API UserLocationSerializer : public GenericPayloadSerializer<UserLocation> {
         public:
             UserLocationSerializer(PayloadSerializerCollection* serializers);
-            virtual ~UserLocationSerializer() SWIFTEN_OVERRIDE;
+            virtual ~UserLocationSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<UserLocation>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<UserLocation>) const override;
     };
 }

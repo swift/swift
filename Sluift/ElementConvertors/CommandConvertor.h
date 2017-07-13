@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Command.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -17,10 +16,10 @@ namespace Swift {
     class CommandConvertor : public GenericLuaElementConvertor<Command> {
         public:
             CommandConvertor(LuaElementConvertors* convertors);
-            virtual ~CommandConvertor() SWIFTEN_OVERRIDE;
+            virtual ~CommandConvertor() override;
 
-            virtual std::shared_ptr<Command> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<Command>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Command> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Command>) override;
 
         private:
             LuaElementConvertors* convertors;

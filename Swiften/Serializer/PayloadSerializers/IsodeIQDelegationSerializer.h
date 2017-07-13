@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/IsodeIQDelegation.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,9 +18,9 @@ namespace Swift {
     class SWIFTEN_API IsodeIQDelegationSerializer : public GenericPayloadSerializer<IsodeIQDelegation> {
         public:
             IsodeIQDelegationSerializer(PayloadSerializerCollection* serializers);
-            virtual ~IsodeIQDelegationSerializer() SWIFTEN_OVERRIDE;
+            virtual ~IsodeIQDelegationSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<IsodeIQDelegation>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<IsodeIQDelegation>) const override;
 
         private:
             PayloadSerializerCollection* serializers;

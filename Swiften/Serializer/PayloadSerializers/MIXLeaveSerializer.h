@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXLeave.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -23,8 +22,8 @@ namespace Swift {
     class SWIFTEN_API MIXLeaveSerializer : public GenericPayloadSerializer<MIXLeave> {
         public:
             MIXLeaveSerializer();
-            virtual ~MIXLeaveSerializer() SWIFTEN_OVERRIDE;
+            virtual ~MIXLeaveSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<MIXLeave>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MIXLeave>) const override;
     };
 }

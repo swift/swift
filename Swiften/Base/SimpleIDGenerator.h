@@ -10,7 +10,6 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/Override.h>
 
 namespace Swift {
 
@@ -22,9 +21,9 @@ namespace Swift {
     class SWIFTEN_API SimpleIDGenerator : public IDGenerator {
         public:
             SimpleIDGenerator();
-            ~SimpleIDGenerator() SWIFTEN_OVERRIDE;
+            ~SimpleIDGenerator() override;
 
-            std::string generateID() SWIFTEN_OVERRIDE;
+            std::string generateID() override;
 
         private:
             std::string currentID;

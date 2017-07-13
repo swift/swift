@@ -9,7 +9,6 @@
 #include <random>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/RandomGenerator.h>
 
 namespace Swift {
@@ -17,7 +16,7 @@ namespace Swift {
         public:
             StdRandomGenerator();
 
-            int generateRandomInteger(int max) SWIFTEN_OVERRIDE;
+            int generateRandomInteger(int max) override;
 
         private:
             std::mt19937 generator;

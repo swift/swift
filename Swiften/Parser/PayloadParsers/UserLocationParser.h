@@ -10,7 +10,6 @@
 #include <string>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/UserLocation.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
@@ -18,11 +17,11 @@ namespace Swift {
     class SWIFTEN_API UserLocationParser : public GenericPayloadParser<UserLocation> {
         public:
             UserLocationParser();
-            virtual ~UserLocationParser() SWIFTEN_OVERRIDE;
+            virtual ~UserLocationParser() override;
 
-            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
-            virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;
-            virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE;
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) override;
+            virtual void handleEndElement(const std::string& element, const std::string&) override;
+            virtual void handleCharacterData(const std::string& data) override;
 
         private:
             int level;

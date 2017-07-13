@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXJoin.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -24,8 +23,8 @@ namespace Swift {
     class SWIFTEN_API MIXJoinSerializer : public GenericPayloadSerializer<MIXJoin> {
         public:
             MIXJoinSerializer();
-            virtual ~MIXJoinSerializer() SWIFTEN_OVERRIDE;
+            virtual ~MIXJoinSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<MIXJoin>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MIXJoin>) const override;
     };
 }

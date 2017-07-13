@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,16 +9,15 @@
 #include <string>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/IDN/IDNConverter.h>
 
 namespace Swift {
     class SWIFTEN_API LibIDNConverter : public IDNConverter {
         public:
-            virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
-            virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) SWIFTEN_OVERRIDE;
+            virtual std::string getStringPrepared(const std::string& s, StringPrepProfile profile) override;
+            virtual SafeByteArray getStringPrepared(const SafeByteArray& s, StringPrepProfile profile) override;
 
-            virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) SWIFTEN_OVERRIDE;
+            virtual boost::optional<std::string> getIDNAEncoded(const std::string& s) override;
     };
 }
 

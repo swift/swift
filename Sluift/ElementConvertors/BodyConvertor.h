@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Body.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -17,9 +16,9 @@ namespace Swift {
     class BodyConvertor : public GenericLuaElementConvertor<Body> {
         public:
             BodyConvertor();
-            virtual ~BodyConvertor() SWIFTEN_OVERRIDE;
+            virtual ~BodyConvertor() override;
 
-            virtual std::shared_ptr<Body> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<Body>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<Body> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<Body>) override;
     };
 }

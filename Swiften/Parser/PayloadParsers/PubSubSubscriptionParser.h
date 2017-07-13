@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/PubSubSubscription.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
@@ -20,11 +19,11 @@ namespace Swift {
     class SWIFTEN_API PubSubSubscriptionParser : public GenericPayloadParser<PubSubSubscription> {
         public:
             PubSubSubscriptionParser(PayloadParserFactoryCollection* parsers);
-            virtual ~PubSubSubscriptionParser() SWIFTEN_OVERRIDE;
+            virtual ~PubSubSubscriptionParser() override;
 
-            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) SWIFTEN_OVERRIDE;
-            virtual void handleEndElement(const std::string& element, const std::string&) SWIFTEN_OVERRIDE;
-            virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE;
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) override;
+            virtual void handleEndElement(const std::string& element, const std::string&) override;
+            virtual void handleCharacterData(const std::string& data) override;
 
         private:
             PayloadParserFactoryCollection* parsers;

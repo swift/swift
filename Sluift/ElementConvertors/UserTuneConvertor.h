@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/UserTune.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -17,10 +16,10 @@ namespace Swift {
     class UserTuneConvertor : public GenericLuaElementConvertor<UserTune> {
         public:
             UserTuneConvertor();
-            virtual ~UserTuneConvertor() SWIFTEN_OVERRIDE;
+            virtual ~UserTuneConvertor() override;
 
-            virtual std::shared_ptr<UserTune> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<UserTune>) SWIFTEN_OVERRIDE;
-            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<UserTune> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<UserTune>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
     };
 }

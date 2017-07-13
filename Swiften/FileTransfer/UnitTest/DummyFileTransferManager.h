@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,6 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/filesystem/path.hpp>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 
 namespace Swift {
@@ -34,7 +33,7 @@ namespace Swift {
                     const boost::filesystem::path&,
                     const std::string&,
                     std::shared_ptr<ReadBytestream>,
-                    const FileTransferOptions&) SWIFTEN_OVERRIDE {
+                    const FileTransferOptions&) override {
                 return OutgoingFileTransfer::ref();
             }
 
@@ -45,7 +44,7 @@ namespace Swift {
                     const boost::uintmax_t,
                     const boost::posix_time::ptime&,
                     std::shared_ptr<ReadBytestream>,
-                    const FileTransferOptions&) SWIFTEN_OVERRIDE {
+                    const FileTransferOptions&) override {
                 return OutgoingFileTransfer::ref();
             }
 

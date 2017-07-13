@@ -13,10 +13,10 @@ namespace Swift {
 
 class SWIFTEN_API FailingTransportSession : public TransportSession {
     public:
-        virtual ~FailingTransportSession() SWIFTEN_OVERRIDE;
+        virtual ~FailingTransportSession() override;
 
-        virtual void start() SWIFTEN_OVERRIDE;
-        virtual void stop() SWIFTEN_OVERRIDE;
+        virtual void start() override;
+        virtual void stop() override;
 };
 
 }

@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXCreate.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -24,8 +23,8 @@ namespace Swift {
     class SWIFTEN_API MIXCreateSerializer : public GenericPayloadSerializer<MIXCreate> {
         public:
             MIXCreateSerializer();
-            virtual ~MIXCreateSerializer() SWIFTEN_OVERRIDE;
+            virtual ~MIXCreateSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<MIXCreate>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MIXCreate>) const override;
     };
 }

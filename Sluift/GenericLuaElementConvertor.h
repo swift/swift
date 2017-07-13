@@ -10,8 +10,6 @@
 
 #include <lua.hpp>
 
-#include <Swiften/Base/Override.h>
-
 #include <Sluift/Lua/Check.h>
 #include <Sluift/Lua/LuaUtils.h>
 #include <Sluift/LuaElementConvertor.h>
@@ -23,9 +21,9 @@ namespace Swift {
             GenericLuaElementConvertor(const std::string& type) : type(type) {
             }
 
-            virtual ~GenericLuaElementConvertor() SWIFTEN_OVERRIDE {}
+            virtual ~GenericLuaElementConvertor() override {}
 
-            virtual std::shared_ptr<Element> convertFromLua(lua_State* L, int index, const std::string& payloadType) SWIFTEN_OVERRIDE {
+            virtual std::shared_ptr<Element> convertFromLua(lua_State* L, int index, const std::string& payloadType) override {
                 if (payloadType == type) {
                     Lua::checkType(L, index, LUA_TTABLE);
                     lua_pushvalue(L, index);
@@ -37,7 +35,7 @@ namespace Swift {
             }
 
             virtual boost::optional<std::string> convertToLua(
-                    lua_State* L, std::shared_ptr<Element> payload) SWIFTEN_OVERRIDE {
+                    lua_State* L, std::shared_ptr<Element> payload) override {
                 if (std::shared_ptr<T> actualPayload = std::dynamic_pointer_cast<T>(payload)) {
                     doConvertToLua(L, actualPayload);
                     assert(lua_type(L, -1) == LUA_TTABLE);

@@ -4,10 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Parser/GenericPayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXSetNickParser.h>
 
@@ -17,11 +22,11 @@ namespace Swift {
             MIXSetNickParserFactory() {
             }
 
-            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const SWIFTEN_OVERRIDE {
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const override {
                 return element == "setnick" && ns == "urn:xmpp:mix:0";
             }
 
-            virtual PayloadParser* createPayloadParser() SWIFTEN_OVERRIDE {
+            virtual PayloadParser* createPayloadParser() override {
                 return new MIXSetNickParser();
             }
     };

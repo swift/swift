@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,7 +10,6 @@
 
 #include <boost/noncopyable.hpp>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 
 namespace Swift {
@@ -19,11 +18,11 @@ namespace Swift {
             WindowsCryptoProvider();
             virtual ~WindowsCryptoProvider();
 
-            virtual Hash* createSHA1() SWIFTEN_OVERRIDE;
-            virtual Hash* createMD5() SWIFTEN_OVERRIDE;
-            virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
-            virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) SWIFTEN_OVERRIDE;
-            virtual bool isMD5AllowedForCrypto() const SWIFTEN_OVERRIDE;
+            virtual Hash* createSHA1() override;
+            virtual Hash* createMD5() override;
+            virtual ByteArray getHMACSHA1(const SafeByteArray& key, const ByteArray& data) override;
+            virtual ByteArray getHMACSHA1(const ByteArray& key, const ByteArray& data) override;
+            virtual bool isMD5AllowedForCrypto() const override;
 
         private:
             struct Private;

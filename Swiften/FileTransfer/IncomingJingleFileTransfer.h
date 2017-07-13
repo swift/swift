@@ -13,7 +13,6 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/JingleS5BTransportPayload.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
 #include <Swiften/FileTransfer/IncomingFileTransfer.h>
@@ -49,10 +48,10 @@ namespace Swift {
                 FileTransferTransporterFactory*,
                 TimerFactory*,
                 CryptoProvider*);
-            virtual ~IncomingJingleFileTransfer() SWIFTEN_OVERRIDE;
+            virtual ~IncomingJingleFileTransfer() override;
 
-            virtual void accept(std::shared_ptr<WriteBytestream>, const FileTransferOptions& = FileTransferOptions()) SWIFTEN_OVERRIDE;
-            virtual void cancel() SWIFTEN_OVERRIDE;
+            virtual void accept(std::shared_ptr<WriteBytestream>, const FileTransferOptions& = FileTransferOptions()) override;
+            virtual void cancel() override;
 
         private:
             enum State {
@@ -68,44 +67,44 @@ namespace Swift {
             };
 
             virtual void handleSessionTerminateReceived(
-                    boost::optional<JinglePayload::Reason> reason) SWIFTEN_OVERRIDE;
-            virtual void handleSessionInfoReceived(std::shared_ptr<JinglePayload>) SWIFTEN_OVERRIDE;
+                    boost::optional<JinglePayload::Reason> reason) override;
+            virtual void handleSessionInfoReceived(std::shared_ptr<JinglePayload>) override;
             virtual void handleTransportReplaceReceived(
-                    const JingleContentID&, std::shared_ptr<JingleTransportPayload>) SWIFTEN_OVERRIDE;
+                    const JingleContentID&, std::shared_ptr<JingleTransportPayload>) override;
 
             virtual void handleLocalTransportCandidatesGenerated(
                     const std::string& s5bSessionID,
                     const std::vector<JingleS5BTransportPayload::Candidate>&,
-                    const std::string& dstAddr) SWIFTEN_OVERRIDE;
+                    const std::string& dstAddr) override;
 
             void handleWriteStreamDataReceived(const std::vector<unsigned char>& data);
             void stopActiveTransport();
             void checkCandidateSelected();
-            virtual JingleContentID getContentID() const SWIFTEN_OVERRIDE;
+            virtual JingleContentID getContentID() const override;
             void checkIfAllDataReceived();
             bool verifyData();
             void handleWaitOnHashTimerTicked();
             void handleTransferFinished(boost::optional<FileTransferError>);
 
         private:
-            virtual void startTransferViaRemoteCandidate() SWIFTEN_OVERRIDE;
-            virtual void startTransferViaLocalCandidate() SWIFTEN_OVERRIDE;
+            virtual void startTransferViaRemoteCandidate() override;
+            virtual void startTransferViaLocalCandidate() override;
             void checkHashAndTerminate();
             void stopAll();
             void setState(State state);
             void setFinishedState(FileTransfer::State::Type, const boost::optional<FileTransferError>& error);
-            const JID& getSender() const SWIFTEN_OVERRIDE;
-            const JID& getRecipient() const SWIFTEN_OVERRIDE;
+            const JID& getSender() const override;
+            const JID& getRecipient() const override;
             static FileTransfer::State::Type getExternalState(State state);
-            virtual bool hasPriorityOnCandidateTie() const SWIFTEN_OVERRIDE;
-            virtual void fallback() SWIFTEN_OVERRIDE;
-            virtual void startTransferring(std::shared_ptr<TransportSession>) SWIFTEN_OVERRIDE;
-            virtual bool isWaitingForPeerProxyActivate() const SWIFTEN_OVERRIDE;
-            virtual bool isWaitingForLocalProxyActivate() const SWIFTEN_OVERRIDE;
-            virtual bool isTryingCandidates() const SWIFTEN_OVERRIDE;
-            virtual std::shared_ptr<TransportSession> createLocalCandidateSession() SWIFTEN_OVERRIDE;
-            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession() SWIFTEN_OVERRIDE;
-            virtual void terminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;
+            virtual bool hasPriorityOnCandidateTie() const override;
+            virtual void fallback() override;
+            virtual void startTransferring(std::shared_ptr<TransportSession>) override;
+            virtual bool isWaitingForPeerProxyActivate() const override;
+            virtual bool isWaitingForLocalProxyActivate() const override;
+            virtual bool isTryingCandidates() const override;
+            virtual std::shared_ptr<TransportSession> createLocalCandidateSession() override;
+            virtual std::shared_ptr<TransportSession> createRemoteCandidateSession() override;
+            virtual void terminate(JinglePayload::Reason::Type reason) override;
 
 
         private:

@@ -15,7 +15,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXUserPreference.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -24,8 +23,8 @@ namespace Swift {
     class SWIFTEN_API MIXUserPreferenceSerializer : public GenericPayloadSerializer<MIXUserPreference> {
         public:
             MIXUserPreferenceSerializer();
-            virtual ~MIXUserPreferenceSerializer() SWIFTEN_OVERRIDE;
+            virtual ~MIXUserPreferenceSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<MIXUserPreference>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MIXUserPreference>) const override;
     };
 }

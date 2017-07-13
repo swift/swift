@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,11 +43,11 @@ namespace {
                 CryptDestroyHash(hash);
             }
 
-            virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const ByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const SafeByteArray& data) override {
                 return updateInternal(data);
             }
 
@@ -123,11 +123,11 @@ namespace {
                 CryptDestroyHash(hash);
             }
 
-            virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const ByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const SafeByteArray& data) override {
                 return updateInternal(data);
             }
 

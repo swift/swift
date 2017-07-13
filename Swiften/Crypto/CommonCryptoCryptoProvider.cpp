@@ -27,18 +27,18 @@ namespace {
                 }
             }
 
-            virtual ~SHA1Hash() SWIFTEN_OVERRIDE {
+            virtual ~SHA1Hash() override {
             }
 
-            virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const ByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const SafeByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual std::vector<unsigned char> getHash() SWIFTEN_OVERRIDE {
+            virtual std::vector<unsigned char> getHash() override {
                 assert(!finalized);
                 std::vector<unsigned char> result(CC_SHA1_DIGEST_LENGTH);
                 CC_SHA1_Final(vecptr(result), &context);
@@ -68,18 +68,18 @@ namespace {
                 }
             }
 
-            virtual ~MD5Hash() SWIFTEN_OVERRIDE {
+            virtual ~MD5Hash() override {
             }
 
-            virtual Hash& update(const ByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const ByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual Hash& update(const SafeByteArray& data) SWIFTEN_OVERRIDE {
+            virtual Hash& update(const SafeByteArray& data) override {
                 return updateInternal(data);
             }
 
-            virtual std::vector<unsigned char> getHash() SWIFTEN_OVERRIDE {
+            virtual std::vector<unsigned char> getHash() override {
                 assert(!finalized);
                 std::vector<unsigned char> result(CC_MD5_DIGEST_LENGTH);
                 CC_MD5_Final(vecptr(result), &context);

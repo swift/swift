@@ -22,7 +22,6 @@
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/S5BProxyRequest.h>
 #include <Swiften/FileTransfer/FileTransferManager.h>
 #include <Swiften/FileTransfer/FileTransferOptions.h>
@@ -65,14 +64,14 @@ namespace Swift {
                     NetworkEnvironment* networkEnvironment,
                     NATTraverser* natTraverser,
                     CryptoProvider* crypto);
-            virtual ~FileTransferManagerImpl() SWIFTEN_OVERRIDE;
+            virtual ~FileTransferManagerImpl() override;
 
             OutgoingFileTransfer::ref createOutgoingFileTransfer(
                     const JID& to,
                     const boost::filesystem::path& filepath,
                     const std::string& description,
                     std::shared_ptr<ReadBytestream> bytestream,
-                    const FileTransferOptions&) SWIFTEN_OVERRIDE;
+                    const FileTransferOptions&) override;
             OutgoingFileTransfer::ref createOutgoingFileTransfer(
                     const JID& to,
                     const std::string& filename,
@@ -80,7 +79,7 @@ namespace Swift {
                     const boost::uintmax_t sizeInBytes,
                     const boost::posix_time::ptime& lastModified,
                     std::shared_ptr<ReadBytestream> bytestream,
-                    const FileTransferOptions&) SWIFTEN_OVERRIDE;
+                    const FileTransferOptions&) override;
 
             void start();
             void stop();

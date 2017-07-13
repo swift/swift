@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@ namespace {
 
             virtual void handleStartElement(
                     const std::string& element, const std::string& ns,
-                    const AttributeMap& attributes) SWIFTEN_OVERRIDE {
+                    const AttributeMap& attributes) override {
                 lua_checkstack(L, 6);
                 lua_pushnumber(L, currentIndex);
                 lua_newtable(L);
@@ -70,7 +70,7 @@ namespace {
             }
 
             virtual void handleEndElement(
-                    const std::string&, const std::string&) SWIFTEN_OVERRIDE {
+                    const std::string&, const std::string&) override {
                 lua_setfield(L, -2, "children");
                 lua_settable(L, -3);
                 currentIndex = indexStack.back();
@@ -78,7 +78,7 @@ namespace {
                 currentIndex++;
             }
 
-            virtual void handleCharacterData(const std::string& data) SWIFTEN_OVERRIDE {
+            virtual void handleCharacterData(const std::string& data) override {
                 lua_checkstack(L, 2);
                 lua_pushnumber(L, currentIndex);
                 lua_pushstring(L, data.c_str());

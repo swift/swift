@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MAMResult.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,9 +18,9 @@ namespace Swift {
     class SWIFTEN_API MAMResultSerializer : public GenericPayloadSerializer<MAMResult> {
         public:
             MAMResultSerializer(PayloadSerializerCollection* serializers);
-            virtual ~MAMResultSerializer() SWIFTEN_OVERRIDE;
+            virtual ~MAMResultSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<MAMResult>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<MAMResult>) const override;
 
         private:
             PayloadSerializerCollection* serializers_;

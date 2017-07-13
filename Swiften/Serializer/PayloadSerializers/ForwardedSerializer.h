@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,9 +18,9 @@ namespace Swift {
     class SWIFTEN_API ForwardedSerializer : public GenericPayloadSerializer<Forwarded> {
         public:
             ForwardedSerializer(PayloadSerializerCollection* serializers);
-            virtual ~ForwardedSerializer() SWIFTEN_OVERRIDE;
+            virtual ~ForwardedSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<Forwarded>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<Forwarded>) const override;
 
         private:
             PayloadSerializerCollection* serializers_;

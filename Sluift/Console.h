@@ -10,8 +10,6 @@
 
 #include <boost/optional/optional.hpp>
 
-#include <Swiften/Base/Override.h>
-
 #include <Sluift/Completer.h>
 
 struct lua_State;
@@ -22,7 +20,7 @@ namespace Swift {
     class Console : public Completer {
         public:
             Console(lua_State* L, Terminal* terminal);
-            virtual ~Console() SWIFTEN_OVERRIDE;
+            virtual ~Console() override;
 
             void run();
 
@@ -34,7 +32,7 @@ namespace Swift {
             bool readCommand();
             int tryLoadCommand(const std::string& command);
 
-            virtual std::vector<std::string> getCompletions(const std::string&, int start, int end) SWIFTEN_OVERRIDE;
+            virtual std::vector<std::string> getCompletions(const std::string&, int start, int end) override;
 
         private:
             lua_State* L;

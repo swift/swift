@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/PubSubEventItem.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,9 +18,9 @@ namespace Swift {
     class SWIFTEN_API PubSubEventItemSerializer : public GenericPayloadSerializer<PubSubEventItem> {
         public:
             PubSubEventItemSerializer(PayloadSerializerCollection* serializers);
-            virtual ~PubSubEventItemSerializer() SWIFTEN_OVERRIDE;
+            virtual ~PubSubEventItemSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<PubSubEventItem>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubEventItem>) const override;
 
         private:
             PayloadSerializerCollection* serializers;

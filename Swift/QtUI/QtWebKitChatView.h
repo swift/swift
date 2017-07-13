@@ -13,8 +13,6 @@
 #include <QWebElement>
 #include <QWidget>
 
-#include <Swiften/Base/Override.h>
-
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 
 #include <Swift/QtUI/ChatSnippet.h>
@@ -45,41 +43,41 @@ namespace Swift {
             static const QString ButtonMUCInvite;
         public:
             QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll = false);
-            ~QtWebKitChatView() SWIFTEN_OVERRIDE;
+            ~QtWebKitChatView() override;
 
             /** Add message to window.
              * @return id of added message (for acks).
              */
-            virtual std::string addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
+            virtual std::string addMessage(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) override;
             /** Adds action to window.
              * @return id of added message (for acks);
              */
-            virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
+            virtual std::string addAction(const ChatWindow::ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& avatarPath, const boost::posix_time::ptime& time) override;
 
-            virtual std::string addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
-            virtual void addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) SWIFTEN_OVERRIDE;
+            virtual std::string addSystemMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) override;
+            virtual void addPresenceMessage(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction) override;
 
-            virtual void addErrorMessage(const ChatWindow::ChatMessage& message) SWIFTEN_OVERRIDE;
-            virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
-            virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, ChatWindow::TimestampBehaviour timestampBehaviour) SWIFTEN_OVERRIDE;
-            virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) SWIFTEN_OVERRIDE;
-            virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour) SWIFTEN_OVERRIDE;
-            virtual void setAckState(const std::string& id, ChatWindow::AckState state) SWIFTEN_OVERRIDE;
+            virtual void addErrorMessage(const ChatWindow::ChatMessage& message) override;
+            virtual void replaceMessage(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) override;
+            virtual void replaceSystemMessage(const ChatWindow::ChatMessage& message, const std::string& id, ChatWindow::TimestampBehaviour timestampBehaviour) override;
+            virtual void replaceWithAction(const ChatWindow::ChatMessage& message, const std::string& id, const boost::posix_time::ptime& time) override;
+            virtual void replaceLastMessage(const ChatWindow::ChatMessage& message, const ChatWindow::TimestampBehaviour timestampBehaviour) override;
+            virtual void setAckState(const std::string& id, ChatWindow::AckState state) override;
 
-            virtual std::string addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) SWIFTEN_OVERRIDE;
-            virtual void setFileTransferProgress(std::string, const int percentageDone) SWIFTEN_OVERRIDE;
-            virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState state, const std::string& msg = "") SWIFTEN_OVERRIDE;
-            virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) SWIFTEN_OVERRIDE;
-            virtual std::string addWhiteboardRequest(const QString& contact, bool senderIsSelf) SWIFTEN_OVERRIDE;
-            virtual void setWhiteboardSessionStatus(const std::string& id, const ChatWindow::WhiteboardSessionState state) SWIFTEN_OVERRIDE;
-            virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) SWIFTEN_OVERRIDE;
+            virtual std::string addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) override;
+            virtual void setFileTransferProgress(std::string, const int percentageDone) override;
+            virtual void setFileTransferStatus(std::string, const ChatWindow::FileTransferState state, const std::string& msg = "") override;
+            virtual void addMUCInvitation(const std::string& senderName, const JID& jid, const std::string& reason, const std::string& password, bool direct, bool isImpromptu, bool isContinuation) override;
+            virtual std::string addWhiteboardRequest(const QString& contact, bool senderIsSelf) override;
+            virtual void setWhiteboardSessionStatus(const std::string& id, const ChatWindow::WhiteboardSessionState state) override;
+            virtual void setMessageReceiptState(const std::string& id, ChatWindow::ReceiptState state) override;
 
-            virtual void showEmoticons(bool show) SWIFTEN_OVERRIDE;
+            virtual void showEmoticons(bool show) override;
             void addMessageTop(std::shared_ptr<ChatSnippet> snippet);
             void addMessageBottom(std::shared_ptr<ChatSnippet> snippet);
 
             int getSnippetPositionByDate(const QDate& date); // FIXME : This probably shouldn't have been public
-            virtual void addLastSeenLine() SWIFTEN_OVERRIDE;
+            virtual void addLastSeenLine() override;
 
         private: // previously public, now private
             void replaceLastMessage(const QString& newMessage, const ChatWindow::TimestampBehaviour timestampBehaviour);
@@ -116,9 +114,9 @@ namespace Swift {
             void resetTopInsertPoint();
             void increaseFontSize(int numSteps = 1);
             void decreaseFontSize();
-            virtual void resizeFont(int fontSizeSteps) SWIFTEN_OVERRIDE;
-            virtual void scrollToBottom() SWIFTEN_OVERRIDE;
-            virtual void handleKeyPressEvent(QKeyEvent* event) SWIFTEN_OVERRIDE;
+            virtual void resizeFont(int fontSizeSteps) override;
+            virtual void scrollToBottom() override;
+            virtual void handleKeyPressEvent(QKeyEvent* event) override;
 
         private slots:
             void handleViewLoadFinished(bool);
@@ -160,7 +158,7 @@ namespace Swift {
             static QString buildChatWindowButton(const QString& name, const QString& id, const QString& arg1 = QString(), const QString& arg2 = QString(), const QString& arg3 = QString(), const QString& arg4 = QString(), const QString& arg5 = QString());
 
         protected:
-            void resizeEvent(QResizeEvent* event) SWIFTEN_OVERRIDE;
+            void resizeEvent(QResizeEvent* event) override;
 
         private:
             void headerEncode();

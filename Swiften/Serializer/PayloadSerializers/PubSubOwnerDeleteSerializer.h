@@ -9,7 +9,6 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/PubSubOwnerDelete.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -19,9 +18,9 @@ namespace Swift {
     class SWIFTEN_API PubSubOwnerDeleteSerializer : public GenericPayloadSerializer<PubSubOwnerDelete> {
         public:
             PubSubOwnerDeleteSerializer(PayloadSerializerCollection* serializers);
-            virtual ~PubSubOwnerDeleteSerializer() SWIFTEN_OVERRIDE;
+            virtual ~PubSubOwnerDeleteSerializer() override;
 
-            virtual std::string serializePayload(std::shared_ptr<PubSubOwnerDelete>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubOwnerDelete>) const override;
 
         private:
             PayloadSerializerCollection* serializers;

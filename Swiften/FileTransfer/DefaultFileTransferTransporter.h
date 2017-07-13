@@ -7,7 +7,6 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/FileTransfer/FileTransferTransporter.h>
 
@@ -48,35 +47,35 @@ namespace Swift {
                 CryptoProvider*,
                 IQRouter*,
                 const FileTransferOptions&);
-            virtual ~DefaultFileTransferTransporter() SWIFTEN_OVERRIDE;
+            virtual ~DefaultFileTransferTransporter() override;
 
 
             virtual void initialize();
             virtual void initialize(const std::string& s5bSessionID);
 
-            virtual void startGeneratingLocalCandidates() SWIFTEN_OVERRIDE;
-            virtual void stopGeneratingLocalCandidates() SWIFTEN_OVERRIDE;
+            virtual void startGeneratingLocalCandidates() override;
+            virtual void stopGeneratingLocalCandidates() override;
 
             virtual void addRemoteCandidates(
-                    const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string&) SWIFTEN_OVERRIDE;
-            virtual void startTryingRemoteCandidates() SWIFTEN_OVERRIDE;
-            virtual void stopTryingRemoteCandidates() SWIFTEN_OVERRIDE;
+                    const std::vector<JingleS5BTransportPayload::Candidate>&, const std::string&) override;
+            virtual void startTryingRemoteCandidates() override;
+            virtual void stopTryingRemoteCandidates() override;
 
-            virtual void startActivatingProxy(const JID& jid) SWIFTEN_OVERRIDE;
-            virtual void stopActivatingProxy() SWIFTEN_OVERRIDE;
+            virtual void startActivatingProxy(const JID& jid) override;
+            virtual void stopActivatingProxy() override;
 
             virtual std::shared_ptr<TransportSession> createIBBSendSession(
-                    const std::string& sessionID, unsigned int blockSize, std::shared_ptr<ReadBytestream>) SWIFTEN_OVERRIDE;
+                    const std::string& sessionID, unsigned int blockSize, std::shared_ptr<ReadBytestream>) override;
             virtual std::shared_ptr<TransportSession> createIBBReceiveSession(
-                    const std::string& sessionID, unsigned long long size, std::shared_ptr<WriteBytestream>) SWIFTEN_OVERRIDE;
+                    const std::string& sessionID, unsigned long long size, std::shared_ptr<WriteBytestream>) override;
             virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
-                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) override;
             virtual std::shared_ptr<TransportSession> createRemoteCandidateSession(
-                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) override;
             virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
-                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+                    std::shared_ptr<ReadBytestream>, const JingleS5BTransportPayload::Candidate& candidate) override;
             virtual std::shared_ptr<TransportSession> createLocalCandidateSession(
-                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) SWIFTEN_OVERRIDE;
+                    std::shared_ptr<WriteBytestream>, const JingleS5BTransportPayload::Candidate& candidate) override;
 
         private:
             void handleLocalCandidatesGenerated(const std::vector<JingleS5BTransportPayload::Candidate>&);

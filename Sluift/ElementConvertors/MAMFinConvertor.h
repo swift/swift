@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MAMFin.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -17,11 +16,11 @@ namespace Swift {
     class MAMFinConvertor : public GenericLuaElementConvertor<MAMFin> {
         public:
             MAMFinConvertor(LuaElementConvertors* convertors);
-            virtual ~MAMFinConvertor() SWIFTEN_OVERRIDE;
+            virtual ~MAMFinConvertor() override;
 
-            virtual std::shared_ptr<MAMFin> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<MAMFin>) SWIFTEN_OVERRIDE;
-            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<MAMFin> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<MAMFin>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
 
         private:
             LuaElementConvertors* convertors;

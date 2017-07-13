@@ -9,11 +9,10 @@
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/PubSub/PubSubManager.h>
 #define SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST(payload, container, response) \
     virtual std::shared_ptr< PubSubRequest<payload> >  \
-            createRequest(IQ::Type type, const JID& receiver, std::shared_ptr<payload> p) SWIFTEN_OVERRIDE { \
+            createRequest(IQ::Type type, const JID& receiver, std::shared_ptr<payload> p) override { \
         return std::make_shared< PubSubRequest<payload> >(type, receiver, p, router); \
     }
 
@@ -24,7 +23,7 @@ namespace Swift {
     class SWIFTEN_API PubSubManagerImpl : public PubSubManager {
         public:
             PubSubManagerImpl(StanzaChannel* stanzaChannel, IQRouter* router);
-            virtual ~PubSubManagerImpl() SWIFTEN_OVERRIDE;
+            virtual ~PubSubManagerImpl() override;
 
             SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
                     SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST)

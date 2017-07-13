@@ -4,10 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2017 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/MIXSetNick.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 
@@ -16,6 +21,6 @@ namespace Swift {
         public:
             MIXSetNickSerializer();
 
-            virtual std::string serializePayload(std::shared_ptr<MIXSetNick> payload) const SWIFTEN_OVERRIDE ;
+            virtual std::string serializePayload(std::shared_ptr<MIXSetNick> payload) const override ;
     };
 }

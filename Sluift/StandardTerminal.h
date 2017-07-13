@@ -6,18 +6,16 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-
 #include <Sluift/Terminal.h>
 
 namespace Swift {
     class StandardTerminal : public Terminal {
         public:
             StandardTerminal();
-            virtual ~StandardTerminal() SWIFTEN_OVERRIDE;
+            virtual ~StandardTerminal() override;
 
-            virtual boost::optional<std::string> readLine(const std::string& prompt) SWIFTEN_OVERRIDE;
-            virtual void printError(const std::string& message) SWIFTEN_OVERRIDE;
-            virtual void addToHistory(const std::string& command) SWIFTEN_OVERRIDE;
+            virtual boost::optional<std::string> readLine(const std::string& prompt) override;
+            virtual void printError(const std::string& message) override;
+            virtual void addToHistory(const std::string& command) override;
     };
 }

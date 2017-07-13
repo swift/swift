@@ -35,10 +35,10 @@ class SWIFTEN_API S5BTransportSession : public TransportSession {
             initialize();
         }
 
-        virtual ~S5BTransportSession() SWIFTEN_OVERRIDE {
+        virtual ~S5BTransportSession() override {
         }
 
-        virtual void start() SWIFTEN_OVERRIDE {
+        virtual void start() override {
             if (readStream) {
                 session->startSending(readStream);
             }
@@ -47,7 +47,7 @@ class SWIFTEN_API S5BTransportSession : public TransportSession {
             }
         }
 
-        virtual void stop() SWIFTEN_OVERRIDE {
+        virtual void stop() override {
             session->stop();
         }
 

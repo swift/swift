@@ -9,7 +9,6 @@
 #include <map>
 #include <string>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/Tristate.h>
 
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
@@ -32,41 +31,41 @@ namespace Swift {
     class ChatController : public ChatControllerBase {
         public:
             ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
-            virtual ~ChatController() SWIFTEN_OVERRIDE;
-            virtual void setToJID(const JID& jid) SWIFTEN_OVERRIDE;
-            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) SWIFTEN_OVERRIDE;
-            virtual void setOnline(bool online) SWIFTEN_OVERRIDE;
+            virtual ~ChatController() override;
+            virtual void setToJID(const JID& jid) override;
+            virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) override;
+            virtual void setOnline(bool online) override;
             virtual void handleNewFileTransferController(FileTransferController* ftc);
             virtual void handleWhiteboardSessionRequest(bool senderIsSelf);
             virtual void handleWhiteboardStateChange(const ChatWindow::WhiteboardSessionState state);
-            virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/) SWIFTEN_OVERRIDE;
-            virtual ChatWindow* detachChatWindow() SWIFTEN_OVERRIDE;
-            virtual void handleIncomingOwnMessage(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
+            virtual void setContactIsReceivingPresence(bool /*isReceivingPresence*/) override;
+            virtual ChatWindow* detachChatWindow() override;
+            virtual void handleIncomingOwnMessage(std::shared_ptr<Message> message) override;
 
         protected:
-            virtual void cancelReplaces() SWIFTEN_OVERRIDE;
-            virtual JID getBaseJID() SWIFTEN_OVERRIDE;
-            virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) SWIFTEN_OVERRIDE;
-            virtual bool shouldIgnoreMessage(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
-            virtual JID messageCorrectionJID(const JID& fromJID) SWIFTEN_OVERRIDE;
+            virtual void cancelReplaces() override;
+            virtual JID getBaseJID() override;
+            virtual void logMessage(const std::string& message, const JID& fromJID, const JID& toJID, const boost::posix_time::ptime& timeStamp, bool isIncoming) override;
+            virtual bool shouldIgnoreMessage(std::shared_ptr<Message> message) override;
+            virtual JID messageCorrectionJID(const JID& fromJID) override;
 
         private:
             void handlePresenceChange(std::shared_ptr<Presence> newPresence);
             std::string getStatusChangeString(std::shared_ptr<Presence> presence);
-            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) SWIFTEN_OVERRIDE;
-            virtual void postSendMessage(const std::string &body, std::shared_ptr<Stanza> sentStanza) SWIFTEN_OVERRIDE;
-            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) SWIFTEN_OVERRIDE;
-            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) SWIFTEN_OVERRIDE;
-            virtual void handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) SWIFTEN_OVERRIDE;
-            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) SWIFTEN_OVERRIDE;
-            virtual void preSendMessageRequest(std::shared_ptr<Message>) SWIFTEN_OVERRIDE;
-            virtual std::string senderHighlightNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
-            virtual std::string senderDisplayNameFromMessage(const JID& from) SWIFTEN_OVERRIDE;
-            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message>) const SWIFTEN_OVERRIDE;
+            virtual bool isIncomingMessageFromMe(std::shared_ptr<Message> message) override;
+            virtual void postSendMessage(const std::string &body, std::shared_ptr<Stanza> sentStanza) override;
+            virtual void preHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent) override;
+            virtual void addMessageHandleIncomingMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) override;
+            virtual void handleIncomingReplaceMessage(const JID& from, const ChatWindow::ChatMessage& message, const std::string& messageID, const std::string& idToReplace, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const boost::posix_time::ptime& timeStamp) override;
+            virtual void postHandleIncomingMessage(std::shared_ptr<MessageEvent> messageEvent, const ChatWindow::ChatMessage& chatMessage) override;
+            virtual void preSendMessageRequest(std::shared_ptr<Message>) override;
+            virtual std::string senderHighlightNameFromMessage(const JID& from) override;
+            virtual std::string senderDisplayNameFromMessage(const JID& from) override;
+            virtual boost::optional<boost::posix_time::ptime> getMessageTimestamp(std::shared_ptr<Message>) const override;
             void handleStanzaAcked(std::shared_ptr<Stanza> stanza);
-            virtual void dayTicked() SWIFTEN_OVERRIDE { lastWasPresence_ = false; }
+            virtual void dayTicked() override { lastWasPresence_ = false; }
             void handleContactNickChanged(const JID& jid, const std::string& /*oldNick*/);
-            virtual void handleBareJIDCapsChanged(const JID& jid) SWIFTEN_OVERRIDE;
+            virtual void handleBareJIDCapsChanged(const JID& jid) override;
 
             void handleFileTransferCancel(std::string /* id */);
             void handleFileTransferStart(std::string /* id */, std::string /* description */);

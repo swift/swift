@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/UserLocation.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -17,10 +16,10 @@ namespace Swift {
     class UserLocationConvertor : public GenericLuaElementConvertor<UserLocation> {
         public:
             UserLocationConvertor();
-            virtual ~UserLocationConvertor() SWIFTEN_OVERRIDE;
+            virtual ~UserLocationConvertor() override;
 
-            virtual std::shared_ptr<UserLocation> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<UserLocation>) SWIFTEN_OVERRIDE;
-            virtual boost::optional<Documentation> getDocumentation() const SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<UserLocation> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<UserLocation>) override;
+            virtual boost::optional<Documentation> getDocumentation() const override;
     };
 }

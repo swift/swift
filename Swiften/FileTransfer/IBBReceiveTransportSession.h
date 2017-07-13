@@ -17,10 +17,10 @@ namespace Swift {
 class SWIFTEN_API IBBReceiveTransportSession : public TransportSession {
     public:
         IBBReceiveTransportSession(std::shared_ptr<IBBReceiveSession> session);
-        virtual ~IBBReceiveTransportSession() SWIFTEN_OVERRIDE;
+        virtual ~IBBReceiveTransportSession() override;
 
-        virtual void start() SWIFTEN_OVERRIDE;
-        virtual void stop() SWIFTEN_OVERRIDE;
+        virtual void start() override;
+        virtual void stop() override;
 
     private:
         std::shared_ptr<IBBReceiveSession> session;

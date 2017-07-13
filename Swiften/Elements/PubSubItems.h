@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,7 +13,6 @@
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubItem.h>
 #include <Swiften/Elements/PubSubPayload.h>

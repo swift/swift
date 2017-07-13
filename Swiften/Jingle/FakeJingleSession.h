@@ -20,7 +20,6 @@
 #include <boost/variant.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/SimpleIDGenerator.h>
 #include <Swiften/Elements/JinglePayload.h>
 #include <Swiften/JID/JID.h>
@@ -86,16 +85,16 @@ namespace Swift {
             typedef std::shared_ptr<FakeJingleSession> ref;
 
             FakeJingleSession(const JID& initiator, const std::string& id);
-            virtual ~FakeJingleSession() SWIFTEN_OVERRIDE;
+            virtual ~FakeJingleSession() override;
 
-            virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
-            virtual void sendTerminate(JinglePayload::Reason::Type reason) SWIFTEN_OVERRIDE;
-            virtual void sendInfo(std::shared_ptr<Payload>) SWIFTEN_OVERRIDE;
-            virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref()) SWIFTEN_OVERRIDE;
-            virtual std::string sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
-            virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
-            virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
-            virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) SWIFTEN_OVERRIDE;
+            virtual void sendInitiate(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref) override;
+            virtual void sendTerminate(JinglePayload::Reason::Type reason) override;
+            virtual void sendInfo(std::shared_ptr<Payload>) override;
+            virtual void sendAccept(const JingleContentID&, JingleDescription::ref, JingleTransportPayload::ref = JingleTransportPayload::ref()) override;
+            virtual std::string sendTransportInfo(const JingleContentID&, JingleTransportPayload::ref) override;
+            virtual void sendTransportAccept(const JingleContentID&, JingleTransportPayload::ref) override;
+            virtual void sendTransportReject(const JingleContentID&, JingleTransportPayload::ref) override;
+            virtual void sendTransportReplace(const JingleContentID&, JingleTransportPayload::ref) override;
 
             void handleSessionTerminateReceived(boost::optional<JinglePayload::Reason>);
             void handleSessionAcceptReceived(const JingleContentID&, std::shared_ptr<JingleDescription>, std::shared_ptr<JingleTransportPayload>);

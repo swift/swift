@@ -7,7 +7,6 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/Override.h>
 #include <Swiften/FileTransfer/FileTransferTransporterFactory.h>
 
 namespace Swift {
@@ -31,12 +30,12 @@ namespace Swift {
                 TimerFactory*,
                 CryptoProvider*,
                 IQRouter*);
-            virtual ~DefaultFileTransferTransporterFactory() SWIFTEN_OVERRIDE;
+            virtual ~DefaultFileTransferTransporterFactory() override;
 
             virtual FileTransferTransporter* createInitiatorTransporter(
-                    const JID& initiator, const JID& responder, const FileTransferOptions&) SWIFTEN_OVERRIDE;
+                    const JID& initiator, const JID& responder, const FileTransferOptions&) override;
             virtual FileTransferTransporter* createResponderTransporter(
-                    const JID& initiator, const JID& responder, const std::string& s5bSessionID, const FileTransferOptions&) SWIFTEN_OVERRIDE;
+                    const JID& initiator, const JID& responder, const std::string& s5bSessionID, const FileTransferOptions&) override;
 
         private:
             SOCKS5BytestreamRegistry* s5bRegistry;

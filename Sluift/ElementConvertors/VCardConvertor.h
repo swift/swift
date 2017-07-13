@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Elements/VCard.h>
 
 #include <Sluift/GenericLuaElementConvertor.h>
@@ -15,9 +14,9 @@ namespace Swift {
     class VCardConvertor : public GenericLuaElementConvertor<VCard> {
         public:
             VCardConvertor();
-            virtual ~VCardConvertor() SWIFTEN_OVERRIDE;
+            virtual ~VCardConvertor() override;
 
-            virtual std::shared_ptr<VCard> doConvertFromLua(lua_State*) SWIFTEN_OVERRIDE;
-            virtual void doConvertToLua(lua_State*, std::shared_ptr<VCard>) SWIFTEN_OVERRIDE;
+            virtual std::shared_ptr<VCard> doConvertFromLua(lua_State*) override;
+            virtual void doConvertToLua(lua_State*, std::shared_ptr<VCard>) override;
     };
 }
