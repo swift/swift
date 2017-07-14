@@ -53,6 +53,13 @@ namespace testing {
 
 using namespace internal;
 
+static std::string plural(const std::string msg1, const std::string msg2, int n) {
+    if (n == 1) {
+        return msg1;
+    }
+    return msg2;
+}
+
 static std::string PrintTestPartResultToString(const TestPartResult& testPartResult) {
     return (Message() << internal::FormatFileLocation(testPartResult.file_name(), testPartResult.line_number())
         << " " << (testPartResult.type() == TestPartResult::Type::kSuccess ? "Success" : "Failure") << std::endl << testPartResult.message()).GetString();
@@ -70,8 +77,9 @@ void CppUnitTestResultPrinter::OnTestIterationStart(const UnitTest& unitTest, in
         ColoredPrintf(COLOR_YELLOW, "Note: Randomizing tests' orders with a seed of %d .\n", unitTest.random_seed());
     }
     ColoredPrintf(COLOR_GREEN, "[==========] ");
-    std::cout << "Running " << unitTest.test_to_run_count() << " test(s) from " << unitTest.test_case_to_run_count() << " test case(s)" << std::endl;
-    fflush(stdout);
+    std::cout << "Running " << unitTest.test_to_run_count() << " " << plural("test", "tests", unitTest.test_to_run_count());
+    std::cout << " from " << unitTest.test_case_to_run_count() << " " << plural("test case", "test cases", unitTest.test_case_to_run_count()) << "." << std::endl;
+    std::cout.flush();
 }
 
 void CppUnitTestResultPrinter::OnTestPartResult(const TestPartResult& testPartResult) {
@@ -93,29 +101,29 @@ void CppUnitTestResultPrinter::OnTestEnd(const TestInfo& testInfo) {
 
 void CppUnitTestResultPrinter::OnTestIterationEnd(const UnitTest& unitTest, int) {
     ColoredPrintf(COLOR_GREEN, "\n[==========] ");
-    std::cout << unitTest.test_to_run_count() << " test(s) from " << unitTest.test_case_to_run_count() << " test case(s) ran. ";
+    std::cout << unitTest.test_to_run_count() << " " << plural("test", "tests", unitTest.test_to_run_count()) << " from " << unitTest.test_case_to_run_count() << " " << plural("test case", "test cases", unitTest.test_case_to_run_count()) << " ran. ";
     if (GTEST_FLAG(print_time)) {
         std::cout << "(" << StreamableToString(unitTest.elapsed_time()).c_str() << " ms total)";
     }
     ColoredPrintf(COLOR_GREEN, "\n[  PASSED  ] ");
-    std::cout << unitTest.successful_test_count() << std::endl;
+    std::cout << unitTest.successful_test_count() << " " << plural("test", "tests", unitTest.successful_test_count()) << "." << std::endl;
 
     int num_failures = unitTest.failed_test_count();
     if (!unitTest.Passed()) {
         ColoredPrintf(COLOR_RED, "[  FAILED  ] ");
-        std::cout << unitTest.failed_test_count() << " test(s), listed below:" << std::endl;
+        std::cout << unitTest.failed_test_count() << " "  << plural("test", "tests", unitTest.failed_test_count()) << ", listed below:" << std::endl;
         PrintFailedTests(unitTest);
-        std::cout << std::endl << num_failures << " FAILED " << ((num_failures == 1) ? "TEST" : "TESTS") << std::endl;
+        std::cout << std::endl << num_failures << " FAILED " << plural("TEST", "TESTS", num_failures) << std::endl;
     }
     int num_disabled = unitTest.reportable_disabled_test_count();
     if (num_disabled && !GTEST_FLAG(also_run_disabled_tests)) {
         if (!num_failures) {
             std::cout << std::endl;
         }
-        std::cout << num_disabled << " test(s) were disabled." << std::endl << std::endl;
+        std::cout << num_disabled << " " << plural("test", "tests", num_disabled) << " were disabled." << std::endl << std::endl;
     }
     std::cout << testFailures_.rdbuf();
-    fflush(stdout);
+    std::cout.flush();
 }
 
 // Internal helper for printing the list of failed tests.
