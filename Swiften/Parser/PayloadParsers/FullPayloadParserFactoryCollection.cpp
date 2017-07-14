@@ -53,6 +53,7 @@
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXParticipantParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXCreateParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXRegisterNickParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXSetNickParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXDestroyParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXJoinParserFactory.h>
@@ -139,6 +140,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<ClientStateParserFactory>());
     factories_.push_back(std::make_shared<MIXParticipantParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXDestroyParser> >("destroy", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<MIXRegisterNickParserFactory>());
     factories_.push_back(std::make_shared<MIXSetNickParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUserPreferenceParser> >("user-preference", "urn:xmpp:mix:0"));
