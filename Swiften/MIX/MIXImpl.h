@@ -39,9 +39,12 @@ namespace Swift {
 
             virtual void leaveChannel() override;
 
+            virtual void requestVCard(const JID &participant) override;
+
         private:
             void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
             void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
+            void handleVCardReceived(VCard::ref payload, ErrorPayload::ref error);
 
         private:
             JID ownJID_;

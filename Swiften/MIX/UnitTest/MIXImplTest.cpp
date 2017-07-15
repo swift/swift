@@ -34,6 +34,7 @@ class MIXImplTest : public ::testing::Test {
             auto mix = std::make_shared<MIXImpl>(ownJID_, channelJID_, router_);
             mix->onJoinComplete.connect(boost::bind(&MIXImplTest::handleJoinComplete, this, _1));
             mix->onLeaveComplete.connect(boost::bind(&MIXImplTest::handleLeaveComplete, this, _1));
+            mix->onVCardReceived.connect(boost::bind(&MIXImplTest::handleVCard, this, _1));
             return mix;
         }
 
@@ -48,6 +49,11 @@ class MIXImplTest : public ::testing::Test {
         void handleLeaveComplete(MIXLeave::ref leavePayload) {
             ASSERT_TRUE(leavePayload);
             ASSERT_EQ(static_cast<int>(0), subscribedNodes_.size());
+        }
+
+        void handleVCard(VCard::ref payload) {
+            ASSERT_TRUE(payload);
+            vCardResult_ = payload;
         }
 
         IQ::ref createJoinResult(const std::unordered_set<std::string>& nodes) {
@@ -72,12 +78,23 @@ class MIXImplTest : public ::testing::Test {
             return std::find(subscribedNodes_.begin(), subscribedNodes_.end(), value) != subscribedNodes_.end();
         }
 
+        IQ::ref createVCardResult() {
+            auto vCard = std::make_shared<VCard>();
+            vCard->setFullName("Peter Saint-Andre");
+            vCard->setFamilyName("Saint-Andre");
+            vCard->setGivenName("Peter");
+            vCard->setNickname("stpeter");
+            vCard->addURL("http://www.xmpp.org/xsf/people/stpeter.shtml");
+            return IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), vCard);
+        }
+
         JID ownJID_;
         JID channelJID_;
         DummyStanzaChannel* channel_;
         IQRouter* router_;
         int successfulJoins_;
         std::unordered_set<std::string> subscribedNodes_;
+        VCard::ref vCardResult_;
 };
 
 TEST_F(MIXImplTest, testJoinChannelOnly) {
@@ -181,4 +198,15 @@ TEST_F(MIXImplTest, testLeaveChannel) {
     ASSERT_TRUE(iq->getPayload<MIXLeave>()->getChannel());
 
     channel_->onIQReceived(createLeaveResult());
+}
+
+TEST_F(MIXImplTest, testRequestVCard) {
+    MIX::ref testling = createMIXClient();
+    testling->requestVCard(JID("989898#coven@mix.shakespeare.example"));
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->isRequestAtIndex<VCard>(0, JID("989898#coven@mix.shakespeare.example"), IQ::Get));
+
+    channel_->onIQReceived(createVCardResult());
+    ASSERT_TRUE(vCardResult_);
+    ASSERT_EQ(vCardResult_->getFullName(), std::string("Peter Saint-Andre"));
 }

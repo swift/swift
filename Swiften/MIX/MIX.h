@@ -16,6 +16,7 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/MIXJoin.h>
 #include <Swiften/Elements/MIXLeave.h>
+#include <Swiften/Elements/VCard.h>
 #include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
@@ -34,10 +35,14 @@ namespace Swift {
 
             virtual void leaveChannel() = 0;
 
+            virtual void requestVCard(const JID &participant) = 0;
+
         public:
             boost::signals2::signal<void (MIXJoin::ref /* joinResponse */)> onJoinComplete;
             boost::signals2::signal<void (ErrorPayload::ref /* joinError */)> onJoinFailed;
             boost::signals2::signal<void (MIXLeave::ref /* leaveResponse */)> onLeaveComplete;
             boost::signals2::signal<void (ErrorPayload::ref /* leaveError */)> onLeaveFailed;
+            boost::signals2::signal<void (VCard::ref /* vCard */)> onVCardReceived;
+            boost::signals2::signal<void (ErrorPayload::ref /* vCardRequestError */)> onVCardRequestFailed;
     };
 }

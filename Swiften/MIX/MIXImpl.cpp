@@ -6,7 +6,6 @@
 
 #include <Swiften/MIX/MIXImpl.h>
 
-#include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Queries/IQRouter.h>
@@ -57,6 +56,21 @@ void MIXImpl::handleLeaveResponse(MIXLeave::ref payload, ErrorPayload::ref error
         onLeaveFailed(error);
     } else {
         onLeaveComplete(payload);
+    }
+}
+
+void MIXImpl::requestVCard(const JID &participant) {
+    auto vCardPayload = std::make_shared<VCard>();
+    auto request = std::make_shared<GenericRequest<VCard> >(IQ::Get, participant, vCardPayload, iqRouter_);
+    request->onResponse.connect(boost::bind(&MIXImpl::handleVCardReceived, this, _1, _2));
+    request->send();
+}
+
+void MIXImpl::handleVCardReceived(VCard::ref payload, ErrorPayload::ref error) {
+    if (error) {
+        onVCardRequestFailed(error);
+    } else {
+        onVCardReceived(payload);
     }
 }
 
