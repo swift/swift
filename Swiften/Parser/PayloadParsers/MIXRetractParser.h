@@ -4,28 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-/*
- * Copyright (c) 2017 Isode Limited.
- * All rights reserved.
- * See the COPYING file for more information.
- */
-
 #pragma once
 
 #include <memory>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Elements/MIXSubscribe.h>
+#include <Swiften/Elements/MIXRetract.h>
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-    class PayloadParserFactoryCollection;
     class PayloadParser;
 
-    class SWIFTEN_API MIXSubscribeParser : public GenericPayloadParser<MIXSubscribe> {
+    class SWIFTEN_API MIXRetractParser : public GenericPayloadParser<MIXRetract> {
         public:
-            MIXSubscribeParser();
-            virtual ~MIXSubscribeParser() override;
+            MIXRetractParser();
+            virtual ~MIXRetractParser() override;
 
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) override;
             virtual void handleEndElement(const std::string& element, const std::string&) override;

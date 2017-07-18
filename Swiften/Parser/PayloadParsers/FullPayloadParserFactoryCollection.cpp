@@ -56,8 +56,10 @@
 #include <Swiften/Parser/PayloadParsers/MIXRegisterNickParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXSetNickParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXDestroyParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXUpdateSubscriptionParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXJoinParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/MIXRetractParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXUserPreferenceParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXLeaveParser.h>
 #include <Swiften/Parser/PayloadParsers/MUCAdminPayloadParser.h>
@@ -143,9 +145,11 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<MIXRegisterNickParserFactory>());
     factories_.push_back(std::make_shared<MIXSetNickParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUpdateSubscriptionParser> >("update-subscription", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUserPreferenceParser> >("user-preference", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<MIXPayloadParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXLeaveParser> >("leave", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXRetractParser> >("retract", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<MUCUserPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<MUCOwnerPayloadParserFactory>(this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MUCInvitationPayloadParser> >("x", "jabber:x:conference"));

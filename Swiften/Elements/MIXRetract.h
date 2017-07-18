@@ -9,30 +9,27 @@
 #include <memory>
 #include <string>
 
-#include <boost/optional.hpp>
-
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-    class SWIFTEN_API MIXSubscribe : public Payload {
+    class SWIFTEN_API MIXRetract : public Payload {
+        public:
+            using ref = std::shared_ptr<MIXRetract>;
 
         public:
-            using ref = std::shared_ptr<MIXSubscribe>;
 
-        public:
+            MIXRetract() {}
 
-            MIXSubscribe() {}
-
-            const std::string& getNode() const {
-                return node_;
+            const std::string& getMessageID() const {
+                return messageID_;
             }
 
-            void setNode(const std::string& node) {
-                node_ = node;
+            void setMessageID(std::string messageID) {
+                messageID_ = messageID;
             }
 
         private:
-            std::string node_;
+            std::string messageID_;
     };
 }
