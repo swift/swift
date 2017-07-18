@@ -19,6 +19,7 @@ class MIXImplTest : public ::testing::Test {
     protected:
         void SetUp() {
             ownJID_ = JID("hag66@shakespeare.example/UUID-a1j/7533");
+            channelJID_ = JID("coven@mix.shakespeare.example");
             channel_ = new DummyStanzaChannel();
             router_ = new IQRouter(channel_);
             successfulJoins_ = 0;
@@ -30,9 +31,10 @@ class MIXImplTest : public ::testing::Test {
         }
 
         MIX::ref createMIXClient(const JID& jid) {
-            auto mix = std::make_shared<MIXImpl>(jid, router_);
+            auto mix = std::make_shared<MIXImpl>(jid, router_, channel_);
             mix->onJoinComplete.connect(boost::bind(&MIXImplTest::handleJoinComplete, this, _1));
             mix->onLeaveComplete.connect(boost::bind(&MIXImplTest::handleLeaveComplete, this, _1));
+            mix->onMessageReceived.connect(boost::bind(&MIXImplTest::handleMessage, this, _1));
             return mix;
         }
 
@@ -47,6 +49,10 @@ class MIXImplTest : public ::testing::Test {
         void handleLeaveComplete(MIXLeave::ref leavePayload) {
             ASSERT_TRUE(leavePayload);
             ASSERT_EQ(static_cast<int>(0), subscribedNodes_.size());
+        }
+
+        void handleMessage(Message::ref message) {
+            receivedMessage_ = message;
         }
 
         IQ::ref createJoinResult(const std::unordered_set<std::string>& nodes) {
@@ -72,7 +78,9 @@ class MIXImplTest : public ::testing::Test {
         }
 
         JID ownJID_;
+        JID channelJID_;
         DummyStanzaChannel* channel_;
+        Message::ref receivedMessage_;
         IQRouter* router_;
         int successfulJoins_;
         std::unordered_set<std::string> subscribedNodes_;
@@ -80,7 +88,7 @@ class MIXImplTest : public ::testing::Test {
 
 TEST_F(MIXImplTest, testJoinChannelOnly) {
     MIX::ref testling = createMIXClient(ownJID_);
-    testling->joinChannel(JID("coven@mix.shakespeare.example"));
+    testling->joinChannel(channelJID_);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -98,7 +106,7 @@ TEST_F(MIXImplTest, testJoinChannelOnly) {
 
 TEST_F(MIXImplTest, testJoinError) {
     MIX::ref testling = createMIXClient(ownJID_);
-    testling->joinChannel(JID("coven@mix.shakespeare.example"));
+    testling->joinChannel(channelJID_);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -122,7 +130,7 @@ TEST_F(MIXImplTest, testJoinWithAllSubscriptions) {
     nodes.insert(std::string("urn:xmpp:mix:nodes:participants"));
     nodes.insert(std::string("urn:xmpp:mix:nodes:config"));
 
-    testling->joinChannelAndSubscribe(JID("coven@mix.shakespeare.example"), nodes);
+    testling->joinChannelAndSubscribe(channelJID_, nodes);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -146,7 +154,7 @@ TEST_F(MIXImplTest, testJoinWithSomeSubscriptions) {
     nodes.insert(std::string("urn:xmpp:mix:nodes:participants"));
     nodes.insert(std::string("urn:xmpp:mix:nodes:config"));
 
-    testling->joinChannelAndSubscribe(JID("coven@mix.shakespeare.example"), nodes);
+    testling->joinChannelAndSubscribe(channelJID_, nodes);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -169,7 +177,7 @@ TEST_F(MIXImplTest, testJoinWithSomeSubscriptions) {
 
 TEST_F(MIXImplTest, testLeaveChannel) {
     MIX::ref testling = createMIXClient(ownJID_);
-    testling->leaveChannel(JID("coven@mix.shakespeare.example"));
+    testling->leaveChannel(channelJID_);
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXLeave>(0, ownJID_.toBare(), IQ::Set));
 
@@ -179,4 +187,40 @@ TEST_F(MIXImplTest, testLeaveChannel) {
     ASSERT_TRUE(iq->getPayload<MIXLeave>()->getChannel());
 
     channel_->onIQReceived(createLeaveResult());
+}
+
+
+TEST_F(MIXImplTest, testReceiveMessage) {
+    MIX::ref testling = createMIXClient(ownJID_);
+
+    auto response = std::make_shared<Message>();
+    response->setFrom(channelJID_);
+    response->setTo(ownJID_.toBare());
+    response->setBody(std::string("Hello there!"));
+    channel_->onMessageReceived(response);
+
+    ASSERT_EQ(receivedMessage_->getBody(), std::string("Hello there!"));
+
+}
+
+TEST_F(MIXImplTest, testSendAndRetractMessage) {
+    MIX::ref testling = createMIXClient(ownJID_);
+    testling->sendMessage(channelJID_, std::string("Harpier cries: 'tis time, 'tis time."));
+
+    //sent message
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->getStanzaAtIndex<Message>(0));
+    auto sentPayload = channel_->getStanzaAtIndex<Message>(0);
+    ASSERT_EQ(sentPayload->getTo(), channelJID_.toString());
+    ASSERT_EQ(sentPayload->getBody(), std::string("Harpier cries: 'tis time, 'tis time."));
+
+    //retract
+    testling->retractMessage(channelJID_, sentPayload->getID());
+    ASSERT_EQ(2, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->getStanzaAtIndex<Message>(1));
+    auto messageStanza = channel_->getStanzaAtIndex<Message>(1);
+    ASSERT_EQ(messageStanza->getTo(), channelJID_.toString());
+    ASSERT_EQ(static_cast<int>(1), messageStanza->getPayloads().size());
+    ASSERT_TRUE(messageStanza->getPayload<MIXRetract>());
+    ASSERT_EQ(messageStanza->getPayload<MIXRetract>()->getMessageID(), sentPayload->getID());
 }
