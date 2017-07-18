@@ -4,31 +4,27 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include <Swiften/Serializer/PayloadSerializers/MIXJoinSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXUpdateSubscriptionSerializer.h>
 
 #include <memory>
-#include <string>
 
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
-using namespace Swift;
+namespace Swift {
 
-MIXJoinSerializer::MIXJoinSerializer() {
+MIXUpdateSubscriptionSerializer::MIXUpdateSubscriptionSerializer() {
 }
 
-MIXJoinSerializer::~MIXJoinSerializer() {
+MIXUpdateSubscriptionSerializer::~MIXUpdateSubscriptionSerializer() {
 }
 
-std::string MIXJoinSerializer::serializePayload(std::shared_ptr<MIXJoin> payload) const {
+std::string MIXUpdateSubscriptionSerializer::serializePayload(std::shared_ptr<MIXUpdateSubscription> payload) const {
     if (!payload) {
         return "";
     }
-    XMLElement element("join", "urn:xmpp:mix:0");
-    if (payload->getChannel()) {
-        element.setAttribute("channel", *payload->getChannel());
-    }
+    XMLElement element("update-subscription", "urn:xmpp:mix:0");
     if (payload->getJID()) {
         element.setAttribute("jid", *payload->getJID());
     }
@@ -41,9 +37,7 @@ std::string MIXJoinSerializer::serializePayload(std::shared_ptr<MIXJoin> payload
         subscribeElement->setAttribute("node", item);
         element.addNode(subscribeElement);
     }
-
-    if (payload->getForm()) {
-        element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getForm())));
-    }
     return element.serialize();
+}
+
 }
