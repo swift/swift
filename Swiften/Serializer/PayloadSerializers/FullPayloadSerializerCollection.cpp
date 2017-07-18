@@ -49,6 +49,7 @@
 #include <Swiften/Serializer/PayloadSerializers/MIXDestroySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXUpdateSubscriptionSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXParticipantSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXRetractSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXRegisterNickSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXCreateSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXPayloadSerializer.h>
@@ -165,6 +166,7 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
     serializers_.push_back(new ResultSetSerializer());
     serializers_.push_back(new ForwardedSerializer(this));
     serializers_.push_back(new MIXParticipantSerializer());
+    serializers_.push_back(new MIXRetractSerializer());
     serializers_.push_back(new MIXCreateSerializer());
     serializers_.push_back(new MIXRegisterNickSerializer());
     serializers_.push_back(new MIXPayloadSerializer());

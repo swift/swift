@@ -8,6 +8,8 @@
 
 #include <Swiften/MIX/MIX.h>
 
+#include <Swiften/Base/IDGenerator.h>
+
 namespace Swift {
     class StanzaChannel;
     class IQRouter;
@@ -17,7 +19,7 @@ namespace Swift {
             using ref = std::shared_ptr<MIXImpl>;
 
         public:
-            MIXImpl(const JID &ownJID, IQRouter* iqRouter);
+            MIXImpl(const JID &ownJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel);
             virtual ~MIXImpl();
 
             /**
@@ -32,12 +34,18 @@ namespace Swift {
 
             virtual void leaveChannel(const JID &channel) override;
 
+            virtual void sendMessage(const JID &channel, const std::string &body) override;
+            virtual void retractMessage(const JID &channel, const std::string &messageID) override;
+
         private:
             void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
             void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
+            void handleIncomingMessage(Message::ref);
 
         private:
             JID ownJID_;
             IQRouter* iqRouter_;
+            StanzaChannel* stanzaChannel_;
+            IDGenerator idGenerator;
     };
 }

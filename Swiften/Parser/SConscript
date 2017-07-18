@@ -73,6 +73,7 @@ sources = [
         "PayloadParsers/MIXDestroyParser.cpp",
         "PayloadParsers/MIXCreateParser.cpp",
         "PayloadParsers/MIXPayloadParser.cpp",
+        "PayloadParsers/MIXRetractParser.cpp",
         "PayloadParsers/MIXLeaveParser.cpp",
         "PayloadParsers/MIXJoinParser.cpp",
         "PayloadParsers/MIXUserPreferenceParser.cpp",

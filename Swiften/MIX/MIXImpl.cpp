@@ -6,14 +6,15 @@
 
 #include <Swiften/MIX/MIXImpl.h>
 
+#include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Queries/IQRouter.h>
 
 namespace Swift {
 
-MIXImpl::MIXImpl(const JID &ownJID, IQRouter* iqRouter) : ownJID_(ownJID), iqRouter_(iqRouter) {
-
+MIXImpl::MIXImpl(const JID &ownJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel) : ownJID_(ownJID), iqRouter_(iqRouter), stanzaChannel_(stanzaChannel) {
+    stanzaChannel_->onMessageReceived.connect(boost::bind(&MIXImpl::handleIncomingMessage, this, _1));
 }
 
 MIXImpl::~MIXImpl() {
@@ -57,6 +58,31 @@ void MIXImpl::handleLeaveResponse(MIXLeave::ref payload, ErrorPayload::ref error
     } else {
         onLeaveComplete(payload);
     }
+}
+
+void MIXImpl::sendMessage(const JID &channel, const std::string &body) {
+    auto message = std::make_shared<Message>();
+    message->setTo(channel);
+    message->setType(Message::Groupchat);
+    message->setBody(body);
+    message->setID(idGenerator.generateID());
+    stanzaChannel_->sendMessage(message);
+}
+
+void MIXImpl::handleIncomingMessage(Message::ref message) {
+    //if (!message) {
+        onMessageReceived(message);
+    //}
+}
+
+void MIXImpl::retractMessage(const JID &channel, const std::string &messageID) {
+    auto message = std::make_shared<Message>();
+    message->setTo(channel);
+    message->setID(idGenerator.generateID());
+    auto retract = std::make_shared<MIXRetract>();
+    retract->setMessageID(messageID);
+    message->addPayload(retract);
+    stanzaChannel_->sendMessage(message);
 }
 
 }
