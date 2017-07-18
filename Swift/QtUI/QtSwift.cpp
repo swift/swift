@@ -214,7 +214,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     for (auto&& fontName : fontNames) {
         std::string fontPath = std::string(":/") + fontName;
         int error = QFontDatabase::addApplicationFont(P2QSTRING(fontPath));
-        assert((error != -1) && "Failed to load font.");
+        SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath << std::endl;
     }
 
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
