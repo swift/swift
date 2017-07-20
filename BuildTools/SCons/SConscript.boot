@@ -53,6 +53,7 @@ vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVa
 vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("boost_bundled_enable", "Allow use of bundled Boost as last resort", "true"))
 vars.Add(BoolVariable("boost_force_bundled", "Force use of bundled Boost.", False))
+vars.Add(BoolVariable("allow_boost_1_64", "Allow use of Boost 1.64", False))
 vars.Add(PathVariable("zlib_includedir", "Zlib headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("zlib_libdir", "Zlib library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("zlib_libfile", "Zlib library file (full path to file)", None, PathVariable.PathAccept))

@@ -93,6 +93,7 @@ if env["SCONS_STAGE"] == "build" :
         ])
 
     env.Append(UNITTEST_SOURCES = [
+            File("Chat/UnitTest/ChatListWindowChatTest.cpp"),
             File("Chat/UnitTest/ChatMessageParserTest.cpp"),
             File("Chat/UnitTest/ChatsManagerTest.cpp"),
             File("Chat/UnitTest/MUCControllerTest.cpp"),
