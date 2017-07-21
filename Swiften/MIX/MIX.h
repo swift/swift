@@ -17,14 +17,20 @@
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/MIXJoin.h>
 #include <Swiften/Elements/MIXLeave.h>
+#include <Swiften/Elements/MIXParticipant.h>
 #include <Swiften/Elements/MIXUpdateSubscription.h>
 #include <Swiften/Elements/MIXUserPreference.h>
+#include <Swiften/Elements/PubSub.h>
+#include <Swiften/Elements/PubSubItem.h>
+#include <Swiften/Elements/PubSubItems.h>
 #include <Swiften/Elements/ErrorPayload.h>
 
 namespace Swift {
     class SWIFTEN_API MIX {
         public:
             using ref = std::shared_ptr<MIX>;
+
+            static const std::string JIDMapNode;
 
         public:
             virtual ~MIX();
@@ -59,6 +65,11 @@ namespace Swift {
             */
             virtual void updatePreferences(Form::ref form) = 0;
 
+            /**
+            * Look up real JID from proxy JID in JIDVisible or JIDMaybeVisible Rooms.
+            */
+            virtual void lookupJID(const JID& proxyJID) = 0;
+
         public:
             boost::signals2::signal<void (MIXJoin::ref /* joinResponse */)> onJoinComplete;
             boost::signals2::signal<void (ErrorPayload::ref /* joinError */)> onJoinFailed;
@@ -68,5 +79,8 @@ namespace Swift {
             boost::signals2::signal<void (ErrorPayload::ref /* updateError */)> onSubscriptionUpdateFailed;
             boost::signals2::signal<void (Form::ref /* preferencesForm */)> onPreferencesFormReceived;
             boost::signals2::signal<void (ErrorPayload::ref /* failedConfiguration */)> onPreferencesUpdateFailed;
+            boost::signals2::signal<void (const JID& /* realJID */)> onLookupSuccess;
+            boost::signals2::signal<void (ErrorPayload::ref /* failedConfiguration */)> onLookupFailed;
+
     };
 }

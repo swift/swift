@@ -112,4 +112,39 @@ void MIXImpl::updatePreferences(Form::ref form) {
     request->send();
 }
 
+void MIXImpl::lookupJID(const JID& proxyJID) {
+    auto item = std::make_shared<PubSubItem>();
+    item->setID(std::string(proxyJID));
+
+    auto itemsPayload = std::make_shared<PubSubItems>();
+    itemsPayload->setNode(MIX::JIDMapNode);
+    itemsPayload->addItem(item);
+
+    auto pubSubPayload = std::make_shared<PubSub>();
+    pubSubPayload->setPayload(itemsPayload);
+
+    auto request = std::make_shared<GenericRequest<PubSub>>(IQ::Get, channelJID_, pubSubPayload, iqRouter_);
+    request->onResponse.connect(boost::bind(&MIXImpl::handleJIDLookupResponse, this, _1, _2, proxyJID));
+    request->send();
+}
+
+void MIXImpl::handleJIDLookupResponse(std::shared_ptr<PubSub> payload, ErrorPayload::ref error, const JID& proxyJID) {
+    if (error) {
+        onLookupFailed(error);
+    } else {
+        auto itemsPayload = std::dynamic_pointer_cast<PubSubItems>(payload->getPayload());
+        auto items = itemsPayload->getItems();
+        assert(items.size() == static_cast<int>(1));
+        auto item = items[0];
+        assert(item->getID() == proxyJID.toString());
+        assert(item->getData().size() == static_cast<int>(1));
+        auto participant = std::dynamic_pointer_cast<MIXParticipant>(item->getData()[0]);
+        if (boost::optional<JID> realJID = participant->getJID()) {
+            onLookupSuccess(*realJID);
+        } else {
+            onLookupFailed(error);
+        }
+    }
+}
+
 }

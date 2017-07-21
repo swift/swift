@@ -46,12 +46,15 @@ namespace Swift {
 
             virtual void updatePreferences(Form::ref form) override;
 
+            virtual void lookupJID(const JID& proxyJID) override;
+
         private:
             void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
             void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
             void handleUpdateSubscriptionResponse(MIXUpdateSubscription::ref, ErrorPayload::ref);
             void handlePreferencesFormReceived(MIXUserPreference::ref, ErrorPayload::ref);
             void handlePreferencesResultReceived(MIXUserPreference::ref /*payload*/, ErrorPayload::ref error);
+            void handleJIDLookupResponse(std::shared_ptr<PubSub>  /*payload*/, ErrorPayload::ref, const JID& proxyJID);
 
         private:
             JID ownJID_;

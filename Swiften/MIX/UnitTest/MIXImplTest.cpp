@@ -37,6 +37,7 @@ class MIXImplTest : public ::testing::Test {
             mix->onLeaveComplete.connect(boost::bind(&MIXImplTest::handleLeaveComplete, this, _1));
             mix->onSubscriptionUpdated.connect(boost::bind(&MIXImplTest::handleSubscriptionUpdated, this, _1));
             mix->onPreferencesFormReceived.connect(boost::bind(&MIXImplTest::handlePreferenceForm, this, _1));
+            mix->onLookupSuccess.connect(boost::bind(&MIXImplTest::handleLookupSuccess, this, _1));
             return mix;
         }
 
@@ -61,6 +62,10 @@ class MIXImplTest : public ::testing::Test {
             for (auto node : payload->getSubscriptions()) {
                 subscribedNodes_.insert(node);
             }
+        }
+
+        void handleLookupSuccess(const JID& realJID) {
+            realJID_ = realJID;
         }
 
         void handlePreferenceForm(Form::ref form) {
@@ -94,6 +99,7 @@ class MIXImplTest : public ::testing::Test {
 
         JID ownJID_;
         JID channelJID_;
+        JID realJID_;
         DummyStanzaChannel* channel_;
         IQRouter* router_;
         int successfulJoins_;
@@ -300,4 +306,33 @@ TEST_F(MIXImplTest, preferenceFormRequest) {
 
     channel_->onIQReceived(IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), preferenceResponse));
     ASSERT_TRUE(preferenceForm_);
+}
+
+TEST_F(MIXImplTest, jidLookup) {
+    MIX::ref testling = createMIXClient();
+    JID proxyJID = JID("123456#coven@mix.shakespeare.example");
+    testling->lookupJID(proxyJID);
+
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->isRequestAtIndex<PubSub>(0, channelJID_, IQ::Get));
+
+    //fake response
+    auto item = std::make_shared<PubSubItem>();
+    item->setID(std::string(proxyJID));
+
+    auto participant = std::make_shared<MIXParticipant>();
+    participant->setJID(JID("hecate@mix.shakespeare.example"));
+    item->addData(participant);
+
+    auto itemsPayload = std::make_shared<PubSubItems>();
+    itemsPayload->setNode(MIX::JIDMapNode);
+    itemsPayload->addItem(item);
+
+    auto pubSubPayload = std::make_shared<PubSub>();
+    pubSubPayload->setPayload(itemsPayload);
+
+    auto response = IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), pubSubPayload);
+    channel_->onIQReceived(response);
+    ASSERT_EQ(realJID_, JID("hecate@mix.shakespeare.example"));
+
 }

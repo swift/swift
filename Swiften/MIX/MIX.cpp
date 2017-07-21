@@ -8,6 +8,8 @@
 
 namespace Swift {
 
+const std::string MIX::JIDMapNode = std::string("urn:xmpp:mix:nodes:jidmap");
+
 MIX::~MIX() {
 }
 
