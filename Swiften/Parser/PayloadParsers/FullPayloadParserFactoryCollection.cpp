@@ -52,6 +52,9 @@
 #include <Swiften/Parser/PayloadParsers/MAMQueryParser.h>
 #include <Swiften/Parser/PayloadParsers/MAMResultParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXParticipantParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/MIXInvitationParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/MIXInvitationAckParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXInviteParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXCreateParser.h>
 #include <Swiften/Parser/PayloadParsers/MIXRegisterNickParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/MIXSetNickParserFactory.h>
@@ -140,9 +143,12 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<ChatStateParserFactory>());
     factories_.push_back(std::make_shared<ClientStateParserFactory>());
     factories_.push_back(std::make_shared<MIXParticipantParserFactory>());
+    factories_.push_back(std::make_shared<MIXInvitationParserFactory>());
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXDestroyParser> >("destroy", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<MIXRegisterNickParserFactory>());
     factories_.push_back(std::make_shared<MIXSetNickParserFactory>());
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXInvitationAckParser> >("invitation-ack", "urn:xmpp:mix:0"));
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXInviteParser> >("invite", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXCreateParser> >("create", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUpdateSubscriptionParser> >("update-subscription", "urn:xmpp:mix:0"));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<MIXUserPreferenceParser> >("user-preference", "urn:xmpp:mix:0"));
