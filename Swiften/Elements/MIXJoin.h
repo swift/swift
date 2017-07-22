@@ -15,6 +15,7 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/MIXInvitation.h>
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
@@ -67,11 +68,19 @@ namespace Swift {
                 return form_;
             }
 
+            const boost::optional<MIXInvitation::ref>& getInvitation() const {
+                return invitation_;
+            }
+
+            void setInvitation(MIXInvitation::ref invitation) {
+                invitation_ = invitation;
+            }
+
         private:
             boost::optional<JID> jid_;
             boost::optional<JID> channel_;
             std::unordered_set<std::string> subscribeItems_;
             std::shared_ptr<Form> form_;
-            // FIXME: MIXInvitation to be implemented. boost::optional<MIXInvitation> invitation_;
+            boost::optional<MIXInvitation::ref> invitation_;
     };
 }

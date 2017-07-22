@@ -10,6 +10,7 @@
 #include <string>
 
 #include <Swiften/Serializer/PayloadSerializers/FormSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXInvitationSerializer.h>
 #include <Swiften/Serializer/XML/XMLElement.h>
 #include <Swiften/Serializer/XML/XMLRawTextNode.h>
 
@@ -45,5 +46,10 @@ std::string MIXJoinSerializer::serializePayload(std::shared_ptr<MIXJoin> payload
     if (payload->getForm()) {
         element.addNode(std::make_shared<XMLRawTextNode>(FormSerializer().serialize(payload->getForm())));
     }
+
+    if (payload->getInvitation()) {
+        element.addNode(std::make_shared<XMLRawTextNode>(MIXInvitationSerializer().serialize(*payload->getInvitation())));
+    }
+
     return element.serialize();
 }
