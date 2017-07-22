@@ -49,6 +49,9 @@
 #include <Swiften/Serializer/PayloadSerializers/MIXDestroySerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXUpdateSubscriptionSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXParticipantSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXInviteSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXInvitationSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/MIXInvitationAckSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXRegisterNickSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXCreateSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/MIXPayloadSerializer.h>
@@ -165,6 +168,9 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
     serializers_.push_back(new ResultSetSerializer());
     serializers_.push_back(new ForwardedSerializer(this));
     serializers_.push_back(new MIXParticipantSerializer());
+    serializers_.push_back(new MIXInviteSerializer());
+    serializers_.push_back(new MIXInvitationSerializer());
+    serializers_.push_back(new MIXInvitationAckSerializer());
     serializers_.push_back(new MIXCreateSerializer());
     serializers_.push_back(new MIXRegisterNickSerializer());
     serializers_.push_back(new MIXPayloadSerializer());
