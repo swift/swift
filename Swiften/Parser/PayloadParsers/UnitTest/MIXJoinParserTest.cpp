@@ -29,6 +29,8 @@ TEST(MIXJoinParserTest, XEP0369_Example22) {
     ASSERT_EQ(JID("coven@mix.shakespeare.example"), *payload->getChannel());
     ASSERT_FALSE(payload->getJID());
     ASSERT_FALSE(payload->getForm());
+    ASSERT_FALSE(payload->getInvitation());
+
 
     ASSERT_EQ(static_cast<size_t>(4), payload->getSubscriptions().size());
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
@@ -54,12 +56,45 @@ TEST(MIXJoinParserTest, XEP0369_Example23) {
     ASSERT_FALSE(payload->getChannel());
     ASSERT_FALSE(payload->getJID());
     ASSERT_FALSE(payload->getForm());
+    ASSERT_FALSE(payload->getInvitation());
 
     ASSERT_EQ(static_cast<size_t>(4), payload->getSubscriptions().size());
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:presence")));
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:participants")));
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:config")));
+}
+
+TEST(MIXJoinParserTest, XEP0369_Example58) {
+    PayloadsParserTester parser;
+    ASSERT_TRUE(parser.parse(
+                "<join xmlns=\"urn:xmpp:mix:0\">"
+                    "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
+                    "<invitation>"
+                        "<inviter>hag66@shakespeare.lit</inviter>"
+                        "<invitee>cat@shakespeare.lit</invitee>"
+                        "<channel>coven@mix.shakespeare.lit</channel>"
+                        "<token>ABCDEF</token>"
+                    "</invitation>"
+                "</join>"
+                ));
+
+    MIXJoin::ref payload = parser.getPayload<MIXJoin>();
+    ASSERT_TRUE(payload);
+
+    ASSERT_FALSE(payload->getChannel());
+    ASSERT_FALSE(payload->getJID());
+    ASSERT_FALSE(payload->getForm());
+    ASSERT_TRUE(payload->getInvitation());
+
+    ASSERT_EQ(static_cast<size_t>(1), payload->getSubscriptions().size());
+    ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
+
+    auto invite = *payload->getInvitation();
+    ASSERT_EQ(invite->getInviter(), JID("hag66@shakespeare.lit"));
+    ASSERT_EQ(invite->getInvitee(), JID("cat@shakespeare.lit"));
+    ASSERT_EQ(invite->getChannel(), JID("coven@mix.shakespeare.lit"));
+    ASSERT_EQ(invite->getToken(), std::string("ABCDEF"));
 }
 
 TEST(MIXJoinParserTest, XEP0369_Example24) {
@@ -80,6 +115,7 @@ TEST(MIXJoinParserTest, XEP0369_Example24) {
     ASSERT_TRUE(payload->getJID());
     ASSERT_EQ(JID("123456#coven@mix.shakespeare.example"), *payload->getJID());
     ASSERT_FALSE(payload->getForm());
+    ASSERT_FALSE(payload->getInvitation());
 
     ASSERT_EQ(static_cast<size_t>(4), payload->getSubscriptions().size());
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
@@ -109,6 +145,7 @@ TEST(MIXJoinParserTest, XEP0369_Example29) {
 
     ASSERT_FALSE(payload->getChannel());
     ASSERT_FALSE(payload->getJID());
+    ASSERT_FALSE(payload->getInvitation());
 
     ASSERT_EQ(static_cast<size_t>(2), payload->getSubscriptions().size());
     ASSERT_TRUE(payload->hasSubscription(std::string("urn:xmpp:mix:nodes:messages")));
@@ -151,6 +188,8 @@ TEST(MIXJoinParserTest, XEP0369_Example30) {
 
     ASSERT_FALSE(payload->getChannel());
     ASSERT_TRUE(payload->getJID());
+    ASSERT_FALSE(payload->getInvitation());
+
     ASSERT_EQ(JID("hag66@shakespeare.example"), *payload->getJID());
 
     ASSERT_EQ(static_cast<size_t>(2), payload->getSubscriptions().size());

@@ -10,6 +10,7 @@
 
 #include <Swiften/Parser/PayloadParserFactory.h>
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
+#include <Swiften/Parser/PayloadParsers/MIXInvitationParser.h>
 
 using namespace Swift;
 
@@ -42,6 +43,9 @@ void MIXJoinParser::handleStartElement(const std::string& element, const std::st
         if (element == "x" && ns == "jabber:x:data") {
             currentPayloadParser_ = std::make_shared<FormParser>();
         }
+        if (element == "invitation" && ns == "urn:xmpp:mix:0") {
+            currentPayloadParser_ = std::make_shared<MIXInvitationParser>();
+        }
     }
 
     if (level_ >= 1 && currentPayloadParser_) {
@@ -60,6 +64,9 @@ void MIXJoinParser::handleEndElement(const std::string& element, const std::stri
         if (level_ == 1) {
             if (element == "x" && ns == "jabber:x:data") {
                 getPayloadInternal()->setForm(std::dynamic_pointer_cast<Form>(currentPayloadParser_->getPayload()));
+            }
+            if (element == "invitation" && ns == "urn:xmpp:mix:0") {
+                getPayloadInternal()->setInvitation(std::dynamic_pointer_cast<MIXInvitation>(currentPayloadParser_->getPayload()));
             }
             currentPayloadParser_.reset();
         }

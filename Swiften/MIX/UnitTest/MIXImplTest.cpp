@@ -32,11 +32,12 @@ class MIXImplTest : public ::testing::Test {
         }
 
         MIX::ref createMIXClient() {
-            auto mix = std::make_shared<MIXImpl>(ownJID_, channelJID_, router_);
+            auto mix = std::make_shared<MIXImpl>(ownJID_, channelJID_, router_, channel_);
             mix->onJoinComplete.connect(boost::bind(&MIXImplTest::handleJoinComplete, this, _1));
             mix->onLeaveComplete.connect(boost::bind(&MIXImplTest::handleLeaveComplete, this, _1));
             mix->onSubscriptionUpdated.connect(boost::bind(&MIXImplTest::handleSubscriptionUpdated, this, _1));
             mix->onPreferencesFormReceived.connect(boost::bind(&MIXImplTest::handlePreferenceForm, this, _1));
+            mix->onInvitationReceived.connect(boost::bind(&MIXImplTest::handleInvitation, this, _1));
             return mix;
         }
 
@@ -49,6 +50,10 @@ class MIXImplTest : public ::testing::Test {
             }
             ++successfulJoins_;
             subscribedNodes_ = joinPayload->getSubscriptions();
+        }
+
+        void handleInvitation(MIXInvitation::ref invitation) {
+            invitation_ = invitation;
         }
 
         void handleLeaveComplete(MIXLeave::ref leavePayload) {
@@ -98,12 +103,13 @@ class MIXImplTest : public ::testing::Test {
         IQRouter* router_;
         int successfulJoins_;
         Form::ref preferenceForm_;
+        MIXInvitation::ref invitation_;
         std::unordered_set<std::string> subscribedNodes_;
 };
 
 TEST_F(MIXImplTest, testJoinError) {
     MIX::ref testling = createMIXClient();
-    testling->joinChannel(std::unordered_set<std::string>());
+    testling->joinChannelWithSubscriptions(std::unordered_set<std::string>());
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -127,7 +133,7 @@ TEST_F(MIXImplTest, testJoinWithAllSubscriptions) {
     nodes.insert(std::string("urn:xmpp:mix:nodes:participants"));
     nodes.insert(std::string("urn:xmpp:mix:nodes:config"));
 
-    testling->joinChannel(nodes);
+    testling->joinChannelWithSubscriptions(nodes);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -143,6 +149,29 @@ TEST_F(MIXImplTest, testJoinWithAllSubscriptions) {
     ASSERT_EQ(static_cast<int>(4), subscribedNodes_.size());
 }
 
+TEST_F(MIXImplTest, testInvite) {
+    MIX::ref testling = createMIXClient();
+    testling->requestInvitation(JID("cat@shakespeare.lit"));
+
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->isRequestAtIndex<MIXInvite>(0, channelJID_, IQ::Get));
+
+    //fake response
+    auto invite = std::make_shared<MIXInvite>();
+
+    auto invitation = std::make_shared<MIXInvitation>();
+    invitation->setInviter(JID("hag66@shakespeare.lit"));
+    invitation->setInvitee(JID("cat@shakespeare.lit"));
+    invitation->setChannel(JID("coven@mix.shakespeare.lit"));
+    invitation->setToken(std::string("ABCDEF"));
+
+    invite->setInvitation(invitation);
+
+    channel_->onIQReceived(IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), invite));
+    ASSERT_TRUE(invitation_);
+    ASSERT_EQ(invitation_->getInvitee(), JID("cat@shakespeare.lit"));
+}
+
 TEST_F(MIXImplTest, testJoinWithSomeSubscriptions) {
     MIX::ref testling = createMIXClient();
     std::unordered_set<std::string> nodes;
@@ -151,7 +180,7 @@ TEST_F(MIXImplTest, testJoinWithSomeSubscriptions) {
     nodes.insert(std::string("urn:xmpp:mix:nodes:participants"));
     nodes.insert(std::string("urn:xmpp:mix:nodes:config"));
 
-    testling->joinChannel(nodes);
+    testling->joinChannelWithSubscriptions(nodes);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));
@@ -191,7 +220,7 @@ TEST_F(MIXImplTest, testUpdateSubscription) {
     nodes.insert(std::string("urn:xmpp:mix:nodes:messages"));
     nodes.insert(std::string("urn:xmpp:mix:nodes:presence"));
 
-    testling->joinChannel(nodes);
+    testling->joinChannelWithSubscriptions(nodes);
 
     ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
     ASSERT_TRUE(channel_->isRequestAtIndex<MIXJoin>(0, ownJID_.toBare(), IQ::Set));

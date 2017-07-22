@@ -13,19 +13,15 @@
 
 namespace Swift {
 
-MIXImpl::MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter) : ownJID_(ownJID), channelJID_(channelJID), iqRouter_(iqRouter) {
-
+MIXImpl::MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel) : ownJID_(ownJID), channelJID_(channelJID), iqRouter_(iqRouter), stanzaChannel_(stanzaChannel) {
+    stanzaChannel_->onMessageReceived.connect(boost::bind(&MIXImpl::handleIncomingMessage, this, _1));
 }
 
 MIXImpl::~MIXImpl() {
 
 }
 
-void MIXImpl::joinChannel(const std::unordered_set<std::string>& nodes) {
-    joinChannelWithPreferences(nodes, nullptr);
-}
-
-void MIXImpl::joinChannelWithPreferences(const std::unordered_set<std::string>& nodes, Form::ref form) {
+void MIXImpl::joinChannel(const std::unordered_set<std::string>& nodes, Form::ref form, MIXInvitation::ref invitation) {
     auto joinPayload = std::make_shared<MIXJoin>();
     joinPayload->setChannel(channelJID_);
     for (auto node : nodes) {
@@ -34,9 +30,24 @@ void MIXImpl::joinChannelWithPreferences(const std::unordered_set<std::string>& 
     if (form) {
         joinPayload->setForm(form);
     }
+    if (invitation) {
+        joinPayload->setInvitation(invitation);
+    }
     auto request = std::make_shared<GenericRequest<MIXJoin>>(IQ::Set, getJID(), joinPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MIXImpl::handleJoinResponse, this, _1, _2));
     request->send();
+}
+
+void MIXImpl::joinChannelWithSubscriptions(const std::unordered_set<std::string>& nodes) {
+    joinChannel(nodes, nullptr, nullptr);
+}
+
+void MIXImpl::joinChannelWithPreferences(const std::unordered_set<std::string>& nodes, Form::ref form) {
+    joinChannel(nodes, form, nullptr);
+}
+
+void MIXImpl::joinChannelWithInvite(const std::unordered_set<std::string>& nodes, MIXInvitation::ref invitation) {
+    joinChannel(nodes, nullptr, invitation);
 }
 
 void MIXImpl::handleJoinResponse(MIXJoin::ref payload, ErrorPayload::ref error) {
@@ -110,6 +121,36 @@ void MIXImpl::updatePreferences(Form::ref form) {
     auto request = std::make_shared<GenericRequest<MIXUserPreference>>(IQ::Set, channelJID_, prefPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MIXImpl::handlePreferencesResultReceived, this, _1, _2));
     request->send();
+}
+
+void MIXImpl::handleIncomingMessage(Message::ref message) {
+    onMessageReceived(message);
+}
+
+void MIXImpl::requestInvitation(const JID& invitee) {
+    auto invitePayload = std::make_shared<MIXInvite>();
+    invitePayload->setInvitee(invitee);
+    auto request = std::make_shared<GenericRequest<MIXInvite>>(IQ::Get, channelJID_, invitePayload, iqRouter_);
+    request->onResponse.connect(boost::bind(&MIXImpl::handleInvitationReceived, this, _1, _2));
+    request->send();
+}
+
+void MIXImpl::handleInvitationReceived(MIXInvite::ref invite, ErrorPayload::ref error) {
+    if (error) {
+        onInvitationRequestFailed(error);
+    } else {
+        if (invite->getInvitation()) {
+            onInvitationReceived(*invite->getInvitation());
+        }
+    }
+}
+
+void MIXImpl::sendInvitation(MIXInvitation::ref invitation, std::string invitationMessage) {
+    auto message = std::make_shared<Message>();
+    message->setTo(invitation->getInvitee());
+    message->setBody(invitationMessage);
+    message->addPayload(invitation);
+    stanzaChannel_->sendMessage(message);
 }
 
 }

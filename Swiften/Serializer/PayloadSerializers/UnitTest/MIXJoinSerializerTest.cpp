@@ -49,6 +49,33 @@ TEST(MIXJoinSerializerTest, XEP0369_Example23) {
     ASSERT_EQ(expectedResult, testling.serialize(join));
 }
 
+TEST(MIXJoinSerializerTest, XEP0369_Example58) {
+    MIXJoinSerializer testling;
+
+    std::shared_ptr<MIXJoin> join(new MIXJoin());
+
+    join->addSubscription(std::string("urn:xmpp:mix:nodes:messages"));
+
+    auto invitation = std::make_shared<MIXInvitation>();
+    invitation->setInviter(JID("hag66@shakespeare.lit"));
+    invitation->setInvitee(JID("cat@shakespeare.lit"));
+    invitation->setChannel(JID("coven@mix.shakespeare.lit"));
+    invitation->setToken(std::string("ABCDEF"));
+
+    join->setInvitation(invitation);
+
+    std::string expectedResult = "<join xmlns=\"urn:xmpp:mix:0\">"
+                                "<subscribe node=\"urn:xmpp:mix:nodes:messages\"/>"
+                                "<invitation xmlns=\"urn:xmpp:mix:0\">"
+                                    "<inviter>hag66@shakespeare.lit</inviter>"
+                                    "<invitee>cat@shakespeare.lit</invitee>"
+                                    "<channel>coven@mix.shakespeare.lit</channel>"
+                                    "<token>ABCDEF</token>"
+                                "</invitation>"
+                            "</join>";
+    ASSERT_EQ(expectedResult, testling.serialize(join));
+}
+
 TEST(MIXJoinSerializerTest, XEP0369_Example24) {
     MIXJoinSerializer testling;
 
