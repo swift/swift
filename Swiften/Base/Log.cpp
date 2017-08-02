@@ -16,6 +16,7 @@
 namespace Swift {
 
 static Log::Severity logLevel = Log::warning;
+std::unique_ptr<FILE, Log::LogFileClose> Log::logfile;
 
 Log::Log() {
 }
@@ -25,8 +26,14 @@ Log::~Log() {
     __android_log_print(ANDROID_LOG_VERBOSE, "Swift", stream.str().c_str(), 1);
 #else
     // Using stdio for thread safety (POSIX file i/o calls are guaranteed to be atomic)
-    fprintf(stderr, "%s", stream.str().c_str());
-    fflush(stderr);
+    if (logfile) {
+        fwrite(stream.str().c_str(), sizeof(char), stream.str().size(), logfile.get());
+        fflush(logfile.get());
+    }
+    else {
+        fwrite(stream.str().c_str(), sizeof(char), stream.str().size(), stderr);
+        fflush(stderr);
+    }
 #endif
 }
 
@@ -46,6 +53,12 @@ Log::Severity Log::getLogLevel() {
 
 void Log::setLogLevel(Severity level) {
     logLevel = level;
+}
+
+void Log::setLogFile(const std::string& fileName) {
+    if (!fileName.empty()) {
+        logfile = std::unique_ptr<FILE, Log::LogFileClose>(fopen(fileName.c_str(), "a"));
+    }
 }
 
 }

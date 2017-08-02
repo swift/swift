@@ -101,6 +101,7 @@ po::options_description QtSwift::getOptionsDescription() {
 #if QT_VERSION >= 0x040800
         ("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
 #endif
+        ("logfile", po::value<std::string>()->implicit_value(""), "Save all logging information to a file")
         ;
     return result;
 }
@@ -187,6 +188,16 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
     if (options.count("debug")) {
         Log::setLogLevel(Swift::Log::debug);
+    }
+
+    if (options.count("logfile")) {
+        try {
+            std::string fileName = options["logfile"].as<std::string>();
+            Log::setLogFile(fileName);
+        }
+        catch (...) {
+            SWIFT_LOG(error) << "Error while retrieving the specified log file name from the command line" << std::endl;
+        }
     }
 
     // Load fonts
