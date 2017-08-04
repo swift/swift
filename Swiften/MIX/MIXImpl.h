@@ -34,21 +34,13 @@ namespace Swift {
                 return channelJID_;
             }
 
-            virtual void joinChannel(const std::unordered_set<std::string>& nodes) override;
-
-            virtual void joinChannelWithPreferences(const std::unordered_set<std::string>& nodes, Form::ref form) override;
-
             virtual void updateSubscription(const std::unordered_set<std::string>& nodes) override;
-
-            virtual void leaveChannel() override;
 
             virtual void requestPreferencesForm() override;
 
             virtual void updatePreferences(Form::ref form) override;
 
         private:
-            void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
-            void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
             void handleUpdateSubscriptionResponse(MIXUpdateSubscription::ref, ErrorPayload::ref);
             void handlePreferencesFormReceived(MIXUserPreference::ref, ErrorPayload::ref);
             void handlePreferencesResultReceived(MIXUserPreference::ref /*payload*/, ErrorPayload::ref error);

@@ -16,6 +16,7 @@ class RosterParserTest : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(RosterParserTest);
         CPPUNIT_TEST(testParse);
+        CPPUNIT_TEST(testParseWithChannel);
         CPPUNIT_TEST(testParse_ItemWithUnknownContent);
         CPPUNIT_TEST(testParse_WithVersion);
         CPPUNIT_TEST(testParse_WithEmptyVersion);
@@ -53,6 +54,24 @@ class RosterParserTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT_EQUAL(RosterItemPayload::None, items[1].getSubscription());
             CPPUNIT_ASSERT(!items[1].getSubscriptionRequested());
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), items[1].getGroups().size());
+        }
+
+        void testParseWithChannel() {
+            PayloadsParserTester parser;
+            CPPUNIT_ASSERT(parser.parse(
+                "<query xmlns=\"jabber:iq:roster\">"
+                    "<item jid=\"balcony@example.net\">"
+                        "<channel xmlns=\"urn:xmpp:mix:roster:0\"/>"
+                    "</item>"
+                "</query>"));
+
+            RosterPayload* payload = dynamic_cast<RosterPayload*>(parser.getPayload().get());
+
+            const RosterPayload::RosterItemPayloads& items = payload->getItems();
+
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), items.size());
+            CPPUNIT_ASSERT_EQUAL(JID("balcony@example.net"), items[0].getJID());
+            CPPUNIT_ASSERT(items[0].isMIXChannel());
         }
 
         void testParse_ItemWithUnknownContent() {

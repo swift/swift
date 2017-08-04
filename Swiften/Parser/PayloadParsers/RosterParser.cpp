@@ -52,11 +52,15 @@ void RosterParser::handleStartElement(const std::string& element, const std::str
             if (attributes.getAttribute("ask") == "subscribe") {
                 currentItem_.setSubscriptionRequested();
             }
+        } else if (element == "annotate" && ns == "urn:xmpp:mix:roster:0") {
+            getPayloadInternal()->setSupportsMIXAnnotations(true);
         }
     }
     else if (level_ == ItemLevel) {
         if (element == "group") {
             currentText_ = "";
+        } else if (element == "channel" && ns == "urn:xmpp:mix:roster:0") {
+            currentItem_.setMIXChannel(true);
         }
         else {
             assert(!unknownContentParser_);

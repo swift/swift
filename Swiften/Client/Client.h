@@ -21,6 +21,7 @@ namespace Swift {
     class FileTransferManager;
     class FileTransferManager;
     class JingleSessionManager;
+    class MIXRegistry;
     class MUCManager;
     class MUCRegistry;
     class MemoryStorages;
@@ -93,7 +94,7 @@ namespace Swift {
              *
              * \see getRoster()
              */
-            void requestRoster();
+            void requestRoster(bool includeMIX = false);
 
             /**
              * Returns the last received presence for the given (full) JID.
@@ -110,6 +111,10 @@ namespace Swift {
             }
 
             PresenceSender* getPresenceSender() const;
+
+            MIXRegistry* getMIXRegistry() const {
+                return mixRegistry;
+            }
 
             MUCManager* getMUCManager() const {
                 return mucManager;
@@ -191,6 +196,7 @@ namespace Swift {
             PresenceOracle* presenceOracle;
             DirectedPresenceSender* directedPresenceSender;
             StanzaChannelPresenceSender* stanzaChannelPresenceSender;
+            MIXRegistry* mixRegistry;
             MUCRegistry* mucRegistry;
             VCardManager* vcardManager;
             AvatarManager* avatarManager;

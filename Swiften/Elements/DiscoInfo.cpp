@@ -26,6 +26,7 @@ const std::string DiscoInfo::MessageDeliveryReceiptsFeature = std::string("urn:x
 const std::string DiscoInfo::WhiteboardFeature = std::string("http://swift.im/whiteboard");
 const std::string DiscoInfo::BlockingCommandFeature = std::string("urn:xmpp:blocking");
 const std::string DiscoInfo::MessageCarbonsFeature = std::string("urn:xmpp:carbons:2");
+const std::string DiscoInfo::MIXFeature = std::string("urn:xmpp:mix:0");
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {
     if (category_ == other.category_) {
