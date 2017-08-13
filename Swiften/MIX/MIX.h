@@ -24,6 +24,16 @@ namespace Swift {
         public:
             using ref = std::shared_ptr<MIX>;
 
+            static const std::string AllowedNode;
+            static const std::string BannedNode;
+            static const std::string ConfigurationNode;
+            static const std::string InformationNode;
+            static const std::string JIDMapNode;
+            static const std::string JIDMaybeVisibleMapNode;
+            static const std::string MessagesNode;
+            static const std::string ParticipantsNode;
+            static const std::string PresenceNode;
+
         public:
             virtual ~MIX();
 

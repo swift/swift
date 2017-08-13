@@ -73,7 +73,7 @@ std::unordered_set<MIXImpl::ref> MIXRegistry::getChannels() {
     return results;
 }
 
-MIX::ref MIXRegistry::getMIXInstance(const JID& channelJID) {
+MIXImpl::ref MIXRegistry::getMIXInstance(const JID& channelJID) {
     auto i = entries_.find(channelJID);
     if (i != entries_.end()) {
         return i->second;
@@ -81,5 +81,4 @@ MIX::ref MIXRegistry::getMIXInstance(const JID& channelJID) {
         return nullptr;
     }
 }
-
 }

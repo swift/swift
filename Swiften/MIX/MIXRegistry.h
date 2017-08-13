@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <memory>
 #include <unordered_set>
 
 #include <boost/signals2.hpp>
@@ -24,6 +25,8 @@ namespace Swift {
 
     class SWIFTEN_API MIXRegistry {
         public:
+            using ref = std::shared_ptr<MIXRegistry>;
+
             using MIXInstanceMap = std::map<JID, MIXImpl::ref>;
 
         public:
@@ -31,13 +34,25 @@ namespace Swift {
 
             ~MIXRegistry();
 
+            /**
+            * Join a MIX Channel with subscriptions.
+            */
             void joinChannel(const JID& channelJID, const std::unordered_set<std::string>& nodes);
 
+            /**
+            * Leave a MIX Channel.
+            */
             void leaveChannel(const JID& channelJID);
 
+            /**
+            * Get MIX objects for all joinedChannels.
+            */
             std::unordered_set<MIXImpl::ref> getChannels();
 
-            MIX::ref getMIXInstance(const JID& jid);
+            /**
+            * Get MIX instance for a joined channel.
+            */
+            MIXImpl::ref getMIXInstance(const JID& jid);
 
         private:
             void handleJIDAdded(const JID& jid);
