@@ -14,6 +14,7 @@
 #include <Swiften/Base/Log.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/StringCodecs/Hexify.h>
+#include <Swiften/TLS/Schannel/SchannelUtil.h>
 
 // Size of the SHA1 hash
 #define SHA1_HASH_LEN 20
@@ -43,6 +44,7 @@ CAPICertificate::CAPICertificate(const std::string& capiUri, TimerFactory* timer
 }
 
 CAPICertificate::~CAPICertificate() {
+    SWIFT_LOG(debug) << "Destroying the CAPICertificate" << std::endl;
     if (smartCardTimer_) {
         smartCardTimer_->stop();
         smartCardTimer_->onTick.disconnect(boost::bind(&CAPICertificate::handleSmartCardTimerTick, this));
@@ -50,7 +52,9 @@ CAPICertificate::~CAPICertificate() {
     }
 
     if (certStoreHandle_) {
-        CertCloseStore(certStoreHandle_, 0);
+        if (CertCloseStore(certStoreHandle_, 0) == FALSE) {
+            SWIFT_LOG(debug) << "Failed to close the certificate store handle" << std::endl;
+        }
     }
 
     if (cardHandle_) {
@@ -80,7 +84,7 @@ const std::string& CAPICertificate::getSmartCardReaderName() const {
     return smartCardReaderName_;
 }
 
-PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::string &certName) {
+PCCERT_CONTEXT findCertificateInStore(HCERTSTORE certStoreHandle, const std::string &certName) {
     if (!boost::iequals(certName.substr(0, 5), "sha1:")) {
 
         // Find client certificate. Note that this sample just searches for a
@@ -105,8 +109,7 @@ PCCERT_CONTEXT findCertificateInStore (HCERTSTORE certStoreHandle, const std::st
 
 }
 
-
-void CAPICertificate::setUri (const std::string& capiUri) {
+void CAPICertificate::setUri(const std::string& capiUri) {
     valid_ = false;
 
     /* Syntax: "certstore:" <cert_store> ":" <hash> ":" <hash_of_cert> */
@@ -118,7 +121,7 @@ void CAPICertificate::setUri (const std::string& capiUri) {
     /* Substring of subject: uses "storename" */
     std::string capiIdentity = capiUri.substr(10);
     std::string newCertStoreName;
-    size_t pos = capiIdentity.find_first_of (':');
+    size_t pos = capiIdentity.find_first_of(':');
 
     if (pos == std::string::npos) {
         /* Using the default certificate store */
@@ -146,48 +149,37 @@ void CAPICertificate::setUri (const std::string& capiUri) {
 
     certStore_ = newCertStoreName;
 
-    PCCERT_CONTEXT certContext = findCertificateInStore (certStoreHandle_, certName_);
-
+    ScopedCertContext certContext(findCertificateInStore(certStoreHandle_, certName_));
     if (!certContext) {
         return;
     }
 
-
     /* Now verify that we can have access to the corresponding private key */
 
     DWORD len;
-    CRYPT_KEY_PROV_INFO *pinfo;
-    HCRYPTPROV hprov;
-    HCRYPTKEY key;
-
     if (!CertGetCertificateContextProperty(certContext,
             CERT_KEY_PROV_INFO_PROP_ID,
             NULL,
             &len)) {
-        CertFreeCertificateContext(certContext);
+        SWIFT_LOG(error) << "Error while retrieving context properties" << std::endl;
         return;
     }
 
-    pinfo = static_cast<CRYPT_KEY_PROV_INFO *>(malloc(len));
+    std::shared_ptr<CRYPT_KEY_PROV_INFO> pinfo(static_cast<CRYPT_KEY_PROV_INFO *>(malloc(len)), free);
     if (!pinfo) {
-        CertFreeCertificateContext(certContext);
         return;
     }
 
-    if (!CertGetCertificateContextProperty(certContext, CERT_KEY_PROV_INFO_PROP_ID, pinfo, &len)) {
-        CertFreeCertificateContext(certContext);
-        free(pinfo);
+    if (!CertGetCertificateContextProperty(certContext, CERT_KEY_PROV_INFO_PROP_ID, pinfo.get(), &len)) {
         return;
     }
+    certContext.FreeContext();
 
-    CertFreeCertificateContext(certContext);
-
+    HCRYPTPROV hprov;
     // Now verify if we have access to the private key
     if (!CryptAcquireContextW(&hprov, pinfo->pwszContainerName, pinfo->pwszProvName, pinfo->dwProvType, 0)) {
-        free(pinfo);
         return;
     }
-
 
     char smartCardReader[1024];
     DWORD bufferLength = sizeof(smartCardReader);
@@ -205,19 +197,19 @@ void CAPICertificate::setUri (const std::string& capiUri) {
             smartCardTimer_ = timerFactory_->createTimer(SMARTCARD_EJECTION_CHECK_FREQUENCY_MILLISECONDS);
         }
         else {
-            ///Need to handle an error here
+            CryptReleaseContext(hprov, 0);
+            return;
         }
     }
 
+    HCRYPTKEY key;
     if (!CryptGetUserKey(hprov, pinfo->dwKeySpec, &key)) {
         CryptReleaseContext(hprov, 0);
-        free(pinfo);
         return;
     }
 
     CryptDestroyKey(key);
     CryptReleaseContext(hprov, 0);
-    free(pinfo);
 
     if (smartCardTimer_) {
         smartCardTimer_->onTick.connect(boost::bind(&CAPICertificate::handleSmartCardTimerTick, this));
@@ -227,7 +219,7 @@ void CAPICertificate::setUri (const std::string& capiUri) {
     valid_ = true;
 }
 
-static void smartcard_check_status (SCARDCONTEXT hContext,
+static void smartcard_check_status(SCARDCONTEXT hContext,
         const char* pReader,
         SCARDHANDLE hCardHandle, /* Can be 0 on the first call */
         SCARDHANDLE* newCardHandle, /* The handle returned */
@@ -288,7 +280,7 @@ static void smartcard_check_status (SCARDCONTEXT hContext,
     }
 }
 
-bool CAPICertificate::checkIfSmartCardPresent () {
+bool CAPICertificate::checkIfSmartCardPresent() {
     if (!smartCardReaderName_.empty()) {
         DWORD dwState;
         smartcard_check_status(scardContext_, smartCardReaderName_.c_str(), cardHandle_, &cardHandle_, &dwState);
@@ -317,8 +309,6 @@ bool CAPICertificate::checkIfSmartCardPresent () {
                 break;
         }
 
-
-
         switch (dwState) {
             case SCARD_ABSENT:
                 return false;
@@ -342,6 +332,7 @@ bool CAPICertificate::checkIfSmartCardPresent () {
 void CAPICertificate::handleSmartCardTimerTick() {
     bool poll = checkIfSmartCardPresent();
     if (lastPollingResult_ && !poll) {
+        SWIFT_LOG(debug) << "CAPI Certificate detected that the certificate card was removed" << std::endl;
         onCertificateCardRemoved();
     }
     lastPollingResult_ = poll;

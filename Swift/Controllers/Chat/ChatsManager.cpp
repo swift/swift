@@ -33,10 +33,10 @@
 #include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/VCards/VCardManager.h>
 
-#include <Swift/Controllers/Chat/ChatListWindowChatBoostSerialize.h>
 #include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
+#include <Swift/Controllers/Chat/ChatListWindowChatBoostSerialize.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/MUCSearchController.h>
@@ -164,6 +164,7 @@ ChatsManager::~ChatsManager() {
     roster_->onRosterCleared.disconnect(boost::bind(&ChatsManager::handleRosterCleared, this));
     ftOverview_->onNewFileTransferController.disconnect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
     delete joinMUCWindow_;
+    SWIFT_LOG(debug) << "Destroying ChatsManager, containing " << chatControllers_.size() << " chats and " << mucControllers_.size() << " MUCs" << std::endl;
     for (JIDChatControllerPair controllerPair : chatControllers_) {
         delete controllerPair.second;
     }
