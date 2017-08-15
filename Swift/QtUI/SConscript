@@ -57,7 +57,7 @@ myenv.Tool("textfile", toolpath = ["#/BuildTools/SCons/Tools"])
 qt4modules = ['QtCore', 'QtWebKit', 'QtGui']
 if myenv["qt5"] :
     qt_version = '5'
-    # QtSvg is required so the image format plugin for SVG images is installed 
+    # QtSvg is required so the image format plugin for SVG images is installed
     # correctly by Qt's deployment tools.
     qt4modules += ['QtWidgets', 'QtWebKitWidgets', 'QtMultimedia', 'QtSvg']
     if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
@@ -494,7 +494,18 @@ if env["PLATFORM"] == "win32" :
             lightTask = myenv.WiX_Light('#/Packages/Swift/Swift-' + myenv["SWIFT_VERSION"] + '.msi', ['..\\Packaging\\WiX\\gen_files.wixobj','..\\Packaging\\WiX\\Swift.wixobj'])
             if myenv.get("SIGNTOOL_KEY_PFX", None) and myenv.get("SIGNTOOL_TIMESTAMP_URL", None) :
                 def signToolAction(target = None, source = None, env = None):
-                    env.Execute('signtool.exe sign /fd SHA256 /f "${SIGNTOOL_KEY_PFX}" /t "${SIGNTOOL_TIMESTAMP_URL}" ' + str(target[0]))
+                    signresult = 0
+                    for x in range (1, 4) :
+                        print "Attemping to sign the packages [%s]" % x
+                        signresult = env.Execute('signtool.exe sign /fd SHA256 /f "${SIGNTOOL_KEY_PFX}" /t "${SIGNTOOL_TIMESTAMP_URL}" ' + str(target[0]))
+                        if signresult != 1 :
+                            break
+                    #If all 3 attemps to sign the package failed, stop the build.
+                    if signresult == 1 :
+                        print "Error: The build has failed to sign the installer package"
+                        Exit(1)
+                    if signresult == 2 :
+                        print "Signing was completed with warnings."
 
                 myenv.AddPostAction(lightTask, signToolAction)
 
