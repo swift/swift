@@ -50,7 +50,7 @@ QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider*
 QtUIFactory::~QtUIFactory() {
     SWIFT_LOG(debug) << "Entering QtUIFactory destructor. chatWindows size:" << chatWindows.size() << std::endl;
     for (auto chat : chatWindows) {
-        SWIFT_LOG_ASSERT(!chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly" << std::endl;
+        SWIFT_LOG_ASSERT(chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly" << std::endl;
     }
 }
 
