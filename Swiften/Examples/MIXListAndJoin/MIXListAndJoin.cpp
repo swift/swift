@@ -47,7 +47,7 @@ static void handleChannelJoined(const JID& jid) {
     assert(mixRegistry_);
     assert(mixRegistry_->getMIXInstance(jid));
 
-    cout << "Successfully joined channel " << jid << std::endl;
+    std::cout << "Successfully joined channel " << jid << std::endl;
 
     //trying to rejoin the same channel joined. Should not send the iq request. Will print a warning.
     mixRegistry_->joinChannel(mixChannelJID, supportedNodes);
@@ -57,83 +57,101 @@ static void handleChannelJoined(const JID& jid) {
     // Can perform other functions with MIXImpl object: mix.
 
     // Finally leave channel.
-    mixRegistry_->leaveChannel(mixChannelJID);
+    // This is commented to check the sync between different users using different clients(resources) to connect.
+    //mixRegistry_->leaveChannel(mixChannelJID);
 }
 
 static void handleChannelJoinFailed(ErrorPayload::ref /*error*/) {
-    cout << "Channel Join Failed." << std::endl;
+    std::cout << "Channel Join Failed." << std::endl;
 }
 
 static void handleChannelLeft(const JID& jid) {
     assert(mixRegistry_);
     assert(!mixRegistry_->getMIXInstance(jid));
 
-    cout << "Successfully left channel " << jid << std::endl;
+    std::cout << "Successfully left channel " << jid << std::endl;
+}
+
+static void handleRosterPopulated() {
+    XMPPRoster* xmppRoster = client->getRoster();
+    int channelCount = 0;
+    std::cout << "Already Joined channels: " << std::endl;
+    for (auto item : xmppRoster->getItems()) {
+        channelCount++;
+        std::cout << "\t" << channelCount << ". " << item.getName() << " - " << item.getJID() << std::endl;
+    }
+    if (channelCount == 0) {
+        std::cout << "No channels already joined." << std::endl;
+    }
+    std::cout << std::endl;
+    // Still issuing this join to check for warning.
+    mixRegistry_->joinChannel(mixChannelJID, supportedNodes);
 }
 
 static void handleChannelNodesSupported(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
     if (error) {
-        cout << "Error fetching list of nodes for " << mixChannelJID << endl;
+        std::cout << "Error fetching list of nodes for " << mixChannelJID << std::endl;
         return;
     }
 
     // Successfully received supported nodes.
     int nodeCount = 0;
-    cout << "Nodes supported by channel " << mixChannelJID << endl;
+    std::cout << "Nodes supported by channel " << mixChannelJID << std::endl;
     for (auto&& item : items->getItems()) {
         nodeCount++;
-        cout << "\t" << nodeCount << ". " << item.getName() << std::endl;
+        std::cout << "\t" << nodeCount << ". " << item.getName() << std::endl;
         supportedNodes.insert(item.getName());
     }
-    cout << endl;
+    std::cout << std::endl;
 
     // Initialize MIX Registry and send join request.
-    client->requestRoster(true);
     mixRegistry_ = client->getMIXRegistry();
     mixRegistry_->onChannelJoined.connect(&handleChannelJoined);
     mixRegistry_->onChannelJoinFailed.connect(&handleChannelJoinFailed);
     mixRegistry_->onChannelLeft.connect(&handleChannelLeft);
 
-    mixRegistry_->joinChannel(mixChannelJID, supportedNodes);
+    XMPPRoster* xmppRoster = client->getRoster();
+    xmppRoster->onInitialRosterPopulated.connect(&handleRosterPopulated);
+    client->requestRoster(true);
 }
 
 static void handleChannelItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
     if (error) {
-        cout << "Error fetching list of channels." << endl;
+        std::cout << "Error fetching list of channels." << std::endl;
         return;
     }
 
     //Successfully received the list of available channels.
     int channelCount = 0;
-    cout << "List of rooms at " << mixServiceDomain << endl;
+    std::cout << "List of rooms at " << mixServiceDomain << std::endl;
     for (auto&& item : items->getItems()) {
         channelCount++;
-        cout << "\t" << channelCount << ". " << item.getJID().getNode() << " - " << item.getJID() << std::endl;
+        std::cout << "\t" << channelCount << ". " << item.getJID().getNode() << " - " << item.getJID() << std::endl;
         if (channelCount == 1) {
             mixChannelJID = item.getJID();
         }
     }
-    cout << endl;
+    std::cout << std::endl;
 
     // Get the list of MIX nodes supported by MIX channel to be joined.
     if (mixChannelJID.isValid()) {
         auto discoItemsRequest = GetDiscoItemsRequest::create(mixChannelJID, std::string("mix"), client->getIQRouter());
         discoItemsRequest->onResponse.connect(&handleChannelNodesSupported);
 
-        cout << "Request supported nodes for MIX channel: " << mixChannelJID << endl;
+        std::cout << "Request supported nodes for MIX channel: " << mixChannelJID << std::endl;
         discoItemsRequest->send();
     }
 }
 
 static void handleConnected() {
     //Successfully connected.
-    cout << "Connected" << std::endl;
+    std::cout << "Connected" << std::endl;
 
     auto discoItemsRequest = GetDiscoItemsRequest::create(mixServiceDomain, client->getIQRouter());
     discoItemsRequest->onResponse.connect(&handleChannelItemsResponse);
 
     //See the list of available channels.
-    cout << "Request list of channels." << endl;
+    std::cout << "Request list of channels." << std::endl;
     discoItemsRequest->send();
 }
 
@@ -149,7 +167,7 @@ int main(int argc, char* argv[]) {
     Log::setLogLevel(Log::Severity::warning);
 
     if (argc != 4) {
-        cout << "Usage: ./" << argv[0] << " <jid> <password> <mix_service_domain>" << endl;
+        std::cout << "Usage: ./" << argv[0] << " <jid> <password> <mix_service_domain>" << std::endl;
         ret = -1;
     }
     else {
@@ -164,7 +182,7 @@ int main(int argc, char* argv[]) {
         client->onConnected.connect(&handleConnected);
         client->onDisconnected.connect(&handleDisconnected);
 
-        cout << "Connecting..." << flush;
+        std::cout << "Connecting..." << std::flush;
         client->connect(options);
         {
             Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);

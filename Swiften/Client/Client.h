@@ -113,7 +113,7 @@ namespace Swift {
             PresenceSender* getPresenceSender() const;
 
             MIXRegistry* getMIXRegistry() const {
-                return mixRegistry;
+                return mixRegistry.get();
             }
 
             MUCManager* getMUCManager() const {
@@ -196,7 +196,7 @@ namespace Swift {
             PresenceOracle* presenceOracle;
             DirectedPresenceSender* directedPresenceSender;
             StanzaChannelPresenceSender* stanzaChannelPresenceSender;
-            MIXRegistry* mixRegistry;
+            std::unique_ptr<MIXRegistry> mixRegistry;
             MUCRegistry* mucRegistry;
             VCardManager* vcardManager;
             AvatarManager* avatarManager;

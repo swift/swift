@@ -10,20 +10,37 @@
 namespace Swift {
 
 MIXRegistry::MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster) : ownJID_(ownJID), iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
-    xmppRoster_->onJIDAdded.connect(boost::bind(&MIXRegistry::handleJIDAdded, this, _1));
-    xmppRoster_->onJIDRemoved.connect(boost::bind(&MIXRegistry::handleJIDRemoved, this, _1));
+    xmppRoster_->onInitialRosterPopulated.connect(boost::bind(&MIXRegistry::syncRegistryWithRoster, this));
 }
 
 MIXRegistry::~MIXRegistry() {
 
 }
 
+void MIXRegistry::syncRegistryWithRoster() {
+    SWIFT_LOG(debug) << "Syncing with roster items. " << std::endl;
+    for (auto item : xmppRoster_->getItems()) {
+        if (item.isMIXChannel()) {
+            SWIFT_LOG(debug) << item.getJID() << std::endl;
+            auto i = entries_.find(item.getJID());
+            if (i == entries_.end()) {
+                SWIFT_LOG(debug) << "Adding " << item.getJID() << std::endl;
+                entries_.insert(std::make_pair(item.getJID(), std::make_shared<MIXImpl>(ownJID_, item.getJID(), iqRouter_)));
+            }
+        }
+    }
+    xmppRoster_->onJIDAdded.connect(boost::bind(&MIXRegistry::handleJIDAdded, this, _1));
+    xmppRoster_->onJIDRemoved.connect(boost::bind(&MIXRegistry::handleJIDRemoved, this, _1));
+}
+
 void MIXRegistry::joinChannel(const JID& channelJID, const std::unordered_set<std::string>& nodes) {
+    SWIFT_LOG(debug) << "Joining Channel " << channelJID << std::endl;
     auto i = entries_.find(channelJID);
     if (i != entries_.end()) {
         SWIFT_LOG(warning) << "Channel already joined: " << channelJID << std::endl;
         return;
     }
+    SWIFT_LOG(debug) << "Sending request for joining channel " << channelJID << std::endl;
     auto joinPayload = std::make_shared<MIXJoin>();
     joinPayload->setChannel(channelJID);
     for (auto node : nodes) {
@@ -65,7 +82,7 @@ void MIXRegistry::handleJIDRemoved(const JID& jid) {
     }
 }
 
-std::unordered_set<MIXImpl::ref> MIXRegistry::getChannels() {
+const std::unordered_set<MIXImpl::ref> MIXRegistry::getChannels() {
     std::unordered_set<MIXImpl::ref> results;
     for (const auto& entry : entries_) {
         results.insert(entry.second);

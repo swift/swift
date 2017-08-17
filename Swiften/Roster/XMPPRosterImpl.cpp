@@ -17,7 +17,7 @@ XMPPRosterImpl::~XMPPRosterImpl() {
 
 void XMPPRosterImpl::addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription, bool isMIXChannel) {
     JID bareJID(jid.toBare());
-    std::map<JID, XMPPRosterItem>::iterator i = entries_.find(bareJID);
+    auto i = entries_.find(bareJID);
     if (i != entries_.end()) {
         std::string oldName = i->second.getName();
         std::vector<std::string> oldGroups = i->second.getGroups();
@@ -41,7 +41,7 @@ void XMPPRosterImpl::clear() {
 }
 
 bool XMPPRosterImpl::isMIXChannel(const JID& jid) {
-    std::map<JID, XMPPRosterItem>::const_iterator i = entries_.find(jid.toBare());
+    auto i = entries_.find(jid.toBare());
     if (i != entries_.end()) {
         return i->second.isMIXChannel();
     } else {
@@ -54,7 +54,7 @@ bool XMPPRosterImpl::containsJID(const JID& jid) {
 }
 
 std::string XMPPRosterImpl::getNameForJID(const JID& jid) const {
-    std::map<JID, XMPPRosterItem>::const_iterator i = entries_.find(jid.toBare());
+    auto i = entries_.find(jid.toBare());
     if (i != entries_.end()) {
         return i->second.getName();
     }
@@ -64,7 +64,7 @@ std::string XMPPRosterImpl::getNameForJID(const JID& jid) const {
 }
 
 std::vector<std::string> XMPPRosterImpl::getGroupsForJID(const JID& jid) {
-    std::map<JID, XMPPRosterItem>::iterator i = entries_.find(jid.toBare());
+    auto i = entries_.find(jid.toBare());
     if (i != entries_.end()) {
         return i->second.getGroups();
     }
@@ -74,7 +74,7 @@ std::vector<std::string> XMPPRosterImpl::getGroupsForJID(const JID& jid) {
 }
 
 RosterItemPayload::Subscription XMPPRosterImpl::getSubscriptionStateForJID(const JID& jid) {
-    std::map<JID, XMPPRosterItem>::iterator i = entries_.find(jid.toBare());
+    auto i = entries_.find(jid.toBare());
     if (i != entries_.end()) {
         return i->second.getSubscription();
     }
@@ -92,7 +92,7 @@ std::vector<XMPPRosterItem> XMPPRosterImpl::getItems() const {
 }
 
 boost::optional<XMPPRosterItem> XMPPRosterImpl::getItem(const JID& jid) const {
-    std::map<JID, XMPPRosterItem>::const_iterator i = entries_.find(jid.toBare());
+    auto i = entries_.find(jid.toBare());
     if (i != entries_.end()) {
         return i->second;
     }

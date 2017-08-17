@@ -42,11 +42,11 @@ namespace Swift {
                 version_ = version;
             }
 
-            bool hasMIXAnnotationSupport() const {
+            bool hasRequestMIXAnnotations() const {
                 return hasAnnotate_;
             }
 
-            void setSupportsMIXAnnotations(bool hasAnnotate) {
+            void setRequestMIXAnnotations(bool hasAnnotate) {
                 hasAnnotate_ = hasAnnotate;
             }
 

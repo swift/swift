@@ -59,7 +59,7 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
     directedPresenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
     discoManager = new ClientDiscoManager(getIQRouter(), directedPresenceSender, networkFactories->getCryptoProvider());
 
-    mixRegistry = new MIXRegistry(getJID(), getIQRouter(), getRoster());
+    mixRegistry = std::make_unique<MIXRegistry>(getJID(), getIQRouter(), getRoster());
 
     mucRegistry = new MUCRegistry();
     mucManager = new MUCManager(getStanzaChannel(), getIQRouter(), directedPresenceSender, mucRegistry);
@@ -121,7 +121,7 @@ Client::~Client() {
     delete avatarManager;
     delete vcardManager;
 
-    delete mixRegistry;
+    mixRegistry.reset();
 
     delete mucManager;
     delete mucRegistry;

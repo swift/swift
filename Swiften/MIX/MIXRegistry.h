@@ -35,6 +35,11 @@ namespace Swift {
             ~MIXRegistry();
 
             /**
+            * Sync based on initially populated roster.
+            */
+            void syncRegistryWithRoster();
+
+            /**
             * Join a MIX Channel with subscriptions.
             */
             void joinChannel(const JID& channelJID, const std::unordered_set<std::string>& nodes);
@@ -47,7 +52,7 @@ namespace Swift {
             /**
             * Get MIX objects for all joinedChannels.
             */
-            std::unordered_set<MIXImpl::ref> getChannels();
+            const std::unordered_set<MIXImpl::ref> getChannels();
 
             /**
             * Get MIX instance for a joined channel.

@@ -76,6 +76,7 @@ class MIXRegistryTest : public ::testing::Test {
 
 TEST_F(MIXRegistryTest, testJoinAndLeaveChannel) {
     auto testling = getMIXRegistry();
+    testling->syncRegistryWithRoster();
 
     std::unordered_set<std::string> nodes;
     nodes.insert(std::string("urn:xmpp:mix:nodes:messages"));
@@ -122,6 +123,7 @@ TEST_F(MIXRegistryTest, testJoinAndLeaveChannel) {
 
 TEST_F(MIXRegistryTest, testFailedJoin) {
     auto testling = getMIXRegistry();
+    testling->syncRegistryWithRoster();
 
     std::unordered_set<std::string> nodes;
     nodes.insert(std::string("urn:xmpp:mix:nodes:messages"));

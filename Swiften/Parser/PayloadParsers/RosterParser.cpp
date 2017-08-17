@@ -53,7 +53,7 @@ void RosterParser::handleStartElement(const std::string& element, const std::str
                 currentItem_.setSubscriptionRequested();
             }
         } else if (element == "annotate" && ns == "urn:xmpp:mix:roster:0") {
-            getPayloadInternal()->setSupportsMIXAnnotations(true);
+            getPayloadInternal()->setRequestMIXAnnotations(true);
         }
     }
     else if (level_ == ItemLevel) {

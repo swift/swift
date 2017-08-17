@@ -58,7 +58,7 @@ std::string RosterSerializer::serializePayload(std::shared_ptr<RosterPayload> ro
         queryElement.addNode(itemElement);
     }
 
-    if (roster->hasMIXAnnotationSupport()) {
+    if (roster->hasRequestMIXAnnotations()) {
         auto annotateElement = std::make_shared<XMLElement>("annotate", "urn:xmpp:mix:roster:0");
         queryElement.addNode(annotateElement);
     }
