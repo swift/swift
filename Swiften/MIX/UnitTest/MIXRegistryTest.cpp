@@ -27,7 +27,7 @@ class MIXRegistryTest : public ::testing::Test {
         }
 
         MIXRegistry* getMIXRegistry() {
-            mixRegistry_ = new MIXRegistry(ownJID_, router_, xmppRoster_);
+            mixRegistry_ = new MIXRegistry(ownJID_, router_, xmppRoster_, channel_);
             mixRegistry_->onChannelJoined.connect(boost::bind(&MIXRegistryTest::handleChannelJoined, this, _1));
             mixRegistry_->onChannelJoinFailed.connect(boost::bind(&MIXRegistryTest::handleJoinFailed, this, _1));
             mixRegistry_->onChannelLeft.connect(boost::bind(&MIXRegistryTest::handleChannelLeft, this, _1));

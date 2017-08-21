@@ -9,14 +9,14 @@
 
 namespace Swift {
 
-MIXRegistry::MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster) : ownJID_(ownJID), iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
+MIXRegistry::MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster, StanzaChannel* stanzaChannel) : ownJID_(ownJID), iqRouter_(iqRouter), xmppRoster_(xmppRoster), stanzaChannel_(stanzaChannel) {
     initialRosterPopulationConnection_ = xmppRoster_->onInitialRosterPopulated.connect([=] {
         SWIFT_LOG(debug) << "Syncing with roster items. " << std::endl;
         for (auto item : xmppRoster_->getItems()) {
             if (item.isMIXChannel()) {
                 auto i = entries_.find(item.getJID());
                 if (i == entries_.end()) {
-                    entries_.insert(std::make_pair(item.getJID(), std::make_shared<MIXImpl>(ownJID_, item.getJID(), iqRouter_)));
+                entries_.insert(std::make_pair(item.getJID(), std::make_shared<MIXImpl>(ownJID_, item.getJID(), iqRouter_, stanzaChannel_)));
                 }
             }
         }
@@ -66,7 +66,7 @@ void MIXRegistry::handleJIDAdded(const JID& jid) {
     if (xmppRoster_->isMIXChannel(jid)) {
         auto i = entries_.find(jid);
         if (i == entries_.end()) {
-            entries_.insert(std::make_pair(jid, std::make_shared<MIXImpl>(ownJID_, jid, iqRouter_)));
+            entries_.insert(std::make_pair(jid, std::make_shared<MIXImpl>(ownJID_, jid, iqRouter_, stanzaChannel_)));
         }
         onChannelJoined(jid);
     }

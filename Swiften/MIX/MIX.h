@@ -15,6 +15,10 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Form.h>
+#include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/PubSub.h>
+#include <Swiften/Elements/PubSubItem.h>
+#include <Swiften/Elements/PubSubItems.h>
 #include <Swiften/Elements/MIXUpdateSubscription.h>
 #include <Swiften/Elements/MIXUserPreference.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -52,9 +56,26 @@ namespace Swift {
             */
             virtual void updatePreferences(Form::ref form) = 0;
 
+            /**
+            * Sends a message to channel with given body.
+            */
+            virtual void sendMessage(const std::string &body) = 0;
+
+            /**
+            * Look up real JIDs from proxy JIDs in JIDVisible or JIDMaybeVisible Rooms.
+            */
+            virtual void lookupJID(const std::unordered_set<std::string>& proxyJIDs) = 0;
+
+            /**
+            * Retrieves the list of participants of the channel.
+            */
+            virtual void requestParticipantList() = 0;
+
         public:
             boost::signals2::signal<void (MIXUpdateSubscription::ref /* updateResponse */, ErrorPayload::ref /* updateError */)> onSubscriptionUpdateResponse;
             boost::signals2::signal<void (Form::ref /* preferencesForm */, ErrorPayload::ref /* failedConfiguration */)> onPreferencesFormResponse;
             boost::signals2::signal<void (MIXUserPreference::ref /* userPreferenceResponse */, ErrorPayload::ref /* failedUpdate */)> onPreferencesUpdateResponse;
+            boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* lookupError */)> onLookupResponse;
+            boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* lookupError */)> onParticipantResponse;
     };
 }

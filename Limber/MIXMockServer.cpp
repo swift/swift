@@ -19,10 +19,16 @@
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/MIXJoin.h>
 #include <Swiften/Elements/MIXLeave.h>
+#include <Swiften/Elements/MIXParticipant.h>
+#include <Swiften/Elements/MIXPayload.h>
+#include <Swiften/Elements/PubSub.h>
+#include <Swiften/Elements/PubSubItem.h>
+#include <Swiften/Elements/PubSubItems.h>
 #include <Swiften/Elements/RosterPayload.h>
 #include <Swiften/Elements/RosterItemPayload.h>
 #include <Swiften/Elements/Stanza.h>
@@ -67,6 +73,35 @@ class SimpleMIXChannelRegistry {
         std::unordered_set<std::string> channels_;
 };
 
+class MIXParticipantInformation {
+
+    public:
+        using ref = std::shared_ptr<MIXParticipantInformation>;
+
+    public:
+        MIXParticipantInformation() {}
+
+        const boost::optional<std::shared_ptr<XMPPRosterImpl>>& getRoster() {
+            return roster_;
+        }
+
+        const boost::optional<JID>& getProxyJID() {
+            return proxyJID_;
+        }
+
+        void setProxyJID(JID proxyJID) {
+            proxyJID_ = proxyJID;
+        }
+
+        void setRoster(std::shared_ptr<XMPPRosterImpl> roster) {
+            roster_ = roster;
+        }
+
+    private:
+        boost::optional<JID> proxyJID_;
+        boost::optional<std::shared_ptr<XMPPRosterImpl>> roster_;
+};
+
 class Server {
     public:
         Server(UserRegistry* userRegistry, SimpleMIXChannelRegistry* mixChannelRegistry, EventLoop* eventLoop) : userRegistry_(userRegistry), mixChannelRegistry_(mixChannelRegistry) {
@@ -95,6 +130,20 @@ class Server {
             }
             stanza->setFrom(session->getRemoteJID());
 
+            auto i = participantInformationMap_.find(session->getRemoteJID().toBare());
+            if (i != participantInformationMap_.end()) {
+                information_ = i->second;
+            } else {
+                information_ = std::make_shared<MIXParticipantInformation>();
+                participantInformationMap_.insert(std::make_pair(session->getRemoteJID().toBare(), information_));
+            }
+
+            auto message = std::dynamic_pointer_cast<Message>(stanza);
+            if (message) {
+                handleMessageReceived(message, session);
+                return;
+            }
+
             auto iq = std::dynamic_pointer_cast<IQ>(stanza);
             if (!iq) {
                 return;
@@ -109,6 +158,50 @@ class Server {
             } else if (stanza->getTo() == session->getRemoteJID().toBare() || stanza->getTo() == JID()) {
                 //If request comes to own account.
                 handleElementReceivedForAccount(iq, session);
+            }
+        }
+
+        void handleMessageReceived(Message::ref message, std::shared_ptr<ServerFromClientSession> session) {
+            SWIFT_LOG(debug) << "Message Received" << std::endl;
+            auto channelJID = message->getTo();
+            auto sender = message->getFrom();
+            SWIFT_LOG(debug) << "Channel " << channelJID << std::endl;
+            SWIFT_LOG(debug) << "Sender " << sender << std::endl;
+
+            SWIFT_LOG_ASSERT(mixChannelRegistry_->hasMIXChannel(channelJID), warning);
+            auto i = participantMap_.find(channelJID);
+            if (i != participantMap_.end()) {
+                auto participants = i->second;
+
+                auto forwardMessage = std::make_shared<Message>();
+                forwardMessage->setFrom(channelJID);
+                forwardMessage->setType(Message::Groupchat);
+                forwardMessage->setBody(message->getBody());
+                forwardMessage->setID(idGenerator_.generateID());
+
+                auto mixPayload = std::make_shared<MIXPayload>();
+
+                if (information_->getProxyJID()) {
+                    mixPayload->setJID(*information_->getProxyJID());
+                }
+
+                forwardMessage->addPayload(mixPayload);
+
+                for (auto participant : participants) {
+                    if (participant != sender.toString()) {
+                        SWIFT_LOG(debug) << "Forwarding to " << participant << std::endl;
+                        forwardMessage->setTo(JID(participant));
+                        auto k = sessionMap_.find(JID(participant));
+                        if (k != sessionMap_.end()) {
+                            SWIFT_LOG(debug) << "Session Found for " << participant << std::endl;
+                            (k->second)->sendElement(forwardMessage);
+                        }
+                    }
+                }
+
+                mixPayload->setSubmissionID(message->getID());
+                forwardMessage->setTo(sender);
+                session->sendElement(forwardMessage);
             }
         }
 
@@ -134,7 +227,19 @@ class Server {
         }
 
         void handleElementReceivedForMIXChannel(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session) {
-            if (iq->getPayload<DiscoItems>()->getNode() == "mix") {
+            if (auto pubSubPayload = iq->getPayload<PubSub>()) {
+                SWIFT_LOG(debug) << "Query: PubSub" << std::endl;
+                auto channelJID = iq->getTo();
+                SWIFT_LOG_ASSERT(mixChannelRegistry_->hasMIXChannel(channelJID), warning);
+                auto itemsPayload = std::dynamic_pointer_cast<PubSubItems>(pubSubPayload->getPayload());
+                if (itemsPayload->getNode() == MIX::ParticipantsNode) {
+                    SWIFT_LOG(debug) << "Query: Participant List for " << channelJID << std::endl;
+                    session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), getParticipantsOfChannel(channelJID)));
+                } else if (itemsPayload->getNode() == MIX::JIDMapNode) {
+                    SWIFT_LOG(debug) << "Query: Lookup Participants from " << channelJID << std::endl;
+                    session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), getRealJIDResponse(pubSubPayload)));
+                }
+            } else if (iq->getPayload<DiscoItems>()->getNode() == "mix") {
                 SWIFT_LOG(debug) << "Query: Channel Nodes Supported" << std::endl;
                 auto responsePayload = std::make_shared<DiscoItems>();
                 responsePayload->addItem(DiscoItems::Item(MIX::ParticipantsNode, JID(iq->getTo())));
@@ -149,14 +254,13 @@ class Server {
 
         void handleRosterRequest(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session) {
             SWIFT_LOG(debug) << "Query: Roster" << std::endl;
-            auto i = rosterMap_.find(iq->getFrom().toBare());
-            if (i != rosterMap_.end()) {
+            if (information_->getRoster()) {
                 SWIFT_LOG(debug) << "Query: Roster Found." << std::endl;
-                session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), getRosterPayloadFromXMPPRoster(i->second)));
+                session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), getRosterPayloadFromXMPPRoster(*information_->getRoster())));
             } else {
                 SWIFT_LOG(debug) << "Query: Roster Not Found. Creating New." << std::endl;
                 auto newRoster = std::make_shared<XMPPRosterImpl>();
-                rosterMap_.insert(std::make_pair(iq->getFrom().toBare(), newRoster));
+                information_->setRoster(newRoster);
                 session->sendElement(IQ::createResult(iq->getFrom(), iq->getID(), getRosterPayloadFromXMPPRoster(newRoster)));
             }
         }
@@ -166,12 +270,11 @@ class Server {
                 SWIFT_LOG(debug) << "Request: Channel Join - " << *channelJID << std::endl;
                 if (mixChannelRegistry_->hasMIXChannel(*channelJID)) {
 
-                    auto responsePayload = createJoinResult(incomingJoinPayload->getSubscriptions());
+                    auto responsePayload = createJoinResult(*channelJID, incomingJoinPayload->getSubscriptions());
                     session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), responsePayload));
 
-                    auto i = rosterMap_.find(iq->getFrom().toBare());
-                    if (i != rosterMap_.end()) {
-                        auto roster = i->second;
+                    if (information_->getRoster()) {
+                        auto roster = *information_->getRoster();
                         roster->addContact(*channelJID, channelJID->getNode(), std::vector<std::string>(), RosterItemPayload::Subscription::Both, true);
 
                         auto rosterUpdatePayload = std::make_shared<RosterPayload>();
@@ -179,6 +282,14 @@ class Server {
                         itemPayload.setMIXChannel(true);
                         rosterUpdatePayload->addItem(itemPayload);
                         session->sendElement(IQ::createRequest(IQ::Set, iq->getFrom(), iq->getID(), rosterUpdatePayload));
+
+                        updateParticipantNode(*channelJID, iq->getFrom());
+
+                        auto j = sessionMap_.find(iq->getFrom());
+                        if (j == sessionMap_.end()) {
+                            SWIFT_LOG(debug) << "Inserting " << iq->getFrom() << " with " << &session << std::endl;
+                            sessionMap_.insert(std::make_pair(iq->getFrom(), session));
+                        }
 
                     } else {
                         SWIFT_LOG(debug) << "Initial roster not requested by client." <<std::endl;
@@ -198,9 +309,8 @@ class Server {
 
                     session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), std::make_shared<MIXLeave>()));
 
-                    auto i = rosterMap_.find(iq->getFrom().toBare());
-                    if (i != rosterMap_.end()) {
-                        auto roster = i->second;
+                    if (information_->getRoster()) {
+                        auto roster = *information_->getRoster();
                         roster->removeContact(*channelJID);
 
                         auto rosterUpdatePayload = std::make_shared<RosterPayload>();
@@ -209,6 +319,13 @@ class Server {
                         rosterUpdatePayload->addItem(itemPayload);
 
                         session->sendElement(IQ::createRequest(IQ::Set, iq->getFrom(), iq->getID(), rosterUpdatePayload));
+
+                        removeParticipantFromNode(*channelJID, iq->getFrom());
+
+                        auto j = sessionMap_.find(iq->getFrom());
+                        if (j != sessionMap_.end()) {
+                            sessionMap_.erase(iq->getFrom());
+                        }
                     } else {
                         SWIFT_LOG(debug) << "Initial roster not requested by client." <<std::endl;
                     }
@@ -220,12 +337,40 @@ class Server {
             }
         }
 
-        MIXJoin::ref createJoinResult(const std::unordered_set<std::string>& nodes) {
+        void updateParticipantNode(const JID& channelJID, const JID& participantJID) {
+            auto i = participantMap_.find(channelJID);
+            if (i != participantMap_.end()) {
+                (i->second).insert(participantJID);
+            } else {
+                std::unordered_set<std::string> participants;
+                participants.insert(participantJID);
+                participantMap_.insert(std::make_pair(channelJID, participants));
+            }
+        }
+
+        void removeParticipantFromNode(const JID& channelJID, const JID& participantJID) {
+            auto i = participantMap_.find(channelJID);
+            if (i != participantMap_.end()) {
+                (i->second).erase(participantJID);
+            }
+        }
+
+        MIXJoin::ref createJoinResult(const JID& channelJID, const std::unordered_set<std::string>& nodes) {
             auto joinResultPayload = std::make_shared<MIXJoin>();
             for (auto node : nodes) {
                 joinResultPayload->addSubscription(node);
             }
-            joinResultPayload->setJID(JID("123456#coven@example.com"));
+            auto proxyJID = idGenerator_.generateID();
+
+            if (information_->getProxyJID()) {
+                proxyJID = *information_->getProxyJID();
+            } else {
+                proxyJID += ("#"+channelJID.toString());
+                information_->setProxyJID(proxyJID);
+            }
+
+            joinResultPayload->setJID(JID(proxyJID));
+
             return joinResultPayload;
         }
 
@@ -241,6 +386,50 @@ class Server {
             return rosterPayload;
         }
 
+        std::shared_ptr<PubSub> getParticipantsOfChannel(const JID& channelJID) {
+            auto pubSubPayload = std::make_shared<PubSub>();
+            auto pubSubItems = std::make_shared<PubSubItems>();
+            pubSubItems->setNode(MIX::ParticipantsNode);
+            auto i = participantMap_.find(channelJID);
+            if (i != participantMap_.end()) {
+                auto participants = i->second;
+                for (auto participant : participants) {
+
+                    auto itemPayload = std::make_shared<PubSubItem>();
+                    auto mixParticipant = std::make_shared<MIXParticipant>();
+
+                    auto j = participantInformationMap_.find(JID(participant).toBare());
+                    if (j != participantInformationMap_.end()) {
+                        SWIFT_LOG_ASSERT((j->second)->getProxyJID(), warning);
+                        itemPayload->setID(*((j->second)->getProxyJID()));
+                    } else {
+                        SWIFT_LOG(debug) << "Participant" << JID(participant).toBare() << "not found in JIDMap." << std::endl;
+                    }
+                    itemPayload->addData(mixParticipant);
+                    pubSubItems->addItem(itemPayload);
+                }
+            } else {
+                SWIFT_LOG(debug) << "Channel" << channelJID << "not found in ParticipantMap." << std::endl;
+            }
+            pubSubPayload->setPayload(pubSubItems);
+            return pubSubPayload;
+        }
+
+        std::shared_ptr<PubSub> getRealJIDResponse(std::shared_ptr<PubSub> payload) {
+            auto itemsPayload = std::dynamic_pointer_cast<PubSubItems>(payload->getPayload());
+            for (auto item : itemsPayload->getItems()) {
+                for( auto iter = participantInformationMap_.begin(), iend = participantInformationMap_.end(); iter != iend; ++iter ) {
+                    if (*((iter->second)->getProxyJID()) == item->getID()) {
+                        auto mixParticipant = std::make_shared<MIXParticipant>();
+                        mixParticipant->setJID(iter->first);
+                        item->addData(mixParticipant);
+                        break;
+                    }
+                }
+            }
+            return payload;
+        }
+
     private:
         IDGenerator idGenerator_;
         PlatformXMLParserFactory xmlParserFactory_;
@@ -252,12 +441,24 @@ class Server {
         FullPayloadParserFactoryCollection payloadParserFactories_;
         FullPayloadSerializerCollection payloadSerializers_;
 
-        using RosterMap = std::map<JID, std::shared_ptr<XMPPRosterImpl>>;
-        RosterMap rosterMap_;
+        //Holds information about the current user JID.
+        MIXParticipantInformation::ref information_;
+
+        // Maps channel JID to its participants.
+        using ParticipantMap = std::map<JID, std::unordered_set<std::string>>;
+        ParticipantMap participantMap_;
+
+        // Maps client JID to its session.
+        using SessionMap = std::map<JID, std::shared_ptr<ServerFromClientSession>>;
+        SessionMap sessionMap_;
+
+        // Maps user JID to its information object.
+        using MIXParticipantInformationMap = std::map<JID, std::shared_ptr<MIXParticipantInformation>>;
+        MIXParticipantInformationMap participantInformationMap_;
 };
 
 int main() {
-    //Log::setLogLevel(Log::Severity::debug);
+    Log::setLogLevel(Log::Severity::debug);
 
     SimpleEventLoop eventLoop;
     SimpleUserRegistry userRegistry;

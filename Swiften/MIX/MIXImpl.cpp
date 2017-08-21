@@ -13,7 +13,7 @@
 
 namespace Swift {
 
-MIXImpl::MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter) : ownJID_(ownJID), channelJID_(channelJID), iqRouter_(iqRouter) {
+MIXImpl::MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel) : ownJID_(ownJID), channelJID_(channelJID), iqRouter_(iqRouter), stanzaChannel_(stanzaChannel) {
 
 }
 
@@ -58,6 +58,53 @@ void MIXImpl::updatePreferences(Form::ref form) {
     auto request = std::make_shared<GenericRequest<MIXUserPreference>>(IQ::Set, channelJID_, prefPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MIXImpl::handlePreferencesResultReceived, this, _1, _2));
     request->send();
+}
+
+void MIXImpl::sendMessage(const std::string &body) {
+    auto message = std::make_shared<Message>();
+    message->setTo(channelJID_);
+    message->setType(Message::Groupchat);
+    message->setBody(body);
+    message->setID(idGenerator.generateID());
+    stanzaChannel_->sendMessage(message);
+}
+
+void MIXImpl::lookupJID(const std::unordered_set<std::string>& proxyJIDs) {
+    auto itemsPayload = std::make_shared<PubSubItems>();
+    itemsPayload->setNode(MIX::JIDMapNode);
+
+    for (auto proxyJID : proxyJIDs) {
+        auto item = std::make_shared<PubSubItem>();
+        item->setID(std::string(proxyJID));
+        itemsPayload->addItem(item);
+    }
+
+    auto pubSubPayload = std::make_shared<PubSub>();
+    pubSubPayload->setPayload(itemsPayload);
+
+    auto request = std::make_shared<GenericRequest<PubSub>>(IQ::Get, channelJID_, pubSubPayload, iqRouter_);
+    request->onResponse.connect(boost::bind(&MIXImpl::handleJIDLookupResponse, this, _1, _2));
+    request->send();
+}
+
+void MIXImpl::handleJIDLookupResponse(std::shared_ptr<PubSub> payload, ErrorPayload::ref error) {
+    onLookupResponse(payload, error);
+}
+
+void MIXImpl::requestParticipantList() {
+    auto itemsPayload = std::make_shared<PubSubItems>();
+    itemsPayload->setNode(MIX::ParticipantsNode);
+
+    auto pubSubPayload = std::make_shared<PubSub>();
+    pubSubPayload->setPayload(itemsPayload);
+
+    auto request = std::make_shared<GenericRequest<PubSub>>(IQ::Get, channelJID_, pubSubPayload, iqRouter_);
+    request->onResponse.connect(boost::bind(&MIXImpl::handleParticipantList, this, _1, _2));
+    request->send();
+}
+
+void MIXImpl::handleParticipantList(std::shared_ptr<PubSub> payload, ErrorPayload::ref error) {
+    onParticipantResponse(payload, error);
 }
 
 }
