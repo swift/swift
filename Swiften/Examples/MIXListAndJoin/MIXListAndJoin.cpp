@@ -4,19 +4,21 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+#include <cassert>
 #include <iostream>
 #include <memory>
 #include <unordered_set>
 
 #include <boost/optional.hpp>
 
-#include <Swiften/Elements/DiscoInfo.h>
-#include <Swiften/Elements/ErrorPayload.h>
-#include <Swiften/Elements/MIXParticipant.h>
+#include <Swiften/Base/Log.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientOptions.h>
 #include <Swiften/Client/ClientXMLTracer.h>
 #include <Swiften/Disco/GetDiscoItemsRequest.h>
+#include <Swiften/Elements/DiscoInfo.h>
+#include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Elements/MIXParticipant.h>
 #include <Swiften/EventLoop/SimpleEventLoop.h>
 #include <Swiften/JID/JID.h>
 #include <Swiften/MIX/MIX.h>
@@ -26,8 +28,6 @@
 #include <Swiften/Network/Timer.h>
 #include <Swiften/Network/TimerFactory.h>
 #include <Swiften/Queries/GenericRequest.h>
-
-#include <Swiften/Base/Log.h>
 
 using namespace Swift;
 using namespace std;
@@ -73,7 +73,7 @@ static void handleChannelLeft(const JID& jid) {
 }
 
 static void handleRosterPopulated() {
-    XMPPRoster* xmppRoster = client->getRoster();
+    auto xmppRoster = client->getRoster();
     int channelCount = 0;
     std::cout << "Already Joined channels: " << std::endl;
     for (auto item : xmppRoster->getItems()) {
@@ -110,7 +110,7 @@ static void handleChannelNodesSupported(std::shared_ptr<DiscoItems> items, Error
     mixRegistry_->onChannelJoinFailed.connect(&handleChannelJoinFailed);
     mixRegistry_->onChannelLeft.connect(&handleChannelLeft);
 
-    XMPPRoster* xmppRoster = client->getRoster();
+    auto xmppRoster = client->getRoster();
     xmppRoster->onInitialRosterPopulated.connect(&handleRosterPopulated);
     client->requestRoster(true);
 }
@@ -185,10 +185,10 @@ int main(int argc, char* argv[]) {
         std::cout << "Connecting..." << std::flush;
         client->connect(options);
         {
-            Timer::ref timer = networkFactories.getTimerFactory()->createTimer(30000);
+            auto timer = networkFactories.getTimerFactory()->createTimer(30000);
             timer->onTick.connect(boost::bind(&SimpleEventLoop::stop, &eventLoop));
 
-            Timer::ref disconnectTimer = networkFactories.getTimerFactory()->createTimer(25000);
+            auto disconnectTimer = networkFactories.getTimerFactory()->createTimer(25000);
             disconnectTimer->onTick.connect(boost::bind(&Client::disconnect, client.get()));
 
             timer->start();

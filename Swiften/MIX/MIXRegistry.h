@@ -7,19 +7,20 @@
 #pragma once
 
 #include <memory>
+#include <string>
 #include <unordered_set>
 
 #include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/JID/JID.h>
-#include <Swiften/MIX/MIXImpl.h>
+#include <Swiften/Elements/ErrorPayload.h>
 #include <Swiften/Elements/MIXJoin.h>
 #include <Swiften/Elements/MIXLeave.h>
-#include <Swiften/Elements/ErrorPayload.h>
-#include <Swiften/Roster/XMPPRoster.h>
-#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/JID/JID.h>
+#include <Swiften/MIX/MIXImpl.h>
 #include <Swiften/Queries/GenericRequest.h>
+#include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Roster/XMPPRoster.h>
 
 namespace Swift {
 

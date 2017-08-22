@@ -104,10 +104,10 @@ class Server {
                 //If request comes to particular channel supported by service.
                 handleElementReceivedForMIXChannel(iq, session);
             } else if (stanza->getTo() == session->getLocalJID()) {
-                //If request comes to domain service
+                //If request comes to domain service.
                 handleElementReceivedForMIXService(iq, session);
             } else if (stanza->getTo() == session->getRemoteJID().toBare() || stanza->getTo() == JID()) {
-                //If request comes to own local server
+                //If request comes to own account.
                 handleElementReceivedForAccount(iq, session);
             }
         }
@@ -229,7 +229,7 @@ class Server {
             return joinResultPayload;
         }
 
-        std::shared_ptr<RosterPayload> getRosterPayloadFromXMPPRoster(std::shared_ptr<XMPPRosterImpl> roster) {
+        static std::shared_ptr<RosterPayload> getRosterPayloadFromXMPPRoster(std::shared_ptr<XMPPRosterImpl> roster) {
             auto rosterPayload = std::make_shared<RosterPayload>();
             for (auto item : roster->getItems()) {
                 auto itemPayload = RosterItemPayload(item.getJID(), item.getName(), item.getSubscription());
