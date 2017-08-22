@@ -58,6 +58,33 @@ static void handleMessageReceived(Message::ref message) {
     }
 }
 
+static void handlePresenceReceived(Presence::ref presence) {
+    std::string presenceStatus;
+    if (presence->getType() == Presence::Type::Unavailable) {
+        presenceStatus = " is now unavailable ";
+    } else {
+        presenceStatus = " is available ";
+    }
+    std::cout << "[ " << mixChannelJID << " ] " << ": " << presence->getFrom() << presenceStatus << std::endl;
+}
+
+static void handlePresenceChanged(Presence::ref presence) {
+
+    if (presence->getType() == Presence::Type::Unavailable) {
+        std::cout << "Client is going offline " << std::endl;
+        std::cout << std::endl;
+    } else {
+        std::cout << "Client is now online " << std::endl;
+        std::cout << std::endl;
+        // Sending message to channel
+        mix->sendMessage("Hello, I am here! " + client->getJID().getNode());
+
+        // Leave channel.
+        // Commented to test the sync between different clients of same user.
+        //mixRegistry_->leaveChannel(mixChannelJID);
+    }
+}
+
 static void handleLookupResponse(std::shared_ptr<PubSub> payload, ErrorPayload::ref error) {
     if (error) {
         return;
@@ -81,12 +108,16 @@ static void handleLookupResponse(std::shared_ptr<PubSub> payload, ErrorPayload::
 
     std::cout << std::endl;
 
-    // Sending message to channel
-    mix->sendMessage("Hello, I am here! " + client->getJID().getNode());
+    mix->onPresenceChanged.connect(&handlePresenceChanged);
 
-    // Leave channel.
-    // Commented to test the sync between different clients of same user.
-    // mixRegistry_->leaveChannel(mixChannelJID);
+    // This is just for testing. To test whether client receives channel presence when it comes online after being online for some time.
+    if (client->getJID().toBare() == "another@example.com") {
+        mix->goOffline();
+        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        mix->setPresence(Presence::Type::Available);
+    } else {
+        mix->setPresence(Presence::Type::Available);
+    }
 }
 
 static void handleParticipantsReceived(std::shared_ptr<PubSub> payload, ErrorPayload::ref error) {
@@ -105,7 +136,8 @@ static void handleParticipantsReceived(std::shared_ptr<PubSub> payload, ErrorPay
         SWIFT_LOG_ASSERT(item->getData().size() == static_cast<int>(1), warning);
         participantCount++;
         auto mixParticipant = std::dynamic_pointer_cast<MIXParticipant>(item->getData()[0]);
-        std::cout << "\t" << participantCount << ". " << item->getID() << std::endl;
+        SWIFT_LOG_ASSERT(mixParticipant->getNick(), warning);
+        std::cout << "\t" << participantCount << ". " << item->getID() << " Nick: [" <<  *mixParticipant->getNick() << "]" << std::endl;
         participants.insert(item->getID());
     }
 
@@ -120,6 +152,21 @@ static void handleParticipantsReceived(std::shared_ptr<PubSub> payload, ErrorPay
     mix->lookupJID(participants);
 }
 
+static void handleSetNick(MIXSetNick::ref payload, ErrorPayload::ref error) {
+    if (error) {
+        if (error->getCondition() == ErrorPayload::Condition::Conflict) {
+            std::cout << "Nick " << payload->getNick() << " already taken." << std::endl;
+        }
+        return;
+    }
+
+    std::cout << "Nick Assigned: " << payload->getNick() << std::endl;
+    std::cout << std::endl;
+
+    mix->onParticipantResponse.connect(&handleParticipantsReceived);
+    mix->requestParticipantList();
+}
+
 static void handleChannelJoined(const JID& jid) {
     // Successfully joined the channel.
     assert(mixRegistry_);
@@ -127,15 +174,15 @@ static void handleChannelJoined(const JID& jid) {
 
     std::cout << "Successfully joined channel " << jid << std::endl;
 
-    //trying to rejoin the same channel joined. Should not send the iq request. Will print a warning.
+    // trying to rejoin the same channel joined. Should not send the iq request. Will print a warning.
     mixRegistry_->joinChannel(mixChannelJID, supportedNodes);
     std::cout << std::endl;
 
     mix = mixRegistry_->getMIXInstance(jid);
-    mix->onParticipantResponse.connect(&handleParticipantsReceived);
-    // Can perform other functions with MIXImpl object: mix.
-    mix->requestParticipantList();
 
+    mix->onNickResponse.connect(&handleSetNick);
+    SWIFT_LOG(debug) << "Requesting Nick: " << client->getJID().getNode() << std::endl;
+    mix->setNick(client->getJID().getNode());
 }
 
 static void handleChannelJoinFailed(ErrorPayload::ref /*error*/) {
@@ -163,6 +210,7 @@ static void handleSyncSuccess() {
     std::cout << std::endl;
     // Still issuing this join to check for warning.
     mixRegistry_->joinChannel(mixChannelJID, supportedNodes);
+    std::cout << std::endl;
 }
 
 static void handleChannelNodesSupported(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {
@@ -257,6 +305,7 @@ int main(int argc, char* argv[]) {
         client->onConnected.connect(&handleConnected);
         client->onDisconnected.connect(&handleDisconnected);
         client->onMessageReceived.connect(&handleMessageReceived);
+        client->onPresenceReceived.connect(&handlePresenceReceived);
 
         std::cout << "Connecting..." << std::flush;
         client->connect(options);

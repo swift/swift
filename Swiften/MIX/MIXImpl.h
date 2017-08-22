@@ -19,7 +19,7 @@ namespace Swift {
             using ref = std::shared_ptr<MIXImpl>;
 
         public:
-            MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel);
+            MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel, PresenceSender* presenceSender);
             virtual ~MIXImpl();
 
             /**
@@ -48,18 +48,26 @@ namespace Swift {
 
             virtual void requestParticipantList() override;
 
+            virtual void setNick(const std::string& nick) override;
+
+            virtual void goOffline() override;
+
+            virtual void setPresence(Presence::Type type);
+
         private:
             void handleUpdateSubscriptionResponse(MIXUpdateSubscription::ref, ErrorPayload::ref);
             void handlePreferencesFormReceived(MIXUserPreference::ref, ErrorPayload::ref);
             void handlePreferencesResultReceived(MIXUserPreference::ref /*payload*/, ErrorPayload::ref error);
             void handleJIDLookupResponse(std::shared_ptr<PubSub>, ErrorPayload::ref error);
             void handleParticipantList(std::shared_ptr<PubSub>, ErrorPayload::ref error);
+            void handleNickUpdated(MIXSetNick::ref, ErrorPayload::ref);
 
         private:
             JID ownJID_;
             JID channelJID_;
             IQRouter* iqRouter_;
             StanzaChannel* stanzaChannel_;
+            PresenceSender* presenceSender_;
             IDGenerator idGenerator;
     };
 }

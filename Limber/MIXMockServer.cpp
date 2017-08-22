@@ -20,10 +20,12 @@
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/DiscoInfo.h>
 #include <Swiften/Elements/DiscoItems.h>
 #include <Swiften/Elements/MIXJoin.h>
 #include <Swiften/Elements/MIXLeave.h>
+#include <Swiften/Elements/MIXSetNick.h>
 #include <Swiften/Elements/MIXParticipant.h>
 #include <Swiften/Elements/MIXPayload.h>
 #include <Swiften/Elements/PubSub.h>
@@ -89,6 +91,10 @@ class MIXParticipantInformation {
             return proxyJID_;
         }
 
+        const boost::optional<std::string>& getNick() {
+            return nick_;
+        }
+
         void setProxyJID(JID proxyJID) {
             proxyJID_ = proxyJID;
         }
@@ -97,7 +103,12 @@ class MIXParticipantInformation {
             roster_ = roster;
         }
 
+        void setNick(std::string nick) {
+            nick_ = nick;
+        }
+
     private:
+        boost::optional<std::string> nick_;
         boost::optional<JID> proxyJID_;
         boost::optional<std::shared_ptr<XMPPRosterImpl>> roster_;
 };
@@ -150,6 +161,100 @@ class Server {
             }
         }
 
+        void handlePresenceReceived(Presence::ref presence) {
+            SWIFT_LOG(debug) << "Presence Received" << std::endl;
+            auto channelJID = presence->getTo();
+            auto sender = presence->getFrom();
+            auto j = presenceMap_.find(sender);
+            if (j != presenceMap_.end()) {
+                SWIFT_LOG(debug) << "Updating Presence" << std::endl;
+                auto currentPresenceStatus = j->second;
+                j->second = presence->getType();
+
+                //Coming online after being online. Returning presence of channel to client.
+                if (currentPresenceStatus == Presence::Type::Unavailable && presence->getType() == Presence::Type::Available) {
+                    SWIFT_LOG(debug) << "Client coming online after being online " << std::endl;
+                    sendChannelPresence(channelJID, sender);
+                }
+            } else {
+                SWIFT_LOG(debug) << "Presence information not found for " << sender << std::endl;
+            }
+
+            SWIFT_LOG_ASSERT(mixChannelRegistry_->hasMIXChannel(channelJID), warning);
+            sendPresenceStatusToClients(sender, channelJID, presence);
+        }
+
+        void sendChannelPresence(const JID& channelJID, const JID& recipient) {
+            SWIFT_LOG(debug) << "Sending channel presence to " << recipient << std::endl;
+            auto i = participantMap_.find(channelJID);
+            if (i != participantMap_.end()) {
+                auto participants = i->second;
+                auto forwardPresence = Presence::create();
+                forwardPresence->setID(idGenerator_.generateID());
+                for (auto participant : participants) {
+                    // Not sending self presence information.
+                    if (participant != recipient.toString()) {
+                        SWIFT_LOG(debug) << "Participant: " << participant << std::endl;
+                        auto k = participantInformationMap_.find(JID(participant).toBare());
+                        if (k != participantInformationMap_.end()) {
+                            if ((k->second)->getProxyJID()) {
+                                forwardPresence->setFrom(*((k->second)->getProxyJID()));
+                            }
+                        }
+
+                        auto j = presenceMap_.find(JID(participant));
+                        if (j != presenceMap_.end()) {
+                            forwardPresence->setType(j->second);
+                        }
+
+                        auto t = sessionMap_.find(recipient);
+                        if (t != sessionMap_.end()) {
+                            forwardPresence->setTo(recipient);
+                            (t->second)->sendElement(forwardPresence);
+                        }
+                    }
+                }
+            }
+        }
+
+        void sendPresenceStatusToClients(const JID& sender, const JID& channelJID, Presence::ref newPresence) {
+            auto i = participantMap_.find(channelJID);
+            if (i != participantMap_.end()) {
+                auto participants = i->second;
+
+                auto forwardPresence = Presence::create();
+                forwardPresence->setType(newPresence->getType());
+                forwardPresence->setID(idGenerator_.generateID());
+
+                if (information_->getProxyJID()) {
+                    SWIFT_LOG_ASSERT(information_->getProxyJID(), warning);
+                    forwardPresence->setFrom(*information_->getProxyJID());
+                }
+
+                for (auto participant : participants) {
+                    if (participant != sender.toString()) {
+                        auto t = presenceMap_.find(JID(participant));
+                        if (t != presenceMap_.end()) {
+                            if (t->second == Presence::Type::Unavailable) {
+                                SWIFT_LOG(debug) << "Client" << participant << "not Available" << std::endl;
+                                continue;
+                            }
+                        } else {
+                            SWIFT_LOG(debug) << "Presence information not found for " << participant << std::endl;
+                        }
+
+                        SWIFT_LOG(debug) << "Forwarding Presence to " << participant << std::endl;
+                        forwardPresence->setTo(JID(participant));
+                        auto k = sessionMap_.find(JID(participant));
+                        if (k != sessionMap_.end()) {
+                            SWIFT_LOG(debug) << "Session Found for " << participant << std::endl;
+                            (k->second)->sendElement(forwardPresence);
+                        }
+                    }
+                }
+            }
+        }
+
         void handleMessageReceived(Message::ref message, std::shared_ptr<ServerFromClientSession> session) {
             SWIFT_LOG(debug) << "Message Received" << std::endl;
             auto channelJID = message->getTo();
@@ -171,14 +276,30 @@ class Server {
                 auto mixPayload = std::make_shared<MIXPayload>();
 
                 if (information_->getProxyJID()) {
+                    SWIFT_LOG_ASSERT(information_->getProxyJID(), warning);
                     mixPayload->setJID(*information_->getProxyJID());
+                }
+
+                if (information_->getNick()) {
+                    SWIFT_LOG_ASSERT(information_->getNick(), warning);
+                    mixPayload->setNick(*information_->getNick());
                 }
 
                 forwardMessage->addPayload(mixPayload);
 
                 for (auto participant : participants) {
                     if (participant != sender.toString()) {
-                        SWIFT_LOG(debug) << "Forwarding to " << participant << std::endl;
+                        auto t = presenceMap_.find(JID(participant));
+                        if (t != presenceMap_.end()) {
+                            if (t->second == Presence::Type::Unavailable) {
+                                SWIFT_LOG(debug) << "Client" << participant << "not Available" << std::endl;
+                                continue;
+                            }
+                        } else {
+                            SWIFT_LOG(debug) << "Presence information not found for " << participant << std::endl;
+                        }
+
+                        SWIFT_LOG(debug) << "Forwarding Message to " << participant << std::endl;
                         forwardMessage->setTo(JID(participant));
                         auto k = sessionMap_.find(JID(participant));
                         if (k != sessionMap_.end()) {
@@ -232,12 +353,21 @@ class Server {
                 return;
             }
 
+            auto presence = std::dynamic_pointer_cast<Presence>(stanza);
+            if (presence) {
+                handlePresenceReceived(presence);
+                return;
+            }
+
             auto iq = std::dynamic_pointer_cast<IQ>(stanza);
             if (!iq) {
                 return;
             }
 
-            if (auto pubSubPayload = iq->getPayload<PubSub>()) {
+            if (auto setNickPayload = iq->getPayload<MIXSetNick>()) {
+                SWIFT_LOG(debug) << "Query: Set Nick" << std::endl;
+                handleSetNickRequest(iq, session, setNickPayload);
+            } else if (auto pubSubPayload = iq->getPayload<PubSub>()) {
                 SWIFT_LOG(debug) << "Query: PubSub" << std::endl;
                 auto channelJID = iq->getTo();
                 SWIFT_LOG_ASSERT(mixChannelRegistry_->hasMIXChannel(channelJID), warning);
@@ -275,6 +405,21 @@ class Server {
             }
         }
 
+        void handleSetNickRequest(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session, MIXSetNick::ref payload) {
+            auto requestedNick = payload->getNick();
+            for ( auto iter = participantInformationMap_.begin(), iend = participantInformationMap_.end(); iter != iend; ++iter ) {
+                if ((iter->second)->getNick() && *((iter->second)->getNick()) == requestedNick) {
+                    SWIFT_LOG(debug) << "Nick Conflict" << requestedNick << std::endl;
+                    session->sendElement(IQ::createError(iq->getFrom(), iq->getID(), ErrorPayload::Conflict, ErrorPayload::Cancel));
+                    return;
+                }
+            }
+            information_->setNick(requestedNick);
+            auto setNickPayload = std::make_shared<MIXSetNick>();
+            setNickPayload->setNick(requestedNick);
+            session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), setNickPayload));
+        }
+
         void handleJoin(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session, MIXJoin::ref incomingJoinPayload) {
             if (auto channelJID = incomingJoinPayload->getChannel()) {
                 SWIFT_LOG(debug) << "Request: Channel Join - " << *channelJID << std::endl;
@@ -294,12 +439,16 @@ class Server {
                         session->sendElement(IQ::createRequest(IQ::Set, iq->getFrom(), iq->getID(), rosterUpdatePayload));
 
                         updateParticipantNode(*channelJID, iq->getFrom());
+                        presenceMap_.insert(std::make_pair(iq->getFrom(),Presence::Type::Available));
 
                         auto j = sessionMap_.find(iq->getFrom());
                         if (j == sessionMap_.end()) {
                             SWIFT_LOG(debug) << "Inserting " << iq->getFrom() << " with " << &session << std::endl;
                             sessionMap_.insert(std::make_pair(iq->getFrom(), session));
                         }
+
+                        //returning presence information for channel.
+                        sendChannelPresence(*channelJID, iq->getFrom());
 
                     } else {
                         SWIFT_LOG(debug) << "Initial roster not requested by client." <<std::endl;
@@ -331,10 +480,16 @@ class Server {
                         session->sendElement(IQ::createRequest(IQ::Set, iq->getFrom(), iq->getID(), rosterUpdatePayload));
 
                         removeParticipantFromNode(*channelJID, iq->getFrom());
+                        presenceMap_.erase(iq->getFrom());
 
                         auto j = sessionMap_.find(iq->getFrom());
                         if (j != sessionMap_.end()) {
                             sessionMap_.erase(iq->getFrom());
+                        }
+
+                        auto k = participantInformationMap_.find(iq->getFrom().toBare());
+                        if (k != participantInformationMap_.end()) {
+                            participantInformationMap_.erase(iq->getFrom().toBare());
                         }
                     } else {
                         SWIFT_LOG(debug) << "Initial roster not requested by client." <<std::endl;
@@ -412,9 +567,14 @@ class Server {
                     if (j != participantInformationMap_.end()) {
                         SWIFT_LOG_ASSERT((j->second)->getProxyJID(), warning);
                         itemPayload->setID(*((j->second)->getProxyJID()));
-                    } else {
-                        SWIFT_LOG(debug) << "Participant" << JID(participant).toBare() << "not found in JIDMap." << std::endl;
+
+                        if ((j->second)->getNick()) {
+                            mixParticipant->setNick(*((j->second)->getNick()));
+                        } else {
+                            SWIFT_LOG(debug) << "Participant" << JID(participant).toBare() << "not found in NickMap." << std::endl;
+                        }
                     }
+
                     itemPayload->addData(mixParticipant);
                     pubSubItems->addItem(itemPayload);
                 }
@@ -429,7 +589,7 @@ class Server {
             auto itemsPayload = std::dynamic_pointer_cast<PubSubItems>(payload->getPayload());
             for (auto item : itemsPayload->getItems()) {
                 for( auto iter = participantInformationMap_.begin(), iend = participantInformationMap_.end(); iter != iend; ++iter ) {
-                    if (*((iter->second)->getProxyJID()) == item->getID()) {
+                    if ((iter->second)->getProxyJID() && *((iter->second)->getProxyJID()) == item->getID()) {
                         auto mixParticipant = std::make_shared<MIXParticipant>();
                         mixParticipant->setJID(iter->first);
                         item->addData(mixParticipant);
@@ -462,6 +622,10 @@ class Server {
         using SessionMap = std::map<JID, std::shared_ptr<ServerFromClientSession>>;
         SessionMap sessionMap_;
 
+        // Maps client JID to its presence.
+        using PresenceMap = std::map<JID, Presence::Type>;
+        PresenceMap presenceMap_;
+
         // Maps user JID to its information object.
         using MIXParticipantInformationMap = std::map<JID, std::shared_ptr<MIXParticipantInformation>>;
         MIXParticipantInformationMap participantInformationMap_;
@@ -474,7 +638,8 @@ int main() {
     SimpleUserRegistry userRegistry;
 
     userRegistry.addUser(JID("some@example.com"), "mixtest");
-    userRegistry.addUser(JID("another@example.com"), "mixtest2");
+    userRegistry.addUser(JID("another@example.com"), "mixtest");
+    userRegistry.addUser(JID("yetanother@example.com"), "mixtest");
 
     SimpleMIXChannelRegistry mixChannelRegistry;
     mixChannelRegistry.addMIXChannel(JID("coven@example.com"));

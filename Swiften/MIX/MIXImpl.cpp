@@ -10,10 +10,11 @@
 #include <Swiften/Elements/IQ.h>
 #include <Swiften/Queries/GenericRequest.h>
 #include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
-MIXImpl::MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel) : ownJID_(ownJID), channelJID_(channelJID), iqRouter_(iqRouter), stanzaChannel_(stanzaChannel) {
+MIXImpl::MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter, StanzaChannel* stanzaChannel, PresenceSender* presenceSender) : ownJID_(ownJID), channelJID_(channelJID), iqRouter_(iqRouter), stanzaChannel_(stanzaChannel), presenceSender_(presenceSender) {
 
 }
 
@@ -105,6 +106,31 @@ void MIXImpl::requestParticipantList() {
 
 void MIXImpl::handleParticipantList(std::shared_ptr<PubSub> payload, ErrorPayload::ref error) {
     onParticipantResponse(payload, error);
+}
+
+void MIXImpl::setNick(const std::string& nick) {
+    auto setNickPayload = std::make_shared<MIXSetNick>();
+    setNickPayload->setNick(nick);
+    auto request = std::make_shared<GenericRequest<MIXSetNick>>(IQ::Set, channelJID_, setNickPayload, iqRouter_);
+    request->onResponse.connect(boost::bind(&MIXImpl::handleNickUpdated, this, _1, _2));
+    request->send();
+}
+
+void MIXImpl::handleNickUpdated(MIXSetNick::ref payload, ErrorPayload::ref error) {
+    onNickResponse(payload, error);
+}
+
+void MIXImpl::goOffline() {
+    setPresence(Presence::Type::Unavailable);
+}
+
+void MIXImpl::setPresence(Presence::Type type) {
+    auto presencePayload = Presence::create();
+    presencePayload->setFrom(ownJID_);
+    presencePayload->setTo(channelJID_);
+    presencePayload->setType(type);
+    presenceSender_->sendPresence(presencePayload);
+    onPresenceChanged(presencePayload);
 }
 
 }

@@ -12,6 +12,7 @@
 #include <Swiften/MIX/MIXRegistry.h>
 #include <Swiften/Roster/XMPPRosterImpl.h>
 #include <Swiften/Queries/IQRouter.h>
+#include <Swiften/Presence/StanzaChannelPresenceSender.h>
 
 using namespace Swift;
 
@@ -23,11 +24,12 @@ class MIXRegistryTest : public ::testing::Test {
             channel_ = new DummyStanzaChannel();
             router_ = new IQRouter(channel_);
             xmppRoster_ = new XMPPRosterImpl();
+            stanzaChannelPresenceSender_ = new StanzaChannelPresenceSender(channel_);
             successfulJoins_ = 0;
         }
 
         MIXRegistry* getMIXRegistry() {
-            mixRegistry_ = new MIXRegistry(ownJID_, router_, xmppRoster_, channel_);
+            mixRegistry_ = new MIXRegistry(ownJID_, router_, xmppRoster_, channel_, stanzaChannelPresenceSender_);
             mixRegistry_->onChannelJoined.connect(boost::bind(&MIXRegistryTest::handleChannelJoined, this, _1));
             mixRegistry_->onChannelJoinFailed.connect(boost::bind(&MIXRegistryTest::handleJoinFailed, this, _1));
             mixRegistry_->onChannelLeft.connect(boost::bind(&MIXRegistryTest::handleChannelLeft, this, _1));
@@ -72,6 +74,7 @@ class MIXRegistryTest : public ::testing::Test {
         XMPPRosterImpl* xmppRoster_;
         MIXRegistry* mixRegistry_;
         int successfulJoins_;
+        StanzaChannelPresenceSender* stanzaChannelPresenceSender_;
 };
 
 TEST_F(MIXRegistryTest, testJoinAndLeaveChannel) {

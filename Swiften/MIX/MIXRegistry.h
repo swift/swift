@@ -32,7 +32,7 @@ namespace Swift {
             using MIXInstanceMap = std::map<JID, MIXImpl::ref>;
 
         public:
-            MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster, StanzaChannel* stanzaChannel);
+            MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster, StanzaChannel* stanzaChannel, PresenceSender* presenceSender);
 
             ~MIXRegistry();
 
@@ -73,6 +73,7 @@ namespace Swift {
             IQRouter* iqRouter_;
             XMPPRoster* xmppRoster_;
             StanzaChannel* stanzaChannel_;
+            PresenceSender* presenceSender_;
             MIXInstanceMap entries_;
             boost::signals2::scoped_connection initialRosterPopulationConnection_;
     };

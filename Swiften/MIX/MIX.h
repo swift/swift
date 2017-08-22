@@ -16,12 +16,15 @@
 #include <Swiften/JID/JID.h>
 #include <Swiften/Elements/Form.h>
 #include <Swiften/Elements/Message.h>
+#include <Swiften/Elements/Presence.h>
 #include <Swiften/Elements/PubSub.h>
 #include <Swiften/Elements/PubSubItem.h>
 #include <Swiften/Elements/PubSubItems.h>
+#include <Swiften/Elements/MIXSetNick.h>
 #include <Swiften/Elements/MIXUpdateSubscription.h>
 #include <Swiften/Elements/MIXUserPreference.h>
 #include <Swiften/Elements/ErrorPayload.h>
+#include <Swiften/Presence/PresenceSender.h>
 
 namespace Swift {
     class SWIFTEN_API MIX {
@@ -71,11 +74,23 @@ namespace Swift {
             */
             virtual void requestParticipantList() = 0;
 
+            /**
+            * Set nick of participant on channel.
+            */
+            virtual void setNick(const std::string& nick) = 0;
+
+            /**
+            * Client becomes offline.
+            */
+            virtual void goOffline() = 0;
+
         public:
             boost::signals2::signal<void (MIXUpdateSubscription::ref /* updateResponse */, ErrorPayload::ref /* updateError */)> onSubscriptionUpdateResponse;
             boost::signals2::signal<void (Form::ref /* preferencesForm */, ErrorPayload::ref /* failedConfiguration */)> onPreferencesFormResponse;
             boost::signals2::signal<void (MIXUserPreference::ref /* userPreferenceResponse */, ErrorPayload::ref /* failedUpdate */)> onPreferencesUpdateResponse;
             boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* lookupError */)> onLookupResponse;
             boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* lookupError */)> onParticipantResponse;
-    };
+            boost::signals2::signal<void (MIXSetNick::ref /* responseNick */, ErrorPayload::ref /* setNickError */)> onNickResponse;
+            boost::signals2::signal<void (Presence::ref /* presencePayload */)> onPresenceChanged;
+      };
 }
