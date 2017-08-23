@@ -72,13 +72,13 @@ static void handleChannelLeft(const JID& jid) {
     std::cout << "Successfully left channel " << jid << std::endl;
 }
 
-static void handleRosterPopulated() {
-    auto xmppRoster = client->getRoster();
+static void handleSyncSuccess() {
+    auto channels = mixRegistry_->getChannels();
     int channelCount = 0;
     std::cout << "Already Joined channels: " << std::endl;
-    for (auto item : xmppRoster->getItems()) {
+    for (auto channel : channels) {
         channelCount++;
-        std::cout << "\t" << channelCount << ". " << item.getName() << " - " << item.getJID() << std::endl;
+        std::cout << "\t" << channelCount << ". " << channel->getChannelJID() << std::endl;
     }
     if (channelCount == 0) {
         std::cout << "No channels already joined." << std::endl;
@@ -106,13 +106,11 @@ static void handleChannelNodesSupported(std::shared_ptr<DiscoItems> items, Error
 
     // Initialize MIX Registry and send join request.
     mixRegistry_ = client->getMIXRegistry();
+    mixRegistry_->onSyncSuccess.connect(&handleSyncSuccess);
     mixRegistry_->onChannelJoined.connect(&handleChannelJoined);
     mixRegistry_->onChannelJoinFailed.connect(&handleChannelJoinFailed);
     mixRegistry_->onChannelLeft.connect(&handleChannelLeft);
-
-    auto xmppRoster = client->getRoster();
-    xmppRoster->onInitialRosterPopulated.connect(&handleRosterPopulated);
-    client->requestRoster(true);
+    client->requestRoster();
 }
 
 static void handleChannelItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error) {

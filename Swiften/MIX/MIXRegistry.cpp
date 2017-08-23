@@ -10,7 +10,7 @@
 namespace Swift {
 
 MIXRegistry::MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster) : ownJID_(ownJID), iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
-    xmppRoster_->onInitialRosterPopulated.connect(boost::bind(&MIXRegistry::syncRegistryWithRoster, this));
+    scopedConnection_ = xmppRoster_->onInitialRosterPopulated.connect(boost::bind(&MIXRegistry::syncRegistryWithRoster, this));
 }
 
 MIXRegistry::~MIXRegistry() {
@@ -31,6 +31,7 @@ void MIXRegistry::syncRegistryWithRoster() {
     }
     xmppRoster_->onJIDAdded.connect(boost::bind(&MIXRegistry::handleJIDAdded, this, _1));
     xmppRoster_->onJIDRemoved.connect(boost::bind(&MIXRegistry::handleJIDRemoved, this, _1));
+    onSyncSuccess();
 }
 
 void MIXRegistry::joinChannel(const JID& channelJID, const std::unordered_set<std::string>& nodes) {

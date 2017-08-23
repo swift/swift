@@ -11,6 +11,7 @@
 #include <unordered_set>
 
 #include <boost/signals2.hpp>
+#include <boost/signals2/connection.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/ErrorPayload.h>
@@ -70,11 +71,13 @@ namespace Swift {
             boost::signals2::signal<void (const JID& /* joinedChannel */)> onChannelJoined;
             boost::signals2::signal<void (ErrorPayload::ref /* joinResponse */)> onChannelJoinFailed;
             boost::signals2::signal<void (const JID& /* leavedChannel */)> onChannelLeft;
+            boost::signals2::signal<void ()> onSyncSuccess;
 
         private:
             JID ownJID_;
             IQRouter* iqRouter_;
             XMPPRoster* xmppRoster_;
             MIXInstanceMap entries_;
+            boost::signals2::scoped_connection scopedConnection_;
     };
 }
