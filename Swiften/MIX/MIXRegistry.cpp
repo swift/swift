@@ -10,28 +10,25 @@
 namespace Swift {
 
 MIXRegistry::MIXRegistry(const JID& ownJID, IQRouter* iqRouter, XMPPRoster* xmppRoster) : ownJID_(ownJID), iqRouter_(iqRouter), xmppRoster_(xmppRoster) {
-    scopedConnection_ = xmppRoster_->onInitialRosterPopulated.connect(boost::bind(&MIXRegistry::syncRegistryWithRoster, this));
+    initialRosterPopulationConnection_ = xmppRoster_->onInitialRosterPopulated.connect([=] {
+        SWIFT_LOG(debug) << "Syncing with roster items. " << std::endl;
+        for (auto item : xmppRoster_->getItems()) {
+            if (item.isMIXChannel()) {
+                auto i = entries_.find(item.getJID());
+                if (i == entries_.end()) {
+                    entries_.insert(std::make_pair(item.getJID(), std::make_shared<MIXImpl>(ownJID_, item.getJID(), iqRouter_)));
+                }
+            }
+        }
+        onSyncSuccess();
+    });
+    xmppRoster_->onJIDAdded.connect(boost::bind(&MIXRegistry::handleJIDAdded, this, _1));
+    xmppRoster_->onJIDRemoved.connect(boost::bind(&MIXRegistry::handleJIDRemoved, this, _1));
 }
 
 MIXRegistry::~MIXRegistry() {
-
-}
-
-void MIXRegistry::syncRegistryWithRoster() {
-    SWIFT_LOG(debug) << "Syncing with roster items. " << std::endl;
-    for (auto item : xmppRoster_->getItems()) {
-        if (item.isMIXChannel()) {
-            SWIFT_LOG(debug) << item.getJID() << std::endl;
-            auto i = entries_.find(item.getJID());
-            if (i == entries_.end()) {
-                SWIFT_LOG(debug) << "Adding " << item.getJID() << std::endl;
-                entries_.insert(std::make_pair(item.getJID(), std::make_shared<MIXImpl>(ownJID_, item.getJID(), iqRouter_)));
-            }
-        }
-    }
-    xmppRoster_->onJIDAdded.connect(boost::bind(&MIXRegistry::handleJIDAdded, this, _1));
-    xmppRoster_->onJIDRemoved.connect(boost::bind(&MIXRegistry::handleJIDRemoved, this, _1));
-    onSyncSuccess();
+    xmppRoster_->onJIDAdded.disconnect(boost::bind(&MIXRegistry::handleJIDAdded, this, _1));
+    xmppRoster_->onJIDRemoved.disconnect(boost::bind(&MIXRegistry::handleJIDRemoved, this, _1));
 }
 
 void MIXRegistry::joinChannel(const JID& channelJID, const std::unordered_set<std::string>& nodes) {

@@ -37,11 +37,6 @@ namespace Swift {
             ~MIXRegistry();
 
             /**
-            * Sync based on initially populated roster.
-            */
-            void syncRegistryWithRoster();
-
-            /**
             * Join a MIX Channel with subscriptions.
             */
             void joinChannel(const JID& channelJID, const std::unordered_set<std::string>& nodes);
@@ -61,12 +56,6 @@ namespace Swift {
             */
             MIXImpl::ref getMIXInstance(const JID& jid);
 
-        private:
-            void handleJIDAdded(const JID& jid);
-            void handleJIDRemoved(const JID& jid);
-            void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
-            void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
-
         public:
             boost::signals2::signal<void (const JID& /* joinedChannel */)> onChannelJoined;
             boost::signals2::signal<void (ErrorPayload::ref /* joinResponse */)> onChannelJoinFailed;
@@ -74,10 +63,16 @@ namespace Swift {
             boost::signals2::signal<void ()> onSyncSuccess;
 
         private:
+            void handleJIDAdded(const JID& jid);
+            void handleJIDRemoved(const JID& jid);
+            void handleJoinResponse(MIXJoin::ref, ErrorPayload::ref);
+            void handleLeaveResponse(MIXLeave::ref, ErrorPayload::ref);
+
+        private:
             JID ownJID_;
             IQRouter* iqRouter_;
             XMPPRoster* xmppRoster_;
             MIXInstanceMap entries_;
-            boost::signals2::scoped_connection scopedConnection_;
+            boost::signals2::scoped_connection initialRosterPopulationConnection_;
     };
 }
