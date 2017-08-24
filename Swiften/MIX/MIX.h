@@ -76,6 +76,6 @@ namespace Swift {
             boost::signals2::signal<void (Form::ref /* preferencesForm */, ErrorPayload::ref /* failedConfiguration */)> onPreferencesFormResponse;
             boost::signals2::signal<void (MIXUserPreference::ref /* userPreferenceResponse */, ErrorPayload::ref /* failedUpdate */)> onPreferencesUpdateResponse;
             boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* lookupError */)> onLookupResponse;
-            boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* lookupError */)> onParticipantResponse;
+            boost::signals2::signal<void (std::shared_ptr<PubSub> /* responsePubSub */, ErrorPayload::ref /* errorResponse */)> onParticipantResponse;
     };
 }

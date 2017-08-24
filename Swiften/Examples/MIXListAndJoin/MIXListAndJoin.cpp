@@ -51,7 +51,6 @@ static void handleMessageReceived(Message::ref message) {
     if (auto mixPayload = message->getPayload<MIXPayload>()) {
         if (mixPayload->getSubmissionID()) {
             SWIFT_LOG(debug) << "Ignoring the replicated message" << std::endl;
-            return;
         } else if (message->getFrom().toBare() == mixChannelJID) {
             std::cout << "[ " << mixChannelJID << " ] " << message->getFrom().getResource() << ": " << message->getBody().get_value_or("") << std::endl;
         }
