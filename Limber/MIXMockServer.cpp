@@ -138,26 +138,15 @@ class Server {
                 participantInformationMap_.insert(std::make_pair(session->getRemoteJID().toBare(), information_));
             }
 
-            auto message = std::dynamic_pointer_cast<Message>(stanza);
-            if (message) {
-                handleMessageReceived(message, session);
-                return;
-            }
-
-            auto iq = std::dynamic_pointer_cast<IQ>(stanza);
-            if (!iq) {
-                return;
-            }
-
             if (mixChannelRegistry_->hasMIXChannel(stanza->getTo())) {
                 //If request comes to particular channel supported by service.
-                handleElementReceivedForMIXChannel(iq, session);
+                handleElementReceivedForMIXChannel(stanza, session);
             } else if (stanza->getTo() == session->getLocalJID()) {
                 //If request comes to domain service.
-                handleElementReceivedForMIXService(iq, session);
+                handleElementReceivedForMIXService(stanza, session);
             } else if (stanza->getTo() == session->getRemoteJID().toBare() || stanza->getTo() == JID()) {
                 //If request comes to own account.
-                handleElementReceivedForAccount(iq, session);
+                handleElementReceivedForAccount(stanza, session);
             }
         }
 
@@ -205,7 +194,12 @@ class Server {
             }
         }
 
-        void handleElementReceivedForAccount(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session) {
+        void handleElementReceivedForAccount(Stanza::ref stanza, std::shared_ptr<ServerFromClientSession> session) {
+            auto iq = std::dynamic_pointer_cast<IQ>(stanza);
+            if (!iq) {
+                return;
+            }
+
             if(iq->getPayload<RosterPayload>()) {
                 handleRosterRequest(iq, session);
             } else if (auto incomingJoinPayload = iq->getPayload<MIXJoin>()) {
@@ -215,7 +209,12 @@ class Server {
             }
         }
 
-        void handleElementReceivedForMIXService(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session) {
+        void handleElementReceivedForMIXService(Stanza::ref stanza, std::shared_ptr<ServerFromClientSession> session) {
+            auto iq = std::dynamic_pointer_cast<IQ>(stanza);
+            if (!iq) {
+                return;
+            }
+
             if (iq->getPayload<DiscoItems>()) {
                 SWIFT_LOG(debug) << "Query: Channel List" << std::endl;
                 auto responsePayload = std::make_shared<DiscoItems>();
@@ -226,7 +225,18 @@ class Server {
             }
         }
 
-        void handleElementReceivedForMIXChannel(IQ::ref iq, std::shared_ptr<ServerFromClientSession> session) {
+        void handleElementReceivedForMIXChannel(Stanza::ref stanza, std::shared_ptr<ServerFromClientSession> session) {
+            auto message = std::dynamic_pointer_cast<Message>(stanza);
+            if (message) {
+                handleMessageReceived(message, session);
+                return;
+            }
+
+            auto iq = std::dynamic_pointer_cast<IQ>(stanza);
+            if (!iq) {
+                return;
+            }
+
             if (auto pubSubPayload = iq->getPayload<PubSub>()) {
                 SWIFT_LOG(debug) << "Query: PubSub" << std::endl;
                 auto channelJID = iq->getTo();
@@ -234,7 +244,7 @@ class Server {
                 auto itemsPayload = std::dynamic_pointer_cast<PubSubItems>(pubSubPayload->getPayload());
                 if (itemsPayload->getNode() == MIX::ParticipantsNode) {
                     SWIFT_LOG(debug) << "Query: Participant List for " << channelJID << std::endl;
-                    session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), getParticipantsOfChannel(channelJID)));
+                    session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), getParticipants(channelJID)));
                 } else if (itemsPayload->getNode() == MIX::JIDMapNode) {
                     SWIFT_LOG(debug) << "Query: Lookup Participants from " << channelJID << std::endl;
                     session->sendElement(IQ::createResult(iq->getFrom(), iq->getTo(), iq->getID(), getRealJIDResponse(pubSubPayload)));
@@ -386,7 +396,7 @@ class Server {
             return rosterPayload;
         }
 
-        std::shared_ptr<PubSub> getParticipantsOfChannel(const JID& channelJID) {
+        std::shared_ptr<PubSub> getParticipants(const JID& channelJID) {
             auto pubSubPayload = std::make_shared<PubSub>();
             auto pubSubItems = std::make_shared<PubSubItems>();
             pubSubItems->setNode(MIX::ParticipantsNode);
