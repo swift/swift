@@ -57,7 +57,7 @@ myenv.Tool("textfile", toolpath = ["#/BuildTools/SCons/Tools"])
 qt4modules = ['QtCore', 'QtWebKit', 'QtGui']
 if myenv["qt5"] :
     qt_version = '5'
-    # QtSvg is required so the image format plugin for SVG images is installed 
+    # QtSvg is required so the image format plugin for SVG images is installed
     # correctly by Qt's deployment tools.
     qt4modules += ['QtWidgets', 'QtWebKitWidgets', 'QtMultimedia', 'QtSvg']
     if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
@@ -478,9 +478,16 @@ if env["PLATFORM"] == "win32" :
                 outfile.close()
                 infile.close()
             copying = env.Command(["Swift/COPYING.rtf"], ["COPYING"], convertToRTF)
+            if env.get("vcredistdir", "") :
+                vcredistdir = os.path.dirname(env["vcredistdir"])
+            else:
+                vcredistdir = os.path.dirname(env["vcredist"])+"\\..\\" + ("x86" if env["win_target_arch"] == "x86" else "x64") + "\\Microsoft.VC"+env.get("MSVC_VERSION", "").replace(".","")[:3]+".CRT\\"
             wixvariables = {
                 'VCCRTFile': env["vcredist"],
-                'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + "." + str(myenv["SWIFT_VERSION_PATCH"])
+                'VCCRTPath': vcredistdir,
+                'Version': str(myenv["SWIFT_VERSION_MAJOR"]) + "." + str(myenv["SWIFT_VERSION_MINOR"]) + "." + str(myenv["SWIFT_VERSION_PATCH"]),
+                'MsvcVersion': str(env.get("MSVC_VERSION", "").replace(".","")[:3]),
+                'MsvcDotVersion': str(env.get("MSVC_VERSION", "")[:4])
             }
             wixincludecontent = "<Include>"
             for key in wixvariables:

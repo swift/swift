@@ -46,10 +46,11 @@ The Windows package consist of a Widnows Installer (.msi) file. This is generate
 For packaging use:
 - Microsoft VS 2013 Express
 - WiX
-- Download the C++ redistributable package from Microsoft and put it at `C:\Program Files (x86)\Common Files\Merge Modules\`
+- Swift has a dependency on C++ redistributable package from Microsoft that needs to be deployed during install. If the common tools for Visual C++ is installed, then the installation file should be located under `C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\1033\` (for Visual Studio 2013). If not download from Microsoft and put it at `C:\Program Files (x86)\Common Files\Merge Modules\`
 - `config.py` should contain:
     qt = "c:\\qt\\5.4.2"
-    vcredist = "C:\\Program Files (x86)\\Common Files\\Merge Modules\\vcredist_x86.exe"
+    vcredist = "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\redist\\vcredist_x86.exe"
+    vcredistdir = "C:\\Program Files (x86)\\Microsoft Visual Studio 12.0\\VC\\redist\\x86\Microsoft.VC120.CRT\\"
     debug = 1
     optimize = 1
     wix_bindir = "c:\\program files\\Windows Installer XML v3.5\\bin"

@@ -3,18 +3,29 @@
 <!-- For a sensible tutorial on WiX, see http://wix.tramontana.co.hu/tutorial -->
 
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
-
 	<?include variables.wxs ?>
 
 	<Product Name='Swift' Id='*' UpgradeCode='D7F276D5-BA67-421E-817B-9E7AB4B7D2BF' Language='1033' Codepage='1252' Version='$(var.Version)' Manufacturer='Swift.im'>
-		<Package Id='*' Keywords='Installer' Description="Swift Installer" Comments="Swift is available under the GPL version 3" Manufacturer="Swift.im" InstallerVersion='300' Languages='1033' Compressed='yes' SummaryCodepage='1252' InstallScope="perMachine"/>
+		<Package Id='*' Keywords='Installer' Description="Swift Installer" Comments="Swift is available under the GPL version 3" Manufacturer="Swift.im" InstallerVersion='500' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+		<Property Id="ALLUSERS" Value="2" />
+		<Property Id="MSIINSTALLPERUSER" Value="1" />
+		<Property Id="WIXUIVCREDISTINSTALL" Value="0" />
+
+		<Property Id="VCREDISTINSTALLED">
+		<RegistrySearch Id="VCREDISTINSTALLED"
+						Root="HKLM"
+						Key="SOFTWARE\Wow6432Node\Microsoft\VisualStudio\$(var.MsvcDotVersion)\VC\Runtimes\$(sys.BUILDARCH)"
+						Name="Installed"
+						Type="raw" />
+
+		</Property>
 		<Media Id='1' Cabinet='Swift.cab' EmbedCab='yes'/>
 
 		<!-- Schedule the upgrade to afterInstallExecute means that MSI will first install the new version
 			 over the existing version and run the uninstall of the old version afterwards. This way shortcuts
 			 are not recreated on every new installation and pinned shortcuts stay alive.
 			 However this requires that the components for installed files with the same filename will always
-			 have the same GUID (do not run heat.exe with -gg flag) or else when MSI removes the components 
+			 have the same GUID (do not run heat.exe with -gg flag) or else when MSI removes the components
 			 of the old version with the same filename as components of the new version it will delete the
 			 files that belong to components of the new version.-->
 		<MajorUpgrade Schedule="afterInstallExecute" DowngradeErrorMessage="A newer version is already installed. Remove this version if you wish to downgrade." />
@@ -25,6 +36,9 @@
 			-->
 
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
+				<Directory Id="APPLICATIONFOLDER" Name="Swift">
+				</Directory>
+
 					<!--<Directory Id='INSTALLDIR' Name='Swift'>
 					</Directory>-->
 			</Directory>
@@ -42,8 +56,11 @@
 			<Directory Id="DesktopFolder" Name="Desktop" />
 		</Directory>
 
+		<Property Id="WixAppFolder" Value="WixPerUserFolder" />
+
 		<Feature Id='Core' Level='1' Title='Swift' Description='All necessary Swift files' Display='expand' ConfigurableDirectory='INSTALLDIR' AllowAdvertise='no' Absent='disallow'>
 			<ComponentGroupRef Id='Files' />
+			<ComponentGroupRef Id='VCFiles' />
 			<!--<ComponentRef Id='Manual' />-->
 		</Feature>
 
@@ -53,23 +70,133 @@
 
 		<!--<UIRef Id='WixUI_Advanced'/>-->
 		<!--<UIRef Id="WixUI_Minimal"/>-->
-		<UIRef Id="WixUI_Mondo"/>
+		<!--UIRef Id="WixUI_Mondo"/-->
+		<UIRef Id="WixUI_Swift"/>
+
 		<WixVariable Id='WixUILicenseRtf' Value='COPYING.rtf'/>
 
 		<Icon Id="Swift.exe" SourceFile="Swift.exe" />
 		<Property Id="ARPPRODUCTICON" Value="Swift.exe"/> <!-- The icon in the "Programs" dialog -->
 
-		<!-- 
-				 VC Redistributable 
+		<!--
+				 VC Redistributable
 		-->
 
 		<Binary Id="CRTBinary" SourceFile="$(var.VCCRTFile)"/>
 
 		<CustomAction Id="CRTAction" Impersonate="no" Return="asyncNoWait" Execute="deferred" BinaryKey="CRTBinary" ExeCommand="/passive"/>
-
+		<InstallUISequence>
+			<!-- Suppress FindRelatedProducts untill the user selects the scope of the install -->
+			<FindRelatedProducts Suppress="yes" />
+		</InstallUISequence>
 		<InstallExecuteSequence>
-			<Custom Action='CRTAction' After='InstallInitialize'/>
+			<Custom Action='CRTAction' After='InstallInitialize'>(NOT VCREDISTINSTALLED AND ALLUSERS = 1) OR WIXUIVCREDISTINSTALL = 1</Custom>
 		</InstallExecuteSequence>
 
 	</Product>
+	<Fragment>
+		<DirectoryRef Id="INSTALLDIR">
+			<Component Id="msvcp.dll" Guid="*">
+				<Condition>(NOT (VCREDISTINSTALLED OR ALLUSERS = 1)) AND WIXUIVCREDISTINSTALL = 0 </Condition>
+				<File Id="msvcp$(var.MsvcVersion).dll" KeyPath="yes" Source="$(var.VCCRTPath)\msvcp$(var.MsvcVersion).dll" />
+			</Component>
+			<Component Id="vcruntime.dll" Guid="*">
+				<Condition>(NOT (VCREDISTINSTALLED OR ALLUSERS = 1)) AND WIXUIVCREDISTINSTALL = 0 </Condition>
+				<?if $(var.MsvcVersion) > "120"?>
+					<File Id="vcruntime$(var.MsvcVersion).dll" KeyPath="yes" Source="$(var.VCCRTPath)\vcruntime$(var.MsvcVersion).dll" />
+				<?else?>
+					<File Id="msvcr$(var.MsvcVersion).dll" KeyPath="yes" Source="$(var.VCCRTPath)\msvcr$(var.MsvcVersion).dll" />
+				<?endif?>
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+	<Fragment>
+		<ComponentGroup Id="VCFiles">
+			<ComponentRef Id="msvcp.dll" />
+			<ComponentRef Id="vcruntime.dll" />
+		</ComponentGroup>
+	</Fragment>
+	<Fragment>
+
+		<WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
+		<WixVariable Id="WixUISupportPerMachine" Value="1" Overridable="yes" />
+
+		<!-- This is Based on WixUI_Mondo, but it adds an InstallScopeDlg dialog -->
+		<UI Id="WixUI_Swift">
+				<TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+				<TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+				<TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+				<Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+				<Property Id="WixUI_Mode" Value="Mondo" />
+
+				<DialogRef Id="ErrorDlg" />
+				<DialogRef Id="FatalError" />
+				<DialogRef Id="FilesInUse" />
+				<DialogRef Id="MsiRMFilesInUse" />
+				<DialogRef Id="PrepareDlg" />
+				<DialogRef Id="ProgressDlg" />
+				<DialogRef Id="ResumeDlg" />
+				<DialogRef Id="UserExit" />
+
+				<Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+				<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">NOT Installed AND NOT PATCH</Publish>
+				<Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">Installed AND PATCH</Publish>
+
+				<Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+				<Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="InstallScopeDlg" Order="2">LicenseAccepted = "1"</Publish>
+
+				<Publish Dialog="InstallScopeDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+				<!-- override default WixAppFolder of WixPerMachineFolder as standard user won't be shown the radio group to set WixAppFolder -->
+				<Publish Dialog="InstallScopeDlg" Control="Next" Property="WixAppFolder" Value="WixPerUserFolder" Order="1">!(wix.WixUISupportPerUser) AND NOT Privileged</Publish>
+				<Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="{}" Order="2">WixAppFolder = "WixPerUserFolder"</Publish>
+				<Publish Dialog="InstallScopeDlg" Control="Next" Property="ALLUSERS" Value="1" Order="3">WixAppFolder = "WixPerMachineFolder"</Publish>
+				<Publish Dialog="InstallScopeDlg" Control="Next" Property="APPLICATIONFOLDER" Value="[WixPerUserFolder]" Order="4">WixAppFolder = "WixPerUserFolder"</Publish>
+				<Publish Dialog="InstallScopeDlg" Control="Next" Property="APPLICATIONFOLDER" Value="[WixPerMachineFolder]" Order="5">WixAppFolder = "WixPerMachineFolder"</Publish>
+				<Publish Dialog="InstallScopeDlg" Control="Next" Event="NewDialog" Value="SetupTypeDlg">1</Publish>
+				<!-- After selecting the scope of the installation, run FindRelatedProducts to find previous versions that needs upgrading -->
+				<Publish Dialog="InstallScopeDlg" Control="Next" Event="DoAction" Value="FindRelatedProducts"  Order="6">1</Publish>
+
+				<Publish Dialog="SetupTypeDlg" Control="Back" Event="NewDialog" Value="InstallScopeDlg">1</Publish>
+				<Publish Dialog="SetupTypeDlg" Control="TypicalButton" Event="NewDialog" Value="VCResdistDialog">NOT VCREDISTINSTALLED AND NOT ALLUSERS </Publish>
+				<Publish Dialog="SetupTypeDlg" Control="CustomButton" Event="NewDialog" Value="CustomizeDlg">NOT VCREDISTINSTALLED AND NOT ALLUSERS </Publish>
+				<Publish Dialog="SetupTypeDlg" Control="CompleteButton" Event="NewDialog" Value="VCResdistDialog">NOT VCREDISTINSTALLED AND NOT ALLUSERS </Publish>
+				<Publish Dialog="SetupTypeDlg" Control="TypicalButton" Event="NewDialog" Value="VerifyReadyDlg">VCREDISTINSTALLED OR ALLUSERS = 1</Publish>
+				<Publish Dialog="SetupTypeDlg" Control="CustomButton" Event="NewDialog" Value="CustomizeDlg">VCREDISTINSTALLED OR ALLUSERS = 1</Publish>
+				<Publish Dialog="SetupTypeDlg" Control="CompleteButton" Event="NewDialog" Value="VerifyReadyDlg">VCREDISTINSTALLED OR ALLUSERS = 1</Publish>
+
+				<Dialog Id="VCResdistDialog" Width="260" Height="85" Title="[ProductName] Setup">
+					<Control Id="VcRredistNo" Type="PushButton" X="132" Y="57" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.WixUINo)">
+						<Publish Property="WIXUIVCREDISTINSTALL" Value="0">1</Publish>
+						<Publish Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+					</Control>
+					<Control Id="VcRredistYes" Type="PushButton" X="72" Y="57" Width="56" Height="17" Text="!(loc.WixUIYes)">
+						<Publish Property="WIXUIVCREDISTINSTALL" Value="1">1</Publish>
+						<Publish Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+					</Control>
+					<Control Id="Text" Type="Text" X="48" Y="15" Width="194" Height="30" NoPrefix="yes" Text="Visual Studio redistributables installation was not found on your computer.	Would you like Swift to install them?" />
+					<Control Id="Icon" Type="Icon" X="15" Y="15" Width="24" Height="24" ToolTip="!(loc.CancelDlgIconTooltip)" FixedSize="yes" IconSize="32" Text="!(loc.CancelDlgIcon)" />
+				</Dialog>
+
+				<Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">WixUI_InstallMode = "Change"</Publish>
+				<Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="SetupTypeDlg" Order="2">WixUI_InstallMode = "InstallCustom"</Publish>
+				<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VCResdistDialog" Order="1">NOT VCREDISTINSTALLED AND NOT ALLUSERS</Publish>
+				<Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="2">VCREDISTINSTALLED OR ALLUSERS = 1</Publish>
+
+				<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">WixUI_InstallMode = "InstallCustom"</Publish>
+				<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="SetupTypeDlg" Order="2">WixUI_InstallMode = "InstallTypical" OR WixUI_InstallMode = "InstallComplete"</Publish>
+				<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="3">WixUI_InstallMode = "Change"</Publish>
+				<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="4">WixUI_InstallMode = "Repair" OR WixUI_InstallMode = "Remove"</Publish>
+				<Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg" Order="2">WixUI_InstallMode = "Update"</Publish>
+
+				<Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+				<Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+				<Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+				<Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+				<Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+		</UI>
+		<UIRef Id="WixUI_Common" />
+	</Fragment>
 </Wix>

@@ -38,7 +38,7 @@ def generate(env) :
 
 
     light_builder = SCons.Builder.Builder(
-        action = '"$WIX_LIGHT" $WIX_LIGHT_OPTIONS -b "$WIX_SOURCE_OBJECT_DIR" ${SOURCES} -o ${TARGET}',
+        action = '"$WIX_LIGHT" $WIX_LIGHT_OPTIONS -b "$WIX_SOURCE_OBJECT_DIR" ${SOURCES} -loc Swift\\Packaging\\WiX\\Swift_en-us.wxl -o ${TARGET}',
         src_suffix = '.wixobj',
         src_builder = candle_builder)
 
@@ -48,4 +48,3 @@ def generate(env) :
 
 def exists(env) :
     return True
-
