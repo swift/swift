@@ -425,6 +425,8 @@ for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR", "SLUIFT_INSTALLDIR"] :
             env[path] = Dir(ARGUMENTS[path]).abspath
         else :
             env[path] = Dir("#/" + ARGUMENTS[path]).abspath
+if ARGUMENTS.get("SWIFTEN_LIBDIR", "") :
+    env["SWIFTEN_LIBDIR"] = ARGUMENTS["SWIFTEN_LIBDIR"]
 
 
 ################################################################################
