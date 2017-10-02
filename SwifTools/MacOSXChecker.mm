@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,6 +18,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include <AppKit/AppKit.h>
+
+#include <SwifTools/Cocoa/CocoaUtil.h>
 
 namespace Swift {
 
@@ -54,7 +56,7 @@ void MacOSXChecker::getSuggestions(const std::string& word, std::vector<std::str
     NSString* wordString = [[NSString alloc] initWithUTF8String: word.c_str()];
     NSArray* suggestions = [spellChecker guessesForWordRange:NSMakeRange(0, [wordString length]) inString:wordString language:nil inSpellDocumentWithTag:0];
     for(unsigned int i = 0; i < [suggestions count]; ++i) {
-        list.push_back(std::string([[suggestions objectAtIndex:i] UTF8String]));
+        list.push_back(ns2StdString([suggestions objectAtIndex:i]));
     }
     [wordString release];
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -93,13 +93,14 @@ void SecureTransportCertificate::parse() {
         NSDictionary* subjectAltNamesDict = certDict[@"2.5.29.17"][@"value"];
 
         for (NSDictionary* entry in subjectAltNamesDict) {
-            if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_XMPPADDR_OID])]) {
+            NSString* label = entry[@"label"];
+            if ([label isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_XMPPADDR_OID])]) {
                 xmppAddresses_.push_back(ns2StdString(entry[@"value"]));
             }
-            else if ([entry[@"label"] isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_DNSSRV_OID])]) {
+            else if ([label isEqualToString:static_cast<NSString * _Nonnull>([NSString stringWithUTF8String:ID_ON_DNSSRV_OID])]) {
                 srvNames_.push_back(ns2StdString(entry[@"value"]));
             }
-            else if ([entry[@"label"] isEqualToString:@"DNS Name"]) {
+            else if ([label isEqualToString:@"DNS Name"]) {
                 dnsNames_.push_back(ns2StdString(entry[@"value"]));
             }
         }
