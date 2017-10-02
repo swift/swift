@@ -4,7 +4,15 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
+
+#include <string>
 
 #include <Swiften/Base/Platform.h>
 
@@ -15,10 +23,11 @@
 #endif
 
 namespace Swift {
-	class SpellChecker;
-	class SpellCheckerFactory {
-		public:
-			SpellCheckerFactory();
-			SpellChecker* createSpellChecker(const std::string& dictFile);
-	};
+    class SpellChecker;
+
+    class SpellCheckerFactory {
+        public:
+            SpellCheckerFactory();
+            SpellChecker* createSpellChecker();
+    };
 }

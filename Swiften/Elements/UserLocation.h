@@ -1,227 +1,226 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/date_time/posix_time/posix_time_types.hpp>
-#include <boost/optional.hpp>
 #include <string>
 
+#include <boost/date_time/posix_time/posix_time_types.hpp>
+#include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API UserLocation : public Payload {
-		public:
-			
-			UserLocation();
-			
-			virtual ~UserLocation();
+    class SWIFTEN_API UserLocation : public Payload {
+        public:
 
-			const boost::optional< std::string >& getArea() const {
-				return area;
-			}
+            UserLocation();
 
-			void setArea(const boost::optional< std::string >& value) {
-				this->area = value ;
-			}
+            virtual ~UserLocation();
 
-			const boost::optional< float >& getAltitude() const {
-				return altitude;
-			}
+            const boost::optional< std::string >& getArea() const {
+                return area;
+            }
 
-			void setAltitude(const boost::optional< float >& value) {
-				this->altitude = value ;
-			}
+            void setArea(const boost::optional< std::string >& value) {
+                this->area = value ;
+            }
 
-			const boost::optional< std::string >& getLocality() const {
-				return locality;
-			}
+            const boost::optional< double >& getAltitude() const {
+                return altitude;
+            }
 
-			void setLocality(const boost::optional< std::string >& value) {
-				this->locality = value ;
-			}
+            void setAltitude(const boost::optional< double >& value) {
+                this->altitude = value ;
+            }
 
-			const boost::optional< float >& getLatitude() const {
-				return latitude;
-			}
+            const boost::optional< std::string >& getLocality() const {
+                return locality;
+            }
 
-			void setLatitude(const boost::optional< float >& value) {
-				this->latitude = value ;
-			}
+            void setLocality(const boost::optional< std::string >& value) {
+                this->locality = value ;
+            }
 
-			const boost::optional< float >& getAccuracy() const {
-				return accuracy;
-			}
+            const boost::optional< double >& getLatitude() const {
+                return latitude;
+            }
 
-			void setAccuracy(const boost::optional< float >& value) {
-				this->accuracy = value ;
-			}
+            void setLatitude(const boost::optional< double >& value) {
+                this->latitude = value ;
+            }
 
-			const boost::optional< std::string >& getDescription() const {
-				return description;
-			}
+            const boost::optional< double >& getAccuracy() const {
+                return accuracy;
+            }
 
-			void setDescription(const boost::optional< std::string >& value) {
-				this->description = value ;
-			}
+            void setAccuracy(const boost::optional< double >& value) {
+                this->accuracy = value ;
+            }
 
-			const boost::optional< std::string >& getCountryCode() const {
-				return countryCode;
-			}
+            const boost::optional< std::string >& getDescription() const {
+                return description;
+            }
 
-			void setCountryCode(const boost::optional< std::string >& value) {
-				this->countryCode = value ;
-			}
+            void setDescription(const boost::optional< std::string >& value) {
+                this->description = value ;
+            }
 
-			const boost::optional< boost::posix_time::ptime >& getTimestamp() const {
-				return timestamp;
-			}
+            const boost::optional< std::string >& getCountryCode() const {
+                return countryCode;
+            }
 
-			void setTimestamp(const boost::optional< boost::posix_time::ptime >& value) {
-				this->timestamp = value ;
-			}
+            void setCountryCode(const boost::optional< std::string >& value) {
+                this->countryCode = value ;
+            }
 
-			const boost::optional< std::string >& getFloor() const {
-				return floor;
-			}
+            const boost::optional< boost::posix_time::ptime >& getTimestamp() const {
+                return timestamp;
+            }
 
-			void setFloor(const boost::optional< std::string >& value) {
-				this->floor = value ;
-			}
+            void setTimestamp(const boost::optional< boost::posix_time::ptime >& value) {
+                this->timestamp = value ;
+            }
 
-			const boost::optional< std::string >& getBuilding() const {
-				return building;
-			}
+            const boost::optional< std::string >& getFloor() const {
+                return floor;
+            }
 
-			void setBuilding(const boost::optional< std::string >& value) {
-				this->building = value ;
-			}
+            void setFloor(const boost::optional< std::string >& value) {
+                this->floor = value ;
+            }
 
-			const boost::optional< std::string >& getRoom() const {
-				return room;
-			}
+            const boost::optional< std::string >& getBuilding() const {
+                return building;
+            }
 
-			void setRoom(const boost::optional< std::string >& value) {
-				this->room = value ;
-			}
+            void setBuilding(const boost::optional< std::string >& value) {
+                this->building = value ;
+            }
 
-			const boost::optional< std::string >& getCountry() const {
-				return country;
-			}
+            const boost::optional< std::string >& getRoom() const {
+                return room;
+            }
 
-			void setCountry(const boost::optional< std::string >& value) {
-				this->country = value ;
-			}
+            void setRoom(const boost::optional< std::string >& value) {
+                this->room = value ;
+            }
 
-			const boost::optional< std::string >& getRegion() const {
-				return region;
-			}
+            const boost::optional< std::string >& getCountry() const {
+                return country;
+            }
 
-			void setRegion(const boost::optional< std::string >& value) {
-				this->region = value ;
-			}
+            void setCountry(const boost::optional< std::string >& value) {
+                this->country = value ;
+            }
 
-			const boost::optional< std::string >& getURI() const {
-				return uri;
-			}
+            const boost::optional< std::string >& getRegion() const {
+                return region;
+            }
 
-			void setURI(const boost::optional< std::string >& value) {
-				this->uri = value ;
-			}
+            void setRegion(const boost::optional< std::string >& value) {
+                this->region = value ;
+            }
 
-			const boost::optional< float >& getLongitude() const {
-				return longitude;
-			}
+            const boost::optional< std::string >& getURI() const {
+                return uri;
+            }
 
-			void setLongitude(const boost::optional< float >& value) {
-				this->longitude = value ;
-			}
+            void setURI(const boost::optional< std::string >& value) {
+                this->uri = value ;
+            }
 
-			const boost::optional< float >& getError() const {
-				return error;
-			}
+            const boost::optional< double >& getLongitude() const {
+                return longitude;
+            }
 
-			void setError(const boost::optional< float >& value) {
-				this->error = value ;
-			}
+            void setLongitude(const boost::optional< double >& value) {
+                this->longitude = value ;
+            }
 
-			const boost::optional< std::string >& getPostalCode() const {
-				return postalCode;
-			}
+            const boost::optional< double >& getError() const {
+                return error;
+            }
 
-			void setPostalCode(const boost::optional< std::string >& value) {
-				this->postalCode = value ;
-			}
+            void setError(const boost::optional< double >& value) {
+                this->error = value ;
+            }
 
-			const boost::optional< float >& getBearing() const {
-				return bearing;
-			}
+            const boost::optional< std::string >& getPostalCode() const {
+                return postalCode;
+            }
 
-			void setBearing(const boost::optional< float >& value) {
-				this->bearing = value ;
-			}
+            void setPostalCode(const boost::optional< std::string >& value) {
+                this->postalCode = value ;
+            }
 
-			const boost::optional< std::string >& getText() const {
-				return text;
-			}
+            const boost::optional< double >& getBearing() const {
+                return bearing;
+            }
 
-			void setText(const boost::optional< std::string >& value) {
-				this->text = value ;
-			}
+            void setBearing(const boost::optional< double >& value) {
+                this->bearing = value ;
+            }
 
-			const boost::optional< std::string >& getDatum() const {
-				return datum;
-			}
+            const boost::optional< std::string >& getText() const {
+                return text;
+            }
 
-			void setDatum(const boost::optional< std::string >& value) {
-				this->datum = value ;
-			}
+            void setText(const boost::optional< std::string >& value) {
+                this->text = value ;
+            }
 
-			const boost::optional< std::string >& getStreet() const {
-				return street;
-			}
+            const boost::optional< std::string >& getDatum() const {
+                return datum;
+            }
 
-			void setStreet(const boost::optional< std::string >& value) {
-				this->street = value ;
-			}
+            void setDatum(const boost::optional< std::string >& value) {
+                this->datum = value ;
+            }
 
-			const boost::optional< float >& getSpeed() const {
-				return speed;
-			}
+            const boost::optional< std::string >& getStreet() const {
+                return street;
+            }
 
-			void setSpeed(const boost::optional< float >& value) {
-				this->speed = value ;
-			}
+            void setStreet(const boost::optional< std::string >& value) {
+                this->street = value ;
+            }
+
+            const boost::optional< double >& getSpeed() const {
+                return speed;
+            }
+
+            void setSpeed(const boost::optional< double >& value) {
+                this->speed = value ;
+            }
 
 
-		private:
-			boost::optional< std::string > area;
-			boost::optional< float > altitude;
-			boost::optional< std::string > locality;
-			boost::optional< float > latitude;
-			boost::optional< float > accuracy;
-			boost::optional< std::string > description;
-			boost::optional< std::string > countryCode;
-			boost::optional< boost::posix_time::ptime > timestamp;
-			boost::optional< std::string > floor;
-			boost::optional< std::string > building;
-			boost::optional< std::string > room;
-			boost::optional< std::string > country;
-			boost::optional< std::string > region;
-			boost::optional< std::string > uri;
-			boost::optional< float > longitude;
-			boost::optional< float > error;
-			boost::optional< std::string > postalCode;
-			boost::optional< float > bearing;
-			boost::optional< std::string > text;
-			boost::optional< std::string > datum;
-			boost::optional< std::string > street;
-			boost::optional< float > speed;
-	};
+        private:
+            boost::optional< std::string > area;
+            boost::optional< double > altitude;
+            boost::optional< std::string > locality;
+            boost::optional< double > latitude;
+            boost::optional< double > accuracy;
+            boost::optional< std::string > description;
+            boost::optional< std::string > countryCode;
+            boost::optional< boost::posix_time::ptime > timestamp;
+            boost::optional< std::string > floor;
+            boost::optional< std::string > building;
+            boost::optional< std::string > room;
+            boost::optional< std::string > country;
+            boost::optional< std::string > region;
+            boost::optional< std::string > uri;
+            boost::optional< double > longitude;
+            boost::optional< double > error;
+            boost::optional< std::string > postalCode;
+            boost::optional< double > bearing;
+            boost::optional< std::string > text;
+            boost::optional< std::string > datum;
+            boost::optional< std::string > street;
+            boost::optional< double > speed;
+    };
 }

@@ -11,8 +11,8 @@
 #include <Swiften/Parser/GenericPayloadTreeParser.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCInvitationPayloadParser : public GenericPayloadTreeParser<MUCInvitationPayload> {
-		public:
-			virtual void handleTree(ParserElement::ref root);
-	};
+    class SWIFTEN_API MUCInvitationPayloadParser : public GenericPayloadTreeParser<MUCInvitationPayload> {
+        public:
+            virtual void handleTree(ParserElement::ref root);
+    };
 }

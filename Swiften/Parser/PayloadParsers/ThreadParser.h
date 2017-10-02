@@ -11,17 +11,17 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API ThreadParser : public GenericPayloadParser<Thread> {
-		public:
-			ThreadParser();
-			virtual ~ThreadParser();
+    class SWIFTEN_API ThreadParser : public GenericPayloadParser<Thread> {
+        public:
+            ThreadParser();
+            virtual ~ThreadParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			int level_;
-			std::string text_;
-	};
+        private:
+            int level_;
+            std::string text_;
+    };
 }

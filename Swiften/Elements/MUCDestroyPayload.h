@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,31 +13,31 @@
 #include <Swiften/JID/JID.h>
 
 namespace Swift {
-	class SWIFTEN_API MUCDestroyPayload : public Payload {
-		public:
-			typedef boost::shared_ptr<MUCDestroyPayload> ref;
+    class SWIFTEN_API MUCDestroyPayload : public Payload {
+        public:
+            typedef std::shared_ptr<MUCDestroyPayload> ref;
 
-			MUCDestroyPayload() {
-			}
+            MUCDestroyPayload() {
+            }
 
-			void setNewVenue(const JID& jid) {
-				newVenue_ = jid;
-			}
+            void setNewVenue(const JID& jid) {
+                newVenue_ = jid;
+            }
 
-			const JID& getNewVenue() const {
-				return newVenue_;
-			}
+            const JID& getNewVenue() const {
+                return newVenue_;
+            }
 
-			void setReason(const std::string& reason) {
-				reason_ = reason;
-			}
+            void setReason(const std::string& reason) {
+                reason_ = reason;
+            }
 
-			const std::string& getReason() const {
-				return reason_;
-			}
+            const std::string& getReason() const {
+                return reason_;
+            }
 
-		private:
-			JID newVenue_;
-			std::string reason_;
-	};
+        private:
+            JID newVenue_;
+            std::string reason_;
+    };
 }

@@ -1,34 +1,35 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/TLS/OpenSSL/OpenSSLContextFactory.h>
-#include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
+
 #include <Swiften/Base/Log.h>
+#include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
 
 namespace Swift {
 
 bool OpenSSLContextFactory::canCreate() const {
-	return true;
+    return true;
 }
 
 TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&) {
-	return new OpenSSLContext();
+    return new OpenSSLContext();
 }
 
 void OpenSSLContextFactory::setCheckCertificateRevocation(bool check) {
-	if (check) {
-		SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
-		assert(false);
-	}
+    if (check) {
+        SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
+        assert(false);
+    }
 }
 
 void OpenSSLContextFactory::setDisconnectOnCardRemoval(bool check) {
-	if (check) {
-		SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL" << std::endl;
-	}
+    if (check) {
+        SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL" << std::endl;
+    }
 }
 
 

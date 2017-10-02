@@ -4,28 +4,34 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QObject>
 
-#include "QtTagComboBox.h"
+#include <Swift/QtUI/QtVCardWidget/QtTagComboBox.h>
 
 namespace Swift {
 
 class QtVCardHomeWork {
-	public:
-		QtVCardHomeWork();
-		virtual ~QtVCardHomeWork();
+    public:
+        QtVCardHomeWork();
+        virtual ~QtVCardHomeWork();
 
-		void setTagComboBox(QtTagComboBox* tagBox);
+        void setTagComboBox(QtTagComboBox* tagBox);
 
-		void setHome(const bool home);
-		bool getHome() const;
-		void setWork(const bool work);
-		bool getWork() const;
+        void setHome(const bool home);
+        bool getHome() const;
+        void setWork(const bool work);
+        bool getWork() const;
 
-	private:
-		QtTagComboBox* tagComboBox;
+    private:
+        QtTagComboBox* tagComboBox;
 };
 
 }

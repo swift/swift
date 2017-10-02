@@ -7,6 +7,6 @@
 #include <Swiften/Elements/CarbonsPrivate.h>
 
 namespace Swift {
-	CarbonsPrivate::~CarbonsPrivate() { 
-	}
+    CarbonsPrivate::~CarbonsPrivate() {
+    }
 }

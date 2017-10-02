@@ -15,11 +15,11 @@ myenv.UseFlags(env.get("AVAHI_FLAGS", ""))
 myenv.UseFlags(myenv["PLATFORM_FLAGS"])
 
 if myenv.get("HAVE_ICU") :
-	myenv.MergeFlags(env["ICU_FLAGS"])
-	myenv.Append(CPPDEFINES = ["HAVE_ICU"])
+    myenv.MergeFlags(env["ICU_FLAGS"])
+    myenv.Append(CPPDEFINES = ["HAVE_ICU"])
 if myenv.get("HAVE_LIBIDN") :
-	myenv.MergeFlags(env["LIBIDN_FLAGS"])
-	myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
+    myenv.MergeFlags(env["LIBIDN_FLAGS"])
+    myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
 
 myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
 myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
@@ -27,41 +27,39 @@ myenv.Tool("nsis", toolpath = ["#/BuildTools/SCons/Tools"])
 
 qt4modules = ['QtCore', 'QtGui']
 if myenv["qt5"] :
-	qt_version = '5'
-	qt4modules += ['QtWidgets']
+    qt_version = '5'
+    qt4modules += ['QtWidgets']
 else :
-	qt_version = '4'
+    qt_version = '4'
 myenv.EnableQt4Modules(qt4modules, debug = False, version = qt_version)
 
-myenv.Append(CPPPATH = ["."])
-
 if env["PLATFORM"] == "win32" :
-	myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
-	myenv.Append(LIBS = "qtmain")
+    myenv.Append(LINKFLAGS = ["/SUBSYSTEM:WINDOWS"])
+    myenv.Append(LIBS = "qtmain")
 
 myenv.BuildVersion("BuildVersion.h", project = "slimber")
 
 sources = [
-		"main.cpp", 
-		"QtMenulet.cpp",
-		"QtAboutDialog.cpp",
-		myenv.Qrc("Slimber.qrc"),
-	]
+        "main.cpp", 
+        "QtMenulet.cpp",
+        "QtAboutDialog.cpp",
+        myenv.Qrc("Slimber.qrc"),
+    ]
 
 #if env["PLATFORM"] == "win32" :
-#	myenv.RES("../resources/Windows/Slimber.rc")
-#	sources += ["../resources/Windows/Slimber.res"]
+#   myenv.RES("../resources/Windows/Slimber.rc")
+#   sources += ["../resources/Windows/Slimber.res"]
 
 if env["PLATFORM"] == "win32" :
-	slimberProgram = myenv.Program("Slimber", sources)
+    slimberProgram = myenv.Program("Slimber", sources)
 else :
-	slimberProgram = myenv.Program("slimber", sources)
+    slimberProgram = myenv.Program("slimber", sources)
 
 if env["PLATFORM"] == "win32" :
-	if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
-		myenv.WindowsBundle("Slimber", resources = {}, qtlibs = ["QtCore4", "QtGui4"])
-		myenv.Append(NSIS_OPTIONS = [
-				"/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
-				"/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")
-			])
-		#myenv.Nsis("../Packaging/nsis/slimber.nsi")
+    if "dist" in COMMAND_LINE_TARGETS or env.GetOption("clean") :
+        myenv.WindowsBundle("Slimber", resources = {}, qtlibs = ["QtCore4", "QtGui4"])
+        myenv.Append(NSIS_OPTIONS = [
+                "/DmsvccRedistributableDir=\"" + env["vcredist"] + "\"", 
+                "/DbuildDate=" + datetime.date.today().strftime("%Y%m%d")
+            ])
+        #myenv.Nsis("../Packaging/nsis/slimber.nsi")

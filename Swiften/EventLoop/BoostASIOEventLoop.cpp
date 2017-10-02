@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-BoostASIOEventLoop::BoostASIOEventLoop(boost::shared_ptr<boost::asio::io_service> ioService) : ioService_(ioService) {
+BoostASIOEventLoop::BoostASIOEventLoop(std::shared_ptr<boost::asio::io_service> ioService) : ioService_(ioService) {
 
 }
 
@@ -19,19 +19,19 @@ BoostASIOEventLoop::~BoostASIOEventLoop() {
 }
 
 void BoostASIOEventLoop::handleASIOEvent() {
-	{
-		boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
-		isEventInASIOEventLoop_ = false;
-	}
-	handleNextEvents();
+    {
+        std::unique_lock<std::recursive_mutex> lock(isEventInASIOEventLoopMutex_);
+        isEventInASIOEventLoop_ = false;
+    }
+    handleNextEvents();
 }
 
 void BoostASIOEventLoop::eventPosted() {
-	boost::recursive_mutex::scoped_lock lock(isEventInASIOEventLoopMutex_);
-	if (!isEventInASIOEventLoop_) {
-		isEventInASIOEventLoop_ = true;
-		ioService_->post(boost::bind(&BoostASIOEventLoop::handleASIOEvent, this));
-	}
+    std::unique_lock<std::recursive_mutex> lock(isEventInASIOEventLoopMutex_);
+    if (!isEventInASIOEventLoop_) {
+        isEventInASIOEventLoop_ = true;
+        ioService_->post(boost::bind(&BoostASIOEventLoop::handleASIOEvent, this));
+    }
 }
 
 }

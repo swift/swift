@@ -16,16 +16,16 @@
 #include <Swiften/Network/ProxyProvider.h>
 
 namespace Swift {
-	class SWIFTEN_API EnvironmentProxyProvider : public ProxyProvider {
-		public:
-			EnvironmentProxyProvider();
-			virtual HostAddressPort getHTTPConnectProxy() const;
-			virtual HostAddressPort getSOCKS5Proxy() const;
-		private:
-			HostAddressPort getFromEnv(const char* envVarName, std::string proxyProtocol);
-			HostAddressPort socksProxy;
-			HostAddressPort httpProxy;
-	};
+    class SWIFTEN_API EnvironmentProxyProvider : public ProxyProvider {
+        public:
+            EnvironmentProxyProvider();
+            virtual HostAddressPort getHTTPConnectProxy() const;
+            virtual HostAddressPort getSOCKS5Proxy() const;
+        private:
+            HostAddressPort getFromEnv(const char* envVarName, std::string proxyProtocol);
+            HostAddressPort socksProxy;
+            HostAddressPort httpProxy;
+    };
 }
 
 

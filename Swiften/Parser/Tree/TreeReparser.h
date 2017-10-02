@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2015 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,10 +11,10 @@
 #include <Swiften/Parser/PayloadParsers/MUCItemParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
-	class SWIFTEN_API TreeReparser {
-		public:
-			static boost::shared_ptr<Payload> parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection);
+    class PayloadParserFactoryCollection;
+    class SWIFTEN_API TreeReparser {
+        public:
+            static std::shared_ptr<Payload> parseTree(ParserElement::ref root, PayloadParserFactoryCollection* collection);
 
-	};
+    };
 }

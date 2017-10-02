@@ -11,8 +11,8 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API Paths {
-		public:
-			static boost::filesystem::path getExecutablePath();
-	};
+    class SWIFTEN_API Paths {
+        public:
+            static boost::filesystem::path getExecutablePath();
+    };
 }

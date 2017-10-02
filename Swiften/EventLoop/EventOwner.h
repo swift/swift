@@ -9,8 +9,8 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API EventOwner {
-		public:
-			virtual ~EventOwner();
-	};
+    class SWIFTEN_API EventOwner {
+        public:
+            virtual ~EventOwner();
+    };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,18 +13,18 @@
 #include <Swift/QtUI/Roster/DelegateCommons.h>
 
 namespace Swift {
-	class UserSearchDelegate : public QStyledItemDelegate {
-		Q_OBJECT
+    class UserSearchDelegate : public QStyledItemDelegate {
+        Q_OBJECT
 
-		public:
-			UserSearchDelegate(QObject* parent = 0);
-			virtual ~UserSearchDelegate();
+        public:
+            UserSearchDelegate(QObject* parent = nullptr);
+            virtual ~UserSearchDelegate();
 
-			void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-			QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const;
-		private:
-			DelegateCommons common_;
-	};
+            void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+            QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index ) const;
+        private:
+            DelegateCommons common_;
+    };
 
 }
 

@@ -11,13 +11,13 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API CarbonsDisableParser : public GenericPayloadParser<CarbonsDisable> {
-		public:
-			CarbonsDisableParser();
-			virtual ~CarbonsDisableParser();
+    class SWIFTEN_API CarbonsDisableParser : public GenericPayloadParser<CarbonsDisable> {
+        public:
+            CarbonsDisableParser();
+            virtual ~CarbonsDisableParser();
 
-			virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&);
-			virtual void handleEndElement(const std::string&, const std::string&);
-			virtual void handleCharacterData(const std::string&);
-	};
+            virtual void handleStartElement(const std::string&, const std::string&, const AttributeMap&);
+            virtual void handleEndElement(const std::string&, const std::string&);
+            virtual void handleCharacterData(const std::string&);
+    };
 }

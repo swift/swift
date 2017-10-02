@@ -1,293 +1,236 @@
-* {
-		word-wrap: break-word;
-		word-break:break-word;
-}
-
-#header1 { 
-	position: fixed; 
-	top: 0px; 
-	left: 0px; 
-	right: 0px; 
-	margin: 0; 
-	padding: 10px; 
-	overflow: auto; 
-	color: white; 
-	text-align: center; 
-	font-size: 10px; 
-	font-weight: regular; 
-	background: rgba(0,0,0,.65); 
-	z-index: 999; 
-}
-
-#heading { 
-	position: fixed; 
-	top: 0px; 
-	left: 0px; 
-	margin: 0; 
-	padding: 5px;
-	font-weight: regular; 
-	background-color:#fbfbed;
-	z-index: 999;
-	width:100%;
-	height:45px;
-	border-bottom:2px solid #d5d5d5;
-	background:url("images/steelHeading.jpg") repeat-x top left;
-	
-}
-
-#heading .conversationIncomingIcon {
-	position:absolute;
-	left:5px;
-	top:5px;
-}
-
-#heading .conversationIncomingIcon img {
-	width:48px;
-	height:48px;
-}
-
-#heading .conversationWith {
-	position:relative;
-	left:60px;
-	margin:5px 0 0 0;
-	overflow:hide;
-}
-
-#heading .conversationTime {
-	position:relative;
-	left:60px;
-	color:#6d6d6d;
-}
+/* Chat Window Container */
 
 body {
-	margin-top: 65px;
-	background-color: white;
-	color: black;
+    font-family: 'Lato', sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-.status_container {
+/* This turns the insert marker element into a vertical fill.
+ * This way the colored side bar is expanded to the full height of the view. */
+#insert {
+    display: table-row;
+    height: 100%;
 }
 
+.container {
+    height: 100%;
+    width:  100%;
+    background-color: #fff;
+    position: absolute;
+    display: table;
+}
+/* Holds all user and message content */
 
-body {
-	font-family: "DejaVu Sans", "Myriad Pro", Myriad, "Lucida Grande", "Trebuchet MS", Arial, "Droid Sans", sans-serif;
+.message-block {
+    display: table;
+    border: 0px solid black;
+    border-spacing: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    overflow-wrap: break-word; /* Allow breaking of long words (e.g. URLs) to prevent overflow. */
 }
 
-.followUp {
-	clear:right;
-	height:1px;
-	font-size:1px;
-	line-height:1px;
-	margin:4px 0 4px 0;
-}
-
-.chatItem {
-	/*Removing opacity, because this causes Qt's WebKit to draw low-quality images */
-	/*opacity:0.96;*/
-}
-
-.tableBubble {
-	width:100%;
-}
-
-.tableBubble .tl {
-	height:8px;
-}
-
-.tableBubble .tr {
-	width:8px;
-	height:8px;
-}
+/* Individual message */
 
 .message {
-	padding:0 1em 0 1.25em;
-	word-wrap: break-word;
+    display: table-row;
+    border: inherit;
+    width: 100%;
+    margin-top: 10px;
+    border-top: 0.2em solid transparent;
 }
 
-.tableBubble .message {
-	font-size:11px;
+.additional {
+    margin-top: -12px;
 }
 
-.tableBubble .message img {
-	vertical-align:middle;
+.unread {
+    height: 30px;
+    display: table-row;
+    border: inherit;
+    /*width: 100%;*/
+    margin-top: -6px;
+    margin-bottom: -15px;
+    margin-left: 190px;
+    margin-right: 20px;
+    text-align: right;
 }
 
-.tableBubble .messageRight {
-	width:1px;
+.unread p {
+    margin-top: 0px;
+    font-size: 75%;
+    text-transform: uppercase;
+    color: #ffd180;
+    border-top: solid 1px #ffd180;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
-.tableBubble .bl {
-	height:10px;
+/* Left column content */
+
+:not(.additional) > .user {
+    height: 2.5em;
 }
 
-.tableBubble .br {
-	width:8px;
-	height:10px;
+.user {
+    display: table-cell;
+    border: inherit;
+    margin-top: 2px;
+    text-align: right;
+    width:     4.6em;
+    max-width: 4.6em;
+    min-width: 4.6em;
+    background-color: #595959;
 }
 
-.tableBubble .timeStamp {
-	margin-left:7px;
-	text-align:right;
-	float:right;
+div.time {
+    color: #ffffff;
+    font-size: 80%;
+    font-weight: 300;
+
+    float: right;
+    background-color: #595959;
+    border-top-left-radius: 3ex 3ex;
+    border-bottom-left-radius: 3ex 3ex;
+    /* min-width: 50px; */
+    text-align: right;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    padding-top: 0.05ex;
+    padding-bottom: 0.05ex;
+    margin-left: 0.5em;
 }
 
-.myBubble .indicator {
-	position:absolute;
-	top:8px;
-	left:0;
-	width:13px;
-	height:11px;
+.myavatar {
+    height: 2.5em;
+    width: 2.5em;
+    display: inline-block;
+    margin: 0 auto;
+    background-color: #92c47e;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    position: relative;
+    left: 1px;
 }
 
-.myBubble {
-	position:relative;
-	padding-left:10px;
-	margin-left:33px;
-	margin-right:10px;
+.otheravatar {
+    height: 2.5em;
+    width: 2.5em;
+    display: inline-block;
+    margin: 0 auto;
+    background-color: #6eb6ce;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    position: relative;
+    left: 1px;
 }
 
-.chatItem .avatar {
-	max-width:32px;
-	max-height:32px;
-	float:left;
+.myavatar img {
+    border-radius: 50%;
+    height: 2.5em;
+    position: relative;
+    left: -2px;
 }
 
-/****** STatus  ******/
-
-.statusMessage {
-	opacity:0.8;
-	color:#676767;
+.otheravatar img {
+    border-radius: 50%;
+    height: 2.5em;
+    position: relative;
+    left: -2px;
 }
 
-.statusMessage .myBubble .indicator {
-	background:url("images/steelIndicator.png") no-repeat top left;
+.myright {
+    float: right;
+    width: 1.05em;    /* myuser width/2 - ( other avatar width/2) = 1.05em*/
+    height: 2.5em;
+    background: #92c47e;
 }
 
-.statusMessage .tableBubble .tl {
-	background:url("images/steelCurves.png") no-repeat top left;
+.otherright {
+    float: right;
+    width: 1.05em;    /* myuser width/2 - ( other avatar width/2) = 1.05em*/
+    height: 2.5em;
+    background: #6eb6ce;
 }
 
-.statusMessage .tableBubble .tr {
-	background:url("images/steelCurves.png") no-repeat top right;
+:not(.additional) > div > .systemavatar {
+    height: 2.5em;
 }
 
-.statusMessage .tableBubble .head {
-	background:url("images/steelCurves.png") no-repeat -10px 0;
+.systemavatar {
+    width: 2.5em;
+    display: inline-block;
+    margin: 0 auto;
+    background-color: #595959;
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
 }
 
-.statusMessage .tableBubble .message {
-	background:url("images/steelBackground.png") repeat-y top left;
+:not(.additional) > div > .systemright {
+    height: 2.5em;
 }
 
-.statusMessage .tableBubble .messageRight {
-	background:url("images/steelBackground.png") repeat-y top right;
+.systemright {
+    float: right;
+    width: 1.05em;    /* myuser width/2 - ( other avatar width/2) = 1.05em*/
+    background: #595959;
 }
 
-.statusMessage .tableBubble .bl {
-	background:url("images/steelCurves.png") no-repeat bottom left;
+/* Right column content */
+.message:not(.additional) {
+    border-top: 1.2em solid transparent; /* Workaround for table rows not having a padding. */
 }
 
-.statusMessage .tableBubble .br {
-	background:url("images/steelCurves.png") no-repeat bottom right;
+.message:not(.additional) .text {
+    min-height: 2.5em;
 }
 
-.statusMessage .followUp {
-	background-color:#f4f0a7;
-	border-bottom:1px solid #fff;
+.text {
+    display: table-cell;
+    border: inherit;
+    color: #595959;
+    vertical-align: top;
+
+    /* Break long URLs at any point. */
+    word-break: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
-.statusMessage .timeStamp {
-	color:#676767;
+.username {
+    margin-left: 20px;
+    font-weight: 700;
+    margin-top: 0px;
+    margin-bottom: 0.2em;
 }
 
-
-/*incoming */
-
-.incomingItem .myBubble .indicator {
-	background:url("images/yellowIndicator.png") no-repeat top left;
+.myusername {
+    color: #92c47e;
 }
 
-.incomingItem .tableBubble .tl {
-	background:url("images/yellowCurves.png") no-repeat top left;
+.otherusername {
+    color: #6eb6ce;
 }
 
-.incomingItem .tableBubble .tr {
-	background:url("images/yellowCurves.png") no-repeat top right;
+.message-content {
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
-.incomingItem .tableBubble .head {
-	background:url("images/yellowCurves.png") no-repeat -10px 0;
+.system-message {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: #aaa;
+    font-style: italic;
 }
 
-.incomingItem .tableBubble .message {
-	background:url("images/yellowBackground.png") repeat-y top left;
-}
-
-.incomingItem .tableBubble .messageRight {
-	background:url("images/yellowBackground.png") repeat-y top right;
-}
-
-.incomingItem .tableBubble .bl {
-	background:url("images/yellowCurves.png") no-repeat bottom left;
-}
-
-.incomingItem .tableBubble .br {
-	background:url("images/yellowCurves.png") no-repeat bottom right;
-}
-
-.incomingItem .followUp {
-	background-color:#f4f0a7;
-	border-bottom:1px solid #fff;
-}
-
-.incomingItem .timeStamp {
-	color:#bdb410;
-}
-
-/* outgoing */
-
-
-.outgoingItem .myBubble .indicator {
-	background:url("images/greenIndicator.png") no-repeat top left;
-}
-
-.outgoingItem .tableBubble .tl {
-	background:url("images/greenCurves.png") no-repeat top left;
-}
-
-.outgoingItem .tableBubble .tr {
-	background:url("images/greenCurves.png") no-repeat top right;
-}
-
-.outgoingItem .tableBubble .head {
-	background:url("images/greenCurves.png") no-repeat -10px 0;
-}
-
-.outgoingItem .tableBubble .message {
-	background:url("images/greenBackground.png") repeat-y top left;
-}
-
-.outgoingItem .tableBubble .messageRight {
-	background:url("images/greenBackground.png") repeat-y top right;
-}
-
-.outgoingItem .tableBubble .bl {
-	background:url("images/greenCurves.png") no-repeat bottom left;
-}
-
-.outgoingItem .tableBubble .br {
-	background:url("images/greenCurves.png") no-repeat bottom right;
-}
-
-.outgoingItem .followUp {
-	background-color:#e2efc4;
-	border-bottom:1px solid #fff;
-}
-
-.outgoingItem .timeStamp {
-	color:#9ecf35;
-}
-
-html {
-	height: 101%;
+/* receipt */
+span.swift_receipt > img {
+    height: 12px;
 }

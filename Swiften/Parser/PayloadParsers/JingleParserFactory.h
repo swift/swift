@@ -17,26 +17,26 @@
 #include <Swiften/Parser/PayloadParsers/JingleParser.h>
 
 namespace Swift {
-	
-	class PayloadParserFactoryCollection;
 
-	class SWIFTEN_API JingleParserFactory : public PayloadParserFactory {
-		public:
-			JingleParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
-			}
+    class PayloadParserFactoryCollection;
 
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-				return element == "jingle" && ns == "urn:xmpp:jingle:1";
-			}
+    class SWIFTEN_API JingleParserFactory : public PayloadParserFactory {
+        public:
+            JingleParserFactory(PayloadParserFactoryCollection* factories) : factories(factories) {
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new JingleParser(factories);
-			}
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+                return element == "jingle" && ns == "urn:xmpp:jingle:1";
+            }
 
-		private:
-			PayloadParserFactoryCollection* factories;
-			
-	};
+            virtual PayloadParser* createPayloadParser() {
+                return new JingleParser(factories);
+            }
+
+        private:
+            PayloadParserFactoryCollection* factories;
+
+    };
 }
 
 

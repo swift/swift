@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,13 +12,15 @@
 #include <Swiften/Disco/EntityCapsProvider.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyEntityCapsProvider : public EntityCapsProvider {
-		public:
-			DummyEntityCapsProvider() {
-			}
+    class SWIFTEN_API DummyEntityCapsProvider : public EntityCapsProvider {
+        public:
+            DummyEntityCapsProvider() {
+            }
 
-			DiscoInfo::ref getCaps(const JID& jid) const;
+            DiscoInfo::ref getCaps(const JID& jid) const;
 
-			std::map<JID, DiscoInfo::ref> caps;
-	};
+            DiscoInfo::ref getCapsCached(const JID& jid);
+
+            std::map<JID, DiscoInfo::ref> caps;
+    };
 }

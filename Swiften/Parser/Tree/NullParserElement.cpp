@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,6 @@
 
 namespace Swift {
 
-boost::shared_ptr<NullParserElement> NullParserElement::element = boost::make_shared<NullParserElement>();
+std::shared_ptr<NullParserElement> NullParserElement::element = std::make_shared<NullParserElement>();
 
 }

@@ -6,21 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>523</width>
-    <height>368</height>
+    <width>566</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Search Room</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="label_2">
-     <property name="text">
-      <string>Service:</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1">
     <widget class="QComboBox" name="service_">
      <property name="sizePolicy">
@@ -34,26 +27,14 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
-    <widget class="QLineEdit" name="filter_">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>1</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+   <item row="0" column="0">
+    <widget class="QLabel" name="serviceLabel_">
      <property name="text">
-      <string/>
-     </property>
-     <property name="frame">
-      <bool>true</bool>
+      <string>Service:</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="QTreeView" name="results_"/>
-   </item>
-   <item row="2" column="0" colspan="4">
+   <item row="2" column="0" colspan="5">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <spacer name="horizontalSpacer">
@@ -90,10 +71,39 @@
      </item>
     </layout>
    </item>
+   <item row="0" column="4">
+    <widget class="QLineEdit" name="filter_">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="2">
-    <widget class="QToolButton" name="searchButton">
+    <widget class="QToolButton" name="searchButton_">
      <property name="text">
       <string>List rooms</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="5">
+    <widget class="QTreeView" name="results_"/>
+   </item>
+   <item row="0" column="3">
+    <widget class="QLabel" name="filterLabel_">
+     <property name="text">
+      <string>Search for</string>
      </property>
     </widget>
    </item>

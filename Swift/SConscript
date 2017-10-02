@@ -5,17 +5,13 @@ Import("env")
 SConscript("Controllers/SConscript")
 
 if env["SCONS_STAGE"] == "build" :
-	if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) and not env.get("HAVE_SCHANNEL", 0) and not env.get("HAVE_SECURETRANSPORT", 0):
-		print "Error: Swift requires OpenSSL support, and OpenSSL was not found."
-		if "Swift" in env["PROJECTS"] :
-			env["PROJECTS"].remove("Swift")
-	elif not GetOption("help") and not env.get("HAVE_QT", 0) :
-		if "Swift" in env["PROJECTS"] :
-			print "Warning: Swift requires Qt. Not building the Swift Qt application."
-			env["PROJECTS"].remove("Swift")
-	elif not GetOption("help") and env["target"] == "native" and "Swift" in env["PROJECTS"] :
-		try :
-			SConscript("QtUI/SConscript")
-		except Exception as e:
-			print "Warning: %s" % str(e) 
-			env["PROJECTS"].remove("Swift")
+    if not GetOption("help") and not env.get("HAVE_QT", 0) :
+        if "Swift" in env["PROJECTS"] :
+            print "Warning: Swift requires Qt. Not building the Swift Qt application."
+            env["PROJECTS"].remove("Swift")
+    elif not GetOption("help") and env["target"] == "native" and "Swift" in env["PROJECTS"] :
+        try :
+            SConscript("QtUI/SConscript")
+        except Exception as e:
+            print "Warning: %s" % str(e) 
+            env["PROJECTS"].remove("Swift")

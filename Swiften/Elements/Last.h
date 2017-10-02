@@ -10,14 +10,14 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API Last : public Payload {
-		public:
-			Last(int seconds = 0) : seconds_(seconds) {}
+    class SWIFTEN_API Last : public Payload {
+        public:
+            Last(int seconds = 0) : seconds_(seconds) {}
 
-			int getSeconds() const {return seconds_;}
-			void setSeconds(int seconds) {seconds_ = seconds;}
+            int getSeconds() const {return seconds_;}
+            void setSeconds(int seconds) {seconds_ = seconds;}
 
-		private:
-			int seconds_;
-	};
+        private:
+            int seconds_;
+    };
 }

@@ -1,0 +1,33 @@
+- hosts: all
+  tasks:
+  - name: Install required packages via apt
+    apt: name=git state=latest update_cache=yes
+    become: true
+    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
+  - name: Install required packages via dnf
+    dnf: name={{item}} state=latest
+    with_items:
+      - git
+      - redhat-lsb
+    become: true
+    when: ansible_distribution == 'CentOS' or ansible_distribution == 'Red Hat Enterprise Linux' or ansible_distribution == 'RedHat' or ansible_distribution == 'Fedora'
+  - name: 'Install required packages via zypper'
+    zypper: name={{item}} state=latest
+    with_items:
+      - git-core
+      - lsb-release
+    become: true
+    when: ansible_distribution == 'openSUSE Leap'
+  - name: Clone git from host working directory
+    git: repo=/home/vagrant/swift-host dest=/home/vagrant/swift
+
+  - name: 'Install Swift dependencies for openSUSE Leap'
+    shell: ./BuildTools/InstallSwiftDependencies.sh --non-interactive chdir=/home/vagrant/swift
+    become: true
+    when: ansible_distribution == 'openSUSE Leap'
+  - name: 'Install Swift dependencies'
+    environment:
+      ACCEPT_LICENSE: '*'
+    shell: yes | ./BuildTools/InstallSwiftDependencies.sh chdir=/home/vagrant/swift
+    become: true
+    when: ansible_distribution != 'openSUSE Leap'

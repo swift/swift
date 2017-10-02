@@ -8,8 +8,8 @@ root = Dir("../..").abspath
 # Override SConscript to handle tests
 oldSConscript = SConscript
 def SConscript(*arguments, **keywords) :
-	if not keywords.get("test_only", False) or env["TEST"] :
-		return apply(oldSConscript, arguments, keywords)
+    if not keywords.get("test_only", False) or env["TEST"] :
+        return apply(oldSConscript, arguments, keywords)
 env.SConscript = SConscript
 
 ################################################################################
@@ -21,313 +21,356 @@ env.SConscript = SConscript
 ################################################################################
 
 #if env["PLATFORM"] == "win32" :
-#	env["MSVC_BATCH"] = 1
+#   env["MSVC_BATCH"] = 1
 
 # Pretty output
 def colorize(command, target, color) :
-	colors = { "red": "31", "green": "32", "yellow": "33", "blue": "34" }
-	prefix = ""
-	suffix = ""
-	if sys.stdout.isatty() and env["PLATFORM"] != "win32":
-		prefix = "\033[0;" + colors[color] + ";140m"
-		suffix = "\033[0m"
-	return "  " + prefix + command + suffix + " " + target
+    colors = { "red": "31", "green": "32", "yellow": "33", "blue": "34" }
+    prefix = ""
+    suffix = ""
+    if sys.stdout.isatty() and env["PLATFORM"] != "win32":
+        prefix = "\033[0;" + colors[color] + ";140m"
+        suffix = "\033[0m"
+    return "  " + prefix + command + suffix + " " + target
 
 if int(ARGUMENTS.get("V", 0)) == 0 and not ARGUMENTS.get("dump_trace", False) :
-	env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
-	env["SHCCCOMSTR"] = colorize("CC", "$TARGET", "green")
-	env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
-	env["SHCXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
-	env["LINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
-	env["SHLINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
-	env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
-	env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
-	env["PCHCOMSTR"] = colorize("PCH", "$TARGET", "blue")
-	env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
-	env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
-	env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")
-	env["QT4_MOCFROMCXXCOMSTR"] = colorize("MOC", "$TARGET", "blue")
-	env["QT4_LRELEASECOMSTR"] = colorize("LRELEASE", "$TARGET", "blue")
-	env["QT4_LUPDATECOMSTR"] = colorize("LUPDATE", "$TARGET", "blue")
-	env["GENCOMSTR"] = colorize("GEN", "$TARGET", "blue")
-	env["RCCOMSTR"] = colorize("RC", "$TARGET", "blue")
-	env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")
-	env["NIBCOMSTR"] = colorize("NIB", "$TARGET", "blue")
-	env["NSISCOMSTR"] = colorize("NSIS", "$TARGET", "blue")
-	env["INSTALLSTR"] = colorize("INSTALL", "$TARGET", "blue")
-	env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
-	env["FOCOMSTR"] = colorize("FO", "$TARGET", "blue")
-	env["XSLTCOMSTR"] = colorize("XSLT", "$TARGET", "blue")
-	env["XMLLINTCOMSTR"] = colorize("XMLLINT", "$SOURCE", "blue")
-	env["DOXYCOMSTR"] = colorize("DOXY", "$SOURCE", "blue")
-	#Progress(colorize("DEP", "$TARGET", "red")
+    env["CCCOMSTR"] = colorize("CC", "$TARGET", "green")
+    env["SHCCCOMSTR"] = colorize("CC", "$TARGET", "green")
+    env["CXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
+    env["SHCXXCOMSTR"] = colorize("CXX", "$TARGET", "green")
+    env["LINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
+    env["SHLINKCOMSTR"] = colorize("LINK", "$TARGET", "red")
+    env["ARCOMSTR"] = colorize("AR", "$TARGET", "red")
+    env["RANLIBCOMSTR"] = colorize("RANLIB", "$TARGET", "red")
+    env["PCHCOMSTR"] = colorize("PCH", "$TARGET", "blue")
+    env["QT4_RCCCOMSTR"] = colorize("RCC", "$TARGET", "blue")
+    env["QT4_UICCOMSTR"] = colorize("UIC", "$TARGET", "blue")
+    env["QT4_MOCFROMHCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+    env["QT4_MOCFROMCXXCOMSTR"] = colorize("MOC", "$TARGET", "blue")
+    env["QT4_LRELEASECOMSTR"] = colorize("LRELEASE", "$TARGET", "blue")
+    env["QT4_LUPDATECOMSTR"] = colorize("LUPDATE", "$TARGET", "blue")
+    env["GENCOMSTR"] = colorize("GEN", "$TARGET", "blue")
+    env["RCCOMSTR"] = colorize("RC", "$TARGET", "blue")
+    env["BUNDLECOMSTR"] = colorize("BUNDLE", "$TARGET", "blue")
+    env["NIBCOMSTR"] = colorize("NIB", "$TARGET", "blue")
+    env["NSISCOMSTR"] = colorize("NSIS", "$TARGET", "blue")
+    env["INSTALLSTR"] = colorize("INSTALL", "$TARGET", "blue")
+    env["TESTCOMSTR"] = colorize("TEST", "$SOURCE", "yellow")
+    env["FOCOMSTR"] = colorize("FO", "$TARGET", "blue")
+    env["XSLTCOMSTR"] = colorize("XSLT", "$TARGET", "blue")
+    env["XMLLINTCOMSTR"] = colorize("XMLLINT", "$SOURCE", "blue")
+    env["DOXYCOMSTR"] = colorize("DOXY", "$SOURCE", "blue")
+    #Progress(colorize("DEP", "$TARGET", "red")
 
 def checkObjCHeader(context, header) :
-	context.Message("Checking for Objective-C header " + header + " ... ")
-	ret = context.TryCompile("#include <Cocoa/Cocoa.h>\n#include <" + header + ">", ".m")
-	context.Result(ret)
-	return ret
+    context.Message("Checking for Objective-C header " + header + " ... ")
+    ret = context.TryCompile("#include <Cocoa/Cocoa.h>\n#include <" + header + ">", ".m")
+    context.Result(ret)
+    return ret
+
+def checkForCpp11Support(context) :
+    context.Message('Checking whether the C++ compiler supports C++11... ')
+    result = context.TryLink(
+        """
+#include <memory>
+
+int main(int, char **) {
+    // shared_ptr test
+    std::shared_ptr<int> intPtr = std::make_shared<int>();
+
+    // unique_ptr test
+    std::unique_ptr<int> intPtrUnique = std::unique_ptr<int>(new int(1));
+
+    // auto test
+    auto otherIntPtr = intPtr;
+    std::shared_ptr<int> fooIntPtr = otherIntPtr;
+
+    // lambda test
+    auto someFunction = [](int i){ i = i * i; };
+    someFunction(2);
+
+    // nullptr test
+    double* fooDouble = nullptr;
+    double bazDouble = 8.0;
+    fooDouble = &bazDouble;
+    bazDouble = *fooDouble;
+
+    return 0;
+}
+""", '.cpp')
+    context.Result(result)
+    return result
+
 
 ################################################################################
 # Platform configuration
 ################################################################################
 
 if ARGUMENTS.get("force-configure", 0) :
-	SCons.SConf.SetCacheMode("force")
+    SCons.SConf.SetCacheMode("force")
 
 def CheckPKG(context, name):
-	context.Message( 'Checking for package %s... ' % name )
-	ret = context.TryAction('pkg-config --exists \'%s\'' % name)[0]
-	context.Result( ret )
-	return ret
+    context.Message( 'Checking for package %s... ' % name )
+    ret = context.TryAction('pkg-config --exists \'%s\'' % name)[0]
+    context.Result( ret )
+    return ret
 
 def CheckVersion(context, library, version, define, header, value) :
-	context.Message("Checking " + library + " version (>= " + version + ") ...")
-	version = GetVersion(context, define, header)
-	ok = version >= value
-	context.Result(ok)
-	return ok
+    context.Message("Checking " + library + " version (>= " + version + ") ...")
+    version = GetVersion(context, define, header)
+    ok = version >= value
+    context.Result(ok)
+    return ok
 
 def GetVersion(context, define, header, extension = ".c") :
-	ret = context.TryRun("""
+    ret = context.TryRun("""
 #include <%(header)s>
 #include <stdio.h>
 
 int main(int argc, char* argv[]) {
-	printf("%%d\\n", %(define)s);
-	return 0;
+    printf("%%d\\n", %(define)s);
+    return 0;
 }
 """ % { "header" : header, "define": define }, extension)
-	if ret[0] :
-		return int(ret[1])
-	else :
-		return -1
+    if ret[0] :
+        return int(ret[1])
+    else :
+        return -1
 
-
-conf = Configure(conf_env)
+conf = Configure(conf_env, custom_tests = {
+    'CheckCpp11Support' : checkForCpp11Support,
+    })
 
 if not conf.CheckCXX() or not conf.CheckCC() :
-	print "Error: You need a working compiler"
-	Exit(1)
+    print "Error: You need a working compiler"
+    Exit(1)
+
+if not conf.CheckCpp11Support() :
+    print "Error: You need a compiler with support for the C++11 standard"
+    Exit(1)
+
 
 env["HAVE_ZLIB"] = True
 zlib_flags = {}
 zlib_okay = False
 if env.get("zlib_libdir", None) :
-	zlib_flags["LIBPATH"] = [env["zlib_libdir"]]
-	zlib_okay = True
+    zlib_flags["LIBPATH"] = [env["zlib_libdir"]]
+    zlib_okay = True
 if env.get("zlib_includedir", None) :
-	zlib_flags["CPPPATH"] = [env["zlib_includedir"]]
-	zlib_okay = True
+    zlib_flags["CPPPATH"] = [env["zlib_includedir"]]
+    zlib_okay = True
 if env.get("zlib_libfile", None) :
-	zlib_flags["LIBS"] = [File(env["zlib_libfile"])]
-	zlib_okay = True
+    zlib_flags["LIBS"] = [File(env["zlib_libfile"])]
+    zlib_okay = True
 elif zlib_okay :
-	zlib_flags["LIBS"] = ["z"]
+    zlib_flags["LIBS"] = ["z"]
 if (not zlib_okay) and conf.CheckLib("z") :
-	zlib_flags["LIBS"] = ["z"]
-	zlib_okay = True
+    zlib_flags["LIBS"] = ["z"]
+    zlib_okay = True
 if zlib_okay :
-	env["ZLIB_FLAGS"] = zlib_flags
+    env["ZLIB_FLAGS"] = zlib_flags
 elif not env.get("zlib_bundled_enable", True) :
-	print "Error: Zlib not found and zlib_bundled_enable is false"
-	Exit(1)
+    print "Error: Zlib not found and zlib_bundled_enable is false"
+    Exit(1)
 else :
-	env["ZLIB_BUNDLED"] = True
+    env["ZLIB_BUNDLED"] = True
 
 if conf.CheckLib("resolv") :
-	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["resolv"]
+    env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["resolv"]
 
 if env["PLATFORM"] != "win32" :
-	if conf.CheckLib("pthread") :
-		env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["pthread"]
+    if conf.CheckLib("pthread") :
+        env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["pthread"]
 
 if conf.CheckLib("dl") :
-	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["dl"]
+    env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["dl"]
 
 if conf.CheckLib("m") :
-	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["m"]
+    env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["m"]
 
 if conf.CheckLib("c") :
-	env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["c"]
+    env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["c"]
 
 # Even if you find stdc++ on HP-UX, it is the wrong one for aCC
 if env["PLATFORM"] != "hpux" :
-	if conf.CheckLib("stdc++", language='CXX') :
-		env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
+    if conf.CheckLib("stdc++", language='CXX') :
+        env["PLATFORM_FLAGS"]["LIBS"] = env["PLATFORM_FLAGS"].get("LIBS", []) + ["stdc++"]
 conf.Finish()
 
 # Boost
 boost_conf_env = conf_env.Clone()
 boost_flags = {}
 if env.get("boost_libdir", None) :
-	boost_flags["LIBPATH"] = [env["boost_libdir"]]
+    boost_flags["LIBPATH"] = [env["boost_libdir"]]
 if env.get("boost_includedir", None) :
-	if env["PLATFORM"] == "win32" or env["PLATFORM"] == "hpux" or env["PLATFORM"] == "sunos" :
-		boost_flags["CPPPATH"] = [env["boost_includedir"]]
-	else :
-		# Using isystem to avoid getting warnings from a system boost
-		# Unfortunately, this also disables dependency tracking
-		boost_flags["CPPFLAGS"] = [("-isystem", env["boost_includedir"])]
+    if env["PLATFORM"] == "win32" or env["PLATFORM"] == "hpux" or env["PLATFORM"] == "sunos" :
+        boost_flags["CPPPATH"] = [env["boost_includedir"]]
+    else :
+        # Using isystem to avoid getting warnings from a system boost
+        # Unfortunately, this also disables dependency tracking
+        boost_flags["CPPFLAGS"] = [("-isystem", env["boost_includedir"])]
 boost_conf_env.MergeFlags(boost_flags)
 conf = Configure(boost_conf_env)
-boostLibs = [("signals", None), ("system", "system/system_error.hpp"), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("serialization", "archive/text_oarchive.hpp"), ("date_time", "date_time/date.hpp")]
+boostLibs = [(None, "signals2.hpp"), ("system", "system/system_error.hpp"), ("thread", None), ("regex", None), ("program_options", None), ("filesystem", None), ("serialization", "archive/text_oarchive.hpp"), ("date_time", "date_time/date.hpp")]
 allLibsPresent = True
 libNames = []
 for (lib, header) in boostLibs :
-	if header :
-		header = "boost/" + header
-	else :
-		header = "boost/" + lib + ".hpp"
-	if not conf.CheckCXXHeader(header) :
-		allLibsPresent = False
-		break
-	if env["PLATFORM"] != "win32" :
-		libName = "boost_" + lib
-		if not conf.CheckLib(libName, language='CXX') :
-			libName += "-mt"
-			if not conf.CheckLib(libName, language='CXX') :
-				allLibsPresent = False
-				break
-		libNames.append(libName)
-if allLibsPresent :
-	boost_flags["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
-	env["BOOST_FLAGS"] = boost_flags
-	if env["PLATFORM"] != "win32" :
-		env["BOOST_FLAGS"].update({"LIBS": libNames})
-	if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
-		# FIXME: Remove this workaround when UUID is available in most distros
-		env["BOOST_BUNDLED_UUID_ONLY"] = True
-		env["BOOST_FLAGS"]["CPPDEFINES"] = ["BOOST_SIGNALS_NO_DEPRECATION_WARNING"]
+    if header :
+        header = "boost/" + header
+    else :
+        header = "boost/" + lib + ".hpp"
+    if not conf.CheckCXXHeader(header) :
+        allLibsPresent = False
+        break
+    if lib and env["PLATFORM"] != "win32" :
+        libName = "boost_" + lib
+        if not conf.CheckLib(libName, language='CXX') :
+            libName += "-mt"
+            if not conf.CheckLib(libName, language='CXX') :
+                allLibsPresent = False
+                break
+        libNames.append(libName)
+if not env.get("boost_force_bundled") and allLibsPresent :
+    env["BOOST_FLAGS"] = boost_flags
+    if env["PLATFORM"] != "win32" :
+        env["BOOST_FLAGS"].update({"LIBS": libNames})
+    if not conf.CheckCXXHeader("boost/uuid/uuid.hpp") :
+        # FIXME: Remove this workaround when UUID is available in most distros
+        env["BOOST_BUNDLED_UUID_ONLY"] = True
 elif not env.get("boost_bundled_enable", True) :
-	print "Error: Boost not found and boost_bundled_enable is false"
-	Exit(1)
+    print "Error: Boost not found and boost_bundled_enable is false"
+    Exit(1)
 else :
-	env["BOOST_BUNDLED"] = True
+    env["BOOST_BUNDLED"] = True
 conf.Finish()
 
 
 # Xss
 env["HAVE_XSS"] = 0
 if env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
-	xss_flags = {
-			"LIBPATH": ["/usr/X11R6/lib"],
-			"LIBS": ["Xss"]
-		}
-	xss_env = conf_env.Clone()
-	xss_env.MergeFlags(xss_flags)
-	conf = Configure(xss_env)
-	if conf.CheckFunc("XScreenSaverQueryExtension") :
-		env["HAVE_XSS"] = 1
-		env["XSS_FLAGS"] = xss_flags
-	conf.Finish()
+    xss_flags = {
+            "LIBPATH": ["/usr/X11R6/lib"],
+            "LIBS": ["Xss"]
+        }
+    xss_env = conf_env.Clone()
+    xss_env.MergeFlags(xss_flags)
+    conf = Configure(xss_env)
+    if conf.CheckFunc("XScreenSaverQueryExtension") :
+        env["HAVE_XSS"] = 1
+        env["XSS_FLAGS"] = xss_flags
+    conf.Finish()
 
 # GConf
 env["HAVE_GCONF"] = 0
 if env.get("try_gconf", True) and env["PLATFORM"] != "win32" and env["PLATFORM"] != "darwin" :
-	gconf_env = conf_env.Clone()
-	conf = Configure(gconf_env, custom_tests = {"CheckPKG": CheckPKG})
-	if conf.CheckPKG("gconf-2.0") :
-		gconf_bare_env = Environment()
-		gconf_bare_env.ParseConfig('pkg-config --cflags gconf-2.0 gobject-2.0 --libs gconf-2.0 gobject-2.0')
-		gconf_flags = {
-				"LIBS": gconf_bare_env["LIBS"],
-				"CCFLAGS": gconf_bare_env["CCFLAGS"],
-				"CPPPATH": gconf_bare_env["CPPPATH"],
-				"CPPDEFINES": gconf_bare_env.get("CPPDEFINES", []),
-			}
-		gconf_env.MergeFlags(gconf_flags)
-		if conf.CheckCHeader("gconf/gconf-client.h") and conf.CheckLib("gconf-2") :
-			env["HAVE_GCONF"] = 1
-			env["GCONF_FLAGS"] = {
-				"LIBS": gconf_env["LIBS"],
-				"CCFLAGS": gconf_env["CCFLAGS"],
-				"CPPPATH": gconf_env["CPPPATH"],
-				"CPPDEFINES": gconf_env.get("CPPDEFINES", []),
-			}
-	conf.Finish()
+    gconf_env = conf_env.Clone()
+    conf = Configure(gconf_env, custom_tests = {"CheckPKG": CheckPKG})
+    if conf.CheckPKG("gconf-2.0") :
+        gconf_bare_env = Environment()
+        gconf_bare_env.ParseConfig('pkg-config --cflags gconf-2.0 gobject-2.0 --libs gconf-2.0 gobject-2.0')
+        if os.path.basename(env["CXX"]).startswith(("g++", "clang++")) :
+            gconf_bare_env["CCFLAGS"] = [("-isystem" + ccflag) for ccflag in gconf_bare_env["CPPPATH"]]
+            gconf_bare_env["CPPPATH"] = []
+        gconf_flags = {
+                "LIBS": gconf_bare_env["LIBS"],
+                "CCFLAGS": gconf_bare_env["CCFLAGS"],
+                "CPPPATH": gconf_bare_env["CPPPATH"],
+                "CPPDEFINES": gconf_bare_env.get("CPPDEFINES", []),
+            }
+        gconf_env.MergeFlags(gconf_flags)
+        if conf.CheckCHeader("gconf/gconf-client.h") and conf.CheckLib("gconf-2") :
+            env["HAVE_GCONF"] = 1
+            env["GCONF_FLAGS"] = {
+                "LIBS": gconf_env["LIBS"],
+                "CCFLAGS": gconf_env["CCFLAGS"],
+                "CPPPATH": gconf_env.get("CPPPATH", []),
+                "CPPDEFINES": gconf_env.get("CPPDEFINES", []),
+            }
+    conf.Finish()
 
 # Sparkle
 env["HAVE_SPARKLE"] = 0
 if env["PLATFORM"] == "darwin" :
-	sparkle_flags = {
-			"FRAMEWORKPATH": ["/Library/Frameworks"],
-			"FRAMEWORKS": ["Sparkle"]
-		}
-	sparkle_env = conf_env.Clone()
-	sparkle_env.MergeFlags(sparkle_flags)
-	conf = Configure(sparkle_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
-	if conf.CheckObjCHeader("Sparkle/Sparkle.h") :
-		env["HAVE_SPARKLE"] = 1
-		env["SPARKLE_FLAGS"] = sparkle_flags
-		env["SPARKLE_FRAMEWORK"] = "/Library/Frameworks/Sparkle.framework"
-	conf.Finish()
+    sparkle_flags = {
+            "FRAMEWORKPATH": ["3rdParty/Sparkle/Sparkle-1.14.0"],
+            "FRAMEWORKS": ["Sparkle"]
+        }
+    sparkle_env = conf_env.Clone()
+    sparkle_env.MergeFlags(sparkle_flags)
+    conf = Configure(sparkle_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
+    if conf.CheckObjCHeader("Sparkle/Sparkle.h") :
+        env["HAVE_SPARKLE"] = 1
+        env["SPARKLE_FLAGS"] = sparkle_flags
+        env["SPARKLE_FRAMEWORK"] = Dir("../../3rdParty/Sparkle/Sparkle-1.14.0/Sparkle.framework")
+        env["SPARKLE_COPYING"] = File("../../3rdParty/Sparkle/Sparkle-1.14.0/LICENSE")
+    conf.Finish()
+
+    if env.get("sparkle_public_dsa_key", None) != None :
+        env["SWIFT_SPARKLE_PUBLIC_DSA_KEY"] = File(env.get("sparkle_public_dsa_key"))
+    else :
+        env["SWIFT_SPARKLE_PUBLIC_DSA_KEY"] = None
 
 # Growl
 env["HAVE_GROWL"] = 0
 if env["PLATFORM"] == "darwin" :
-	growl_flags = {
-			"FRAMEWORKPATH": ["/Library/Frameworks"],
-			"FRAMEWORKS": ["Growl"]
-		}
-	growl_env = conf_env.Clone()
-	growl_env.MergeFlags(growl_flags)
-	conf = Configure(growl_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
-	if conf.CheckObjCHeader("Growl/Growl.h") :
-		env["HAVE_GROWL"] = 1
-		env["GROWL_FLAGS"] = growl_flags
-		env["GROWL_FRAMEWORK"] = "/Library/Frameworks/Growl.framework"
-	conf.Finish()
-
-# Snarl
-if env["PLATFORM"] == "win32" :
-	env["HAVE_SNARL"] = True
+    growl_flags = {
+            "FRAMEWORKPATH": ["/Library/Frameworks"],
+            "FRAMEWORKS": ["Growl"]
+        }
+    growl_env = conf_env.Clone()
+    growl_env.MergeFlags(growl_flags)
+    conf = Configure(growl_env, custom_tests = { "CheckObjCHeader" : checkObjCHeader })
+    if conf.CheckObjCHeader("Growl/Growl.h") :
+        env["HAVE_GROWL"] = 1
+        env["GROWL_FLAGS"] = growl_flags
+        env["GROWL_FRAMEWORK"] = "/Library/Frameworks/Growl.framework"
+    conf.Finish()
 
 # LibXML
 conf = Configure(conf_env, custom_tests = {"CheckVersion": CheckVersion})
 if env.get("try_libxml", True) and conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
 #and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623) :
-	env["HAVE_LIBXML"] = 1
-	env["LIBXML_FLAGS"] = { "LIBS": ["xml2"] }
+    env["HAVE_LIBXML"] = 1
+    env["LIBXML_FLAGS"] = { "LIBS": ["xml2"] }
 conf.Finish()
 
 if env.get("try_libxml", True) and not env.get("HAVE_LIBXML", 0) :
-	libxml_env = conf_env.Clone()
-	libxml_env.Append(CPPPATH = ["/usr/include/libxml2"])
-	conf = Configure(libxml_env, custom_tests = {"CheckVersion": CheckVersion})
-	if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
-#	and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623):
-		env["HAVE_LIBXML"] = 1
-		libxml_env.Append()
-		if os.path.basename(env["CC"]) in ("clang", "gcc"):
-			env["LIBXML_FLAGS"] = { "CXXFLAGS": ["-isystem/usr/include/libxml2"], "LIBS": ["xml2"] }
-		else:
-			env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
-	conf.Finish()
+    libxml_env = conf_env.Clone()
+    libxml_env.Append(CPPPATH = ["/usr/include/libxml2"])
+    conf = Configure(libxml_env, custom_tests = {"CheckVersion": CheckVersion})
+    if conf.CheckCHeader("libxml/parser.h") and conf.CheckLib("xml2") :
+#   and conf.CheckVersion("LibXML", "2.6.23", "LIBXML_VERSION", "libxml/xmlversion.h", 20623):
+        env["HAVE_LIBXML"] = 1
+        libxml_env.Append()
+        if os.path.basename(env["CC"]) in ("clang", "gcc"):
+            env["LIBXML_FLAGS"] = { "CXXFLAGS": ["-isystem/usr/include/libxml2"], "LIBS": ["xml2"] }
+        else:
+            env["LIBXML_FLAGS"] = { "CPPPATH": ["/usr/include/libxml2"], "LIBS": ["xml2"] }
+    conf.Finish()
 
 # Expat
 if env.get("try_expat", True) and not env.get("HAVE_LIBXML",0) :
-	expat_conf_env = conf_env.Clone()
-	expat_flags = {}
-	if env.get("expat_libdir", None) :
-		expat_flags["LIBPATH"] = [env["expat_libdir"]]
-	if env.get("expat_includedir", None) :
-		expat_flags["CPPPATH"] = [env["expat_includedir"]]
-	expat_conf_env.MergeFlags(expat_flags)
-	conf = Configure(expat_conf_env)
-	if conf.CheckCHeader("expat.h") and conf.CheckLib(env["expat_libname"]) :
-		env["HAVE_EXPAT"] = 1
-		env["EXPAT_FLAGS"] = { "LIBS": [env["expat_libname"]] }
-		env["EXPAT_FLAGS"].update(expat_flags)
-	conf.Finish()
+    expat_conf_env = conf_env.Clone()
+    expat_flags = {}
+    if env.get("expat_libdir", None) :
+        expat_flags["LIBPATH"] = [env["expat_libdir"]]
+    if env.get("expat_includedir", None) :
+        expat_flags["CPPPATH"] = [env["expat_includedir"]]
+    expat_conf_env.MergeFlags(expat_flags)
+    conf = Configure(expat_conf_env)
+    if conf.CheckCHeader("expat.h") and conf.CheckLib(env["expat_libname"]) :
+        env["HAVE_EXPAT"] = 1
+        env["EXPAT_FLAGS"] = { "LIBS": [env["expat_libname"]] }
+        env["EXPAT_FLAGS"].update(expat_flags)
+    conf.Finish()
 
 # Bundled expat
 bundledExpat = False
 if not env.get("HAVE_EXPAT", 0) and not env.get("HAVE_LIBXML", 0) :
-	print "Expat or LibXML not found. Using bundled Expat"
-	SConscript("#/3rdParty/Expat/SConscript")
-	env["HAVE_EXPAT"] = 1
-	env["EXPAT_BUNDLED"] = True
+    print "Expat or LibXML not found. Using bundled Expat"
+    SConscript("#/3rdParty/Expat/SConscript")
+    env["HAVE_EXPAT"] = 1
+    env["EXPAT_BUNDLED"] = True
 
 ################################################################################
 # IDN library
@@ -340,292 +383,294 @@ icu_env = conf_env.Clone()
 use_icu = bool(env["icu"])
 icu_prefix = ""
 if isinstance(env["icu"], str) :
-				icu_prefix = env["icu"]
+                icu_prefix = env["icu"]
 icu_flags = {}
 if icu_prefix :
-	icu_flags = { "CPPPATH": [os.path.join(icu_prefix, "include")] }
-	icu_flags["LIBPATH"] = [os.path.join(icu_prefix, "lib")]
-	icu_env.MergeFlags(icu_flags)
+    icu_flags = { "CPPPATH": [os.path.join(icu_prefix, "include")] }
+    icu_flags["LIBPATH"] = [os.path.join(icu_prefix, "lib")]
+    icu_env.MergeFlags(icu_flags)
 
 icu_conf = Configure(icu_env)
 if use_icu and icu_conf.CheckCHeader("unicode/usprep.h") :
-	env["HAVE_ICU"] = 1
-	env["ICU_FLAGS"] = icu_flags
-	env["ICU_FLAGS"]["LIBS"] = ["icuuc"]
+    env["HAVE_ICU"] = 1
+    env["ICU_FLAGS"] = icu_flags
+    env["ICU_FLAGS"]["LIBS"] = ["icuuc"]
 icu_conf.Finish()
 
 # LibIDN
 libidn_conf_env = conf_env.Clone()
 libidn_flags = {}
 if env.get("libidn_libdir", None) :
-	libidn_flags["LIBPATH"] = [env["libidn_libdir"]]
+    libidn_flags["LIBPATH"] = [env["libidn_libdir"]]
 if env.get("libidn_includedir", None) :
-	libidn_flags["CPPPATH"] = [env["libidn_includedir"]]
+    libidn_flags["CPPPATH"] = [env["libidn_includedir"]]
 libidn_conf_env.MergeFlags(libidn_flags)
 conf = Configure(libidn_conf_env)
 if env.get("try_libidn", True) and not env.get("HAVE_ICU") and conf.CheckCHeader("idna.h") and conf.CheckLib(env["libidn_libname"]) :
-	env["HAVE_LIBIDN"] = 1
-	env["LIBIDN_FLAGS"] = { "LIBS": [env["libidn_libname"]] }
-	env["LIBIDN_FLAGS"].update(libidn_flags)
+    env["HAVE_LIBIDN"] = 1
+    env["LIBIDN_FLAGS"] = { "LIBS": [env["libidn_libname"]] }
+    env["LIBIDN_FLAGS"].update(libidn_flags)
 conf.Finish()
 
 # Fallback to bundled LibIDN
 if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
-	if env.get("libidn_bundled_enable", True)  :
-		env["HAVE_LIBIDN"] = 1
-		env["LIBIDN_BUNDLED"] = 1
-	elif env.get("need_idn", True):
-		print "Error: ICU and LIBIDN not found, and libidn_bundled_enable is false"
-		Exit(1)
-	else:
-		print "Proceeding without an IDN library because need_idn was false. This will break all internal binaries"
+    if env.get("libidn_bundled_enable", True)  :
+        env["HAVE_LIBIDN"] = 1
+        env["LIBIDN_BUNDLED"] = 1
+    elif env.get("need_idn", True):
+        print "Error: ICU and LIBIDN not found, and libidn_bundled_enable is false"
+        Exit(1)
+    else:
+        print "Proceeding without an IDN library because need_idn was false. This will break all internal binaries"
 
 # Unbound
 if env["unbound"] :
-	env["LDNS_BUNDLED"] = 1
-	env["UNBOUND_BUNDLED"] = 1
+    env["LDNS_BUNDLED"] = 1
+    env["UNBOUND_BUNDLED"] = 1
 else :
-	env["LDNS_FLAGS"] = {}
-	env["UNBOUND_FLAGS"] = {}
+    env["LDNS_FLAGS"] = {}
+    env["UNBOUND_FLAGS"] = {}
 
 # LibMiniUPnPc
 if env["experimental_ft"] :
-	libminiupnpc_flags = {"CPPPATH": ["/usr/include/miniupnpc/"]}
-	libminiupnpc_conf_env = conf_env.Clone()
-	if env.get("libminiupnpc_libdir", None) :
-		libminiupnpc_flags["LIBPATH"] = [env["libminiupnpc_libdir"]]
-	if env.get("libminiupnpc_includedir", None) :
-		libminiupnpc_flags["CPPPATH"] = [env["libminiupnpc_includedir"]]
-	libminiupnpc_conf_env.MergeFlags(libminiupnpc_flags)
-	conf = Configure(libminiupnpc_conf_env)
-	if conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) :
-		env["HAVE_LIBMINIUPNPC"] = 1
-		env["LIBMINIUPNPC_FLAGS"] = { "LIBS": ["miniupnpc"] }
-		env["LIBMINIUPNPC_FLAGS"].update(libminiupnpc_flags)
-	else :
-		env["LIBMINIUPNPC_BUNDLED"] = 1
-	conf.Finish()
+    libminiupnpc_flags = {"CPPPATH": ["/usr/include/miniupnpc/"]}
+    libminiupnpc_conf_env = conf_env.Clone()
+    if env.get("libminiupnpc_libdir", None) :
+        libminiupnpc_flags["LIBPATH"] = [env["libminiupnpc_libdir"]]
+    if env.get("libminiupnpc_includedir", None) :
+        libminiupnpc_flags["CPPPATH"] = [env["libminiupnpc_includedir"]]
+    libminiupnpc_conf_env.MergeFlags(libminiupnpc_flags)
+    conf = Configure(libminiupnpc_conf_env)
+    if not env.get("libminiupnpc_force_bundled") and conf.CheckCHeader("miniupnpc.h") and conf.CheckLib(env["libminiupnpc_libname"]) :
+        env["HAVE_LIBMINIUPNPC"] = 1
+        env["LIBMINIUPNPC_FLAGS"] = { "LIBS": ["miniupnpc"] }
+        env["LIBMINIUPNPC_FLAGS"].update(libminiupnpc_flags)
+    else :
+        env["LIBMINIUPNPC_BUNDLED"] = 1
+    conf.Finish()
 else :
-	env["LIBMINIUPNPC_FLAGS"] = {}
+    env["LIBMINIUPNPC_FLAGS"] = {}
 
 # LibNATPMP
 if env["experimental_ft"] :
-	libnatpmp_flags = {}
-	libnatpmp_conf_env = conf_env.Clone()
-	if env.get("libnatpmp_libdir", None) :
-		libnatpmp_flags["LIBPATH"] = [env["libnatpmp_libdir"]]
-	if env.get("libnatpmp_includedir", None) :
-		libnatpmp_flags["CPPPATH"] = [env["libnatpmp_includedir"]]
-	libnatpmp_conf_env.MergeFlags(libnatpmp_flags)
-	conf = Configure(libnatpmp_conf_env)
-	if conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) :
-		env["HAVE_LIBNATPMP"] = 1
-		env["LIBNATPMP_FLAGS"] = { "LIBS": ["natpmp"] }
-		env["LIBNATPMP_FLAGS"].update(libnatpmp_flags)
-	else :
-		env["LIBNATPMP_BUNDLED"] = 1
-	conf.Finish()
+    libnatpmp_flags = {}
+    libnatpmp_conf_env = conf_env.Clone()
+    if env.get("libnatpmp_libdir", None) :
+        libnatpmp_flags["LIBPATH"] = [env["libnatpmp_libdir"]]
+    if env.get("libnatpmp_includedir", None) :
+        libnatpmp_flags["CPPPATH"] = [env["libnatpmp_includedir"]]
+    libnatpmp_conf_env.MergeFlags(libnatpmp_flags)
+    conf = Configure(libnatpmp_conf_env)
+    if  not env.get("libnatpmp_force_bundled") and conf.CheckCHeader("natpmp.h") and conf.CheckLib(env["libnatpmp_libname"]) :
+        env["HAVE_LIBNATPMP"] = 1
+        env["LIBNATPMP_FLAGS"] = { "LIBS": ["natpmp"] }
+        env["LIBNATPMP_FLAGS"].update(libnatpmp_flags)
+    else :
+        env["LIBNATPMP_BUNDLED"] = 1
+    conf.Finish()
 else :
-	env["LIBNATPMP_FLAGS"] = {}
+    env["LIBNATPMP_FLAGS"] = {}
 
 # SQLite
 if env["experimental"] :
-	sqlite_conf_env = conf_env.Clone()
-	sqlite_flags = {}
-	if env.get("sqlite_libdir", None) :
-		sqlite_flags["LIBPATH"] = [env["sqlite_libdir"]]
-	if env.get("sqlite_includedir", None) :
-		sqlite_flags["CPPPATH"] = [env["sqlite_includedir"]]
-	sqlite_conf_env.MergeFlags(sqlite_flags)
-	conf = Configure(sqlite_conf_env)
-	if conf.CheckCHeader("sqlite3.h") and conf.CheckLib(env["sqlite_libname"]) and not env.get("sqlite_force_bundled", False):
-		env["HAVE_SQLITE"] = 1
-		env["SQLITE_FLAGS"] = { "LIBS": [env["sqlite_libname"]] }
-		env["SQLITE_FLAGS"].update(sqlite_flags)
-	else :
-		env["SQLITE_BUNDLED"] = 1
-	conf.Finish()
+    sqlite_conf_env = conf_env.Clone()
+    sqlite_flags = {}
+    if env.get("sqlite_libdir", None) :
+        sqlite_flags["LIBPATH"] = [env["sqlite_libdir"]]
+    if env.get("sqlite_includedir", None) :
+        sqlite_flags["CPPPATH"] = [env["sqlite_includedir"]]
+    sqlite_conf_env.MergeFlags(sqlite_flags)
+    conf = Configure(sqlite_conf_env)
+    if conf.CheckCHeader("sqlite3.h") and conf.CheckLib(env["sqlite_libname"]) and not env.get("sqlite_force_bundled", False):
+        env["HAVE_SQLITE"] = 1
+        env["SQLITE_FLAGS"] = { "LIBS": [env["sqlite_libname"]] }
+        env["SQLITE_FLAGS"].update(sqlite_flags)
+    else :
+        env["SQLITE_BUNDLED"] = 1
+    conf.Finish()
 else :
-	env["SQLITE_FLAGS"] = {}
+    env["SQLITE_FLAGS"] = {}
 
 
 # Lua
 lua_conf_env = conf_env.Clone()
 lua_flags = {}
 if env.get("lua_libdir", None) :
-	lua_flags["LIBPATH"] = [env["lua_libdir"]]
+    lua_flags["LIBPATH"] = [env["lua_libdir"]]
 if env.get("lua_includedir", None) :
-	lua_flags["CPPPATH"] = [env["lua_includedir"]]
+    lua_flags["CPPPATH"] = [env["lua_includedir"]]
 lua_conf_env.MergeFlags(lua_flags)
 conf = Configure(lua_conf_env)
 if not env.get("lua_force_bundled", False) and conf.CheckLibWithHeader(env["lua_libname"], "lua.hpp", "cxx", autoadd = 0) :
-	env["HAVE_LUA"] = 1
-	env["LUA_FLAGS"] = { "LIBS": [env["lua_libname"]] }
-	lua_version = GetVersion(conf, "LUA_VERSION_NUM", "lua.h")
-	if lua_version > 0 :
-		env["LUA_FLAGS"]["LUA_VERSION"] = str(lua_version // 100) + "." + str(lua_version % 100)
-	else :
-		print "Warning: Unable to determine Lua version. Not installing Lua libraries."
-	env["LUA_FLAGS"].update(lua_flags)
+    env["HAVE_LUA"] = 1
+    env["LUA_FLAGS"] = { "LIBS": [env["lua_libname"]] }
+    lua_version = GetVersion(conf, "LUA_VERSION_NUM", "lua.h")
+    if lua_version > 0 :
+        env["LUA_FLAGS"]["LUA_VERSION"] = str(lua_version // 100) + "." + str(lua_version % 100)
+    else :
+        print "Warning: Unable to determine Lua version. Not installing Lua libraries."
+    env["LUA_FLAGS"].update(lua_flags)
 else :
-	env["LUA_BUNDLED"] = 1
+    env["LUA_BUNDLED"] = 1
 conf.Finish()
 
 # Readline
 editline_conf_env = conf_env.Clone()
 editline_flags = {}
 if env.get("editline_libdir", None) :
-	editline_flags["LIBPATH"] = [env["editline_libdir"]]
+    editline_flags["LIBPATH"] = [env["editline_libdir"]]
 if env.get("editline_includedir", None) :
-	editline_flags["CPPPATH"] = [env["editline_includedir"]]
+    editline_flags["CPPPATH"] = [env["editline_includedir"]]
 editline_conf_env.MergeFlags(editline_flags)
 conf = Configure(editline_conf_env)
 if conf.CheckLibWithHeader(env["editline_libname"], ["stdio.h", "editline/readline.h"], "c") :
-	env["HAVE_EDITLINE"] = 1
-	env["EDITLINE_FLAGS"] = { "LIBS": [env["editline_libname"]] }
-	env["EDITLINE_FLAGS"].update(editline_flags)
+    env["HAVE_EDITLINE"] = 1
+    env["EDITLINE_FLAGS"] = { "LIBS": [env["editline_libname"]] }
+    env["EDITLINE_FLAGS"].update(editline_flags)
 conf.Finish()
 
 # Avahi
 avahi_conf_env = conf_env.Clone()
 avahi_flags = {}
 if env.get("avahi_libdir", None) :
-	avahi_flags["LIBPATH"] = [env["avahi_libdir"]]
+    avahi_flags["LIBPATH"] = [env["avahi_libdir"]]
 if env.get("avahi_includedir", None) :
-	avahi_flags["CPPPATH"] = [env["avahi_includedir"]]
+    avahi_flags["CPPPATH"] = [env["avahi_includedir"]]
 avahi_conf_env.MergeFlags(avahi_flags)
 conf = Configure(avahi_conf_env)
 if env.get("try_avahi", True) and conf.CheckCHeader("avahi-client/client.h") and conf.CheckLib("avahi-client") and conf.CheckLib("avahi-common") :
-	env["HAVE_AVAHI"] = True
-	env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
-	env["AVAHI_FLAGS"].update(avahi_flags)
+    env["HAVE_AVAHI"] = True
+    env["AVAHI_FLAGS"] = { "LIBS": ["avahi-client", "avahi-common"] }
+    env["AVAHI_FLAGS"].update(avahi_flags)
 conf.Finish()
 
 # Qt
 if env["qt"] :
-	env["QTDIR"] = env["qt"]
+    env["QTDIR"] = env["qt"]
 
-# Check for OS X Secure Transport
-if not env.get("openssl_force_bundled", False) and env["PLATFORM"] == "darwin" and env["target"] == "native"  :
-	env["HAVE_SECURETRANSPORT"] = True
-else :
-	env["HAVE_SECURETRANSPORT"] = False
 
+################################################################################
+# TLS backend selection
+################################################################################
+env["OPENSSL_FLAGS"] = {}
+if env.get("tls_backend") == "native" :
+    if env["PLATFORM"] == "win32" :
+        env["HAVE_SCHANNEL"] = True
+    elif env["PLATFORM"] == "darwin" and env["target"] == "native":
+        env["HAVE_SECURETRANSPORT"] = True
+    elif env["target"] in ("iphone-device", "iphone-simulator", "xcode", "android") :
+        env["tls_backend"] = "openssl_bundled"
+    else :
+        env["tls_backend"] = "openssl"
 # OpenSSL
-openssl_env = conf_env.Clone()
-if env.get("openssl_force_bundled", False) or env["target"] in ("iphone-device", "iphone-simulator", "xcode", "android") :
-	env["OPENSSL_BUNDLED"] = True
-	env["HAVE_OPENSSL"] = True
-elif not env["HAVE_SECURETRANSPORT"] :
-	use_openssl = bool(env["openssl"])
-	openssl_prefix = ""
-	if isinstance(env["openssl"], str) :
-		openssl_prefix = env["openssl"]
-	openssl_flags = {}
-	if openssl_prefix :
-		openssl_include = env.get("openssl_include", None)
-		openssl_libdir = env.get("openssl_libdir", None)
-		if openssl_include:
-			openssl_flags = {"CPPPATH":[openssl_include]}
-		else:
-			openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
-		if openssl_libdir:
-			openssl_flags["LIBPATH"] = [openssl_libdir]
-			env["OPENSSL_DIR"] = openssl_prefix
-		elif env["PLATFORM"] == "win32" :
-			openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
-			env["OPENSSL_DIR"] = openssl_prefix
-		else :
-			openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib")]
-		openssl_env.MergeFlags(openssl_flags)
+if env.get("tls_backend") == "openssl_bundled" :
+    env["OPENSSL_BUNDLED"] = True
+    env["HAVE_OPENSSL"] = True
+elif env.get("tls_backend") == "openssl" :
+    openssl_env = conf_env.Clone()
+    use_openssl = bool(env["openssl"])
+    openssl_prefix = ""
+    if isinstance(env["openssl"], str) :
+        openssl_prefix = env["openssl"]
+    openssl_flags = {}
+    if openssl_prefix :
+        openssl_include = env.get("openssl_include")
+        openssl_libdir = env.get("openssl_libdir")
+        if openssl_include:
+            openssl_flags = {"CPPPATH":[openssl_include]}
+        else:
+            openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
+        if openssl_libdir:
+            openssl_flags["LIBPATH"] = [openssl_libdir]
+            env["OPENSSL_DIR"] = openssl_prefix
+        elif env["PLATFORM"] == "win32" :
+            openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib", "VC")]
+            env["OPENSSL_DIR"] = openssl_prefix
+        else :
+            openssl_flags["LIBPATH"] = [os.path.join(openssl_prefix, "lib")]
+        openssl_env.MergeFlags(openssl_flags)
 
-	openssl_conf = Configure(openssl_env)
-	if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
-		env["HAVE_OPENSSL"] = 1
-		env["OPENSSL_FLAGS"] = openssl_flags
-		openssl_libnames = env.get("openssl_libnames", None)
-		if openssl_libnames:
-			env["OPENSSL_FLAGS"]["LIBS"] = openssl_libnames.split(',')
-		elif env["PLATFORM"] == "win32" :
-			env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MD", "ssleay32MD"]
-		else:
-			env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
-			if env["PLATFORM"] == "darwin" :
-				if platform.mac_ver()[0].startswith("10.5") :
-					env["OPENSSL_FLAGS"]["FRAMEWORKS"] = ["Security"]
-	else :
-		env["OPENSSL_FLAGS"] = {}
-		if env["PLATFORM"] == "win32" :
-			# If we're compiling for Windows and OpenSSL isn't being used, use Schannel
-			env["HAVE_SCHANNEL"] = True
-
-	openssl_conf.Finish()
+    openssl_conf = Configure(openssl_env)
+    if use_openssl and openssl_conf.CheckCHeader("openssl/ssl.h") :
+        env["HAVE_OPENSSL"] = 1
+        env["OPENSSL_FLAGS"] = openssl_flags
+        openssl_libnames = env.get("openssl_libnames")
+        if openssl_libnames:
+            env["OPENSSL_FLAGS"]["LIBS"] = openssl_libnames.split(',')
+        elif env["PLATFORM"] == "win32" :
+            env["OPENSSL_FLAGS"]["LIBS"] = ["libeay32MD", "ssleay32MD"]
+        else:
+            env["OPENSSL_FLAGS"]["LIBS"] = ["ssl", "crypto"]
+            if env["PLATFORM"] == "darwin" :
+                if platform.mac_ver()[0].startswith("10.5") :
+                    env["OPENSSL_FLAGS"]["FRAMEWORKS"] = ["Security"]
+    openssl_conf.Finish()
 
 if env["PLATFORM"] == "win32" :
-	# On Windows link to secur32. It is needed by Swiften/SASL/WindowsAuthentication
-	env.Append(LIBS = ["secur32"])
+    # On Windows link to secur32. It is needed by Swiften/SASL/WindowsAuthentication
+    env.Append(LIBS = ["secur32"])
 
 #Hunspell
 hunspell_env = conf_env.Clone()
 hunspell_prefix = isinstance(env.get("hunspell_prefix", False), str) and env["hunspell_prefix"] or ""
 hunspell_flags = {}
 if hunspell_prefix :
-	hunspell_flags = {"CPPPATH":[os.path.join(hunspell_prefix, "include")], "LIBPATH":[os.path.join(hunspell_prefix, "lib")]}
+    hunspell_flags = {"CPPPATH":[os.path.join(hunspell_prefix, "include")], "LIBPATH":[os.path.join(hunspell_prefix, "lib")]}
 hunspell_env.MergeFlags(hunspell_flags)
 
 env["HAVE_HUNSPELL"] = 0;
 if env.get("hunspell_enable", False) :
-	hunspell_conf = Configure(hunspell_env)
-	if hunspell_conf.CheckCXXHeader("hunspell/hunspell.hxx") and hunspell_conf.CheckLib("hunspell") :
-		env["HAVE_HUNSPELL"] = 1
-		hunspell_flags["LIBS"] = ["hunspell"]
-		env["HUNSPELL_FLAGS"] = hunspell_flags
-	hunspell_conf.Finish()
+    hunspell_conf = Configure(hunspell_env)
+    if hunspell_conf.CheckCXXHeader("hunspell/hunspell.hxx") and hunspell_conf.CheckLib("hunspell") :
+        env["HAVE_HUNSPELL"] = 1
+        hunspell_flags["LIBS"] = ["hunspell"]
+        env["HUNSPELL_FLAGS"] = hunspell_flags
+    hunspell_conf.Finish()
 
 # Bonjour
 if env["PLATFORM"] == "darwin" and env["target"] == "native" :
-	env["HAVE_BONJOUR"] = 1
+    env["HAVE_BONJOUR"] = 1
 elif env.get("bonjour", False) :
-	bonjour_env = conf_env.Clone()
-	bonjour_conf = Configure(bonjour_env)
-	bonjour_flags = {}
-	if env.get("bonjour") != True :
-		bonjour_prefix = env["bonjour"]
-		bonjour_flags["CPPPATH"] = [os.path.join(bonjour_prefix, "include")]
-		bonjour_flags["LIBPATH"] = [os.path.join(bonjour_prefix, "lib", "win32")]
-	bonjour_env.MergeFlags(bonjour_flags)
-	if bonjour_conf.CheckCHeader("dns_sd.h") and bonjour_conf.CheckLib("dnssd") :
-		env["HAVE_BONJOUR"] = 1
-		env["BONJOUR_FLAGS"] = bonjour_flags
-		env["BONJOUR_FLAGS"]["LIBS"] = ["dnssd"]
-	bonjour_conf.Finish()
+    bonjour_env = conf_env.Clone()
+    bonjour_conf = Configure(bonjour_env)
+    bonjour_flags = {}
+    if env.get("bonjour") != True :
+        bonjour_prefix = env["bonjour"]
+        bonjour_flags["CPPPATH"] = [os.path.join(bonjour_prefix, "include")]
+        bonjour_flags["LIBPATH"] = [os.path.join(bonjour_prefix, "lib", "win32")]
+    bonjour_env.MergeFlags(bonjour_flags)
+    if bonjour_conf.CheckCHeader("dns_sd.h") and bonjour_conf.CheckLib("dnssd") :
+        env["HAVE_BONJOUR"] = 1
+        env["BONJOUR_FLAGS"] = bonjour_flags
+        env["BONJOUR_FLAGS"]["LIBS"] = ["dnssd"]
+    bonjour_conf.Finish()
 
 # Cocoa & IOKit
 if env["PLATFORM"] == "darwin" :
-	cocoa_conf = Configure(conf_env)
-	if cocoa_conf.CheckCHeader("IOKit/IOKitLib.h") :
-		env["HAVE_IOKIT"] = True
-	cocoa_conf.Finish()
+    cocoa_conf = Configure(conf_env)
+    if cocoa_conf.CheckCHeader("IOKit/IOKitLib.h") :
+        env["HAVE_IOKIT"] = True
+    cocoa_conf.Finish()
 
 # Qt
 try :
-	myenv = env.Clone()
-	myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
-	env["HAVE_QT"] = True
+    myenv = env.Clone()
+    myenv.Tool("qt4", toolpath = ["#/BuildTools/SCons/Tools"])
+    env["HAVE_QT"] = True
 except SCons.Errors.StopError:
-	env["HAVE_QT"] = False
+    env["HAVE_QT"] = False
 except Exception as e:
-	print "Info: %s" % str(e)
-	env["HAVE_QT"] = False
+    print "Info: %s" % str(e)
+    env["HAVE_QT"] = False
 
 ################################################################################
 # DocBook setup
 ################################################################################
 
 if env.get("docbook_xml") :
-	env["DOCBOOK_XML_DIR"] = env["docbook_xml"]
+    env["DOCBOOK_XML_DIR"] = env["docbook_xml"]
 if env.get("docbook_xsl") :
-	env["DOCBOOK_XSL_DIR"] = env["docbook_xsl"]
+    env["DOCBOOK_XSL_DIR"] = env["docbook_xsl"]
 
 
 ################################################################################
@@ -633,11 +678,11 @@ if env.get("docbook_xsl") :
 ################################################################################
 
 try:
-	if env.Dir("#/.git").exists() :
-		if not env.GetOption("clean") and env.get("install_git_hooks", True) :
-			env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
+    if env.Dir("#/.git").exists() :
+        if not env.GetOption("clean") and env.get("install_git_hooks", True) :
+            env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
 except TypeError:
-	print "You seem to be using Swift in a Git submodule. Not installing hooks."
+    print "You seem to be using Swift in a Git submodule. Not installing hooks."
 
 
 ################################################################################
@@ -645,23 +690,23 @@ except TypeError:
 ################################################################################
 
 if ARGUMENTS.get("replace_pragma_once", False) :
-	env.Tool("ReplacePragmaOnce", toolpath = ["#/BuildTools/SCons/Tools"])
+    env.Tool("ReplacePragmaOnce", toolpath = ["#/BuildTools/SCons/Tools"])
 
-	def relpath(path, start) :
-		i = len(os.path.commonprefix([path, start]))
-		return path[i+1:]
+    def relpath(path, start) :
+        i = len(os.path.commonprefix([path, start]))
+        return path[i+1:]
 
-	for actual_root, dirs, files in os.walk(root) :
-		if "3rdParty" in actual_root :
-			continue
-		for file in files :
-			if not file.endswith(".h") :
-				continue
-			include = relpath(os.path.join(actual_root, file), root)
-			env.ReplacePragmaOnce("#/include/" + include, "#/" + include)
-	env.Append(CPPPATH = ["#/include"])
+    for actual_root, dirs, files in os.walk(root) :
+        if "3rdParty" in actual_root :
+            continue
+        for file in files :
+            if not file.endswith(".h") :
+                continue
+            include = relpath(os.path.join(actual_root, file), root)
+            env.ReplacePragmaOnce("#/include/" + include, "#/" + include)
+    env.Append(CPPPATH = ["#/include"])
 else :
-	env.Append(CPPPATH = [root])
+    env.Append(CPPPATH = [root])
 
 
 ################################################################################
@@ -669,29 +714,29 @@ else :
 ################################################################################
 
 if ARGUMENTS.get("dump_trace", False) :
-	env.SetOption("no_exec", True)
-	env["TEST"] = True
-	env["BOOST_BUILD_BCP"] = True
-	env.Decider(lambda x, y, z : True)
-	SCons.Node.Python.Value.changed_since_last_build = (lambda x, y, z: True)
+    env.SetOption("no_exec", True)
+    env["TEST"] = True
+    env["BOOST_BUILD_BCP"] = True
+    env.Decider(lambda x, y, z : True)
+    SCons.Node.Python.Value.changed_since_last_build = (lambda x, y, z: True)
 
 # Modules
 modules = []
 if os.path.isdir(Dir("#/3rdParty").abspath) :
-	for dir in os.listdir(Dir("#/3rdParty").abspath) :
-		full_dir = os.path.join(Dir("#/3rdParty").abspath, dir)
-		if not os.path.isdir(full_dir) :
-			continue
-		sconscript = os.path.join(full_dir, "SConscript")
-		if os.path.isfile(sconscript) :
-			modules.append("3rdParty/" + dir)
+    for dir in os.listdir(Dir("#/3rdParty").abspath) :
+        full_dir = os.path.join(Dir("#/3rdParty").abspath, dir)
+        if not os.path.isdir(full_dir) :
+            continue
+        sconscript = os.path.join(full_dir, "SConscript")
+        if os.path.isfile(sconscript) :
+            modules.append("3rdParty/" + dir)
 for dir in os.listdir(Dir("#").abspath) :
-	full_dir = os.path.join(Dir("#").abspath, dir)
-	if not os.path.isdir(full_dir) :
-		continue
-	sconscript = os.path.join(full_dir, "SConscript")
-	if os.path.isfile(sconscript) :
-		modules.append(dir)
+    full_dir = os.path.join(Dir("#").abspath, dir)
+    if not os.path.isdir(full_dir) :
+        continue
+    sconscript = os.path.join(full_dir, "SConscript")
+    if os.path.isfile(sconscript) :
+        modules.append(dir)
 
 # QA comes last
 modules.remove("QA")
@@ -700,13 +745,13 @@ modules.append("QA")
 # Flags
 env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifTools"] and not m.startswith("3rdParty")]
 for stage in ["flags", "build"] :
-	env["SCONS_STAGE"] = stage
-	SConscript(dirs = map(lambda x : root + "/" + x, modules))
+    env["SCONS_STAGE"] = stage
+    SConscript(dirs = map(lambda x : root + "/" + x, modules))
 
 # SLOCCount
 if ARGUMENTS.get("sloccount", False) :
-	for project in env["PROJECTS"] :
-		env.SLOCCount("#/" + project)
+    for project in env["PROJECTS"] :
+        env.SLOCCount("#/" + project)
 
 
 ################################################################################
@@ -719,11 +764,11 @@ print "  -------------------"
 
 parsers = []
 if env.get("HAVE_LIBXML", 0):
-	parsers.append("LibXML")
+    parsers.append("LibXML")
 if env.get("HAVE_EXPAT", 0):
-	parsers.append("Expat")
-	if env.get("EXPAT_BUNDLED", False) :
-		parsers.append("(Bundled)")
+    parsers.append("Expat")
+    if env.get("EXPAT_BUNDLED", False) :
+        parsers.append("(Bundled)")
 print "  Projects: " + ' '.join(env["PROJECTS"])
 print ""
 print "  XML Parsers: " + ' '.join(parsers)
@@ -731,3 +776,8 @@ print "  XML Parsers: " + ' '.join(parsers)
 print "  TLS Support: " + (env.get("HAVE_OPENSSL",0) and "OpenSSL" or env.get("HAVE_SECURETRANSPORT",0) and "Secure Transport" or env.get("HAVE_SCHANNEL", 0) and "Schannel" or "Disabled")
 print "  DNSSD Support: " + (env.get("HAVE_BONJOUR") and "Bonjour" or (env.get("HAVE_AVAHI") and "Avahi" or "Disabled"))
 print
+
+if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) and not env.get("HAVE_SCHANNEL", 0) and not env.get("HAVE_SECURETRANSPORT", 0):
+    print "Error: A working TLS backend is required. Please check the documentation for more information."
+    Exit(1)
+

@@ -1,91 +1,90 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/optional.hpp>
 #include <string>
 
+#include <boost/optional.hpp>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API UserTune : public Payload {
-		public:
-			
-			UserTune();
-			
-			virtual ~UserTune();
+    class SWIFTEN_API UserTune : public Payload {
+        public:
 
-			const boost::optional< unsigned int >& getRating() const {
-				return rating;
-			}
+            UserTune();
 
-			void setRating(const boost::optional< unsigned int >& value) {
-				this->rating = value ;
-			}
+            virtual ~UserTune();
 
-			const boost::optional< std::string >& getTitle() const {
-				return title;
-			}
+            const boost::optional< unsigned int >& getRating() const {
+                return rating;
+            }
 
-			void setTitle(const boost::optional< std::string >& value) {
-				this->title = value ;
-			}
+            void setRating(const boost::optional< unsigned int >& value) {
+                this->rating = value ;
+            }
 
-			const boost::optional< std::string >& getTrack() const {
-				return track;
-			}
+            const boost::optional< std::string >& getTitle() const {
+                return title;
+            }
 
-			void setTrack(const boost::optional< std::string >& value) {
-				this->track = value ;
-			}
+            void setTitle(const boost::optional< std::string >& value) {
+                this->title = value ;
+            }
 
-			const boost::optional< std::string >& getArtist() const {
-				return artist;
-			}
+            const boost::optional< std::string >& getTrack() const {
+                return track;
+            }
 
-			void setArtist(const boost::optional< std::string >& value) {
-				this->artist = value ;
-			}
+            void setTrack(const boost::optional< std::string >& value) {
+                this->track = value ;
+            }
 
-			const boost::optional< std::string >& getURI() const {
-				return uri;
-			}
+            const boost::optional< std::string >& getArtist() const {
+                return artist;
+            }
 
-			void setURI(const boost::optional< std::string >& value) {
-				this->uri = value ;
-			}
+            void setArtist(const boost::optional< std::string >& value) {
+                this->artist = value ;
+            }
 
-			const boost::optional< std::string >& getSource() const {
-				return source;
-			}
+            const boost::optional< std::string >& getURI() const {
+                return uri;
+            }
 
-			void setSource(const boost::optional< std::string >& value) {
-				this->source = value ;
-			}
+            void setURI(const boost::optional< std::string >& value) {
+                this->uri = value ;
+            }
 
-			const boost::optional< unsigned int >& getLength() const {
-				return length;
-			}
+            const boost::optional< std::string >& getSource() const {
+                return source;
+            }
 
-			void setLength(const boost::optional< unsigned int >& value) {
-				this->length = value ;
-			}
+            void setSource(const boost::optional< std::string >& value) {
+                this->source = value ;
+            }
+
+            const boost::optional< unsigned int >& getLength() const {
+                return length;
+            }
+
+            void setLength(const boost::optional< unsigned int >& value) {
+                this->length = value ;
+            }
 
 
-		private:
-			boost::optional< unsigned int > rating;
-			boost::optional< std::string > title;
-			boost::optional< std::string > track;
-			boost::optional< std::string > artist;
-			boost::optional< std::string > uri;
-			boost::optional< std::string > source;
-			boost::optional< unsigned int > length;
-	};
+        private:
+            boost::optional< unsigned int > rating;
+            boost::optional< std::string > title;
+            boost::optional< std::string > track;
+            boost::optional< std::string > artist;
+            boost::optional< std::string > uri;
+            boost::optional< std::string > source;
+            boost::optional< unsigned int > length;
+    };
 }

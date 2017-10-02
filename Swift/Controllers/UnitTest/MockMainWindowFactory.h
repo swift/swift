@@ -1,28 +1,28 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include "Swift/Controllers/UIInterfaces/MainWindowFactory.h"
-#include "Swift/Controllers/UnitTest/MockMainWindow.h"
+#include <Swift/Controllers/UIInterfaces/MainWindowFactory.h>
+#include <Swift/Controllers/UnitTest/MockMainWindow.h>
 
 namespace Swift {
 
-	class MockMainWindowFactory : public MainWindowFactory {
-		public:
-			MockMainWindowFactory() : last(NULL) {}
+    class MockMainWindowFactory : public MainWindowFactory {
+        public:
+            MockMainWindowFactory() : last(nullptr) {}
 
-			virtual ~MockMainWindowFactory() {}
+            virtual ~MockMainWindowFactory() {}
 
-			/**
-			 * Transfers ownership of result.
-			 */
-			virtual MainWindow* createMainWindow(UIEventStream*) {last = new MockMainWindow();return last;}
-			MockMainWindow* last;
-	};
+            /**
+             * Transfers ownership of result.
+             */
+            virtual MainWindow* createMainWindow(UIEventStream*) {last = new MockMainWindow();return last;}
+            MockMainWindow* last;
+    };
 }
 
 

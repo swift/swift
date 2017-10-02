@@ -16,7 +16,7 @@
 
 QT_TRANSLATE_NOOP("CloseButton", "Close Tab");
 
-QT_TRANSLATE_NOOP3("QApplication", "QT_LAYOUT_DIRECTION", "Translate this to LTR for left-to-right or RTL for right-to-left languages");
+QT_TRANSLATE_NOOP3("QGuiApplication", "QT_LAYOUT_DIRECTION", "Translate this to LTR for left-to-right or RTL for right-to-left languages");
 
 QT_TRANSLATE_NOOP("QLineEdit", "Select All");
 QT_TRANSLATE_NOOP("QLineEdit", "&Undo");

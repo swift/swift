@@ -3,31 +3,32 @@ Import("swiften_env", "env")
 myenv = swiften_env.Clone()
 
 objects = myenv.SwiftenObject([
-		"ClientAuthenticator.cpp",
-		"EXTERNALClientAuthenticator.cpp",
-		"PLAINClientAuthenticator.cpp",
-		"PLAINMessage.cpp",
-		"SCRAMSHA1ClientAuthenticator.cpp",
-		"DIGESTMD5Properties.cpp",
-		"DIGESTMD5ClientAuthenticator.cpp",
-	])
+        "ClientAuthenticator.cpp",
+        "EXTERNALClientAuthenticator.cpp",
+        "PLAINClientAuthenticator.cpp",
+        "PLAINMessage.cpp",
+        "SCRAMSHA1ClientAuthenticator.cpp",
+        "DIGESTMD5Properties.cpp",
+        "DIGESTMD5ClientAuthenticator.cpp",
+    ])
 if myenv["PLATFORM"] == "win32" :
-	objects += myenv.SwiftenObject([
-		"WindowsServicePrincipalName.cpp",
-		"WindowsAuthentication.cpp",
-		"WindowsGSSAPIClientAuthenticator.cpp"
-	])
+    objects += myenv.SwiftenObject([
+        "WindowsServicePrincipalName.cpp",
+        "WindowsAuthentication.cpp",
+        "WindowsGSSAPIClientAuthenticator.cpp"
+    ])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
 env.Append(UNITTEST_SOURCES = [
-			File("UnitTest/PLAINMessageTest.cpp"),
-			File("UnitTest/PLAINClientAuthenticatorTest.cpp"),
-			File("UnitTest/SCRAMSHA1ClientAuthenticatorTest.cpp"),
-			File("UnitTest/DIGESTMD5PropertiesTest.cpp"),
-			File("UnitTest/DIGESTMD5ClientAuthenticatorTest.cpp"),
-	])
+            File("UnitTest/PLAINMessageTest.cpp"),
+            File("UnitTest/PLAINClientAuthenticatorTest.cpp"),
+            File("UnitTest/EXTERNALClientAuthenticatorTest.cpp"),
+            File("UnitTest/SCRAMSHA1ClientAuthenticatorTest.cpp"),
+            File("UnitTest/DIGESTMD5PropertiesTest.cpp"),
+            File("UnitTest/DIGESTMD5ClientAuthenticatorTest.cpp"),
+    ])
 if myenv["PLATFORM"] == "win32" :
-	env.Append(UNITTEST_SOURCES = [
-			File("UnitTest/WindowsServicePrincipalNameTest.cpp"),
-		])
+    env.Append(UNITTEST_SOURCES = [
+            File("UnitTest/WindowsServicePrincipalNameTest.cpp"),
+        ])

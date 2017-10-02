@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,15 +12,15 @@
 
 namespace Swift {
 
-std::string PayloadsSerializer::serialize(boost::shared_ptr<Payload> payload) {
-	PayloadSerializer* serializer = serializers.getPayloadSerializer(payload);
-	if (serializer) {
-		return serializer->serialize(payload);
-	}
-	else {
-		CPPUNIT_ASSERT(false);
-		return "";
-	}
+std::string PayloadsSerializer::serialize(std::shared_ptr<Payload> payload) {
+    PayloadSerializer* serializer = serializers.getPayloadSerializer(payload);
+    if (serializer) {
+        return serializer->serialize(payload);
+    }
+    else {
+        CPPUNIT_ASSERT(false);
+        return "";
+    }
 }
 
 

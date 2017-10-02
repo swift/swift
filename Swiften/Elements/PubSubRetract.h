@@ -1,61 +1,62 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include <boost/optional.hpp>
+
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubItem.h>
 #include <Swiften/Elements/PubSubPayload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubRetract : public PubSubPayload {
-		public:
-			
-			PubSubRetract();
-			
-			virtual ~PubSubRetract();
+    class SWIFTEN_API PubSubRetract : public PubSubPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubRetract();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubRetract();
 
-			const std::vector< boost::shared_ptr<PubSubItem> >& getItems() const {
-				return items;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setItems(const std::vector< boost::shared_ptr<PubSubItem> >& value) {
-				this->items = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void addItem(boost::shared_ptr<PubSubItem> value) {
-				this->items.push_back(value);
-			}
+            const std::vector< std::shared_ptr<PubSubItem> >& getItems() const {
+                return items;
+            }
 
-			bool isNotify() const {
-				return notify;
-			}
+            void setItems(const std::vector< std::shared_ptr<PubSubItem> >& value) {
+                this->items = value ;
+            }
 
-			void setNotify(bool value) {
-				this->notify = value ;
-			}
+            void addItem(std::shared_ptr<PubSubItem> value) {
+                this->items.push_back(value);
+            }
+
+            boost::optional<bool> isNotify() const {
+                return notify;
+            }
+
+            void setNotify(const boost::optional<bool>& value) {
+                this->notify = value ;
+            }
 
 
-		private:
-			std::string node;
-			std::vector< boost::shared_ptr<PubSubItem> > items;
-			bool notify;
-	};
+        private:
+            std::string node;
+            std::vector< std::shared_ptr<PubSubItem> > items;
+            boost::optional<bool> notify;
+    };
 }

@@ -1,36 +1,32 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
-
-
-
 namespace Swift {
-	class SWIFTEN_API PubSubSubscribeOptions : public Payload {
-		public:
-			
-			PubSubSubscribeOptions();
-			
-			virtual ~PubSubSubscribeOptions();
+    class SWIFTEN_API PubSubSubscribeOptions : public Payload {
+        public:
 
-			bool isRequired() const {
-				return required;
-			}
+            PubSubSubscribeOptions();
 
-			void setRequired(bool value) {
-				this->required = value ;
-			}
+            virtual ~PubSubSubscribeOptions();
+
+            bool isRequired() const {
+                return required;
+            }
+
+            void setRequired(bool value) {
+                this->required = value ;
+            }
 
 
-		private:
-			bool required;
-	};
+        private:
+            bool required;
+    };
 }

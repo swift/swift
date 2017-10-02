@@ -1,51 +1,49 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include <Swiften/Base/API.h>
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubItem : public Payload {
-		public:
-			
-			PubSubItem();
-			
-			virtual ~PubSubItem();
+    class SWIFTEN_API PubSubItem : public Payload {
+        public:
 
-			const std::vector< boost::shared_ptr<Payload> >& getData() const {
-				return data;
-			}
+            PubSubItem();
 
-			void setData(const std::vector< boost::shared_ptr<Payload> >& value) {
-				this->data = value ;
-			}
+            virtual ~PubSubItem();
 
-			void addData(boost::shared_ptr<Payload> value) {
-				this->data.push_back(value);
-			}
+            const std::vector< std::shared_ptr<Payload> >& getData() const {
+                return data;
+            }
 
-			const std::string& getID() const {
-				return id;
-			}
+            void setData(const std::vector< std::shared_ptr<Payload> >& value) {
+                this->data = value ;
+            }
 
-			void setID(const std::string& value) {
-				this->id = value ;
-			}
+            void addData(std::shared_ptr<Payload> value) {
+                this->data.push_back(value);
+            }
+
+            const std::string& getID() const {
+                return id;
+            }
+
+            void setID(const std::string& value) {
+                this->id = value ;
+            }
 
 
-		private:
-			std::vector< boost::shared_ptr<Payload> > data;
-			std::string id;
-	};
+        private:
+            std::vector< std::shared_ptr<Payload> > data;
+            std::string id;
+    };
 }

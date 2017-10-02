@@ -5,79 +5,80 @@ Import("env")
 ################################################################################
 
 if env["SCONS_STAGE"] == "flags" :
-	env["SWIFTOOLS_FLAGS"] = {
-			"LIBPATH": [Dir(".")],
-			"LIBS": ["SwifTools"]
-		}
+    env["SWIFTOOLS_FLAGS"] = {
+            "LIBPATH": [Dir(".")],
+            "LIBS": ["SwifTools"]
+        }
 
 ################################################################################
 # Build
 ################################################################################
 
 if env["SCONS_STAGE"] == "build" :
-	swiftools_env = env.Clone()
-	swiftools_env.UseFlags(swiftools_env["SWIFTEN_FLAGS"])
-	swiftools_env.UseFlags(swiftools_env["BOOST_FLAGS"])
+    swiftools_env = env.Clone()
+    swiftools_env.UseFlags(swiftools_env["SWIFTEN_FLAGS"])
+    swiftools_env.UseFlags(swiftools_env["BOOST_FLAGS"])
 
-	sources = [
-			"Idle/IdleDetector.cpp",
-			"Idle/ActualIdleDetector.cpp",
-			"Idle/IdleQuerier.cpp",
-			"Idle/PlatformIdleQuerier.cpp",
-			"AutoUpdater/AutoUpdater.cpp",
-			"AutoUpdater/PlatformAutoUpdaterFactory.cpp",
-			"Linkify.cpp",
-			"TabComplete.cpp",
-			"LastLineTracker.cpp",
-		]
-	
-	if swiftools_env["HAVE_HUNSPELL"] :
-		swiftools_env.UseFlags(swiftools_env["HUNSPELL_FLAGS"])
-		swiftools_env.Append(CPPDEFINES = ["HAVE_HUNSPELL"])
-		sources += [
-			"SpellCheckerFactory.cpp",
-			"HunspellChecker.cpp",
-			"SpellParser.cpp",
-		]
-	elif swiftools_env["PLATFORM"] == "darwin" and env["target"] == "native" :
-		sources += [
-			"SpellCheckerFactory.cpp",
-			"MacOSXChecker.mm",
-			"SpellParser.cpp",
-		]
+    sources = [
+            "EmojiMapper.cpp",
+            "Idle/IdleDetector.cpp",
+            "Idle/ActualIdleDetector.cpp",
+            "Idle/IdleQuerier.cpp",
+            "Idle/PlatformIdleQuerier.cpp",
+            "AutoUpdater/AutoUpdater.cpp",
+            "AutoUpdater/PlatformAutoUpdaterFactory.cpp",
+            "Linkify.cpp",
+            "TabComplete.cpp",
+            "LastLineTracker.cpp",
+        ]
+
+    if swiftools_env["HAVE_HUNSPELL"] :
+        swiftools_env.UseFlags(swiftools_env["HUNSPELL_FLAGS"])
+        swiftools_env.Append(CPPDEFINES = ["HAVE_HUNSPELL"])
+        sources += [
+            "SpellCheckerFactory.cpp",
+            "HunspellChecker.cpp",
+            "SpellParser.cpp",
+        ]
+    elif swiftools_env["PLATFORM"] == "darwin" and env["target"] == "native" :
+        sources += [
+            "SpellCheckerFactory.cpp",
+            "MacOSXChecker.mm",
+            "SpellParser.cpp",
+        ]
 
 
-	if swiftools_env.get("HAVE_SPARKLE", 0) :
-		swiftools_env.UseFlags(swiftools_env["SPARKLE_FLAGS"])
-		swiftools_env.Append(CPPDEFINES = ["HAVE_SPARKLE"])
-		sources += ["AutoUpdater/SparkleAutoUpdater.mm"]
+    if swiftools_env.get("HAVE_SPARKLE", 0) :
+        swiftools_env.UseFlags(swiftools_env["SPARKLE_FLAGS"])
+        swiftools_env.Append(CPPDEFINES = ["HAVE_SPARKLE"])
+        sources += ["AutoUpdater/SparkleAutoUpdater.mm", "AutoUpdater/SparkleAutoUpdaterDelegate.mm"]
 
-	if swiftools_env["PLATFORM"] == "win32" :
-		sources += ["Idle/WindowsIdleQuerier.cpp"]
-	elif swiftools_env["PLATFORM"] == "darwin" and swiftools_env.get("HAVE_IOKIT", False) :
-			swiftools_env.Append(CPPDEFINES = ["HAVE_IOKIT"])
-			sources += ["Idle/MacOSXIdleQuerier.cpp"]
-	elif swiftools_env["HAVE_XSS"] :
-		swiftools_env.Append(CPPDEFINES = ["HAVE_XSS"])
-		sources += ["Idle/XSSIdleQuerier.cpp"]
+    if swiftools_env["PLATFORM"] == "win32" :
+        sources += ["Idle/WindowsIdleQuerier.cpp"]
+    elif swiftools_env["PLATFORM"] == "darwin" and swiftools_env.get("HAVE_IOKIT", False) :
+            swiftools_env.Append(CPPDEFINES = ["HAVE_IOKIT"])
+            sources += ["Idle/MacOSXIdleQuerier.cpp"]
+    elif swiftools_env["HAVE_XSS"] :
+        swiftools_env.Append(CPPDEFINES = ["HAVE_XSS"])
+        sources += ["Idle/XSSIdleQuerier.cpp"]
 
-	if env.get("HAVE_BREAKPAD", False) :
-		swiftools_env.UseFlags(swiftools_env["BREAKPAD_FLAGS"])
-		swiftools_env.Append(CPPDEFINES = ["HAVE_BREAKPAD"])
-	sources += ["CrashReporter.cpp"]
-	
-	swiftools_env["SWIFTOOLS_OBJECTS"] = []
-	Export("swiftools_env")
-	
-	SConscript(dirs = [
-			"Application",
-			"Dock",
-			"Notifier",
-			"URIHandler",
-			"Idle/IdleQuerierTest",
-			"Idle/UnitTest",
-			"Cocoa",
-			"UnitTest"
-		])
+    if env.get("HAVE_BREAKPAD", False) :
+        swiftools_env.UseFlags(swiftools_env["BREAKPAD_FLAGS"])
+        swiftools_env.Append(CPPDEFINES = ["HAVE_BREAKPAD"])
+    sources += ["CrashReporter.cpp"]
 
-	swiftools_env.StaticLibrary("SwifTools", sources + swiftools_env["SWIFTOOLS_OBJECTS"])
+    swiftools_env["SWIFTOOLS_OBJECTS"] = []
+    Export("swiftools_env")
+
+    SConscript(dirs = [
+            "Application",
+            "Dock",
+            "Notifier",
+            "URIHandler",
+            "Idle/IdleQuerierTest",
+            "Idle/UnitTest",
+            "Cocoa",
+            "UnitTest"
+        ])
+
+    swiftools_env.StaticLibrary("SwifTools", sources + swiftools_env["SWIFTOOLS_OBJECTS"])

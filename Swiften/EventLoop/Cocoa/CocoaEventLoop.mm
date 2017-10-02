@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,25 +19,25 @@ CocoaEventLoop::~CocoaEventLoop() {
 }
 
 void CocoaEventLoop::handleNextCocoaEvent() {
-	{
-		boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
-		isEventInCocoaEventLoop_ = false;
-	}
-	handleNextEvents();
+    {
+        std::unique_lock<std::recursive_mutex> lock(isEventInCocoaEventLoopMutex_);
+        isEventInCocoaEventLoop_ = false;
+    }
+    handleNextEvents();
 }
 
 void CocoaEventLoop::eventPosted() {
-	boost::recursive_mutex::scoped_lock lock(isEventInCocoaEventLoopMutex_);
-	if (!isEventInCocoaEventLoop_) {
-		isEventInCocoaEventLoop_ = true;
-		
-		CocoaEvent* cocoaEvent = [[CocoaEvent alloc] init: this];
-		[cocoaEvent
-			performSelectorOnMainThread:@selector(process) 
-			withObject: nil
-			waitUntilDone: NO];
-		[cocoaEvent release];
-	}
+    std::unique_lock<std::recursive_mutex> lock(isEventInCocoaEventLoopMutex_);
+    if (!isEventInCocoaEventLoop_) {
+        isEventInCocoaEventLoop_ = true;
+
+        CocoaEvent* cocoaEvent = [[CocoaEvent alloc] init: this];
+        [cocoaEvent
+            performSelectorOnMainThread:@selector(process)
+            withObject: nil
+            waitUntilDone: NO];
+        [cocoaEvent release];
+    }
 }
 
 }

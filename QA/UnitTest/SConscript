@@ -3,27 +3,29 @@ import os
 Import("env")
 
 if env["TEST"] :
-	if env["SCONS_STAGE"] == "flags" :
-		env["UNITTEST_SOURCES"] = []
-		env["UNITTEST_OBJECTS"] = []
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.UseFlags(env.get("CHECKER_FLAGS",""))
-		myenv.UseFlags(env.get("INJECTED_UNITTEST_FLAGS","")) # So things that piggy-back our build system can piggy-back our test system too
-		myenv.UseFlags(env.get("SLIMBER_FLAGS",""))
-		myenv.UseFlags(env.get("SWIFT_CONTROLLERS_FLAGS",""))
-		myenv.UseFlags(env.get("SWIFTOOLS_FLAGS",""))
-		myenv.UseFlags(env.get("LIMBER_FLAGS",""))
-		myenv.UseFlags(env.get("SWIFTEN_FLAGS",""))
-		myenv.UseFlags(env.get("CPPUNIT_FLAGS",""))
-		myenv.UseFlags(env.get("SWIFTEN_DEP_FLAGS", ""))
-		if env.get("HAVE_LIBXML") :
-			myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
-		if env.get("HAVE_EXPAT") :
-			myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
-		if env["TEST_CREATE_LIBRARIES"] :
-			lib = myenv.StaticLibrary("Swift_UnitTests", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
-			myenv.Program("checker", lib)
-		else :
-			checker = myenv.Program("checker", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
-			myenv.Test(checker, is_checker = True)
+    if env["SCONS_STAGE"] == "flags" :
+        env["UNITTEST_SOURCES"] = []
+        env["UNITTEST_OBJECTS"] = []
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.UseFlags(env.get("CHECKER_FLAGS",""))
+        myenv.UseFlags(env.get("INJECTED_UNITTEST_FLAGS","")) # So things that piggy-back our build system can piggy-back our test system too
+        myenv.UseFlags(env.get("SLIMBER_FLAGS",""))
+        myenv.UseFlags(env.get("SWIFT_CONTROLLERS_FLAGS",""))
+        myenv.UseFlags(env.get("SWIFTOOLS_FLAGS",""))
+        myenv.UseFlags(env.get("LIMBER_FLAGS",""))
+        myenv.UseFlags(env.get("SWIFTEN_FLAGS",""))
+        myenv.UseFlags(env.get("CPPUNIT_FLAGS",""))
+        myenv.UseFlags(env.get("GOOGLETEST_FLAGS", ""))
+        myenv.UseFlags(env.get("SWIFTEN_DEP_FLAGS", ""))
+        myenv.UseFlags(env.get("SWIFT_QTUI_TEST_FLAGS", ""))
+        if env.get("HAVE_LIBXML") :
+            myenv.Append(CPPDEFINES = ["HAVE_LIBXML"])
+        if env.get("HAVE_EXPAT") :
+            myenv.Append(CPPDEFINES = ["HAVE_EXPAT"])
+        if env["TEST_CREATE_LIBRARIES"] :
+            lib = myenv.StaticLibrary("Swift_UnitTests", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
+            myenv.Program("checker", lib)
+        else :
+            checker = myenv.Program("checker", env["UNITTEST_SOURCES"] + env["UNITTEST_OBJECTS"])
+            myenv.Test(checker, is_checker = True)

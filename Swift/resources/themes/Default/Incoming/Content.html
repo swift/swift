@@ -1,30 +1,19 @@
-<div class="chatItem incomingItem">
-	<table width="100%">
-		<tr>
-			<td valign="top">
-				<img src="%userIconPath%" class="avatar" title="%sender%" ondragstart="return false" />
-				<div class="myBubble">
-					<div class="indicator"></div>
-					<table class="tableBubble" cellspacing="0" cellpadding="0">
-						<tr>
-							<td class="tl"></td>
-							<td class="tr"></td>
-						</tr>
-						<tr>
-							<td class="message" style="direction: %direction%">
-								%message%
-								<div class="timeStamp"><span class="name">%wrapped_sender% @</span> %time%</div>
-								<span id="insert"></span>
-							</td>
-							<td class="messageRight"></td>
-						</tr>
-						<tr>
-							<td class="bl"></td>
-							<td class="br"></td>
-						</tr>
-					</table>
-				</div>
-			</td>
-		</tr>
-	</table>
+<!--OTHERS MESSAGE-->
+<div class="message" id="%id%">
+    <div class="user">
+        <div class="otheravatar">
+            <img src="%userIconPath%"/>
+        </div>
+        <div class="otherright">
+            <span class="swift_ack"></span>
+            <span class="swift_receipt"></span>
+        </div>
+    </div>
+    <div class="text">
+        <p class="otherusername username">%wrapped_sender%</p>
+        <div class="time">
+            %time%
+        </div>
+        <div class="message-content">%message%</div>
+    </div>
 </div>

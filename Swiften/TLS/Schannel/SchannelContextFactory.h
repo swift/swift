@@ -15,19 +15,19 @@
 #include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
-	class SchannelContextFactory : public TLSContextFactory {
-		public:
-			SchannelContextFactory();
+    class SchannelContextFactory : public TLSContextFactory {
+        public:
+            SchannelContextFactory();
 
-			bool canCreate() const;
-			virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
+            bool canCreate() const;
+            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
 
-			virtual void setCheckCertificateRevocation(bool b);
+            virtual void setCheckCertificateRevocation(bool b);
 
-			virtual void setDisconnectOnCardRemoval(bool b);
+            virtual void setDisconnectOnCardRemoval(bool b);
 
-		public:
-			bool checkCertificateRevocation;
-			bool disconnectOnCardRemoval;
-	};
+        public:
+            bool checkCertificateRevocation;
+            bool disconnectOnCardRemoval;
+    };
 }

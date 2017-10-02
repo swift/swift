@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,12 +14,12 @@
 #include <Swiften/Serializer/XML/XMLElement.h>
 
 namespace Swift {
-	class SWIFTEN_API StartSessionSerializer : public GenericPayloadSerializer<StartSession> {
-		public:
-			StartSessionSerializer() : GenericPayloadSerializer<StartSession>() {}
+    class SWIFTEN_API StartSessionSerializer : public GenericPayloadSerializer<StartSession> {
+        public:
+            StartSessionSerializer() : GenericPayloadSerializer<StartSession>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<StartSession>)  const {
-				return XMLElement("session", "urn:ietf:params:xml:ns:xmpp-session").serialize();
-			}
-	};
+            virtual std::string serializePayload(std::shared_ptr<StartSession>)  const {
+                return XMLElement("session", "urn:ietf:params:xml:ns:xmpp-session").serialize();
+            }
+    };
 }

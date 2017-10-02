@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,26 +7,27 @@
 #pragma once
 
 #include <string>
-#include <Swiften/Base/boost_bsignals.h>
+
+#include <boost/signals2.hpp>
 
 namespace Swift {
-	class URIHandler;
-	class JID;
-	class UIEventStream;
+    class URIHandler;
+    class JID;
+    class UIEventStream;
 
-	class XMPPURIController {
-		public:
-			XMPPURIController(URIHandler* uriHandler, UIEventStream* uiEventStream);
-			~XMPPURIController();
+    class XMPPURIController {
+        public:
+            XMPPURIController(URIHandler* uriHandler, UIEventStream* uiEventStream);
+            ~XMPPURIController();
 
-			boost::signal<void (const JID&)> onStartChat;
-			boost::signal<void (const JID&)> onJoinMUC;
+            boost::signals2::signal<void (const JID&)> onStartChat;
+            boost::signals2::signal<void (const JID&)> onJoinMUC;
 
-		private:
-			void handleURI(const std::string&);
+        private:
+            void handleURI(const std::string&);
 
-		private:
-			URIHandler* uriHandler;
-			UIEventStream* uiEventStream;
-	};
+        private:
+            URIHandler* uriHandler;
+            UIEventStream* uiEventStream;
+    };
 }

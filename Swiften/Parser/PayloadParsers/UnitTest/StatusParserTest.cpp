@@ -14,21 +14,21 @@ using namespace Swift;
 
 class StatusParserTest : public CppUnit::TestFixture
 {
-		CPPUNIT_TEST_SUITE(StatusParserTest);
-		CPPUNIT_TEST(testParse);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(StatusParserTest);
+        CPPUNIT_TEST(testParse);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		StatusParserTest() {}
+    public:
+        StatusParserTest() {}
 
-		void testParse() {
-			PayloadsParserTester parser;
+        void testParse() {
+            PayloadsParserTester parser;
 
-			CPPUNIT_ASSERT(parser.parse("<status>foo<baz>bar</baz>fum</status>"));
+            CPPUNIT_ASSERT(parser.parse("<status>foo<baz>bar</baz>fum</status>"));
 
-			Status* payload = dynamic_cast<Status*>(parser.getPayload().get());
-			CPPUNIT_ASSERT_EQUAL(std::string("foobarfum"), payload->getText());
-		}
+            Status* payload = dynamic_cast<Status*>(parser.getPayload().get());
+            CPPUNIT_ASSERT_EQUAL(std::string("foobarfum"), payload->getText());
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(StatusParserTest);

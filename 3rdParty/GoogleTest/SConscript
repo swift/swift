@@ -1,0 +1,36 @@
+Import("env")
+
+if env["TEST"] :
+    includeFlagPrefix = ""
+    if env["PLATFORM"] == "win32" :
+        includeFlagPrefix = "/I"
+    elif env["PLATFORM"] == "sunos" :
+        includeFlagPrefix = "-I"
+    else :
+        includeFlagPrefix = "-isystem"
+    cppflags = [(includeFlagPrefix + Dir("src/googletest/include").abspath), (includeFlagPrefix + Dir("src/googlemock/include").abspath)]
+
+################################################################################
+# Module flags
+################################################################################
+
+    if env["SCONS_STAGE"] == "flags" :
+        env["GOOGLETEST_FLAGS"] = {
+                "CPPPATH": [env.Dir(".")],
+                "CPPFLAGS": cppflags,
+                "LIBPATH": [env.Dir(".")],
+                "LIBS": ["Swiften_GoogleTest"]
+            }
+
+################################################################################
+# Build
+################################################################################
+
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.Replace(CXXFLAGS = [flag for flag in env["CXXFLAGS"] if not flag.startswith("-W")])
+        myenv.Append(CPPPATH = ["src/googletest/include", "src/googletest"])
+        sources = [
+            "src/googletest/src/gtest-all.cc"
+            ]
+        myenv.StaticLibrary("Swiften_GoogleTest", sources)

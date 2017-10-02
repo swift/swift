@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Serializer/StreamResumeSerializer.h>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
+
 #include <boost/lexical_cast.hpp>
 
 #include <Swiften/Elements/StreamResume.h>
@@ -17,12 +18,12 @@ using namespace Swift;
 StreamResumeSerializer::StreamResumeSerializer() : GenericElementSerializer<StreamResume>() {
 }
 
-SafeByteArray StreamResumeSerializer::serialize(boost::shared_ptr<ToplevelElement> el) const {
-	boost::shared_ptr<StreamResume> e(boost::dynamic_pointer_cast<StreamResume>(el));
-	XMLElement element("resume", "urn:xmpp:sm:2");
-	element.setAttribute("previd", e->getResumeID());
-	if (e->getHandledStanzasCount()) {
-		element.setAttribute("h", boost::lexical_cast<std::string>(e->getHandledStanzasCount().get()));
-	}
-	return createSafeByteArray(element.serialize());
+SafeByteArray StreamResumeSerializer::serialize(std::shared_ptr<ToplevelElement> el) const {
+    std::shared_ptr<StreamResume> e(std::dynamic_pointer_cast<StreamResume>(el));
+    XMLElement element("resume", "urn:xmpp:sm:2");
+    element.setAttribute("previd", e->getResumeID());
+    if (e->getHandledStanzasCount()) {
+        element.setAttribute("h", boost::lexical_cast<std::string>(e->getHandledStanzasCount().get()));
+    }
+    return createSafeByteArray(element.serialize());
 }

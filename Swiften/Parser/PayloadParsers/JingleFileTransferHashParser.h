@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,15 +20,15 @@ namespace Swift {
 
 class SWIFTEN_API JingleFileTransferHashParser : public GenericPayloadParser<JingleFileTransferHash> {
 public:
-	JingleFileTransferHashParser();
-	
-	virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-	virtual void handleEndElement(const std::string& element, const std::string&);
-	virtual void handleCharacterData(const std::string& data);
-	
+    JingleFileTransferHashParser();
+
+    virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+    virtual void handleEndElement(const std::string& element, const std::string&);
+    virtual void handleCharacterData(const std::string& data);
+
 private:
-	int level;
-	boost::shared_ptr<PayloadParser> currentPayloadParser;
+    int level;
+    std::shared_ptr<PayloadParser> currentPayloadParser;
 };
 
 }

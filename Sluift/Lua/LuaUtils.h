@@ -16,28 +16,28 @@
 #endif
 
 namespace Swift {
-	namespace Lua {
-		/**
-		 * Can be used as __tostring metamethod on a table.
-		 */
-		int convertTableToString(lua_State* L);
+    namespace Lua {
+        /**
+         * Can be used as __tostring metamethod on a table.
+         */
+        int convertTableToString(lua_State* L);
 
-		void registerTableToString(lua_State* L, int index);
-		void registerTableEquals(lua_State* L, int index);
-		void registerGetByTypeIndex(lua_State* L, int index);
-		void registerHelp(lua_State* L, int index, 
-				const std::string& description, const std::string& parameters, const std::string& options);
-		void registerClassHelp(lua_State* L, const std::string& name, const std::string& description);
-		void registerExtraHelp(lua_State* L, int index, const std::string& name);
+        void registerTableToString(lua_State* L, int index);
+        void registerTableEquals(lua_State* L, int index);
+        void registerGetByTypeIndex(lua_State* L, int index);
+        void registerHelp(lua_State* L, int index,
+                const std::string& description, const std::string& parameters, const std::string& options);
+        void registerClassHelp(lua_State* L, const std::string& name, const std::string& description);
+        void registerExtraHelp(lua_State* L, int index, const std::string& name);
 
-		inline int absoluteOffset(lua_State* L, int index) {
-			return index > 0 ? index : lua_gettop(L) + index + 1;
-		}
+        inline int absoluteOffset(lua_State* L, int index) {
+            return index > 0 ? index : lua_gettop(L) + index + 1;
+        }
 
-		boost::optional<std::string> getStringField(lua_State* L, int index, const std::string&);
-		boost::optional<bool> getBooleanField(lua_State* L, int index, const std::string&);
-		boost::optional<int> getIntField(lua_State* L, int index, const std::string&);
+        boost::optional<std::string> getStringField(lua_State* L, int index, const std::string&);
+        boost::optional<bool> getBooleanField(lua_State* L, int index, const std::string&);
+        boost::optional<int> getIntField(lua_State* L, int index, const std::string&);
 
-		void pushStringArray(lua_State* L, const std::vector<std::string>& strings);
-	}
+        void pushStringArray(lua_State* L, const std::vector<std::string>& strings);
+    }
 }

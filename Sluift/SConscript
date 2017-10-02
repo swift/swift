@@ -3,86 +3,86 @@ import Version, os.path
 Import(["env"])
 
 if env["SCONS_STAGE"] == "build" and not GetOption("help") and not env.get("HAVE_LUA", 0) :
-	print "Warning: Lua was not found. Sluift will not be built."
-	if "Sluift" in env["PROJECTS"] :
-		env["PROJECTS"].remove("Sluift")
-		
+    print "Warning: Lua was not found. Sluift will not be built."
+    if "Sluift" in env["PROJECTS"] :
+        env["PROJECTS"].remove("Sluift")
+
 elif env["SCONS_STAGE"] == "build" :
-	sluift_sources = [
-		"Lua/Value.cpp",
-		"Lua/Exception.cpp",
-		"Lua/Check.cpp",
-		"Lua/FunctionRegistration.cpp",
-		"Lua/FunctionRegistry.cpp",
-		"Lua/LuaUtils.cpp",
-		"LuaElementConvertors.cpp",
-		"LuaElementConvertor.cpp",
-		"Response.cpp",
-		"ElementConvertors/BodyConvertor.cpp",
-		"ElementConvertors/VCardUpdateConvertor.cpp",
-		"ElementConvertors/PubSubEventConvertor.cpp",
-		"ElementConvertors/RawXMLElementConvertor.cpp",
-		"ElementConvertors/DOMElementConvertor.cpp",
-		"ElementConvertors/DefaultElementConvertor.cpp",
-		"ElementConvertors/DiscoInfoConvertor.cpp",
-		"ElementConvertors/DiscoItemsConvertor.cpp",
-		"ElementConvertors/FormConvertor.cpp",
-		"ElementConvertors/SoftwareVersionConvertor.cpp",
-		"ElementConvertors/VCardConvertor.cpp",
-		"ElementConvertors/CommandConvertor.cpp",
-		"ElementConvertors/StatusConvertor.cpp",
-		"ElementConvertors/StatusShowConvertor.cpp",
-		"ElementConvertors/DelayConvertor.cpp",
-		"Helpers.cpp",
-		"SluiftClient.cpp",
-		"SluiftComponent.cpp",
-		"Watchdog.cpp",
-		"core.c",
-		"client.cpp",
-		"component.cpp",
-		"sluift.cpp"
-	]
-	sluift_sources += env.SConscript("ElementConvertors/SConscript")
+    sluift_sources = [
+        "Lua/Value.cpp",
+        "Lua/Exception.cpp",
+        "Lua/Check.cpp",
+        "Lua/FunctionRegistration.cpp",
+        "Lua/FunctionRegistry.cpp",
+        "Lua/LuaUtils.cpp",
+        "LuaElementConvertors.cpp",
+        "LuaElementConvertor.cpp",
+        "Response.cpp",
+        "ElementConvertors/BodyConvertor.cpp",
+        "ElementConvertors/VCardUpdateConvertor.cpp",
+        "ElementConvertors/PubSubEventConvertor.cpp",
+        "ElementConvertors/RawXMLElementConvertor.cpp",
+        "ElementConvertors/DOMElementConvertor.cpp",
+        "ElementConvertors/DefaultElementConvertor.cpp",
+        "ElementConvertors/DiscoInfoConvertor.cpp",
+        "ElementConvertors/DiscoItemsConvertor.cpp",
+        "ElementConvertors/FormConvertor.cpp",
+        "ElementConvertors/SoftwareVersionConvertor.cpp",
+        "ElementConvertors/VCardConvertor.cpp",
+        "ElementConvertors/CommandConvertor.cpp",
+        "ElementConvertors/StatusConvertor.cpp",
+        "ElementConvertors/StatusShowConvertor.cpp",
+        "ElementConvertors/DelayConvertor.cpp",
+        "Helpers.cpp",
+        "SluiftClient.cpp",
+        "SluiftComponent.cpp",
+        "Watchdog.cpp",
+        "core.c",
+        "client.cpp",
+        "component.cpp",
+        "sluift.cpp"
+    ]
+    sluift_sources += env.SConscript("ElementConvertors/SConscript")
 
 
 
-	sluift_env = env.Clone()
-	sluift_env.UseFlags(env.get("LUA_FLAGS", {}))
-	sluift_env.UseFlags(env["SWIFTEN_FLAGS"])
-	sluift_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
-	# Support compilation on both Lua 5.1 and Lua 5.2
-	sluift_env.Append(CPPDEFINES = ["LUA_COMPAT_ALL"])
-	if sluift_env["PLATFORM"] == "win32" :
-		sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
+    sluift_env = env.Clone()
+    sluift_env.UseFlags(env.get("LUA_FLAGS", {}))
+    sluift_env.UseFlags(env["SWIFTEN_FLAGS"])
+    sluift_env.UseFlags(env["SWIFTEN_DEP_FLAGS"])
+    # Support compilation on both Lua 5.1 and Lua 5.2
+    sluift_env.Append(CPPDEFINES = ["LUA_COMPAT_ALL"])
+    if sluift_env["PLATFORM"] == "win32" :
+        sluift_env.Append(CPPDEFINES = ["SLUIFT_BUILD_DLL"])
 
-	if sluift_env["PLATFORM"] == "darwin" and os.path.isdir("/Applications/iTunes.app") :
-		sluift_env.Append(FRAMEWORKS = ["ScriptingBridge"])
-		sluift_env.Command("iTunes.h", "/Applications/iTunes.app", 
-				"sdef ${SOURCE} | sdp -fh --basename iTunes -V 10.10 -o ${TARGET.dir}")
-		sluift_env.Append(CPPDEFINES = ["HAVE_ITUNES"])
-		sluift_sources += ["ITunesInterface.mm"]
+    if sluift_env["PLATFORM"] == "darwin" and os.path.isdir("/Applications/iTunes.app") :
+        sluift_env.Append(FRAMEWORKS = ["ScriptingBridge"])
+        sluift_env.Command("iTunes.h", "/Applications/iTunes.app", 
+                "sdef ${SOURCE} | sdp -fh --basename iTunes -V 10.10 -o ${TARGET.dir}")
+        sluift_env.Append(CPPDEFINES = ["HAVE_ITUNES"])
+        sluift_sources += ["ITunesInterface.mm"]
 
-	# Generate Version.h
-	version_header = "#pragma once\n\n"
-	version_header += "#define SLUIFT_VERSION_STRING \"" + Version.getBuildVersion(env.Dir("#").abspath, "sluift") + "\"\n"
-	sluift_env.WriteVal("Version.h", sluift_env.Value(version_header))
+    # Generate Version.h
+    version_header = "#pragma once\n\n"
+    version_header += "#define SLUIFT_VERSION_STRING \"" + Version.getBuildVersion(env.Dir("#").abspath, "sluift") + "\"\n"
+    sluift_env.WriteVal("Version.h", sluift_env.Value(version_header))
 
-	# Generate core.c
-	def generate_embedded_lua(env, target, source) :
-		f = open(source[0].abspath, "r")
-		data = f.read()
-		f.close()
-		f = open(target[0].abspath, "w")
-		f.write('#include <stddef.h>\n')
-		f.write('const size_t ' + source[0].name.replace(".", "_") + "_size = " + str(len(data)) + ";\n")
-		f.write('const char ' + source[0].name.replace(".", "_") + "[] = {" + ", ".join([str(ord(c)) for c in data]) + "};\n")
-		f.close()
-	sluift_env.Command("core.c", ["core.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
+    # Generate core.c
+    def generate_embedded_lua(env, target, source) :
+        f = open(source[0].abspath, "r")
+        data = f.read()
+        f.close()
+        f = open(target[0].abspath, "w")
+        f.write('#include <stddef.h>\n')
+        f.write('const size_t ' + source[0].name.replace(".", "_") + "_size = " + str(len(data)) + ";\n")
+        f.write('const char ' + source[0].name.replace(".", "_") + "[] = {" + ", ".join([str(ord(c)) for c in data]) + "};\n")
+        f.close()
+    sluift_env.Command("core.c", ["core.lua"], env.Action(generate_embedded_lua, cmdstr="$GENCOMSTR"))
 
-	sluift_env.WriteVal("dll.c", sluift_env.Value(""))
+    sluift_env.WriteVal("dll.c", sluift_env.Value(""))
 
-	sluift_sources = [env.File(x) for x in sluift_sources]
-	for sluift_variant in ['dll', 'exe'] :
-		SConscript(["SConscript.variant"], variant_dir = sluift_variant,
-				duplicate = 0,
-				exports = ['sluift_sources', 'sluift_variant', 'sluift_env'])
+    sluift_sources = [env.File(x) for x in sluift_sources]
+    for sluift_variant in ['dll', 'exe'] :
+        SConscript(["SConscript.variant"], variant_dir = sluift_variant,
+                duplicate = 0,
+                exports = ['sluift_sources', 'sluift_variant', 'sluift_env'])

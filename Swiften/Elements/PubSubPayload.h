@@ -10,8 +10,8 @@
 #include <Swiften/Elements/Payload.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubPayload : public Payload {
-		public:
-			virtual ~PubSubPayload();
-	};
+    class SWIFTEN_API PubSubPayload : public Payload {
+        public:
+            virtual ~PubSubPayload();
+    };
 }

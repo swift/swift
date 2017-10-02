@@ -10,7 +10,7 @@
 
 namespace Swift {
 
-	class RequestHighlightEditorUIEvent : public UIEvent {
-	};
+    class RequestHighlightEditorUIEvent : public UIEvent {
+    };
 
 }

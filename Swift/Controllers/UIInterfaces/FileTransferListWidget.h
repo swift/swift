@@ -12,12 +12,12 @@ class FileTransferOverview;
 
 class FileTransferListWidget {
 public:
-	virtual ~FileTransferListWidget() {}
+    virtual ~FileTransferListWidget() {}
 
-	virtual void show() = 0;
-	virtual void activate() = 0;
+    virtual void show() = 0;
+    virtual void activate() = 0;
 
-	virtual void setFileTransferOverview(FileTransferOverview*) = 0;
+    virtual void setFileTransferOverview(FileTransferOverview*) = 0;
 };
 
 }

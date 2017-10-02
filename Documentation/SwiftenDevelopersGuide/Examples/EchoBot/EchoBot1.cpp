@@ -9,14 +9,14 @@
 using namespace Swift;
 
 int main(int, char**) {
-	SimpleEventLoop eventLoop;
-	BoostNetworkFactories networkFactories(&eventLoop);
+    SimpleEventLoop eventLoop;
+    BoostNetworkFactories networkFactories(&eventLoop);
 
-	Client client("echobot@wonderland.lit", "mypass", &networkFactories);
-	client.setAlwaysTrustCertificates();
-	client.connect();
+    Client client("echobot@wonderland.lit", "mypass", &networkFactories);
+    client.setAlwaysTrustCertificates();
+    client.connect();
 
-	eventLoop.run();
+    eventLoop.run();
 
-	return 0;
+    return 0;
 }

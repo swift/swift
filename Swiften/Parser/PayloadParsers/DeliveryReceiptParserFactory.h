@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,20 +17,18 @@
 #include <Swiften/Parser/PayloadParsers/DeliveryReceiptParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
+    class SWIFTEN_API DeliveryReceiptParserFactory : public PayloadParserFactory {
+        public:
+            DeliveryReceiptParserFactory() {
+            }
 
-	class SWIFTEN_API DeliveryReceiptParserFactory : public PayloadParserFactory {
-		public:
-			DeliveryReceiptParserFactory() {
-			}
+            virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
+                return ns == "urn:xmpp:receipts" && element == "received";
+            }
 
-			virtual bool canParse(const std::string& element, const std::string& ns, const AttributeMap&) const {
-				return ns == "urn:xmpp:receipts" && element == "received";
-			}
+            virtual PayloadParser* createPayloadParser() {
+                return new DeliveryReceiptParser();
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new DeliveryReceiptParser();
-			}
-
-	};
+    };
 }

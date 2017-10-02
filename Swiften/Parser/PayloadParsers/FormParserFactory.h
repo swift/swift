@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,20 +11,18 @@
 #include <Swiften/Parser/PayloadParsers/FormParser.h>
 
 namespace Swift {
-	class PayloadParserFactoryCollection;
+    class SWIFTEN_API FormParserFactory : public PayloadParserFactory {
+        public:
+            FormParserFactory() {
+            }
 
-	class SWIFTEN_API FormParserFactory : public PayloadParserFactory {
-		public:
-			FormParserFactory() {
-			}
+            virtual bool canParse(const std::string& /*element*/, const std::string& ns, const AttributeMap&) const {
+                return ns == "jabber:x:data";
+            }
 
-			virtual bool canParse(const std::string& /*element*/, const std::string& ns, const AttributeMap&) const {
-				return ns == "jabber:x:data";
-			}
+            virtual PayloadParser* createPayloadParser() {
+                return new FormParser();
+            }
 
-			virtual PayloadParser* createPayloadParser() {
-				return new FormParser();
-			}
-
-	};
+    };
 }

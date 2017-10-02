@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,29 +16,29 @@
 #include <Swiften/Network/ProxiedConnection.h>
 
 namespace Swift {
-	class ConnectionFactory;
-	class DomainNameResolver;
-	class TimerFactory;
+    class ConnectionFactory;
+    class DomainNameResolver;
+    class TimerFactory;
 
-	class SWIFTEN_API SOCKS5ProxiedConnection : public ProxiedConnection {
-		public:
-			typedef boost::shared_ptr<SOCKS5ProxiedConnection> ref;
+    class SWIFTEN_API SOCKS5ProxiedConnection : public ProxiedConnection {
+        public:
+            typedef std::shared_ptr<SOCKS5ProxiedConnection> ref;
 
-			static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort) {
-				return ref(new SOCKS5ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort));
-			}
+            static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort) {
+                return ref(new SOCKS5ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort));
+            }
 
-		private:
-			SOCKS5ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
+        private:
+            SOCKS5ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
 
-			virtual void initializeProxy();
-			virtual void handleProxyInitializeData(boost::shared_ptr<SafeByteArray> data);
+            virtual void initializeProxy();
+            virtual void handleProxyInitializeData(std::shared_ptr<SafeByteArray> data);
 
-		private:
-			enum {
-				Initial = 0,
-				ProxyAuthenticating,
-				ProxyConnecting
-			} proxyState_;
-	};
+        private:
+            enum {
+                Initial = 0,
+                ProxyAuthenticating,
+                ProxyConnecting
+            } proxyState_;
+    };
 }

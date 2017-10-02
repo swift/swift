@@ -1,10 +1,11 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Parser/AuthChallengeParser.h>
+
 #include <Swiften/StringCodecs/Base64.h>
 
 namespace Swift {
@@ -13,18 +14,18 @@ AuthChallengeParser::AuthChallengeParser() : GenericElementParser<AuthChallenge>
 }
 
 void AuthChallengeParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
-	++depth;
+    ++depth;
 }
 
 void AuthChallengeParser::handleEndElement(const std::string&, const std::string&) {
-	--depth;
-	if (depth == 0) {
-		getElementGeneric()->setValue(Base64::decode(text));
-	}
+    --depth;
+    if (depth == 0) {
+        getElementGeneric()->setValue(Base64::decode(text));
+    }
 }
 
 void AuthChallengeParser::handleCharacterData(const std::string& text) {
-	this->text += text;
+    this->text += text;
 }
 
 }

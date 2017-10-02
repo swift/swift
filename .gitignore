@@ -48,7 +48,8 @@ Swift/QtUI/swift-im
 Swift/QtUI/swift
 Swift/QtUI/COPYING
 Swift/QtUI/DefaultTheme.qrc
-checker-report.xml
+*-report.cppunit.xml
+*-report.gtest.xml
 /VERSION.*
 cppcheck.log
 /build
@@ -72,3 +73,14 @@ cscope.out
 cscope.files
 ctags.sh
 compile_commands.json
+
+# Ignore some of the Visual Studio files
+/Debug/
+/Release/
+*.VC.db
+*.VC.VC.opendb
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sdf

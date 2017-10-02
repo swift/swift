@@ -3,20 +3,21 @@ import os
 Import("env")
 
 if env["TEST"] :
-	myenv = env.Clone()
-	if "test_ipv6" in ARGUMENTS :
-		myenv.Append(CPPDEFINES = ["TEST_IPV6"])
-	myenv.MergeFlags(myenv["CHECKER_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
-	myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
-	myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+    myenv = env.Clone()
+    if "test_ipv6" in ARGUMENTS :
+        myenv.Append(CPPDEFINES = ["TEST_IPV6"])
+    myenv.MergeFlags(myenv["CHECKER_FLAGS"])
+    myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
+    myenv.MergeFlags(myenv["SWIFTEN_DEP_FLAGS"])
+    myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+    myenv.MergeFlags(myenv["GOOGLETEST_FLAGS"])
 
-	if env.get("unbound", False) :
-		myenv.Append(CPPDEFINES = ["USE_UNBOUND"])
+    if env.get("unbound", False) :
+        myenv.Append(CPPDEFINES = ["USE_UNBOUND"])
 
-	tester = myenv.Program("NetworkTest", [
-			"BoostConnectionServerTest.cpp",
-			"BoostConnectionTest.cpp",
-			"DomainNameResolverTest.cpp",
-		])
-	myenv.Test(tester, "system", is_checker = True)
+    tester = myenv.Program("NetworkTest", [
+            "BoostConnectionServerTest.cpp",
+            "BoostConnectionTest.cpp",
+            "DomainNameResolverTest.cpp",
+        ])
+    myenv.Test(tester, "system", is_checker = True)

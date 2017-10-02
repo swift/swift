@@ -14,6 +14,6 @@ StanzaAck::~StanzaAck() {
 }
 
 void StanzaAck::setHandledStanzasCount(int i) {
-	handledStanzasCount = boost::numeric_cast<unsigned int>(i);
-	valid = true;
+    handledStanzasCount = boost::numeric_cast<unsigned int>(i);
+    valid = true;
 }

@@ -11,22 +11,22 @@
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
-	class Watchdog {
-		public:
-			Watchdog(int timeout, TimerFactory* timerFactory);
-			~Watchdog();
+    class Watchdog {
+        public:
+            Watchdog(int timeout, TimerFactory* timerFactory);
+            ~Watchdog();
 
-			bool getTimedOut() const {
-				return timedOut;
-			}
+            bool getTimedOut() const {
+                return timedOut;
+            }
 
-		private:
-			void handleTimerTick();
+        private:
+            void handleTimerTick();
 
-		private:
-			Timer::ref timer;
-			int remainingTime;
-			TimerFactory* timerFactory;
-			bool timedOut;
-	};
+        private:
+            Timer::ref timer;
+            int remainingTime;
+            TimerFactory* timerFactory;
+            bool timedOut;
+    };
 }

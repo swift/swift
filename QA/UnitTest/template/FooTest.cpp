@@ -10,19 +10,19 @@
 using namespace Swift;
 
 class FooTest : public CppUnit::TestFixture {
-		CPPUNIT_TEST_SUITE(FooTest);
-		CPPUNIT_TEST(testBar);
-		CPPUNIT_TEST_SUITE_END();
+        CPPUNIT_TEST_SUITE(FooTest);
+        CPPUNIT_TEST(testBar);
+        CPPUNIT_TEST_SUITE_END();
 
-	public:
-		void setUp() {
-		}
+    public:
+        void setUp() {
+        }
 
-		void tearDown() {
-		}
+        void tearDown() {
+        }
 
-		void testBar() {
-		}
+        void testBar() {
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(FooTest);

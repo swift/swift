@@ -9,10 +9,10 @@
 #include <Swift/Controllers/UIInterfaces/HistoryWindow.h>
 
 namespace Swift {
-	class UIEventStream;
-	class HistoryWindowFactory {
-		public:
-			virtual ~HistoryWindowFactory() {}
-			virtual HistoryWindow* createHistoryWindow(UIEventStream* eventStream) = 0;
-	};
+    class UIEventStream;
+    class HistoryWindowFactory {
+        public:
+            virtual ~HistoryWindowFactory() {}
+            virtual HistoryWindow* createHistoryWindow(UIEventStream* eventStream) = 0;
+    };
 }

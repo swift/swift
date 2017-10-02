@@ -9,29 +9,29 @@
 #include <QSplitter>
 
 namespace Swift {
-	class QtSettingsProvider;
+    class QtSettingsProvider;
 
-	class QtSingleWindow : public QSplitter {
-		Q_OBJECT
-		public:
-			QtSingleWindow(QtSettingsProvider* settings);
-			virtual ~QtSingleWindow();
-			void insertAtFront(QWidget* widget);
-			void addWidget(QWidget* widget);
-		protected:
-			void resizeEvent(QResizeEvent*);
-			void moveEvent(QMoveEvent*);
-		private slots:
-			void handleSplitterMoved(int, int);
-			void handleTabsTitleChanged(const QString& title);
-		private:
-			void handleGeometryChanged();
-			void restoreSplitters();
+    class QtSingleWindow : public QSplitter {
+        Q_OBJECT
+        public:
+            QtSingleWindow(QtSettingsProvider* settings);
+            virtual ~QtSingleWindow();
+            void insertAtFront(QWidget* widget);
+            void addWidget(QWidget* widget);
+        protected:
+            void resizeEvent(QResizeEvent*);
+            void moveEvent(QMoveEvent*);
+        private slots:
+            void handleSplitterMoved(int, int);
+            void handleTabsTitleChanged(const QString& title);
+        private:
+            void handleGeometryChanged();
+            void restoreSplitters();
 
-		private:
+        private:
 
-			QtSettingsProvider* settings_;
-	};
+            QtSettingsProvider* settings_;
+    };
 
 }
 

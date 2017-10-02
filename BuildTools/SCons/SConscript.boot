@@ -14,8 +14,9 @@ vars.Add('link', "Linker")
 vars.Add('linkflags', "Extra linker flags")
 vars.Add('ar', "Archiver (ar or lib)")
 if os.name == "nt":
-	vars.Add('mt', "manifest tool")
+    vars.Add('mt', "manifest tool")
 vars.Add(BoolVariable("ccache", "Use CCache", "no"))
+vars.Add(BoolVariable("distcc", "Use distcc", "no"))
 vars.Add(EnumVariable("test", "Compile and run tests", "none", ["none", "all", "unit", "system"]))
 vars.Add(BoolVariable("optimize", "Compile with optimizations turned on", "no"))
 vars.Add(BoolVariable("debug", "Compile with debug information", "yes"))
@@ -28,29 +29,30 @@ vars.Add('android_sdk_bin', "Path to Android SDK's tools directory")
 vars.Add(BoolVariable("swift_mobile", "Build mobile Swift", "no"))
 vars.Add(BoolVariable("swiften_dll", "Build Swiften as dynamically linked library", "no"))
 if os.name != "nt" :
-	vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
+    vars.Add(BoolVariable("coverage", "Compile with coverage information", "no"))
 if os.name == "posix" :
-	vars.Add(BoolVariable("valgrind", "Run tests with valgrind", "no"))
+    vars.Add(BoolVariable("valgrind", "Run tests with valgrind", "no"))
 if os.name == "mac" or (os.name == "posix" and os.uname()[0] == "Darwin"):
-	vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
-	vars.Add(BoolVariable("mac105", "Link against the 10.5 frameworks", "no"))
-	vars.Add(BoolVariable("mac106", "Link against the 10.6 frameworks", "no"))
+    vars.Add(BoolVariable("universal", "Create universal binaries", "no"))
+    vars.Add(BoolVariable("mac105", "Link against the 10.5 frameworks", "no"))
+    vars.Add(BoolVariable("mac106", "Link against the 10.6 frameworks", "no"))
 if os.name == "nt" :
-	vars.Add(PathVariable("vcredist", "MSVC redistributable dir", None, PathVariable.PathAccept))
+    vars.Add(PathVariable("vcredist", "MSVC redistributable dir", None, PathVariable.PathAccept))
 if os.name == "nt" :
-	vars.Add(PathVariable("wix_bindir", "Path to WiX binaries", "", PathVariable.PathAccept))
+    vars.Add(PathVariable("wix_bindir", "Path to WiX binaries", "", PathVariable.PathAccept))
 if os.name == "nt" :
-	vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
+    vars.Add(PackageVariable("bonjour", "Bonjour SDK location", "yes"))
+vars.Add(EnumVariable("tls_backend", "Choose the TLS backend", "native", ["native", "openssl", "openssl_bundled"]))
 vars.Add(PackageVariable("openssl", "OpenSSL location", "yes"))
 vars.Add("openssl_libnames", "Comma-separated openssl library names to override defaults", None)
-vars.Add(BoolVariable("openssl_force_bundled", "Force use of the bundled OpenSSL", "no"))
 vars.Add("openssl_include", "Location of OpenSSL include files (if not under (openssl)/include)", None)
 vars.Add("openssl_libdir", "Location of OpenSSL library files (if not under (openssl)/lib)", None)
 vars.Add(PackageVariable("hunspell_prefix", "Hunspell location", False))
-vars.Add(BoolVariable("hunspell_enable", "Build with Hunspell support", False))
+vars.Add(BoolVariable("hunspell_enable", "Build with Hunspell support", True))
 vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("boost_bundled_enable", "Allow use of bundled Boost as last resort", "true"))
+vars.Add(BoolVariable("boost_force_bundled", "Force use of bundled Boost.", False))
 vars.Add(PathVariable("zlib_includedir", "Zlib headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("zlib_libdir", "Zlib library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("zlib_libfile", "Zlib library file (full path to file)", None, PathVariable.PathAccept))
@@ -68,12 +70,17 @@ vars.Add(PathVariable("libidn_includedir", "LibIDN headers location", None, Path
 vars.Add(PathVariable("libidn_libdir", "LibIDN library location", None, PathVariable.PathAccept))
 vars.Add("libidn_libname", "LibIDN library name",  os.name == "nt" and "libidn" or "idn")
 vars.Add(BoolVariable("need_idn", "Whether an IDN library is required. Without this, most internal binaries will fail", "true"))
+
 vars.Add(PathVariable("libminiupnpc_includedir", "LibMiniUPNPC headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libminiupnpc_libdir", "LibMiniUPNPC library location", None, PathVariable.PathAccept))
 vars.Add("libminiupnpc_libname", "LibMiniUPNPC library name", os.name == "nt" and "libminiupnpc" or "miniupnpc")
+vars.Add(BoolVariable("libminiupnpc_force_bundled", "Force use of bundled LibMiniUPNPC", False))
+
 vars.Add(PathVariable("libnatpmp_includedir", "LibNATPMP headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("libnatpmp_libdir", "LibNATPMP library location", None, PathVariable.PathAccept))
 vars.Add("libnatpmp_libname", "LibNATPMP library name", os.name == "nt" and "libnatpmp" or "natpmp")
+vars.Add(BoolVariable("libnatpmp_force_bundled", "Force use of bundled LibNATPMP", False))
+
 vars.Add(PathVariable("sqlite_includedir", "SQLite headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("sqlite_libdir", "SQLite library location", None, PathVariable.PathAccept))
 vars.Add("sqlite_libname", "SQLite library name", os.name == "nt" and "libsqlite3" or "sqlite3")
@@ -104,36 +111,50 @@ vars.Add(BoolVariable("check_headers", "Independently build compilation units fo
 vars.Add("win_target_arch", "Target architecture for Windows builds. x86 for 32-bit (default) or x86_64 for 64-bit.", "x86")
 vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
 
+# Code Signing Options
+vars.Add("codesign_identity", "macOS code signing identity to be passed to codesign when building the distribution package. Must match the Commen Name of the Subject of the code signing certificate.", "")
+vars.Add("signtool_key_pfx", "The keyfile (.pfx) that will be used to sign the Windows installer.", None)
+vars.Add("signtool_timestamp_url", "The timestamp server that will be queried for a signed time stamp in the signing process.", None)
+
+# Automatic Software Update Options
+vars.Add(PathVariable("sparkle_public_dsa_key", "Optional path to a public DSA key used to verify Sparkle software updates. Without specifiying this option, the app needs to be code signed for Sparkle to work.", None, PathVariable.PathIsFile))
+
+
 ################################################################################
 # Set up default build & configure environment
 ################################################################################
 
 env_ENV = {
-	'PATH' : os.environ['PATH'],
-	'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
-	'TERM' : os.environ.get("TERM", ""),
+    'PATH' : os.environ['PATH'],
+    'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
+    'TERM' : os.environ.get("TERM", ""),
 }
 
 if "MSVC_VERSION" in ARGUMENTS :
-	env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None))
-	env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
+    env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None))
+    env = Environment(ENV = env_ENV, variables = vars, MSVC_VERSION = ARGUMENTS["MSVC_VERSION"], platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
 else :
-	env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
-	env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
+    env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None))
+    env = Environment(ENV = env_ENV, variables = vars, platform = ARGUMENTS.get("PLATFORM", None), TARGET_ARCH=env["win_target_arch"])
+
+if env["PLATFORM"] == "win32" and env["qt"] :
+    # This adds Qt's binary directory at the end of the PATH variable, so that
+    # windeployqt.exe is automatically detected and used in WindowsBundle.py.
+    os.environ["PATH"] =  env['ENV']['PATH'] + ";" + env['qt'] + "\\bin"
 
 Help(vars.GenerateHelpText(env))
 
 # Workaround for missing Visual Studio 2012 support in SCons
 # Requires scons to be run from a VS2012 console
 if env.get("MSVC_VERSION", "").startswith("11.0") :
-	env["ENV"]["LIB"] = os.environ["LIB"]
-	env["ENV"]["INCLUDE"] = os.environ["INCLUDE"]
+    env["ENV"]["LIB"] = os.environ["LIB"]
+    env["ENV"]["INCLUDE"] = os.environ["INCLUDE"]
 
 # Default environment variables
 env["PLATFORM_FLAGS"] = {
-		"LIBPATH": [],
-		"LIBS": [],
-		"FRAMEWORKS": [],
+        "LIBPATH": [],
+        "LIBS": [],
+        "FRAMEWORKS": [],
 }
 
 # Default custom tools
@@ -142,24 +163,24 @@ env.Tool("WriteVal", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("BuildVersion", toolpath = ["#/BuildTools/SCons/Tools"])
 env.Tool("Flags", toolpath = ["#/BuildTools/SCons/Tools"])
 if env["PLATFORM"] == "darwin" :
-	env.Tool("Nib", toolpath = ["#/BuildTools/SCons/Tools"])
-	env.Tool("AppBundle", toolpath = ["#/BuildTools/SCons/Tools"])
+    env.Tool("Nib", toolpath = ["#/BuildTools/SCons/Tools"])
+    env.Tool("AppBundle", toolpath = ["#/BuildTools/SCons/Tools"])
 if env["PLATFORM"] == "win32" :
-	env.Tool("WindowsBundle", toolpath = ["#/BuildTools/SCons/Tools"])
-	#So we don't need to escalate with UAC
-	if "TMP" in os.environ.keys() :
-		env['ENV']['TMP'] = os.environ['TMP']
+    env.Tool("WindowsBundle", toolpath = ["#/BuildTools/SCons/Tools"])
+    #So we don't need to escalate with UAC
+    if "TMP" in os.environ.keys() :
+        env['ENV']['TMP'] = os.environ['TMP']
 env.Tool("SLOCCount", toolpath = ["#/BuildTools/SCons/Tools"])
 
 # Max out the number of jobs
 if env["max_jobs"] :
-	try :
-		import multiprocessing
-		SetOption("num_jobs", multiprocessing.cpu_count())
-	except NotImplementedError :
-		pass
-	except ImportError :
-		pass
+    try :
+        import multiprocessing
+        SetOption("num_jobs", multiprocessing.cpu_count())
+    except NotImplementedError :
+        pass
+    except ImportError :
+        pass
 
 # Set speed options
 env.Decider("MD5-timestamp")
@@ -168,19 +189,24 @@ env.SetOption("implicit_cache", True)
 
 # Set the default compiler to CLang on OS X, and set the necessary flags
 if env["PLATFORM"] == "darwin" and env["target"] == "native" :
-	if "cc" not in env :
-		env["CC"] = "clang"
-		if platform.machine() == "x86_64" :
-			env["CCFLAGS"] = ["-arch", "x86_64"]
-	if "cxx" not in env :
-		env["CXX"] = "clang++"
-		# Compiling Qt5 in C++0x mode includes headers that we don't have
-		if not env["qt5"] :
-			env["CXXFLAGS"] = ["-std=c++11"]
-	if "link" not in env :
-		env["LINK"] = "clang"
-		if platform.machine() == "x86_64" :
-			env.Append(LINKFLAGS = ["-arch", "x86_64"])
+    if "cc" not in env :
+        env["CC"] = "clang"
+        if platform.machine() == "x86_64" :
+            env["CCFLAGS"] = ["-arch", "x86_64"]
+    if "cxx" not in env :
+        env["CXX"] = "clang++"
+    if "link" not in env :
+        # Use clang++ instead of clang, otherwise XCode's clang will cause linking errors due to missing C++ standard lib.
+        env["LINK"] = "clang++"
+        if platform.machine() == "x86_64" :
+            env.Append(LINKFLAGS = ["-arch", "x86_64"])
+
+# Set QT_SELECT variable to enable building on systems that have Qt4 and Qt5 installed and use qtselect
+if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
+    if env["qt5"] :
+        env["ENV"]["QT_SELECT"] = "qt5"
+    else:
+        env["ENV"]["QT_SELECT"] = "qt4"
 
 # Set QT_SELECT variable to enable building on systems that have Qt4 and Qt5 installed and use qtselect
 if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
@@ -191,198 +217,215 @@ if env["PLATFORM"] != "darwin" and env["PLATFORM"] != "win32" :
 
 # Check whether we are running inside scan-build, and override compiler if so
 if "CCC_ANALYZER_HTML" in os.environ :
-	for key, value in os.environ.items() :
-		if key.startswith("CCC_") or key.startswith("CLANG") :
-			env["ENV"][key] = value
-	env["CC"] = os.environ["CC"]
-	env["CXX"] = os.environ["CXX"]
+    for key, value in os.environ.items() :
+        if key.startswith("CCC_") or key.startswith("CLANG") :
+            env["ENV"][key] = value
+    env["CC"] = os.environ["CC"]
+    env["CXX"] = os.environ["CXX"]
 
 # Override the compiler with custom variables set at config time
 if "cc" in env :
-	env["CC"] = env["cc"]
+    env["CC"] = env["cc"]
 if "cxx" in env :
-	env["CXX"] = env["cxx"]
+    env["CXX"] = env["cxx"]
 if "ar" in env :
-	env["AR"] = env["ar"]
+    env["AR"] = env["ar"]
 
 if "link" in env :
-	env["SHLINK"] = env["link"]
-	env["LINK"] = env["link"]
+    env["SHLINK"] = env["link"]
+    env["LINK"] = env["link"]
+
+# Process user-defined external flags
 for flags_type in ["ccflags", "cxxflags", "linkflags"] :
-	if flags_type in env :
-		if isinstance(env[flags_type], str) :
-			# FIXME: Make the splitting more robust
-			env[flags_type.upper()] = env[flags_type].split(" ")
-		else :
-			env[flags_type.upper()] = env[flags_type]
+    if flags_type in env :
+        if isinstance(env[flags_type], str) :
+            # FIXME: Make the splitting more robust
+            env[flags_type.upper()] = env[flags_type].split(" ")
+        else :
+            env[flags_type.upper()] = env[flags_type]
 # This isn't a real flag (yet) AFAIK. Be sure to append it to the CXXFLAGS
 # where you need it
 env["OBJCCFLAGS"] = []
 
+if env["PLATFORM"] != "win32" :
+    env.AppendUnique(CCFLAGS=['-isystem', Dir('#').abspath + '/Backport/'])
+
+# Compile code as C++11
+if env["PLATFORM"] != "win32" :
+    env.Append(CXXFLAGS = ["-std=c++11"])
+
 if env["optimize"] :
-	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["/O2"])
-	else :
-		env.Append(CCFLAGS = ["-O2"])
+    if env["PLATFORM"] == "win32" :
+        env.Append(CCFLAGS = ["/O2"])
+    else :
+        env.Append(CCFLAGS = ["-O2"])
 
 if env["target"] == "xcode" and os.environ["CONFIGURATION"] == "Release" :
-	env.Append(CCFLAGS = ["-Os"])
+    env.Append(CCFLAGS = ["-Os"])
 
 if env["debug"] :
-	if env["PLATFORM"] == "win32" :
-		env.Append(CCFLAGS = ["/Zi"])
-		env.Append(LINKFLAGS = ["/DEBUG"])
-		if GetOption("num_jobs") > 1 :
-			env["CCPDBFLAGS"] = '/Fd${TARGET}.pdb'
-			env["PDB"] = '${TARGET.base}.pdb'
-		if env["set_iterator_debug_level"] :
-			env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
-		if env["optimize"] :
-			env.Append(LINKFLAGS = ["/OPT:NOREF"])
-			env.Append(CCFLAGS = ["/MD"])
-		else :
-			env.Append(CCFLAGS = ["/MDd"])
-	else :
-		env.Append(CCFLAGS = ["-g"])
+    if env["PLATFORM"] == "win32" :
+        env.Append(CCFLAGS = ["/Zi"])
+        env.Append(LINKFLAGS = ["/DEBUG"])
+        if GetOption("num_jobs") > 1 :
+            env["CCPDBFLAGS"] = '/Fd${TARGET}.pdb'
+            env["PDB"] = '${TARGET.base}.pdb'
+        if env["set_iterator_debug_level"] :
+            env.Append(CPPDEFINES = ["_ITERATOR_DEBUG_LEVEL=0"])
+        env.Append(LINKFLAGS = ["/OPT:NOREF"])
+        env.Append(CCFLAGS = ["/MD"])
+    else :
+        env.Append(CCFLAGS = ["-g"])
 elif env["PLATFORM"] == "win32" :
-	env.Append(CCFLAGS = ["/MD"])
+    env.Append(CCFLAGS = ["/MD"])
 
 if env.get("universal", 0) :
-	assert(env["PLATFORM"] == "darwin")
-	env.Append(CCFLAGS = [
-			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk",
-			"-arch", "i386",
-			"-arch", "ppc"])
-	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.4",
-			"-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk",
-			"-arch", "i386",
-			"-arch", "ppc"])
+    assert(env["PLATFORM"] == "darwin")
+    env.Append(CCFLAGS = [
+            "-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk",
+            "-arch", "i386",
+            "-arch", "ppc"])
+    env.Append(LINKFLAGS = [
+            "-mmacosx-version-min=10.4",
+            "-isysroot", "/Developer/SDKs/MacOSX10.4u.sdk",
+            "-arch", "i386",
+            "-arch", "ppc"])
 
 
 # Link against other versions of the OS X SDKs.
 # FIXME: This method does not work anymore, we need to set deployment targets.
 if env.get("mac105", 0) :
-	assert(env["PLATFORM"] == "darwin")
-	env.Append(CCFLAGS = [
-			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk",
-			"-arch", "i386"])
-	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.5",
-			"-isysroot", "/Developer/SDKs/MacOSX10.5.sdk",
-			"-arch", "i386"])
+    assert(env["PLATFORM"] == "darwin")
+    env.Append(CCFLAGS = [
+            "-isysroot", "/Developer/SDKs/MacOSX10.5.sdk",
+            "-arch", "i386"])
+    env.Append(LINKFLAGS = [
+            "-mmacosx-version-min=10.5",
+            "-isysroot", "/Developer/SDKs/MacOSX10.5.sdk",
+            "-arch", "i386"])
 if env.get("mac106", 0) :
-	assert(env["PLATFORM"] == "darwin")
-	env.Append(CCFLAGS = [
-			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk",
-			"-arch", "i386"])
-	env.Append(LINKFLAGS = [
-			"-mmacosx-version-min=10.6",
-			"-isysroot", "/Developer/SDKs/MacOSX10.6.sdk",
-			"-arch", "i386"])
+    assert(env["PLATFORM"] == "darwin")
+    env.Append(CCFLAGS = [
+            "-isysroot", "/Developer/SDKs/MacOSX10.6.sdk",
+            "-arch", "i386"])
+    env.Append(LINKFLAGS = [
+            "-mmacosx-version-min=10.6",
+            "-isysroot", "/Developer/SDKs/MacOSX10.6.sdk",
+            "-arch", "i386"])
 
 if not env["assertions"] :
-	env.Append(CPPDEFINES = ["NDEBUG"])
+    env.Append(CPPDEFINES = ["NDEBUG"])
 
 # disable file-transfer support on iOS
 if env["target"] in ["iphone-device", "iphone-simulator", "xcode"] :
-	env["experimental_ft"] = False
+    env["experimental_ft"] = False
 
 if env["experimental_ft"] :
-	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT"])
+    env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_FT"])
 
 if env["experimental"] :
-	env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_HISTORY", "SWIFT_EXPERIMENTAL_WB"])
+    env.Append(CPPDEFINES = ["SWIFT_EXPERIMENTAL_HISTORY", "SWIFT_EXPERIMENTAL_WB"])
 
 # If we build shared libs on AMD64, we need -fPIC.
 # This should have no performance impact om AMD64
 if env["PLATFORM"] == "posix" and platform.machine() in ["x86_64", "amd64"] :
-	env.Append(CCFLAGS = ["-fPIC"])
+    env.Append(CCFLAGS = ["-fPIC"])
 
 # Warnings
 if env["PLATFORM"] == "win32" :
-	env.Append(CXXFLAGS = ["/wd4068"])
+    env.Append(CXXFLAGS = ["/wd4068"])
+    env.Append(CXXFLAGS = ["/wd4503"]) # Disable 'decorated name length exceeded, name was truncated' warning
+    if not env.get("allow_warnings", "False") :
+        env.Append(CXXFLAGS = ["/WX"])
 elif env["PLATFORM"] == "hpux" :
-	# HP-UX gives a flood of minor warnings if this is enabled
-	#env.Append(CXXFLAGS = ["+w"])
-	pass
+    # HP-UX gives a flood of minor warnings if this is enabled
+    #env.Append(CXXFLAGS = ["+w"])
+    pass
 elif env["PLATFORM"] == "sunos" :
-	#env.Append(CXXFLAGS = ["-z verbose"])
-	pass
+    #env.Append(CXXFLAGS = ["-z verbose"])
+    pass
 else :
-	if "clang" in env["CXX"] :
-		env.Append(CXXFLAGS = [
-			"-Weverything",
-			"-Wno-unknown-warning-option", # To stay compatible between CLang versions
-			"-Wno-unknown-pragmas", # To stay compatible between CLang versions
-			"-Wno-weak-vtables", # Virtually none of our elements have outlined methods. This also seems to affect classes in .cpp files, which in turn affects all our tests, which may need fixing in CLang
-			"-Wno-shadow", # Also warns for shadowing on constructor arguments, which we do a lot
-			"-Wno-documentation", # We don't care about documentation warnings
-			"-Wno-documentation-unknown-command", # We don't care about documentation warnings
-			"-Wno-exit-time-destructors", # Used a lot in e.g. CPPUnit
-			"-Wno-c++98-compat-pedantic", # We do different things that violate this, but they could be fixed
-			"-Wno-global-constructors", # We depend on this for e.g. string constants
-			"-Wno-disabled-macro-expansion", # Caused due to system headers
-			"-Wno-c++11-extensions", # We use C++11; turn this off when we use -std=c++11
-			"-Wno-long-long", # We use long long
-			"-Wno-padded",
-			"-Wno-missing-variable-declarations", # Getting rid of CPPUnit warnings
-			"-Wno-direct-ivar-access", # Obj-C code warning
-			"-Wno-potentially-evaluated-expression", # Caused due to calling shared_ptr::get() inside typeid()
-			])
-	else :
-		env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls", "-Wno-unknown-pragmas"])
-		gccVersion = env.get("CCVERSION", "0.0.0").split(".")
-		if gccVersion >= ["4", "5", "0"] and not "clang" in env["CC"] :
-			env.Append(CXXFLAGS = ["-Wlogical-op"])
-	if not env.get("allow_warnings", False) :
-		env.Append(CXXFLAGS = ["-Werror"])
+    if os.path.basename(env["CXX"]).startswith(("clang", "clang++")) :
+        env.Append(CXXFLAGS = [
+            "-Weverything",
+            "-Wno-unknown-warning-option", # To stay compatible between CLang versions
+            "-Wno-unknown-pragmas", # To stay compatible between CLang versions
+            "-Wno-weak-vtables", # Virtually none of our elements have outlined methods. This also seems to affect classes in .cpp files, which in turn affects all our tests, which may need fixing in CLang
+            "-Wno-shadow", # Also warns for shadowing on constructor arguments, which we do a lot
+            "-Wno-documentation", # We don't care about documentation warnings
+            "-Wno-documentation-unknown-command", # We don't care about documentation warnings
+            "-Wno-exit-time-destructors", # Used a lot in e.g. CPPUnit
+            "-Wno-c++98-compat-pedantic", # We do different things that violate this, but they could be fixed
+            "-Wno-global-constructors", # We depend on this for e.g. string constants
+            "-Wno-disabled-macro-expansion", # Caused due to system headers
+            "-Wno-long-long", # We use long long
+            "-Wno-padded",
+            "-Wno-missing-variable-declarations", # Getting rid of CPPUnit warnings
+            "-Wno-direct-ivar-access", # Obj-C code warning
+            "-Wno-potentially-evaluated-expression", # Caused due to calling shared_ptr::get() inside typeid()
+
+            "-Wno-shadow-field", # FIXME: fix source code issues regarding this warning later
+            "-Wno-unused-template", # FIXME: fix source code issues regarding this warning later
+            ])
+    else :
+        env.Append(CXXFLAGS = ["-Wextra", "-Wall", "-Wnon-virtual-dtor", "-Wundef", "-Wold-style-cast", "-Wno-long-long", "-Woverloaded-virtual", "-Wfloat-equal", "-Wredundant-decls", "-Wno-unknown-pragmas"])
+        gccVersion = env.get("CCVERSION", "0.0.0").split(".")
+        if gccVersion >= ["4", "5", "0"] and not "clang" in env["CC"] :
+            env.Append(CXXFLAGS = ["-Wlogical-op"])
+    if not env.get("allow_warnings", False) :
+        env.Append(CXXFLAGS = ["-Werror"])
 
 if env.get("coverage", 0) :
-	assert(env["PLATFORM"] != "win32")
-	env.Append(CCFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
-	env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
+    assert(env["PLATFORM"] != "win32")
+    env.Append(CCFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
+    env.Append(LINKFLAGS = ["-fprofile-arcs", "-ftest-coverage"])
 
 if env["PLATFORM"] == "win32" :
-	env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32", "ntdsapi"])
-	env.Append(CCFLAGS = ["/EHsc", "/nologo", "/Zm256"])
-	env.Append(LINKFLAGS = ["/INCREMENTAL:no", "/NOLOGO"])
-	if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
-		mt = env.get('mt')
-		if not mt:
-			mt = 'mt.exe'
-		env["LINKCOM"] = [env["LINKCOM"], '%s  -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1' % mt]
-		env["SHLINKCOM"] = [env["SHLINKCOM"], '%s  -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2' % mt]
+    env.Append(LIBS = ["user32", "crypt32", "dnsapi", "iphlpapi", "ws2_32", "wsock32", "Advapi32", "ntdsapi"])
+    env.Append(CCFLAGS = ["/EHsc", "/nologo", "/Zm256"])
+    env.Append(LINKFLAGS = ["/INCREMENTAL:no", "/NOLOGO"])
+    if int(env["MSVS_VERSION"].split(".")[0]) < 10 :
+        mt = env.get('mt')
+        if not mt:
+            mt = 'mt.exe'
+        env["LINKCOM"] = [env["LINKCOM"], '%s  -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;1' % mt]
+        env["SHLINKCOM"] = [env["SHLINKCOM"], '%s  -nologo -manifest ${TARGET}.manifest -outputresource:$TARGET;2' % mt]
 
 if env["PLATFORM"] == "darwin" and not env["target"] in ["iphone-device", "iphone-simulator", "xcode", "android"] :
-	env["PLATFORM_FLAGS"]["FRAMEWORKS"] += ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"]
+    env["PLATFORM_FLAGS"]["FRAMEWORKS"] += ["IOKit", "AppKit", "SystemConfiguration", "Security", "SecurityInterface"]
 
 # Required by boost headers on HP-UX
 if env["PLATFORM"] == "hpux" :
-	env.Append(CXXFLAGS = ["+hpxstd98", "-mt", "-AA"])
-	# FIXME: Need -AA for linking C++ but not C
-	#env.Append(LINKFLAGS = ["-AA"])
+    env.Append(CXXFLAGS = ["+hpxstd98", "-mt", "-AA"])
+    # FIXME: Need -AA for linking C++ but not C
+    #env.Append(LINKFLAGS = ["-AA"])
 
+# Code signing
+if env["PLATFORM"] == "darwin" :
+    env["CODE_SIGN_IDENTITY"] = env["codesign_identity"]
+if env["PLATFORM"] == "win32" :
+    env["SIGNTOOL_KEY_PFX"] = env.get("signtool_key_pfx", None)
+    env["SIGNTOOL_TIMESTAMP_URL"] = env.get("signtool_timestamp_url", None)
 
 # Testing
 env["TEST_TYPE"] = env["test"]
 if "check" in ARGUMENTS :
-	env["TEST_TYPE"] = "unit"
+    env["TEST_TYPE"] = "unit"
 env["checker_report"] = ARGUMENTS.get("checker_report", False)
 env["TEST"] = (env["TEST_TYPE"] != "none") or env.GetOption("clean")
 if env.get("valgrind", 0) :
-	env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
+    env["TEST_RUNNER"] = "valgrind --suppressions=QA/valgrind.supp -q --leak-check=full --track-origins=yes "
 env["TEST_IGNORE_RESULT"] = "ignore_test_result" in ARGUMENTS
 env["TEST_CREATE_LIBRARIES"] = "create_test_libraries" in ARGUMENTS
 
 # Packaging
 env["DIST"] = "dist" in ARGUMENTS or env.GetOption("clean")
 for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR", "SLUIFT_INSTALLDIR"] :
-	if ARGUMENTS.get(path, "") :
-		if os.path.isabs(ARGUMENTS[path]) :
-			env[path] = Dir(ARGUMENTS[path]).abspath
-		else :
-			env[path] = Dir("#/" + ARGUMENTS[path]).abspath
+    if ARGUMENTS.get(path, "") :
+        if os.path.isabs(ARGUMENTS[path]) :
+            env[path] = Dir(ARGUMENTS[path]).abspath
+        else :
+            env[path] = Dir("#/" + ARGUMENTS[path]).abspath
 
 
 ################################################################################
@@ -391,70 +434,77 @@ for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR", "SLUIFT_INSTALLDIR"] :
 
 target = env["target"]
 if target in ["iphone-device", "iphone-simulator", "xcode"] :
-	# Extract/initialize all the information we need
-	if target == "xcode" :
-		# Get the information from the XCode environment
-		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = os.environ["PLATFORM_DEVELOPER_BIN_DIR"]
-		env["XCODE_SDKROOT"] = os.environ["SDKROOT"]
-		env["XCODE_ARCH_FLAGS"] = sum([["-arch", arch] for arch in os.environ["ARCHS"].split(" ")], [])
-		env["IPHONEOS_DEPLOYMENT_TARGET"] = os.environ["IPHONEOS_DEPLOYMENT_TARGET"]
-		# Use absolute path sources so Xcode can highlight compilation errors in swiften
-		env['CXXCOM'] = '$CXX -o $TARGET -c $CXXFLAGS $CCFLAGS $_CCCOMCOM ${SOURCES.abspath}'
-	else :
-		# Hard code values
-		env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
-		if target == "iphone-device":
-			env["XCODE_ARCH_FLAGS"] = ["-arch", "armv6", "-arch", "armv7"]
-			sdkPart = "iPhoneOS"
-		else :
-			env["XCODE_ARCH_FLAGS"] = ["-arch", "i386"]
-			sdkPart = "iPhoneSimulator"
-		sdkVer = "6.0"
-		env["XCODE_SDKROOT"] = "/Applications/Xcode.app/Contents/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
-		env["IPHONEOS_DEPLOYMENT_TARGET"] = "4.1"
+    # Extract/initialize all the information we need
+    if target == "xcode" :
+        # Get the information from the XCode environment
+        env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = os.environ["PLATFORM_DEVELOPER_BIN_DIR"]
+        env["XCODE_SDKROOT"] = os.environ["SDKROOT"]
+        env["XCODE_ARCH_FLAGS"] = sum([["-arch", arch] for arch in os.environ["ARCHS"].split(" ")], [])
+        env["IPHONEOS_DEPLOYMENT_TARGET"] = os.environ["IPHONEOS_DEPLOYMENT_TARGET"]
+        # Use absolute path sources so Xcode can highlight compilation errors in swiften
+        env['CXXCOM'] = '$CXX -o $TARGET -c $CXXFLAGS $CCFLAGS $_CCCOMCOM ${SOURCES.abspath}'
+    else :
+        # Hard code values
+        env["XCODE_PLATFORM_DEVELOPER_BIN_DIR"] = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin"
+        if target == "iphone-device":
+            env["XCODE_ARCH_FLAGS"] = ["-arch", "armv6", "-arch", "armv7"]
+            sdkPart = "iPhoneOS"
+        else :
+            env["XCODE_ARCH_FLAGS"] = ["-arch", "i386"]
+            sdkPart = "iPhoneSimulator"
+        sdkVer = "6.0"
+        env["XCODE_SDKROOT"] = "/Applications/Xcode.app/Contents/Developer/Platforms/" + sdkPart + ".platform/Developer/SDKs/" + sdkPart + sdkVer + ".sdk"
+        env["IPHONEOS_DEPLOYMENT_TARGET"] = "4.1"
 
-	# Set the build flags
-	env["CC"] = os.environ["DEVELOPER_BIN_DIR"] + "/gcc"
-	env["CXX"] = os.environ["DEVELOPER_BIN_DIR"] + "/g++"
-	env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
-	env["LD"] = env["CC"]
-	env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden", "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"]])
-	env.Append(LINKFLAGS = "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"])
-	if os.environ.get("GCC_THUMB_SUPPORT", False) :
-		env.Append(CCFLAGS = ["-mthumb"])
-	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
-	env.Append(CPPFLAGS = ["-isysroot", "$XCODE_SDKROOT"])
-	env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
-	env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"] + ["-isysroot", "$XCODE_SDKROOT", "-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
-	# Bit of a hack, because BOOST doesn't know the endianness for ARM
-	env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"])
+    # Set the build flags
+    env["CC"] = os.environ["DEVELOPER_BIN_DIR"] + "/gcc"
+    env["CXX"] = os.environ["DEVELOPER_BIN_DIR"] + "/g++"
+    env["OBJCCFLAGS"] = ["-fobjc-abi-version=2", "-fobjc-legacy-dispatch"]
+    env["LD"] = env["CC"]
+    env.Append(CCFLAGS = env["XCODE_ARCH_FLAGS"] + ["-fvisibility=hidden", "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"]])
+    env.Append(LINKFLAGS = "-miphoneos-version-min=" + env["IPHONEOS_DEPLOYMENT_TARGET"])
+    if os.environ.get("GCC_THUMB_SUPPORT", False) :
+        env.Append(CCFLAGS = ["-mthumb"])
+    env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"])
+    env.Append(CPPFLAGS = ["-isysroot", "$XCODE_SDKROOT"])
+    env.Append(FRAMEWORKS = ["CoreFoundation", "Foundation", "UIKit", "CoreGraphics"])
+    env.Append(LINKFLAGS = env["XCODE_ARCH_FLAGS"] + ["-isysroot", "$XCODE_SDKROOT", "-L\"$XCODE_SDKROOT/usr/lib\"", "-F\"$XCODE_SDKROOT/System/Library/Frameworks\"", "-F\"$XCODE_SDKROOT/System/Library/PrivateFrameworks\""])
+    # Bit of a hack, because BOOST doesn't know the endianness for ARM
+    env.Append(CPPDEFINES = ["_LITTLE_ENDIAN"])
 
 ################################################################################
 # Android
 ################################################################################
 if target in ["android"] :
-	env["ENV"]["PATH"] = env["android_toolchain"] + "/bin:" + env["ENV"]["PATH"]
-	env["CC"] = "arm-linux-androideabi-gcc"
-	env["CXX"] = "arm-linux-androideabi-g++"
-	env["AR"] = "arm-linux-androideabi-ar"
-	env["RANLIB"] = "arm-linux-androideabi-ranlib"
-	env.Append(CPPDEFINES = ["ANDROID"])
-	env.Append(CPPDEFINES = ["_REENTRANT", "_GLIBCXX__PTHREADS"])
+    env["ENV"]["PATH"] = env["android_toolchain"] + "/bin:" + env["ENV"]["PATH"]
+    env["CC"] = "arm-linux-androideabi-gcc"
+    env["CXX"] = "arm-linux-androideabi-g++"
+    env["AR"] = "arm-linux-androideabi-ar"
+    env["RANLIB"] = "arm-linux-androideabi-ranlib"
+    env.Append(CPPDEFINES = ["ANDROID"])
+    env.Append(CPPDEFINES = ["_REENTRANT", "_GLIBCXX__PTHREADS"])
 
 # CCache
 if env.get("ccache", False) :
-	env["ENV"]["HOME"] = os.environ["HOME"]
-	for var in os.environ :
-		if var.startswith("CCACHE_") :
-			env["ENV"][var] = os.environ[var]
-	if env.get("CC", "") != "" :
-		env["CC"] = "ccache " + env["CC"]
-	else :
-		env["CC"] = "ccache gcc"
-	if env.get("CXX", "") != "" :
-		env["CXX"] = "ccache " + env["CXX"]
-	else :
-		env["CC"] = "ccache g++"
+    env["ENV"]["HOME"] = os.environ["HOME"]
+    for var in os.environ :
+        if var.startswith("CCACHE_") :
+            env["ENV"][var] = os.environ[var]
+    if env.get("CC", "") != "" :
+        env["CC"] = "ccache " + env["CC"]
+    else :
+        env["CC"] = "ccache gcc"
+    if env.get("CXX", "") != "" :
+        env["CXX"] = "ccache " + env["CXX"]
+    else :
+        env["CC"] = "ccache g++"
+
+# distcc
+if env.get("distcc", False) :
+    env["ENV"]["HOME"] = os.environ["HOME"]
+    for var in os.environ :
+        if var.startswith("DISTCC_") :
+            env["ENV"][var] = os.environ[var]
 
 conf_env = env.Clone()
 
@@ -463,12 +513,12 @@ Export("conf_env")
 
 variant = ""
 if env["enable_variants"] :
-	fingerprint = ",".join([flag for flag in env["CXXFLAGS"] + env["CCFLAGS"] if not flag.startswith("-W") and not flag.startswith("-fvisibility")])
-	variant = "build/" + fingerprint
-	if not os.path.exists(Dir("#/build").abspath) :
-		os.mkdir(Dir("#/build").abspath)
-	if os.path.exists(Dir("#/build/current").abspath) :
-		os.unlink(Dir("#/build/current").abspath)
-	os.symlink(os.path.basename(variant), Dir("#/build/current").abspath)
+    fingerprint = ",".join([flag for flag in env["CXXFLAGS"] + env["CCFLAGS"] if not flag.startswith("-W") and not flag.startswith("-fvisibility")])
+    variant = "build/" + fingerprint
+    if not os.path.exists(Dir("#/build").abspath) :
+        os.mkdir(Dir("#/build").abspath)
+    if os.path.exists(Dir("#/build/current").abspath) :
+        os.unlink(Dir("#/build/current").abspath)
+    os.symlink(os.path.basename(variant), Dir("#/build/current").abspath)
 
 Return("variant")

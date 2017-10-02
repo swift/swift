@@ -13,20 +13,20 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API IBBParser : public GenericPayloadParser<IBB> {
-		public:
-			IBBParser();
-			~IBBParser();
+    class SWIFTEN_API IBBParser : public GenericPayloadParser<IBB> {
+        public:
+            IBBParser();
+            ~IBBParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			enum Level { 
-				TopLevel = 0
-			};
-			int level;
-			std::string currentText;
-	};
+        private:
+            enum Level {
+                TopLevel = 0
+            };
+            int level;
+            std::string currentText;
+    };
 }

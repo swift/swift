@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,42 +27,42 @@ namespace Swift {
 class QtElidingLabel;
 
 class QtVCardAddressField : public QtVCardGeneralField, public QtVCardHomeWork {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO("Address", UNLIMITED_INSTANCES, QtVCardAddressField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Address"), UNLIMITED_INSTANCES, QtVCardAddressField)
 
-		QtVCardAddressField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardAddressField();
+        QtVCardAddressField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
+        virtual ~QtVCardAddressField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setAddress(const VCard::Address& address);
-		VCard::Address getAddress() const;
+        void setAddress(const VCard::Address& address);
+        VCard::Address getAddress() const;
 
-	protected:
-		virtual void setupContentWidgets();
-		virtual void customCleanup();
+    protected:
+        virtual void setupContentWidgets();
+        virtual void customCleanup();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private:
-		QList<QWidget*> textFields;
-		QtResizableLineEdit* streetLineEdit;
-		QtResizableLineEdit* poboxLineEdit;
-		QtResizableLineEdit* addressextLineEdit;
-		QtResizableLineEdit* cityLineEdit;
-		QtResizableLineEdit* pocodeLineEdit;
-		QtResizableLineEdit* regionLineEdit;
-		QtResizableLineEdit* countryLineEdit;
-		QGridLayout* textFieldGridLayout;
-		QLayoutItem* textFieldGridLayoutItem;
+    private:
+        QList<QWidget*> textFields;
+        QtResizableLineEdit* streetLineEdit;
+        QtResizableLineEdit* poboxLineEdit;
+        QtResizableLineEdit* addressextLineEdit;
+        QtResizableLineEdit* cityLineEdit;
+        QtResizableLineEdit* pocodeLineEdit;
+        QtResizableLineEdit* regionLineEdit;
+        QtResizableLineEdit* countryLineEdit;
+        QGridLayout* textFieldGridLayout;
+        QLayoutItem* textFieldGridLayoutItem;
 
-		QtElidingLabel* deliveryTypeLabel;
-		QRadioButton* domesticRadioButton;
-		QRadioButton* internationalRadioButton;
-		QButtonGroup* buttonGroup;
+        QtElidingLabel* deliveryTypeLabel;
+        QRadioButton* domesticRadioButton;
+        QRadioButton* internationalRadioButton;
+        QButtonGroup* buttonGroup;
 };
 
 }

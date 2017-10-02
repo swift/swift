@@ -16,11 +16,11 @@ StanzaAckResponder::StanzaAckResponder() : handledStanzasCount(0) {
 }
 
 void StanzaAckResponder::handleStanzaReceived() {
-	handledStanzasCount = (handledStanzasCount == MAX_HANDLED_STANZA_COUNT ? 0 : handledStanzasCount + 1);
+    handledStanzasCount = (handledStanzasCount == MAX_HANDLED_STANZA_COUNT ? 0 : handledStanzasCount + 1);
 }
 
 void StanzaAckResponder::handleAckRequestReceived() {
-	onAck(handledStanzasCount);
+    onAck(handledStanzasCount);
 }
 
 }

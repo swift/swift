@@ -6,76 +6,76 @@ if env.get("LUA_BUNDLED", False) :
 # Module flags
 ################################################################################
 
-	if env["SCONS_STAGE"] == "flags" :
-		env["HAVE_LUA"] = True
-		cppdefines = []
-		if not env["optimize"] :
-			cppdefines.append("LUA_USE_APICHECK")
-		if env["PLATFORM"] == "win32" :
-			pass
-		elif env["PLATFORM"] == "darwin" :
-			cppdefines += ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
-		else :
-			cppdefines += ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
+    if env["SCONS_STAGE"] == "flags" :
+        env["HAVE_LUA"] = True
+        cppdefines = []
+        if not env["optimize"] :
+            cppdefines.append("LUA_USE_APICHECK")
+        if env["PLATFORM"] == "win32" :
+            pass
+        elif env["PLATFORM"] == "darwin" :
+            cppdefines += ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
+        else :
+            cppdefines += ["LUA_USE_POSIX", "LUA_USE_DLOPEN"]
 
-		env["LUA_FLAGS"] = {
-				"CPPDEFINES": cppdefines,
-				"CPPPATH": [Dir("src")],
-				"LIBPATH": [Dir(".")],
-				"LIBS": ["Swiften_Lua"],
-			}
+        env["LUA_FLAGS"] = {
+                "CPPDEFINES": cppdefines,
+                "CPPPATH": [Dir("src")],
+                "LIBPATH": [Dir(".")],
+                "LIBS": ["Swiften_Lua"],
+            }
 
 ################################################################################
 # Build
 ################################################################################
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
 
-		# Remove warn flags
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if not flag.startswith("-W")])
-		if "clang" in env["CC"] :
-			myenv.Append(CCFLAGS = ["-Wno-unknown-warning-option", "-Wno-empty-body"])
+        # Remove warn flags
+        myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if not flag.startswith("-W")])
+        if "clang" in env["CC"] :
+            myenv.Append(CCFLAGS = ["-Wno-unknown-warning-option", "-Wno-empty-body"])
 
-		myenv.MergeFlags(myenv["LUA_FLAGS"])
-		myenv.StaticLibrary("Swiften_Lua", [
-			"src/lapi.c",
-			"src/lcode.c",
-			"src/ldebug.c",
-			"src/ldo.c",
-			"src/ldump.c",
-			"src/lfunc.c",
-			"src/lgc.c",
-			"src/llex.c",
-			"src/lmem.c",
-			"src/lobject.c",
-			"src/lopcodes.c",
-			"src/lparser.c",
-			"src/lstate.c",
-			"src/lstring.c",
-			"src/ltable.c",
-			"src/ltm.c",
-			"src/lundump.c",
-			"src/lvm.c",
-			"src/lzio.c",
-			"src/lauxlib.c",
-			"src/lbaselib.c",
-			"src/ldblib.c",
-			"src/liolib.c",
-			"src/lmathlib.c",
-			"src/loslib.c",
-			"src/ltablib.c",
-			"src/lstrlib.c",
-			"src/loadlib.c",
-		])
+        myenv.MergeFlags(myenv["LUA_FLAGS"])
+        myenv.StaticLibrary("Swiften_Lua", [
+            "src/lapi.c",
+            "src/lcode.c",
+            "src/ldebug.c",
+            "src/ldo.c",
+            "src/ldump.c",
+            "src/lfunc.c",
+            "src/lgc.c",
+            "src/llex.c",
+            "src/lmem.c",
+            "src/lobject.c",
+            "src/lopcodes.c",
+            "src/lparser.c",
+            "src/lstate.c",
+            "src/lstring.c",
+            "src/ltable.c",
+            "src/ltm.c",
+            "src/lundump.c",
+            "src/lvm.c",
+            "src/lzio.c",
+            "src/lauxlib.c",
+            "src/lbaselib.c",
+            "src/ldblib.c",
+            "src/liolib.c",
+            "src/lmathlib.c",
+            "src/loslib.c",
+            "src/ltablib.c",
+            "src/lstrlib.c",
+            "src/loadlib.c",
+        ])
 
-		lua_env = myenv.Clone()
-		lua_env.MergeFlags(lua_env["LUA_FLAGS"])
-		if lua_env.get("HAVE_READLINE", False) :
-			lua_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
-			lua_env.MergeFlags(lua_env["READLINE_FLAGS"])
-		lua_env.MergeFlags(myenv["PLATFORM_FLAGS"])
-		lua_env.Program("lua", [
-				"src/linit.c",
-				"src/lua.c",
-			])
+        lua_env = myenv.Clone()
+        lua_env.MergeFlags(lua_env["LUA_FLAGS"])
+        if lua_env.get("HAVE_READLINE", False) :
+            lua_env.Append(CPPDEFINES = ["LUA_USE_READLINE"])
+            lua_env.MergeFlags(lua_env["READLINE_FLAGS"])
+        lua_env.MergeFlags(myenv["PLATFORM_FLAGS"])
+        lua_env.Program("lua", [
+                "src/linit.c",
+                "src/lua.c",
+            ])

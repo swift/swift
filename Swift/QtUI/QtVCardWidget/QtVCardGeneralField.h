@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,69 +25,69 @@ namespace Swift {
 class QtElidingLabel;
 
 /*
- *	covers features like:
- *		- preffered (star ceckbox)
- *		- combo check box
- *		- label
- *		- remove button
+ *    covers features like:
+ *        - preffered (star ceckbox)
+ *        - combo check box
+ *        - label
+ *        - remove button
  */
 class QtVCardGeneralField : public QWidget {
-		Q_OBJECT
-		Q_PROPERTY(bool editable READ isEditable WRITE setEditable NOTIFY editableChanged)
-		Q_PROPERTY(bool empty READ isEmpty)
+        Q_OBJECT
+        Q_PROPERTY(bool editable READ isEditable WRITE setEditable NOTIFY editableChanged)
+        Q_PROPERTY(bool empty READ isEmpty)
 
-	public:
-		explicit QtVCardGeneralField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false, int row = 0, QString label = QString(),
-										bool preferrable = true, bool taggable = true);
-		virtual ~QtVCardGeneralField();
+    public:
+        explicit QtVCardGeneralField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false, int row = 0, QString label = QString(),
+                                        bool preferrable = true, bool taggable = true);
+        virtual ~QtVCardGeneralField();
 
-		void initialize();
+        void initialize();
 
-		virtual bool isEditable() const;
-		virtual void setEditable(bool);
+        virtual bool isEditable() const;
+        virtual void setEditable(bool);
 
-		virtual bool isEmpty() const = 0;
+        virtual bool isEmpty() const = 0;
 
-		void setStarVisible(const bool isVisible);
-		bool getStarVisible() const;
+        void setStarVisible(const bool isVisible);
+        bool getStarVisible() const;
 
-		void setPreferred(const bool preferred);
-		bool getPreferred() const;
+        void setPreferred(const bool preferred);
+        bool getPreferred() const;
 
-	protected:
-		virtual void setupContentWidgets() = 0;
-		virtual void customCleanup();
+    protected:
+        virtual void setupContentWidgets() = 0;
+        virtual void customCleanup();
 
-		QtTagComboBox* getTagComboBox() const;
-		QGridLayout* getGridLayout() const;
+        QtTagComboBox* getTagComboBox() const;
+        QGridLayout* getGridLayout() const;
 
-	signals:
-		void editableChanged(bool);
-		void deleteField(QtVCardGeneralField*);
-		
-	public slots:
-		void handleCloseButtonClicked();
-		void handlePreferredStarStateChanged(int statte);
+    signals:
+        void editableChanged(bool);
+        void deleteField(QtVCardGeneralField*);
 
-	protected:
-		QList<QWidget*> childWidgets;
+    public slots:
+        void handleCloseButtonClicked();
+        void handlePreferredStarStateChanged(int statte);
 
-	private:
-		void updatePreferredStarVisibility();
+    protected:
+        QList<QWidget*> childWidgets;
 
-	private:
-		bool editable;
-		bool preferrable;
-		bool starVisible;
-		bool taggable;
-		QGridLayout* layout;
-		int row;
-		QCheckBox* preferredCheckBox;
-		QLabel* label;
-		QString labelText;
-		QtTagComboBox* tagComboBox;
-		QtElidingLabel* tagLabel;
-		QtCloseButton* closeButton;
+    private:
+        void updatePreferredStarVisibility();
+
+    private:
+        bool editable;
+        bool preferrable;
+        bool starVisible;
+        bool taggable;
+        QGridLayout* layout;
+        int row;
+        QCheckBox* preferredCheckBox;
+        QLabel* label;
+        QString labelText;
+        QtTagComboBox* tagComboBox;
+        QtElidingLabel* tagLabel;
+        QtCloseButton* closeButton;
 };
 
 }

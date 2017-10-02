@@ -1,18 +1,18 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace Swift {
-	class UIEvent {
-		public:
-			typedef boost::shared_ptr<UIEvent> ref;
+    class UIEvent {
+        public:
+            typedef std::shared_ptr<UIEvent> ref;
 
-			virtual ~UIEvent();
-	};
+            virtual ~UIEvent();
+    };
 }

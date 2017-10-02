@@ -2,109 +2,109 @@ Import("env")
 
 if env.get("UNBOUND_BUNDLED", False) :
 
-	if env["PLATFORM"] == "win32" :
-		cppflags = ["/I" + Dir("#/3rdParty/Unbound/src/unbound").abspath]
-	else :
-		cppflags = [("-isystem", Dir("#/3rdParty/Unbound/src/unbound").abspath)]
+    if env["PLATFORM"] == "win32" :
+        cppflags = ["/I" + Dir("#/3rdParty/Unbound/src/unbound").abspath]
+    else :
+        cppflags = [("-isystem", Dir("#/3rdParty/Unbound/src/unbound").abspath)]
 
 
 ################################################################################
 # Flags
 ################################################################################
-    
-	if env["SCONS_STAGE"] == "flags" :
-		env["UNBOUND_FLAGS"] = {
-				"CPPPATH":  [Dir("src/unbound/libunbound")],
-				"CPPFLAGS": cppflags,
-				"LIBPATH": [env.Dir(".")],
-				"LIBS": ["Swiften_Unbound"],
-			}
-		if env["target"] == "android" :
-			env["UNBOUND_FLAGS"]["CPPPATH"].append(Dir("src/android/compat"))
+
+    if env["SCONS_STAGE"] == "flags" :
+        env["UNBOUND_FLAGS"] = {
+                "CPPPATH":  [Dir("src/unbound/libunbound")],
+                "CPPFLAGS": cppflags,
+                "LIBPATH": [env.Dir(".")],
+                "LIBS": ["Swiften_Unbound"],
+            }
+        if env["target"] == "android" :
+            env["UNBOUND_FLAGS"]["CPPPATH"].append(Dir("src/android/compat"))
 
 ################################################################################
 # Build
 ################################################################################
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.Append(CPPDEFINES = [("UNBOUND_STATICLIB")])
-		myenv.Append(CPPPATH = ["../Ldns/src/ldns", "src/unbound", "."])
-		if env["target"] == "android" :
-			myenv.Append(CPPPATH = ["src/android/compat", "src/android/config"])
-			myenv.Append(CPPPATH = ["src/android/dns"])
-			myenv.Append(CPPPATH = ["../Ldns/src/android"])
-		myenv.UseFlags(env["OPENSSL_FLAGS"])
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.Append(CPPDEFINES = [("UNBOUND_STATICLIB")])
+        myenv.Append(CPPPATH = ["../Ldns/src/ldns", "src/unbound", "."])
+        if env["target"] == "android" :
+            myenv.Append(CPPPATH = ["src/android/compat", "src/android/config"])
+            myenv.Append(CPPPATH = ["src/android/dns"])
+            myenv.Append(CPPPATH = ["../Ldns/src/android"])
+        myenv.UseFlags(env["OPENSSL_FLAGS"])
 
-		unbound_objects = [
-		"src/unbound/daemon/acl_list.c",
-		"src/unbound/daemon/cachedump.c",
-		"src/unbound/daemon/daemon.c",
-		"src/unbound/daemon/remote.c",
-		"src/unbound/daemon/stats.c",
-		"src/unbound/daemon/unbound.c",
-		# duplicate symbols: "src/src/daemon/worker.c",
-		"src/unbound/iterator/iter_delegpt.c",
-		"src/unbound/iterator/iter_donotq.c",
-		"src/unbound/iterator/iter_fwd.c",
-		"src/unbound/iterator/iter_hints.c",
-		"src/unbound/iterator/iter_priv.c",
-		"src/unbound/iterator/iter_resptype.c",
-		"src/unbound/iterator/iter_scrub.c",
-		"src/unbound/iterator/iter_utils.c",
-		"src/unbound/iterator/iterator.c",
-		"src/unbound/libunbound/context.c",
-		"src/unbound/libunbound/libunbound.c",
-		"src/unbound/libunbound/libworker.c",
-		"src/unbound/services/cache/dns.c",
-		"src/unbound/services/cache/infra.c",
-		"src/unbound/services/cache/rrset.c",
-		"src/unbound/services/listen_dnsport.c",
-		"src/unbound/services/localzone.c",
-		"src/unbound/services/mesh.c",
-		"src/unbound/services/modstack.c",
-		"src/unbound/services/outbound_list.c",
-		"src/unbound/services/outside_network.c",
-		"src/unbound/util/alloc.c",
-		"src/unbound/util/config_file.c",
-		"src/unbound/util/configlexer.c",
-		"src/unbound/util/configparser.c",
-		"src/unbound/util/data/dname.c",
-		"src/unbound/util/data/msgencode.c",
-		"src/unbound/util/data/msgparse.c",
-		"src/unbound/util/data/msgreply.c",
-		"src/unbound/util/data/packed_rrset.c",
-		"src/unbound/util/fptr_wlist.c",
-		"src/unbound/util/locks.c",
-		"src/unbound/util/log.c",
-		"src/unbound/util/mini_event.c",
-		"src/unbound/util/module.c",
-		"src/unbound/util/net_help.c",
-		"src/unbound/util/netevent.c",
-		"src/unbound/util/random.c",
-		"src/unbound/util/rbtree.c",
-		"src/unbound/util/regional.c",
-		"src/unbound/util/rtt.c",
-		"src/unbound/util/storage/dnstree.c",
-		"src/unbound/util/storage/lookup3.c",
-		"src/unbound/util/storage/lruhash.c",
-		"src/unbound/util/storage/slabhash.c",
-		"src/unbound/util/timehist.c",
-		"src/unbound/util/tube.c",
-		#src/unbound/util/winsock_event.c
-		"src/unbound/validator/autotrust.c",
-		"src/unbound/validator/val_anchor.c",
-		"src/unbound/validator/val_kcache.c",
-		"src/unbound/validator/val_kentry.c",
-		"src/unbound/validator/val_neg.c",
-		"src/unbound/validator/val_nsec.c",
-		"src/unbound/validator/val_nsec3.c",
-		"src/unbound/validator/val_secalgo.c",
-		"src/unbound/validator/val_sigcrypt.c",
-		"src/unbound/validator/val_utils.c",
-		"src/unbound/validator/validator.c",
-			]
-		if env["target"] == "android" :
-			unbound_objects.append("src/android/compat/glob.c")
-			unbound_objects.append("src/android/dns/dns_android.cpp")
-		env["UNBOUND_OBJECTS"] = myenv.SwiftenObject(unbound_objects)
+        unbound_objects = [
+        "src/unbound/daemon/acl_list.c",
+        "src/unbound/daemon/cachedump.c",
+        "src/unbound/daemon/daemon.c",
+        "src/unbound/daemon/remote.c",
+        "src/unbound/daemon/stats.c",
+        "src/unbound/daemon/unbound.c",
+        # duplicate symbols: "src/src/daemon/worker.c",
+        "src/unbound/iterator/iter_delegpt.c",
+        "src/unbound/iterator/iter_donotq.c",
+        "src/unbound/iterator/iter_fwd.c",
+        "src/unbound/iterator/iter_hints.c",
+        "src/unbound/iterator/iter_priv.c",
+        "src/unbound/iterator/iter_resptype.c",
+        "src/unbound/iterator/iter_scrub.c",
+        "src/unbound/iterator/iter_utils.c",
+        "src/unbound/iterator/iterator.c",
+        "src/unbound/libunbound/context.c",
+        "src/unbound/libunbound/libunbound.c",
+        "src/unbound/libunbound/libworker.c",
+        "src/unbound/services/cache/dns.c",
+        "src/unbound/services/cache/infra.c",
+        "src/unbound/services/cache/rrset.c",
+        "src/unbound/services/listen_dnsport.c",
+        "src/unbound/services/localzone.c",
+        "src/unbound/services/mesh.c",
+        "src/unbound/services/modstack.c",
+        "src/unbound/services/outbound_list.c",
+        "src/unbound/services/outside_network.c",
+        "src/unbound/util/alloc.c",
+        "src/unbound/util/config_file.c",
+        "src/unbound/util/configlexer.c",
+        "src/unbound/util/configparser.c",
+        "src/unbound/util/data/dname.c",
+        "src/unbound/util/data/msgencode.c",
+        "src/unbound/util/data/msgparse.c",
+        "src/unbound/util/data/msgreply.c",
+        "src/unbound/util/data/packed_rrset.c",
+        "src/unbound/util/fptr_wlist.c",
+        "src/unbound/util/locks.c",
+        "src/unbound/util/log.c",
+        "src/unbound/util/mini_event.c",
+        "src/unbound/util/module.c",
+        "src/unbound/util/net_help.c",
+        "src/unbound/util/netevent.c",
+        "src/unbound/util/random.c",
+        "src/unbound/util/rbtree.c",
+        "src/unbound/util/regional.c",
+        "src/unbound/util/rtt.c",
+        "src/unbound/util/storage/dnstree.c",
+        "src/unbound/util/storage/lookup3.c",
+        "src/unbound/util/storage/lruhash.c",
+        "src/unbound/util/storage/slabhash.c",
+        "src/unbound/util/timehist.c",
+        "src/unbound/util/tube.c",
+        #src/unbound/util/winsock_event.c
+        "src/unbound/validator/autotrust.c",
+        "src/unbound/validator/val_anchor.c",
+        "src/unbound/validator/val_kcache.c",
+        "src/unbound/validator/val_kentry.c",
+        "src/unbound/validator/val_neg.c",
+        "src/unbound/validator/val_nsec.c",
+        "src/unbound/validator/val_nsec3.c",
+        "src/unbound/validator/val_secalgo.c",
+        "src/unbound/validator/val_sigcrypt.c",
+        "src/unbound/validator/val_utils.c",
+        "src/unbound/validator/validator.c",
+            ]
+        if env["target"] == "android" :
+            unbound_objects.append("src/android/compat/glob.c")
+            unbound_objects.append("src/android/dns/dns_android.cpp")
+        env["UNBOUND_OBJECTS"] = myenv.SwiftenObject(unbound_objects)

@@ -1,12 +1,13 @@
 /*
- * Copyright (c) 2010-2014 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
+
 #include <Swiften/AdHoc/OutgoingAdHocCommandSession.h>
 
 namespace Swift {
@@ -16,13 +17,13 @@ class AdHocCommandWindow;
 
 class AdHocController {
 public:
-	AdHocController(AdHocCommandWindowFactory* factory, boost::shared_ptr<OutgoingAdHocCommandSession> command);
-	~AdHocController();
-	boost::signal<void ()> onDeleting;
-	void setOnline(bool online);
+    AdHocController(AdHocCommandWindowFactory* factory, std::shared_ptr<OutgoingAdHocCommandSession> command);
+    ~AdHocController();
+    boost::signals2::signal<void ()> onDeleting;
+    void setOnline(bool online);
 private:
-	void handleWindowClosed();
-	AdHocCommandWindow* window_;
+    void handleWindowClosed();
+    AdHocCommandWindow* window_;
 };
 
 }

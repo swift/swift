@@ -1,31 +1,31 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
+#include <memory>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/PubSubSubscription.h>
-#include <boost/shared_ptr.hpp>
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PubSubSubscriptionSerializer : public GenericPayloadSerializer<PubSubSubscription> {
-		public:
-			PubSubSubscriptionSerializer(PayloadSerializerCollection* serializers);
-			virtual ~PubSubSubscriptionSerializer();
+    class SWIFTEN_API PubSubSubscriptionSerializer : public GenericPayloadSerializer<PubSubSubscription> {
+        public:
+            PubSubSubscriptionSerializer(PayloadSerializerCollection* serializers);
+            virtual ~PubSubSubscriptionSerializer() override;
 
-			virtual std::string serializePayload(boost::shared_ptr<PubSubSubscription>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubSubscription>) const override;
 
-		private:
-			static std::string serializeSubscriptionType(PubSubSubscription::SubscriptionType);
+        private:
+            static std::string serializeSubscriptionType(PubSubSubscription::SubscriptionType);
 
-		private:
-			PayloadSerializerCollection* serializers;
-	};
+        private:
+            PayloadSerializerCollection* serializers;
+    };
 }

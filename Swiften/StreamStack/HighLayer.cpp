@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,17 +12,17 @@
 
 namespace Swift {
 
-HighLayer::HighLayer() : childLayer(NULL) {
+HighLayer::HighLayer() : childLayer(nullptr) {
 }
 
 HighLayer::~HighLayer() {
 }
 
 void HighLayer::writeDataToChildLayer(const SafeByteArray& data) {
-	//assert(childLayer);
-	if (childLayer) {
-		childLayer->writeData(data);
-	}
+    //assert(childLayer);
+    if (childLayer) {
+        childLayer->writeData(data);
+    }
 }
 
 }

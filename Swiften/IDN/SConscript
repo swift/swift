@@ -5,27 +5,27 @@ objects = swiften_env.SwiftenObject(["IDNConverter.cpp"])
 
 myenv = swiften_env.Clone()
 if myenv.get("NEED_IDN"):
-	myenv.Append(CPPDEFINES = ["NEED_IDN"])
+    myenv.Append(CPPDEFINES = ["NEED_IDN"])
 if myenv.get("HAVE_ICU") :
-	myenv.MergeFlags(swiften_env["ICU_FLAGS"])
-	myenv.Append(CPPDEFINES = ["HAVE_ICU"])
-	objects += myenv.SwiftenObject(["ICUConverter.cpp"])
+    myenv.MergeFlags(swiften_env["ICU_FLAGS"])
+    myenv.Append(CPPDEFINES = ["HAVE_ICU"])
+    objects += myenv.SwiftenObject(["ICUConverter.cpp"])
 if myenv.get("HAVE_LIBIDN") :
-	myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
-	myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
-	objects += myenv.SwiftenObject(["LibIDNConverter.cpp"])
+    myenv.MergeFlags(swiften_env["LIBIDN_FLAGS"])
+    myenv.Append(CPPDEFINES = ["HAVE_LIBIDN"])
+    objects += myenv.SwiftenObject(["LibIDNConverter.cpp"])
 objects += myenv.SwiftenObject([
-	"PlatformIDNConverter.cpp"
-	])
+    "PlatformIDNConverter.cpp"
+    ])
 
 swiften_env.Append(SWIFTEN_OBJECTS = [objects])
 
 if env["TEST"] :
-	test_env = myenv.Clone()
-	test_env.UseFlags(swiften_env["CPPUNIT_FLAGS"])
-	env.Append(UNITTEST_OBJECTS = test_env.SwiftenObject([
-				File("UnitTest/IDNConverterTest.cpp"),
-				File("UnitTest/UTF8ValidatorTest.cpp")
-	]))
+    test_env = myenv.Clone()
+    test_env.UseFlags(swiften_env["CPPUNIT_FLAGS"])
+    env.Append(UNITTEST_OBJECTS = test_env.SwiftenObject([
+                File("UnitTest/IDNConverterTest.cpp"),
+                File("UnitTest/UTF8ValidatorTest.cpp")
+    ]))
 
 

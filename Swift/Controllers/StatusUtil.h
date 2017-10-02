@@ -11,6 +11,6 @@
 #include <Swiften/Elements/StatusShow.h>
 
 namespace Swift {
-	std::string statusShowTypeToFriendlyName(StatusShow::Type type);
+    std::string statusShowTypeToFriendlyName(StatusShow::Type type);
 }
 

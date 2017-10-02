@@ -6,14 +6,14 @@ if env.get("SQLITE_BUNDLED", False) :
 # Flags
 ################################################################################
 
-	if env["SCONS_STAGE"] == "flags" :
-		env["SQLITE_FLAGS"] = {
-				"CPPPATH": [Dir(".")],
-				"LIBPATH": [Dir(".")],
-			}
+    if env["SCONS_STAGE"] == "flags" :
+        env["SQLITE_FLAGS"] = {
+                "CPPPATH": [Dir(".")],
+                "LIBPATH": [Dir(".")],
+            }
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
-		myenv.Append(CPPPATH = ["."])
-		env["SQLITE_OBJECTS"] = myenv.SwiftenObject(["sqlite3.c"])
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.Replace(CCFLAGS = [flag for flag in env["CCFLAGS"] if flag not in ["-W", "-Wall"]])
+        myenv.Append(CPPPATH = ["."])
+        env["SQLITE_OBJECTS"] = myenv.SwiftenObject(["sqlite3.c"])

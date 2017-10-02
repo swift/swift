@@ -10,12 +10,12 @@
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
-	class SWIFTEN_API PresenceSender {
-		public:
-			virtual ~PresenceSender();
+    class SWIFTEN_API PresenceSender {
+        public:
+            virtual ~PresenceSender();
 
-			virtual void sendPresence(Presence::ref) = 0;
+            virtual void sendPresence(Presence::ref) = 0;
 
-			virtual bool isAvailable() const = 0;
-	};
+            virtual bool isAvailable() const = 0;
+    };
 }

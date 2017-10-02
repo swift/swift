@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,7 @@
 
 #include <vector>
 
-#include <Swiften/Base/boost_bsignals.h>
+#include <boost/signals2.hpp>
 
 #include <Swift/Controllers/FileTransfer/FileTransferController.h>
 
@@ -25,25 +25,25 @@ class FileTransferManager;
 
 class FileTransferOverview {
 public:
-	FileTransferOverview(FileTransferManager*);
-	~FileTransferOverview();
-	
-	void sendFile(const JID&, const std::string&);
-	const std::vector<FileTransferController*>& getFileTransfers() const;
-	void clearFinished();
-	bool isClearable() const;
+    FileTransferOverview(FileTransferManager*);
+    ~FileTransferOverview();
 
-	boost::signal<void (FileTransferController*)> onNewFileTransferController;
-	boost::signal<void ()> onFileTransferListChanged;
+    void sendFile(const JID&, const std::string&);
+    const std::vector<FileTransferController*>& getFileTransfers() const;
+    void clearFinished();
+    bool isClearable() const;
 
-private:
-	void handleIncomingFileTransfer(IncomingFileTransfer::ref transfer);
-	void handleNewFileTransferController(FileTransferController* controller);
-	void handleFileTransferStateChanged();
+    boost::signals2::signal<void (FileTransferController*)> onNewFileTransferController;
+    boost::signals2::signal<void ()> onFileTransferListChanged;
 
 private:
-	std::vector<FileTransferController*> fileTransfers;
-	FileTransferManager *fileTransferManager;
+    void handleIncomingFileTransfer(IncomingFileTransfer::ref transfer);
+    void handleNewFileTransferController(FileTransferController* controller);
+    void handleFileTransferStateChanged();
+
+private:
+    std::vector<FileTransferController*> fileTransfers;
+    FileTransferManager *fileTransferManager;
 };
 
 }

@@ -23,22 +23,22 @@ SecureTransportContextFactory::~SecureTransportContextFactory() {
 }
 
 bool SecureTransportContextFactory::canCreate() const {
-	return true;
+    return true;
 }
 
 TLSContext* SecureTransportContextFactory::createTLSContext(const TLSOptions& /* tlsOptions */) {
-	return new SecureTransportContext(checkCertificateRevocation_);
+    return new SecureTransportContext(checkCertificateRevocation_);
 }
 
 void SecureTransportContextFactory::setCheckCertificateRevocation(bool b) {
-	checkCertificateRevocation_ = b;
+    checkCertificateRevocation_ = b;
 }
 
 void SecureTransportContextFactory::setDisconnectOnCardRemoval(bool b) {
-	disconnectOnCardRemoval_ = b;
-	if (disconnectOnCardRemoval_) {
-		SWIFT_LOG(warning) << "Smart cards have not been tested yet" << std::endl;
-	}
+    disconnectOnCardRemoval_ = b;
+    if (disconnectOnCardRemoval_) {
+        SWIFT_LOG(warning) << "Smart cards have not been tested yet" << std::endl;
+    }
 }
 
 }

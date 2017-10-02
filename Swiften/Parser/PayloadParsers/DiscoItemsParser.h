@@ -11,20 +11,20 @@
 #include <Swiften/Parser/GenericPayloadParser.h>
 
 namespace Swift {
-	class SWIFTEN_API DiscoItemsParser : public GenericPayloadParser<DiscoItems> {
-		public:
-			DiscoItemsParser();
+    class SWIFTEN_API DiscoItemsParser : public GenericPayloadParser<DiscoItems> {
+        public:
+            DiscoItemsParser();
 
-			virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
-			virtual void handleEndElement(const std::string& element, const std::string&);
-			virtual void handleCharacterData(const std::string& data);
+            virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes);
+            virtual void handleEndElement(const std::string& element, const std::string&);
+            virtual void handleCharacterData(const std::string& data);
 
-		private:
-			enum Level { 
-				TopLevel = 0, 
-				PayloadLevel = 1
-			};
-			int level_;
-	};
+        private:
+            enum Level {
+                TopLevel = 0,
+                PayloadLevel = 1
+            };
+            int level_;
+    };
 }
 

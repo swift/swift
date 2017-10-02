@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>QtUpdateFeedSelectionDialog</class>
+ <widget class="QDialog" name="QtUpdateFeedSelectionDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>335</width>
+    <height>158</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Select Update Channel</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QComboBox" name="currentChannelComboBox">
+     <property name="currentText">
+      <string/>
+     </property>
+     <property name="currentIndex">
+      <number>-1</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>Stable Channel</string>
+      </property>
+      <property name="icon">
+       <iconset theme=":/icons/delivery-success.svg"/>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Testing Channel</string>
+      </property>
+      <property name="icon">
+       <iconset theme=":/icons/delivery-warning.svg"/>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Development Channel</string>
+      </property>
+      <property name="icon">
+       <iconset theme=":/icons/delivery-warning.svg"/>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="stableDescriptionLabel">
+     <property name="text">
+      <string>This release channel includes our stable releases. They went throught internal QA testing and had previous RC releases to find critical bugs.</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+     <property name="textInteractionFlags">
+      <set>Qt::NoTextInteraction</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="testingDescriptionLabel">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>This release channel includes our stable releases, beta releases and release candidates. They should be free from obvious bugs and are released for wider testing to find more obscure bugs.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="developmentDescriptionLabel">
+     <property name="text">
+      <string>This release channel includes our stable releases, beta releases, release candidates and development releases. The development releases are not thoroughly tested and might contain bugs.</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignTop</set>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>QtUpdateFeedSelectionDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>QtUpdateFeedSelectionDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

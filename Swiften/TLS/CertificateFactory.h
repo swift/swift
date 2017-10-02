@@ -10,10 +10,10 @@
 #include <Swiften/TLS/Certificate.h>
 
 namespace Swift {
-	class SWIFTEN_API CertificateFactory {
-		public:
-			virtual ~CertificateFactory();
+    class SWIFTEN_API CertificateFactory {
+        public:
+            virtual ~CertificateFactory();
 
-			virtual Certificate* createCertificateFromDER(const ByteArray& der) = 0;
-	};
+            virtual Certificate* createCertificateFromDER(const ByteArray& der) = 0;
+    };
 }

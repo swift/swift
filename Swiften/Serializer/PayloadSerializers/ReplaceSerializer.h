@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012-2015 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,17 +13,17 @@
 #pragma once
 
 #include <Swiften/Base/API.h>
+#include <Swiften/Elements/Replace.h>
 #include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Serializer/XML/XMLTextNode.h>
-#include <Swiften/Elements/Replace.h>
 
 namespace Swift {
-	class SWIFTEN_API ReplaceSerializer : public GenericPayloadSerializer<Replace> {
-		public:
-			ReplaceSerializer() : GenericPayloadSerializer<Replace>() {}
+    class SWIFTEN_API ReplaceSerializer : public GenericPayloadSerializer<Replace> {
+        public:
+            ReplaceSerializer() : GenericPayloadSerializer<Replace>() {}
 
-			virtual std::string serializePayload(boost::shared_ptr<Replace> replace) const {
-				return "<replace id = '" + replace->getID() + "' xmlns='urn:xmpp:message-correct:0'/>";
-			}
-	};
+            virtual std::string serializePayload(std::shared_ptr<Replace> replace) const {
+                return "<replace id = '" + replace->getID() + "' xmlns='urn:xmpp:message-correct:0'/>";
+            }
+    };
 }

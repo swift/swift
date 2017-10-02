@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Network/TLSConnectionFactory.h>
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Network/TLSConnection.h>
 
@@ -21,8 +21,8 @@ TLSConnectionFactory::~TLSConnectionFactory() {
 }
 
 
-boost::shared_ptr<Connection> TLSConnectionFactory::createConnection() {
-	return boost::make_shared<TLSConnection>(connectionFactory->createConnection(), contextFactory, options_);
+std::shared_ptr<Connection> TLSConnectionFactory::createConnection() {
+    return std::make_shared<TLSConnection>(connectionFactory->createConnection(), contextFactory, options_);
 }
 
 }

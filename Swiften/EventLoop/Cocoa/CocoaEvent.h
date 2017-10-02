@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,8 +8,12 @@
 
 #include <Foundation/Foundation.h>
 
+// The following line is a workaround for a bug in Boost 1.60 when building as C++11.
+// See ticket #11897 and #11863 in Boost's bug tracker.
+#undef check
+
 namespace Swift {
-	class CocoaEventLoop;
+    class CocoaEventLoop;
 }
 
 // Using deprecated declaration of instance vars in interface, because this
@@ -18,7 +22,7 @@ namespace Swift {
 #pragma clang diagnostic ignored "-Wobjc-interface-ivars"
 
 @interface CocoaEvent : NSObject {
-	Swift::CocoaEventLoop* eventLoop;
+    Swift::CocoaEventLoop* eventLoop;
 }
 
 #pragma clang diagnostic pop

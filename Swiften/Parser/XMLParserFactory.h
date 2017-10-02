@@ -6,16 +6,18 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class XMLParser;
-	class XMLParserClient;
+    class XMLParser;
+    class XMLParserClient;
 
-	class SWIFTEN_API XMLParserFactory {
-		public:
-			virtual ~XMLParserFactory();
+    class SWIFTEN_API XMLParserFactory {
+        public:
+            virtual ~XMLParserFactory();
 
-			virtual XMLParser* createXMLParser(XMLParserClient*) = 0;
-	};
+            virtual std::unique_ptr<XMLParser> createXMLParser(XMLParserClient*) = 0;
+    };
 }

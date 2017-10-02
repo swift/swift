@@ -1,6 +1,6 @@
-/* $Id: getgateway.h,v 1.7 2013/09/10 20:09:04 nanard Exp $ */
+/* $Id: getgateway.h,v 1.8 2014/04/22 09:15:40 nanard Exp $ */
 /* libnatpmp
-Copyright (c) 2007-2013, Thomas BERNARD
+Copyright (c) 2007-2014, Thomas BERNARD
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,7 @@ typedef unsigned short uint16_t;
 #endif
 #define in_addr_t uint32_t
 #endif
-#include "declspec.h"
+/* #include "declspec.h" */
 
 #ifdef ANDROID
 #include <arpa/inet.h>
@@ -49,6 +49,6 @@ typedef unsigned short uint16_t;
  * return value :
  *    0 : success
  *   -1 : failure    */
-LIBSPEC int getdefaultgateway(in_addr_t * addr);
+/* LIBSPEC */int getdefaultgateway(in_addr_t * addr);
 
 #endif

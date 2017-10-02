@@ -1,31 +1,28 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
+#include <memory>
+
 #include <Swiften/Base/API.h>
-#include <Swiften/Serializer/GenericPayloadSerializer.h>
 #include <Swiften/Elements/PubSubEventDelete.h>
-#include <boost/shared_ptr.hpp>
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
 
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PubSubEventDeleteSerializer : public GenericPayloadSerializer<PubSubEventDelete> {
-		public:
-			PubSubEventDeleteSerializer(PayloadSerializerCollection* serializers);
-			virtual ~PubSubEventDeleteSerializer();
+    class SWIFTEN_API PubSubEventDeleteSerializer : public GenericPayloadSerializer<PubSubEventDelete> {
+        public:
+            PubSubEventDeleteSerializer(PayloadSerializerCollection* serializers);
+            virtual ~PubSubEventDeleteSerializer() override;
 
-			virtual std::string serializePayload(boost::shared_ptr<PubSubEventDelete>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubEventDelete>) const override;
 
-		private:
-			
-
-		private:
-			PayloadSerializerCollection* serializers;
-	};
+        private:
+            PayloadSerializerCollection* serializers;
+    };
 }

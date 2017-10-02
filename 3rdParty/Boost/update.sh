@@ -25,13 +25,16 @@ fi
 	date_time/local_time/local_time.hpp \
 	date_time/c_local_time_adjustor.hpp \
 	date_time/gregorian/gregorian_types.hpp \
-	foreach.hpp \
 	filesystem.hpp \
 	filesystem/fstream.hpp \
 	format.hpp \
 	lambda/lambda.hpp \
 	lambda/bind.hpp \
 	logic/tribool.hpp \
+	multi_index_container.hpp \
+	multi_index/hashed_index.hpp \
+	multi_index/member.hpp \
+	multi_index/sequenced_index.hpp \
 	noncopyable.hpp \
 	numeric/conversion/cast.hpp \
 	optional.hpp \
@@ -41,8 +44,6 @@ fi
 	random/uniform_int.hpp \
 	regex.hpp \
 	scope_exit.hpp \
-	shared_ptr.hpp \
-	smart_ptr/make_shared.hpp \
 	serialization/serialization.hpp \
 	serialization/vector.hpp \
 	serialization/list.hpp \
@@ -53,7 +54,7 @@ fi
 	serialization/version.hpp \
 	serialization/split_member.hpp \
 	serialization/optional.hpp \
-	signals.hpp \
+	signals2.hpp \
 	thread.hpp \
 	unordered_map.hpp \
 	uuid/uuid.hpp \
@@ -62,13 +63,18 @@ fi
 	variant.hpp \
 	spirit/include/lex_lexertl.hpp \
 	typeof/incr_registration_group.hpp \
+	atomic \
+	system/src/error_code.cpp \
+	phoenix/support/detail/iterate.hpp \
+	type_traits.hpp \
+	range/adaptor/reversed.hpp \
 	$TARGET_DIR
 cp $1/LICENSE_1_0.txt $TARGET_DIR
 
 rm -rf $TARGET_DIR/libs/config
 rm -rf $TARGET_DIR/libs/smart_ptr
 
-LIBS="date_time regex system thread signals filesystem program_options serialization archive"
+LIBS="date_time regex system thread signals2 filesystem multi_index program_options serialization archive atomic"
 for lib in $LIBS; do
 	rm -rf $TARGET_DIR/libs/$lib/build $TARGET_DIR/libs/$lib/*.doc $TARGET_DIR/libs/$lib/src/*.doc $TARGET_DIR/libs/$lib/src/CMakeLists.txt $TARGET_DIR/libs/$lib/test
 done

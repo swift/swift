@@ -12,20 +12,20 @@
 #include <Swiften/Elements/ToplevelElement.h>
 
 namespace Swift {
-	class SWIFTEN_API CompressRequest : public ToplevelElement
-	{
-		public:
-			CompressRequest(const std::string& method = "") : method_(method) {}
+    class SWIFTEN_API CompressRequest : public ToplevelElement
+    {
+        public:
+            CompressRequest(const std::string& method = "") : method_(method) {}
 
-			const std::string& getMethod() const {
-				return method_;
-			}
+            const std::string& getMethod() const {
+                return method_;
+            }
 
-			void setMethod(const std::string& method) { 
-				method_ = method;
-			}
+            void setMethod(const std::string& method) {
+                method_ = method;
+            }
 
-		private:
-			std::string method_;
-	};
+        private:
+            std::string method_;
+    };
 }

@@ -16,17 +16,17 @@
 namespace Swift {
 
 ZLibDecompressor::ZLibDecompressor() {
-	int result = inflateInit(&p->stream);
-	assert(result == Z_OK);
-	(void) result;
+    int result = inflateInit(&p->stream);
+    assert(result == Z_OK);
+    (void) result;
 }
 
 ZLibDecompressor::~ZLibDecompressor() {
-	inflateEnd(&p->stream);
+    inflateEnd(&p->stream);
 }
 
 int ZLibDecompressor::processZStream() {
-	return inflate(&p->stream, Z_SYNC_FLUSH);
+    return inflate(&p->stream, Z_SYNC_FLUSH);
 }
 
 }

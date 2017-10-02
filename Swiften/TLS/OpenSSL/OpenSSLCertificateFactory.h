@@ -10,10 +10,10 @@
 #include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
 
 namespace Swift {
-	class OpenSSLCertificateFactory : public CertificateFactory {
-		public:
-			virtual Certificate* createCertificateFromDER(const ByteArray& der) {
-				return new OpenSSLCertificate(der);
-			}
-	};
+    class OpenSSLCertificateFactory : public CertificateFactory {
+        public:
+            virtual Certificate* createCertificateFromDER(const ByteArray& der) {
+                return new OpenSSLCertificate(der);
+            }
+    };
 }

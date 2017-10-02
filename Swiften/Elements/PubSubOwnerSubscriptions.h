@@ -1,52 +1,51 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Elements/Payload.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <string>
 #include <vector>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/Payload.h>
 #include <Swiften/Elements/PubSubOwnerPayload.h>
 #include <Swiften/Elements/PubSubOwnerSubscription.h>
 
 namespace Swift {
-	class SWIFTEN_API PubSubOwnerSubscriptions : public PubSubOwnerPayload {
-		public:
-			
-			PubSubOwnerSubscriptions();
-			
-			virtual ~PubSubOwnerSubscriptions();
+    class SWIFTEN_API PubSubOwnerSubscriptions : public PubSubOwnerPayload {
+        public:
 
-			const std::string& getNode() const {
-				return node;
-			}
+            PubSubOwnerSubscriptions();
 
-			void setNode(const std::string& value) {
-				this->node = value ;
-			}
+            virtual ~PubSubOwnerSubscriptions();
 
-			const std::vector< boost::shared_ptr<PubSubOwnerSubscription> >& getSubscriptions() const {
-				return subscriptions;
-			}
+            const std::string& getNode() const {
+                return node;
+            }
 
-			void setSubscriptions(const std::vector< boost::shared_ptr<PubSubOwnerSubscription> >& value) {
-				this->subscriptions = value ;
-			}
+            void setNode(const std::string& value) {
+                this->node = value ;
+            }
 
-			void addSubscription(boost::shared_ptr<PubSubOwnerSubscription> value) {
-				this->subscriptions.push_back(value);
-			}
+            const std::vector< std::shared_ptr<PubSubOwnerSubscription> >& getSubscriptions() const {
+                return subscriptions;
+            }
+
+            void setSubscriptions(const std::vector< std::shared_ptr<PubSubOwnerSubscription> >& value) {
+                this->subscriptions = value ;
+            }
+
+            void addSubscription(std::shared_ptr<PubSubOwnerSubscription> value) {
+                this->subscriptions.push_back(value);
+            }
 
 
-		private:
-			std::string node;
-			std::vector< boost::shared_ptr<PubSubOwnerSubscription> > subscriptions;
-	};
+        private:
+            std::string node;
+            std::vector< std::shared_ptr<PubSubOwnerSubscription> > subscriptions;
+    };
 }

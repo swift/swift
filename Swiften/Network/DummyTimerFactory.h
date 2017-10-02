@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,18 +12,18 @@
 #include <Swiften/Network/TimerFactory.h>
 
 namespace Swift {
-	class SWIFTEN_API DummyTimerFactory : public TimerFactory {
-		public:
-			class DummyTimer;
+    class SWIFTEN_API DummyTimerFactory : public TimerFactory {
+        public:
+            class DummyTimer;
 
-			DummyTimerFactory();
+            DummyTimerFactory();
 
-			virtual boost::shared_ptr<Timer> createTimer(int milliseconds);
-			void setTime(int time);
+            virtual std::shared_ptr<Timer> createTimer(int milliseconds);
+            void setTime(int time);
 
-		private:
-			friend class DummyTimer;
-			int currentTime;
-			std::list<boost::shared_ptr<DummyTimer> > timers;
-	};
+        private:
+            friend class DummyTimer;
+            int currentTime;
+            std::list<std::shared_ptr<DummyTimer> > timers;
+    };
 }

@@ -25,45 +25,6 @@
     <widget class="QWidget" name="hunspellOptions" native="true">
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="pathLabel">
-          <property name="text">
-           <string>Dictionary Path:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="pathContent"/>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pathButton">
-          <property name="text">
-           <string>Change</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QLabel" name="currentLanguage">
-          <property name="text">
-           <string>Current Language:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="currentLanguageValue">
-          <property name="text">
-           <string/>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_4">
         <item>
          <widget class="QLabel" name="language">
@@ -73,7 +34,11 @@
          </widget>
         </item>
         <item>
-         <widget class="QListWidget" name="languageView"/>
+         <widget class="QListWidget" name="languageView">
+          <property name="alternatingRowColors">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>

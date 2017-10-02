@@ -1,33 +1,29 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <Swiften/Base/Override.h>
-#include <Swiften/Base/API.h>
-#include <Swiften/Serializer/GenericPayloadSerializer.h>
-#include <Swiften/Elements/PubSubEvent.h>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 #include <vector>
 
+#include <Swiften/Base/API.h>
+#include <Swiften/Elements/PubSubEvent.h>
+#include <Swiften/Serializer/GenericPayloadSerializer.h>
+
 namespace Swift {
-	class PayloadSerializerCollection;
+    class PayloadSerializerCollection;
 
-	class SWIFTEN_API PubSubEventSerializer : public GenericPayloadSerializer<PubSubEvent> {
-		public:
-			PubSubEventSerializer(PayloadSerializerCollection* serializers);
-			virtual ~PubSubEventSerializer();
+    class SWIFTEN_API PubSubEventSerializer : public GenericPayloadSerializer<PubSubEvent> {
+        public:
+            PubSubEventSerializer(PayloadSerializerCollection* serializers);
+            virtual ~PubSubEventSerializer() override;
 
-			virtual std::string serializePayload(boost::shared_ptr<PubSubEvent>) const SWIFTEN_OVERRIDE;
+            virtual std::string serializePayload(std::shared_ptr<PubSubEvent>) const override;
 
-		private:
-			
-
-		private:
-			PayloadSerializerCollection* serializers;
-			std::vector< boost::shared_ptr<PayloadSerializer> > pubsubSerializers;
-	};
+        private:
+            std::vector< std::shared_ptr<PayloadSerializer> > pubsubSerializers;
+    };
 }

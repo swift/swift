@@ -9,19 +9,19 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class TLSContextFactory;
-	class CertificateFactory;
+    class TLSContextFactory;
+    class CertificateFactory;
 
-	class SWIFTEN_API PlatformTLSFactories {
-		public:
-			PlatformTLSFactories();
-			~PlatformTLSFactories();
+    class SWIFTEN_API PlatformTLSFactories {
+        public:
+            PlatformTLSFactories();
+            ~PlatformTLSFactories();
 
-			TLSContextFactory* getTLSContextFactory() const;
-			CertificateFactory* getCertificateFactory() const;
+            TLSContextFactory* getTLSContextFactory() const;
+            CertificateFactory* getCertificateFactory() const;
 
-		private:
-			TLSContextFactory* contextFactory;
-			CertificateFactory* certificateFactory;
-	};
+        private:
+            TLSContextFactory* contextFactory;
+            CertificateFactory* certificateFactory;
+    };
 }

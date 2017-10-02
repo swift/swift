@@ -13,13 +13,13 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API Hash {
-		public:
-			virtual ~Hash();
+    class SWIFTEN_API Hash {
+        public:
+            virtual ~Hash();
 
-			virtual Hash& update(const ByteArray& data) = 0;
-			virtual Hash& update(const SafeByteArray& data) = 0;
+            virtual Hash& update(const ByteArray& data) = 0;
+            virtual Hash& update(const SafeByteArray& data) = 0;
 
-			virtual std::vector<unsigned char> getHash() = 0;
-	};
+            virtual std::vector<unsigned char> getHash() = 0;
+    };
 }

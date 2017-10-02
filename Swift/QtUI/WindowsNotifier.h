@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -9,29 +9,30 @@
 #include <map>
 
 #include <QObject>
+
 #include <SwifTools/Notifier/Notifier.h>
-#include <SwifTools/Notifier/SnarlNotifier.h>
 
 class QSystemTrayIcon;
 
 namespace Swift {
-	class WindowsNotifier : public QObject, public Notifier {
-			Q_OBJECT
+    class Win32NotifierWindow;
 
-		public:
-			WindowsNotifier(const std::string& name, const boost::filesystem::path& icon, QSystemTrayIcon* tray);
-			~WindowsNotifier();
+    class WindowsNotifier : public QObject, public Notifier {
+            Q_OBJECT
 
-			virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
-			virtual void purgeCallbacks();
+        public:
+            WindowsNotifier(const std::string& name, const boost::filesystem::path& icon, QSystemTrayIcon* tray);
+            ~WindowsNotifier();
 
-		private slots:
-			void handleMessageClicked();
+            virtual void showMessage(Type type, const std::string& subject, const std::string& description, const boost::filesystem::path& picture, boost::function<void()> callback);
+            virtual void purgeCallbacks();
 
-		private:
-			QSystemTrayIcon* tray;
-			Win32NotifierWindow* notifierWindow;
-			SnarlNotifier* snarlNotifier;
-			boost::function<void()> lastCallback;
-	};
+        private slots:
+            void handleMessageClicked();
+
+        private:
+            QSystemTrayIcon* tray;
+            Win32NotifierWindow* notifierWindow;
+            boost::function<void()> lastCallback;
+    };
 }

@@ -22,7 +22,7 @@
 #   This script creates an overview PNG image of a source code file by
 #   representing each source code character by a single pixel.
 #
-#   Note that the PERL module GD.pm is required for this script to work.
+#   Note that the Perl module GD.pm is required for this script to work.
 #   It may be obtained from http://www.cpan.org
 #
 # History:
@@ -32,10 +32,12 @@
 use strict;
 use File::Basename; 
 use Getopt::Long;
+use Cwd qw/abs_path/;
 
 
 # Constants
-our $lcov_version	= 'LCOV version 1.9';
+our $tool_dir		= abs_path(dirname($0));
+our $lcov_version	= "LCOV version 1.12";
 our $lcov_url		= "http://ltp.sourceforge.net/coverage/lcov.php";
 our $tool_name		= basename($0);
 
@@ -52,9 +54,6 @@ sub genpng_die_handler($);
 #
 # Code entry point
 #
-
-# Prettify version string
-$lcov_version =~ s/\$\s*Revision\s*:?\s*(\S+)\s*\$/$1/;
 
 # Check whether required module GD.pm is installed
 if (check_and_load_module("GD"))
@@ -182,7 +181,7 @@ sub genpng_process_file($$$$)
 	local *HANDLE;
 	my @source;
 
-	open(HANDLE, "<$filename")
+	open(HANDLE, "<", $filename)
 		or die("ERROR: cannot open $filename!\n");
 
 	# Check for .gcov filename extension
@@ -238,7 +237,7 @@ sub gen_png($$$@)
 	my $overview_width = shift(@_);	# Imagewidth for image
 	my $tab_size = shift(@_);	# Replacement string for tab signs
 	my @source = @_;	# Source code as passed via argument 2
-	my $height = scalar(@source);	# Height as define by source size
+	my $height;		# Height as define by source size
 	my $overview;		# Source code overview image data
 	my $col_plain_back;	# Color for overview background
 	my $col_plain_text;	# Color for uninstrumented text
@@ -261,6 +260,11 @@ sub gen_png($$$@)
 	my $replacement;	# Replacement string for tabulator chars
 	local *PNG_HANDLE;	# Handle for output PNG file
 
+	# Handle empty source files
+	if (!@source) {
+		@source = ( "" );
+	}
+	$height = scalar(@source);
 	# Create image
 	$overview = new GD::Image($overview_width, $height)
 		or die("ERROR: cannot allocate overview image!\n");
@@ -362,7 +366,7 @@ sub gen_png($$$@)
 	}
 
 	# Write PNG file
-	open (PNG_HANDLE, ">$filename")
+	open (PNG_HANDLE, ">", $filename)
 		or die("ERROR: cannot write png file $filename!\n");
 	binmode(*PNG_HANDLE);
 	print(PNG_HANDLE $overview->png());

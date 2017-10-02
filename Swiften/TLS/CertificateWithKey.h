@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,14 +10,14 @@
 #include <Swiften/Base/SafeByteArray.h>
 
 namespace Swift {
-	class SWIFTEN_API CertificateWithKey {
-		public:
-			typedef boost::shared_ptr<CertificateWithKey> ref;
-			CertificateWithKey() {}
+    class SWIFTEN_API CertificateWithKey {
+        public:
+            typedef std::shared_ptr<CertificateWithKey> ref;
+            CertificateWithKey() {}
 
-			virtual ~CertificateWithKey() {}
+            virtual ~CertificateWithKey() {}
 
-			virtual bool isNull() const = 0;
+            virtual bool isNull() const = 0;
 
-	};
+    };
 }

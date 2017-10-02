@@ -3,16 +3,16 @@ import os.path
 Import("env")
 
 def replaceSwiftenPath(input) :
-	return input.replace(env.Dir("#").abspath, "#")
+    return input.replace(env.Dir("#").abspath, "#")
 
 def cStringVariable(env, cVar, sconsVar) :
-	result = "static const char* " + cVar + "[] = {\n"
-	# FIXME: Probably not very robust
-	for var in sconsVar.split(" ") :
-		result += "\t\"" + env.subst(var).replace("\\", "\\\\") + "\",\n"
-	result += "\t0\n"
-	result += "};\n"
-	return result
+    result = "static const char* " + cVar + "[] = {\n"
+    # FIXME: Probably not very robust
+    for var in sconsVar.split(" ") :
+        result += "\t\"" + env.subst(var).replace("\\", "\\\\") + "\",\n"
+    result += "\t0\n"
+    result += "};\n"
+    return result
 
 config_flags = ""
 
@@ -21,36 +21,38 @@ swiften_env.UseFlags(swiften_env["SWIFTEN_FLAGS"])
 swiften_env.UseFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
 
 cppflags = replaceSwiftenPath(" ".join([
-	swiften_env.subst("$CPPFLAGS").replace("-isystem ","-I"),
-	swiften_env.subst("$_CPPDEFFLAGS"), 
-	swiften_env.subst("$_CPPINCFLAGS")]))
+    swiften_env.subst("$CPPFLAGS").replace("-isystem ","-I"),
+    swiften_env.subst("$_CPPDEFFLAGS"), 
+    swiften_env.subst("$_CPPINCFLAGS")]))
 config_flags += cStringVariable(swiften_env, "CPPFLAGS", cppflags)
 
 libflags = replaceSwiftenPath(" ".join([
-		swiften_env.subst("$_LIBDIRFLAGS"), 
-		swiften_env.subst("$_LIBFLAGS"), 
-		swiften_env.subst("$_FRAMEWORKPATH"), 
-		swiften_env.subst("$_FRAMEWORKS"), 
-		swiften_env.subst("$_FRAMEWORKSFLAGS")
-	]))
+        swiften_env.subst("$_LIBDIRFLAGS"), 
+        swiften_env.subst("$_LIBFLAGS"), 
+        swiften_env.subst("$_FRAMEWORKPATH"), 
+        swiften_env.subst("$_FRAMEWORKS"), 
+        swiften_env.subst("$_FRAMEWORKSFLAGS")
+    ]))
 config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
 
 config_env = env.Clone()
+config_env.Append(CPPDEFINES = ["SWIFTEN_STATIC"])
+
 # Create a local copy of Paths.cpp to avoid a Swiften dependency
 config_env.Install(".", [
-	"#/Swiften/Base/Paths.cpp",
-	"#/Swiften/Base/Path.cpp",
-	"#/Swiften/Base/String.cpp",
+    "#/Swiften/Base/Paths.cpp",
+    "#/Swiften/Base/Path.cpp",
+    "#/Swiften/Base/String.cpp",
 ])
 config_env.UseFlags(config_env["BOOST_FLAGS"])
 config_env.UseFlags(config_env["PLATFORM_FLAGS"])
 config_env.WriteVal("swiften-config.h", config_env.Value(config_flags))
 swiften_config = config_env.Program("swiften-config", [
-		"Paths.cpp",
-		"Path.cpp",
-		"String.cpp",
-		"swiften-config.cpp"
-	])
+        "Paths.cpp",
+        "Path.cpp",
+        "String.cpp",
+        "swiften-config.cpp"
+    ])
 
 if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
-	swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "bin"), swiften_config)
+    swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "bin"), swiften_config)

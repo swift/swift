@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,19 +18,19 @@
 using namespace Swift;
 
 class ReplaceSerializerTest: public CppUnit::TestFixture {
-	CPPUNIT_TEST_SUITE(ReplaceSerializerTest);
-	CPPUNIT_TEST(testSerialize);
-	CPPUNIT_TEST_SUITE_END();
+    CPPUNIT_TEST_SUITE(ReplaceSerializerTest);
+    CPPUNIT_TEST(testSerialize);
+    CPPUNIT_TEST_SUITE_END();
 
-	public:
-		ReplaceSerializerTest() {}
+    public:
+        ReplaceSerializerTest() {}
 
-		void testSerialize() {
-			ReplaceSerializer testling;
-			boost::shared_ptr<Replace> replace(new Replace());
-			replace->setID("bad1");
-			CPPUNIT_ASSERT_EQUAL(std::string("<replace id = 'bad1' xmlns='urn:xmpp:message-correct:0'/>"), testling.serialize(replace));
-		}
+        void testSerialize() {
+            ReplaceSerializer testling;
+            std::shared_ptr<Replace> replace(new Replace());
+            replace->setID("bad1");
+            CPPUNIT_ASSERT_EQUAL(std::string("<replace id = 'bad1' xmlns='urn:xmpp:message-correct:0'/>"), testling.serialize(replace));
+        }
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ReplaceSerializerTest);

@@ -2,69 +2,68 @@ Import("env")
 
 if env.get("LDNS_BUNDLED", False) :
 
-	if env["PLATFORM"] == "win32" :
-		cppflags = ["/I" + Dir("#/3rdParty/Ldns/src/ldns").abspath]
-	else :
-		cppflags = [("-isystem", Dir("#/3rdParty/Ldns/src/ldns").abspath)]
+    if env["PLATFORM"] == "win32" :
+        cppflags = ["/I" + Dir("#/3rdParty/Ldns/src/ldns").abspath]
+    else :
+        cppflags = [("-isystem", Dir("#/3rdParty/Ldns/src/ldns").abspath)]
 
 
 ################################################################################
 # Flags
 ################################################################################
-    
-	if env["SCONS_STAGE"] == "flags" :
-		env["LDNS_FLAGS"] = {
-				"CPPPATH": [Dir("src/ldns")],
-				"CPPFLAGS": cppflags,
-				"LIBPATH": [env.Dir(".")],
-				"LIBS": ["Swiften_Ldns"],
-			}
-		if env["target"] == "android" :
-			env["LDNS_FLAGS"]["CPPPATH"].append(Dir("src/android"))
+    if env["SCONS_STAGE"] == "flags" :
+        env["LDNS_FLAGS"] = {
+                "CPPPATH": [Dir("src/ldns")],
+                "CPPFLAGS": cppflags,
+                "LIBPATH": [env.Dir(".")],
+                "LIBS": ["Swiften_Ldns"],
+            }
+        if env["target"] == "android" :
+            env["LDNS_FLAGS"]["CPPPATH"].append(Dir("src/android"))
 
 ################################################################################
 # Build
 ################################################################################
 
-	if env["SCONS_STAGE"] == "build" :
-		myenv = env.Clone()
-		myenv.Append(CPPDEFINES = [("LDNS_STATICLIB")])
-		myenv.Append(CPPPATH = ["src/ldns", "."])
-		if env["target"] == "android" :
-			myenv.Append(CPPPATH = ["src/android"])
-		myenv.UseFlags(env["OPENSSL_FLAGS"])
-		
-		env["LDNS_OBJECTS"] = myenv.SwiftenObject([
-			"src/ldns/compat/b32_ntop.c",
-			"src/ldns/compat/b32_pton.c",
-			"src/ldns/compat/b64_ntop.c",
-			"src/ldns/compat/b64_pton.c",
-			"src/ldns/buffer.c",
-			"src/ldns/dname.c",
-			"src/ldns/dnssec_sign.c",
-			"src/ldns/dnssec_verify.c",
-			"src/ldns/dnssec_zone.c",
-			"src/ldns/dnssec.c",
-			"src/ldns/error.c",
-			"src/ldns/higher.c",
-			"src/ldns/host2str.c",
-			"src/ldns/host2wire.c",
-			"src/ldns/keys.c",
-			"src/ldns/linktest.c",
-			"src/ldns/net.c",
-			"src/ldns/packet.c",
-			"src/ldns/parse.c",
-			"src/ldns/rbtree.c",
-			"src/ldns/rdata.c",
-			"src/ldns/resolver.c",
-			"src/ldns/rr_functions.c",
-			"src/ldns/rr.c",
-			"src/ldns/sha1.c",
-			"src/ldns/sha2.c",
-			"src/ldns/str2host.c",
-			"src/ldns/tsig.c",
-			"src/ldns/update.c",
-			"src/ldns/util.c",
-			"src/ldns/wire2host.c",
-			"src/ldns/zone.c",
-		])
+    if env["SCONS_STAGE"] == "build" :
+        myenv = env.Clone()
+        myenv.Append(CPPDEFINES = [("LDNS_STATICLIB")])
+        myenv.Append(CPPPATH = ["src/ldns", "."])
+        if env["target"] == "android" :
+            myenv.Append(CPPPATH = ["src/android"])
+        myenv.UseFlags(env["OPENSSL_FLAGS"])
+
+        env["LDNS_OBJECTS"] = myenv.SwiftenObject([
+            "src/ldns/compat/b32_ntop.c",
+            "src/ldns/compat/b32_pton.c",
+            "src/ldns/compat/b64_ntop.c",
+            "src/ldns/compat/b64_pton.c",
+            "src/ldns/buffer.c",
+            "src/ldns/dname.c",
+            "src/ldns/dnssec_sign.c",
+            "src/ldns/dnssec_verify.c",
+            "src/ldns/dnssec_zone.c",
+            "src/ldns/dnssec.c",
+            "src/ldns/error.c",
+            "src/ldns/higher.c",
+            "src/ldns/host2str.c",
+            "src/ldns/host2wire.c",
+            "src/ldns/keys.c",
+            "src/ldns/linktest.c",
+            "src/ldns/net.c",
+            "src/ldns/packet.c",
+            "src/ldns/parse.c",
+            "src/ldns/rbtree.c",
+            "src/ldns/rdata.c",
+            "src/ldns/resolver.c",
+            "src/ldns/rr_functions.c",
+            "src/ldns/rr.c",
+            "src/ldns/sha1.c",
+            "src/ldns/sha2.c",
+            "src/ldns/str2host.c",
+            "src/ldns/tsig.c",
+            "src/ldns/update.c",
+            "src/ldns/util.c",
+            "src/ldns/wire2host.c",
+            "src/ldns/zone.c",
+        ])

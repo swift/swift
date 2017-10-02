@@ -8,19 +8,19 @@
 
 namespace Swift {
 
-	CarbonsPrivateParser::CarbonsPrivateParser() : GenericPayloadParser<CarbonsPrivate>() {
-	}
+    CarbonsPrivateParser::CarbonsPrivateParser() : GenericPayloadParser<CarbonsPrivate>() {
+    }
 
-	CarbonsPrivateParser::~CarbonsPrivateParser() {
-	}
+    CarbonsPrivateParser::~CarbonsPrivateParser() {
+    }
 
-	void CarbonsPrivateParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
-	}
+    void CarbonsPrivateParser::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
+    }
 
-	void CarbonsPrivateParser::handleEndElement(const std::string&, const std::string&) {
-	}
+    void CarbonsPrivateParser::handleEndElement(const std::string&, const std::string&) {
+    }
 
-	void CarbonsPrivateParser::handleCharacterData(const std::string&) {
-	}
-	
+    void CarbonsPrivateParser::handleCharacterData(const std::string&) {
+    }
+
 }

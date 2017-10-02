@@ -4,42 +4,48 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
-#include "Swift/Controllers/FileTransferListController.h"
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+#include <Swift/Controllers/FileTransferListController.h>
 
 #include <boost/bind.hpp>
 
-#include "Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h"
-#include "Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h"
+#include <Swift/Controllers/UIEvents/RequestFileTransferListUIEvent.h>
+#include <Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h>
 
 namespace Swift {
 
-FileTransferListController::FileTransferListController(UIEventStream* uiEventStream, FileTransferListWidgetFactory* fileTransferListWidgetFactory) : fileTransferListWidgetFactory(fileTransferListWidgetFactory), fileTransferListWidget(NULL), fileTransferOverview(0) {
-	uiEventStream->onUIEvent.connect(boost::bind(&FileTransferListController::handleUIEvent, this, _1));
+FileTransferListController::FileTransferListController(UIEventStream* uiEventStream, FileTransferListWidgetFactory* fileTransferListWidgetFactory) : fileTransferListWidgetFactory(fileTransferListWidgetFactory), fileTransferListWidget(nullptr), fileTransferOverview(nullptr) {
+    uiEventStream->onUIEvent.connect(boost::bind(&FileTransferListController::handleUIEvent, this, _1));
 }
 
 FileTransferListController::~FileTransferListController() {
-	delete fileTransferListWidget;
+    delete fileTransferListWidget;
 }
 
 void FileTransferListController::setFileTransferOverview(FileTransferOverview *overview) {
-	fileTransferOverview = overview;
-	if (fileTransferListWidget) {
-		fileTransferListWidget->setFileTransferOverview(fileTransferOverview);
-	}
+    fileTransferOverview = overview;
+    if (fileTransferListWidget) {
+        fileTransferListWidget->setFileTransferOverview(fileTransferOverview);
+    }
 }
 
-void FileTransferListController::handleUIEvent(boost::shared_ptr<UIEvent> rawEvent) {
-	boost::shared_ptr<RequestFileTransferListUIEvent> event = boost::dynamic_pointer_cast<RequestFileTransferListUIEvent>(rawEvent);
-	if (event != NULL) {
-		if (fileTransferListWidget == NULL) {
-			fileTransferListWidget = fileTransferListWidgetFactory->createFileTransferListWidget();
-			if (fileTransferOverview) {
-				fileTransferListWidget->setFileTransferOverview(fileTransferOverview);
-			}
-		}
-		fileTransferListWidget->show();
-		fileTransferListWidget->activate();
-	}
+void FileTransferListController::handleUIEvent(std::shared_ptr<UIEvent> rawEvent) {
+    std::shared_ptr<RequestFileTransferListUIEvent> event = std::dynamic_pointer_cast<RequestFileTransferListUIEvent>(rawEvent);
+    if (event != nullptr) {
+        if (fileTransferListWidget == nullptr) {
+            fileTransferListWidget = fileTransferListWidgetFactory->createFileTransferListWidget();
+            if (fileTransferOverview) {
+                fileTransferListWidget->setFileTransferOverview(fileTransferOverview);
+            }
+        }
+        fileTransferListWidget->show();
+        fileTransferListWidget->activate();
+    }
 }
 
 }

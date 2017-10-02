@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012 Isode Limited.
+ * Copyright (c) 2012-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,14 +15,14 @@ namespace Swift {
 
 IDNConverter* PlatformIDNConverter::create() {
 #if defined(HAVE_LIBIDN)
-	return new LibIDNConverter();
+    return new LibIDNConverter();
 #elif defined(HAVE_ICU)
-	return new ICUConverter();
+    return new ICUConverter();
 #else
 #if defined(NEED_IDN)
 #error "No IDN implementation"
 #endif
-	return 0;
+    return nullptr;
 #endif
 }
 

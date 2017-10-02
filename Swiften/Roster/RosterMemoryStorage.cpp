@@ -1,23 +1,23 @@
 /*
- * Copyright (c) 2011 Isode Limited.
+ * Copyright (c) 2011-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/Roster/RosterMemoryStorage.h>
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
 namespace Swift {
 
 RosterMemoryStorage::RosterMemoryStorage() {
 }
 
-void RosterMemoryStorage::setRoster(boost::shared_ptr<RosterPayload> r) {
-	roster.reset();
-	if (r) {
-		roster = boost::make_shared<RosterPayload>(*r);
-	}
+void RosterMemoryStorage::setRoster(std::shared_ptr<RosterPayload> r) {
+    roster.reset();
+    if (r) {
+        roster = std::make_shared<RosterPayload>(*r);
+    }
 }
 
 }

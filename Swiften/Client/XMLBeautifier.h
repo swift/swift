@@ -5,57 +5,62 @@
  */
 
 /*
- * Copyright (c) 2014-2015 Isode Limited.
+ * Copyright (c) 2014-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <sstream>
-#include <string>
 #include <stack>
+#include <string>
+
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
-#include <Swiften/Base/boost_bsignals.h>
-#include <Swiften/Parser/XMLParserFactory.h>
-#include <Swiften/Parser/XMLParserClient.h>
 #include <Swiften/Parser/XMLParser.h>
+#include <Swiften/Parser/XMLParserClient.h>
+#include <Swiften/Parser/XMLParserFactory.h>
 
 namespace Swift {
 
 class SWIFTEN_API XMLBeautifier : public XMLParserClient {
 public:
-	XMLBeautifier(bool indention, bool coloring);
-	virtual ~XMLBeautifier();
 
-	std::string beautify(const std::string&);
+    XMLBeautifier(bool indention, bool coloring);
 
-private:
-	void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
-	void handleEndElement(const std::string& element, const std::string& ns);
-	void handleCharacterData(const std::string& data);
+    std::string beautify(const std::string&);
+    bool wasReset() const;
+    int getLevel() const;
 
 private:
-	void indent();
+    void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
+    void handleEndElement(const std::string& element, const std::string& ns);
+    void handleCharacterData(const std::string& data);
 
 private:
-	std::string styleTag(const std::string& text) const;
-	std::string styleNamespace(const std::string& text) const;
-	std::string styleAttribute(const std::string& text) const;
-	std::string styleValue(const std::string& text) const;
+    void indent();
+    void reset();
 
 private:
-	bool doIndention;
-	bool doColoring;
+    std::string styleTag(const std::string& text) const;
+    std::string styleNamespace(const std::string& text) const;
+    std::string styleAttribute(const std::string& text) const;
+    std::string styleValue(const std::string& text) const;
 
-	int intLevel;
-	std::string inputBuffer;
-	std::stringstream buffer;
-	XMLParserFactory* factory;
-	XMLParser* parser;
+private:
+    const bool doIndention_;
+    const bool doColoring_;
 
-	bool lastWasStepDown;
-	std::stack<std::string> parentNSs;
+    std::unique_ptr<XMLParserFactory> factory_;
+    std::unique_ptr<XMLParser> parser_;
+
+    bool wasReset_ = true;
+    int intLevel_ = 0;
+    bool lastWasStepDown_ = false;
+    std::stringstream buffer_;
+    std::stack<std::string> parentNSs_;
 };
 }

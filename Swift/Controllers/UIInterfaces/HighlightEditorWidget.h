@@ -8,15 +8,15 @@
 
 namespace Swift {
 
-	class HighlightManager;
+    class HighlightManager;
 
-	class HighlightEditorWidget {
-		public:
-			virtual ~HighlightEditorWidget() {}
+    class HighlightEditorWidget {
+        public:
+            virtual ~HighlightEditorWidget() {}
 
-			virtual void show() = 0;
+            virtual void show() = 0;
 
-			virtual void setHighlightManager(HighlightManager* highlightManager) = 0;
-	};
+            virtual void setHighlightManager(HighlightManager* highlightManager) = 0;
+    };
 
 }

@@ -11,6 +11,7 @@
 namespace Swift {
 
 const std::string DiscoInfo::ChatStatesFeature = std::string("http://jabber.org/protocol/chatstates");
+const std::string DiscoInfo::ClientStatesFeature = std::string("urn:xmpp:csi:0");
 const std::string DiscoInfo::SecurityLabelsFeature = std::string("urn:xmpp:sec-label:0");
 const std::string DiscoInfo::SecurityLabelsCatalogFeature = std::string("urn:xmpp:sec-label:catalog:2");
 const std::string DiscoInfo::JabberSearchFeature = std::string("jabber:iq:search");
@@ -24,28 +25,29 @@ const std::string DiscoInfo::Bytestream = std::string("http://jabber.org/protoco
 const std::string DiscoInfo::MessageDeliveryReceiptsFeature = std::string("urn:xmpp:receipts");
 const std::string DiscoInfo::WhiteboardFeature = std::string("http://swift.im/whiteboard");
 const std::string DiscoInfo::BlockingCommandFeature = std::string("urn:xmpp:blocking");
+const std::string DiscoInfo::MessageCarbonsFeature = std::string("urn:xmpp:carbons:2");
 
 bool DiscoInfo::Identity::operator<(const Identity& other) const {
-	if (category_ == other.category_) {
-		if (type_ == other.type_) {
-			if (lang_ == other.lang_) {
-				return name_ < other.name_;
-			}
-			else {
-				return lang_ < other.lang_;
-			}
-		}
-		else {
-			return type_ < other.type_;
-		}
-	}
-	else {
-		return category_ < other.category_;
-	}
+    if (category_ == other.category_) {
+        if (type_ == other.type_) {
+            if (lang_ == other.lang_) {
+                return name_ < other.name_;
+            }
+            else {
+                return lang_ < other.lang_;
+            }
+        }
+        else {
+            return type_ < other.type_;
+        }
+    }
+    else {
+        return category_ < other.category_;
+    }
 }
 
 bool DiscoInfo::hasFeature(const std::string& feature) const {
-	return std::find(features_.begin(), features_.end(), feature) != features_.end();
+    return std::find(features_.begin(), features_.end(), feature) != features_.end();
 }
 
 }

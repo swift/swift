@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,14 +8,14 @@
 
 #include <set>
 
-#include "Swift/Controllers/UIInterfaces/UserSearchWindow.h"
+#include <Swift/Controllers/UIInterfaces/UserSearchWindow.h>
 
 namespace Swift {
-	class UIEventStream;
-	class UserSearchWindowFactory {
-		public:
-			virtual ~UserSearchWindowFactory() {}
+    class UIEventStream;
+    class UserSearchWindowFactory {
+        public:
+            virtual ~UserSearchWindowFactory() {}
 
-			virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) = 0;
-	};
+            virtual UserSearchWindow* createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) = 0;
+    };
 }

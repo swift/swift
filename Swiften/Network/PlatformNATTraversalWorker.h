@@ -5,20 +5,20 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <condition_variable>
 #include <deque>
+#include <mutex>
+#include <thread>
 
 #include <boost/logic/tribool.hpp>
 #include <boost/optional.hpp>
-#include <boost/thread/condition_variable.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/thread.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Atomic.h>
@@ -27,49 +27,48 @@
 #include <Swiften/Network/NullNATTraversalInterface.h>
 
 namespace Swift {
-	class EventLoop;
-	class NATTraversalGetPublicIPRequest;
-	class NATTraversalForwardPortRequest;
-	class NATTraversalRemovePortForwardingRequest;
-	class PlatformNATTraversalRequest;
-	class NATPMPInterface;
-	class MiniUPnPInterface;
-	class NATTraversalInterface;
-	class NATPortMapping;
+    class EventLoop;
+    class NATTraversalGetPublicIPRequest;
+    class NATTraversalForwardPortRequest;
+    class NATTraversalRemovePortForwardingRequest;
+    class PlatformNATTraversalRequest;
+    class NATPMPInterface;
+    class MiniUPnPInterface;
+    class NATTraversalInterface;
 
-	class SWIFTEN_API PlatformNATTraversalWorker : public NATTraverser {
-			friend class PlatformNATTraversalRequest;
+    class SWIFTEN_API PlatformNATTraversalWorker : public NATTraverser {
+            friend class PlatformNATTraversalRequest;
 
-		public:
-			PlatformNATTraversalWorker(EventLoop* eventLoop);
-			virtual ~PlatformNATTraversalWorker();
+        public:
+            PlatformNATTraversalWorker(EventLoop* eventLoop);
+            virtual ~PlatformNATTraversalWorker();
 
-			boost::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest();
-			boost::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort);
-			boost::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(int localPort, int publicPort);
+            std::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest();
+            std::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort);
+            std::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(int localPort, int publicPort);
 
-		private:
-			NATTraversalInterface* getNATTraversalInterface() const;
-			void addRequestToQueue(boost::shared_ptr<PlatformNATTraversalRequest>);
-			void start();
-			void stop();
+        private:
+            NATTraversalInterface* getNATTraversalInterface() const;
+            void addRequestToQueue(std::shared_ptr<PlatformNATTraversalRequest>);
+            void start();
+            void stop();
 
-			EventLoop* getEventLoop() const {
-				return eventLoop;
-			}
+            EventLoop* getEventLoop() const {
+                return eventLoop;
+            }
 
-		private:
-			EventLoop* eventLoop;
-			Atomic<bool> stopRequested;
-			boost::thread* thread;
-			std::deque<boost::shared_ptr<PlatformNATTraversalRequest> > queue;
-			boost::mutex queueMutex;
-			boost::condition_variable queueNonEmpty;
+        private:
+            EventLoop* eventLoop;
+            Atomic<bool> stopRequested;
+            std::thread* thread;
+            std::deque<std::shared_ptr<PlatformNATTraversalRequest> > queue;
+            std::mutex queueMutex;
+            std::condition_variable queueNonEmpty;
 
-			NullNATTraversalInterface* nullNATTraversalInterface;
-			mutable boost::logic::tribool natPMPSupported;
-			mutable NATPMPInterface* natPMPInterface;
-			mutable boost::logic::tribool miniUPnPSupported;
-			mutable MiniUPnPInterface* miniUPnPInterface;
-	};
+            NullNATTraversalInterface* nullNATTraversalInterface;
+            mutable boost::logic::tribool natPMPSupported;
+            mutable NATPMPInterface* natPMPInterface;
+            mutable boost::logic::tribool miniUPnPSupported;
+            mutable MiniUPnPInterface* miniUPnPInterface;
+    };
 }

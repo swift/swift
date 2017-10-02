@@ -4,6 +4,12 @@
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
 
+/*
+ * Copyright (c) 2016 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
 #pragma once
 
 #include <QTreeWidget>
@@ -18,37 +24,37 @@
 namespace Swift {
 
 class QtVCardOrganizationField : public QtVCardGeneralField {
-	Q_OBJECT
+    Q_OBJECT
 
-	public:
-		GENERIC_QT_VCARD_FIELD_INFO("Organization", UNLIMITED_INSTANCES, QtVCardOrganizationField)
+    public:
+        GENERIC_QT_VCARD_FIELD_INFO(tr("Organization"), UNLIMITED_INSTANCES, QtVCardOrganizationField)
 
-		QtVCardOrganizationField(QWidget* parent = 0, QGridLayout* layout = 0, bool editable = false);
-		virtual ~QtVCardOrganizationField();
+        QtVCardOrganizationField(QWidget* parent = nullptr, QGridLayout* layout = nullptr, bool editable = false);
+        virtual ~QtVCardOrganizationField();
 
-		virtual bool isEmpty() const;
+        virtual bool isEmpty() const;
 
-		void setOrganization(const VCard::Organization& organization);
-		VCard::Organization getOrganization() const;
+        void setOrganization(const VCard::Organization& organization);
+        VCard::Organization getOrganization() const;
 
-	protected:
-		virtual void setupContentWidgets();
+    protected:
+        virtual void setupContentWidgets();
 
-	public slots:
-		void handleEditibleChanged(bool isEditable);
+    public slots:
+        void handleEditibleChanged(bool isEditable);
 
-	private slots:
-		void handleItemChanged(QTreeWidgetItem*, int);
-		void handleRowsRemoved(const QModelIndex&, int, int);
+    private slots:
+        void handleItemChanged(QTreeWidgetItem*, int);
+        void handleRowsRemoved(const QModelIndex&, int, int);
 
-	private:
-		void guaranteeEmptyRow();
+    private:
+        void guaranteeEmptyRow();
 
-	private:
-		QLabel* organizationLabel;
-		QtResizableLineEdit* organizationLineEdit;
-		QTreeWidget* unitsTreeWidget;
-		QtRemovableItemDelegate* itemDelegate;
+    private:
+        QLabel* organizationLabel;
+        QtResizableLineEdit* organizationLineEdit;
+        QTreeWidget* unitsTreeWidget;
+        QtRemovableItemDelegate* itemDelegate;
 };
 
 }

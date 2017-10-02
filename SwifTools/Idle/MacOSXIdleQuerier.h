@@ -11,13 +11,13 @@
 #include <SwifTools/Idle/IdleQuerier.h>
 
 namespace Swift {
-	class MacOSXIdleQuerier : public IdleQuerier {
-		public:
-			MacOSXIdleQuerier();
+    class MacOSXIdleQuerier : public IdleQuerier {
+        public:
+            MacOSXIdleQuerier();
 
-			virtual int getIdleTimeSeconds();
+            virtual int getIdleTimeSeconds();
 
-		private:
-			io_service_t ioService;
-	};
+        private:
+            io_service_t ioService;
+    };
 }

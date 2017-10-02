@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,18 +13,19 @@
 
 namespace Swift {
 
-	/**
-	 * @brief The SimpleIDGenerator class implements a IDGenerator generating consecutive ID strings from
-	 * the lower case latin alphabet.
-	 */
+    /**
+     * @brief The SimpleIDGenerator class implements a IDGenerator generating consecutive ID strings from
+     * the lower case latin alphabet.
+     */
 
-	class SWIFTEN_API SimpleIDGenerator : public IDGenerator {
-		public:
-			SimpleIDGenerator();
+    class SWIFTEN_API SimpleIDGenerator : public IDGenerator {
+        public:
+            SimpleIDGenerator();
+            ~SimpleIDGenerator() override;
 
-			std::string generateID();
+            std::string generateID() override;
 
-		private:
-			std::string currentID;
-	};
+        private:
+            std::string currentID;
+    };
 }

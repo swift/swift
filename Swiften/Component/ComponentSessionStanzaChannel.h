@@ -1,56 +1,58 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/IDGenerator.h>
-#include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Client/StanzaChannel.h>
-#include <Swiften/Elements/Message.h>
+#include <Swiften/Component/ComponentSession.h>
 #include <Swiften/Elements/IQ.h>
+#include <Swiften/Elements/Message.h>
 #include <Swiften/Elements/Presence.h>
 
 namespace Swift {
-	/**
-	 * StanzaChannel implementation around a ComponentSession.
-	 */
-	class SWIFTEN_API ComponentSessionStanzaChannel : public StanzaChannel {
-		public:
-			void setSession(boost::shared_ptr<ComponentSession> session);
+    /**
+     * StanzaChannel implementation around a ComponentSession.
+     */
+    class SWIFTEN_API ComponentSessionStanzaChannel : public StanzaChannel {
+        public:
+            virtual ~ComponentSessionStanzaChannel();
 
-			void sendIQ(boost::shared_ptr<IQ> iq);
-			void sendMessage(boost::shared_ptr<Message> message);
-			void sendPresence(boost::shared_ptr<Presence> presence);
+            void setSession(std::shared_ptr<ComponentSession> session);
 
-			bool getStreamManagementEnabled() const {
-				return false;
-			}
+            void sendIQ(std::shared_ptr<IQ> iq);
+            void sendMessage(std::shared_ptr<Message> message);
+            void sendPresence(std::shared_ptr<Presence> presence);
 
-			std::vector<Certificate::ref> getPeerCertificateChain() const {
-				// TODO: actually implement this method
-				return std::vector<Certificate::ref>();
-			}
+            bool getStreamManagementEnabled() const {
+                return false;
+            }
 
-			bool isAvailable() const {
-				return session && session->getState() == ComponentSession::Initialized;
-			}
+            std::vector<Certificate::ref> getPeerCertificateChain() const {
+                // TODO: actually implement this method
+                return std::vector<Certificate::ref>();
+            }
 
-		private:
-			std::string getNewIQID();
-			void send(boost::shared_ptr<Stanza> stanza);
-			void handleSessionFinished(boost::shared_ptr<Error> error);
-			void handleStanza(boost::shared_ptr<Stanza> stanza);
-			void handleSessionInitialized();
+            bool isAvailable() const {
+                return session && session->getState() == ComponentSession::Initialized;
+            }
 
-		private:
-			IDGenerator idGenerator;
-			boost::shared_ptr<ComponentSession> session;
-	};
+        private:
+            std::string getNewIQID();
+            void send(std::shared_ptr<Stanza> stanza);
+            void handleSessionFinished(std::shared_ptr<Error> error);
+            void handleStanza(std::shared_ptr<Stanza> stanza);
+            void handleSessionInitialized();
+
+        private:
+            IDGenerator idGenerator;
+            std::shared_ptr<ComponentSession> session;
+    };
 
 }

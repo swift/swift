@@ -1,19 +1,19 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <memory>
 #include <string>
 
-#include <boost/shared_ptr.hpp>
+#include <boost/signals2.hpp>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
 #include <Swiften/Base/SafeByteArray.h>
-#include <Swiften/Base/boost_bsignals.h>
 #include <Swiften/Component/ComponentConnector.h>
 #include <Swiften/Component/ComponentError.h>
 #include <Swiften/Component/ComponentSession.h>
@@ -26,79 +26,78 @@
 #include <Swiften/Serializer/PayloadSerializers/FullPayloadSerializerCollection.h>
 
 namespace Swift {
-	class EventLoop;
-	class IQRouter;
-	class NetworkFactories;
-	class ComponentSession;
-	class BasicSessionStream;
+    class BasicSessionStream;
+    class ComponentSession;
+    class IQRouter;
+    class NetworkFactories;
 
-	/**
-	 * The central class for communicating with an XMPP server as a component.
-	 *
-	 * This class is responsible for setting up the connection with the XMPP 
-	 * server and authenticating the component.
-	 *
-	 * This class can be used directly in your application, although the Component 
-	 * subclass provides more functionality and interfaces, and is better suited 
-	 * for most needs.
-	 */
-	class SWIFTEN_API CoreComponent : public Entity {
-		public:
-			CoreComponent(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
-			virtual ~CoreComponent();
+    /**
+     * The central class for communicating with an XMPP server as a component.
+     *
+     * This class is responsible for setting up the connection with the XMPP
+     * server and authenticating the component.
+     *
+     * This class can be used directly in your application, although the Component
+     * subclass provides more functionality and interfaces, and is better suited
+     * for most needs.
+     */
+    class SWIFTEN_API CoreComponent : public Entity {
+        public:
+            CoreComponent(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
+            virtual ~CoreComponent();
 
-			void connect(const std::string& host, int port);
-			void disconnect();
-			
-			void sendMessage(boost::shared_ptr<Message>);
-			void sendPresence(boost::shared_ptr<Presence>);
-			void sendData(const std::string& data);
+            void connect(const std::string& host, int port);
+            void disconnect();
 
-			IQRouter* getIQRouter() const {
-				return iqRouter_;
-			}
+            void sendMessage(std::shared_ptr<Message>);
+            void sendPresence(std::shared_ptr<Presence>);
+            void sendData(const std::string& data);
 
-			StanzaChannel* getStanzaChannel() const {
-				return stanzaChannel_;
-			}
+            IQRouter* getIQRouter() const {
+                return iqRouter_;
+            }
 
-			bool isAvailable() const {
-				return stanzaChannel_->isAvailable();
-			}
+            StanzaChannel* getStanzaChannel() const {
+                return stanzaChannel_;
+            }
 
-			/**
-			 * Returns the JID of the component
-			 */
-			const JID& getJID() const {
-				return jid_;
-			}
+            bool isAvailable() const {
+                return stanzaChannel_->isAvailable();
+            }
 
-		public:
-			boost::signal<void (const ComponentError&)> onError;
-			boost::signal<void ()> onConnected;
-			boost::signal<void (const SafeByteArray&)> onDataRead;
-			boost::signal<void (const SafeByteArray&)> onDataWritten;
+            /**
+             * Returns the JID of the component
+             */
+            const JID& getJID() const {
+                return jid_;
+            }
 
-			boost::signal<void (boost::shared_ptr<Message>)> onMessageReceived;
-			boost::signal<void (boost::shared_ptr<Presence>) > onPresenceReceived;
+        public:
+            boost::signals2::signal<void (const ComponentError&)> onError;
+            boost::signals2::signal<void ()> onConnected;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataRead;
+            boost::signals2::signal<void (const SafeByteArray&)> onDataWritten;
 
-		private:
-			void handleConnectorFinished(boost::shared_ptr<Connection>);
-			void handleStanzaChannelAvailableChanged(bool available);
-			void handleSessionFinished(boost::shared_ptr<Error>);
-			void handleDataRead(const SafeByteArray&);
-			void handleDataWritten(const SafeByteArray&);
+            boost::signals2::signal<void (std::shared_ptr<Message>)> onMessageReceived;
+            boost::signals2::signal<void (std::shared_ptr<Presence>) > onPresenceReceived;
 
-		private:
-			NetworkFactories* networkFactories;
-			JID jid_;
-			std::string secret_;
-			ComponentSessionStanzaChannel* stanzaChannel_;
-			IQRouter* iqRouter_;
-			ComponentConnector::ref connector_;
-			boost::shared_ptr<Connection> connection_;
-			boost::shared_ptr<BasicSessionStream> sessionStream_;
-			boost::shared_ptr<ComponentSession> session_;
-			bool disconnectRequested_;
-	};
+        private:
+            void handleConnectorFinished(std::shared_ptr<Connection>);
+            void handleStanzaChannelAvailableChanged(bool available);
+            void handleSessionFinished(std::shared_ptr<Error>);
+            void handleDataRead(const SafeByteArray&);
+            void handleDataWritten(const SafeByteArray&);
+
+        private:
+            NetworkFactories* networkFactories;
+            JID jid_;
+            std::string secret_;
+            ComponentSessionStanzaChannel* stanzaChannel_;
+            IQRouter* iqRouter_;
+            ComponentConnector::ref connector_;
+            std::shared_ptr<Connection> connection_;
+            std::shared_ptr<BasicSessionStream> sessionStream_;
+            std::shared_ptr<ComponentSession> session_;
+            bool disconnectRequested_;
+    };
 }

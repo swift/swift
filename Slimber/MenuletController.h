@@ -1,39 +1,39 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <vector>
-#include <boost/signal.hpp>
-
 #include <string>
+#include <vector>
+
+#include <boost/signals2.hpp>
 
 class Menulet;
 
 class MenuletController {
-	public:
-		enum Status {
-			Online,
-			Offline
-		};
+    public:
+        enum Status {
+            Online,
+            Offline
+        };
 
-		MenuletController(Menulet*);
-		virtual ~MenuletController();
+        MenuletController(Menulet*);
+        virtual ~MenuletController();
 
-		void setXMPPStatus(const std::string& message, Status status);
-		void setUserNames(const std::vector<std::string>&);
-	
-		boost::signal<void ()> onRestartRequested;
+        void setXMPPStatus(const std::string& message, Status status);
+        void setUserNames(const std::vector<std::string>&);
 
-	private:
-		void update();
-	
-	private:
-		Menulet* menulet;
-		Status xmppStatus;
-		std::string xmppStatusMessage;
-		std::vector<std::string> linkLocalUsers;
+        boost::signals2::signal<void ()> onRestartRequested;
+
+    private:
+        void update();
+
+    private:
+        Menulet* menulet;
+        Status xmppStatus;
+        std::string xmppStatusMessage;
+        std::vector<std::string> linkLocalUsers;
 };

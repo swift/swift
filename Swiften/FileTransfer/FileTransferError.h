@@ -9,23 +9,23 @@
 #include <Swiften/Base/API.h>
 
 namespace Swift {
-	class SWIFTEN_API FileTransferError {
-		public:
-			enum Type {
-				UnknownError,
-				PeerError,
-				ReadError,
-				WriteError,
-				ClosedError
-			};
+    class SWIFTEN_API FileTransferError {
+        public:
+            enum Type {
+                UnknownError,
+                PeerError,
+                ReadError,
+                WriteError,
+                ClosedError
+            };
 
-			FileTransferError(Type type = UnknownError) : type(type) {}
+            FileTransferError(Type type = UnknownError) : type(type) {}
 
-			Type getType() const {
-				return type;
-			}
+            Type getType() const {
+                return type;
+            }
 
-		private:
-			Type type;
-	};
+        private:
+            Type type;
+    };
 }

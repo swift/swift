@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,15 +7,15 @@
 #include <Swiften/Elements/CarbonsReceived.h>
 
 namespace Swift {
-	CarbonsReceived::~CarbonsReceived() {
+    CarbonsReceived::~CarbonsReceived() {
 
-	}
+    }
 
-	void CarbonsReceived::setForwarded(boost::shared_ptr<Forwarded> forwarded) {
-		forwarded_ = forwarded;
-	}
+    void CarbonsReceived::setForwarded(std::shared_ptr<Forwarded> forwarded) {
+        forwarded_ = forwarded;
+    }
 
-	boost::shared_ptr<Forwarded> CarbonsReceived::getForwarded() const {
-		return forwarded_;
-	}
+    std::shared_ptr<Forwarded> CarbonsReceived::getForwarded() const {
+        return forwarded_;
+    }
 }

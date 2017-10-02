@@ -17,19 +17,19 @@
 using namespace Swift;
 
 - (NSString *) applicationNameForGrowl {
-	return name;
+    return name;
 }
 
 - (NSDictionary*) registrationDictionaryForGrowl {
-	return registrationDictionary;
+    return registrationDictionary;
 }
 
 - (void) growlNotificationWasClicked: (id) clickContext {
-	notifier->handleNotificationClicked(clickContext);
+    notifier->handleNotificationClicked(clickContext);
 }
 
 - (void) growlNotificationTimedOut: (id) clickContext {
-	notifier->handleNotificationTimedOut(clickContext);
+    notifier->handleNotificationTimedOut(clickContext);
 }
 
 @end

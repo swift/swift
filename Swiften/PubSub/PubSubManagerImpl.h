@@ -1,41 +1,38 @@
 /*
- * Copyright (c) 2013 Isode Limited.
+ * Copyright (c) 2013-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
-#include <boost/smart_ptr/make_shared.hpp>
+#include <memory>
 
-#include <Swiften/Base/Override.h>
 #include <Swiften/Base/API.h>
 #include <Swiften/PubSub/PubSubManager.h>
-
 #define SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST(payload, container, response) \
-	virtual boost::shared_ptr< PubSubRequest<payload> >  \
-			createRequest(IQ::Type type, const JID& receiver, boost::shared_ptr<payload> p) SWIFTEN_OVERRIDE { \
-		return boost::make_shared< PubSubRequest<payload> >(type, receiver, p, router); \
-	}
+    virtual std::shared_ptr< PubSubRequest<payload> >  \
+            createRequest(IQ::Type type, const JID& receiver, std::shared_ptr<payload> p) override { \
+        return std::make_shared< PubSubRequest<payload> >(type, receiver, p, router); \
+    }
 
 namespace Swift {
-	class JID;
-	class StanzaChannel;
-	class Message;
+    class StanzaChannel;
+    class Message;
 
-	class SWIFTEN_API PubSubManagerImpl : public PubSubManager {
-		public:
-			PubSubManagerImpl(StanzaChannel* stanzaChannel, IQRouter* router);
-			virtual ~PubSubManagerImpl();
+    class SWIFTEN_API PubSubManagerImpl : public PubSubManager {
+        public:
+            PubSubManagerImpl(StanzaChannel* stanzaChannel, IQRouter* router);
+            virtual ~PubSubManagerImpl() override;
 
-			SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
-					SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST)
+            SWIFTEN_PUBSUB_FOREACH_PUBSUB_PAYLOAD_TYPE(
+                    SWIFTEN_PUBSUBMANAGERIMPL_DECLARE_CREATE_REQUEST)
 
-		private:
-			void handleMessageRecevied(boost::shared_ptr<Message>);
+        private:
+            void handleMessageRecevied(std::shared_ptr<Message>);
 
-		private:
-			StanzaChannel* stanzaChannel;
-			IQRouter* router;
-	};
+        private:
+            StanzaChannel* stanzaChannel;
+            IQRouter* router;
+    };
 }

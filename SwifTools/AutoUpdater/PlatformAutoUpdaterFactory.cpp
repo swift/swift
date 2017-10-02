@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2016 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,18 +16,18 @@ namespace Swift {
 
 bool PlatformAutoUpdaterFactory::isSupported() const {
 #ifdef HAVE_SPARKLE
-	return true;
+    return true;
 #else
-	return false;
+    return false;
 #endif
 }
 
 AutoUpdater* PlatformAutoUpdaterFactory::createAutoUpdater(const std::string& appcastURL) {
 #ifdef HAVE_SPARKLE
-	return new SparkleAutoUpdater(appcastURL);
+    return new SparkleAutoUpdater(appcastURL);
 #else
-	(void) appcastURL;
-	return NULL;
+    (void) appcastURL;
+    return nullptr;
 #endif
 }
 

@@ -11,16 +11,16 @@
 #if defined(SWIFTEN_PLATFORM_MACOSX)
 #include <SwifTools/Application/MacOSXApplicationPathProvider.h>
 namespace Swift {
-	typedef MacOSXApplicationPathProvider PlatformApplicationPathProvider;
+    typedef MacOSXApplicationPathProvider PlatformApplicationPathProvider;
 }
 #elif defined(SWIFTEN_PLATFORM_WIN32)
 #include <SwifTools/Application/WindowsApplicationPathProvider.h>
 namespace Swift {
-	typedef WindowsApplicationPathProvider PlatformApplicationPathProvider;
+    typedef WindowsApplicationPathProvider PlatformApplicationPathProvider;
 }
 #else
 #include <SwifTools/Application/UnixApplicationPathProvider.h>
 namespace Swift {
-	typedef UnixApplicationPathProvider PlatformApplicationPathProvider;
+    typedef UnixApplicationPathProvider PlatformApplicationPathProvider;
 }
 #endif

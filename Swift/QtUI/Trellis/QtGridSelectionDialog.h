@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014 Isode Limited.
+ * Copyright (c) 2014-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,47 +11,56 @@
 
 namespace Swift {
 
-	class QtGridSelectionDialog : public QWidget {
-			Q_OBJECT
+    class QtGridSelectionDialog : public QWidget {
+            Q_OBJECT
 
-			Q_PROPERTY(QSize currentGridSize READ getCurrentGridSize WRITE setCurrentGridSize NOTIFY currentGridSizeChanged)
-			Q_PROPERTY(QSize minGridSize READ getMinGridSize WRITE setMinGridSize NOTIFY minGridSizeChanged)
-			Q_PROPERTY(QSize maxGridSize READ getMaxGridSize WRITE setMaxGridSize NOTIFY maxGridSizeChanged)
-		public:
-			explicit QtGridSelectionDialog(QWidget* parent = 0);
+            Q_PROPERTY(QSize currentGridSize READ getCurrentGridSize WRITE setCurrentGridSize NOTIFY currentGridSizeChanged)
+            Q_PROPERTY(QSize minGridSize READ getMinGridSize WRITE setMinGridSize NOTIFY minGridSizeChanged)
+            Q_PROPERTY(QSize maxGridSize READ getMaxGridSize WRITE setMaxGridSize NOTIFY maxGridSizeChanged)
+        public:
+            explicit QtGridSelectionDialog(QWidget* parent = nullptr);
 
-			virtual QSize sizeHint() const;
+            virtual QSize sizeHint() const;
 
-			void setCurrentGridSize(const QSize& size);
-			QSize getCurrentGridSize() const;
-			void setMinGridSize(const QSize& size);
-			QSize getMinGridSize() const;
-			void setMaxGridSize(const QSize& size);
-			QSize getMaxGridSize() const;
+            void setCurrentGridSize(const QSize& size);
+            QSize getCurrentGridSize() const;
+            void setMinGridSize(const QSize& size);
+            QSize getMinGridSize() const;
+            void setMaxGridSize(const QSize& size);
+            QSize getMaxGridSize() const;
 
-		signals:
-			void currentGridSizeChanged(QSize);
-			void minGridSizeChanged(QSize);
-			void maxGridSizeChanged(QSize);
+            QSize getFrameSize() const;
+            int getDescriptionTextHeight() const;
 
-		protected:
-			void keyReleaseEvent(QKeyEvent* event);
-			void mousePressEvent(QMouseEvent* event);
-			void mouseMoveEvent(QMouseEvent* event);
-			void paintEvent(QPaintEvent* event);
-			void showEvent(QShowEvent* event);
-			void hideEvent(QHideEvent* event);
-			void leaveEvent(QEvent *event);
+        signals:
+            void currentGridSizeChanged(QSize);
+            void minGridSizeChanged(QSize);
+            void maxGridSizeChanged(QSize);
 
-		private:
-			int padding;
-			int horizontalMargin;
-			int verticalMargin;
+        protected:
+            void keyReleaseEvent(QKeyEvent* event);
+            void mousePressEvent(QMouseEvent* event);
+            void paintEvent(QPaintEvent* event);
+            void showEvent(QShowEvent* event);
+            void hideEvent(QHideEvent* event);
+            bool event(QEvent* event);
+            void timerEvent(QTimerEvent* event);
 
-			QSize frameSize;
+    private:
+        int getDescriptionTextHeight(int width) const;
 
-			QSize currentGridSize;
-			QSize minGridSize;
-			QSize maxGridSize;
-	};
+        private:
+            int padding;
+            int horizontalMargin;
+            int verticalMargin;
+            int timerId = -1;
+
+            QSize frameSize;
+
+            QSize currentGridSize;
+            QSize minGridSize;
+            QSize maxGridSize;
+
+            const QString descriptionText;
+    };
 }
