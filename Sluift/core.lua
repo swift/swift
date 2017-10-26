@@ -961,7 +961,7 @@ register_help(Component.process_events)
 --	component:set_command{to = 'alice@wonderland.lit', command = { type = 'execute', node = 'uptime' }}
 --
 local get_set_shortcuts = {
-	get = {'software_version', 'disco_items', 'xml', 'dom', 'vcard'},
+	get = {'software_version', 'disco_items', 'disco_info', 'xml', 'dom', 'vcard'},
 	set = {'command', 'vcard'}
 }
 for query_action, query_types in pairs(get_set_shortcuts) do
