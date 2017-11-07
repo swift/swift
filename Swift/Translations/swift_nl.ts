@@ -32,10 +32,6 @@
         <translation>%1% is nu bezet</translation>
     </message>
     <message>
-        <source>The day is now %1%</source>
-        <translation>De huidige dag is nu %1%</translation>
-    </message>
-    <message>
         <source>Error sending message</source>
         <translation>Fout tijdens het versturen van bericht</translation>
     </message>
@@ -540,10 +536,6 @@
         <translation>%1% heeft de %2% betreden.</translation>
     </message>
     <message>
-        <source>%1%</source>
-        <translation>%1%</translation>
-    </message>
-    <message>
         <source>You&apos;ve blocked this room. To enter the room, first unblock it using the cog menu and try again</source>
         <translation>U heeft deze kamer geblokkeerd. Om de kamer te betreden moet u deze eerst deblokkeren met behulp van het tandradmenu, en het dan opnieuw proberen</translation>
     </message>
@@ -608,10 +600,6 @@
         <translation>Deze server ondersteunt het delen van echte identiteiten in deze conversatie niet.</translation>
     </message>
     <message>
-        <source>Empty Chat</source>
-        <translation>Lege conversatie</translation>
-    </message>
-    <message>
         <source>This contact is already on your contact list.</source>
         <translation>Dit contact staat al op uw contactenlijst.</translation>
     </message>
@@ -655,6 +643,38 @@
         <source>Outcast</source>
         <translation>Verstoteling</translation>
     </message>
+    <message>
+        <source>This user could not be found in the room.</source>
+        <translation>De gebruiker kan niet worden gevonden in deze kamer.</translation>
+    </message>
+    <message>
+        <source>The room subject has been removed</source>
+        <translation>Het onderwerp van deze kamer is verwijderd</translation>
+    </message>
+    <message>
+        <source>%1% says</source>
+        <translation>%1% zegt</translation>
+    </message>
+    <message>
+        <source>%1% in %2% says</source>
+        <translation>%1% in %2% zegt</translation>
+    </message>
+    <message>
+        <source>%1% mentioned you in %2%</source>
+        <translation>%1% heeft u genoemd in %2%</translation>
+    </message>
+    <message>
+        <source>%1% mentioned &apos;%2%&apos;</source>
+        <translation>%1% heeft &apos;%2%&apos; genoemd</translation>
+    </message>
+    <message>
+        <source>There was an error fetching your current profile data</source>
+        <translation>Er is een fout opgetreden bij het ophalen van uw profielgegevens</translation>
+    </message>
+    <message>
+        <source>Failed to retrieve recent profile for user.</source>
+        <translation>Ophalen van recente profielgegevens is mislukt.</translation>
+    </message>
 </context>
 <context>
     <name>CloseButton</name>
@@ -695,12 +715,7 @@
     </message>
 </context>
 <context>
-    <name>QGuiApplication</name>
-    <message>
-        <source>QT_LAYOUT_DIRECTION</source>
-        <comment>Translate this to LTR for left-to-right or RTL for right-to-left languages</comment>
-        <translation>LTR</translation>
-    </message>
+    <name>QApplication</name>
     <message>
         <source>QT_LAYOUT_DIRECTION</source>
         <translation>LTR</translation>
@@ -731,6 +746,18 @@
     <message>
         <source>Cancel</source>
         <translation>Annuleren</translation>
+    </message>
+</context>
+<context>
+    <name>QGuiApplication</name>
+    <message>
+        <source>QT_LAYOUT_DIRECTION</source>
+        <comment>Translate this to LTR for left-to-right or RTL for right-to-left languages</comment>
+        <translation>LTR</translation>
+    </message>
+    <message>
+        <source>QT_LAYOUT_DIRECTION</source>
+        <translation>LTR</translation>
     </message>
 </context>
 <context>
@@ -951,6 +978,21 @@
     </message>
 </context>
 <context>
+    <name>QPlatformTheme</name>
+    <message>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <source>Cancel</source>
+        <translation>Annuleren</translation>
+    </message>
+    <message>
+        <source>Restore Defaults</source>
+        <translation>Standaardintellingen</translation>
+    </message>
+</context>
+<context>
     <name>QScrollBar</name>
     <message>
         <source>Scroll here</source>
@@ -1053,6 +1095,37 @@
     <message>
         <source>Scroll down</source>
         <translation>Rol omlaag</translation>
+    </message>
+</context>
+<context>
+    <name>QWidgetTextControl</name>
+    <message>
+        <source>Select All</source>
+        <translation>Alles selecteren</translation>
+    </message>
+    <message>
+        <source>&amp;Undo</source>
+        <translation>&amp;Herstel</translation>
+    </message>
+    <message>
+        <source>&amp;Redo</source>
+        <translation>&amp;Opnieuw</translation>
+    </message>
+    <message>
+        <source>Cu&amp;t</source>
+        <translation>&amp;Knip</translation>
+    </message>
+    <message>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopieer</translation>
+    </message>
+    <message>
+        <source>&amp;Paste</source>
+        <translation>&amp;Plak</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Verwijder</translation>
     </message>
 </context>
 <context>
@@ -1202,7 +1275,7 @@
     </message>
     <message>
         <source>Manual</source>
-        <translation>Manueel</translation>
+        <translation>Handmatig</translation>
     </message>
     <message>
         <source>BOSH</source>
@@ -1234,7 +1307,7 @@
     </message>
     <message>
         <source>Manually select server</source>
-        <translation>Manuele serverselectie</translation>
+        <translation>Handmatige serverselectie</translation>
     </message>
     <message>
         <source>Hostname:</source>
@@ -1278,7 +1351,7 @@
     </message>
     <message>
         <source>Manually select HTTP proxy</source>
-        <translation>Selecteer HTTP proxy manueel</translation>
+        <translation>Selecteer HTTP proxy handmatig</translation>
     </message>
     <message>
         <source>Connection Options</source>
@@ -1401,34 +1474,94 @@
     </message>
 </context>
 <context>
-    <name>QtHighlightEditorWidget</name>
+    <name>QtHighlightNotificationConfigDialog</name>
     <message>
-        <source>Form</source>
-        <translation>Formulier</translation>
+        <source>Highlight and Notification Configuration</source>
+        <translation>Markeer- en meldingsinstellingen</translation>
     </message>
     <message>
-        <source>Incoming messages are checked against the following rules. First rule that matches will be executed.</source>
-        <translation>Inkomende berichten worden gecontrolleerd aan de hand van de volgende regels. De eerst overeenkomende regel wordt uitgevoerd.</translation>
+        <source>Highlight messages from these people</source>
+        <translation>Markeer berichten van deze mensen</translation>
     </message>
     <message>
-        <source>New</source>
-        <translation>Nieuw</translation>
+        <source>Nickname</source>
+        <translation>Roepnaam</translation>
     </message>
     <message>
-        <source>Delete</source>
-        <translation>Verwijder</translation>
+        <source>Text color</source>
+        <translation>Tekstkleur</translation>
     </message>
     <message>
-        <source>Move up</source>
-        <translation>Verplaats omhoog</translation>
+        <source>Background color</source>
+        <translation>Achtergrondkleur</translation>
     </message>
     <message>
-        <source>Move down</source>
-        <translation>Verplaats omlaag</translation>
+        <source>Play sound</source>
+        <translation>Speel geluid</translation>
     </message>
     <message>
-        <source>Close</source>
-        <translation>Sluit tab</translation>
+        <source>Create notification</source>
+        <translation>Melding</translation>
+    </message>
+    <message>
+        <source>+</source>
+        <translation>+</translation>
+    </message>
+    <message>
+        <source>-</source>
+        <translation>-</translation>
+    </message>
+    <message>
+        <source>Highlight messages containing these keywords</source>
+        <translation>Markeer berichten die deze sleutelwoorden bevatten</translation>
+    </message>
+    <message>
+        <source>Keyword</source>
+        <translation>Sleutelwoord</translation>
+    </message>
+    <message>
+        <source>Match case sensitive</source>
+        <translation>Identieke hoofdletters/kleine letters</translation>
+    </message>
+    <message>
+        <source>General notification settings</source>
+        <translation>Algemene meldingsinstellingen</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <source>Highlight background color on own mention</source>
+        <translation>Achtergrondkleur van vermeldingen van mijn naam</translation>
+    </message>
+    <message>
+        <source>Create notification on incoming group messages</source>
+        <translation>Melding bij binnenkomende berichten uit een kamer</translation>
+    </message>
+    <message>
+        <source>Create notification when my name is mentioned</source>
+        <translation>Melding wanneer mijn naam genoemd wordt</translation>
+    </message>
+    <message>
+        <source>Play sound on incoming direct messages</source>
+        <translation>Speel geluid bij binnenkomende directe berichten</translation>
+    </message>
+    <message>
+        <source>Play sound on incoming group messages</source>
+        <translation>Speel geluid bij binnenkomende groepsgesprekken</translation>
+    </message>
+    <message>
+        <source>Create notification on incoming direct messages</source>
+        <translation>Melding bij binnenkomende directe berichten</translation>
+    </message>
+    <message>
+        <source>Play sound when my name is mentioned</source>
+        <translation>Speel geluid wanneer mijn naam genoemd wordt</translation>
+    </message>
+    <message>
+        <source>Highlight text color on own mention</source>
+        <translation>Tekstkleur van vermeldingen van mijn naam</translation>
     </message>
 </context>
 <context>
@@ -1503,6 +1636,10 @@
         <source>OK</source>
         <translation>OK</translation>
     </message>
+    <message>
+        <source>Search for</source>
+        <translation>Zoek naar</translation>
+    </message>
 </context>
 <context>
     <name>QtProfileWindow</name>
@@ -1530,18 +1667,6 @@
         <translation>Spellingscontrole ingeschakeld</translation>
     </message>
     <message>
-        <source>Dictionary Path:</source>
-        <translation>Pad woordenboek:</translation>
-    </message>
-    <message>
-        <source>Change</source>
-        <translation>Wijzig</translation>
-    </message>
-    <message>
-        <source>Current Language:</source>
-        <translation>Huidige taal:</translation>
-    </message>
-    <message>
         <source>Language:</source>
         <translation>Taal:</translation>
     </message>
@@ -1552,6 +1677,37 @@
     <message>
         <source>Apply</source>
         <translation>Toepassen</translation>
+    </message>
+</context>
+<context>
+    <name>QtUpdateFeedSelectionDialog</name>
+    <message>
+        <source>Select Update Channel</source>
+        <translation>Kies updatekanaal</translation>
+    </message>
+    <message>
+        <source>Stable Channel</source>
+        <translation>Stabiel kanaal</translation>
+    </message>
+    <message>
+        <source>Testing Channel</source>
+        <translation>Testkanaal</translation>
+    </message>
+    <message>
+        <source>Development Channel</source>
+        <translation>Ontwikkelkanaal</translation>
+    </message>
+    <message>
+        <source>This release channel includes our stable releases. They went throught internal QA testing and had previous RC releases to find critical bugs.</source>
+        <translation>Dit kanaal bevat onze stabiele versies. Deze hebben uitgebreide interne kwaliteitscontrole gehad, en hebben testversies gehad om kritische fouten te vinden.</translation>
+    </message>
+    <message>
+        <source>This release channel includes our stable releases, beta releases and release candidates. They should be free from obvious bugs and are released for wider testing to find more obscure bugs.</source>
+        <translation>Dit kanaal bevat onze stabiele versies, betaversies en release candidates. Deze versies zouden vrij moeten zijn van opvallende fouten en worden verspreidt om minder opvallende fouten te vinden.</translation>
+    </message>
+    <message>
+        <source>This release channel includes our stable releases, beta releases, release candidates and development releases. The development releases are not thoroughly tested and might contain bugs.</source>
+        <translation>Dit kanaal bevat onze stabiele versies, betaversies, release candidates en ontwikkelversies. De ontwikkelversies zijn niet uitvoerig getest en kunnen fouten bevatten.</translation>
     </message>
 </context>
 <context>
@@ -1737,6 +1893,46 @@
     <message>
         <source>Close</source>
         <translation>Sluiten</translation>
+    </message>
+    <message>
+        <source>View Changes</source>
+        <translation>Belijk Wijzigingen</translation>
+    </message>
+    <message>
+        <source>You are receiving updates from the Stable update channel.</source>
+        <translation>U ontvangt updates vanuit het stabiele updatekanaal.</translation>
+    </message>
+    <message>
+        <source>You are receiving updates from the Development update channel.</source>
+        <translation>U ontvangt updates vanuit het ontwikkelupdatekanaal.</translation>
+    </message>
+    <message>
+        <source>You are receiving updates from the Testing update channel.</source>
+        <translation>U ontvangt updates vanuit het testupdatekanaal.</translation>
+    </message>
+    <message>
+        <source>Change the update channel.</source>
+        <translation>Wijzig het updatekanaal.</translation>
+    </message>
+    <message>
+        <source>Checking for updates…</source>
+        <translation>Controlleren op updates…</translation>
+    </message>
+    <message>
+        <source>Error checking for updates!</source>
+        <translation>Fout tijdens het controlleren op updates!</translation>
+    </message>
+    <message>
+        <source>Swift is up to date.</source>
+        <translation>Swift is up-to-date.</translation>
+    </message>
+    <message>
+        <source>Downloading update…</source>
+        <translation>Update aan het downloaden…</translation>
+    </message>
+    <message>
+        <source>Update will be installed when you next restart Swift.</source>
+        <translation>De update wordt geinstalleerd wanneer u Swift herstart.</translation>
     </message>
 </context>
 <context>
@@ -2063,6 +2259,10 @@ afbeelding</translation>
         <source>Edit bookmark...</source>
         <translation>Bewerk bladwijzer...</translation>
     </message>
+    <message>
+        <source>The day is now %1</source>
+        <translation>De huidige dag is nu %1</translation>
+    </message>
 </context>
 <context>
     <name>Swift::QtConnectionSettingsWindow</name>
@@ -2118,6 +2318,13 @@ afbeelding</translation>
     </message>
 </context>
 <context>
+    <name>Swift::QtEmojisSelector</name>
+    <message>
+        <source>Recent</source>
+        <translation>Recent</translation>
+    </message>
+</context>
+<context>
     <name>Swift::QtEventWindow</name>
     <message>
         <source>Display Notice</source>
@@ -2136,108 +2343,10 @@ afbeelding</translation>
     </message>
 </context>
 <context>
-    <name>Swift::QtHighlightEditor</name>
+    <name>Swift::QtGridSelectionDialog</name>
     <message>
-        <source>Highlight Rules</source>
-        <translation>Markeerregels</translation>
-    </message>
-    <message>
-        <source>Apply to all chat messages</source>
-        <translation>Pas toe op alle berichten in conversaties</translation>
-    </message>
-    <message>
-        <source>Apply to all room messages</source>
-        <translation>Pas toe op alle berichten in kamers</translation>
-    </message>
-    <message>
-        <source>Select sound file...</source>
-        <translation>Selecteer geluidsbestand...</translation>
-    </message>
-</context>
-<context>
-    <name>Swift::QtHighlightEditorWidget</name>
-    <message>
-        <source>Highlight Rules</source>
-        <translation>Markeerregels</translation>
-    </message>
-</context>
-<context>
-    <name>Swift::QtHighlightRulesItemModel</name>
-    <message>
-        <source>Apply to</source>
-        <translation>Pas toe op</translation>
-    </message>
-    <message>
-        <source>Sender</source>
-        <translation>Afzender</translation>
-    </message>
-    <message>
-        <source>Keyword</source>
-        <translation>Sleutelwoord</translation>
-    </message>
-    <message>
-        <source>Action</source>
-        <translation>Actie</translation>
-    </message>
-    <message>
-        <source>Nick Is Keyword</source>
-        <translation>Roepnaam is sleutelwoord</translation>
-    </message>
-    <message>
-        <source>Match Case</source>
-        <translation>Identieke hoofdletters/kleine letters</translation>
-    </message>
-    <message>
-        <source>Match Whole Words</source>
-        <translation>Heel woord</translation>
-    </message>
-    <message>
-        <source>Highlight Text</source>
-        <translation>Markeer tekst</translation>
-    </message>
-    <message>
-        <source>Text Color</source>
-        <translation>Voorgrondkleur</translation>
-    </message>
-    <message>
-        <source>Text Background</source>
-        <translation>Achtergrondkleur</translation>
-    </message>
-    <message>
-        <source>Play Sounds</source>
-        <translation>Speel geluid</translation>
-    </message>
-    <message>
-        <source>Sound File</source>
-        <translation>Geluidsbestand</translation>
-    </message>
-    <message>
-        <source>&lt;nick&gt;</source>
-        <translation>&lt;roepnaam&gt;</translation>
-    </message>
-    <message>
-        <source>Highlight text</source>
-        <translation>Markeer tekst</translation>
-    </message>
-    <message>
-        <source>Play sound</source>
-        <translation>Speel geluid</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Geen</translation>
-    </message>
-    <message>
-        <source>Chat or MUC</source>
-        <translation>Conversatie of kamer</translation>
-    </message>
-    <message>
-        <source>Chat</source>
-        <translation>Conversatie</translation>
-    </message>
-    <message>
-        <source>MUC</source>
-        <translation>Kamer</translation>
+        <source>Select the number of rows and columns for your layout. You can change the size by moving the mouse or cursor keys.</source>
+        <translation>Kies het aantal rijen en kolommen voor uw opmaak. U kunt de grootte wijzigen met de muis of met de pijltjestoetsen.</translation>
     </message>
 </context>
 <context>
@@ -2572,35 +2681,35 @@ afbeelding</translation>
     <name>Swift::QtPlainChatView</name>
     <message>
         <source>Chat Messages</source>
-        <translation type="unfinished"></translation>
+        <translation>Berichten</translation>
     </message>
     <message>
         <source>At %1 %2 said:</source>
-        <translation type="unfinished"></translation>
+        <translation>Om %1 zei %2:</translation>
     </message>
     <message>
         <source>At %1 &lt;i&gt;%2 </source>
-        <translation type="unfinished"></translation>
+        <translation>Om %1 &lt;i&gt;%2</translation>
     </message>
     <message>
         <source>At %1 %2 corrected the last message to:</source>
-        <translation type="unfinished"></translation>
+        <translation>Om %1 corrigeerde %2 het laatste bericht naar:</translation>
     </message>
     <message>
         <source>At %1 %2 corrected the last action to: &lt;i&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Om %1 corrigeerde %2 de laatste actie naar: &lt;i&gt;</translation>
     </message>
     <message>
         <source>File transfer description</source>
-        <translation type="unfinished">Beschrijving bestand</translation>
+        <translation>Beschrijving bestand</translation>
     </message>
     <message>
         <source>Description:</source>
-        <translation type="unfinished">Beschrijving:</translation>
+        <translation>Beschrijving:</translation>
     </message>
     <message>
         <source>Save File</source>
-        <translation type="unfinished">Bestand opslaan</translation>
+        <translation>Bestand opslaan</translation>
     </message>
 </context>
 <context>
@@ -2695,18 +2804,14 @@ afbeelding</translation>
     </message>
 </context>
 <context>
-    <name>Swift::QtSpellCheckerWindow</name>
+    <name>Swift::QtSoundSelectionStyledItemDelegate</name>
     <message>
-        <source>Dictionary Path</source>
-        <translation>Pad woordenboek</translation>
+        <source>No sound</source>
+        <translation>Geen geluid</translation>
     </message>
     <message>
-        <source>Select Personal Dictionary</source>
-        <translation>Kies persoonlijk woordenboek</translation>
-    </message>
-    <message>
-        <source>(*.dic</source>
-        <translation>(*.dic</translation>
+        <source>Default sound</source>
+        <translation>Standaardgeluid</translation>
     </message>
 </context>
 <context>
@@ -2753,6 +2858,28 @@ afbeelding</translation>
     <message>
         <source>(If you choose to defer this choice, you will be asked again when you next login.)</source>
         <translation>(Als u deze keuze uitstelt, zal deze bij volgende login opnieuw gesteld worden.)</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtSwift</name>
+    <message>
+        <source>Swift Update Available</source>
+        <translation>Swift-update beschikbaar</translation>
+    </message>
+    <message>
+        <source>Restart Swift to update to the new Swift version.</source>
+        <translation>Herstart Swift om bij te werken naar de nieuwe versie.</translation>
+    </message>
+</context>
+<context>
+    <name>Swift::QtTabWidget</name>
+    <message>
+        <source>This empty cell is a placeholder for chat windows. You can move existing chats to this cell by dragging the tab over here. You can change the number of cells via the &apos;Change layout&apos; dialog under the &apos;View&apos; menu or by using the %1 shortcut.</source>
+        <translation>Dit lege vak is vulling voor berichtenschermen. U kunt bestaande gesprekken naar dit vak verplaatsen door het tabje hier heen te slepen. U kunt het aantal vakken veranderen door middel van het &apos;Wijzig opmaak&apos;-scherm in het &apos;Beeld&apos;-menu of door middel van de %1 snelkoppeling.</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+L</source>
+        <translation>Ctrl+Alt+L</translation>
     </message>
 </context>
 <context>
@@ -3028,7 +3155,7 @@ afbeelding</translation>
     </message>
     <message>
         <source>0118 999 881 999 119 7253</source>
-        <translation></translation>
+        <translation>0118 999 881 999 119 7253</translation>
     </message>
 </context>
 <context>
@@ -3253,7 +3380,7 @@ afbeelding</translation>
     <message>
         <source>TRANSLATION_LICENSE</source>
         <comment>This string contains the license under which this translation is licensed. We ask you to license the translation under the BSD license. Please read http://www.opensource.org/licenses/bsd-license.php, and if you agree to release your translation under this license, use the following (untranslated) text: &apos;This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php&apos;</comment>
-        <translation>This translation is licensed under the GNU General Public License v3. See Documentation/Licenses/GPLv3.txt for more information</translation>
+        <translation>This translation is licensed under the BSD License. See http://www.opensource.org/licenses/bsd-license.php</translation>
     </message>
 </context>
 </TS>
