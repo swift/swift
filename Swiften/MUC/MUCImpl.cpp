@@ -371,7 +371,7 @@ void MUCImpl::changeAffiliation(const JID& jid, MUCOccupant::Affiliation affilia
     MUCAdminPayload::ref mucPayload = std::make_shared<MUCAdminPayload>();
     MUCItem item;
     item.affiliation = affiliation;
-    item.realJID = jid.toBare();
+    item.realJID = jid;
     mucPayload->addItem(item);
     std::shared_ptr<GenericRequest<MUCAdminPayload> > request = std::make_shared<GenericRequest<MUCAdminPayload> >(IQ::Set, getJID(), mucPayload, iqRouter_);
     request->onResponse.connect(boost::bind(&MUCImpl::handleAffiliationChangeResponse, this, _1, _2, jid, affiliation));
