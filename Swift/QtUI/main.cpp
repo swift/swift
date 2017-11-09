@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
             qtTranslator.load(QString(SWIFT_APPLICATION_NAME).toLower() + "_" + P2QSTRING(language), P2QSTRING(Swift::pathToString(someTranslationPath.parent_path())));
         }
         else {
-            qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", P2QSTRING(Swift::pathToString(someTranslationPath)));
+            qtTranslator.load(QLocale::system(), QString(SWIFT_APPLICATION_NAME).toLower(), "_", P2QSTRING(Swift::pathToString(someTranslationPath.parent_path())));
         }
 #else
         //std::cout << "Loading " << std::string(QLocale::system().name().toUtf8()) << std::endl;
