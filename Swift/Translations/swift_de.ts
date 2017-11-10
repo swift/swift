@@ -62,7 +62,7 @@
     <message>
         <location filename="../Controllers/Chat/ChatController.cpp" line="481"/>
         <source> and has been idle since %1%</source>
-        <translation>und ist untätig seit %1%</translation>
+        <translation> und ist untätig seit %1%</translation>
     </message>
     <message>
         <source>The day is now %1%</source>
@@ -834,12 +834,12 @@
         <translation>Verbannter</translation>
     </message>
     <message>
-        <location filename="../QtUI/CAPICertificateSelector.cpp" line="63"/>
+        <location filename="../QtUI/CAPICertificateSelector.cpp" line="65"/>
         <source>TLS Client Certificate Selection</source>
         <translation>TLS Clientzertifikatauswahl</translation>
     </message>
     <message>
-        <location filename="../QtUI/CAPICertificateSelector.cpp" line="64"/>
+        <location filename="../QtUI/CAPICertificateSelector.cpp" line="66"/>
         <source>Select a certificate to use for authentication</source>
         <translation>Wähle ein Zertifikat zur Authentifizierung</translation>
     </message>
@@ -879,39 +879,47 @@
     </message>
 </context>
 <context>
+    <name>Form</name>
+    <message>
+        <location filename="../QtUI/Form.ui" line="16"/>
+        <source>Form</source>
+        <translation>Formular</translation>
+    </message>
+</context>
+<context>
     <name>MAC_APPLICATION_MENU</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="79"/>
+        <location filename="../QtUI/QtStrings.h" line="91"/>
         <source>Services</source>
         <translation>Dienste</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="80"/>
+        <location filename="../QtUI/QtStrings.h" line="92"/>
         <source>Hide %1</source>
         <translation>Verstecke %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="81"/>
+        <location filename="../QtUI/QtStrings.h" line="93"/>
         <source>Hide Others</source>
         <translation>Verstecke andere</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="82"/>
+        <location filename="../QtUI/QtStrings.h" line="94"/>
         <source>Show All</source>
         <translation>Zeige alle</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="83"/>
+        <location filename="../QtUI/QtStrings.h" line="95"/>
         <source>Preferences...</source>
         <translation>Einstellungen...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="84"/>
+        <location filename="../QtUI/QtStrings.h" line="96"/>
         <source>Quit %1</source>
         <translation>Beende %1</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="85"/>
+        <location filename="../QtUI/QtStrings.h" line="97"/>
         <source>About %1</source>
         <translation>Über %1</translation>
     </message>
@@ -927,32 +935,32 @@
 <context>
     <name>QDialogButtonBox</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="69"/>
+        <location filename="../QtUI/QtStrings.h" line="77"/>
         <source>&amp;Yes</source>
         <translation>&amp;Ja</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="70"/>
+        <location filename="../QtUI/QtStrings.h" line="78"/>
         <source>&amp;No</source>
         <translation>&amp;Nein</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="71"/>
+        <location filename="../QtUI/QtStrings.h" line="79"/>
         <source>&amp;OK</source>
         <translation>&amp;Ok</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="72"/>
+        <location filename="../QtUI/QtStrings.h" line="80"/>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="73"/>
+        <location filename="../QtUI/QtStrings.h" line="81"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Abbrechen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="74"/>
+        <location filename="../QtUI/QtStrings.h" line="82"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
@@ -1012,12 +1020,12 @@
 <context>
     <name>QMessageBox</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="76"/>
+        <location filename="../QtUI/QtStrings.h" line="84"/>
         <source>Show Details...</source>
         <translation>Details anzeigen...</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="77"/>
+        <location filename="../QtUI/QtStrings.h" line="85"/>
         <source>Hide Details...</source>
         <translation>Details verstecken...</translation>
     </message>
@@ -1242,39 +1250,57 @@
     </message>
 </context>
 <context>
+    <name>QPlatformTheme</name>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="87"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="88"/>
+        <source>Cancel</source>
+        <translation>Abbrechen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="89"/>
+        <source>Restore Defaults</source>
+        <translation>Standardeinstellungen</translation>
+    </message>
+</context>
+<context>
     <name>QScrollBar</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="29"/>
+        <location filename="../QtUI/QtStrings.h" line="37"/>
         <source>Scroll here</source>
         <translation>Hier scrollen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="30"/>
+        <location filename="../QtUI/QtStrings.h" line="38"/>
         <source>Top</source>
         <translation>Oben</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="31"/>
+        <location filename="../QtUI/QtStrings.h" line="39"/>
         <source>Bottom</source>
         <translation>Unten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="32"/>
+        <location filename="../QtUI/QtStrings.h" line="40"/>
         <source>Page up</source>
         <translation>Seite hoch</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="33"/>
+        <location filename="../QtUI/QtStrings.h" line="41"/>
         <source>Page down</source>
         <translation>Seite runter</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="34"/>
+        <location filename="../QtUI/QtStrings.h" line="42"/>
         <source>Scroll up</source>
         <translation>raufscrollen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="35"/>
+        <location filename="../QtUI/QtStrings.h" line="43"/>
         <source>Scroll down</source>
         <translation>runterscrollen</translation>
     </message>
@@ -1282,37 +1308,37 @@
 <context>
     <name>QTextControl</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="37"/>
+        <location filename="../QtUI/QtStrings.h" line="45"/>
         <source>Select All</source>
         <translation>Alles auswählen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="38"/>
+        <location filename="../QtUI/QtStrings.h" line="46"/>
         <source>&amp;Copy</source>
         <translation>&amp;Kopieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="39"/>
+        <location filename="../QtUI/QtStrings.h" line="47"/>
         <source>&amp;Undo</source>
         <translation>&amp;Rückgängig</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="40"/>
+        <location filename="../QtUI/QtStrings.h" line="48"/>
         <source>&amp;Redo</source>
         <translation>&amp;Wiederherstellen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="41"/>
+        <location filename="../QtUI/QtStrings.h" line="49"/>
         <source>Cu&amp;t</source>
         <translation>&amp;Ausschneiden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="42"/>
+        <location filename="../QtUI/QtStrings.h" line="50"/>
         <source>&amp;Paste</source>
         <translation>&amp;Einfügen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="43"/>
+        <location filename="../QtUI/QtStrings.h" line="51"/>
         <source>Delete</source>
         <translation>Löschen</translation>
     </message>
@@ -1320,115 +1346,153 @@
 <context>
     <name>QWebPage</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="45"/>
+        <location filename="../QtUI/QtStrings.h" line="53"/>
         <source>Copy Link</source>
         <translation>Verknüpfung kopieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="46"/>
+        <location filename="../QtUI/QtStrings.h" line="54"/>
         <source>Copy</source>
         <translation>Kopieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="47"/>
+        <location filename="../QtUI/QtStrings.h" line="55"/>
         <source>Copy Image</source>
         <translation>Bild kopieren</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="48"/>
+        <location filename="../QtUI/QtStrings.h" line="56"/>
         <source>Scroll here</source>
         <translation>Hier scrollen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="49"/>
+        <location filename="../QtUI/QtStrings.h" line="57"/>
         <source>Top</source>
         <translation>Oben</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="50"/>
+        <location filename="../QtUI/QtStrings.h" line="58"/>
         <source>Bottom</source>
         <translation>Unten</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="51"/>
+        <location filename="../QtUI/QtStrings.h" line="59"/>
         <source>Page up</source>
         <translation>Seite hoch</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="52"/>
+        <location filename="../QtUI/QtStrings.h" line="60"/>
         <source>Page down</source>
         <translation>Seite runter</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="53"/>
+        <location filename="../QtUI/QtStrings.h" line="61"/>
         <source>Scroll up</source>
         <translation>hochscrollen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="54"/>
+        <location filename="../QtUI/QtStrings.h" line="62"/>
         <source>Scroll down</source>
         <translation>runterscrollen</translation>
     </message>
 </context>
 <context>
+    <name>QWidgetTextControl</name>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="29"/>
+        <source>Select All</source>
+        <translation>Alles auswählen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="30"/>
+        <source>&amp;Undo</source>
+        <translation>&amp;Rückgängig</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="31"/>
+        <source>&amp;Redo</source>
+        <translation>&amp;Wiederherstellen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="32"/>
+        <source>Cu&amp;t</source>
+        <translation>&amp;Ausschneiden</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="33"/>
+        <source>&amp;Copy</source>
+        <translation>&amp;Kopieren</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="34"/>
+        <source>&amp;Paste</source>
+        <translation>&amp;Einfügen</translation>
+    </message>
+    <message>
+        <location filename="../QtUI/QtStrings.h" line="35"/>
+        <source>Delete</source>
+        <translation>Löschen</translation>
+    </message>
+</context>
+<context>
     <name>QWizard</name>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="56"/>
+        <location filename="../QtUI/QtStrings.h" line="64"/>
         <source>&lt; &amp;Back</source>
         <translation>&lt; &amp;Zurück</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="57"/>
+        <location filename="../QtUI/QtStrings.h" line="65"/>
         <source>&amp;Finish</source>
         <translation>&amp;Abschließen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="58"/>
+        <location filename="../QtUI/QtStrings.h" line="66"/>
         <source>&amp;Help</source>
         <translation>&amp;Hilfe</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="59"/>
+        <location filename="../QtUI/QtStrings.h" line="67"/>
         <source>Go Back</source>
         <translation>Zurück</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="60"/>
+        <location filename="../QtUI/QtStrings.h" line="68"/>
         <source>Continue</source>
         <translation>Weiter</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="61"/>
+        <location filename="../QtUI/QtStrings.h" line="69"/>
         <source>Commit</source>
         <translation>Festlegen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="62"/>
+        <location filename="../QtUI/QtStrings.h" line="70"/>
         <source>Done</source>
         <translation>Fertig</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="63"/>
+        <location filename="../QtUI/QtStrings.h" line="71"/>
         <source>Quit</source>
         <translation>Beenden</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="64"/>
+        <location filename="../QtUI/QtStrings.h" line="72"/>
         <source>Help</source>
         <translation>Hilfe</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="65"/>
+        <location filename="../QtUI/QtStrings.h" line="73"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="66"/>
+        <location filename="../QtUI/QtStrings.h" line="74"/>
         <source>&amp;Next</source>
         <translation>&amp;Nächstes</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtStrings.h" line="67"/>
+        <location filename="../QtUI/QtStrings.h" line="75"/>
         <source>&amp;Next &gt;</source>
         <translation>&amp;Nächstes &gt;</translation>
     </message>
@@ -1437,49 +1501,41 @@
     <name>QtAffiliationEditor</name>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="14"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="122"/>
         <source>Edit Affiliations</source>
         <translation>Zugehörigkeiten bearbeiten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="28"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="124"/>
         <source>Affiliation:</source>
         <translation>Zugehörigkeit:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="36"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="127"/>
         <source>Owner</source>
         <translation>Besitzer</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="41"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="128"/>
         <source>Administrator</source>
         <translation>Administrator</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="46"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="129"/>
         <source>Member</source>
         <translation>Mitglied</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="51"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="130"/>
         <source>Outcast (Banned)</source>
         <translation>Verbannter</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="68"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="132"/>
         <source>Add User</source>
         <translation>Benutzer hinzufügen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtAffiliationEditor.ui" line="75"/>
-        <location filename="../QtUI/ui_QtAffiliationEditor.h" line="133"/>
         <source>Remove User</source>
         <translation>Benutzer entfernen</translation>
     </message>
@@ -1488,19 +1544,16 @@
     <name>QtBlockListEditorWindow</name>
     <message>
         <location filename="../QtUI/QtBlockListEditorWindow.ui" line="14"/>
-        <location filename="../QtUI/ui_QtBlockListEditorWindow.h" line="103"/>
         <source>Edit Block List</source>
         <translation>Blockliste bearbeiten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBlockListEditorWindow.ui" line="35"/>
-        <location filename="../QtUI/ui_QtBlockListEditorWindow.h" line="104"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;The following list shows all contacts that you have currently blocked. You can add contacts to the list at the bottom of the list and remove contacts by clicking on the right column.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;Die folgende Liste zeigt alle Kontakte, die aktuell blockiert sind. Sie können Kontakte am unteren Ende via Mausklick hinzufügen oder Kontakte von der Liste entfernen, indem Sie in die rechte Spalte klicken.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBlockListEditorWindow.ui" line="101"/>
-        <location filename="../QtUI/ui_QtBlockListEditorWindow.h" line="107"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
@@ -1509,37 +1562,31 @@
     <name>QtBookmarkDetailWindow</name>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="20"/>
-        <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="138"/>
         <source>Edit Bookmark Details</source>
         <translation>Lesezeichendetails editieren</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="48"/>
-        <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="139"/>
         <source>Bookmark Name:</source>
         <translation>Lesezeichenname:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="58"/>
-        <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="140"/>
         <source>Room Address:</source>
         <translation>Chatraumadresse:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="68"/>
-        <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="141"/>
         <source>Your Nickname:</source>
         <translation>Dein Nickname:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="78"/>
-        <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="142"/>
         <source>Room password:</source>
         <translation>Chatraum Passwort:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtBookmarkDetailWindow.ui" line="101"/>
-        <location filename="../QtUI/ui_QtBookmarkDetailWindow.h" line="143"/>
         <source>Enter automatically</source>
         <translation>Automatisch betreten</translation>
     </message>
@@ -1548,7 +1595,6 @@
     <name>QtCertificateViewerDialog</name>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.ui" line="14"/>
-        <location filename="../QtUI/ui_QtCertificateViewerDialog.h" line="98"/>
         <source>Certificate Viewer</source>
         <translation>Zertifikatsbetrachter</translation>
     </message>
@@ -1557,79 +1603,66 @@
     <name>QtConnectionSettings</name>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="14"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="394"/>
         <source>Connection Options</source>
         <translation>Verbindungsoptionen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="22"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="395"/>
         <source>Connection Method:</source>
         <translation>Verbindungsmethode:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="36"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="398"/>
         <source>Automatic</source>
         <translation>Automatisch</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="41"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="399"/>
         <source>Manual</source>
         <translation>Manuell</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="46"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="400"/>
         <source>BOSH</source>
         <translation>BOSH</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="99"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="402"/>
         <source>Secure connection:</source>
         <translation>Sichere Verbindung:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="107"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="405"/>
         <source>Never</source>
         <translation>Niemals</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="112"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="406"/>
         <source>Encrypt when possible</source>
         <translation>Verschlüsselung wenn möglich</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="117"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="407"/>
         <source>Always encrypt</source>
         <translation>Immer Verschlüsseln</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="127"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="409"/>
         <source>Allow Compression</source>
         <translation>Komprimierung erlaubt</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="134"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="410"/>
         <source>Allow sending password over insecure connection</source>
         <translation>Erlaube das Versenden des Passworts über unsichere Verbindungen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="141"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="411"/>
         <source>Limit encryption to TLS 1.0</source>
         <translation>Beschränke Verschlüsselung auf TLS 1.0</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="164"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="412"/>
         <source>Manually select server</source>
         <translation>Manuelle Serverauswahl</translation>
     </message>
@@ -1637,9 +1670,6 @@
         <location filename="../QtUI/QtConnectionSettings.ui" line="192"/>
         <location filename="../QtUI/QtConnectionSettings.ui" line="322"/>
         <location filename="../QtUI/QtConnectionSettings.ui" line="436"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="413"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="425"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="429"/>
         <source>Hostname:</source>
         <translation>Hostname:</translation>
     </message>
@@ -1647,69 +1677,56 @@
         <location filename="../QtUI/QtConnectionSettings.ui" line="215"/>
         <location filename="../QtUI/QtConnectionSettings.ui" line="345"/>
         <location filename="../QtUI/QtConnectionSettings.ui" line="459"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="414"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="426"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="430"/>
         <source>Port:</source>
         <translation>Port:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="237"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="415"/>
         <source>Connection Proxy</source>
         <translation>Verbindungsproxy</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="245"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="416"/>
         <source>Proxy type:</source>
         <translation>Proxyart:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="256"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="419"/>
         <source>None</source>
         <translation>Kein Proxy</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="261"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="420"/>
         <source>Use system-configured proxy</source>
         <translation>Benutze System-Proxykonfiguration</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="266"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="421"/>
         <source>SOCKS5</source>
         <translation>SOCKS5</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="271"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="422"/>
         <source>HTTP Connect</source>
         <translation>HTTP Connect</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="294"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="424"/>
         <source>Override system-configured proxy</source>
         <translation>Über System-Proxykonfiguration hinwegsetzen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="389"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="427"/>
         <source>BOSH URI:</source>
         <translation>BOSH URI:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="408"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="428"/>
         <source>Manually select HTTP proxy</source>
         <translation>Manuelle Auswahl des HTTP Proxy</translation>
     </message>
     <message>
         <location filename="../QtUI/QtConnectionSettings.ui" line="498"/>
-        <location filename="../QtUI/ui_QtConnectionSettings.h" line="431"/>
         <source>Connection options will be saved when next connecting to this account.</source>
         <translation>Verbindungsoptionen werden beim nächsten Verbindungsversuch zu diesem Konto gespeichert.</translation>
     </message>
@@ -1806,19 +1823,19 @@
     </message>
     <message>
         <source>No Sound</source>
-        <translation type="vanished">Keinen Ton</translation>
+        <translation type="vanished">Keinen Sound</translation>
     </message>
     <message>
         <source>Default Sound</source>
-        <translation type="vanished">Standartton</translation>
+        <translation type="vanished">Standardsound</translation>
     </message>
     <message>
         <source>Custom Sound</source>
-        <translation type="vanished">Benutzerdefinierter Ton</translation>
+        <translation type="vanished">Benutzerdefinierter Sound</translation>
     </message>
     <message>
         <source>...</source>
-        <translation type="vanished">Ton auswählen…</translation>
+        <translation type="vanished">Sound auswählen…</translation>
     </message>
 </context>
 <context>
@@ -1832,147 +1849,118 @@
     <name>QtHighlightNotificationConfigDialog</name>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="14"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="305"/>
         <source>Highlight and Notification Configuration</source>
         <translation>Hervorhebungs- und Benachrichtigungseinstellungen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="26"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="306"/>
         <source>Highlight messages from these people</source>
         <translation>Nachrichten von folgenden Personen hervorheben</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="87"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="312"/>
         <source>Nickname</source>
-        <translation>Spitzname</translation>
+        <translation>Nickname</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="92"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="258"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="311"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="320"/>
         <source>Text color</source>
         <translation>Textfarbe</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="97"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="263"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="310"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="319"/>
         <source>Background color</source>
         <translation>Hintergrundfrabe</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="102"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="268"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="309"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="318"/>
         <source>Play sound</source>
         <translation>Sound abspielen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="107"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="273"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="308"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="317"/>
         <source>Create notification</source>
         <translation>Benachrichtigung erstellen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="158"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="295"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="313"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="323"/>
         <source>+</source>
         <translation>+</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="174"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="311"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="314"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="324"/>
         <source>-</source>
         <translation>-</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="199"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="315"/>
         <source>Highlight messages containing these keywords</source>
         <translation>Nachrichten hervorheben die folgende Schlüsselwörter enthalten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="248"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="322"/>
         <source>Keyword</source>
         <translation>Schlüsselwort</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="253"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="321"/>
         <source>Match case sensitive</source>
         <translation>Groß-/Kleinschreibung beachten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="336"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="325"/>
         <source>General notification settings</source>
         <translation>Globale Benachrichtigungseinstellungen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="350"/>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="435"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="326"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="334"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="357"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="327"/>
         <source>Highlight background color on own mention</source>
         <translation>Hintergrundfarbe hervorheben wen Sie selber erwähnt wurden</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="379"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="328"/>
         <source>Create notification on incoming group messages</source>
         <translation>Benachrichtigen wenn eine Gruppennachricht eintrifft</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="386"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="329"/>
         <source>Create notification when my name is mentioned</source>
         <translation>Benachrichtigen wenn dein Name erwähnt wurde</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="393"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="330"/>
         <source>Play sound on incoming direct messages</source>
         <translation>Bei einkommenden direkten Nachrichten Sound abspielen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="400"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="331"/>
         <source>Play sound on incoming group messages</source>
         <translation>Bei einkommenden Gruppennachrichten Sound abspielen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="407"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="332"/>
         <source>Create notification on incoming direct messages</source>
         <translation>Benachrichtigen wenn eine direkte Nachricht eintrifft</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="414"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="333"/>
         <source>Play sound when my name is mentioned</source>
         <translation>Sound abspielen wenn dein Name erwähnt wurde</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHighlightNotificationConfigDialog.ui" line="442"/>
-        <location filename="../QtUI/ui_QtHighlightNotificationConfigDialog.h" line="335"/>
         <source>Highlight text color on own mention</source>
         <translation>Textfarbe hervorheben wen Sie selber erwähnt wurden</translation>
     </message>
@@ -1981,25 +1969,21 @@
     <name>QtHistoryWindow</name>
     <message>
         <location filename="../QtUI/QtHistoryWindow.ui" line="14"/>
-        <location filename="../QtUI/ui_QtHistoryWindow.h" line="132"/>
         <source>History</source>
         <translation>Verlauf</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHistoryWindow.ui" line="22"/>
-        <location filename="../QtUI/ui_QtHistoryWindow.h" line="133"/>
         <source>Search:</source>
         <translation>Suche:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHistoryWindow.ui" line="42"/>
-        <location filename="../QtUI/ui_QtHistoryWindow.h" line="134"/>
         <source>Next</source>
         <translation>Weiter</translation>
     </message>
     <message>
         <location filename="../QtUI/QtHistoryWindow.ui" line="52"/>
-        <location filename="../QtUI/ui_QtHistoryWindow.h" line="135"/>
         <source>Previous</source>
         <translation>Zurück</translation>
     </message>
@@ -2009,44 +1993,36 @@
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="20"/>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="113"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="143"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="151"/>
         <source>Enter Room</source>
         <translation>Chatraum betreten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="28"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="144"/>
         <source>Room Address:</source>
         <translation>Chatraumadresse:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="42"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="146"/>
         <source>Your Nickname:</source>
         <translation>Dein Nickname:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="56"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="148"/>
         <source>Room Password:</source>
         <translation>Chatraum Passwort:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="71"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="149"/>
         <source>Automatically configure newly created rooms</source>
         <translation>Automatisch Konfigurieren bei Betreten</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="35"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="145"/>
         <source>Search ...</source>
         <translation>Suchen ...</translation>
     </message>
     <message>
         <location filename="../QtUI/QtJoinMUCWindow.ui" line="106"/>
-        <location filename="../QtUI/ui_QtJoinMUCWindow.h" line="150"/>
         <source>Enter automatically in future</source>
         <translation>In Zukunft automatisch eintreten</translation>
     </message>
@@ -2055,37 +2031,31 @@
     <name>QtMUCSearchWindow</name>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui" line="14"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="123"/>
         <source>Search Room</source>
         <translation>Chatraum suchen</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui" line="33"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="124"/>
         <source>Service:</source>
         <translation>Service:</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui" line="55"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="125"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui" line="96"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="129"/>
         <source>List rooms</source>
         <translation>Chaträume auflisten</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui" line="106"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="130"/>
         <source>Search for</source>
         <translation>Suche nach</translation>
     </message>
     <message>
         <location filename="../QtUI/MUCSearch/QtMUCSearchWindow.ui" line="65"/>
-        <location filename="../QtUI/MUCSearch/ui_QtMUCSearchWindow.h" line="126"/>
         <source>OK</source>
         <translation>Ok</translation>
     </message>
@@ -2094,21 +2064,17 @@
     <name>QtProfileWindow</name>
     <message>
         <location filename="../QtUI/QtProfileWindow.ui" line="14"/>
-        <location filename="../QtUI/ui_QtProfileWindow.h" line="104"/>
         <source>Edit Profile</source>
         <translation>Profil editieren</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.ui" line="26"/>
         <location filename="../QtUI/QtProfileWindow.ui" line="36"/>
-        <location filename="../QtUI/ui_QtProfileWindow.h" line="105"/>
-        <location filename="../QtUI/ui_QtProfileWindow.h" line="106"/>
         <source>TextLabel</source>
         <translation>Textbezeichnung</translation>
     </message>
     <message>
         <location filename="../QtUI/QtProfileWindow.ui" line="84"/>
-        <location filename="../QtUI/ui_QtProfileWindow.h" line="109"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
@@ -2117,13 +2083,11 @@
     <name>QtSpellCheckerWindow</name>
     <message>
         <location filename="../QtUI/QtSpellCheckerWindow.ui" line="14"/>
-        <location filename="../QtUI/ui_QtSpellCheckerWindow.h" line="100"/>
         <source>Dialog</source>
         <translation>Dialog</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSpellCheckerWindow.ui" line="20"/>
-        <location filename="../QtUI/ui_QtSpellCheckerWindow.h" line="101"/>
         <source>Spell Checker Enabled</source>
         <translation>Rechtschreibprüfung aktiviert</translation>
     </message>
@@ -2141,19 +2105,16 @@
     </message>
     <message>
         <location filename="../QtUI/QtSpellCheckerWindow.ui" line="32"/>
-        <location filename="../QtUI/ui_QtSpellCheckerWindow.h" line="102"/>
         <source>Language:</source>
         <translation>Sprache:</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSpellCheckerWindow.ui" line="53"/>
-        <location filename="../QtUI/ui_QtSpellCheckerWindow.h" line="103"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtSpellCheckerWindow.ui" line="60"/>
-        <location filename="../QtUI/ui_QtSpellCheckerWindow.h" line="104"/>
         <source>Apply</source>
         <translation>Anwenden</translation>
     </message>
@@ -2162,43 +2123,36 @@
     <name>QtUpdateFeedSelectionDialog</name>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="14"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="96"/>
         <source>Select Update Channel</source>
         <translation>Update Kanal auswählen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="27"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="97"/>
         <source>Stable Channel</source>
         <translation>Kanal für stabile Versionen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="35"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="98"/>
         <source>Testing Channel</source>
         <translation>Kanal für Testversionen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="43"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="99"/>
         <source>Development Channel</source>
         <translation>Kanal für Entwicklungsversionen</translation>
     </message>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="54"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="102"/>
         <source>This release channel includes our stable releases. They went throught internal QA testing and had previous RC releases to find critical bugs.</source>
         <translation>Dieser Freigabekanal enthält die stabilen Freigaben. Diese Freigaben sind durchliefen interne QA-Tests und hatten vorangegangen RC-Freigaben um kritische Fehler zu finden.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="76"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="103"/>
         <source>This release channel includes our stable releases, beta releases and release candidates. They should be free from obvious bugs and are released for wider testing to find more obscure bugs.</source>
         <translation>Dieser Freigabekanal enthält die stabilen Releases, Beta Releases und Releasekandidaten. Diese Freigaben sollten frei von offensichtlichen Fehlern sein und werden freigegeben um größeren Testrahmen zu erreichen und mehr obskure Fehler zu finden.</translation>
     </message>
     <message>
         <location filename="../QtUI/QtUpdateFeedSelectionDialog.ui" line="89"/>
-        <location filename="../QtUI/ui_QtUpdateFeedSelectionDialog.h" line="104"/>
         <source>This release channel includes our stable releases, beta releases, release candidates and development releases. The development releases are not thoroughly tested and might contain bugs.</source>
         <translation>Dieser Freigabekanal enthält die stabilen Releases, Beta Releases, Releasekandidaten und Entwicklungsreleases. Die Entwicklungsreleases sind nicht wirklich getest und können Fehler enthalten.</translation>
     </message>
@@ -2314,7 +2268,6 @@
     <name>QtUserSearchWizard</name>
     <message>
         <location filename="../QtUI/UserSearch/QtUserSearchWizard.ui" line="14"/>
-        <location filename="../QtUI/UserSearch/ui_QtUserSearchWizard.h" line="38"/>
         <source>Find User</source>
         <translation>Benutzer finden</translation>
     </message>
@@ -2633,57 +2586,57 @@
     </message>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="110"/>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="138"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="136"/>
         <source>Organization</source>
         <translation>Organisation</translation>
     </message>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="111"/>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="139"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="137"/>
         <source>Common Name</source>
         <translation>Gemeiner Name</translation>
     </message>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="112"/>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="140"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="138"/>
         <source>Locality</source>
         <translation>Lokalität</translation>
     </message>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="113"/>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="141"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="139"/>
         <source>Organizational Unit</source>
         <translation>Unternehmensabteilung</translation>
     </message>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="114"/>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="142"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="140"/>
         <source>Country</source>
         <translation>Land</translation>
     </message>
     <message>
         <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="115"/>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="143"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="141"/>
         <source>State</source>
         <translation>Land</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="125"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="123"/>
         <source>Alternate Subject Names</source>
         <translation>Alternativer Subjektname</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="129"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="127"/>
         <source>E-mail Address</source>
         <translation>E-Mail Adresse</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="131"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="129"/>
         <source>DNS Name</source>
         <translation>DNS Name</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="137"/>
+        <location filename="../QtUI/QtCertificateViewerDialog.cpp" line="135"/>
         <source>Issuer</source>
         <translation>Herausgeber</translation>
     </message>
@@ -3602,7 +3555,7 @@
         <location filename="../QtUI/QtSoundSelectionStyledItemDelegate.cpp" line="44"/>
         <location filename="../QtUI/QtSoundSelectionStyledItemDelegate.cpp" line="69"/>
         <source>Default sound</source>
-        <translation>Default Sound</translation>
+        <translation>Standardsound</translation>
     </message>
 </context>
 <context>
@@ -3679,12 +3632,12 @@
 <context>
     <name>Swift::QtSwift</name>
     <message>
-        <location filename="../QtUI/QtSwift.cpp" line="363"/>
+        <location filename="../QtUI/QtSwift.cpp" line="374"/>
         <source>Swift Update Available</source>
         <translation>Swift Update verfügbar</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtSwift.cpp" line="363"/>
+        <location filename="../QtUI/QtSwift.cpp" line="374"/>
         <source>Restart Swift to update to the new Swift version.</source>
         <translation>Swift muss neugestartet werden damit das Update installiert werden kann.</translation>
     </message>
@@ -3705,12 +3658,12 @@
 <context>
     <name>Swift::QtTextEdit</name>
     <message>
-        <location filename="../QtUI/QtTextEdit.cpp" line="164"/>
+        <location filename="../QtUI/QtTextEdit.cpp" line="166"/>
         <source>Spell Checker Options</source>
         <translation>Rechtschreibprüfungsoptionen</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtTextEdit.cpp" line="209"/>
+        <location filename="../QtUI/QtTextEdit.cpp" line="211"/>
         <source>No Suggestions</source>
         <translation>Keine Korrekturempfehlungen</translation>
     </message>
