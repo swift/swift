@@ -3,7 +3,7 @@
 # ----
 # This script requires:
 #   - cdb, the Windows command line debugger installed and available in PATH.
-#   - the SWIFT_DIST environment variable set to a locatioon that contains msi and pdb.gz files.
+#   - the SWIFT_DIST environment variable set to a location that contains msi and pdb.gz files.
 
 import sys
 from subprocess import call
