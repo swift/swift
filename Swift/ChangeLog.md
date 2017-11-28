@@ -1,3 +1,11 @@
+4.0-rc3 ( 2017-11-28 )
+----------------------
+- Fix crash in emoticon dialog
+- Fix Windows MSI installer when updating from earlier Swift version
+- Update translations ( Dutch, German )
+- Add AppImage for Linux 64-bit as a supported platform
+- And smaller bug fixes
+
 4.0-rc2 ( 2017-05-22 )
 ----------------------
 - Fix regression in chat window titles for chat rooms
