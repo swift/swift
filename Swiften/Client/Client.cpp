@@ -18,6 +18,7 @@
 #include <Swiften/Disco/EntityCapsManager.h>
 #include <Swiften/FileTransfer/FileTransferManagerImpl.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
+#include <Swiften/MIX/MIXRegistry.h>
 #include <Swiften/MUC/MUCManager.h>
 #include <Swiften/MUC/MUCRegistry.h>
 #include <Swiften/Network/NetworkFactories.h>
@@ -57,6 +58,8 @@ Client::Client(const JID& jid, const SafeString& password, NetworkFactories* net
     stanzaChannelPresenceSender = new StanzaChannelPresenceSender(getStanzaChannel());
     directedPresenceSender = new DirectedPresenceSender(stanzaChannelPresenceSender);
     discoManager = new ClientDiscoManager(getIQRouter(), directedPresenceSender, networkFactories->getCryptoProvider());
+
+    mixRegistry = std::make_unique<MIXRegistry>(getJID(), getIQRouter(), getRoster());
 
     mucRegistry = new MUCRegistry();
     mucManager = new MUCManager(getStanzaChannel(), getIQRouter(), directedPresenceSender, mucRegistry);
@@ -118,6 +121,8 @@ Client::~Client() {
     delete avatarManager;
     delete vcardManager;
 
+    mixRegistry.reset();
+
     delete mucManager;
     delete mucRegistry;
 
@@ -148,13 +153,13 @@ void Client::handleConnected() {
     discoManager->handleConnected();
 }
 
-void Client::requestRoster() {
+void Client::requestRoster(bool includeMIX) {
     // FIXME: We should set this once when the session is finished, but there
     // is currently no callback for this
     if (getSession()) {
         rosterController->setUseVersioning(getSession()->getRosterVersioningSupported());
     }
-    rosterController->requestRoster();
+    rosterController->requestRoster(includeMIX);
 }
 
 Presence::ref Client::getLastPresence(const JID& jid) const {

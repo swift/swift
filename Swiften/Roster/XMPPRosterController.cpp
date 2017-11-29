@@ -29,7 +29,7 @@ XMPPRosterController::~XMPPRosterController() {
     rosterPushResponder_.stop();
 }
 
-void XMPPRosterController::requestRoster() {
+void XMPPRosterController::requestRoster(bool hasAnnotate) {
     xmppRoster_->clear();
 
     std::shared_ptr<RosterPayload> storedRoster = rosterStorage_->getRoster();
@@ -39,10 +39,10 @@ void XMPPRosterController::requestRoster() {
         if (storedRoster && storedRoster->getVersion()) {
             version = *storedRoster->getVersion();
         }
-        rosterRequest = GetRosterRequest::create(iqRouter_, version);
+        rosterRequest = GetRosterRequest::create(iqRouter_, version, hasAnnotate);
     }
     else {
-        rosterRequest = GetRosterRequest::create(iqRouter_);
+        rosterRequest = GetRosterRequest::create(iqRouter_, hasAnnotate);
     }
     rosterRequest->onResponse.connect(boost::bind(&XMPPRosterController::handleRosterReceived, this, _1, true, storedRoster));
     rosterRequest->send();
@@ -51,19 +51,21 @@ void XMPPRosterController::requestRoster() {
 void XMPPRosterController::handleRosterReceived(std::shared_ptr<RosterPayload> rosterPayload, bool initial, std::shared_ptr<RosterPayload> previousRoster) {
     if (rosterPayload) {
         for (const auto& item : rosterPayload->getItems()) {
+
             //Don't worry about the updated case, the XMPPRoster sorts that out.
             if (item.getSubscription() == RosterItemPayload::Remove) {
                 xmppRoster_->removeContact(item.getJID());
             } else {
-                xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
+                xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription(), item.isMIXChannel());
             }
         }
     }
     else if (previousRoster) {
         // The cached version hasn't changed; emit all items
         for (const auto& item : previousRoster->getItems()) {
+
             if (item.getSubscription() != RosterItemPayload::Remove) {
-                xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription());
+                xmppRoster_->addContact(item.getJID(), item.getName(), item.getGroups(), item.getSubscription(), item.isMIXChannel());
             }
             else {
                 SWIFT_LOG(error) << "Stored invalid roster item" << std::endl;
@@ -83,7 +85,11 @@ void XMPPRosterController::saveRoster(const std::string& version) {
     std::shared_ptr<RosterPayload> roster(new RosterPayload());
     roster->setVersion(version);
     for (const auto& item : items) {
-        roster->addItem(RosterItemPayload(item.getJID(), item.getName(), item.getSubscription(), item.getGroups()));
+        auto rosterItemPayload = RosterItemPayload(item.getJID(), item.getName(), item.getSubscription(), item.getGroups());
+        if (item.isMIXChannel()) {
+            rosterItemPayload.setMIXChannel(true);
+        }
+        roster->addItem(rosterItemPayload);
     }
     rosterStorage_->setRoster(roster);
 }

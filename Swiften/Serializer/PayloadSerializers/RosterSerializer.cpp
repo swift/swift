@@ -45,12 +45,22 @@ std::string RosterSerializer::serializePayload(std::shared_ptr<RosterPayload> ro
             itemElement->addNode(groupElement);
         }
 
+        if (item.isMIXChannel()) {
+            auto channelElement = std::make_shared<XMLElement>("channel", "urn:xmpp:mix:roster:0");
+            itemElement->addNode(channelElement);
+        }
+
         if (!item.getUnknownContent().empty()) {
             itemElement->addNode(std::make_shared<XMLRawTextNode>(item.getUnknownContent()));
         }
 
 
         queryElement.addNode(itemElement);
+    }
+
+    if (roster->hasRequestMIXAnnotations()) {
+        auto annotateElement = std::make_shared<XMLElement>("annotate", "urn:xmpp:mix:roster:0");
+        queryElement.addNode(annotateElement);
     }
 
     return queryElement.serialize();
