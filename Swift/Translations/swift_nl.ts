@@ -2137,10 +2137,6 @@ afbeelding</translation>
         <translation>Wijzig &amp;opmaak</translation>
     </message>
     <message>
-        <source>Ctrl+Alt+L</source>
-        <translation>Ctrl+Alt+L</translation>
-    </message>
-    <message>
         <source>Move Tab right</source>
         <translation>Verplaats tab naar rechts</translation>
     </message>
@@ -2874,12 +2870,8 @@ afbeelding</translation>
 <context>
     <name>Swift::QtTabWidget</name>
     <message>
-        <source>This empty cell is a placeholder for chat windows. You can move existing chats to this cell by dragging the tab over here. You can change the number of cells via the &apos;Change layout&apos; dialog under the &apos;View&apos; menu or by using the %1 shortcut.</source>
-        <translation>Dit lege vak is vulling voor berichtenschermen. U kunt bestaande gesprekken naar dit vak verplaatsen door het tabje hier heen te slepen. U kunt het aantal vakken veranderen door middel van het &apos;Wijzig opmaak&apos;-scherm in het &apos;Beeld&apos;-menu of door middel van de %1 snelkoppeling.</translation>
-    </message>
-    <message>
-        <source>Ctrl+Alt+L</source>
-        <translation>Ctrl+Alt+L</translation>
+        <source>This empty cell is a placeholder for chat windows. You can move existing chats to this cell by dragging the tab over here. You can change the number of cells via the &apos;Change layout&apos; dialog under the &apos;View&apos; menu.</source>
+        <translation>Dit lege vak is vulling voor berichtenschermen. U kunt bestaande gesprekken naar dit vak verplaatsen door het tabje hier heen te slepen. U kunt het aantal vakken veranderen door middel van het &apos;Wijzig opmaak&apos;-scherm in het &apos;Beeld&apos;-menu.</translation>
     </message>
 </context>
 <context>
