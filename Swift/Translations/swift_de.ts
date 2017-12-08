@@ -2686,9 +2686,8 @@
         <translation>&amp;Anordnung ändern</translation>
     </message>
     <message>
-        <location filename="../QtUI/QtChatTabs.cpp" line="116"/>
         <source>Ctrl+Alt+L</source>
-        <translation>Ctrl+Alt+L</translation>
+        <translation type="vanished">Ctrl+Alt+L</translation>
     </message>
     <message>
         <location filename="../QtUI/QtChatTabs.cpp" line="120"/>
@@ -3645,14 +3644,17 @@
 <context>
     <name>Swift::QtTabWidget</name>
     <message>
-        <location filename="../QtUI/QtTabWidget.cpp" line="60"/>
         <source>This empty cell is a placeholder for chat windows. You can move existing chats to this cell by dragging the tab over here. You can change the number of cells via the &apos;Change layout&apos; dialog under the &apos;View&apos; menu or by using the %1 shortcut.</source>
-        <translation>Diese leere Zelle ist ein Platzhalter für Chatfenster. Sie können bestehende Chatfenster zu dieser Zelle bewegen indem Sie das Tab hierher ziehen. Sie können die Anzahl von Zellen anhand des &quot;Anordnung ändern&quot; Dialogs im Menü &quot;Ansicht&quot; ändern oder indem Sie die Tastenkombination %1 nutzen.</translation>
+        <translation type="vanished">Diese leere Zelle ist ein Platzhalter für Chatfenster. Sie können bestehende Chatfenster zu dieser Zelle bewegen indem Sie das Tab hierher ziehen. Sie können die Anzahl von Zellen anhand des &quot;Anordnung ändern&quot; Dialogs im Menü &quot;Ansicht&quot; ändern oder indem Sie die Tastenkombination %1 nutzen.</translation>
+    </message>
+    <message>
+        <source>Ctrl+Alt+L</source>
+        <translation type="vanished">Ctrl+Alt+L</translation>
     </message>
     <message>
         <location filename="../QtUI/QtTabWidget.cpp" line="60"/>
-        <source>Ctrl+Alt+L</source>
-        <translation>Ctrl+Alt+L</translation>
+        <source>This empty cell is a placeholder for chat windows. You can move existing chats to this cell by dragging the tab over here. You can change the number of cells via the &apos;Change layout&apos; dialog under the &apos;View&apos; menu.</source>
+        <translation>Diese leere Zelle ist ein Platzhalter für Chatfenster. Sie können bestehende Chatfenster zu dieser Zelle bewegen indem Sie das Tab hierher ziehen. Sie können die Anzahl von Zellen anhand des &quot;Anordnung ändern&quot; Dialogs im Menü &quot;Ansicht&quot; ändern.</translation>
     </message>
 </context>
 <context>
