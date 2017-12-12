@@ -24,9 +24,15 @@ export SWIFT_FORCE_LUCID="yep"
 unset SWIFT_FORCE_LUCID
 ./package.sh
 
-for distro in xenial yakkety jessie sid; do
+if [ -z ${SWIFT_PACKAGE_PLATFORMS+x} ];
+then
+	platformsarray=( xenial yakkety jessie sid )
+else
+	platformsarray=( $SWIFT_PACKAGE_PLATFORMS )
+fi
+
+for distro in "${platformsarray[@]}"; do
 	for arch in amd64; do
 		pbuilder-dist $distro $arch build *.dsc
 	done
 done
-
