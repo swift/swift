@@ -635,8 +635,9 @@ if env["SCONS_STAGE"] == "build" :
 
     # Install swiften
     if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
-        swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "lib"), swiften_lib)
+        swiften_libdir = swiften_env.get("SWIFTEN_LIBDIR", "lib")
+        swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], swiften_libdir), swiften_lib)
         for alias in myenv["SWIFTEN_LIBRARY_ALIASES"] :
-            myenv.Command(myenv.File(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "lib", alias)), [env.Value(swiften_lib[0].name), swiften_lib[0]], symlink)
+            myenv.Command(myenv.File(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], swiften_libdir, alias)), [env.Value(swiften_lib[0].name), swiften_lib[0]], symlink)
         for include in swiften_includes :
             swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "include", os.path.dirname(include)), "#/" + include)
