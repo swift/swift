@@ -1,3 +1,8 @@
+4.0-rc4 ( 2018-01-04 )
+----------------------
+- Remove conflicting shortcut
+- Debian packaging fixes
+
 4.0-rc3 ( 2017-11-28 )
 ----------------------
 - Fix crash in emoticon dialog
