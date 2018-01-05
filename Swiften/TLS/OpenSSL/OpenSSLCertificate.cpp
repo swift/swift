@@ -30,7 +30,7 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 #else
     const unsigned char* p = vecptr(der);
 #endif
-    cert = std::shared_ptr<X509>(d2i_X509(NULL, &p, der.size()), X509_free);
+    cert = std::shared_ptr<X509>(d2i_X509(nullptr, &p, der.size()), X509_free);
     if (!cert) {
         SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
     }
@@ -42,7 +42,7 @@ ByteArray OpenSSLCertificate::toDER() const {
     if (!cert) {
         return result;
     }
-    result.resize(i2d_X509(cert.get(), NULL));
+    result.resize(i2d_X509(cert.get(), nullptr));
     unsigned char* p = vecptr(result);
     i2d_X509(cert.get(), &p);
     return result;
