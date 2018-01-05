@@ -85,8 +85,8 @@ for full_distribution_path in $INCOMING_FOLDER/{debian,ubuntu}/*; do
 	distro_name=$(basename `dirname $full_distribution_path`)
 	distro_reprepro_root=${APT_REPO_ROOT}/${distro_name}/${distro_version}
 
-	if ! [[ $SWIFT_PACKAGE_PLATFORMS == *"$distro_name"* ]]; then
-		echo "$distro_name was not found in SWIFT_PACKAGE_PLATFORMS. Skipping..."
+	if ! [[ $SWIFT_PACKAGE_PLATFORMS == *"$distro_version"* ]]; then
+		echo "$distro_version was not found in SWIFT_PACKAGE_PLATFORMS. Skipping..."
 		continue
 	fi
 
