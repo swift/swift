@@ -2,10 +2,15 @@ Import("env", "conf_env")
 
 openssl_bundle_dir = "openssl"
 
+if env["PLATFORM"] == "win32" :
+    systemIncludeFlag = "/I"
+else:
+    systemIncludeFlag = "-isystem"
+
 if env.get("OPENSSL_BUNDLED", False) :
     if env["SCONS_STAGE"] == "flags" :
         env["OPENSSL_FLAGS"] = {
-                "CPPPATH": [Dir(openssl_bundle_dir + "/include")],
+                "CCFLAGS": [systemIncludeFlag + Dir(openssl_bundle_dir + "/include").abspath],
                 "LIBPATH": [Dir(".")],
                 "LIBS": ["ssl", "crypto"]
             }
