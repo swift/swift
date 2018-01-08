@@ -189,6 +189,7 @@ void Connector::finish(std::shared_ptr<Connection> connection) {
 
 void Connector::handleTimeout() {
     SWIFT_LOG(debug) << "Timeout" << std::endl;
+    SWIFT_LOG_ASSERT(currentConnection, error) << "Connection not valid but triggered a timeout" <<std::endl;
     handleConnectionConnectFinished(true);
 }
 
