@@ -1,3 +1,7 @@
+4.0-rc5 ( 2018-01-09 )
+----------------------
+- Fix crash during sleep on macOS
+
 4.0-rc4 ( 2018-01-04 )
 ----------------------
 - Remove conflicting shortcut
