@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -147,6 +147,13 @@ void Connector::handleConnectionConnectFinished(bool error) {
     if (timer) {
             timer->stop();
             timer.reset();
+    }
+    if (!currentConnection) {
+        // We've hit a race condition where multiple finisheds were on the eventloop queue at once.
+        // This is particularly likely on macOS where the hourly momentary wakeup while asleep
+        // can cause both a timeout and an onConnectFinished to be queued sequentially (SWIFT-232).
+        // Let the first one process as normal, but ignore the second.
+        return;
     }
     currentConnection->onConnectFinished.disconnect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
     if (error) {
