@@ -548,6 +548,10 @@ conf.Finish()
 if env["qt"] :
     env["QTDIR"] = env["qt"]
 
+if env["PLATFORM"] == "win32" :
+    systemIncludeFlag = "/I"
+else:
+    systemIncludeFlag = "-isystem"
 
 ################################################################################
 # TLS backend selection
@@ -577,9 +581,9 @@ elif env.get("tls_backend") == "openssl" :
         openssl_include = env.get("openssl_include")
         openssl_libdir = env.get("openssl_libdir")
         if openssl_include:
-            openssl_flags = {"CPPPATH":[openssl_include]}
+            openssl_flags = { "CPPFLAGS": [systemIncludeFlag + openssl_include]}
         else:
-            openssl_flags = { "CPPPATH": [os.path.join(openssl_prefix, "include")] }
+            openssl_flags = { "CPPFLAGS": [systemIncludeFlag + os.path.join(openssl_prefix, "include")] }
         if openssl_libdir:
             openssl_flags["LIBPATH"] = [openssl_libdir]
             env["OPENSSL_DIR"] = openssl_prefix
@@ -780,4 +784,3 @@ print
 if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) and not env.get("HAVE_SCHANNEL", 0) and not env.get("HAVE_SECURETRANSPORT", 0):
     print "Error: A working TLS backend is required. Please check the documentation for more information."
     Exit(1)
-

@@ -4,6 +4,7 @@ objects = swiften_env.SwiftenObject([
             "Certificate.cpp",
             "CertificateFactory.cpp",
             "CertificateTrustChecker.cpp",
+            "PrivateKey.cpp",
             "ServerIdentityVerifier.cpp",
             "TLSContext.cpp",
             "TLSContextFactory.cpp",
@@ -16,6 +17,7 @@ if myenv.get("HAVE_OPENSSL", 0) :
             "OpenSSL/OpenSSLContext.cpp",
             "OpenSSL/OpenSSLCertificate.cpp",
             "OpenSSL/OpenSSLContextFactory.cpp",
+            "OpenSSL/OpenSSLCertificateFactory.cpp",
         ])
     myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
 elif myenv.get("HAVE_SCHANNEL", 0) :
