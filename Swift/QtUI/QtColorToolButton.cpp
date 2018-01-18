@@ -36,6 +36,7 @@ void QtColorToolButton::setColor(const QColor& color)
 void QtColorToolButton::onClicked()
 {
     QColor c = QColorDialog::getColor(color_, this);
+    window()->raise();
     if (c.isValid()) {
         setColor(c);
     }
