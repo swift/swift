@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,6 +23,7 @@
 #include <Swiften/Client/ClientBlockListManager.h>
 #include <Swiften/Client/StanzaChannel.h>
 #include <Swiften/Disco/EntityCapsProvider.h>
+#include <Swiften/Disco/GetDiscoInfoRequest.h>
 #include <Swiften/Elements/Delay.h>
 #include <Swiften/Elements/Thread.h>
 #include <Swiften/MUC/MUC.h>
@@ -273,6 +274,9 @@ void MUCController::rejoin() {
             lastActivity_ = historyController_->getLastTimeStampFromMUC(selfJID_, toJID_);
         }
 #endif
+
+        requestSecurityMarking();
+
         if (lastActivity_ == boost::posix_time::not_a_date_time) {
             muc_->joinAs(nick_);
         }
@@ -1241,6 +1245,55 @@ void MUCController::addChatSystemMessage() {
 void MUCController::setChatWindowTitle(const std::string& title) {
     chatWindowTitle_ = title;
     chatWindow_->setName(chatWindowTitle_);
+}
+
+void MUCController::requestSecurityMarking() {
+    auto discoInfoRequest = GetDiscoInfoRequest::create(muc_->getJID(), iqRouter_);
+    discoInfoRequest->onResponse.connect(
+        [this](std::shared_ptr<DiscoInfo> discoInfoRef, ErrorPayload::ref errorPayloadRef) {
+            if (!discoInfoRef || errorPayloadRef) {
+                return;
+            }
+            const std::vector<Form::ref>& extensionsList = discoInfoRef->getExtensions();
+            if (extensionsList.empty()) {
+                return;
+            }
+            // Get the correct form if it exists
+            Form::ref roomInfoForm;
+            for (const auto& form : extensionsList) {
+                if (form->getFormType() == "http://jabber.org/protocol/muc#roominfo") {
+                    roomInfoForm = form;
+                    break;
+                }
+            }
+            if (!roomInfoForm) {
+                return;
+            }
+            // It exists, now examine the security marking data
+            auto marking = roomInfoForm->getField("x-isode#roominfo_marking");
+            if (!marking) {
+                return;
+            }
+            // Now we know the marking is valid
+            auto markingValue = marking->getTextSingleValue();
+            if (markingValue == "") {
+                chatWindow_->removeChatSecurityMarking();
+                return;
+            }
+            auto markingForegroundColor = roomInfoForm->getField("x-isode#roominfo_marking_fg_color");
+            auto markingBackgroundColor = roomInfoForm->getField("x-isode#roominfo_marking_bg_color");
+            std::string markingForegroundColorValue = "Black";
+            std::string markingBackgroundColorValue = "White";
+            if (markingForegroundColor) {
+                markingForegroundColorValue = markingForegroundColor->getTextSingleValue();
+            }
+            if (markingBackgroundColor) {
+                markingBackgroundColorValue = markingBackgroundColor->getTextSingleValue();
+            }
+            chatWindow_->setChatSecurityMarking(markingValue, markingForegroundColorValue, markingBackgroundColorValue);
+        }
+    );
+    discoInfoRequest->send();
 }
 
 }

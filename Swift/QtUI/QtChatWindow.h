@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -194,6 +194,9 @@ namespace Swift {
 
             void resetDayChangeTimer();
 
+            void setChatSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue);
+            void removeChatSecurityMarking();
+
         private:
             int unreadCount_;
             bool contactIsTyping_;
@@ -241,5 +244,7 @@ namespace Swift {
             QPointer<QtEmojisSelector> emojisGrid_;
             std::map<std::string, std::string> emoticonsMap_;
             QTimer* dayChangeTimer = nullptr;
+            QHBoxLayout* securityMarkingLayout_ = nullptr;
+            QLabel* securityMarkingDisplay_ = nullptr;
     };
 }

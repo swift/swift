@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -982,6 +982,48 @@ void QtChatWindow::setMessageReceiptState(const std::string& id, ChatWindow::Rec
 
 void QtChatWindow::setBookmarkState(RoomBookmarkState bookmarkState) {
     roomBookmarkState_ = bookmarkState;
+}
+
+void QtChatWindow::setChatSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue) {
+    auto layout = static_cast<QBoxLayout*>(this->layout());
+
+    if (securityMarkingLayout_) {
+        layout->removeItem(securityMarkingLayout_);
+        securityMarkingLayout_->removeWidget(securityMarkingDisplay_);
+        delete securityMarkingLayout_;
+    }
+    delete securityMarkingDisplay_;
+
+    securityMarkingLayout_ = new QHBoxLayout();
+    securityMarkingDisplay_ = new QLabel(P2QSTRING(markingValue));
+
+    securityMarkingLayout_->addWidget(securityMarkingDisplay_);
+    layout->insertLayout(1, securityMarkingLayout_);
+
+    auto palette = securityMarkingDisplay_->palette();
+    palette.setColor(securityMarkingDisplay_->foregroundRole(), P2QSTRING(markingForegroundColorValue));
+    palette.setColor(securityMarkingDisplay_->backgroundRole(), P2QSTRING(markingBackgroundColorValue));
+
+    securityMarkingDisplay_->setPalette(palette);
+    securityMarkingDisplay_->setContentsMargins(4,4,4,4);
+    securityMarkingDisplay_->setAutoFillBackground(true);
+    securityMarkingDisplay_->setAlignment(Qt::AlignCenter);
+}
+
+void QtChatWindow::removeChatSecurityMarking() {
+    if (!securityMarkingLayout_) {
+        return;
+    }
+
+    auto layout = static_cast<QBoxLayout*>(this->layout());
+
+    layout->removeItem(securityMarkingLayout_);
+    securityMarkingLayout_->removeWidget(securityMarkingDisplay_);
+
+    delete securityMarkingDisplay_;
+    delete securityMarkingLayout_;
+    securityMarkingDisplay_ = nullptr;
+    securityMarkingLayout_ = nullptr;
 }
 
 }

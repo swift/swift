@@ -68,6 +68,14 @@ class MUCControllerTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(testNonImpromptuMUCWindowTitle);
 
+    CPPUNIT_TEST(testSecurityMarkingRequestCompleteMarking);
+    CPPUNIT_TEST(testSecurityMarkingRequestCompleteMarkingWithExtraForm);
+    CPPUNIT_TEST(testSecurityMarkingRequestEmptyMarking);
+    CPPUNIT_TEST(testSecurityMarkingRequestWithMarkingNoFormType);
+    CPPUNIT_TEST(testSecurityMarkingRequestNoMarking);
+    CPPUNIT_TEST(testSecurityMarkingRequestNoForm);
+    CPPUNIT_TEST(testSecurityMarkingRequestError);
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -591,6 +599,168 @@ public:
 
     void testNonImpromptuMUCWindowTitle() {
         CPPUNIT_ASSERT_EQUAL(muc_->getJID().getNode(), window_->name_);
+    }
+
+    void testSecurityMarkingRequestCompleteMarking() {
+        auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
+        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Black");
+        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Red");
+        formTypeField->setName("FORM_TYPE");
+        markingField->setName("x-isode#roominfo_marking");
+        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+        form->addField(formTypeField);
+        form->addField(markingField);
+        form->addField(markingForegroundColorField);
+        form->addField(markingBackgroundColorField);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string("Test | Highest Possible Security"), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Black"), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Red"), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestCompleteMarkingWithExtraForm() {
+        auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
+        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Black");
+        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Red");
+        formTypeField->setName("FORM_TYPE");
+        markingField->setName("x-isode#roominfo_marking");
+        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+
+        auto extraForm = std::make_shared<Form>(Form::Type::ResultType);
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+        form->addField(formTypeField);
+        form->addField(markingField);
+        form->addField(markingForegroundColorField);
+        form->addField(markingBackgroundColorField);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(extraForm);
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string("Test | Highest Possible Security"), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Black"), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Red"), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestNoColorsInMarking() {
+        auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
+        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+        formTypeField->setName("FORM_TYPE");
+        markingField->setName("x-isode#roominfo_marking");
+        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+        form->addField(formTypeField);
+        form->addField(markingField);
+        form->addField(markingForegroundColorField);
+        form->addField(markingBackgroundColorField);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string("Test | Highest Possible Security"), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Black"), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("White"), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestEmptyMarking() {
+        auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+        formTypeField->setName("FORM_TYPE");
+        markingField->setName("x-isode#roominfo_marking");
+        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+        form->addField(formTypeField);
+        form->addField(markingField);
+        form->addField(markingForegroundColorField);
+        form->addField(markingBackgroundColorField);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestWithMarkingNoFormType() {
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
+        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Black");
+        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Red");
+        markingField->setName("x-isode#roominfo_marking");
+        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+        form->addField(markingField);
+        form->addField(markingForegroundColorField);
+        form->addField(markingBackgroundColorField);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestNoMarking() {
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestNoForm() {
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+
+        auto infoResponse = IQ::createResult( self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingRequestError() {
+        auto errorPayload = std::make_shared<ErrorPayload>(ErrorPayload::Condition::NotAuthorized, ErrorPayload::Type::Auth);
+
+        auto infoResponse = IQ::createResult( self_, mucJID_, "test-id", errorPayload);
+        iqChannel_->onIQReceived(infoResponse);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
     }
 
 private:

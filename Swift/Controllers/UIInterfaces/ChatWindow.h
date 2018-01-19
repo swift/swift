@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,6 +33,8 @@ namespace Swift {
     class ContactRosterItem;
     class FileTransferController;
     class UserSearchWindow;
+    class DiscoInfo;
+    class ErrorPayload;
 
 
     class ChatWindow {
@@ -219,6 +221,9 @@ namespace Swift {
             virtual void showBookmarkWindow(const MUCBookmark& bookmark) = 0;
             virtual void setBookmarkState(RoomBookmarkState bookmarkState) = 0;
 
+            virtual void setChatSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue) = 0;
+            virtual void removeChatSecurityMarking() = 0;
+
             /**
              * A handle that uniquely identities an alert message.
              */
@@ -282,4 +287,3 @@ namespace Swift {
             boost::signals2::signal<void ()> onUnblockUserRequest;
     };
 }
-

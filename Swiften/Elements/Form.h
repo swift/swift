@@ -89,6 +89,9 @@ namespace Swift {
                 return instructions_;
             }
 
+            /** Returns the Form::Type enum (ie. ResultType, CancelType etc.).
+             * NOT to be confused with Form::getFormType().
+             */
             Type getType() const {
                 return type_;
             }
@@ -97,6 +100,9 @@ namespace Swift {
                 type_ = type;
             }
 
+            /** Returns the value of the field FORM_TYPE
+             * NOT to be confused with Form::getType().
+             */
             std::string getFormType() const;
             FormField::ref getField(const std::string& name) const;
             void addItem(const FormItem& item);

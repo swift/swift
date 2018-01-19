@@ -133,6 +133,14 @@ namespace Swift {
                 lastAddedMessageSenderIsSelf_ = lastAddedActionSenderIsSelf_ = false;
             }
 
+            void setChatSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue) {
+                markingValue_ = markingValue;
+                markingForegroundColorValue_ = markingForegroundColorValue;
+                markingBackgroundColorValue_ = markingBackgroundColorValue;
+            }
+
+            void removeChatSecurityMarking() {}
+
             std::string name_;
             ChatMessage lastAddedMessage_;
             std::string lastAddedMessageSenderName_;
@@ -154,6 +162,9 @@ namespace Swift {
             Roster* roster_ = nullptr;
             std::vector<std::pair<std::string, ReceiptState>> receiptChanges_;
             boost::optional<MUCType> mucType_;
+            std::string markingValue_;
+            std::string markingForegroundColorValue_;
+            std::string markingBackgroundColorValue_;
     };
 }
 

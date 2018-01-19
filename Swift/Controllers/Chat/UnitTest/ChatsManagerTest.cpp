@@ -776,7 +776,7 @@ public:
         // send message to participantA
         auto messageBody = std::string("message body to send");
         window->onSendMessageRequest(messageBody, false);
-        auto sendMessageStanza = stanzaChannel_->getStanzaAtIndex<Message>(2);
+        auto sendMessageStanza = stanzaChannel_->getStanzaAtIndex<Message>(3);
         CPPUNIT_ASSERT_EQUAL(messageBody, *sendMessageStanza->getBody());
 
         // receive reply with error
@@ -1537,7 +1537,11 @@ public:
         uiEventStream_->send(std::make_shared<CreateImpromptuMUCUIEvent>(jids, mucJID, ""));
         CPPUNIT_ASSERT_EQUAL(std::string("bar@test.com, foo@test.com"), manager_->getRecentChats()[0].getTitle());
 
-        auto mucJoinPresence = std::dynamic_pointer_cast<Presence>(stanzaChannel_->sentStanzas[2]);
+        // Check the MUC security marking request
+        auto mucInfoRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[2]);
+        CPPUNIT_ASSERT(mucInfoRequest);
+
+        auto mucJoinPresence = std::dynamic_pointer_cast<Presence>(stanzaChannel_->sentStanzas[3]);
         CPPUNIT_ASSERT(mucJoinPresence);
 
         // MUC presence reply
