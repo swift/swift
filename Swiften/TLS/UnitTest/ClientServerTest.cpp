@@ -655,3 +655,26 @@ TEST(ClientServerTest, testClientServerSNIRequestedHostUnavailable) {
     ASSERT_EQ("client", events.events[3].first);
     ASSERT_EQ("TLSFault()", boost::apply_visitor(TLSEventToStringVisitor(), events.events[3].second));
 }
+
+TEST(ClientServerTest, testClientServerEqualFinishedMessage) {
+    auto clientContext = createTLSContext(TLSContext::Mode::Client);
+    auto serverContext = createTLSContext(TLSContext::Mode::Server);
+
+    TLSClientServerEventHistory events(clientContext.get(), serverContext.get());
+
+    ClientServerConnector connector(clientContext.get(), serverContext.get());
+
+    auto tlsFactories = std::make_shared<PlatformTLSFactories>();
+
+    ASSERT_EQ(true, serverContext->setCertificateChain(tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM["capulet.example"]))));
+
+    auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM["capulet.example"]));
+    ASSERT_NE(nullptr, privateKey.get());
+    ASSERT_EQ(true, serverContext->setPrivateKey(privateKey));
+
+    serverContext->accept();
+    clientContext->connect();
+
+    ASSERT_EQ(serverContext->getPeerFinishMessage(), clientContext->getFinishMessage());
+    ASSERT_EQ(clientContext->getPeerFinishMessage(), serverContext->getFinishMessage());
+}

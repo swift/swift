@@ -57,6 +57,7 @@ namespace Swift {
             std::shared_ptr<CertificateVerificationError> getPeerCertificateVerificationError() const override final;
 
             virtual ByteArray getFinishMessage() const override final;
+            virtual ByteArray getPeerFinishMessage() const override final;
 
         private:
             static void ensureLibraryInitialized();

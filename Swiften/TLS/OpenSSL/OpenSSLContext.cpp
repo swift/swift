@@ -490,10 +490,18 @@ std::shared_ptr<CertificateVerificationError> OpenSSLContext::getPeerCertificate
 ByteArray OpenSSLContext::getFinishMessage() const {
     ByteArray data;
     data.resize(MAX_FINISHED_SIZE);
-    size_t size = SSL_get_finished(handle_.get(), vecptr(data), data.size());
+    auto size = SSL_get_finished(handle_.get(), vecptr(data), data.size());
     data.resize(size);
     return data;
 }
+
+ByteArray OpenSSLContext::getPeerFinishMessage() const {
+    ByteArray data;
+    data.resize(MAX_FINISHED_SIZE);
+    auto size = SSL_get_peer_finished(handle_.get(), vecptr(data), data.size());
+    data.resize(size);
+    return data;
+ }
 
 CertificateVerificationError::Type OpenSSLContext::getVerificationErrorTypeForResult(int result) {
     assert(result != 0);

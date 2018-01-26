@@ -47,6 +47,8 @@ namespace Swift {
             virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
 
             virtual ByteArray getFinishMessage() const = 0;
+            virtual ByteArray getPeerFinishMessage() const;
+
 
         public:
             enum class Mode {
