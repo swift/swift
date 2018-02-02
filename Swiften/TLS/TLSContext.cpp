@@ -1,14 +1,30 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/TLS/TLSContext.h>
 
+#include <cassert>
+
 namespace Swift {
 
 TLSContext::~TLSContext() {
+}
+
+void TLSContext::accept() {
+     assert(false);
+}
+
+bool TLSContext::setCertificateChain(const std::vector<Certificate::ref>& /* certificateChain */) {
+    assert(false);
+    return false;
+}
+
+bool TLSContext::setPrivateKey(const PrivateKey::ref& /* privateKey */) {
+    assert(false);
+    return false;
 }
 
 Certificate::ref TLSContext::getPeerCertificate() const {

@@ -21,6 +21,8 @@
 #include <Security/Security.h>
 #endif
 
+#include <Swiften/Base/Log.h>
+#include <Swiften/Base/Algorithm.h>
 #include <Swiften/TLS/OpenSSL/OpenSSLContext.h>
 #include <Swiften/TLS/OpenSSL/OpenSSLCertificate.h>
 #include <Swiften/TLS/CertificateWithKey.h>
@@ -61,11 +63,33 @@ namespace {
 
             OpenSSLInitializerFinalizer(const OpenSSLInitializerFinalizer &) = delete;
     };
-}
 
-OpenSSLContext::OpenSSLContext() : state_(State::Start) {
+    std::unique_ptr<SSL_CTX> createSSL_CTX(OpenSSLContext::Mode mode) {
+        std::unique_ptr<SSL_CTX> sslCtx;
+        switch (mode) {
+            case OpenSSLContext::Mode::Client:
+                sslCtx = std::unique_ptr<SSL_CTX>(SSL_CTX_new(SSLv23_client_method()));
+                break;
+            case OpenSSLContext::Mode::Server:
+                sslCtx = std::unique_ptr<SSL_CTX>(SSL_CTX_new(SSLv23_server_method()));
+                break;
+        }
+        return sslCtx;
+    }
+
+    std::string openSSLInternalErrorToString() {
+        auto bio = std::shared_ptr<BIO>(BIO_new(BIO_s_mem()), BIO_free);
+        ERR_print_errors(bio.get());
+        std::string errorString;
+        errorString.resize(BIO_pending(bio.get()));
+        BIO_read(bio.get(), (void*)errorString.data(), errorString.size());
+        return errorString;
+    }
+ }
+
+OpenSSLContext::OpenSSLContext(Mode mode) : mode_(mode), state_(State::Start) {
     ensureLibraryInitialized();
-    context_ = std::unique_ptr<SSL_CTX>(SSL_CTX_new(SSLv23_client_method()));
+    context_ = createSSL_CTX(mode_);
     SSL_CTX_set_options(context_.get(), SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
 
     // TODO: implement CRL checking
@@ -129,7 +153,15 @@ void OpenSSLContext::ensureLibraryInitialized() {
     static OpenSSLInitializerFinalizer openSSLInit;
 }
 
-void OpenSSLContext::connect() {
+void OpenSSLContext::initAndSetBIOs() {
+    // Ownership of BIOs is transferred
+    readBIO_ = BIO_new(BIO_s_mem());
+    writeBIO_ = BIO_new(BIO_s_mem());
+    SSL_set_bio(handle_.get(), readBIO_, writeBIO_);
+}
+
+void OpenSSLContext::accept() {
+    assert(mode_ == Mode::Server);
     handle_ = std::unique_ptr<SSL>(SSL_new(context_.get()));
     if (!handle_) {
         state_ = State::Error;
@@ -137,13 +169,53 @@ void OpenSSLContext::connect() {
         return;
     }
 
-    // Ownership of BIOs is transferred
-    readBIO_ = BIO_new(BIO_s_mem());
-    writeBIO_ = BIO_new(BIO_s_mem());
-    SSL_set_bio(handle_.get(), readBIO_, writeBIO_);
+    initAndSetBIOs();
+
+    state_ = State::Accepting;
+    doAccept();
+}
+
+void OpenSSLContext::connect() {
+    assert(mode_ == Mode::Client);
+    handle_ = std::unique_ptr<SSL>(SSL_new(context_.get()));
+    if (!handle_) {
+        state_ = State::Error;
+        onError(std::make_shared<TLSError>());
+        return;
+    }
+
+    // Ownership of BIOs is transferred to the SSL_CTX instance in handle_.
+    initAndSetBIOs();
 
     state_ = State::Connecting;
     doConnect();
+}
+
+void OpenSSLContext::doAccept() {
+    auto acceptResult = SSL_accept(handle_.get());
+    auto error = SSL_get_error(handle_.get(), acceptResult);
+    switch (error) {
+        case SSL_ERROR_NONE: {
+            state_ = State::Connected;
+            //std::cout << x->name << std::endl;
+            //const char* comp = SSL_get_current_compression(handle_.get());
+            //std::cout << "Compression: " << SSL_COMP_get_name(comp) << std::endl;
+            onConnected();
+            // The following call is important so the client knowns the handshake is finished.
+            sendPendingDataToNetwork();
+            break;
+        }
+        case SSL_ERROR_WANT_READ:
+            sendPendingDataToNetwork();
+            break;
+        case SSL_ERROR_WANT_WRITE:
+            sendPendingDataToNetwork();
+            break;
+        default:
+            SWIFT_LOG(warning) << openSSLInternalErrorToString() << std::endl;
+            state_ = State::Error;
+            onError(std::make_shared<TLSError>());
+    }
 }
 
 void OpenSSLContext::doConnect() {
@@ -162,6 +234,7 @@ void OpenSSLContext::doConnect() {
             sendPendingDataToNetwork();
             break;
         default:
+            SWIFT_LOG(warning) << openSSLInternalErrorToString() << std::endl;
             state_ = State::Error;
             onError(std::make_shared<TLSError>());
     }
@@ -180,6 +253,9 @@ void OpenSSLContext::sendPendingDataToNetwork() {
 void OpenSSLContext::handleDataFromNetwork(const SafeByteArray& data) {
     BIO_write(readBIO_, vecptr(data), data.size());
     switch (state_) {
+        case State::Accepting:
+            doAccept();
+            break;
         case State::Connecting:
             doConnect();
             break;
@@ -215,6 +291,98 @@ void OpenSSLContext::sendPendingDataToApplication() {
         state_ = State::Error;
         onError(std::make_shared<TLSError>());
     }
+}
+
+bool OpenSSLContext::setCertificateChain(const std::vector<Certificate::ref>& certificateChain) {
+    if (certificateChain.size() == 0) {
+        SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
+        return false;
+    }
+
+    // load endpoint certificate
+    auto openSSLCert = std::dynamic_pointer_cast<OpenSSLCertificate>(certificateChain[0]);
+    if (!openSSLCert) {
+        return false;
+    }
+
+    if (SSL_CTX_use_certificate(context_.get(), openSSLCert->getInternalX509().get()) != 1) {
+        return false;
+    }
+
+    if (certificateChain.size() > 1) {
+        for (auto certificate : range(certificateChain.begin() + 1, certificateChain.end())) {
+            auto openSSLCert = std::dynamic_pointer_cast<OpenSSLCertificate>(certificate);
+            if (!openSSLCert) {
+                return false;
+            }
+            if (SSL_CTX_add_extra_chain_cert(context_.get(), openSSLCert->getInternalX509().get()) != 1) {
+                SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
+                return false;
+            }
+        }
+    }
+
+    if (handle_) {
+        // This workaround is needed as OpenSSL has a shortcut to not do anything
+        // if you set the SSL_CTX to the existing SSL_CTX and not reloading the
+        // certificates from the SSL_CTX.
+        auto dummyContext = createSSL_CTX(mode_);
+        SSL_set_SSL_CTX(handle_.get(), dummyContext.get());
+        SSL_set_SSL_CTX(handle_.get(), context_.get());
+    }
+
+    return true;
+}
+
+int empty_or_preset_password_cb(char* buf, int max_len, int flag, void* password);
+
+int empty_or_preset_password_cb(char* buf, int max_len, int /* flag */, void* password) {
+    char* charPassword = (char*)password;
+    if (charPassword == nullptr) {
+        return 0;
+    }
+    int len = strlen(charPassword);
+    if(len > max_len) {
+        return 0;
+    }
+    memcpy(buf, charPassword, len);
+    return len;
+}
+
+bool OpenSSLContext::setPrivateKey(const PrivateKey::ref& privateKey) {
+    if (privateKey->getData().size() > std::numeric_limits<int>::max()) {
+        return false;
+    }
+
+    auto bio = std::shared_ptr<BIO>(BIO_new(BIO_s_mem()), BIO_free);
+    BIO_write(bio.get(), vecptr(privateKey->getData()), int(privateKey->getData().size()));
+
+    SafeByteArray safePassword;
+    void* password = nullptr;
+    if (privateKey->getPassword()) {
+        safePassword = privateKey->getPassword().get();
+        safePassword.push_back(0);
+        password = safePassword.data();
+    }
+    auto resultKey = PEM_read_bio_PrivateKey(bio.get(), nullptr, empty_or_preset_password_cb, password);
+    if (resultKey) {
+        if (handle_) {
+            auto result = SSL_use_PrivateKey(handle_.get(), resultKey);;
+            if (result != 1) {
+                return false;
+            }
+        }
+        else {
+            auto result = SSL_CTX_use_PrivateKey(context_.get(), resultKey);
+            if (result != 1) {
+                return false;
+            }
+        }
+    }
+    else {
+        return false;
+    }
+    return true;
 }
 
 bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {

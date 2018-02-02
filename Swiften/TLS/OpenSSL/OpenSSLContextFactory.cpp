@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,8 +15,8 @@ bool OpenSSLContextFactory::canCreate() const {
     return true;
 }
 
-TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&) {
-    return new OpenSSLContext();
+TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&, TLSContext::Mode mode) {
+    return new OpenSSLContext(mode);
 }
 
 void OpenSSLContextFactory::setCheckCertificateRevocation(bool check) {

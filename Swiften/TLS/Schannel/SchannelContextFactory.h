@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,8 +20,7 @@ namespace Swift {
             SchannelContextFactory();
 
             bool canCreate() const;
-            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions);
-
+            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode = TLSContext::Mode::Client);
             virtual void setCheckCertificateRevocation(bool b);
 
             virtual void setDisconnectOnCardRemoval(bool b);

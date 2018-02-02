@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2014 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -159,5 +159,29 @@ namespace Swift {
         auto pred = [](decltype(*lhs.begin()) a, decltype(a) b) { return a.first == b.first; };
 
         return lhs.size() == rhs.size() && std::equal(lhs.begin(), lhs.end(), rhs.begin(), pred);
+    }
+
+    /**
+     * Ranges
+     */
+    template <typename T>
+    class range_t {
+        public:
+            range_t(T b, T e) : b_(b), e_(e) {}
+
+            T begin() {
+                return b_;
+            }
+            T end() {
+                return e_;
+            }
+        private:
+            T b_;
+            T e_;
+    };
+
+    template <typename T>
+    range_t<T> range(T b, T e) {
+        return range_t<T>(b, e);
     }
 }

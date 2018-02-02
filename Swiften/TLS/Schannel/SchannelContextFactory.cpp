@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,9 @@ bool SchannelContextFactory::canCreate() const {
     return true;
 }
 
-TLSContext* SchannelContextFactory::createTLSContext(const TLSOptions& tlsOptions) {
+TLSContext* SchannelContextFactory::createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode) {
+    // TLS server mode is not supported for the SecureTransport backend yet.
+    assert(mode == TLSContext::Mode::Client);
     SchannelContext* context = new SchannelContext(tlsOptions.schannelTLS1_0Workaround);
     context->setCheckCertificateRevocation(checkCertificateRevocation);
     context->setDisconnectOnCardRemoval(disconnectOnCardRemoval);

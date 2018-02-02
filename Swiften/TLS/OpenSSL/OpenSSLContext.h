@@ -38,10 +38,14 @@ namespace std {
 namespace Swift {
     class OpenSSLContext : public TLSContext, boost::noncopyable {
         public:
-            OpenSSLContext();
+            OpenSSLContext(Mode mode);
             virtual ~OpenSSLContext() override final;
 
+            void accept() override final;
             void connect() override final;
+
+            bool setCertificateChain(const std::vector<Certificate::ref>& certificateChain) override final;
+            bool setPrivateKey(const PrivateKey::ref& privateKey) override final;
             bool setClientCertificate(CertificateWithKey::ref cert) override final;
 
             void handleDataFromNetwork(const SafeByteArray&) override final;
@@ -57,13 +61,16 @@ namespace Swift {
 
             static CertificateVerificationError::Type getVerificationErrorTypeForResult(int);
 
+            void initAndSetBIOs();
+            void doAccept();
             void doConnect();
             void sendPendingDataToNetwork();
             void sendPendingDataToApplication();
 
         private:
-            enum class State { Start, Connecting, Connected, Error };
+            enum class State { Start, Accepting, Connecting, Connected, Error };
 
+            Mode mode_;
             State state_;
             std::unique_ptr<SSL_CTX> context_;
             std::unique_ptr<SSL> handle_;

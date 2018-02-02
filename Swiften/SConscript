@@ -575,6 +575,10 @@ if env["SCONS_STAGE"] == "build" :
             File("Whiteboard/UnitTest/WhiteboardServerTest.cpp"),
             File("Whiteboard/UnitTest/WhiteboardClientTest.cpp"),
         ])
+    if env.get("HAVE_OPENSSL", 0) :
+        env.Append(UNITTEST_SOURCES = [
+            File("TLS/UnitTest/ClientServerTest.cpp"),
+        ])
 
     # Generate the Swiften header
     def relpath(path, start) :

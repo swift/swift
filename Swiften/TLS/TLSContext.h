@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,6 +15,7 @@
 #include <Swiften/TLS/Certificate.h>
 #include <Swiften/TLS/CertificateVerificationError.h>
 #include <Swiften/TLS/CertificateWithKey.h>
+#include <Swiften/TLS/PrivateKey.h>
 #include <Swiften/TLS/TLSError.h>
 
 namespace Swift {
@@ -23,7 +24,11 @@ namespace Swift {
         public:
             virtual ~TLSContext();
 
+            virtual void accept();
             virtual void connect() = 0;
+
+            virtual bool setCertificateChain(const std::vector<Certificate::ref>& /* certificateChain */);
+            virtual bool setPrivateKey(const PrivateKey::ref& /* privateKey */);
 
             virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;
 
@@ -35,6 +40,12 @@ namespace Swift {
             virtual CertificateVerificationError::ref getPeerCertificateVerificationError() const = 0;
 
             virtual ByteArray getFinishMessage() const = 0;
+
+        public:
+            enum class Mode {
+                Client,
+                Server
+            };
 
         public:
             boost::signals2::signal<void (const SafeByteArray&)> onDataForNetwork;
