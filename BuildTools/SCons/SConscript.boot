@@ -111,6 +111,7 @@ vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for D
 vars.Add(BoolVariable("check_headers", "Independently build compilation units for all Swiften headers for detecting missing dependencies.", "no"))
 vars.Add("win_target_arch", "Target architecture for Windows builds. x86 for 32-bit (default) or x86_64 for 64-bit.", "x86")
 vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
+vars.Add(BoolVariable("help2man", "Run help2man to geneate man pages", "false"))
 
 # Code Signing Options
 vars.Add("codesign_identity", "macOS code signing identity to be passed to codesign when building the distribution package. Must match the Commen Name of the Subject of the code signing certificate.", "")

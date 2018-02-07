@@ -19,3 +19,5 @@ if "Swift" in env["PROJECTS"] and env["BOOST_1_64_DETECTED"] and not env.get("al
     #Version 1.64 has some issues with the serialization of boost::optional, see https://svn.boost.org/trac10/ticket/13050
     print "Boost 1.64 has been detected. It is not recommended to use this version due to a regression within the library. Swift has been removed from the current build. You can still use this version by setting allow_boost_1_64 to true, but recent chats and highlighting rules will reset."
     env["PROJECTS"].remove("Swift")
+if env["help2man"]:
+    SConscript("Packaging/SConscript")

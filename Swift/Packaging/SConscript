@@ -1,0 +1,29 @@
+Import("env")
+import os
+
+################################################################################
+# Build
+################################################################################
+
+if env["SCONS_STAGE"] == "build" :
+    help2man = env.WhereIs('help2man', os.environ['PATH'])
+    if help2man:
+        env['HELP2MAN'] = help2man
+        env['HELP2MANSTR'] = "HELP2MAN $TARGET"
+
+        if Dir("#/debian").exists():
+            # This is needed for debian packaging using pbuilder which expects
+            # generated man pages in this location.
+            env['HELP2MAN_DEBIAN_DIR'] = "#/debian"
+        else:
+            env['HELP2MAN_DEBIAN_DIR'] = "Debian/debian"
+
+        swiftenConfigHelp = env.Command(
+            target='$HELP2MAN_DEBIAN_DIR/swiften-config.1', source='#/Swiften/Config/swiften-config',
+            action = Action('$HELP2MAN -m "Swift Manual" -S "swiften-config" -n "swiften-config" -N $SOURCE > $TARGET', cmdstr = "$HELP2MANSTR"))
+        swiftHelp = env.Command(
+            target='$HELP2MAN_DEBIAN_DIR/swift-im.1', source='#/Swift/QtUI/swift-im',
+            action = Action('$HELP2MAN -m "Swift Manual" -S "Swift" -n "swift-im" -N $SOURCE > $TARGET', cmdstr = "$HELP2MANSTR"))
+    else:
+        print "Enabled help2man but help2man is not in the PATH of the current environment."
+        Exit(1)
