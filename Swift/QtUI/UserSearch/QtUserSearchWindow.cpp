@@ -606,6 +606,7 @@ void QtUserSearchWindow::clear() {
             howText = QString(tr("Who do you want to invite to the chat?"));
         }
         firstMultiJIDPage_->howLabel_->setText(howText);
+        firstMultiJIDPage_->groupBox->setEnabled(true);
     }
     clearForm();
     resultsPage_->results_->setModel(nullptr);
