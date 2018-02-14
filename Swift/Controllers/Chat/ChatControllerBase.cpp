@@ -58,6 +58,9 @@ void ChatControllerBase::handleContinuationsBroken() {
 }
 
 ChatWindow* ChatControllerBase::detachChatWindow() {
+    chatWindow_->onContinuationsBroken.disconnect(boost::bind(&ChatControllerBase::handleContinuationsBroken, this));
+    chatWindow_->onSendMessageRequest.disconnect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
+    chatWindow_->onAllMessagesRead.disconnect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
     ChatWindow* chatWindow = chatWindow_;
     chatWindow_ = nullptr;
     return chatWindow;
