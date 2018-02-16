@@ -320,6 +320,7 @@ void ChatController::handleIncomingOwnMessage(std::shared_ptr<Message> message) 
     if (!message->getBody().get_value_or("").empty()) {
         postSendMessage(message->getBody().get_value_or(""), message);
         handleStanzaAcked(message);
+        onActivity(message->getBody().get_value_or(""));
     }
 }
 
