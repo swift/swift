@@ -26,11 +26,18 @@ namespace Swift {
 
             virtual void accept();
             virtual void connect() = 0;
+            virtual void connect(const std::string& serverName);
 
             virtual bool setCertificateChain(const std::vector<Certificate::ref>& /* certificateChain */);
             virtual bool setPrivateKey(const PrivateKey::ref& /* privateKey */);
 
             virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;
+
+            /**
+             *  This method can be used during the \ref onServerNameRequested signal,
+             *  to report an error about an unknown host back to the requesting client.
+             */
+            virtual void setAbortTLSHandshake(bool /* abort */);
 
             virtual void handleDataFromNetwork(const SafeByteArray&) = 0;
             virtual void handleDataFromApplication(const SafeByteArray&) = 0;
@@ -52,5 +59,6 @@ namespace Swift {
             boost::signals2::signal<void (const SafeByteArray&)> onDataForApplication;
             boost::signals2::signal<void (std::shared_ptr<TLSError>)> onError;
             boost::signals2::signal<void ()> onConnected;
+            boost::signals2::signal<void (const std::string&)> onServerNameRequested;
     };
 }

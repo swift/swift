@@ -92,6 +92,11 @@ OpenSSLContext::OpenSSLContext(Mode mode) : mode_(mode), state_(State::Start) {
     context_ = createSSL_CTX(mode_);
     SSL_CTX_set_options(context_.get(), SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
 
+    if (mode_ == Mode::Server) {
+        SSL_CTX_set_tlsext_servername_arg(context_.get(), this);
+        SSL_CTX_set_tlsext_servername_callback(context_.get(), OpenSSLContext::handleServerNameCallback);
+    }
+
     // TODO: implement CRL checking
     // TODO: download CRL (HTTP transport)
     // TODO: cache CRL downloads for configurable time period
@@ -176,12 +181,22 @@ void OpenSSLContext::accept() {
 }
 
 void OpenSSLContext::connect() {
+    connect(std::string());
+}
+
+void OpenSSLContext::connect(const std::string& requestedServerName) {
     assert(mode_ == Mode::Client);
     handle_ = std::unique_ptr<SSL>(SSL_new(context_.get()));
     if (!handle_) {
         state_ = State::Error;
         onError(std::make_shared<TLSError>());
         return;
+    }
+
+    if (!requestedServerName.empty()) {
+        if (SSL_set_tlsext_host_name(handle_.get(), const_cast<char*>(requestedServerName.c_str())) != 1) {
+            SWIFT_LOG(error) << "Failed on SSL_set_tlsext_host_name()." << std::endl;
+        }
     }
 
     // Ownership of BIOs is transferred to the SSL_CTX instance in handle_.
@@ -215,6 +230,7 @@ void OpenSSLContext::doAccept() {
             SWIFT_LOG(warning) << openSSLInternalErrorToString() << std::endl;
             state_ = State::Error;
             onError(std::make_shared<TLSError>());
+            sendPendingDataToNetwork();
     }
 }
 
@@ -238,6 +254,24 @@ void OpenSSLContext::doConnect() {
             state_ = State::Error;
             onError(std::make_shared<TLSError>());
     }
+}
+
+int OpenSSLContext::handleServerNameCallback(SSL* ssl, int*, void* arg) {
+    if (ssl == nullptr)
+        return SSL_TLSEXT_ERR_NOACK;
+
+    const char* servername = SSL_get_servername(ssl, TLSEXT_NAMETYPE_host_name);
+    if (servername) {
+        auto serverNameString = std::string(servername);
+        auto context = reinterpret_cast<OpenSSLContext*>(arg);
+        context->onServerNameRequested(serverNameString);
+
+        if (context->abortTLSHandshake_) {
+            context->abortTLSHandshake_ = false;
+            return SSL_TLSEXT_ERR_ALERT_FATAL;
+        }
+    }
+    return SSL_TLSEXT_ERR_OK;
 }
 
 void OpenSSLContext::sendPendingDataToNetwork() {
@@ -383,6 +417,10 @@ bool OpenSSLContext::setPrivateKey(const PrivateKey::ref& privateKey) {
         return false;
     }
     return true;
+}
+
+void OpenSSLContext::setAbortTLSHandshake(bool abort) {
+    abortTLSHandshake_ = abort;
 }
 
 bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {

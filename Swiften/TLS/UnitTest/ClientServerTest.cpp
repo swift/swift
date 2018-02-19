@@ -293,7 +293,11 @@ struct TLSConnected {
     std::vector<Certificate::ref> chain;
 };
 
-using TLSEvent = boost::variant<TLSDataForNetwork, TLSDataForApplication, TLSFault, TLSConnected>;
+struct TLSServerNameRequested {
+    std::string name;
+};
+
+using TLSEvent = boost::variant<TLSDataForNetwork, TLSDataForApplication, TLSFault, TLSConnected, TLSServerNameRequested>;
 
 class TLSEventToSafeByteArrayVisitor : public boost::static_visitor<SafeByteArray> {
     public:
@@ -312,6 +316,11 @@ class TLSEventToSafeByteArrayVisitor : public boost::static_visitor<SafeByteArra
         SafeByteArray operator()(const TLSConnected&) const {
             return createSafeByteArray("");
         }
+
+        SafeByteArray operator()(const TLSServerNameRequested&) const {
+            return createSafeByteArray("");
+        }
+
 };
 
 class TLSEventToStringVisitor : public boost::static_visitor<std::string> {
@@ -334,6 +343,10 @@ class TLSEventToStringVisitor : public boost::static_visitor<std::string> {
                 certificates += "\t" + cert->getSubjectName() + "\n";
             }
             return std::string("TLSConnected()") + "\n" + certificates;
+        }
+
+        std::string operator()(const TLSServerNameRequested& event) const {
+            return std::string("TLSServerNameRequested(") + "name: " + event.name + ")";
         }
 };
 
@@ -571,4 +584,74 @@ TEST(ClientServerTest, testSettingPrivateKeyWithoutRequiredPassword) {
     auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(montagueEncryptedPEM));
     ASSERT_NE(nullptr, privateKey.get());
     ASSERT_EQ(false, serverContext->setPrivateKey(privateKey));
+}
+
+TEST(ClientServerTest, testClientServerSNIRequestedHostAvailable) {
+    auto tlsFactories = std::make_shared<PlatformTLSFactories>();
+    auto clientContext = createTLSContext(TLSContext::Mode::Client);
+    auto serverContext = createTLSContext(TLSContext::Mode::Server);
+
+    serverContext->onServerNameRequested.connect([&](const std::string& requestedName) {
+        if (certificatePEM.find(requestedName) != certificatePEM.end() && privateKeyPEM.find(requestedName) != privateKeyPEM.end()) {
+            auto certChain = tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM[requestedName]));
+            ASSERT_EQ(true, serverContext->setCertificateChain(certChain));
+
+            auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM[requestedName]));
+            ASSERT_NE(nullptr, privateKey.get());
+            ASSERT_EQ(true, serverContext->setPrivateKey(privateKey));
+        }
+    });
+
+    TLSClientServerEventHistory events(clientContext.get(), serverContext.get());
+
+    ClientServerConnector connector(clientContext.get(), serverContext.get());
+
+    ASSERT_EQ(true, serverContext->setCertificateChain(tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM["capulet.example"]))));
+
+    auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM["capulet.example"]));
+    ASSERT_NE(nullptr, privateKey.get());
+    ASSERT_EQ(true, serverContext->setPrivateKey(privateKey));
+
+    serverContext->accept();
+    clientContext->connect("montague.example");
+
+    clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
+    serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
+    ASSERT_EQ("This is a test message from the client.", safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
+    })->second)));
+    ASSERT_EQ("This is a test message from the server.", safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
+    })->second)));
+
+    ASSERT_EQ("/CN=montague.example", boost::get<TLSConnected>(events.events[5].second).chain[0]->getSubjectName());
+}
+
+TEST(ClientServerTest, testClientServerSNIRequestedHostUnavailable) {
+    auto tlsFactories = std::make_shared<PlatformTLSFactories>();
+    auto clientContext = createTLSContext(TLSContext::Mode::Client);
+    auto serverContext = createTLSContext(TLSContext::Mode::Server);
+
+    serverContext->onServerNameRequested.connect([&](const std::string&) {
+        serverContext->setAbortTLSHandshake(true);
+    });
+
+    TLSClientServerEventHistory events(clientContext.get(), serverContext.get());
+
+    ClientServerConnector connector(clientContext.get(), serverContext.get());
+
+    ASSERT_EQ(true, serverContext->setCertificateChain(tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM["capulet.example"]))));
+
+    auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM["capulet.example"]));
+    ASSERT_NE(nullptr, privateKey.get());
+    ASSERT_EQ(true, serverContext->setPrivateKey(privateKey));
+
+    serverContext->accept();
+    clientContext->connect("montague.example");
+
+    ASSERT_EQ("server", events.events[1].first);
+    ASSERT_EQ("TLSFault()", boost::apply_visitor(TLSEventToStringVisitor(), events.events[1].second));
+
+    ASSERT_EQ("client", events.events[3].first);
+    ASSERT_EQ("TLSFault()", boost::apply_visitor(TLSEventToStringVisitor(), events.events[3].second));
 }

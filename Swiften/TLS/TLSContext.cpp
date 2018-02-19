@@ -14,7 +14,11 @@ TLSContext::~TLSContext() {
 }
 
 void TLSContext::accept() {
-     assert(false);
+    assert(false);
+}
+
+void TLSContext::connect(const std::string& /* serverName */) {
+    assert(false);
 }
 
 bool TLSContext::setCertificateChain(const std::vector<Certificate::ref>& /* certificateChain */) {
@@ -26,6 +30,11 @@ bool TLSContext::setPrivateKey(const PrivateKey::ref& /* privateKey */) {
     assert(false);
     return false;
 }
+
+void TLSContext::setAbortTLSHandshake(bool /* abort */) {
+    assert(false);
+}
+
 
 Certificate::ref TLSContext::getPeerCertificate() const {
     std::vector<Certificate::ref> chain = getPeerCertificateChain();

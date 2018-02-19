@@ -43,10 +43,12 @@ namespace Swift {
 
             void accept() override final;
             void connect() override final;
+            void connect(const std::string& requestHostname) override final;
 
             bool setCertificateChain(const std::vector<Certificate::ref>& certificateChain) override final;
             bool setPrivateKey(const PrivateKey::ref& privateKey) override final;
             bool setClientCertificate(CertificateWithKey::ref cert) override final;
+            void setAbortTLSHandshake(bool abort) override final;
 
             void handleDataFromNetwork(const SafeByteArray&) override final;
             void handleDataFromApplication(const SafeByteArray&) override final;
@@ -58,7 +60,7 @@ namespace Swift {
 
         private:
             static void ensureLibraryInitialized();
-
+            static int handleServerNameCallback(SSL *ssl, int *ad, void *arg);
             static CertificateVerificationError::Type getVerificationErrorTypeForResult(int);
 
             void initAndSetBIOs();
@@ -70,11 +72,12 @@ namespace Swift {
         private:
             enum class State { Start, Accepting, Connecting, Connected, Error };
 
-            Mode mode_;
+            const Mode mode_;
             State state_;
             std::unique_ptr<SSL_CTX> context_;
             std::unique_ptr<SSL> handle_;
             BIO* readBIO_ = nullptr;
             BIO* writeBIO_ = nullptr;
+            bool abortTLSHandshake_ = false;
     };
 }
