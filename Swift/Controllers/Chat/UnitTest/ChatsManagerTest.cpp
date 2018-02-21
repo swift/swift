@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,9 +32,12 @@
 #include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/PrivateStorage.h>
+#include <Swiften/Elements/Storage.h>
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/MUC/MUCManager.h>
+#include <Swiften/MUC/UnitTest/MockMUC.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Presence/PresenceOracle.h>
@@ -71,7 +74,6 @@
 #include <SwifTools/Notifier/Notifier.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swiften/MUC/UnitTest/MockMUC.h>
 
 using namespace Swift;
 
@@ -154,6 +156,11 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testImpromptuChatTitle);
     CPPUNIT_TEST(testImpromptuChatWindowTitle);
     CPPUNIT_TEST(testStandardMUCChatWindowTitle);
+
+    // Bookmark tests
+    CPPUNIT_TEST(testReceivingBookmarksWithDomainJID);
+    CPPUNIT_TEST(testReceivingBookmarksWithBareJID);
+    CPPUNIT_TEST(testReceivingBookmarksWithFullJID);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1598,6 +1605,78 @@ public:
         CPPUNIT_ASSERT_EQUAL(std::string("mucroom"), window->name_);
     }
 
+    static std::shared_ptr<Storage> createBookmarkStorageWithJID(const JID& jid) {
+        auto storage = std::make_shared<Storage>();
+        auto room = Storage::Room();
+        room.jid = jid;
+        room.autoJoin = true;
+        storage->addRoom(room);
+        return storage;
+    }
+
+    void testReceivingBookmarksWithDomainJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        CPPUNIT_ASSERT(bookmarkRequest);
+        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+
+        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
+        CPPUNIT_ASSERT(privateStorage);
+
+        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
+        CPPUNIT_ASSERT(storage);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("montague.lit"))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingBookmarksWithBareJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        CPPUNIT_ASSERT(bookmarkRequest);
+        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+
+        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
+        CPPUNIT_ASSERT(privateStorage);
+
+        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
+        CPPUNIT_ASSERT(storage);
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID("example@montague.lit"), uiEventStream_).Return(window);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("example@montague.lit"))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingBookmarksWithFullJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        CPPUNIT_ASSERT(bookmarkRequest);
+        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+
+        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
+        CPPUNIT_ASSERT(privateStorage);
+
+        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
+        CPPUNIT_ASSERT(storage);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("example@montague.lit/someresource"))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
 private:
     std::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {
         std::shared_ptr<Message> message = std::make_shared<Message>();
@@ -1664,4 +1743,3 @@ private:
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);
-

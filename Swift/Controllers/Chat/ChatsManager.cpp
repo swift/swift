@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -331,11 +331,13 @@ void ChatsManager::handleBookmarksReady() {
 }
 
 void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
-    std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
-    if (it == mucControllers_.end() && bookmark.getAutojoin()) {
-        handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false, false  );
+    if (bookmark.getRoom().isBare() && !bookmark.getRoom().getNode().empty()) {
+        std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
+        if (it == mucControllers_.end() && bookmark.getAutojoin()) {
+            handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false, false  );
+        }
+        chatListWindow_->addMUCBookmark(bookmark);
     }
-    chatListWindow_->addMUCBookmark(bookmark);
 }
 
 void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
