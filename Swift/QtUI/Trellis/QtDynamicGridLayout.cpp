@@ -144,7 +144,9 @@ void QtDynamicGridLayout::removeTab(int index) {
     int tabIndex = -1;
     QtTabWidget* tabWidget = indexToTabWidget(index, tabIndex);
     if (tabWidget) {
+        QWidget* tab = tabWidget->widget(tabIndex);
         tabWidget->removeTab(tabIndex);
+        tab->setParent(nullptr);
     }
 }
 
