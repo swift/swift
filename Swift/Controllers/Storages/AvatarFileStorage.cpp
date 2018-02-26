@@ -1,16 +1,15 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/Controllers/Storages/AvatarFileStorage.h>
 
-#include <iostream>
-
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Base/String.h>
 #include <Swiften/Crypto/CryptoProvider.h>
 #include <Swiften/StringCodecs/Hexify.h>
@@ -31,13 +30,13 @@ AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& avatarsDir, 
                         jidAvatars.insert(std::make_pair(jid, r.first));
                     }
                     else if (!r.first.empty() || !r.second.empty()) {
-                        std::cerr << "Invalid entry in avatars file: " << r.second << std::endl;
+                        SWIFT_LOG(error) << "Invalid entry in avatars file: " << r.second << std::endl;
                     }
                 }
             }
         }
         catch (...) {
-            std::cerr << "Error reading avatars file" << std::endl;
+            SWIFT_LOG(error) << "Error reading avatars file" << std::endl;
         }
     }
 }
@@ -55,12 +54,17 @@ void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avat
             boost::filesystem::create_directories(avatarPath.parent_path());
         }
         catch (const boost::filesystem::filesystem_error& e) {
-            std::cerr << "ERROR: " << e.what() << std::endl;
+            SWIFT_LOG(error) << "filesystem error: " << e.what() << std::endl;
         }
     }
-    boost::filesystem::ofstream file(avatarPath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
-    file.write(reinterpret_cast<const char*>(vecptr(avatar)), static_cast<std::streamsize>(avatar.size()));
-    file.close();
+
+    try {
+        boost::filesystem::ofstream file(avatarPath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
+        file.write(reinterpret_cast<const char*>(vecptr(avatar)), static_cast<std::streamsize>(avatar.size()));
+    }
+    catch (const boost::filesystem::filesystem_error& e) {
+        SWIFT_LOG(error) << "filesystem error: " << e.what() << std::endl;
+    }
 }
 
 boost::filesystem::path AvatarFileStorage::getAvatarPath(const std::string& hash) const {
@@ -69,7 +73,12 @@ boost::filesystem::path AvatarFileStorage::getAvatarPath(const std::string& hash
 
 ByteArray AvatarFileStorage::getAvatar(const std::string& hash) const {
     ByteArray data;
-    readByteArrayFromFile(data, getAvatarPath(hash));
+    try {
+        readByteArrayFromFile(data, getAvatarPath(hash));
+    }
+    catch (const boost::filesystem::filesystem_error& e) {
+        SWIFT_LOG(error) << "filesystem error: " << e.what() << std::endl;
+    }
     return data;
 }
 
@@ -98,7 +107,7 @@ void AvatarFileStorage::saveJIDAvatars() {
         file.close();
     }
     catch (...) {
-        std::cerr << "Error writing avatars file" << std::endl;
+        SWIFT_LOG(error) << "Error writing avatars file" << std::endl;
     }
 }
 

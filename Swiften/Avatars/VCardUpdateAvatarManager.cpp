@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,6 +32,10 @@ void VCardUpdateAvatarManager::handlePresenceReceived(std::shared_ptr<Presence> 
         return;
     }
     JID from = getAvatarJID(presence->getFrom());
+    if (update->getPhotoHash().size() != 40) {
+        SWIFT_LOG(debug) << "Invalid vCard avatar photo hash length. Must be hex-encoded SHA-1, i.e. 40 characters." << std::endl;
+        return;
+    }
     if (getAvatarHash(from) == update->getPhotoHash()) {
         return;
     }
