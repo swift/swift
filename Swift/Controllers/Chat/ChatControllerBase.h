@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,6 +28,7 @@
 
 #include <Swift/Controllers/Highlighting/HighlightManager.h>
 #include <Swift/Controllers/HistoryController.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
 #include <Swift/Controllers/XMPPEvents/MUCInviteEvent.h>
 #include <Swift/Controllers/XMPPEvents/MessageEvent.h>
@@ -79,7 +80,7 @@ namespace Swift {
             boost::signals2::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
         protected:
-            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings);
 
             /**
              * Pass the Message appended, and the stanza used to send it.
@@ -150,5 +151,8 @@ namespace Swift {
             AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider_;
             UIEventStream* eventStream_;
             bool lastWasPresence_ = false;
+            std::string roomSecurityMarking_;
+            std::string previousMessageSecurityMarking_;
+            SettingsProvider* settings_;
     };
 }

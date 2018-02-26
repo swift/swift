@@ -28,6 +28,8 @@
 #include <Swiften/Base/Log.h>
 #include <Swiften/StringCodecs/Base64.h>
 
+#include <Swift/Controllers/SettingConstants.h>
+#include <Swift/Controllers/Settings/SettingsProvider.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 
@@ -56,7 +58,7 @@ namespace {
     const double minimalFontScaling = 0.7;
 }
 
-QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll) : QtChatView(parent), window_(window), eventStream_(eventStream), fontSizeSteps_(0), disableAutoScroll_(disableAutoScroll), previousMessageKind_(PreviosuMessageWasNone), previousMessageWasSelf_(false), showEmoticons_(false), insertingLastLine_(false), idCounter_(0) {
+QtWebKitChatView::QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, SettingsProvider* settings, bool disableAutoScroll /*= false*/) : QtChatView(parent), window_(window), eventStream_(eventStream), fontSizeSteps_(0), disableAutoScroll_(disableAutoScroll), previousMessageKind_(PreviosuMessageWasNone), previousMessageWasSelf_(false), showEmoticons_(false), insertingLastLine_(false), idCounter_(0), settings_(settings) {
     theme_ = theme;
 
     QVBoxLayout* mainLayout = new QVBoxLayout(this);
@@ -555,10 +557,13 @@ std::string QtWebKitChatView::addMessage(
 
     QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
 
+    std::string messageMarkingValue = "";
+
     QString htmlString;
     if (label) {
+        messageMarkingValue = label->getDisplayMarking();
         htmlString = QString("<span style=\"border: thin dashed grey; padding-left: .5em; padding-right: .5em; color: %1; background-color: %2; font-size: 90%; margin-right: .5em; \" class='swift_label'>").arg(QtUtilities::htmlEscape(P2QSTRING(label->getForegroundColor()))).arg(QtUtilities::htmlEscape(P2QSTRING(label->getBackgroundColor())));
-        htmlString += QString("%1</span> ").arg(QtUtilities::htmlEscape(P2QSTRING(label->getDisplayMarking())));
+        htmlString += QString("%1</span> ").arg(QtUtilities::htmlEscape(P2QSTRING(messageMarkingValue)));
     }
 
     QString styleSpanStart = style == "" ? "" : "<span style=\"" + style + "\">";
@@ -569,7 +574,7 @@ std::string QtWebKitChatView::addMessage(
     QString highlightSpanEnd = highlightWholeMessage ? "</span>" : "";
     htmlString += "<span class='swift_inner_message'>" + styleSpanStart + highlightSpanStart + message + highlightSpanEnd + styleSpanEnd + "</span>" ;
 
-    bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf);
+    bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf, label);
 
     QString qAvatarPath = scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
     std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
@@ -578,6 +583,7 @@ std::string QtWebKitChatView::addMessage(
     previousMessageWasSelf_ = senderIsSelf;
     previousSenderName_ = P2QSTRING(senderName);
     previousMessageKind_ = PreviousMessageWasMessage;
+    previousMessageDisplayMarking_ = messageMarkingValue;
     return id;
 }
 
@@ -978,11 +984,18 @@ void QtWebKitChatView::setMessageReceiptState(const std::string& id, ChatWindow:
     setReceiptXML(P2QSTRING(id), xml);
 }
 
-bool QtWebKitChatView::appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf) {
+bool QtWebKitChatView::appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf, const std::shared_ptr<SecurityLabel>& label /*=nullptr*/) {
     bool result = previousMessageKind_ == messageKind && ((senderIsSelf && previousMessageWasSelf_) || (!senderIsSelf && !previousMessageWasSelf_&& previousSenderName_ == P2QSTRING(senderName)));
     if (insertingLastLine_) {
         insertingLastLine_ = false;
         return false;
+    }
+    if (settings_->getSetting(SettingConstants::MUC_MARKING_ELISION)) {
+        if (label && label->getDisplayMarking() != previousMessageDisplayMarking_) {
+            if (label->getDisplayMarking() != "") {
+                return false;
+            }
+        }
     }
     return result;
 }

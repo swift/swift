@@ -111,7 +111,7 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
         messageLog_ = new QtPlainChatView(this, eventStream_);
     }
     else {
-        messageLog_ = new QtWebKitChatView(this, eventStream_, theme, this); // I accept that passing the ChatWindow in so that the view can call the signals is somewhat inelegant, but it saves a lot of boilerplate. This patch is unpleasant enough already. So let's fix this soon (it at least needs fixing by the time history is sorted), but not now.
+        messageLog_ = new QtWebKitChatView(this, eventStream_, theme, this, settings); // I accept that passing the ChatWindow in so that the view can call the signals is somewhat inelegant, but it saves a lot of boilerplate. This patch is unpleasant enough already. So let's fix this soon (it at least needs fixing by the time history is sorted), but not now.
     }
     logRosterSplitter_->addWidget(messageLog_);
 

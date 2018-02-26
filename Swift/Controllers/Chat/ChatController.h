@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,7 +30,7 @@ namespace Swift {
 
     class ChatController : public ChatControllerBase {
         public:
-            ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, SettingsProvider* settings, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider);
+            ChatController(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &contact, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool isInMUC, bool useDelayForLatency, UIEventStream* eventStream, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, bool userWantsReceipts, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings);
             virtual ~ChatController() override;
             virtual void setToJID(const JID& jid) override;
             virtual void setAvailableServerFeatures(std::shared_ptr<DiscoInfo> info) override;
@@ -104,7 +104,6 @@ namespace Swift {
             bool receivingPresenceFromUs_ = false;
             bool userWantsReceipts_;
             std::map<std::string, FileTransferController*> ftControllers;
-            SettingsProvider* settings_;
             std::string lastWbID_;
             std::string lastHandledMessageID_;
 

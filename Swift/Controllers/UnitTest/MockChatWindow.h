@@ -17,10 +17,11 @@ namespace Swift {
             MockChatWindow() {}
             virtual ~MockChatWindow();
 
-            virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> /*label*/, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
+            virtual std::string addMessage(const ChatMessage& message, const std::string& senderName, bool senderIsSelf, std::shared_ptr<SecurityLabel> label, const std::string& /*avatarPath*/, const boost::posix_time::ptime& /*time*/) {
                 lastAddedMessage_ = message;
                 lastAddedMessageSenderName_ = senderName;
                 lastAddedMessageSenderIsSelf_ = senderIsSelf;
+                lastAddedMessageSecurityLabel_ = label;
                 return "id";
             }
 
@@ -145,6 +146,7 @@ namespace Swift {
             ChatMessage lastAddedMessage_;
             std::string lastAddedMessageSenderName_;
             bool lastAddedMessageSenderIsSelf_ = false;
+            std::shared_ptr<SecurityLabel> lastAddedMessageSecurityLabel_ = nullptr;
             ChatMessage lastAddedAction_;
             std::string lastAddedActionSenderName_;
             bool lastAddedActionSenderIsSelf_ = false;

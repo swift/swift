@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,5 +24,6 @@ const SettingsProvider::Setting<std::string> SettingConstants::HIGHLIGHT_RULES_V
 const SettingsProvider::Setting<std::string> SettingConstants::INVITE_AUTO_ACCEPT_MODE("inviteAutoAcceptMode", "presence");
 const SettingsProvider::Setting<bool> SettingConstants::DISCONNECT_ON_CARD_REMOVAL("disconnectOnCardRemoval", true);
 const SettingsProvider::Setting<bool> SettingConstants::SINGLE_SIGN_ON("singleSignOn", false);
+const SettingsProvider::Setting<bool> SettingConstants::MUC_MARKING_ELISION("mucMarkingElision", true);
 
 }

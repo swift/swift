@@ -15,6 +15,7 @@
 namespace Swift {
     class SWIFTEN_API SecurityLabel : public Payload {
         public:
+            using ref = std::shared_ptr<SecurityLabel>;
 
             SecurityLabel();
 

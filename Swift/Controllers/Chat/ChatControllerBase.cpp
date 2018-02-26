@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -38,7 +38,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream), roomSecurityMarking_(""), previousMessageSecurityMarking_(""), settings_(settings) {
     chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
     chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
     chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
@@ -190,11 +190,33 @@ void ChatControllerBase::updateMessageCount() {
 }
 
 std::string ChatControllerBase::addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, const std::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time) {
+    auto displayedLabel = label;
+
+    if (settings_->getSetting(SettingConstants::MUC_MARKING_ELISION)) {
+        if (roomSecurityMarking_ != "") {
+
+            if (label && label->getDisplayMarking() == roomSecurityMarking_) {
+                if (label->getDisplayMarking() == previousMessageSecurityMarking_) {
+                    displayedLabel = std::make_shared<SecurityLabel>();
+                }
+                previousMessageSecurityMarking_ = label->getDisplayMarking();
+            }
+            else if (!label || label->getDisplayMarking().empty()) {
+                displayedLabel = std::make_shared<SecurityLabel>();
+                displayedLabel->setDisplayMarking("Unmarked");
+                previousMessageSecurityMarking_ = "Unmarked";
+            }
+            else {
+                previousMessageSecurityMarking_ = displayedLabel->getDisplayMarking();
+            }
+        }
+    }
+
     if (chatMessage.isMeCommand()) {
-        return chatWindow_->addAction(chatMessage, senderName, senderIsSelf, label, pathToString(avatarPath), time);
+        return chatWindow_->addAction(chatMessage, senderName, senderIsSelf, displayedLabel, pathToString(avatarPath), time);
     }
     else {
-        return chatWindow_->addMessage(chatMessage, senderName, senderIsSelf, label, pathToString(avatarPath), time);
+        return chatWindow_->addMessage(chatMessage, senderName, senderIsSelf, displayedLabel, pathToString(avatarPath), time);
     }
 }
 

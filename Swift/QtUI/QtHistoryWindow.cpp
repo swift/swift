@@ -49,7 +49,7 @@ QtHistoryWindow::QtHistoryWindow(SettingsProvider* settings, UIEventStream* even
     idCounter_ = 0;
 
     delete ui_.conversation_;
-    conversation_ = new QtWebKitChatView(nullptr, nullptr, theme_, this, true); // Horrible unsafe. Do not do this. FIXME
+    conversation_ = new QtWebKitChatView(nullptr, nullptr, theme_, this, settings, true); // Horrible unsafe. Do not do this. FIXME
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     sizePolicy.setHorizontalStretch(80);
     sizePolicy.setVerticalStretch(0);

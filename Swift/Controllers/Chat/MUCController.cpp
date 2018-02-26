@@ -99,8 +99,9 @@ MUCController::MUCController (
         bool isImpromptu,
         AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
         VCardManager* vcardManager,
-        MUCBookmarkManager* mucBookmarkManager) :
-    ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), nickResolver, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
+        MUCBookmarkManager* mucBookmarkManager,
+        SettingsProvider* settings) :
+    ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), nickResolver, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider, settings), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
     assert(avatarManager_);
 
     parting_ = true;
@@ -1277,7 +1278,7 @@ void MUCController::requestSecurityMarking() {
             // Now we know the marking is valid
             auto markingValue = marking->getTextSingleValue();
             if (markingValue == "") {
-                chatWindow_->removeChatSecurityMarking();
+                setMUCSecurityMarkingDefault();
                 return;
             }
             auto markingForegroundColor = roomInfoForm->getField("x-isode#roominfo_marking_fg_color");
@@ -1290,10 +1291,20 @@ void MUCController::requestSecurityMarking() {
             if (markingBackgroundColor) {
                 markingBackgroundColorValue = markingBackgroundColor->getTextSingleValue();
             }
-            chatWindow_->setChatSecurityMarking(markingValue, markingForegroundColorValue, markingBackgroundColorValue);
+            setMUCSecurityMarking(markingValue, markingForegroundColorValue, markingBackgroundColorValue);
         }
     );
     discoInfoRequest->send();
+}
+
+void MUCController::setMUCSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue) {
+    roomSecurityMarking_ = markingValue;
+    chatWindow_->setChatSecurityMarking(markingValue, markingForegroundColorValue, markingBackgroundColorValue);
+}
+
+void MUCController::setMUCSecurityMarkingDefault() {
+    roomSecurityMarking_ = "";
+    chatWindow_->removeChatSecurityMarking();
 }
 
 }

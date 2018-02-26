@@ -53,7 +53,7 @@ namespace Swift {
 
     class MUCController : public ChatControllerBase {
         public:
-            MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* xmppRoster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager);
+            MUCController(const JID& self, MUC::ref muc, const boost::optional<std::string>& password, const std::string &nick, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, UIEventStream* events, bool useDelayForLatency, TimerFactory* timerFactory, EventController* eventController, EntityCapsProvider* entityCapsProvider, XMPPRoster* xmppRoster, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, std::shared_ptr<ChatMessageParser> chatMessageParser, bool isImpromptu, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, VCardManager* vcardManager, MUCBookmarkManager* mucBookmarkManager, SettingsProvider* settings);
             virtual ~MUCController() override;
             boost::signals2::signal<void ()> onUserLeft;
             boost::signals2::signal<void ()> onUserJoined;
@@ -149,6 +149,8 @@ namespace Swift {
             void addChatSystemMessage();
 
             void requestSecurityMarking();
+            void setMUCSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue);
+            void setMUCSecurityMarkingDefault();
 
         private:
             MUC::ref muc_;
@@ -191,4 +193,3 @@ namespace Swift {
             std::string chatWindowTitle_;
     };
 }
-

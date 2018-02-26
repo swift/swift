@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -93,5 +93,16 @@ namespace Swift {
              * log in the user; else not.
              */
             static const SettingsProvider::Setting<bool> SINGLE_SIGN_ON;
+            /**
+             * The #MUC_MARKING_ELISION setting
+             * specifies whether or not messages with the default muc
+             * marking display their marking, and whether unmarked messages
+             * are marked as such.
+             *
+             * If set true, unmarked messages will be marked with the marking
+             * "unmarked", and messages with the room default marking will
+             * have their markings stripped.
+             */
+            static const SettingsProvider::Setting<bool> MUC_MARKING_ELISION;
     };
 }

@@ -28,6 +28,7 @@ namespace Swift {
     class QtChatWindowJSBridge;
     class UIEventStream;
     class QtChatWindow;
+    class SettingsProvider;
     class QtWebKitChatView : public QtChatView {
             Q_OBJECT
 
@@ -42,7 +43,7 @@ namespace Swift {
             static const QString ButtonFileTransferOpenFile;
             static const QString ButtonMUCInvite;
         public:
-            QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, bool disableAutoScroll = false);
+            QtWebKitChatView(QtChatWindow* window, UIEventStream* eventStream, QtChatTheme* theme, QWidget* parent, SettingsProvider* settings, bool disableAutoScroll = false);
             ~QtWebKitChatView() override;
 
             /** Add message to window.
@@ -150,7 +151,7 @@ namespace Swift {
                     const boost::posix_time::ptime& time,
                     const QString& style,
                     const HighlightAction& highlight);
-            bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf);
+            bool appendToPreviousCheck(PreviousMessageKind messageKind, const std::string& senderName, bool senderIsSelf, const std::shared_ptr<SecurityLabel>& label = nullptr);
             static ChatSnippet::Direction getActualDirection(const ChatWindow::ChatMessage& message, ChatWindow::Direction direction);
             QString getHighlightSpanStart(const std::string& text, const std::string& background);
             QString getHighlightSpanStart(const HighlightAction& highlight);
@@ -189,5 +190,7 @@ namespace Swift {
             QString previousSenderName_;
             std::map<QString, QString> descriptions_;
             std::map<QString, QString> filePaths_;
+            std::string previousMessageDisplayMarking_;
+            SettingsProvider* settings_ = nullptr;
     };
 }

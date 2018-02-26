@@ -36,6 +36,7 @@
 #include <Swift/Controllers/Chat/UserSearchController.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/Roster.h>
+#include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/DummySettingsProvider.h>
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/ChatWindow.h>
@@ -76,6 +77,17 @@ class MUCControllerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testSecurityMarkingRequestNoForm);
     CPPUNIT_TEST(testSecurityMarkingRequestError);
 
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_Elision_NoRoomMarkingA);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_Elision_NoRoomMarkingB);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_Elision_WithRoomMarkingA);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_Elision_WithRoomMarkingB);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_Elision_WithRoomMarkingC);
+
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_NoElision_NoRoomMarkingA);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_NoElision_NoRoomMarkingB);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_NoElision_WithRoomMarkingA);
+    CPPUNIT_TEST(testSecurityMarkingAddedToMessage_NoElision_WithRoomMarkingB);
+
     CPPUNIT_TEST_SUITE_END();
 
 public:
@@ -112,7 +124,7 @@ public:
         nickResolver_ = new NickResolver(self_, xmppRoster_, vcardManager_, mucRegistry_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
         mucBookmarkManager_ = new MUCBookmarkManager(iqRouter_);
-        controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_);
+        controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_, settings_);
     }
 
     void tearDown() {
@@ -169,6 +181,44 @@ public:
 
             controller_->handleIncomingMessage(std::make_shared<MessageEvent>(message));
         }
+    }
+
+    void setMUCSecurityMarking(const std::string& markingValue, const std::string   & markingForegroundColorValue, const std::string& markingBackgroundColorValue, const bool includeFormTypeField = true) {
+        auto form = std::make_shared<Form>(Form::Type::ResultType);
+
+        if (includeFormTypeField) {
+            std::shared_ptr<FormField> formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
+            formTypeField->setName("FORM_TYPE");
+            form->addField(formTypeField);
+        }
+
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, markingValue);
+        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, markingForegroundColorValue);
+        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, markingBackgroundColorValue);
+
+        markingField->setName("x-isode#roominfo_marking");
+        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+
+        form->addField(markingField);
+        form->addField(markingForegroundColorField);
+        form->addField(markingBackgroundColorField);
+
+        auto discoInfoRef = std::make_shared<DiscoInfo>();
+        discoInfoRef->addExtension(form);
+
+        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+        iqChannel_->onIQReceived(infoResponse);
+    }
+
+    Message::ref createTestMessageWithoutSecurityLabel() {
+        auto message = std::make_shared<Message>();
+        message->setType(Message::Type::Groupchat);
+        message->setID("test-id");
+        message->setTo(self_);
+        message->setFrom(mucJID_.withResource("TestNickname"));
+        message->setBody("Do Not Read This Message");
+        return message;
     }
 
     void testAddressedToSelf() {
@@ -602,34 +652,16 @@ public:
     }
 
     void testSecurityMarkingRequestCompleteMarking() {
-        auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
-        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
-        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Black");
-        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Red");
-        formTypeField->setName("FORM_TYPE");
-        markingField->setName("x-isode#roominfo_marking");
-        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
-        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+        setMUCSecurityMarking("Test|Highest Possible Security", "Black", "Red", true);
 
-        auto form = std::make_shared<Form>(Form::Type::ResultType);
-        form->addField(formTypeField);
-        form->addField(markingField);
-        form->addField(markingForegroundColorField);
-        form->addField(markingBackgroundColorField);
-
-        auto discoInfoRef = std::make_shared<DiscoInfo>();
-        discoInfoRef->addExtension(form);
-
-        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
-        iqChannel_->onIQReceived(infoResponse);
-        CPPUNIT_ASSERT_EQUAL(std::string("Test | Highest Possible Security"), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), window_->markingValue_);
         CPPUNIT_ASSERT_EQUAL(std::string("Black"), window_->markingForegroundColorValue_);
         CPPUNIT_ASSERT_EQUAL(std::string("Red"), window_->markingBackgroundColorValue_);
     }
 
     void testSecurityMarkingRequestCompleteMarkingWithExtraForm() {
         auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
-        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test|Highest Possible Security");
         auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Black");
         auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Red");
         formTypeField->setName("FORM_TYPE");
@@ -650,14 +682,14 @@ public:
 
         auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
         iqChannel_->onIQReceived(infoResponse);
-        CPPUNIT_ASSERT_EQUAL(std::string("Test | Highest Possible Security"), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), window_->markingValue_);
         CPPUNIT_ASSERT_EQUAL(std::string("Black"), window_->markingForegroundColorValue_);
         CPPUNIT_ASSERT_EQUAL(std::string("Red"), window_->markingBackgroundColorValue_);
     }
 
     void testSecurityMarkingRequestNoColorsInMarking() {
         auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
-        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
+        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test|Highest Possible Security");
         auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
         auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
         formTypeField->setName("FORM_TYPE");
@@ -676,55 +708,22 @@ public:
 
         auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
         iqChannel_->onIQReceived(infoResponse);
-        CPPUNIT_ASSERT_EQUAL(std::string("Test | Highest Possible Security"), window_->markingValue_);
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), window_->markingValue_);
         CPPUNIT_ASSERT_EQUAL(std::string("Black"), window_->markingForegroundColorValue_);
         CPPUNIT_ASSERT_EQUAL(std::string("White"), window_->markingBackgroundColorValue_);
     }
 
     void testSecurityMarkingRequestEmptyMarking() {
-        auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
-        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
-        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
-        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
-        formTypeField->setName("FORM_TYPE");
-        markingField->setName("x-isode#roominfo_marking");
-        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
-        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+        setMUCSecurityMarking("", "", "", true);
 
-        auto form = std::make_shared<Form>(Form::Type::ResultType);
-        form->addField(formTypeField);
-        form->addField(markingField);
-        form->addField(markingForegroundColorField);
-        form->addField(markingBackgroundColorField);
-
-        auto discoInfoRef = std::make_shared<DiscoInfo>();
-        discoInfoRef->addExtension(form);
-
-        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
-        iqChannel_->onIQReceived(infoResponse);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
     }
 
     void testSecurityMarkingRequestWithMarkingNoFormType() {
-        auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test | Highest Possible Security");
-        auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Black");
-        auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Red");
-        markingField->setName("x-isode#roominfo_marking");
-        markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
-        markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+        setMUCSecurityMarking("Test|Highest Possible Security", "Black", "Red", false);
 
-        auto form = std::make_shared<Form>(Form::Type::ResultType);
-        form->addField(markingField);
-        form->addField(markingForegroundColorField);
-        form->addField(markingBackgroundColorField);
-
-        auto discoInfoRef = std::make_shared<DiscoInfo>();
-        discoInfoRef->addExtension(form);
-
-        auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
-        iqChannel_->onIQReceived(infoResponse);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
@@ -761,6 +760,212 @@ public:
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingValue_);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingForegroundColorValue_);
         CPPUNIT_ASSERT_EQUAL(std::string(""), window_->markingBackgroundColorValue_);
+    }
+
+    void testSecurityMarkingAddedToMessage_Elision_NoRoomMarkingA() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, true);
+        setMUCSecurityMarking("", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("Test|Highest Possible Security");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), storedSecurityLabel->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_Elision_NoRoomMarkingB() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, true);
+        setMUCSecurityMarking("", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string(""), storedSecurityLabel->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_Elision_WithRoomMarkingA() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, true);
+        setMUCSecurityMarking("Test|Highest Possible Security", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("Test|Highest Possible Security");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        // Test the first message matching MUC marking. This message SHOULD have a marking
+
+        auto sentMessageEvent1 = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent1);
+
+        auto storedSecurityLabel1 = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel1 == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), storedSecurityLabel1->getDisplayMarking());
+
+        // Test a consecutive message matching MUC marking. This message SHOULD NOT have a marking
+
+        auto sentMessageEvent2 = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent2);
+
+        auto storedSecurityLabel2 = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel2 == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string(""), storedSecurityLabel2->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_Elision_WithRoomMarkingB() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, true);
+        setMUCSecurityMarking("Test|Lower Security Marking", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("Test|Highest Possible Security");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), storedSecurityLabel->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_Elision_WithRoomMarkingC() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, true);
+        setMUCSecurityMarking("Test|Highest Possible Security", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Unmarked"), storedSecurityLabel->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_NoElision_NoRoomMarkingA() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, false);
+        setMUCSecurityMarking("", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("Test|Highest Possible Security");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), storedSecurityLabel->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_NoElision_NoRoomMarkingB() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, false);
+        setMUCSecurityMarking("", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string(""), storedSecurityLabel->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_NoElision_WithRoomMarkingA() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, false);
+        setMUCSecurityMarking("Test|Highest Possible Security", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("Test|Highest Possible Security");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        // Test the first message matching MUC marking. This message SHOULD have a marking
+
+        auto sentMessageEvent1 = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent1);
+
+        auto storedSecurityLabel1 = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel1 == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), storedSecurityLabel1->getDisplayMarking());
+
+        // Test a consecutive message matching MUC marking. This message SHOULD ALSO have a marking
+
+        auto sentMessageEvent2 = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent2);
+
+        auto storedSecurityLabel2 = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel2 == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string("Test|Highest Possible Security"), storedSecurityLabel2->getDisplayMarking());
+    }
+
+    void testSecurityMarkingAddedToMessage_NoElision_WithRoomMarkingB() {
+        settings_->storeSetting(SettingConstants::MUC_MARKING_ELISION, false);
+        setMUCSecurityMarking("", "Black", "Red");
+
+        auto messageLabel = std::make_shared<SecurityLabel>();
+        messageLabel->setDisplayMarking("");
+
+        auto sentMessage = createTestMessageWithoutSecurityLabel();
+        sentMessage->addPayload(messageLabel);
+
+        auto sentMessageEvent = std::make_shared<MessageEvent>(sentMessage);
+        controller_->handleIncomingMessage(sentMessageEvent);
+
+        auto storedSecurityLabel = window_->lastAddedMessageSecurityLabel_;
+
+        CPPUNIT_ASSERT_EQUAL(false, storedSecurityLabel == nullptr);
+        // This is the potentially altered security label that is displayed on the screen
+        CPPUNIT_ASSERT_EQUAL(std::string(""), storedSecurityLabel->getDisplayMarking());
     }
 
 private:
