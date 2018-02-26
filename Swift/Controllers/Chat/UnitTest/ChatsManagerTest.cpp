@@ -1235,6 +1235,11 @@ public:
 
             CPPUNIT_ASSERT_EQUAL(forwardedBody, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
             CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
+
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, originalMessage->getFrom().toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some further text."));
         }
     }
 
@@ -1271,6 +1276,11 @@ public:
             CPPUNIT_ASSERT_EQUAL(true, window->lastAddedMessageSenderIsSelf_);
             CPPUNIT_ASSERT_EQUAL(size_t(1), window->receiptChanges_.size());
             CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptRequested, window->receiptChanges_[0].second);
+
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, originalMessage->getTo().toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some text my other resource sent."));
         }
 
         // incoming carbons message for the received delivery receipt to the other resource
@@ -1287,6 +1297,12 @@ public:
 
             CPPUNIT_ASSERT_EQUAL(size_t(2), window->receiptChanges_.size());
             CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptReceived, window->receiptChanges_[1].second);
+
+            //Delivery receipt should not change the latest recent entry. Checking for the original message.
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, messageJID.toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some text my other resource sent."));
         }
     }
 
@@ -1326,6 +1342,11 @@ public:
             manager_->handleIncomingMessage(messageWrapper);
             CPPUNIT_ASSERT_EQUAL(std::string(), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
             CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
+
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, originalMessage->getFrom().toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some further text."));
         }
     }
 
