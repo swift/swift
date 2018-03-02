@@ -26,7 +26,7 @@ unset SWIFT_FORCE_LUCID
 
 if [ -z ${SWIFT_PACKAGE_PLATFORMS+x} ];
 then
-	platformsarray=( xenial yakkety jessie sid )
+	platformsarray=( xenial artful jessie stretch sid )
 else
 	platformsarray=( $SWIFT_PACKAGE_PLATFORMS )
 fi

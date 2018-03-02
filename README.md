@@ -26,8 +26,9 @@ Platforms we officially test our releases on are listed below. We only test on d
 * Swift
     * Windows 7 to Windows 10
     * Mac OS X 10.10 and Mac OS X 10.11
-    * Ubuntu 14.04 ( Trusty Tahr ) and Ubuntu 16.04 ( Xenial Xerus )
+    * Ubuntu 17.10 ( Artful Aardvark ) and Ubuntu 16.04 ( Xenial Xerus )
     * Debian 8 ( jessie )
+    * Debian 9 ( stretch )
 
 ## External Dependencies
 The Swift repository includes some third party dependencies in the 3rdParty directory

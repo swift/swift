@@ -40,25 +40,31 @@ arr[0,0]="ubuntu"
 arr[0,1]="http://archive.ubuntu.com/ubuntu"
 arr[0,2]="xenial"
 
-#Ubuntu yakkety
+#Ubuntu artful
 arr[1,0]="ubuntu"
 arr[1,1]="http://archive.ubuntu.com/ubuntu"
-arr[1,2]="yakkety"
+arr[1,2]="artful"
 
 #Debian jessie
 arr[2,0]="debian"
 arr[2,1]="http://deb.debian.org/debian/"
 arr[2,2]="jessie"
 
-#Debian sid
+#Debian stretch
 arr[3,0]="debian"
 arr[3,1]="http://deb.debian.org/debian/"
-arr[3,2]="sid"
+arr[3,2]="stretch"
+
+#Debian sid
+arr[4,0]="debian"
+arr[4,1]="http://deb.debian.org/debian/"
+arr[4,2]="sid"
+
 
 DIST="$1"
 RETURN_VALUE=0
 
-for counter in {0..3}
+for counter in {0..4}
 do
 #  for ARCH in "amd64" "i386"
   for ARCH in "amd64"

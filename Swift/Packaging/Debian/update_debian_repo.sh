@@ -74,7 +74,7 @@ command -v reprepro >/dev/null 2>&1 || { echo >&2 "This script requires aptly bu
 mkdir -p $APT_REPO_ROOT
 
 if [ -z ${SWIFT_PACKAGE_PLATFORMS+x} ]; then
-	platformsarray=( xenial yakkety jessie sid )
+	platformsarray=( xenial artful jessie stretch sid )
 else
 	platformsarray=( $SWIFT_PACKAGE_PLATFORMS )
 fi
