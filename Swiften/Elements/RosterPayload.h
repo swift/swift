@@ -22,7 +22,7 @@ namespace Swift {
             typedef std::vector<RosterItemPayload> RosterItemPayloads;
 
         public:
-            RosterPayload() {}
+            RosterPayload(bool hasAnnotate = false) : hasAnnotate_(hasAnnotate) {}
 
             boost::optional<RosterItemPayload> getItem(const JID& jid) const;
 
@@ -42,7 +42,16 @@ namespace Swift {
                 version_ = version;
             }
 
+            bool hasMIXAnnotationSupport() const {
+                return hasAnnotate_;
+            }
+
+            void setSupportsMIXAnnotations(bool hasAnnotate) {
+                hasAnnotate_ = hasAnnotate;
+            }
+
         private:
+            bool hasAnnotate_;
             RosterItemPayloads items_;
             boost::optional<std::string> version_;
     };

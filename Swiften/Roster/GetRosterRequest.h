@@ -15,19 +15,19 @@ namespace Swift {
         public:
             typedef std::shared_ptr<GetRosterRequest> ref;
 
-            static ref create(IQRouter* router) {
-                return ref(new GetRosterRequest(router));
+            static ref create(IQRouter* router, bool hasAnnotate = false) {
+                return ref(new GetRosterRequest(router, hasAnnotate));
             }
 
-            static ref create(IQRouter* router, const std::string& version) {
-                ref result(new GetRosterRequest(router));
+            static ref create(IQRouter* router, const std::string& version, bool hasAnnotate = false) {
+                ref result(new GetRosterRequest(router, hasAnnotate));
                 result->getPayloadGeneric()->setVersion(version);
                 return result;
             }
 
         private:
-            GetRosterRequest(IQRouter* router) :
-                    GenericRequest<RosterPayload>(IQ::Get, JID(), std::make_shared<RosterPayload>(), router) {
+            GetRosterRequest(IQRouter* router, bool hasAnnotate) :
+                    GenericRequest<RosterPayload>(IQ::Get, JID(), std::make_shared<RosterPayload>(hasAnnotate), router) {
             }
     };
 }

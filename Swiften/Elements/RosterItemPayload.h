@@ -17,8 +17,8 @@ namespace Swift {
         public:
             enum Subscription { None, To, From, Both, Remove };
 
-            RosterItemPayload() : subscription_(None), ask_(false) {}
-            RosterItemPayload(const JID& jid, const std::string& name, Subscription subscription, const std::vector<std::string>& groups = std::vector<std::string>()) : jid_(jid), name_(name), subscription_(subscription), groups_(groups), ask_(false) { }
+            RosterItemPayload() : subscription_(None), ask_(false), isMIXChannel_(false) {}
+            RosterItemPayload(const JID& jid, const std::string& name, Subscription subscription, const std::vector<std::string>& groups = std::vector<std::string>()) : jid_(jid), name_(name), subscription_(subscription), groups_(groups), ask_(false) , isMIXChannel_(false) { }
 
             void setJID(const JID& jid) { jid_ = jid; }
             const JID& getJID() const { return jid_; }
@@ -41,6 +41,9 @@ namespace Swift {
                 unknownContent_ += c;
             }
 
+            void setMIXChannel(bool isMIXChannel) { isMIXChannel_ = isMIXChannel; }
+            bool isMIXChannel() const { return isMIXChannel_; }
+
         private:
             JID jid_;
             std::string name_;
@@ -48,5 +51,6 @@ namespace Swift {
             std::vector<std::string> groups_;
             bool ask_;
             std::string unknownContent_;
+            bool isMIXChannel_;
     };
 }

@@ -15,17 +15,17 @@ XMPPRosterImpl::~XMPPRosterImpl() {
 
 }
 
-void XMPPRosterImpl::addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription) {
+void XMPPRosterImpl::addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription, bool isMIXChannel) {
     JID bareJID(jid.toBare());
     std::map<JID, XMPPRosterItem>::iterator i = entries_.find(bareJID);
     if (i != entries_.end()) {
         std::string oldName = i->second.getName();
         std::vector<std::string> oldGroups = i->second.getGroups();
-        i->second = XMPPRosterItem(jid, name, groups, subscription);
+        i->second = XMPPRosterItem(jid, name, groups, subscription, isMIXChannel);
         onJIDUpdated(bareJID, oldName, oldGroups);
     }
     else {
-        entries_.insert(std::make_pair(bareJID, XMPPRosterItem(jid, name, groups, subscription)));
+        entries_.insert(std::make_pair(bareJID, XMPPRosterItem(jid, name, groups, subscription, isMIXChannel)));
         onJIDAdded(bareJID);
     }
 }
@@ -38,6 +38,15 @@ void XMPPRosterImpl::removeContact(const JID& jid) {
 void XMPPRosterImpl::clear() {
     entries_.clear();
     onRosterCleared();
+}
+
+bool XMPPRosterImpl::isMIXChannel(const JID& jid) {
+    std::map<JID, XMPPRosterItem>::const_iterator i = entries_.find(jid.toBare());
+    if (i != entries_.end()) {
+        return i->second.isMIXChannel();
+    } else {
+        return false;
+    }
 }
 
 bool XMPPRosterImpl::containsJID(const JID& jid) {
@@ -102,4 +111,3 @@ std::set<std::string> XMPPRosterImpl::getGroups() const {
 }
 
 }
-
