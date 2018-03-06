@@ -1,3 +1,9 @@
+4.0-rc6 ( 2018-03-07 )
+----------------------
+- Small usability fixes in Carbons ( XEP-0280 ) handling and Windows installer
+- Fix crashes related to room invitations, layout changes, and vCard handling
+- And smaller bug fixes
+
 4.0-rc5 ( 2018-01-09 )
 ----------------------
 - Fix crash during sleep on macOS
