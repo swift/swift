@@ -6,9 +6,16 @@
 
 #include <Swiften/TLS/TLSContextFactory.h>
 
+#include <cassert>
+
 namespace Swift {
 
 TLSContextFactory::~TLSContextFactory() {
+}
+
+ByteArray TLSContextFactory::convertDHParametersFromPEMToDER(const std::string& /* pem */) {
+    assert(false);
+    return ByteArray();
 }
 
 }

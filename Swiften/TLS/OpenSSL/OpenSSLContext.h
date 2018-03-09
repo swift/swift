@@ -49,6 +49,7 @@ namespace Swift {
             bool setPrivateKey(const PrivateKey::ref& privateKey) override final;
             bool setClientCertificate(CertificateWithKey::ref cert) override final;
             void setAbortTLSHandshake(bool abort) override final;
+            bool setDiffieHellmanParameters(const ByteArray& parametersInOpenSslDer) override final;
 
             void handleDataFromNetwork(const SafeByteArray&) override final;
             void handleDataFromApplication(const SafeByteArray&) override final;

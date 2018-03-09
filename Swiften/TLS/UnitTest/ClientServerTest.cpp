@@ -250,6 +250,22 @@ X137HnkpmtJGF+bcMRwY5u9fSQQZtBNLCadRsvHnz6J+1uodFDnre0+Q4dokmFfv
 -----END RSA PRIVATE KEY-----
 )";
 
+auto dhParamsOpenSslDer1024 = R"(-----BEGIN DH PARAMETERS-----
+MIGHAoGBANjw4f5+gu8b8X8O6ALyJA1tH9TQTWZEI3YjUKQ1m0dVBMJ6XDC7FLJn
+gqE4hIGcm1FAWwIiuo0uMufqyVwFT2c+G8j4JHWK5z1tEP+GaqiO34N0cUo86qHp
+THSkJN7LuHbYRqI9fHWDZocW/5yAsDq5RPUCjFZAoh1BWdfDFfrjAgEC
+-----END DH PARAMETERS-----
+)";
+auto dhParamsOpenSslDer2048 = R"(-----BEGIN DH PARAMETERS-----
+MIIBCAKCAQEA0Q6vD5qtrh3XEkVkbN29ord/k3sgo2Q3PiFmyFt89qqVbebEzYmt
+t8DwaFGMcGlyKs4Lb1s7vocm9y3M9C0FZm85Muvv8WCbLZVZ+wfEtMibOjgRoDqt
+p7Qqe7/iPgMVrSjWegVkg3V8K8dnPpohPClM0yOe4NpBjSVNgBVJRpEtH8gFiCor
+H7hw63HpN/MgFdkjZNeCN+erv8p673xH8LrN98gQpkdQ9vCqYt1dHxF2XZcxBp8x
+XganwPeGgQosofkA6nVB70hyjwjEyxnHJZIMlx6DPXWC7X6ed0SazgH0sQNdACvG
+uU1zHCVIv6/f0adKrJg0s1jrM3qWZ6HmUwIBAg==
+-----END DH PARAMETERS-----
+)";
+
 auto createTLSContext = [](TLSContext::Mode mode) {
     auto tlsFactories = std::make_shared<PlatformTLSFactories>();
 
@@ -677,4 +693,68 @@ TEST(ClientServerTest, testClientServerEqualFinishedMessage) {
 
     ASSERT_EQ(serverContext->getPeerFinishMessage(), clientContext->getFinishMessage());
     ASSERT_EQ(clientContext->getPeerFinishMessage(), serverContext->getFinishMessage());
+}
+
+TEST(ClientServerTest, testClientServerBasicCommunicationWith2048BitDHParams) {
+    auto clientContext = createTLSContext(TLSContext::Mode::Client);
+    auto serverContext = createTLSContext(TLSContext::Mode::Server);
+
+    TLSClientServerEventHistory events(clientContext.get(), serverContext.get());
+
+    ClientServerConnector connector(clientContext.get(), serverContext.get());
+
+    auto tlsFactories = std::make_shared<PlatformTLSFactories>();
+
+    ASSERT_EQ(true, serverContext->setCertificateChain(tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM["capulet.example"]))));
+
+    auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM["capulet.example"]));
+    ASSERT_NE(nullptr, privateKey.get());
+    ASSERT_EQ(true, serverContext->setPrivateKey(privateKey));
+
+    ASSERT_EQ(true, serverContext->setDiffieHellmanParameters(tlsFactories->getTLSContextFactory()->convertDHParametersFromPEMToDER(dhParamsOpenSslDer2048)));
+
+    serverContext->accept();
+    clientContext->connect();
+
+    clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
+    serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
+
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
+    })->second)));
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
+    })->second)));
+}
+
+TEST(ClientServerTest, testClientServerBasicCommunicationWith1024BitDHParams) {
+    auto clientContext = createTLSContext(TLSContext::Mode::Client);
+    auto serverContext = createTLSContext(TLSContext::Mode::Server);
+
+    TLSClientServerEventHistory events(clientContext.get(), serverContext.get());
+
+    ClientServerConnector connector(clientContext.get(), serverContext.get());
+
+    auto tlsFactories = std::make_shared<PlatformTLSFactories>();
+
+    ASSERT_EQ(true, serverContext->setCertificateChain(tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM["capulet.example"]))));
+
+    auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM["capulet.example"]));
+    ASSERT_NE(nullptr, privateKey.get());
+    ASSERT_EQ(true, serverContext->setPrivateKey(privateKey));
+
+    ASSERT_EQ(true, serverContext->setDiffieHellmanParameters(tlsFactories->getTLSContextFactory()->convertDHParametersFromPEMToDER(dhParamsOpenSslDer1024)));
+
+    serverContext->accept();
+    clientContext->connect();
+
+    clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
+    serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
+
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
+    })->second)));
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
+    })->second)));
 }

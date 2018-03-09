@@ -32,6 +32,7 @@ namespace Swift {
             virtual bool setPrivateKey(const PrivateKey::ref& /* privateKey */);
 
             virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;
+            virtual bool setDiffieHellmanParameters(const ByteArray& parametersInOpenSslDer);
 
             /**
              *  This method can be used during the \ref onServerNameRequested signal,

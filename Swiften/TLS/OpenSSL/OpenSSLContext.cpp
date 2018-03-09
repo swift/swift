@@ -14,6 +14,8 @@
 #include <memory>
 #include <vector>
 
+
+#include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/pkcs12.h>
 
@@ -93,6 +95,13 @@ OpenSSLContext::OpenSSLContext(Mode mode) : mode_(mode), state_(State::Start) {
     SSL_CTX_set_options(context_.get(), SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
 
     if (mode_ == Mode::Server) {
+#if OPENSSL_VERSION_NUMBER < 0x1010
+        // Automatically select highest preference curve used for ECDH temporary keys used during
+        // key exchange if possible.
+        // Since version 1.1.0, this option is always enabled.
+        SSL_CTX_set_ecdh_auto(context_.get(), 1);
+#endif
+
         SSL_CTX_set_tlsext_servername_arg(context_.get(), this);
         SSL_CTX_set_tlsext_servername_callback(context_.get(), OpenSSLContext::handleServerNameCallback);
     }
@@ -463,6 +472,25 @@ bool OpenSSLContext::setClientCertificate(CertificateWithKey::ref certificate) {
         SSL_CTX_add_extra_chain_cert(context_.get(), sk_X509_value(caCerts.get(), i));
     }
     return true;
+}
+
+bool OpenSSLContext::setDiffieHellmanParameters(const ByteArray& parametersInOpenSslDer) {
+    auto bio = std::unique_ptr<BIO, decltype(&BIO_free)>(BIO_new(BIO_s_mem()), BIO_free);
+    if (bio) {
+        BIO_write(bio.get(), vecptr(parametersInOpenSslDer), parametersInOpenSslDer.size());
+        auto result = 0L;
+        if (auto dhparams = d2i_DHparams_bio(bio.get(), NULL)) {
+            if (handle_) {
+                result = SSL_set_tmp_dh(handle_.get(), dhparams);
+            }
+            else {
+                result = SSL_CTX_set_tmp_dh(context_.get(), dhparams);
+            }
+            DH_free(dhparams);
+        }
+        return result == 1;
+    }
+    return false;
 }
 
 std::vector<Certificate::ref> OpenSSLContext::getPeerCertificateChain() const {

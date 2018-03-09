@@ -14,6 +14,8 @@ namespace Swift {
             bool canCreate() const override final;
             virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode) override final;
 
+            virtual ByteArray convertDHParametersFromPEMToDER(const std::string& dhParametersInPEM) override final;
+
             // Not supported
             virtual void setCheckCertificateRevocation(bool b) override final;
             virtual void setDisconnectOnCardRemoval(bool b) override final;

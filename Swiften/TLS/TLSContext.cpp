@@ -31,6 +31,11 @@ bool TLSContext::setPrivateKey(const PrivateKey::ref& /* privateKey */) {
     return false;
 }
 
+bool TLSContext::setDiffieHellmanParameters(const ByteArray& /*parametersInOpenSslDer*/) {
+    assert(false);
+    return false;
+}
+
 void TLSContext::setAbortTLSHandshake(bool /* abort */) {
     assert(false);
 }
