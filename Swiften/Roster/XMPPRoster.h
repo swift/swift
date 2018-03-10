@@ -31,6 +31,11 @@ namespace Swift {
             virtual ~XMPPRoster();
 
             /**
+            * Checks whether jid is a MIX channel.
+            */
+            virtual bool isMIXChannel(const JID& jid) = 0;
+
+            /**
              * Checks whether the bare jid of the given jid is in the roster.
              */
             virtual bool containsJID(const JID& jid) = 0;
