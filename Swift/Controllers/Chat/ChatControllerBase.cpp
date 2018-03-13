@@ -306,7 +306,9 @@ void ChatControllerBase::handleIncomingMessage(std::shared_ptr<MessageEvent> mes
             addMessageHandleIncomingMessage(from, chatMessage, message->getID(), senderIsSelf, label, timeStamp);
         }
 
+#ifdef SWIFT_EXPERIMENTAL_HISTORY
         logMessage(body, from, selfJID_, timeStamp, true);
+#endif
     }
     chatWindow_->show();
     updateMessageCount();
