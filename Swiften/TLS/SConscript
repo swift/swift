@@ -20,6 +20,8 @@ if myenv.get("HAVE_OPENSSL", 0) :
             "OpenSSL/OpenSSLCertificateFactory.cpp",
         ])
     myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
+    if myenv["PLATFORM"] == "win32" :
+        myenv.Append(CPPDEFINES = "NOMINMAX")
 elif myenv.get("HAVE_SCHANNEL", 0) :
     swiften_env.Append(LIBS = ["Winscard"])
     objects += myenv.SwiftenObject([
