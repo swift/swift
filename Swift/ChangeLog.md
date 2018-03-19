@@ -1,3 +1,22 @@
+4.0 (2018-03-20)
+----------------
+- New chat theme including a new font
+- Support for message carbons (XEP-0280)
+- Enabled trellis mode as a default feature, allowing several tiled chats windows to be shown at once
+- Redesigned keyword highlighting
+- Improve date formatting
+- Fix Last Message Correction in multi client scenarios
+- Fix UI layout issue for translations that require right-to-left (RTL) layout
+- Fix UX issues in trellis mode
+- Improvements to font size handling in the chat theme
+- Fix display of default avatar on Windows
+- Support for automatic software updates on macOS
+- macOS releases are now code-signed
+- Support for unicode emojis on macOS
+- Add AppImage for Linux 64-bit as a supported platform
+- Improved spell checker support on Linux
+- And assorted smaller features and usability enhancements
+
 4.0-rc6 ( 2018-03-07 )
 ----------------------
 - Small usability fixes in Carbons ( XEP-0280 ) handling and Windows installer
@@ -33,7 +52,7 @@
 - Fix Last Message Correction in multi client scenarios
 - Fix display of default avatar on Windows
 - Support for automatic software updates on macOS
-- Redesigned keyword highlighing
+- Redesigned keyword highlighting
 - Support for unicode emojis on macOS
 - Improvements to font size handling in the chat theme
 - Fix UX issues in trellis mode
