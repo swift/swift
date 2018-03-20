@@ -33,15 +33,13 @@
 //
 // Author: Dan Waylonis
 
-extern "C" {  // necessary for Leopard
-  #include <assert.h>
-  #include <fcntl.h>
-  #include <mach-o/arch.h>
-  #include <mach-o/loader.h>
-  #include <mach-o/swap.h>
-  #include <string.h>
-  #include <unistd.h>
-}
+#include <assert.h>
+#include <fcntl.h>
+#include <mach-o/arch.h>
+#include <mach-o/fat.h>
+#include <mach-o/loader.h>
+#include <string.h>
+#include <unistd.h>
 
 #include "common/mac/byteswap.h"
 #include "common/mac/macho_walker.h"
@@ -51,7 +49,7 @@ namespace MacFileUtilities {
 
 MachoWalker::MachoWalker(const char *path, LoadCommandCallback callback,
                          void *context)
-    : file_(0),
+    : file_(-1),
       memory_(NULL),
       memory_size_(0),
       callback_(callback),
@@ -64,7 +62,7 @@ MachoWalker::MachoWalker(const char *path, LoadCommandCallback callback,
 
 MachoWalker::MachoWalker(void *memory, size_t size,
                          LoadCommandCallback callback, void *context)
-    : file_(0),
+    : file_(-1),
       memory_(memory),
       memory_size_(size),
       callback_(callback),
@@ -79,21 +77,18 @@ MachoWalker::~MachoWalker() {
     close(file_);
 }
 
-int MachoWalker::ValidateCPUType(int cpu_type) {
-  // If the user didn't specify, use the local architecture.
+bool MachoWalker::WalkHeader(cpu_type_t cpu_type, cpu_subtype_t cpu_subtype) {
+  cpu_type_t valid_cpu_type = cpu_type;
+  cpu_subtype_t valid_cpu_subtype = cpu_subtype;
+  // if |cpu_type| is 0, use the native cpu type.
   if (cpu_type == 0) {
     const NXArchInfo *arch = NXGetLocalArchInfo();
     assert(arch);
-    cpu_type = arch->cputype;
+    valid_cpu_type = arch->cputype;
+    valid_cpu_subtype = CPU_SUBTYPE_MULTIPLE;
   }
-
-  return cpu_type;
-}
-
-bool MachoWalker::WalkHeader(int cpu_type) {
-  int valid_cpu_type = ValidateCPUType(cpu_type);
   off_t offset;
-  if (FindHeader(valid_cpu_type, offset)) {
+  if (FindHeader(valid_cpu_type, valid_cpu_subtype, offset)) {
     if (cpu_type & CPU_ARCH_ABI64)
       return WalkHeader64AtOffset(offset);
 
@@ -111,7 +106,7 @@ bool MachoWalker::ReadBytes(void *buffer, size_t size, off_t offset) {
     if (offset + size > memory_size_) {
       if (static_cast<size_t>(offset) >= memory_size_)
         return false;
-      size = memory_size_ - offset;
+      size = memory_size_ - static_cast<size_t>(offset);
       result = false;
     }
     memcpy(buffer, static_cast<char *>(memory_) + offset, size);
@@ -131,8 +126,9 @@ bool MachoWalker::CurrentHeader(struct mach_header_64 *header, off_t *offset) {
   return false;
 }
 
-bool MachoWalker::FindHeader(int cpu_type, off_t &offset) {
-  int valid_cpu_type = ValidateCPUType(cpu_type);
+bool MachoWalker::FindHeader(cpu_type_t cpu_type,
+                             cpu_subtype_t cpu_subtype,
+                             off_t &offset) {
   // Read the magic bytes that's common amongst all mach-o files
   uint32_t magic;
   if (!ReadBytes(&magic, sizeof(magic), 0))
@@ -153,15 +149,18 @@ bool MachoWalker::FindHeader(int cpu_type, off_t &offset) {
   if (!is_fat) {
     // If we don't have a fat header, check if the cpu type matches the single
     // header
-    cpu_type_t header_cpu_type;
-    if (!ReadBytes(&header_cpu_type, sizeof(header_cpu_type), offset))
+    struct mach_header header;
+    if (!ReadBytes(&header, sizeof(header), 0))
       return false;
 
     if (magic == MH_CIGAM || magic == MH_CIGAM_64)
-      header_cpu_type = ByteSwap(header_cpu_type);
+      breakpad_swap_mach_header(&header);
 
-    if (valid_cpu_type != header_cpu_type)
+    if (cpu_type != header.cputype ||
+        (cpu_subtype != CPU_SUBTYPE_MULTIPLE &&
+         cpu_subtype != header.cpusubtype)) {
       return false;
+    }
 
     offset = 0;
     return true;
@@ -173,7 +172,7 @@ bool MachoWalker::FindHeader(int cpu_type, off_t &offset) {
       return false;
 
     if (NXHostByteOrder() != NX_BigEndian)
-      swap_fat_header(&fat, NXHostByteOrder());
+      breakpad_swap_fat_header(&fat);
 
     offset += sizeof(fat);
 
@@ -184,9 +183,11 @@ bool MachoWalker::FindHeader(int cpu_type, off_t &offset) {
         return false;
 
       if (NXHostByteOrder() != NX_BigEndian)
-        swap_fat_arch(&arch, 1, NXHostByteOrder());
+        breakpad_swap_fat_arch(&arch, 1);
 
-      if (arch.cputype == valid_cpu_type) {
+      if (arch.cputype == cpu_type &&
+          (cpu_subtype == CPU_SUBTYPE_MULTIPLE ||
+           arch.cpusubtype == cpu_subtype)) {
         offset = arch.offset;
         return true;
       }
@@ -205,7 +206,7 @@ bool MachoWalker::WalkHeaderAtOffset(off_t offset) {
 
   bool swap = (header.magic == MH_CIGAM);
   if (swap)
-    swap_mach_header(&header, NXHostByteOrder());
+    breakpad_swap_mach_header(&header);
 
   // Copy the data into the mach_header_64 structure.  Since the 32-bit and
   // 64-bit only differ in the last field (reserved), this is safe to do.
@@ -231,7 +232,7 @@ bool MachoWalker::WalkHeader64AtOffset(off_t offset) {
 
   bool swap = (header.magic == MH_CIGAM_64);
   if (swap)
-    breakpad_swap_mach_header_64(&header, NXHostByteOrder());
+    breakpad_swap_mach_header_64(&header);
 
   current_header_ = &header;
   current_header_size_ = sizeof(header);
@@ -252,7 +253,7 @@ bool MachoWalker::WalkHeaderCore(off_t offset, uint32_t number_of_commands,
       return false;
 
     if (swap)
-      swap_load_command(&cmd, NXHostByteOrder());
+      breakpad_swap_load_command(&cmd);
 
     // Call the user callback
     if (callback_ && !callback_(this, &cmd, offset, swap, callback_context_))

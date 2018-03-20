@@ -12,6 +12,8 @@
 
 #include <Swift/Controllers/Highlighting/HighlightAction.h>
 
+BOOST_CLASS_VERSION(Swift::HighlightAction, 1)
+
 namespace Swift {
 
 

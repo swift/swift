@@ -36,7 +36,7 @@ namespace Swift {
             Q_OBJECT
         public:
             QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID);
-
+            ~QtUIFactory();
             virtual XMLConsoleWidget* createXMLConsoleWidget();
             virtual HistoryWindow* createHistoryWindow(UIEventStream*);
             virtual MainWindow* createMainWindow(UIEventStream* eventStream);

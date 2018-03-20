@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2017 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,8 +18,8 @@
 #include <QMenu>
 #include <QTabBar>
 #include <QTabWidget>
-#include <QtGlobal>
 #include <QWindow>
+#include <QtGlobal>
 
 #include <Swiften/Base/Log.h>
 
@@ -112,8 +112,6 @@ void QtChatTabs::setViewMenu(QMenu* viewMenu) {
     if (trellisMode_) {
         viewMenu->addSeparator();
         QAction* action = new QAction(tr("Change &layout"), this);
-        action->setShortcutContext(Qt::ApplicationShortcut);
-        action->setShortcut(QKeySequence(tr("Ctrl+Alt+L")));
         connect(action, SIGNAL(triggered()), this, SLOT(handleOpenLayoutChangeDialog()));
         viewMenu->addAction(action);
 

@@ -11,6 +11,7 @@
 namespace Swift {
 
 class QtSoundSelectionStyledItemDelegate : public QStyledItemDelegate {
+    Q_OBJECT
     public:
         QtSoundSelectionStyledItemDelegate(QObject* parent = nullptr);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -91,6 +91,7 @@ class AvatarManagerImplTest : public CppUnit::TestFixture {
             /* send new presence to notify of blank avatar */
 
             vcardUpdate = std::make_shared<VCardUpdate>();
+            vcardUpdate->setPhotoHash("da39a3ee5e6b4b0d3255bfef95601890afd80709");
             presence = std::make_shared<Presence>();
             presence->setTo(ownerJID);
             presence->setFrom(personJID);

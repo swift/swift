@@ -231,13 +231,13 @@ void ClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
 #ifdef SWIFTEN_PLATFORM_WIN32
             if (singleSignOn) {
                 const boost::optional<std::string> authenticationHostname = streamFeatures->getAuthenticationHostname();
-                bool gssapiSupported = streamFeatures->hasAuthenticationMechanism("GSSAPI") && authenticationHostname && !authenticationHostname->empty();
+                bool gssapiSupported = streamFeatures->hasAuthenticationMechanism("GSSAPI");
 
                 if (!gssapiSupported) {
                     finishSession(Error::NoSupportedAuthMechanismsError);
                 }
                 else {
-                    WindowsGSSAPIClientAuthenticator* gssapiAuthenticator = new WindowsGSSAPIClientAuthenticator(*authenticationHostname, localJID.getDomain(), authenticationPort);
+                    WindowsGSSAPIClientAuthenticator* gssapiAuthenticator = new WindowsGSSAPIClientAuthenticator(authenticationHostname.value_or(""), localJID.getDomain(), authenticationPort);
                     std::shared_ptr<Error> error = std::make_shared<Error>(Error::AuthenticationFailedError);
 
                     authenticator = gssapiAuthenticator;

@@ -34,7 +34,7 @@
  *
  * Author: Mark Mentovai
  * Split into its own file: Neal Sidhwaney */
- 
+
 
 #ifndef GOOGLE_BREAKPAD_COMMON_MINIDUMP_EXCEPTION_MAC_H__
 #define GOOGLE_BREAKPAD_COMMON_MINIDUMP_EXCEPTION_MAC_H__
@@ -65,8 +65,10 @@ typedef enum {
       /* EXC_SYSCALL */
   MD_EXCEPTION_MAC_MACH_SYSCALL    = 8,
       /* EXC_MACH_SYSCALL */
-  MD_EXCEPTION_MAC_RPC_ALERT       = 9
+  MD_EXCEPTION_MAC_RPC_ALERT       = 9,
       /* EXC_RPC_ALERT */
+  MD_EXCEPTION_MAC_SIMULATED       = 0x43507378
+      /* Fake exception code used by Crashpad's SimulateCrash ('CPsx'). */
 } MDExceptionMac;
 
 /* For (MDException).exception_flags.  Breakpad minidump extension for Mac OS X
@@ -92,6 +94,16 @@ typedef enum {
   MD_EXCEPTION_CODE_MAC_ABORT        = 0x00010002,  /* Mach SIGABRT */
   /* Custom values */
   MD_EXCEPTION_CODE_MAC_NS_EXCEPTION = 0xDEADC0DE,  /* uncaught NSException */
+
+  /* With MD_EXCEPTION_MAC_BAD_ACCESS on arm */
+  MD_EXCEPTION_CODE_MAC_ARM_DA_ALIGN = 0x0101,  /* EXC_ARM_DA_ALIGN */
+  MD_EXCEPTION_CODE_MAC_ARM_DA_DEBUG = 0x0102,  /* EXC_ARM_DA_DEBUG */
+
+  /* With MD_EXCEPTION_MAC_BAD_INSTRUCTION on arm */
+  MD_EXCEPTION_CODE_MAC_ARM_UNDEFINED = 1,  /* EXC_ARM_UNDEFINED */
+
+  /* With MD_EXCEPTION_MAC_BREAKPOINT on arm */
+  MD_EXCEPTION_CODE_MAC_ARM_BREAKPOINT = 1, /* EXC_ARM_BREAKPOINT */
 
   /* With MD_EXCEPTION_MAC_BAD_ACCESS on ppc */
   MD_EXCEPTION_CODE_MAC_PPC_VM_PROT_READ = 0x0101,

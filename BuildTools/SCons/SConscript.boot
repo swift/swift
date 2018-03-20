@@ -54,6 +54,7 @@ vars.Add(PathVariable("boost_includedir", "Boost headers location", None, PathVa
 vars.Add(PathVariable("boost_libdir", "Boost library location", None, PathVariable.PathAccept))
 vars.Add(BoolVariable("boost_bundled_enable", "Allow use of bundled Boost as last resort", "true"))
 vars.Add(BoolVariable("boost_force_bundled", "Force use of bundled Boost.", False))
+vars.Add(BoolVariable("allow_boost_1_64", "Allow use of Boost 1.64", False))
 vars.Add(PathVariable("zlib_includedir", "Zlib headers location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("zlib_libdir", "Zlib library location", None, PathVariable.PathAccept))
 vars.Add(PathVariable("zlib_libfile", "Zlib library file (full path to file)", None, PathVariable.PathAccept))
@@ -111,6 +112,7 @@ vars.Add(BoolVariable("unbound", "Build bundled ldns and unbound. Use them for D
 vars.Add(BoolVariable("check_headers", "Independently build compilation units for all Swiften headers for detecting missing dependencies.", "no"))
 vars.Add("win_target_arch", "Target architecture for Windows builds. x86 for 32-bit (default) or x86_64 for 64-bit.", "x86")
 vars.Add(BoolVariable("install_git_hooks", "Install git hooks", "true"))
+vars.Add(BoolVariable("help2man", "Run help2man to geneate man pages", "false"))
 
 # Code Signing Options
 vars.Add("codesign_identity", "macOS code signing identity to be passed to codesign when building the distribution package. Must match the Commen Name of the Subject of the code signing certificate.", "")
@@ -427,6 +429,8 @@ for path in ["SWIFT_INSTALLDIR", "SWIFTEN_INSTALLDIR", "SLUIFT_INSTALLDIR"] :
             env[path] = Dir(ARGUMENTS[path]).abspath
         else :
             env[path] = Dir("#/" + ARGUMENTS[path]).abspath
+if ARGUMENTS.get("SWIFTEN_LIBDIR", "") :
+    env["SWIFTEN_LIBDIR"] = ARGUMENTS["SWIFTEN_LIBDIR"]
 
 
 ################################################################################

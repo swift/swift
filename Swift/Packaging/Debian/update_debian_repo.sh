@@ -73,11 +73,22 @@ command -v reprepro >/dev/null 2>&1 || { echo >&2 "This script requires aptly bu
 
 mkdir -p $APT_REPO_ROOT
 
+if [ -z ${SWIFT_PACKAGE_PLATFORMS+x} ]; then
+	platformsarray=( xenial artful jessie stretch sid )
+else
+	platformsarray=( $SWIFT_PACKAGE_PLATFORMS )
+fi
+
 # distros
 for full_distribution_path in $INCOMING_FOLDER/{debian,ubuntu}/*; do
 	distro_version=`basename $full_distribution_path`
 	distro_name=$(basename `dirname $full_distribution_path`)
 	distro_reprepro_root=${APT_REPO_ROOT}/${distro_name}/${distro_version}
+
+	if ! [[ $SWIFT_PACKAGE_PLATFORMS == *"$distro_version"* ]]; then
+		echo "$distro_version was not found in SWIFT_PACKAGE_PLATFORMS. Skipping..."
+		continue
+	fi
 
 	# ensure reprepro diretctory for this distribution version is present
 	if [ ! -d "$distro_preprepro_root" ]; then
@@ -89,7 +100,7 @@ for full_distribution_path in $INCOMING_FOLDER/{debian,ubuntu}/*; do
 		write_reprepo_conf_incoming_to_file "${distro_reprepro_root}/conf/incoming" "$full_distribution_path"
 	fi
 
-	# This is workaround for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808558 
+	# This is workaround for https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=808558
 	# and https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=843402
 	if [ "$distro_name/$distro_version" = "debian/sid" ]; then
 		sed -i '/dbgsym/ d' $full_distribution_path/*.changes

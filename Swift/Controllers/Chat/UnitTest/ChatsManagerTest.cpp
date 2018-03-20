@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,9 +32,12 @@
 #include <Swiften/Elements/Forwarded.h>
 #include <Swiften/Elements/MUCInvitationPayload.h>
 #include <Swiften/Elements/MUCUserPayload.h>
+#include <Swiften/Elements/PrivateStorage.h>
+#include <Swiften/Elements/Storage.h>
 #include <Swiften/FileTransfer/UnitTest/DummyFileTransferManager.h>
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/MUC/MUCManager.h>
+#include <Swiften/MUC/UnitTest/MockMUC.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Presence/PresenceOracle.h>
@@ -71,7 +74,6 @@
 #include <SwifTools/Notifier/Notifier.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
-#include <Swiften/MUC/UnitTest/MockMUC.h>
 
 using namespace Swift;
 
@@ -154,6 +156,11 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testImpromptuChatTitle);
     CPPUNIT_TEST(testImpromptuChatWindowTitle);
     CPPUNIT_TEST(testStandardMUCChatWindowTitle);
+
+    // Bookmark tests
+    CPPUNIT_TEST(testReceivingBookmarksWithDomainJID);
+    CPPUNIT_TEST(testReceivingBookmarksWithBareJID);
+    CPPUNIT_TEST(testReceivingBookmarksWithFullJID);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1228,6 +1235,11 @@ public:
 
             CPPUNIT_ASSERT_EQUAL(forwardedBody, MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
             CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
+
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, originalMessage->getFrom().toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some further text."));
         }
     }
 
@@ -1264,6 +1276,11 @@ public:
             CPPUNIT_ASSERT_EQUAL(true, window->lastAddedMessageSenderIsSelf_);
             CPPUNIT_ASSERT_EQUAL(size_t(1), window->receiptChanges_.size());
             CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptRequested, window->receiptChanges_[0].second);
+
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, originalMessage->getTo().toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some text my other resource sent."));
         }
 
         // incoming carbons message for the received delivery receipt to the other resource
@@ -1280,6 +1297,12 @@ public:
 
             CPPUNIT_ASSERT_EQUAL(size_t(2), window->receiptChanges_.size());
             CPPUNIT_ASSERT_EQUAL(ChatWindow::ReceiptReceived, window->receiptChanges_[1].second);
+
+            //Delivery receipt should not change the latest recent entry. Checking for the original message.
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, messageJID.toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some text my other resource sent."));
         }
     }
 
@@ -1319,6 +1342,11 @@ public:
             manager_->handleIncomingMessage(messageWrapper);
             CPPUNIT_ASSERT_EQUAL(std::string(), MockChatWindow::bodyFromMessage(window->lastAddedMessage_));
             CPPUNIT_ASSERT_EQUAL(false, window->lastAddedMessageSenderIsSelf_);
+
+            auto recentChats = manager_->getRecentChats();
+            CPPUNIT_ASSERT_EQUAL(recentChats.size(), size_t(1));
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].jid, originalMessage->getFrom().toBare());
+            CPPUNIT_ASSERT_EQUAL(recentChats[0].activity, std::string("Some further text."));
         }
     }
 
@@ -1602,6 +1630,78 @@ public:
         CPPUNIT_ASSERT_EQUAL(std::string("mucroom"), window->name_);
     }
 
+    static std::shared_ptr<Storage> createBookmarkStorageWithJID(const JID& jid) {
+        auto storage = std::make_shared<Storage>();
+        auto room = Storage::Room();
+        room.jid = jid;
+        room.autoJoin = true;
+        storage->addRoom(room);
+        return storage;
+    }
+
+    void testReceivingBookmarksWithDomainJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        CPPUNIT_ASSERT(bookmarkRequest);
+        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+
+        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
+        CPPUNIT_ASSERT(privateStorage);
+
+        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
+        CPPUNIT_ASSERT(storage);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("montague.lit"))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingBookmarksWithBareJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        CPPUNIT_ASSERT(bookmarkRequest);
+        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+
+        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
+        CPPUNIT_ASSERT(privateStorage);
+
+        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
+        CPPUNIT_ASSERT(storage);
+
+        MockChatWindow* window = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID("example@montague.lit"), uiEventStream_).Return(window);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("example@montague.lit"))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingBookmarksWithFullJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        CPPUNIT_ASSERT(bookmarkRequest);
+        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+
+        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
+        CPPUNIT_ASSERT(privateStorage);
+
+        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
+        CPPUNIT_ASSERT(storage);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("example@montague.lit/someresource"))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
 private:
     std::shared_ptr<Message> makeDeliveryReceiptTestMessage(const JID& from, const std::string& id) {
         std::shared_ptr<Message> message = std::make_shared<Message>();
@@ -1668,4 +1768,3 @@ private:
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(ChatsManagerTest);
-

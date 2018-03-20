@@ -18,7 +18,9 @@
 #include <boost/algorithm/string.hpp>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
+
 #include <Swiften/Base/Log.h>
+#include <Swiften/TLS/Schannel/SchannelUtil.h>
 
 namespace Swift {
 
@@ -87,23 +89,22 @@ std::string selectCAPICertificate() {
         }
     }
 
-
-
+    std::string result;
     /* Call Windows dialog to select a suitable certificate */
-    PCCERT_CONTEXT cert = CryptUIDlgSelectCertificateFromStore(hstore, hwnd, titleChars, promptChars, exclude_columns, 0, NULL);
+    {
+        ScopedCertContext cert(CryptUIDlgSelectCertificateFromStore(hstore, hwnd, titleChars, promptChars, exclude_columns, 0, NULL));
+        if (cert) {
+            result = getCertUri(cert, certStoreName);
+        }
+    }
 
     delete[] titleChars;
     delete[] promptChars;
 
     if (hstore) {
-        CertCloseStore(hstore, 0);
-    }
-
-    std::string result;
-
-    if (cert) {
-        result = getCertUri(cert, certStoreName);
-        CertFreeCertificateContext(cert);
+        if (CertCloseStore(hstore, 0) == FALSE) {
+            SWIFT_LOG(debug) << "Failed to close the certificate store handle." << std::endl;
+        }
     }
 
     return result;

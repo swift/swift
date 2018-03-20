@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <cstdio>
+#include <memory>
 #include <sstream>
 
 #include <Swiften/Base/API.h>
@@ -29,9 +31,18 @@ namespace Swift {
 
             static Severity getLogLevel();
             static void setLogLevel(Severity level);
+            static void setLogFile(const std::string& fileName);
 
         private:
+            struct LogFileClose {
+                void operator()(FILE* p) {
+                    if (p) {
+                        fclose(p);
+                    }
+                }
+            };
             std::ostringstream stream;
+            static std::unique_ptr<FILE, LogFileClose> logfile;
     };
 }
 

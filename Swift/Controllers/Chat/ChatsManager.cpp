@@ -9,14 +9,7 @@
 #include <memory>
 
 #include <boost/algorithm/string.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 #include <boost/bind.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/optional.hpp>
-#include <boost/serialization/split_free.hpp>
-#include <boost/serialization/string.hpp>
-#include <boost/serialization/vector.hpp>
 
 #include <Swiften/Avatars/AvatarManager.h>
 #include <Swiften/Base/Log.h>
@@ -43,6 +36,7 @@
 #include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatControllerBase.h>
+#include <Swift/Controllers/Chat/ChatListWindowChatBoostSerialize.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/MUCSearchController.h>
@@ -66,42 +60,6 @@
 #include <Swift/Controllers/UIInterfaces/JoinMUCWindowFactory.h>
 #include <Swift/Controllers/WhiteboardManager.h>
 #include <Swift/Controllers/XMPPEvents/EventController.h>
-
-BOOST_CLASS_VERSION(Swift::ChatListWindow::Chat, 2)
-
-namespace boost {
-namespace serialization {
-    template<class Archive> void save(Archive& ar, const Swift::JID& jid, const unsigned int /*version*/) {
-        std::string jidStr = jid.toString();
-        ar << jidStr;
-    }
-
-    template<class Archive> void load(Archive& ar, Swift::JID& jid, const unsigned int /*version*/) {
-        std::string stringJID;
-        ar >> stringJID;
-        jid = Swift::JID(stringJID);
-    }
-
-    template<class Archive> inline void serialize(Archive& ar, Swift::JID& t, const unsigned int file_version){
-        split_free(ar, t, file_version);
-    }
-
-    template<class Archive> void serialize(Archive& ar, Swift::ChatListWindow::Chat& chat, const unsigned int version) {
-        ar & chat.jid;
-        ar & chat.chatName;
-        ar & chat.activity;
-        ar & chat.isMUC;
-        ar & chat.nick;
-        ar & chat.impromptuJIDs;
-        if (version > 0) {
-            ar & chat.password;
-        }
-        if (version > 1) {
-            ar & chat.inviteesNames;
-        }
-    }
-}
-}
 
 namespace Swift {
 
@@ -206,6 +164,7 @@ ChatsManager::~ChatsManager() {
     roster_->onRosterCleared.disconnect(boost::bind(&ChatsManager::handleRosterCleared, this));
     ftOverview_->onNewFileTransferController.disconnect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
     delete joinMUCWindow_;
+    SWIFT_LOG(debug) << "Destroying ChatsManager, containing " << chatControllers_.size() << " chats and " << mucControllers_.size() << " MUCs" << std::endl;
     for (JIDChatControllerPair controllerPair : chatControllers_) {
         delete controllerPair.second;
     }
@@ -341,7 +300,7 @@ void ChatsManager::loadRecents() {
             SWIFT_LOG(debug) << "Failed to load recents: " << e.what() << std::endl;
             return;
         }
-
+        recentChats.erase(std::remove(recentChats.begin(), recentChats.end(), ChatListWindow::Chat()), recentChats.end());
         for (auto chat : recentChats) {
             chat.statusType = StatusShow::None;
             chat = updateChatStatusAndAvatarHelper(chat);
@@ -372,11 +331,13 @@ void ChatsManager::handleBookmarksReady() {
 }
 
 void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
-    std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
-    if (it == mucControllers_.end() && bookmark.getAutojoin()) {
-        handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false, false  );
+    if (bookmark.getRoom().isBare() && !bookmark.getRoom().getNode().empty()) {
+        std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
+        if (it == mucControllers_.end() && bookmark.getAutojoin()) {
+            handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false, false  );
+        }
+        chatListWindow_->addMUCBookmark(bookmark);
     }
-    chatListWindow_->addMUCBookmark(bookmark);
 }
 
 void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {

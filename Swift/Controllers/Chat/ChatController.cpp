@@ -86,7 +86,7 @@ ChatController::ChatController(const JID& self, StanzaChannel* stanzaChannel, IQ
     chatStateNotifier_->setContactIsOnline(theirPresence && theirPresence->getType() == Presence::Available);
     startMessage += ".";
     chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(startMessage), ChatWindow::DefaultDirection);
-    chatWindow_->onContinuationsBroken.connect([this, startMessage]() { chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(startMessage), ChatWindow::DefaultDirection); });
+    continuationsBrokenConnection_ = chatWindow_->onContinuationsBroken.connect([this, startMessage]() { chatWindow_->addSystemMessage(chatMessageParser_->parseMessageBody(startMessage), ChatWindow::DefaultDirection); });
     chatWindow_->onUserTyping.connect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
     chatWindow_->onUserCancelsTyping.connect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
     chatWindow_->onFileTransferStart.connect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
@@ -320,6 +320,7 @@ void ChatController::handleIncomingOwnMessage(std::shared_ptr<Message> message) 
     if (!message->getBody().get_value_or("").empty()) {
         postSendMessage(message->getBody().get_value_or(""), message);
         handleStanzaAcked(message);
+        onActivity(message->getBody().get_value_or(""));
     }
 }
 
@@ -585,8 +586,20 @@ JID ChatController::messageCorrectionJID(const JID& fromJID) {
 }
 
 ChatWindow* ChatController::detachChatWindow() {
-    chatWindow_->onUserTyping.disconnect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
+    continuationsBrokenConnection_.disconnect();
+    chatWindow_->onClosed.disconnect(boost::bind(&ChatController::handleWindowClosed, this));
+    chatWindow_->onInviteToChat.disconnect(boost::bind(&ChatController::handleInviteToChat, this, _1));
+    chatWindow_->onUnblockUserRequest.disconnect(boost::bind(&ChatController::handleUnblockUserRequest, this));
+    chatWindow_->onBlockUserRequest.disconnect(boost::bind(&ChatController::handleBlockUserRequest, this));
+    chatWindow_->onWhiteboardWindowShow.disconnect(boost::bind(&ChatController::handleWhiteboardWindowShow, this));
+    chatWindow_->onWhiteboardSessionCancel.disconnect(boost::bind(&ChatController::handleWhiteboardSessionCancel, this));
+    chatWindow_->onWhiteboardSessionAccept.disconnect(boost::bind(&ChatController::handleWhiteboardSessionAccept, this));
+    chatWindow_->onSendFileRequest.disconnect(boost::bind(&ChatController::handleSendFileRequest, this, _1));
+    chatWindow_->onFileTransferCancel.disconnect(boost::bind(&ChatController::handleFileTransferCancel, this, _1));
+    chatWindow_->onFileTransferAccept.disconnect(boost::bind(&ChatController::handleFileTransferAccept, this, _1, _2));
+    chatWindow_->onFileTransferStart.disconnect(boost::bind(&ChatController::handleFileTransferStart, this, _1, _2));
     chatWindow_->onUserCancelsTyping.disconnect(boost::bind(&ChatStateNotifier::userCancelledNewMessage, chatStateNotifier_));
+    chatWindow_->onUserTyping.disconnect(boost::bind(&ChatStateNotifier::setUserIsTyping, chatStateNotifier_));
     return ChatControllerBase::detachChatWindow();
 }
 

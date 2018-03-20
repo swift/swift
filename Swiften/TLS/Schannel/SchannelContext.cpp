@@ -16,6 +16,7 @@
 
 #include <WinHTTP.h> /* For SECURITY_FLAG_IGNORE_CERT_CN_INVALID */
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/TLS/CAPICertificate.h>
 #include <Swiften/TLS/Schannel/SchannelCertificate.h>
 
@@ -39,13 +40,20 @@ SchannelContext::SchannelContext(bool tls1_0Workaround) : state_(Start), secCont
 //------------------------------------------------------------------------
 
 SchannelContext::~SchannelContext() {
-    if (myCertStore_) CertCloseStore(myCertStore_, 0);
+    SWIFT_LOG(debug) << "Destroying SchannelContext" << std::endl;
+    if (myCertStore_) {
+        if (CertCloseStore(myCertStore_, 0) == FALSE) {
+            SWIFT_LOG(debug) << "Failed to close the certificate store" << std::endl;
+        }
+    }
 }
 
 //------------------------------------------------------------------------
 
 void SchannelContext::determineStreamSizes() {
-    QueryContextAttributes(contextHandle_, SECPKG_ATTR_STREAM_SIZES, &streamSizes_);
+    if (QueryContextAttributes(contextHandle_, SECPKG_ATTR_STREAM_SIZES, &streamSizes_) != SEC_E_OK) {
+        SWIFT_LOG(debug) << "QueryContextAttributes failed to determinate the stream size" << std::endl;
+    }
 }
 
 //------------------------------------------------------------------------
@@ -267,8 +275,8 @@ void SchannelContext::continueHandshake(const SafeByteArray& data) {
         SecBuffer inBuffers[2];
 
         // Provide Schannel with the remote host's handshake data
-        inBuffers[0].pvBuffer     = (char*)(&receivedData_[0]);
-        inBuffers[0].cbBuffer     = (unsigned long)receivedData_.size();
+        inBuffers[0].pvBuffer = static_cast<char*>(&receivedData_[0]);
+        inBuffers[0].cbBuffer = static_cast<unsigned long>(receivedData_.size());
         inBuffers[0].BufferType  = SECBUFFER_TOKEN;
 
         inBuffers[1].pvBuffer   = NULL;
@@ -483,8 +491,8 @@ void SchannelContext::decryptAndProcessData(const SafeByteArray& data) {
         //   contexts. Additionally, a second SECBUFFER_TOKEN type buffer that contains a security token
         //   must also be supplied.
         //
-        inBuffers[0].pvBuffer     = (char*)(&receivedData_[0]);
-        inBuffers[0].cbBuffer     = (unsigned long)receivedData_.size();
+        inBuffers[0].pvBuffer = static_cast<char*>(&receivedData_[0]);
+        inBuffers[0].cbBuffer = static_cast<unsigned long>(receivedData_.size());
         inBuffers[0].BufferType  = SECBUFFER_DATA;
 
         inBuffers[1].BufferType  = SECBUFFER_EMPTY;
@@ -578,7 +586,7 @@ void SchannelContext::encryptAndSendData(const SafeByteArray& data) {
         outBuffers[0].BufferType = SECBUFFER_STREAM_HEADER;
 
         outBuffers[1].pvBuffer     = &sendBuffer[0] + streamSizes_.cbHeader;
-        outBuffers[1].cbBuffer     = (unsigned long)bytesToSend;
+        outBuffers[1].cbBuffer     = static_cast<unsigned long>(bytesToSend);
         outBuffers[1].BufferType = SECBUFFER_DATA;
 
         outBuffers[2].pvBuffer     = &sendBuffer[0] + streamSizes_.cbHeader + bytesToSend;
@@ -645,6 +653,7 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
     SECURITY_STATUS status = QueryContextAttributes(contextHandle_, SECPKG_ATTR_REMOTE_CERT_CONTEXT, pServerCert.Reset());
 
     if (status != SEC_E_OK) {
+        SWIFT_LOG(debug) << "Error while Querying the Certificate Chain" << std::endl;
         return certificateChain;
     }
     certificateChain.push_back(std::make_shared<SchannelCertificate>(pServerCert));
@@ -678,6 +687,10 @@ ByteArray SchannelContext::getFinishMessage() const {
     if (ret == SEC_E_OK) {
         return createByteArray(((unsigned char*) bindings.Bindings) + bindings.Bindings->dwApplicationDataOffset + 11 /* tls-unique:*/, bindings.Bindings->cbApplicationDataLength - 11);
     }
+    else {
+        SWIFT_LOG(debug) << "Error while retrieving Finish Message" << std::endl;
+    }
+
     return ByteArray();
 }
 

@@ -10,6 +10,7 @@
 
 #include <QSplitter>
 
+#include <Swiften/Base/Log.h>
 #include <Swiften/Whiteboard/WhiteboardSession.h>
 
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
@@ -44,6 +45,13 @@ QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider*
     chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
     historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
     this->tabs = dynamic_cast<QtChatTabs*>(tabsBase);
+}
+
+QtUIFactory::~QtUIFactory() {
+    SWIFT_LOG(debug) << "Entering QtUIFactory destructor. chatWindows size:" << chatWindows.size() << std::endl;
+    for (auto chat : chatWindows) {
+        SWIFT_LOG_ASSERT(chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly" << std::endl;
+    }
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {

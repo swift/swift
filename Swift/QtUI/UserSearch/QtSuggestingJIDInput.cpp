@@ -205,7 +205,7 @@ void QtSuggestingJIDInput::hidePopup() {
 
     // Give focus back to input widget because the hide() call passes the focus to the wrong widget.
     setFocus();
-#if defined(Q_WS_MAC)
+#if defined(Q_OS_MAC)
     // This workaround is needed on OS X, to bring the dialog containing this widget back to the front after
     // the popup is hidden. Ubuntu 16.04 and Windows 8 do not have this issue.
     window()->raise();

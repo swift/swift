@@ -208,16 +208,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 --- START OF SIMPLIFIED BSD LICENSE
 
-Copyright (c) 2012 Isode Limited, London, England.
-Copyright (c) 2012 Yoann Blein.
-Copyright (c) 2012 Mateusz Piekos.
-Copyright (c) 2012 Catalin Badea.
-Copyright (c) 2012 Maciej Niedzielski.
-Copyright (c) 2015 Kim Alvefur.
-Copyright (c) 2015 Tarun Gupta.
-Copyright (c) 2015 Daniel Baczynski.
-Copyright (c) 2015 Michael Vetter.
-Copyright (c) 2016 Barun Parruck.
+Copyright (c) 2012 Isode Limited, London, England
+Copyright (c) 2012 Yoann Blein
+Copyright (c) 2012 Mateusz Piekos
+Copyright (c) 2012 Catalin Badea
+Copyright (c) 2012 Maciej Niedzielski
+Copyright (c) 2015 Kim Alvefur
+Copyright (c) 2015 Tarun Gupta
+Copyright (c) 2015 Daniel Baczynski
+Copyright (c) 2015 Michael Vetter
+Copyright (c) 2016 Barun Parruck
+Copyright (c) 2017 Vitaly Takmazov
+Copyright (c) 2017 Dennis Schridde
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:

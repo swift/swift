@@ -707,9 +707,9 @@ void QtChatWindow::handleEmojiClicked(QString emoji) {
     if (isVisible()) {
         input_->textCursor().insertText(emoji);
         input_->setFocus();
-        // The next line also deletes the emojisGrid_, as it was added to the
-        // layout of the emojisMenu_.
-        emojisMenu_.reset();
+        // We cannot delete the emojisGrid_
+        // Grid may not close yet and we should not try to destroy it.
+        emojisMenu_->setVisible(false);
     }
 }
 

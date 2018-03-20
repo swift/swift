@@ -242,6 +242,12 @@ elif not env.get("boost_bundled_enable", True) :
     Exit(1)
 else :
     env["BOOST_BUNDLED"] = True
+boost_version = GetVersion(conf, "BOOST_VERSION", "boost/version.hpp")
+if boost_version == 106400 :
+    #Version 1.64 has some issues with the serialization of boost::optional, see https://svn.boost.org/trac10/ticket/13050
+    env["BOOST_1_64_DETECTED"] = True
+else:
+    env["BOOST_1_64_DETECTED"] = False
 conf.Finish()
 
 
