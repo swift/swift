@@ -16,7 +16,7 @@
 namespace Swift {
     class SWIFTEN_API XMPPRosterItem {
         public:
-            XMPPRosterItem(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription) : jid(jid), name(name), groups(groups), subscription(subscription) {
+            XMPPRosterItem(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription, bool isMIXChannel = false) : jid(jid), name(name), groups(groups), subscription(subscription), isMIXChannel_(isMIXChannel) {
             }
 
             const JID& getJID() const {
@@ -43,11 +43,19 @@ namespace Swift {
                 return subscription;
             }
 
+            void setMIXChannel(bool isMIXChannel) {
+                isMIXChannel_ = isMIXChannel;
+            }
+
+            bool isMIXChannel() const {
+                return isMIXChannel_;
+            }
+
         private:
             JID jid;
             std::string name;
             std::vector<std::string> groups;
             RosterItemPayload::Subscription subscription;
+            bool isMIXChannel_;
     };
 }
-

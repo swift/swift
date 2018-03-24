@@ -18,10 +18,11 @@ namespace Swift {
             XMPPRosterImpl();
             virtual ~XMPPRosterImpl();
 
-            void addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription);
+            void addContact(const JID& jid, const std::string& name, const std::vector<std::string>& groups, RosterItemPayload::Subscription subscription, bool isMIXChannel = false);
             void removeContact(const JID& jid);
             void clear();
 
+            bool isMIXChannel(const JID& jid);
             bool containsJID(const JID& jid);
             RosterItemPayload::Subscription getSubscriptionStateForJID(const JID& jid);
             std::string getNameForJID(const JID& jid) const;

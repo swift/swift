@@ -11,4 +11,5 @@ SConscript(dirs = [
     "ParserTester",
     "BenchTool",
     "MUCListAndJoin",
+    "MIXListAndJoin"
 ])

@@ -23,6 +23,7 @@ elif env["SCONS_STAGE"] == "build" :
     myenv.UseFlags(env["LIMBER_FLAGS"])
     myenv.UseFlags(env["SWIFTEN_FLAGS"])
     myenv.UseFlags(env["SWIFTEN_DEP_FLAGS"])
+    myenv.Program("MIXMockServer", ["MIXMockServer.cpp"])
     myenv.Program("limber", ["main.cpp"])
 
     env.Append(UNITTEST_SOURCES = [

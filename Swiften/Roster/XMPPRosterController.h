@@ -27,7 +27,7 @@ namespace Swift {
             XMPPRosterController(IQRouter *iqRouter, XMPPRosterImpl* xmppRoster, RosterStorage* storage);
             ~XMPPRosterController();
 
-            void requestRoster();
+            void requestRoster(bool hasAnnotate = false);
 
             void setUseVersioning(bool b) {
                 useVersioning = b;
@@ -45,4 +45,3 @@ namespace Swift {
             bool useVersioning;
     };
 }
-
