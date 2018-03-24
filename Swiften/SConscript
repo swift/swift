@@ -593,6 +593,8 @@ if env["SCONS_STAGE"] == "build" :
     swiften_public_includes = []
     top_path = env.Dir("..").abspath
     for root, dirs, files in os.walk(env.Dir(".").abspath) :
+        dirs.sort()
+        files.sort()
         if root.endswith("UnitTest") :
             continue
         for file in files :
