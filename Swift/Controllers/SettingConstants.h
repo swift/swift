@@ -104,5 +104,11 @@ namespace Swift {
              * have their markings stripped.
              */
             static const SettingsProvider::Setting<bool> MUC_MARKING_ELISION;
+
+            /**
+             * The #FUTURE setting enables use of experimental features
+             * planned for future releases.
+             */
+            static const SettingsProvider::Setting<bool> FUTURE;
     };
 }

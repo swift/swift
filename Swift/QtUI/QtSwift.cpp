@@ -101,6 +101,8 @@ po::options_description QtSwift::getOptionsDescription() {
         ("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
 #endif
         ("logfile", po::value<std::string>()->implicit_value(""), "Save all logging information to a file")
+        ("enable-future", "Enable future features (unsupported). This will persist across restarts")
+        ("disable-future", "Disable future features. This will persist across restarts")
         ;
     return result;
 }
@@ -183,6 +185,14 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
     if (options.count("debug")) {
         Log::setLogLevel(Swift::Log::debug);
+    }
+
+    if (options.count("enable-future")) {
+        settingsHierachy_->storeSetting(SettingConstants::FUTURE, true);
+    }
+
+    if (options.count("disable-future")) {
+        settingsHierachy_->storeSetting(SettingConstants::FUTURE, false);
     }
 
     if (options.count("logfile")) {
