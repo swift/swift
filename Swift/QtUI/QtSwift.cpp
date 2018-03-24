@@ -92,12 +92,11 @@ po::options_description QtSwift::getOptionsDescription() {
         ("debug", "Turn on debug logging")
         ("help", "Show this help message")
         ("version", "Show version information")
-        ("netbook-mode", "Use netbook mode display (unsupported)")
         ("no-tabs", "Don't manage chat windows in tabs (unsupported)")
         ("latency-debug", "Use latency debugging (unsupported)")
         ("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
         ("start-minimized", "Don't show the login/roster window at startup")
-        ("enable-jid-adhocs", "Enable AdHoc commands to custom JID's.")
+        ("enable-jid-adhocs", "Enable AdHoc commands to custom JIDs.")
 #if QT_VERSION >= 0x040800
         ("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
 #endif
@@ -172,11 +171,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);
     loadEmoticonsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "emoticons.txt")), emoticons);
 
-    if (options.count("netbook-mode")) {
-        splitter_ = new QtSingleWindow(qtSettings_);
-    } else {
-        splitter_ = nullptr;
-    }
+    splitter_ = new QtSingleWindow(qtSettings_);
 
     int numberOfAccounts = 1;
     try {
