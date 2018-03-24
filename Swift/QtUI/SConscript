@@ -10,6 +10,8 @@ def generateQRCTheme(dir, prefix) :
         #skip the Noto emoji fonts in Windows. No need to package them since they aren't used
         if "Noto" in path and not env["PLATFORM"] == "linux" :
             continue
+        dirs.sort()
+        files.sort()
         for file in files :
             filePath = os.path.join(path,file)
             result += "<file alias=\"%(alias)s\">%(path)s</file>" % {

@@ -707,6 +707,8 @@ if ARGUMENTS.get("replace_pragma_once", False) :
         return path[i+1:]
 
     for actual_root, dirs, files in os.walk(root) :
+        dirs.sort()
+        files.sort()
         if "3rdParty" in actual_root :
             continue
         for file in files :
@@ -733,14 +735,14 @@ if ARGUMENTS.get("dump_trace", False) :
 # Modules
 modules = []
 if os.path.isdir(Dir("#/3rdParty").abspath) :
-    for dir in os.listdir(Dir("#/3rdParty").abspath) :
+    for dir in sorted(os.listdir(Dir("#/3rdParty").abspath)) :
         full_dir = os.path.join(Dir("#/3rdParty").abspath, dir)
         if not os.path.isdir(full_dir) :
             continue
         sconscript = os.path.join(full_dir, "SConscript")
         if os.path.isfile(sconscript) :
             modules.append("3rdParty/" + dir)
-for dir in os.listdir(Dir("#").abspath) :
+for dir in sorted(os.listdir(Dir("#").abspath)) :
     full_dir = os.path.join(Dir("#").abspath, dir)
     if not os.path.isdir(full_dir) :
         continue
