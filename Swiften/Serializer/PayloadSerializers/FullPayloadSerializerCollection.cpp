@@ -69,6 +69,7 @@
 #include <Swiften/Serializer/PayloadSerializers/PubSubOwnerPubSubSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/PubSubSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/RawXMLPayloadSerializer.h>
+#include <Swiften/Serializer/PayloadSerializers/ReferencePayloadSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ReplaceSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ResourceBindSerializer.h>
 #include <Swiften/Serializer/PayloadSerializers/ResultSetSerializer.h>
@@ -185,6 +186,8 @@ FullPayloadSerializerCollection::FullPayloadSerializerCollection() {
     serializers_.push_back(new CarbonsSentSerializer(this));
 
     serializers_.push_back(new IsodeIQDelegationSerializer(this));
+
+    serializers_.push_back(new ReferencePayloadSerializer(this));
 
     for (auto serializer : serializers_) {
         addSerializer(serializer);

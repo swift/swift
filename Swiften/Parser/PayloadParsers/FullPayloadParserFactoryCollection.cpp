@@ -75,6 +75,7 @@
 #include <Swiften/Parser/PayloadParsers/PubSubOwnerPubSubParser.h>
 #include <Swiften/Parser/PayloadParsers/PubSubParser.h>
 #include <Swiften/Parser/PayloadParsers/RawXMLPayloadParserFactory.h>
+#include <Swiften/Parser/PayloadParsers/ReferencePayloadParser.h>
 #include <Swiften/Parser/PayloadParsers/ReplaceParser.h>
 #include <Swiften/Parser/PayloadParsers/ResourceBindParser.h>
 #include <Swiften/Parser/PayloadParsers/ResultSetParser.h>
@@ -187,6 +188,7 @@ FullPayloadParserFactoryCollection::FullPayloadParserFactoryCollection() {
     factories_.push_back(std::make_shared<GenericPayloadParserFactory2<CarbonsSentParser> >("sent", "urn:xmpp:carbons:2", this));
     factories_.push_back(std::make_shared<GenericPayloadParserFactory<CarbonsPrivateParser> >("private", "urn:xmpp:carbons:2"));
     factories_.push_back(std::make_shared<MIXJoinParserFactory>());
+    factories_.push_back(std::make_shared<GenericPayloadParserFactory2<ReferencePayloadParser> >("reference", "urn:xmpp:reference:0", this));
 
     for (auto& factory : factories_) {
         addFactory(factory.get());

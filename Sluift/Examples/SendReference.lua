@@ -37,7 +37,7 @@ function get_password(prompt)
     if stty_ret then
         io.write("\027[m")
     else
-        os.execute("stty sane")
+        os.execute("stty echo")
     end
     io.write("\n");
     if ok then
@@ -55,6 +55,7 @@ datauri = #arg > 2 and arg[3] or DEFAULT_URI
 
 sluift.debug = 1
 sluift.with(sluift.new_client(jid, password), function()
+    options = { host=os.getenv("XMPP_HOST"), port=os.getenv("XMPP_PORT") }
     connect(options)
     reference = {
         ['_type'] = 'dom',
@@ -63,6 +64,9 @@ sluift.with(sluift.new_client(jid, password), function()
         ['attributes'] = {
             { ['name'] = 'type', ['value'] = 'data' },
             { ['name'] = 'uri', ['value'] = datauri },
+            { ['name'] = 'mimeType', ['value'] = arg[4] },
+            { ['name'] = 'begin', ['value'] = arg[5] },
+            { ['name'] = 'end', ['value'] = arg[6] }
         },
     }
     send_message{to=tojid, body="Check out this data!", payloads={reference}}
