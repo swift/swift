@@ -1,3 +1,7 @@
+4.0.1 (2018-03-28)
+------------------
+- Allow setting vCard on servers that do not return an empty vCard on fresh accounts
+
 4.0 (2018-03-20)
 ----------------
 - New chat theme including a new font

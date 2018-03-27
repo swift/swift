@@ -1,4 +1,8 @@
-4.0 (2017-03-20)
+4.0.1 (2018-03-28)
+------------------
+- Fix handling errors when fetching own vCard
+
+4.0 (2018-03-20)
 ----------------
 - Moved code-base to C++11
     - Use C++11 threading instead of Boost.Thread library
