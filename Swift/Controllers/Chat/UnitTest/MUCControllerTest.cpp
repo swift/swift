@@ -674,31 +674,31 @@ TEST_F(MUCControllerTest, testSecurityMarkingRequestCompleteMarkingWithExtraForm
     ASSERT_EQ(std::string("Red"), window_->markingBackgroundColorValue_);
 }
 
-// TEST_F(MUCControllerTest, testSecurityMarkingRequestNoColorsInMarking) {
-//     auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
-//     auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test|Highest Possible Security");
-//     auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
-//     auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
-//     formTypeField->setName("FORM_TYPE");
-//     markingField->setName("x-isode#roominfo_marking");
-//     markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
-//     markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
+TEST_F(MUCControllerTest, testSecurityMarkingRequestNoColorsInMarking) {
+    auto formTypeField = std::make_shared<FormField>(FormField::Type::HiddenType, "http://jabber.org/protocol/muc#roominfo");
+    auto markingField = std::make_shared<FormField>(FormField::Type::TextSingleType, "Test|Highest Possible Security");
+    auto markingForegroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+    auto markingBackgroundColorField = std::make_shared<FormField>(FormField::Type::TextSingleType, "");
+    formTypeField->setName("FORM_TYPE");
+    markingField->setName("x-isode#roominfo_marking");
+    markingForegroundColorField->setName("x-isode#roominfo_marking_fg_color");
+    markingBackgroundColorField->setName("x-isode#roominfo_marking_bg_color");
 
-//     auto form = std::make_shared<Form>(Form::Type::ResultType);
-//     form->addField(formTypeField);
-//     form->addField(markingField);
-//     form->addField(markingForegroundColorField);
-//     form->addField(markingBackgroundColorField);
+    auto form = std::make_shared<Form>(Form::Type::ResultType);
+    form->addField(formTypeField);
+    form->addField(markingField);
+    form->addField(markingForegroundColorField);
+    form->addField(markingBackgroundColorField);
 
-//     auto discoInfoRef = std::make_shared<DiscoInfo>();
-//     discoInfoRef->addExtension(form);
+    auto discoInfoRef = std::make_shared<DiscoInfo>();
+    discoInfoRef->addExtension(form);
 
-//     auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
-//     iqChannel_->onIQReceived(infoResponse);
-//     ASSERT_EQ(std::string("Test|Highest Possible Security"), window_->markingValue_);
-//     ASSERT_EQ(std::string("Black"), window_->markingForegroundColorValue_);
-//     ASSERT_EQ(std::string("White"), window_->markingBackgroundColorValue_);
-// }
+    auto infoResponse = IQ::createResult(self_, mucJID_, "test-id", discoInfoRef);
+    iqChannel_->onIQReceived(infoResponse);
+    ASSERT_EQ(std::string("Test|Highest Possible Security"), window_->markingValue_);
+    ASSERT_EQ(std::string("Black"), window_->markingForegroundColorValue_);
+    ASSERT_EQ(std::string("White"), window_->markingBackgroundColorValue_);
+}
 
 TEST_F(MUCControllerTest, testSecurityMarkingRequestEmptyMarking) {
     setMUCSecurityMarking("", "", "", true);

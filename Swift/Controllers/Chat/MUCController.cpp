@@ -1285,10 +1285,10 @@ void MUCController::requestSecurityMarking() {
             auto markingBackgroundColor = roomInfoForm->getField("x-isode#roominfo_marking_bg_color");
             std::string markingForegroundColorValue = "Black";
             std::string markingBackgroundColorValue = "White";
-            if (markingForegroundColor) {
+            if (markingForegroundColor && markingForegroundColor->getTextSingleValue() != "") {
                 markingForegroundColorValue = markingForegroundColor->getTextSingleValue();
             }
-            if (markingBackgroundColor) {
+            if (markingBackgroundColor && markingBackgroundColor->getTextSingleValue() != "") {
                 markingBackgroundColorValue = markingBackgroundColor->getTextSingleValue();
             }
             setMUCSecurityMarking(markingValue, markingForegroundColorValue, markingBackgroundColorValue);
