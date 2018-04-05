@@ -1,3 +1,7 @@
+4.0.2 (2018-04-05)
+------------------
+- Fix versioning issue in Windows Installer process
+
 4.0.1 (2018-03-28)
 ------------------
 - Allow setting vCard on servers that do not return an empty vCard on fresh accounts
