@@ -1,3 +1,21 @@
+swift-im (4.0.2-1) UNRELEASED; urgency=medium
+
+  * New chat theme including a new font
+  * Support for message carbons (XEP-0280)
+  * Enabled trellis mode as a default feature, allowing several tiled chats windows to be shown at once
+  * Redesigned keyword highlighting
+  * Improve date formatting
+  * Fix Last Message Correction in multi client scenarios
+  * Fix UI layout issue for translations that require right-to-left (RTL) layout
+  * Fix UX issues in trellis mode
+  * Improvements to font size handling in the chat theme
+  * Add AppImage for Linux 64-bit as a supported platform
+  * Improved spell checker support on Linux
+  * Allow setting vCard on servers that do not return an empty vCard on fresh accounts
+  * And assorted smaller features and usability enhancements. Closes: 840151, 889062
+
+ -- Kevin Smith <kevin@kismith.co.uk>  Tue, 10 Apr 2018 10:46:13 +0200
+
 swift-im (3.0.4-1) unstable; urgency=low
 
   * New upstream release
