@@ -7,6 +7,9 @@ def generateQRCTheme(dir, prefix) :
     result += "<RCC version =\"1.0\">"
     result += "<qresource prefix=\"/themes/" + prefix + "\">"
     for (path, dirs, files) in os.walk(sourceDir) :
+        #skip the Noto emoji fonts in Windows. No need to package them since they aren't used
+        if "Noto" in path and not env["PLATFORM"] == "linux" :
+            continue
         for file in files :
             filePath = os.path.join(path,file)
             result += "<file alias=\"%(alias)s\">%(path)s</file>" % {

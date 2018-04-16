@@ -155,11 +155,15 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
     connect(input_, SIGNAL(lostFocus()), this, SLOT(handleTextInputLostFocus()));
     connect(input_, SIGNAL(itemDropped(QDropEvent*)), this, SLOT(dropEvent(QDropEvent*)));
     QPushButton* emojisButton_ = new QPushButton(this);
-
-#ifdef SWIFTEN_PLATFORM_MACOSX
     emojisButton_->setText("\xF0\x9F\x98\x83");
-#else
-    emojisButton_->setIcon(QIcon(":/emoticons/smile.png"));
+
+#if defined(SWIFTEN_PLATFORM_WINDOWS) || defined(SWIFTEN_PLATFORM_LINUX)
+    //Using a emoji glyph instead of an image makes the button sizes inequal in windows & linux,
+    //so we set fixed size for both buttons, the one that is hinted for actionButton_
+    emojisButton_->setMaximumWidth(actionButton_->sizeHint().width());
+    emojisButton_->setMaximumHeight(actionButton_->sizeHint().height());
+    actionButton_->setMaximumWidth(actionButton_->sizeHint().width());
+    actionButton_->setMaximumHeight(actionButton_->sizeHint().height());
 #endif
     connect(emojisButton_, SIGNAL(clicked()), this, SLOT(handleEmojisButtonClicked()));
 

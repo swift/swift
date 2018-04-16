@@ -1,7 +1,7 @@
 /* Chat Window Container */
 
 body {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Lato', 'apple color emoji', 'notocoloremoji', sans-serif;
     margin: 0;
     padding: 0;
 }

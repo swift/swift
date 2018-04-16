@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtEmojiCell.h>
+
+#include <Swiften/Base/Platform.h>
 
 #include <QFont>
 #include <QFontMetrics>
@@ -17,13 +19,20 @@ namespace Swift {
     QtEmojiCell::QtEmojiCell(QString shortname, QString text, QWidget* parent) :  QPushButton(parent) {
         setText(text);
         QFont font = this->font();
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+        //Windows emoji font miscalculates the bounding rectangular that surrounds the emoji. We set a multiplier value to make it look consistent with linux & Mac
+        const float sizeMultiplier = 1.3;
+        font.setPointSize(18);
+#else
         font.setPointSize(22);
+        const float sizeMultiplier = 1;
+#endif
         font.setBold(true);
         setFont(font);
 
         const auto boundingRect = fontMetrics().boundingRect("\xF0\x9F\x98\x83");
-        setFixedWidth(qMax(boundingRect.width(), boundingRect.height()));
-        setFixedHeight(qMax(boundingRect.width(), boundingRect.height()));
+        setFixedWidth(qMax(sizeMultiplier*boundingRect.width(), sizeMultiplier*boundingRect.height()));
+        setFixedHeight(qMax(sizeMultiplier*boundingRect.width(), sizeMultiplier*boundingRect.height()));
 
         setFlat(true);
         setToolTip(shortname);

@@ -24,7 +24,6 @@
 
 namespace Swift {
     QtEmojisSelector::QtEmojisSelector(QSettings* settings, const std::map<std::string, std::string>& emoticonsMap, QWidget* parent) : QTabWidget(parent), settings_(settings), emoticonsMap_(emoticonsMap) {
-#ifdef SWIFTEN_PLATFORM_MACOSX
         recentEmojisGrid_ = addRecentTab();
         connect(recentEmojisGrid_, SIGNAL(onEmojiSelected(QString)), this, SLOT(emojiClickedSlot(QString)));
 
@@ -34,17 +33,13 @@ namespace Swift {
                 connect(grid, SIGNAL(onEmojiSelected(QString)), this, SLOT(emojiClickedSlot(QString)));
             }
         }
-
         loadSettings();
-#else
-        setupEmoticonsTab();
-#endif
+        //The size of an emoji cell varies depending the OS, 42 is the ceil value.
+        setFixedSize(QSize(EmojiMapper::emojisInCategory.size() * 42, 300));
     }
 
     QtEmojisSelector::~QtEmojisSelector() {
-#ifdef SWIFTEN_PLATFORM_MACOSX
         writeSettings();
-#endif
     }
 
     QtRecentEmojisGrid* QtEmojisSelector::addRecentTab() {

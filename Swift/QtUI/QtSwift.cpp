@@ -233,6 +233,15 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
         SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath << std::endl;
     }
 
+#ifdef SWIFTEN_PLATFORM_LINUX
+    std::string fontPath = std::string(":/themes/Default/Noto/NotoColorEmoji.ttf");
+    int error = QFontDatabase::addApplicationFont(P2QSTRING(fontPath));
+    SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath << std::endl;
+    QFont::insertSubstitution(QApplication::font().family(),"NotoColorEmoji");
+#endif
+#ifdef SWIFTEN_PLATFORM_WINDOWS
+    QFont::insertSubstitution(QApplication::font().family(), "Segoe UI Emoji");
+#endif
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
     tabs_ = nullptr;
     if (options.count("no-tabs") && !splitter_) {

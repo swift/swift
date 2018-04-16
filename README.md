@@ -39,6 +39,7 @@ to easy development. Third party dependencies not included are listed below:
 * Qt 5 and QtWebKit is required by Swift. Depending on platform, architecture, and compiler/IDE, you have the following options to fulfill this dependency:
   * download and install the [official binary Qt 5.5 release](http://download.qt.io/archive/qt/5.5/5.5.1/) if it is available for your platform/architecture/compiler
   * download and install the latest [official binary Qt 5.7 release](http://download.qt.io/archive/qt/5.7/) **and** download the *matching* [Qt WebKit Technology Preview release for Qt 5.7](https://github.com/annulen/webkit/releases/) and copy/merge the folders with the matching folders of the previously installed Qt 5.7 installation
+  * Some features of Swift, such as unicode Emojis support, require QT 5.6 or newer.
 
 ## General Build Instructions
 The Swift projects use the SCons build system for build configuration and Build
@@ -64,6 +65,7 @@ After installing Qt, simply run `./scons qt=/Users/username/Qt_installation_path
 - Windows SDK
 - Python (2.5 <= version < 3)
 - Qt Open Source Edition
+  - QT 5.6 or newer to support emojis.
 
 A binary release of Qt can be obtained from https://www.qt.io/download-open-source/. Make sure it matches the Visual Studio version you have installed.
 
