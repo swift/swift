@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,6 +33,7 @@ namespace Swift {
     class UIFactory;
     class EventLoop;
     class Client;
+    class Chattables;
     class ChatController;
     class ChatsManager;
     class CertificateStorageFactory;
@@ -152,6 +153,7 @@ namespace Swift {
             TogglableNotifier* notifier_;
             PresenceNotifier* presenceNotifier_;
             EventNotifier* eventNotifier_;
+            std::unique_ptr<Chattables> chattables_;
             RosterController* rosterController_;
             EventController* eventController_;
             EventWindowController* eventWindowController_;

@@ -20,7 +20,7 @@ namespace Swift {
     class QtDynamicGridLayout : public QWidget {
         Q_OBJECT
     public:
-        explicit QtDynamicGridLayout(QWidget* parent = nullptr, bool enableDND = false);
+        explicit QtDynamicGridLayout(bool future, QWidget* parent = nullptr, bool enableDND = false);
         virtual ~QtDynamicGridLayout();
 
         QSize getDimension() const;
@@ -71,6 +71,7 @@ namespace Swift {
         void moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex);
         QtTabWidget* createDNDTabWidget(QWidget* parent);
         void updateEmphasiseFocusOnTabs();
+        void showHideFirstTabs();
 
     private:
         QGridLayout *gridLayout_;
@@ -78,5 +79,6 @@ namespace Swift {
         QHash<QString, QPoint> tabPositions_;
         QtTabbable* movingTab_;
         bool resizing_ = false;
+        bool future_ = false;
     };
 }

@@ -20,9 +20,7 @@ namespace Swift {
             /**
              * Transfers ownership of result.
              */
-            virtual MainWindow* createMainWindow(UIEventStream*) {last = new MockMainWindow();return last;}
+            virtual MainWindow* createMainWindow(Chattables&, UIEventStream*) {last = new MockMainWindow();return last;}
             MockMainWindow* last;
     };
 }
-
-

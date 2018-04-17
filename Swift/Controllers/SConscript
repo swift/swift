@@ -25,6 +25,7 @@ if env["SCONS_STAGE"] == "build" :
             "AdHocController.cpp",
             "AdHocManager.cpp",
             "BlockListController.cpp",
+            "Chat/Chattables.cpp",
             "Chat/ChatController.cpp",
             "Chat/ChatControllerBase.cpp",
             "Chat/ChatMessageParser.cpp",

@@ -23,7 +23,7 @@
 
 namespace Swift {
 
-QtDynamicGridLayout::QtDynamicGridLayout(QWidget* parent, bool enableDND) : QWidget(parent), dndEnabled_(enableDND), movingTab_(nullptr) {
+QtDynamicGridLayout::QtDynamicGridLayout(bool future, QWidget* parent, bool enableDND) : QWidget(parent), dndEnabled_(enableDND), movingTab_(nullptr), future_(future) {
     gridLayout_ = new QGridLayout(this);
     setContentsMargins(0,0,0,0);
     setDimensions(QSize(1,1));
@@ -49,6 +49,9 @@ int QtDynamicGridLayout::addTab(QtTabbable* tab, const QString& title) {
         tabWidget->addTab(tab, title);
     }
     tab->setEmphasiseFocus(getDimension().width() > 1 || getDimension().height() > 1);
+    if (future_) {
+        showHideFirstTabs(); // FIXME: Putting it here as a workaround until I work out why it doesn't work initially
+    }
     return tabWidget ? indexOf(tab) : -1;
 }
 
@@ -328,6 +331,24 @@ void QtDynamicGridLayout::setDimensions(const QSize& dim) {
     setCurrentWidget(restoredWidget);
 
     updateEmphasiseFocusOnTabs();
+
+    if (future_) {
+        showHideFirstTabs();
+    }
+}
+
+void QtDynamicGridLayout::showHideFirstTabs() {
+    int tmp;
+    auto firstTabs = indexToTabWidget(0, tmp);
+
+    if (firstTabs) {
+        if (gridLayout_->columnCount() == 1 && gridLayout_->rowCount() == 1) {
+            firstTabs->tabBar()->hide();
+        }
+        else {
+            firstTabs->tabBar()->show();
+        }
+    }
 }
 
 void QtDynamicGridLayout::updateEmphasiseFocusOnTabs() {

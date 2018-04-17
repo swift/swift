@@ -100,8 +100,9 @@ MUCController::MUCController (
         AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider,
         VCardManager* vcardManager,
         MUCBookmarkManager* mucBookmarkManager,
-        SettingsProvider* settings) :
-    ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), nickResolver, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider, settings), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
+        SettingsProvider* settings,
+        Chattables& chattables) :
+    ChatControllerBase(self, stanzaChannel, iqRouter, chatWindowFactory, muc->getJID(), nickResolver, presenceOracle, avatarManager, useDelayForLatency, uiEventStream, eventController, entityCapsProvider, historyController, mucRegistry, highlightManager, chatMessageParser, autoAcceptMUCInviteDecider, settings, chattables), muc_(muc), nick_(nick), desiredNick_(nick), password_(password), renameCounter_(0), isImpromptu_(isImpromptu), isImpromptuAlreadyConfigured_(false), clientBlockListManager_(clientBlockListManager), mucBookmarkManager_(mucBookmarkManager) {
     assert(avatarManager_);
 
     parting_ = true;

@@ -50,6 +50,7 @@
 
 #include <Swift/Controllers/Chat/ChatController.h>
 #include <Swift/Controllers/Chat/ChatsManager.h>
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/UnitTest/MockChatListWindow.h>
 #include <Swift/Controllers/EventNotifier.h>
@@ -207,7 +208,8 @@ public:
         mocks_->ExpectCall(chatListWindowFactory_, ChatListWindowFactory::createChatListWindow).With(uiEventStream_).Return(chatListWindow_);
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
         timerFactory_ = new DummyTimerFactory();
-        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, timerFactory_, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_);
+        chattables_ = std::make_unique<Chattables>();
+        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, timerFactory_, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_, *chattables_);
 
         manager_->setAvatarManager(avatarManager_);
     }
@@ -1764,6 +1766,7 @@ private:
     int handledHighlightActions_;
     std::set<std::string> soundsPlayed_;
     DummyTimerFactory* timerFactory_;
+    std::unique_ptr<Chattables> chattables_;
 
 };
 

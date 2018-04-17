@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,6 +19,7 @@
 #include <QListWidgetItem>
 #include <QMenuBar>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QTabWidget>
 #include <QToolBar>
 
@@ -35,6 +36,7 @@
 #include <Swift/Controllers/UIEvents/RequestProfileEditorUIEvent.h>
 
 #include <Swift/QtUI/QtAdHocCommandWithJIDWindow.h>
+#include <Swift/QtUI/QtChatOverview.h>
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
@@ -52,7 +54,7 @@
 
 namespace Swift {
 
-QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, StatusCache* statusCache, bool emoticonsExist, bool enableAdHocCommandOnJID) : QWidget(), MainWindow(false), loginMenus_(loginMenus) {
+QtMainWindow::QtMainWindow(Chattables& chattables, SettingsProvider* settings, UIEventStream* uiEventStream, QtLoginWindow::QtMenus loginMenus, StatusCache* statusCache, bool emoticonsExist, bool enableAdHocCommandOnJID) : QWidget(), MainWindow(false), chattables_(chattables), loginMenus_(loginMenus) {
     uiEventStream_ = uiEventStream;
     settings_ = settings;
     setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
@@ -66,11 +68,18 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
     connect(meView_, SIGNAL(onShowCertificateInfo()), this, SLOT(handleShowCertificateInfo()));
 
     tabs_ = new QtTabWidget(this);
-#if QT_VERSION >= 0x040500
     tabs_->setDocumentMode(true);
-#endif
     tabs_->setTabPosition(QTabWidget::South);
     mainLayout->addWidget(tabs_);
+
+    if (settings->getSetting(SettingConstants::FUTURE)) {
+        chatOverview_ = new QtChatOverview(chattables, this);
+        auto overviewScroll = new QScrollArea(this);
+        overviewScroll->setWidgetResizable(true);
+        overviewScroll->setWidget(chatOverview_);
+        tabs_->addTab(overviewScroll, tr("&All"));
+    }
+
     contactsTabWidget_ = new QWidget(this);
     contactsTabWidget_->setContentsMargins(0, 0, 0, 0);
     QBoxLayout *contactTabLayout = new QBoxLayout(QBoxLayout::TopToBottom, contactsTabWidget_);
@@ -82,9 +91,7 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
 
     contactTabLayout->addWidget(treeWidget_);
     new QtFilterWidget(this, treeWidget_, uiEventStream_, contactTabLayout);
-
     tabs_->addTab(contactsTabWidget_, tr("&Contacts"));
-
     eventWindow_ = new QtEventWindow(uiEventStream_);
     connect(eventWindow_, SIGNAL(onNewEventCountUpdated(int)), this, SLOT(handleEventCountUpdated(int)));
 
@@ -103,8 +110,11 @@ QtMainWindow::QtMainWindow(SettingsProvider* settings, UIEventStream* uiEventStr
         tabs_->tabBar()->hide();
         tabBarCombo_ = new QComboBox(this);
         tabBarCombo_->setAccessibleName("Current View");
+        tabBarCombo_->addItem(tr("All"));
+#ifndef NOT_YET
         tabBarCombo_->addItem(tr("Contacts"));
         tabBarCombo_->addItem(tr("Chats"));
+#endif
         tabBarCombo_->addItem(tr("Notices"));
         tabBarCombo_->setCurrentIndex(tabs_->currentIndex());
         mainLayout->addWidget(tabBarCombo_);
@@ -424,4 +434,3 @@ void QtMainWindow::setBlockingCommandAvailable(bool isAvailable) {
 }
 
 }
-

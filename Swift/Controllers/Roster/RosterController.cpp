@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,6 +31,7 @@
 #include <Swiften/Roster/XMPPRosterItem.h>
 #include <Swiften/VCards/VCardManager.h>
 
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/ItemOperations/AppearOffline.h>
@@ -49,6 +50,7 @@
 #include <Swift/Controllers/UIEvents/RemoveRosterItemUIEvent.h>
 #include <Swift/Controllers/UIEvents/RenameGroupUIEvent.h>
 #include <Swift/Controllers/UIEvents/RenameRosterItemUIEvent.h>
+#include <Swift/Controllers/UIEvents/UIEventStream.h>
 #include <Swift/Controllers/UIInterfaces/MainWindow.h>
 #include <Swift/Controllers/UIInterfaces/MainWindowFactory.h>
 #include <Swift/Controllers/XMPPEvents/ErrorEvent.h>
@@ -60,14 +62,16 @@ namespace Swift {
 /**
  * The controller does not gain ownership of these parameters.
  */
-RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager)
-    : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), vcardManager_(vcardManager), avatarManager_(avatarManager), nickManager_(nickManager), nickResolver_(nickResolver), presenceOracle_(presenceOracle), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), clientBlockListManager_(clientBlockListManager) {
+RosterController::RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsManager, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager, Chattables& chattables)
+    : myJID_(jid), xmppRoster_(xmppRoster), mainWindowFactory_(mainWindowFactory), mainWindow_(mainWindowFactory_->createMainWindow(chattables, uiEventStream)), roster_(new Roster()), offlineFilter_(new OfflineRosterFilter()), vcardManager_(vcardManager), avatarManager_(avatarManager), nickManager_(nickManager), nickResolver_(nickResolver), presenceOracle_(presenceOracle), uiEventStream_(uiEventStream), entityCapsManager_(entityCapsManager), clientBlockListManager_(clientBlockListManager), chattables_(chattables) {
     iqRouter_ = iqRouter;
     subscriptionManager_ = subscriptionManager;
     eventController_ = eventController;
     settings_ = settings;
     expandiness_ = new RosterGroupExpandinessPersister(roster_, settings);
+#ifndef NOT_YET
     mainWindow_->setRosterModel(roster_);
+#endif
     rosterVCardProvider_ = new RosterVCardProvider(roster_, vcardManager, JID::WithoutResource);
 
     changeStatusConnection_ = mainWindow_->onChangeStatusRequest.connect(boost::bind(&RosterController::handleChangeStatusRequest, this, _1, _2));
@@ -148,6 +152,11 @@ void RosterController::handleOnJIDAdded(const JID& jid) {
         roster_->addContact(jid, jid, name, QT_TRANSLATE_NOOP("", "Contacts"), avatarManager_->getAvatarPath(jid));
     }
     applyAllPresenceTo(jid);
+
+    chattables_.addJID(jid, Chattables::State::Type::Person);
+    auto state = chattables_.getState(jid);
+    state.name = name;
+    chattables_.setState(jid, state);
 }
 
 void RosterController::applyAllPresenceTo(const JID& jid) {
@@ -329,13 +338,17 @@ void RosterController::handleIncomingPresence(Presence::ref newPresence) {
     if (newPresence->getType() == Presence::Error) {
         return;
     }
-    Presence::ref accountPresence = presenceOracle_->getAccountPresence(newPresence->getFrom().toBare());
+    auto bareFrom = newPresence->getFrom().toBare();
+    Presence::ref accountPresence = presenceOracle_->getAccountPresence(bareFrom);
     if (!accountPresence) {
         accountPresence = Presence::create();
         accountPresence->setFrom(newPresence->getFrom());
         accountPresence->setType(Presence::Unavailable);
     }
     roster_->applyOnItems(SetPresence(accountPresence));
+    auto state = chattables_.getState(bareFrom);
+    state.status = accountPresence->getShow();
+    chattables_.setState(bareFrom, state);
 }
 
 void RosterController::handleSubscriptionRequest(const JID& jid, const std::string& message) {

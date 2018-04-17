@@ -25,6 +25,7 @@
 #include <Swiften/Queries/Requests/GetSecurityLabelsCatalogRequest.h>
 
 #include <Swift/Controllers/Chat/AutoAcceptMUCInviteDecider.h>
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
 #include <Swift/Controllers/Highlighting/HighlightManager.h>
 #include <Swift/Controllers/Highlighting/Highlighter.h>
@@ -38,7 +39,7 @@
 
 namespace Swift {
 
-ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream), roomSecurityMarking_(""), previousMessageSecurityMarking_(""), settings_(settings) {
+ChatControllerBase::ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings, Chattables& chattables) : selfJID_(self), stanzaChannel_(stanzaChannel), iqRouter_(iqRouter), chatWindowFactory_(chatWindowFactory), toJID_(toJID), labelsEnabled_(false), presenceOracle_(presenceOracle), avatarManager_(avatarManager), useDelayForLatency_(useDelayForLatency), eventController_(eventController), entityCapsProvider_(entityCapsProvider), historyController_(historyController), mucRegistry_(mucRegistry), chatMessageParser_(chatMessageParser), autoAcceptMUCInviteDecider_(autoAcceptMUCInviteDecider), eventStream_(eventStream), roomSecurityMarking_(""), previousMessageSecurityMarking_(""), settings_(settings), chattables_(chattables) {
     chatWindow_ = chatWindowFactory_->createChatWindow(toJID, eventStream);
     chatWindow_->onAllMessagesRead.connect(boost::bind(&ChatControllerBase::handleAllMessagesRead, this));
     chatWindow_->onSendMessageRequest.connect(boost::bind(&ChatControllerBase::handleSendMessageRequest, this, _1, _2));
@@ -188,8 +189,15 @@ ChatWindow::ChatMessage ChatControllerBase::buildChatWindowChatMessage(const std
 }
 
 void ChatControllerBase::updateMessageCount() {
-    chatWindow_->setUnreadMessageCount(boost::numeric_cast<int>(unreadMessages_.size()));
+    int intCount = boost::numeric_cast<int>(unreadMessages_.size());
+    chatWindow_->setUnreadMessageCount(intCount);
+    auto baseJID = getBaseJID();
+    auto state = chattables_.getState(baseJID);
+    state.unreadCount = intCount;
+    chattables_.setState(baseJID, state);
+#ifndef NOT_YET
     onUnreadCountChanged();
+#endif
 }
 
 std::string ChatControllerBase::addMessage(const ChatWindow::ChatMessage& chatMessage, const std::string& senderName, bool senderIsSelf, const std::shared_ptr<SecurityLabel> label, const boost::filesystem::path& avatarPath, const boost::posix_time::ptime& time) {

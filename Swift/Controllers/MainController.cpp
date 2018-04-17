@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,6 +47,7 @@
 #include <Swift/Controllers/AdHocManager.h>
 #include <Swift/Controllers/BlockListController.h>
 #include <Swift/Controllers/BuildVersion.h>
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Chat/ChatsManager.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/UserSearchController.h>
@@ -277,6 +278,7 @@ void MainController::resetClient() {
     blockListController_ = nullptr;
     delete rosterController_;
     rosterController_ = nullptr;
+    chattables_.reset();
     delete eventNotifier_;
     eventNotifier_ = nullptr;
     delete presenceNotifier_;
@@ -348,7 +350,8 @@ void MainController::handleConnected() {
         showProfileController_ = new ShowProfileController(client_->getVCardManager(), uiFactory_, uiEventStream_);
         ftOverview_ = new FileTransferOverview(client_->getFileTransferManager());
         fileTransferListController_->setFileTransferOverview(ftOverview_);
-        rosterController_ = new RosterController(boundJID_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), client_->getClientBlockListManager(), client_->getVCardManager());
+        chattables_ = std::make_unique<Chattables>();
+        rosterController_ = new RosterController(boundJID_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), client_->getClientBlockListManager(), client_->getVCardManager(), *chattables_);
         rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
         rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
         rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&MainController::handleShowCertificateRequest, this));
@@ -372,7 +375,7 @@ void MainController::handleConnected() {
         historyViewController_ = new HistoryViewController(jid_, uiEventStream_, historyController_, client_->getNickResolver(), client_->getAvatarManager(), client_->getPresenceOracle(), uiFactory_);
         chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, historyController_, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, client_->getVCardManager());
 #else
-        chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, nullptr, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, client_->getVCardManager());
+        chatsManager_ = new ChatsManager(jid_, client_->getStanzaChannel(), client_->getIQRouter(), eventController_, uiFactory_, uiFactory_, client_->getNickResolver(), client_->getPresenceOracle(), client_->getPresenceSender(), uiEventStream_, uiFactory_, useDelayForLatency_, networkFactories_->getTimerFactory(), client_->getMUCRegistry(), client_->getEntityCapsProvider(), client_->getMUCManager(), uiFactory_, profileSettings_, ftOverview_, client_->getRoster(), !settings_->getSetting(SettingConstants::REMEMBER_RECENT_CHATS), settings_, nullptr, whiteboardManager_, highlightManager_, client_->getClientBlockListManager(), emoticons_, client_->getVCardManager(), *chattables_);
 #endif
         contactsFromRosterProvider_ = new ContactsFromXMPPRoster(client_->getRoster(), client_->getAvatarManager(), client_->getPresenceOracle());
         contactSuggesterWithoutRoster_->addContactProvider(chatsManager_);

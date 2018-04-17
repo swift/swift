@@ -6,6 +6,8 @@
 
 #include <boost/algorithm/string.hpp>
 
+#include <memory>
+
 #include <gtest/gtest.h>
 #include <hippomocks.h>
 
@@ -31,6 +33,7 @@
 #include <Swiften/VCards/VCardMemoryStorage.h>
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Chat/MUCController.h>
 #include <Swift/Controllers/Chat/UserSearchController.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
@@ -82,7 +85,8 @@ class MUCControllerTest : public ::testing::Test {
             nickResolver_ = new NickResolver(self_, xmppRoster_, vcardManager_, mucRegistry_);
             clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
             mucBookmarkManager_ = new MUCBookmarkManager(iqRouter_);
-            controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_, settings_);
+            chattables_ = std::make_unique<Chattables>();
+            controller_ = new MUCController (self_, muc_, boost::optional<std::string>(), nick_, stanzaChannel_, iqRouter_, chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory, eventController_, entityCapsProvider_, nullptr, nullptr, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser_, false, nullptr, vcardManager_, mucBookmarkManager_, settings_, *chattables_);
         }
 
         void TearDown() {
@@ -238,6 +242,7 @@ class MUCControllerTest : public ::testing::Test {
         ClientBlockListManager* clientBlockListManager_;
         MUCBookmarkManager* mucBookmarkManager_;
         XMPPRoster* xmppRoster_;
+        std::unique_ptr<Chattables> chattables_;
 };
 
 TEST_F(MUCControllerTest, testAddressedToSelf) {

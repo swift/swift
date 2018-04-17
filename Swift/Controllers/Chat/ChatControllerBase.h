@@ -37,11 +37,12 @@ namespace Swift {
     class AutoAcceptMUCInviteDecider;
     class AvatarManager;
     class ChatMessageParser;
+    class Chattables;
     class ChatWindowFactory;
     class EntityCapsProvider;
     class EventController;
-    class HighlightManager;
     class Highlighter;
+    class HighlightManager;
     class IQRouter;
     class NickResolver;
     class StanzaChannel;
@@ -80,7 +81,7 @@ namespace Swift {
             boost::signals2::signal<void(ChatWindow* /*window to reuse*/, const std::vector<JID>& /*invite people*/, const std::string& /*reason*/)> onConvertToMUC;
 
         protected:
-            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings);
+            ChatControllerBase(const JID& self, StanzaChannel* stanzaChannel, IQRouter* iqRouter, ChatWindowFactory* chatWindowFactory, const JID &toJID, NickResolver* nickResolver, PresenceOracle* presenceOracle, AvatarManager* avatarManager, bool useDelayForLatency, UIEventStream* eventStream, EventController* eventController, EntityCapsProvider* entityCapsProvider, HistoryController* historyController, MUCRegistry* mucRegistry, HighlightManager* highlightManager, std::shared_ptr<ChatMessageParser> chatMessageParser, AutoAcceptMUCInviteDecider* autoAcceptMUCInviteDecider, SettingsProvider* settings, Chattables& chattables);
 
             /**
              * Pass the Message appended, and the stanza used to send it.
@@ -154,5 +155,6 @@ namespace Swift {
             std::string roomSecurityMarking_;
             std::string previousMessageSecurityMarking_;
             SettingsProvider* settings_;
+            Chattables& chattables_;
     };
 }

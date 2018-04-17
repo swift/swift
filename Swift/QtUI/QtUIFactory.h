@@ -17,6 +17,7 @@ class QSplitter;
 
 namespace Swift {
     class AutoUpdater;
+    class Chattables;
     class QtChatTabs;
     class QtChatTabsBase;
     class QtChatTheme;
@@ -39,7 +40,7 @@ namespace Swift {
             ~QtUIFactory();
             virtual XMLConsoleWidget* createXMLConsoleWidget();
             virtual HistoryWindow* createHistoryWindow(UIEventStream*);
-            virtual MainWindow* createMainWindow(UIEventStream* eventStream);
+            virtual MainWindow* createMainWindow(Chattables& chattables, UIEventStream* eventStream);
             virtual LoginWindow* createLoginWindow(UIEventStream* eventStream);
             virtual EventWindow* createEventWindow();
             virtual ChatListWindow* createChatListWindow(UIEventStream*);

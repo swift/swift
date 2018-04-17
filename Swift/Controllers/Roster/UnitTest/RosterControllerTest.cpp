@@ -1,8 +1,10 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
+
+#include <memory>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -32,6 +34,7 @@
 #include <Swiften/VCards/VCardManager.h>
 #include <Swiften/VCards/VCardMemoryStorage.h>
 
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
 #include <Swift/Controllers/Roster/GroupRosterItem.h>
 #include <Swift/Controllers/Roster/Roster.h>
@@ -62,6 +65,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testRemoveResultsInUnavailablePresence);
         CPPUNIT_TEST(testOwnContactInRosterPresence);
         CPPUNIT_TEST(testMultiResourceFileTransferFeature);
+        //FIXME: All needs rewriting for new roster
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -90,7 +94,8 @@ class RosterControllerTest : public CppUnit::TestFixture {
             clientBlockListManager_ = new ClientBlockListManager(router_);
             vcardStorage_ = new VCardMemoryStorage(crypto_);
             vcardManager_ = new VCardManager(jid_, router_, vcardStorage_);
-            rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, clientBlockListManager_, vcardManager_);
+            chattables_ = std::make_unique<Chattables>();
+            rosterController_ = new RosterController(jid_, xmppRoster_, avatarManager_, mainWindowFactory_, nickManager_, nickResolver_, presenceOracle_, subscriptionManager_, eventController_, uiEventStream_, router_, settings_, entityCapsManager_, clientBlockListManager_, vcardManager_, *chattables_);
             mainWindow_ = mainWindowFactory_->last;
             capsInfoGenerator_ = std::make_unique<CapsInfoGenerator>("", crypto_);
         }
@@ -476,6 +481,7 @@ class RosterControllerTest : public CppUnit::TestFixture {
         VCardStorage* vcardStorage_;
         VCardManager* vcardManager_;
         std::unique_ptr<CapsInfoGenerator> capsInfoGenerator_;
+        std::unique_ptr<Chattables> chattables_;
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(RosterControllerTest);

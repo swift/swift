@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,6 +24,7 @@
 
 namespace Swift {
     class AvatarManager;
+    class Chattables;
     class ClientBlockListManager;
     class EntityCapsProvider;
     class EventController;
@@ -49,7 +50,7 @@ namespace Swift {
 
     class RosterController {
         public:
-            RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager);
+            RosterController(const JID& jid, XMPPRoster* xmppRoster, AvatarManager* avatarManager, MainWindowFactory* mainWindowFactory, NickManager* nickManager, NickResolver* nickResolver, PresenceOracle* presenceOracle, SubscriptionManager* subscriptionManager, EventController* eventController, UIEventStream* uiEventStream, IQRouter* iqRouter, SettingsProvider* settings, EntityCapsProvider* entityCapsProvider, ClientBlockListManager* clientBlockListManager, VCardManager* vcardManager, Chattables& chattables);
             ~RosterController();
             void showRosterWindow();
             void setJID(const JID& jid) { myJID_ = jid; }
@@ -112,6 +113,7 @@ namespace Swift {
             UIEventStream* uiEventStream_;
             EntityCapsProvider* entityCapsManager_;
             ClientBlockListManager* clientBlockListManager_;
+            Chattables& chattables_;
             RosterVCardProvider* rosterVCardProvider_;
             std::shared_ptr<ContactRosterItem> ownContact_;
             std::unique_ptr<FeatureOracle> featureOracle_;

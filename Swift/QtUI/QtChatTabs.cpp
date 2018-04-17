@@ -24,6 +24,7 @@
 #include <Swiften/Base/Log.h>
 
 #include <Swift/Controllers/ChatMessageSummarizer.h>
+#include <Swift/Controllers/SettingConstants.h>
 
 #include <Swift/QtUI/QtSwiftUtil.h>
 #include <Swift/QtUI/QtTabWidget.h>
@@ -39,7 +40,7 @@ QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bo
 #else
     setAttribute(Qt::WA_ShowWithoutActivating);
 #endif
-    dynamicGrid_ = new QtDynamicGridLayout(this, trellisMode);
+    dynamicGrid_ = new QtDynamicGridLayout(settingsProvider->getSetting(SettingConstants::FUTURE), this, trellisMode);
     connect(dynamicGrid_, SIGNAL(tabCloseRequested(int)), this, SLOT(handleTabCloseRequested(int)));
     connect(dynamicGrid_, SIGNAL(onCurrentIndexChanged(int)), this, SLOT(handleCurrentTabIndexChanged(int)));
 
