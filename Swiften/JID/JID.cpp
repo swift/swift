@@ -104,12 +104,12 @@ void JID::initializeFromString(const std::string& jid) {
         hasResource_ = false;
         bare = jid;
     }
-    std::pair<std::string,std::string> nodeAndDomain = String::getSplittedAtFirst(bare, '@');
-    if (nodeAndDomain.second.empty()) {
-        nameprepAndSetComponents("", nodeAndDomain.first, resource);
+    auto firstMatch = bare.find('@');
+    if (firstMatch != bare.npos) {
+        nameprepAndSetComponents(bare.substr(0, firstMatch), bare.substr(firstMatch + 1), resource);
     }
     else {
-        nameprepAndSetComponents(nodeAndDomain.first, nodeAndDomain.second, resource);
+        nameprepAndSetComponents("", bare, resource);
     }
 }
 

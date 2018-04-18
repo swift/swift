@@ -25,6 +25,8 @@ class JIDTest : public CppUnit::TestFixture
         CPPUNIT_TEST(testConstructorWithString_UpperCaseDomain);
         CPPUNIT_TEST(testConstructorWithString_UpperCaseResource);
         CPPUNIT_TEST(testConstructorWithString_EmptyNode);
+        CPPUNIT_TEST(testConstructorWithString_EmptyDomain);
+        CPPUNIT_TEST(testConstructorWithString_EmptyDomainWithResource);
         CPPUNIT_TEST(testConstructorWithString_IllegalResource);
         CPPUNIT_TEST(testConstructorWithString_SpacesInNode);
         CPPUNIT_TEST(testConstructorWithStrings);
@@ -147,6 +149,18 @@ class JIDTest : public CppUnit::TestFixture
 
         void testConstructorWithString_EmptyNode() {
             JID testling("@bar");
+
+            CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testConstructorWithString_EmptyDomain() {
+            JID testling("bar@");
+
+            CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testConstructorWithString_EmptyDomainWithResource() {
+            JID testling("bar@/resource");
 
             CPPUNIT_ASSERT(!testling.isValid());
         }
