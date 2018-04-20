@@ -56,6 +56,7 @@
 #include <Swift/Controllers/ContactsFromXMPPRoster.h>
 #include <Swift/Controllers/EventNotifier.h>
 #include <Swift/Controllers/EventWindowController.h>
+#include <Swift/Controllers/FdpFormSubmitController.h>
 #include <Swift/Controllers/FileTransfer/FileTransferOverview.h>
 #include <Swift/Controllers/FileTransferListController.h>
 #include <Swift/Controllers/Highlighting/HighlightEditorController.h>
@@ -125,7 +126,8 @@ AccountController::AccountController(
             loginWindow_(nullptr) ,
             useDelayForLatency_(useDelayForLatency),
             ftOverview_(nullptr),
-            emoticons_(emoticons) {
+            emoticons_(emoticons),
+            fdpFormSubmitController_(nullptr) {
     storages_ = nullptr;
     certificateStorage_ = nullptr;
     certificateTrustChecker_ = nullptr;
@@ -580,6 +582,7 @@ void AccountController::performLoginFromCachedCredentials() {
         presence->setShow(static_cast<StatusShow::Type>(profileSettings_->getIntSetting("lastShow", StatusShow::Online)));
         presence->setStatus(profileSettings_->getStringSetting("lastStatus"));
         statusTracker_->setRequestedPresence(presence);
+        fdpFormSubmitController_ = std::make_unique<FdpFormSubmitController>(jid_, client_->getIQRouter(), uiEventStream_, uiFactory_);
     } else {
         /* In case we're in the middle of another login, make sure they don't overlap */
         client_->disconnect();

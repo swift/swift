@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,32 +18,32 @@ namespace Swift {
         public:
 
             PubSubItem();
+            PubSubItem(const std::string& id);
 
             virtual ~PubSubItem();
 
             const std::vector< std::shared_ptr<Payload> >& getData() const {
-                return data;
+                return data_;
             }
 
             void setData(const std::vector< std::shared_ptr<Payload> >& value) {
-                this->data = value ;
+                this->data_ = value ;
             }
 
             void addData(std::shared_ptr<Payload> value) {
-                this->data.push_back(value);
+                this->data_.push_back(value);
             }
 
             const std::string& getID() const {
-                return id;
+                return id_;
             }
 
             void setID(const std::string& value) {
-                this->id = value ;
+                this->id_ = value ;
             }
 
-
         private:
-            std::vector< std::shared_ptr<Payload> > data;
-            std::string id;
+            std::vector< std::shared_ptr<Payload> > data_;
+            std::string id_;
     };
 }

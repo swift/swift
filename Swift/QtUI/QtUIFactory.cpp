@@ -22,6 +22,7 @@
 #include <Swift/QtUI/QtChatWindow.h>
 #include <Swift/QtUI/QtChatWindowFactory.h>
 #include <Swift/QtUI/QtContactEditWindow.h>
+#include <Swift/QtUI/QtFdpFormSubmitWindow.h>
 #include <Swift/QtUI/QtFileTransferListWidget.h>
 #include <Swift/QtUI/QtHighlightNotificationConfigDialog.h>
 #include <Swift/QtUI/QtHistoryWindow.h>
@@ -173,6 +174,10 @@ BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {
 
 AdHocCommandWindow* QtUIFactory::createAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command) {
     return new QtAdHocCommandWindow(command);
+}
+
+std::unique_ptr<FdpFormSubmitWindow> QtUIFactory::createFdpFormSubmitWindow() {
+    return std::make_unique<QtFdpFormSubmitWindow>();
 }
 
 void QtUIFactory::showTabs() {

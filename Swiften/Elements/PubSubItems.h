@@ -61,7 +61,6 @@ namespace Swift {
                 this->subscriptionID = value ;
             }
 
-
         private:
             std::string node;
             std::vector< std::shared_ptr<PubSubItem> > items;

@@ -81,6 +81,7 @@ namespace Swift {
     class BlockListController;
     class ContactSuggester;
     class ContactsFromXMPPRoster;
+    class FdpFormSubmitController;
 
     class AccountController {
         public:
@@ -197,5 +198,6 @@ namespace Swift {
             HighlightEditorController* highlightEditorController_;
             std::map<std::string, std::string> emoticons_;
             boost::signals2::connection enableCarbonsRequestHandlerConnection_;
+            std::unique_ptr<FdpFormSubmitController> fdpFormSubmitController_;
     };
 }

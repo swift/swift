@@ -27,6 +27,7 @@
 
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
+#include <Swift/Controllers/UIEvents/FdpFormSubmitWindowOpenUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAdHocUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestAddUserDialogUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestBlockListDialogUIEvent.h>
@@ -199,6 +200,13 @@ QtMainWindow::QtMainWindow(Chattables& chattables, SettingsProvider* settings, U
     }
     serverAdHocMenu_ = new QMenu(tr("Run Server Command"), this);
     actionsMenu->addMenu(serverAdHocMenu_);
+    if (settings_->getSetting(SettingConstants::FUTURE)) {
+        actionsMenu->addSeparator();
+        submitFormAction_ = new QAction(tr("Submit Form"), this);
+        connect(submitFormAction_, &QAction::triggered, this, &QtMainWindow::handleSubmitFormActionTriggered);
+        actionsMenu->addAction(submitFormAction_);
+        onlineOnlyActions_ << submitFormAction_;
+    }
     actionsMenu->addSeparator();
     QAction* signOutAction = new QAction(tr("&Sign Out"), this);
     connect(signOutAction, SIGNAL(triggered()), SLOT(handleSignOutAction()));
@@ -435,6 +443,10 @@ void QtMainWindow::setAvailableAdHocCommands(const std::vector<DiscoItems::Item>
 
 void QtMainWindow::setBlockingCommandAvailable(bool isAvailable) {
     openBlockingListEditor_->setVisible(isAvailable);
+}
+
+void QtMainWindow::handleSubmitFormActionTriggered() {
+    uiEventStream_->send(std::make_shared<FdpFormSubmitWindowOpenUIEvent>());
 }
 
 }

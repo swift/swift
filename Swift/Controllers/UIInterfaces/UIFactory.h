@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,6 +12,7 @@
 #include <Swift/Controllers/UIInterfaces/ChatWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/ContactEditWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/EventWindowFactory.h>
+#include <Swift/Controllers/UIInterfaces/FdpFormSubmitWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/FileTransferListWidgetFactory.h>
 #include <Swift/Controllers/UIInterfaces/HighlightEditorWindowFactory.h>
 #include <Swift/Controllers/UIInterfaces/HistoryWindowFactory.h>
@@ -42,7 +43,8 @@ namespace Swift {
             public FileTransferListWidgetFactory,
             public WhiteboardWindowFactory,
             public HighlightEditorWindowFactory,
-            public BlockListEditorWidgetFactory {
+            public BlockListEditorWidgetFactory,
+            public FdpFormSubmitWindowFactory {
         public:
             virtual ~UIFactory() {}
     };

@@ -18,6 +18,7 @@ class QSplitter;
 namespace Swift {
     class AutoUpdater;
     class Chattables;
+    class FdpFormSubmitWindow;
     class QtChatTabs;
     class QtChatTheme;
     class QtChatWindow;
@@ -54,6 +55,7 @@ namespace Swift {
             virtual HighlightEditorWindow* createHighlightEditorWindow();
             virtual BlockListEditorWidget* createBlockListEditorWidget();
             virtual AdHocCommandWindow* createAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command);
+            virtual std::unique_ptr<FdpFormSubmitWindow> createFdpFormSubmitWindow();
 
         private slots:
             void handleChatWindowFontResized(int);

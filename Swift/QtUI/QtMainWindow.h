@@ -81,6 +81,7 @@ namespace Swift {
             void handleShowCertificateInfo();
             void handleEditBlockingList();
             void handleSomethingSelectedChanged(bool itemSelected);
+            void handleSubmitFormActionTriggered();
 
         private:
             Chattables& chattables_;
@@ -110,5 +111,6 @@ namespace Swift {
             std::vector<DiscoItems::Item> serverAdHocCommands_;
             QList<QAction*> serverAdHocCommandActions_;
             QList<QAction*> onlineOnlyActions_;
+            QAction* submitFormAction_;
     };
 }
