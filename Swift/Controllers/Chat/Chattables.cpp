@@ -18,6 +18,9 @@ const Chattables::State& Chattables::getState(const JID& jid) const {
 }
 
 void Chattables::addJID(const JID& jid, State::Type type) {
+    if (states_.find(jid) != states_.end()) {
+        return;
+    }
     State state;
     state.type = type;
     state.jid = jid;
