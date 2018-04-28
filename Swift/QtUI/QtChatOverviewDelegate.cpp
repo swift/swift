@@ -47,18 +47,18 @@ void QtChatOverviewDelegate::paint(QPainter* painter, const QStyleOptionViewItem
     DelegateCommons::drawElidedText(painter, nameRegion, index.data(Qt::DisplayRole).toString());
 
     const auto green = QColor(124, 243, 145);
-    const auto yellow = QColor(124, 243, 145); // FIXME: Yellow isn't green
-    const auto red = QColor(255,45,71);
+    const auto yellow = QColor(243, 243, 0);
+    const auto red = QColor(255, 45, 71);
     const auto grey = QColor(159,159,159);
     auto circleColour = grey;
     auto status = static_cast<StatusShow::Type>(index.data(ChattablesModel::StatusRole).toInt());
     switch (status) {
-        case StatusShow::Online: circleColour = green;break;
-        case StatusShow::FFC: circleColour = green;break;
-        case StatusShow::Away: circleColour = yellow;break;
-        case StatusShow::XA: circleColour = yellow;break;
-        case StatusShow::DND: circleColour = red;break;
-        case StatusShow::None: circleColour = grey;break;
+        case StatusShow::Online: circleColour = green; break;
+        case StatusShow::FFC: circleColour = green; break;
+        case StatusShow::Away: circleColour = yellow; break;
+        case StatusShow::XA: circleColour = yellow; break;
+        case StatusShow::DND: circleColour = red; break;
+        case StatusShow::None: circleColour = grey; break;
     }
 
     painter->setRenderHint(QPainter::Antialiasing, true);
