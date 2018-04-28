@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2017 Isode Limited.
+ * Copyright (c) 2017-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,7 +24,7 @@ namespace Swift {
     class SWIFTEN_API MIXUpdateSubscriptionParser : public GenericPayloadParser<MIXUpdateSubscription> {
         public:
             MIXUpdateSubscriptionParser();
-            virtual ~MIXUpdateSubscriptionParser();
+            virtual ~MIXUpdateSubscriptionParser() override;
 
             virtual void handleStartElement(const std::string& element, const std::string&, const AttributeMap& attributes) override;
             virtual void handleEndElement(const std::string& element, const std::string&) override;

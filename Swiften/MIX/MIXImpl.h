@@ -1,4 +1,10 @@
 /*
+ * Copyright (c) 2018 Isode Limited.
+ * All rights reserved.
+ * See the COPYING file for more information.
+ */
+
+ /*
  * Copyright (c) 2017 Tarun Gupta
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
@@ -18,7 +24,7 @@ namespace Swift {
 
         public:
             MIXImpl(const JID& ownJID, const JID& channelJID, IQRouter* iqRouter);
-            virtual ~MIXImpl();
+            virtual ~MIXImpl() override;
 
             /**
              * Returns the (bare) JID of the user.

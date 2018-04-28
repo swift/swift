@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2017 Isode Limited.
+ * Copyright (c) 2017-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
     class SWIFTEN_API MIXUpdateSubscriptionSerializer : public GenericPayloadSerializer<MIXUpdateSubscription> {
         public:
             MIXUpdateSubscriptionSerializer();
-            virtual ~MIXUpdateSubscriptionSerializer();
+            virtual ~MIXUpdateSubscriptionSerializer() override;
 
             virtual std::string serializePayload(std::shared_ptr<MIXUpdateSubscription>) const override;
     };

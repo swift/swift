@@ -10,7 +10,7 @@ def cStringVariable(env, cVar, sconsVar) :
     # FIXME: Probably not very robust
     for var in sconsVar.split(" ") :
         result += "\t\"" + env.subst(var).replace("\\", "\\\\") + "\",\n"
-    result += "\t0\n"
+    result += "\tnullptr\n"
     result += "};\n"
     return result
 
@@ -22,15 +22,15 @@ swiften_env.UseFlags(swiften_env["SWIFTEN_DEP_FLAGS"])
 
 cppflags = replaceSwiftenPath(" ".join([
     swiften_env.subst("$CPPFLAGS").replace("-isystem ","-I"),
-    swiften_env.subst("$_CPPDEFFLAGS"), 
+    swiften_env.subst("$_CPPDEFFLAGS"),
     swiften_env.subst("$_CPPINCFLAGS")]))
 config_flags += cStringVariable(swiften_env, "CPPFLAGS", cppflags)
 
 libflags = replaceSwiftenPath(" ".join([
-        swiften_env.subst("$_LIBDIRFLAGS"), 
-        swiften_env.subst("$_LIBFLAGS"), 
-        swiften_env.subst("$_FRAMEWORKPATH"), 
-        swiften_env.subst("$_FRAMEWORKS"), 
+        swiften_env.subst("$_LIBDIRFLAGS"),
+        swiften_env.subst("$_LIBFLAGS"),
+        swiften_env.subst("$_FRAMEWORKPATH"),
+        swiften_env.subst("$_FRAMEWORKS"),
         swiften_env.subst("$_FRAMEWORKSFLAGS")
     ]))
 config_flags += cStringVariable(swiften_env, "LIBFLAGS", libflags)
