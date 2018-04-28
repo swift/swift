@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -110,7 +110,7 @@ namespace Swift {
             void disconnect();
             void setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os);
             boost::optional<SluiftClient::Event> getNextEvent(int timeout,
-                    boost::function<bool (const Event&)> condition = 0);
+                    boost::function<bool (const Event&)> condition = boost::function<bool (const Event&)>());
             std::vector<XMPPRosterItem> getRoster(int timeout);
             std::vector<JID> getBlockList(int timeout);
 

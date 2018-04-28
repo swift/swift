@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -85,7 +85,7 @@ namespace Swift {
             void disconnect();
             void setSoftwareVersion(const std::string& name, const std::string& version, const std::string& os);
             boost::optional<SluiftComponent::Event> getNextEvent(int timeout,
-                    boost::function<bool (const Event&)> condition = 0);
+                    boost::function<bool (const Event&)> condition = boost::function<bool (const Event&)>());
 
         private:
             Sluift::Response doSendRequest(std::shared_ptr<Request> request, int timeout);
