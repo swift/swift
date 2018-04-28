@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,9 @@
 #include "gtest/gtest.h"
 #include <Swiften/Client/XMLBeautifier.h>
 #include <iostream>
+
+// Clang wrongly things that tests for 0 are using 0 as null.
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 
 using namespace Swift;
 

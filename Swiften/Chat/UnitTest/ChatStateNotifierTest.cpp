@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -12,6 +12,9 @@
 #include <Swiften/Client/DummyStanzaChannel.h>
 #include <Swiften/Disco/DummyEntityCapsProvider.h>
 #include <Swiften/Network/DummyTimerFactory.h>
+
+// Clang wrongly things that tests for 0 are using 0 as null.
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
 
 using namespace Swift;
 
