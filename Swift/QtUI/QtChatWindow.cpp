@@ -719,7 +719,17 @@ void QtChatWindow::handleEmojiClicked(QString emoji) {
 void QtChatWindow::handleTextInputReceivedFocus() {
     lastLineTracker_.setHasFocus(true);
     input_->setFocus();
-    onAllMessagesRead();
+    if (focusTimer_) {
+        focusTimer_->stop();
+    }
+    else {
+        focusTimer_ = std::make_unique<QTimer>(this);
+        focusTimer_->setSingleShot(true);
+        focusTimer_->setTimerType(Qt::CoarseTimer);
+        connect(focusTimer_.get(), &QTimer::timeout, this, &QtChatWindow::handleFocusTimerTick);
+    }
+    focusTimer_->setInterval(1000);
+    focusTimer_->start();
 }
 
 void QtChatWindow::handleTextInputLostFocus() {
@@ -1027,6 +1037,13 @@ void QtChatWindow::removeChatSecurityMarking() {
     delete securityMarkingLayout_;
     securityMarkingDisplay_ = nullptr;
     securityMarkingLayout_ = nullptr;
+}
+
+void QtChatWindow::handleFocusTimerTick() {
+    if (hasFocus()) {
+        onAllMessagesRead();
+    }
+    focusTimer_.reset();
 }
 
 }

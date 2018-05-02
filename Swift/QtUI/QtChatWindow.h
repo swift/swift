@@ -34,6 +34,7 @@ class QComboBox;
 class QLabel;
 class QSplitter;
 class QPushButton;
+class QTimer;
 
 namespace Swift {
     class QtChatView;
@@ -196,6 +197,7 @@ namespace Swift {
 
             void setChatSecurityMarking(const std::string& markingValue, const std::string& markingForegroundColorValue, const std::string& markingBackgroundColorValue);
             void removeChatSecurityMarking();
+            void handleFocusTimerTick();
 
         private:
             int unreadCount_;
@@ -246,5 +248,6 @@ namespace Swift {
             QTimer* dayChangeTimer = nullptr;
             QHBoxLayout* securityMarkingLayout_ = nullptr;
             QLabel* securityMarkingDisplay_ = nullptr;
+            std::unique_ptr<QTimer> focusTimer_;
     };
 }
