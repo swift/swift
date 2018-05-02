@@ -26,6 +26,7 @@ namespace Swift {
 BundleFilter::BundleFilter(QObject* parent) : QSortFilterProxyModel(parent) {
     sort(0, Qt::AscendingOrder);
     setDynamicSortFilter(true);
+    setSortCaseSensitivity(Qt::CaseSensitivity::CaseInsensitive);
 }
 
 void BundleFilter::addFilter(Filter filter) {
