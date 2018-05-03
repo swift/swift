@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
 class QtEmojisSelector : public QTabWidget {
     Q_OBJECT
     public:
-        QtEmojisSelector(QSettings* settings, const std::map<std::string, std::string>& emoticonsMap, QWidget * parent = 0);
+        QtEmojisSelector(QSettings* settings, const std::map<std::string, std::string>& emoticonsMap, QWidget* parent = nullptr);
         ~QtEmojisSelector();
 
     public slots:

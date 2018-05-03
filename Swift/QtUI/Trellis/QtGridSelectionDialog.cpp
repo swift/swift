@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -76,7 +76,7 @@ int QtGridSelectionDialog::getDescriptionTextHeight() const {
 int QtGridSelectionDialog::getDescriptionTextHeight(int width) const {
     // Height of descriptive centered text below trellis
     auto fontMetrics = QFontMetrics(QApplication::font());
-    auto descriptionBB = fontMetrics.boundingRect(QRect(0, 0, width - 2 * horizontalMargin, 1000), Qt::TextWordWrap, descriptionText, 0, 0);
+    auto descriptionBB = fontMetrics.boundingRect(QRect(0, 0, width - 2 * horizontalMargin, 1000), Qt::TextWordWrap, descriptionText, 0, nullptr);
 
     return (descriptionBB.height() + descriptionBB.y());
 }
@@ -136,7 +136,7 @@ void QtGridSelectionDialog::paintEvent(QPaintEvent*) {
 
     // draw description text
     auto fontMetrics = QFontMetrics(QApplication::font());
-    auto descriptionBB = fontMetrics.boundingRect(QRect(0,0, width() - 2 * horizontalMargin,0), Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap, descriptionText, 0, 0);
+    auto descriptionBB = fontMetrics.boundingRect(QRect(0,0, width() - 2 * horizontalMargin,0), Qt::AlignHCenter | Qt::AlignTop | Qt::TextWordWrap, descriptionText, 0, nullptr);
 
     QStyleOption opt;
     opt.initFrom(this);

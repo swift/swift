@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,7 +42,7 @@ QtPlainChatView::QtPlainChatView(QtChatWindow *window, UIEventStream* eventStrea
 QtPlainChatView::~QtPlainChatView() {
 }
 
-QString chatMessageToString(const ChatWindow::ChatMessage& message) {
+static QString chatMessageToString(const ChatWindow::ChatMessage& message) {
     QString result;
     for (auto&& part : message.getParts()) {
         std::shared_ptr<ChatWindow::ChatTextMessagePart> textPart;

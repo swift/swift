@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -50,7 +50,7 @@ QtHighlightNotificationConfigDialog::QtHighlightNotificationConfigDialog(QtSetti
         }
     });
     connect(ui_.userHighlightTreeWidget, &QTreeWidget::currentItemChanged, [&](QTreeWidgetItem* current, QTreeWidgetItem* ) {
-        ui_.removeUserHighlightPushButton->setEnabled(current != 0);
+        ui_.removeUserHighlightPushButton->setEnabled(current != nullptr);
     });
 
     // keyword highlight edit slots
@@ -72,7 +72,7 @@ QtHighlightNotificationConfigDialog::QtHighlightNotificationConfigDialog(QtSetti
         }
     });
     connect(ui_.keywordHighlightTreeWidget, &QTreeWidget::currentItemChanged, [&](QTreeWidgetItem* current, QTreeWidgetItem* ) {
-        ui_.removeKeywordHighlightPushButton->setEnabled(current != 0);
+        ui_.removeKeywordHighlightPushButton->setEnabled(current != nullptr);
     });
 
     // setup slots for main dialog buttons

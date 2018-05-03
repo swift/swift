@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,6 +13,6 @@ namespace Swift {
     class QtEmojisScroll : public QWidget {
         Q_OBJECT
     public:
-        QtEmojisScroll(QLayout* emojiLayout, QWidget *parent = 0);
+        QtEmojisScroll(QLayout* emojiLayout, QWidget* parent = nullptr);
     };
 }

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,7 +36,7 @@
             } \
     \
             virtual bool testInstance(QWidget* widget) const { \
-                return dynamic_cast<FIELD_CLASS*>(widget) != 0; \
+                return dynamic_cast<FIELD_CLASS*>(widget) != nullptr; \
             } \
     };
 

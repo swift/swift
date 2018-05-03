@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,32 +21,6 @@
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
-
-QDataStream& operator >>(QDataStream& in, StatusShow::Type& e){
-    quint32 buffer;
-    in >> buffer;
-    switch(buffer) {
-        case StatusShow::Online:
-            e = StatusShow::Online;
-            break;
-        case StatusShow::Away:
-            e = StatusShow::Away;
-            break;
-        case StatusShow::FFC:
-            e = StatusShow::FFC;
-            break;
-        case StatusShow::XA:
-            e = StatusShow::XA;
-            break;
-        case StatusShow::DND:
-            e = StatusShow::DND;
-            break;
-        default:
-            e = StatusShow::None;
-            break;
-    }
-    return in;
-}
 
 ContactListModel::ContactListModel(bool editable) : QAbstractItemModel(), editable_(editable) {
 }
