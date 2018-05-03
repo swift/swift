@@ -37,6 +37,7 @@ __revision__ = "/home/scons/scons/branch.0/branch.96/baseline/src/engine/SCons/T
 import os.path
 import re
 import subprocess
+from string import Template
 
 import SCons.Action
 import SCons.Builder
@@ -129,7 +130,9 @@ class _Automoc:
         
         # The following is kind of hacky to get builders working properly (FIXME)
         objBuilderEnv = objBuilder.env
-        objBuilder.env = env
+        objBuilder.env = env.Clone()
+        if os.path.basename(objBuilder.env ["CXX"]).startswith(("gcc", "clang")):
+            objBuilder.env.Append(CXXFLAGS = "-w")
         mocBuilderEnv = env.Moc4.env
         env.Moc4.env = env
         
@@ -368,8 +371,30 @@ def generate(env):
     env.Append( BUILDERS = { 'Qrc': qrcbuilder } )
 
     # Interface builder
+    def addDisableWarningsPragmaToFile(target, source, env):
+        assert( len(target) == 1 )
+        assert( len(source) == 1 )
+        srcf = str(source[0])
+        dstf = str(target[0])
+        with open(dstf, 'r+') as uiHeader:
+            data=uiHeader.read()
+
+            template = Template(
+"""#pragma once
+#pragma warning(push, 0)
+#pragma GCC system_header
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wall"
+$uiheadertext
+#pragma clang diagnostic pop
+#pragma warning(pop)
+""")
+            uiHeader.seek(0)
+            uiHeader.write(template.substitute(uiheadertext=data))
+            uiHeader.truncate()
+
     uic4builder = Builder(
-        action = SCons.Action.Action('$QT4_UICCOM', cmdstr = '$QT4_UICCOMSTR'), 
+        action = [SCons.Action.Action('$QT4_UICCOM', cmdstr = '$QT4_UICCOMSTR'), SCons.Action.Action(addDisableWarningsPragmaToFile, None)],
         src_suffix='$QT4_UISUFFIX',
         suffix='$QT4_UICDECLSUFFIX',
         prefix='$QT4_UICDECLPREFIX',
