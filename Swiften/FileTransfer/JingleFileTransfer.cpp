@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swiften/FileTransfer/JingleFileTransfer.h>
-
-#include <boost/typeof/typeof.hpp>
 
 #include <Swiften/Base/Log.h>
 #include <Swiften/Crypto/CryptoProvider.h>
@@ -29,7 +27,6 @@ JingleFileTransfer::JingleFileTransfer(
             theirCandidateSelectFinished(false) {
 
     session->addListener(this);
-
 }
 
 JingleFileTransfer::~JingleFileTransfer() {
@@ -176,7 +173,7 @@ void JingleFileTransfer::handleTransportInfoReceived(
 
             theirCandidateSelectFinished = true;
             if (!s5bPayload->hasCandidateError()) {
-                BOOST_AUTO(theirCandidate, localCandidates.find(s5bPayload->getCandidateUsed()));
+                auto theirCandidate = localCandidates.find(s5bPayload->getCandidateUsed());
                 if (theirCandidate == localCandidates.end()) {
                     SWIFT_LOG(warning) << "Got invalid candidate" << std::endl;
                     terminate(JinglePayload::Reason::GeneralError);
@@ -231,4 +228,3 @@ void JingleFileTransfer::removeTransporter() {
         transporter = nullptr;
     }
 }
-

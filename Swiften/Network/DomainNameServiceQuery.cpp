@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,6 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <boost/typeof/typeof.hpp>
 
 #include <Swiften/Base/RandomGenerator.h>
 
@@ -53,7 +52,7 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
                         weights.end(),
                         std::back_inserter(cumulativeWeights));
                 int randomNumber = generator.generateRandomInteger(cumulativeWeights.back());
-                BOOST_AUTO(selectedIndex, std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin());
+                auto selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
                 std::swap(i[j], i[j + selectedIndex]);
                 std::swap(weights.begin()[j], weights.begin()[j + selectedIndex]);
             }
