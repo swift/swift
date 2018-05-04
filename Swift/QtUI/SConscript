@@ -169,6 +169,7 @@ sources = [
     "QtEmojisScroll.cpp",
     "QtEmojisSelector.cpp",
     "QtEmoticonsGrid.cpp",
+    "QtExpandedListView.cpp",
     "QtFileTransferListItemModel.cpp",
     "QtFileTransferListWidget.cpp",
     "QtFormResultItemModel.cpp",

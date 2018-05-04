@@ -19,6 +19,7 @@ class QListView;
 namespace Swift {
     class ChattablesModel;
     class QtClickableLabel;
+    class QtExpandedListView;
 
     class BundleFilter : public QSortFilterProxyModel {
         Q_OBJECT
@@ -44,12 +45,12 @@ namespace Swift {
             void clicked(JID jid);
 
         private slots:
-            void recalculateSize();
             void handleFilterClicked();
             void handleItemClicked(const QModelIndex&);
+
         private:
             ChattablesModel* rootModel_;
-            QListView* listView_;
+            QtExpandedListView* listView_;
             BundleFilter* proxyModel_;
             bool hideWhenEmpty_;
             QtClickableLabel* filterLabel_ = nullptr;

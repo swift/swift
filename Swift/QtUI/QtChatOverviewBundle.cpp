@@ -9,7 +9,6 @@
 #include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QListView>
 #include <QPalette>
 #include <QSortFilterProxyModel>
 #include <QVBoxLayout>
@@ -19,6 +18,7 @@
 #include <Swift/QtUI/ChattablesModel.h>
 #include <Swift/QtUI/QtChatOverviewDelegate.h>
 #include <Swift/QtUI/QtClickableLabel.h>
+#include <Swift/QtUI/QtExpandedListView.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
 
 namespace Swift {
@@ -100,33 +100,15 @@ QtChatOverviewBundle::QtChatOverviewBundle(ChattablesModel* rootModel, QString n
         headerLayout->addWidget(filterLabel_);
         connect(filterLabel_, SIGNAL(clicked()), this, SLOT(handleFilterClicked()));
     }
-    listView_ = new QListView(this);
+    listView_ = new QtExpandedListView(this);
     listView_->setModel(proxyModel_);
     listView_->setFrameStyle(QFrame::NoFrame);
     listView_->setItemDelegate(new QtChatOverviewDelegate(this));
     connect(listView_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleItemClicked(const QModelIndex&)));
-    recalculateSize();
     mainLayout->addWidget(listView_);
-    connect(proxyModel_, SIGNAL(rowsInserted(const QModelIndex&, int, int)), this, SLOT(recalculateSize()));
-    connect(proxyModel_, SIGNAL(rowsRemoved(const QModelIndex&, int, int)), this, SLOT(recalculateSize()));
-    connect(proxyModel_, SIGNAL(modelReset()), this, SLOT(recalculateSize()));
 }
 
 QtChatOverviewBundle::~QtChatOverviewBundle() {}
-
-void QtChatOverviewBundle::recalculateSize() {
-    int totalHeight = 0;
-    for (int i = 0; i < proxyModel_->rowCount(); i++) {
-        totalHeight += listView_->sizeHintForRow(i);
-    }
-    listView_->setFixedHeight(totalHeight);
-    if (hideWhenEmpty_ && totalHeight == 0) {
-        hide();
-    }
-    else {
-        show();
-    }
-}
 
 void QtChatOverviewBundle::handleFilterClicked() {
     if (proxyModel_->hasFilter(BundleFilter::Filter::Online)) {
