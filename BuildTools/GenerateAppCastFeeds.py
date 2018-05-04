@@ -148,6 +148,6 @@ writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-testing-appcast
 writeAppcastFile(filename=os.path.join(args.outputFolder, "swift-development-appcast-mac.xml"),
     title="Swift Development Releases",
     description="",
-    regexPattern="^\d+(\.\d+)?(\.\d+)?(alpha)?(beta\d+)?(rc\d+)?(-dev\d+)?$",
+    regexPattern="^\d+(\.\d+)?(\.\d+)?(alpha\d*)?(beta\d+)?(rc\d+)?(-dev\d+)?$",
     appcastURL=urlparse.urljoin(args.downloadsURL, "swift-development-appcast-mac.xml"),
     releases=automaticReleases)
