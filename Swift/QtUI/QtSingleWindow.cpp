@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <Swift/QtUI/QtSingleWindow.h>
+
+#include <Swiften/Base/Platform.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
@@ -22,6 +24,10 @@ QtSingleWindow::QtSingleWindow(QtSettingsProvider* settings) : QSplitter() {
     }
     connect(this, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(int, int)));
     restoreSplitters();
+
+#ifdef SWIFTEN_PLATFORM_MACOSX
+    setHandleWidth(0);
+#endif
 }
 
 QtSingleWindow::~QtSingleWindow() {

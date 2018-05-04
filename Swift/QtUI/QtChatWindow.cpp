@@ -353,6 +353,9 @@ QByteArray QtChatWindow::getSplitterState() {
 
 void QtChatWindow::handleChangeSplitterState(QByteArray state) {
     logRosterSplitter_->restoreState(state);
+#ifdef SWIFTEN_PLATFORM_MACOSX
+    logRosterSplitter_->setHandleWidth(0);
+#endif
 }
 
 void QtChatWindow::handleSplitterMoved(int, int) {
