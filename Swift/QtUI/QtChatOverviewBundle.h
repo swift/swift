@@ -49,6 +49,9 @@ namespace Swift {
             void handleItemClicked(const QModelIndex&);
 
         private:
+            void updateVisibility();
+
+        private:
             ChattablesModel* rootModel_;
             QtExpandedListView* listView_;
             BundleFilter* proxyModel_;

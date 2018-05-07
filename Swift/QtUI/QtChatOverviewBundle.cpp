@@ -6,7 +6,6 @@
 
 #include <Swift/QtUI/QtChatOverviewBundle.h>
 
-#include <QDebug>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPalette>
@@ -93,7 +92,7 @@ QtChatOverviewBundle::QtChatOverviewBundle(ChattablesModel* rootModel, QString n
     nameLabel->setStyleSheet("color: white;");
     headerLayout->addWidget(nameLabel);
     headerLayout->addStretch();
-    if (!hideWhenEmpty) {
+    if (!hideWhenEmpty_) {
         filterLabel_ = new QtClickableLabel(this);
         filterLabel_->setText(tr("Online"));
         filterLabel_->setStyleSheet("color: white;");
@@ -106,6 +105,19 @@ QtChatOverviewBundle::QtChatOverviewBundle(ChattablesModel* rootModel, QString n
     listView_->setItemDelegate(new QtChatOverviewDelegate(this));
     connect(listView_, SIGNAL(clicked(const QModelIndex&)), this, SLOT(handleItemClicked(const QModelIndex&)));
     mainLayout->addWidget(listView_);
+
+    if (hideWhenEmpty_) {
+        connect(proxyModel_, &QAbstractItemModel::modelReset, this, [&](){
+            updateVisibility();
+        });
+        connect(proxyModel_, &QAbstractItemModel::rowsInserted, this, [&](){
+            updateVisibility();
+        });
+        connect(proxyModel_, &QAbstractItemModel::rowsRemoved, this, [&](){
+            updateVisibility();
+        });
+        updateVisibility();
+    }
 }
 
 QtChatOverviewBundle::~QtChatOverviewBundle() {}
@@ -120,6 +132,12 @@ void QtChatOverviewBundle::handleFilterClicked() {
         filterLabel_->setText(tr("Online"));
     }
 }
+
+void QtChatOverviewBundle::updateVisibility() {
+    auto shouldBeVisible = (proxyModel_->rowCount(listView_->rootIndex()) > 0);
+    setVisible(shouldBeVisible);
+}
+
 
 void QtChatOverviewBundle::handleItemClicked(const QModelIndex& index) {
     clicked(JID(Q2PSTRING(index.data(ChattablesModel::JIDRole).toString())));
