@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,9 +7,6 @@
 #include <Swift/QtUI/QtStatusWidget.h>
 
 #include <algorithm>
-
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 
 #include <QApplication>
 #include <QBoxLayout>
@@ -31,8 +28,6 @@
 #include <Swift/QtUI/QtElidingLabel.h>
 #include <Swift/QtUI/QtLineEdit.h>
 #include <Swift/QtUI/QtSwiftUtil.h>
-
-namespace lambda = boost::lambda;
 
 namespace Swift {
 
@@ -153,8 +148,9 @@ void QtStatusWidget::generateList() {
     }
     std::vector<StatusCache::PreviousStatus> previousStatuses = statusCache_->getMatches(Q2PSTRING(text), 8);
     for (const auto& savedStatus : previousStatuses) {
-        if (savedStatus.first.empty() || std::find_if(allTypes_.begin(), allTypes_.end(),
-                    savedStatus.second == lambda::_1 && savedStatus.first == lambda::bind(&statusShowTypeToFriendlyName, lambda::_1)) != allTypes_.end()) {
+        if (savedStatus.first.empty() || std::find_if(allTypes_.begin(), allTypes_.end(), [&](StatusShow::Type type) {
+            return (savedStatus.second == type) && (savedStatus.first == statusShowTypeToFriendlyName(type));
+            }) != allTypes_.end()) {
             continue;
         }
         QListWidgetItem* item = new QListWidgetItem(P2QSTRING(savedStatus.first), menu_);

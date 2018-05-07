@@ -11,14 +11,11 @@
 #include <iterator>
 #include <numeric>
 
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/RandomGenerator.h>
 
 using namespace Swift;
-namespace lambda = boost::lambda;
 
 namespace {
     struct ResultPriorityComparator {
@@ -42,9 +39,10 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
         std::vector<DomainNameServiceQuery::Result>::iterator next = std::upper_bound(i, queries.end(), *i, comparator);
         if (std::distance(i, next) > 1) {
             std::vector<int> weights;
-            std::transform(i, next, std::back_inserter(weights),
-                    /* easy hack to account for '0' weights getting at least some weight */
-                    lambda::bind(&Result::weight, lambda::_1) + 1);
+            std::transform(i, next, std::back_inserter(weights), [](const DomainNameServiceQuery::Result& result) {
+                /* easy hack to account for '0' weights getting at least some weight */
+                return result.weight + 1;
+            });
             for (int j = 0; j < boost::numeric_cast<int>(weights.size() - 1); ++j) {
                 std::vector<int> cumulativeWeights;
                 std::partial_sum(

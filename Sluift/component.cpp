@@ -1,12 +1,10 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <boost/assign/list_of.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/IDGenerator.h>
 #include <Swiften/Elements/DiscoInfo.h>
@@ -41,7 +39,6 @@
 #include <Sluift/globals.h>
 
 using namespace Swift;
-namespace lambda = boost::lambda;
 
 static inline SluiftComponent* getComponent(lua_State* L) {
     return *Lua::checkUserData<SluiftComponent>(L, 1);
@@ -433,7 +430,9 @@ SLUIFT_LUA_FUNCTION(Component, get_next_event) {
     }
     else if (type) {
         event = component->getNextEvent(
-                timeout, lambda::bind(&SluiftComponent::Event::type, lambda::_1) == *type);
+                timeout, [&](const SluiftComponent::Event& event) {
+                    return event.type == *type;
+                });
     }
     else {
         event = component->getNextEvent(timeout);

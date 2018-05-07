@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,15 +19,11 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/find.hpp>
 #include <boost/bind.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/JID/JID.h>
 
 #include <Swift/Controllers/ContactProvider.h>
-
-namespace lambda = boost::lambda;
 
 namespace Swift {
 
@@ -60,8 +56,9 @@ std::vector<Contact::ref> ContactSuggester::getSuggestions(const std::string& se
 
     std::sort(results.begin(), results.end(), Contact::lexicographicalSortPredicate);
     results.erase(std::unique(results.begin(), results.end(), Contact::equalityPredicate), results.end());
-    results.erase(std::remove_if(results.begin(), results.end(), !lambda::bind(&matchContact, search, lambda::_1)),
-        results.end());
+    results.erase(std::remove_if(results.begin(), results.end(), [&](const Contact::ref contact) {
+        return !matchContact(search, contact);
+    }), results.end());
     std::sort(results.begin(), results.end(), boost::bind(&Contact::sortPredicate, _1, _2, search));
 
     return results;

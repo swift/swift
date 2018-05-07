@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,14 +10,9 @@
 #include <cassert>
 #include <vector>
 
-#include <boost/bind.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/Log.h>
-
-namespace lambda = boost::lambda;
 
 namespace Swift {
 
@@ -96,7 +91,9 @@ void EventLoop::removeEventsFromOwner(std::shared_ptr<EventOwner> owner) {
 
     std::lock(removeLock, eventsLock);
 
-    events_.remove_if(lambda::bind(&Event::owner, lambda::_1) == owner);
+    events_.remove_if([&](const Event& event) {
+        return event.owner == owner;
+    });
 }
 
 }
