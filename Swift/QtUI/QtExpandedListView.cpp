@@ -8,6 +8,7 @@
 
 #include <QWheelEvent>
 #include <QScrollArea>
+#include <QDebug>
 
 namespace Swift {
 
@@ -60,12 +61,13 @@ void QtExpandedListView::currentChanged(const QModelIndex &current, const QModel
     // Make sure that the current selected index is visible in the parent QScrollArea.
     auto scrollArea = getParentOfType<QScrollArea*>(parentWidget());
     if (scrollArea) {
+        auto scrollWidget = scrollArea->widget();
         QList<QPoint> points;
         auto visRect = visualRect(current);
-        points << pos() + visRect.topLeft();
-        points << pos() + visRect.topRight();
-        points << pos() + visRect.bottomLeft();
-        points << pos() + visRect.bottomRight();
+        points << mapTo(scrollWidget, visRect.topLeft());
+        points << mapTo(scrollWidget, visRect.topRight());
+        points << mapTo(scrollWidget, visRect.bottomLeft());
+        points << mapTo(scrollWidget, visRect.bottomRight());
 
         for (auto&& point : points) {
             scrollArea->ensureVisible(point.x(), point.y(), 0, 0);
