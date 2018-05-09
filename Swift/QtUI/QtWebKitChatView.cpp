@@ -11,9 +11,9 @@
 #include <QDesktopWidget>
 #include <QEventLoop>
 #include <QFile>
+#include <QFileDevice>
 #include <QFileDialog>
 #include <QFileInfo>
-#include <QFileDevice>
 #include <QInputDialog>
 #include <QKeyEvent>
 #include <QMessageBox>

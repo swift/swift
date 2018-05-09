@@ -113,6 +113,9 @@ QtChatWindow::QtChatWindow(const QString& contact, QtChatTheme* theme, UIEventSt
     else {
         messageLog_ = new QtWebKitChatView(this, eventStream_, theme, this, settings); // I accept that passing the ChatWindow in so that the view can call the signals is somewhat inelegant, but it saves a lot of boilerplate. This patch is unpleasant enough already. So let's fix this soon (it at least needs fixing by the time history is sorted), but not now.
     }
+    // When used with QSplitter and setChildrenCollapsible(false), the following prevents
+    // this widget to be hidden, i.e. resized to zero width.
+    messageLog_->setMinimumWidth(20);
     logRosterSplitter_->addWidget(messageLog_);
 
     treeWidget_ = new QtOccupantListWidget(eventStream_, settings_, QtTreeWidget::MessageDisplayJID, this);
@@ -356,6 +359,7 @@ void QtChatWindow::handleChangeSplitterState(QByteArray state) {
 #ifdef SWIFTEN_PLATFORM_MACOSX
     logRosterSplitter_->setHandleWidth(0);
 #endif
+    logRosterSplitter_->setChildrenCollapsible(false);
 }
 
 void QtChatWindow::handleSplitterMoved(int, int) {

@@ -78,6 +78,10 @@ QtMainWindow::QtMainWindow(Chattables& chattables, SettingsProvider* settings, U
         overviewScroll->setWidgetResizable(true);
         overviewScroll->setWidget(chatOverview_);
         tabs_->addTab(overviewScroll, tr("&All"));
+
+        // When used with QSplitter and setChildrenCollapsible(false), the following prevents
+        // this widget to be hidden, i.e. resized to zero width.
+        chatOverview_->setMinimumWidth(20);
     }
 
     contactsTabWidget_ = new QWidget(this);

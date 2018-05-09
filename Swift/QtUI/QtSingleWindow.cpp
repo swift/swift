@@ -24,7 +24,7 @@ QtSingleWindow::QtSingleWindow(QtSettingsProvider* settings) : QSplitter() {
     }
     connect(this, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(int, int)));
     restoreSplitters();
-
+    setChildrenCollapsible(false);
 #ifdef SWIFTEN_PLATFORM_MACOSX
     setHandleWidth(0);
 #endif
