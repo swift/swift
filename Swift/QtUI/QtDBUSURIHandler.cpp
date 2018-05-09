@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ using namespace Swift;
 namespace {
     class DBUSAdaptor: public QDBusAbstractAdaptor {
             Q_OBJECT
-            Q_CLASSINFO("D-Bus Interface", "im.swift.Swift.URIHandler");
+            Q_CLASSINFO("D-Bus Interface", "im.swift.Swift.URIHandler")
         public:
             DBUSAdaptor(QtDBUSURIHandler* uriHandler) : QDBusAbstractAdaptor(uriHandler), uriHandler(uriHandler) {
             }
