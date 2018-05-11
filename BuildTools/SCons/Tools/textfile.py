@@ -113,7 +113,11 @@ def _action(target, source, env):
     lsep = None
     for s in source:
         if lsep: fd.write(lsep)
-        fd.write(_do_subst(s, subs))
+        stringtowrite = _do_subst(s, subs)
+        if isinstance(stringtowrite, str):
+          fd.write(stringtowrite)
+        elif isinstance(stringtowrite, unicode):
+          fd.write(stringtowrite.encode('utf-8'))
         lsep = linesep
     fd.close()
 
