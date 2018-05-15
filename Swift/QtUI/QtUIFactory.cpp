@@ -41,30 +41,30 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings(settings), qtOnlySettings(qtOnlySettings), tabsBase(tabs), netbookSplitter(netbookSplitter), systemTray(systemTray), chatWindowFactory(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow(nullptr), loginWindow(nullptr), statusCache(statusCache), autoUpdater(autoUpdater), startMinimized(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
-    chatFontSize = settings->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
-    historyFontSize_ = settings->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
-    this->tabs = dynamic_cast<QtChatTabs*>(tabsBase);
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings_(settings), qtOnlySettings_(qtOnlySettings), tabsBase_(tabs), netbookSplitter_(netbookSplitter), systemTray_(systemTray), chatWindowFactory_(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow_(nullptr), loginWindow_(nullptr), statusCache_(statusCache), autoUpdater_(autoUpdater), startMinimized_(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
+    chatFontSize_ = settings_->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
+    historyFontSize_ = settings_->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
+    this->tabs_ = dynamic_cast<QtChatTabs*>(tabsBase_);
 }
 
 QtUIFactory::~QtUIFactory() {
-    SWIFT_LOG(debug) << "Entering QtUIFactory destructor. chatWindows size:" << chatWindows.size() << std::endl;
-    for (auto chat : chatWindows) {
+    SWIFT_LOG(debug) << "Entering QtUIFactory destructor. chatWindows size:" << chatWindows_.size() << std::endl;
+    for (auto chat : chatWindows_) {
         SWIFT_LOG_ASSERT(chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly" << std::endl;
     }
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
     QtXMLConsoleWidget* widget = new QtXMLConsoleWidget();
-    tabsBase->addTab(widget);
+    tabsBase_->addTab(widget);
     showTabs();
     widget->show();
     return widget;
 }
 
 HistoryWindow* QtUIFactory::createHistoryWindow(UIEventStream* uiEventStream) {
-    QtHistoryWindow* window = new QtHistoryWindow(settings, uiEventStream);
-    tabsBase->addTab(window);
+    QtHistoryWindow* window = new QtHistoryWindow(settings_, uiEventStream);
+    tabsBase_->addTab(window);
     showTabs();
     connect(window, SIGNAL(fontResized(int)), this, SLOT(handleHistoryWindowFontResized(int)));
 
@@ -75,41 +75,41 @@ HistoryWindow* QtUIFactory::createHistoryWindow(UIEventStream* uiEventStream) {
 
 void QtUIFactory::handleHistoryWindowFontResized(int size) {
     historyFontSize_ = size;
-    settings->storeSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE, size);
+    settings_->storeSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE, size);
 }
 
 FileTransferListWidget* QtUIFactory::createFileTransferListWidget() {
     QtFileTransferListWidget* widget = new QtFileTransferListWidget();
-    tabsBase->addTab(widget);
+    tabsBase_->addTab(widget);
     showTabs();
     widget->show();
     return widget;
 }
 
 MainWindow* QtUIFactory::createMainWindow(Chattables& chattables, UIEventStream* eventStream) {
-    lastMainWindow  = new QtMainWindow(chattables, settings, eventStream, loginWindow->getMenus(), statusCache, emoticonsExist_, enableAdHocCommandOnJID_);
-    if (tabs) {
-        tabs->setViewMenu(lastMainWindow->getMenus()[0]);
+    lastMainWindow_ = new QtMainWindow(chattables, settings_, eventStream, loginWindow_->getMenus(), statusCache_, emoticonsExist_, enableAdHocCommandOnJID_);
+    if (tabs_) {
+        tabs_->setViewMenu(lastMainWindow_->getMenus()[0]);
     }
-    return lastMainWindow;
+    return lastMainWindow_;
 }
 
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
-    loginWindow = new QtLoginWindow(eventStream, settings, timerFactory_, autoUpdater);
-    netbookSplitter->insertAtFront(loginWindow);
-    connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(toggleBringToFront()));
-    if (startMinimized) {
-        loginWindow->hide();
+    loginWindow_ = new QtLoginWindow(eventStream, settings_, timerFactory_, autoUpdater_);
+    netbookSplitter_->insertAtFront(loginWindow_);
+    connect(systemTray_, SIGNAL(clicked()), loginWindow_, SLOT(toggleBringToFront()));
+    if (startMinimized_) {
+        loginWindow_->hide();
     }
-    return loginWindow;
+    return loginWindow_;
 }
 
 EventWindow* QtUIFactory::createEventWindow() {
-    return lastMainWindow->getEventWindow();
+    return lastMainWindow_->getEventWindow();
 }
 
 ChatListWindow* QtUIFactory::createChatListWindow(UIEventStream*) {
-    return lastMainWindow->getChatListWindow();
+    return lastMainWindow_->getChatListWindow();
 }
 
 MUCSearchWindow* QtUIFactory::createMUCSearchWindow() {
@@ -117,27 +117,27 @@ MUCSearchWindow* QtUIFactory::createMUCSearchWindow() {
 }
 
 ChatWindow* QtUIFactory::createChatWindow(const JID& contact, UIEventStream* eventStream) {
-    QtChatWindow* window = dynamic_cast<QtChatWindow*>(chatWindowFactory->createChatWindow(contact, eventStream));
+    QtChatWindow* window = dynamic_cast<QtChatWindow*>(chatWindowFactory_->createChatWindow(contact, eventStream));
 
     // remove already closed and thereby deleted chat windows
-    chatWindows.erase(std::remove_if(chatWindows.begin(), chatWindows.end(),
+    chatWindows_.erase(std::remove_if(chatWindows_.begin(), chatWindows_.end(),
         [](QPointer<QtChatWindow>& window) {
             return window.isNull();
-        }), chatWindows.end());
+        }), chatWindows_.end());
 
-    chatWindows.push_back(window);
+    chatWindows_.push_back(window);
 
     connect(window, SIGNAL(fontResized(int)), this, SLOT(handleChatWindowFontResized(int)));
-    window->handleFontResized(chatFontSize);
+    window->handleFontResized(chatFontSize_);
     return window;
 }
 
 void QtUIFactory::handleChatWindowFontResized(int size) {
-    chatFontSize = size;
-    settings->storeSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE, size);
+    chatFontSize_ = size;
+    settings_->storeSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE, size);
 
     // resize font in other chat windows
-    for (auto&& existingWindow : chatWindows) {
+    for (auto&& existingWindow : chatWindows_) {
         if (!existingWindow.isNull()) {
             existingWindow->handleFontResized(size);
         }
@@ -145,7 +145,7 @@ void QtUIFactory::handleChatWindowFontResized(int size) {
 }
 
 UserSearchWindow* QtUIFactory::createUserSearchWindow(UserSearchWindow::Type type, UIEventStream* eventStream, const std::set<std::string>& groups) {
-    return new QtUserSearchWindow(eventStream, type, groups, qtOnlySettings);
+    return new QtUserSearchWindow(eventStream, type, groups, qtOnlySettings_);
 }
 
 JoinMUCWindow* QtUIFactory::createJoinMUCWindow(UIEventStream* uiEventStream) {
@@ -165,7 +165,7 @@ WhiteboardWindow* QtUIFactory::createWhiteboardWindow(std::shared_ptr<Whiteboard
 }
 
 HighlightEditorWindow* QtUIFactory::createHighlightEditorWindow() {
-    return new QtHighlightNotificationConfigDialog(qtOnlySettings);
+    return new QtHighlightNotificationConfigDialog(qtOnlySettings_);
 }
 
 BlockListEditorWidget *QtUIFactory::createBlockListEditorWidget() {
@@ -177,9 +177,9 @@ AdHocCommandWindow* QtUIFactory::createAdHocCommandWindow(std::shared_ptr<Outgoi
 }
 
 void QtUIFactory::showTabs() {
-    if (tabs) {
-        if (!tabs->isVisible()) {
-            tabs->show();
+    if (tabs_) {
+        if (!tabs_->isVisible()) {
+            tabs_->show();
         }
     }
 }

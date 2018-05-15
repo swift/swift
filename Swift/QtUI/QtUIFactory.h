@@ -64,21 +64,21 @@ namespace Swift {
             void showTabs();
 
         private:
-            SettingsProviderHierachy* settings;
-            QtSettingsProvider* qtOnlySettings;
-            QtChatTabsBase* tabsBase;
-            QtChatTabs* tabs;
-            QtSingleWindow* netbookSplitter;
-            QtSystemTray* systemTray;
-            QtChatWindowFactory* chatWindowFactory;
+            SettingsProviderHierachy* settings_;
+            QtSettingsProvider* qtOnlySettings_;
+            QtChatTabsBase* tabsBase_;
+            QtChatTabs* tabs_;
+            QtSingleWindow* netbookSplitter_;
+            QtSystemTray* systemTray_;
+            QtChatWindowFactory* chatWindowFactory_;
             TimerFactory* timerFactory_;
-            QtMainWindow* lastMainWindow;
-            QtLoginWindow* loginWindow;
-            StatusCache* statusCache;
-            AutoUpdater* autoUpdater;
-            std::vector<QPointer<QtChatWindow> > chatWindows;
-            bool startMinimized;
-            int chatFontSize;
+            QtMainWindow* lastMainWindow_;
+            QtLoginWindow* loginWindow_;
+            StatusCache* statusCache_;
+            AutoUpdater* autoUpdater_;
+            std::vector<QPointer<QtChatWindow> > chatWindows_;
+            bool startMinimized_;
+            int chatFontSize_;
             int historyFontSize_;
             bool emoticonsExist_;
             bool enableAdHocCommandOnJID_;
