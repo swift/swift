@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,7 +11,6 @@
 #include <SwifTools/EmojiMapper.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
-#include <Swift/QtUI/QtChatTabsBase.h>
 #include <Swift/QtUI/QtChatTheme.h>
 #include <Swift/QtUI/QtChatWindow.h>
 #include <Swift/QtUI/QtEmojisSelector.h>
@@ -23,22 +22,17 @@ namespace Swift {
 static const QString SPLITTER_STATE = "mucSplitterState";
 static const QString CHAT_TABS_GEOMETRY = "chatTabsGeometry";
 
-QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabsBase* tabs, const QString& themePath, const std::map<std::string, std::string>& emoticonsMap) : themePath_(themePath), emoticonsMap_(emoticonsMap) {
+QtChatWindowFactory::QtChatWindowFactory(QtSingleWindow* splitter, SettingsProvider* settings, QtSettingsProvider* qtSettings, QtChatTabs* tabs, const QString& themePath, const std::map<std::string, std::string>& emoticonsMap) : themePath_(themePath), emoticonsMap_(emoticonsMap) {
     qtOnlySettings_ = qtSettings;
     settings_ = settings;
     tabs_ = tabs;
     theme_ = nullptr;
-    QtChatTabs* fullTabs = dynamic_cast<QtChatTabs*>(tabs_);
-    if (splitter) {
-        assert(fullTabs && "Netbook mode and no-tabs interface is not supported!");
-        splitter->addWidget(fullTabs);
-    } else if (fullTabs) {
-        QVariant chatTabsGeometryVariant = qtOnlySettings_->getQSettings()->value(CHAT_TABS_GEOMETRY);
-        if (chatTabsGeometryVariant.isValid()) {
-            fullTabs->restoreGeometry(chatTabsGeometryVariant.toByteArray());
-        }
-        connect(fullTabs, SIGNAL(geometryChanged()), this, SLOT(handleWindowGeometryChanged()));
+    splitter->addWidget(tabs_);
+    QVariant chatTabsGeometryVariant = qtOnlySettings_->getQSettings()->value(CHAT_TABS_GEOMETRY);
+    if (chatTabsGeometryVariant.isValid()) {
+        tabs_->restoreGeometry(chatTabsGeometryVariant.toByteArray());
     }
+    connect(tabs_, SIGNAL(geometryChanged()), this, SLOT(handleWindowGeometryChanged()));
 }
 
 QtChatWindowFactory::~QtChatWindowFactory() {
@@ -60,7 +54,7 @@ ChatWindow* QtChatWindowFactory::createChatWindow(const JID &contact,UIEventStre
     connect(this, SIGNAL(changeSplitterState(QByteArray)), chatWindow, SLOT(handleChangeSplitterState(QByteArray)));
 
     QVariant splitterState = qtOnlySettings_->getQSettings()->value(SPLITTER_STATE);
-    if(splitterState.isValid()) {
+    if (splitterState.isValid()) {
         chatWindow->handleChangeSplitterState(splitterState.toByteArray());
     }
 

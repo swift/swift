@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@
 #include <Swift/QtUI/Trellis/QtGridSelectionDialog.h>
 
 namespace Swift {
-QtChatTabs::QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode) : QWidget(), singleWindow_(singleWindow), settingsProvider_(settingsProvider), trellisMode_(trellisMode), dynamicGrid_(nullptr), gridSelectionDialog_(nullptr) {
+QtChatTabs::QtChatTabs(SettingsProvider* settingsProvider, bool trellisMode) : QWidget(), settingsProvider_(settingsProvider), trellisMode_(trellisMode), dynamicGrid_(nullptr), gridSelectionDialog_(nullptr) {
 #ifndef Q_OS_MAC
     setWindowIcon(QIcon(":/logo-chat-16.png"));
 #else
@@ -200,13 +200,8 @@ void QtChatTabs::handleTabClosing() {
     if (widget && ((index = dynamicGrid_->indexOf(widget)) >= 0)) {
         dynamicGrid_->removeTab(index);
         if (dynamicGrid_->count() == 0) {
-            if (!singleWindow_) {
-                hide();
-            }
-            else {
-                setWindowTitle("");
-                onTitleChanged("");
-            }
+            setWindowTitle("");
+            onTitleChanged("");
         }
         else {
             handleTabTitleUpdated(dynamicGrid_->currentWidget());

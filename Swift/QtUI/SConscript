@@ -151,7 +151,6 @@ sources = [
     "QtChatOverviewDelegate.cpp",
     "QtChatTabs.cpp",
     "QtChatTabsBase.cpp",
-    "QtChatTabsShortcutOnlySubstitute.cpp",
     "QtChatTheme.cpp",
     "QtChatView.cpp",
     "QtChatWindow.cpp",

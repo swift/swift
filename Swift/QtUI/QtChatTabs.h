@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,7 @@ namespace Swift {
     class QtChatTabs : public QWidget, public QtChatTabsBase {
         Q_OBJECT
         public:
-            QtChatTabs(bool singleWindow, SettingsProvider* settingsProvider, bool trellisMode);
+            QtChatTabs(SettingsProvider* settingsProvider, bool trellisMode);
             virtual ~QtChatTabs();
 
             virtual void addTab(QtTabbable* tab);
@@ -66,7 +66,6 @@ namespace Swift {
             void checkForFirstShow();
 
         private:
-            bool singleWindow_;
             SettingsProvider* settingsProvider_;
             bool trellisMode_;
             QtDynamicGridLayout* dynamicGrid_;

@@ -19,7 +19,6 @@ namespace Swift {
     class AutoUpdater;
     class Chattables;
     class QtChatTabs;
-    class QtChatTabsBase;
     class QtChatTheme;
     class QtChatWindow;
     class QtChatWindowFactory;
@@ -36,7 +35,7 @@ namespace Swift {
     class QtUIFactory : public QObject, public UIFactory {
             Q_OBJECT
         public:
-            QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabsBase* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID);
+            QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID);
             ~QtUIFactory();
             virtual XMLConsoleWidget* createXMLConsoleWidget();
             virtual HistoryWindow* createHistoryWindow(UIEventStream*);
@@ -66,7 +65,6 @@ namespace Swift {
         private:
             SettingsProviderHierachy* settings_;
             QtSettingsProvider* qtOnlySettings_;
-            QtChatTabsBase* tabsBase_;
             QtChatTabs* tabs_;
             QtSingleWindow* netbookSplitter_;
             QtSystemTray* systemTray_;

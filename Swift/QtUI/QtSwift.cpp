@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,8 +42,6 @@
 #include <Swift/Controllers/Storages/FileStoragesFactory.h>
 
 #include <Swift/QtUI/QtChatTabs.h>
-#include <Swift/QtUI/QtChatTabsBase.h>
-#include <Swift/QtUI/QtChatTabsShortcutOnlySubstitute.h>
 #include <Swift/QtUI/QtChatWindowFactory.h>
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Swift/QtUI/QtSingleWindow.h>
@@ -243,13 +241,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     QFont::insertSubstitution(QApplication::font().family(), "Segoe UI Emoji");
 #endif
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
-    tabs_ = nullptr;
-    if (options.count("no-tabs") && !splitter_) {
-        tabs_ = new QtChatTabsShortcutOnlySubstitute();
-    }
-    else {
-        tabs_ = new QtChatTabs(splitter_ != nullptr, settingsHierachy_, true);
-    }
+    tabs_ = new QtChatTabs(settingsHierachy_, true);
     bool startMinimized = options.count("start-minimized") > 0;
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
     storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
@@ -290,9 +282,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
     statusCache_ = new StatusCache(applicationPathProvider_);
 
-    if (splitter_) {
-        splitter_->show();
-    }
+    splitter_->show();
 
     PlatformAutoUpdaterFactory autoUpdaterFactory;
     if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)
