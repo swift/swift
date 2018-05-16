@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2012 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ namespace Swift {
             void resizeEvent(QResizeEvent*);
             void moveEvent(QMoveEvent*);
         private slots:
-            void handleSplitterMoved(int, int);
+            void handleSplitterMoved();
             void handleTabsTitleChanged(const QString& title);
         private:
             void handleGeometryChanged();

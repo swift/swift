@@ -33,6 +33,7 @@ namespace Swift {
             void minimise();
             QtTabbable* getCurrentTab();
             void setViewMenu(QMenu* viewMenu);
+            QSize sizeHint() const;
 
         signals:
             void geometryChanged();

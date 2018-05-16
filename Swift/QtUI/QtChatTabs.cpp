@@ -426,4 +426,8 @@ void QtChatTabs::checkForFirstShow() {
     }
 }
 
+QSize QtChatTabs::sizeHint() const {
+    return QSize(600, 600);
+}
+
 }

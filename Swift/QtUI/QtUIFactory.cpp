@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -96,24 +96,12 @@ MainWindow* QtUIFactory::createMainWindow(Chattables& chattables, UIEventStream*
 
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
     loginWindow = new QtLoginWindow(eventStream, settings, timerFactory_, autoUpdater);
-    if (netbookSplitter) {
-        netbookSplitter->insertAtFront(loginWindow);
-    }
+    netbookSplitter->insertAtFront(loginWindow);
     connect(systemTray, SIGNAL(clicked()), loginWindow, SLOT(toggleBringToFront()));
-
-#ifndef SWIFT_MOBILE
-    QVariant loginWindowGeometryVariant = qtOnlySettings->getQSettings()->value("loginWindowGeometry");
-    if (loginWindowGeometryVariant.isValid()) {
-        loginWindow->restoreGeometry(loginWindowGeometryVariant.toByteArray());
+    if (startMinimized) {
+        loginWindow->hide();
     }
-    connect(loginWindow, SIGNAL(geometryChanged()), this, SLOT(handleLoginWindowGeometryChanged()));
-    if (startMinimized) loginWindow->hide();
-#endif
     return loginWindow;
-}
-
-void QtUIFactory::handleLoginWindowGeometryChanged() {
-    qtOnlySettings->getQSettings()->setValue("loginWindowGeometry", loginWindow->saveGeometry());
 }
 
 EventWindow* QtUIFactory::createEventWindow() {

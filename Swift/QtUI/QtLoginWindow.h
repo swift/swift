@@ -54,6 +54,7 @@ namespace Swift {
             void hide();
             QtMenus getMenus() const;
             virtual void quit();
+            QSize sizeHint() const;
 
         signals:
             void geometryChanged();

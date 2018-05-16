@@ -18,12 +18,11 @@ static const QString SINGLE_WINDOW_SPLITS = QString("SINGLE_WINDOW_SPLITS");
 
 QtSingleWindow::QtSingleWindow(QtSettingsProvider* settings) : QSplitter() {
     settings_ = settings;
-    QVariant geometryVariant = settings_->getQSettings()->value(SINGLE_WINDOW_GEOMETRY);
+    auto geometryVariant = settings_->getQSettings()->value(SINGLE_WINDOW_GEOMETRY);
     if (geometryVariant.isValid()) {
         restoreGeometry(geometryVariant.toByteArray());
     }
-    connect(this, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(int, int)));
-    restoreSplitters();
+    connect(this, SIGNAL(splitterMoved(int, int)), this, SLOT(handleSplitterMoved(/*int, int*/)));
     setChildrenCollapsible(false);
 #ifdef SWIFTEN_PLATFORM_MACOSX
     setHandleWidth(0);
@@ -46,7 +45,7 @@ void QtSingleWindow::handleTabsTitleChanged(const QString& title) {
     setWindowTitle(title);
 }
 
-void QtSingleWindow::handleSplitterMoved(int, int) {
+void QtSingleWindow::handleSplitterMoved() {
     QList<QVariant> variantValues;
     QList<int> intValues = sizes();
     for (const auto& value : intValues) {
@@ -66,7 +65,15 @@ void QtSingleWindow::restoreSplitters() {
 
 void QtSingleWindow::insertAtFront(QWidget* widget) {
     insertWidget(0, widget);
-    restoreSplitters();
+    auto splitsVariant = settings_->getQSettings()->value(SINGLE_WINDOW_SPLITS);
+    if (splitsVariant.isValid()) {
+        restoreSplitters();
+    }
+    else {
+        handleSplitterMoved();
+    }
+    setStretchFactor(0, 0);
+    setStretchFactor(1, 1);
 }
 
 void QtSingleWindow::handleGeometryChanged() {

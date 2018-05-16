@@ -573,4 +573,8 @@ void QtLoginWindow::handleOpenConnectionOptions() {
     }
 }
 
+QSize QtLoginWindow::sizeHint() const {
+    return QSize(250, 600);
+}
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -57,7 +57,6 @@ namespace Swift {
             virtual AdHocCommandWindow* createAdHocCommandWindow(std::shared_ptr<OutgoingAdHocCommandSession> command);
 
         private slots:
-            void handleLoginWindowGeometryChanged();
             void handleChatWindowFontResized(int);
             void handleHistoryWindowFontResized(int);
 
