@@ -83,6 +83,19 @@ def generate(env) :
         qtmappings = captureWinDeployQtMapping()
         assert(qtmappings)
 
+        # Add QtWebKit dependencies.
+        # This is needed as QtWebKit since 5.6 is developed and released seperately
+        # of Qt and windeployqt does not know about its dependencies anymore.
+        for map_from, map_to in qtmappings:
+            if map_to == "Qt5WebKit.dll":
+                # hidden Qt5WebKit dependencies
+                hidden_dependencies = ["libxml2.dll", "libxslt.dll"]
+                for dependency in hidden_dependencies:
+                    dependency_from_path = os.path.join(env["QTDIR"], "bin", dependency)
+                    if os.path.isfile(dependency_from_path):
+                        qtmappings.append((dependency_from_path, dependency))
+                break
+
         # handle core DLLs
         qt_corelib_regex = re.compile(ur".*bin.*\\(.*)\.dll")
 
@@ -119,4 +132,3 @@ def generate(env) :
 
 def exists(env) :
     return env["PLATFORM"] == "win32"
-
