@@ -35,10 +35,8 @@ namespace Swift {
             void onCountUpdated(int count);
         private slots:
             void handleItemActivated(const QModelIndex&);
-            void handleAddBookmark();
             void handleEditBookmark();
             void handleRemoveBookmark();
-            void handleAddBookmarkFromRecents();
             void handleClicked(const QModelIndex& index);
             void handleSettingChanged(const std::string& setting);
             void handleClearRecentsRequested();

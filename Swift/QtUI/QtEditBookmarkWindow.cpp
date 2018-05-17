@@ -12,7 +12,6 @@ namespace Swift {
 QtEditBookmarkWindow::QtEditBookmarkWindow(UIEventStream* eventStream, const MUCBookmark& bookmark) : eventStream_(eventStream), bookmark_(bookmark) {
     name_->setText(P2QSTRING(bookmark.getName()));
     room_->setText(P2QSTRING(bookmark.getRoom().toString()));
-    autojoin_->setChecked(bookmark.getAutojoin());
     nick_->setText(bookmark.getNick() ? P2QSTRING(bookmark.getNick().get()) : "");
     password_->setText(bookmark.getPassword() ? P2QSTRING(bookmark.getPassword().get()) : "");
 }

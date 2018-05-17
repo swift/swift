@@ -6,6 +6,7 @@
 
 #include <Swiften/MUC/MUCBookmarkManager.h>
 
+#include <algorithm>
 #include <memory>
 
 #include <boost/bind.hpp>
@@ -30,6 +31,7 @@ void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payloa
     }
 
     ready_ = true;
+    handlingReceivedBookmarks_ = true;
     onBookmarksReady();
 
     storage = payload;
@@ -47,18 +49,25 @@ void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payloa
             onBookmarkRemoved(oldBookmark);
         }
     }
-
+    std::vector<MUCBookmark> newAddedBookmarksToBeSignaled;
     for (const auto& newBookmark : receivedBookmarks) {
         if (!containsEquivalent(bookmarks_, newBookmark)) {
             newBookmarks.push_back(newBookmark);
-            onBookmarkAdded(newBookmark);
+            //If the bookmark does not exist in bookmark manager, after emmiting the signal, chatsmanager will try to join the room, if the bookmark has autojoin to true.
+            //The bookmark is not yet available in bookmark manager, therefore a new bookmark will be created which will be lost when newBookmarks replace bookmarks.
+            newAddedBookmarksToBeSignaled.push_back(newBookmark);
         }
     }
     bookmarks_ = newBookmarks;
+    for (auto bookmark : newAddedBookmarksToBeSignaled) {
+        onBookmarkAdded(bookmark);
+   }
+
+    handlingReceivedBookmarks_ = false;
 }
 
 bool MUCBookmarkManager::containsEquivalent(const std::vector<MUCBookmark>& list, const MUCBookmark& bookmark) {
-    return std::find(list.begin(), list.end(), bookmark) != list.end();
+    return std::find_if(list.begin(), list.end(), [&](const MUCBookmark& val) { return bookmark.getRoom() == val.getRoom(); }) != list.end();
 }
 
 void MUCBookmarkManager::replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark) {
@@ -76,8 +85,15 @@ void MUCBookmarkManager::replaceBookmark(const MUCBookmark& oldBookmark, const M
 
 void MUCBookmarkManager::addBookmark(const MUCBookmark& bookmark) {
     if (!ready_) return;
-    bookmarks_.push_back(bookmark);
-    onBookmarkAdded(bookmark);
+    if (auto found = lookupBookmark(bookmark.getRoom())) {
+        if (found != bookmark) {
+            replaceBookmark(found.get(), bookmark);
+        }
+    }
+    else {
+        bookmarks_.push_back(bookmark);
+        onBookmarkAdded(bookmark);
+    }
     flush();
 }
 
@@ -96,6 +112,9 @@ void MUCBookmarkManager::removeBookmark(const MUCBookmark& bookmark) {
 }
 
 void MUCBookmarkManager::flush() {
+    if (handlingReceivedBookmarks_) {
+        return;
+    }
     if (!storage) {
         storage = std::make_shared<Storage>();
     }
@@ -114,6 +133,14 @@ void MUCBookmarkManager::flush() {
 
 const std::vector<MUCBookmark>& MUCBookmarkManager::getBookmarks() const {
     return bookmarks_;
+}
+
+boost::optional<MUCBookmark> MUCBookmarkManager::lookupBookmark(const JID& bookmarkJID) const {
+    auto bookmarkIterator = std::find_if(bookmarks_.begin(), bookmarks_.end(), [&](const MUCBookmark& val) { return bookmarkJID == val.getRoom(); });
+    if (bookmarkIterator != bookmarks_.end()) {
+        return *bookmarkIterator;
+    }
+    return boost::none;
 }
 
 }

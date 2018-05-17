@@ -82,29 +82,6 @@
        <item row="3" column="1">
         <widget class="QLineEdit" name="password_"/>
        </item>
-       <item row="4" column="0">
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="1">
-        <widget class="QCheckBox" name="autojoin_">
-         <property name="text">
-          <string>Enter automatically</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
      <item>

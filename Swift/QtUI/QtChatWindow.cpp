@@ -751,6 +751,7 @@ void QtChatWindow::handleActionButtonClicked() {
     QAction* affiliations = nullptr;
     QAction* destroy = nullptr;
     QAction* invite = nullptr;
+    QAction* leave = nullptr;
 
     QAction* block = nullptr;
     QAction* unblock = nullptr;
@@ -804,6 +805,10 @@ void QtChatWindow::handleActionButtonClicked() {
                     invite = contextMenu.addAction(tr("Invite person to this room…"));
                     invite->setEnabled(isOnline_);
                     break;
+                case ChatWindow::Leave:
+                    leave = contextMenu.addAction(tr("Leave room"));
+                    leave->setEnabled(isOnline_);
+                    break;
             }
         }
     }
@@ -855,6 +860,9 @@ void QtChatWindow::handleActionButtonClicked() {
     else if (result == invite) {
         onInviteToChat(std::vector<JID>());
     }
+    else if (result == leave) {
+        close();
+    }
     else if (result == block) {
         onBlockUserRequest();
     }
@@ -888,14 +896,16 @@ void QtChatWindow::setCanInitiateImpromptuChats(bool supportsImpromptu) {
 }
 
 void QtChatWindow::showBookmarkWindow(const MUCBookmark& bookmark) {
-    if (roomBookmarkState_ == RoomNotBookmarked) {
-        QtAddBookmarkWindow* window = new QtAddBookmarkWindow(eventStream_, bookmark);
-        window->show();
-    }
-    else {
+    if (roomBookmarkState_ != RoomNotBookmarked) {
         QtEditBookmarkWindow* window = new QtEditBookmarkWindow(eventStream_, bookmark);
         window->show();
     }
+#ifndef  NOT_YET
+    else {
+        QtAddBookmarkWindow* window = new QtAddBookmarkWindow(eventStream_, bookmark);
+        window->show();
+    }
+#endif // ! NOT_YET
 }
 
 std::string QtChatWindow::getID() const {

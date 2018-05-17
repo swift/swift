@@ -86,11 +86,9 @@ void QtChatListWindow::handleClicked(const QModelIndex& index) {
 
 void QtChatListWindow::setupContextMenus() {
     mucMenu_ = new QMenu();
-    onlineOnlyActions_ << mucMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
     onlineOnlyActions_ << mucMenu_->addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
     onlineOnlyActions_ << mucMenu_->addAction(tr("Remove Bookmark"), this, SLOT(handleRemoveBookmark()));
     emptyMenu_ = new QMenu();
-    onlineOnlyActions_ << emptyMenu_->addAction(tr("Add New Bookmark"), this, SLOT(handleAddBookmark()));
 }
 
 void QtChatListWindow::handleItemActivated(const QModelIndex& index) {
@@ -146,22 +144,6 @@ void QtChatListWindow::handleRemoveBookmark() {
     eventStream_->send(std::make_shared<RemoveMUCBookmarkUIEvent>(mucItem->getBookmark()));
 }
 
-void QtChatListWindow::handleAddBookmarkFromRecents() {
-    const ChatListRecentItem* item = dynamic_cast<const ChatListRecentItem*>(contextMenuItem_);
-    if (item) {
-        const ChatListWindow::Chat& chat = item->getChat();
-        MUCBookmark bookmark(chat.jid, chat.jid.toBare().toString());
-        bookmark.setNick(chat.nick);
-        bookmark.setPassword(chat.password);
-        eventStream_->send(std::make_shared<AddMUCBookmarkUIEvent>(bookmark));
-    }
-}
-
-void QtChatListWindow::handleAddBookmark() {
-    (new QtAddBookmarkWindow(eventStream_))->show();
-}
-
-
 void QtChatListWindow::handleEditBookmark() {
     const ChatListMUCItem* mucItem = dynamic_cast<const ChatListMUCItem*>(contextMenuItem_);
     if (!mucItem) return;
@@ -208,11 +190,8 @@ void QtChatListWindow::contextMenuEvent(QContextMenuEvent* event) {
             if (mucItem) {
                 contextMenuItem_ = mucItem;
                 bookmarkAction = mucRecentsMenu.addAction(tr("Edit Bookmark"), this, SLOT(handleEditBookmark()));
+                bookmarkAction->setEnabled(isOnline_);
             }
-            else {
-                bookmarkAction = mucRecentsMenu.addAction(tr("Add to Bookmarks"), this, SLOT(handleAddBookmarkFromRecents()));
-            }
-            bookmarkAction->setEnabled(isOnline_);
             mucRecentsMenu.addAction(tr("Clear recents"), this, SLOT(handleClearRecentsRequested()));
             mucRecentsMenu.exec(QCursor::pos());
             return;

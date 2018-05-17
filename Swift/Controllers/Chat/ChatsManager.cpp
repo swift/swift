@@ -353,9 +353,11 @@ void ChatsManager::handleMUCBookmarkAdded(const MUCBookmark& bookmark) {
     if (bookmark.getRoom().isBare() && !bookmark.getRoom().getNode().empty()) {
         std::map<JID, MUCController*>::iterator it = mucControllers_.find(bookmark.getRoom());
         if (it == mucControllers_.end() && bookmark.getAutojoin()) {
-            handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false, false  );
+            handleJoinMUCRequest(bookmark.getRoom(), bookmark.getPassword(), bookmark.getNick(), false, false);
         }
 #ifndef NOT_YET
+        //Only one entry of the bookmark should exist
+        chatListWindow_->removeMUCBookmark(bookmark);
         chatListWindow_->addMUCBookmark(bookmark);
 #endif
         chattables_.addJID(bookmark.getRoom(), Chattables::State::Type::Room);
@@ -534,6 +536,12 @@ void ChatsManager::handleUserLeftMUC(MUCController* mucController) {
             auto state = chattables_.getState(jid);
             state.status = StatusShow::None;
             chattables_.setState(jid, state);
+            //If user deletes bookmark from chatListWindow_ and then decides to leave the room, or if the server doesn't support bookmarks, the bookmark will not exist.
+            if (auto bookmarkFound = mucBookmarkManager_->lookupBookmark(jid)) {
+                MUCBookmark newBookmark(bookmarkFound.get());
+                newBookmark.setAutojoin(false);
+                mucBookmarkManager_->replaceBookmark(bookmarkFound.get(), newBookmark);
+            }
             mucControllers_.erase(it);
             delete mucController;
             break;
@@ -619,7 +627,7 @@ void ChatsManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
             invitees_[roomJID].insert(jid);
         }
         // join muc
-        MUC::ref muc = handleJoinMUCRequest(roomJID, boost::optional<std::string>(), nickResolver_->jidToNick(jid_), false, true, true);
+        MUC::ref muc = handleJoinMUCRequest(roomJID, boost::optional<std::string>(), nickResolver_->jidToNick(jid_), true, true);
         mucControllers_[roomJID]->onImpromptuConfigCompleted.connect(boost::bind(&ChatsManager::finalizeImpromptuJoin, this, muc, createImpromptuMUCEvent->getJIDs(), createImpromptuMUCEvent->getReason(), boost::optional<JID>()));
         mucControllers_[roomJID]->activateChatWindow();
     }
@@ -629,7 +637,7 @@ void ChatsManager::handleUIEvent(std::shared_ptr<UIEvent> event) {
         mucBookmarkManager_->replaceBookmark(editMUCBookmarkEvent->getOldBookmark(), editMUCBookmarkEvent->getNewBookmark());
     }
     else if (JoinMUCUIEvent::ref joinEvent = std::dynamic_pointer_cast<JoinMUCUIEvent>(event)) {
-        handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getPassword(), joinEvent->getNick(), joinEvent->getShouldJoinAutomatically(), joinEvent->getCreateAsReservedRoomIfNew(), joinEvent->isImpromptu());
+        handleJoinMUCRequest(joinEvent->getJID(), joinEvent->getPassword(), joinEvent->getNick(), joinEvent->getCreateAsReservedRoomIfNew(), joinEvent->isImpromptu());
         mucControllers_[joinEvent->getJID()]->activateChatWindow();
     }
     else if (std::shared_ptr<RequestJoinMUCUIEvent> joinEvent = std::dynamic_pointer_cast<RequestJoinMUCUIEvent>(event)) {
@@ -665,7 +673,7 @@ void ChatsManager::handleTransformChatToMUC(ChatController* chatController, Chat
     JID roomJID = JID(idGenerator_.generateID(), localMUCServiceJID_);
 
     // join muc
-    MUC::ref muc = handleJoinMUCRequest(roomJID, boost::optional<std::string>(), nickResolver_->jidToNick(jid_), false, true, true, chatWindow);
+    MUC::ref muc = handleJoinMUCRequest(roomJID, boost::optional<std::string>(), nickResolver_->jidToNick(jid_), true, true, chatWindow);
     mucControllers_[roomJID]->onImpromptuConfigCompleted.connect(boost::bind(&ChatsManager::finalizeImpromptuJoin, this, muc, jidsToInvite, reason, boost::optional<JID>(reuseChatInvite)));
 }
 
@@ -839,20 +847,8 @@ void ChatsManager::rebindControllerJID(const JID& from, const JID& to) {
     chatControllers_[to]->setToJID(to);
 }
 
-MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& password, const boost::optional<std::string>& nickMaybe, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow) {
+MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::optional<std::string>& password, const boost::optional<std::string>& nickMaybe, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow) {
     MUC::ref muc;
-    if (addAutoJoin) {
-        MUCBookmark bookmark(mucJID, mucJID.getNode());
-        bookmark.setAutojoin(true);
-        if (nickMaybe) {
-            bookmark.setNick(*nickMaybe);
-        }
-        if (password) {
-            bookmark.setPassword(*password);
-        }
-        mucBookmarkManager_->addBookmark(bookmark);
-    }
-
     std::map<JID, MUCController*>::iterator it = mucControllers_.find(mucJID);
     if (it != mucControllers_.end()) {
         if (stanzaChannel_->isAvailable()) {
@@ -875,6 +871,10 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
         }
         std::shared_ptr<ChatMessageParser> chatMessageParser = std::make_shared<ChatMessageParser>(emoticons_, highlightManager_->getConfiguration(), ChatMessageParser::Mode::GroupChat); /* a message parser that knows this is a room/MUC (not a chat) */
         controller = new MUCController(jid_, muc, password, nick, stanzaChannel_, iqRouter_, reuseChatwindow ? chatWindowFactoryAdapter : chatWindowFactory_, nickResolver_, presenceOracle_, avatarManager_, uiEventStream_, false, timerFactory_, eventController_, entityCapsProvider_, roster_, historyController_, mucRegistry_, highlightManager_, clientBlockListManager_, chatMessageParser, isImpromptu, autoAcceptMUCInviteDecider_, vcardManager_, mucBookmarkManager_, settings_, chattables_);
+        chattables_.addJID(muc->getJID(), Chattables::State::Type::Room);
+        auto state = chattables_.getState(muc->getJID());
+        state.status = StatusShow::Online;
+        chattables_.setState(muc->getJID(), state);
         if (chatWindowFactoryAdapter) {
             /* The adapters are only passed to chat windows, which are deleted in their
              * controllers' dtor, which are deleted in ChatManager's dtor. The adapters
@@ -906,6 +906,24 @@ MUC::ref ChatsManager::handleJoinMUCRequest(const JID &mucJID, const boost::opti
         mucControllers_[mucJID]->setChatWindowTitle(chatListWindowIter->getTitle());
     }
 #endif
+    if (auto existingBookmark = mucBookmarkManager_->lookupBookmark(mucJID)) {
+        if (!existingBookmark->getAutojoin()) {
+            MUCBookmark newbookmark(existingBookmark.get());
+            newbookmark.setAutojoin(true);
+            mucBookmarkManager_->replaceBookmark(*existingBookmark, newbookmark);
+        }
+    }
+    else {
+        MUCBookmark bookmark(mucJID, mucJID.getNode());
+        bookmark.setAutojoin(true);
+        if (nickMaybe) {
+            bookmark.setNick(*nickMaybe);
+        }
+        if (password) {
+            bookmark.setPassword(*password);
+        }
+        mucBookmarkManager_->addBookmark(bookmark);
+    }
     mucControllers_[mucJID]->showChatWindow();
     return muc;
 }
@@ -1015,11 +1033,11 @@ void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> incomingMessag
                 ChatWindow* window = controller->detachChatWindow();
                 chatControllers_.erase(fromJID);
                 delete controller;
-                handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true, window);
+                handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, true, window);
                 return;
             }
         } else {
-            handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true);
+            handleJoinMUCRequest(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(),  false, true);
             return;
         }
     }
@@ -1091,7 +1109,7 @@ void ChatsManager::handleRecentActivated(const ChatListWindow::Chat& chat) {
     else if (chat.isMUC) {
         bool isImpromptu = (!chat.inviteesNames.empty() || !chat.impromptuJIDs.empty());
         /* FIXME: This means that recents requiring passwords will just flat-out not work */
-        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick, false, false, isImpromptu));
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(chat.jid, boost::optional<std::string>(), chat.nick, false, isImpromptu));
     }
     else {
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(chat.jid));
@@ -1106,8 +1124,12 @@ void ChatsManager::handleChattableActivated(const JID& jid) {
         uiEventStream_->send(std::make_shared<RequestChatUIEvent>(jid));
     }
     else if (state.type == Chattables::State::Type::Room) {
-        //FIXME: Find bookmarks and do handleMUCBookmarkActivated things
-        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(jid, boost::optional<std::string>(), boost::optional<std::string>())); // Just a quick hack to reuse already open MUCs
+        if (auto foundBookmark = mucBookmarkManager_->lookupBookmark(jid)) {
+            handleMUCBookmarkActivated(foundBookmark.get());
+        }
+        else {
+            uiEventStream_->send(std::make_shared<JoinMUCUIEvent>(jid, boost::optional<std::string>(), boost::optional<std::string>())); // Just a quick hack to reuse already open MUCs
+        }
     }
 }
 

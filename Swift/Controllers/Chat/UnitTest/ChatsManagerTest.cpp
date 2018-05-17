@@ -38,6 +38,7 @@
 #include <Swiften/Jingle/JingleSessionManager.h>
 #include <Swiften/MUC/MUCManager.h>
 #include <Swiften/MUC/UnitTest/MockMUC.h>
+#include <Swiften/MUC/MUCBookmarkManager.h>
 #include <Swiften/Network/DummyTimerFactory.h>
 #include <Swiften/Presence/DirectedPresenceSender.h>
 #include <Swiften/Presence/PresenceOracle.h>
@@ -58,6 +59,7 @@
 #include <Swift/Controllers/ProfileSettingsProvider.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/DummySettingsProvider.h>
+#include <Swift/Controllers/UIEvents/AddMUCBookmarkUIEvent.h>
 #include <Swift/Controllers/UIEvents/CreateImpromptuMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/JoinMUCUIEvent.h>
 #include <Swift/Controllers/UIEvents/RequestChatUIEvent.h>
@@ -105,6 +107,16 @@ class DummyNotifier : public Notifier {
 
     public:
         std::vector<Notification> notifications;
+};
+
+class ExtendedChatsManager : public ChatsManager {
+public:
+    ExtendedChatsManager(JID jid, StanzaChannel* stanzaChannel, IQRouter* iqRouter, EventController* eventController, ChatWindowFactory* chatWindowFactory, JoinMUCWindowFactory* joinMUCWindowFactory, NickResolver* nickResolver, PresenceOracle* presenceOracle, PresenceSender* presenceSender, UIEventStream* uiEventStream, ChatListWindowFactory* chatListWindowFactory, bool useDelayForLatency, TimerFactory* timerFactory, MUCRegistry* mucRegistry, EntityCapsProvider* entityCapsProvider, MUCManager* mucManager, MUCSearchWindowFactory* mucSearchWindowFactory, ProfileSettingsProvider* profileSettings, FileTransferOverview* ftOverview, XMPPRoster* roster, bool eagleMode, SettingsProvider* settings, HistoryController* historyController_, WhiteboardManager* whiteboardManager, HighlightManager* highlightManager, ClientBlockListManager* clientBlockListManager, const std::map<std::string, std::string>& emoticons, VCardManager* vcardManager, Chattables& chattables) :
+        ChatsManager(jid, stanzaChannel, iqRouter, eventController, chatWindowFactory, joinMUCWindowFactory, nickResolver, presenceOracle, presenceSender, uiEventStream, chatListWindowFactory, useDelayForLatency, timerFactory, mucRegistry, entityCapsProvider, mucManager, mucSearchWindowFactory, profileSettings, ftOverview, roster, eagleMode, settings, historyController_, whiteboardManager, highlightManager, clientBlockListManager, emoticons, vcardManager, chattables) {
+    }
+    MUCBookmarkManager* getBookmarkManager() {
+        return mucBookmarkManager_;
+    }
 };
 
 
@@ -162,6 +174,9 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testReceivingBookmarksWithDomainJID);
     CPPUNIT_TEST(testReceivingBookmarksWithBareJID);
     CPPUNIT_TEST(testReceivingBookmarksWithFullJID);
+    CPPUNIT_TEST(testAutoJoinBookmarksAndChattables);
+    CPPUNIT_TEST(testJoinNoAutojoinBookmark);
+    CPPUNIT_TEST(testJoinAndBookmarkMUC);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -209,7 +224,7 @@ public:
         clientBlockListManager_ = new ClientBlockListManager(iqRouter_);
         timerFactory_ = new DummyTimerFactory();
         chattables_ = std::make_unique<Chattables>();
-        manager_ = new ChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, timerFactory_, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_, *chattables_);
+        manager_ = new ExtendedChatsManager(jid_, stanzaChannel_, iqRouter_, eventController_, chatWindowFactory_, joinMUCWindowFactory_, nickResolver_, presenceOracle_, directedPresenceSender_, uiEventStream_, chatListWindowFactory_, true, timerFactory_, mucRegistry_, entityCapsProvider_, mucManager_, mucSearchWindowFactory_, profileSettings_, ftOverview_, xmppRoster_, false, settings_, nullptr, wbManager_, highlightManager_, clientBlockListManager_, emoticons_, vcardManager_, *chattables_);
 
         manager_->setAvatarManager(avatarManager_);
     }
@@ -1632,17 +1647,7 @@ public:
         CPPUNIT_ASSERT_EQUAL(std::string("mucroom"), window->name_);
     }
 
-    static std::shared_ptr<Storage> createBookmarkStorageWithJID(const JID& jid) {
-        auto storage = std::make_shared<Storage>();
-        auto room = Storage::Room();
-        room.jid = jid;
-        room.autoJoin = true;
-        storage->addRoom(room);
-        return storage;
-    }
-
-    void testReceivingBookmarksWithDomainJID() {
-        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+    std::shared_ptr<Storage> createBookmarkStorageWithJID(std::shared_ptr<IQ> bookmarkRequest, const JID& jid, const bool autojoin) {
         CPPUNIT_ASSERT(bookmarkRequest);
         CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
 
@@ -1652,56 +1657,144 @@ public:
         auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
         CPPUNIT_ASSERT(storage);
 
+        auto roomsStorage = std::make_shared<Storage>();
+        if (jid.isValid()) {
+            auto room = Storage::Room();
+            room.jid = jid;
+            room.autoJoin = autojoin;
+            roomsStorage->addRoom(room);
+        }
+        return roomsStorage;
+    }
+
+    void testReceivingBookmarksWithDomainJID() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
         auto response = IQ::createResult(
             bookmarkRequest->getFrom(),
             bookmarkRequest->getTo(),
             bookmarkRequest->getID(),
-            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("montague.lit"))
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID(bookmarkRequest, "montague.lit", true))
         );
         stanzaChannel_->onIQReceived(response);
     }
 
     void testReceivingBookmarksWithBareJID() {
         auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
-        CPPUNIT_ASSERT(bookmarkRequest);
-        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
-
-        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
-        CPPUNIT_ASSERT(privateStorage);
-
-        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
-        CPPUNIT_ASSERT(storage);
-
         MockChatWindow* window = new MockChatWindow();
         mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID("example@montague.lit"), uiEventStream_).Return(window);
-
         auto response = IQ::createResult(
             bookmarkRequest->getFrom(),
             bookmarkRequest->getTo(),
             bookmarkRequest->getID(),
-            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("example@montague.lit"))
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID(bookmarkRequest, "example@montague.lit", true))
         );
         stanzaChannel_->onIQReceived(response);
     }
 
     void testReceivingBookmarksWithFullJID() {
         auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
-        CPPUNIT_ASSERT(bookmarkRequest);
-        CPPUNIT_ASSERT_EQUAL(IQ::Get, bookmarkRequest->getType());
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID(bookmarkRequest, "example@montague.lit/someresource", true))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
 
-        auto privateStorage = bookmarkRequest->getPayload<PrivateStorage>();
-        CPPUNIT_ASSERT(privateStorage);
+    void testAutoJoinBookmarksAndChattables() {
 
-        auto storage = std::dynamic_pointer_cast<Storage>(privateStorage->getPayload());
-        CPPUNIT_ASSERT(storage);
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        auto roomsStorage = createBookmarkStorageWithJID(bookmarkRequest, "autojoin@bookmark.lit", true);
+        auto room = Storage::Room();
+        room.jid = "noAutojoin@bookmark.lit";
+        roomsStorage->addRoom(room);
+
+        //Only autojoin@bookmark.lit window should open.
+        MockChatWindow* autojoinBookmarkWindow = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID("autojoin@bookmark.lit"), uiEventStream_).Return(autojoinBookmarkWindow);
 
         auto response = IQ::createResult(
             bookmarkRequest->getFrom(),
             bookmarkRequest->getTo(),
             bookmarkRequest->getID(),
-            std::make_shared<PrivateStorage>(createBookmarkStorageWithJID("example@montague.lit/someresource"))
+            std::make_shared<PrivateStorage>(roomsStorage)
         );
         stanzaChannel_->onIQReceived(response);
+        //Both bookmarks should be added to the chattables.
+        CPPUNIT_ASSERT_EQUAL(size_t(2), chattables_->get().size());
+        auto autoJoinState = chattables_->getState("autojoin@bookmark.lit");
+        CPPUNIT_ASSERT(autoJoinState.type == Chattables::State::Type::Room);
+        CPPUNIT_ASSERT_EQUAL(autoJoinState.status, StatusShow::Online);
+        auto noAutoJoinState = chattables_->getState("noAutojoin@bookmark.lit");
+        CPPUNIT_ASSERT(noAutoJoinState.type == Chattables::State::Type::Room);
+        CPPUNIT_ASSERT_EQUAL(noAutoJoinState.status, StatusShow::None);
+    }
+
+    void testJoinNoAutojoinBookmark() {
+
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        auto roomsStorage = createBookmarkStorageWithJID(bookmarkRequest, "example@montague.lit", false);
+
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(roomsStorage)
+        );
+        stanzaChannel_->onIQReceived(response);
+
+        //Join previous bookmarked room, expecting no increase in chattables and change of autojoin in bookmark to true
+        MockChatWindow* newExampleChatWindow = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With(JID("example@montague.lit"), uiEventStream_).Return(newExampleChatWindow);
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>("example@montague.lit", boost::optional<std::string>(), boost::optional<std::string>()));
+        CPPUNIT_ASSERT_EQUAL(size_t(1), chattables_->get().size());
+        auto state = chattables_->getState("example@montague.lit");
+        CPPUNIT_ASSERT(state.type == Chattables::State::Type::Room);
+        CPPUNIT_ASSERT_EQUAL(state.status, StatusShow::Online);
+
+        auto bookmarks = manager_->getBookmarkManager()->getBookmarks();
+        CPPUNIT_ASSERT_EQUAL(bookmarks.size(), size_t(1));
+        CPPUNIT_ASSERT(bookmarks[0].getRoom() == JID("example@montague.lit"));
+        CPPUNIT_ASSERT(bookmarks[0].getAutojoin());
+    }
+
+    void testJoinAndBookmarkMUC() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        auto roomsStorage = createBookmarkStorageWithJID(bookmarkRequest, "", true);
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>(roomsStorage)
+        );
+        stanzaChannel_->onIQReceived(response);
+
+        //Join non-bookmarked room expecting for the room to get bookmarked with autojoin to true
+        MockChatWindow* exampleChatWindow = new MockChatWindow();
+        mocks_->ExpectCall(chatWindowFactory_, ChatWindowFactory::createChatWindow).With("example@montague.lit", uiEventStream_).Return(exampleChatWindow);
+        uiEventStream_->send(std::make_shared<JoinMUCUIEvent>("example@montague.lit", boost::optional<std::string>(), boost::optional<std::string>()));
+        {
+            CPPUNIT_ASSERT_EQUAL(size_t(1), chattables_->get().size());
+            auto state = chattables_->getState("example@montague.lit");
+            CPPUNIT_ASSERT(state.type == Chattables::State::Type::Room);
+            CPPUNIT_ASSERT_EQUAL(state.status, StatusShow::Online);
+
+            auto bookmarks = manager_->getBookmarkManager()->getBookmarks();
+            CPPUNIT_ASSERT_EQUAL(bookmarks.size(), size_t(1));
+            CPPUNIT_ASSERT(bookmarks[0].getRoom() == JID("example@montague.lit"));
+            CPPUNIT_ASSERT(bookmarks[0].getAutojoin());
+
+        }
+        //Exiting room that is bookmarked, expecting chattable to stay but bookmark autojoin change to false.
+        exampleChatWindow->onClosed();
+        {
+            CPPUNIT_ASSERT_EQUAL(size_t(1), chattables_->get().size());
+            auto bookmarks = manager_->getBookmarkManager()->getBookmarks();
+            CPPUNIT_ASSERT_EQUAL(bookmarks.size(), size_t(1));
+            CPPUNIT_ASSERT(bookmarks[0].getRoom() == JID("example@montague.lit"));
+            CPPUNIT_ASSERT(!bookmarks[0].getAutojoin());
+        }
     }
 
 private:
@@ -1728,7 +1821,7 @@ private:
 private:
     JID jid_;
     std::unique_ptr<DummyNotifier> notifier_;
-    ChatsManager* manager_;
+    ExtendedChatsManager* manager_;
     DummyStanzaChannel* stanzaChannel_;
     IQRouter* iqRouter_;
     EventController* eventController_;

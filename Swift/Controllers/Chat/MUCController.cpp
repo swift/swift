@@ -36,6 +36,7 @@
 #include <SwifTools/TabComplete.h>
 
 #include <Swift/Controllers/Chat/ChatMessageParser.h>
+#include <Swift/Controllers/Chat/Chattables.h>
 #include <Swift/Controllers/Highlighting/Highlighter.h>
 #include <Swift/Controllers/Intl.h>
 #include <Swift/Controllers/Roster/ContactRosterItem.h>
@@ -59,17 +60,6 @@
 #define MUC_JOIN_WARNING_TIMEOUT_MILLISECONDS 60000
 
 namespace Swift {
-
-class MUCBookmarkPredicate {
-    public:
-        MUCBookmarkPredicate(const JID& mucJID) : roomJID_(mucJID) { }
-        bool operator()(const MUCBookmark& operand) {
-            return operand.getRoom() == roomJID_;
-        }
-
-    private:
-        JID roomJID_;
-};
 
 /**
  * The controller does not gain ownership of the stanzaChannel, nor the factory.
@@ -174,14 +164,7 @@ MUCController::MUCController (
     mucBookmarkManagerBookmarkAddedConnection_ = (mucBookmarkManager_->onBookmarkAdded.connect(boost::bind(&MUCController::handleMUCBookmarkAdded, this, _1)));
     mucBookmarkManagerBookmarkRemovedConnection_ = (mucBookmarkManager_->onBookmarkRemoved.connect(boost::bind(&MUCController::handleMUCBookmarkRemoved, this, _1)));
 
-    std::vector<MUCBookmark> mucBookmarks = mucBookmarkManager_->getBookmarks();
-    std::vector<MUCBookmark>::iterator bookmarkIterator = std::find_if(mucBookmarks.begin(), mucBookmarks.end(), MUCBookmarkPredicate(muc->getJID()));
-    if (bookmarkIterator != mucBookmarks.end()) {
-        updateChatWindowBookmarkStatus(*bookmarkIterator);
-    }
-    else {
-        updateChatWindowBookmarkStatus(boost::optional<MUCBookmark>());
-    }
+    updateChatWindowBookmarkStatus(mucBookmarkManager_->lookupBookmark(muc->getJID()));
 }
 
 MUCController::~MUCController() {
@@ -498,6 +481,7 @@ void MUCController::setAvailableRoomActions(const MUCOccupant::Affiliation& affi
     if (role <= MUCOccupant::Visitor) {
         actions.push_back(ChatWindow::Invite);
     }
+    actions.push_back(ChatWindow::Leave);
     chatWindow_->setAvailableRoomActions(actions);
 }
 

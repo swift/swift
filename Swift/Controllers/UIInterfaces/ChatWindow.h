@@ -141,7 +141,7 @@ namespace Swift {
             enum AckState {Pending, Received, Failed};
             enum ReceiptState {ReceiptRequested, ReceiptReceived, ReceiptFailed};
             enum OccupantAction {Kick, Ban, MakeModerator, MakeParticipant, MakeVisitor, AddContact, ShowProfile};
-            enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite};
+            enum RoomAction {ChangeSubject, Configure, Affiliations, Destroy, Invite, Leave};
             enum FileTransferState {
                 Initialisation,     ///< Collecting information required for sending the request out.
                 WaitingForAccept,   ///< The file transfer request was send out.

@@ -94,7 +94,7 @@ namespace Swift {
 #endif
             void handleChatRequest(const std::string& contact);
             void finalizeImpromptuJoin(MUC::ref muc, const std::vector<JID>& jidsToInvite, const std::string& reason, const boost::optional<JID>& reuseChatJID = boost::optional<JID>());
-            MUC::ref handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool addAutoJoin, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow = nullptr);
+            MUC::ref handleJoinMUCRequest(const JID& muc, const boost::optional<std::string>& password, const boost::optional<std::string>& nick, bool createAsReservedIfNew, bool isImpromptu, ChatWindow* reuseChatwindow = nullptr);
             void handleSearchMUCRequest();
             void handleMUCSelectedAfterSearch(const JID&);
             void rebindControllerJID(const JID& from, const JID& to);
@@ -152,6 +152,9 @@ namespace Swift {
             ChatController* getChatControllerOrCreate(const JID &contact);
             ChatController* getChatControllerIfExists(const JID &contact, bool rebindIfNeeded = true);
 
+        protected:
+            MUCBookmarkManager* mucBookmarkManager_;
+
         private:
             std::map<JID, MUCController*> mucControllers_;
             std::map<JID, ChatController*> chatControllers_;
@@ -167,7 +170,6 @@ namespace Swift {
             AvatarManager* avatarManager_;
             PresenceSender* presenceSender_;
             UIEventStream* uiEventStream_;
-            MUCBookmarkManager* mucBookmarkManager_;
             std::shared_ptr<DiscoInfo> serverDiscoInfo_;
 #ifndef NOT_YET
             ChatListWindow* chatListWindow_;

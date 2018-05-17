@@ -42,7 +42,7 @@ boost::optional<MUCBookmark> QtBookmarkDetailWindow::createBookmarkFromForm() {
     MUCBookmark bookmark(room, name);
     std::string nick(Q2PSTRING(nick_->text()));
     std::string password(Q2PSTRING(password_->text()));
-    bookmark.setAutojoin(autojoin_->isChecked());
+    bookmark.setAutojoin(true);
     if (!nick.empty()) {
         bookmark.setNick(nick);
     }
@@ -67,12 +67,6 @@ void QtBookmarkDetailWindow::createFormFromBookmark(const MUCBookmark& bookmark)
 
     if (bookmark.getPassword()) {
         password_->setText(P2QSTRING((*bookmark.getPassword())));
-    }
-
-    if (bookmark.getAutojoin()) {
-        autojoin_->setCheckState(Qt::Checked);
-    } else {
-        autojoin_->setCheckState(Qt::Unchecked);
     }
 }
 

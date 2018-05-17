@@ -101,13 +101,6 @@
       </spacer>
      </item>
      <item>
-      <widget class="QCheckBox" name="joinAutomatically">
-       <property name="text">
-        <string>Enter automatically in future</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="joinButton">
        <property name="text">
         <string>Enter Room</string>
@@ -124,7 +117,6 @@
   <tabstop>nickName</tabstop>
   <tabstop>password</tabstop>
   <tabstop>instantRoom</tabstop>
-  <tabstop>joinAutomatically</tabstop>
   <tabstop>joinButton</tabstop>
  </tabstops>
  <resources/>

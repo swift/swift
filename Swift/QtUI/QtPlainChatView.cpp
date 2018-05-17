@@ -327,7 +327,7 @@ void QtPlainChatView::acceptMUCInvite()
 {
     AcceptMUCInviteAction *action = dynamic_cast<AcceptMUCInviteAction*>(sender());
     if (action) {
-        eventStream_->send(std::make_shared<JoinMUCUIEvent>(action->jid_.toString(), action->password_, boost::optional<std::string>(), false, false, action->isImpromptu_, action->isContinuation_));
+        eventStream_->send(std::make_shared<JoinMUCUIEvent>(action->jid_.toString(), action->password_, boost::optional<std::string>(), false, action->isImpromptu_, action->isContinuation_));
         delete action->parent_;
     }
 }

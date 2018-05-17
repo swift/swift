@@ -811,7 +811,7 @@ void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgume
         QString elementID = arg3;
         QString isImpromptu = arg4;
         QString isContinuation = arg5;
-        eventStream_->send(std::make_shared<JoinMUCUIEvent>(Q2PSTRING(roomJID), Q2PSTRING(password), boost::optional<std::string>(), false, false, isImpromptu.contains("true"), isContinuation.contains("true")));
+        eventStream_->send(std::make_shared<JoinMUCUIEvent>(Q2PSTRING(roomJID), Q2PSTRING(password), boost::optional<std::string>(), false, isImpromptu.contains("true"), isContinuation.contains("true")));
         setMUCInvitationJoined(elementID);
     }
     else if (id.startsWith(ButtonResendPopup)) {

@@ -378,7 +378,7 @@ void ChatControllerBase::handleMUCInvitation(Message::ref message) {
     MUCInvitationPayload::ref invite = message->getPayload<MUCInvitationPayload>();
 
     if (autoAcceptMUCInviteDecider_->isAutoAcceptedInvite(message->getFrom(), invite)) {
-        eventStream_->send(std::make_shared<JoinMUCUIEvent>(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, false, true));
+        eventStream_->send(std::make_shared<JoinMUCUIEvent>(invite->getJID(), boost::optional<std::string>(), boost::optional<std::string>(), false, true));
     } else {
         MUCInviteEvent::ref inviteEvent = std::make_shared<MUCInviteEvent>(toJID_, invite->getJID(), invite->getReason(), invite->getPassword(), true, invite->getIsImpromptu());
         handleGeneralMUCInvitation(inviteEvent);

@@ -27,8 +27,8 @@ namespace Swift {
             void addBookmark(const MUCBookmark& bookmark);
             void removeBookmark(const MUCBookmark& bookmark);
             void replaceBookmark(const MUCBookmark& oldBookmark, const MUCBookmark& newBookmark);
-
             const std::vector<MUCBookmark>& getBookmarks() const;
+            boost::optional<MUCBookmark> lookupBookmark(const JID& bookmarkJID) const;
 
         public:
             boost::signals2::signal<void (const MUCBookmark&)> onBookmarkAdded;
@@ -45,6 +45,7 @@ namespace Swift {
 
         private:
             bool ready_;
+            bool handlingReceivedBookmarks_;
             std::vector<MUCBookmark> bookmarks_;
             IQRouter* iqRouter_;
             std::shared_ptr<Storage> storage;
