@@ -26,6 +26,7 @@ class ConnectorTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testConnect);
         CPPUNIT_TEST(testConnect_NoServiceLookups);
         CPPUNIT_TEST(testConnect_NoServiceLookups_DefaultPort);
+        CPPUNIT_TEST(testConnect_OnlyLiteral);
         CPPUNIT_TEST(testConnect_FirstAddressHostFails);
         CPPUNIT_TEST(testConnect_NoSRVHost);
         CPPUNIT_TEST(testConnect_NoHosts);
@@ -117,6 +118,21 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host3 == *(connections[0]->hostAddressPort));
             CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
+        }
+
+        void testConnect_OnlyLiteral() {
+            auto testling = Connector::create("1.1.1.1", 1234, boost::none, resolver, connectionFactory, timerFactory);
+            testling->onConnectFinished.connect(boost::bind(&ConnectorTest::handleConnectorFinished, this, _1, _2));
+
+            auto address1 = HostAddress::fromString("1.1.1.1").get();
+            connectionFactory->failingPorts.push_back(HostAddressPort(address1, 1234));
+
+            testling->start();
+            eventLoop->processEvents();
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
+            CPPUNIT_ASSERT(!connections[0]);
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connectionFactory->createdConnections.size()));
         }
 
         void testConnect_FirstAddressHostFails() {
@@ -356,12 +372,15 @@ class ConnectorTest : public CppUnit::TestFixture {
             }
 
             std::shared_ptr<Connection> createConnection() {
-                return std::make_shared<MockConnection>(failingPorts, isResponsive, eventLoop);
+                auto connection = std::make_shared<MockConnection>(failingPorts, isResponsive, eventLoop);
+                createdConnections.push_back(connection);
+                return connection;
             }
 
             EventLoop* eventLoop;
             bool isResponsive;
             std::vector<HostAddressPort> failingPorts;
+            std::vector<std::shared_ptr<MockConnection>> createdConnections;
         };
 
     private:

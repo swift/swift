@@ -50,6 +50,10 @@ namespace {
             if (!resolver->getIsResponsive()) {
                 return;
             }
+            if (auto address = HostAddress::fromString(host)) {
+                // IP Literals should resolve to themselves
+                resolver->addAddress(host, *address);
+            }
             StaticDomainNameResolver::AddressesMap::const_iterator i = resolver->getAddresses().find(host);
             if (i != resolver->getAddresses().end()) {
                 eventLoop->postEvent(
