@@ -101,7 +101,6 @@ namespace Swift {
                     bool useDelayForLatency);
             ~MainController();
 
-
         private:
             void resetClient();
             void handleConnected();

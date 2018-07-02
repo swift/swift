@@ -14,6 +14,8 @@
 #include <Swift/QtUI/QtChatTabs.h>
 #include <Swift/QtUI/QtLoginWindow.h>
 #include <Swift/QtUI/QtSettingsProvider.h>
+#include <Swift/QtUI/ServerList/QtServerListView.h>
+#include <Swift/QtUI/ServerList/ServerListModel.h>
 
 namespace Swift {
 
@@ -30,10 +32,14 @@ QtSingleWindow::QtSingleWindow(QtSettingsProvider* settings) : QSplitter() {
     setChildrenCollapsible(false);
 
     auto left = new QWidget(this);
-    list_ = new QListWidget(left);
+    serverList_ = new QtServerListView();
+    serverListModel_ = new ServerListModel();
+    serverList_->setModel(serverListModel_);
+    serverListModel_->setModelData(&accountData_);
+    accountData_.onDataChanged.connect(boost::bind(&ServerListModel::handleDataChanged, serverListModel_));
     auto addButton = new QPushButton("+", left);
     QVBoxLayout* leftLayout = new QVBoxLayout();
-    leftLayout->addWidget(list_);
+    leftLayout->addWidget(serverList_);
     leftLayout->addWidget(addButton);
     left->setLayout(leftLayout);
     QSplitter::addWidget(left);
@@ -45,8 +51,8 @@ QtSingleWindow::QtSingleWindow(QtSettingsProvider* settings) : QSplitter() {
     setStretchFactor(0, 0);
     setStretchFactor(1, 0);
     setStretchFactor(2, 1);
-    connect(list_, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(handleListItemClicked(QListWidgetItem*)));
-    connect(addButton, SIGNAL(clicked()), this, SIGNAL(wantsToAddAccount()));
+    connect(serverList_, &QtServerListView::clicked, this, &QtSingleWindow::handleListItemClicked);
+    connect(addButton, &QPushButton::clicked, this, &QtSingleWindow::wantsToAddAccount);
 #ifdef SWIFTEN_PLATFORM_MACOSX
     setHandleWidth(0);
 #endif
@@ -98,24 +104,23 @@ void QtSingleWindow::moveEvent(QMoveEvent*) {
 }
 
 void QtSingleWindow::addAccount(QtLoginWindow* loginWindow, QtChatTabs* tabs) {
-    if (!loginWindows_->count()) {
-        connect(tabs, SIGNAL(onTitleChanged(const QString&)), this, SLOT(handleTabsTitleChanged(const QString&)));
-    }
     loginWindows_->addWidget(loginWindow);
     tabs_->addWidget(tabs);
-    list_->addItem(QString("Account %1").arg(loginWindows_->count()));
+    std::string account = QString("Account %1").arg(loginWindows_->count()).toStdString();
+    accountData_.addAccount(account);
+    emit serverListModel_->layoutChanged();
 }
 
-void QtSingleWindow::handleListItemClicked(QListWidgetItem* /*item*/) {
-    //FIXME: Should use a full model/view and do this properly (and render pretty things ourselves too)
+void QtSingleWindow::handleListItemClicked(const QModelIndex& item) {
     auto currentTabs = tabs_->widget(tabs_->currentIndex());
     disconnect(currentTabs, SIGNAL(onTitleChanged(const QString&)), this, SLOT(handleTabsTitleChanged(const QString&)));
-    loginWindows_->setCurrentIndex(list_->currentRow());
-    tabs_->setCurrentIndex(list_->currentRow());
+    loginWindows_->setCurrentIndex(item.row());
+    tabs_->setCurrentIndex(item.row());
     currentTabs = tabs_->widget(tabs_->currentIndex());
     connect(currentTabs, SIGNAL(onTitleChanged(const QString&)), this, SLOT(handleTabsTitleChanged(const QString&)));
     //TODO change the title of the window.
     handleTabsTitleChanged(QString("Swift"));
+
 }
 
 }

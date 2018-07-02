@@ -10,11 +10,14 @@
 #include <QSplitter>
 #include <QStackedWidget>
 
+#include <Swift/QtUI/ServerList/ServerListModel.h>
 
 namespace Swift {
     class QtChatTabs;
     class QtLoginWindow;
     class QtSettingsProvider;
+    class QtServerListView;
+    class ServerListModel;
 
     class QtSingleWindow : public QSplitter {
         Q_OBJECT
@@ -32,7 +35,7 @@ namespace Swift {
         private slots:
             void handleSplitterMoved();
             void handleTabsTitleChanged(const QString& title);
-            void handleListItemClicked(QListWidgetItem*);
+            void handleListItemClicked(const QModelIndex&);
         private:
             void handleGeometryChanged();
             void restoreSplitters();
@@ -40,7 +43,9 @@ namespace Swift {
         private:
 
             QtSettingsProvider* settings_;
-            QListWidget* list_;
+            SwiftAccountData accountData_;
+            QtServerListView* serverList_;
+            ServerListModel* serverListModel_;
             QStackedWidget* loginWindows_;
             QStackedWidget* tabs_;
     };
