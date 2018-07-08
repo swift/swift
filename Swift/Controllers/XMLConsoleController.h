@@ -12,6 +12,7 @@
 #include <boost/signals2.hpp>
 
 #include <Swiften/Base/SafeByteArray.h>
+#include <Swiften/Client/Client.h>
 
 #include <Swift/Controllers/UIEvents/UIEventStream.h>
 
@@ -28,12 +29,14 @@ namespace Swift {
         public:
             void handleDataRead(const SafeByteArray& data);
             void handleDataWritten(const SafeByteArray& data);
+            void setClient(std::shared_ptr<Client> client);
 
         private:
             void handleUIEvent(std::shared_ptr<UIEvent> event);
-
+            void sendXML(const std::string& data);
         private:
             XMLConsoleWidgetFactory* xmlConsoleWidgetFactory;
             XMLConsoleWidget* xmlConsoleWidget;
+            std::shared_ptr<Client> client_;
     };
 }

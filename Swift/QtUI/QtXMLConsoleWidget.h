@@ -13,6 +13,8 @@
 class QTextEdit;
 class QCheckBox;
 class QColor;
+class QPushButton;
+
 
 namespace Swift {
     class QtXMLConsoleWidget : public QtTabbable, public XMLConsoleWidget {
@@ -30,6 +32,9 @@ namespace Swift {
 
             virtual std::string getID() const;
 
+        public slots:
+            virtual void sendXML();
+
         private:
             virtual void closeEvent(QCloseEvent* event);
             virtual void showEvent(QShowEvent* event);
@@ -37,7 +42,10 @@ namespace Swift {
             void appendTextIfEnabled(const std::string& data, const QColor& color);
 
         private:
-            QTextEdit* textEdit;
-            QCheckBox* enabled;
+            QTextEdit* textEdit = nullptr;
+            QCheckBox* enabled = nullptr;
+            QCheckBox* debugEnabled = nullptr;
+            QTextEdit* xmlWindow = nullptr;
+            QPushButton* sendXMLButton = nullptr;
     };
 }
