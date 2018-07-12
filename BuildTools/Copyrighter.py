@@ -122,14 +122,14 @@ def check_copyright(filename, hints) :
                     return True
                 else :
                     if hints :
-                        print "Copyright block for " + copyrightSetting.author + " does not cover current year in: " + filename
+                        print("Copyright block for " + copyrightSetting.author + " does not cover current year in: " + filename)
                     return False
         if hints :
-            print "Missing copyright block for " + copyrightSetting.author + " in: " + filename
+            print("Missing copyright block for " + copyrightSetting.author + " in: " + filename)
         return False
     else :
         if hints :
-            print "No copyright found in: " + filename
+            print("No copyright found in: " + filename)
         return False
 
 def replace_data_in_file(filename, begin, end, replaceWith) :
@@ -140,7 +140,7 @@ def replace_data_in_file(filename, begin, end, replaceWith) :
 
 def set_or_update_copyright(filename) :
     if check_copyright(filename, False) :
-        print "No update required for file: " + filename
+        print("No update required for file: " + filename)
     else :
         copyrightBlocks = parse_file_new(filename)
         username, email = get_userinfo()
@@ -161,7 +161,7 @@ def set_or_update_copyright(filename) :
         replace_data_in_file(filename, lastBlock+1, lastBlock+1, "\n" + str(copyrightSetting))
 
 def print_help() :
-    print """Usage:
+    print("""Usage:
     Copyrighter.py check-copyright $filename
         Cheks for the existence of a copyright comment block.
 
@@ -172,7 +172,7 @@ def print_help() :
         A users license configuration can be set via the SWIFT_LICENSE_CONFIG environment variable 
         in the format "$copyright holder|$license", e.g. "Jane Doe|mit". Possible values for 
         $license are default, mit and gpl.
-    """
+    """)
 
 if sys.argv[1] == "check-copyright" :
     file = sys.argv[2]
@@ -183,6 +183,6 @@ elif sys.argv[1] == "set-copyright" :
     file = sys.argv[2]
     set_or_update_copyright(file)
 else :
-    print "Unknown command: " + sys.argv[1]
+    print("Unknown command: " + sys.argv[1])
     print_help()
     sys.exit(-1)

@@ -11,10 +11,10 @@ elif env["PLATFORM"] != "darwin" :
         env["PROJECTS"].remove("Slimber")
 
 if not "Slimber" in env["PROJECTS"] and env["SCONS_STAGE"] == "flags" :
-        print "Bonjour missing. Not building Slimber."
+        print("Bonjour missing. Not building Slimber.")
 
 if not env.get("HAVE_QT", False) and "Slimber" in env["PROJECTS"] :
-    print "Qt missing. Not building Slimber."
+    print("Qt missing. Not building Slimber.")
     env["PROJECTS"].remove("Slimber")
 
 if "Slimber" in env["PROJECTS"] :

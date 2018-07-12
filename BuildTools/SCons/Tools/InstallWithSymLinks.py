@@ -74,21 +74,21 @@ def scons_copytree(src, dst, symlinks=False):
             else:
                 shutil.copy2(srcname, dstname)
             # XXX What about devices, sockets etc.?
-        except (IOError, os.error), why:
+        except (IOError, os.error) as why:
             errors.append((srcname, dstname, str(why)))
         # catch the CopytreeError from the recursive copytree so that we can
         # continue with other files
-        except CopytreeError, err:
+        except CopytreeError as err:
             errors.extend(err.args[0])
     try:
         shutil.copystat(src, dst)
     except WindowsError:
         # can't copy file access times on Windows
         pass
-    except OSError, why:
+    except OSError as why:
         errors.extend((src, dst, str(why)))
     if errors:
-        raise CopytreeError, errors
+        raise CopytreeError(errors)
 
 
 def symlinkBuilderImpl(target, source, env):

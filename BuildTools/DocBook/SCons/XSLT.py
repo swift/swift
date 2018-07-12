@@ -8,7 +8,7 @@ import xml.dom.minidom, os, os.path
 def generate(env) :
     def generate_actions(source, target, env, for_signature) :
         if not env.has_key("XSLTSTYLESHEET") :
-            raise SCons.Errors.UserError, "The XSLTSTYLESHEET construction variable must be defined"
+            raise SCons.Errors.UserError("The XSLTSTYLESHEET construction variable must be defined")
 
         # Process the XML catalog files
         # FIXME: It's probably not clean to do an ENV assignment globally

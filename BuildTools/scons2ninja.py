@@ -429,7 +429,7 @@ for line in f.stdout :
         previous_filename = filename
 
 if f.wait() != 0 :
-    print "Error calling '" + scons_generate_cmd + "'"
+    print("Error calling '" + scons_generate_cmd + "'")
     print f.stderr.read()
     exit(-1)
 

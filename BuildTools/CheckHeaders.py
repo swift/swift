@@ -36,7 +36,7 @@ for line in file.readlines() :
         continue
     for forbiddenInclude, ignores in FORBIDDEN_INCLUDES :
         if forbiddenInclude in line and len([x for x in ignores if x in filename]) == 0 :
-            print "Found " + forbiddenInclude + " include in " + filename
+            print("Found " + forbiddenInclude + " include in " + filename)
             foundBadHeaders = True
 
 sys.exit(foundBadHeaders)

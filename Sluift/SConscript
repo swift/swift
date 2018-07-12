@@ -3,7 +3,7 @@ import Version, os.path
 Import(["env"])
 
 if env["SCONS_STAGE"] == "build" and not GetOption("help") and not env.get("HAVE_LUA", 0) :
-    print "Warning: Lua was not found. Sluift will not be built."
+    print("Warning: Lua was not found. Sluift will not be built.")
     if "Sluift" in env["PROJECTS"] :
         env["PROJECTS"].remove("Sluift")
 

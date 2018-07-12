@@ -40,13 +40,13 @@ if env.get("LIBIDN_BUNDLED", False) :
             if conf.CheckFunc("stricmp") :
                 myenv.Append(CPPDEFINES = [("strcasecmp", "stricmp")])
             else :
-                print "Error: Cannot find strcasecmp() or stricmp()"
+                print("Error: Cannot find strcasecmp() or stricmp()")
                 Exit(1)
         if not conf.CheckFunc('strncasecmp') :
             if conf.CheckFunc("strnicmp") :
                 myenv.Append(CPPDEFINES = [("strncasecmp", "strnicmp")])
             else :
-                print "Error: Cannot find strncasecmp() or strnicmp()"
+                print("Error: Cannot find strncasecmp() or strnicmp()")
                 Exit(1)
         conf.Finish()
 

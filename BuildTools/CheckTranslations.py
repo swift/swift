@@ -41,10 +41,10 @@ for filename in os.listdir("Swift/Translations") :
             translationText = getText(translation.childNodes)
             translationPlaceholders = set(re.findall("%\d+%?", translationText))
             if translationPlaceholders != sourcePlaceholders :
-                print "[Error] " + filename + ": Placeholder mismatch in translation '" + sourceText + "'"
+                print("[Error] " + filename + ": Placeholder mismatch in translation '" + sourceText + "'")
         if not finished :
-                print "[Warning] " + filename + ": Unfinished"
+                print("[Warning] " + filename + ": Unfinished")
         if language not in desktop_generic_names and language != "en" :
-                print "[Warning] GenericName field missing in desktop entry for " + language
+                print("[Warning] GenericName field missing in desktop entry for " + language)
         if language not in desktop_comments and language != "en" :
-                print "[Warning] Comment field missing in desktop entry for " + language
+                print("[Warning] Comment field missing in desktop entry for " + language)

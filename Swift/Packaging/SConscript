@@ -25,5 +25,5 @@ if env["SCONS_STAGE"] == "build" :
             target='$HELP2MAN_DEBIAN_DIR/swift-im.1', source='#/Swift/QtUI/swift-im',
             action = Action('$HELP2MAN --no-discard-stderr -m "Swift Manual" -S "Swift" -n "swift-im" -N $SOURCE > $TARGET', cmdstr = "$HELP2MANSTR"))
     else:
-        print "Enabled help2man but help2man is not in the PATH of the current environment."
+        print("Enabled help2man but help2man is not in the PATH of the current environment.")
         Exit(1)

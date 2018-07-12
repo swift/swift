@@ -153,12 +153,12 @@ for line in content[headerStart:headerEnd]:
             headerGroups[headerType] = [line]
 
 if containsComplexPreprocessorDirectives:
-    print "Cannot format headers containing preprocessor #if, #pragma, #define or #undef statements!"
+    print("Cannot format headers containing preprocessor #if, #pragma, #define or #undef statements!")
     exit(1)
 
 if filename_base.endswith(".h"):
     if not HeaderType.PRAGMA_ONCE in headerGroups:
-        print "Missing #pragma once!"
+        print("Missing #pragma once!")
         exit(2)
     cleanHeaderFile(content, headerStart, headerEnd, headerGroups)
 elif filename_base.endswith(".cpp") or filename_base.endswith(".mm"):

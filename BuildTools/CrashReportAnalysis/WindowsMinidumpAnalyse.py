@@ -19,11 +19,11 @@ import time
 
 swiftWindowBuildsPathPrefix = os.getenv("SWIFT_DIST")
 if swiftWindowBuildsPathPrefix == None :
-    print "Please set the SWIFT_DIST environment variable to a location containing msi and pdb.gz files."
+    print("Please set the SWIFT_DIST environment variable to a location containing msi and pdb.gz files.")
     sys.exit(1)
 
 if len(sys.argv) != 3:
-    print "Usage: python WindowsMinidumpAnalyse.py VERSION MINIDUMP_FILE"
+    print("Usage: python WindowsMinidumpAnalyse.py VERSION MINIDUMP_FILE")
     sys.exit(1)
 
 version = sys.argv[1]
@@ -93,7 +93,7 @@ def printHumanReadableReport():
 try:
     shutil.rmtree(working_folder)
 except:
-    print ""
+    print("")
 
 # clone local git repository into dedicated directory
 call(["git", "clone",  ".", working_folder], shell=True)
@@ -120,7 +120,7 @@ assert(len(commit) > 0)
 if not os.path.exists(symbol_cache_path):
     os.makedirs(symbol_cache_path)
 
-#print "Checking out commit {0}.".format(commit)
+#print("Checking out commit {0}.".format(commit))
 call(["git", "-C", working_folder, "checkout", commit])
 
 os.chdir(working_folder)

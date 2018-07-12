@@ -27,7 +27,7 @@ Import("env")
 myenv = env.Clone()
 
 # Disable warnings that affect Qt
-myenv["CXXFLAGS"] = filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"])
+myenv["CXXFLAGS"] = list(filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"]))
 if "clang" in env["CC"] :
     myenv.Append(CXXFLAGS = ["-Wno-float-equal", "-Wno-shorten-64-to-32", "-Wno-conversion"])
 
@@ -512,16 +512,16 @@ if env["PLATFORM"] == "win32" :
                 def signToolAction(target = None, source = None, env = None):
                     signresult = 0
                     for x in range (1, 4) :
-                        print "Attemping to sign the packages [%s]" % x
+                        print("Attemping to sign the packages [%s]" % x)
                         signresult = env.Execute('signtool.exe sign /fd SHA256 /f "${SIGNTOOL_KEY_PFX}" /t "${SIGNTOOL_TIMESTAMP_URL}" /d "Swift Installer" ' + str(target[0]))
                         if signresult != 1 :
                             break
                     #If all 3 attemps to sign the package failed, stop the build.
                     if signresult == 1 :
-                        print "Error: The build has failed to sign the installer package"
+                        print("Error: The build has failed to sign the installer package")
                         Exit(1)
                     if signresult == 2 :
-                        print "Signing was completed with warnings."
+                        print("Signing was completed with warnings.")
 
                 myenv.AddPostAction(lightTask, signToolAction)
 

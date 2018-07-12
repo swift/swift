@@ -7,9 +7,9 @@ root = Dir("../..").abspath
 
 # Override SConscript to handle tests
 oldSConscript = SConscript
-def SConscript(*arguments, **keywords) :
-    if not keywords.get("test_only", False) or env["TEST"] :
-        return apply(oldSConscript, arguments, keywords)
+def SConscript(*args, **kwargs) :
+    if not kwargs.get("test_only", False) or env["TEST"] :
+        return oldSConscript(*args, **kwargs)
 env.SConscript = SConscript
 
 ################################################################################
@@ -142,11 +142,11 @@ conf = Configure(conf_env, custom_tests = {
     })
 
 if not conf.CheckCXX() or not conf.CheckCC() :
-    print "Error: You need a working compiler"
+    print("Error: You need a working compiler")
     Exit(1)
 
 if not conf.CheckCpp11Support() :
-    print "Error: You need a compiler with support for the C++11 standard"
+    print("Error: You need a compiler with support for the C++11 standard")
     Exit(1)
 
 
@@ -170,7 +170,7 @@ if (not zlib_okay) and conf.CheckLib("z") :
 if zlib_okay :
     env["ZLIB_FLAGS"] = zlib_flags
 elif not env.get("zlib_bundled_enable", True) :
-    print "Error: Zlib not found and zlib_bundled_enable is false"
+    print("Error: Zlib not found and zlib_bundled_enable is false")
     Exit(1)
 else :
     env["ZLIB_BUNDLED"] = True
@@ -238,7 +238,7 @@ if not env.get("boost_force_bundled") and allLibsPresent :
         # FIXME: Remove this workaround when UUID is available in most distros
         env["BOOST_BUNDLED_UUID_ONLY"] = True
 elif not env.get("boost_bundled_enable", True) :
-    print "Error: Boost not found and boost_bundled_enable is false"
+    print("Error: Boost not found and boost_bundled_enable is false")
     Exit(1)
 else :
     env["BOOST_BUNDLED"] = True
@@ -373,7 +373,7 @@ if env.get("try_expat", True) and not env.get("HAVE_LIBXML",0) :
 # Bundled expat
 bundledExpat = False
 if not env.get("HAVE_EXPAT", 0) and not env.get("HAVE_LIBXML", 0) :
-    print "Expat or LibXML not found. Using bundled Expat"
+    print("Expat or LibXML not found. Using bundled Expat")
     SConscript("#/3rdParty/Expat/SConscript")
     env["HAVE_EXPAT"] = 1
     env["EXPAT_BUNDLED"] = True
@@ -424,10 +424,10 @@ if not env.get("HAVE_ICU", False) and not env.get("HAVE_LIBIDN", False) :
         env["HAVE_LIBIDN"] = 1
         env["LIBIDN_BUNDLED"] = 1
     elif env.get("need_idn", True):
-        print "Error: ICU and LIBIDN not found, and libidn_bundled_enable is false"
+        print("Error: ICU and LIBIDN not found, and libidn_bundled_enable is false")
         Exit(1)
     else:
-        print "Proceeding without an IDN library because need_idn was false. This will break all internal binaries"
+        print("Proceeding without an IDN library because need_idn was false. This will break all internal binaries")
 
 # Unbound
 if env["unbound"] :
@@ -514,7 +514,7 @@ if not env.get("lua_force_bundled", False) and conf.CheckLibWithHeader(env["lua_
     if lua_version > 0 :
         env["LUA_FLAGS"]["LUA_VERSION"] = str(lua_version // 100) + "." + str(lua_version % 100)
     else :
-        print "Warning: Unable to determine Lua version. Not installing Lua libraries."
+        print("Warning: Unable to determine Lua version. Not installing Lua libraries.")
     env["LUA_FLAGS"].update(lua_flags)
 else :
     env["LUA_BUNDLED"] = 1
@@ -670,7 +670,7 @@ try :
 except SCons.Errors.StopError:
     env["HAVE_QT"] = False
 except Exception as e:
-    print "Info: %s" % str(e)
+    print("Info: %s" % str(e))
     env["HAVE_QT"] = False
 
 ################################################################################
@@ -692,7 +692,7 @@ try:
         if not env.GetOption("clean") and env.get("install_git_hooks", True) :
             env.Install("#/.git/hooks", Glob("#/BuildTools/Git/Hooks/*"))
 except TypeError:
-    print "You seem to be using Swift in a Git submodule. Not installing hooks."
+    print("You seem to be using Swift in a Git submodule. Not installing hooks.")
 
 
 ################################################################################
@@ -758,7 +758,7 @@ modules.append("QA")
 env["PROJECTS"] = [m for m in modules if m not in ["Documentation", "QA", "SwifTools"] and not m.startswith("3rdParty")]
 for stage in ["flags", "build"] :
     env["SCONS_STAGE"] = stage
-    SConscript(dirs = map(lambda x : root + "/" + x, modules))
+    SConscript(dirs = list(map(lambda x : root + "/" + x, modules)))
 
 # SLOCCount
 if ARGUMENTS.get("sloccount", False) :
@@ -770,9 +770,9 @@ if ARGUMENTS.get("sloccount", False) :
 # Print summary
 ################################################################################
 
-print
-print "  Build Configuration"
-print "  -------------------"
+print("")
+print("  Build Configuration")
+print("  -------------------")
 
 parsers = []
 if env.get("HAVE_LIBXML", 0):
@@ -781,14 +781,14 @@ if env.get("HAVE_EXPAT", 0):
     parsers.append("Expat")
     if env.get("EXPAT_BUNDLED", False) :
         parsers.append("(Bundled)")
-print "  Projects: " + ' '.join(env["PROJECTS"])
-print ""
-print "  XML Parsers: " + ' '.join(parsers)
+print("  Projects: " + ' '.join(env["PROJECTS"]))
+print("")
+print("  XML Parsers: " + ' '.join(parsers))
 
-print "  TLS Support: " + (env.get("HAVE_OPENSSL",0) and "OpenSSL" or env.get("HAVE_SECURETRANSPORT",0) and "Secure Transport" or env.get("HAVE_SCHANNEL", 0) and "Schannel" or "Disabled")
-print "  DNSSD Support: " + (env.get("HAVE_BONJOUR") and "Bonjour" or (env.get("HAVE_AVAHI") and "Avahi" or "Disabled"))
-print
+print("  TLS Support: " + (env.get("HAVE_OPENSSL",0) and "OpenSSL" or env.get("HAVE_SECURETRANSPORT",0) and "Secure Transport" or env.get("HAVE_SCHANNEL", 0) and "Schannel" or "Disabled"))
+print("  DNSSD Support: " + (env.get("HAVE_BONJOUR") and "Bonjour" or (env.get("HAVE_AVAHI") and "Avahi" or "Disabled")))
+print("")
 
 if not GetOption("help") and not env.get("HAVE_OPENSSL", 0) and not env.get("HAVE_SCHANNEL", 0) and not env.get("HAVE_SECURETRANSPORT", 0):
-    print "Error: A working TLS backend is required. Please check the documentation for more information."
+    print("Error: A working TLS backend is required. Please check the documentation for more information.")
     Exit(1)

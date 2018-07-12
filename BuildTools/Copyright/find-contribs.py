@@ -46,12 +46,12 @@ def print_log(full_log):
 
 full_swiften_log = subprocess.check_output(["git", "log", "--", "Swiften"])
 
-print "Contributors for Swiften/ subtree:\n"
+print("Contributors for Swiften/ subtree:\n")
 print_log(full_swiften_log)
 
 full_all_log = subprocess.check_output(["git", "log"])
 
-print "\n\n\n\n"
+print("\n\n\n\n")
 
-print "Contributors for full tree:\n"
+print("Contributors for full tree:\n")
 print_log(full_all_log)

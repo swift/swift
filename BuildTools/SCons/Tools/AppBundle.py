@@ -34,7 +34,7 @@ def generate(env) :
     """
         for key, value in infoDict.items() :
             plist += "<key>" + key + "</key>\n"
-            plist += "<string>" + value.encode("utf-8") + "</string>\n"
+            plist += "<string>" + value + "</string>\n"
         if handlesXMPPURIs :
             plist += """<key>CFBundleURLTypes</key>
 <array>
@@ -50,7 +50,7 @@ def generate(env) :
 
         if sparklePublicDSAKey :
             plist += "<key>SUPublicDSAKeyFile</key>"
-            plist += "<string>" + sparklePublicDSAKey.name.encode("utf-8") + "</string>"
+            plist += "<string>" + sparklePublicDSAKey.name + "</string>"
             env.Install(resourcesDir, sparklePublicDSAKey)
         plist += """</dict>
     </plist>

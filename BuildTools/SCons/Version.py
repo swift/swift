@@ -6,7 +6,7 @@ def getGitBuildVersion(root, project) :
         return tag.rstrip()[len(project)+1:]
     tag = git("describe --tags --match \"" + project + "-*\"", root)
     if tag :
-        m = re.match(project + "-(.*)-(.*)-(.*)", tag)
+        m = re.match(project + "-(.*)-(.*)-(.*)", tag.decode('utf-8'))
         if m :
             return m.group(1) + "-dev" + m.group(2)
     return None
@@ -17,7 +17,7 @@ def git(cmd, root) :
     gitVersion = p.stdout.read()
     # error = p.stderr.read()
     # if error:
-    #   print "Git error: " + error
+    #   print("Git error: " + error)
     p.stdin.close()
     if p.wait() == 0 :
         return gitVersion
@@ -38,7 +38,7 @@ def getBuildVersion(root, project) :
     return datetime.date.today().strftime("%Y%m%d")
 
 def convertToWindowsVersion(version) :
-    version_match = re.match("(\d+)\.(\d+)(.*)", version)
+    version_match = re.match("(\d+)\.(\d+)(.*)", version.decode('utf-8'))
     major = version_match and int(version_match.group(1)) or 0
     minor = version_match and int(version_match.group(2)) or 0
     if version_match and len(version_match.group(3)) == 0 :
