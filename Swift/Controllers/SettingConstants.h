@@ -34,8 +34,6 @@ namespace Swift {
             static const SettingsProvider::Setting<bool> REQUEST_DELIVERYRECEIPTS;
             static const SettingsProvider::Setting<bool> FORGET_PASSWORDS;
             static const SettingsProvider::Setting<bool> REMEMBER_RECENT_CHATS;
-            static const SettingsProvider::Setting<std::string> LAST_LOGIN_JID;
-            static const SettingsProvider::Setting<bool> LOGIN_AUTOMATICALLY;
             /**
              * The #SHOW_OFFLINE setting specifies whether or not to show offline contacts in the
              * roster.
@@ -84,15 +82,6 @@ namespace Swift {
              * smart card is removed; else not.
              */
             static const SettingsProvider::Setting<bool> DISCONNECT_ON_CARD_REMOVAL;
-            /**
-             * The #SINGLE_SIGN_ON setting
-             * specifies whether to log in using Single Sign On.
-             * This is currently supported on Windows.
-             *
-             * If set true Swift will use GSSAPI authentication to
-             * log in the user; else not.
-             */
-            static const SettingsProvider::Setting<bool> SINGLE_SIGN_ON;
             /**
              * The #MUC_MARKING_ELISION setting
              * specifies whether or not messages with the default muc

@@ -132,7 +132,6 @@ namespace Swift {
             void handleForceQuit();
             void purgeCachedCredentials();
             std::string serializeClientOptions(const ClientOptions& options);
-            ClientOptions parseClientOptions(const std::string& optionString);
 
         private:
             EventLoop* eventLoop_;
@@ -146,7 +145,7 @@ namespace Swift {
             bool clientInitialized_;
             std::shared_ptr<Client> client_;
             SettingsProvider *settings_;
-            ProfileSettingsProvider* profileSettings_;
+            ProfileSettingsProvider* profileSettings_ = nullptr;
             Dock* dock_;
             URIHandler* uriHandler_;
             IdleDetector* idleDetector_;

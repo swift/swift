@@ -6,9 +6,14 @@
 
 #pragma once
 
+#include <QListWidget>
 #include <QSplitter>
+#include <QStackedWidget>
+
 
 namespace Swift {
+    class QtChatTabs;
+    class QtLoginWindow;
     class QtSettingsProvider;
 
     class QtSingleWindow : public QSplitter {
@@ -16,14 +21,18 @@ namespace Swift {
         public:
             QtSingleWindow(QtSettingsProvider* settings);
             virtual ~QtSingleWindow();
-            void insertAtFront(QWidget* widget);
-            void addWidget(QWidget* widget);
+            void addAccount(QtLoginWindow* widget, QtChatTabs* tabs);
+
+        signals:
+            void wantsToAddAccount();
+
         protected:
             void resizeEvent(QResizeEvent*);
             void moveEvent(QMoveEvent*);
         private slots:
             void handleSplitterMoved();
             void handleTabsTitleChanged(const QString& title);
+            void handleListItemClicked(QListWidgetItem*);
         private:
             void handleGeometryChanged();
             void restoreSplitters();
@@ -31,6 +40,9 @@ namespace Swift {
         private:
 
             QtSettingsProvider* settings_;
+            QListWidget* list_;
+            QStackedWidget* loginWindows_;
+            QStackedWidget* tabs_;
     };
 
 }

@@ -35,7 +35,7 @@ namespace Swift {
     class QtUIFactory : public QObject, public UIFactory {
             Q_OBJECT
         public:
-            QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID);
+            QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, std::map<std::string, std::string>& emoticons, bool enableAdHocCommandOnJID);
             ~QtUIFactory();
             virtual XMLConsoleWidget* createXMLConsoleWidget();
             virtual HistoryWindow* createHistoryWindow(UIEventStream*);
@@ -75,10 +75,10 @@ namespace Swift {
             StatusCache* statusCache_;
             AutoUpdater* autoUpdater_;
             std::vector<QPointer<QtChatWindow> > chatWindows_;
-            bool startMinimized_;
             int chatFontSize_;
             int historyFontSize_;
             bool emoticonsExist_;
+            std::map<std::string, std::string>& emoticons_;
             bool enableAdHocCommandOnJID_;
     };
 }

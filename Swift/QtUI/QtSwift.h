@@ -6,12 +6,14 @@
 
 #pragma once
 
+#include <map>
 #include <string>
 
 #include <boost/program_options/options_description.hpp>
 #include <boost/program_options/variables_map.hpp>
 
 #include <Swiften/Base/Platform.h>
+#include <Swiften/Client/ClientOptions.h>
 #include <Swiften/EventLoop/Qt/QtEventLoop.h>
 #include <Swiften/Network/BoostNetworkFactories.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
@@ -68,11 +70,19 @@ namespace Swift {
         private slots:
             void handleAboutToQuit();
             void handleAutoUpdaterStateChanged(AutoUpdater::State updatedState);
+            void handleWantsToAddAccount();
 
         private:
             XMLSettingsProvider* loadSettingsFile(const QString& fileName);
             void loadEmoticonsFile(const QString& fileName, std::map<std::string, std::string>& emoticons);
             static const std::string& updateChannelToFeed(const std::string& channel);
+            QtLoginWindow* addAccount();
+            ClientOptions parseClientOptions(const std::string& optionString);
+            void restoreAccounts();
+            /**
+            * Upgrades the config from pre-multi-account to post-multi-account format (added in 5.0).
+            */
+            void migrateLastLoginAccount();
 
         private:
             QtEventLoop clientMainThreadCaller_;
@@ -89,7 +99,6 @@ namespace Swift {
             QtSoundPlayer* soundPlayer_;
             Dock* dock_;
             URIHandler* uriHandler_;
-            QtChatTabs* tabs_;
             ApplicationPathProvider* applicationPathProvider_;
             StoragesFactory* storagesFactory_;
             CertificateStorageFactory* certificateStorageFactory_;
@@ -98,6 +107,9 @@ namespace Swift {
             StatusCache* statusCache_;
             PlatformIdleQuerier idleQuerier_;
             ActualIdleDetector idleDetector_;
+            std::map<std::string, std::string> emoticons_;
+            bool enableAdHocCommandOnJID_ = false;
+            bool useDelayForLatency_;
 #if defined(SWIFTEN_PLATFORM_MACOSX)
             CocoaApplication cocoaApplication_;
             CocoaApplicationActivateHelper cocoaApplicationActivateHelper_;

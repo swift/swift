@@ -40,7 +40,9 @@
 
 namespace Swift {
 
-QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, QtChatWindowFactory* chatWindowFactory, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, bool startMinimized, bool emoticonsExist, bool enableAdHocCommandOnJID) : settings_(settings), qtOnlySettings_(qtOnlySettings), tabs_(tabs), netbookSplitter_(netbookSplitter), systemTray_(systemTray), chatWindowFactory_(chatWindowFactory), timerFactory_(timerFactory), lastMainWindow_(nullptr), loginWindow_(nullptr), statusCache_(statusCache), autoUpdater_(autoUpdater), startMinimized_(startMinimized), emoticonsExist_(emoticonsExist), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
+QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider* qtOnlySettings, QtChatTabs* tabs, QtSingleWindow* netbookSplitter, QtSystemTray* systemTray, TimerFactory* timerFactory, StatusCache* statusCache, AutoUpdater* autoUpdater, std::map<std::string, std::string>& emoticons, bool enableAdHocCommandOnJID) : settings_(settings), qtOnlySettings_(qtOnlySettings), tabs_(tabs), netbookSplitter_(netbookSplitter), systemTray_(systemTray), timerFactory_(timerFactory), lastMainWindow_(nullptr), loginWindow_(nullptr), statusCache_(statusCache), autoUpdater_(autoUpdater), emoticons_(emoticons), enableAdHocCommandOnJID_(enableAdHocCommandOnJID) {
+    emoticonsExist_ = !emoticons_.empty();
+    chatWindowFactory_ = new QtChatWindowFactory(netbookSplitter_, settings, qtOnlySettings, tabs_, ":/themes/Default/", emoticons_);
     chatFontSize_ = settings_->getSetting(QtUISettingConstants::CHATWINDOW_FONT_SIZE);
     historyFontSize_ = settings_->getSetting(QtUISettingConstants::HISTORYWINDOW_FONT_SIZE);
 }
@@ -50,6 +52,7 @@ QtUIFactory::~QtUIFactory() {
     for (auto chat : chatWindows_) {
         SWIFT_LOG_ASSERT(chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly" << std::endl;
     }
+    delete chatWindowFactory_;
 }
 
 XMLConsoleWidget* QtUIFactory::createXMLConsoleWidget() {
@@ -91,12 +94,12 @@ MainWindow* QtUIFactory::createMainWindow(Chattables& chattables, UIEventStream*
 }
 
 LoginWindow* QtUIFactory::createLoginWindow(UIEventStream* eventStream) {
-    loginWindow_ = new QtLoginWindow(eventStream, settings_, timerFactory_, autoUpdater_);
-    netbookSplitter_->insertAtFront(loginWindow_);
-    connect(systemTray_, SIGNAL(clicked()), loginWindow_, SLOT(toggleBringToFront()));
-    if (startMinimized_) {
-        loginWindow_->hide();
+    if (loginWindow_) {
+        return loginWindow_;
     }
+    loginWindow_ = new QtLoginWindow(eventStream, settings_, timerFactory_, autoUpdater_);
+    netbookSplitter_->addAccount(loginWindow_, tabs_);
+    connect(systemTray_, SIGNAL(clicked()), loginWindow_, SLOT(toggleBringToFront()));
     return loginWindow_;
 }
 

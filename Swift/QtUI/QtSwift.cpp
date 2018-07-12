@@ -22,8 +22,10 @@
 #include <Swiften/Base/Path.h>
 #include <Swiften/Base/Paths.h>
 #include <Swiften/Base/Platform.h>
+#include <Swiften/Base/String.h>
 #include <Swiften/Client/Client.h>
 #include <Swiften/Elements/Presence.h>
+#include <Swiften/StringCodecs/Base64.h>
 #include <Swiften/TLS/TLSContextFactory.h>
 
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
@@ -92,8 +94,6 @@ po::options_description QtSwift::getOptionsDescription() {
         ("version", "Show version information")
         ("no-tabs", "Don't manage chat windows in tabs (unsupported)")
         ("latency-debug", "Use latency debugging (unsupported)")
-        ("multi-account", po::value<int>()->default_value(1), "Number of accounts to open windows for (unsupported)")
-        ("start-minimized", "Don't show the login/roster window at startup")
         ("enable-jid-adhocs", "Enable AdHoc commands to custom JIDs.")
 #if QT_VERSION >= 0x040800
         ("language", po::value<std::string>(), "Use a specific language, instead of the system-wide one")
@@ -167,19 +167,11 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
     networkFactories_.getTLSContextFactory()->setDisconnectOnCardRemoval(settingsHierarchy_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
 
-    std::map<std::string, std::string> emoticons;
-    loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);
-    loadEmoticonsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "emoticons.txt")), emoticons);
+    loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons_);
+    loadEmoticonsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "emoticons.txt")), emoticons_);
 
     splitter_ = new QtSingleWindow(qtSettings_);
-
-    int numberOfAccounts = 1;
-    try {
-        numberOfAccounts = options["multi-account"].as<int>();
-    } catch (...) {
-        /* This seems to fail on a Mac when the .app is launched directly (the usual path).*/
-        numberOfAccounts = 1;
-    }
+    connect(splitter_, SIGNAL(wantsToAddAccount()), this, SLOT(handleWantsToAddAccount()));
 
     if (options.count("debug")) {
         Log::setLogLevel(Swift::Log::debug);
@@ -202,6 +194,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
             SWIFT_LOG(error) << "Error while retrieving the specified log file name from the command line" << std::endl;
         }
     }
+    //TODO this old option can be purged
+    useDelayForLatency_ = options.count("latency-debug") > 0;
 
     // Load fonts
     std::vector<std::string> fontNames = {
@@ -240,13 +234,10 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 #ifdef SWIFTEN_PLATFORM_WINDOWS
     QFont::insertSubstitution(QApplication::font().family(), "Segoe UI Emoji");
 #endif
-    bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
-    tabs_ = new QtChatTabs(settingsHierarchy_, true);
-    bool startMinimized = options.count("start-minimized") > 0;
+    enableAdHocCommandOnJID_ = options.count("enable-jid-adhocs") > 0;
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
     storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
     certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory(), networkFactories_.getCryptoProvider());
-    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierarchy_, qtSettings_, tabs_, ":/themes/Default/", emoticons);
     soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
     // Ugly, because the dock depends on the tray, but the temporary
@@ -298,32 +289,8 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
             }
         });
     }
-
-    for (int i = 0; i < numberOfAccounts; i++) {
-        if (i > 0) {
-            // Don't add the first tray (see note above)
-            systemTrays_.push_back(new QtSystemTray());
-        }
-        QtUIFactory* uiFactory = new QtUIFactory(settingsHierarchy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, autoUpdater_, startMinimized, !emoticons.empty(), enableAdHocCommandOnJID);
-        uiFactories_.push_back(uiFactory);
-        MainController* mainController = new MainController(
-                &clientMainThreadCaller_,
-                &networkFactories_,
-                uiFactory,
-                settingsHierarchy_,
-                systemTrays_[i],
-                soundPlayer_,
-                storagesFactory_,
-                certificateStorageFactory_,
-                dock_,
-                notifier_,
-                uriHandler_,
-                &idleDetector_,
-                emoticons,
-                options.count("latency-debug") > 0);
-        mainControllers_.push_back(mainController);
-    }
-
+    migrateLastLoginAccount();
+    restoreAccounts();
     connect(qApp, SIGNAL(aboutToQuit()), this, SLOT(handleAboutToQuit()));
 }
 
@@ -339,8 +306,6 @@ QtSwift::~QtSwift() {
     for (auto* tray : systemTrays_) {
         delete tray;
     }
-    delete tabs_;
-    delete chatWindowFactory_;
     delete splitter_;
     delete settingsHierarchy_;
     delete qtSettings_;
@@ -378,5 +343,140 @@ void QtSwift::handleAutoUpdaterStateChanged(AutoUpdater::State updatedState) {
         notifier_->showMessage(Notifier::SystemMessage, Q2PSTRING(tr("Swift Update Available")), Q2PSTRING(tr("Restart Swift to update to the new Swift version.")), "", [](){});
     }
 }
+
+void QtSwift::handleWantsToAddAccount() {
+    auto loginWindow = addAccount();
+    if (!settingsHierarchy_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
+        for (const auto& profile : settingsHierarchy_->getAvailableProfiles()) {
+            ProfileSettingsProvider profileSettings(profile, settingsHierarchy_);
+            if (profileSettings.getIntSetting("enabled", 0)) {
+                // No point showing accounts that're already logged in
+                continue;
+            }
+            const auto& password = profileSettings.getStringSetting("pass");
+            const auto& certificate = profileSettings.getStringSetting("certificate");
+            const auto& jid = profileSettings.getStringSetting("jid");
+            const auto& clientOptions = parseClientOptions(profileSettings.getStringSetting("options"));
+            loginWindow->addAvailableAccount(jid, password, certificate, clientOptions);
+        }
+    }
+}
+
+void QtSwift::restoreAccounts() {
+    if (!settingsHierarchy_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
+        for (const auto& profile : settingsHierarchy_->getAvailableProfiles()) {
+            ProfileSettingsProvider profileSettings(profile, settingsHierarchy_);
+            if (!profileSettings.getIntSetting("enabled", 0)) {
+                continue;
+            }
+            const auto& jid = profileSettings.getStringSetting("jid");
+            const auto& password = profileSettings.getStringSetting("pass");
+            const auto& certificate = profileSettings.getStringSetting("certificate");
+            const auto& clientOptions = parseClientOptions(profileSettings.getStringSetting("options"));
+            auto loginWindow = addAccount();
+            loginWindow->addAvailableAccount(jid, password, certificate, clientOptions);
+            loginWindow->loginClicked();
+        }
+    }
+}
+
+void QtSwift::migrateLastLoginAccount() {
+    const SettingsProvider::Setting<bool> loginAutomatically = SettingsProvider::Setting<bool>("loginAutomatically", false);
+    if (settingsHierarchy_->getSetting(loginAutomatically)) {
+        auto selectedLoginJID = settingsHierarchy_->getSetting(SettingsProvider::Setting<std::string>("lastLoginJID", ""));
+        for (const auto& profile : settingsHierarchy_->getAvailableProfiles()) {
+            ProfileSettingsProvider profileSettings(profile, settingsHierarchy_);
+            if (profileSettings.getStringSetting("jid") == selectedLoginJID) {
+                profileSettings.storeInt("enabled", 1);
+                break;
+            }
+        }
+        settingsHierarchy_->storeSetting(loginAutomatically, false);
+    }
+}
+
+QtLoginWindow* QtSwift::addAccount() {
+    if (uiFactories_.size() > 0) {
+        // Don't add the first tray (see note above)
+        systemTrays_.push_back(new QtSystemTray());
+    }
+    auto tabs = new QtChatTabs(settingsHierarchy_, true);
+    QtUIFactory* uiFactory = new QtUIFactory(settingsHierarchy_, qtSettings_, tabs, splitter_, systemTrays_[systemTrays_.size() - 1], networkFactories_.getTimerFactory(), statusCache_, autoUpdater_, emoticons_, enableAdHocCommandOnJID_);
+    uiFactories_.push_back(uiFactory);
+    MainController* mainController = new MainController(
+        &clientMainThreadCaller_,
+        &networkFactories_,
+        uiFactory,
+        settingsHierarchy_,
+        systemTrays_[systemTrays_.size() - 1],
+        soundPlayer_,
+        storagesFactory_,
+        certificateStorageFactory_,
+        dock_,
+        notifier_,
+        uriHandler_,
+        &idleDetector_,
+        emoticons_,
+        useDelayForLatency_);
+    mainControllers_.push_back(mainController);
+
+    //FIXME - mainController has already created the window, so we can pass null here and get the old one
+    auto loginWindow = uiFactory->createLoginWindow(nullptr);
+
+    return dynamic_cast<QtLoginWindow*>(loginWindow);
+}
+
+//FIXME: Switch all this to boost::serialise
+
+#define CHECK_PARSE_LENGTH if (i >= segments.size()) {return result;}
+#define PARSE_INT_RAW(defaultValue) CHECK_PARSE_LENGTH intVal = defaultValue; try {intVal = boost::lexical_cast<int>(segments[i]);} catch(const boost::bad_lexical_cast&) {};i++;
+#define PARSE_STRING_RAW CHECK_PARSE_LENGTH stringVal = byteArrayToString(Base64::decode(segments[i]));i++;
+
+#define PARSE_BOOL(option, defaultValue) PARSE_INT_RAW(defaultValue); result.option = (intVal == 1);
+#define PARSE_INT(option, defaultValue) PARSE_INT_RAW(defaultValue); result.option = intVal;
+#define PARSE_STRING(option) PARSE_STRING_RAW; result.option = stringVal;
+#define PARSE_SAFE_STRING(option) PARSE_STRING_RAW; result.option = SafeString(createSafeByteArray(stringVal));
+#define PARSE_URL(option) {PARSE_STRING_RAW; result.option = URL::fromString(stringVal);}
+
+
+ClientOptions QtSwift::parseClientOptions(const std::string& optionString) {
+    ClientOptions result;
+    size_t i = 0;
+    int intVal = 0;
+    std::string stringVal;
+    std::vector<std::string> segments = String::split(optionString, ',');
+
+    PARSE_BOOL(useStreamCompression, 1);
+    PARSE_INT_RAW(-1);
+    switch (intVal) {
+    case 1: result.useTLS = ClientOptions::NeverUseTLS; break;
+    case 2: result.useTLS = ClientOptions::UseTLSWhenAvailable; break;
+    case 3: result.useTLS = ClientOptions::RequireTLS; break;
+    default:;
+    }
+    PARSE_BOOL(allowPLAINWithoutTLS, 0);
+    PARSE_BOOL(useStreamResumption, 0);
+    PARSE_BOOL(useAcks, 1);
+    PARSE_STRING(manualHostname);
+    PARSE_INT(manualPort, -1);
+    PARSE_INT_RAW(-1);
+    switch (intVal) {
+    case 1: result.proxyType = ClientOptions::NoProxy; break;
+    case 2: result.proxyType = ClientOptions::SystemConfiguredProxy; break;
+    case 3: result.proxyType = ClientOptions::SOCKS5Proxy; break;
+    case 4: result.proxyType = ClientOptions::HTTPConnectProxy; break;
+    }
+    PARSE_STRING(manualProxyHostname);
+    PARSE_INT(manualProxyPort, -1);
+    PARSE_URL(boshURL);
+    PARSE_URL(boshHTTPConnectProxyURL);
+    PARSE_SAFE_STRING(boshHTTPConnectProxyAuthID);
+    PARSE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
+    PARSE_BOOL(tlsOptions.schannelTLS1_0Workaround, false);
+    PARSE_BOOL(singleSignOn, false);
+
+    return result;
+}
+
 
 }

@@ -59,8 +59,10 @@ namespace Swift {
         signals:
             void geometryChanged();
 
-        private slots:
+        public slots:
             void loginClicked();
+
+        private slots:
             void handleCertficateChecked(bool);
             void handleQuit();
             void handleShowXMLConsole();
