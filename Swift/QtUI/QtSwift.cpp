@@ -161,11 +161,11 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
 
     qtSettings_ = new QtSettingsProvider();
     xmlSettings_ = loadSettingsFile(P2QSTRING(pathToString(Paths::getExecutablePath() / "system-settings.xml")));
-    settingsHierachy_ = new SettingsProviderHierachy();
-    settingsHierachy_->addProviderToTopOfStack(xmlSettings_);
-    settingsHierachy_->addProviderToTopOfStack(qtSettings_);
+    settingsHierarchy_ = new SettingsProviderHierachy();
+    settingsHierarchy_->addProviderToTopOfStack(xmlSettings_);
+    settingsHierarchy_->addProviderToTopOfStack(qtSettings_);
 
-    networkFactories_.getTLSContextFactory()->setDisconnectOnCardRemoval(settingsHierachy_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
+    networkFactories_.getTLSContextFactory()->setDisconnectOnCardRemoval(settingsHierarchy_->getSetting(SettingConstants::DISCONNECT_ON_CARD_REMOVAL));
 
     std::map<std::string, std::string> emoticons;
     loadEmoticonsFile(":/emoticons/emoticons.txt", emoticons);
@@ -186,11 +186,11 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     }
 
     if (options.count("enable-future")) {
-        settingsHierachy_->storeSetting(SettingConstants::FUTURE, true);
+        settingsHierarchy_->storeSetting(SettingConstants::FUTURE, true);
     }
 
     if (options.count("disable-future")) {
-        settingsHierachy_->storeSetting(SettingConstants::FUTURE, false);
+        settingsHierarchy_->storeSetting(SettingConstants::FUTURE, false);
     }
 
     if (options.count("logfile")) {
@@ -241,12 +241,12 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     QFont::insertSubstitution(QApplication::font().family(), "Segoe UI Emoji");
 #endif
     bool enableAdHocCommandOnJID = options.count("enable-jid-adhocs") > 0;
-    tabs_ = new QtChatTabs(settingsHierachy_, true);
+    tabs_ = new QtChatTabs(settingsHierarchy_, true);
     bool startMinimized = options.count("start-minimized") > 0;
     applicationPathProvider_ = new PlatformApplicationPathProvider(SWIFT_APPLICATION_NAME);
     storagesFactory_ = new FileStoragesFactory(applicationPathProvider_->getDataDir(), networkFactories_.getCryptoProvider());
     certificateStorageFactory_ = new CertificateFileStorageFactory(applicationPathProvider_->getDataDir(), tlsFactories_.getCertificateFactory(), networkFactories_.getCryptoProvider());
-    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierachy_, qtSettings_, tabs_, ":/themes/Default/", emoticons);
+    chatWindowFactory_ = new QtChatWindowFactory(splitter_, settingsHierarchy_, qtSettings_, tabs_, ":/themes/Default/", emoticons);
     soundPlayer_ = new QtSoundPlayer(applicationPathProvider_);
 
     // Ugly, because the dock depends on the tray, but the temporary
@@ -285,15 +285,15 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     splitter_->show();
 
     PlatformAutoUpdaterFactory autoUpdaterFactory;
-    if (autoUpdaterFactory.isSupported() && settingsHierachy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)
-        && !settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
-        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
+    if (autoUpdaterFactory.isSupported() && settingsHierarchy_->getSetting(QtUISettingConstants::ENABLE_SOFTWARE_UPDATES)
+        && !settingsHierarchy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL).empty()) {
+        autoUpdater_ = autoUpdaterFactory.createAutoUpdater(updateChannelToFeed(settingsHierarchy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
         autoUpdater_->checkForUpdates();
         autoUpdater_->onUpdateStateChanged.connect(boost::bind(&QtSwift::handleAutoUpdaterStateChanged, this, _1));
 
-        settingsHierachy_->onSettingChanged.connect([&](const std::string& path) {
+        settingsHierarchy_->onSettingChanged.connect([&](const std::string& path) {
             if (path == QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL.getKey()) {
-                autoUpdater_->setAppcastFeed(updateChannelToFeed(settingsHierachy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
+                autoUpdater_->setAppcastFeed(updateChannelToFeed(settingsHierarchy_->getSetting(QtUISettingConstants::SOFTWARE_UPDATE_CHANNEL)));
                 autoUpdater_->checkForUpdates();
             }
         });
@@ -304,13 +304,13 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
             // Don't add the first tray (see note above)
             systemTrays_.push_back(new QtSystemTray());
         }
-        QtUIFactory* uiFactory = new QtUIFactory(settingsHierachy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, autoUpdater_, startMinimized, !emoticons.empty(), enableAdHocCommandOnJID);
+        QtUIFactory* uiFactory = new QtUIFactory(settingsHierarchy_, qtSettings_, tabs_, splitter_, systemTrays_[i], chatWindowFactory_, networkFactories_.getTimerFactory(), statusCache_, autoUpdater_, startMinimized, !emoticons.empty(), enableAdHocCommandOnJID);
         uiFactories_.push_back(uiFactory);
         MainController* mainController = new MainController(
                 &clientMainThreadCaller_,
                 &networkFactories_,
                 uiFactory,
-                settingsHierachy_,
+                settingsHierarchy_,
                 systemTrays_[i],
                 soundPlayer_,
                 storagesFactory_,
@@ -342,7 +342,7 @@ QtSwift::~QtSwift() {
     delete tabs_;
     delete chatWindowFactory_;
     delete splitter_;
-    delete settingsHierachy_;
+    delete settingsHierarchy_;
     delete qtSettings_;
     delete xmlSettings_;
     delete statusCache_;

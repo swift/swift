@@ -35,27 +35,28 @@ namespace po = boost::program_options;
 class QSplitter;
 
 namespace Swift {
-    class QtUIFactory;
-    class CertificateStorageFactory;
-    class Dock;
-    class Notifier;
-    class StoragesFactory;
     class ApplicationPathProvider;
     class AvatarStorage;
     class CapsStorage;
+    class CertificateStorageFactory;
+    class Dock;
+    class EventLoop;
     class MainController;
-    class QtSystemTray;
+    class Notifier;
     class QtChatTabs;
     class QtChatWindowFactory;
-    class QtSoundPlayer;
+    class QtLoginWindow;
     class QtMUCSearchWindowFactory;
-    class QtUserSearchWindowFactory;
-    class EventLoop;
-    class URIHandler;
-    class SettingsProviderHierachy;
-    class XMLSettingsProvider;
-    class StatusCache;
     class QtSingleWindow;
+    class QtSoundPlayer;
+    class QtSystemTray;
+    class QtUIFactory;
+    class QtUserSearchWindowFactory;
+    class SettingsProviderHierachy;
+    class StatusCache;
+    class StoragesFactory;
+    class URIHandler;
+    class XMLSettingsProvider;
 
     class QtSwift : public QObject {
         Q_OBJECT
@@ -83,7 +84,7 @@ namespace Swift {
             std::vector<QtUIFactory*> uiFactories_;
             QtSettingsProvider* qtSettings_;
             XMLSettingsProvider* xmlSettings_;
-            SettingsProviderHierachy* settingsHierachy_;
+            SettingsProviderHierachy* settingsHierarchy_;
             QtSingleWindow* splitter_;
             QtSoundPlayer* soundPlayer_;
             Dock* dock_;
