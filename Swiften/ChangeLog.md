@@ -1,3 +1,7 @@
+5-in-progress
+-------------
+- Update build system from scons 2.4.0 to 3.0.1
+
 4.0 (2017-03-20)
 ----------------
 - Moved code-base to C++11
