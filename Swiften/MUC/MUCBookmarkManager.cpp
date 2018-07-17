@@ -26,7 +26,7 @@ MUCBookmarkManager::MUCBookmarkManager(IQRouter* iqRouter) {
 }
 
 void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payload, ErrorPayload::ref error) {
-    if (error) {
+    if (error || !payload) {
         return;
     }
 
