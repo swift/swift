@@ -177,6 +177,9 @@ class ChatsManagerTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(testAutoJoinBookmarksAndChattables);
     CPPUNIT_TEST(testJoinNoAutojoinBookmark);
     CPPUNIT_TEST(testJoinAndBookmarkMUC);
+    CPPUNIT_TEST(testReceivingNoBookmarks);
+    CPPUNIT_TEST(testReceivingNullBookmarks);
+    CPPUNIT_TEST(testReceivingBookmarksError);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1687,6 +1690,41 @@ public:
             bookmarkRequest->getTo(),
             bookmarkRequest->getID(),
             std::make_shared<PrivateStorage>(createBookmarkStorageWithJID(bookmarkRequest, "example@montague.lit", true))
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingNoBookmarks() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            std::make_shared<PrivateStorage>()
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingNullBookmarks() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        auto response = IQ::createResult(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            nullptr
+        );
+        stanzaChannel_->onIQReceived(response);
+    }
+
+    void testReceivingBookmarksError() {
+        auto bookmarkRequest = std::dynamic_pointer_cast<IQ>(stanzaChannel_->sentStanzas[0]);
+        auto response = IQ::createError(
+            bookmarkRequest->getFrom(),
+            bookmarkRequest->getTo(),
+            bookmarkRequest->getID(),
+            ErrorPayload::Condition::ServiceUnavailable,
+            ErrorPayload::Type::Cancel,
+            nullptr
         );
         stanzaChannel_->onIQReceived(response);
     }
