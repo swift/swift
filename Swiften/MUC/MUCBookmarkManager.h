@@ -48,6 +48,6 @@ namespace Swift {
             bool handlingReceivedBookmarks_;
             std::vector<MUCBookmark> bookmarks_;
             IQRouter* iqRouter_;
-            std::shared_ptr<Storage> storage;
+            std::shared_ptr<Storage> storage_;
     };
 }

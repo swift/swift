@@ -34,7 +34,7 @@ void MUCBookmarkManager::handleBookmarksReceived(std::shared_ptr<Storage> payloa
     handlingReceivedBookmarks_ = true;
     onBookmarksReady();
 
-    storage = payload;
+    storage_ = payload;
 
     std::vector<MUCBookmark> receivedBookmarks;
     for (const auto& room : payload->getRooms()) {
@@ -115,17 +115,17 @@ void MUCBookmarkManager::flush() {
     if (handlingReceivedBookmarks_) {
         return;
     }
-    if (!storage) {
-        storage = std::make_shared<Storage>();
+    if (!storage_) {
+        storage_ = std::make_shared<Storage>();
     }
     // Update the storage element
-    storage->clearRooms();
+    storage_->clearRooms();
     for (const auto& bookmark : bookmarks_) {
-        storage->addRoom(bookmark.toStorage());
+        storage_->addRoom(bookmark.toStorage());
     }
 
     // Send an iq to save the storage element
-    SetPrivateStorageRequest<Storage>::ref request = SetPrivateStorageRequest<Storage>::create(storage, iqRouter_);
+    SetPrivateStorageRequest<Storage>::ref request = SetPrivateStorageRequest<Storage>::create(storage_, iqRouter_);
     // FIXME: We should care about the result
     //request->onResponse.connect(boost::bind(&MUCBookmarkManager::handleBookmarksSet, this, _1, _2));
     request->send();
