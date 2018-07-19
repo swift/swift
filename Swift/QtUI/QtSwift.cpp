@@ -35,7 +35,7 @@
 
 #include <Swift/Controllers/ApplicationInfo.h>
 #include <Swift/Controllers/BuildVersion.h>
-#include <Swift/Controllers/MainController.h>
+#include <Swift/Controllers/AccountController.h>
 #include <Swift/Controllers/SettingConstants.h>
 #include <Swift/Controllers/Settings/SettingsProviderHierachy.h>
 #include <Swift/Controllers/Settings/XMLSettingsProvider.h>
@@ -299,7 +299,7 @@ QtSwift::~QtSwift() {
     for (auto* factory : uiFactories_) {
         delete factory;
     }
-    for (auto* controller : mainControllers_) {
+    for (auto* controller : accountControllers_) {
         delete controller;
     }
     delete notifier_;
@@ -403,7 +403,7 @@ QtLoginWindow* QtSwift::addAccount() {
     auto tabs = new QtChatTabs(settingsHierarchy_, true);
     QtUIFactory* uiFactory = new QtUIFactory(settingsHierarchy_, qtSettings_, tabs, splitter_, systemTrays_[systemTrays_.size() - 1], networkFactories_.getTimerFactory(), statusCache_, autoUpdater_, emoticons_, enableAdHocCommandOnJID_);
     uiFactories_.push_back(uiFactory);
-    MainController* mainController = new MainController(
+    AccountController* accountController = new AccountController(
         &clientMainThreadCaller_,
         &networkFactories_,
         uiFactory,
@@ -418,9 +418,9 @@ QtLoginWindow* QtSwift::addAccount() {
         &idleDetector_,
         emoticons_,
         useDelayForLatency_);
-    mainControllers_.push_back(mainController);
+    accountControllers_.push_back(accountController);
 
-    //FIXME - mainController has already created the window, so we can pass null here and get the old one
+    //FIXME - accountController has already created the window, so we can pass null here and get the old one
     auto loginWindow = uiFactory->createLoginWindow(nullptr);
 
     return dynamic_cast<QtLoginWindow*>(loginWindow);

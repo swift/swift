@@ -43,7 +43,7 @@ namespace Swift {
     class CertificateStorageFactory;
     class Dock;
     class EventLoop;
-    class MainController;
+    class AccountController;
     class Notifier;
     class QtChatTabs;
     class QtChatWindowFactory;
@@ -89,7 +89,7 @@ namespace Swift {
             PlatformTLSFactories tlsFactories_;
             BoostNetworkFactories networkFactories_;
             QtChatWindowFactory* chatWindowFactory_;
-            std::vector<MainController*> mainControllers_;
+            std::vector<AccountController*> accountControllers_;
             std::vector<QtSystemTray*> systemTrays_;
             std::vector<QtUIFactory*> uiFactories_;
             QtSettingsProvider* qtSettings_;

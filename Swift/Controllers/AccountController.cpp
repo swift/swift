@@ -4,7 +4,7 @@
  * See the COPYING file for more information.
  */
 
-#include <Swift/Controllers/MainController.h>
+#include <Swift/Controllers/AccountController.h>
 
 #include <cstdlib>
 #include <memory>
@@ -99,7 +99,7 @@ static const std::string CLIENT_NAME = "Swift";
 static const std::string CLIENT_NODE = "http://swift.im";
 
 
-MainController::MainController(
+AccountController::AccountController(
         EventLoop* eventLoop,
         NetworkFactories* networkFactories,
         UIFactory* uiFactories,
@@ -160,7 +160,7 @@ MainController::MainController(
     notifier_ = new TogglableNotifier(notifier);
     notifier_->setPersistentEnabled(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
     eventController_ = new EventController();
-    eventController_->onEventQueueLengthChange.connect(boost::bind(&MainController::handleEventQueueLengthChange, this, _1));
+    eventController_->onEventQueueLengthChange.connect(boost::bind(&AccountController::handleEventQueueLengthChange, this, _1));
 
     systemTrayController_ = new SystemTrayController(eventController_, systemTray);
     loginWindow_ = uiFactory_->createLoginWindow(uiEventStream_);
@@ -173,24 +173,24 @@ MainController::MainController(
 
     xmppURIController_ = new XMPPURIController(uriHandler_, uiEventStream_);
 
-    loginWindow_->onLoginRequest.connect(boost::bind(&MainController::handleLoginRequest, this, _1, _2, _3, _4, _5, _6, _7));
-    loginWindow_->onPurgeSavedLoginRequest.connect(boost::bind(&MainController::handlePurgeSavedLoginRequest, this, _1));
-    loginWindow_->onCancelLoginRequest.connect(boost::bind(&MainController::handleCancelLoginRequest, this));
-    loginWindow_->onQuitRequest.connect(boost::bind(&MainController::handleQuitRequest, this));
+    loginWindow_->onLoginRequest.connect(boost::bind(&AccountController::handleLoginRequest, this, _1, _2, _3, _4, _5, _6, _7));
+    loginWindow_->onPurgeSavedLoginRequest.connect(boost::bind(&AccountController::handlePurgeSavedLoginRequest, this, _1));
+    loginWindow_->onCancelLoginRequest.connect(boost::bind(&AccountController::handleCancelLoginRequest, this));
+    loginWindow_->onQuitRequest.connect(boost::bind(&AccountController::handleQuitRequest, this));
 
     idleDetector_->setIdleTimeSeconds(settings->getSetting(SettingConstants::IDLE_TIMEOUT));
-    idleDetector_->onIdleChanged.connect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
+    idleDetector_->onIdleChanged.connect(boost::bind(&AccountController::handleInputIdleChanged, this, _1));
 
     xmlConsoleController_ = new XMLConsoleController(uiEventStream_, uiFactory_);
 
     fileTransferListController_ = new FileTransferListController(uiEventStream_, uiFactory_);
 
-    settings_->onSettingChanged.connect(boost::bind(&MainController::handleSettingChanged, this, _1));
+    settings_->onSettingChanged.connect(boost::bind(&AccountController::handleSettingChanged, this, _1));
 
 }
 
-MainController::~MainController() {
-    idleDetector_->onIdleChanged.disconnect(boost::bind(&MainController::handleInputIdleChanged, this, _1));
+AccountController::~AccountController() {
+    idleDetector_->onIdleChanged.disconnect(boost::bind(&AccountController::handleInputIdleChanged, this, _1));
 
     purgeCachedCredentials();
     //setManagersOffline();
@@ -209,11 +209,11 @@ MainController::~MainController() {
     delete uiEventStream_;
 }
 
-void MainController::purgeCachedCredentials() {
+void AccountController::purgeCachedCredentials() {
     safeClear(password_);
 }
 
-void MainController::resetClient() {
+void AccountController::resetClient() {
     purgeCachedCredentials();
     resetCurrentError();
     resetPendingReconnects();
@@ -275,13 +275,13 @@ void MainController::resetClient() {
     clientInitialized_ = false;
 }
 
-void MainController::handleSettingChanged(const std::string& settingPath) {
+void AccountController::handleSettingChanged(const std::string& settingPath) {
     if (settingPath == SettingConstants::SHOW_NOTIFICATIONS.getKey()) {
         notifier_->setPersistentEnabled(settings_->getSetting(SettingConstants::SHOW_NOTIFICATIONS));
     }
 }
 
-void MainController::resetPendingReconnects() {
+void AccountController::resetPendingReconnects() {
     timeBeforeNextReconnect_ = -1;
     if (reconnectTimer_) {
         reconnectTimer_->stop();
@@ -290,14 +290,14 @@ void MainController::resetPendingReconnects() {
     resetCurrentError();
 }
 
-void MainController::resetCurrentError() {
+void AccountController::resetCurrentError() {
     if (lastDisconnectError_) {
         lastDisconnectError_->conclude();
         lastDisconnectError_ = std::shared_ptr<ErrorEvent>();
     }
 }
 
-void MainController::handleConnected() {
+void AccountController::handleConnected() {
     boundJID_ = client_->getJID();
     resetCurrentError();
     resetPendingReconnects();
@@ -315,9 +315,9 @@ void MainController::handleConnected() {
         fileTransferListController_->setFileTransferOverview(ftOverview_);
         chattables_ = std::make_unique<Chattables>();
         rosterController_ = new RosterController(boundJID_, client_->getRoster(), client_->getAvatarManager(), uiFactory_, client_->getNickManager(), client_->getNickResolver(), client_->getPresenceOracle(), client_->getSubscriptionManager(), eventController_, uiEventStream_, client_->getIQRouter(), settings_, client_->getEntityCapsProvider(), client_->getClientBlockListManager(), client_->getVCardManager(), *chattables_);
-        rosterController_->onChangeStatusRequest.connect(boost::bind(&MainController::handleChangeStatusRequest, this, _1, _2));
-        rosterController_->onSignOutRequest.connect(boost::bind(&MainController::signOut, this));
-        rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&MainController::handleShowCertificateRequest, this));
+        rosterController_->onChangeStatusRequest.connect(boost::bind(&AccountController::handleChangeStatusRequest, this, _1, _2));
+        rosterController_->onSignOutRequest.connect(boost::bind(&AccountController::signOut, this));
+        rosterController_->getWindow()->onShowCertificateRequest.connect(boost::bind(&AccountController::handleShowCertificateRequest, this));
 
         blockListController_ = new BlockListController(client_->getClientBlockListManager(), uiEventStream_, uiFactory_, eventController_);
 
@@ -382,7 +382,7 @@ void MainController::handleConnected() {
     client_->requestRoster();
 
     GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(JID(boundJID_.getDomain()), client_->getIQRouter());
-    discoInfoRequest->onResponse.connect(boost::bind(&MainController::handleServerDiscoInfoResponse, this, _1, _2));
+    discoInfoRequest->onResponse.connect(boost::bind(&AccountController::handleServerDiscoInfoResponse, this, _1, _2));
     discoInfoRequest->send();
 
     client_->getVCardManager()->requestOwnVCard();
@@ -401,18 +401,18 @@ void MainController::handleConnected() {
     adHocManager_->setOnline(true);
 }
 
-void MainController::handleEventQueueLengthChange(int count) {
+void AccountController::handleEventQueueLengthChange(int count) {
     dock_->setNumberOfPendingMessages(count);
 }
 
-void MainController::reconnectAfterError() {
+void AccountController::reconnectAfterError() {
     if (reconnectTimer_) {
         reconnectTimer_->stop();
     }
     performLoginFromCachedCredentials();
 }
 
-void MainController::handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText) {
+void AccountController::handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText) {
     std::shared_ptr<Presence> presence(new Presence());
     if (show == StatusShow::None) {
         // Note: this is misleading, None doesn't mean unavailable on the wire.
@@ -438,7 +438,7 @@ void MainController::handleChangeStatusRequest(StatusShow::Type show, const std:
     }
 }
 
-void MainController::sendPresence(std::shared_ptr<Presence> presence) {
+void AccountController::sendPresence(std::shared_ptr<Presence> presence) {
     rosterController_->getWindow()->setMyStatusType(presence->getShow());
     rosterController_->getWindow()->setMyStatusText(presence->getStatus());
     systemTrayController_->setMyStatusType(presence->getShow());
@@ -452,7 +452,7 @@ void MainController::sendPresence(std::shared_ptr<Presence> presence) {
     }
 }
 
-void MainController::handleInputIdleChanged(bool idle) {
+void AccountController::handleInputIdleChanged(bool idle) {
     if (!statusTracker_) {
         //Haven't logged in yet.
         return;
@@ -480,12 +480,12 @@ void MainController::handleInputIdleChanged(bool idle) {
     }
 }
 
-void MainController::handleShowCertificateRequest() {
+void AccountController::handleShowCertificateRequest() {
     std::vector<Certificate::ref> chain = client_->getStanzaChannel()->getPeerCertificateChain();
     rosterController_->getWindow()->openCertificateDialog(chain);
 }
 
-void MainController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, const ClientOptions& options, bool remember, bool loginAutomatically) {
+void AccountController::handleLoginRequest(const std::string &username, const std::string &password, const std::string& certificatePath, CertificateWithKey::ref certificate, const ClientOptions& options, bool remember, bool loginAutomatically) {
     jid_ = JID(username);
     if (options.singleSignOn && (!jid_.isValid() || !jid_.getNode().empty())) {
         loginWindow_->setMessage(QT_TRANSLATE_NOOP("", "User address invalid. User address should be of the form 'wonderland.lit'"));
@@ -533,12 +533,12 @@ void MainController::handleLoginRequest(const std::string &username, const std::
     }
 }
 
-void MainController::handlePurgeSavedLoginRequest(const std::string& username) {
+void AccountController::handlePurgeSavedLoginRequest(const std::string& username) {
     settings_->removeProfile(username);
     loginWindow_->removeAvailableAccount(username);
 }
 
-void MainController::performLoginFromCachedCredentials() {
+void AccountController::performLoginFromCachedCredentials() {
     if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS) && password_.empty()) {
         /* Then we can't try to login again. */
         return;
@@ -563,16 +563,16 @@ void MainController::performLoginFromCachedCredentials() {
         client_->setCertificateTrustChecker(certificateTrustChecker_);
         client_->onDataRead.connect(boost::bind(&XMLConsoleController::handleDataRead, xmlConsoleController_, _1));
         client_->onDataWritten.connect(boost::bind(&XMLConsoleController::handleDataWritten, xmlConsoleController_, _1));
-        client_->onDisconnected.connect(boost::bind(&MainController::handleDisconnected, this, _1));
-        client_->onConnected.connect(boost::bind(&MainController::handleConnected, this));
+        client_->onDisconnected.connect(boost::bind(&AccountController::handleDisconnected, this, _1));
+        client_->onConnected.connect(boost::bind(&AccountController::handleConnected, this));
 
         client_->setSoftwareVersion(CLIENT_NAME, buildVersion);
 
-        client_->getVCardManager()->onVCardChanged.connect(boost::bind(&MainController::handleVCardReceived, this, _1, _2));
+        client_->getVCardManager()->onVCardChanged.connect(boost::bind(&AccountController::handleVCardReceived, this, _1, _2));
         presenceNotifier_ = new PresenceNotifier(client_->getStanzaChannel(), notifier_, client_->getMUCRegistry(), client_->getAvatarManager(), client_->getNickResolver(), client_->getPresenceOracle(), networkFactories_->getTimerFactory());
-        presenceNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
+        presenceNotifier_->onNotificationActivated.connect(boost::bind(&AccountController::handleNotificationClicked, this, _1));
         eventNotifier_ = new EventNotifier(eventController_, notifier_, client_->getAvatarManager(), client_->getNickResolver());
-        eventNotifier_->onNotificationActivated.connect(boost::bind(&MainController::handleNotificationClicked, this, _1));
+        eventNotifier_->onNotificationActivated.connect(boost::bind(&AccountController::handleNotificationClicked, this, _1));
         if (certificate_) {
             client_->setCertificate(certificate_);
         }
@@ -595,7 +595,7 @@ void MainController::performLoginFromCachedCredentials() {
     client_->connect(clientOptions);
 }
 
-void MainController::handleDisconnected(const boost::optional<ClientError>& error) {
+void AccountController::handleDisconnected(const boost::optional<ClientError>& error) {
     if (rosterController_) {
         rosterController_->getWindow()->setStreamEncryptionStatus(false);
     }
@@ -700,7 +700,7 @@ void MainController::handleDisconnected(const boost::optional<ClientError>& erro
     }
 }
 
-void MainController::setReconnectTimer() {
+void AccountController::setReconnectTimer() {
     if (timeBeforeNextReconnect_ < 0) {
         timeBeforeNextReconnect_ = 1;
     } else {
@@ -710,15 +710,15 @@ void MainController::setReconnectTimer() {
         reconnectTimer_->stop();
     }
     reconnectTimer_ = networkFactories_->getTimerFactory()->createTimer(timeBeforeNextReconnect_ * 1000);
-    reconnectTimer_->onTick.connect(boost::bind(&MainController::reconnectAfterError, this));
+    reconnectTimer_->onTick.connect(boost::bind(&AccountController::reconnectAfterError, this));
     reconnectTimer_->start();
 }
 
-void MainController::handleCancelLoginRequest() {
+void AccountController::handleCancelLoginRequest() {
     signOut();
 }
 
-void MainController::signOut() {
+void AccountController::signOut() {
     if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
         purgeCachedCredentials();
     }
@@ -729,7 +729,7 @@ void MainController::signOut() {
     resetClient();
 }
 
-void MainController::logout() {
+void AccountController::logout() {
     if (settings_->getSetting(SettingConstants::FORGET_PASSWORDS)) {
         purgeCachedCredentials();
     }
@@ -745,7 +745,7 @@ void MainController::logout() {
     setManagersOffline();
 }
 
-void MainController::setManagersOffline() {
+void AccountController::setManagersOffline() {
     if (chatsManager_) {
         chatsManager_->setOnline(false);
     }
@@ -760,7 +760,7 @@ void MainController::setManagersOffline() {
     }
 }
 
-void MainController::handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> info, ErrorPayload::ref error) {
+void AccountController::handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> info, ErrorPayload::ref error) {
     if (!error) {
         chatsManager_->setServerDiscoInfo(info);
         adHocManager_->setServerDiscoInfo(info);
@@ -774,7 +774,7 @@ void MainController::handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo> in
     }
 }
 
-void MainController::enableMessageCarbons() {
+void AccountController::enableMessageCarbons() {
     auto enableCarbonsRequest = EnableCarbonsRequest::create(client_->getIQRouter());
     enableCarbonsRequestHandlerConnection_ = enableCarbonsRequest->onResponse.connect([&](Payload::ref /*payload*/, ErrorPayload::ref error) {
         if (error) {
@@ -788,7 +788,7 @@ void MainController::enableMessageCarbons() {
     enableCarbonsRequest->send();
 }
 
-void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
+void AccountController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
     if (!jid.equals(jid_, JID::WithoutResource) || !vCard) {
         return;
     }
@@ -804,7 +804,7 @@ void MainController::handleVCardReceived(const JID& jid, VCard::ref vCard) {
     }
 }
 
-void MainController::handleNotificationClicked(const JID& jid) {
+void AccountController::handleNotificationClicked(const JID& jid) {
     assert(chatsManager_);
     if (clientInitialized_) {
         if (client_->getMUCRegistry()->isMUC(jid)) {
@@ -816,7 +816,7 @@ void MainController::handleNotificationClicked(const JID& jid) {
     }
 }
 
-void MainController::handleQuitRequest() {
+void AccountController::handleQuitRequest() {
     if (client_ && client_->isActive()) {
         quitRequested_ = true;
         client_->disconnect();
@@ -835,7 +835,7 @@ void MainController::handleQuitRequest() {
 #define SERIALIZE_SAFE_STRING(option) result += safeByteArrayToString(Base64::encode(options.option)); result += ",";
 #define SERIALIZE_URL(option) SERIALIZE_STRING(option.toString())
 
-std::string MainController::serializeClientOptions(const ClientOptions& options) {
+std::string AccountController::serializeClientOptions(const ClientOptions& options) {
     std::string result;
     SERIALIZE_BOOL(useStreamCompression);
     switch (options.useTLS) {

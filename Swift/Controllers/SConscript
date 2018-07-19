@@ -51,7 +51,7 @@ if env["SCONS_STAGE"] == "build" :
             "Highlighting/Highlighter.cpp",
             "HistoryController.cpp",
             "HistoryViewController.cpp",
-            "MainController.cpp",
+            "AccountController.cpp",
             "PresenceNotifier.cpp",
             "PreviousStatusStore.cpp",
             "ProfileController.cpp",

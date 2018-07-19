@@ -82,9 +82,9 @@ namespace Swift {
     class ContactSuggester;
     class ContactsFromXMPPRoster;
 
-    class MainController {
+    class AccountController {
         public:
-            MainController(
+            AccountController(
                     EventLoop* eventLoop,
                     NetworkFactories* networkFactories,
                     UIFactory* uiFactories,
@@ -99,7 +99,7 @@ namespace Swift {
                     IdleDetector* idleDetector,
                     const std::map<std::string, std::string>& emoticons,
                     bool useDelayForLatency);
-            ~MainController();
+            ~AccountController();
 
         private:
             void resetClient();
