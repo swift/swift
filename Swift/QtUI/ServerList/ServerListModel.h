@@ -68,7 +68,7 @@ namespace Swift {
         Q_OBJECT
         public:
             ServerListModel();
-            ~ServerListModel();
+            ~ServerListModel() override;
 
             QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
             QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const override;

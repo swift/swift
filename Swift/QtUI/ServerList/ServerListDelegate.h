@@ -17,7 +17,7 @@ namespace Swift {
     class ServerListDelegate : public QStyledItemDelegate {
     public:
         ServerListDelegate();
-        ~ServerListDelegate();
+        ~ServerListDelegate() override;
         QSize sizeHint(const QStyleOptionViewItem& option, const QModelIndex& index) const override;
         void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const override;
     private:
