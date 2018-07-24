@@ -24,14 +24,20 @@ void Chattables::addJID(const JID& jid, State::Type type) {
     State state;
     state.type = type;
     state.jid = jid;
+    onBeginAdd(static_cast<int>(list_.size()));
     list_.push_back(jid);
     states_[jid] = state;
-    onAdded(jid);
+    onAdded();
 }
 
 void Chattables::setState(const JID& jid, State state) {
-    states_[jid] = state;
-    onChanged(jid);
+    auto stateIter = states_.find(jid);
+    if (stateIter == states_.end()) {
+        return;
+    }
+    stateIter->second = state;
+    auto listPos = static_cast<int>(std::distance(list_.begin(), std::find(list_.begin(), list_.end(), jid)));
+    onChanged(jid, listPos);
 }
 
 }

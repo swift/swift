@@ -15,10 +15,21 @@
 namespace Swift {
 
 ChattablesModel::ChattablesModel(Chattables& chattables, QObject* parent) : QAbstractListModel(parent), chattables_(chattables) {
-    //FIXME: scoped connections, do it properly not reset.
-    chattables_.onAdded.connect([this](const JID& /*jid*/) {beginResetModel(); endResetModel();});
-    chattables_.onRemoved.connect([this](const JID& /*jid*/) {beginResetModel(); endResetModel();});
-    chattables_.onChanged.connect([this](const JID& /*jid*/) {beginResetModel(); endResetModel();});
+    using scoped_connection = boost::signals2::scoped_connection;
+    connectionList_.emplace_back(std::make_unique<scoped_connection>(
+        chattables_.onBeginAdd.connect([this](int index) {beginInsertRows(QModelIndex(), index, index);})
+    ));
+    connectionList_.emplace_back(std::make_unique<scoped_connection>(
+        chattables_.onAdded.connect([this]() {endInsertRows();})
+    ));
+    connectionList_.emplace_back(std::make_unique<scoped_connection>(
+        chattables_.onChanged.connect(
+            [this](const JID& jid, int index) {
+                auto modelIndex = createIndex(index, 0, const_cast<JID*>(&jid));
+                dataChanged(modelIndex, modelIndex, {});
+            }
+        )
+    ));
 }
 
 int ChattablesModel::rowCount(const QModelIndex& /*parent*/) const {

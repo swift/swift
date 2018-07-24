@@ -6,6 +6,11 @@
 
 #pragma once
 
+#include <memory>
+#include <vector>
+
+#include <boost/signals2/connection.hpp>
+
 #include <QAbstractListModel>
 
 namespace Swift {
@@ -23,6 +28,7 @@ class ChattablesModel : public QAbstractListModel {
         QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
     private:
         Chattables& chattables_;
+        std::vector<std::unique_ptr<boost::signals2::scoped_connection>> connectionList_;
 };
 
 }

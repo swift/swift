@@ -34,9 +34,9 @@ class Chattables {
         void addJID(const JID& jid, State::Type type);
         void setState(const JID& jid, State state);
 
-        boost::signals2::signal<void (const JID&)> onAdded;
-        boost::signals2::signal<void (const JID&)> onRemoved;
-        boost::signals2::signal<void (const JID&)> onChanged;
+        boost::signals2::signal<void (int)> onBeginAdd;
+        boost::signals2::signal<void ()> onAdded;
+        boost::signals2::signal<void (const JID&, int)> onChanged;
         /// The UI has activated a chattable item (e.g. clicked in the roster)
         boost::signals2::signal<void (const JID&)> onActivated;
     private:
