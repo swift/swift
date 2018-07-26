@@ -593,6 +593,8 @@ for line in build_lines :
                 basename = basename,
                 outdir = outdir)
 
+    elif tool == 'checker':
+        pass
 
     elif not ninja_custom_command(ninja, line)  :
         raise Exception("Unknown tool: '" + line + "'")
