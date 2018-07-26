@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 
 ################################################################################
 #
@@ -204,9 +204,9 @@ class NinjaBuilder :
     def to_string(self, lst, quote = False) :
         if is_list(lst) :
             if quote :
-                return ' '.join([quote_spaces(x) for x in lst]) 
+                return ' '.join([quote_spaces(x) for x in lst])
             else :
-                return ' '.join([escape(x) for x in lst]) 
+                return ' '.join([escape(x) for x in lst])
         if is_regexp(lst) :
             return ' '.join([escape(x) for x in self.targets if lst.match(x)])
         return escape(lst)
@@ -248,8 +248,8 @@ ninja = NinjaBuilder()
 ninja.pool('scons_pool', depth = 1)
 
 if sys.platform == 'win32' :
-    ninja.rule('cl', 
-        deps = 'msvc', 
+    ninja.rule('cl',
+        deps = 'msvc',
         command = '$cl /showIncludes $clflags -c $in /Fo$out',
         description = 'CXX $out')
 
@@ -369,7 +369,7 @@ for line in f.stdout :
 
     # Skip lines if requested from previous command
     if skip_nth_line >= 0 :
-        skip_nth_line -= 1 
+        skip_nth_line -= 1
     if skip_nth_line == 0 :
         continue
 
@@ -407,7 +407,7 @@ for line in f.stdout :
         level = line.index('+-') / 2
         filename = line[level*2+2:]
         if filename.startswith('[') :
-            filename = filename[1:-1] 
+            filename = filename[1:-1]
 
         # Check if we use the 'fixed' format which escapes filenamenames
         if filename.startswith('\'') and filename.endswith('\'') :
@@ -528,10 +528,10 @@ for line in build_lines :
         libpaths = get_unary_flags("/libpath:", flags)
         deps = get_built_libs(libs, libpaths, ninja.targets)
         if out in mtflags :
-            ninja.build(out, 'link_mt', objects, deps = sorted(deps), 
+            ninja.build(out, 'link_mt', objects, deps = sorted(deps),
                 libs = libs, linkflags = flags, mtflags = mtflags[out])
         else :
-            ninja.build(out, 'link', objects, deps = sorted(deps), 
+            ninja.build(out, 'link', objects, deps = sorted(deps),
                 libs = libs, linkflags = flags)
 
     elif tool == 'rc':
@@ -589,7 +589,7 @@ for line in build_lines :
         source = flags[0];
         outdir, flags = extract_binary_flag("-o", flags)
         basename, flags = extract_binary_flag("--basename", flags)
-        ninja.build(os.path.join(outdir, basename + ".h"), 'sdef', [source], 
+        ninja.build(os.path.join(outdir, basename + ".h"), 'sdef', [source],
                 basename = basename,
                 outdir = outdir)
 
