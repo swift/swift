@@ -102,13 +102,13 @@ void MainController::handleServerStopped(boost::optional<ServerError> error) {
         std::string message;
         switch (error->getType()) {
             case ServerError::C2SPortConflict:
-                message = std::string("Error: Port ") + boost::lexical_cast<std::string>(server->getClientToServerPort()) + std::string(" in use");
+                message = std::string("Error: Port ") + std::to_string(server->getClientToServerPort()) + std::string(" in use");
                 break;
             case ServerError::C2SError:
                 message = std::string("Local connection server error");
              break;
             case ServerError::LinkLocalPortConflict:
-                message = std::string("Error: Port ") + boost::lexical_cast<std::string>(server->getLinkLocalPort()) + std::string(" in use");
+                message = std::string("Error: Port ") + std::to_string(server->getLinkLocalPort()) + std::string(" in use");
                 break;
             case ServerError::LinkLocalError:
                 message = std::string("External connection server error");

@@ -40,7 +40,7 @@ std::string StreamInitiationFileInfoSerializer::serializePayload(std::shared_ptr
         fileElement.setAttribute("name", fileInfo->getName());
     }
     if (fileInfo->getSize() != 0) {
-        fileElement.setAttribute("size", boost::lexical_cast<std::string>(fileInfo->getSize()));
+        fileElement.setAttribute("size", std::to_string(fileInfo->getSize()));
     }
     if (!fileInfo->getDescription().empty()) {
         std::shared_ptr<XMLElement> desc = std::make_shared<XMLElement>("desc", "", fileInfo->getDescription());
@@ -49,7 +49,7 @@ std::string StreamInitiationFileInfoSerializer::serializePayload(std::shared_ptr
     if (fileInfo->getSupportsRangeRequests()) {
         std::shared_ptr<XMLElement> range = std::make_shared<XMLElement>("range");
         if (fileInfo->getRangeOffset() != 0) {
-            range->setAttribute("offset", boost::lexical_cast<std::string>(fileInfo->getRangeOffset()));
+            range->setAttribute("offset", std::to_string(fileInfo->getRangeOffset()));
         }
         fileElement.addNode(range);
     }

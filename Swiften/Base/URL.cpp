@@ -132,7 +132,7 @@ std::string URL::toString() const {
     }
     if (port) {
         result += ":";
-        result += boost::lexical_cast<std::string>(*port);
+        result += std::to_string(*port);
     }
     result += path;
     return result;

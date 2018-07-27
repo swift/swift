@@ -688,7 +688,7 @@ void AccountController::handleDisconnected(const boost::optional<ClientError>& e
                     setReconnectTimer();
                 }
                 if (lastDisconnectError_) {
-                    message = str(format(QT_TRANSLATE_NOOP("", "Reconnect to %1% failed: %2%. Will retry in %3% seconds.")) % jid_.getDomain() % message % boost::lexical_cast<std::string>(timeBeforeNextReconnect_));
+                    message = str(format(QT_TRANSLATE_NOOP("", "Reconnect to %1% failed: %2%. Will retry in %3% seconds.")) % jid_.getDomain() % message % std::to_string(timeBeforeNextReconnect_));
                     lastDisconnectError_->conclude();
                 } else {
                     message = str(format(QT_TRANSLATE_NOOP("", "Disconnected from %1%: %2%.")) % jid_.getDomain() % message);

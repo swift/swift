@@ -25,7 +25,7 @@ namespace Swift {
                 StanzaAck::ref stanzaAck(std::dynamic_pointer_cast<StanzaAck>(element));
                 assert(stanzaAck->isValid());
                 XMLElement result("a", "urn:xmpp:sm:2");
-                result.setAttribute("h", std::string(boost::lexical_cast<std::string>(stanzaAck->getHandledStanzasCount())));
+                result.setAttribute("h", std::string(std::to_string(stanzaAck->getHandledStanzasCount())));
                 return createSafeByteArray(result.serialize());
             }
     };

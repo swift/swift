@@ -178,7 +178,7 @@ void QtPlainChatView::setAckState(const std::string& /*id*/, ChatWindow::AckStat
 
 std::string QtPlainChatView::addFileTransfer(const std::string& senderName, const std::string& /*avatarPath*/, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description)
 {
-    const std::string ftId = "ft" + boost::lexical_cast<std::string>(idGenerator_++);
+    const std::string ftId = "ft" + std::to_string(idGenerator_++);
     const std::string sizeString = formatSize(sizeInBytes);
 
     FileTransfer* transfer;

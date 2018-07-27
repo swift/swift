@@ -39,8 +39,8 @@ std::string JingleS5BTransportPayloadSerializer::serializePayload(std::shared_pt
         candidateXML->setAttribute("cid", candidate.cid);
         candidateXML->setAttribute("host", candidate.hostPort.getAddress().toString());
         candidateXML->setAttribute("jid", candidate.jid.toString());
-        candidateXML->setAttribute("port", boost::lexical_cast<std::string>(candidate.hostPort.getPort()));
-        candidateXML->setAttribute("priority", boost::lexical_cast<std::string>(candidate.priority));
+        candidateXML->setAttribute("port", std::to_string(candidate.hostPort.getPort()));
+        candidateXML->setAttribute("priority", std::to_string(candidate.priority));
         candidateXML->setAttribute("type", typeToString(candidate.type));
         payloadXML.addNode(candidateXML);
     }

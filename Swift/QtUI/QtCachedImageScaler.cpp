@@ -21,7 +21,7 @@ QtCachedImageScaler::QtCachedImageScaler() {
 
 boost::filesystem::path QtCachedImageScaler::getScaledImage(const boost::filesystem::path& imagePath, int size) {
     boost::filesystem::path scaledImagePath(imagePath);
-    std::string suffix = "." + boost::lexical_cast<std::string>(size);
+    std::string suffix = "." + std::to_string(size);
     scaledImagePath = stringToPath(pathToString(scaledImagePath) + suffix);
     if (!boost::filesystem::exists(scaledImagePath)) {
         QImage image(P2QSTRING(pathToString(imagePath)));

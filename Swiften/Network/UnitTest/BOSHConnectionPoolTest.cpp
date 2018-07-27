@@ -194,7 +194,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(st(2), connectionFactory->connections.size()); /* 0 was waiting for response, open and send on 1 */
             CPPUNIT_ASSERT_EQUAL(st(4), boshDataWritten.size()); /* data */
             c1 = connectionFactory->connections[1];
-            std::string fullBody = "<body rid='" + boost::lexical_cast<std::string>(rid) + "' sid='" + sid + "' xmlns='http://jabber.org/protocol/httpbind'><blah/></body>"; /* check empty write */
+            std::string fullBody = "<body rid='" + std::to_string(rid) + "' sid='" + sid + "' xmlns='http://jabber.org/protocol/httpbind'><blah/></body>"; /* check empty write */
             CPPUNIT_ASSERT_EQUAL(fullBody, lastBody());
             CPPUNIT_ASSERT(c0->pending);
             CPPUNIT_ASSERT(c1->pending);
@@ -310,7 +310,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
             readResponse("<body></body>", c0);
             eventLoop->processEvents();
             CPPUNIT_ASSERT_EQUAL(st(3), boshDataWritten.size());
-            std::string fullBody = "<body rid='" + boost::lexical_cast<std::string>(initialRID + 2) + "' sid='" + sid + "' xmlns='http://jabber.org/protocol/httpbind'></body>";
+            std::string fullBody = "<body rid='" + std::to_string(initialRID + 2) + "' sid='" + sid + "' xmlns='http://jabber.org/protocol/httpbind'></body>";
             std::string response = boshDataWritten[2];
             size_t bodyPosition = response.find("\r\n\r\n");
             CPPUNIT_ASSERT_EQUAL(fullBody, response.substr(bodyPosition+4));
@@ -427,7 +427,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
                 "Access-Control-Allow-Headers: Content-Type\r\n"
                 "Content-Length: "));
             connection->onDataRead(data1);
-            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(boost::lexical_cast<std::string>(response.size())));
+            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(std::to_string(response.size())));
             connection->onDataRead(data2);
             std::shared_ptr<SafeByteArray> data3 = std::make_shared<SafeByteArray>(createSafeByteArray("\r\n\r\n"));
             connection->onDataRead(data3);
@@ -440,7 +440,7 @@ class BOSHConnectionPoolTest : public CppUnit::TestFixture {
             std::string result = "POST /" + path + " HTTP/1.1\r\n"
                         + "Host: " + to + ":" + port + "\r\n"
                         + "Content-Type: text/xml; charset=utf-8\r\n"
-                        + "Content-Length: " + boost::lexical_cast<std::string>(body.size()) + "\r\n\r\n"
+                        + "Content-Length: " + std::to_string(body.size()) + "\r\n\r\n"
                         + body;
             return result;
         }

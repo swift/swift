@@ -21,7 +21,7 @@ HostAddressPort::HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint)
 std::string HostAddressPort::toString() const {
     std::string portAsString;
     try {
-        portAsString = boost::lexical_cast<std::string>(getPort());
+        portAsString = std::to_string(getPort());
     } catch (boost::bad_lexical_cast&) {
     }
     return getAddress().toString() + ":" + portAsString;

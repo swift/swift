@@ -318,7 +318,7 @@ class BOSHConnectionTest : public CppUnit::TestFixture {
                 "Access-Control-Allow-Headers: Content-Type\r\n"
                 "Content-Length: "));
             connection->onDataRead(data1);
-            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(boost::lexical_cast<std::string>(response.size())));
+            std::shared_ptr<SafeByteArray> data2 = std::make_shared<SafeByteArray>(createSafeByteArray(std::to_string(response.size())));
             connection->onDataRead(data2);
             std::shared_ptr<SafeByteArray> data3 = std::make_shared<SafeByteArray>(createSafeByteArray("\r\n\r\n"));
             connection->onDataRead(data3);

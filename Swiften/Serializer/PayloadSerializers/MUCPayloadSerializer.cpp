@@ -25,15 +25,15 @@ std::string MUCPayloadSerializer::serializePayload(std::shared_ptr<MUCPayload> m
     std::shared_ptr<XMLElement> historyElement(new XMLElement("history"));
     bool history = false;
     if (muc->getMaxChars() >= 0) {
-        historyElement->setAttribute("maxchars", boost::lexical_cast<std::string>(muc->getMaxChars()));
+        historyElement->setAttribute("maxchars", std::to_string(muc->getMaxChars()));
         history = true;
     }
     if (muc->getMaxStanzas() >= 0) {
-        historyElement->setAttribute("maxstanzas", boost::lexical_cast<std::string>(muc->getMaxStanzas()));
+        historyElement->setAttribute("maxstanzas", std::to_string(muc->getMaxStanzas()));
         history = true;
     }
     if (muc->getSeconds() >= 0) {
-        historyElement->setAttribute("seconds", boost::lexical_cast<std::string>(muc->getSeconds()));
+        historyElement->setAttribute("seconds", std::to_string(muc->getSeconds()));
         history = true;
     }
     if (muc->getSince() != boost::posix_time::not_a_date_time) {

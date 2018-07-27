@@ -102,7 +102,7 @@ void StaticDomainNameResolver::addService(const std::string& service, const Doma
 
 void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, const HostAddressPort& address) {
     static int hostid = 0;
-    std::string hostname(std::string("host-") + boost::lexical_cast<std::string>(hostid));
+    std::string hostname(std::string("host-") + std::to_string(hostid));
     hostid++;
 
     addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, address.getPort(), 0, 0));

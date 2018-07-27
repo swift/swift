@@ -147,7 +147,7 @@ QWidget* QtFormWidget::createWidget(FormField::ref field, const FormField::Type 
     std::string indexString;
     if (index) {
         /* for multi-item forms we need to distinguish between the different rows */
-        indexString = boost::lexical_cast<std::string>(index);
+        indexString = std::to_string(index);
     }
     fields_[field->getName() + indexString] = widget;
     return widget;

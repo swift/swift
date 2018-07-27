@@ -25,7 +25,7 @@ std::string BytestreamsSerializer::serializePayload(std::shared_ptr<Bytestreams>
         std::shared_ptr<XMLElement> streamHostElement(new XMLElement("streamhost"));
         streamHostElement->setAttribute("host", streamHost.host);
         streamHostElement->setAttribute("jid", streamHost.jid.toString());
-        streamHostElement->setAttribute("port", boost::lexical_cast<std::string>(streamHost.port));
+        streamHostElement->setAttribute("port", std::to_string(streamHost.port));
         queryElement.addNode(streamHostElement);
     }
 

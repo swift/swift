@@ -80,9 +80,9 @@ boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLoca
 
     NATPortMapping mapping(actualLocalPort, actualPublicPort, NATPortMapping::TCP);
 
-    std::string publicPort = boost::lexical_cast<std::string>(mapping.getPublicPort());
-    std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
-    std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
+    std::string publicPort = std::to_string(mapping.getPublicPort());
+    std::string localPort = std::to_string(mapping.getLocalPort());
+    std::string leaseSeconds = std::to_string(mapping.getLeaseInSeconds());
 
     int ret = UPNP_AddPortMapping(
             p->urls.controlURL,
@@ -107,9 +107,9 @@ bool MiniUPnPInterface::removePortForward(const NATPortMapping& mapping) {
         return false;
     }
 
-    std::string publicPort = boost::lexical_cast<std::string>(mapping.getPublicPort());
-    std::string localPort = boost::lexical_cast<std::string>(mapping.getLocalPort());
-    std::string leaseSeconds = boost::lexical_cast<std::string>(mapping.getLeaseInSeconds());
+    std::string publicPort = std::to_string(mapping.getPublicPort());
+    std::string localPort = std::to_string(mapping.getLocalPort());
+    std::string leaseSeconds = std::to_string(mapping.getLeaseInSeconds());
 
     int ret = UPNP_DeletePortMapping(p->urls.controlURL, p->data.first.servicetype, publicPort.c_str(), mapping.getProtocol() == NATPortMapping::TCP ? "TCP" : "UDP", nullptr);
     return ret == UPNPCOMMAND_SUCCESS;

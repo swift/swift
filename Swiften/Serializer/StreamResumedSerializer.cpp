@@ -23,7 +23,7 @@ SafeByteArray StreamResumedSerializer::serialize(std::shared_ptr<ToplevelElement
     XMLElement element("resumed", "urn:xmpp:sm:2");
     element.setAttribute("previd", e->getResumeID());
     if (e->getHandledStanzasCount()) {
-        element.setAttribute("h", boost::lexical_cast<std::string>(e->getHandledStanzasCount().get()));
+        element.setAttribute("h", std::to_string(e->getHandledStanzasCount().get()));
     }
     return createSafeByteArray(element.serialize());
 }

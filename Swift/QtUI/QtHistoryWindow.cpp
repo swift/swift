@@ -131,7 +131,7 @@ void QtHistoryWindow::addMessage(const std::string &message, const std::string &
     QTime dayTime = QTime(time.time_of_day().hours(), time.time_of_day().minutes(), time.time_of_day().seconds());
     QDateTime qTime = QDateTime(date, dayTime);
 
-    std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "id" + std::to_string(idCounter_++);
 
     QString qAvatarPath =  scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.png" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
 

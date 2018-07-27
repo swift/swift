@@ -26,7 +26,7 @@ std::string IBBSerializer::serializePayload(std::shared_ptr<IBB> ibb) const {
             XMLElement ibbElement("data", "http://jabber.org/protocol/ibb");
             ibbElement.setAttribute("sid", ibb->getStreamID());
             if (ibb->getSequenceNumber() >= 0) {
-                ibbElement.setAttribute("seq", boost::lexical_cast<std::string>(ibb->getSequenceNumber()));
+                ibbElement.setAttribute("seq", std::to_string(ibb->getSequenceNumber()));
             }
             ibbElement.addNode(std::make_shared<XMLTextNode>(Base64::encode(ibb->getData())));
             return ibbElement.serialize();
@@ -39,7 +39,7 @@ std::string IBBSerializer::serializePayload(std::shared_ptr<IBB> ibb) const {
                 case IBB::MessageStanza: ibbElement.setAttribute("stanza", "message"); break;
             }
             assert(ibb->getBlockSize() > 0);
-            ibbElement.setAttribute("block-size", boost::lexical_cast<std::string>(ibb->getBlockSize()));
+            ibbElement.setAttribute("block-size", std::to_string(ibb->getBlockSize()));
             return ibbElement.serialize();
         }
         case IBB::Close: {

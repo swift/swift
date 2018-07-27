@@ -580,7 +580,7 @@ std::string QtWebKitChatView::addMessage(
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasMessage, senderName, senderIsSelf, label);
 
     QString qAvatarPath = scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
-    std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "id" + std::to_string(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(time), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), direction));
 
     previousMessageWasSelf_ = senderIsSelf;
@@ -658,7 +658,7 @@ std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, con
     bool appendToPrevious = appendToPreviousCheck(PreviousMessageWasFileTransfer, senderName, senderIsSelf);
     QString scaledAvatarPath = QtScaledAvatarCache(32).getScaledAvatarPath(avatarPath.c_str());
     QString qAvatarPath = scaledAvatarPath.isEmpty() ? "qrc:/icons/avatar.svg" : QUrl::fromLocalFile(scaledAvatarPath).toEncoded();
-    std::string id = "ftmessage" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "ftmessage" + std::to_string(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(P2QSTRING(senderName)), B2QDATE(boost::posix_time::second_clock::universal_time()), qAvatarPath, senderIsSelf, appendToPrevious, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
 
     previousMessageWasSelf_ = senderIsSelf;
@@ -692,7 +692,7 @@ std::string QtWebKitChatView::addWhiteboardRequest(const QString& contact, bool 
             "</div>";
     }
     QString qAvatarPath = "qrc:/icons/avatar.svg";
-    std::string id = "wbmessage" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "wbmessage" + std::to_string(idCounter_++);
     addMessageBottom(std::make_shared<MessageSnippet>(htmlString, QtUtilities::htmlEscape(contact), B2QDATE(boost::posix_time::second_clock::universal_time()), qAvatarPath, false, false, theme_, P2QSTRING(id), ChatSnippet::getDirection(actionText)));
     previousMessageWasSelf_ = false;
     previousSenderName_ = contact;
@@ -849,7 +849,7 @@ void QtWebKitChatView::addErrorMessage(const ChatWindow::ChatMessage& errorMessa
     }
 
     QString errorMessageHTML(chatMessageToHTML(errorMessage));
-    std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "id" + std::to_string(idCounter_++);
     addMessageBottom(std::make_shared<SystemMessageSnippet>("<span class=\"error\">" + errorMessageHTML + "</span>", QDateTime::currentDateTime(), false, theme_, P2QSTRING(id), ChatSnippet::getDirection(errorMessage)));
 
     previousMessageWasSelf_ = false;
@@ -862,7 +862,7 @@ std::string QtWebKitChatView::addSystemMessage(const ChatWindow::ChatMessage& me
     }
 
     QString messageHTML = chatMessageToHTML(message);
-    std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "id" + std::to_string(idCounter_++);
     addMessageBottom(std::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, P2QSTRING(id), getActualDirection(message, direction)));
 
     previousMessageKind_ = PreviousMessageWasSystem;
@@ -928,7 +928,7 @@ void QtWebKitChatView::addPresenceMessage(const ChatWindow::ChatMessage& message
     }
 
     QString messageHTML = chatMessageToHTML(message);
-    std::string id = "id" + boost::lexical_cast<std::string>(idCounter_++);
+    std::string id = "id" + std::to_string(idCounter_++);
     addMessageBottom(std::make_shared<SystemMessageSnippet>(messageHTML, QDateTime::currentDateTime(), false, theme_, P2QSTRING(id), getActualDirection(message, direction)));
 
     previousMessageKind_ = PreviousMessageWasPresence;

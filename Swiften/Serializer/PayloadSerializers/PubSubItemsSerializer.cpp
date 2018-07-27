@@ -37,7 +37,7 @@ std::string PubSubItemsSerializer::serializePayload(std::shared_ptr<PubSubItems>
         element.addNode(std::make_shared<XMLRawTextNode>(PubSubItemSerializer(serializers).serialize(item)));
     }
     if (payload->getMaximumItems()) {
-        element.setAttribute("max_items", boost::lexical_cast<std::string>(*payload->getMaximumItems()));
+        element.setAttribute("max_items", std::to_string(*payload->getMaximumItems()));
     }
     if (payload->getSubscriptionID()) {
         element.setAttribute("subid", *payload->getSubscriptionID());

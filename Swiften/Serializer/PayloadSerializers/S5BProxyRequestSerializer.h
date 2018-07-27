@@ -29,7 +29,7 @@ namespace Swift {
                 if (s5bProxyRequest && s5bProxyRequest->getStreamHost()) {
                     std::shared_ptr<XMLElement> streamHost = std::make_shared<XMLElement>("streamhost");
                     streamHost->setAttribute("host", s5bProxyRequest->getStreamHost().get().host);
-                    streamHost->setAttribute("port", boost::lexical_cast<std::string>(s5bProxyRequest->getStreamHost().get().port));
+                    streamHost->setAttribute("port", std::to_string(s5bProxyRequest->getStreamHost().get().port));
                     streamHost->setAttribute("jid", s5bProxyRequest->getStreamHost().get().jid.toString());
                     queryElement.addNode(streamHost);
                 } else if (s5bProxyRequest && s5bProxyRequest->getActivate()) {

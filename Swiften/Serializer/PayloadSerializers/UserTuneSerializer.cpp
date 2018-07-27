@@ -26,7 +26,7 @@ std::string UserTuneSerializer::serializePayload(std::shared_ptr<UserTune> paylo
     }
     XMLElement element("tune", "http://jabber.org/protocol/tune");
     if (payload->getRating()) {
-        element.addNode(std::make_shared<XMLElement>("rating", "", boost::lexical_cast<std::string>(*payload->getRating())));
+        element.addNode(std::make_shared<XMLElement>("rating", "", std::to_string(*payload->getRating())));
     }
     if (payload->getTitle()) {
         element.addNode(std::make_shared<XMLElement>("title", "", *payload->getTitle()));
@@ -44,7 +44,7 @@ std::string UserTuneSerializer::serializePayload(std::shared_ptr<UserTune> paylo
         element.addNode(std::make_shared<XMLElement>("source", "", *payload->getSource()));
     }
     if (payload->getLength()) {
-        element.addNode(std::make_shared<XMLElement>("length", "", boost::lexical_cast<std::string>(*payload->getLength())));
+        element.addNode(std::make_shared<XMLElement>("length", "", std::to_string(*payload->getLength())));
     }
     return element.serialize();
 }

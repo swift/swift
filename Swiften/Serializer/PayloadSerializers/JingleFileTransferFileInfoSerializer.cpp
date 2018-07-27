@@ -44,13 +44,13 @@ std::string JingleFileTransferFileInfoSerializer::serializePayload(std::shared_p
     if (fileInfo->getSupportsRangeRequests()) {
         std::shared_ptr<XMLElement> range = std::make_shared<XMLElement>("range");
         if (fileInfo->getRangeOffset() != 0) {
-            range->setAttribute("offset", boost::lexical_cast<std::string>(fileInfo->getRangeOffset()));
+            range->setAttribute("offset", std::to_string(fileInfo->getRangeOffset()));
         }
         fileElement.addNode(range);
     }
 
     if (fileInfo->getSize() > 0) {
-        fileElement.addNode(std::make_shared<XMLElement>("size", "", boost::lexical_cast<std::string>(fileInfo->getSize())));
+        fileElement.addNode(std::make_shared<XMLElement>("size", "", std::to_string(fileInfo->getSize())));
     }
 
     for (const auto& hashElement : fileInfo->getHashes()) {

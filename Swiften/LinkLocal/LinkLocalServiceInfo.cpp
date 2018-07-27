@@ -35,7 +35,7 @@ ByteArray LinkLocalServiceInfo::toTXTRecord() const {
         append(result, getEncoded("nick=" + nick));
     }
     if (port) {
-        append(result, getEncoded("port.p2pj=" + std::string(boost::lexical_cast<std::string>(*port))));
+        append(result, getEncoded("port.p2pj=" + std::string(std::to_string(*port))));
     }
 
     switch (status) {
