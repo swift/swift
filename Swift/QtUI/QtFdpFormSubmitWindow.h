@@ -32,7 +32,7 @@ namespace Swift {
 
         public:
             QtFdpFormSubmitWindow(QWidget* parent = nullptr);
-            virtual ~QtFdpFormSubmitWindow();
+            virtual ~QtFdpFormSubmitWindow() override;
 
         protected:
             virtual void closeEvent(QCloseEvent* event) override;

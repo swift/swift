@@ -112,7 +112,7 @@ TEST_F(ChattablesTest, testSetState) {
     JID returnedJID;
     int returnedIndex;
     int callsToChanged = 0;
-    chattables_.onChanged.connect([this, &returnedJID, &returnedIndex, &callsToChanged](const JID& jid, int index){
+    chattables_.onChanged.connect([&returnedJID, &returnedIndex, &callsToChanged](const JID& jid, int index){
         returnedJID = jid;
         returnedIndex = index;
         callsToChanged++;
