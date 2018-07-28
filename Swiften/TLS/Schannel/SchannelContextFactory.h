@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
@@ -20,7 +22,7 @@ namespace Swift {
             SchannelContextFactory();
 
             bool canCreate() const;
-            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode = TLSContext::Mode::Client);
+            virtual std::unique_ptr<TLSContext> createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode = TLSContext::Mode::Client);
             virtual void setCheckCertificateRevocation(bool b);
 
             virtual void setDisconnectOnCardRemoval(bool b);

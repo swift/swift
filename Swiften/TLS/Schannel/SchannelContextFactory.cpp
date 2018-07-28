@@ -23,13 +23,13 @@ bool SchannelContextFactory::canCreate() const {
     return true;
 }
 
-TLSContext* SchannelContextFactory::createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode) {
+std::unique_ptr<TLSContext> SchannelContextFactory::createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode) {
     // TLS server mode is not supported for the SecureTransport backend yet.
     assert(mode == TLSContext::Mode::Client);
     SchannelContext* context = new SchannelContext(tlsOptions.schannelTLS1_0Workaround);
     context->setCheckCertificateRevocation(checkCertificateRevocation);
     context->setDisconnectOnCardRemoval(disconnectOnCardRemoval);
-    return context;
+    return std::unique_ptr<TLSContext>(context);
 }
 
 void SchannelContextFactory::setCheckCertificateRevocation(bool b) {

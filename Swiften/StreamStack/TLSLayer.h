@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
 
     class SWIFTEN_API TLSLayer : public StreamLayer {
         public:
-            TLSLayer(TLSContextFactory*, const TLSOptions&);
+            TLSLayer(std::unique_ptr<TLSContext> tlsContext);
             virtual ~TLSLayer();
 
             void connect();
@@ -37,7 +37,7 @@ namespace Swift {
             void handleDataRead(const SafeByteArray& data);
 
             TLSContext* getContext() const {
-                return context;
+                return context_.get();
             }
 
         public:
@@ -45,6 +45,6 @@ namespace Swift {
             boost::signals2::signal<void ()> onConnected;
 
         private:
-            TLSContext* context;
+            std::unique_ptr<TLSContext> context_;
     };
 }

@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/TLS/TLSContext.h>
@@ -18,7 +20,7 @@ namespace Swift {
 
             virtual bool canCreate() const = 0;
 
-            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode = TLSContext::Mode::Client) = 0;
+            virtual std::unique_ptr<TLSContext> createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode = TLSContext::Mode::Client) = 0;
             virtual void setCheckCertificateRevocation(bool b) = 0;
             virtual void setDisconnectOnCardRemoval(bool b) = 0;
 

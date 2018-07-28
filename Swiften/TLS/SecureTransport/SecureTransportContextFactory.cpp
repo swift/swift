@@ -26,10 +26,10 @@ bool SecureTransportContextFactory::canCreate() const {
     return true;
 }
 
-TLSContext* SecureTransportContextFactory::createTLSContext(const TLSOptions& /* tlsOptions */, TLSContext::Mode mode) {
+std::unique_ptr<TLSContext> SecureTransportContextFactory::createTLSContext(const TLSOptions& /* tlsOptions */, TLSContext::Mode mode) {
     // TLS server mode is not supported for the SecureTransport backend yet.
     assert(mode == TLSContext::Mode::Client);
-    return new SecureTransportContext(checkCertificateRevocation_);
+    return std::unique_ptr<TLSContext>(new SecureTransportContext(checkCertificateRevocation_));
 }
 
 void SecureTransportContextFactory::setCheckCertificateRevocation(bool b) {

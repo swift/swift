@@ -21,8 +21,8 @@ bool OpenSSLContextFactory::canCreate() const {
     return true;
 }
 
-TLSContext* OpenSSLContextFactory::createTLSContext(const TLSOptions&, TLSContext::Mode mode) {
-    return new OpenSSLContext(mode);
+std::unique_ptr<TLSContext> OpenSSLContextFactory::createTLSContext(const TLSOptions&, TLSContext::Mode mode) {
+    return std::unique_ptr<TLSContext>(new OpenSSLContext(mode));
 }
 
 ByteArray OpenSSLContextFactory::convertDHParametersFromPEMToDER(const std::string& dhParametersInPEM) {

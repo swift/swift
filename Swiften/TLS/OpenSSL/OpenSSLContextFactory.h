@@ -6,13 +6,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include <Swiften/TLS/TLSContextFactory.h>
 
 namespace Swift {
     class OpenSSLContextFactory : public TLSContextFactory {
         public:
             bool canCreate() const override final;
-            virtual TLSContext* createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode) override final;
+            virtual std::unique_ptr<TLSContext> createTLSContext(const TLSOptions& tlsOptions, TLSContext::Mode mode) override final;
 
             virtual ByteArray convertDHParametersFromPEMToDER(const std::string& dhParametersInPEM) override final;
 

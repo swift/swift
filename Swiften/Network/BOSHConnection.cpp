@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2017 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -27,6 +27,7 @@
 #include <Swiften/StreamStack/DummyStreamLayer.h>
 #include <Swiften/StreamStack/TLSLayer.h>
 #include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/TLSContextFactory.h>
 #include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
@@ -42,7 +43,8 @@ BOSHConnection::BOSHConnection(const URL& boshURL, Connector::ref connector, XML
       connectionReady_(false)
 {
     if (boshURL_.getScheme() == "https") {
-        tlsLayer_ = std::make_shared<TLSLayer>(tlsContextFactory, tlsOptions);
+        auto tlsContext = tlsContextFactory->createTLSContext(tlsOptions);
+        tlsLayer_ = std::make_shared<TLSLayer>(std::move(tlsContext));
         // The following dummyLayer_ is needed as the TLSLayer will pass the decrypted data to its parent layer.
         // The dummyLayer_ will serve as the parent layer.
         dummyLayer_ = std::make_shared<DummyStreamLayer>(tlsLayer_.get());

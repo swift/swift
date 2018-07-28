@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -111,7 +111,8 @@ bool BasicSessionStream::supportsTLSEncryption() {
 
 void BasicSessionStream::addTLSEncryption() {
     assert(available);
-    tlsLayer = new TLSLayer(tlsContextFactory, tlsOptions_);
+    auto tlsContext = tlsContextFactory->createTLSContext(tlsOptions_);
+    tlsLayer = new TLSLayer(std::move(tlsContext));
     if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
         onClosed(std::make_shared<SessionStreamError>(SessionStreamError::InvalidTLSCertificateError));
     }

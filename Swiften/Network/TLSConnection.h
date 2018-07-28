@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ namespace Swift {
             void handleTLSDataForApplication(const SafeByteArray& data);
 
         private:
-            TLSContext* context;
+            std::unique_ptr<TLSContext> context;
             Connection::ref connection;
     };
 }

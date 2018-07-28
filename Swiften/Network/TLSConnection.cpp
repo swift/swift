@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,6 @@ TLSConnection::~TLSConnection() {
     connection->onDataRead.disconnect(boost::bind(&TLSConnection::handleRawDataRead, this, _1));
     connection->onDataWritten.disconnect(boost::bind(&TLSConnection::handleRawDataWritten, this));
     connection->onDisconnected.disconnect(boost::bind(&TLSConnection::handleRawDisconnected, this, _1));
-    delete context;
 }
 
 void TLSConnection::handleTLSConnectFinished(bool error) {
@@ -71,7 +70,7 @@ HostAddressPort TLSConnection::getRemoteAddress() const {
 }
 
 TLSContext* TLSConnection::getTLSContext() const {
-    return context;
+    return context.get();
 }
 
 void TLSConnection::handleRawConnectFinished(bool error) {
