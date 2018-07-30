@@ -99,7 +99,6 @@ Checks: >
 #  readability-named-parameter,
 #  readability-redundant-smartptr-get,
 #  readability-simplify-boolean-expr,
-WarningsAsErrors: '*'
 HeaderFilterRegex: '(Swift|Swiften|Sluift)/.*'
 AnalyzeTemporaryDtors: false
 CheckOptions:
