@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,15 +24,15 @@ namespace Swift {
             StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer);
             ~StreamStack();
 
-            void addLayer(StreamLayer*);
+            void addLayer(std::unique_ptr<StreamLayer> /* streamLayer */);
 
             XMPPLayer* getXMPPLayer() const {
                 return xmppLayer_;
             }
 
-            template<typename T> T* getLayer() {
-                for (auto& i : layers_) {
-                    T* layer = dynamic_cast<T*>(i);
+            template<typename T> T* getLayer() const {
+                for (const auto& i : layers_) {
+                    T* layer = dynamic_cast<T*>(i.get());
                     if (layer) {
                         return layer;
                     }
@@ -43,6 +43,6 @@ namespace Swift {
         private:
             XMPPLayer* xmppLayer_;
             LowLayer* physicalLayer_;
-            std::vector<StreamLayer*> layers_;
+            std::vector<std::unique_ptr<StreamLayer>> layers_;
     };
 }

@@ -34,9 +34,6 @@ BasicSessionStream::BasicSessionStream(
             connection(connection),
             tlsContextFactory(tlsContextFactory),
             timerFactory(timerFactory),
-            compressionLayer(nullptr),
-            tlsLayer(nullptr),
-            whitespacePingLayer(nullptr),
             tlsOptions_(tlsOptions) {
     xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
     xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
@@ -55,14 +52,11 @@ BasicSessionStream::BasicSessionStream(
 }
 
 BasicSessionStream::~BasicSessionStream() {
-    delete compressionLayer;
 
-    if (tlsLayer) {
+    if (auto tlsLayer = streamStack->getLayer<TLSLayer>()) {
         tlsLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleTLSError, this, _1));
         tlsLayer->onConnected.disconnect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
-        delete tlsLayer;
     }
-    delete whitespacePingLayer;
     delete streamStack;
 
     connection->onDisconnected.disconnect(boost::bind(&BasicSessionStream::handleConnectionFinished, this, _1));
@@ -112,12 +106,13 @@ bool BasicSessionStream::supportsTLSEncryption() {
 void BasicSessionStream::addTLSEncryption() {
     assert(available);
     auto tlsContext = tlsContextFactory->createTLSContext(tlsOptions_);
-    tlsLayer = new TLSLayer(std::move(tlsContext));
+    auto tlsLayer = std::make_unique<TLSLayer>(std::move(tlsContext));
     if (hasTLSCertificate() && !tlsLayer->setClientCertificate(getTLSCertificate())) {
         onClosed(std::make_shared<SessionStreamError>(SessionStreamError::InvalidTLSCertificateError));
     }
     else {
-        streamStack->addLayer(tlsLayer);
+        streamStack->addLayer(std::move(tlsLayer));
+        auto tlsLayer = streamStack->getLayer<TLSLayer>();
         tlsLayer->onError.connect(boost::bind(&BasicSessionStream::handleTLSError, this, _1));
         tlsLayer->onConnected.connect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
         tlsLayer->connect();
@@ -125,23 +120,23 @@ void BasicSessionStream::addTLSEncryption() {
 }
 
 bool BasicSessionStream::isTLSEncrypted() {
-    return tlsLayer;
+    return streamStack->getLayer<TLSLayer>() != nullptr;
 }
 
 Certificate::ref BasicSessionStream::getPeerCertificate() const {
-    return tlsLayer->getPeerCertificate();
+    return streamStack->getLayer<TLSLayer>()->getPeerCertificate();
 }
 
 std::vector<Certificate::ref> BasicSessionStream::getPeerCertificateChain() const {
-    return tlsLayer->getPeerCertificateChain();
+    return streamStack->getLayer<TLSLayer>()->getPeerCertificateChain();
 }
 
 std::shared_ptr<CertificateVerificationError> BasicSessionStream::getPeerCertificateVerificationError() const {
-    return tlsLayer->getPeerCertificateVerificationError();
+    return streamStack->getLayer<TLSLayer>()->getPeerCertificateVerificationError();
 }
 
 ByteArray BasicSessionStream::getTLSFinishMessage() const {
-    return tlsLayer->getContext()->getFinishMessage();
+    return streamStack->getLayer<TLSLayer>()->getContext()->getFinishMessage();
 }
 
 bool BasicSessionStream::supportsZLibCompression() {
@@ -149,15 +144,16 @@ bool BasicSessionStream::supportsZLibCompression() {
 }
 
 void BasicSessionStream::addZLibCompression() {
-    compressionLayer = new CompressionLayer();
-    streamStack->addLayer(compressionLayer);
+    auto compressionLayer = std::make_unique<CompressionLayer>();
+    streamStack->addLayer(std::move(compressionLayer));
 }
 
 void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
+    auto whitespacePingLayer = streamStack->getLayer<WhitespacePingLayer>();
     if (enabled) {
         if (!whitespacePingLayer) {
-            whitespacePingLayer = new WhitespacePingLayer(timerFactory);
-            streamStack->addLayer(whitespacePingLayer);
+            streamStack->addLayer(std::make_unique<WhitespacePingLayer>(timerFactory));
+            whitespacePingLayer = streamStack->getLayer<WhitespacePingLayer>();
         }
         whitespacePingLayer->setActive();
     }

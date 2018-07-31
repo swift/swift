@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,16 +22,16 @@ StreamStack::StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer) : xmppLa
 StreamStack::~StreamStack() {
 }
 
-void StreamStack::addLayer(StreamLayer* newLayer) {
-    LowLayer* lowLayer = layers_.empty() ? physicalLayer_ : *layers_.rbegin();
+void StreamStack::addLayer(std::unique_ptr<StreamLayer> streamLayer) {
+    LowLayer* lowLayer = layers_.empty() ? physicalLayer_ : layers_.rbegin()->get();
 
-    xmppLayer_->setChildLayer(newLayer);
-    newLayer->setParentLayer(xmppLayer_);
+    xmppLayer_->setChildLayer(streamLayer.get());
+    streamLayer->setParentLayer(xmppLayer_);
 
-    lowLayer->setParentLayer(newLayer);
-    newLayer->setChildLayer(lowLayer);
+    lowLayer->setParentLayer(streamLayer.get());
+    streamLayer->setChildLayer(lowLayer);
 
-    layers_.push_back(newLayer);
+    layers_.emplace_back(std::move(streamLayer));
 }
 
 }
