@@ -120,7 +120,7 @@ void BasicSessionStream::addTLSEncryption() {
 }
 
 bool BasicSessionStream::isTLSEncrypted() {
-    return streamStack->getLayer<TLSLayer>() != nullptr;
+    return streamStack->getLayer<TLSLayer>();
 }
 
 Certificate::ref BasicSessionStream::getPeerCertificate() const {
@@ -144,8 +144,7 @@ bool BasicSessionStream::supportsZLibCompression() {
 }
 
 void BasicSessionStream::addZLibCompression() {
-    auto compressionLayer = std::make_unique<CompressionLayer>();
-    streamStack->addLayer(std::move(compressionLayer));
+    streamStack->addLayer(std::make_unique<CompressionLayer>());
 }
 
 void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
