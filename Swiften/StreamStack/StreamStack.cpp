@@ -10,23 +10,23 @@
 
 #include <Swiften/StreamStack/LowLayer.h>
 #include <Swiften/StreamStack/StreamLayer.h>
-#include <Swiften/StreamStack/XMPPLayer.h>
+#include <Swiften/StreamStack/HighLayer.h>
 
 namespace Swift {
 
-StreamStack::StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer) : xmppLayer_(xmppLayer), physicalLayer_(physicalLayer) {
-    physicalLayer_->setParentLayer(xmppLayer_);
-    xmppLayer_->setChildLayer(physicalLayer_);
+StreamStack::StreamStack(HighLayer* topLayer, LowLayer* bottomLayer) : topLayer_(topLayer), bottomLayer_(bottomLayer) {
+    bottomLayer_->setParentLayer(topLayer_);
+    topLayer_->setChildLayer(bottomLayer_);
 }
 
 StreamStack::~StreamStack() {
 }
 
 void StreamStack::addLayer(std::unique_ptr<StreamLayer> streamLayer) {
-    LowLayer* lowLayer = layers_.empty() ? physicalLayer_ : layers_.rbegin()->get();
+    LowLayer* lowLayer = layers_.empty() ? bottomLayer_ : layers_.rbegin()->get();
 
-    xmppLayer_->setChildLayer(streamLayer.get());
-    streamLayer->setParentLayer(xmppLayer_);
+    topLayer_->setChildLayer(streamLayer.get());
+    streamLayer->setParentLayer(topLayer_);
 
     lowLayer->setParentLayer(streamLayer.get());
     streamLayer->setChildLayer(lowLayer);

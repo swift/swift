@@ -15,19 +15,19 @@
 #include <Swiften/Elements/Stanza.h>
 
 namespace Swift {
-    class XMPPLayer;
+    class HighLayer;
     class LowLayer;
     class StreamLayer;
 
     class SWIFTEN_API StreamStack {
         public:
-            StreamStack(XMPPLayer* xmppLayer, LowLayer* physicalLayer);
+            StreamStack(HighLayer* topLayer, LowLayer* bottomLayer);
             ~StreamStack();
 
             void addLayer(std::unique_ptr<StreamLayer> /* streamLayer */);
 
-            XMPPLayer* getXMPPLayer() const {
-                return xmppLayer_;
+            HighLayer* getTopLayer() const {
+                return topLayer_;
             }
 
             template<typename T> T* getLayer() const {
@@ -41,8 +41,8 @@ namespace Swift {
             }
 
         private:
-            XMPPLayer* xmppLayer_;
-            LowLayer* physicalLayer_;
+            HighLayer* topLayer_;
+            LowLayer* bottomLayer_;
             std::vector<std::unique_ptr<StreamLayer>> layers_;
     };
 }
