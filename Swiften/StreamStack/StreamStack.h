@@ -21,13 +21,13 @@ namespace Swift {
 
     class SWIFTEN_API StreamStack {
         public:
-            StreamStack(HighLayer* topLayer, LowLayer* bottomLayer);
+            StreamStack(std::unique_ptr<HighLayer> topLayer, std::unique_ptr<LowLayer> bottomLayer);
             ~StreamStack();
 
             void addLayer(std::unique_ptr<StreamLayer> /* streamLayer */);
 
             HighLayer* getTopLayer() const {
-                return topLayer_;
+                return topLayer_.get();
             }
 
             template<typename T> T* getLayer() const {
@@ -37,12 +37,18 @@ namespace Swift {
                         return layer;
                     }
                 }
+                if (T* layer = dynamic_cast<T*>(topLayer_.get())) {
+                    return layer;
+                }
+                if (T* layer = dynamic_cast<T*>(bottomLayer_.get())) {
+                    return layer;
+                }
                 return nullptr;
             }
 
         private:
-            HighLayer* topLayer_;
-            LowLayer* bottomLayer_;
+            std::unique_ptr<HighLayer> topLayer_;
+            std::unique_ptr<LowLayer> bottomLayer_;
             std::vector<std::unique_ptr<StreamLayer>> layers_;
     };
 }

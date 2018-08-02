@@ -8,25 +8,25 @@
 
 #include <boost/bind.hpp>
 
+#include <Swiften/StreamStack/HighLayer.h>
 #include <Swiften/StreamStack/LowLayer.h>
 #include <Swiften/StreamStack/StreamLayer.h>
-#include <Swiften/StreamStack/HighLayer.h>
 
 namespace Swift {
 
-StreamStack::StreamStack(HighLayer* topLayer, LowLayer* bottomLayer) : topLayer_(topLayer), bottomLayer_(bottomLayer) {
-    bottomLayer_->setParentLayer(topLayer_);
-    topLayer_->setChildLayer(bottomLayer_);
+StreamStack::StreamStack(std::unique_ptr<HighLayer> topLayer, std::unique_ptr<LowLayer> bottomLayer) : topLayer_(std::move(topLayer)), bottomLayer_(std::move(bottomLayer)) {
+    bottomLayer_->setParentLayer(topLayer_.get());
+    topLayer_->setChildLayer(bottomLayer_.get());
 }
 
 StreamStack::~StreamStack() {
 }
 
 void StreamStack::addLayer(std::unique_ptr<StreamLayer> streamLayer) {
-    LowLayer* lowLayer = layers_.empty() ? bottomLayer_ : layers_.rbegin()->get();
+    auto* lowLayer = layers_.empty() ? bottomLayer_.get() : layers_.rbegin()->get();
 
     topLayer_->setChildLayer(streamLayer.get());
-    streamLayer->setParentLayer(topLayer_);
+    streamLayer->setParentLayer(topLayer_.get());
 
     lowLayer->setParentLayer(streamLayer.get());
     streamLayer->setChildLayer(lowLayer);

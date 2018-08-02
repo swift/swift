@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,16 +22,10 @@ Session::Session(
             payloadParserFactories(payloadParserFactories),
             payloadSerializers(payloadSerializers),
             xmlParserFactory(xmlParserFactory),
-            xmppLayer(nullptr),
-            connectionLayer(nullptr),
-            streamStack(nullptr),
             finishing(false) {
 }
 
 Session::~Session() {
-    delete streamStack;
-    delete connectionLayer;
-    delete xmppLayer;
 }
 
 void Session::startSession() {
@@ -44,7 +38,7 @@ void Session::finishSession() {
         return;
     }
     finishing = true;
-    if (xmppLayer) {
+    if (auto xmppLayer = getXMPPLayer()) {
         xmppLayer->writeFooter();
     }
     connection->disconnect();
@@ -55,14 +49,14 @@ void Session::finishSession(const SessionError& /*error*/) {
         return;
     }
     finishing = true;
-    if (xmppLayer) {
+    if (auto xmppLayer = getXMPPLayer()) {
         xmppLayer->writeFooter();
     }
     connection->disconnect();
 }
 
 void Session::initializeStreamStack() {
-    xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType);
+    auto xmppLayer = std::unique_ptr<XMPPLayer>(new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, ClientStreamType));
     xmppLayer->onStreamStart.connect(
             boost::bind(&Session::handleStreamStart, this, _1));
     xmppLayer->onElement.connect(boost::bind(&Session::handleElement, this, _1));
@@ -72,12 +66,20 @@ void Session::initializeStreamStack() {
     xmppLayer->onWriteData.connect(boost::bind(boost::ref(onDataWritten), _1));
     connection->onDisconnected.connect(
             boost::bind(&Session::handleDisconnected, this, _1));
-    connectionLayer = new ConnectionLayer(connection);
-    streamStack = new StreamStack(xmppLayer, connectionLayer);
+    streamStack = std::unique_ptr<StreamStack>(new StreamStack(std::move(xmppLayer), std::unique_ptr<ConnectionLayer>(new ConnectionLayer(connection))));
 }
 
+XMPPLayer* Session::getXMPPLayer() const {
+    return dynamic_cast<XMPPLayer*>(streamStack->getTopLayer());
+}
+
+StreamStack* Session::getStreamStack() const {
+    return streamStack.get();
+}
+
+
 void Session::sendElement(std::shared_ptr<ToplevelElement> stanza) {
-    xmppLayer->writeElement(stanza);
+    getXMPPLayer()->writeElement(stanza);
 }
 
 void Session::handleDisconnected(const boost::optional<Connection::Error>& connectionError) {

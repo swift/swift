@@ -83,9 +83,7 @@ namespace Swift {
             std::shared_ptr<Connection> connection;
             TLSContextFactory* tlsContextFactory;
             TimerFactory* timerFactory;
-            XMPPLayer* xmppLayer;
-            ConnectionLayer* connectionLayer;
-            StreamStack* streamStack;
+            std::unique_ptr<StreamStack> streamStack;
             TLSOptions tlsOptions_;
     };
 

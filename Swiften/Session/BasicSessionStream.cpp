@@ -35,7 +35,7 @@ BasicSessionStream::BasicSessionStream(
             tlsContextFactory(tlsContextFactory),
             timerFactory(timerFactory),
             tlsOptions_(tlsOptions) {
-    xmppLayer = new XMPPLayer(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
+    auto xmppLayer = std::make_unique<XMPPLayer>(payloadParserFactories, payloadSerializers, xmlParserFactory, streamType);
     xmppLayer->onStreamStart.connect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
     xmppLayer->onStreamEnd.connect(boost::bind(&BasicSessionStream::handleStreamEndReceived, this));
     xmppLayer->onElement.connect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
@@ -44,10 +44,8 @@ BasicSessionStream::BasicSessionStream(
     xmppLayer->onWriteData.connect(boost::bind(&BasicSessionStream::handleDataWritten, this, _1));
 
     connection->onDisconnected.connect(boost::bind(&BasicSessionStream::handleConnectionFinished, this, _1));
-    connectionLayer = new ConnectionLayer(connection);
 
-    streamStack = new StreamStack(xmppLayer, connectionLayer);
-
+    streamStack = std::make_unique<StreamStack>(std::move(xmppLayer), std::unique_ptr<ConnectionLayer>(new ConnectionLayer(connection)));
     available = true;
 }
 
@@ -57,37 +55,39 @@ BasicSessionStream::~BasicSessionStream() {
         tlsLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleTLSError, this, _1));
         tlsLayer->onConnected.disconnect(boost::bind(&BasicSessionStream::handleTLSConnected, this));
     }
-    delete streamStack;
 
     connection->onDisconnected.disconnect(boost::bind(&BasicSessionStream::handleConnectionFinished, this, _1));
-    delete connectionLayer;
 
+    auto xmppLayer = streamStack->getLayer<XMPPLayer>();
     xmppLayer->onStreamStart.disconnect(boost::bind(&BasicSessionStream::handleStreamStartReceived, this, _1));
     xmppLayer->onStreamEnd.disconnect(boost::bind(&BasicSessionStream::handleStreamEndReceived, this));
     xmppLayer->onElement.disconnect(boost::bind(&BasicSessionStream::handleElementReceived, this, _1));
     xmppLayer->onError.disconnect(boost::bind(&BasicSessionStream::handleXMPPError, this));
     xmppLayer->onDataRead.disconnect(boost::bind(&BasicSessionStream::handleDataRead, this, _1));
     xmppLayer->onWriteData.disconnect(boost::bind(&BasicSessionStream::handleDataWritten, this, _1));
-    delete xmppLayer;
 }
 
 void BasicSessionStream::writeHeader(const ProtocolHeader& header) {
     assert(available);
+    auto* xmppLayer = streamStack->getLayer<XMPPLayer>();
     xmppLayer->writeHeader(header);
 }
 
 void BasicSessionStream::writeElement(std::shared_ptr<ToplevelElement> element) {
     assert(available);
+    auto* xmppLayer = streamStack->getLayer<XMPPLayer>();
     xmppLayer->writeElement(element);
 }
 
 void BasicSessionStream::writeFooter() {
     assert(available);
+    auto* xmppLayer = streamStack->getLayer<XMPPLayer>();
     xmppLayer->writeFooter();
 }
 
 void BasicSessionStream::writeData(const std::string& data) {
     assert(available);
+    auto* xmppLayer = streamStack->getLayer<XMPPLayer>();
     xmppLayer->writeData(data);
 }
 
@@ -162,6 +162,7 @@ void BasicSessionStream::setWhitespacePingEnabled(bool enabled) {
 }
 
 void BasicSessionStream::resetXMPPParser() {
+    auto* xmppLayer = streamStack->getLayer<XMPPLayer>();
     xmppLayer->resetParser();
 }
 

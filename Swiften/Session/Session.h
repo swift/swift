@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -85,13 +85,8 @@ namespace Swift {
 
             void initializeStreamStack();
 
-            XMPPLayer* getXMPPLayer() const {
-                return xmppLayer;
-            }
-
-            StreamStack* getStreamStack() const {
-                return streamStack;
-            }
+            XMPPLayer* getXMPPLayer() const;
+            StreamStack* getStreamStack() const;
 
             void setFinished();
 
@@ -105,9 +100,8 @@ namespace Swift {
             PayloadParserFactoryCollection* payloadParserFactories;
             PayloadSerializerCollection* payloadSerializers;
             XMLParserFactory* xmlParserFactory;
-            XMPPLayer* xmppLayer;
-            ConnectionLayer* connectionLayer;
-            StreamStack* streamStack;
+
+            std::unique_ptr<StreamStack> streamStack;
             bool finishing;
     };
 }
