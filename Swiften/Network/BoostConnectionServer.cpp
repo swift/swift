@@ -58,6 +58,9 @@ boost::optional<BoostConnectionServer::Error> BoostConnectionServer::tryStart() 
             return UnknownError;
         }
     }
+    catch (const boost::numeric::bad_numeric_cast&) {
+        return UnknownError;
+    }
     return boost::optional<Error>();
 }
 
