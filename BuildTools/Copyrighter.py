@@ -8,7 +8,7 @@ CONTRIBUTOR_LICENSE = "mit"
 LICENSE_DIR = "Documentation/Licenses"
 
 # The following regex parses license comment blocks and its part out of a complete source file.
-reParseLicenseCommentBlocks = re.compile(ur'(\/\*\n\s\*\sCopyright \(c\) (?P<startYear>\d\d\d\d)(-(?P<endYear>\d\d\d\d))? (?P<author>[^\n\.]*)\.?\n.\* (?P<license>[^\n]*)\n \* (?P<seeMore>[^\n]+)\n *\*\/)')
+reParseLicenseCommentBlocks = re.compile(r'(\/\*\n\s\*\sCopyright \(c\) (?P<startYear>\d\d\d\d)(-(?P<endYear>\d\d\d\d))? (?P<author>[^\n\.]*)\.?\n.\* (?P<license>[^\n]*)\n \* (?P<seeMore>[^\n]+)\n *\*\/)')
 
 class License :
     def __init__(self, name, file) :

@@ -33,7 +33,7 @@ def generate(env) :
 
             mappings = []
 
-            p = re.compile(ur'"([^\"]*)" "([^\"]*)"')
+            p = re.compile(r'"([^\"]*)" "([^\"]*)"')
 
             matches = re.findall(p, stdout)
             for match in matches:
@@ -97,7 +97,7 @@ def generate(env) :
                 break
 
         # handle core DLLs
-        qt_corelib_regex = re.compile(ur".*bin.*\\(.*)\.dll")
+        qt_corelib_regex = re.compile(r".*bin.*\\(.*)\.dll")
 
         for qtlib in qtlibs:
             if qtlib.startswith("Qt5"):
@@ -111,7 +111,7 @@ def generate(env) :
                 all_files += env.Install(bundle, src_path)
 
         # handle plugins
-        qt_plugin_regex = re.compile(ur".*plugins.*\\(.*)\\(.*)\.dll")
+        qt_plugin_regex = re.compile(r".*plugins.*\\(.*)\\(.*)\.dll")
         for (src_path, target_path) in qtmappings:
             if qt_plugin_regex.match(src_path):
                 plugin_folder, filename = qt_plugin_regex.match(src_path).groups()
