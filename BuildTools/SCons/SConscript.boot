@@ -282,6 +282,8 @@ if env["debug"] :
 
 if env["PLATFORM"] == "win32" :
     env.AppendUnique(CCFLAGS = ["/{}".format(env.get("msvc_runtime"))])
+    # debug builds against debug MSVC runtime can cause some more sections in the object file
+    env.AppendUnique(CCFLAGS = ["/bigobj"])
 
 if env.get("universal", 0) :
     assert(env["PLATFORM"] == "darwin")
