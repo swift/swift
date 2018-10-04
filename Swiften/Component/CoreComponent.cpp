@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -164,6 +164,14 @@ void CoreComponent::sendPresence(std::shared_ptr<Presence> presence) {
 
 void CoreComponent::sendData(const std::string& data) {
     sessionStream_->writeData(data);
+}
+
+bool CoreComponent::isActive() const {
+    return session_ || connector_;
+}
+
+bool CoreComponent::isAvailable() const {
+    return stanzaChannel_->isAvailable();
 }
 
 }

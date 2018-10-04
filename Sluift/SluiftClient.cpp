@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -48,6 +48,9 @@ SluiftClient::~SluiftClient() {
 }
 
 void SluiftClient::connect() {
+    if (client->isActive()) {
+        throw Lua::Exception("Client is already connecting or connected");
+    }
     rosterReceived = false;
     blockListReceived = false;
     disconnectedError = boost::optional<ClientError>();

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -61,9 +61,18 @@ namespace Swift {
                 return stanzaChannel_;
             }
 
-            bool isAvailable() const {
-                return stanzaChannel_->isAvailable();
-            }
+            /**
+             * Checks whether the component is connected to the server,
+             * and stanzas can be sent.
+             */
+            bool isAvailable() const;
+
+            /**
+             * Checks whether the component is active.
+             *
+             * A component is active when it is connected or connecting to the server.
+             */
+            bool isActive() const;
 
             /**
              * Returns the JID of the component

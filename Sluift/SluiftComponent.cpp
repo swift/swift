@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -41,6 +41,9 @@ SluiftComponent::~SluiftComponent() {
 }
 
 void SluiftComponent::connect(const std::string& host, int port) {
+    if (component->isActive()) {
+        throw Lua::Exception("Component is already connecting or connected");
+    }
     disconnectedError = boost::optional<ComponentError>();
     component->connect(host, port);
 }
