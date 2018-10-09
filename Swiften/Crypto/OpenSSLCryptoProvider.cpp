@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@ namespace {
                 }
             }
 
-            ~SHA1Hash() {
+            ~SHA1Hash() override {
             }
 
             virtual Hash& update(const ByteArray& data) override {
@@ -69,7 +69,7 @@ namespace {
                 }
             }
 
-            ~MD5Hash() {
+            ~MD5Hash() override {
             }
 
             virtual Hash& update(const ByteArray& data) override {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,8 +21,9 @@ IDNConverter* PlatformIDNConverter::create() {
 #else
 #if defined(NEED_IDN)
 #error "No IDN implementation"
-#endif
+#else
     return nullptr;
+#endif
 #endif
 }
 
