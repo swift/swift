@@ -64,6 +64,7 @@ class JIDTest : public CppUnit::TestFixture
         CPPUNIT_TEST(testGetEscapedNode_BackslashAtEnd);
         CPPUNIT_TEST(testGetUnescapedNode);
         CPPUNIT_TEST(testGetUnescapedNode_XEP106Examples);
+        CPPUNIT_TEST(testStringPrepFailures);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -157,6 +158,12 @@ class JIDTest : public CppUnit::TestFixture
             JID testling("bar@");
 
             CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testStringPrepFailures() {
+            CPPUNIT_ASSERT_EQUAL(false, JID("foo@bar", "example.com").isValid());
+            CPPUNIT_ASSERT_EQUAL(false, JID("foo^", "example*com").isValid());
+            CPPUNIT_ASSERT_EQUAL(false, JID("foobar", "example^com").isValid());
         }
 
         void testConstructorWithString_EmptyDomainWithResource() {
