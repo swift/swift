@@ -78,7 +78,7 @@ bool SluiftComponent::isConnected() const {
 
 void SluiftComponent::disconnect() {
     component->disconnect();
-    while (component->isAvailable()) {
+    while (component->isActive()) {
         eventLoop->runUntilEvents();
     }
 }
@@ -105,12 +105,12 @@ boost::optional<SluiftComponent::Event> SluiftComponent::getNextEvent(
         }
 
         // Wait for new events
-        while (!watchdog.getTimedOut() && currentIndex >= pendingEvents.size() && component->isAvailable()) {
+        while (!watchdog.getTimedOut() && currentIndex >= pendingEvents.size() && component->isActive()) {
             eventLoop->runUntilEvents();
         }
 
         // Finish if we're disconnected or timed out
-        if (watchdog.getTimedOut() || !component->isAvailable()) {
+        if (watchdog.getTimedOut() || !component->isActive()) {
             return boost::optional<Event>();
         }
     }
