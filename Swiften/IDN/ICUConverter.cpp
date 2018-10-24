@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,6 +19,8 @@ using namespace Swift;
 using boost::numeric_cast;
 
 namespace {
+    static constexpr auto maxStringPrepLength = 1023;
+
     typedef std::vector<UChar, SafeAllocator<UChar> > ICUString;
 
     const char* toConstCharArray(const std::string& input) {
@@ -93,15 +95,8 @@ namespace {
         ICUString icuInput = convertToICUString(s);
         ICUString icuResult;
         UParseError parseError;
-        icuResult.resize(icuInput.size());
+        icuResult.resize(maxStringPrepLength);
         int32_t icuResultLength = usprep_prepare(icuProfile.get(), vecptr(icuInput), numeric_cast<int32_t>(icuInput.size()), vecptr(icuResult), numeric_cast<int32_t>(icuResult.size()), USPREP_ALLOW_UNASSIGNED, &parseError, &status);
-        icuResult.resize(numeric_cast<size_t>(icuResultLength));
-        if (status == U_BUFFER_OVERFLOW_ERROR) {
-            status = U_ZERO_ERROR;
-            icuResult.resize(numeric_cast<size_t>(icuResultLength));
-            icuResultLength = usprep_prepare(icuProfile.get(), vecptr(icuInput), numeric_cast<int32_t>(icuInput.size()), vecptr(icuResult), numeric_cast<int32_t>(icuResult.size()), USPREP_ALLOW_UNASSIGNED, &parseError, &status);
-            icuResult.resize(numeric_cast<size_t>(icuResultLength));
-        }
         if (U_FAILURE(status)) {
             return std::vector<char, SafeAllocator<char> >();
         }
