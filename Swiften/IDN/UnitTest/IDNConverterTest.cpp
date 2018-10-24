@@ -1,64 +1,80 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #include <memory>
 
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <gtest/gtest.h>
 
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/IDN/PlatformIDNConverter.h>
 
 using namespace Swift;
 
-class IDNConverterTest : public CppUnit::TestFixture {
-        CPPUNIT_TEST_SUITE(IDNConverterTest);
-        CPPUNIT_TEST(testStringPrep);
-        CPPUNIT_TEST(testStringPrep_Empty);
-        CPPUNIT_TEST(testGetEncoded);
-        CPPUNIT_TEST(testGetEncoded_International);
-        CPPUNIT_TEST(testGetEncoded_Invalid);
-        CPPUNIT_TEST_SUITE_END();
+class IDNConverterTest : public ::testing::Test {
 
-    public:
-        void setUp() {
-            testling = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
-        }
+protected:
+    virtual void SetUp() {
+        testling_ = std::shared_ptr<IDNConverter>(PlatformIDNConverter::create());
+    }
 
-        void testStringPrep() {
-            std::string result = testling->getStringPrepared("tron\xc3\x87on", IDNConverter::NamePrep);
-
-            CPPUNIT_ASSERT_EQUAL(std::string("tron\xc3\xa7on"), result);
-        }
-
-        void testStringPrep_Empty() {
-            CPPUNIT_ASSERT_EQUAL(std::string(""), testling->getStringPrepared("", IDNConverter::NamePrep));
-            CPPUNIT_ASSERT_EQUAL(std::string(""), testling->getStringPrepared("", IDNConverter::XMPPNodePrep));
-            CPPUNIT_ASSERT_EQUAL(std::string(""), testling->getStringPrepared("", IDNConverter::XMPPResourcePrep));
-        }
-
-        void testGetEncoded() {
-            boost::optional<std::string> result = testling->getIDNAEncoded("www.swift.im");
-            CPPUNIT_ASSERT(!!result);
-            CPPUNIT_ASSERT_EQUAL(std::string("www.swift.im"), *result);
-        }
-
-        void testGetEncoded_International() {
-            boost::optional<std::string> result = testling->getIDNAEncoded("www.tron\xc3\x87on.com");
-            CPPUNIT_ASSERT(!!result);
-            CPPUNIT_ASSERT_EQUAL(std::string("www.xn--tronon-zua.com"), *result);
-        }
-
-        void testGetEncoded_Invalid() {
-            boost::optional<std::string> result = testling->getIDNAEncoded("www.foo,bar.com");
-            CPPUNIT_ASSERT(!result);
-        }
-
-    private:
-        std::shared_ptr<IDNConverter> testling;
+    std::shared_ptr<IDNConverter> testling_;
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(IDNConverterTest);
+TEST_F(IDNConverterTest, testStringPrep) {
+    std::string result = testling_->getStringPrepared("tron\xc3\x87on", IDNConverter::NamePrep);
+
+    ASSERT_EQ(std::string("tron\xc3\xa7on"), result);
+}
+
+TEST_F(IDNConverterTest, testStringPrep_Empty) {
+    ASSERT_EQ(std::string(""), testling_->getStringPrepared("", IDNConverter::NamePrep));
+    ASSERT_EQ(std::string(""), testling_->getStringPrepared("", IDNConverter::XMPPNodePrep));
+    ASSERT_EQ(std::string(""), testling_->getStringPrepared("", IDNConverter::XMPPResourcePrep));
+}
+
+TEST_F(IDNConverterTest, testStringPrep_MaximumOutputSize) {
+    const std::string input(1023, 'x');
+    ASSERT_EQ(input, testling_->getStringPrepared(input, IDNConverter::NamePrep));
+    ASSERT_EQ(input, testling_->getStringPrepared(input, IDNConverter::XMPPNodePrep));
+    ASSERT_EQ(input, testling_->getStringPrepared(input, IDNConverter::XMPPResourcePrep));
+}
+
+TEST_F(IDNConverterTest, testStringPrep_TooLong) {
+    const std::string input(1024, 'x');
+    ASSERT_THROW(testling_->getStringPrepared(input, IDNConverter::NamePrep), std::exception);
+    ASSERT_THROW(testling_->getStringPrepared(input, IDNConverter::XMPPNodePrep), std::exception);
+    ASSERT_THROW(testling_->getStringPrepared(input, IDNConverter::XMPPResourcePrep), std::exception);
+}
+
+TEST_F(IDNConverterTest, testStringPrep_ShrinkingBelow1023) {
+    std::string input;
+    std::string expected;
+    // The four byte \u03b1\u0313 UTF-8 string will shrink to the three byte \u1f00
+    for (auto i = 0; i < 300; ++i) {
+        input +="\xce\xb1\xcc\x93"; // UTF-8 repesentation of U+03B1 U+0313
+        expected += "\xe1\xbc\x80"; // UTF-8 representation of U+1F00
+    }
+    ASSERT_EQ(expected, testling_->getStringPrepared(input, IDNConverter::NamePrep));
+    ASSERT_EQ(expected, testling_->getStringPrepared(input, IDNConverter::XMPPNodePrep));
+    ASSERT_EQ(expected, testling_->getStringPrepared(input, IDNConverter::XMPPResourcePrep));
+}
+
+TEST_F(IDNConverterTest, testGetEncoded) {
+    boost::optional<std::string> result = testling_->getIDNAEncoded("www.swift.im");
+    ASSERT_TRUE(!!result);
+    ASSERT_EQ(std::string("www.swift.im"), *result);
+}
+
+TEST_F(IDNConverterTest, testGetEncoded_International) {
+    boost::optional<std::string> result = testling_->getIDNAEncoded("www.tron\xc3\x87on.com");
+    ASSERT_TRUE(result);
+    ASSERT_EQ(std::string("www.xn--tronon-zua.com"), *result);
+}
+
+TEST_F(IDNConverterTest, testGetEncoded_Invalid) {
+    boost::optional<std::string> result = testling_->getIDNAEncoded("www.foo,bar.com");
+    ASSERT_FALSE(result);
+}

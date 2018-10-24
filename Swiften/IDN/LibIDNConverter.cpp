@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,7 +24,7 @@ extern "C" {
 using namespace Swift;
 
 namespace {
-    static const int MAX_STRINGPREP_SIZE = 1024;
+    static const size_t MAX_STRINGPREP_SIZE = 1024;
 
     const Stringprep_profile* getLibIDNProfile(IDNConverter::StringPrepProfile profile) {
         switch(profile) {
@@ -44,7 +44,8 @@ namespace {
             return ContainerType();
         }
 
-        input.resize(MAX_STRINGPREP_SIZE);
+        // Ensure we have enough space for stringprepping, and that input is always NUL terminated
+        input.resize(std::max(MAX_STRINGPREP_SIZE, input.size() + 1));
         if (stringprep(&input[0], MAX_STRINGPREP_SIZE, static_cast<Stringprep_profile_flags>(0), getLibIDNProfile(profile)) == 0) {
             return input;
         }
