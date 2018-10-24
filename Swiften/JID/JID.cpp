@@ -111,7 +111,12 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
 
     try {
         node_ = idnConverter->getStringPrepared(node, IDNConverter::XMPPNodePrep);
-        domain_ = idnConverter->getStringPrepared(domain, IDNConverter::NamePrep);
+        if (domain.back() == '.') {
+            domain_ = idnConverter->getStringPrepared(domain.substr(0, domain.size() - 1), IDNConverter::NamePrep);
+        }
+        else {
+            domain_ = idnConverter->getStringPrepared(domain, IDNConverter::NamePrep);
+        }
         resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
     } catch (...) {
         valid_ = false;

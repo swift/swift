@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,13 +20,19 @@ class JIDTest : public CppUnit::TestFixture
         CPPUNIT_TEST(testConstructorWithString_NoNode);
         CPPUNIT_TEST(testConstructorWithString_EmptyResource);
         CPPUNIT_TEST(testConstructorWithString_OnlyDomain);
+        CPPUNIT_TEST(testConstructorWithString_OnlyDomainWithDot);
+        CPPUNIT_TEST(testConstructorWithString_OnlyDomainDotStrippedOff);
+        CPPUNIT_TEST(testConstructorWithString_InvalidOnlyDomainSingleDot);
         CPPUNIT_TEST(testConstructorWithString_InvalidDomain);
+        CPPUNIT_TEST(testConstructorWithString_InvalidDomainEmptyLabel);
         CPPUNIT_TEST(testConstructorWithString_UpperCaseNode);
         CPPUNIT_TEST(testConstructorWithString_UpperCaseDomain);
         CPPUNIT_TEST(testConstructorWithString_UpperCaseResource);
         CPPUNIT_TEST(testConstructorWithString_EmptyNode);
         CPPUNIT_TEST(testConstructorWithString_EmptyDomain);
         CPPUNIT_TEST(testConstructorWithString_EmptyDomainWithResource);
+        CPPUNIT_TEST(testConstructorWithString_DotDomain);
+        CPPUNIT_TEST(testConstructorWithString_DotDomainWithResource);
         CPPUNIT_TEST(testConstructorWithString_IllegalResource);
         CPPUNIT_TEST(testConstructorWithString_SpacesInNode);
         CPPUNIT_TEST(testConstructorWithStrings);
@@ -122,8 +128,36 @@ class JIDTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT(testling.isValid());
         }
 
+        void testConstructorWithString_OnlyDomainWithDot() {
+            JID testling("bar.");
+
+            CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getNode());
+            CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+            CPPUNIT_ASSERT_EQUAL(std::string(""), testling.getResource());
+            CPPUNIT_ASSERT(testling.isBare());
+            CPPUNIT_ASSERT(testling.isValid());
+        }
+
+        void testConstructorWithString_OnlyDomainDotStrippedOff() {
+            JID testling("foo.@bar./resource.");
+
+            CPPUNIT_ASSERT_EQUAL(std::string("foo."), testling.getNode());
+            CPPUNIT_ASSERT_EQUAL(std::string("bar"), testling.getDomain());
+            CPPUNIT_ASSERT_EQUAL(std::string("resource."), testling.getResource());
+            CPPUNIT_ASSERT(!testling.isBare());
+            CPPUNIT_ASSERT(testling.isValid());
+        }
+
+        void testConstructorWithString_InvalidOnlyDomainSingleDot() {
+            CPPUNIT_ASSERT(!JID(".").isValid());
+        }
+
         void testConstructorWithString_InvalidDomain() {
             CPPUNIT_ASSERT(!JID("foo@bar,baz").isValid());
+        }
+
+        void testConstructorWithString_InvalidDomainEmptyLabel() {
+            CPPUNIT_ASSERT(!JID("foo@bar..").isValid());
         }
 
         void testConstructorWithString_UpperCaseNode() {
@@ -168,6 +202,18 @@ class JIDTest : public CppUnit::TestFixture
 
         void testConstructorWithString_EmptyDomainWithResource() {
             JID testling("bar@/resource");
+
+            CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testConstructorWithString_DotDomain() {
+            JID testling("bar@.");
+
+            CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testConstructorWithString_DotDomainWithResource() {
+            JID testling("bar@./resource");
 
             CPPUNIT_ASSERT(!testling.isValid());
         }
