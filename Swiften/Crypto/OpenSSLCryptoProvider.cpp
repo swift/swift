@@ -107,7 +107,12 @@ namespace {
     ByteArray getHMACSHA1Internal(const T& key, const ByteArray& data) {
         unsigned int len = SHA_DIGEST_LENGTH;
         std::vector<unsigned char> result(len);
-        HMAC(EVP_sha1(), vecptr(key), boost::numeric_cast<int>(key.size()), vecptr(data), data.size(), vecptr(result), &len);
+        try {
+            HMAC(EVP_sha1(), vecptr(key), boost::numeric_cast<int>(key.size()), vecptr(data), boost::numeric_cast<int>(data.size()), vecptr(result), &len);
+        }
+        catch (const boost::numeric::bad_numeric_cast&) {
+            assert(false);
+        }
         return result;
     }
 }

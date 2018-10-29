@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2017 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,12 @@ namespace {
             template<typename ContainerType>
             Hash& updateInternal(const ContainerType& data) {
                 assert(!finalized);
-                if (!CC_SHA1_Update(&context, vecptr(data), boost::numeric_cast<CC_LONG>(data.size()))) {
+                try {
+                    if (!CC_SHA1_Update(&context, vecptr(data), boost::numeric_cast<CC_LONG>(data.size()))) {
+                        assert(false);
+                    }
+                }
+                catch (const boost::numeric::bad_numeric_cast&) {
                     assert(false);
                 }
                 return *this;
@@ -90,7 +95,12 @@ namespace {
             template<typename ContainerType>
             Hash& updateInternal(const ContainerType& data) {
                 assert(!finalized);
-                if (!CC_MD5_Update(&context, vecptr(data), boost::numeric_cast<CC_LONG>(data.size()))) {
+                try {
+                    if (!CC_MD5_Update(&context, vecptr(data), boost::numeric_cast<CC_LONG>(data.size()))) {
+                        assert(false);
+                    }
+                }
+                catch (const boost::numeric::bad_numeric_cast&) {
                     assert(false);
                 }
                 return *this;
@@ -104,7 +114,12 @@ namespace {
     template<typename T>
     ByteArray getHMACSHA1Internal(const T& key, const ByteArray& data) {
         std::vector<unsigned char> result(CC_SHA1_DIGEST_LENGTH);
-        CCHmac(kCCHmacAlgSHA1, vecptr(key), key.size(), vecptr(data), boost::numeric_cast<CC_LONG>(data.size()), vecptr(result));
+        try {
+            CCHmac(kCCHmacAlgSHA1, vecptr(key), key.size(), vecptr(data), boost::numeric_cast<CC_LONG>(data.size()), vecptr(result));
+        }
+        catch (const boost::numeric::bad_numeric_cast&) {
+            assert(false);
+        }
         return result;
     }
 }
