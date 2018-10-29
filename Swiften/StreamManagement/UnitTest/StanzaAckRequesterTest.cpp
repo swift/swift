@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
+#include <cstdint>
+
 #include <boost/bind.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
@@ -111,7 +112,7 @@ class StanzaAckRequesterTest : public CppUnit::TestFixture {
         // Handle stanza ack count wrapping, as per the XEP
         void testHandleAckReceived_WrapAround() {
             std::shared_ptr<StanzaAckRequester> testling(createRequester());
-            testling->lastHandledStanzasCount = boost::numeric_cast<unsigned int>((1ULL<<32) - 1);
+            testling->lastHandledStanzasCount = UINT32_MAX;
             testling->handleStanzaSent(createMessage("m1"));
             testling->handleStanzaSent(createMessage("m2"));
 
