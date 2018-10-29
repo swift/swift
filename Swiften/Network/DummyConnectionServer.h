@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,8 +17,8 @@
 namespace Swift {
     class SWIFTEN_API DummyConnectionServer : public ConnectionServer, public EventOwner, public std::enable_shared_from_this<DummyConnectionServer> {
         public:
-            DummyConnectionServer(EventLoop* /*eventLoop*/, int port) : localAddressPort(HostAddress(), port) {}
-            DummyConnectionServer(EventLoop* /*eventLoop*/, const Swift::HostAddress& hostAddress, int port) : localAddressPort(hostAddress, port) {}
+            DummyConnectionServer(EventLoop* /*eventLoop*/, unsigned short port) : localAddressPort(HostAddress(), port) {}
+            DummyConnectionServer(EventLoop* /*eventLoop*/, const Swift::HostAddress& hostAddress, unsigned short port) : localAddressPort(hostAddress, port) {}
             virtual ~DummyConnectionServer() {}
 
             virtual HostAddressPort getAddressPort() const {

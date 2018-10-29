@@ -23,16 +23,16 @@ namespace Swift {
             UDP
         };
 
-        NATPortMapping(int localPort, int publicPort, Protocol protocol = TCP, int leaseInSeconds = 60 * 60 * 24) :
+        NATPortMapping(unsigned short localPort, unsigned short publicPort, Protocol protocol = TCP, int leaseInSeconds = 60 * 60 * 24) :
             publicPort(publicPort), localPort(localPort), protocol(protocol), leaseInSeconds(leaseInSeconds) {
 
         }
 
-        int getPublicPort() const {
+        unsigned short getPublicPort() const {
             return publicPort;
         }
 
-        int getLocalPort() const {
+        unsigned short getLocalPort() const {
             return localPort;
         }
 
@@ -45,8 +45,8 @@ namespace Swift {
         }
 
     private:
-        int publicPort;
-        int localPort;
+        unsigned short publicPort;
+        unsigned short localPort;
         Protocol protocol;
         int leaseInSeconds;
     };

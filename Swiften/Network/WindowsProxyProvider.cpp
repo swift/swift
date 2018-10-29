@@ -17,6 +17,7 @@
 #include <stdlib.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <windows.h>
 
@@ -77,11 +78,11 @@ HostAddressPort WindowsProxyProvider::getAsHostAddressPort(std::string proxy) {
 
     try {
         std::pair<std::string, std::string> tmp;
-        int port = 0;
+        unsigned short port = 0;
         tmp = String::getSplittedAtFirst(proxy, ':');
         // .c_str() is needed as tmp.second can include a \0 char which will end in an exception of the lexical cast.
         // with .c_str() the \0 will not be part of the string which is to be casted
-        port = boost::lexical_cast<int> (tmp.second.c_str());
+        port = boost::numeric_cast<unsigned short>(boost::lexical_cast<int> (tmp.second.c_str()));
         ret = HostAddressPort(HostAddress::fromString(tmp.first).get(), port);
     }
     catch(...) {

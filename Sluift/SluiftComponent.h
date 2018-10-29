@@ -63,7 +63,7 @@ namespace Swift {
                 return component;
             }
 
-            void connect(const std::string& host, int port);
+            void connect(const std::string& host, unsigned short port);
             void waitConnected(int timeout);
             bool isConnected() const;
             void setTraceEnabled(bool b);

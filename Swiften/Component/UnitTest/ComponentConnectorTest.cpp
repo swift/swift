@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -146,7 +146,7 @@ class ComponentConnectorTest : public CppUnit::TestFixture {
         }
 
     private:
-        ComponentConnector::ref createConnector(const std::string& hostname, int port) {
+        ComponentConnector::ref createConnector(const std::string& hostname, unsigned short port) {
             ComponentConnector::ref connector = ComponentConnector::create(hostname, port, resolver, connectionFactory, timerFactory);
             connector->onConnectFinished.connect(boost::bind(&ComponentConnectorTest::handleConnectorFinished, this, _1));
             return connector;

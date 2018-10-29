@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -78,7 +78,7 @@ namespace Swift {
             enum { Start, Initializing, Initialized } state;
             SOCKS5BytestreamServer* server;
             std::shared_ptr<ConnectionServer> connectionServer;
-            int connectionServerPort = -1;
+            unsigned short connectionServerPort = 0;
 
             std::shared_ptr<NATTraversalGetPublicIPRequest> getPublicIPRequest;
             std::shared_ptr<NATTraversalForwardPortRequest> forwardPortRequest;

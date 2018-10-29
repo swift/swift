@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,7 @@ namespace Swift {
 
             std::shared_ptr<DNSSDBrowseQuery> createBrowseQuery();
             std::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-                    const std::string& name, int port, const ByteArray& info);
+                    const std::string& name, unsigned short port, const ByteArray& info);
             std::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
                     const DNSSDServiceID&);
             std::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(
@@ -51,7 +51,7 @@ namespace Swift {
             void addService(const DNSSDServiceID& id);
             void removeService(const DNSSDServiceID& id);
             void setServiceInfo(const DNSSDServiceID& id, const DNSSDResolveServiceQuery::Result& info);
-            bool isServiceRegistered(const std::string& name, int port, const ByteArray& info);
+            bool isServiceRegistered(const std::string& name, unsigned short port, const ByteArray& info);
             void setAddress(const std::string& hostname, boost::optional<HostAddress> address);
 
             void setBrowseError();

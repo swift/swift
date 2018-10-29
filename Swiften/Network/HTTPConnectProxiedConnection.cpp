@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -36,7 +36,7 @@ HTTPConnectProxiedConnection::HTTPConnectProxiedConnection(
         ConnectionFactory* connectionFactory,
         TimerFactory* timerFactory,
         const std::string& proxyHost,
-        int proxyPort,
+        unsigned short proxyPort,
         const SafeString& authID,
         const SafeString& authPassword) :
             ProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort),

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -73,7 +73,7 @@ boost::optional<HostAddress> MiniUPnPInterface::getPublicIP() {
     }
 }
 
-boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(int actualLocalPort, int actualPublicPort) {
+boost::optional<NATPortMapping> MiniUPnPInterface::addPortForward(unsigned short actualLocalPort, unsigned short actualPublicPort) {
     if (!p->isValid) {
         return boost::optional<NATPortMapping>();
     }

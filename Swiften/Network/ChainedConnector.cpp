@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ using namespace Swift;
 
 ChainedConnector::ChainedConnector(
         const std::string& hostname,
-        int port,
+        unsigned short port,
         const boost::optional<std::string>& serviceLookupPrefix,
         DomainNameResolver* resolver,
         const std::vector<ConnectionFactory*>& connectionFactories,

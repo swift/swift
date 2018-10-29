@@ -46,7 +46,7 @@ namespace Swift {
             CoreComponent(const JID& jid, const std::string& secret, NetworkFactories* networkFactories);
             virtual ~CoreComponent();
 
-            void connect(const std::string& host, int port);
+            void connect(const std::string& host, unsigned short port);
             void disconnect();
 
             void sendMessage(std::shared_ptr<Message>);

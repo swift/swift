@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ std::shared_ptr<DNSSDBrowseQuery> FakeDNSSDQuerier::createBrowseQuery() {
     return std::make_shared<FakeDNSSDBrowseQuery>(shared_from_this());
 }
 
-std::shared_ptr<DNSSDRegisterQuery> FakeDNSSDQuerier::createRegisterQuery(const std::string& name, int port, const ByteArray& info) {
+std::shared_ptr<DNSSDRegisterQuery> FakeDNSSDQuerier::createRegisterQuery(const std::string& name, unsigned short port, const ByteArray& info) {
     return std::make_shared<FakeDNSSDRegisterQuery>(name, port, info, shared_from_this());
 }
 
@@ -105,7 +105,7 @@ void FakeDNSSDQuerier::setServiceInfo(const DNSSDServiceID& id, const DNSSDResol
     }
 }
 
-bool FakeDNSSDQuerier::isServiceRegistered(const std::string& name, int port, const ByteArray& info) {
+bool FakeDNSSDQuerier::isServiceRegistered(const std::string& name, unsigned short port, const ByteArray& info) {
     for (const auto& query : getQueries<FakeDNSSDRegisterQuery>()) {
         if (query->name == name && query->port == port && query->info == info) {
             return true;

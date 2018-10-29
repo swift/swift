@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,8 +43,8 @@ namespace Swift {
             Status getStatus() const { return status; }
             void setStatus(Status s) { status = s; }
 
-            boost::optional<int> getPort() const { return port; }
-            void setPort(int p) { port = p; }
+            boost::optional<unsigned short> getPort() const { return port; }
+            void setPort(unsigned short p) { port = p; }
 
             ByteArray toTXTRecord() const;
 
@@ -62,6 +62,6 @@ namespace Swift {
             std::string message;
             std::string nick;
             Status status;
-            boost::optional<int> port;
+            boost::optional<unsigned short> port;
     };
 }

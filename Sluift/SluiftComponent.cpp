@@ -40,7 +40,7 @@ SluiftComponent::~SluiftComponent() {
     delete component;
 }
 
-void SluiftComponent::connect(const std::string& host, int port) {
+void SluiftComponent::connect(const std::string& host, unsigned short port) {
     if (component->isActive()) {
         throw Lua::Exception("Component is already connecting or connected");
     }

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,6 +13,7 @@
 #include <Swiften/Parser/PayloadParsers/S5BProxyRequestParser.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/optional.hpp>
 
 namespace Swift {
@@ -27,15 +28,14 @@ void S5BProxyRequestParser::handleStartElement(const std::string& element, const
     if (element == "streamhost") {
         if (attributes.getAttributeValue("host") && attributes.getAttributeValue("jid") && attributes.getAttributeValue("port")) {
             std::string host = attributes.getAttributeValue("host").get_value_or("");
-            int port = -1;
+            unsigned short port = 0;
             JID jid = attributes.getAttributeValue("jid").get_value_or("");
 
             try {
-                port = boost::lexical_cast<int>(attributes.getAttributeValue("port").get());
-            } catch (boost::bad_lexical_cast &) {
-                port = -1;
+                port = boost::numeric_cast<unsigned short>(boost::lexical_cast<int>(attributes.getAttributeValue("port").get()));
+            } catch (...) {
             }
-            if (!host.empty() && port != -1 && jid.isValid()) {
+            if (!host.empty() && port != 0 && jid.isValid()) {
                 S5BProxyRequest::StreamHost streamHost;
                 streamHost.host = host;
                 streamHost.port = port;

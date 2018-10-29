@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -114,7 +114,7 @@ void SOCKS5BytestreamServerManager::initialize() {
 
         // Find a port to listen on
         assert(!connectionServer);
-        int port;
+        unsigned short port;
         for (port = LISTEN_PORTS_BEGIN; port < LISTEN_PORTS_END; ++port) {
             SWIFT_LOG(debug) << "Trying to start server on port " << port << std::endl;
             connectionServer = connectionServerFactory->createConnectionServer(HostAddress::fromString("::").get(), port);
@@ -164,7 +164,7 @@ void SOCKS5BytestreamServerManager::setupPortForwarding() {
     }
 
     // Forward ports
-    int port = server->getAddressPort().getPort();
+    auto port = server->getAddressPort().getPort();
     assert(!forwardPortRequest);
     portMapping = boost::optional<NATPortMapping>();
     if ((forwardPortRequest = natTraverser->createForwardPortRequest(port, port))) {

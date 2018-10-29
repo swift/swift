@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ namespace Swift {
 
     class SWIFTEN_API ProxiedConnection : public Connection, public std::enable_shared_from_this<ProxiedConnection> {
         public:
-            ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
+            ProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, unsigned short proxyPort);
             virtual ~ProxiedConnection();
 
             virtual void listen();
@@ -55,7 +55,7 @@ namespace Swift {
             ConnectionFactory* connectionFactory_;
             TimerFactory* timerFactory_;
             std::string proxyHost_;
-            int proxyPort_;
+            unsigned short proxyPort_;
             HostAddressPort server_;
             Connector::ref connector_;
             std::shared_ptr<Connection> connection_;

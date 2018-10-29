@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -72,11 +72,11 @@ std::shared_ptr<NATTraversalGetPublicIPRequest> NullNATTraverser::createGetPubli
     return std::make_shared<NullNATTraversalGetPublicIPRequest>(eventLoop);
 }
 
-std::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(int, int) {
+std::shared_ptr<NATTraversalForwardPortRequest> NullNATTraverser::createForwardPortRequest(unsigned short, unsigned short) {
     return std::make_shared<NullNATTraversalForwardPortRequest>(eventLoop);
 }
 
-std::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(int, int) {
+std::shared_ptr<NATTraversalRemovePortForwardingRequest> NullNATTraverser::createRemovePortForwardingRequest(unsigned short, unsigned short) {
     return std::make_shared<NullNATTraversalRemovePortForwardingRequest>(eventLoop);
 }
 

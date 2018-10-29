@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,14 +14,14 @@
 namespace Swift {
     class SWIFTEN_API HostAddressPort {
         public:
-            HostAddressPort(const HostAddress& address = HostAddress(), int port = -1);
+            HostAddressPort(const HostAddress& address = HostAddress(), unsigned short port = 0);
             HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint);
 
             const HostAddress& getAddress() const {
                 return address_;
             }
 
-            int getPort() const {
+            unsigned short getPort() const {
                 return port_;
             }
 
@@ -37,6 +37,6 @@ namespace Swift {
 
         private:
             HostAddress address_;
-            int port_;
+            unsigned short port_;
     };
 }

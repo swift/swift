@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,10 +19,10 @@
 
 namespace Swift {
 
-BoostConnectionServer::BoostConnectionServer(int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
+BoostConnectionServer::BoostConnectionServer(unsigned short port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
 }
 
-BoostConnectionServer::BoostConnectionServer(const HostAddress &address, int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
+BoostConnectionServer::BoostConnectionServer(const HostAddress &address, unsigned short port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : address_(address), port_(port), ioService_(ioService), eventLoop(eventLoop), acceptor_(nullptr) {
 }
 
 void BoostConnectionServer::start() {
@@ -37,10 +37,10 @@ boost::optional<BoostConnectionServer::Error> BoostConnectionServer::tryStart() 
         assert(!acceptor_);
         boost::asio::ip::tcp::endpoint endpoint;
         if (address_.isValid()) {
-            endpoint = boost::asio::ip::tcp::endpoint(address_.getRawAddress(), boost::numeric_cast<unsigned short>(port_));
+            endpoint = boost::asio::ip::tcp::endpoint(address_.getRawAddress(), port_);
         }
         else {
-            endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), boost::numeric_cast<unsigned short>(port_));
+            endpoint = boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v6(), port_);
         }
         acceptor_ = new boost::asio::ip::tcp::acceptor(*ioService_, endpoint);
         if (endpoint.protocol() ==  boost::asio::ip::tcp::v6()) {

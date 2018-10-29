@@ -21,7 +21,7 @@ namespace Swift {
                 return boost::optional<HostAddress>();
             }
 
-            virtual boost::optional<NATPortMapping> addPortForward(int, int) {
+            virtual boost::optional<NATPortMapping> addPortForward(unsigned short, unsigned short) {
                 return boost::optional<NATPortMapping>();
             }
 

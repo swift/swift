@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,8 +39,8 @@
 namespace Swift {
 
 Server::Server(
-        int clientConnectionPort,
-        int linkLocalConnectionPort,
+        unsigned short clientConnectionPort,
+        unsigned short linkLocalConnectionPort,
         LinkLocalServiceBrowser* linkLocalServiceBrowser,
         VCardCollection* vCardCollection,
         EventLoop* eventLoop) :

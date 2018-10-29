@@ -43,16 +43,21 @@ void DomainNameServiceQuery::sortResults(std::vector<DomainNameServiceQuery::Res
                 /* easy hack to account for '0' weights getting at least some weight */
                 return result.weight + 1;
             });
-            for (int j = 0; j < boost::numeric_cast<int>(weights.size() - 1); ++j) {
-                std::vector<int> cumulativeWeights;
-                std::partial_sum(
-                        weights.begin() + j,
-                        weights.end(),
-                        std::back_inserter(cumulativeWeights));
-                int randomNumber = generator.generateRandomInteger(cumulativeWeights.back());
-                auto selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
-                std::swap(i[j], i[j + selectedIndex]);
-                std::swap(weights.begin()[j], weights.begin()[j + selectedIndex]);
+            try {
+                for (int j = 0; j < boost::numeric_cast<int>(weights.size()) - 1; ++j) {
+                    std::vector<int> cumulativeWeights;
+                    std::partial_sum(
+                            weights.begin() + j,
+                            weights.end(),
+                            std::back_inserter(cumulativeWeights));
+                    int randomNumber = generator.generateRandomInteger(cumulativeWeights.back());
+                    auto selectedIndex = std::lower_bound(cumulativeWeights.begin(), cumulativeWeights.end(), randomNumber) - cumulativeWeights.begin();
+                    std::swap(i[j], i[j + selectedIndex]);
+                    std::swap(weights.begin()[j], weights.begin()[j + selectedIndex]);
+                }
+            }
+            catch (const boost::numeric::bad_numeric_cast&) {
+                // In the unlikely event of weights.size() being too large, use the list as-is.
             }
         }
         i = next;

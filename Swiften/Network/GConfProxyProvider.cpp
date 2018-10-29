@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,6 +20,8 @@
 extern "C" {
 #include <gconf/gconf-client.h>
 }
+
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Log.h>
 
@@ -50,13 +52,17 @@ HostAddressPort GConfProxyProvider::getSOCKS5Proxy() const {
 
 HostAddressPort GConfProxyProvider::getFromGConf(const char* gcHost, const char* gcPort) {
     std::string address;
-    int port = 0;
+    unsigned short port = 0;
     gchar* str;
 
     GConfClient* client = gconf_client_get_default();
 
     str = gconf_client_get_string(client, gcHost, NULL);
-    port = static_cast<int> (gconf_client_get_int(client, gcPort, NULL));
+    try {
+        port = boost::numeric_cast<unsigned short>(gconf_client_get_int(client, gcPort, NULL));
+    }
+    catch (const boost::numeric::bad_numeric_cast&) {
+    }
 
     if(str) {
         address = static_cast<char*> (str);

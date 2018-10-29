@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2017 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,14 +30,14 @@ namespace Swift {
 
             virtual ~HTTPConnectProxiedConnection();
 
-            static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword) {
+            static ref create(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, unsigned short proxyPort, const SafeString& authID, const SafeString& authPassword) {
                 return ref(new HTTPConnectProxiedConnection(resolver, connectionFactory, timerFactory, proxyHost, proxyPort, authID, authPassword));
             }
 
             void setHTTPTrafficFilter(std::shared_ptr<HTTPTrafficFilter> trafficFilter);
 
         private:
-            HTTPConnectProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword);
+            HTTPConnectProxiedConnection(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, unsigned short proxyPort, const SafeString& authID, const SafeString& authPassword);
 
             virtual void initializeProxy();
             virtual void handleProxyInitializeData(std::shared_ptr<SafeByteArray> data);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,7 +10,7 @@
 
 using namespace Swift;
 
-HostAddressPort::HostAddressPort(const HostAddress& address, int port) : address_(address), port_(port) {
+HostAddressPort::HostAddressPort(const HostAddress& address, unsigned short port) : address_(address), port_(port) {
 }
 
 HostAddressPort::HostAddressPort(const boost::asio::ip::tcp::endpoint& endpoint) {

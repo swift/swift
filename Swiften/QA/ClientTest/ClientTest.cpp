@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,6 +8,7 @@
 #include <thread>
 
 #include <boost/bind.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Client/Client.h>
 #include <Swiften/Client/ClientXMLTracer.h>
@@ -74,7 +75,17 @@ int main(int, char**) {
 
     if (boshHost && boshPort && boshPath) {
         std::cout << "Using BOSH with URL: http://" << boshHost << ":" << boshPort << boshPath << std::endl;
-        options.boshURL = URL("http", boshHost, atoi(boshPort), boshPath);
+        try {
+            options.boshURL = URL("http", boshHost, boost::numeric_cast<unsigned short>(boost::lexical_cast<int>(boshPort)), boshPath);
+        }
+        catch (const boost::numeric::bad_numeric_cast& e) {
+            std::cerr << "SWIFT_CLIENTTEST_BOSH_PORT doesn't hold a valid port number: " << e.what() << std::endl;
+            return -1;
+        }
+        catch (const boost::bad_lexical_cast& e) {
+            std::cerr << "SWIFT_CLIENTTEST_BOSH_PORT doesn't hold a valid port number: " << e.what() << std::endl;
+            return -1;
+        }
     }
 
     client = new Swift::Client(JID(jid), std::string(pass), &networkFactories);

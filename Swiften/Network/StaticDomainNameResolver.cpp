@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -109,7 +109,7 @@ void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, c
     addAddress(hostname, address.getAddress());
 }
 
-void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, const std::string& hostname, int port) {
+void StaticDomainNameResolver::addXMPPClientService(const std::string& domain, const std::string& hostname, unsigned short port) {
     addService("_xmpp-client._tcp." + domain, ServiceQuery::Result(hostname, port, 0, 0));
 }
 

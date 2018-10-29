@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -129,35 +129,42 @@ void PlatformDomainNameServiceQuery::runBlocking() {
         currentEntry += entryLength;
         currentEntry += NS_RRFIXEDSZ;
 
-        // Priority
-        if (currentEntry + 2 >= messageEnd) {
-            emitError();
-            return;
-        }
-        record.priority = boost::numeric_cast<int>(ns_get16(currentEntry));
-        currentEntry += 2;
+        try {
+            // Priority
+            if (currentEntry + 2 >= messageEnd) {
+                emitError();
+                return;
+            }
+            record.priority = boost::numeric_cast<int>(ns_get16(currentEntry));
+            currentEntry += 2;
 
-        // Weight
-        if (currentEntry + 2 >= messageEnd) {
-            emitError();
-            return;
-        }
-        record.weight = boost::numeric_cast<int>(ns_get16(currentEntry));
-        currentEntry += 2;
+            // Weight
+            if (currentEntry + 2 >= messageEnd) {
+                emitError();
+                return;
+            }
+            record.weight = boost::numeric_cast<int>(ns_get16(currentEntry));
+            currentEntry += 2;
 
-        // Port
-        if (currentEntry + 2 >= messageEnd) {
-            emitError();
-            return;
-        }
-        record.port = boost::numeric_cast<int>(ns_get16(currentEntry));
-        currentEntry += 2;
+            // Port
+            if (currentEntry + 2 >= messageEnd) {
+                emitError();
+                return;
+            }
+            record.port = boost::numeric_cast<unsigned short>(ns_get16(currentEntry));
+            currentEntry += 2;
 
-        // Hostname
-        if (currentEntry >= messageEnd) {
+            // Hostname
+            if (currentEntry >= messageEnd) {
+                emitError();
+                return;
+            }
+        }
+        catch (const boost::numeric::bad_numeric_cast&) {
             emitError();
             return;
         }
+
         ByteArray entry;
         entry.resize(NS_MAXDNAME);
         entryLength = dn_expand(messageStart, messageEnd, currentEntry, reinterpret_cast<char*>(vecptr(entry)), entry.size());

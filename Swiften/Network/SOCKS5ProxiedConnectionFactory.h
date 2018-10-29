@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
 
     class SWIFTEN_API SOCKS5ProxiedConnectionFactory : public ConnectionFactory {
         public:
-            SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort);
+            SOCKS5ProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, unsigned short proxyPort);
 
             virtual std::shared_ptr<Connection> createConnection();
 
@@ -32,6 +32,6 @@ namespace Swift {
             ConnectionFactory* connectionFactory_;
             TimerFactory* timerFactory_;
             std::string proxyHost_;
-            int proxyPort_;
+            unsigned short proxyPort_;
     };
 }

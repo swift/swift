@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ namespace Swift {
 
     class FakeDNSSDRegisterQuery : public DNSSDRegisterQuery, public FakeDNSSDQuery {
         public:
-            FakeDNSSDRegisterQuery(const std::string& name, int port, const ByteArray& info, std::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), name(name), port(port), info(info) {
+            FakeDNSSDRegisterQuery(const std::string& name, unsigned short port, const ByteArray& info, std::shared_ptr<FakeDNSSDQuerier> querier) : FakeDNSSDQuery(querier), name(name), port(port), info(info) {
             }
 
             void registerService() {
@@ -33,7 +33,7 @@ namespace Swift {
             }
 
             std::string name;
-            int port;
+            unsigned short port;
             ByteArray info;
     };
 }

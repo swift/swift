@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -85,7 +85,17 @@ void CoreClient::connect(const ClientOptions& o) {
         case ClientOptions::SOCKS5Proxy: {
             SWIFT_LOG(debug) << " with manual configured SOCKS5 proxy" << std::endl;
             std::string proxyHostname = o.manualProxyHostname.empty() ? systemSOCKS5Proxy.getAddress().toString() : o.manualProxyHostname;
-            int proxyPort = o.manualProxyPort == -1 ? systemSOCKS5Proxy.getPort() : o.manualProxyPort;
+            auto proxyPort = systemSOCKS5Proxy.getPort();
+            if (o.manualProxyPort != -1) {
+                try {
+                    proxyPort = boost::numeric_cast<unsigned short>(o.manualProxyPort);
+                }
+                catch (const boost::numeric::bad_numeric_cast& e) {
+                    SWIFT_LOG(warning) << "Manual proxy port " << o.manualProxyPort << " is invalid: " << e.what() << std::endl;
+                    onDisconnected(boost::optional<ClientError>(ClientError::ConnectionError));
+                    return;
+                }
+            }
             SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
             proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
             useDirectConnection = false;
@@ -94,7 +104,17 @@ void CoreClient::connect(const ClientOptions& o) {
         case ClientOptions::HTTPConnectProxy: {
             SWIFT_LOG(debug) << " with manual configured HTTPConnect proxy" << std::endl;
             std::string proxyHostname = o.manualProxyHostname.empty() ? systemHTTPConnectProxy.getAddress().toString() : o.manualProxyHostname;
-            int proxyPort = o.manualProxyPort == -1 ? systemHTTPConnectProxy.getPort() : o.manualProxyPort;
+            unsigned short proxyPort = systemHTTPConnectProxy.getPort();
+            if (o.manualProxyPort != -1) {
+                try {
+                    proxyPort = boost::numeric_cast<unsigned short>(o.manualProxyPort);
+                }
+                catch (const boost::numeric::bad_numeric_cast& e) {
+                    SWIFT_LOG(warning) << "Manual proxy port " << o.manualProxyPort << " is invalid: " << e.what() << std::endl;
+                    onDisconnected(boost::optional<ClientError>(ClientError::ConnectionError));
+                    return;
+                }
+            }
             SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
             proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort, o.httpTrafficFilter));
             useDirectConnection = false;
@@ -108,7 +128,17 @@ void CoreClient::connect(const ClientOptions& o) {
 
     // Create connector
     std::string host = o.manualHostname.empty() ?  jid_.getDomain() : o.manualHostname;
-    int port = o.manualPort;
+    unsigned short port = 0;
+    if (o.manualPort != -1) {
+        try {
+            port = boost::numeric_cast<unsigned short>(o.manualPort);
+        }
+        catch (const boost::numeric::bad_numeric_cast& e) {
+            SWIFT_LOG(warning) << "Invalid manual port " << o.manualPort << ": " << e.what() << std::endl;
+            onDisconnected(boost::optional<ClientError>(ClientError::ConnectionError));
+            return;
+        }
+    }
     boost::optional<std::string> serviceLookupPrefix;
     if (o.manualHostname.empty()) {
         serviceLookupPrefix = "_xmpp-client._tcp.";

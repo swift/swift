@@ -17,7 +17,7 @@
 
 namespace Swift {
 
-Connector::Connector(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), port(port), serviceLookupPrefix(serviceLookupPrefix), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true), foundSomeDNS(false) {
+Connector::Connector(const std::string& hostname, unsigned short port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) : hostname(hostname), port(port), serviceLookupPrefix(serviceLookupPrefix), resolver(resolver), connectionFactory(connectionFactory), timerFactory(timerFactory), timeoutMilliseconds(0), queriedAllServices(true), foundSomeDNS(false) {
 }
 
 void Connector::setTimeoutMilliseconds(int milliseconds) {
@@ -122,7 +122,7 @@ void Connector::tryNextAddress() {
         HostAddress address = addressQueryResults.front();
         addressQueryResults.pop_front();
 
-        int connectPort = (port == -1 ? 5222 : port);
+        unsigned short connectPort = (port == 0 ? 5222 : port);
         if (!serviceQueryResults.empty()) {
             connectPort = serviceQueryResults.front().port;
         }

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,13 +40,15 @@ static HostAddressPort getFromDictionary(CFDictionaryRef dict, CFStringRef enabl
         CFRelease(zero);
 
         if(result != kCFCompareEqualTo) {
-            int port = 0;
+            unsigned short port = 0;
             std::string host = "";
 
             try {
                 CFNumberRef numberValue = reinterpret_cast<CFNumberRef> (CFDictionaryGetValue(dict, portKey));
                 if(numberValue != nullptr) {
-                    CFNumberGetValue(numberValue, kCFNumberIntType, &port);
+                    int intPort = 0;
+                    CFNumberGetValue(numberValue, kCFNumberIntType, &intPort);
+                    port = boost::numeric_cast<unsigned short>(intPort);
                 }
 
                 CFStringRef stringValue = reinterpret_cast<CFStringRef> (CFDictionaryGetValue(dict, hostKey));

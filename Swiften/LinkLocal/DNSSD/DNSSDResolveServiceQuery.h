@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,11 +16,11 @@ namespace Swift {
     class DNSSDResolveServiceQuery {
         public:
             struct Result {
-                Result(const std::string& fullName, const std::string& host, int port, const ByteArray& info) :
+                Result(const std::string& fullName, const std::string& host, unsigned short port, const ByteArray& info) :
                             fullName(fullName), host(host), port(port), info(info) {}
                 std::string fullName;
                 std::string host;
-                int port;
+                unsigned short port;
                 ByteArray info;
             };
 

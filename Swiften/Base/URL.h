@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,7 +21,7 @@ class SWIFTEN_API URL {
         URL() : scheme(""), user(""), password(""), host(""), path(""), empty(true) {
         }
 
-        URL(const std::string& scheme, const std::string& host, int port, const std::string& path) : scheme(scheme), user(), password(), host(host), port(port), path(path), empty(false) {
+        URL(const std::string& scheme, const std::string& host, unsigned short port, const std::string& path) : scheme(scheme), user(), password(), host(host), port(port), path(path), empty(false) {
         }
 
         URL(const std::string& scheme, const std::string& host, const std::string& path) : scheme(scheme), user(), password(), host(host), path(path), empty(false) {
@@ -51,7 +51,7 @@ class SWIFTEN_API URL {
         /**
          * Port number
          */
-        boost::optional<int> getPort() const {
+        boost::optional<unsigned short> getPort() const {
             return port;
         }
 
@@ -64,7 +64,7 @@ class SWIFTEN_API URL {
 
         std::string toString() const;
 
-        static int getPortOrDefaultPort(const URL& url);
+        static unsigned short getPortOrDefaultPort(const URL& url);
         static URL fromString(const std::string&);
         static std::string unescape(const std::string&);
 
@@ -74,7 +74,7 @@ class SWIFTEN_API URL {
         std::string user;
         std::string password;
         std::string host;
-        boost::optional<int> port;
+        boost::optional<unsigned short> port;
         std::string path;
         bool empty;
     };

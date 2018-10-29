@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -11,7 +11,7 @@
 
 namespace Swift {
 
-int URL::getPortOrDefaultPort(const URL& url) {
+unsigned short URL::getPortOrDefaultPort(const URL& url) {
     if (url.getPort()) {
         return *url.getPort();
     }
@@ -62,7 +62,7 @@ URL URL::fromString(const std::string& urlString) {
         }
 
         std::string host;
-        boost::optional<int> port;
+        boost::optional<unsigned short> port;
         if (hostAndPort[0] == '[') {
             // handle IPv6 address literals
             size_t addressEndIndex = hostAndPort.find(']');
@@ -71,9 +71,9 @@ URL URL::fromString(const std::string& urlString) {
                 colonIndex = hostAndPort.find(':', addressEndIndex);
                 if (colonIndex != std::string::npos) {
                     try {
-                        port = boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1));
+                        port = boost::numeric_cast<unsigned short>(boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1)));
                     }
-                    catch (const boost::bad_lexical_cast&) {
+                    catch (...) {
                         return URL();
                     }
                 }
@@ -87,7 +87,7 @@ URL URL::fromString(const std::string& urlString) {
             if (colonIndex != std::string::npos) {
                 host = unescape(hostAndPort.substr(0, colonIndex));
                 try {
-                    port = boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1));
+                    port = boost::numeric_cast<unsigned short>(boost::lexical_cast<int>(hostAndPort.substr(colonIndex + 1)));
                 }
                 catch (const boost::bad_lexical_cast&) {
                     return URL();

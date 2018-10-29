@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,7 @@ namespace Swift {
 
             virtual std::shared_ptr<DNSSDBrowseQuery> createBrowseQuery() = 0;
             virtual std::shared_ptr<DNSSDRegisterQuery> createRegisterQuery(
-                    const std::string& name, int port, const ByteArray& info) = 0;
+                    const std::string& name, unsigned short port, const ByteArray& info) = 0;
             virtual std::shared_ptr<DNSSDResolveServiceQuery> createResolveServiceQuery(
                     const DNSSDServiceID&) = 0;
             virtual std::shared_ptr<DNSSDResolveHostnameQuery> createResolveHostnameQuery(

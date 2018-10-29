@@ -84,7 +84,7 @@ class PlatformNATTraversalGetPublicIPRequest : public NATTraversalGetPublicIPReq
 
 class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortRequest, public PlatformNATTraversalRequest {
     public:
-        PlatformNATTraversalForwardPortRequest(PlatformNATTraversalWorker* worker, unsigned int localIP, unsigned int publicIP) : PlatformNATTraversalRequest(worker), localIP(localIP), publicIP(publicIP) {
+        PlatformNATTraversalForwardPortRequest(PlatformNATTraversalWorker* worker, unsigned short localPort, unsigned short publicPort) : PlatformNATTraversalRequest(worker), localPort(localPort), publicPort(publicPort) {
         }
 
         virtual ~PlatformNATTraversalForwardPortRequest() {
@@ -99,12 +99,12 @@ class PlatformNATTraversalForwardPortRequest : public NATTraversalForwardPortReq
         }
 
         virtual void runBlocking() {
-            getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->addPortForward(boost::numeric_cast<int>(localIP), boost::numeric_cast<int>(publicIP))), shared_from_this());
+            getEventLoop()->postEvent(boost::bind(boost::ref(onResult), getNATTraversalInterface()->addPortForward(localPort, publicPort)), shared_from_this());
         }
 
     private:
-        unsigned int localIP;
-        unsigned int publicIP;
+        unsigned short localPort;
+        unsigned short publicPort;
 };
 
 class PlatformNATTraversalRemovePortForwardingRequest : public NATTraversalRemovePortForwardingRequest, public PlatformNATTraversalRequest {
@@ -181,11 +181,11 @@ std::shared_ptr<NATTraversalGetPublicIPRequest> PlatformNATTraversalWorker::crea
     return std::make_shared<PlatformNATTraversalGetPublicIPRequest>(this);
 }
 
-std::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(int localPort, int publicPort) {
+std::shared_ptr<NATTraversalForwardPortRequest> PlatformNATTraversalWorker::createForwardPortRequest(unsigned short localPort, unsigned short publicPort) {
     return std::make_shared<PlatformNATTraversalForwardPortRequest>(this, localPort, publicPort);
 }
 
-std::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(int localPort, int publicPort) {
+std::shared_ptr<NATTraversalRemovePortForwardingRequest> PlatformNATTraversalWorker::createRemovePortForwardingRequest(unsigned short localPort, unsigned short publicPort) {
     NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP); // FIXME
     return std::make_shared<PlatformNATTraversalRemovePortForwardingRequest>(this, mapping);
 }

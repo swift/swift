@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,11 +23,11 @@ namespace Swift {
         public:
             typedef std::shared_ptr<BoostConnectionServer> ref;
 
-            static ref create(int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
+            static ref create(unsigned short port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
                 return ref(new BoostConnectionServer(port, ioService, eventLoop));
             }
 
-            static ref create(const HostAddress &address, int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
+            static ref create(const HostAddress &address, unsigned short port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) {
                 return ref(new BoostConnectionServer(address, port, ioService, eventLoop));
             }
 
@@ -40,8 +40,8 @@ namespace Swift {
             boost::signals2::signal<void (boost::optional<Error>)> onStopped;
 
         private:
-            BoostConnectionServer(int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
-            BoostConnectionServer(const HostAddress &address, int port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+            BoostConnectionServer(unsigned short port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
+            BoostConnectionServer(const HostAddress &address, unsigned short port, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop);
 
             void stop(boost::optional<Error> e);
             void acceptNextConnection();
@@ -49,7 +49,7 @@ namespace Swift {
 
         private:
             HostAddress address_;
-            int port_;
+            unsigned short port_;
             std::shared_ptr<boost::asio::io_service> ioService_;
             EventLoop* eventLoop;
             boost::asio::ip::tcp::acceptor* acceptor_;

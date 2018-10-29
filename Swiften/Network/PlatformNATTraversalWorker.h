@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -44,8 +44,8 @@ namespace Swift {
             virtual ~PlatformNATTraversalWorker();
 
             std::shared_ptr<NATTraversalGetPublicIPRequest> createGetPublicIPRequest();
-            std::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(int localPort, int publicPort);
-            std::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(int localPort, int publicPort);
+            std::shared_ptr<NATTraversalForwardPortRequest> createForwardPortRequest(unsigned short localPort, unsigned short publicPort);
+            std::shared_ptr<NATTraversalRemovePortForwardingRequest> createRemovePortForwardingRequest(unsigned short localPort, unsigned short publicPort);
 
         private:
             NATTraversalInterface* getNATTraversalInterface() const;

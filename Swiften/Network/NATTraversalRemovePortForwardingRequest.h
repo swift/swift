@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,8 +26,8 @@ namespace Swift {
                     UDP
                 };
 
-                unsigned int publicPort;
-                unsigned int localPort;
+                unsigned short publicPort;
+                unsigned short localPort;
                 Protocol protocol;
                 unsigned long leaseInSeconds;
             };

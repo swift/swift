@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -66,7 +66,7 @@ class URLTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
             CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
-            CPPUNIT_ASSERT_EQUAL(1234, *url.getPort());
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(1234), *url.getPort());
             CPPUNIT_ASSERT_EQUAL(std::string("/baz/bam"), url.getPath());
         }
 
@@ -75,7 +75,7 @@ class URLTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
             CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
-            CPPUNIT_ASSERT_EQUAL(11440, *url.getPort());
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(11440), *url.getPort());
             CPPUNIT_ASSERT_EQUAL(std::string("/http-bind/"), url.getPath());
         }
 
@@ -84,7 +84,7 @@ class URLTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
             CPPUNIT_ASSERT_EQUAL(std::string("foo.bar"), url.getHost());
-            CPPUNIT_ASSERT_EQUAL(1234, *url.getPort());
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(1234), *url.getPort());
             CPPUNIT_ASSERT_EQUAL(std::string(""), url.getPath());
         }
 
@@ -121,7 +121,7 @@ class URLTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
             CPPUNIT_ASSERT_EQUAL(std::string("127.0.0.1"), url.getHost());
-            CPPUNIT_ASSERT_EQUAL(12345, url.getPort().get_value_or(0));
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(12345), url.getPort().get_value_or(0));
             CPPUNIT_ASSERT_EQUAL(std::string("/foobar"), url.getPath());
         }
 
@@ -137,7 +137,7 @@ class URLTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
             CPPUNIT_ASSERT_EQUAL(std::string("fdf8:f53b:82e4::53"), url.getHost());
-            CPPUNIT_ASSERT_EQUAL(12435, url.getPort().get_value_or(0));
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(12435), url.getPort().get_value_or(0));
         }
 
         void test_FromString_ToString_IPv6RFC2732() {
@@ -147,7 +147,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("FEDC:BA98:7654:3210:FEDC:BA98:7654:3210"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(80, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(80), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string("/index.html"), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());
@@ -159,7 +159,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("1080:0:0:0:8:800:200C:417A"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(2, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(2), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string("/index.html"), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());
@@ -171,7 +171,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("3ffe:2a00:100:7031::1"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(2, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(2), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string(""), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());
@@ -183,7 +183,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("1080::8:800:200C:417A"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(2, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(2), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string("/foo"), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());
@@ -195,7 +195,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("::192.9.5.5"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(2, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(2), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string("/ipng"), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());
@@ -207,7 +207,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("::FFFF:129.144.52.38"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(80, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(80), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string("/index.html"), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());
@@ -219,7 +219,7 @@ class URLTest : public CppUnit::TestFixture {
 
                 CPPUNIT_ASSERT_EQUAL(std::string("http"), url.getScheme());
                 CPPUNIT_ASSERT_EQUAL(std::string("2010:836B:4179::836B:4179"), url.getHost());
-                CPPUNIT_ASSERT_EQUAL(2, url.getPort().get_value_or(2));
+                CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(2), url.getPort().get_value_or(2));
                 CPPUNIT_ASSERT_EQUAL(std::string(), url.getPath());
 
                 CPPUNIT_ASSERT_EQUAL(std::string(testVector), url.toString());

@@ -19,11 +19,11 @@ namespace Swift {
 BoostConnectionServerFactory::BoostConnectionServerFactory(std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : ioService(ioService), eventLoop(eventLoop) {
 }
 
-std::shared_ptr<ConnectionServer> BoostConnectionServerFactory::createConnectionServer(int port) {
+std::shared_ptr<ConnectionServer> BoostConnectionServerFactory::createConnectionServer(unsigned short port) {
     return BoostConnectionServer::create(port, ioService, eventLoop);
 }
 
-std::shared_ptr<ConnectionServer> BoostConnectionServerFactory::createConnectionServer(const Swift::HostAddress &hostAddress, int port) {
+std::shared_ptr<ConnectionServer> BoostConnectionServerFactory::createConnectionServer(const Swift::HostAddress &hostAddress, unsigned short port) {
     return BoostConnectionServer::create(hostAddress, port, ioService, eventLoop);
 }
 

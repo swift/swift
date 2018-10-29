@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,9 +24,9 @@ namespace Swift {
             typedef std::shared_ptr<DomainNameServiceQuery> ref;
 
             struct Result {
-                Result(const std::string& hostname = "", int port = -1, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
+                Result(const std::string& hostname = "", unsigned short port = 0, int priority = -1, int weight = -1) : hostname(hostname), port(port), priority(priority), weight(weight) {}
                 std::string hostname;
-                int port;
+                unsigned short port;
                 int priority;
                 int weight;
             };

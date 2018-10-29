@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -65,7 +65,7 @@ bool LinkLocalServiceBrowser::isRegistered() const {
     return !!registerQuery;
 }
 
-void LinkLocalServiceBrowser::registerService(const std::string& name, int port, const LinkLocalServiceInfo& info) {
+void LinkLocalServiceBrowser::registerService(const std::string& name, unsigned short port, const LinkLocalServiceInfo& info) {
     assert(!registerQuery);
     registerQuery = querier->createRegisterQuery(name, port, info.toTXTRecord());
     registerQuery->onRegisterFinished.connect(

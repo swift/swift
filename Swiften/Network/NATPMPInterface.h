@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * Licensed under the simplified BSD license.
  * See Documentation/Licenses/BSD-simplified.txt for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
             virtual bool isAvailable();
 
             virtual boost::optional<HostAddress> getPublicIP();
-            virtual boost::optional<NATPortMapping> addPortForward(int localPort, int publicPort);
+            virtual boost::optional<NATPortMapping> addPortForward(unsigned short localPort, unsigned short publicPort);
             virtual bool removePortForward(const NATPortMapping&);
 
         private:

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2013 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -82,7 +82,13 @@ LinkLocalServiceInfo LinkLocalServiceInfo::createFromTXTRecord(const ByteArray& 
             info.setNick(entry.second);
         }
         else if (entry.first == "port.p2pj") {
-            info.setPort(boost::lexical_cast<int>(entry.second));
+            try {
+                info.setPort(boost::numeric_cast<unsigned short>(boost::lexical_cast<int>(entry.second)));
+            }
+            catch (const boost::bad_lexical_cast&) {
+            }
+            catch (const boost::numeric::bad_numeric_cast&) {
+            }
         }
         else if (entry.first == "status") {
             if (entry.second == "away") {

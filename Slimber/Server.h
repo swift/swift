@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -41,8 +41,8 @@ namespace Swift {
     class Server {
         public:
             Server(
-                    int clientConnectionPort,
-                    int linkLocalConnectionPort,
+                    unsigned short clientConnectionPort,
+                    unsigned short linkLocalConnectionPort,
                     LinkLocalServiceBrowser* browser,
                     VCardCollection* vCardCollection,
                     EventLoop* eventLoop);
@@ -51,11 +51,11 @@ namespace Swift {
             void start();
             void stop();
 
-            int getLinkLocalPort() const {
+            unsigned short getLinkLocalPort() const {
                 return linkLocalConnectionPort;
             }
 
-            int getClientToServerPort() const {
+            unsigned short getClientToServerPort() const {
                 return clientConnectionPort;
             }
 
@@ -105,8 +105,8 @@ namespace Swift {
             PlatformXMLParserFactory xmlParserFactory;
             bool linkLocalServiceRegistered;
             bool rosterRequested;
-            int clientConnectionPort;
-            int linkLocalConnectionPort;
+            unsigned short clientConnectionPort;
+            unsigned short linkLocalConnectionPort;
             LinkLocalServiceBrowser* linkLocalServiceBrowser;
             VCardCollection* vCardCollection;
             EventLoop* eventLoop;

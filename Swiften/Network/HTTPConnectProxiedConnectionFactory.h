@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2017 Isode Limited.
+ * Copyright (c) 2012-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,8 +24,8 @@ namespace Swift {
 
     class SWIFTEN_API HTTPConnectProxiedConnectionFactory : public ConnectionFactory {
         public:
-            HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, std::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = std::shared_ptr<HTTPTrafficFilter>());
-            HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, int proxyPort, const SafeString& authID, const SafeString& authPassword, std::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = std::shared_ptr<HTTPTrafficFilter>());
+            HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, unsigned short proxyPort, std::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = std::shared_ptr<HTTPTrafficFilter>());
+            HTTPConnectProxiedConnectionFactory(DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory, const std::string& proxyHost, unsigned short proxyPort, const SafeString& authID, const SafeString& authPassword, std::shared_ptr<HTTPTrafficFilter> httpTrafficFilter = std::shared_ptr<HTTPTrafficFilter>());
 
             virtual std::shared_ptr<Connection> createConnection();
 
@@ -34,7 +34,7 @@ namespace Swift {
             ConnectionFactory* connectionFactory_;
             TimerFactory* timerFactory_;
             std::string proxyHost_;
-            int proxyPort_;
+            unsigned short proxyPort_;
             SafeString authID_;
             SafeString authPassword_;
             std::shared_ptr<HTTPTrafficFilter> httpTrafficFilter_;

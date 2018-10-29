@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,11 +22,11 @@ namespace Swift {
             typedef std::shared_ptr<Bytestreams> ref;
 
             struct StreamHost {
-                StreamHost(const std::string& host = "", const JID& jid = JID(), int port = -1) : host(host), jid(jid), port(port) {}
+                StreamHost(const std::string& host = "", const JID& jid = JID(), unsigned short port = 0) : host(host), jid(jid), port(port) {}
 
                 std::string host;
                 JID jid;
-                int port;
+                unsigned short port;
             };
 
             Bytestreams() {}

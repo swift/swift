@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -92,7 +92,7 @@ class ConnectorTest : public CppUnit::TestFixture {
         }
 
         void testConnect_NoServiceLookups_DefaultPort() {
-            Connector::ref testling(createConnector(-1, boost::optional<std::string>()));
+            Connector::ref testling(createConnector(0, boost::optional<std::string>()));
             resolver->addXMPPClientService("foo.com", host1);
             resolver->addXMPPClientService("foo.com", host2);
             resolver->addAddress("foo.com", host3.getAddress());
@@ -103,7 +103,7 @@ class ConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(connections.size()));
             CPPUNIT_ASSERT(connections[0]);
             CPPUNIT_ASSERT(host3.getAddress() == (*(connections[0]->hostAddressPort)).getAddress());
-            CPPUNIT_ASSERT_EQUAL(5222, (*(connections[0]->hostAddressPort)).getPort());
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(5222), (*(connections[0]->hostAddressPort)).getPort());
             CPPUNIT_ASSERT(!std::dynamic_pointer_cast<DomainNameResolveError>(error));
         }
 
@@ -328,7 +328,7 @@ class ConnectorTest : public CppUnit::TestFixture {
 
 
     private:
-        Connector::ref createConnector(int port = -1, boost::optional<std::string> serviceLookupPrefix = boost::optional<std::string>("_xmpp-client._tcp.")) {
+        Connector::ref createConnector(unsigned short port = 0, boost::optional<std::string> serviceLookupPrefix = boost::optional<std::string>("_xmpp-client._tcp.")) {
             Connector::ref connector = Connector::create("foo.com", port, serviceLookupPrefix, resolver, connectionFactory, timerFactory);
             connector->onConnectFinished.connect(boost::bind(&ConnectorTest::handleConnectorFinished, this, _1, _2));
             return connector;

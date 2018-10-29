@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,6 +13,7 @@
 #include <Swiften/Parser/PayloadParsers/JingleS5BTransportMethodPayloadParser.h>
 
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <boost/optional.hpp>
 
 #include <Swiften/Base/Log.h>
@@ -40,10 +41,10 @@ namespace Swift {
                 JingleS5BTransportPayload::Candidate candidate;
                 candidate.cid = attributes.getAttributeValue("cid").get_value_or("");
 
-                int port = -1;
+                unsigned short port = 0;
                 try {
-                    port = boost::lexical_cast<int>(attributes.getAttributeValue("port").get_value_or("-1"));
-                } catch(boost::bad_lexical_cast &) { }
+                    port = boost::numeric_cast<unsigned short>(boost::lexical_cast<int>(attributes.getAttributeValue("port").get_value_or("0")));
+                } catch(...) { }
                 candidate.hostPort = HostAddressPort(HostAddress::fromString(attributes.getAttributeValue("host").get_value_or("")).get_value_or(HostAddress()), port);
                 candidate.jid = JID(attributes.getAttributeValue("jid").get_value_or(""));
                 int priority = -1;

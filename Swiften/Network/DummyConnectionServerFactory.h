@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,11 +20,11 @@ public:
     DummyConnectionServerFactory(EventLoop* eventLoop) : eventLoop(eventLoop) {}
     virtual ~DummyConnectionServerFactory() {}
 
-    virtual std::shared_ptr<ConnectionServer> createConnectionServer(int port) {
+    virtual std::shared_ptr<ConnectionServer> createConnectionServer(unsigned short port) {
         return std::make_shared<DummyConnectionServer>(eventLoop, port);
     }
 
-    virtual std::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, int port) {
+    virtual std::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, unsigned short port) {
         return std::make_shared<DummyConnectionServer>(eventLoop, hostAddress, port);
     }
 

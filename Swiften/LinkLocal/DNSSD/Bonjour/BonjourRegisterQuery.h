@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,12 +20,21 @@ namespace Swift {
 
     class BonjourRegisterQuery : public DNSSDRegisterQuery, public BonjourQuery {
         public:
-            BonjourRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, std::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
+            BonjourRegisterQuery(const std::string& name, unsigned short port, const ByteArray& txtRecord, std::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
+                unsigned short recordSize = 0;
+                try {
+                    recordSize = boost::numeric_cast<unsigned short>(txtRecord.size());
+                }
+                catch (const boost::numeric::bad_numeric_cast&) {
+                    SWIFT_LOG(warning) << "Bonjour TXT record is too long (" << txtRecord.size() << " bytes), not registring service" << std::endl;
+                    return;
+                }
                 DNSServiceErrorType result = DNSServiceRegister(
-                        &sdRef, 0, 0, name.c_str(), "_presence._tcp", nullptr, nullptr, boost::numeric_cast<unsigned short>(port),
-                        boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord),
+                        &sdRef, 0, 0, name.c_str(), "_presence._tcp", nullptr, nullptr, port,
+                        recordSize, vecptr(txtRecord),
                         &BonjourRegisterQuery::handleServiceRegisteredStatic, this);
                 if (result != kDNSServiceErr_NoError) {
+                    SWIFT_LOG(warning) << "Failed to register Bonjour service" << std::endl;
                     sdRef = nullptr;
                 }
             }
@@ -45,7 +54,12 @@ namespace Swift {
 
             void updateServiceInfo(const ByteArray& txtRecord) {
                 std::lock_guard<std::mutex> lock(sdRefMutex);
-                DNSServiceUpdateRecord(sdRef, nullptr, 0, boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 0);
+                try {
+                    DNSServiceUpdateRecord(sdRef, nullptr, 0, boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 0);
+                }
+                catch (const boost::numeric::bad_numeric_cast&) {
+                    SWIFT_LOG(warning) << "Bonjour TXT record is too long (" << txtRecord.size() << " bytes), not updating service record" << std::endl;
+                }
             }
 
         private:

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -24,8 +24,8 @@ namespace Swift {
         public:
             virtual ~ConnectionServerFactory();
 
-            virtual std::shared_ptr<ConnectionServer> createConnectionServer(int port) = 0;
+            virtual std::shared_ptr<ConnectionServer> createConnectionServer(unsigned short port) = 0;
 
-            virtual std::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, int port) = 0;
+            virtual std::shared_ptr<ConnectionServer> createConnectionServer(const Swift::HostAddress& hostAddress, unsigned short port) = 0;
     };
 }

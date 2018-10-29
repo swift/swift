@@ -43,7 +43,7 @@ CoreComponent::~CoreComponent() {
     delete stanzaChannel_;
 }
 
-void CoreComponent::connect(const std::string& host, int port) {
+void CoreComponent::connect(const std::string& host, unsigned short port) {
     assert(!connector_);
     connector_ = ComponentConnector::create(host, port, networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory());
     connector_->onConnectFinished.connect(boost::bind(&CoreComponent::handleConnectorFinished, this, _1));

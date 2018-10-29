@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ namespace Swift {
 
     class AvahiRegisterQuery : public DNSSDRegisterQuery, public AvahiQuery {
         public:
-            AvahiRegisterQuery(const std::string& name, int port, const ByteArray& txtRecord, std::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), name(name), port(port), txtRecord(txtRecord), group(0) {
+            AvahiRegisterQuery(const std::string& name, unsigned short port, const ByteArray& txtRecord, std::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), name(name), port(port), txtRecord(txtRecord), group(0) {
             }
 
             void registerService();
@@ -50,7 +50,7 @@ namespace Swift {
 
         private:
             std::string name;
-            int port;
+            unsigned short port;
             ByteArray txtRecord;
             AvahiEntryGroup* group;
     };

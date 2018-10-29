@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,7 +30,7 @@ namespace Swift {
         public:
             typedef std::shared_ptr<Connector> ref;
 
-            static Connector::ref create(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
+            static Connector::ref create(const std::string& hostname, unsigned short port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver* resolver, ConnectionFactory* connectionFactory, TimerFactory* timerFactory) {
                 return ref(new Connector(hostname, port, serviceLookupPrefix, resolver, connectionFactory, timerFactory));
             }
 
@@ -46,7 +46,7 @@ namespace Swift {
             boost::signals2::signal<void (std::shared_ptr<Connection>, std::shared_ptr<Error>)> onConnectFinished;
 
         private:
-            Connector(const std::string& hostname, int port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
+            Connector(const std::string& hostname, unsigned short port, const boost::optional<std::string>& serviceLookupPrefix, DomainNameResolver*, ConnectionFactory*, TimerFactory*);
 
             void handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result);
             void handleAddressQueryResult(const std::vector<HostAddress>& address, boost::optional<DomainNameResolveError> error);
@@ -63,7 +63,7 @@ namespace Swift {
 
         private:
             std::string hostname;
-            int port;
+            unsigned short port;
             boost::optional<std::string> serviceLookupPrefix;
             DomainNameResolver* resolver;
             ConnectionFactory* connectionFactory;

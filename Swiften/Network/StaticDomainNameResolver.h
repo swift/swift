@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,7 @@ namespace Swift {
             void addAddress(const std::string& domain, const HostAddress& address);
             void addService(const std::string& service, const DomainNameServiceQuery::Result& result);
             void addXMPPClientService(const std::string& domain, const HostAddressPort&);
-            void addXMPPClientService(const std::string& domain, const std::string& host, int port);
+            void addXMPPClientService(const std::string& domain, const std::string& host, unsigned short port);
 
             const AddressesMap& getAddresses() const {
                 return addresses;

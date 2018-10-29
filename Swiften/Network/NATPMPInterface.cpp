@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -74,13 +74,13 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
     }
 }
 
-boost::optional<NATPortMapping> NATPMPInterface::addPortForward(int localPort, int publicPort) {
+boost::optional<NATPortMapping> NATPMPInterface::addPortForward(unsigned short localPort, unsigned short publicPort) {
     NATPortMapping mapping(localPort, publicPort, NATPortMapping::TCP);
     if (sendnewportmappingrequest(
                 &p->natpmp,
                 mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP,
-                boost::numeric_cast<uint16_t>(mapping.getLocalPort()),
-                boost::numeric_cast<uint16_t>(mapping.getPublicPort()),
+                mapping.getLocalPort(),
+                mapping.getPublicPort(),
                 boost::numeric_cast<uint32_t>(mapping.getLeaseInSeconds())) < 0) {
         SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
         return boost::optional<NATPortMapping>();

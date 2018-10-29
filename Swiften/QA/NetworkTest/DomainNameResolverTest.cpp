@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -179,19 +179,19 @@ class DomainNameResolverTest : public CppUnit::TestFixture {
 
             CPPUNIT_ASSERT_EQUAL(4, static_cast<int>(serviceQueryResult.size()));
             CPPUNIT_ASSERT_EQUAL(std::string("xmpp1.test.swift.im"), serviceQueryResult[0].hostname);
-            CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[0].port);
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(5000), serviceQueryResult[0].port);
             CPPUNIT_ASSERT_EQUAL(0, serviceQueryResult[0].priority);
             CPPUNIT_ASSERT_EQUAL(1, serviceQueryResult[0].weight);
             CPPUNIT_ASSERT_EQUAL(std::string("xmpp-invalid.test.swift.im"), serviceQueryResult[1].hostname);
-            CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[1].port);
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(5000), serviceQueryResult[1].port);
             CPPUNIT_ASSERT_EQUAL(1, serviceQueryResult[1].priority);
             CPPUNIT_ASSERT_EQUAL(100, serviceQueryResult[1].weight);
             CPPUNIT_ASSERT_EQUAL(std::string("xmpp3.test.swift.im"), serviceQueryResult[2].hostname);
-            CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[2].port);
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(5000), serviceQueryResult[2].port);
             CPPUNIT_ASSERT_EQUAL(3, serviceQueryResult[2].priority);
             CPPUNIT_ASSERT_EQUAL(100, serviceQueryResult[2].weight);
             CPPUNIT_ASSERT_EQUAL(std::string("xmpp2.test.swift.im"), serviceQueryResult[3].hostname);
-            CPPUNIT_ASSERT_EQUAL(5000, serviceQueryResult[3].port);
+            CPPUNIT_ASSERT_EQUAL(static_cast<unsigned short>(5000), serviceQueryResult[3].port);
             CPPUNIT_ASSERT_EQUAL(5, serviceQueryResult[3].priority);
             CPPUNIT_ASSERT_EQUAL(100, serviceQueryResult[3].weight);
         }

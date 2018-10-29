@@ -96,13 +96,13 @@ SLUIFT_LUA_FUNCTION(Component, async_connect) {
     SluiftComponent* component = getComponent(L);
 
     std::string host;
-    int port = 0;
+    unsigned short port = 0;
     if (lua_istable(L, 2)) {
         if (boost::optional<std::string> hostString = Lua::getStringField(L, 2, "host")) {
             host = *hostString;
         }
         if (boost::optional<int> portInt = Lua::getIntField(L, 2, "port")) {
-            port = *portInt;
+            port = boost::numeric_cast<unsigned short>(*portInt);
         }
     }
     component->connect(host, port);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,7 +53,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(!connectError);
             CPPUNIT_ASSERT(connection->connectedTo);
             CPPUNIT_ASSERT_EQUAL(std::string(connection->connectedTo->getAddress().toString()), std::string("192.168.1.1"));
-            CPPUNIT_ASSERT_EQUAL(connection->connectedTo->getPort(), 1234);
+            CPPUNIT_ASSERT_EQUAL(connection->connectedTo->getPort(), static_cast<unsigned short>(1234));
         }
 
         void testConnect_UnableToResolve() {
@@ -114,7 +114,7 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
         }
 
     private:
-        std::shared_ptr<LinkLocalConnector> createConnector(const std::string& hostname, int port) {
+        std::shared_ptr<LinkLocalConnector> createConnector(const std::string& hostname, unsigned short port) {
             LinkLocalService service(
                     DNSSDServiceID("myname", "local."),
                     DNSSDResolveServiceQuery::Result(
