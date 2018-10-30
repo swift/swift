@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -97,16 +97,16 @@ class WindowsServicePrincipalNameTest : public CppUnit::TestFixture {
             WindowsServicePrincipalName spn("adlon.isode.net");
 
             spn.setInstanceName("mlink.adlon.isode.net");
-            spn.setInstancePort(6222);
-            CPPUNIT_ASSERT_EQUAL(spn.toString(), std::string("xmpp/mlink.adlon.isode.net:6222/adlon.isode.net"));
+            spn.setInstancePort(55222);
+            CPPUNIT_ASSERT_EQUAL(spn.toString(), std::string("xmpp/mlink.adlon.isode.net:55222/adlon.isode.net"));
 
             spn.setInstancePort(0);
             CPPUNIT_ASSERT_EQUAL(spn.toString(), std::string("xmpp/mlink.adlon.isode.net/adlon.isode.net"));
 
             WindowsServicePrincipalName spn2("mlink.adlon.isode.net");
 
-            spn2.setInstancePort(6222);
-            CPPUNIT_ASSERT_EQUAL(spn2.toString(), std::string("xmpp/mlink.adlon.isode.net:6222"));
+            spn2.setInstancePort(55222);
+            CPPUNIT_ASSERT_EQUAL(spn2.toString(), std::string("xmpp/mlink.adlon.isode.net:55222"));
 
             spn2.setInstancePort(0);
             CPPUNIT_ASSERT_EQUAL(spn2.toString(), std::string("xmpp/mlink.adlon.isode.net"));

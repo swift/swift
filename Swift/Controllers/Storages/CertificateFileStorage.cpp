@@ -50,10 +50,15 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
             std::cerr << "ERROR: " << e.what() << std::endl;
         }
     }
-    boost::filesystem::ofstream file(certificatePath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
-    ByteArray data = certificate->toDER();
-    file.write(reinterpret_cast<const char*>(vecptr(data)), boost::numeric_cast<std::streamsize>(data.size()));
-    file.close();
+    try {
+        boost::filesystem::ofstream file(certificatePath, boost::filesystem::ofstream::binary|boost::filesystem::ofstream::out);
+        ByteArray data = certificate->toDER();
+        file.write(reinterpret_cast<const char*>(vecptr(data)), boost::numeric_cast<std::streamsize>(data.size()));
+        file.close();
+    }
+    catch (...) {
+        SWIFT_LOG(warning) << "Failed to store certificate to " << certificatePath << std::endl;
+    }
 }
 
 boost::filesystem::path CertificateFileStorage::getCertificatePath(Certificate::ref certificate) const {

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,6 @@
 #include <string>
 
 #include <boost/bind.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 #include <boost/ref.hpp>
 #include <boost/spirit/include/lex_lexertl.hpp>
 
@@ -47,14 +46,14 @@ struct counter
     {
         switch (t.id()) {
             case ID_WWW:
-                position += boost::numeric_cast<size_t>(t.value().size());
+                position += static_cast<std::size_t>(t.value().size());
                 break;
             case ID_HTTP:
-                position += boost::numeric_cast<size_t>(t.value().size());
+                position += static_cast<std::size_t>(t.value().size());
                 break;
             case ID_WORD:       // matched a word
-                wordPositions.push_back(boost::tuples::make_tuple(position, position + boost::numeric_cast<size_t>(t.value().size())));
-                position += boost::numeric_cast<size_t>(t.value().size());
+                wordPositions.push_back(boost::tuples::make_tuple(position, position + static_cast<std::size_t>(t.value().size())));
+                position += static_cast<std::size_t>(t.value().size());
                 break;
             case ID_CHAR:       // match a simple char
                 ++position;

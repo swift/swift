@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,13 +18,13 @@
 
 namespace Swift {
 
-FileTransferProgressInfo::FileTransferProgressInfo(boost::uintmax_t completeBytes) : completeBytes(completeBytes), completedBytes(0), percentage(0) {
+FileTransferProgressInfo::FileTransferProgressInfo(size_t completeBytes) : completeBytes(completeBytes), completedBytes(0), percentage(0) {
     onProgressPercentage(0);
 }
 
-void FileTransferProgressInfo::setBytesProcessed(int processedBytes) {
+void FileTransferProgressInfo::setBytesProcessed(size_t processedBytes) {
     int oldPercentage = int(double(completedBytes) / double(completeBytes) * 100.0);
-    completedBytes += boost::numeric_cast<boost::uintmax_t>(processedBytes);
+    completedBytes += processedBytes;
     int newPercentage = int(double(completedBytes) / double(completeBytes) * 100.0);
     if (oldPercentage != newPercentage) {
         onProgressPercentage(newPercentage);

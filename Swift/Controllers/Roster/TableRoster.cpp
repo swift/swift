@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -132,15 +132,20 @@ void TableRoster::handleUpdateTimerTick() {
         std::vector<size_t> itemRemoves;
         std::vector<size_t> itemInserts;
         computeIndexDiff<Item, ItemEquals, ItemNeedsUpdate >(sections[sectionUpdates[i]].items, newSections[sectionPostUpdates[i]].items, itemUpdates, itemPostUpdates, itemRemoves, itemInserts);
-        size_t end = update.insertedRows.size();
-        update.insertedRows.resize(update.insertedRows.size() + itemInserts.size());
-        std::transform(itemInserts.begin(), itemInserts.end(), update.insertedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionPostUpdates[i]));
-        end = update.deletedRows.size();
-        update.deletedRows.resize(update.deletedRows.size() + itemRemoves.size());
-        std::transform(itemRemoves.begin(), itemRemoves.end(), update.deletedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionUpdates[i]));
-        end = update.updatedRows.size();
-        update.updatedRows.resize(update.updatedRows.size() + itemUpdates.size());
-        std::transform(itemUpdates.begin(), itemUpdates.end(), update.updatedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionPostUpdates[i]));
+        try {
+            size_t end = update.insertedRows.size();
+            update.insertedRows.resize(update.insertedRows.size() + itemInserts.size());
+            std::transform(itemInserts.begin(), itemInserts.end(), update.insertedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionPostUpdates[i]));
+            end = update.deletedRows.size();
+            update.deletedRows.resize(update.deletedRows.size() + itemRemoves.size());
+            std::transform(itemRemoves.begin(), itemRemoves.end(), update.deletedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionUpdates[i]));
+            end = update.updatedRows.size();
+            update.updatedRows.resize(update.updatedRows.size() + itemUpdates.size());
+            std::transform(itemUpdates.begin(), itemUpdates.end(), update.updatedRows.begin() + boost::numeric_cast<long long>(end), CreateIndexForSection(sectionPostUpdates[i]));
+        }
+        catch (const boost::numeric::bad_numeric_cast&) {
+            // If any container claims it has more than long long max items, we have bigger issues, so letting this pass
+        }
     }
 
     // Switch the old model with the new

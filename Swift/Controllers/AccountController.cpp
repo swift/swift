@@ -403,7 +403,7 @@ void AccountController::handleConnected() {
     adHocManager_->setOnline(true);
 }
 
-void AccountController::handleEventQueueLengthChange(int count) {
+void AccountController::handleEventQueueLengthChange(size_t count) {
     dock_->setNumberOfPendingMessages(count);
 }
 

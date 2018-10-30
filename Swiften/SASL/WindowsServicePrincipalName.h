@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ namespace Swift {
              * it remain 0 to indicate that the default port is
              * used.
              */
-            void setInstancePort(short int instancePort) { instancePort_ = instancePort; }
+            void setInstancePort(unsigned short instancePort) { instancePort_ = instancePort; }
 
             /*
              * This follows the rules of SPN creation on Windows and

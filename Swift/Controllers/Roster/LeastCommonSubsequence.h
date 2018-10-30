@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ namespace Swift {
             Predicate predicate;
             for (size_t i = 1; i < width; ++i) {
                 for (size_t j = 1; j < height; ++j) {
-                    result[i + j*width] = predicate(*(xBegin + boost::numeric_cast<long long>(i)-1), *(yBegin + boost::numeric_cast<long long >(j)-1)) ? result[(i-1) + (j-1)*width] + 1 : std::max(result[i + (j-1)*width], result[i-1 + (j*width)]);
+                    result[i + j*width] = predicate(*(xBegin + static_cast<long long>(i)-1), *(yBegin + static_cast<long long>(j)-1)) ? result[(i-1) + (j-1)*width] + 1 : std::max(result[i + (j-1)*width], result[i-1 + (j*width)]);
                 }
             }
         }

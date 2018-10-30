@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ namespace Swift {
         public:
             WindowsDock(QSystemTrayIcon* tray, Notifier* notifier) : tray(tray), notifier(notifier) {}
 
-            virtual void setNumberOfPendingMessages(int i) {
+            virtual void setNumberOfPendingMessages(size_t i) {
                 if (notifier->isAvailable()) {
                     return;
                 }

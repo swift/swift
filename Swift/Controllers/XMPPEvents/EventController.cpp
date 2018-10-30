@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -51,7 +51,7 @@ void EventController::handleIncomingEvent(std::shared_ptr<StanzaEvent> sourceEve
     if ((messageEvent && messageEvent->isReadable()) || subscriptionEvent || errorEvent || mucInviteEvent || incomingFileTransferEvent) {
         events_.push_back(sourceEvent);
         sourceEvent->onConclusion.connect(boost::bind(&EventController::handleEventConcluded, this, sourceEvent));
-        onEventQueueLengthChange(boost::numeric_cast<int>(events_.size()));
+        onEventQueueLengthChange(events_.size());
         onEventQueueEventAdded(sourceEvent);
         if (sourceEvent->getConcluded()) {
             handleEventConcluded(sourceEvent);
@@ -62,7 +62,7 @@ void EventController::handleIncomingEvent(std::shared_ptr<StanzaEvent> sourceEve
 void EventController::handleEventConcluded(std::shared_ptr<StanzaEvent> event) {
     event->onConclusion.disconnect(boost::bind(&EventController::handleEventConcluded, this, event));
     events_.erase(std::remove(events_.begin(), events_.end(), event), events_.end());
-    onEventQueueLengthChange(boost::numeric_cast<int>(events_.size()));
+    onEventQueueLengthChange(events_.size());
 }
 
 void EventController::disconnectAll() {

@@ -1,11 +1,12 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
 
+#include <cstddef>
 #include <memory>
 #include <vector>
 
@@ -22,7 +23,7 @@ namespace Swift {
             ~EventController();
 
             void handleIncomingEvent(std::shared_ptr<StanzaEvent> sourceEvent);
-            boost::signals2::signal<void (int)> onEventQueueLengthChange;
+            boost::signals2::signal<void (size_t)> onEventQueueLengthChange;
             boost::signals2::signal<void (std::shared_ptr<StanzaEvent>)> onEventQueueEventAdded;
             const EventList& getEvents() const {return events_;}
             void disconnectAll();

@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 
 #include <Swift/QtUI/QtWebView.h>
-
-#include <boost/numeric/conversion/cast.hpp>
 
 #include <QFocusEvent>
 #include <QKeyEvent>
@@ -48,7 +46,7 @@ void QtWebView::keyPressEvent(QKeyEvent* event) {
                                modifiers,
                                event->text(),
                                event->isAutoRepeat(),
-                               boost::numeric_cast<unsigned short>(event->count()));
+                               event->count());
     QWebView::keyPressEvent(translatedEvent);
     delete translatedEvent;
 }

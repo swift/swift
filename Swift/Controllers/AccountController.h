@@ -111,7 +111,7 @@ namespace Swift {
             void handleChangeStatusRequest(StatusShow::Type show, const std::string &statusText);
             void handleDisconnected(const boost::optional<ClientError>& error);
             void handleServerDiscoInfoResponse(std::shared_ptr<DiscoInfo>, ErrorPayload::ref);
-            void handleEventQueueLengthChange(int count);
+            void handleEventQueueLengthChange(size_t count);
             void handleVCardReceived(const JID& j, VCard::ref vCard);
             void handleSettingChanged(const std::string& settingPath);
             void handlePurgeSavedLoginRequest(const std::string& username);

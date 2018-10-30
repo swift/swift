@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,8 @@
 
 #include <cassert>
 #include <iostream>
+#include <limits>
+
 #include <boost/numeric/conversion/cast.hpp>
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -29,7 +31,12 @@ int MacOSXIdleQuerier::getIdleTimeSeconds() {
     assert(result);
     (void) result;
     CFRelease(property);
-    return boost::numeric_cast<int>(idle / 1000000000);
+    try {
+        return boost::numeric_cast<int>(idle / 1000000000);
+    }
+    catch (const boost::numeric::bad_numeric_cast&) {
+        return std::numeric_limits<int>::max();
+    }
 }
 
 }
