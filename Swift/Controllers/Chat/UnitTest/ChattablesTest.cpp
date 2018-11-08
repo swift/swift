@@ -9,6 +9,9 @@
 
 #include <Swift/Controllers/Chat/Chattables.h>
 
+// Clang wrongly things that tests for 0 are using 0 as null.
+#pragma clang diagnostic ignored "-Wzero-as-null-pointer-constant"
+
 using namespace Swift;
 
 class ChattablesTest : public ::testing::Test {

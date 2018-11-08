@@ -73,7 +73,7 @@ namespace Swift {
             boost::signals2::signal<void (const std::string& /*activity*/)> onActivity;
             boost::signals2::signal<void ()> onUnreadCountChanged;
             boost::signals2::signal<void ()> onWindowClosed;
-            int getUnreadCount();
+            size_t getUnreadCount();
             const JID& getToJID() {return toJID_;}
             void handleCapsChanged(const JID& jid);
             void setCanStartImpromptuChats(bool supportsImpromptu);

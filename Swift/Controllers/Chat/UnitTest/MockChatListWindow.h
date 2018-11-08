@@ -20,7 +20,7 @@ namespace Swift {
             void removeWhiteboardSession(const JID& /*jid*/) {}
             void setBookmarksEnabled(bool /*enabled*/) {}
             void setRecents(const std::list<ChatListWindow::Chat>& /*recents*/) {}
-            void setUnreadCount(int /*unread*/) {}
+            void setUnreadCount(size_t /*unread*/) {}
             void clearBookmarks() {}
             void setOnline(bool /*isOnline*/) {}
     };

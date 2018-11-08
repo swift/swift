@@ -505,7 +505,7 @@ void QtChatWindow::showEvent(QShowEvent* event) {
     QWidget::showEvent(event);
 }
 
-void QtChatWindow::setUnreadMessageCount(int count) {
+void QtChatWindow::setUnreadMessageCount(size_t count) {
     if (unreadCount_ != count) {
         unreadCount_ = count;
         updateTitleWithUnreadCount();
@@ -547,7 +547,7 @@ void QtChatWindow::flash() {
     emit requestFlash();
 }
 
-int QtChatWindow::getCount() {
+size_t QtChatWindow::getCount() {
     return unreadCount_;
 }
 

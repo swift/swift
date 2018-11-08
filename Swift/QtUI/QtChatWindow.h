@@ -106,7 +106,7 @@ namespace Swift {
             void show();
             bool isVisible() const;
             void activate();
-            void setUnreadMessageCount(int count);
+            void setUnreadMessageCount(size_t count);
             void convertToMUC(MUCType mucType);
 //            TreeWidget *getTreeWidget();
             void setAvailableSecurityLabels(const std::vector<SecurityLabelsCatalog::Item>& labels);
@@ -119,7 +119,7 @@ namespace Swift {
             void setContactChatState(ChatState::ChatStateType state);
             void setRosterModel(Roster* roster);
             void setTabComplete(TabComplete* completer);
-            int getCount();
+            size_t getCount();
             virtual void replaceSystemMessage(const ChatMessage& message, const std::string& id, const TimestampBehaviour timestampBehaviour);
             void replaceLastMessage(const ChatMessage& message, const TimestampBehaviour timestampBehaviour);
             void setAckState(const std::string& id, AckState state);
@@ -201,7 +201,7 @@ namespace Swift {
             void handleFocusTimerTick();
 
         private:
-            int unreadCount_;
+            size_t unreadCount_;
             bool contactIsTyping_;
             LastLineTracker lastLineTracker_;
             std::string id_;

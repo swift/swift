@@ -118,8 +118,8 @@ void ChatControllerBase::handleAllMessagesRead() {
     }
 }
 
-int ChatControllerBase::getUnreadCount() {
-    return boost::numeric_cast<int>(targetedUnreadMessages_.size());
+size_t ChatControllerBase::getUnreadCount() {
+    return targetedUnreadMessages_.size();
 }
 
 void ChatControllerBase::handleSendMessageRequest(const std::string &body, bool isCorrectionMessage) {
@@ -193,11 +193,10 @@ ChatWindow::ChatMessage ChatControllerBase::buildChatWindowChatMessage(const std
 }
 
 void ChatControllerBase::updateMessageCount() {
-    int intCount = boost::numeric_cast<int>(unreadMessages_.size());
-    chatWindow_->setUnreadMessageCount(intCount);
     auto baseJID = getBaseJID();
     auto state = chattables_.getState(baseJID);
-    state.unreadCount = intCount;
+    state.unreadCount = unreadMessages_.size();
+    chatWindow_->setUnreadMessageCount(state.unreadCount);
     chattables_.setState(baseJID, state);
 #ifndef NOT_YET
     onUnreadCountChanged();

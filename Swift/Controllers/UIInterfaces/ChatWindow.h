@@ -202,7 +202,7 @@ namespace Swift {
             virtual void setSecurityLabelsEnabled(bool enabled) = 0;
             virtual void setCorrectionEnabled(Tristate enabled) = 0;
             virtual void setFileTransferEnabled(Tristate enabled) = 0;
-            virtual void setUnreadMessageCount(int count) = 0;
+            virtual void setUnreadMessageCount(size_t count) = 0;
             virtual void convertToMUC(MUCType mucType) = 0;
 //            virtual TreeWidget *getTreeWidget() = 0;
             virtual void setSecurityLabelsError() = 0;

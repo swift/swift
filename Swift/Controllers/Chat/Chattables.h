@@ -22,7 +22,7 @@ class Chattables {
             JID jid;
             /// Empty for no name
             std::string name;
-            int unreadCount = 0;
+            size_t unreadCount = 0;
             Type type;
             StatusShow::Type status = StatusShow::None;
             //avatar

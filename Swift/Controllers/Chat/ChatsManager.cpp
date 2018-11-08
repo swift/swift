@@ -372,7 +372,7 @@ void ChatsManager::handleMUCBookmarkRemoved(const MUCBookmark& bookmark) {
 
 #ifndef NOT_YET
 ChatListWindow::Chat ChatsManager::createChatListChatItem(const JID& jid, const std::string& activity, bool privateMessage) {
-    int unreadCount = 0;
+    size_t unreadCount = 0;
     if (mucRegistry_->isMUC(jid)) {
         MUCController* controller = mucControllers_[jid.toBare()];
         StatusShow::Type type = StatusShow::None;
@@ -447,7 +447,7 @@ void ChatsManager::handleChatClosed(const JID& /*jid*/) {
 #ifndef NOT_YET
 
 void ChatsManager::handleUnreadCountChanged(ChatControllerBase* controller) {
-    int unreadTotal = 0;
+    size_t unreadTotal = 0;
     bool controllerIsMUC = dynamic_cast<MUCController*>(controller);
     bool isPM = controller && !controllerIsMUC && mucRegistry_->isMUC(controller->getToJID().toBare());
     for (ChatListWindow::Chat& chatItem : recentChats_) {

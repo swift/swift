@@ -26,7 +26,7 @@ namespace Swift {
             class Chat {
                 public:
                     Chat() : statusType(StatusShow::None), isMUC(false), unreadCount(0), isPrivateMessage(false) {}
-                    Chat(const JID& jid, const std::string& chatName, const std::string& activity, int unreadCount, StatusShow::Type statusType, const boost::filesystem::path& avatarPath, bool isMUC, bool isPrivateMessage = false, const std::string& nick = "", const boost::optional<std::string> password = boost::optional<std::string>())
+                    Chat(const JID& jid, const std::string& chatName, const std::string& activity, size_t unreadCount, StatusShow::Type statusType, const boost::filesystem::path& avatarPath, bool isMUC, bool isPrivateMessage = false, const std::string& nick = "", const boost::optional<std::string> password = boost::optional<std::string>())
                     : jid(jid), chatName(chatName), activity(activity), statusType(statusType), isMUC(isMUC), nick(nick), password(password), unreadCount(unreadCount), avatarPath(avatarPath), isPrivateMessage(isPrivateMessage) {}
                     /** Assume that nicks and other transient features aren't important for equality */
                     bool operator==(const Chat& other) const {
@@ -53,7 +53,7 @@ namespace Swift {
                             return key_compare(inviteesNames, other.inviteesNames);
                         }
                     }
-                    void setUnreadCount(int unread) {
+                    void setUnreadCount(size_t unread) {
                         unreadCount = unread;
                     }
                     void setStatusType(StatusShow::Type type) {
@@ -93,7 +93,7 @@ namespace Swift {
                     bool isMUC;
                     std::string nick;
                     boost::optional<std::string> password;
-                    int unreadCount;
+                    size_t unreadCount;
                     boost::filesystem::path avatarPath;
                     std::map<std::string, JID> impromptuJIDs;
                     std::map<JID, std::string> inviteesNames;
@@ -107,7 +107,7 @@ namespace Swift {
             virtual void removeWhiteboardSession(const JID& jid) = 0;
             virtual void removeMUCBookmark(const MUCBookmark& bookmark) = 0;
             virtual void setRecents(const std::list<Chat>& recents) = 0;
-            virtual void setUnreadCount(int unread) = 0;
+            virtual void setUnreadCount(size_t unread) = 0;
             virtual void clearBookmarks() = 0;
             virtual void setOnline(bool isOnline) = 0;
 

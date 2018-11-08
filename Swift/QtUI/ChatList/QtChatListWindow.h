@@ -27,12 +27,12 @@ namespace Swift {
             void removeWhiteboardSession(const JID& jid);
             void setBookmarksEnabled(bool enabled);
             void setRecents(const std::list<ChatListWindow::Chat>& recents);
-            void setUnreadCount(int unread);
+            void setUnreadCount(size_t unread);
             void clearBookmarks();
             virtual void setOnline(bool isOnline);
 
         signals:
-            void onCountUpdated(int count);
+            void onCountUpdated(size_t count);
         private slots:
             void handleItemActivated(const QModelIndex&);
             void handleEditBookmark();

@@ -130,7 +130,7 @@ void QtChatListWindow::setRecents(const std::list<ChatListWindow::Chat>& recents
     model_->setRecents(recents);
 }
 
-void QtChatListWindow::setUnreadCount(int unread) {
+void QtChatListWindow::setUnreadCount(size_t unread) {
     emit onCountUpdated(unread);
 }
 

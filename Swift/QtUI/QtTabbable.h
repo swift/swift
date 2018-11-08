@@ -19,7 +19,7 @@ namespace Swift {
 
             bool isWidgetSelected();
             virtual AlertType getWidgetAlertState() {return NoActivity;}
-            virtual int getCount() {return 0;}
+            virtual size_t getCount() {return 0;}
             virtual std::string getID() const = 0;
             virtual void setEmphasiseFocus(bool /*emphasise*/) {}
 
