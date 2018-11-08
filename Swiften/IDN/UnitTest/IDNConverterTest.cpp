@@ -78,3 +78,21 @@ TEST_F(IDNConverterTest, testGetEncoded_Invalid) {
     boost::optional<std::string> result = testling_->getIDNAEncoded("www.foo,bar.com");
     ASSERT_FALSE(result);
 }
+
+TEST_F(IDNConverterTest, testRFC1035LengthRestrictions) {
+    // label size check, 63 octets or less
+    ASSERT_TRUE(testling_->getIDNAEncoded(std::string(63, 'a') + ".example"));
+    ASSERT_TRUE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(63, 'a') + ".example"));
+    ASSERT_FALSE(testling_->getIDNAEncoded(std::string(64, 'a') + "." + std::string(63, 'a') + ".example"));
+    ASSERT_FALSE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(64, 'a') + ".example"));
+    ASSERT_FALSE(testling_->getIDNAEncoded(std::string(0, 'a') + "." + std::string(63, 'a') + ".example"));
+    ASSERT_FALSE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(0, 'a') + ".example"));
+
+    // domain name 255 octets or less
+    ASSERT_TRUE(testling_->getIDNAEncoded(std::string(63, 'a') + ".example"));
+    ASSERT_TRUE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(63, 'a') + ".example"));
+    ASSERT_TRUE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(63, 'a') + "." + std::string(63, 'a') + ".example"));
+    ASSERT_TRUE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(63, 'a') + "." + std::string(63, 'a') + "." + std::string(55, 'a') + ".example"));
+    ASSERT_FALSE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(63, 'a') + "." + std::string(63, 'a') + "." + std::string(56, 'a') + ".example"));
+    ASSERT_FALSE(testling_->getIDNAEncoded(std::string(63, 'a') + "." + std::string(56, 'a') + "." + std::string(63, 'a') + "." + std::string(63, 'a') + ".example"));
+}

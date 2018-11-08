@@ -78,6 +78,9 @@ boost::optional<std::string> LibIDNConverter::getIDNAEncoded(const std::string& 
     if (idna_to_ascii_8z(domain.c_str(), &output, IDNA_USE_STD3_ASCII_RULES) == IDNA_SUCCESS) {
         std::string result(output);
         free(output);
+        if (result.size() > 255) {
+            return boost::optional<std::string>();
+        }
         return result;
     }
     else {
