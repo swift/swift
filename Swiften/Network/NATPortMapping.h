@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015 Isode Limited.
+ * Copyright (c) 2015-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@ namespace Swift {
             UDP
         };
 
-        NATPortMapping(unsigned short localPort, unsigned short publicPort, Protocol protocol = TCP, int leaseInSeconds = 60 * 60 * 24) :
+        NATPortMapping(unsigned short localPort, unsigned short publicPort, Protocol protocol = TCP, uint32_t leaseInSeconds = 60 * 60 * 24) :
             publicPort(publicPort), localPort(localPort), protocol(protocol), leaseInSeconds(leaseInSeconds) {
 
         }
@@ -40,7 +40,7 @@ namespace Swift {
             return protocol;
         }
 
-        int getLeaseInSeconds() const {
+        uint32_t getLeaseInSeconds() const {
             return leaseInSeconds;
         }
 
@@ -48,6 +48,6 @@ namespace Swift {
         unsigned short publicPort;
         unsigned short localPort;
         Protocol protocol;
-        int leaseInSeconds;
+        uint32_t leaseInSeconds;
     };
 }

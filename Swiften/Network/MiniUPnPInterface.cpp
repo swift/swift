@@ -14,8 +14,6 @@
 
 #include <memory>
 
-#include <boost/lexical_cast.hpp>
-
 #include <miniupnpc.h>
 #include <upnpcommands.h>
 #include <upnperrors.h>
