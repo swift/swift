@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,8 +7,6 @@
 #include <Swiften/Parser/BOSHBodyExtractor.h>
 
 #include <memory>
-
-#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Parser/XMLParser.h>
 #include <Swiften/Parser/XMLParserClient.h>
@@ -119,17 +117,19 @@ BOSHBodyExtractor::BOSHBodyExtractor(XMLParserFactory* parserFactory, const Byte
 
     body = BOSHBody();
     if (!endElementSeen) {
+        assert(i <= j.base());
         body->content = std::string(
                 reinterpret_cast<const char*>(vecptr(data) + std::distance(data.begin(), i)),
-                boost::numeric_cast<size_t>(std::distance(i, j.base())));
+                static_cast<size_t>(std::distance(i, j.base())));
     }
 
     // Parse the body element
     BOSHBodyParserClient parserClient(this);
     std::shared_ptr<XMLParser> parser(parserFactory->createXMLParser(&parserClient));
+    assert(data.begin() <= i);
     if (!parser->parse(std::string(
             reinterpret_cast<const char*>(vecptr(data)),
-            boost::numeric_cast<size_t>(std::distance(data.begin(), i))))) {
+            static_cast<size_t>(std::distance(data.begin(), i))))) {
         /* TODO: This needs to be only validating the BOSH <body> element, so that XMPP parsing errors are caught at
            the correct higher layer */
         body = boost::optional<BOSHBody>();
