@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,7 +58,7 @@ class IBBSendSessionTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<IBB>(0, JID("foo@bar.com/baz"), IQ::Set));
             IBB::ref ibb = stanzaChannel->sentStanzas[0]->getPayload<IBB>();
             CPPUNIT_ASSERT_EQUAL(IBB::Open, ibb->getAction());
-            CPPUNIT_ASSERT_EQUAL(1234, ibb->getBlockSize());
+            CPPUNIT_ASSERT_EQUAL(1234u, ibb->getBlockSize());
             CPPUNIT_ASSERT_EQUAL(std::string("myid"), ibb->getStreamID());
         }
 

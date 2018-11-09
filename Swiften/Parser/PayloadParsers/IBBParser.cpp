@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,7 @@ void IBBParser::handleStartElement(const std::string& element, const std::string
                 getPayloadInternal()->setStanzaType(IBB::IQStanza);
             }
             try {
-                getPayloadInternal()->setBlockSize(boost::lexical_cast<int>(attributes.getAttribute("block-size")));
+                getPayloadInternal()->setBlockSize(boost::lexical_cast<unsigned int>(attributes.getAttribute("block-size")));
             }
             catch (boost::bad_lexical_cast&) {
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -138,7 +138,14 @@ void SOCKS5BytestreamServerSession::process() {
                 SafeByteArray result = createSafeByteArray("\x05", 1);
                 result.push_back(hasBytestream ? 0x0 : 0x4);
                 append(result, createByteArray("\x00\x03", 2));
-                result.push_back(boost::numeric_cast<unsigned char>(requestID.size()));
+                try {
+                    result.push_back(boost::numeric_cast<unsigned char>(requestID.size()));
+                }
+                catch (const boost::numeric::bad_numeric_cast& e) {
+                    SWIFT_LOG(warning) << "SOCKS5 request ID is too long (" << requestID.size() << "): " << e.what() << std::endl;
+                    finish();
+                    return;
+                }
                 append(result, concat(requestID, createByteArray("\x00\x00", 2)));
                 if (!hasBytestream) {
                     SWIFT_LOG(debug) << "Readstream or Wrtiestream with ID " << streamID << " not found!" << std::endl;

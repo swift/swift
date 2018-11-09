@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -8,7 +8,6 @@
 
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
 
 #include <Swiften/Base/Debug.h>
@@ -78,14 +77,14 @@ class FileTransferTest {
             sendFilePath_ = boost::filesystem::unique_path("ft_send_%%%%%%%%%%%%%%%%.bin");
             receiveFilePath_ = boost::filesystem::unique_path("ft_receive_%%%%%%%%%%%%%%%%.bin");
 
-            size_t size = 1024 + boost::numeric_cast<size_t>(randGen.generateRandomInteger(1024 * 10));
+            size_t size = 1024 + static_cast<size_t>(randGen.generateRandomInteger(1024 * 10));
             sendData_.resize(size);
             for (unsigned char& n : sendData_) {
-                n = boost::numeric_cast<unsigned char>(randGen.generateRandomInteger(255));
+                n = static_cast<unsigned char>(randGen.generateRandomInteger(255));
             }
 
             std::ofstream outfile(sendFilePath_.native().c_str(), std::ios::out | std::ios::binary);
-            outfile.write(reinterpret_cast<char *>(&sendData_[0]), boost::numeric_cast<ptrdiff_t>(sendData_.size()));
+            outfile.write(reinterpret_cast<char *>(&sendData_[0]), static_cast<ptrdiff_t>(sendData_.size()));
             outfile.close();
         }
 

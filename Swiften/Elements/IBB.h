@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,10 +28,10 @@ namespace Swift {
                 MessageStanza
             };
 
-            IBB(Action action = Open, const std::string& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(-1), sequenceNumber(-1) {
+            IBB(Action action = Open, const std::string& streamID = "") : action(action), streamID(streamID), stanzaType(IQStanza), blockSize(0), sequenceNumber(-1) {
             }
 
-            static IBB::ref createIBBOpen(const std::string& streamID, int blockSize) {
+            static IBB::ref createIBBOpen(const std::string& streamID, unsigned int blockSize) {
                 IBB::ref result = std::make_shared<IBB>(Open, streamID);
                 result->setBlockSize(blockSize);
                 return result;
@@ -80,11 +80,11 @@ namespace Swift {
                 this->data = data;
             }
 
-            int getBlockSize() const {
+            unsigned int getBlockSize() const {
                 return blockSize;
             }
 
-            void setBlockSize(int blockSize) {
+            void setBlockSize(unsigned int blockSize) {
                 this->blockSize = blockSize;
             }
 
@@ -101,7 +101,7 @@ namespace Swift {
             std::string streamID;
             std::vector<unsigned char> data;
             StanzaType stanzaType;
-            int blockSize;
+            unsigned int blockSize;
             int sequenceNumber;
     };
 }

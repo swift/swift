@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,7 +40,7 @@ IBBSendSession::~IBBSendSession() {
 
 void IBBSendSession::start() {
     IBBRequest::ref request = IBBRequest::create(
-            from, to, IBB::createIBBOpen(id, boost::numeric_cast<int>(blockSize)), router);
+            from, to, IBB::createIBBOpen(id, blockSize), router);
     request->onResponse.connect(boost::bind(&IBBSendSession::handleIBBResponse, this, _1, _2));
     active = true;
     request->send();
