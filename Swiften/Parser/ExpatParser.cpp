@@ -7,12 +7,11 @@
 #include <Swiften/Parser/ExpatParser.h>
 
 #include <cassert>
+#include <limits>
 #include <memory>
 #include <string>
 
 #include <expat.h>
-
-#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Parser/XMLParserClient.h>
@@ -84,7 +83,10 @@ ExpatParser::~ExpatParser() {
 }
 
 bool ExpatParser::parse(const std::string& data) {
-    bool success = XML_Parse(p->parser_, data.c_str(), boost::numeric_cast<int>(data.size()), false) == XML_STATUS_OK;
+    if (data.size() > std::numeric_limits<int>::max()) {
+        return false;
+    }
+    bool success = XML_Parse(p->parser_, data.c_str(), static_cast<int>(data.size()), false) == XML_STATUS_OK;
     /*if (!success) {
         std::cout << "ERROR: " << XML_ErrorString(XML_GetErrorCode(p->parser_)) << " while parsing " << data << std::endl;
     }*/
