@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -14,7 +14,6 @@
 #include <boost/asio/placeholders.hpp>
 #include <boost/asio/write.hpp>
 #include <boost/bind.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/ByteArray.h>
@@ -64,7 +63,7 @@ void BoostConnection::listen() {
 
 void BoostConnection::connect(const HostAddressPort& addressPort) {
     boost::asio::ip::tcp::endpoint endpoint(
-            boost::asio::ip::address::from_string(addressPort.getAddress().toString()), boost::numeric_cast<unsigned short>(addressPort.getPort()));
+            boost::asio::ip::address::from_string(addressPort.getAddress().toString()), addressPort.getPort());
     socket_.async_connect(
             endpoint,
             boost::bind(&BoostConnection::handleConnectFinished, shared_from_this(), boost::asio::placeholders::error));
