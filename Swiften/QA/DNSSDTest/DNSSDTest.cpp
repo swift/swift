@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -35,7 +35,7 @@ class DNSSDTest : public CppUnit::TestFixture {
     public:
         void setUp() {
             eventLoop = new DummyEventLoop();
-            querier = std::make_shared<DNSSDQuerier>();
+            querier = std::make_shared<DNSSDQuerierType>(eventLoop);
             querier->start();
         }
 
@@ -55,7 +55,7 @@ class DNSSDTest : public CppUnit::TestFixture {
 
             // Publish the service
             LinkLocalServiceInfo info;
-            std::shared_ptr<DNSSDRegisterQuery> registerQuery = querier->createRegisterQuery("DNSSDTest", 1234, info.toTXTRecord());
+            std::shared_ptr<DNSSDRegisterQuery> registerQuery = querier->createRegisterQuery("DNSSDTest", 1234, *info.toTXTRecord());
             registerQuery->onRegisterFinished.connect(boost::bind(&DNSSDTest::handleRegisterFinished, this, _1));
             registerQuery->registerService();
 
@@ -137,7 +137,7 @@ class DNSSDTest : public CppUnit::TestFixture {
 
     private:
         DummyEventLoop* eventLoop;
-        std::shared_ptr<DNSSDQuerier> querier;
+        std::shared_ptr<DNSSDQuerierType> querier;
         std::vector<DNSSDServiceID> added;
         std::vector<DNSSDServiceID> registered;
         std::vector<DNSSDServiceID> toRemove;

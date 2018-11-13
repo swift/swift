@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,10 +58,12 @@ class LinkLocalServiceTest : public CppUnit::TestFixture {
             info.setFirstName(firstName);
             info.setLastName(lastName);
             info.setNick(nickName);
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
             return LinkLocalService(service,
                     DNSSDResolveServiceQuery::Result(
                         name + "._presence._tcp.local", "rabbithole.local", 1234,
-                        info.toTXTRecord()));
+                        *txtRecord));
         }
 };
 

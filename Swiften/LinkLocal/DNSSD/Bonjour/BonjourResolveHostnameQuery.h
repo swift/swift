@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,11 +23,16 @@ namespace Swift {
     class BonjourResolveHostnameQuery : public DNSSDResolveHostnameQuery, public BonjourQuery {
         public:
             BonjourResolveHostnameQuery(const std::string& hostname, int interfaceIndex, std::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
-                DNSServiceErrorType result = DNSServiceGetAddrInfo(
-                        &sdRef, 0, boost::numeric_cast<unsigned int>(interfaceIndex), kDNSServiceProtocol_IPv4,
-                        hostname.c_str(),
-                        &BonjourResolveHostnameQuery::handleHostnameResolvedStatic, this);
-                if (result != kDNSServiceErr_NoError) {
+                try {
+                    DNSServiceErrorType result = DNSServiceGetAddrInfo(
+                            &sdRef, 0, boost::numeric_cast<unsigned int>(interfaceIndex), kDNSServiceProtocol_IPv4,
+                            hostname.c_str(),
+                            &BonjourResolveHostnameQuery::handleHostnameResolvedStatic, this);
+                    if (result != kDNSServiceErr_NoError) {
+                        sdRef = nullptr;
+                    }
+                }
+                catch (...) {
                     sdRef = nullptr;
                 }
             }

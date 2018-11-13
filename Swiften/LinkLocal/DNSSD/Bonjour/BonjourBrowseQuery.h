@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -50,12 +50,17 @@ namespace Swift {
                 }
                 else {
                     //std::cout << "Discovered service: name:" << name << " domain:" << domain << " type: " << type << std::endl;
-                    DNSSDServiceID service(name, domain, type, boost::numeric_cast<int>(interfaceIndex));
-                    if (flags & kDNSServiceFlagsAdd) {
-                        eventLoop->postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
+                    try {
+                        DNSSDServiceID service(name, domain, type, boost::numeric_cast<int>(interfaceIndex));
+                        if (flags & kDNSServiceFlagsAdd) {
+                            eventLoop->postEvent(boost::bind(boost::ref(onServiceAdded), service), shared_from_this());
+                        }
+                        else {
+                            eventLoop->postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
+                        }
                     }
-                    else {
-                        eventLoop->postEvent(boost::bind(boost::ref(onServiceRemoved), service), shared_from_this());
+                    catch (...) {
+                        eventLoop->postEvent(boost::bind(boost::ref(onError)), shared_from_this());
                     }
                 }
             }

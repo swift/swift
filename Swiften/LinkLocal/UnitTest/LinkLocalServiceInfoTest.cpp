@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -29,7 +29,9 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
             info.setLastName("Tron\xc3\xe7on");
             info.setStatus(LinkLocalServiceInfo::Away);
 
-            CPPUNIT_ASSERT_EQUAL(createByteArray("\x09txtvers=1\x09" + std::string("1st=Remko\x0dlast=Tron\xc3\xe7on\x0bstatus=away")), info.toTXTRecord());
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            CPPUNIT_ASSERT_EQUAL(createByteArray("\x09txtvers=1\x09" + std::string("1st=Remko\x0dlast=Tron\xc3\xe7on\x0bstatus=away")), *txtRecord);
         }
 
         void testCreateFromTXTRecord() {
@@ -57,7 +59,9 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
             info.setStatus(LinkLocalServiceInfo::DND);
             info.setPort(1234);
 
-            LinkLocalServiceInfo info2 = LinkLocalServiceInfo::createFromTXTRecord(info.toTXTRecord());
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            LinkLocalServiceInfo info2 = LinkLocalServiceInfo::createFromTXTRecord(*txtRecord);
             CPPUNIT_ASSERT_EQUAL(info.getFirstName(), info2.getFirstName());
             CPPUNIT_ASSERT_EQUAL(info.getLastName(), info2.getLastName());
             CPPUNIT_ASSERT_EQUAL(info.getEMail(), info2.getEMail());
@@ -66,6 +70,13 @@ class LinkLocalServiceInfoTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(info.getNick(), info2.getNick());
             CPPUNIT_ASSERT(info.getStatus() == info2.getStatus());
             CPPUNIT_ASSERT(info.getPort() == info2.getPort());
+        }
+
+        void testToTXTRecordWithInvalidParameter() {
+            LinkLocalServiceInfo info;
+            info.setFirstName(std::string(256, 'x'));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(!txtRecord);
         }
 };
 

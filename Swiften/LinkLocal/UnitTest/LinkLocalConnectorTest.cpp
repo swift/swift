@@ -115,11 +115,13 @@ class LinkLocalConnectorTest : public CppUnit::TestFixture {
 
     private:
         std::shared_ptr<LinkLocalConnector> createConnector(const std::string& hostname, unsigned short port) {
+            auto txtRecord = LinkLocalServiceInfo().toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
             LinkLocalService service(
                     DNSSDServiceID("myname", "local."),
                     DNSSDResolveServiceQuery::Result(
                         "myname._presence._tcp.local", hostname, port,
-                        LinkLocalServiceInfo().toTXTRecord()));
+                        *txtRecord));
             std::shared_ptr<LinkLocalConnector> result(
                     new LinkLocalConnector(service, querier, connection));
             result->onConnectFinished.connect(

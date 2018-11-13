@@ -46,7 +46,7 @@ namespace Swift {
             boost::optional<unsigned short> getPort() const { return port; }
             void setPort(unsigned short p) { port = p; }
 
-            ByteArray toTXTRecord() const;
+            boost::optional<ByteArray> toTXTRecord() const;
 
             static LinkLocalServiceInfo createFromTXTRecord(const ByteArray& record);
 

@@ -7,6 +7,7 @@ if env["TEST"] :
     myenv.MergeFlags(myenv["CHECKER_FLAGS"])
     myenv.MergeFlags(myenv["SWIFTEN_FLAGS"])
     myenv.MergeFlags(myenv["CPPUNIT_FLAGS"])
+    myenv.MergeFlags(myenv["GOOGLETEST_FLAGS"])
     myenv.MergeFlags(myenv["BOOST_FLAGS"])
     myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
     if myenv.get("HAVE_BONJOUR", 0) :
@@ -14,6 +15,7 @@ if env["TEST"] :
     elif myenv.get("HAVE_AVAHI", 0) :
         myenv.Append(CPPDEFINES = ["HAVE_AVAHI"])
         myenv.MergeFlags(myenv["AVAHI_FLAGS"])
+    myenv.MergeFlags(myenv["PLATFORM_FLAGS"])
 
     tester = myenv.Program("DNSSDTest", [
             "DNSSDTest.cpp",

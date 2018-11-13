@@ -11,40 +11,47 @@
 
 #include <Swiften/Base/Algorithm.h>
 #include <Swiften/Base/Concat.h>
+#include <Swiften/Base/Log.h>
 
 namespace Swift {
 
-ByteArray LinkLocalServiceInfo::toTXTRecord() const {
-    ByteArray result(getEncoded("txtvers=1"));
-    if (!firstName.empty()) {
-        append(result, getEncoded("1st=" + firstName));
-    }
-    if (!lastName.empty()) {
-        append(result, getEncoded("last=" + lastName));
-    }
-    if (!email.empty()) {
-        append(result, getEncoded("email=" + email));
-    }
-    if (jid.isValid()) {
-        append(result, getEncoded("jid=" + jid.toString()));
-    }
-    if (!message.empty()) {
-        append(result, getEncoded("msg=" + message));
-    }
-    if (!nick.empty()) {
-        append(result, getEncoded("nick=" + nick));
-    }
-    if (port) {
-        append(result, getEncoded("port.p2pj=" + std::string(std::to_string(*port))));
-    }
+boost::optional<ByteArray> LinkLocalServiceInfo::toTXTRecord() const {
+    try {
+        ByteArray result(getEncoded("txtvers=1"));
+        if (!firstName.empty()) {
+            append(result, getEncoded("1st=" + firstName));
+        }
+        if (!lastName.empty()) {
+            append(result, getEncoded("last=" + lastName));
+        }
+        if (!email.empty()) {
+            append(result, getEncoded("email=" + email));
+        }
+        if (jid.isValid()) {
+            append(result, getEncoded("jid=" + jid.toString()));
+        }
+        if (!message.empty()) {
+            append(result, getEncoded("msg=" + message));
+        }
+        if (!nick.empty()) {
+            append(result, getEncoded("nick=" + nick));
+        }
+        if (port) {
+            append(result, getEncoded("port.p2pj=" + std::string(std::to_string(*port))));
+        }
 
-    switch (status) {
-        case Available: append(result, getEncoded("status=avail")); break;
-        case Away: append(result, getEncoded("status=away")); break;
-        case DND: append(result, getEncoded("status=dnd")); break;
-    }
+        switch (status) {
+            case Available: append(result, getEncoded("status=avail")); break;
+            case Away: append(result, getEncoded("status=away")); break;
+            case DND: append(result, getEncoded("status=dnd")); break;
+        }
 
-    return result;
+        return result;
+    }
+    catch (const std::exception& e) {
+        SWIFT_LOG(warning) << "Failed to create TXT record for link local service info: " << e.what() << std::endl;
+        return boost::none;
+    }
 }
 
 ByteArray LinkLocalServiceInfo::getEncoded(const std::string& s) {

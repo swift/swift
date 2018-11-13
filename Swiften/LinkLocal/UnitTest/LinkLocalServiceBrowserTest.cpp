@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,10 +47,12 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
             eventLoop = new DummyEventLoop();
             querier = std::make_shared<FakeDNSSDQuerier>("wonderland.lit", eventLoop);
             aliceServiceID = new DNSSDServiceID("alice", "wonderland.lit");
-            aliceServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.wonderland.lit", "xmpp.wonderland.lit", 1234, LinkLocalServiceInfo().toTXTRecord());
+            auto txtRecord = LinkLocalServiceInfo().toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            aliceServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.wonderland.lit", "xmpp.wonderland.lit", 1234, *txtRecord);
             testServiceID = new DNSSDServiceID("foo", "bar.local");
-            testServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.bar.local", "xmpp.bar.local", 1234, LinkLocalServiceInfo().toTXTRecord());
-            testServiceInfo2 = new DNSSDResolveServiceQuery::Result("_presence.tcp.bar.local", "xmpp.foo.local", 2345, LinkLocalServiceInfo().toTXTRecord());
+            testServiceInfo = new DNSSDResolveServiceQuery::Result("_presence._tcp.bar.local", "xmpp.bar.local", 1234, *txtRecord);
+            testServiceInfo2 = new DNSSDResolveServiceQuery::Result("_presence.tcp.bar.local", "xmpp.foo.local", 2345, *txtRecord);
             errorStopReceived = false;
             normalStopReceived = false;
         }
@@ -292,7 +294,9 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
             testling->registerService("foo@bar", 1234, info);
             eventLoop->processEvents();
 
-            CPPUNIT_ASSERT(querier->isServiceRegistered("foo@bar", 1234, info.toTXTRecord()));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            CPPUNIT_ASSERT(querier->isServiceRegistered("foo@bar", 1234, *txtRecord));
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(registeredServices.size()));
             CPPUNIT_ASSERT(registeredServices[0] == DNSSDServiceID("foo@bar", "wonderland.lit"));
             testling->stop();
@@ -311,7 +315,9 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(!testling->isRunning());
             CPPUNIT_ASSERT(testling->hasError());
             CPPUNIT_ASSERT(errorStopReceived);
-            CPPUNIT_ASSERT(!querier->isServiceRegistered("foo@bar", 1234, info.toTXTRecord()));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            CPPUNIT_ASSERT(!querier->isServiceRegistered("foo@bar", 1234, *txtRecord));
         }
 
         void testRegisterService_Reregister() {
@@ -329,7 +335,9 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
             testling->registerService("bar@baz", 3456, info);
             eventLoop->processEvents();
 
-            CPPUNIT_ASSERT(querier->isServiceRegistered("bar@baz", 3456, info.toTXTRecord()));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            CPPUNIT_ASSERT(querier->isServiceRegistered("bar@baz", 3456, *txtRecord));
 
             testling->stop();
         }
@@ -346,7 +354,9 @@ class LinkLocalServiceBrowserTest : public CppUnit::TestFixture {
             info.setFirstName("Bar");
             testling->updateService(info);
 
-            CPPUNIT_ASSERT(querier->isServiceRegistered("foo@bar", 1234, info.toTXTRecord()));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            CPPUNIT_ASSERT(querier->isServiceRegistered("foo@bar", 1234, *txtRecord));
 
             testling->stop();
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,12 +20,17 @@ namespace Swift {
     class BonjourResolveServiceQuery : public DNSSDResolveServiceQuery, public BonjourQuery {
         public:
             BonjourResolveServiceQuery(const DNSSDServiceID& service, std::shared_ptr<BonjourQuerier> querier, EventLoop* eventLoop) : BonjourQuery(querier, eventLoop) {
-                DNSServiceErrorType result = DNSServiceResolve(
-                        &sdRef, 0, boost::numeric_cast<unsigned int>(service.getNetworkInterfaceID()),
-                        service.getName().c_str(), service.getType().c_str(),
-                        service.getDomain().c_str(),
-                        &BonjourResolveServiceQuery::handleServiceResolvedStatic, this);
-                if (result != kDNSServiceErr_NoError) {
+                try {
+                    DNSServiceErrorType result = DNSServiceResolve(
+                            &sdRef, 0, boost::numeric_cast<unsigned int>(service.getNetworkInterfaceID()),
+                            service.getName().c_str(), service.getType().c_str(),
+                            service.getDomain().c_str(),
+                            &BonjourResolveServiceQuery::handleServiceResolvedStatic, this);
+                    if (result != kDNSServiceErr_NoError) {
+                        sdRef = nullptr;
+                    }
+                }
+                catch (...) {
                     sdRef = nullptr;
                 }
             }

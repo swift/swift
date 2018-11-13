@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -225,7 +225,9 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
             info.setFirstName(firstName);
             info.setLastName(lastName);
             info.setNick(nickName);
-            querier->setServiceInfo(service, DNSSDResolveServiceQuery::Result(name + "._presence._tcp.local", "rabbithole.local", 1234, info.toTXTRecord()));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            querier->setServiceInfo(service, DNSSDResolveServiceQuery::Result(name + "._presence._tcp.local", "rabbithole.local", 1234, *txtRecord));
             querier->addService(service);
             eventLoop->processEvents();
         }
@@ -241,7 +243,9 @@ class LinkLocalPresenceManagerTest : public CppUnit::TestFixture {
             LinkLocalServiceInfo info;
             info.setStatus(status);
             info.setMessage(message);
-            querier->setServiceInfo(service, DNSSDResolveServiceQuery::Result(name + "._presence._tcp.local", "rabbithole.local", 1234, info.toTXTRecord()));
+            auto txtRecord = info.toTXTRecord();
+            CPPUNIT_ASSERT(txtRecord);
+            querier->setServiceInfo(service, DNSSDResolveServiceQuery::Result(name + "._presence._tcp.local", "rabbithole.local", 1234, *txtRecord));
             eventLoop->processEvents();
         }
 

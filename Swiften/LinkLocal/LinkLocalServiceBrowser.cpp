@@ -67,15 +67,27 @@ bool LinkLocalServiceBrowser::isRegistered() const {
 
 void LinkLocalServiceBrowser::registerService(const std::string& name, unsigned short port, const LinkLocalServiceInfo& info) {
     assert(!registerQuery);
-    registerQuery = querier->createRegisterQuery(name, port, info.toTXTRecord());
-    registerQuery->onRegisterFinished.connect(
-        boost::bind(&LinkLocalServiceBrowser::handleRegisterFinished, this, _1));
-    registerQuery->registerService();
+    if (auto txtRecord = info.toTXTRecord()) {
+        registerQuery = querier->createRegisterQuery(name, port, *txtRecord);
+        registerQuery->onRegisterFinished.connect(
+            boost::bind(&LinkLocalServiceBrowser::handleRegisterFinished, this, _1));
+        registerQuery->registerService();
+    }
+    else {
+        haveError = true;
+        stop();
+    }
 }
 
 void LinkLocalServiceBrowser::updateService(const LinkLocalServiceInfo& info) {
     assert(registerQuery);
-    registerQuery->updateServiceInfo(info.toTXTRecord());
+    if (auto txtRecord = info.toTXTRecord()) {
+        registerQuery->updateServiceInfo(*txtRecord);
+    }
+    else {
+        haveError = true;
+        stop();
+    }
 }
 
 void LinkLocalServiceBrowser::unregisterService() {
