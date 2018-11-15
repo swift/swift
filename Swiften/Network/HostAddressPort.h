@@ -29,6 +29,13 @@ namespace Swift {
                 return address_ == o.address_ && port_ == o.port_;
             }
 
+            bool operator<(const HostAddressPort& o) const {
+                if (address_ < o.address_) {
+                    return true;
+                }
+                return address_ == o.address_ && port_ < o.port_;
+            }
+
             bool isValid() const {
                 return address_.isValid() && port_ > 0;
             }

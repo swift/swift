@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -10,6 +10,7 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 
 #include <Swiften/Network/HostAddress.h>
+#include <Swiften/Network/HostAddressPort.h>
 
 using namespace Swift;
 
@@ -21,6 +22,7 @@ class HostAddressTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testToString);
         CPPUNIT_TEST(testToString_IPv6);
         CPPUNIT_TEST(testToString_Invalid);
+        CPPUNIT_TEST(testComparison);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -61,6 +63,32 @@ class HostAddressTest : public CppUnit::TestFixture {
             HostAddress testling;
 
             CPPUNIT_ASSERT_EQUAL(std::string("0.0.0.0"), testling.toString());
+        }
+
+        void testComparison() {
+            auto ha127_0_0_1 = *HostAddress::fromString("127.0.0.1");
+            auto ha127_0_0_2 = *HostAddress::fromString("127.0.0.2");
+            auto ha127_0_1_0 = *HostAddress::fromString("127.0.1.0");
+
+            CPPUNIT_ASSERT(ha127_0_0_1 < ha127_0_0_2);
+            CPPUNIT_ASSERT(ha127_0_0_2 < ha127_0_1_0);
+            CPPUNIT_ASSERT(!(ha127_0_0_1 < ha127_0_0_1));
+            CPPUNIT_ASSERT(!(ha127_0_0_2 < ha127_0_0_1));
+            CPPUNIT_ASSERT(!(ha127_0_0_2 == ha127_0_0_1));
+            CPPUNIT_ASSERT(ha127_0_0_1 == ha127_0_0_1);
+
+            auto hap_127_0_0_1__1 = HostAddressPort(ha127_0_0_1, 1);
+            auto hap_127_0_0_1__2 = HostAddressPort(ha127_0_0_1, 2);
+            auto hap_127_0_0_2__1 = HostAddressPort(ha127_0_0_2, 1);
+            auto hap_127_0_0_2__2 = HostAddressPort(ha127_0_0_2, 2);
+
+            CPPUNIT_ASSERT(hap_127_0_0_1__1 < hap_127_0_0_1__2);
+            CPPUNIT_ASSERT(!(hap_127_0_0_1__1 < hap_127_0_0_1__1));
+            CPPUNIT_ASSERT(!(hap_127_0_0_1__1 == hap_127_0_0_1__2));
+            CPPUNIT_ASSERT(hap_127_0_0_1__1 == hap_127_0_0_1__1);
+            CPPUNIT_ASSERT(!(hap_127_0_0_1__2 == hap_127_0_0_1__1));
+            CPPUNIT_ASSERT(hap_127_0_0_1__2 < hap_127_0_0_2__1);
+            CPPUNIT_ASSERT(hap_127_0_0_2__1 < hap_127_0_0_2__2);
         }
 };
 
