@@ -45,7 +45,10 @@ namespace Swift {
                     PresenceType,
                     PubSubEventType,
                     BlockEventType,
-                    UnblockEventType
+                    UnblockEventType,
+                    RosterAddType,
+                    RosterRemoveType,
+                    RosterUpdateType
                 };
 
                 Event(std::shared_ptr<Message> stanza) : type(MessageType), stanza(stanza) {}
@@ -61,7 +64,7 @@ namespace Swift {
                 JID from;
                 std::shared_ptr<PubSubEventPayload> pubsubEvent;
 
-                // Blocklist
+                // Blocklist & Roster Push
                 JID item;
             };
 
@@ -122,6 +125,9 @@ namespace Swift {
             void handleIncomingBlockEvent(const JID& item);
             void handleIncomingUnblockEvent(const JID& item);
             void handleInitialRosterPopulated();
+            void handleIncomingRosterAdd(const JID& item);
+            void handleIncomingRosterRemove(const JID& item);
+            void handleIncomingRosterUpdate(const JID& item);
             void handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error);
             void handleDisconnected(const boost::optional<ClientError>& error);
 

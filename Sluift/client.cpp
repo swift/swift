@@ -599,6 +599,33 @@ static void pushEvent(lua_State* L, const SluiftClient::Event& event) {
             Lua::registerTableToString(L, -1);
             break;
         }
+        case SluiftClient::Event::RosterAddType: {
+            Lua::Table result = boost::assign::map_list_of
+                ("type", std::make_shared<Lua::Value>(std::string("rosterpush")))
+                ("jid",  std::make_shared<Lua::Value>(event.item.toString()))
+                ("action", std::make_shared<Lua::Value>(std::string("added")));
+            Lua::pushValue(L, result);
+            Lua::registerTableToString(L, -1);
+            break;
+        }
+        case SluiftClient::Event::RosterRemoveType: {
+            Lua::Table result = boost::assign::map_list_of
+                ("type", std::make_shared<Lua::Value>(std::string("rosterpush")))
+                ("jid",  std::make_shared<Lua::Value>(event.item.toString()))
+                ("action", std::make_shared<Lua::Value>(std::string("removed")));
+            Lua::pushValue(L, result);
+            Lua::registerTableToString(L, -1);
+            break;
+        }
+        case SluiftClient::Event::RosterUpdateType: {
+            Lua::Table result = boost::assign::map_list_of
+                ("type", std::make_shared<Lua::Value>(std::string("rosterpush")))
+                ("jid",  std::make_shared<Lua::Value>(event.item.toString()))
+                ("action", std::make_shared<Lua::Value>(std::string("updated")));
+            Lua::pushValue(L, result);
+            Lua::registerTableToString(L, -1);
+            break;
+        }
     }
 }
 

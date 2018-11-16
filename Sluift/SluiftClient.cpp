@@ -38,6 +38,9 @@ SluiftClient::SluiftClient(
     client->onPresenceReceived.connect(boost::bind(&SluiftClient::handleIncomingPresence, this, _1));
     client->getPubSubManager()->onEvent.connect(boost::bind(&SluiftClient::handleIncomingPubSubEvent, this, _1, _2));
     client->getRoster()->onInitialRosterPopulated.connect(boost::bind(&SluiftClient::handleInitialRosterPopulated, this));
+    client->getRoster()->onJIDAdded.connect(boost::bind(&SluiftClient::handleIncomingRosterAdd, this, _1));
+    client->getRoster()->onJIDRemoved.connect(boost::bind(&SluiftClient::handleIncomingRosterRemove, this, _1));
+    client->getRoster()->onJIDUpdated.connect(boost::bind(&SluiftClient::handleIncomingRosterUpdate, this, _1));
     client->getClientBlockListManager()->getBlockList()->onItemAdded.connect(boost::bind(&SluiftClient::handleIncomingBlockEvent, this, _1));
     client->getClientBlockListManager()->getBlockList()->onItemRemoved.connect(boost::bind(&SluiftClient::handleIncomingUnblockEvent, this, _1));
 }
@@ -190,6 +193,18 @@ void SluiftClient::handleIncomingUnblockEvent(const JID& item) {
 
 void SluiftClient::handleInitialRosterPopulated() {
     rosterReceived = true;
+}
+
+void SluiftClient::handleIncomingRosterAdd(const JID& item) {
+    pendingEvents.push_back(Event(item, Event::RosterAddType));
+}
+
+void SluiftClient::handleIncomingRosterRemove(const JID& item) {
+    pendingEvents.push_back(Event(item, Event::RosterRemoveType));
+}
+
+void SluiftClient::handleIncomingRosterUpdate(const JID& item) {
+    pendingEvents.push_back(Event(item, Event::RosterUpdateType));
 }
 
 void SluiftClient::handleRequestResponse(std::shared_ptr<Payload> response, std::shared_ptr<ErrorPayload> error) {
