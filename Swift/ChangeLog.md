@@ -1,3 +1,7 @@
+4.0.3 (2019-01-03)
+------------------
+- Fix handling of empty bookmark responses
+
 4.0.2 (2018-04-05)
 ------------------
 - Fix versioning issue in Windows Installer process

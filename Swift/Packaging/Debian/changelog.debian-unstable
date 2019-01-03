@@ -1,4 +1,4 @@
-swift-im (4.0.2-1) UNRELEASED; urgency=medium
+swift-im (4.0.3-1) UNRELEASED; urgency=medium
 
   * New chat theme including a new font
   * Support for message carbons (XEP-0280)
@@ -14,7 +14,7 @@ swift-im (4.0.2-1) UNRELEASED; urgency=medium
   * Allow setting vCard on servers that do not return an empty vCard on fresh accounts
   * And assorted smaller features and usability enhancements. Closes: 840151, 889062
 
- -- Kevin Smith <kevin@kismith.co.uk>  Tue, 10 Apr 2018 10:46:13 +0200
+ -- Kevin Smith <kevin@kismith.co.uk>  Thu, 03 Jan 2019 13:59:07 +0100
 
 swift-im (3.0.4-1) unstable; urgency=low
 
