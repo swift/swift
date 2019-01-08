@@ -50,7 +50,6 @@ namespace Swift {
             virtual ByteArray getFinishMessage() const = 0;
             virtual ByteArray getPeerFinishMessage() const;
 
-
         public:
             enum class Mode {
                 Client,

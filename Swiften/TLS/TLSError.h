@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -7,6 +7,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Base/Error.h>
@@ -18,16 +19,23 @@ namespace Swift {
 
             enum Type {
                 UnknownError,
-                CertificateCardRemoved
+                CertificateCardRemoved,
+                AcceptFailed,
+                ConnectFailed
             };
 
-            TLSError(Type type = UnknownError) : type(type) {}
+            TLSError(Type type = UnknownError, std::string message = "") : type_(type), message_(std::move(message)) {}
 
             Type getType() const {
-                return type;
+                return type_;
+            }
+
+            const std::string& getMessage() const {
+                return message_;
             }
 
         private:
-            Type type;
+            Type type_;
+            std::string message_;
     };
 }

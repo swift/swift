@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2018 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -93,8 +93,8 @@ void BOSHConnection::handleRawDataRead(std::shared_ptr<SafeByteArray> data) {
     tlsLayer_->handleDataRead(*data.get());
 }
 
-void BOSHConnection::handleTLSError(std::shared_ptr<TLSError> /* error */) {
-
+void BOSHConnection::handleTLSError(std::shared_ptr<TLSError> error) {
+    SWIFT_LOG(debug) << (error ? error->getMessage() : "Unknown TLS error") << std::endl;
 }
 
 void BOSHConnection::writeData(const SafeByteArray& data) {

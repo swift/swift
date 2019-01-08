@@ -316,6 +316,8 @@ void CoreClient::handleSessionFinished(std::shared_ptr<Error> error) {
                     clientError = ClientError(ClientError::CertificateCardRemoved);
                     break;
                 case TLSError::UnknownError:
+                case TLSError::AcceptFailed:
+                case TLSError::ConnectFailed:
                     clientError = ClientError(ClientError::TLSError);
                     break;
             }

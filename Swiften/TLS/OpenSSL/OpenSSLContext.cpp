@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -180,7 +180,7 @@ void OpenSSLContext::accept() {
     handle_ = std::unique_ptr<SSL>(SSL_new(context_.get()));
     if (!handle_) {
         state_ = State::Error;
-        onError(std::make_shared<TLSError>());
+        onError(std::make_shared<TLSError>(TLSError::AcceptFailed, openSSLInternalErrorToString()));
         return;
     }
 
@@ -199,13 +199,14 @@ void OpenSSLContext::connect(const std::string& requestedServerName) {
     handle_ = std::unique_ptr<SSL>(SSL_new(context_.get()));
     if (!handle_) {
         state_ = State::Error;
-        onError(std::make_shared<TLSError>());
+        onError(std::make_shared<TLSError>(TLSError::ConnectFailed, openSSLInternalErrorToString()));
         return;
     }
 
     if (!requestedServerName.empty()) {
         if (SSL_set_tlsext_host_name(handle_.get(), const_cast<char*>(requestedServerName.c_str())) != 1) {
-            SWIFT_LOG(error) << "Failed on SSL_set_tlsext_host_name()." << std::endl;
+            onError(std::make_shared<TLSError>(TLSError::ConnectFailed, "Failed to set Server Name Indication: " + openSSLInternalErrorToString()));\
+            return;
         }
     }
 
@@ -237,9 +238,8 @@ void OpenSSLContext::doAccept() {
             sendPendingDataToNetwork();
             break;
         default:
-            SWIFT_LOG(warning) << openSSLInternalErrorToString() << std::endl;
             state_ = State::Error;
-            onError(std::make_shared<TLSError>());
+            onError(std::make_shared<TLSError>(TLSError::AcceptFailed, openSSLInternalErrorToString()));
             sendPendingDataToNetwork();
     }
 }
@@ -260,9 +260,9 @@ void OpenSSLContext::doConnect() {
             sendPendingDataToNetwork();
             break;
         default:
-            SWIFT_LOG(warning) << openSSLInternalErrorToString() << std::endl;
             state_ = State::Error;
             onError(std::make_shared<TLSError>());
+            onError(std::make_shared<TLSError>(TLSError::ConnectFailed, openSSLInternalErrorToString()));
     }
 }
 
@@ -312,12 +312,13 @@ void OpenSSLContext::handleDataFromNetwork(const SafeByteArray& data) {
 }
 
 void OpenSSLContext::handleDataFromApplication(const SafeByteArray& data) {
-    if (SSL_write(handle_.get(), vecptr(data), data.size()) >= 0) {
-        sendPendingDataToNetwork();
+    auto ret = SSL_write(handle_.get(), vecptr(data), data.size());
+    if (ret > 0 || SSL_get_error(handle_.get(), ret) == SSL_ERROR_WANT_READ) {
+            sendPendingDataToNetwork();
     }
     else {
         state_ = State::Error;
-        onError(std::make_shared<TLSError>());
+        onError(std::make_shared<TLSError>(TLSError::UnknownError, openSSLInternalErrorToString()));
     }
 }
 
@@ -333,7 +334,7 @@ void OpenSSLContext::sendPendingDataToApplication() {
     }
     if (ret < 0 && SSL_get_error(handle_.get(), ret) != SSL_ERROR_WANT_READ) {
         state_ = State::Error;
-        onError(std::make_shared<TLSError>());
+        onError(std::make_shared<TLSError>(TLSError::UnknownError, openSSLInternalErrorToString()));
     }
 }
 
