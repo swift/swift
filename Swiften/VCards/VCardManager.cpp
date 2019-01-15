@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -50,10 +50,9 @@ void VCardManager::requestOwnVCard() {
     requestVCard(JID());
 }
 
-
 void VCardManager::handleVCardReceived(const JID& actualJID, VCard::ref vcard, ErrorPayload::ref error) {
     requestedVCards.erase(actualJID);
-    if (!error) {
+    if (!error || (error && error->getCondition() == ErrorPayload::ItemNotFound)) {
         if (!vcard) {
             vcard = VCard::ref(new VCard());
         }

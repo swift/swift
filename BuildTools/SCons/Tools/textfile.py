@@ -63,7 +63,7 @@ def _do_subst(node, subs):
     then all instances of %VERSION% in the file will be replaced with
     1.2345 and so forth.
     """
-    contents = node.get_text_contents()
+    contents = node.get_contents().decode('utf-8')
     if not subs: return contents
     for (k,v) in subs:
         contents = re.sub(k, v, contents)

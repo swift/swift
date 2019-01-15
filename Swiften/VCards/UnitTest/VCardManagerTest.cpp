@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2018 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,17 @@ class VCardManagerTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testRequest_Error);
         CPPUNIT_TEST(testRequest_VCardAlreadyRequested);
         CPPUNIT_TEST(testRequest_AfterPreviousRequest);
-        CPPUNIT_TEST(testRequestOwnVCard);
+
+        CPPUNIT_TEST(testRequestVCard_ReturnFullVCard);
+        CPPUNIT_TEST(testRequestVCard_ReturnEmptyVCard);
+        CPPUNIT_TEST(testRequestVCard_ReturnItemNotFoundError);
+        CPPUNIT_TEST(testRequestVCard_ReturnFeatureNotImplementedError);
+
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnFullVCard);
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnEmptyVCard);
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnItemNotFoundError);
+        CPPUNIT_TEST(testRequestOwnVCard_ReturnFeatureNotImplementedError);
+
         CPPUNIT_TEST(testCreateSetVCardRequest);
         CPPUNIT_TEST(testCreateSetVCardRequest_Error);
         CPPUNIT_TEST_SUITE_END();
@@ -54,7 +64,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testGet_NewVCardRequestsVCard() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
             CPPUNIT_ASSERT(!result);
@@ -63,7 +73,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testGet_ExistingVCard() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             VCard::ref vcard(new VCard());
             vcard->setFullName("Foo Bar");
             vcardStorage->setVCard(JID("foo@bar.com/baz"), vcard);
@@ -75,7 +85,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testRequest_RequestsVCard() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             testling->requestVCard(JID("foo@bar.com/baz"));
 
             CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
@@ -83,7 +93,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testRequest_ReceiveEmitsNotification() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             testling->requestVCard(JID("foo@bar.com/baz"));
             stanzaChannel->onIQReceived(createVCardResult());
 
@@ -96,7 +106,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testRequest_Error() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             testling->requestVCard(JID("foo@bar.com/baz"));
             stanzaChannel->onIQReceived(IQ::createError(JID("baz@fum.com/foo"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID()));
 
@@ -105,7 +115,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testRequest_VCardAlreadyRequested() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             testling->requestVCard(JID("foo@bar.com/baz"));
             VCard::ref result = testling->getVCardAndRequestWhenNeeded(JID("foo@bar.com/baz"));
 
@@ -114,7 +124,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testRequest_AfterPreviousRequest() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             testling->requestVCard(JID("foo@bar.com/baz"));
             stanzaChannel->onIQReceived(createVCardResult());
             testling->requestVCard(JID("foo@bar.com/baz"));
@@ -123,8 +133,60 @@ class VCardManagerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(1, JID("foo@bar.com/baz"), IQ::Get));
         }
 
-        void testRequestOwnVCard() {
-            std::shared_ptr<VCardManager> testling = createManager();
+        void testRequestVCard_ReturnFullVCard() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+            stanzaChannel->onIQReceived(createVCardResult());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(JID("foo@bar.com/baz"), changes[0].first);
+            CPPUNIT_ASSERT_EQUAL(std::string("Foo Bar"), changes[0].second->getFullName());
+            CPPUNIT_ASSERT_EQUAL(false, changes[0].second->isEmpty());
+        }
+
+        void testRequestVCard_ReturnEmptyVCard() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+                  stanzaChannel->onIQReceived([&](){
+                    auto vcard = std::make_shared<VCard>();
+                    return IQ::createResult(JID("foo@bar.com/baz"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
+
+        void testRequestVCard_ReturnItemNotFoundError() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+                  stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID("foo@bar.com/baz"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::ItemNotFound);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
+
+        void testRequestVCard_ReturnFeatureNotImplementedError() {
+            auto testling = createManager();
+            testling->requestVCard(JID("foo@bar.com/baz"));
+                  stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID("foo@bar.com/baz"), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::FeatureNotImplemented);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID("foo@bar.com/baz"), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
+
+        void testRequestOwnVCard_ReturnFullVCard() {
+            auto testling = createManager();
             testling->requestVCard(ownJID);
             stanzaChannel->onIQReceived(createOwnVCardResult());
 
@@ -139,8 +201,47 @@ class VCardManagerTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("Myself"), ownChanges[0]->getFullName());
         }
 
+        void testRequestOwnVCard_ReturnEmptyVCard() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived([&](){
+                    auto vcard = std::make_shared<VCard>();
+                    return IQ::createResult(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), vcard);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
+
+        void testRequestOwnVCard_ReturnItemNotFoundError() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::ItemNotFound);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(changes.size()));
+            CPPUNIT_ASSERT_EQUAL(true, changes[0].second->isEmpty());
+        }
+
+        void testRequestOwnVCard_ReturnFeatureNotImplementedError() {
+            auto testling = createManager();
+            testling->requestVCard(ownJID);
+            stanzaChannel->onIQReceived([&](){
+                    return IQ::createError(JID(), stanzaChannel->sentStanzas[0]->getTo(), stanzaChannel->sentStanzas[0]->getID(), ErrorPayload::FeatureNotImplemented);
+            }());
+
+            CPPUNIT_ASSERT_EQUAL(1, static_cast<int>(stanzaChannel->sentStanzas.size()));
+            CPPUNIT_ASSERT(stanzaChannel->isRequestAtIndex<VCard>(0, JID(), IQ::Get));
+            CPPUNIT_ASSERT_EQUAL(0, static_cast<int>(changes.size()));
+        }
+
         void testCreateSetVCardRequest() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             VCard::ref vcard = std::make_shared<VCard>();
             vcard->setFullName("New Name");
             SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);
@@ -154,7 +255,7 @@ class VCardManagerTest : public CppUnit::TestFixture {
         }
 
         void testCreateSetVCardRequest_Error() {
-            std::shared_ptr<VCardManager> testling = createManager();
+            auto testling = createManager();
             VCard::ref vcard = std::make_shared<VCard>();
             vcard->setFullName("New Name");
             SetVCardRequest::ref request = testling->createSetVCardRequest(vcard);

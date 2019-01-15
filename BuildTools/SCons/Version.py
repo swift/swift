@@ -1,4 +1,4 @@
-import subprocess, os, datetime, re, os.path
+import subprocess, os, datetime, re, os.path, sys, unittest
 
 def getGitBuildVersion(root, project) :
     tag = git("describe --tags --exact --match \"" + project + "-*\"", root)
@@ -6,7 +6,7 @@ def getGitBuildVersion(root, project) :
         return tag.rstrip()[len(project)+1:]
     tag = git("describe --tags --match \"" + project + "-*\"", root)
     if tag :
-        m = re.match(project + "-(.*)-(.*)-(.*)", tag.decode('utf-8'))
+        m = re.match(project + "-(.*)-(.*)-(.*)", tag)
         if m :
             return m.group(1) + "-dev" + m.group(2)
     return None
@@ -37,32 +37,165 @@ def getBuildVersion(root, project) :
 
     return datetime.date.today().strftime("%Y%m%d")
 
-def convertToWindowsVersion(version) :
-    version_match = re.match("(\d+)\.(\d+)(.*)", version.decode('utf-8'))
-    major = version_match and int(version_match.group(1)) or 0
-    minor = version_match and int(version_match.group(2)) or 0
-    if version_match and len(version_match.group(3)) == 0 :
-        patch = 60000
-    else :
-        match = re.match("^beta(\d+)(.*)", version_match.group(3))
-        build_string = ""
-        if match :
-            patch = 1000*int(match.group(1))
-            build_string = match.group(2)
-        else :
-            rc_match = re.match("^rc(\d+)(.*)", version_match.group(3))
-            if rc_match :
-                patch = 10000*int(rc_match.group(1))
-                build_string = rc_match.group(2)
-            else :
-                patch = 0
-                alpha_match = re.match("^alpha(.*)", version_match.group(3))
-                if alpha_match :
-                    build_string = alpha_match.group(1)
+# The following conversion allows us to use version tags the format:
+#   major.0
+#   major.0.(0 to 9)
+#
+#   Either from above followed by:
+#   alpha(0 to 4)
+#   beta(0 to 6)
+#   rc(1 to 11)
+#
+#   Followed by an optional -dev(1-65535) for off tag builds.
+def convertToWindowsVersion(version):
+    match = re.match(r"(?P<major>\d+)\.(?P<minor>\d+)\.?(?P<patch>\d+)?(?:(?P<stage>rc|beta|alpha)(?P<stage_number>\d+)?)?(?:-dev(?P<dev>\d+))?", version)
+    assert(match)
+    major, minor, patch = (0, 0, 0)
 
-        if len(build_string) > 0 :
-            build_match = re.match("^-dev(\d+)", build_string)
-            if build_match :
-                patch += int(build_match.group(1))
+    groups = match.groupdict()
+    assert(groups['major'])
+    major = int(groups['major'])
 
+    if groups['minor']:
+        assert(int(groups['minor']) == 0)
+
+    if groups['patch']:
+        assert(0 <= int(groups['patch']) <= 9)
+        minor = int(groups['patch']) * 25
+
+    stage = groups["stage"]
+    if stage:
+        stageNumber = groups['stage_number']
+        if not stageNumber or stageNumber == "":
+            stageNumber = 0
+        else:
+            stageNumber = int(stageNumber)
+
+        if stage == "alpha":
+            assert(0 <= stageNumber <= 4)
+            minor = 1 + stageNumber
+        elif stage == "beta":
+            assert(0 <= stageNumber <= 6)
+            minor = 6 + stageNumber
+        elif stage == "rc":
+            assert(1 <= stageNumber <= 11)
+            minor = 12 + stageNumber
+        else:
+            assert(False)
+    else:
+        minor = minor + 24
+
+    if groups['dev']:
+        patch = 1 + int(groups['dev'])
+
+    # The following constraints are set by Windows Installer framework
+    assert(0 <= major <= 255)
+    assert(0 <= minor <= 255)
+    assert(0 <= patch <= 65535)
     return (major, minor, patch)
+
+# Test Windows version mapping scheme
+class convertToWindowsVersionTest(unittest.TestCase):
+    def testWindowsVersionsAreDescending(self):
+        versionStringsWithOldVersions = [
+            ("5.0rc11", None),
+            ("5.0rc1", None),
+            ("5.0beta6", None),
+            ("5.0alpha4", None),
+            ("5.0alpha2", None),
+            ("5.0alpha", None),
+            ("4.0.9", None),
+            ("4.0.1", None),
+            ("4.0", (4, 0, 60000)),
+            ("4.0rc6", (4, 0, 60000)),
+            ("4.0rc5", (4, 0, 50000)),
+            ("4.0rc4", (4, 0, 40000)),
+            ("4.0rc3", (4, 0, 30000)),
+            ('4.0rc2-dev34', (4, 0, 20034)),
+            ('4.0rc2-dev33', (4, 0, 20033)),
+            ('4.0rc2-dev31', (4, 0, 20031)),
+            ('4.0rc2-dev30', (4, 0, 20030)),
+            ('4.0rc2-dev29', (4, 0, 20029)),
+            ('4.0rc2-dev27', (4, 0, 20027)),
+            ('4.0rc2-dev39', (4, 0, 20039)),
+            ('4.0rc2', (4, 0, 20000)),
+            ('4.0rc1', (4, 0, 10000)),
+            ('4.0beta2-dev203', (4, 0, 2203)),
+            ('4.0beta2-dev195', (4, 0, 2195)),
+            ('4.0beta2-dev177', (4, 0, 2177)),
+            ('4.0beta2-dev171', (4, 0, 2171)),
+            ('4.0beta2-dev154', (4, 0, 2154)),
+            ('4.0beta2-dev150', (4, 0, 2150)),
+            ('4.0beta2-dev142', (4, 0, 2142)),
+            ('4.0beta2-dev140', (4, 0, 2140)),
+            ('4.0beta2-dev133', (4, 0, 2133)),
+            ('4.0beta2-dev118', (4, 0, 2118)),
+            ('4.0beta2-dev112', (4, 0, 2112)),
+            ('4.0beta2-dev93', (4, 0, 2093)),
+            ('4.0beta2-dev80', (4, 0, 2080)),
+            ('4.0beta2-dev72', (4, 0, 2072)),
+            ('4.0beta2-dev57', (4, 0, 2057)),
+            ('4.0beta2-dev44', (4, 0, 2044)),
+            ('4.0beta2-dev38', (4, 0, 2038)),
+            ('4.0beta2-dev29', (4, 0, 2029)),
+            ('4.0beta2-dev15', (4, 0, 2015)),
+            ('4.0beta2', (4, 0, 2000)),
+            ('4.0beta1', (4, 0, 1000)),
+            ('4.0alpha-dev80', (4, 0, 80)),
+            ('4.0alpha-dev50', (4, 0, 50)),
+            ('4.0alpha-dev43', (4, 0, 43)),
+            ('4.0alpha-dev21', (4, 0, 21)),
+            ('3.0', (3, 0, 60000)),
+            ('3.0rc3', (3, 0, 30000)),
+            ('3.0rc2', (3, 0, 20000)),
+            ('3.0rc1', (3, 0, 10000)),
+            ('3.0beta2-dev124', (3, 0, 2124)),
+            ('3.0beta2-dev81', (3, 0, 2081)),
+            ('3.0beta2-dev50', (3, 0, 2050)),
+            ('3.0beta2-dev44', (3, 0, 2044)),
+            ('3.0beta2-dev40', (3, 0, 2040)),
+            ('3.0beta2-dev26', (3, 0, 2026)),
+            ('3.0beta2', (3, 0, 2000)),
+            ('3.0beta1', (3, 0, 1000)),
+            ('3.0alpha-dev529', (3, 0, 529)),
+            ('3.0alpha-dev528', (3, 0, 528)),
+            ('3.0alpha-dev526', (3, 0, 526)),
+            ('3.0alpha-dev524', (3, 0, 524)),
+            ('3.0alpha-dev515', (3, 0, 515)),
+        ]
+        windowsVersionMapping = list(map(lambda (x,y): (x, convertToWindowsVersion(x)), versionStringsWithOldVersions))
+
+    def testThatBetaIsHigherThanAlpha(self):
+        self.assertTrue(convertToWindowsVersion("3.0beta0") > convertToWindowsVersion("3.0alpha0"))
+        self.assertTrue(convertToWindowsVersion("3.0beta6") > convertToWindowsVersion("3.0alpha1"))
+        self.assertTrue(convertToWindowsVersion("3.0beta6") > convertToWindowsVersion("3.0alpha4"))
+
+    def testThatRcIsHigherThanAlphaAndBeta(self):
+        self.assertTrue(convertToWindowsVersion("3.0rc11") > convertToWindowsVersion("3.0alpha0"))
+        self.assertTrue(convertToWindowsVersion("3.0rc11") > convertToWindowsVersion("3.0alpha4"))
+        self.assertTrue(convertToWindowsVersion("3.0rc1") > convertToWindowsVersion("3.0alpha0"))
+        self.assertTrue(convertToWindowsVersion("3.0rc1") > convertToWindowsVersion("3.0alpha4"))
+        self.assertTrue(convertToWindowsVersion("3.0rc11") > convertToWindowsVersion("3.0beta0"))
+        self.assertTrue(convertToWindowsVersion("3.0rc11") > convertToWindowsVersion("3.0beta6"))
+        self.assertTrue(convertToWindowsVersion("3.0rc1") > convertToWindowsVersion("3.0beta0"))
+        self.assertTrue(convertToWindowsVersion("3.0rc1") > convertToWindowsVersion("3.0beta6"))
+
+    def testThatStableIsHigherThanAlphaAndBetaAndRc(self):
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0alpha0"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0alpha4"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0alpha0"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0alpha4"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0beta0"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0beta6"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0rc1"))
+        self.assertTrue(convertToWindowsVersion("3.0") > convertToWindowsVersion("3.0rc11"))
+
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        unittest.main()
+    elif len(sys.argv) == 2:
+        print convertToWindowsVersion(sys.argv[1])
+        sys.exit(0)
+    else:
+        print "Error: Simply run the script without arguments or pass a single argument."
+        sys.exit(-1)
