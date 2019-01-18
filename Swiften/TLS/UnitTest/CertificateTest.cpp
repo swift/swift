@@ -73,7 +73,7 @@ zqCzpwGL
             auto certificateChain = tlsFactories.getCertificateFactory()->createCertificateChain(createByteArray(PEMCertificate));
             CPPUNIT_ASSERT_EQUAL(size_t(1), certificateChain.size());
 
-            auto certificate = certificateChain[0];
+            auto certificate = certificateChain[0].get();
             CPPUNIT_ASSERT_EQUAL(std::string("/CN=montague.example"), certificate->getSubjectName());
         }
 

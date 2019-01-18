@@ -19,7 +19,7 @@ namespace Swift {
             virtual ~CertificateFactory();
 
             virtual Certificate* createCertificateFromDER(const ByteArray& der) = 0;
-            virtual std::vector<Certificate::ref> createCertificateChain(const ByteArray& data);
+            virtual std::vector<std::unique_ptr<Certificate>> createCertificateChain(const ByteArray& data);
             PrivateKey::ref createPrivateKey(const SafeByteArray& data, boost::optional<SafeByteArray> password = boost::optional<SafeByteArray>());
     };
 }

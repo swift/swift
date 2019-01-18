@@ -23,9 +23,9 @@ namespace Swift {
 CertificateFactory::~CertificateFactory() {
 }
 
-std::vector<Certificate::ref> CertificateFactory::createCertificateChain(const ByteArray& /* data */) {
+std::vector<std::unique_ptr<Certificate>> CertificateFactory::createCertificateChain(const ByteArray& /* data */) {
     assert(false);
-    return std::vector<Certificate::ref>();
+    return std::vector<std::unique_ptr<Certificate>>();
 }
 
 PrivateKey::ref CertificateFactory::createPrivateKey(const SafeByteArray& data, boost::optional<SafeByteArray> password) {

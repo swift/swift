@@ -20,8 +20,8 @@ Certificate* OpenSSLCertificateFactory::createCertificateFromDER(const ByteArray
     return new OpenSSLCertificate(der);
 }
 
-std::vector<Certificate::ref> OpenSSLCertificateFactory::createCertificateChain(const ByteArray& data) {
-    std::vector<Certificate::ref> certificateChain;
+std::vector<std::unique_ptr<Certificate>> OpenSSLCertificateFactory::createCertificateChain(const ByteArray& data) {
+    std::vector<std::unique_ptr<Certificate>> certificateChain;
 
     if (data.size() > std::numeric_limits<int>::max()) {
         return certificateChain;
@@ -35,11 +35,11 @@ std::vector<Certificate::ref> OpenSSLCertificateFactory::createCertificateChain(
     auto x509certFromPEM = PEM_read_bio_X509(bio.get(), &openSSLCert, nullptr, nullptr);
     if (x509certFromPEM && openSSLCert) {
         std::shared_ptr<X509> x509Cert(openSSLCert, X509_free);
-        certificateChain.push_back(std::make_shared<OpenSSLCertificate>(x509Cert));
+        certificateChain.emplace_back(std::make_unique<OpenSSLCertificate>(x509Cert));
         openSSLCert = nullptr;
         while ((x509certFromPEM = PEM_read_bio_X509(bio.get(), &openSSLCert, nullptr, nullptr)) != nullptr) {
             std::shared_ptr<X509> x509Cert(openSSLCert, X509_free);
-            certificateChain.push_back(std::make_shared<OpenSSLCertificate>(x509Cert));
+            certificateChain.emplace_back(std::make_unique<OpenSSLCertificate>(x509Cert));
             openSSLCert = nullptr;
         }
     }

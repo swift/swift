@@ -16,6 +16,6 @@ namespace Swift {
             virtual ~OpenSSLCertificateFactory() override final;
 
             virtual Certificate* createCertificateFromDER(const ByteArray& der) override final;
-            virtual std::vector<Certificate::ref> createCertificateChain(const ByteArray& data) override final;
+            virtual std::vector<std::unique_ptr<Certificate>> createCertificateChain(const ByteArray& data) override final;
     };
 }

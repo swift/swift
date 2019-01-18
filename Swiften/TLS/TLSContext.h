@@ -28,7 +28,7 @@ namespace Swift {
             virtual void connect() = 0;
             virtual void connect(const std::string& serverName);
 
-            virtual bool setCertificateChain(const std::vector<Certificate::ref>& /* certificateChain */);
+            virtual bool setCertificateChain(std::vector<std::unique_ptr<Certificate>>&& /* certificateChain */);
             virtual bool setPrivateKey(const PrivateKey::ref& /* privateKey */);
 
             virtual bool setClientCertificate(CertificateWithKey::ref cert) = 0;

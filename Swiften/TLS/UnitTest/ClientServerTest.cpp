@@ -84,7 +84,49 @@ S05kF7XRpludRB4QkAJt5BNNv6BPP7HPIKyR/rq94ONvzVPAo7uASyFE2sMBsfwP
 pXAI1LVolPCoUC13jEkKdmc8kMSxU+XtsvFryNhkfQtZfSg+nBRFYptFE7GrZ9WY
 GMSL4g==
 -----END CERTIFICATE-----
-)"}};
+)"},
+    {"casigned.example.com",
+R"(-----BEGIN CERTIFICATE-----
+MIIDYTCCAkmgAwIBAgIJAPEpYlUWlJW8MA0GCSqGSIb3DQEBCwUAMEAxCzAJBgNV
+BAYTAkdCMRAwDgYDVQQIDAdFbmdsYW5kMQ4wDAYDVQQKDAVJc29kZTEPMA0GA1UE
+AwwGVGVzdENBMB4XDTE4MDExODAwMDAwMFoXDTQ5MDExODAwMDAwMFowTjELMAkG
+A1UEBhMCR0IxEDAOBgNVBAgMB0VuZ2xhbmQxDjAMBgNVBAoMBUlzb2RlMR0wGwYD
+VQQDDBRjYXNpZ25lZC5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEP
+ADCCAQoCggEBAKw4iCscGIDCc55mwxgJsn/v2GEorpE9zHYsMfl6px2aRLGgB8ki
+xYyNiEPA/b/ilShRp7pp22LPb5O3aOVVWzAs5FTvPdFY2vS8YIxR6XSKXO3u4Q8/
+w8CR0AbKpeCtL0TwSl1u76nq6ORMep6QGsTjDLQ7wUwdShL4qV4nIGxJWon/5GI0
+nl4Xr/wzmysbMjAMSiWOR90DNZMvqQBBhQcJdqdirc+whR8gOhIMvJBn5jlMuFEB
+zL/bR+kG/zFuD0EMsMTy6TETefYuxeWmhuzQENyAV5+1v48G/1a9zzN9Y0xQ6T0N
+ppbLzq+/zhxT1eBN8/O0bAGUzzk1VSFvouECAwEAAaNQME4wHQYDVR0OBBYEFCnR
+umlxjdaUvcpf77zahrDmPnt1MB8GA1UdIwQYMBaAFAbbhPAKtD5YzxQqGH2Um4/f
+OmdFMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBAEPrTTKS+7A4dJJh
+gSAS44ZYyR8/kt9Y3V4qxJM2xrOrW6rM8N15n2i/osSy0AYHiPuvgDG+D7hLt5Ct
+7jZKrp3JRsBaU8//9k6+euwVyWS+EKo/eb7qtSNibZOk7GwrXekJMbRXz1cHTKnW
+0R8UG+EMkOqKQh5dhWuEBXff9SYLTALf0/i+/Ixl3b9rQ6zpY/7UwBdlWLaliM1i
+odIgVu1XRE6Su+bGMa1L5ArniN0LMFq9Mxag2H0V7Kru7vIvbBkL7U6tbi7u26hv
+q4kUFROW2U2C02FTmJeSEBvWoDyMoVjKkmaTL0+vDSQRPGtCsvCgaCXgOwU2Po9s
+8jjHQxg=
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIDUzCCAjugAwIBAgIJAPEpYlUWlJW7MA0GCSqGSIb3DQEBCwUAMEAxCzAJBgNV
+BAYTAkdCMRAwDgYDVQQIDAdFbmdsYW5kMQ4wDAYDVQQKDAVJc29kZTEPMA0GA1UE
+AwwGVGVzdENBMB4XDTE4MDExODAwMDAwMFoXDTQ5MDExODAwMDAwMFowQDELMAkG
+A1UEBhMCR0IxEDAOBgNVBAgMB0VuZ2xhbmQxDjAMBgNVBAoMBUlzb2RlMQ8wDQYD
+VQQDDAZUZXN0Q0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCiCA+9
+bdSHFNPOgbsnhrKbLJP+1lxWTe06+ExwJA3QgCKsR13MsAK8rhmuNB0k8ZIFJL+c
+yUOUgw0370eP940QAtK+HinJpvaGEZKEwaB8VUCjzFTb7zUBio1Y7B45aawEV3qT
+Lzcnil3f7vPIxnAoaptzPriySdggIsimj+y6AWum5FUPyfZzF7EnYfF/VH8V/ZNX
+fku7PPbaeDHvu4EF/0s8P+/l6jddz8dqbDMjH3GDM8sjryWPQPNDjKZ1x80BIdyq
+s9m/kXqIIySNwdIa/X+nYTMchUa5y46n2N4n0RA4F+rf+Ni1Cxk9Ejmmz5hinV+t
+Yzh6jsbB7yZiqEnzAgMBAAGjUDBOMB0GA1UdDgQWBBQG24TwCrQ+WM8UKhh9lJuP
+3zpnRTAfBgNVHSMEGDAWgBQG24TwCrQ+WM8UKhh9lJuP3zpnRTAMBgNVHRMEBTAD
+AQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBMHQ3WMEhkEc0VoOEw3mbsngt1eyJz+nFM
+FeGdRb7JSwpJfe/yBxyGodGyHsQJPVole6sUdq8S1QGT547PkgDHc6Btoq96Mahq
+brgfx1JL9a1F8qaqcENebHc7ltW8kps4xtdlithfo4nKaciYZ5mKbug+AFv569mb
+LU3F282dyW1dLa7+L8dGbb8Ntpnp0BB0Cotm4GX3Xi6Y+fikouqcmXj7vX+uMhG4
+pQpXqb2ML1Gev4w6XUsnls+OJok97x99NsOcqtwqsLJS/sg0cpwrgZ9+50hQKlHO
+8H6hhNjGBkvpIiNsWb9UOc+Id86J+drs9Ed93Eyyvwnq2XcqPGF3
+-----END CERTIFICATE-----)"}};
 std::map<std::string, std::string> privateKeyPEM = {
     {"montague.example",
 R"(-----BEGIN PRIVATE KEY-----
@@ -191,6 +233,36 @@ mL1QEBUNDmvOn2SYERKI1iRevjBBXSzwTpAXnfaWvvTn1XSKzSJK3TjMhFTZHtbj
 mgPPV65cznhofUsg2QenT8zKisvYPYN3p3p9Jo6IqHyT/CCymwIB4OMZITiwXxQs
 PMAxlZGkX3Uri5A8Ln3QQ46elanI2TlC+ZDa84gu/Gw691JWCfsaSaQDTJKnGqos
 dwiNVl130YWaJLjiA9Poc2llKtypfQ8=
+-----END PRIVATE KEY-----
+)"},
+    {"casigned.example.com",
+R"(-----BEGIN PRIVATE KEY-----
+MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCsOIgrHBiAwnOe
+ZsMYCbJ/79hhKK6RPcx2LDH5eqcdmkSxoAfJIsWMjYhDwP2/4pUoUae6adtiz2+T
+t2jlVVswLORU7z3RWNr0vGCMUel0ilzt7uEPP8PAkdAGyqXgrS9E8Epdbu+p6ujk
+THqekBrE4wy0O8FMHUoS+KleJyBsSVqJ/+RiNJ5eF6/8M5srGzIwDEoljkfdAzWT
+L6kAQYUHCXanYq3PsIUfIDoSDLyQZ+Y5TLhRAcy/20fpBv8xbg9BDLDE8ukxE3n2
+LsXlpobs0BDcgFeftb+PBv9Wvc8zfWNMUOk9DaaWy86vv84cU9XgTfPztGwBlM85
+NVUhb6LhAgMBAAECggEAP5KesUstwFoHU/GbEsSBn7hpp3Pc/MBTOUwXJoCgL81C
+jk8EkLrFMZ0NL/WNtcduR/PcdnOdCFyKU3zgu8dGYgIwRyoJJ74lFTJ0cVfLVbm9
+lBcZ/QcMu4kXwWoM0WMcj9YjnVnWHmMYlS2mFeIb/5HQnrdwIyisr1QbMSZAUbgn
+HOLSjkd0KUcXxwP9HfE/8zUFbUsv/wPHE9T5eWqZz7lKZRvgUyk3jYElpewxqPvR
+HPOq9BN87ft7rPzmmZ4JCU2tM5MEQONo3jT5pljTU/iz4pfs1HArHS+/zZbGcoiu
+AhODErhLucodwZ07MZsE9KAdGPGUeob4SgMwmkIiAQKBgQDYZ33DHOgYd5Fa7Tqv
+TC77Nbpjmnk5lyoInNf+7pxBTgqIuKbpS6Ctq76nHI0qerNfd44LqojQEJ9S5rbL
+3s+HR+pypx3DyysE92uLaVsF4rfwZeEpJyQ1Q9NGbsKVb2nNrdGs3LZhG5PL+JQT
+8lS9h/sMIbh5Gd/Dkt8a2HlTawKBgQDLu3YdXWeWUOcq63YrLFDO+RUGsCe1cf+2
+3wTmMRgxfzpAPDZKymUPwrJNd1ddCQiRVKg91pLhlDl8B89Q4iWdOpYnE6vrnw3w
+6iEdEyA6IauvEvD3JPXHGtVHKBS/wz06wQVGzsgMvVun1w32SDzTGZ/somvkN1UE
+BTMRVqXB4wKBgCgkgnq4GQG45FjGmtU7v5dP7yRc2lHpjZ2NYq/imU+v51pXTncG
+VWcB7drX/AO+QRnbdpkJaFmYS8W4EH6e9UY1+/KKt4XDYVaJgwSYZY8g8FgCvhLB
+NQFAdKejEitgQHMr5DI5uwcmc3MpyGYu1LNXzyT/+FVWjGCeFQ7IyzDDAoGAXK9I
++ez/bkQaFs2OMe/0R2TL6wIC3qohMpndSbf2ELaX0pdR/856EaR6p4FujlXIvw0r
+iQ5wPg3H5SRMbbikchYwL1DkusnedsadD/QeijO9PmW4mEcJRW5wrvGOFvuEhJFB
+jEgQfLM82muc33lXqpYSyn3N5cJCfBS9edrYiA8CgYEA0Tsa4KvwzmBXzy2jexUT
+PPYtV9S7hS0D7Owf5SBI1wtWczOu3Y6DsCG4mbDi/tvo1dxC9d5Ns8RXHH9mtdyn
+8VUuSu24lk7VZ0OP5/byiAGqC2urDFGe0iBqePdb+3uS1g132LzAJm4RqBYw4Xjd
+P6n9b0V3iodcFLMTy1ShJ+I=
 -----END PRIVATE KEY-----
 )"}};
 
@@ -568,6 +640,40 @@ TEST(ClientServerTest, testClientServerBasicCommunicationEncryptedPrivateKeyRigh
     })->second)));
 }
 
+TEST(ClientServerTest, testClientServerBasicCommunicationWithChainedCert) {
+    auto clientContext = createTLSContext(TLSContext::Mode::Client);
+    auto serverContext = createTLSContext(TLSContext::Mode::Server);
+
+    TLSClientServerEventHistory events(clientContext.get(), serverContext.get());
+
+    ClientServerConnector connector(clientContext.get(), serverContext.get());
+
+    auto tlsFactories = std::make_shared<PlatformTLSFactories>();
+
+    ASSERT_TRUE(serverContext->setCertificateChain(tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM["casigned.example.com"]))));
+
+    auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM["casigned.example.com"]));
+    ASSERT_NE(nullptr, privateKey.get());
+    ASSERT_TRUE(serverContext->setPrivateKey(privateKey));
+
+    serverContext->accept();
+    clientContext->connect();
+
+    clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
+    serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
+
+    auto serverEvent = std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
+    });
+    ASSERT_NE(events.events.end(), serverEvent);
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), serverEvent->second)));
+    auto clientEvent = std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
+        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
+    });
+    ASSERT_NE(events.events.end(), clientEvent);
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), clientEvent->second)));
+}
+
 TEST(ClientServerTest, testSettingPrivateKeyWithWrongPassword) {
     auto clientContext = createTLSContext(TLSContext::Mode::Client);
     auto serverContext = createTLSContext(TLSContext::Mode::Server);
@@ -610,7 +716,7 @@ TEST(ClientServerTest, testClientServerSNIRequestedHostAvailable) {
     serverContext->onServerNameRequested.connect([&](const std::string& requestedName) {
         if (certificatePEM.find(requestedName) != certificatePEM.end() && privateKeyPEM.find(requestedName) != privateKeyPEM.end()) {
             auto certChain = tlsFactories->getCertificateFactory()->createCertificateChain(createByteArray(certificatePEM[requestedName]));
-            ASSERT_EQ(true, serverContext->setCertificateChain(certChain));
+            ASSERT_EQ(true, serverContext->setCertificateChain(std::move(certChain)));
 
             auto privateKey = tlsFactories->getCertificateFactory()->createPrivateKey(createSafeByteArray(privateKeyPEM[requestedName]));
             ASSERT_NE(nullptr, privateKey.get());

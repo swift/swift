@@ -338,14 +338,14 @@ void OpenSSLContext::sendPendingDataToApplication() {
     }
 }
 
-bool OpenSSLContext::setCertificateChain(const std::vector<Certificate::ref>& certificateChain) {
+bool OpenSSLContext::setCertificateChain(std::vector<std::unique_ptr<Certificate>>&& certificateChain) {
     if (certificateChain.size() == 0) {
         SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
         return false;
     }
 
     // load endpoint certificate
-    auto openSSLCert = std::dynamic_pointer_cast<OpenSSLCertificate>(certificateChain[0]);
+    auto openSSLCert = dynamic_cast<OpenSSLCertificate*>(certificateChain[0].get());
     if (!openSSLCert) {
         return false;
     }
@@ -355,8 +355,8 @@ bool OpenSSLContext::setCertificateChain(const std::vector<Certificate::ref>& ce
     }
 
     if (certificateChain.size() > 1) {
-        for (auto certificate : range(certificateChain.begin() + 1, certificateChain.end())) {
-            auto openSSLCert = std::dynamic_pointer_cast<OpenSSLCertificate>(certificate);
+        for (auto certificate = certificateChain.begin() + 1; certificate != certificateChain.end(); ++certificate) {
+            auto openSSLCert = dynamic_cast<OpenSSLCertificate*>(certificate->get());
             if (!openSSLCert) {
                 return false;
             }
@@ -364,6 +364,7 @@ bool OpenSSLContext::setCertificateChain(const std::vector<Certificate::ref>& ce
                 SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
                 return false;
             }
+            certificate->release();
         }
     }
 
