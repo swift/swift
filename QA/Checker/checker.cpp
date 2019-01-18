@@ -9,6 +9,8 @@
 #include <string>
 #include <sstream>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <gtest/gtest.h>
 #include <QA/Checker/CppUnitTestResultPrinter.h>
 
@@ -42,6 +44,9 @@ int main(int argc, char* argv[]) {
         }
         else if (param == "--debug") {
             Swift::Log::setLogLevel(Swift::Log::debug);
+        }
+        else if (boost::starts_with(param, "--")) {
+            continue;
         }
         else {
             testsToRun.push_back(param);
