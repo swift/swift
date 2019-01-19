@@ -74,7 +74,7 @@ command -v reprepro >/dev/null 2>&1 || { echo >&2 "This script requires aptly bu
 mkdir -p $APT_REPO_ROOT
 
 if [ -z ${SWIFT_PACKAGE_PLATFORMS+x} ]; then
-	platformsarray=( xenial artful jessie stretch sid )
+	platformsarray=( bionic cosmic stretch sid )
 else
 	platformsarray=( $SWIFT_PACKAGE_PLATFORMS )
 fi
@@ -85,13 +85,13 @@ for full_distribution_path in $INCOMING_FOLDER/{debian,ubuntu}/*; do
 	distro_name=$(basename `dirname $full_distribution_path`)
 	distro_reprepro_root=${APT_REPO_ROOT}/${distro_name}/${distro_version}
 
-	if ! [[ $SWIFT_PACKAGE_PLATFORMS == *"$distro_version"* ]]; then
+	if ! [[ ${platformsarray[@]} == *"$distro_version"* ]]; then
 		echo "$distro_version was not found in SWIFT_PACKAGE_PLATFORMS. Skipping..."
 		continue
 	fi
 
-	# ensure reprepro diretctory for this distribution version is present
-	if [ ! -d "$distro_preprepro_root" ]; then
+	# ensure reprepro directory for this distribution version is present
+	if [ ! -d "$distro_reprepro_root" ]; then
 		echo "Create distribution repository for $distro_name/$distro_version"
 		mkdir -p $distro_reprepro_root
 		mkdir -p ${distro_reprepro_root}/conf
