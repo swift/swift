@@ -229,6 +229,7 @@ void OpenSSLContext::doAccept() {
             onConnected();
             // The following call is important so the client knowns the handshake is finished.
             sendPendingDataToNetwork();
+            sendPendingDataToApplication();
             break;
         }
         case SSL_ERROR_WANT_READ:
@@ -254,6 +255,9 @@ void OpenSSLContext::doConnect() {
             //const char* comp = SSL_get_current_compression(handle_.get());
             //std::cout << "Compression: " << SSL_COMP_get_name(comp) << std::endl;
             onConnected();
+            // The following is needed since OpenSSL 1.1.1 for the server to be able to calculate the
+            // TLS finish message.
+            sendPendingDataToNetwork();
             break;
         }
         case SSL_ERROR_WANT_READ:

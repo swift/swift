@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -408,7 +408,6 @@ class TLSEventToSafeByteArrayVisitor : public boost::static_visitor<SafeByteArra
         SafeByteArray operator()(const TLSServerNameRequested&) const {
             return createSafeByteArray("");
         }
-
 };
 
 class TLSEventToStringVisitor : public boost::static_visitor<std::string> {
@@ -457,6 +456,23 @@ class TLSClientServerEventHistory {
                 std::cout << event.first << " : " << boost::apply_visitor(TLSEventToStringVisitor(), event.second) << std::endl;
                 count++;
             }
+        }
+
+        template<class TLSEventType>
+        boost::optional<TLSEventType> getEvent(const std::string& peer, size_t number = 0) {
+            for (const auto& pair : events) {
+                if (pair.first == peer) {
+                    if (pair.second.type() == typeid(TLSEventType)) {
+                        if (number == 0) {
+                            return boost::optional<TLSEventType>(boost::get<TLSEventType>(pair.second));
+                        }
+                        else {
+                            number--;
+                        }
+                    }
+                }
+            }
+            return {};
         }
 
     private:
@@ -602,12 +618,12 @@ TEST(ClientServerTest, testClientServerBasicCommunication) {
     clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
     serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
 
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
+    auto firstMessageFromClient = events.getEvent<TLSDataForApplication>("server");
+    ASSERT_EQ(true, firstMessageFromClient.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(firstMessageFromClient->data));
+    auto firstMessageFromServer = events.getEvent<TLSDataForApplication>("client");
+    ASSERT_EQ(true, firstMessageFromServer.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(firstMessageFromServer->data));
 }
 
 TEST(ClientServerTest, testClientServerBasicCommunicationEncryptedPrivateKeyRightPassword) {
@@ -632,12 +648,12 @@ TEST(ClientServerTest, testClientServerBasicCommunicationEncryptedPrivateKeyRigh
     clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
     serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
 
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
+    auto firstMessageFromClient = events.getEvent<TLSDataForApplication>("server");
+    ASSERT_EQ(true, firstMessageFromClient.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(firstMessageFromClient->data));
+    auto firstMessageFromServer = events.getEvent<TLSDataForApplication>("client");
+    ASSERT_EQ(true, firstMessageFromServer.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(firstMessageFromServer->data));
 }
 
 TEST(ClientServerTest, testClientServerBasicCommunicationWithChainedCert) {
@@ -739,14 +755,15 @@ TEST(ClientServerTest, testClientServerSNIRequestedHostAvailable) {
 
     clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
     serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
-    ASSERT_EQ("This is a test message from the client.", safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
-    ASSERT_EQ("This is a test message from the server.", safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
 
-    ASSERT_EQ("/CN=montague.example", boost::get<TLSConnected>(events.events[5].second).chain[0]->getSubjectName());
+    auto firstMessageFromClient = events.getEvent<TLSDataForApplication>("server");
+    ASSERT_EQ(true, firstMessageFromClient.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(firstMessageFromClient->data));
+    auto firstMessageFromServer = events.getEvent<TLSDataForApplication>("client");
+    ASSERT_EQ(true, firstMessageFromServer.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(firstMessageFromServer->data));
+
+    ASSERT_EQ("/CN=montague.example", events.getEvent<TLSConnected>("client")->chain[0]->getSubjectName());
 }
 
 TEST(ClientServerTest, testClientServerSNIRequestedHostUnavailable) {
@@ -825,12 +842,12 @@ TEST(ClientServerTest, testClientServerBasicCommunicationWith2048BitDHParams) {
     clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
     serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
 
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
+    auto firstMessageFromClient = events.getEvent<TLSDataForApplication>("server");
+    ASSERT_EQ(true, firstMessageFromClient.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(firstMessageFromClient->data));
+    auto firstMessageFromServer = events.getEvent<TLSDataForApplication>("client");
+    ASSERT_EQ(true, firstMessageFromServer.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(firstMessageFromServer->data));
 }
 
 TEST(ClientServerTest, testClientServerBasicCommunicationWith1024BitDHParams) {
@@ -857,10 +874,10 @@ TEST(ClientServerTest, testClientServerBasicCommunicationWith1024BitDHParams) {
     clientContext->handleDataFromApplication(createSafeByteArray("This is a test message from the client."));
     serverContext->handleDataFromApplication(createSafeByteArray("This is a test message from the server."));
 
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "server" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
-    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(boost::apply_visitor(TLSEventToSafeByteArrayVisitor(), std::find_if(events.events.begin(), events.events.end(), [](std::pair<std::string, TLSEvent>& event){
-        return event.first == "client" && (event.second.type() == typeid(TLSDataForApplication));
-    })->second)));
+    auto firstMessageFromClient = events.getEvent<TLSDataForApplication>("server");
+    ASSERT_EQ(true, firstMessageFromClient.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the client.")), safeByteArrayToString(firstMessageFromClient->data));
+    auto firstMessageFromServer = events.getEvent<TLSDataForApplication>("client");
+    ASSERT_EQ(true, firstMessageFromServer.is_initialized());
+    ASSERT_EQ(safeByteArrayToString(createSafeByteArray("This is a test message from the server.")), safeByteArrayToString(firstMessageFromServer->data));
 }
