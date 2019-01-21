@@ -24,7 +24,7 @@ def generateQRCTheme(dir, prefix) :
 
 Import("env")
 
-myenv = env.Clone()
+myenv = env.Clone(tools = [ 'textfile' ])
 
 # Disable warnings that affect Qt
 myenv["CXXFLAGS"] = list(filter(lambda x : x != "-Wfloat-equal", myenv["CXXFLAGS"]))
@@ -365,7 +365,7 @@ myenv["TEXTFILESUFFIX"] = ""
 copying_files = [myenv.File("../../COPYING.gpl"), myenv.File("../../COPYING.thirdparty"), myenv.File("../../COPYING.dependencies")]
 if env["PLATFORM"] == "darwin" and env["HAVE_SPARKLE"] :
     copying_files.append(env["SPARKLE_COPYING"])
-myenv.MyTextfile(target = "COPYING", source = copying_files, LINESEPARATOR = "\n\n========\n\n\n")
+myenv.Textfile(target = "COPYING", source = copying_files, LINESEPARATOR = "\n\n========\n\n\n")
 
 ################################################################################
 # Translation

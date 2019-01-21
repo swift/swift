@@ -5,6 +5,19 @@
 import SCons.Util, SCons.Action
 import xml.dom.minidom, re, os.path, sys
 
+def maybeBytesToString(s):
+    if isinstance(s, bytes):
+        return s.decode('utf-8')
+    return s
+
+def prepareForWrite(s):
+    try:
+        if isinstance(s, unicode):
+            return s.encode('utf-8')
+    except NameError:
+        pass
+    return s
+
 def generate(env) :
     # Location of stylesheets and catalogs
     docbook_dir = "#/BuildTools/DocBook"
@@ -32,15 +45,15 @@ def generate(env) :
             rewritePrefix="%(docbook_xsl_dir)s/" />
 </catalog>"""
 
-        docbook_xml_dir = source[0].get_contents()
-        docbook_xsl_dir = source[1].get_contents()
+        docbook_xml_dir = maybeBytesToString(source[0].get_contents())
+        docbook_xsl_dir = maybeBytesToString(source[1].get_contents())
         if env["PLATFORM"] == "win32" :
             docbook_xml_dir = docbook_xml_dir.replace("\\","/")
             docbook_xsl_dir = docbook_xsl_dir.replace("\\","/")
         file = open(target[0].abspath, "w")
         file.write(catalog % {
-                "docbook_xml_dir" : docbook_xml_dir,
-                "docbook_xsl_dir" : docbook_xsl_dir,
+                "docbook_xml_dir" : prepareForWrite(docbook_xml_dir),
+                "docbook_xsl_dir" : prepareForWrite(docbook_xsl_dir),
             })
         file.close()
 

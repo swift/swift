@@ -12,7 +12,7 @@ external_swiften_dep_modules = ["BOOST"]
 if env["SCONS_STAGE"] == "flags" :
     env["SWIFTEN_DLL"] = env["swiften_dll"]
     env["SWIFTEN_VERSION"] = Version.getBuildVersion(env.Dir("#").abspath, "swift")
-    version_match = re.match("(\d+)\.(\d+).*", env["SWIFTEN_VERSION"])
+    version_match = re.match(r"(\d+)\.(\d+).*", env["SWIFTEN_VERSION"])
     if version_match :
         env["SWIFTEN_VERSION_MAJOR"] = int(version_match.group(1))
         env["SWIFTEN_VERSION_MINOR"] = int(version_match.group(2))

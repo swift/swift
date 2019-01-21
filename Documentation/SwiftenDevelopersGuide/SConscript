@@ -9,36 +9,6 @@ env.Tool("DocBook", toolpath = ["#/BuildTools/DocBook/SCons"])
 import sys, re, os.path
 
 def generateDocBookCode(env, target, source) :
-    # Strips empty lines from the beginning & end of a program
-    def stripEmptyLines(program) :
-        programLines = program.split('\n')
-        newProgramLines = []
-        inProgram = False
-        for line in programLines :
-            if not re.match("^\s*$", line) or inProgram :
-                inProgram = True
-                newProgramLines.append(line)
-        return '\n'.join(newProgramLines).rstrip()
-
-    def createCallouts(program, calloutPrefix) :
-        newProgramLines = []
-        calloutLines = []
-        nextID = 0
-        for line in program.split("\n") :
-            # FIXME: Takes the largest match
-            m = re.match(".*\/* \(\*\) (.*) \*/.*", line)
-            if m :
-                cobID = "cob-" + calloutPrefix + "-" + str(nextID)
-                coID = "co-" + calloutPrefix + "-" + str(nextID)
-                nextID += 1
-                line = re.sub("/\*.*\*/", "]]><co id=\"%(cobID)s\" linkends=\"%(coID)s\"/><![CDATA[" % {"cobID" : cobID, "coID" : coID}, line)
-                calloutLines.append("<callout arearefs=\"%(cobID)s\" id=\"%(coID)s\"><para>%(text)s</para></callout>" % {"cobID": cobID, "coID": coID, "text": m.group(1)})
-            newProgramLines.append(line)
-            callouts = ""
-            if len(calloutLines) > 0 :
-                callouts = "<calloutlist>" + "\n".join(calloutLines) + "</calloutlist>"
-        return ("\n".join(newProgramLines), callouts)
-
     # Parse program
     filename = source[0].abspath
     filenameBase = os.path.basename(filename).replace(".cpp", "")
@@ -71,10 +41,7 @@ def generateDocBookCode(env, target, source) :
     inputfile.close()
 
     for programName, program in programs.items() :
-        program = stripEmptyLines(program)
-        (program, callouts) = createCallouts(program, filenameBase + "-" + programName)
-
-        document = "<foo><programlisting><![CDATA[" + program + "]]></programlisting>" + callouts + "</foo>"
+        document = "<foo><programlisting><![CDATA[" + program.strip() + "]]></programlisting></foo>"
 
         # Generate code
         output = open(target[0].abspath, 'w')
