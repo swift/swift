@@ -299,6 +299,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         "body  the body of the message. Can alternatively be specified using the `body` option\n",
 
         "to  the JID to send the message to\n"
+        "id  the id to set on the stanza\n"
         "body  the body of the message\n"
         "subject  the subject of the MUC room to set\n"
         "type  the type of message to send (`normal`, `chat`, `error`, `groupchat`, `headline`)\n"
@@ -307,6 +308,7 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     Sluift::globals.eventLoop.runOnce();
     JID to;
     boost::optional<std::string> body;
+    boost::optional<std::string> id;
     boost::optional<std::string> subject;
     std::vector<std::shared_ptr<Payload> > payloads;
     int index = 2;
@@ -322,6 +324,10 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     if (lua_istable(L, index)) {
         if (boost::optional<std::string> value = Lua::getStringField(L, index, "to")) {
             to = *value;
+        }
+
+        if (boost::optional<std::string> value = Lua::getStringField(L, index, "id")) {
+            id = value;
         }
 
         if (boost::optional<std::string> value = Lua::getStringField(L, index, "body")) {
@@ -350,6 +356,9 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     if (body && !body->empty()) {
         message->setBody(*body);
     }
+    if (id) {
+        message->setID(*id);
+    }
     if (subject) {
         message->setSubject(*subject);
     }
@@ -369,7 +378,8 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
         "self\n"
         "body  the text of the presence. Can alternatively be specified using the `status` option\n",
 
-        "to  the JID to send the message to\n"
+        "to  the JID to send the presence to\n"
+        "id  the id to set on the stanza\n"
         "status  the text of the presence\n"
         "show  the availability of the presence (`online`, `ffc`, `away`, `xa`, `dnd`)\n"
         "priority  the priority of the presence\n"
@@ -387,6 +397,9 @@ SLUIFT_LUA_FUNCTION_WITH_HELP(
     if (lua_istable(L, index)) {
         if (boost::optional<std::string> value = Lua::getStringField(L, index, "to")) {
             presence->setTo(*value);
+        }
+        if (boost::optional<std::string> id = Lua::getStringField(L, index, "id")) {
+            presence->setID(*id);
         }
         if (boost::optional<std::string> value = Lua::getStringField(L, index, "status")) {
             presence->setStatus(*value);
