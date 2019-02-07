@@ -21,6 +21,7 @@ namespace Swift {
 
             XMLElement(const std::string& tag, const std::string& xmlns = "", const std::string& text = "");
 
+            static std::string escapeAttributeValue(std::string value);
             void setAttribute(const std::string& attribute, const std::string& value);
             void addNode(std::shared_ptr<XMLNode> node);
 

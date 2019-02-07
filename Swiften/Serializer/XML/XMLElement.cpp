@@ -39,14 +39,17 @@ std::string XMLElement::serialize() {
     return result;
 }
 
+std::string XMLElement::escapeAttributeValue(std::string value) {
+    String::replaceAll(value, '&', "&amp;");
+    String::replaceAll(value, '<', "&lt;");
+    String::replaceAll(value, '>', "&gt;");
+    String::replaceAll(value, '\'', "&apos;");
+    String::replaceAll(value, '"', "&quot;");
+    return value;
+}
+
 void XMLElement::setAttribute(const std::string& attribute, const std::string& value) {
-    std::string escapedValue(value);
-    String::replaceAll(escapedValue, '&', "&amp;");
-    String::replaceAll(escapedValue, '<', "&lt;");
-    String::replaceAll(escapedValue, '>', "&gt;");
-    String::replaceAll(escapedValue, '\'', "&apos;");
-    String::replaceAll(escapedValue, '"', "&quot;");
-    attributes_[attribute] = escapedValue;
+    attributes_[attribute] = escapeAttributeValue(value);
 }
 
 void XMLElement::addNode(std::shared_ptr<XMLNode> node) {

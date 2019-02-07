@@ -65,6 +65,13 @@ class XMLElementTest : public CppUnit::TestFixture
 
             CPPUNIT_ASSERT_EQUAL(std::string("<foo myatt=\"\"/>"), testling.serialize());
         }
+
+        void testEscape_SpecialAttributeCharacters() {
+            auto testling = XMLElement::escapeAttributeValue(R"(<"'&>not escaped.)");
+
+            CPPUNIT_ASSERT_EQUAL(std::string("&lt;&quot;&apos;&amp;&gt;not escaped."), testling);
+        }
+
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(XMLElementTest);
