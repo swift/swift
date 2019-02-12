@@ -127,7 +127,7 @@ def _action(target, source, env):
     # write the file
     try:
         if SCons.Util.PY3:
-            target_file = open(target[0].get_path(), TEXTFILE_FILE_WRITE_MODE, newline='')
+            target_file = open(target[0].get_path(), TEXTFILE_FILE_WRITE_MODE, newline='', encoding="utf8")
         else:
             target_file = open(target[0].get_path(), TEXTFILE_FILE_WRITE_MODE)
     except (OSError, IOError):
