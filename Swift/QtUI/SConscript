@@ -1,5 +1,6 @@
 import os, datetime, re, time
 import Version
+import SCons.Util
 
 def generateQRCTheme(dir, prefix) :
     sourceDir = dir.abspath
@@ -475,11 +476,16 @@ if env["PLATFORM"] == "win32" :
         #myenv.Nsis("../Packaging/nsis/swift.nsi")
         if env["SCONS_STAGE"] == "build" and env.get("wix_bindir", None):
             def convertToRTF(env, target, source) :
-                infile = open(source[0].abspath, 'r')
-                outfile = open(target[0].abspath, 'w')
+                if SCons.Util.PY3:
+                    infile = open(source[0].abspath, 'r', encoding="utf8")
+                    outfile = open(target[0].abspath, 'w', encoding="utf8")
+                else:
+                    infile = open(source[0].abspath, 'r')
+                    outfile = open(target[0].abspath, 'w')
                 outfile.write('{\\rtf1\\ansi{\\fonttbl\\f0\\fswiss Helvetica;}\\fs16\\f0\\pard\n')
                 for line in infile:
-                    for char in line.decode("utf-8") :
+                    line = line if SCons.Util.PY3 else line.decode("utf-8")
+                    for char in line :
                         if ord(char) > 127 :
                             # FIXME: This is incorrect, because it only works for latin1.
                             # The correct way is \u<decimal utf16 point>? , but this is more

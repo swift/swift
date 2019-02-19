@@ -15,7 +15,10 @@ def generate(env) :
 
     def WiX_IncludeScanner(source, env, path, arg):
         wixIncludeRegexp = re.compile(r'^\s*\<\?include (\S+.wxs)\s*\?\>\S*', re.M)
-        contents = source.get_contents()
+        if SCons.Util.PY3:
+            contents = source.get_contents().decode("utf8")
+        else:
+            contents = source.get_contents()
         includes = wixIncludeRegexp.findall(contents)
         return [ "" + include for include in includes ]
 

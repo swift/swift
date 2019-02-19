@@ -33,9 +33,13 @@ def generate(env) :
 
             mappings = []
 
-            p = re.compile(r'"([^\"]*)" "([^\"]*)"')
+            regex = re.compile(r'"([^\"]*)" "([^\"]*)"')
 
-            matches = re.findall(p, stdout)
+            if SCons.Util.PY3:
+                matches = re.findall(regex, stdout.decode('utf8'))
+            else:
+                matches = re.findall(regex, stdout)
+
             for match in matches:
                 mappings.append(match)
             return mappings
