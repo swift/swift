@@ -20,4 +20,8 @@ CMD \
   debuild -i -I -b --lintian-opts --profile debian --pedantic && \
   cd /swift-packages/ && \
   rm -rf /swift-packages/swift-im-${DEBIAN_VERSION}/ && \
+  rm -f /swift-packages/swift-im_${DEBIAN_VERSION}*.orig.tar.gz && \
+  rm -f /swift-packages/swift-im_${DEBIAN_VERSION}*.debian.tar.xz && \
+  rm -f /swift-packages/swift-im_${DEBIAN_VERSION}*.dsc && \
+  rm -f /swift-packages/swift-im_${DEBIAN_VERSION}*_source.* && \
   mv * /out/
