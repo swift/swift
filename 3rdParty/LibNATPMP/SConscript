@@ -47,7 +47,6 @@ if env.get("LIBNATPMP_BUNDLED", False) :
         src_files = [
                 "src/libnatpmp/getgateway.c",
                 "src/libnatpmp/natpmp.c",
-                "src/libnatpmp/natpmpc.c",
             ]
 
         if myenv["PLATFORM"] == "win32":
