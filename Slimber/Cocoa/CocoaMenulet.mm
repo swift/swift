@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,9 +17,9 @@ CocoaMenulet::CocoaMenulet() {
 
     statusItem = [[[NSStatusBar systemStatusBar]
             statusItemWithLength: NSVariableStatusItemLength] retain];
-    [statusItem setHighlightMode: YES];
-    [statusItem setEnabled: YES];
-    [statusItem setToolTip: @"Slimber"];
+    [statusItem.button.cell setHighlightsBy: NSChangeGrayCellMask | NSChangeBackgroundCellMask];
+    [statusItem.button setEnabled: YES];
+    [statusItem.button setToolTip: @"Slimber"];
     [statusItem setMenu: menu];
 }
 
@@ -32,7 +32,7 @@ CocoaMenulet::~CocoaMenulet() {
 void CocoaMenulet::setIcon(const std::string& icon) {
     NSString* path = [[NSBundle mainBundle] pathForResource: std2NSString(icon) ofType:@"png"];
     NSImage* image = [[NSImage alloc] initWithContentsOfFile: path];
-    [statusItem setImage: image];
+    [statusItem.button setImage: image];
     [image release];
 }
 
