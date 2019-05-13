@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -94,11 +94,11 @@ LibXMLParser::~LibXMLParser() {
     }
 }
 
-bool LibXMLParser::parse(const std::string& data) {
+bool LibXMLParser::parse(const std::string& data, bool finalData) {
     if (data.size() > std::numeric_limits<int>::max()) {
         return false;
     }
-    if (xmlParseChunk(p->context_, data.c_str(), static_cast<int>(data.size()), false) == XML_ERR_OK) {
+    if (xmlParseChunk(p->context_, data.c_str(), static_cast<int>(data.size()), finalData) == XML_ERR_OK) {
         return true;
     }
     xmlError* error = xmlCtxtGetLastError(p->context_);

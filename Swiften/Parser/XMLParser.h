@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -18,7 +18,7 @@ namespace Swift {
             XMLParser(XMLParserClient* client);
             virtual ~XMLParser();
 
-            virtual bool parse(const std::string& data) = 0;
+            virtual bool parse(const std::string& data, bool finalData = false) = 0;
 
             XMLParserClient* getClient() const {
                 return client_;

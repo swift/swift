@@ -217,6 +217,15 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("iq"), client_.events[1].data);
         }
 
+        void testParse_CompleteDocument() {
+            ParserType testling(&client_);
+
+            CPPUNIT_ASSERT(!testling.parse("<iq", true));
+            CPPUNIT_ASSERT(!testling.parse("<iq>", true));
+            CPPUNIT_ASSERT(!testling.parse("<iq><child>foo</child>", true));
+            CPPUNIT_ASSERT(testling.parse("<iq><child>foo</child></iq>", true));
+        }
+
         void testParse_WhitespaceInAttribute() {
             ParserType testling(&client_);
 

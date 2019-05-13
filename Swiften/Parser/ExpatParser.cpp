@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -82,11 +82,11 @@ ExpatParser::~ExpatParser() {
     XML_ParserFree(p->parser_);
 }
 
-bool ExpatParser::parse(const std::string& data) {
+bool ExpatParser::parse(const std::string& data, bool finalData) {
     if (data.size() > std::numeric_limits<int>::max()) {
         return false;
     }
-    bool success = XML_Parse(p->parser_, data.c_str(), static_cast<int>(data.size()), false) == XML_STATUS_OK;
+    bool success = XML_Parse(p->parser_, data.c_str(), static_cast<int>(data.size()), finalData) == XML_STATUS_OK;
     /*if (!success) {
         std::cout << "ERROR: " << XML_ErrorString(XML_GetErrorCode(p->parser_)) << " while parsing " << data << std::endl;
     }*/

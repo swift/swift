@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -19,7 +19,7 @@ namespace Swift {
             ExpatParser(XMLParserClient* client);
             ~ExpatParser();
 
-            bool parse(const std::string& data);
+            bool parse(const std::string& data, bool finalData = false);
 
             void stopParser();
 
