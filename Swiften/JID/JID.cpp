@@ -13,6 +13,7 @@
 #include <Swiften/Base/String.h>
 #include <Swiften/IDN/IDNConverter.h>
 #include <Swiften/JID/JID.h>
+#include <Swiften/Network/HostAddress.h>
 
 #ifndef SWIFTEN_JID_NO_DEFAULT_IDN_CONVERTER
 #include <memory>
@@ -97,14 +98,47 @@ void JID::initializeFromString(const std::string& jid) {
     }
 }
 
+void JID::setComponents(const std::string& node, const std::string& domain, const std::string& resource) {
+    domain_ = domain;
+    try {
+        node_ = idnConverter->getStringPrepared(node, IDNConverter::XMPPNodePrep);
+        resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
+    }
+    catch (...) {
+        valid_ = false;
+        return;
+    }
+}
 
 void JID::nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource) {
-    if (domain.empty() || !idnConverter->getIDNAEncoded(domain)) {
+    if (domain.empty() || (hasResource_ && resource.empty())) {
         valid_ = false;
         return;
     }
 
-    if (hasResource_ && resource.empty()) {
+    // Handling IPv6 addresses according to RFC 3986 rules
+    // saying that they are enclosed in square brackets
+    // which we have to remove when passing to HostAddress
+    if (domain.size() > 2 && domain.front() == '[' && domain.back() == ']') {
+        auto inner = std::string(domain.begin() + 1, domain.end() - 1);
+        auto hostAddress = HostAddress::fromString(inner);
+        if (hostAddress && hostAddress->isValid()) {
+            setComponents(node, domain, resource);
+            return;
+        }
+    }
+
+    const auto isAnyOfNonNumericAndNotDot = std::any_of(std::begin(domain), std::end(domain), [](char c) {return !::isdigit(c) && c != '.'; });
+
+    if (!isAnyOfNonNumericAndNotDot) {
+        auto hostAddress = HostAddress::fromString(domain);
+        if (hostAddress && hostAddress->isValid()) {
+            setComponents(node, domain, resource);
+            return;
+        }
+    }
+
+    if (!isAnyOfNonNumericAndNotDot || !idnConverter->getIDNAEncoded(domain)) {
         valid_ = false;
         return;
     }
@@ -118,7 +152,8 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
             domain_ = idnConverter->getStringPrepared(domain, IDNConverter::NamePrep);
         }
         resource_ = idnConverter->getStringPrepared(resource, IDNConverter::XMPPResourcePrep);
-    } catch (...) {
+    }
+    catch (...) {
         valid_ = false;
         return;
     }

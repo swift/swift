@@ -184,6 +184,7 @@ namespace Swift {
 
         private:
             void nameprepAndSetComponents(const std::string& node, const std::string& domain, const std::string& resource);
+            void setComponents(const std::string& node, const std::string& domain, const std::string& resource);
             void initializeFromString(const std::string&);
 
         private:

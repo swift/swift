@@ -71,6 +71,12 @@ class JIDTest : public CppUnit::TestFixture
         CPPUNIT_TEST(testGetUnescapedNode);
         CPPUNIT_TEST(testGetUnescapedNode_XEP106Examples);
         CPPUNIT_TEST(testStringPrepFailures);
+        CPPUNIT_TEST(testConstructorWithString_DomainIPv4);
+        CPPUNIT_TEST(testConstructorWithString_DomainNOTIPv4);
+        CPPUNIT_TEST(testConstructorWithString_ValidDomainNOTIPv4);
+        CPPUNIT_TEST(testConstructorWithString_DomainIPv6);
+        CPPUNIT_TEST(testConstructorWithString_DomainInvalidIPv6);
+        CPPUNIT_TEST(testConstructorWithString_DomainIPv6NoBrackets);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -491,6 +497,46 @@ class JIDTest : public CppUnit::TestFixture
             CPPUNIT_ASSERT_EQUAL(std::string("c:\\\\net"), JID("c\\3a\\\\net@example.com").getUnescapedNode());
             CPPUNIT_ASSERT_EQUAL(std::string("c:\\cool stuff"), JID("c\\3a\\cool\\20stuff@example.com").getUnescapedNode());
             CPPUNIT_ASSERT_EQUAL(std::string("c:\\5commas"), JID("c\\3a\\5c5commas@example.com").getUnescapedNode());
+        }
+
+        void testConstructorWithString_DomainIPv4() {
+            JID testling("foo@192.34.12.1/resource");
+
+            CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
+            CPPUNIT_ASSERT_EQUAL(std::string("192.34.12.1"), testling.getDomain());
+            CPPUNIT_ASSERT_EQUAL(std::string("resource"), testling.getResource());
+            CPPUNIT_ASSERT(!testling.isBare());
+            CPPUNIT_ASSERT(testling.isValid());
+        }
+
+        void testConstructorWithString_DomainNOTIPv4() {
+            JID testling("foo@500.34.12.1/resource");
+            CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testConstructorWithString_ValidDomainNOTIPv4() {
+            JID testling("foo@500.34.12.1a/resource");
+            CPPUNIT_ASSERT(testling.isValid());
+        }
+
+        void testConstructorWithString_DomainIPv6() {
+            JID testling("foo@[fe80::a857:33ff:febd:3580]/resource");
+
+            CPPUNIT_ASSERT_EQUAL(std::string("foo"), testling.getNode());
+            CPPUNIT_ASSERT_EQUAL(std::string("[fe80::a857:33ff:febd:3580]"), testling.getDomain());
+            CPPUNIT_ASSERT_EQUAL(std::string("resource"), testling.getResource());
+            CPPUNIT_ASSERT(!testling.isBare());
+            CPPUNIT_ASSERT(testling.isValid());
+        }
+
+        void testConstructorWithString_DomainInvalidIPv6() {
+            JID testling("foo@[1111::a1111:1111:111!:!!!!]/resource");
+            CPPUNIT_ASSERT(!testling.isValid());
+        }
+
+        void testConstructorWithString_DomainIPv6NoBrackets() {
+            JID testling("foo@fe80::a857:33ff:febd:3580/resource");
+            CPPUNIT_ASSERT(!testling.isValid());
         }
 };
 
