@@ -75,6 +75,11 @@ namespace Swift {
              */
             JID(const std::string& node, const std::string& domain, const std::string& resource);
 
+            JID(const JID& other);
+            JID(JID&& other);
+            JID& operator=(const JID& other);
+            JID& operator=(JID&& other);
+
             /**
              * @return Is a correctly-formatted JID.
              */

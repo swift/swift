@@ -72,6 +72,33 @@ JID::JID(const std::string& node, const std::string& domain, const std::string& 
     nameprepAndSetComponents(node, domain, resource);
 }
 
+JID::JID(const JID& other) {
+    this->operator=(other);
+}
+
+JID::JID(JID&& other) {
+    this->operator=(std::move(other));
+}
+
+JID& JID::operator=(const JID& other) {
+    valid_ = other.valid_;
+    node_ = other.node_;
+    domain_ = other.domain_;
+    hasResource_ = other.hasResource_;
+    resource_ = other.resource_;
+    return *this;
+}
+
+JID& JID::operator=(JID&& other) {
+    valid_ = other.valid_;
+    other.valid_ = false;
+    node_ = std::move(other.node_);
+    domain_ = std::move(other.domain_);
+    hasResource_ = other.hasResource_;
+    resource_ = std::move(other.resource_);
+    return *this;
+}
+
 void JID::initializeFromString(const std::string& jid) {
     if (String::beginsWith(jid, '@')) {
         valid_ = false;
