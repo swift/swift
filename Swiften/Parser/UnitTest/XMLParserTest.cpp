@@ -6,6 +6,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <cppunit/extensions/TestFactoryRegistry.h>
+#include <unordered_map>
 #include <vector>
 
 #include <string>
@@ -61,6 +62,9 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[1].data);
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[1].attributes.getEntries().size());
             CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[1].ns);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[1].namespaces.size());
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[1].namespaces.count(""));
+            CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[1].namespaces[""]);
 
             CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[2].type);
             CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[2].data);
@@ -85,10 +89,13 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("query"), client_.events[0].data);
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[0].attributes.getEntries().size());
             CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[0].ns);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].namespaces.size());
+            CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[0].namespaces[""]);
 
             CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
             CPPUNIT_ASSERT_EQUAL(std::string("name"), client_.events[1].data);
             CPPUNIT_ASSERT_EQUAL(std::string("jabber:iq:version"), client_.events[1].ns);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[1].namespaces.size());
 
             CPPUNIT_ASSERT_EQUAL(Client::CharacterData, client_.events[2].type);
             CPPUNIT_ASSERT_EQUAL(std::string("Swift"), client_.events[2].data);
@@ -161,6 +168,8 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
             CPPUNIT_ASSERT_EQUAL(std::string("x"), client_.events[0].data);
             CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[0].ns);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].namespaces.size());
+            CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[0].namespaces["p"]);
 
             CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
             CPPUNIT_ASSERT_EQUAL(std::string("y"), client_.events[1].data);
@@ -262,6 +271,9 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
             CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
             CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events[0].namespaces.size());
+            CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im"), client_.events[0].namespaces[""]);
+            CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].namespaces["f"]);
         }
 
         void testParse_BillionLaughs() {
@@ -301,6 +313,7 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
             CPPUNIT_ASSERT_EQUAL(std::string("foo:bar"), client_.events[0].data);
             CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].ns);
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(0), client_.events[0].namespaces.size());
 
             CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[1].type);
             CPPUNIT_ASSERT_EQUAL(std::string("bla"), client_.events[1].data);
@@ -328,14 +341,16 @@ class XMLParserTest : public CppUnit::TestFixture {
     private:
         class Client : public XMLParserClient {
             public:
-                enum Type { StartElement, EndElement, CharacterData };
+                using NamespaceMap = std::unordered_map<std::string /* prefix */, std::string /* uri */>;
+                enum Type { StartElement, EndElement, CharacterData, NamespaceDefined };
                 struct Event {
                     Event(
                             Type type,
                             const std::string& data,
                             const std::string& ns,
-                            const AttributeMap& attributes)
-                                : type(type), data(data), ns(ns), attributes(attributes) {}
+                            const AttributeMap& attributes,
+                            NamespaceMap namespaces = {})
+                                : type(type), data(data), ns(ns), attributes(attributes), namespaces(std::move(namespaces)) {}
                     Event(Type type, const std::string& data, const std::string& ns = std::string())
                                 : type(type), data(data), ns(ns) {}
 
@@ -343,23 +358,29 @@ class XMLParserTest : public CppUnit::TestFixture {
                     std::string data;
                     std::string ns;
                     AttributeMap attributes;
+                    NamespaceMap namespaces;
                 };
 
                 Client() {}
 
-                virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) {
-                    events.push_back(Event(StartElement, element, ns, attributes));
+                void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) override {
+                    events.push_back(Event(StartElement, element, ns, attributes, std::move(namespaces_)));
                 }
 
-                virtual void handleEndElement(const std::string& element, const std::string& ns) {
+                void handleEndElement(const std::string& element, const std::string& ns) override {
                     events.push_back(Event(EndElement, element, ns));
                 }
 
-                virtual void handleCharacterData(const std::string& data) {
+                void handleCharacterData(const std::string& data) override {
                     events.push_back(Event(CharacterData, data));
                 }
 
+                void handleNamespaceDeclaration(const std::string& prefix, const std::string& uri) override {
+                    namespaces_[prefix] = uri;
+                }
                 std::vector<Event> events;
+            private:
+                NamespaceMap namespaces_;
         } client_;
 };
 

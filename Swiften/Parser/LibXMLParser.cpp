@@ -24,7 +24,7 @@ struct LibXMLParser::Private {
     xmlParserCtxtPtr context_;
 };
 
-static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int, const xmlChar**, int nbAttributes, int nbDefaulted, const xmlChar ** attributes) {
+static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int nbNamespaces, const xmlChar** namespaces, int nbAttributes, int nbDefaulted, const xmlChar ** attributes) {
     AttributeMap attributeValues;
     if (nbDefaulted != 0) {
         // Just because i don't understand what this means yet :-)
@@ -41,6 +41,11 @@ static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*
                 attributeNS,
                 std::string(reinterpret_cast<const char*>(attributes[i+3]),
                     static_cast<size_t>(attributes[i+4]-attributes[i+3])));
+    }
+    for (auto i = 0; i < nbNamespaces * 2; i += 2) {
+        const auto prefix = namespaces[i] ? std::string(reinterpret_cast<const char*>(namespaces[i])) : "";
+        const auto uri = std::string(reinterpret_cast<const char*>(namespaces[i + 1]));
+        static_cast<XMLParser*>(parser)->getClient()->handleNamespaceDeclaration(prefix, uri);
     }
     static_cast<XMLParser*>(parser)->getClient()->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()), attributeValues);
 }

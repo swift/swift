@@ -64,6 +64,10 @@ static void handleCharacterData(void* parser, const XML_Char* data, int len) {
 static void handleXMLDeclaration(void*, const XML_Char*, const XML_Char*, int) {
 }
 
+static void handleNamespaceDeclaration(void* parser, const XML_Char* prefix, const XML_Char* uri) {
+    static_cast<XMLParser*>(parser)->getClient()->handleNamespaceDeclaration(std::string(prefix ? prefix : ""), std::string(uri ? uri : ""));
+}
+
 static void handleEntityDeclaration(void* parser, const XML_Char*, int, const XML_Char*, int, const XML_Char*, const XML_Char*, const XML_Char*, const XML_Char*) {
     static_cast<ExpatParser*>(parser)->stopParser();
 }
@@ -76,6 +80,7 @@ ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client), p(new Pri
     XML_SetCharacterDataHandler(p->parser_, handleCharacterData);
     XML_SetXmlDeclHandler(p->parser_, handleXMLDeclaration);
     XML_SetEntityDeclHandler(p->parser_, handleEntityDeclaration);
+    XML_SetNamespaceDeclHandler(p->parser_, handleNamespaceDeclaration, nullptr);
 }
 
 ExpatParser::~ExpatParser() {
