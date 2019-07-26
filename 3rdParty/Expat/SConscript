@@ -25,5 +25,6 @@ if env.get("EXPAT_BUNDLED", False) :
         env["EXPAT_OBJECTS"] = myenv.SwiftenObject([
                 "src/xmltok.c",
                 "src/xmlparse.c",
-                "src/xmlrole.c"
+                "src/xmlrole.c",
+                "src/loadlibrary.c",
             ])
