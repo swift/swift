@@ -16,6 +16,7 @@
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/TLS/CertificateWithKey.h>
 #include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 namespace std {
     template<>
@@ -38,7 +39,7 @@ namespace std {
 namespace Swift {
     class OpenSSLContext : public TLSContext, boost::noncopyable {
         public:
-            OpenSSLContext(Mode mode);
+            OpenSSLContext(const TLSOptions& options, Mode mode);
             virtual ~OpenSSLContext() override final;
 
             void accept() override final;
@@ -60,7 +61,11 @@ namespace Swift {
             virtual ByteArray getFinishMessage() const override final;
             virtual ByteArray getPeerFinishMessage() const override final;
 
+            void setX509StoreContext(X509_STORE_CTX *ptr) { x509_store_ctx = ptr; }
+            std::function<int (const TLSContext *)> getVerifyCertCallback() { return verifyCertCallback; }
+
         private:
+            bool configure(const TLSOptions& options);
             static void ensureLibraryInitialized();
             static int handleServerNameCallback(SSL *ssl, int *ad, void *arg);
             static CertificateVerificationError::Type getVerificationErrorTypeForResult(int);
@@ -81,5 +86,7 @@ namespace Swift {
             BIO* readBIO_ = nullptr;
             BIO* writeBIO_ = nullptr;
             bool abortTLSHandshake_ = false;
-    };
+            X509_STORE_CTX *x509_store_ctx = nullptr;
+            std::function<int (const TLSContext *)> verifyCertCallback = nullptr;
+   };
 }

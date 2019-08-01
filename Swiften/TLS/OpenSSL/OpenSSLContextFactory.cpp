@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -21,8 +21,8 @@ bool OpenSSLContextFactory::canCreate() const {
     return true;
 }
 
-std::unique_ptr<TLSContext> OpenSSLContextFactory::createTLSContext(const TLSOptions&, TLSContext::Mode mode) {
-    return std::unique_ptr<TLSContext>(new OpenSSLContext(mode));
+std::unique_ptr<TLSContext> OpenSSLContextFactory::createTLSContext(const TLSOptions& options, TLSContext::Mode mode) {
+    return std::make_unique<OpenSSLContext>(options, mode);
 }
 
 ByteArray OpenSSLContextFactory::convertDHParametersFromPEMToDER(const std::string& dhParametersInPEM) {

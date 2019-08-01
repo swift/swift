@@ -7,8 +7,10 @@
 #pragma once
 
 namespace Swift {
+    class TLSContext;
 
-    struct TLSOptions {
+    class TLSOptions {
+      public:
         TLSOptions() : schannelTLS1_0Workaround(false) {
 
         }
@@ -21,5 +23,44 @@ namespace Swift {
          */
         bool schannelTLS1_0Workaround;
 
+        /**
+         * OpenSSL configuration flags
+         */
+        boost::optional<bool> workaroundMicrosoftSessID;
+        boost::optional<bool> workaroundNetscapeChallenge;
+        boost::optional<bool> workaroundNetscapeReuseCipherChange;
+        boost::optional<bool> workaroundSSLRef2ReuseCertType;
+        boost::optional<bool> workaroundMicrosoftBigSSLv3Buffer;
+        boost::optional<bool> workaroundSSLeay080ClientDH;
+        boost::optional<bool> workaroundTLSD5;
+        boost::optional<bool> workaroundTLSBlockPadding;
+        boost::optional<bool> workaroundDontInsertEmptyFragments;
+        boost::optional<bool> workaroundAll;
+        boost::optional<bool> suppressSSLv2;
+        boost::optional<bool> suppressSSLv3;
+        boost::optional<bool> suppressTLSv1;
+        boost::optional<bool> disableTLSRollBackBug;
+        boost::optional<bool> singleDHUse;
+
+        /**
+         * Other OpenSSL configuration items
+         */
+        boost::optional<std::string> cipherSuites;
+        boost::optional<std::string> context;
+        boost::optional<int> sessionCacheTimeout;
+        boost::optional<int> verifyDepth;
+
+        enum class VerifyMode {
+            NONE,
+            REQUIRED,
+            OPTIONAL
+        } ;
+        boost::optional<VerifyMode> verifyMode;
+
+        /**
+         * Callback for certificate verification
+         */
+
+        boost::optional<std::function<int(const TLSContext *)>> verifyCertificateCallback;
     };
 }

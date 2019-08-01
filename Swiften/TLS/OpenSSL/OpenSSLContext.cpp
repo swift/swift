@@ -42,6 +42,14 @@ namespace Swift {
 static const int MAX_FINISHED_SIZE = 4096;
 static const int SSL_READ_BUFFERSIZE = 8192;
 
+#define SSL_DEFAULT_VERIFY_DEPTH 5
+
+// Callback function declarations for certificate verification
+extern "C" {
+    static int certVerifyCallback(X509_STORE_CTX *store_ctx, void*);
+    static int verifyCallback(int preverify_ok, X509_STORE_CTX *ctx);
+}
+
 static void freeX509Stack(STACK_OF(X509)* stack) {
     sk_X509_free(stack);
 }
@@ -90,7 +98,7 @@ namespace {
     }
  }
 
-OpenSSLContext::OpenSSLContext(Mode mode) : mode_(mode), state_(State::Start) {
+OpenSSLContext::OpenSSLContext(const TLSOptions& options, Mode mode) : mode_(mode), state_(State::Start) {
     ensureLibraryInitialized();
     context_ = createSSL_CTX(mode_);
     SSL_CTX_set_options(context_.get(), SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3);
@@ -118,9 +126,9 @@ OpenSSLContext::OpenSSLContext(Mode mode) : mode_(mode), state_(State::Start) {
     X509_STORE* store = SSL_CTX_get_cert_store(context_.get());
     HCERTSTORE systemStore = CertOpenSystemStore(0, "ROOT");
     if (systemStore) {
-        PCCERT_CONTEXT certContext = NULL;
+        PCCERT_CONTEXT certContext = nullptr;
         while (true) {
-            certContext = CertFindCertificateInStore(systemStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_ANY, NULL, certContext);
+            certContext = CertFindCertificateInStore(systemStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_ANY, nullptr, certContext);
             if (!certContext) {
                 break;
             }
@@ -159,6 +167,7 @@ OpenSSLContext::OpenSSLContext(Mode mode) : mode_(mode), state_(State::Start) {
         CFRelease(anchorCertificates);
     }
 #endif
+    configure(options);
 }
 
 OpenSSLContext::~OpenSSLContext() {
@@ -174,6 +183,222 @@ void OpenSSLContext::initAndSetBIOs() {
     writeBIO_ = BIO_new(BIO_s_mem());
     SSL_set_bio(handle_.get(), readBIO_, writeBIO_);
 }
+
+// This callback is called by OpenSSL when a client certificate needs to be verified.
+// In turn, this calls the verification callback which the user
+// of this OpenSSLContext has configured (if any).
+static int certVerifyCallback(X509_STORE_CTX* store_ctx, void* arg)
+{
+    OpenSSLContext* context = static_cast<OpenSSLContext *>(arg);
+
+    // Need to stash store_ctx pointer for use within verification
+    context->setX509StoreContext(store_ctx);
+
+    int ret;
+
+    // This callback shouldn't have been set up if the context doesn't
+    // have a verifyCertCallback set, but it doesn't hurt to double check
+    std::function<int (const TLSContext *)> cb = context->getVerifyCertCallback();
+    if (cb != nullptr) {
+        ret = cb(static_cast<const OpenSSLContext*>(context));
+    } else {
+        SWIFT_LOG(warning) << "certVerifyCallback called but context.verifyCertCallback is unset" << std::endl;
+        ret = 0;
+    }
+
+    context->setX509StoreContext(nullptr);
+    return ret;
+}
+
+// Convenience function to generate a text representation
+// of an X509 Name. This information is only used for logging.
+static std::string X509_NAME_to_text(X509_NAME* name)
+{
+    std::string nameString;
+
+    if (!name) {
+        return nameString;
+    }
+
+    std::unique_ptr<BIO, decltype(&BIO_free)> io(BIO_new(BIO_s_mem()), &BIO_free);
+    int r = X509_NAME_print_ex(io.get(), name, 0, XN_FLAG_RFC2253);
+    BIO_write(io.get(), "\0", 1);
+
+    if (r > 0) {
+        BUF_MEM* ptr = nullptr;
+        BIO_get_mem_ptr(io.get(), &ptr);
+        nameString = ptr->data;
+    }
+
+    return nameString;
+}
+
+// Check depth of certificate chain
+static int verifyCallback(int preverifyOk, X509_STORE_CTX* ctx)
+{
+    // Retrieve the pointer to the SSL of the connection currently treated
+    // and the application specific data stored into the SSL object.
+
+    int err = X509_STORE_CTX_get_error(ctx);
+    int depth = X509_STORE_CTX_get_error_depth(ctx);
+
+    SSL* ssl = static_cast<SSL*>(X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx()));
+    SSL_CTX* sslctx = ssl ? SSL_get_SSL_CTX(ssl) : nullptr;
+    if (!sslctx) {
+        SWIFT_LOG(error) << "verifyCallback: internal error" << std::endl;
+        return preverifyOk;
+    }
+
+    if (SSL_CTX_get_verify_mode(sslctx) == SSL_VERIFY_NONE) {
+        SWIFT_LOG(info) << "verifyCallback: no verification required" << std::endl;
+        // No verification requested
+        return 1;
+    }
+
+    X509* errCert = X509_STORE_CTX_get_current_cert(ctx);
+    std::string subjectString;
+    if (errCert) {
+        X509_NAME* subjectName = X509_get_subject_name(errCert);
+        subjectString = X509_NAME_to_text(subjectName);
+    }
+
+    // Catch a too long certificate chain. The depth limit set using
+    // SSL_CTX_set_verify_depth() is by purpose set to "limit+1" so
+    // that whenever the "depth>verify_depth" condition is met, we
+    // have violated the limit and want to log this error condition.
+    // We must do it here, because the CHAIN_TOO_LONG error would not
+    // be found explicitly; only errors introduced by cutting off the
+    // additional certificates would be logged.
+    if (depth >= SSL_CTX_get_verify_depth(sslctx)) {
+        preverifyOk = 0;
+        err = X509_V_ERR_CERT_CHAIN_TOO_LONG;
+        X509_STORE_CTX_set_error(ctx, err);
+    }
+
+    if (!preverifyOk) {
+        std::string issuerString;
+        if (errCert) {
+            X509_NAME* issuerName = X509_get_issuer_name(errCert);
+            issuerString = X509_NAME_to_text(issuerName);
+        }
+        SWIFT_LOG(error) << "verifyCallback: verification error" <<
+            X509_verify_cert_error_string(err) << " depth: " <<
+            depth << " issuer: " << ((issuerString.length() > 0) ? issuerString : "<unknown>") << std::endl;
+    } else {
+        SWIFT_LOG(info) << "verifyCallback: SSL depth: " << depth << " Subject: " <<
+            ((subjectString.length() > 0) ? subjectString : "<>")  << std::endl;
+    }
+    return preverifyOk;
+}
+
+bool OpenSSLContext::configure(const TLSOptions &options)
+{
+    if (options.cipherSuites) {
+        std::string cipherSuites = *(options.cipherSuites);
+        if (SSL_CTX_set_cipher_list(context_.get(), cipherSuites.c_str()) != 1 ) {
+            SWIFT_LOG(error) << "Failed to set cipher-suites" << std::endl;
+            return false;
+        }
+    }
+
+    if (options.context) {
+        const auto& contextId = *options.context;
+
+        if (SSL_CTX_set_session_id_context(context_.get(),
+                                           reinterpret_cast<const unsigned char *>(contextId.c_str()),
+                                           contextId.length()) != 1) {
+            SWIFT_LOG(error) << "Failed to set context-id" << std::endl;
+            return false;
+        }
+    }
+
+    if (options.sessionCacheTimeout) {
+        int scto = *options.sessionCacheTimeout;
+        if (scto <= 0) {
+            SWIFT_LOG(error) << "Invalid value for session-cache-timeout" << std::endl;
+            return false;
+        }
+        (void)SSL_CTX_set_timeout(context_.get(), scto);
+        if (SSL_CTX_get_timeout(context_.get()) != scto) {
+            SWIFT_LOG(error) << "Failed to set session-cache-timeout" << std::endl;
+            return false;
+        }
+    }
+
+    if (options.verifyCertificateCallback) {
+        verifyCertCallback = *options.verifyCertificateCallback;
+    } else {
+        verifyCertCallback = nullptr;
+    }
+
+    if (options.verifyMode) {
+        TLSOptions::VerifyMode verify_mode = *options.verifyMode;
+        int mode;
+        switch (verify_mode) {
+        case TLSOptions::VerifyMode::NONE:
+            mode = SSL_VERIFY_NONE;
+            break;
+        case TLSOptions::VerifyMode::REQUIRED:
+            mode = SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT | SSL_VERIFY_CLIENT_ONCE;
+            break;
+        case TLSOptions::VerifyMode::OPTIONAL:
+            mode = SSL_VERIFY_PEER | SSL_VERIFY_CLIENT_ONCE;
+            break;
+        }
+
+        // Set up default certificate chain verification depth - may be overridden below
+        SSL_CTX_set_verify_depth(context_.get(), SSL_DEFAULT_VERIFY_DEPTH + 1);
+
+        // Set callbacks up
+        SSL_CTX_set_verify(context_.get(), mode, verifyCallback);
+
+        // Only set up certificate verification callback if a user callback has
+        // been configured via the TLSOptions
+        if (verifyCertCallback != nullptr) {
+            SSL_CTX_set_cert_verify_callback(context_.get(), certVerifyCallback, this);
+        }
+    }
+
+    if (options.verifyDepth) {
+        int depth = *options.verifyDepth;
+        if (depth <= 0) {
+            SWIFT_LOG(error) << "Invalid value for verify-depth" << std::endl;
+            return false;
+        }
+
+        // Increase depth limit by one, so that verifyCallback() will log it
+        SSL_CTX_set_verify_depth(context_.get(), depth + 1);
+    }
+
+    auto updateOptionIfPresent = [this](boost::optional<bool> option, int flag) {
+        if (option) {
+            if (*option) {
+                SSL_CTX_set_options(context_.get(), flag);
+            }
+            else {
+                SSL_CTX_clear_options(context_.get(), flag);
+            }
+        }
+    };
+    updateOptionIfPresent(options.workaroundMicrosoftSessID, SSL_OP_MICROSOFT_SESS_ID_BUG);
+    updateOptionIfPresent(options.workaroundNetscapeChallenge, SSL_OP_NETSCAPE_CHALLENGE_BUG);
+    updateOptionIfPresent(options.workaroundNetscapeReuseCipherChange, SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG);
+    updateOptionIfPresent(options.workaroundSSLRef2ReuseCertType, SSL_OP_SSLREF2_REUSE_CERT_TYPE_BUG);
+    updateOptionIfPresent(options.workaroundMicrosoftBigSSLv3Buffer, SSL_OP_MICROSOFT_BIG_SSLV3_BUFFER);
+    updateOptionIfPresent(options.workaroundSSLeay080ClientDH, SSL_OP_SSLEAY_080_CLIENT_DH_BUG);
+    updateOptionIfPresent(options.workaroundTLSD5, SSL_OP_TLS_D5_BUG);
+    updateOptionIfPresent(options.workaroundTLSBlockPadding, SSL_OP_TLS_BLOCK_PADDING_BUG);
+    updateOptionIfPresent(options.workaroundDontInsertEmptyFragments, SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS);
+    updateOptionIfPresent(options.workaroundAll, SSL_OP_ALL);
+    updateOptionIfPresent(options.suppressSSLv2, SSL_OP_NO_SSLv2);
+    updateOptionIfPresent(options.suppressSSLv3, SSL_OP_NO_SSLv3);
+    updateOptionIfPresent(options.suppressTLSv1, SSL_OP_NO_TLSv1);
+    updateOptionIfPresent(options.disableTLSRollBackBug, SSL_OP_TLS_ROLLBACK_BUG);
+    updateOptionIfPresent(options.singleDHUse, SSL_OP_SINGLE_DH_USE);
+
+    return true;
+}
+
 
 void OpenSSLContext::accept() {
     assert(mode_ == Mode::Server);
@@ -486,7 +711,7 @@ bool OpenSSLContext::setDiffieHellmanParameters(const ByteArray& parametersInOpe
     if (bio) {
         BIO_write(bio.get(), vecptr(parametersInOpenSslDer), parametersInOpenSslDer.size());
         auto result = 0L;
-        if (auto dhparams = d2i_DHparams_bio(bio.get(), NULL)) {
+        if (auto dhparams = d2i_DHparams_bio(bio.get(), nullptr)) {
             if (handle_) {
                 result = SSL_set_tmp_dh(handle_.get(), dhparams);
             }

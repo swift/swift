@@ -31,7 +31,7 @@ namespace Swift {
     class XMLParserFactory;
     class TLSContextFactory;
     class TLSLayer;
-    struct TLSOptions;
+    class TLSOptions;
     class HighLayer;
 
     class SWIFTEN_API BOSHError : public SessionStream::SessionStreamError {
