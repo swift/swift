@@ -8,6 +8,12 @@ if env.get("EXPAT_BUNDLED", False) :
                 "LIBPATH": [Dir(".")],
             }
 
+    def checkBuilds(context, message, source):
+        context.Message(message)
+        result = context.TryLink(source, '.cpp')
+        context.Result(result)
+        return result
+
     if env["SCONS_STAGE"] == "build" :
         myenv = env.Clone()
         myenv.Append(CPPDEFINES = ["XML_STATIC", "HAVE_EXPAT_CONFIG_H"])
@@ -21,6 +27,55 @@ if env.get("EXPAT_BUNDLED", False) :
         if conf.CheckFunc('memmove') :
             myenv.Append(CPPDEFINES = ["HAVE_MEMMOVE"])
         conf.Finish()
+
+        if env["PLATFORM"] != "win32" :
+            conf = Configure(conf_env, custom_tests = { "CheckBuilds" : checkBuilds})
+            if conf.CheckBuilds('Checking for C function getrandom()... ',
+                """
+                #include <stdlib.h>  /* for NULL */
+                #include <sys/random.h>
+                int main() {
+                    return getrandom(NULL, 0U, 0U);
+                }
+                """):
+                myenv.Append(CPPDEFINES = ["HAVE_GETRANDOM"])
+            elif conf.CheckBuilds('Checking for syscall SYS_getrandom... ',
+                """
+                #include <stdlib.h>  /* for NULL */
+                #include <unistd.h>  /* for syscall */
+                #include <sys/syscall.h>  /* for SYS_getrandom */
+                int main() {
+                    syscall(SYS_getrandom, NULL, 0, 0);
+                    return 0;
+                }
+                """):
+                myenv.Append(CPPDEFINES = ["HAVE_SYSCALL_GETRANDOM"])
+            elif conf.CheckBuilds('Checking for arc4random_buf... ',
+                """
+                #include <stdlib.h>  /* for arc4random_buf on BSD, for NULL */
+                #if defined(HAVE_LIBBSD)
+                # include <bsd/stdlib.h>
+                #endif
+                int main() {
+                    arc4random_buf(NULL, 0U);
+                    return 0;
+                }
+                """):
+                myenv.Append(CPPDEFINES = ["HAVE_ARC4RANDOM_BUF"])
+            elif conf.CheckBuilds('Checking for arc4random... ',
+                """
+                #if defined(HAVE_LIBBSD)
+                # include <bsd/stdlib.h>
+                #else
+                # include <stdlib.h>
+                #endif
+                int main() {
+                    arc4random();
+                    return 0;
+                }
+                """):
+                myenv.Append(CPPDEFINES = ["HAVE_ARC4RANDOM"])
+            conf.Finish()
 
         env["EXPAT_OBJECTS"] = myenv.SwiftenObject([
                 "src/xmltok.c",
