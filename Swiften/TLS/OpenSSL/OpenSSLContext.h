@@ -46,7 +46,7 @@ namespace Swift {
             void connect() override final;
             void connect(const std::string& requestHostname) override final;
 
-            bool setCertificateChain(std::vector<std::unique_ptr<Certificate>>&& certificateChain) override final;
+            bool setCertificateChain(const std::vector<std::shared_ptr<Certificate>>& certificateChain) override final;
             bool setPrivateKey(const PrivateKey::ref& privateKey) override final;
             bool setClientCertificate(CertificateWithKey::ref cert) override final;
             void setAbortTLSHandshake(bool abort) override final;

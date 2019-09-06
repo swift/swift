@@ -37,6 +37,14 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
     parse();
 }
 
+void OpenSSLCertificate::incrementReferenceCount() const {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+    X509_up_ref(cert.get());
+#else
+    CRYPTO_add(&(cert.get()->references), 1, CRYPTO_LOCK_EVP_PKEY);
+#endif
+}
+
 ByteArray OpenSSLCertificate::toDER() const {
     ByteArray result;
     if (!cert) {

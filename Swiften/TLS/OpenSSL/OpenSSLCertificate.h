@@ -45,6 +45,8 @@ namespace Swift {
                 return cert;
             }
 
+            void incrementReferenceCount() const;
+
         private:
             void parse();
 

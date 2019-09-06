@@ -30,12 +30,14 @@ class CertificateTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testGetSRVNames);
         CPPUNIT_TEST(testGetDNSNames);
         CPPUNIT_TEST(testGetXMPPAddresses);
+        CPPUNIT_TEST(testCreateCertificateChain);
         CPPUNIT_TEST_SUITE_END();
 
     public:
         void setUp() {
             pathProvider = std::make_unique<PlatformApplicationPathProvider>("FileReadBytestreamTest");
             readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt"));
+            readByteArrayFromFile(chainData, (pathProvider->getExecutableDir() / "certificateChain.pem"));
             certificateFactory = std::unique_ptr<CertificateFactory>(new CERTIFICATE_FACTORY());
         }
 
@@ -88,9 +90,26 @@ class CertificateTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("*.jabber.org"), testling->getXMPPAddresses()[0]);
         }
 
+        void testCreateCertificateChain() {
+            // The input chain contains a 2-certificate chain:
+            // the first certificate has:
+            // a subject of "O=messaging,CN=Mixer Messaging Configuration,CN=badger.isode.net"
+            // an issuer of "O=messaging, CN=New Messaging CA"
+            // the second certificate has:
+            // a subject of "O=messaging, CN=New Messaging CA"
+            // an issuer of "O=messaging, CN=New Messaging CA"
+            // i.e. it is a self-signed certificate
+            std::vector<std::shared_ptr<Certificate>> chain = certificateFactory->createCertificateChain(chainData);
+            CPPUNIT_ASSERT_EQUAL(2,static_cast<int>(chain.size()));
+            CPPUNIT_ASSERT_EQUAL(std::string("Mixer Messaging Configuration"), chain[0]->getCommonNames()[0]);
+            CPPUNIT_ASSERT_EQUAL(std::string("badger.isode.net"), chain[0]->getCommonNames()[1]);
+            CPPUNIT_ASSERT_EQUAL(std::string("New Messaging CA"), chain[1]->getCommonNames()[0]);
+        }
+
     private:
         std::unique_ptr<PlatformApplicationPathProvider> pathProvider;
         ByteArray certificateData;
+        ByteArray chainData;
         std::unique_ptr<CertificateFactory> certificateFactory;
 };
 

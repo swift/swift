@@ -567,7 +567,7 @@ void OpenSSLContext::sendPendingDataToApplication() {
     }
 }
 
-bool OpenSSLContext::setCertificateChain(std::vector<std::unique_ptr<Certificate>>&& certificateChain) {
+bool OpenSSLContext::setCertificateChain(const std::vector<std::shared_ptr<Certificate>>& certificateChain) {
     if (certificateChain.size() == 0) {
         SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
         return false;
@@ -583,17 +583,22 @@ bool OpenSSLContext::setCertificateChain(std::vector<std::unique_ptr<Certificate
         return false;
     }
 
+    // Increment reference count on certificate so that it does not get freed when the SSL context is destroyed
+    openSSLCert->incrementReferenceCount();
+
     if (certificateChain.size() > 1) {
         for (auto certificate = certificateChain.begin() + 1; certificate != certificateChain.end(); ++certificate) {
             auto openSSLCert = dynamic_cast<OpenSSLCertificate*>(certificate->get());
             if (!openSSLCert) {
                 return false;
             }
+
             if (SSL_CTX_add_extra_chain_cert(context_.get(), openSSLCert->getInternalX509().get()) != 1) {
                 SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
                 return false;
             }
-            certificate->release();
+
+            openSSLCert->incrementReferenceCount();
         }
     }
 

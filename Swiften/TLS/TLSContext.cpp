@@ -21,7 +21,7 @@ void TLSContext::connect(const std::string& /* serverName */) {
     assert(false);
 }
 
-bool TLSContext::setCertificateChain(std::vector<std::unique_ptr<Certificate>>&& /* certificateChain */) {
+bool TLSContext::setCertificateChain(const std::vector<std::shared_ptr<Certificate>>& /* certificateChain */) {
     assert(false);
     return false;
 }
