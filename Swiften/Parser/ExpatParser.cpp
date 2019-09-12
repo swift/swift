@@ -72,8 +72,21 @@ static void handleEntityDeclaration(void* parser, const XML_Char*, int, const XM
     static_cast<ExpatParser*>(parser)->stopParser();
 }
 
+static void handleComment(void* parser, const XML_Char* /*data*/) {
+    if (!static_cast<ExpatParser*>(parser)->allowsComments()) {
+        static_cast<ExpatParser*>(parser)->stopParser();
+    }
+}
 
-ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client), p(new Private()) {
+static void handleProcessingInstruction(void* parser, const XML_Char* /*target*/, const XML_Char* /*data*/) {
+    static_cast<ExpatParser*>(parser)->stopParser();
+}
+
+static void handleDoctypeDeclaration(void* parser, const XML_Char* /*doctypeName*/, const XML_Char* /*sysid*/, const XML_Char* /*pubid*/, int /*has_internal_subset*/) {
+    static_cast<ExpatParser*>(parser)->stopParser();
+}
+
+ExpatParser::ExpatParser(XMLParserClient* client, bool allowComments) : XMLParser(client, allowComments), p(new Private()) {
     p->parser_ = XML_ParserCreateNS("UTF-8", NAMESPACE_SEPARATOR);
     XML_SetUserData(p->parser_, this);
     XML_SetElementHandler(p->parser_, handleStartElement, handleEndElement);
@@ -81,6 +94,9 @@ ExpatParser::ExpatParser(XMLParserClient* client) : XMLParser(client), p(new Pri
     XML_SetXmlDeclHandler(p->parser_, handleXMLDeclaration);
     XML_SetEntityDeclHandler(p->parser_, handleEntityDeclaration);
     XML_SetNamespaceDeclHandler(p->parser_, handleNamespaceDeclaration, nullptr);
+    XML_SetCommentHandler(p->parser_, handleComment);
+    XML_SetProcessingInstructionHandler(p->parser_, handleProcessingInstruction);
+    XML_SetDoctypeDeclHandler(p->parser_, handleDoctypeDeclaration, nullptr);
 }
 
 ExpatParser::~ExpatParser() {

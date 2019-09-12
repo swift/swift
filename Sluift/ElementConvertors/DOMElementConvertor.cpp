@@ -185,7 +185,7 @@ boost::optional<std::string> DOMElementConvertor::convertToLua(
 
     // Parse the payload again
     ParserClient parserClient(L);
-    std::shared_ptr<XMLParser> parser(parsers.createXMLParser(&parserClient));
+    std::shared_ptr<XMLParser> parser(parsers.createXMLParser(&parserClient, false));
     bool result = parser->parse(serializedPayload);
     assert(result);
 

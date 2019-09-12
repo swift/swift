@@ -18,7 +18,7 @@ namespace Swift {
 XMLSettingsProvider::XMLSettingsProvider(const std::string& xmlConfig) : level_(0) {
     if (!xmlConfig.empty()) {
         PlatformXMLParserFactory factory;
-        auto parser = factory.createXMLParser(this);
+        auto parser = factory.createXMLParser(this, true);
         if (parser->parse(xmlConfig)) {
             SWIFT_LOG(debug) << "Found and parsed system config" << std::endl;
         }

@@ -39,6 +39,10 @@ class XMLParserTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testParse_InternalEntity);
         //CPPUNIT_TEST(testParse_UndefinedPrefix);
         //CPPUNIT_TEST(testParse_UndefinedAttributePrefix);
+        CPPUNIT_TEST(testParse_AllowCommentsInXML);
+        CPPUNIT_TEST(testParse_DisallowCommentsInXML);
+        CPPUNIT_TEST(testParse_Doctype);
+        CPPUNIT_TEST(testParse_ProcessingInstructions);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -185,7 +189,7 @@ class XMLParserTest : public CppUnit::TestFixture {
         }
 
         void testParse_UnhandledXML() {
-            ParserType testling(&client_);
+            ParserType testling(&client_, true);
 
             CPPUNIT_ASSERT(testling.parse("<iq><!-- Testing --></iq>"));
 
@@ -331,11 +335,42 @@ class XMLParserTest : public CppUnit::TestFixture {
         void testParse_UndefinedAttributePrefix() {
             ParserType testling(&client_);
 
-            CPPUNIT_ASSERT(testling.parse(
-                "<foo bar:baz='bla'/>"));
+            CPPUNIT_ASSERT(testling.parse("<foo bar:baz='bla'/>"));
 
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
             CPPUNIT_ASSERT_EQUAL(std::string("bar:baz"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
+        }
+
+        void testParse_AllowCommentsInXML() {
+            ParserType testling(&client_, true);
+
+            CPPUNIT_ASSERT(testling.parse("<message><!-- Some More Comments Testing --></message>"));
+
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events.size());
+
+            CPPUNIT_ASSERT_EQUAL(Client::StartElement, client_.events[0].type);
+            CPPUNIT_ASSERT_EQUAL(std::string("message"), client_.events[0].data);
+
+            CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[1].type);
+            CPPUNIT_ASSERT_EQUAL(std::string("message"), client_.events[1].data);
+        }
+
+        void testParse_DisallowCommentsInXML() {
+            ParserType testling(&client_);
+
+            CPPUNIT_ASSERT(!testling.parse("<message><!-- Some More Comments Testing --></message>"));
+        }
+
+        void testParse_Doctype() {
+            ParserType testling(&client_);
+
+            CPPUNIT_ASSERT(!testling.parse("<!DOCTYPE greeting SYSTEM \"hello.dtd\">"));
+        }
+
+        void testParse_ProcessingInstructions() {
+            ParserType testling(&client_);
+
+            CPPUNIT_ASSERT(!testling.parse("<?xml-stylesheet type=\"text/xsl\" href=\"Sample.xsl\"?>"));
         }
 
     private:
@@ -378,6 +413,7 @@ class XMLParserTest : public CppUnit::TestFixture {
                 void handleNamespaceDeclaration(const std::string& prefix, const std::string& uri) override {
                     namespaces_[prefix] = uri;
                 }
+
                 std::vector<Event> events;
             private:
                 NamespaceMap namespaces_;

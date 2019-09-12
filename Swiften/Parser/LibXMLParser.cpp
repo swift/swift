@@ -59,6 +59,24 @@ static void handleCharacterData(void* parser, const xmlChar* data, int len) {
     static_cast<XMLParser*>(parser)->getClient()->handleCharacterData(std::string(reinterpret_cast<const char*>(data), static_cast<size_t>(len)));
 }
 
+static void handleComment(void* parser, const xmlChar* /*data*/) {
+    if (!static_cast<LibXMLParser*>(parser)->allowsComments()) {
+        static_cast<LibXMLParser*>(parser)->stopParser();
+    }
+}
+
+static void handleEntityDeclaration(void * parser, const xmlChar* /*name*/, int /*type*/, const xmlChar* /*publicId*/, const xmlChar* /*systemId*/, xmlChar* /*content*/) {
+    static_cast<LibXMLParser*>(parser)->stopParser();
+}
+
+static void handleProcessingInstruction(void* parser, const xmlChar* /*target*/, const xmlChar* /*data*/) {
+    static_cast<LibXMLParser*>(parser)->stopParser();
+}
+
+static void handleExternalSubset(void* parser, const xmlChar * /*name*/, const xmlChar * /*ExternalID*/, const xmlChar * /*SystemID*/) {
+    static_cast<LibXMLParser*>(parser)->stopParser();
+}
+
 static void handleError(void*, const char* /*m*/, ... ) {
     /*
     va_list args;
@@ -73,7 +91,7 @@ static void handleWarning(void*, const char*, ... ) {
 
 bool LibXMLParser::initialized = false;
 
-LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client), p(new Private()) {
+LibXMLParser::LibXMLParser(XMLParserClient* client, bool allowComments) : XMLParser(client, allowComments), p(new Private()) {
     // Initialize libXML for multithreaded applications
     if (!initialized) {
         xmlInitParser();
@@ -87,6 +105,10 @@ LibXMLParser::LibXMLParser(XMLParserClient* client) : XMLParser(client), p(new P
     p->handler_.characters = &handleCharacterData;
     p->handler_.warning = &handleWarning;
     p->handler_.error = &handleError;
+    p->handler_.comment = &handleComment;
+    p->handler_.entityDecl = &handleEntityDeclaration;
+    p->handler_.processingInstruction = &handleProcessingInstruction;
+    p->handler_.externalSubset = &handleExternalSubset;
 
     p->context_ = xmlCreatePushParserCtxt(&p->handler_, this, nullptr, 0, nullptr);
     xmlCtxtUseOptions(p->context_, XML_PARSE_NOENT);
@@ -106,6 +128,7 @@ bool LibXMLParser::parse(const std::string& data, bool finalData) {
     if (xmlParseChunk(p->context_, data.c_str(), static_cast<int>(data.size()), finalData) == XML_ERR_OK) {
         return true;
     }
+    if (stopped_) return false;
     xmlError* error = xmlCtxtGetLastError(p->context_);
     if (error->code == XML_WAR_NS_URI || error->code == XML_WAR_NS_URI_RELATIVE) {
         xmlCtxtResetLastError(p->context_);
@@ -113,6 +136,11 @@ bool LibXMLParser::parse(const std::string& data, bool finalData) {
         return true;
     }
     return false;
+}
+
+void LibXMLParser::stopParser() {
+    stopped_ = true;
+    xmlStopParser(p->context_);
 }
 
 }

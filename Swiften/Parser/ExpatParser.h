@@ -16,7 +16,7 @@
 namespace Swift {
     class SWIFTEN_API ExpatParser : public XMLParser, public boost::noncopyable {
         public:
-            ExpatParser(XMLParserClient* client);
+            ExpatParser(XMLParserClient* client, bool allowComments = false);
             ~ExpatParser();
 
             bool parse(const std::string& data, bool finalData = false);

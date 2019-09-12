@@ -19,13 +19,16 @@ namespace Swift {
      */
     class LibXMLParser : public XMLParser, public boost::noncopyable {
         public:
-            LibXMLParser(XMLParserClient* client);
+            LibXMLParser(XMLParserClient* client, bool allowComments = false);
             virtual ~LibXMLParser();
 
             bool parse(const std::string& data, bool finalData = false);
 
+            void stopParser();
+
         private:
             static bool initialized;
+            bool stopped_ = false;
 
             struct Private;
             const std::unique_ptr<Private> p;

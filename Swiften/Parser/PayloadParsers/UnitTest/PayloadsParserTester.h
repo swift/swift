@@ -19,7 +19,7 @@ namespace Swift {
     class PayloadsParserTester : public XMLParserClient {
         public:
             PayloadsParserTester() : level(0) {
-                xmlParser = PlatformXMLParserFactory().createXMLParser(this);
+                xmlParser = PlatformXMLParserFactory().createXMLParser(this, false);
             }
 
             bool parse(const std::string& data) {

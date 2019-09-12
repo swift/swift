@@ -20,11 +20,11 @@ namespace Swift {
 PlatformXMLParserFactory::PlatformXMLParserFactory() {
 }
 
-std::unique_ptr<XMLParser> PlatformXMLParserFactory::createXMLParser(XMLParserClient* client) {
+std::unique_ptr<XMLParser> PlatformXMLParserFactory::createXMLParser(XMLParserClient* client, bool allowComments) {
 #ifdef HAVE_LIBXML
-    return std::make_unique<LibXMLParser>(client);
+    return std::make_unique<LibXMLParser>(client, allowComments);
 #else
-    return std::make_unique<ExpatParser>(client);
+    return std::make_unique<ExpatParser>(client, allowComments);
 #endif
 }
 

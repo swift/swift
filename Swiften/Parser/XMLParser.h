@@ -15,7 +15,7 @@ namespace Swift {
 
     class SWIFTEN_API XMLParser {
         public:
-            XMLParser(XMLParserClient* client);
+            XMLParser(XMLParserClient* client, bool allowComments = false);
             virtual ~XMLParser();
 
             virtual bool parse(const std::string& data, bool finalData = false) = 0;
@@ -24,7 +24,12 @@ namespace Swift {
                 return client_;
             }
 
+            bool allowsComments() const {
+                return allowComments_;
+            }
+
         private:
             XMLParserClient* client_;
+            const bool allowComments_ = false;
     };
 }

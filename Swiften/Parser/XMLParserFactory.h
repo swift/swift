@@ -18,6 +18,6 @@ namespace Swift {
         public:
             virtual ~XMLParserFactory();
 
-            virtual std::unique_ptr<XMLParser> createXMLParser(XMLParserClient*) = 0;
+            virtual std::unique_ptr<XMLParser> createXMLParser(XMLParserClient*, bool allowComments = false) = 0;
     };
 }
