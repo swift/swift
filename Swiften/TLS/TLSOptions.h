@@ -51,10 +51,10 @@ namespace Swift {
         boost::optional<int> verifyDepth;
 
         enum class VerifyMode {
-            NONE,
-            REQUIRED,
-            OPTIONAL
-        } ;
+            None,
+            Required,
+            Optional
+        };
         boost::optional<VerifyMode> verifyMode;
 
         /**

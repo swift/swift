@@ -335,13 +335,13 @@ bool OpenSSLContext::configure(const TLSOptions &options)
         TLSOptions::VerifyMode verify_mode = *options.verifyMode;
         int mode;
         switch (verify_mode) {
-        case TLSOptions::VerifyMode::NONE:
+        case TLSOptions::VerifyMode::None:
             mode = SSL_VERIFY_NONE;
             break;
-        case TLSOptions::VerifyMode::REQUIRED:
+        case TLSOptions::VerifyMode::Required:
             mode = SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT | SSL_VERIFY_CLIENT_ONCE;
             break;
-        case TLSOptions::VerifyMode::OPTIONAL:
+        case TLSOptions::VerifyMode::Optional:
             mode = SSL_VERIFY_PEER | SSL_VERIFY_CLIENT_ONCE;
             break;
         }
