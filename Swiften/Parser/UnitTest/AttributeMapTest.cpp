@@ -15,6 +15,7 @@ class AttributeMapTest : public CppUnit::TestFixture
 {
         CPPUNIT_TEST_SUITE(AttributeMapTest);
         CPPUNIT_TEST(testGetAttribute_Namespaced);
+        CPPUNIT_TEST(testGetAttribute_Namespaced_Prefix);
         CPPUNIT_TEST(testGetBoolAttribute_True);
         CPPUNIT_TEST(testGetBoolAttribute_1);
         CPPUNIT_TEST(testGetBoolAttribute_False);
@@ -32,6 +33,22 @@ class AttributeMapTest : public CppUnit::TestFixture
             testling.addAttribute("lang", "", "fr");
 
             CPPUNIT_ASSERT_EQUAL(std::string("en"), testling.getAttribute("lang", "http://www.w3.org/XML/1998/namespace"));
+        }
+
+        void testGetAttribute_Namespaced_Prefix() {
+            AttributeMap testling;
+            testling.addAttribute("lang", "", "prefix", "nl");
+            testling.addAttribute("lang", "http://www.w3.org/XML/1998/namespace", "prefix", "en");
+            testling.addAttribute("lang", "", "prefix", "fr");
+
+            CPPUNIT_ASSERT_EQUAL(std::string("en"), testling.getAttribute("lang", "http://www.w3.org/XML/1998/namespace"));
+            const auto& entries = testling.getEntries();
+            auto it = std::find_if(entries.begin(), entries.end(), [](const AttributeMap::Entry& e) {
+                return e.getValue() == "en";
+            });
+            const bool found = it != entries.end();
+            CPPUNIT_ASSERT_EQUAL(true, found);
+            CPPUNIT_ASSERT_EQUAL(std::string("prefix"), it->getAttribute().getPrefix());
         }
 
         void testGetBoolAttribute_True() {

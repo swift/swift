@@ -14,12 +14,19 @@ namespace Swift {
             Attribute(const std::string& name, const std::string& ns) : name(name), ns(ns) {
             }
 
+            Attribute(const std::string& name, const std::string& ns, const std::string& prefix) : name(name), ns(ns), prefix(prefix) {
+            }
+
             const std::string& getName() const {
                 return name;
             }
 
             const std::string& getNamespace() const {
                 return ns;
+            }
+
+            const std::string& getPrefix() const {
+                return prefix;
             }
 
             bool operator==(const Attribute& o) const {
@@ -29,5 +36,6 @@ namespace Swift {
         private:
             std::string name;
             std::string ns;
+            std::string prefix;
     };
 }

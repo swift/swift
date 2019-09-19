@@ -54,3 +54,7 @@ boost::optional<std::string> AttributeMap::getAttributeValue(const std::string& 
 void AttributeMap::addAttribute(const std::string& name, const std::string& ns, const std::string& value) {
     attributes.push_back(Entry(Attribute(name, ns), value));
 }
+
+void AttributeMap::addAttribute(const std::string& name, const std::string& ns, const std::string& prefix, const std::string& value) {
+    attributes.push_back(Entry(Attribute(name, ns, prefix), value));
+}

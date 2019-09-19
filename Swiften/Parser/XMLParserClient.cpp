@@ -11,6 +11,12 @@ namespace Swift {
 XMLParserClient::~XMLParserClient() {
 }
 
+void XMLParserClient::handleStartElement(const std::string&, const std::string&, const AttributeMap&) {
+}
+
+void XMLParserClient::handleStartElementPrefix(const std::string&, const std::string&, const std::string&, const std::string&, const std::string&, const AttributeMap&) {
+}
+
 void XMLParserClient::handleNamespaceDeclaration(const std::string&, const std::string&) {
 }
 

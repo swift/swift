@@ -17,6 +17,12 @@
 #include <Swiften/Base/Log.h>
 #include <Swiften/Parser/XMLParserClient.h>
 
+namespace {
+std::string asString(const unsigned char* s) {
+    return s ? std::string(reinterpret_cast<const char*>(s)) : std::string();
+}
+}
+
 namespace Swift {
 
 struct LibXMLParser::Private {
@@ -24,34 +30,39 @@ struct LibXMLParser::Private {
     xmlParserCtxtPtr context_;
 };
 
-static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*, const xmlChar* xmlns, int nbNamespaces, const xmlChar** namespaces, int nbAttributes, int nbDefaulted, const xmlChar ** attributes) {
+static void handleStartElement(void* parser, const xmlChar* name, const xmlChar* prefix, const xmlChar* xmlns, int nbNamespaces, const xmlChar** namespaces, int nbAttributes, int nbDefaulted, const xmlChar ** attributes) {
     AttributeMap attributeValues;
     if (nbDefaulted != 0) {
         // Just because i don't understand what this means yet :-)
         SWIFT_LOG(error) << "Unexpected nbDefaulted on XML element" << std::endl;
     }
     for (int i = 0; i < nbAttributes*5; i += 5) {
-        std::string attributeNS = "";
-        if (attributes[i+2]) {
-            attributeNS = std::string(reinterpret_cast<const char*>(attributes[i+2]));
-        }
+        std::string attributeName = asString(attributes[i]);
+        std::string attributePrefix = asString(attributes[i+1]);
+        std::string attributeNS = asString(attributes[i+2]);
         assert(attributes[i+4] >= attributes[i+3]);
         attributeValues.addAttribute(
-                std::string(reinterpret_cast<const char*>(attributes[i])),
+                attributeName,
                 attributeNS,
+                attributePrefix,
                 std::string(reinterpret_cast<const char*>(attributes[i+3]),
                     static_cast<size_t>(attributes[i+4]-attributes[i+3])));
     }
+    auto* client = static_cast<XMLParser*>(parser)->getClient();
     for (auto i = 0; i < nbNamespaces * 2; i += 2) {
-        const auto prefix = namespaces[i] ? std::string(reinterpret_cast<const char*>(namespaces[i])) : "";
-        const auto uri = std::string(reinterpret_cast<const char*>(namespaces[i + 1]));
-        static_cast<XMLParser*>(parser)->getClient()->handleNamespaceDeclaration(prefix, uri);
+        const auto prefix = asString(namespaces[i]);
+        const auto uri = asString(namespaces[i + 1]);
+        client->handleNamespaceDeclaration(prefix, uri);
     }
-    static_cast<XMLParser*>(parser)->getClient()->handleStartElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()), attributeValues);
+    auto nameStr = asString(name);
+    auto xmlsnsStr = asString(xmlns);
+    auto prefixStr = asString(prefix);
+    client->handleStartElementPrefix(prefixStr, xmlsnsStr, nameStr, nameStr, xmlsnsStr, attributeValues);
+    client->handleStartElement(nameStr, xmlsnsStr, attributeValues);
 }
 
 static void handleEndElement(void *parser, const xmlChar* name, const xmlChar*, const xmlChar* xmlns) {
-    static_cast<XMLParser*>(parser)->getClient()->handleEndElement(reinterpret_cast<const char*>(name), (xmlns ? reinterpret_cast<const char*>(xmlns) : std::string()));
+    static_cast<XMLParser*>(parser)->getClient()->handleEndElement(asString(name), asString(xmlns));
 }
 
 static void handleCharacterData(void* parser, const xmlChar* data, int len) {

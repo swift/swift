@@ -11,12 +11,41 @@
 #include <memory>
 #include <string>
 
+#include <boost/algorithm/string.hpp>
+
 #include <expat.h>
 
 #include <Swiften/Base/String.h>
 #include <Swiften/Parser/XMLParserClient.h>
 
 #pragma clang diagnostic ignored "-Wdisabled-macro-expansion"
+
+namespace {
+struct XmlInfo {
+    std::string prefix;
+    std::string uri;
+    std::string name;
+};
+
+XmlInfo splitExpatInfo(const std::string& s, char sep) {
+    // name
+    // uri|name
+    // uri|name|prefix
+    std::vector<std::string> v;
+    boost::split(v, s, [sep](char c) {return c == sep; });
+    switch (v.size()) {
+    case 1:
+        return{ "", "", std::move(v[0]) };
+    case 2:
+        return{ "", std::move(v[0]), std::move(v[1]) };
+    case 3:
+        return{ std::move(v[2]), std::move(v[0]), std::move(v[1]) };
+    default:
+        return{ "", "", "" };
+    }
+}
+}
+
 
 namespace Swift {
 
@@ -27,33 +56,24 @@ struct ExpatParser::Private {
 };
 
 static void handleStartElement(void* parser, const XML_Char* name, const XML_Char** attributes) {
-    std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
-    if (nsTagPair.second == "") {
-        nsTagPair.second = nsTagPair.first;
-        nsTagPair.first = "";
-    }
+    auto elemInfo = splitExpatInfo(name, NAMESPACE_SEPARATOR);
+
     AttributeMap attributeValues;
     const XML_Char** currentAttribute = attributes;
     while (*currentAttribute) {
-        std::pair<std::string,std::string> nsAttributePair = String::getSplittedAtFirst(*currentAttribute, NAMESPACE_SEPARATOR);
-        if (nsAttributePair.second == "") {
-            nsAttributePair.second = nsAttributePair.first;
-            nsAttributePair.first = "";
-        }
-        attributeValues.addAttribute(nsAttributePair.second, nsAttributePair.first, std::string(*(currentAttribute+1)));
+        auto attribInfo = splitExpatInfo(*currentAttribute, NAMESPACE_SEPARATOR);
+        attributeValues.addAttribute(attribInfo.name, attribInfo.uri, attribInfo.prefix, std::string(*(currentAttribute+1)));
         currentAttribute += 2;
     }
 
-    static_cast<XMLParser*>(parser)->getClient()->handleStartElement(nsTagPair.second, nsTagPair.first, attributeValues);
+    auto* client = static_cast<XMLParser*>(parser)->getClient();
+    client->handleStartElementPrefix(elemInfo.prefix, elemInfo.uri, elemInfo.name, elemInfo.name, elemInfo.uri, attributeValues);
+    client->handleStartElement(elemInfo.name, elemInfo.uri, attributeValues);
 }
 
 static void handleEndElement(void* parser, const XML_Char* name) {
-    std::pair<std::string,std::string> nsTagPair = String::getSplittedAtFirst(name, NAMESPACE_SEPARATOR);
-    if (nsTagPair.second == "") {
-        nsTagPair.second = nsTagPair.first;
-        nsTagPair.first = "";
-    }
-    static_cast<XMLParser*>(parser)->getClient()->handleEndElement(nsTagPair.second, nsTagPair.first);
+    auto elemInfo = splitExpatInfo(name, NAMESPACE_SEPARATOR);
+    static_cast<XMLParser*>(parser)->getClient()->handleEndElement(elemInfo.name, elemInfo.uri);
 }
 
 static void handleCharacterData(void* parser, const XML_Char* data, int len) {
@@ -88,6 +108,7 @@ static void handleDoctypeDeclaration(void* parser, const XML_Char* /*doctypeName
 
 ExpatParser::ExpatParser(XMLParserClient* client, bool allowComments) : XMLParser(client, allowComments), p(new Private()) {
     p->parser_ = XML_ParserCreateNS("UTF-8", NAMESPACE_SEPARATOR);
+    XML_SetReturnNSTriplet(p->parser_, true);
     XML_SetUserData(p->parser_, this);
     XML_SetElementHandler(p->parser_, handleStartElement, handleEndElement);
     XML_SetCharacterDataHandler(p->parser_, handleCharacterData);

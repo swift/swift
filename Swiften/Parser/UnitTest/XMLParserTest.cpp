@@ -35,6 +35,7 @@ class XMLParserTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testParse_WhitespaceInAttribute);
         CPPUNIT_TEST(testParse_AttributeWithoutNamespace);
         CPPUNIT_TEST(testParse_AttributeWithNamespace);
+        CPPUNIT_TEST(testParse_AttributeWithNamespaceNoPrefix);
         CPPUNIT_TEST(testParse_BillionLaughs);
         CPPUNIT_TEST(testParse_InternalEntity);
         //CPPUNIT_TEST(testParse_UndefinedPrefix);
@@ -43,6 +44,7 @@ class XMLParserTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testParse_DisallowCommentsInXML);
         CPPUNIT_TEST(testParse_Doctype);
         CPPUNIT_TEST(testParse_ProcessingInstructions);
+        CPPUNIT_TEST(testParse_ProcessingPrefixedElement);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -264,6 +266,7 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
             CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
             CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
+            CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].attributes.getEntries()[0].getAttribute().getPrefix());
         }
 
         void testParse_AttributeWithNamespace() {
@@ -275,6 +278,22 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
             CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
             CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
+            CPPUNIT_ASSERT_EQUAL(std::string("f"), client_.events[0].attributes.getEntries()[0].getAttribute().getPrefix());
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events[0].namespaces.size());
+            CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im"), client_.events[0].namespaces[""]);
+            CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].namespaces["f"]);
+        }
+
+        void testParse_AttributeWithNamespaceNoPrefix() {
+            ParserType testling(&client_);
+
+            CPPUNIT_ASSERT(testling.parse(
+                "<query xmlns='http://swift.im' xmlns:f='http://swift.im/f' attr='3'/>"));
+
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(1), client_.events[0].attributes.getEntries().size());
+            CPPUNIT_ASSERT_EQUAL(std::string("attr"), client_.events[0].attributes.getEntries()[0].getAttribute().getName());
+            CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].attributes.getEntries()[0].getAttribute().getNamespace());
+            CPPUNIT_ASSERT_EQUAL(std::string(""), client_.events[0].attributes.getEntries()[0].getAttribute().getPrefix());
             CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events[0].namespaces.size());
             CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im"), client_.events[0].namespaces[""]);
             CPPUNIT_ASSERT_EQUAL(std::string("http://swift.im/f"), client_.events[0].namespaces["f"]);
@@ -373,25 +392,52 @@ class XMLParserTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(!testling.parse("<?xml-stylesheet type=\"text/xsl\" href=\"Sample.xsl\"?>"));
         }
 
+        void testParse_ProcessingPrefixedElement() {
+            client_.testingStartElementPrefix = true;
+            ParserType testling(&client_);
+
+            CPPUNIT_ASSERT(testling.parse("<prefix:message xmlns='uri' xmlns:prefix='uriPrefix'/>"));
+
+            CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), client_.events.size());
+
+            CPPUNIT_ASSERT_EQUAL(Client::StartElementPrefix, client_.events[0].type);
+            CPPUNIT_ASSERT_EQUAL(std::string("message"), client_.events[0].data);
+            CPPUNIT_ASSERT_EQUAL(std::string("uriPrefix"), client_.events[0].ns);
+            CPPUNIT_ASSERT_EQUAL(std::string("prefix"), client_.events[0].prefix);
+
+            CPPUNIT_ASSERT_EQUAL(Client::EndElement, client_.events[1].type);
+            CPPUNIT_ASSERT_EQUAL(std::string("message"), client_.events[1].data);
+            CPPUNIT_ASSERT_EQUAL(std::string("uriPrefix"), client_.events[1].ns);
+        }
+
     private:
         class Client : public XMLParserClient {
             public:
                 using NamespaceMap = std::unordered_map<std::string /* prefix */, std::string /* uri */>;
-                enum Type { StartElement, EndElement, CharacterData, NamespaceDefined };
+                enum Type { StartElement, StartElementPrefix, EndElement, CharacterData, NamespaceDefined };
                 struct Event {
+                    Event(
+                            Type type,
+                            const std::string& data,
+                            const std::string& ns,
+                            const std::string& prefix,
+                            const AttributeMap& attributes,
+                            NamespaceMap namespaces)
+                                : type(type), data(data), ns(ns), prefix(prefix), attributes(attributes), namespaces(std::move(namespaces)) {}
                     Event(
                             Type type,
                             const std::string& data,
                             const std::string& ns,
                             const AttributeMap& attributes,
                             NamespaceMap namespaces = {})
-                                : type(type), data(data), ns(ns), attributes(attributes), namespaces(std::move(namespaces)) {}
+                                : Event(type, data, ns, {}, attributes, std::move(namespaces)) {}
                     Event(Type type, const std::string& data, const std::string& ns = std::string())
-                                : type(type), data(data), ns(ns) {}
+                                : Event(type, data, ns, "", AttributeMap(), NamespaceMap()) {}
 
                     Type type;
                     std::string data;
                     std::string ns;
+                    std::string prefix;
                     AttributeMap attributes;
                     NamespaceMap namespaces;
                 };
@@ -399,7 +445,13 @@ class XMLParserTest : public CppUnit::TestFixture {
                 Client() {}
 
                 void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes) override {
+                    if (testingStartElementPrefix) return;
                     events.push_back(Event(StartElement, element, ns, attributes, std::move(namespaces_)));
+                }
+
+                void handleStartElementPrefix(const std::string& prefix, const std::string& uri, const std::string& name, const std::string&, const std::string&, const AttributeMap&) override {
+                    if (!testingStartElementPrefix) return;
+                    events.push_back(Event(StartElementPrefix, name, uri, prefix, AttributeMap(), NamespaceMap()));
                 }
 
                 void handleEndElement(const std::string& element, const std::string& ns) override {
@@ -415,6 +467,7 @@ class XMLParserTest : public CppUnit::TestFixture {
                 }
 
                 std::vector<Event> events;
+                bool testingStartElementPrefix = false;
             private:
                 NamespaceMap namespaces_;
         } client_;

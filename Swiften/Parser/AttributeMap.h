@@ -43,6 +43,7 @@ namespace Swift {
             boost::optional<std::string> getAttributeValue(const std::string&) const;
 
             void addAttribute(const std::string& name, const std::string& ns, const std::string& value);
+            void addAttribute(const std::string& name, const std::string& ns, const std::string& prefix, const std::string& value);
 
             const std::vector<Entry>& getEntries() const {
                 return attributes;
