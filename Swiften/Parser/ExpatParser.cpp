@@ -67,7 +67,7 @@ static void handleStartElement(void* parser, const XML_Char* name, const XML_Cha
     }
 
     auto* client = static_cast<XMLParser*>(parser)->getClient();
-    client->handleStartElementPrefix(elemInfo.prefix, elemInfo.uri, elemInfo.name, elemInfo.name, elemInfo.uri, attributeValues);
+    client->handleStartElementPrefix(elemInfo.prefix, elemInfo.uri, elemInfo.name, attributeValues);
     client->handleStartElement(elemInfo.name, elemInfo.uri, attributeValues);
 }
 

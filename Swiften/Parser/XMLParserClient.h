@@ -19,7 +19,7 @@ namespace Swift {
              * he is interested in processing the element prefix or not.
              */
             virtual void handleStartElement(const std::string& element, const std::string& ns, const AttributeMap& attributes);
-            virtual void handleStartElementPrefix(const std::string& prefix, const std::string& uri, const std::string& name, const std::string& element, const std::string& ns, const AttributeMap& attributes);
+            virtual void handleStartElementPrefix(const std::string& prefix, const std::string& uri, const std::string& element, const AttributeMap& attributes);
 
             virtual void handleEndElement(const std::string& element, const std::string& ns) = 0;
             virtual void handleCharacterData(const std::string& data) = 0;

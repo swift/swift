@@ -57,7 +57,7 @@ static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*
     auto nameStr = asString(name);
     auto xmlsnsStr = asString(xmlns);
     auto prefixStr = asString(prefix);
-    client->handleStartElementPrefix(prefixStr, xmlsnsStr, nameStr, nameStr, xmlsnsStr, attributeValues);
+    client->handleStartElementPrefix(prefixStr, xmlsnsStr, nameStr, attributeValues);
     client->handleStartElement(nameStr, xmlsnsStr, attributeValues);
 }
 

@@ -449,7 +449,7 @@ class XMLParserTest : public CppUnit::TestFixture {
                     events.push_back(Event(StartElement, element, ns, attributes, std::move(namespaces_)));
                 }
 
-                void handleStartElementPrefix(const std::string& prefix, const std::string& uri, const std::string& name, const std::string&, const std::string&, const AttributeMap&) override {
+                void handleStartElementPrefix(const std::string& prefix, const std::string& uri, const std::string& name, const AttributeMap&) override {
                     if (!testingStartElementPrefix) return;
                     events.push_back(Event(StartElementPrefix, name, uri, prefix, AttributeMap(), NamespaceMap()));
                 }
