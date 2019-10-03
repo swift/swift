@@ -129,8 +129,10 @@ void JID::nameprepAndSetComponents(const std::string& node, const std::string& d
     }
 
     const auto isAnyOfNonNumericAndNotDot = std::any_of(std::begin(domain), std::end(domain), [](char c) {return !::isdigit(c) && c != '.'; });
+    const auto isDomainAllNumeric = std::all_of(std::begin(domain), std::end(domain), [](char c) {return ::isdigit(c) ; });
 
-    if (!isAnyOfNonNumericAndNotDot) {
+    //Prevent Windows validating non-dotted integers as OK if it can unpack them
+    if (!isAnyOfNonNumericAndNotDot && !isDomainAllNumeric) {
         auto hostAddress = HostAddress::fromString(domain);
         if (hostAddress && hostAddress->isValid()) {
             setComponents(node, domain, resource);

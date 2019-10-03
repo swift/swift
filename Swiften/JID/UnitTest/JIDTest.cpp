@@ -24,6 +24,7 @@ class JIDTest : public CppUnit::TestFixture
         CPPUNIT_TEST(testConstructorWithString_OnlyDomainDotStrippedOff);
         CPPUNIT_TEST(testConstructorWithString_InvalidOnlyDomainSingleDot);
         CPPUNIT_TEST(testConstructorWithString_InvalidDomain);
+        CPPUNIT_TEST(testConstructorWithString_InvalidDomainOnlyDigits);
         CPPUNIT_TEST(testConstructorWithString_InvalidDomainEmptyLabel);
         CPPUNIT_TEST(testConstructorWithString_UpperCaseNode);
         CPPUNIT_TEST(testConstructorWithString_UpperCaseDomain);
@@ -160,6 +161,10 @@ class JIDTest : public CppUnit::TestFixture
 
         void testConstructorWithString_InvalidDomain() {
             CPPUNIT_ASSERT(!JID("foo@bar,baz").isValid());
+        }
+
+        void testConstructorWithString_InvalidDomainOnlyDigits() {
+            CPPUNIT_ASSERT(!JID("1234").isValid());
         }
 
         void testConstructorWithString_InvalidDomainEmptyLabel() {
