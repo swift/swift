@@ -8,6 +8,7 @@
 
 namespace Swift {
     class TLSContext;
+    class Certificate;
 
     class TLSOptions {
       public:
@@ -62,5 +63,10 @@ namespace Swift {
          */
 
         boost::optional<std::function<int(const TLSContext *)>> verifyCertificateCallback;
+
+        /**
+         * Allows specification of application-specific Trust Anchors
+         */
+        boost::optional<std::vector<std::shared_ptr<Certificate>>> trustAnchors;
     };
 }

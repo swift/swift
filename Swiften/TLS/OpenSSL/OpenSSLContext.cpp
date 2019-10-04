@@ -396,6 +396,21 @@ bool OpenSSLContext::configure(const TLSOptions &options)
     updateOptionIfPresent(options.disableTLSRollBackBug, SSL_OP_TLS_ROLLBACK_BUG);
     updateOptionIfPresent(options.singleDHUse, SSL_OP_SINGLE_DH_USE);
 
+    if (options.trustAnchors) {
+        // Add any additional Trust Anchors which are present in the TLSOptions
+        X509_STORE* store = SSL_CTX_get_cert_store(context_.get());
+
+        if (store) {
+            for (auto& certificate : *options.trustAnchors) {
+                auto openSSLCert = dynamic_cast<OpenSSLCertificate*>(certificate.get());
+                if (openSSLCert && openSSLCert->getInternalX509()) {
+                    X509_STORE_add_cert(store, openSSLCert->getInternalX509().get());
+                    // Don't need to increment reference count as X509_STORE_add_cert does thiS
+                }
+            }
+        }
+    }
+
     return true;
 }
 
