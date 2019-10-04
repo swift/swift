@@ -579,12 +579,10 @@ bool OpenSSLContext::setCertificateChain(const std::vector<std::shared_ptr<Certi
         return false;
     }
 
+    // This increments the reference count on the X509 certificate automatically
     if (SSL_CTX_use_certificate(context_.get(), openSSLCert->getInternalX509().get()) != 1) {
         return false;
     }
-
-    // Increment reference count on certificate so that it does not get freed when the SSL context is destroyed
-    openSSLCert->incrementReferenceCount();
 
     if (certificateChain.size() > 1) {
         for (auto certificate = certificateChain.begin() + 1; certificate != certificateChain.end(); ++certificate) {
@@ -597,7 +595,7 @@ bool OpenSSLContext::setCertificateChain(const std::vector<std::shared_ptr<Certi
                 SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
                 return false;
             }
-
+            // Have to manually increment reference count as SSL_CTX_add_extra_chain_cert does not do so
             openSSLCert->incrementReferenceCount();
         }
     }
@@ -644,16 +642,17 @@ bool OpenSSLContext::setPrivateKey(const PrivateKey::ref& privateKey) {
         safePassword.push_back(0);
         password = safePassword.data();
     }
-    auto resultKey = PEM_read_bio_PrivateKey(bio.get(), nullptr, empty_or_preset_password_cb, password);
+    // Make sure resultKey is tidied up by wrapping it in a shared_ptr
+    auto resultKey = std::shared_ptr<EVP_PKEY>(PEM_read_bio_PrivateKey(bio.get(), nullptr, empty_or_preset_password_cb, password), EVP_PKEY_free);
     if (resultKey) {
         if (handle_) {
-            auto result = SSL_use_PrivateKey(handle_.get(), resultKey);;
+            auto result = SSL_use_PrivateKey(handle_.get(), resultKey.get());
             if (result != 1) {
                 return false;
             }
         }
         else {
-            auto result = SSL_CTX_use_PrivateKey(context_.get(), resultKey);
+            auto result = SSL_CTX_use_PrivateKey(context_.get(), resultKey.get());
             if (result != 1) {
                 return false;
             }

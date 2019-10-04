@@ -15,6 +15,9 @@
 
 #include <Swiften/Base/ByteArray.h>
 #include <Swiften/TLS/CertificateFactory.h>
+#include <Swiften/TLS/TLSContext.h>
+#include <Swiften/TLS/PlatformTLSFactories.h>
+#include <Swiften/TLS/TLSContextFactory.h>
 
 #include <SwifTools/Application/PlatformApplicationPathProvider.h>
 
@@ -31,6 +34,7 @@ class CertificateTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testGetDNSNames);
         CPPUNIT_TEST(testGetXMPPAddresses);
         CPPUNIT_TEST(testCreateCertificateChain);
+        CPPUNIT_TEST(testCreateTlsContext);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -38,7 +42,11 @@ class CertificateTest : public CppUnit::TestFixture {
             pathProvider = std::make_unique<PlatformApplicationPathProvider>("FileReadBytestreamTest");
             readByteArrayFromFile(certificateData, (pathProvider->getExecutableDir() / "jabber_org.crt"));
             readByteArrayFromFile(chainData, (pathProvider->getExecutableDir() / "certificateChain.pem"));
+            readByteArrayFromFile(keyData, (pathProvider->getExecutableDir() / "privateKey.pem"));
             certificateFactory = std::unique_ptr<CertificateFactory>(new CERTIFICATE_FACTORY());
+
+            PlatformTLSFactories* tlsFactories_ = new PlatformTLSFactories();
+            tlsContextFactory_ = tlsFactories_->getTLSContextFactory();
         }
 
         void testConstructFromDER() {
@@ -106,11 +114,29 @@ class CertificateTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(std::string("New Messaging CA"), chain[1]->getCommonNames()[0]);
         }
 
+        void testCreateTlsContext() {
+            // Create 2-certificate chain as in previous test
+            std::vector<std::shared_ptr<Certificate>> chain = certificateFactory->createCertificateChain(chainData);
+            CPPUNIT_ASSERT_EQUAL(2,static_cast<int>(chain.size()));
+
+            // Load private key from string
+            PrivateKey::ref key = certificateFactory->createPrivateKey(Swift::createSafeByteArray(keyData));
+            CPPUNIT_ASSERT(key);
+
+            const TLSOptions options;
+            auto context = tlsContextFactory_->createTLSContext(options, TLSContext::Mode::Server);
+            CPPUNIT_ASSERT(context);
+
+            context->setCertificateChain(chain);
+            context->setPrivateKey(key);
+        }
     private:
         std::unique_ptr<PlatformApplicationPathProvider> pathProvider;
         ByteArray certificateData;
         ByteArray chainData;
+        ByteArray keyData;
         std::unique_ptr<CertificateFactory> certificateFactory;
+        TLSContextFactory* tlsContextFactory_;
 };
 
 #ifdef HAVE_OPENSSL
