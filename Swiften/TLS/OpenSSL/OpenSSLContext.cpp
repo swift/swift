@@ -281,14 +281,18 @@ static int verifyCallback(int preverifyOk, X509_STORE_CTX* ctx)
             X509_NAME* issuerName = X509_get_issuer_name(errCert);
             issuerString = X509_NAME_to_text(issuerName);
         }
-        SWIFT_LOG(error) << "verifyCallback: verification error" <<
+        SWIFT_LOG(error) << "verifyCallback: verification error " <<
             X509_verify_cert_error_string(err) << " depth: " <<
             depth << " issuer: " << ((issuerString.length() > 0) ? issuerString : "<unknown>") << std::endl;
     } else {
         SWIFT_LOG(info) << "verifyCallback: SSL depth: " << depth << " Subject: " <<
             ((subjectString.length() > 0) ? subjectString : "<>")  << std::endl;
     }
-    return preverifyOk;
+    // Always return "OK", as check on verification status
+    // will be performed once TLS handshake has completed,
+    // by calling OpenSSLContext::getVerificationErrorTypeForResult() to
+    // get the value set via X509_STORE_CTX_set_error() above.
+    return 1;
 }
 
 bool OpenSSLContext::configure(const TLSOptions &options)
@@ -746,13 +750,33 @@ bool OpenSSLContext::setDiffieHellmanParameters(const ByteArray& parametersInOpe
 
 std::vector<Certificate::ref> OpenSSLContext::getPeerCertificateChain() const {
     std::vector<Certificate::ref> result;
+
+    // When this context is a server, the peer (client) certificate
+    // is obtained via SSL_get_peer_certificate, and any other
+    // certificates set by the peer are available via SSL_get_peer_cert_chain.
+    // When this context is a client, all of the server's certificates are
+    // obtained using SSL_get_peer_cert_chain
+    if (mode_ == Mode::Server) {
+        auto cert = SSL_get_peer_certificate(handle_.get());
+        if (cert) {
+            // Do not need to copy the returned cert as SSL_get_peer_certificate
+            // increments the reference count on the certificate
+            std::shared_ptr<X509> x509Cert(cert, X509_free);
+            Certificate::ref cert = std::make_shared<OpenSSLCertificate>(x509Cert);
+            result.push_back(cert);
+        }
+    }
+
     STACK_OF(X509)* chain = SSL_get_peer_cert_chain(handle_.get());
     for (int i = 0; i < sk_X509_num(chain); ++i) {
+        // Here we do need to copy the returned cert, since SSL_get_peer_cert_chain
+        // does not increment the reference count on each certificate
         std::shared_ptr<X509> x509Cert(X509_dup(sk_X509_value(chain, i)), X509_free);
 
         Certificate::ref cert = std::make_shared<OpenSSLCertificate>(x509Cert);
         result.push_back(cert);
     }
+
     return result;
 }
 
