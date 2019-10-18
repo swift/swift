@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -44,9 +44,9 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, std::shared_p
     idnConverter = PlatformIDNConverter::create();
 #ifdef USE_UNBOUND
     // TODO: What to do about idnConverter.
-    domainNameResolver = new UnboundDomainNameResolver(idnConverter, ioServiceThread.getIOService(), eventLoop);
+    domainNameResolver = new UnboundDomainNameResolver(idnConverter.get(), ioServiceThread.getIOService(), eventLoop);
 #else
-    domainNameResolver = new PlatformDomainNameResolver(idnConverter, eventLoop);
+    domainNameResolver = new PlatformDomainNameResolver(idnConverter.get(), eventLoop);
 #endif
     cryptoProvider = PlatformCryptoProvider::create();
 }
@@ -54,7 +54,6 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, std::shared_p
 BoostNetworkFactories::~BoostNetworkFactories() {
     delete cryptoProvider;
     delete domainNameResolver;
-    delete idnConverter;
     delete proxyProvider;
     delete tlsFactories;
     delete xmlParserFactory;

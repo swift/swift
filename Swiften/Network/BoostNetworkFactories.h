@@ -1,10 +1,12 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
 
 #pragma once
+
+#include <memory>
 
 #include <Swiften/Base/API.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
@@ -68,7 +70,7 @@ namespace Swift {
             }
 
             virtual IDNConverter* getIDNConverter() const override {
-                return idnConverter;
+                return idnConverter.get();
             }
 
             virtual CryptoProvider* getCryptoProvider() const override {
@@ -87,7 +89,7 @@ namespace Swift {
             PlatformTLSFactories* tlsFactories;
             ProxyProvider* proxyProvider;
             EventLoop* eventLoop;
-            IDNConverter* idnConverter;
+            std::unique_ptr<IDNConverter> idnConverter;
             CryptoProvider* cryptoProvider;
     };
 }

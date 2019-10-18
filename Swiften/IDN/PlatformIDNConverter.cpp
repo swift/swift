@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2018 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -13,16 +13,16 @@
 
 namespace Swift {
 
-IDNConverter* PlatformIDNConverter::create() {
+std::unique_ptr<IDNConverter> PlatformIDNConverter::create() {
 #if defined(HAVE_LIBIDN)
-    return new LibIDNConverter();
+    return std::make_unique<LibIDNConverter>();
 #elif defined(HAVE_ICU)
-    return new ICUConverter();
+    return std::make_unique<ICUConverter>();
 #else
 #if defined(NEED_IDN)
 #error "No IDN implementation"
 #else
-    return nullptr;
+    return {};
 #endif
 #endif
 }
