@@ -35,6 +35,7 @@ class CertificateTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testGetXMPPAddresses);
         CPPUNIT_TEST(testCreateCertificateChain);
         CPPUNIT_TEST(testCreateTlsContext);
+        CPPUNIT_TEST(testCreateTlsContextDisableSystemTAs);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -124,6 +125,29 @@ class CertificateTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(key);
 
             const TLSOptions options;
+            auto context = tlsContextFactory_->createTLSContext(options, TLSContext::Mode::Server);
+            CPPUNIT_ASSERT(context);
+
+            context->setCertificateChain(chain);
+            context->setPrivateKey(key);
+        }
+
+    /**
+     * This test does not actually verify that use of system TAs has been disabled, it just provides
+     * a convenient mechanism for testing via a debugger.
+     **/
+        void testCreateTlsContextDisableSystemTAs() {
+            // Create 2-certificate chain as in previous test
+            std::vector<std::shared_ptr<Certificate>> chain = certificateFactory->createCertificateChain(chainData);
+            CPPUNIT_ASSERT_EQUAL(2,static_cast<int>(chain.size()));
+
+            // Load private key from string
+            PrivateKey::ref key = certificateFactory->createPrivateKey(Swift::createSafeByteArray(keyData));
+            CPPUNIT_ASSERT(key);
+
+            // Turn off use of system TAs
+            TLSOptions options;
+            options.ignoreSystemTrustAnchors = true;
             auto context = tlsContextFactory_->createTLSContext(options, TLSContext::Mode::Server);
             CPPUNIT_ASSERT(context);
 

@@ -68,5 +68,10 @@ namespace Swift {
          * Allows specification of application-specific Trust Anchors
          */
         boost::optional<std::vector<std::shared_ptr<Certificate>>> trustAnchors;
+
+        /**
+         * Turns off automatic loading of system Trust Anchors
+         */
+        bool ignoreSystemTrustAnchors = false;
     };
 }

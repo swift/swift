@@ -121,52 +121,57 @@ OpenSSLContext::OpenSSLContext(const TLSOptions& options, Mode mode) : mode_(mod
 
     // TODO: implement OCSP support
     // TODO: handle OCSP stapling see https://www.rfc-editor.org/rfc/rfc4366.txt
-    // Load system certs
+
+    // Default for ignoreSystemTrustAnchors is false, i.e. load System TAs by default,
+    // to preserve previous behaviour
+    if (!options.ignoreSystemTrustAnchors) {
+        // Load system certs
 #if defined(SWIFTEN_PLATFORM_WINDOWS)
-    X509_STORE* store = SSL_CTX_get_cert_store(context_.get());
-    HCERTSTORE systemStore = CertOpenSystemStore(0, "ROOT");
-    if (systemStore) {
-        PCCERT_CONTEXT certContext = nullptr;
-        while (true) {
-            certContext = CertFindCertificateInStore(systemStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_ANY, nullptr, certContext);
-            if (!certContext) {
-                break;
-            }
-            OpenSSLCertificate cert(createByteArray(certContext->pbCertEncoded, certContext->cbCertEncoded));
-            if (store && cert.getInternalX509()) {
-                X509_STORE_add_cert(store, cert.getInternalX509().get());
+        X509_STORE* store = SSL_CTX_get_cert_store(context_.get());
+        HCERTSTORE systemStore = CertOpenSystemStore(0, "ROOT");
+        if (systemStore) {
+            PCCERT_CONTEXT certContext = nullptr;
+            while (true) {
+                certContext = CertFindCertificateInStore(systemStore, X509_ASN_ENCODING | PKCS_7_ASN_ENCODING, 0, CERT_FIND_ANY, nullptr, certContext);
+                if (!certContext) {
+                    break;
+                }
+                OpenSSLCertificate cert(createByteArray(certContext->pbCertEncoded, certContext->cbCertEncoded));
+                if (store && cert.getInternalX509()) {
+                    X509_STORE_add_cert(store, cert.getInternalX509().get());
+                }
             }
         }
-    }
 #elif !defined(SWIFTEN_PLATFORM_MACOSX)
-    SSL_CTX_set_default_verify_paths(context_.get());
+        SSL_CTX_set_default_verify_paths(context_.get());
 #elif defined(SWIFTEN_PLATFORM_MACOSX) && !defined(SWIFTEN_PLATFORM_IPHONE)
-    // On Mac OS X 10.5 (OpenSSL < 0.9.8), OpenSSL does not automatically look in the system store.
-    // On Mac OS X 10.6 (OpenSSL >= 0.9.8), OpenSSL *does* look in the system store to determine trust.
-    // However, if there is a certificate error, it will always emit the "Invalid CA" error if we didn't add
-    // the certificates first. See
-    //        http://opensource.apple.com/source/OpenSSL098/OpenSSL098-27/src/crypto/x509/x509_vfy_apple.c
-    // to understand why. We therefore add all certs from the system store ourselves.
-    X509_STORE* store = SSL_CTX_get_cert_store(context_.get());
-    CFArrayRef anchorCertificates;
-    if (SecTrustCopyAnchorCertificates(&anchorCertificates) == 0) {
-        for (int i = 0; i < CFArrayGetCount(anchorCertificates); ++i) {
-            SecCertificateRef cert = reinterpret_cast<SecCertificateRef>(const_cast<void*>(CFArrayGetValueAtIndex(anchorCertificates, i)));
-            CSSM_DATA certCSSMData;
-            if (SecCertificateGetData(cert, &certCSSMData) != 0 || certCSSMData.Length == 0) {
-                continue;
+        // On Mac OS X 10.5 (OpenSSL < 0.9.8), OpenSSL does not automatically look in the system store.
+        // On Mac OS X 10.6 (OpenSSL >= 0.9.8), OpenSSL *does* look in the system store to determine trust.
+        // However, if there is a certificate error, it will always emit the "Invalid CA" error if we didn't add
+        // the certificates first. See
+        //        http://opensource.apple.com/source/OpenSSL098/OpenSSL098-27/src/crypto/x509/x509_vfy_apple.c
+        // to understand why. We therefore add all certs from the system store ourselves.
+        X509_STORE* store = SSL_CTX_get_cert_store(context_.get());
+        CFArrayRef anchorCertificates;
+        if (SecTrustCopyAnchorCertificates(&anchorCertificates) == 0) {
+            for (int i = 0; i < CFArrayGetCount(anchorCertificates); ++i) {
+                SecCertificateRef cert = reinterpret_cast<SecCertificateRef>(const_cast<void*>(CFArrayGetValueAtIndex(anchorCertificates, i)));
+                CSSM_DATA certCSSMData;
+                if (SecCertificateGetData(cert, &certCSSMData) != 0 || certCSSMData.Length == 0) {
+                    continue;
+                }
+                std::vector<unsigned char> certData;
+                certData.resize(certCSSMData.Length);
+                memcpy(&certData[0], certCSSMData.Data, certCSSMData.Length);
+                OpenSSLCertificate certificate(certData);
+                if (store && certificate.getInternalX509()) {
+                    X509_STORE_add_cert(store, certificate.getInternalX509().get());
+                }
             }
-            std::vector<unsigned char> certData;
-            certData.resize(certCSSMData.Length);
-            memcpy(&certData[0], certCSSMData.Data, certCSSMData.Length);
-            OpenSSLCertificate certificate(certData);
-            if (store && certificate.getInternalX509()) {
-                X509_STORE_add_cert(store, certificate.getInternalX509().get());
-            }
+            CFRelease(anchorCertificates);
         }
-        CFRelease(anchorCertificates);
-    }
 #endif
+    }
     configure(options);
 }
 
