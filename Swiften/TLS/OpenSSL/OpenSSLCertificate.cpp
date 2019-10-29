@@ -32,7 +32,7 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 #endif
     cert = std::shared_ptr<X509>(d2i_X509(nullptr, &p, der.size()), X509_free);
     if (!cert) {
-        SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
+//        SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
     }
     parse();
 }
