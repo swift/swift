@@ -30,7 +30,6 @@ SafeByteArray StreamErrorSerializer::serialize(std::shared_ptr<ToplevelElement> 
         case StreamError::ImproperAddressing: typeTag = "improper-addressing"; break;
         case StreamError::InternalServerError: typeTag = "internal-server-error"; break;
         case StreamError::InvalidFrom: typeTag = "invalid-from"; break;
-        case StreamError::InvalidID: typeTag = "invalid-id"; break;
         case StreamError::InvalidNamespace: typeTag = "invalid-namespace"; break;
         case StreamError::InvalidXML: typeTag = "invalid-xml"; break;
         case StreamError::NotAuthorized: typeTag = "not-authorized"; break;
@@ -44,6 +43,7 @@ SafeByteArray StreamErrorSerializer::serialize(std::shared_ptr<ToplevelElement> 
         case StreamError::SystemShutdown: typeTag = "system-shutdown"; break;
         case StreamError::UndefinedCondition: typeTag = "undefined-condition"; break;
         case StreamError::UnsupportedEncoding: typeTag = "unsupported-encoding"; break;
+        case StreamError::UnsupportedFeature: typeTag = "unsupported-feature"; break;
         case StreamError::UnsupportedStanzaType: typeTag = "unsupported-stanza-type"; break;
         case StreamError::UnsupportedVersion: typeTag = "unsupported-version"; break;
     }

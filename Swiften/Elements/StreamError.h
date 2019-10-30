@@ -27,7 +27,6 @@ namespace Swift {
                 ImproperAddressing,
                 InternalServerError,
                 InvalidFrom,
-                InvalidID,
                 InvalidNamespace,
                 InvalidXML,
                 NotAuthorized,
@@ -41,6 +40,7 @@ namespace Swift {
                 SystemShutdown,
                 UndefinedCondition,
                 UnsupportedEncoding,
+                UnsupportedFeature,
                 UnsupportedStanzaType,
                 UnsupportedVersion
             };

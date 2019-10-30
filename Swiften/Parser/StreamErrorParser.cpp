@@ -48,9 +48,6 @@ void StreamErrorParser::handleEndElement(const std::string& element, const std::
         else if(element == "invalid-from") {
             getElementGeneric()->setType(StreamError::InvalidFrom);
         }
-        else if(element == "invalid-id") {
-            getElementGeneric()->setType(StreamError::InvalidID);
-        }
         else if(element == "invalid-namespace") {
             getElementGeneric()->setType(StreamError::InvalidNamespace);
         }
@@ -89,6 +86,9 @@ void StreamErrorParser::handleEndElement(const std::string& element, const std::
         }
         else if(element == "unsupported-encoding") {
             getElementGeneric()->setType(StreamError::UnsupportedEncoding);
+        }
+        else if(element == "unsupported-feature") {
+            getElementGeneric()->setType(StreamError::UnsupportedFeature);
         }
         else if(element == "unsupported-stanza-type") {
             getElementGeneric()->setType(StreamError::UnsupportedStanzaType);
