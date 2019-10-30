@@ -100,12 +100,20 @@ static void handleError(void*, const char* /*m*/, ... ) {
 static void handleWarning(void*, const char*, ... ) {
 }
 
+static void handleGenericError(void*, const char*, ... ) {
+}
+
+static void handleStructuredError(void*, xmlErrorPtr) {
+}
+
 bool LibXMLParser::initialized = false;
 
 LibXMLParser::LibXMLParser(XMLParserClient* client, bool allowComments) : XMLParser(client, allowComments), p(new Private()) {
     // Initialize libXML for multithreaded applications
     if (!initialized) {
         xmlInitParser();
+        xmlSetGenericErrorFunc(nullptr, handleGenericError);
+        xmlSetStructuredErrorFunc(nullptr, handleStructuredError);
         initialized = true;
     }
 
@@ -136,12 +144,12 @@ bool LibXMLParser::parse(const std::string& data, bool finalData) {
     if (data.size() > std::numeric_limits<int>::max()) {
         return false;
     }
-    if (xmlParseChunk(p->context_, data.c_str(), static_cast<int>(data.size()), finalData) == XML_ERR_OK) {
+    auto error = xmlParseChunk(p->context_, data.c_str(), static_cast<int>(data.size()), finalData);
+    if (error == XML_ERR_OK) {
         return true;
     }
     if (stopped_) return false;
-    xmlError* error = xmlCtxtGetLastError(p->context_);
-    if (error->code == XML_WAR_NS_URI || error->code == XML_WAR_NS_URI_RELATIVE) {
+    if (error == XML_WAR_NS_URI || error == XML_WAR_NS_URI_RELATIVE) {
         xmlCtxtResetLastError(p->context_);
         p->context_->errNo = XML_ERR_OK;
         return true;
