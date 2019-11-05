@@ -35,6 +35,8 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testCertificateVerifies_WithMatchingInternationalXmppAddr);
         CPPUNIT_TEST(testCertificateVerifies_WithMatchingCNWithoutSAN);
         CPPUNIT_TEST(testCertificateVerifies_WithMatchingCNWithSAN);
+        CPPUNIT_TEST(testCertificateVerifies_WithMatchingSRVNameWithServerExpected);
+        CPPUNIT_TEST(testCertificateVerifies_WithMatchingSRVNameWithClientUnexpected);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -127,6 +129,24 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
             ServerIdentityVerifier testling(JID("foo@bar.com/baz"), idnConverter.get());
             SimpleCertificate::ref certificate(new SimpleCertificate());
             certificate->addSRVName("_xmpp-server.bar.com");
+
+            CPPUNIT_ASSERT(!testling.certificateVerifies(certificate));
+        }
+
+        void testCertificateVerifies_WithMatchingSRVNameWithServerExpected() {
+            // Server-mode test which gets cert with "xmpp-server" SRV name
+            ServerIdentityVerifier testling(JID("foo@bar.com/baz"), idnConverter.get(), true);
+            SimpleCertificate::ref certificate(new SimpleCertificate());
+            certificate->addSRVName("_xmpp-server.bar.com");
+
+            CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
+        }
+
+        void testCertificateVerifies_WithMatchingSRVNameWithClientUnexpected() {
+            // Server-mode test which gets cert with "xmpp-client" SRV name
+            ServerIdentityVerifier testling(JID("foo@bar.com/baz"), idnConverter.get(), true);
+            SimpleCertificate::ref certificate(new SimpleCertificate());
+            certificate->addSRVName("_xmpp-client.bar.com");
 
             CPPUNIT_ASSERT(!testling.certificateVerifies(certificate));
         }

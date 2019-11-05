@@ -18,7 +18,7 @@ namespace Swift {
 
     class SWIFTEN_API ServerIdentityVerifier {
         public:
-            ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter);
+            ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter, bool checkServer=false);
 
             bool certificateVerifies(Certificate::ref);
 
@@ -30,5 +30,6 @@ namespace Swift {
             std::string domain;
             std::string encodedDomain;
             bool domainValid;
+            bool checkServer_;
     };
 }

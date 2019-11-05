@@ -12,7 +12,7 @@
 
 namespace Swift {
 
-ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter) : domainValid(false) {
+ServerIdentityVerifier::ServerIdentityVerifier(const JID& jid, IDNConverter* idnConverter, bool checkServer) : domainValid(false), checkServer_(checkServer) {
     domain = jid.getDomain();
     boost::optional<std::string> domainResult = idnConverter->getIDNAEncoded(domain);
     if (!!domainResult) {
@@ -36,12 +36,14 @@ bool ServerIdentityVerifier::certificateVerifies(Certificate::ref certificate) {
     }
     hasSAN |= !dnsNames.empty();
 
+    std::string prefix = (checkServer_) ? "_xmpp-server." : "_xmpp-client.";
+
     // SRV names
     std::vector<std::string> srvNames = certificate->getSRVNames();
     for (const auto& srvName : srvNames) {
         // Only match SRV names that begin with the service; this isn't required per
         // spec, but we're being purist about this.
-        if (boost::starts_with(srvName, "_xmpp-client.") && matchesDomain(srvName.substr(std::string("_xmpp-client.").size(), srvName.npos))) {
+        if (boost::starts_with(srvName, prefix) && matchesDomain(srvName.substr(prefix.size(), srvName.npos))) {
             return true;
         }
     }
