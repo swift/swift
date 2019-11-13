@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdio>
+#include <functional>
 #include <memory>
 #include <sstream>
 
@@ -18,20 +19,22 @@ namespace Swift {
             enum Severity {
                 error, warning, info, debug
             };
+            using Callback = std::function<void(Severity severity, std::string file, int line, std::string function, std::string message)>;
 
             Log();
             ~Log();
 
             std::ostringstream& getStream(
                     Severity severity,
-                    const std::string& severityString,
-                    const std::string& file,
+                    std::string severityString,
+                    std::string file,
                     int line,
-                    const std::string& function);
+                    std::string function);
 
             static Severity getLogLevel();
             static void setLogLevel(Severity level);
             static void setLogFile(const std::string& fileName);
+            static void setLogCallback(Callback callback);
 
         private:
             struct LogFileClose {
@@ -43,6 +46,11 @@ namespace Swift {
             };
             std::ostringstream stream;
             static std::unique_ptr<FILE, LogFileClose> logfile;
+            static Callback logCallback;
+            Severity severity_;
+            std::string file_;
+            int line_;
+            std::string function_;
     };
 }
 

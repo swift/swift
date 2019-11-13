@@ -383,6 +383,7 @@ if env["SCONS_STAGE"] == "build" :
             File("Avatars/UnitTest/CombinedAvatarProviderTest.cpp"),
             File("Avatars/UnitTest/AvatarManagerImplTest.cpp"),
             File("Base/UnitTest/IDGeneratorTest.cpp"),
+            File("Base/UnitTest/LogTest.cpp"),
             File("Base/UnitTest/LRUCacheTest.cpp"),
             File("Base/UnitTest/SimpleIDGeneratorTest.cpp"),
             File("Base/UnitTest/StringTest.cpp"),
