@@ -207,7 +207,7 @@ static int certVerifyCallback(X509_STORE_CTX* store_ctx, void* arg)
     if (cb != nullptr) {
         ret = cb(static_cast<const OpenSSLContext*>(context));
     } else {
-        //SWIFT_LOG(warning) << "certVerifyCallback called but context.verifyCertCallback is unset" << std::endl;
+        SWIFT_LOG(debug) << "certVerifyCallback called but context.verifyCertCallback is unset" << std::endl;
         ret = 0;
     }
 
@@ -250,12 +250,12 @@ static int verifyCallback(int preverifyOk, X509_STORE_CTX* ctx)
     SSL* ssl = static_cast<SSL*>(X509_STORE_CTX_get_ex_data(ctx, SSL_get_ex_data_X509_STORE_CTX_idx()));
     SSL_CTX* sslctx = ssl ? SSL_get_SSL_CTX(ssl) : nullptr;
     if (!sslctx) {
-        //SWIFT_LOG(error) << "verifyCallback: internal error" << std::endl;
+        SWIFT_LOG(debug) << "verifyCallback: internal error" << std::endl;
         return preverifyOk;
     }
 
     if (SSL_CTX_get_verify_mode(sslctx) == SSL_VERIFY_NONE) {
-        //SWIFT_LOG(info) << "verifyCallback: no verification required" << std::endl;
+        SWIFT_LOG(debug) << "verifyCallback: no verification required" << std::endl;
         // No verification requested
         return 1;
     }
@@ -286,12 +286,12 @@ static int verifyCallback(int preverifyOk, X509_STORE_CTX* ctx)
             X509_NAME* issuerName = X509_get_issuer_name(errCert);
             issuerString = X509_NAME_to_text(issuerName);
         }
-//         SWIFT_LOG(error) << "verifyCallback: verification error " <<
-//           X509_verify_cert_error_string(err) << " depth: " <<
-//          depth << " issuer: " << ((issuerString.length() > 0) ? issuerString : "<unknown>") << std::endl;
-//      } else {
-//         SWIFT_LOG(info) << "verifyCallback: SSL depth: " << depth << " Subject: " <<
-//           ((subjectString.length() > 0) ? subjectString : "<>")  << std::endl;
+        SWIFT_LOG(debug) << "verifyCallback: verification error " <<
+          X509_verify_cert_error_string(err) << " depth: " <<
+          depth << " issuer: " << ((issuerString.length() > 0) ? issuerString : "<unknown>") << std::endl;
+     } else {
+        SWIFT_LOG(debug) << "verifyCallback: SSL depth: " << depth << " Subject: " <<
+          ((subjectString.length() > 0) ? subjectString : "<>")  << std::endl;
     }
     // Always return "OK", as check on verification status
     // will be performed once TLS handshake has completed,
@@ -305,7 +305,7 @@ bool OpenSSLContext::configure(const TLSOptions &options)
     if (options.cipherSuites) {
         std::string cipherSuites = *(options.cipherSuites);
         if (SSL_CTX_set_cipher_list(context_.get(), cipherSuites.c_str()) != 1 ) {
-//            SWIFT_LOG(error) << "Failed to set cipher-suites" << std::endl;
+            SWIFT_LOG(debug) << "Failed to set cipher-suites" << std::endl;
             return false;
         }
     }
@@ -316,7 +316,7 @@ bool OpenSSLContext::configure(const TLSOptions &options)
         if (SSL_CTX_set_session_id_context(context_.get(),
                                            reinterpret_cast<const unsigned char *>(contextId.c_str()),
                                            contextId.length()) != 1) {
-//            SWIFT_LOG(error) << "Failed to set context-id" << std::endl;
+            SWIFT_LOG(debug) << "Failed to set context-id" << std::endl;
             return false;
         }
     }
@@ -324,12 +324,12 @@ bool OpenSSLContext::configure(const TLSOptions &options)
     if (options.sessionCacheTimeout) {
         int scto = *options.sessionCacheTimeout;
         if (scto <= 0) {
-//            SWIFT_LOG(error) << "Invalid value for session-cache-timeout" << std::endl;
+            SWIFT_LOG(debug) << "Invalid value for session-cache-timeout" << std::endl;
             return false;
         }
         (void)SSL_CTX_set_timeout(context_.get(), scto);
         if (SSL_CTX_get_timeout(context_.get()) != scto) {
-//            SWIFT_LOG(error) << "Failed to set session-cache-timeout" << std::endl;
+            SWIFT_LOG(debug) << "Failed to set session-cache-timeout" << std::endl;
             return false;
         }
     }
@@ -371,7 +371,7 @@ bool OpenSSLContext::configure(const TLSOptions &options)
     if (options.verifyDepth) {
         int depth = *options.verifyDepth;
         if (depth <= 0) {
-//            SWIFT_LOG(error) << "Invalid value for verify-depth" << std::endl;
+            SWIFT_LOG(debug) << "Invalid value for verify-depth" << std::endl;
             return false;
         }
 
@@ -593,7 +593,7 @@ void OpenSSLContext::sendPendingDataToApplication() {
 
 bool OpenSSLContext::setCertificateChain(const std::vector<std::shared_ptr<Certificate>>& certificateChain) {
     if (certificateChain.size() == 0) {
-//        SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
+        SWIFT_LOG(debug) << "Trying to load empty certificate chain." << std::endl;
         return false;
     }
 
@@ -616,7 +616,7 @@ bool OpenSSLContext::setCertificateChain(const std::vector<std::shared_ptr<Certi
             }
 
             if (SSL_CTX_add_extra_chain_cert(context_.get(), openSSLCert->getInternalX509().get()) != 1) {
-//                SWIFT_LOG(warning) << "Trying to load empty certificate chain." << std::endl;
+                SWIFT_LOG(debug) << "Trying to load empty certificate chain." << std::endl;
                 return false;
             }
             // Have to manually increment reference count as SSL_CTX_add_extra_chain_cert does not do so
