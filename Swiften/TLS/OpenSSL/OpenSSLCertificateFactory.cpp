@@ -7,6 +7,7 @@
 #include <Swiften/TLS/OpenSSL/OpenSSLCertificateFactory.h>
 
 #include <openssl/pem.h>
+#include <openssl/err.h>
 
 namespace Swift {
 
@@ -43,6 +44,11 @@ std::vector<std::shared_ptr<Certificate>> OpenSSLCertificateFactory::createCerti
             openSSLCert = nullptr;
         }
     }
+
+    // Clear any (expected) errors which resulted from PEM parsing
+    // If we don't do this, any existing TLS context will detect these
+    // spurious errors and fail to work
+    ERR_clear_error();
 
     return certificateChain;
 }
