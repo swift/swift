@@ -132,6 +132,7 @@ env_ENV = {
     'PATH' : os.environ['PATH'],
     'LD_LIBRARY_PATH' : os.environ.get("LD_LIBRARY_PATH", ""),
     'TERM' : os.environ.get("TERM", ""),
+    'SDKROOT' : os.environ.get("SDKROOT", ""),
 }
 
 if "MSVC_VERSION" in ARGUMENTS :
