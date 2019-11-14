@@ -446,34 +446,34 @@ ClientOptions QtSwift::parseClientOptions(const std::string& optionString) {
     std::string stringVal;
     std::vector<std::string> segments = String::split(optionString, ',');
 
-    PARSE_BOOL(useStreamCompression, 1);
-    PARSE_INT_RAW(-1);
+    PARSE_BOOL(useStreamCompression, 1)
+    PARSE_INT_RAW(-1)
     switch (intVal) {
     case 1: result.useTLS = ClientOptions::NeverUseTLS; break;
     case 2: result.useTLS = ClientOptions::UseTLSWhenAvailable; break;
     case 3: result.useTLS = ClientOptions::RequireTLS; break;
     default:;
     }
-    PARSE_BOOL(allowPLAINWithoutTLS, 0);
-    PARSE_BOOL(useStreamResumption, 0);
-    PARSE_BOOL(useAcks, 1);
-    PARSE_STRING(manualHostname);
-    PARSE_INT(manualPort, -1);
-    PARSE_INT_RAW(-1);
+    PARSE_BOOL(allowPLAINWithoutTLS, 0)
+    PARSE_BOOL(useStreamResumption, 0)
+    PARSE_BOOL(useAcks, 1)
+    PARSE_STRING(manualHostname)
+    PARSE_INT(manualPort, -1)
+    PARSE_INT_RAW(-1)
     switch (intVal) {
     case 1: result.proxyType = ClientOptions::NoProxy; break;
     case 2: result.proxyType = ClientOptions::SystemConfiguredProxy; break;
     case 3: result.proxyType = ClientOptions::SOCKS5Proxy; break;
     case 4: result.proxyType = ClientOptions::HTTPConnectProxy; break;
     }
-    PARSE_STRING(manualProxyHostname);
-    PARSE_INT(manualProxyPort, -1);
-    PARSE_URL(boshURL);
-    PARSE_URL(boshHTTPConnectProxyURL);
-    PARSE_SAFE_STRING(boshHTTPConnectProxyAuthID);
-    PARSE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
-    PARSE_BOOL(tlsOptions.schannelTLS1_0Workaround, false);
-    PARSE_BOOL(singleSignOn, false);
+    PARSE_STRING(manualProxyHostname)
+    PARSE_INT(manualProxyPort, -1)
+    PARSE_URL(boshURL)
+    PARSE_URL(boshHTTPConnectProxyURL)
+    PARSE_SAFE_STRING(boshHTTPConnectProxyAuthID)
+    PARSE_SAFE_STRING(boshHTTPConnectProxyAuthPassword)
+    PARSE_BOOL(tlsOptions.schannelTLS1_0Workaround, false)
+    PARSE_BOOL(singleSignOn, false)
 
     return result;
 }

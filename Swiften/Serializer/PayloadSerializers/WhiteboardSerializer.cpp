@@ -67,7 +67,7 @@ namespace Swift {
             element->setAttribute("height", std::to_string(rect.getHeight()));
             element->setAttribute("id", rect.getID());
             element->setAttribute("stroke", rect.getPenColor().toHex());
-            element->setAttribute("fill", rect.getBrushColor().toHex());;
+            element->setAttribute("fill", rect.getBrushColor().toHex());
             element->setAttribute("stroke-width", std::to_string(rect.getPenWidth()));
             element->setAttribute("opacity", alphaToOpacity(rect.getPenColor().getAlpha()));
             element->setAttribute("fill-opacity", alphaToOpacity(rect.getBrushColor().getAlpha()));
@@ -80,7 +80,7 @@ namespace Swift {
         try {
             element->setAttribute("id", polygon.getID());
             element->setAttribute("stroke", polygon.getPenColor().toHex());
-            element->setAttribute("fill", polygon.getBrushColor().toHex());;
+            element->setAttribute("fill", polygon.getBrushColor().toHex());
             element->setAttribute("stroke-width", std::to_string(polygon.getPenWidth()));
             element->setAttribute("opacity", alphaToOpacity(polygon.getPenColor().getAlpha()));
             element->setAttribute("fill-opacity", alphaToOpacity(polygon.getBrushColor().getAlpha()));
@@ -117,7 +117,7 @@ namespace Swift {
             element->setAttribute("ry", std::to_string(ellipse.getRY()));
             element->setAttribute("id", ellipse.getID());
             element->setAttribute("stroke", ellipse.getPenColor().toHex());
-            element->setAttribute("fill", ellipse.getBrushColor().toHex());;
+            element->setAttribute("fill", ellipse.getBrushColor().toHex());
             element->setAttribute("stroke-width", std::to_string(ellipse.getPenWidth()));
             element->setAttribute("opacity", alphaToOpacity(ellipse.getPenColor().getAlpha()));
             element->setAttribute("fill-opacity", alphaToOpacity(ellipse.getBrushColor().getAlpha()));

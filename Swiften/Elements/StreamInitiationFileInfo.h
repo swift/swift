@@ -26,7 +26,7 @@ public:
         name(name), description(description), size(size), hash(hash), date(date), algo(algo), supportsRangeRequests(false), rangeOffset(0) {}
 
     void setName(const std::string& name) {
-        this->name = name;;
+        this->name = name;
     }
 
     const std::string& getName() const {

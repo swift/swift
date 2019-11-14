@@ -17,7 +17,7 @@ void ChatStateTracker::handleMessageReceived(std::shared_ptr<Message> message) {
     }
     std::shared_ptr<ChatState> statePayload = message->getPayload<ChatState>();
     if (statePayload) {
-        changeState(statePayload->getChatState());;
+        changeState(statePayload->getChatState());
     }
 }
 

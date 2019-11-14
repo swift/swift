@@ -64,12 +64,12 @@ ByteArray IncrementalBytestreamHashCalculator::getMD5Hash() {
 
 std::string IncrementalBytestreamHashCalculator::getSHA1String() {
     assert(sha1Hasher);
-    return Hexify::hexify(getSHA1Hash());;
+    return Hexify::hexify(getSHA1Hash());
 }
 
 std::string IncrementalBytestreamHashCalculator::getMD5String() {
     assert(md5Hasher);
-    return Hexify::hexify(getMD5Hash());;
+    return Hexify::hexify(getMD5Hash());
 }
 
 }

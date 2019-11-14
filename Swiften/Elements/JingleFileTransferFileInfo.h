@@ -36,7 +36,7 @@ namespace Swift {
 
         public:
             void setName(const std::string& name) {
-                name_ = name;;
+                name_ = name;
             }
 
             const std::string& getName() const {

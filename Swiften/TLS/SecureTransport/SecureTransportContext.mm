@@ -376,7 +376,7 @@ std::vector<Certificate::ref> SecureTransportContext::getPeerCertificateChain() 
             typedef boost::remove_pointer<SecTrustRef>::type SecTrust;
             std::shared_ptr<SecTrust> securityTrust;
 
-            SecTrustRef secTrust = nullptr;;
+            SecTrustRef secTrust = nullptr;
             OSStatus error = SSLCopyPeerTrust(sslContext_.get(), &secTrust);
             if (error == noErr) {
                 securityTrust = std::shared_ptr<SecTrust>(secTrust, CFRelease);

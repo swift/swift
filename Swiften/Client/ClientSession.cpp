@@ -122,7 +122,7 @@ void ClientSession::sendStanza(std::shared_ptr<Stanza> stanza) {
 }
 
 void ClientSession::handleStreamStart(const ProtocolHeader&) {
-    CHECK_STATE_OR_RETURN(State::WaitingForStreamStart);
+    CHECK_STATE_OR_RETURN(State::WaitingForStreamStart)
     state = State::Negotiating;
 }
 
@@ -214,7 +214,7 @@ void ClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
         }
     }
     else if (StreamFeatures* streamFeatures = dynamic_cast<StreamFeatures*>(element.get())) {
-        CHECK_STATE_OR_RETURN(State::Negotiating);
+        CHECK_STATE_OR_RETURN(State::Negotiating)
 
         if (streamFeatures->hasStartTLS() && stream->supportsTLSEncryption() && useTLS != NeverUseTLS) {
             state = State::WaitingForEncrypt;
@@ -320,7 +320,7 @@ void ClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
         }
     }
     else if (std::dynamic_pointer_cast<Compressed>(element)) {
-        CHECK_STATE_OR_RETURN(State::Compressing);
+        CHECK_STATE_OR_RETURN(State::Compressing)
         state = State::WaitingForStreamStart;
         stream->addZLibCompression();
         stream->resetXMPPParser();
@@ -343,7 +343,7 @@ void ClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
         continueSessionInitialization();
     }
     else if (AuthChallenge* challenge = dynamic_cast<AuthChallenge*>(element.get())) {
-        CHECK_STATE_OR_RETURN(State::Authenticating);
+        CHECK_STATE_OR_RETURN(State::Authenticating)
         assert(authenticator);
         if (authenticator->setChallenge(challenge->getValue())) {
             stream->writeElement(std::make_shared<AuthResponse>(authenticator->getResponse()));
@@ -361,7 +361,7 @@ void ClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
         }
     }
     else if (AuthSuccess* authSuccess = dynamic_cast<AuthSuccess*>(element.get())) {
-        CHECK_STATE_OR_RETURN(State::Authenticating);
+        CHECK_STATE_OR_RETURN(State::Authenticating)
         assert(authenticator);
         if (!authenticator->setChallenge(authSuccess->getValue())) {
             finishSession(Error::ServerVerificationFailedError);
@@ -378,7 +378,7 @@ void ClientSession::handleElement(std::shared_ptr<ToplevelElement> element) {
         finishSession(Error::AuthenticationFailedError);
     }
     else if (dynamic_cast<TLSProceed*>(element.get())) {
-        CHECK_STATE_OR_RETURN(State::WaitingForEncrypt);
+        CHECK_STATE_OR_RETURN(State::WaitingForEncrypt)
         state = State::Encrypting;
         stream->addTLSEncryption();
     }
@@ -433,7 +433,7 @@ void ClientSession::sendCredentials(const SafeByteArray& password) {
 
 void ClientSession::handleTLSEncrypted() {
     if (!std::dynamic_pointer_cast<BOSHSessionStream>(stream)) {
-        CHECK_STATE_OR_RETURN(State::Encrypting);
+        CHECK_STATE_OR_RETURN(State::Encrypting)
     }
 
     std::vector<Certificate::ref> certificateChain = stream->getPeerCertificateChain();

@@ -840,18 +840,18 @@ void AccountController::handleQuitRequest() {
 
 std::string AccountController::serializeClientOptions(const ClientOptions& options) {
     std::string result;
-    SERIALIZE_BOOL(useStreamCompression);
+    SERIALIZE_BOOL(useStreamCompression)
     switch (options.useTLS) {
         case ClientOptions::NeverUseTLS: result += "1";break;
         case ClientOptions::UseTLSWhenAvailable: result += "2";break;
         case ClientOptions::RequireTLS: result += "3";break;
     }
     result += ",";
-    SERIALIZE_BOOL(allowPLAINWithoutTLS);
-    SERIALIZE_BOOL(useStreamResumption);
-    SERIALIZE_BOOL(useAcks);
-    SERIALIZE_STRING(manualHostname);
-    SERIALIZE_INT(manualPort);
+    SERIALIZE_BOOL(allowPLAINWithoutTLS)
+    SERIALIZE_BOOL(useStreamResumption)
+    SERIALIZE_BOOL(useAcks)
+    SERIALIZE_STRING(manualHostname)
+    SERIALIZE_INT(manualPort)
     switch (options.proxyType) {
         case ClientOptions::NoProxy: result += "1";break;
         case ClientOptions::SystemConfiguredProxy: result += "2";break;
@@ -859,14 +859,14 @@ std::string AccountController::serializeClientOptions(const ClientOptions& optio
         case ClientOptions::HTTPConnectProxy: result += "4";break;
     }
     result += ",";
-    SERIALIZE_STRING(manualProxyHostname);
-    SERIALIZE_INT(manualProxyPort);
-    SERIALIZE_URL(boshURL);
-    SERIALIZE_URL(boshHTTPConnectProxyURL);
-    SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthID);
-    SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthPassword);
-    SERIALIZE_BOOL(tlsOptions.schannelTLS1_0Workaround);
-    SERIALIZE_BOOL(singleSignOn);
+    SERIALIZE_STRING(manualProxyHostname)
+    SERIALIZE_INT(manualProxyPort)
+    SERIALIZE_URL(boshURL)
+    SERIALIZE_URL(boshHTTPConnectProxyURL)
+    SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthID)
+    SERIALIZE_SAFE_STRING(boshHTTPConnectProxyAuthPassword)
+    SERIALIZE_BOOL(tlsOptions.schannelTLS1_0Workaround)
+    SERIALIZE_BOOL(singleSignOn)
     return result;
 }
 

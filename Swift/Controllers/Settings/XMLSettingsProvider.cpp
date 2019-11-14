@@ -68,7 +68,7 @@ int XMLSettingsProvider::getSetting(const Setting<int>& setting) {
     if (values_.find(setting.getKey()) != values_.end()) {
         std::string value = values_[setting.getKey()];
         try {
-            return value.empty() ? setting.getDefaultValue() : boost::lexical_cast<int>(value);;
+            return value.empty() ? setting.getDefaultValue() : boost::lexical_cast<int>(value);
         }
         catch(boost::bad_lexical_cast &) {}
     }
@@ -123,7 +123,3 @@ void XMLSettingsProvider::handleCharacterData(const std::string& data) {
 
 
 }
-
-
-
-
