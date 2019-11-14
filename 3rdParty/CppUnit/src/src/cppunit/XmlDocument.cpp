@@ -5,7 +5,6 @@
 
 CPPUNIT_NS_BEGIN
 
-
 XmlDocument::XmlDocument( const std::string &encoding,
                           const std::string &styleSheet )
   : m_styleSheet( styleSheet )
@@ -14,7 +13,6 @@ XmlDocument::XmlDocument( const std::string &encoding,
 {
   setEncoding( encoding );
 }
-
 
 XmlDocument::~XmlDocument()
 {

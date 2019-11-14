@@ -26,6 +26,13 @@ public:
   {
   }
 
+private:
+  /// disable copy construction
+  ProtectorContext( const ProtectorContext& );
+  /// disable assignment
+  ProtectorContext& operator=(const ProtectorContext&);
+
+public:
   Test *m_test;
   TestResult *m_result;
   std::string m_shortDescription;

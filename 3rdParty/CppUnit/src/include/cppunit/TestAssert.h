@@ -5,14 +5,20 @@
 #include <cppunit/Exception.h>
 #include <cppunit/Asserter.h>
 #include <cppunit/portability/Stream.h>
+#include <cppunit/tools/StringHelper.h>
 #include <stdio.h>
 #include <float.h> // For struct assertion_traits<double>
+
+// Work around "passing 'T' chooses 'int' over 'unsigned int'" warnings when T
+// is an enum type:
+#if defined __GNUC__ && (__GNUC__ < 4 || (__GNUC__ == 4 && __GNUC_MINOR__ < 6))
+#pragma GCC system_header
+#endif
 
 
 CPPUNIT_NS_BEGIN
 
-
-/*! \brief Traits used by CPPUNIT_ASSERT_EQUAL().
+/*! \brief Traits used by CPPUNIT_ASSERT* macros.
  *
  * Here is an example of specialising these traits: 
  *
@@ -24,7 +30,17 @@ CPPUNIT_NS_BEGIN
  *   {
  *     return x == y;
  *   }
- * 
+ *
+ *   static bool less( const std::string& x, const std::string& y )
+ *   {
+ *      return x < y;
+ *   }
+ *
+ *   static bool lessEqual( const std::string& x, const std::string& y )
+ *   {
+ *      return x <= y;
+ *   }
+ *
  *   static std::string toString( const std::string& x )
  *   {
  *     std::string text = '"' + x + '"';    // adds quote around the string to see whitespace
@@ -43,14 +59,21 @@ struct assertion_traits
         return x == y;
     }
 
+    static bool less( const T& x, const T& y )
+    {
+        return x < y;
+    }
+
+    static bool lessEqual( const T& x, const T& y )
+    {
+        return x <= y;
+    }
+
     static std::string toString( const T& x )
     {
-        OStringStream ost;
-        ost << x;
-        return ost.str();
+        return CPPUNIT_NS::StringHelper::toString(x);
     }
 };
-
 
 /*! \brief Traits used by CPPUNIT_ASSERT_DOUBLES_EQUAL(). 
  * 
@@ -66,6 +89,16 @@ struct assertion_traits<double>
     static bool equal( double x, double y )
     {
         return x == y;
+    }
+
+    static bool less( double x, double y )
+    {
+        return x < y;
+    }
+
+    static bool lessEqual( double x, double y )
+    {
+        return x <= y;
     }
 
     static std::string toString( double x )
@@ -118,6 +151,82 @@ void CPPUNIT_API assertDoubleEquals( double expected,
                                      const std::string &message );
 
 
+/*! \brief (Implementation) Asserts that an object is less than another one of the same type
+ * Use CPPUNIT_ASSERT_LESS, CPPUNIT_ASSERT_GREATER instead of this function.
+ * \sa assertion_traits, Asserter::failNotLess().
+ */
+template <class T>
+void assertLess( const T& expected,
+                 const T& actual,
+                 SourceLine sourceLine,
+                 const std::string& message )
+{
+    if ( !assertion_traits<T>::less(actual,expected) )
+    {
+        Asserter::failNotLess( assertion_traits<T>::toString(expected),
+                               assertion_traits<T>::toString(actual),
+                               sourceLine,
+                               message );
+    }
+}
+
+
+/*! \brief (Implementation) Asserts that an object is less than another one of the same type
+ * Use CPPUNIT_ASSERT_LESS, CPPUNIT_ASSERT_GREATER instead of this function.
+ * \sa assertion_traits, Asserter::failNotLess().
+ */
+template <class T>
+void assertGreater( const T& expected,
+                 const T& actual,
+                 SourceLine sourceLine,
+                 const std::string& message )
+{
+    if ( !assertion_traits<T>::less(expected,actual) )
+    {
+        Asserter::failNotGreater( assertion_traits<T>::toString(expected),
+                               assertion_traits<T>::toString(actual),
+                               sourceLine,
+                               message );
+    }
+}
+
+/*! \brief (Implementation) Asserts that two objects of the same type are equals.
+ * Use CPPUNIT_ASSERT_LESSEQUAL, CPPUNIT_ASSERT_GREATEREQUAL instead of this function.
+ * \sa assertion_traits, Asserter::failNotLessEqual().
+ */
+template <class T>
+void assertLessEqual( const T& expected,
+                      const T& actual,
+                      SourceLine sourceLine,
+                      const std::string& message )
+{
+    if ( !assertion_traits<T>::lessEqual(actual,expected) )
+    {
+        Asserter::failNotLessEqual( assertion_traits<T>::toString(expected),
+                               assertion_traits<T>::toString(actual),
+                               sourceLine,
+                               message );
+    }
+}
+
+/*! \brief (Implementation) Asserts that two objects of the same type are equals.
+ * Use CPPUNIT_ASSERT_LESSEQUAL, CPPUNIT_ASSERT_GREATEREQUAL instead of this function.
+ * \sa assertion_traits, Asserter::failNotLessEqual().
+ */
+template <class T>
+void assertGreaterEqual( const T& expected,
+                      const T& actual,
+                      SourceLine sourceLine,
+                      const std::string& message )
+{
+    if ( !assertion_traits<T>::lessEqual(expected,actual) )
+    {
+        Asserter::failNotGreaterEqual( assertion_traits<T>::toString(expected),
+                               assertion_traits<T>::toString(actual),
+                               sourceLine,
+                               message );
+    }
+}
 /* A set of macros which allow us to get the line number
  * and file name at the point of an error.
  * Just goes to show that preprocessors do have some
@@ -217,6 +326,109 @@ void CPPUNIT_API assertDoubleEquals( double expected,
                               (message) ) )
 #endif
 
+/** Asserts that actual is less than expected, provides additional message on failure.
+ * \ingroup Assertions
+ *
+ * Less and string representation can be defined with
+ * an appropriate assertion_traits class.
+ *
+ * A diagnostic is printed if actual is less than expected.
+ * The message is printed in addition to the expected and actual value
+ * to provide additional information.
+ *
+ * Requirement for \a expected and \a actual parameters:
+ * - They are exactly of the same type
+ * - They are serializable into a std::strstream using operator <<.
+ * - They can be compared using operator <. 
+ *
+ * The last two requirements (serialization and comparison) can be
+ * removed by specializing the CppUnit::assertion_traits.
+ *
+ * \sa CPPUNIT_ASSERT_GREATER
+ */
+#define CPPUNIT_ASSERT_LESS(expected, actual)          \
+    ( CPPUNIT_NS::assertLess( (expected),              \
+                              (actual),                \
+                              CPPUNIT_SOURCELINE(),    \
+                              "" ) )
+
+/** Asserts that actual is greater than expected, provides additional message on failure.
+ * \ingroup Assertions
+ *
+ * String representation can be defined with
+ * an appropriate assertion_traits class. For comparison assertLess is used.
+ *
+ * A diagnostic is printed if actual is less than expected.
+ * The message is printed in addition to the expected and actual value
+ * to provide additional information.
+ *
+ * Requirement for \a expected and \a actual parameters:
+ * - They are exactly of the same type
+ * - They are serializable into a std::strstream using operator <<.
+ * - They can be compared using operator<. 
+ *
+ * The last two requirements (serialization and comparison) can be
+ * removed by specializing the CppUnit::assertion_traits.
+ *
+ * \sa CPPUNIT_ASSERT_LESS
+ */
+#define CPPUNIT_ASSERT_GREATER(expected, actual)       \
+    ( CPPUNIT_NS::assertGreater( (expected),           \
+                                 (actual),             \
+                                 CPPUNIT_SOURCELINE(), \
+                                 "" ) )
+
+/** Asserts that actual is less or equal than expected, provides additional message on failure.
+ * \ingroup Assertions
+ *
+ * LessEqual and string representation can be defined with
+ * an appropriate assertion_traits class.
+ *
+ * A diagnostic is printed if actual is greater than expected.
+ * The message is printed in addition to the expected and actual value
+ * to provide additional information.
+ *
+ * Requirement for \a expected and \a actual parameters:
+ * - They are exactly of the same type
+ * - They are serializable into a std::strstream using operator <<.
+ * - They can be compared using operator <=. 
+ *
+ * The last two requirements (serialization and comparison) can be
+ * removed by specializing the CppUnit::assertion_traits.
+ *
+ * \sa CPPUNIT_ASSERT_GREATEREQUAL
+ */
+#define CPPUNIT_ASSERT_LESSEQUAL(expected, actual)               \
+    ( CPPUNIT_NS::assertLessEqual( (expected),              \
+                                   (actual),                \
+                                   CPPUNIT_SOURCELINE(),    \
+                                   "" ) )
+
+/** Asserts that actual is greater than expected, provides additional message on failure.
+ * \ingroup Assertions
+ *
+ * String representation can be defined with
+ * an appropriate assertion_traits class. For comparison assertLess is used.
+ *
+ * A diagnostic is printed if actual is less than expected.
+ * The message is printed in addition to the expected and actual value
+ * to provide additional information.
+ *
+ * Requirement for \a expected and \a actual parameters:
+ * - They are exactly of the same type
+ * - They are serializable into a std::strstream using operator <<.
+ * - They can be compared using operator<=. 
+ *
+ * The last two requirements (serialization and comparison) can be
+ * removed by specializing the CppUnit::assertion_traits.
+ *
+ * \sa CPPUNIT_ASSERT_LESSEQUAL
+ */
+#define CPPUNIT_ASSERT_GREATEREQUAL(expected, actual)            \
+    ( CPPUNIT_NS::assertGreaterEqual( (expected),                \
+                                      (actual),              \
+                                      CPPUNIT_SOURCELINE(),    \
+                                      "" ) )
 /*! \brief Macro for primitive double value comparisons. 
  * \ingroup Assertions
  *
@@ -263,7 +475,7 @@ void CPPUNIT_API assertDoubleEquals( double expected,
 
 
 // implementation detail
-#if CPPUNIT_USE_TYPEINFO_NAME
+#if defined(CPPUNIT_USE_TYPEINFO_NAME)
 #define CPPUNIT_EXTRACT_EXCEPTION_TYPE_( exception, no_rtti_message ) \
    CPPUNIT_NS::TypeInfoHelper::getClassName( typeid(exception) )
 #else

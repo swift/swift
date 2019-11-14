@@ -8,18 +8,13 @@
 #pragma warning( disable: 4251 )  // X needs to have dll-interface to be used by clients of class Z
 #endif
 
-#include <cppunit/portability/CppUnitDeque.h>
+#include <deque>
 #include <string>
 
 CPPUNIT_NS_BEGIN
 
 
 class Test;
-
-#if CPPUNIT_NEED_DLL_DECL
-//  template class CPPUNIT_API std::deque<Test *>;
-#endif
-
 
 /*! \brief A List of Test representing a path to access a Test.
  * \ingroup ExecutingTest
@@ -174,7 +169,7 @@ protected:
   void checkIndexValid( int index ) const;
 
   /// A list of test names.
-  typedef CppUnitDeque<std::string> PathTestNames;
+  typedef std::deque<std::string> PathTestNames;
 
   /*! \brief Splits a path string into its test name components.
    * \param pathAsString Path string created with toString().
@@ -199,7 +194,7 @@ protected:
                         PathTestNames &testNames );
 
 protected:
-  typedef CppUnitDeque<Test *> Tests;
+  typedef std::deque<Test *> Tests;
   Tests m_tests;
 
 };

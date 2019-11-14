@@ -2,7 +2,7 @@
 #define CPPUNIT_PROTECTORCHAIN_H
 
 #include <cppunit/Protector.h>
-#include <cppunit/portability/CppUnitDeque.h>
+#include <deque>
 
 #if CPPUNIT_NEED_DLL_DECL
 #pragma warning( push )
@@ -19,6 +19,8 @@ CPPUNIT_NS_BEGIN
 class CPPUNIT_API ProtectorChain : public Protector
 {
 public:
+  ProtectorChain();
+
   ~ProtectorChain();
 
   void push( Protector *protector );
@@ -34,10 +36,10 @@ private:
   class ProtectFunctor;
 
 private:
-  typedef CppUnitDeque<Protector *> Protectors;
+  typedef std::deque<Protector *> Protectors;
   Protectors m_protectors;
 
-  typedef CppUnitDeque<Functor *> Functors;
+  typedef std::deque<Functor *> Functors;
 };
 
 

@@ -15,10 +15,13 @@ CPPUNIT_NS_BEGIN
 
 XmlOutputter::XmlOutputter( TestResultCollector *result,
                             OStream &stream,
-                            std::string encoding )
+                            const std::string& encoding )
   : m_result( result )
   , m_stream( stream )
+  , m_encoding( encoding )
+  , m_styleSheet()
   , m_xml( new XmlDocument( encoding ) )
+  , m_hooks()
 {
 }
 

@@ -3,13 +3,10 @@
 
 #include <cppunit/Portability.h>
 
-#if CPPUNIT_HAVE_RTTI
-
 #include <typeinfo>
 #include <string>
 
 CPPUNIT_NS_BEGIN
-
 
   /**! \brief Helper to use type_info.
    */
@@ -25,9 +22,6 @@ CPPUNIT_NS_BEGIN
     static std::string getClassName( const std::type_info &info );
   };
 
-
 CPPUNIT_NS_END
-
-#endif  // CPPUNIT_HAVE_RTTI
 
 #endif  // CPPUNIT_TYPEINFOHELPER_H

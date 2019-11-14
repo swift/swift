@@ -9,7 +9,7 @@
 #endif
 
 #include <cppunit/SynchronizedObject.h>
-#include <cppunit/portability/CppUnitDeque.h>
+#include <deque>
 #include <string>
 
 CPPUNIT_NS_BEGIN
@@ -23,10 +23,6 @@ class Test;
 class TestFailure;
 class TestListener;
 
-
-#if CPPUNIT_NEED_DLL_DECL
-//  template class CPPUNIT_API std::deque<TestListener *>;
-#endif
 
 /*! \brief Manages TestListener.
  * \ingroup TrackingTestExecution
@@ -133,7 +129,7 @@ protected:
   virtual void endTestRun( Test *test );
   
 protected:
-  typedef CppUnitDeque<TestListener *> TestListeners;
+  typedef std::deque<TestListener *> TestListeners;
   TestListeners m_listeners;
   ProtectorChain *m_protectorChain;
   bool m_stop;

@@ -3,7 +3,7 @@
 
 #include <cppunit/Portability.h>
 #include <string>
-#include <cppunit/portability/CppUnitVector.h>
+#include <vector>
 
 
 CPPUNIT_NS_BEGIN
@@ -14,7 +14,7 @@ CPPUNIT_NS_BEGIN
 struct StringTools
 {
 
-  typedef CppUnitVector<std::string> Strings;
+  typedef std::vector<std::string> Strings;
 
   static std::string CPPUNIT_API toString( int value );
 

@@ -5,7 +5,7 @@
 #include <cppunit/TestResult.h>
 #include <stdexcept>
 
-#if CPPUNIT_USE_TYPEINFO_NAME
+#if defined(CPPUNIT_USE_TYPEINFO_NAME)
 #  include <typeinfo>
 #endif
 

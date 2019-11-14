@@ -76,7 +76,7 @@ public:
 
     // Moved outside the try{} statement to handle the case where the
     // expected exception type is Exception (expecting assertion failure).
-#if CPPUNIT_USE_TYPEINFO_NAME
+#if defined(CPPUNIT_USE_TYPEINFO_NAME)
       throw Exception( Message(
                          "expected exception not thrown",
                          "Expected exception type: " + 
@@ -92,7 +92,7 @@ private:
    *
    * Should be overriden to check the exception.
    */
-  virtual void checkException( ExpectedExceptionType &e )
+  virtual void checkException( ExpectedExceptionType & )
   {
   }
 };

@@ -7,6 +7,9 @@ CPPUNIT_NS_BEGIN
 
 TestResultCollector::TestResultCollector( SynchronizationObject *syncObject )
     : TestSuccessListener( syncObject )
+    , m_tests()
+    , m_failures()
+    , m_testErrors(0)
 {
   reset();
 }

@@ -8,7 +8,7 @@
 #pragma warning( disable: 4251)  // X needs to have dll-interface to be used by clients of class Z
 #endif
 
-#include <cppunit/portability/CppUnitSet.h>
+#include <set>
 #include <cppunit/extensions/TestFactory.h>
 #include <string>
 
@@ -16,11 +16,6 @@ CPPUNIT_NS_BEGIN
 
 
 class TestSuite;
-
-#if CPPUNIT_NEED_DLL_DECL
-//  template class CPPUNIT_API std::set<TestFactory *>;
-#endif
-
 
 /*! \brief Registry for TestFactory.
  * \ingroup CreatingTestSuite
@@ -165,7 +160,7 @@ private:
   void operator =( const TestFactoryRegistry &copy );
 
 private:
-  typedef CppUnitSet<TestFactory *, std::less<TestFactory*> > Factories;
+  typedef std::set<TestFactory *, std::less<TestFactory*> > Factories;
   Factories m_factories;
 
   std::string m_name;
