@@ -23,6 +23,7 @@ class EventLoopTest : public CppUnit::TestFixture {
         CPPUNIT_TEST(testPost);
         CPPUNIT_TEST(testRemove);
         CPPUNIT_TEST(testHandleEvent_Recursive);
+        CPPUNIT_TEST(testHandleEvent_FirstEventRemovesSecondEvent);
         CPPUNIT_TEST_SUITE_END();
 
     public:
@@ -72,6 +73,18 @@ class EventLoopTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_EQUAL(2, static_cast<int>(events_.size()));
             CPPUNIT_ASSERT_EQUAL(0, events_[0]);
             CPPUNIT_ASSERT_EQUAL(1, events_[1]);
+        }
+
+        void testHandleEvent_FirstEventRemovesSecondEvent() {
+            DummyEventLoop testling;
+            auto eventOwner = std::make_shared<MyEventOwner>();
+            auto secondEventFired = false;
+
+            testling.postEvent([&](){ testling.removeEventsFromOwner(eventOwner); }, eventOwner);
+            testling.postEvent([&](){ secondEventFired = true; }, eventOwner);
+            testling.processEvents();
+
+            CPPUNIT_ASSERT_EQUAL(false, secondEventFired);
         }
 
     private:

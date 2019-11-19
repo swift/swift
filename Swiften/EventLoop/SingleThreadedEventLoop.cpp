@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,7 +43,7 @@ void SingleThreadedEventLoop::handleEvents() {
         std::lock_guard<std::mutex> lock(eventAvailableMutex_);
         eventAvailable_ = false;
     }
-    handleNextEvents();
+    handleNextEvent();
 }
 
 void SingleThreadedEventLoop::stop() {

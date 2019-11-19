@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ DummyEventLoop::~DummyEventLoop() {
 void DummyEventLoop::processEvents() {
     while(hasEvents()) {
         hasEvents_ = false;
-        handleNextEvents();
+        handleNextEvent();
     }
 }
 

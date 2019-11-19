@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@ void SimpleEventLoop::doRun(bool breakAfterEvents) {
 }
 
 void SimpleEventLoop::runOnce() {
-    handleNextEvents();
+    handleNextEvent();
 }
 
 void SimpleEventLoop::stop() {

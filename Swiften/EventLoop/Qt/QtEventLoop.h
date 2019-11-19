@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -38,7 +38,7 @@ namespace Swift {
                         std::unique_lock<std::recursive_mutex> lock(isEventInQtEventLoopMutex_);
                         isEventInQtEventLoop_ = false;
                     }
-                    handleNextEvents();
+                    handleNextEvent();
                     //event->deleteLater(); FIXME: Leak?
                     return true;
                 }

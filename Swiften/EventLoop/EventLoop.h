@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,21 +43,20 @@ namespace Swift {
 
         protected:
             /**
-             * The \ref handleNextEvents method is called by an implementation of the abstract \ref EventLoop class
+             * The \ref handleNextEvent method is called by an implementation of the abstract \ref EventLoop class
              * at any point after the virtual \ref eventPosted method has been called.
              * This method does not block, except for short-time synchronization.
-             * It can process multiple events before it reutrns.
              * If called recursively, the event queue is not further processed. Instead, \ref eventPosted
              * is called to notify the implementing event loop of the non-empty event queue.
-             * It is recommended to not call \ref handleNextEvents inside an event posted to the event loop
+             * It is recommended to not call \ref handleNextEvent inside an event posted to the event loop
              * as this can lead to an infinite loop.
              */
-            void handleNextEvents();
+            void handleNextEvent();
 
             /**
              * The \ref eventPosted virtual method serves as notification for when events are still available in the queue.
              * It is called after the first event is posted to an empty queue or after an event has been handled in
-             * \ref handleNextEvents and there are still remaining events in the queue.
+             * \ref handleNextEvent and there are still remaining events in the queue.
              */
             virtual void eventPosted() = 0;
 
