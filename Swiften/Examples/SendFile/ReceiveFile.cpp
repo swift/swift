@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -80,7 +80,7 @@ class FileReceiver {
         }
 
         void handleIncomingFileTransfer(IncomingFileTransfer::ref transfer) {
-            SWIFT_LOG(debug) << "foo" << std::endl;
+            SWIFT_LOG(debug) << "foo";
             incomingFileTransfers.push_back(transfer);
             std::shared_ptr<FileWriteBytestream> out = std::make_shared<FileWriteBytestream>("out");
             transfer->onFinished.connect(boost::bind(&FileReceiver::handleFileTransferFinished, this, _1, out));

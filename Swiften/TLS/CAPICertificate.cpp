@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@
 #define DEBUG_SCARD_STATUS(function, status) \
 { \
     std::shared_ptr<boost::system::error_code> errorCode = std::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
-    SWIFT_LOG(debug) << std::hex << function << ": status: 0x" << status << ": " << errorCode->message() << std::endl; \
+    SWIFT_LOG(debug) << std::hex << function << ": status: 0x" << status << ": " << errorCode->message(); \
 }
 
 namespace Swift {
@@ -44,7 +44,7 @@ CAPICertificate::CAPICertificate(const std::string& capiUri, TimerFactory* timer
 }
 
 CAPICertificate::~CAPICertificate() {
-    SWIFT_LOG(debug) << "Destroying the CAPICertificate" << std::endl;
+    SWIFT_LOG(debug) << "Destroying the CAPICertificate";
     if (smartCardTimer_) {
         smartCardTimer_->stop();
         smartCardTimer_->onTick.disconnect(boost::bind(&CAPICertificate::handleSmartCardTimerTick, this));
@@ -53,7 +53,7 @@ CAPICertificate::~CAPICertificate() {
 
     if (certStoreHandle_) {
         if (CertCloseStore(certStoreHandle_, 0) == FALSE) {
-            SWIFT_LOG(debug) << "Failed to close the certificate store handle" << std::endl;
+            SWIFT_LOG(debug) << "Failed to close the certificate store handle";
         }
     }
 
@@ -161,7 +161,7 @@ void CAPICertificate::setUri(const std::string& capiUri) {
             CERT_KEY_PROV_INFO_PROP_ID,
             NULL,
             &len)) {
-        SWIFT_LOG(error) << "Error while retrieving context properties" << std::endl;
+        SWIFT_LOG(error) << "Error while retrieving context properties";
         return;
     }
 
@@ -287,25 +287,25 @@ bool CAPICertificate::checkIfSmartCardPresent() {
 
         switch (dwState) {
             case SCARD_ABSENT:
-                SWIFT_LOG(debug) << "Card absent." << std::endl;
+                SWIFT_LOG(debug) << "Card absent.";
                 break;
             case SCARD_PRESENT:
-                SWIFT_LOG(debug) << "Card present." << std::endl;
+                SWIFT_LOG(debug) << "Card present.";
                 break;
             case SCARD_SWALLOWED:
-                SWIFT_LOG(debug) << "Card swallowed." << std::endl;
+                SWIFT_LOG(debug) << "Card swallowed.";
                 break;
             case SCARD_POWERED:
-                SWIFT_LOG(debug) << "Card has power." << std::endl;
+                SWIFT_LOG(debug) << "Card has power.";
                 break;
             case SCARD_NEGOTIABLE:
-                SWIFT_LOG(debug) << "Card reset and waiting PTS negotiation." << std::endl;
+                SWIFT_LOG(debug) << "Card reset and waiting PTS negotiation.";
                 break;
             case SCARD_SPECIFIC:
-                SWIFT_LOG(debug) << "Card has specific communication protocols set." << std::endl;
+                SWIFT_LOG(debug) << "Card has specific communication protocols set.";
                 break;
             default:
-                SWIFT_LOG(debug) << "Unknown or unexpected card state." << std::endl;
+                SWIFT_LOG(debug) << "Unknown or unexpected card state.";
                 break;
         }
 
@@ -332,7 +332,7 @@ bool CAPICertificate::checkIfSmartCardPresent() {
 void CAPICertificate::handleSmartCardTimerTick() {
     bool poll = checkIfSmartCardPresent();
     if (lastPollingResult_ && !poll) {
-        SWIFT_LOG(debug) << "CAPI Certificate detected that the certificate card was removed" << std::endl;
+        SWIFT_LOG(debug) << "CAPI Certificate detected that the certificate card was removed";
         onCertificateCardRemoved();
     }
     lastPollingResult_ = poll;

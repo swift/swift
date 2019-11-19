@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -133,7 +133,7 @@ void DefaultFileTransferTransporter::handleActivateProxySessionResult(const std:
 
 void DefaultFileTransferTransporter::startActivatingProxy(const JID& proxyServiceJID) {
     // activate proxy
-    SWIFT_LOG(debug) << "Start activating proxy " << proxyServiceJID.toString() << " with sid = " << s5bSessionID << "." << std::endl;
+    SWIFT_LOG(debug) << "Start activating proxy " << proxyServiceJID.toString() << " with sid = " << s5bSessionID << ".";
     S5BProxyRequest::ref proxyRequest = std::make_shared<S5BProxyRequest>();
     proxyRequest->setSID(s5bSessionID);
     proxyRequest->setActivate(role == Initiator ? responder : initiator);
@@ -207,7 +207,7 @@ std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCan
             transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
         }
         else {
-            SWIFT_LOG(error) << "Failed obtaining proxy session with candidate JID " << candidate.jid << " and dstAddr " << getLocalCandidateSOCKS5DstAddr() << "." << std::endl;
+            SWIFT_LOG(error) << "Failed obtaining proxy session with candidate JID " << candidate.jid << " and dstAddr " << getLocalCandidateSOCKS5DstAddr() << ".";
         }
     }
 
@@ -234,7 +234,7 @@ std::shared_ptr<TransportSession> DefaultFileTransferTransporter::createLocalCan
             transportSession = std::make_shared<S5BTransportSession<SOCKS5BytestreamClientSession> >(proxySession, stream);
         }
         else {
-            SWIFT_LOG(error) << "Failed obtaining proxy session with candidate JID " << candidate.jid << " and dstAddr " << getLocalCandidateSOCKS5DstAddr() << "." << std::endl;
+            SWIFT_LOG(error) << "Failed obtaining proxy session with candidate JID " << candidate.jid << " and dstAddr " << getLocalCandidateSOCKS5DstAddr() << ".";
         }
     }
 
@@ -255,11 +255,11 @@ std::string DefaultFileTransferTransporter::getSOCKS5DstAddr() const {
     std::string result;
     if (role == Initiator) {
         result = getInitiatorCandidateSOCKS5DstAddr();
-        SWIFT_LOG(debug) << "Initiator S5B DST.ADDR = " << s5bSessionID << " + " << initiator.toString() << " + " << responder.toString() << " : " << result << std::endl;
+        SWIFT_LOG(debug) << "Initiator S5B DST.ADDR = " << s5bSessionID << " + " << initiator.toString() << " + " << responder.toString() << " : " << result;
     }
     else {
         result = getResponderCandidateSOCKS5DstAddr();
-        SWIFT_LOG(debug) << "Responder S5B DST.ADDR = " << s5bSessionID << " + " << responder.toString() << " + " << initiator.toString() << " : " << result << std::endl;
+        SWIFT_LOG(debug) << "Responder S5B DST.ADDR = " << s5bSessionID << " + " << responder.toString() << " + " << initiator.toString() << " : " << result;
     }
     return result;
 }

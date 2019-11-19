@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,7 +40,7 @@ std::string dateTimeToLocalString(const boost::posix_time::ptime& time) {
         localString = boost::posix_time::to_simple_string(boost::date_time::c_local_adjustor<boost::posix_time::ptime>::utc_to_local(time));
     }
     catch(std::out_of_range& exception) {
-        SWIFT_LOG(debug) << exception.what() << std::endl;
+        SWIFT_LOG(debug) << exception.what();
     }
     return localString;
 }

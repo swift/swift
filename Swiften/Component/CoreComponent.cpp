@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,7 +33,7 @@ CoreComponent::CoreComponent(const JID& jid, const std::string& secret, NetworkF
 
 CoreComponent::~CoreComponent() {
     if (session_ || connection_) {
-        SWIFT_LOG(warning) << "Component not disconnected properly" << std::endl;
+        SWIFT_LOG(warning) << "Component not disconnected properly";
     }
     delete iqRouter_;
 

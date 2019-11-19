@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -87,9 +87,9 @@ OutgoingJingleFileTransfer::~OutgoingJingleFileTransfer() {
 }
 
 void OutgoingJingleFileTransfer::start() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     if (state != Initial) {
-        SWIFT_LOG(warning) << "Incorrect state" << std::endl;
+        SWIFT_LOG(warning) << "Incorrect state";
         return;
     }
 
@@ -109,7 +109,7 @@ void OutgoingJingleFileTransfer::cancel() {
 }
 
 void OutgoingJingleFileTransfer::terminate(JinglePayload::Reason::Type reason) {
-    SWIFT_LOG(debug) << reason << std::endl;
+    SWIFT_LOG(debug) << reason;
 
     if (state != Initial && state != GeneratingInitialLocalCandidates && state != Finished) {
         session->sendTerminate(reason);
@@ -122,8 +122,8 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
         const JingleContentID&,
         JingleDescription::ref,
         JingleTransportPayload::ref transportPayload) {
-    SWIFT_LOG(debug) << std::endl;
-    if (state != WaitingForAccept) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+    SWIFT_LOG(debug);
+    if (state != WaitingForAccept) { SWIFT_LOG(warning) << "Incorrect state"; return; }
 
     if (JingleS5BTransportPayload::ref s5bPayload = std::dynamic_pointer_cast<JingleS5BTransportPayload>(transportPayload)) {
         transporter->addRemoteCandidates(s5bPayload->getCandidates(), s5bPayload->getDstAddr());
@@ -134,14 +134,14 @@ void OutgoingJingleFileTransfer::handleSessionAcceptReceived(
         startTransferring(transporter->createIBBSendSession(ibbPayload->getSessionID(), ibbPayload->getBlockSize().get_value_or(DEFAULT_BLOCK_SIZE), stream));
     }
     else {
-        SWIFT_LOG(debug) << "Unknown transport payload. Falling back." << std::endl;
+        SWIFT_LOG(debug) << "Unknown transport payload. Falling back.";
         fallback();
     }
 }
 
 void OutgoingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<JinglePayload::Reason> reason) {
-    SWIFT_LOG(debug) << std::endl;
-    if (state == Finished) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
+    SWIFT_LOG(debug);
+    if (state == Finished) { SWIFT_LOG(warning) << "Incorrect state: " << state; return; }
 
     stopAll();
     if (state == WaitForTermination) {
@@ -162,26 +162,26 @@ void OutgoingJingleFileTransfer::handleSessionTerminateReceived(boost::optional<
 }
 
 void OutgoingJingleFileTransfer::handleTransportAcceptReceived(const JingleContentID&, JingleTransportPayload::ref transport) {
-    SWIFT_LOG(debug) << std::endl;
-    if (state != FallbackRequested) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+    SWIFT_LOG(debug);
+    if (state != FallbackRequested) { SWIFT_LOG(warning) << "Incorrect state"; return; }
 
     if (JingleIBBTransportPayload::ref ibbPayload = std::dynamic_pointer_cast<JingleIBBTransportPayload>(transport)) {
         startTransferring(transporter->createIBBSendSession(ibbPayload->getSessionID(), ibbPayload->getBlockSize().get_value_or(DEFAULT_BLOCK_SIZE), stream));
     }
     else {
-        SWIFT_LOG(debug) << "Unknown transport replacement" << std::endl;
+        SWIFT_LOG(debug) << "Unknown transport replacement";
         terminate(JinglePayload::Reason::FailedTransport);
     }
 }
 
 void OutgoingJingleFileTransfer::handleTransportRejectReceived(const JingleContentID &, std::shared_ptr<JingleTransportPayload>) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     terminate(JinglePayload::Reason::UnsupportedTransports);
 }
 
 void OutgoingJingleFileTransfer::sendSessionInfoHash() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     JingleFileTransferHash::ref hashElement = std::make_shared<JingleFileTransferHash>();
     hashElement->getFileInfo().addHash(HashElement("sha-1", hashCalculator->getSHA1Hash()));
@@ -191,8 +191,8 @@ void OutgoingJingleFileTransfer::sendSessionInfoHash() {
 
 void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
         const std::string& s5bSessionID, const std::vector<JingleS5BTransportPayload::Candidate>& candidates, const std::string& dstAddr) {
-    SWIFT_LOG(debug) << std::endl;
-    if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
+    SWIFT_LOG(debug);
+    if (state != GeneratingInitialLocalCandidates) { SWIFT_LOG(warning) << "Incorrect state: " << state; return; }
 
     fillCandidateMap(localCandidates, candidates);
 
@@ -203,7 +203,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 
     JingleTransportPayload::ref transport;
     if (candidates.empty()) {
-        SWIFT_LOG(debug) << "no S5B candidates generated. Send IBB transport candidate." << std::endl;
+        SWIFT_LOG(debug) << "no S5B candidates generated. Send IBB transport candidate.";
         JingleIBBTransportPayload::ref ibbTransport = std::make_shared<JingleIBBTransportPayload>();
         ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
         ibbTransport->setSessionID(idGenerator->generateID());
@@ -216,7 +216,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
         s5bTransport->setDstAddr(dstAddr);
         for (auto&& candidate : candidates) {
             s5bTransport->addCandidate(candidate);
-            SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString() << std::endl;
+            SWIFT_LOG(debug) << "\t" << "S5B candidate: " << candidate.hostPort.toString();
         }
         transport = s5bTransport;
     }
@@ -226,7 +226,7 @@ void OutgoingJingleFileTransfer::handleLocalTransportCandidatesGenerated(
 
 void OutgoingJingleFileTransfer::fallback() {
     if (options.isInBandAllowed()) {
-        SWIFT_LOG(debug) << "Trying to fallback to IBB transport." << std::endl;
+        SWIFT_LOG(debug) << "Trying to fallback to IBB transport.";
         JingleIBBTransportPayload::ref ibbTransport = std::make_shared<JingleIBBTransportPayload>();
         ibbTransport->setBlockSize(DEFAULT_BLOCK_SIZE);
         ibbTransport->setSessionID(idGenerator->generateID());
@@ -234,14 +234,14 @@ void OutgoingJingleFileTransfer::fallback() {
         session->sendTransportReplace(contentID, ibbTransport);
     }
     else {
-        SWIFT_LOG(debug) << "Fallback to IBB transport not allowed." << std::endl;
+        SWIFT_LOG(debug) << "Fallback to IBB transport not allowed.";
         terminate(JinglePayload::Reason::ConnectivityError);
     }
 }
 
 void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTransferError> error) {
-    SWIFT_LOG(debug) << std::endl;
-    if (state != Transferring) { SWIFT_LOG(warning) << "Incorrect state: " << state << std::endl; return; }
+    SWIFT_LOG(debug);
+    if (state != Transferring) { SWIFT_LOG(warning) << "Incorrect state: " << state; return; }
 
     if (error) {
         terminate(JinglePayload::Reason::ConnectivityError);
@@ -256,7 +256,7 @@ void OutgoingJingleFileTransfer::handleTransferFinished(boost::optional<FileTran
 }
 
 void OutgoingJingleFileTransfer::startTransferring(std::shared_ptr<TransportSession> transportSession) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     this->transportSession = transportSession;
     processedBytesConnection = transportSession->onBytesSent.connect(
@@ -269,14 +269,14 @@ void OutgoingJingleFileTransfer::startTransferring(std::shared_ptr<TransportSess
 
 
 void OutgoingJingleFileTransfer::setInternalState(State state) {
-    SWIFT_LOG(debug) <<  state << std::endl;
+    SWIFT_LOG(debug) <<  state;
     this->state = state;
     setState(FileTransfer::State(getExternalState(state)));
 }
 
 void OutgoingJingleFileTransfer::setFinishedState(
         FileTransfer::State::Type type, const boost::optional<FileTransferError>& error) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     this->state = Finished;
     onStateChanged(type);
     onFinished(error);
@@ -301,9 +301,9 @@ FileTransfer::State::Type OutgoingJingleFileTransfer::getExternalState(State sta
 }
 
 void OutgoingJingleFileTransfer::stopAll() {
-    SWIFT_LOG(debug) << state << std::endl;
+    SWIFT_LOG(debug) << state;
     switch (state) {
-        case Initial: SWIFT_LOG(warning) << "Not yet started" << std::endl; break;
+        case Initial: SWIFT_LOG(warning) << "Not yet started"; break;
         case GeneratingInitialLocalCandidates: transporter->stopGeneratingLocalCandidates(); break;
         case WaitingForAccept: break;
         case TryingCandidates: transporter->stopTryingRemoteCandidates(); break;
@@ -320,7 +320,7 @@ void OutgoingJingleFileTransfer::stopAll() {
             break;
         case WaitForTermination:
             break;
-        case Finished: SWIFT_LOG(warning) << "Already finished" << std::endl; break;
+        case Finished: SWIFT_LOG(warning) << "Already finished"; break;
     }
     if (state != Initial) {
         removeTransporter();
@@ -328,7 +328,7 @@ void OutgoingJingleFileTransfer::stopAll() {
 }
 
 void OutgoingJingleFileTransfer::startTransferViaRemoteCandidate() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     if (ourCandidateChoice->type == JingleS5BTransportPayload::Candidate::ProxyType) {
         setInternalState(WaitingForPeerProxyActivate);
@@ -340,7 +340,7 @@ void OutgoingJingleFileTransfer::startTransferViaRemoteCandidate() {
 }
 
 void OutgoingJingleFileTransfer::startTransferViaLocalCandidate() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     if (theirCandidateChoice->type == JingleS5BTransportPayload::Candidate::ProxyType) {
         setInternalState(WaitingForLocalProxyActivate);
@@ -400,7 +400,7 @@ std::shared_ptr<TransportSession> OutgoingJingleFileTransfer::createRemoteCandid
 
 void OutgoingJingleFileTransfer::handleWaitForRemoteTerminationTimeout() {
     assert(state == WaitForTermination);
-    SWIFT_LOG(warning) << "Other party did not terminate session. Terminate it now." << std::endl;
+    SWIFT_LOG(warning) << "Other party did not terminate session. Terminate it now.";
     waitForRemoteTermination->stop();
     terminate(JinglePayload::Reason::MediaError);
 }

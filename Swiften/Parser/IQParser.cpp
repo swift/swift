@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ void IQParser::handleStanzaAttributes(const AttributeMap& attributes) {
             getStanzaGeneric()->setType(IQ::Error);
         }
         else {
-            SWIFT_LOG(warning) << "Unknown IQ type: " << *type << std::endl;
+            SWIFT_LOG(warning) << "Unknown IQ type: " << *type;
             getStanzaGeneric()->setType(IQ::Get);
         }
     }

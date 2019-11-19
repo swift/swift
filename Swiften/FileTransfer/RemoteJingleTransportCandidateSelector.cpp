@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -56,14 +56,14 @@ void RemoteJingleTransportCandidateSelector::stopSelectingCandidate() {
 
 void RemoteJingleTransportCandidateSelector::tryNextCandidate() {
     if (candidates.empty()) {
-        SWIFT_LOG(debug) << "No more candidates" << std::endl;
+        SWIFT_LOG(debug) << "No more candidates";
         onCandidateSelectFinished(
                 boost::optional<JingleS5BTransportPayload::Candidate>(), std::shared_ptr<SOCKS5BytestreamClientSession>());
     }
     else {
         lastCandidate = candidates.top();
         candidates.pop();
-        SWIFT_LOG(debug) << "Trying candidate " << lastCandidate.cid << std::endl;
+        SWIFT_LOG(debug) << "Trying candidate " << lastCandidate.cid;
         if ((lastCandidate.type == JingleS5BTransportPayload::Candidate::DirectType && options.isDirectAllowed()) ||
             (lastCandidate.type == JingleS5BTransportPayload::Candidate::AssistedType && options.isAssistedAllowed()) ||
             (lastCandidate.type == JingleS5BTransportPayload::Candidate::ProxyType && options.isProxiedAllowed())) {
@@ -75,7 +75,7 @@ void RemoteJingleTransportCandidateSelector::tryNextCandidate() {
             s5bSession->start();
         }
         else {
-            SWIFT_LOG(debug) << "Can't handle this type of candidate" << std::endl;
+            SWIFT_LOG(debug) << "Can't handle this type of candidate";
             tryNextCandidate();
         }
     }

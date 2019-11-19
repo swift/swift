@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -72,14 +72,14 @@ CFArrayRef CreateClientCertificateChainAsCFArrayRef(CertificateWithKey::ref key)
             break;
         case errSecAuthFailed:
             // Password did not work for decoding the certificate.
-            SWIFT_LOG(warning) << "Invalid password." << std::endl;
+            SWIFT_LOG(warning) << "Invalid password.";
             break;
         case errSecDecode:
             // Other decoding error.
-            SWIFT_LOG(warning) << "PKCS12 decoding error." << std::endl;
+            SWIFT_LOG(warning) << "PKCS12 decoding error.";
             break;
         default:
-            SWIFT_LOG(warning) << "Unknown error." << std::endl;
+            SWIFT_LOG(warning) << "Unknown error.";
     }
 
     if (securityError != errSecSuccess) {
@@ -110,20 +110,20 @@ SecureTransportContext::SecureTransportContext(bool checkCertificateRevocation) 
     // set IO callbacks
     error = SSLSetIOFuncs(sslContext_.get(), &SecureTransportContext::SSLSocketReadCallback, &SecureTransportContext::SSLSocketWriteCallback);
     if (error != noErr) {
-        SWIFT_LOG(error) << "Unable to set IO functions to SSL context." << std::endl;
+        SWIFT_LOG(error) << "Unable to set IO functions to SSL context.";
         sslContext_.reset();
     }
 
     error = SSLSetConnection(sslContext_.get(), this);
     if (error != noErr) {
-        SWIFT_LOG(error) << "Unable to set connection to SSL context." << std::endl;
+        SWIFT_LOG(error) << "Unable to set connection to SSL context.";
         sslContext_.reset();
     }
 
 
     error = SSLSetSessionOption(sslContext_.get(), kSSLSessionOptionBreakOnServerAuth, true);
     if (error != noErr) {
-        SWIFT_LOG(error) << "Unable to set kSSLSessionOptionBreakOnServerAuth on session." << std::endl;
+        SWIFT_LOG(error) << "Unable to set kSSLSessionOptionBreakOnServerAuth on session.";
         sslContext_.reset();
     }
 }
@@ -154,19 +154,19 @@ std::string SecureTransportContext::stateToString(State state) {
 }
 
 void SecureTransportContext::setState(State newState) {
-    SWIFT_LOG(debug) << "Switch state from " << stateToString(state_) << " to " << stateToString(newState) << "." << std::endl;
+    SWIFT_LOG(debug) << "Switch state from " << stateToString(state_) << " to " << stateToString(newState) << ".";
     state_ = newState;
 }
 
 void SecureTransportContext::connect() {
-    SWIFT_LOG_ASSERT(state_ == None, error) << "current state '" << stateToString(state_) << " invalid." << std::endl;
+    SWIFT_LOG_ASSERT(state_ == None, error) << "current state '" << stateToString(state_) << " invalid.";
     if (clientCertificate_) {
         CFArrayRef certs = CreateClientCertificateChainAsCFArrayRef(clientCertificate_);
         if (certs) {
             std::shared_ptr<CFArray> certRefs(certs, CFRelease);
             OSStatus result = SSLSetCertificate(sslContext_.get(), certRefs.get());
             if (result != noErr) {
-                SWIFT_LOG(error) << "SSLSetCertificate failed with error " << result << "." << std::endl;
+                SWIFT_LOG(error) << "SSLSetCertificate failed with error " << result << ".";
             }
         }
     }
@@ -174,23 +174,23 @@ void SecureTransportContext::connect() {
 }
 
 void SecureTransportContext::processHandshake() {
-    SWIFT_LOG_ASSERT(state_ == None || state_ == Handshake, error) << "current state '" << stateToString(state_) << " invalid." << std::endl;
+    SWIFT_LOG_ASSERT(state_ == None || state_ == Handshake, error) << "current state '" << stateToString(state_) << " invalid.";
     OSStatus error = SSLHandshake(sslContext_.get());
     if (error == errSSLWouldBlock) {
         setState(Handshake);
     }
     else if (error == noErr) {
-        SWIFT_LOG(debug) << "TLS handshake successful." << std::endl;
+        SWIFT_LOG(debug) << "TLS handshake successful.";
         setState(HandshakeDone);
         onConnected();
     }
     else if (error == errSSLPeerAuthCompleted) {
-        SWIFT_LOG(debug) << "Received server certificate. Start verification." << std::endl;
+        SWIFT_LOG(debug) << "Received server certificate. Start verification.";
         setState(Handshake);
         verifyServerCertificate();
     }
     else {
-        SWIFT_LOG(debug) << "Error returned from SSLHandshake call is " << error << "." << std::endl;
+        SWIFT_LOG(debug) << "Error returned from SSLHandshake call is " << error << ".";
         fatalError(nativeToTLSError(error), std::make_shared<CertificateVerificationError>());
     }
 }
@@ -226,13 +226,13 @@ void SecureTransportContext::verifyServerCertificate() {
     OSStatus cssmResult = 0;
     switch(trustResult) {
         case kSecTrustResultUnspecified:
-            SWIFT_LOG(warning) << "Successful implicit validation. Result unspecified." << std::endl;
+            SWIFT_LOG(warning) << "Successful implicit validation. Result unspecified.";
             break;
         case kSecTrustResultProceed:
-            SWIFT_LOG(warning) << "Validation resulted in explicitly trusted." << std::endl;
+            SWIFT_LOG(warning) << "Validation resulted in explicitly trusted.";
             break;
         case kSecTrustResultRecoverableTrustFailure:
-            SWIFT_LOG(warning) << "recoverable trust failure" << std::endl;
+            SWIFT_LOG(warning) << "recoverable trust failure";
             error = SecTrustGetCssmResultCode(trust, &cssmResult);
             if (error == errSecSuccess) {
                 verificationError_ = CSSMErrorToVerificationError(cssmResult);
@@ -304,8 +304,8 @@ bool SecureTransportContext::setClientCertificate(CertificateWithKey::ref cert) 
 }
 
 void SecureTransportContext::handleDataFromNetwork(const SafeByteArray& data) {
-    SWIFT_LOG(debug) << std::endl;
-    SWIFT_LOG_ASSERT(state_ == HandshakeDone || state_ == Handshake, error) << "current state '" << stateToString(state_) << " invalid." << std::endl;
+    SWIFT_LOG(debug);
+    SWIFT_LOG_ASSERT(state_ == HandshakeDone || state_ == Handshake, error) << "current state '" << stateToString(state_) << " invalid.";
 
     append(readingBuffer_, data);
 
@@ -332,7 +332,7 @@ void SecureTransportContext::handleDataFromNetwork(const SafeByteArray& data) {
                     break;
                 }
                 else {
-                    SWIFT_LOG(error) << "SSLRead failed with error " << error << ", read bytes: " << bytesRead << "." << std::endl;
+                    SWIFT_LOG(error) << "SSLRead failed with error " << error << ", read bytes: " << bytesRead << ".";
                     fatalError(std::make_shared<TLSError>(), std::make_shared<CertificateVerificationError>());
                     return;
                 }
@@ -347,7 +347,7 @@ void SecureTransportContext::handleDataFromNetwork(const SafeByteArray& data) {
             }
             break;
         case Error:
-            SWIFT_LOG(debug) << "Igoring received data in error state." << std::endl;
+            SWIFT_LOG(debug) << "Igoring received data in error state.";
             break;
     }
 }
@@ -358,13 +358,13 @@ void SecureTransportContext::handleDataFromApplication(const SafeByteArray& data
     OSStatus error = SSLWrite(sslContext_.get(), data.data(), data.size(), &processedBytes);
     switch(error) {
         case errSSLWouldBlock:
-            SWIFT_LOG(warning) << "Unexpected because the write callback does not block." << std::endl;
+            SWIFT_LOG(warning) << "Unexpected because the write callback does not block.";
             return;
         case errSSLClosedGraceful:
         case noErr:
             return;
         default:
-            SWIFT_LOG(warning) << "SSLWrite returned error code: " << error << ", processed bytes: " << processedBytes << std::endl;
+            SWIFT_LOG(warning) << "SSLWrite returned error code: " << error << ", processed bytes: " << processedBytes;
             fatalError(std::make_shared<TLSError>(), std::shared_ptr<CertificateVerificationError>());
     }
 }
@@ -390,7 +390,7 @@ std::vector<Certificate::ref> SecureTransportContext::getPeerCertificateChain() 
                 }
             }
             else {
-                SWIFT_LOG(warning) << "Failed to obtain peer trust structure; error = " << error << "." << std::endl;
+                SWIFT_LOG(warning) << "Failed to obtain peer trust structure; error = " << error << ".";
             }
     }
 
@@ -402,7 +402,7 @@ CertificateVerificationError::ref SecureTransportContext::getPeerCertificateVeri
 }
 
 ByteArray SecureTransportContext::getFinishMessage() const {
-    SWIFT_LOG(warning) << "Access to TLS handshake finish message is not part of OS X Secure Transport APIs." << std::endl;
+    SWIFT_LOG(warning) << "Access to TLS handshake finish message is not part of OS X Secure Transport APIs.";
     return ByteArray();
 }
 
@@ -453,42 +453,42 @@ std::shared_ptr<CertificateVerificationError> SecureTransportContext::CSSMErrorT
     std::shared_ptr<CertificateVerificationError> error;
     switch(resultCode) {
         case CSSMERR_TP_NOT_TRUSTED:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_NOT_TRUSTED" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_NOT_TRUSTED";
             error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::Untrusted);
             break;
         case CSSMERR_TP_CERT_NOT_VALID_YET:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_CERT_NOT_VALID_YET" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_CERT_NOT_VALID_YET";
             error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::NotYetValid);
             break;
         case CSSMERR_TP_CERT_EXPIRED:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_CERT_EXPIRED" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_CERT_EXPIRED";
             error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::Expired);
             break;
         case CSSMERR_TP_CERT_REVOKED:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_CERT_REVOKED" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_CERT_REVOKED";
             error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::Revoked);
             break;
         case CSSMERR_TP_VERIFY_ACTION_FAILED:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_VERIFY_ACTION_FAILED" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_TP_VERIFY_ACTION_FAILED";
             break;
         case CSSMERR_APPLETP_INCOMPLETE_REVOCATION_CHECK:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_APPLETP_INCOMPLETE_REVOCATION_CHECK" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_APPLETP_INCOMPLETE_REVOCATION_CHECK";
             if (checkCertificateRevocation_) {
                 error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::RevocationCheckFailed);
             }
             break;
         case CSSMERR_APPLETP_OCSP_UNAVAILABLE:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_APPLETP_OCSP_UNAVAILABLE" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_APPLETP_OCSP_UNAVAILABLE";
             if (checkCertificateRevocation_) {
                 error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::RevocationCheckFailed);
             }
             break;
         case CSSMERR_APPLETP_SSL_BAD_EXT_KEY_USE:
-            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_APPLETP_SSL_BAD_EXT_KEY_USE" << std::endl;
+            SWIFT_LOG(debug) << "CSSM result code: CSSMERR_APPLETP_SSL_BAD_EXT_KEY_USE";
             error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::InvalidPurpose);
             break;
         default:
-            SWIFT_LOG(warning) << "unhandled CSSM error: " << resultCode << ", CSSM_TP_BASE_TP_ERROR: " << CSSM_TP_BASE_TP_ERROR << std::endl;
+            SWIFT_LOG(warning) << "unhandled CSSM error: " << resultCode << ", CSSM_TP_BASE_TP_ERROR: " << CSSM_TP_BASE_TP_ERROR;
             error = std::make_shared<CertificateVerificationError>(CertificateVerificationError::UnknownError);
             break;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,13 +33,13 @@ void VCardUpdateAvatarManager::handlePresenceReceived(std::shared_ptr<Presence> 
     }
     JID from = getAvatarJID(presence->getFrom());
     if (update->getPhotoHash().size() != 40) {
-        SWIFT_LOG(debug) << "Invalid vCard avatar photo hash length. Must be hex-encoded SHA-1, i.e. 40 characters." << std::endl;
+        SWIFT_LOG(debug) << "Invalid vCard avatar photo hash length. Must be hex-encoded SHA-1, i.e. 40 characters.";
         return;
     }
     if (getAvatarHash(from) == update->getPhotoHash()) {
         return;
     }
-    SWIFT_LOG(debug) << "Updated hash: " << from << " -> " << update->getPhotoHash() << std::endl;
+    SWIFT_LOG(debug) << "Updated hash: " << from << " -> " << update->getPhotoHash();
     if (avatarStorage_->hasAvatar(update->getPhotoHash())) {
         setAvatarHash(from, update->getPhotoHash());
     }
@@ -50,7 +50,7 @@ void VCardUpdateAvatarManager::handlePresenceReceived(std::shared_ptr<Presence> 
 
 void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vCard) {
     if (!vCard) {
-        SWIFT_LOG(debug) << "Missing element: " << from << ": null vcard payload" << std::endl;
+        SWIFT_LOG(debug) << "Missing element: " << from << ": null vcard payload";
         return;
     }
 
@@ -67,7 +67,7 @@ void VCardUpdateAvatarManager::handleVCardChanged(const JID& from, VCard::ref vC
 }
 
 void VCardUpdateAvatarManager::setAvatarHash(const JID& from, const std::string& hash) {
-    SWIFT_LOG(debug) << "Updating hash: " << from << " -> " << hash << std::endl;
+    SWIFT_LOG(debug) << "Updating hash: " << from << " -> " << hash;
     avatarHashes_[from] = hash;
     onAvatarChanged(from);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -17,7 +17,7 @@ DiscoServiceWalker::DiscoServiceWalker(const JID& service, IQRouter* iqRouter, s
 }
 
 void DiscoServiceWalker::beginWalk() {
-    SWIFT_LOG(debug) << "Starting walk to " << service_ << std::endl;
+    SWIFT_LOG(debug) << "Starting walk to " << service_;
     assert(!active_);
     assert(servicesBeingSearched_.empty());
     active_ = true;
@@ -26,7 +26,7 @@ void DiscoServiceWalker::beginWalk() {
 
 void DiscoServiceWalker::endWalk() {
     if (active_) {
-        SWIFT_LOG(debug) << "Ending walk to " << service_ << std::endl;
+        SWIFT_LOG(debug) << "Ending walk to " << service_;
         for (auto&& request : pendingDiscoInfoRequests_) {
             request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, request));
         }
@@ -39,7 +39,7 @@ void DiscoServiceWalker::endWalk() {
 }
 
 void DiscoServiceWalker::walkNode(const JID& jid) {
-    SWIFT_LOG(debug) << "Walking node " << jid << std::endl;
+    SWIFT_LOG(debug) << "Walking node " << jid;
     servicesBeingSearched_.insert(jid);
     searchedServices_.insert(jid);
     GetDiscoInfoRequest::ref discoInfoRequest = GetDiscoInfoRequest::create(jid, iqRouter_);
@@ -54,7 +54,7 @@ void DiscoServiceWalker::handleDiscoInfoResponse(std::shared_ptr<DiscoInfo> info
         return;
     }
 
-    SWIFT_LOG(debug) << "Disco info response from " << request->getReceiver() << std::endl;
+    SWIFT_LOG(debug) << "Disco info response from " << request->getReceiver();
 
     request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoInfoResponse, this, _1, _2, request));
     pendingDiscoInfoRequests_.erase(request);
@@ -90,7 +90,7 @@ void DiscoServiceWalker::handleDiscoItemsResponse(std::shared_ptr<DiscoItems> it
         return;
     }
 
-    SWIFT_LOG(debug) << "Received disco items from " << request->getReceiver() << std::endl;
+    SWIFT_LOG(debug) << "Received disco items from " << request->getReceiver();
     request->onResponse.disconnect(boost::bind(&DiscoServiceWalker::handleDiscoItemsResponse, this, _1, _2, request));
     pendingDiscoItemsRequests_.erase(request);
     if (error) {
@@ -103,7 +103,7 @@ void DiscoServiceWalker::handleDiscoItemsResponse(std::shared_ptr<DiscoItems> it
              * but I've never seen one in the wild, and it's an easy fix for not looping.
              */
             if (std::find(searchedServices_.begin(), searchedServices_.end(), item.getJID()) == searchedServices_.end()) { /* Don't recurse infinitely */
-                SWIFT_LOG(debug) << "Received disco item " << item.getJID() << std::endl;
+                SWIFT_LOG(debug) << "Received disco item " << item.getJID();
                 walkNode(item.getJID());
             }
         }
@@ -112,12 +112,12 @@ void DiscoServiceWalker::handleDiscoItemsResponse(std::shared_ptr<DiscoItems> it
 }
 
 void DiscoServiceWalker::handleDiscoError(const JID& jid, ErrorPayload::ref /*error*/) {
-    SWIFT_LOG(debug) << "Disco error from " << jid << std::endl;
+    SWIFT_LOG(debug) << "Disco error from " << jid;
     markNodeCompleted(jid);
 }
 
 void DiscoServiceWalker::markNodeCompleted(const JID& jid) {
-    SWIFT_LOG(debug) << "Node completed " << jid << std::endl;
+    SWIFT_LOG(debug) << "Node completed " << jid;
     servicesBeingSearched_.erase(jid);
     /* All results are in */
     if (servicesBeingSearched_.empty()) {

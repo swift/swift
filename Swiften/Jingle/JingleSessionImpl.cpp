@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -23,7 +23,7 @@
 namespace Swift {
 
 JingleSessionImpl::JingleSessionImpl(const JID& initiator, const JID& peerJID, const std::string& id, IQRouter* router) : JingleSession(initiator, id), iqRouter(router), peerJID(peerJID) {
-    SWIFT_LOG(debug) << "initiator: " << initiator << ", peerJID: " << peerJID << std::endl;
+    SWIFT_LOG(debug) << "initiator: " << initiator << ", peerJID: " << peerJID;
 }
 
 void JingleSessionImpl::handleIncomingAction(JinglePayload::ref action) {
@@ -38,7 +38,7 @@ void JingleSessionImpl::handleIncomingAction(JinglePayload::ref action) {
 
     JingleContentPayload::ref content = action->getPayload<JingleContentPayload>();
     if (!content) {
-        SWIFT_LOG(debug) << "no content payload!" << std::endl;
+        SWIFT_LOG(debug) << "no content payload!";
         return;
     }
     JingleContentID contentID(content->getName(), content->getCreator());

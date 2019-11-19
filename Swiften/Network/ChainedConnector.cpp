@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2018 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -45,7 +45,7 @@ void ChainedConnector::setTimeoutMilliseconds(int milliseconds) {
 }
 
 void ChainedConnector::start() {
-    SWIFT_LOG(debug) << "Starting queued connector for " << hostname << std::endl;
+    SWIFT_LOG(debug) << "Starting queued connector for " << hostname;
 
     connectionFactoryQueue = std::deque<ConnectionFactory*>(connectionFactories.begin(), connectionFactories.end());
     tryNextConnectionFactory();
@@ -63,12 +63,12 @@ void ChainedConnector::stop() {
 void ChainedConnector::tryNextConnectionFactory() {
     assert(!currentConnector);
     if (connectionFactoryQueue.empty()) {
-        SWIFT_LOG(debug) << "No more connection factories" << std::endl;
+        SWIFT_LOG(debug) << "No more connection factories";
         finish(std::shared_ptr<Connection>(), lastError);
     }
     else {
         ConnectionFactory* connectionFactory = connectionFactoryQueue.front();
-        SWIFT_LOG(debug) << "Trying next connection factory: " << typeid(*connectionFactory).name() << std::endl;
+        SWIFT_LOG(debug) << "Trying next connection factory: " << typeid(*connectionFactory).name();
         connectionFactoryQueue.pop_front();
         currentConnector = Connector::create(hostname, port, serviceLookupPrefix, resolver, connectionFactory, timerFactory);
         currentConnector->setTimeoutMilliseconds(timeoutMilliseconds);
@@ -78,7 +78,7 @@ void ChainedConnector::tryNextConnectionFactory() {
 }
 
 void ChainedConnector::handleConnectorFinished(std::shared_ptr<Connection> connection, std::shared_ptr<Error> error) {
-    SWIFT_LOG(debug) << "Connector finished" << std::endl;
+    SWIFT_LOG(debug) << "Connector finished";
     currentConnector->onConnectFinished.disconnect(boost::bind(&ChainedConnector::handleConnectorFinished, this, _1, _2));
     lastError = error;
     currentConnector.reset();

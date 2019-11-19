@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -107,7 +107,7 @@ void BoostConnection::doWrite(const SafeByteArray& data) {
 }
 
 void BoostConnection::handleConnectFinished(const boost::system::error_code& error) {
-    SWIFT_LOG(debug) << "Connect finished: " << error << std::endl;
+    SWIFT_LOG(debug) << "Connect finished: " << error;
     if (!error) {
         eventLoop->postEvent(boost::bind(boost::ref(onConnectFinished), false), shared_from_this());
         doRead();
@@ -126,7 +126,7 @@ void BoostConnection::doRead() {
 }
 
 void BoostConnection::handleSocketRead(const boost::system::error_code& error, size_t bytesTransferred) {
-    SWIFT_LOG(debug) << "Socket read " << error << std::endl;
+    SWIFT_LOG(debug) << "Socket read " << error;
     if (!error) {
         readBuffer_->resize(bytesTransferred);
         eventLoop->postEvent(boost::bind(boost::ref(onDataRead), readBuffer_), shared_from_this());
@@ -141,7 +141,7 @@ void BoostConnection::handleSocketRead(const boost::system::error_code& error, s
 }
 
 void BoostConnection::handleDataWritten(const boost::system::error_code& error) {
-    SWIFT_LOG(debug) << "Data written " << error << std::endl;
+    SWIFT_LOG(debug) << "Data written " << error;
     if (!error) {
         eventLoop->postEvent(boost::ref(onDataWritten), shared_from_this());
     }

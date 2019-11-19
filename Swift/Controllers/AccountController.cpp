@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -781,10 +781,10 @@ void AccountController::enableMessageCarbons() {
     auto enableCarbonsRequest = EnableCarbonsRequest::create(client_->getIQRouter());
     enableCarbonsRequestHandlerConnection_ = enableCarbonsRequest->onResponse.connect([&](Payload::ref /*payload*/, ErrorPayload::ref error) {
         if (error) {
-            SWIFT_LOG(warning) << "Failed to enable carbons." << std::endl;
+            SWIFT_LOG(warning) << "Failed to enable carbons.";
         }
         else {
-            SWIFT_LOG(debug) << "Successfully enabled carbons." << std::endl;
+            SWIFT_LOG(debug) << "Successfully enabled carbons.";
         }
         enableCarbonsRequestHandlerConnection_.disconnect();
     });

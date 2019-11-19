@@ -22,10 +22,10 @@ inline void invokeCallback(const Event& event) {
         event.callback();
     }
     catch (const std::exception& e) {
-        SWIFT_LOG(error) << "Uncaught exception in event loop: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "Uncaught exception in event loop: " << e.what();
     }
     catch (...) {
-        SWIFT_LOG(error) << "Uncaught non-exception in event loop" << std::endl;
+        SWIFT_LOG(error) << "Uncaught non-exception in event loop";
     }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -306,7 +306,7 @@ void Server::handleLinkLocalElementReceived(std::shared_ptr<ToplevelElement> ele
 
 void Server::handleConnectFinished(std::shared_ptr<LinkLocalConnector> connector, bool error) {
     if (error) {
-        SWIFT_LOG(warning) << "Error connecting" << std::endl;
+        SWIFT_LOG(warning) << "Error connecting";
         // TODO: Send back queued stanzas
     }
     else {

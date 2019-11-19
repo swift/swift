@@ -47,14 +47,14 @@ ByteArray OpenSSLContextFactory::convertDHParametersFromPEMToDER(const std::stri
 
 void OpenSSLContextFactory::setCheckCertificateRevocation(bool check) {
     if (check) {
-        SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL" << std::endl;
+        SWIFT_LOG(warning) << "CRL Checking not supported for OpenSSL";
         assert(false);
     }
 }
 
 void OpenSSLContextFactory::setDisconnectOnCardRemoval(bool check) {
     if (check) {
-        SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL" << std::endl;
+        SWIFT_LOG(warning) << "Smart cards not supported for OpenSSL";
     }
 }
 

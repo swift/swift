@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ boost::optional<BoostConnectionServer::Error> BoostConnectionServer::tryStart() 
         if (endpoint.protocol() ==  boost::asio::ip::tcp::v6()) {
             boost::system::error_code ec;
             acceptor_->set_option(boost::asio::ip::v6_only(false), ec);
-            SWIFT_LOG_ASSERT(ec, warning) << "IPv4/IPv6 dual-stack support is not supported on this platform." << std::endl;
+            SWIFT_LOG_ASSERT(ec, warning) << "IPv4/IPv6 dual-stack support is not supported on this platform.";
         }
         acceptNextConnection();
     }

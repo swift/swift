@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -43,7 +43,7 @@ std::string HostAddress::toString() const {
 
     addressString = address_.to_string(errorCode);
     if (errorCode) {
-        SWIFT_LOG(debug) << "error: " << errorCode.message() << std::endl;
+        SWIFT_LOG(debug) << "error: " << errorCode.message();
     }
 
     return addressString;

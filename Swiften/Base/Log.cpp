@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2015 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,13 +30,16 @@ Log::~Log() {
     if (logCallback) {
         logCallback(severity_, std::move(file_), line_, std::move(function_), stream.str());
     }
-    else if (logfile) {
-        fwrite(stream.str().c_str(), sizeof(char), stream.str().size(), logfile.get());
-        fflush(logfile.get());
-    }
     else {
-        fwrite(stream.str().c_str(), sizeof(char), stream.str().size(), stderr);
-        fflush(stderr);
+        stream << std::endl;
+        if (logfile) {
+            fwrite(stream.str().c_str(), sizeof(char), stream.str().size(), logfile.get());
+            fflush(logfile.get());
+        }
+        else {
+            fwrite(stream.str().c_str(), sizeof(char), stream.str().size(), stderr);
+            fflush(stderr);
+        }
     }
 #endif
 }

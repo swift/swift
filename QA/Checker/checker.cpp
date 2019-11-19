@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -141,7 +141,7 @@ int main(int argc, char* argv[]) {
         googleTestWasSuccessful = RUN_ALL_TESTS() == 0 ? true : false;
     } catch (const ::testing::internal::GoogleTestFailureException& e) {
         googleTestWasSuccessful = false;
-        SWIFT_LOG(error) << "GoogleTestFailureException was thrown: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "GoogleTestFailureException was thrown: " << e.what();
     }
 
     auto cppUnitWasSuccessful = result.wasSuccessful() ? true : false;

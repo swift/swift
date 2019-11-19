@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -40,10 +40,10 @@ SchannelContext::SchannelContext(bool tls1_0Workaround) : state_(Start), secCont
 //------------------------------------------------------------------------
 
 SchannelContext::~SchannelContext() {
-    SWIFT_LOG(debug) << "Destroying SchannelContext" << std::endl;
+    SWIFT_LOG(debug) << "Destroying SchannelContext";
     if (myCertStore_) {
         if (CertCloseStore(myCertStore_, 0) == FALSE) {
-            SWIFT_LOG(debug) << "Failed to close the certificate store" << std::endl;
+            SWIFT_LOG(debug) << "Failed to close the certificate store";
         }
     }
 }
@@ -52,7 +52,7 @@ SchannelContext::~SchannelContext() {
 
 void SchannelContext::determineStreamSizes() {
     if (QueryContextAttributes(contextHandle_, SECPKG_ATTR_STREAM_SIZES, &streamSizes_) != SEC_E_OK) {
-        SWIFT_LOG(debug) << "QueryContextAttributes failed to determinate the stream size" << std::endl;
+        SWIFT_LOG(debug) << "QueryContextAttributes failed to determinate the stream size";
     }
 }
 
@@ -653,7 +653,7 @@ std::vector<Certificate::ref> SchannelContext::getPeerCertificateChain() const {
     SECURITY_STATUS status = QueryContextAttributes(contextHandle_, SECPKG_ATTR_REMOTE_CERT_CONTEXT, pServerCert.Reset());
 
     if (status != SEC_E_OK) {
-        SWIFT_LOG(debug) << "Error while Querying the Certificate Chain" << std::endl;
+        SWIFT_LOG(debug) << "Error while Querying the Certificate Chain";
         return certificateChain;
     }
     certificateChain.push_back(std::make_shared<SchannelCertificate>(pServerCert));
@@ -688,7 +688,7 @@ ByteArray SchannelContext::getFinishMessage() const {
         return createByteArray(((unsigned char*) bindings.Bindings) + bindings.Bindings->dwApplicationDataOffset + 11 /* tls-unique:*/, bindings.Bindings->cbApplicationDataLength - 11);
     }
     else {
-        SWIFT_LOG(debug) << "Error while retrieving Finish Message" << std::endl;
+        SWIFT_LOG(debug) << "Error while retrieving Finish Message";
     }
 
     return ByteArray();

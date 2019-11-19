@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,8 +53,8 @@ QString QtScaledAvatarCache::getScaledAvatarPath(const QString& path) {
     if (avatarFile.exists() && !avatarFile.absolutePath().startsWith(":/")) {
         QString cacheSubPath = QString("ScaledAvatarCacheV%1/%2").arg(QString::number(QT_SCALED_AVATAR_CACHE_VERSION), QString::number(size));
         if (!avatarFile.dir().mkpath(cacheSubPath)) {
-            SWIFT_LOG(error) << "avatarFile.dir(): " << Q2PSTRING(avatarFile.dir().absolutePath()) << std::endl;
-            SWIFT_LOG(error) << "Failed creating cache folder: " << Q2PSTRING(cacheSubPath) << std::endl;
+            SWIFT_LOG(error) << "avatarFile.dir(): " << Q2PSTRING(avatarFile.dir().absolutePath());
+            SWIFT_LOG(error) << "Failed creating cache folder: " << Q2PSTRING(cacheSubPath);
             return path;
         }
         QDir targetDir(avatarFile.dir().absoluteFilePath(cacheSubPath));
@@ -75,7 +75,7 @@ QString QtScaledAvatarCache::getScaledAvatarPath(const QString& path) {
                     return path;
                 }
             } else {
-                SWIFT_LOG(warning) << "Failed to load " << Q2PSTRING(path) << std::endl;
+                SWIFT_LOG(warning) << "Failed to load " << Q2PSTRING(path);
             }
         }
         return targetFile;

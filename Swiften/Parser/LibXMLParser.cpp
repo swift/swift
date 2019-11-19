@@ -34,7 +34,7 @@ static void handleStartElement(void* parser, const xmlChar* name, const xmlChar*
     AttributeMap attributeValues;
     if (nbDefaulted != 0) {
         // Just because i don't understand what this means yet :-)
-        SWIFT_LOG(error) << "Unexpected nbDefaulted on XML element" << std::endl;
+        SWIFT_LOG(error) << "Unexpected nbDefaulted on XML element";
     }
     for (int i = 0; i < nbAttributes*5; i += 5) {
         std::string attributeName = asString(attributes[i]);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -37,7 +37,7 @@ namespace {
 
             virtual std::vector<std::pair<std::string, std::string> > filterHTTPResponseHeader(const std::string& /* statusLine */, const std::vector<std::pair<std::string, std::string> >& response) {
                 filterResponses.push_back(response);
-                SWIFT_LOG(debug) << std::endl;
+                SWIFT_LOG(debug);
                 return filterResponseReturn;
             }
 
@@ -409,7 +409,7 @@ class HTTPConnectProxiedConnectionTest : public CppUnit::TestFixture {
             std::shared_ptr<Connection> createConnection() {
                 std::shared_ptr<MockConnection> connection = std::make_shared<MockConnection>(failingPorts, eventLoop);
                 connections.push_back(connection);
-                SWIFT_LOG(debug) << "new connection created" << std::endl;
+                SWIFT_LOG(debug) << "new connection created";
                 return connection;
             }
 

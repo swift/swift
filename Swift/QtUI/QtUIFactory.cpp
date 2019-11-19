@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,9 +49,9 @@ QtUIFactory::QtUIFactory(SettingsProviderHierachy* settings, QtSettingsProvider*
 }
 
 QtUIFactory::~QtUIFactory() {
-    SWIFT_LOG(debug) << "Entering QtUIFactory destructor. chatWindows size:" << chatWindows_.size() << std::endl;
+    SWIFT_LOG(debug) << "Entering QtUIFactory destructor. chatWindows size:" << chatWindows_.size();
     for (auto chat : chatWindows_) {
-        SWIFT_LOG_ASSERT(chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly" << std::endl;
+        SWIFT_LOG_ASSERT(chat.isNull(), debug) << "QtUIFactory has active chat windows and has not been reset properly";
     }
     delete chatWindowFactory_;
 }

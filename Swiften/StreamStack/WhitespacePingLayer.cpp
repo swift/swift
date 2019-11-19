@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -22,7 +22,7 @@ WhitespacePingLayer::WhitespacePingLayer(TimerFactory* timerFactory) : isActive(
 }
 
 WhitespacePingLayer::~WhitespacePingLayer() {
-    SWIFT_LOG_ASSERT(!isActive, debug) << "WhitespacePingLayer still active at destruction." << std::endl;
+    SWIFT_LOG_ASSERT(!isActive, debug) << "WhitespacePingLayer still active at destruction.";
     if (isActive) {
         timer->stop();
     }

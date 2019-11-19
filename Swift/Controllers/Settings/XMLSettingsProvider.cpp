@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,14 +20,14 @@ XMLSettingsProvider::XMLSettingsProvider(const std::string& xmlConfig) : level_(
         PlatformXMLParserFactory factory;
         auto parser = factory.createXMLParser(this, true);
         if (parser->parse(xmlConfig)) {
-            SWIFT_LOG(debug) << "Found and parsed system config" << std::endl;
+            SWIFT_LOG(debug) << "Found and parsed system config";
         }
         else {
-            SWIFT_LOG(debug) << "Found invalid system config" << std::endl;
+            SWIFT_LOG(debug) << "Found invalid system config";
         }
     }
     else {
-        SWIFT_LOG(debug) << "No system config found" << std::endl;
+        SWIFT_LOG(debug) << "No system config found";
     }
 }
 
@@ -110,7 +110,7 @@ void XMLSettingsProvider::handleStartElement(const std::string& element, const s
 void XMLSettingsProvider::handleEndElement(const std::string& /*element*/, const std::string& /*ns*/) {
     if (level_ == SettingLevel) {
         values_[currentElement_] = currentText_;
-        SWIFT_LOG(debug) << "Setting value of " << currentElement_ << " to " << currentText_ << std::endl;
+        SWIFT_LOG(debug) << "Setting value of " << currentElement_ << " to " << currentText_;
     }
     level_--;
 }

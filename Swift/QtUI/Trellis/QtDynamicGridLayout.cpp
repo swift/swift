@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2016 Isode Limited.
+ * Copyright (c) 2014-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -514,9 +514,9 @@ void QtDynamicGridLayout::updateTabPositions() {
 
 void QtDynamicGridLayout::moveTab(QtTabWidget* tabWidget, int oldIndex, int newIndex) {
 #if QT_VERSION >= 0x040500
-    SWIFT_LOG_ASSERT(movingTab_ == nullptr, error) << std::endl;
+    SWIFT_LOG_ASSERT(movingTab_ == nullptr, error);
     movingTab_ = qobject_cast<QtTabbable*>(tabWidget->widget(oldIndex));
-    SWIFT_LOG_ASSERT(movingTab_ != nullptr, error) << std::endl;
+    SWIFT_LOG_ASSERT(movingTab_ != nullptr, error);
 
     if (movingTab_) {
         // Install event filter that filters out events issued during the internal movement of the
@@ -526,7 +526,7 @@ void QtDynamicGridLayout::moveTab(QtTabWidget* tabWidget, int oldIndex, int newI
         tabWidget->tabBar()->moveTab(oldIndex, newIndex);
 
         qApp->removeEventFilter(this);
-        SWIFT_LOG_ASSERT(movingTab_ == tabWidget->widget(newIndex), error) << std::endl;
+        SWIFT_LOG_ASSERT(movingTab_ == tabWidget->widget(newIndex), error);
     }
     movingTab_ = nullptr;
     tabWidget->widget(newIndex)->setFocus();

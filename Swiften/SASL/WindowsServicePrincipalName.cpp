@@ -64,7 +64,7 @@ std::string WindowsServicePrincipalName::toString() {
         firstCall = false;
     }
 
-    SWIFT_LOG(debug) << "SPN: " << str << std::endl;
+    SWIFT_LOG(debug) << "SPN: " << str;
     return str;
 }
 
@@ -72,17 +72,17 @@ DWORD WindowsServicePrincipalName::dsMakeSpn(DWORD* length, wchar_t* value) {
     DWORD status;
 
 #ifdef UNICODE
-    SWIFT_LOG(debug) << "UNICODE is defined" << std::endl;
+    SWIFT_LOG(debug) << "UNICODE is defined";
 #else
-    SWIFT_LOG(debug) << "UNICODE is not defined" << std::endl;
+    SWIFT_LOG(debug) << "UNICODE is not defined";
 #endif
 
-    SWIFT_LOG(debug) << "serviceClass_: " << convertWStringToString(serviceClass_.c_str()) << std::endl;
-    SWIFT_LOG(debug) << "serviceName_: " << convertWStringToString(serviceName_.c_str()) << std::endl;
-    SWIFT_LOG(debug) << "instanceName_: " << convertWStringToString(instanceName_.c_str()) << std::endl;
-    SWIFT_LOG(debug) << "referrer_: " << convertWStringToString(referrer_.c_str()) << std::endl;
-    SWIFT_LOG(debug) << "instancePort_: " << instancePort_ << std::endl;
-    SWIFT_LOG(debug) << "length: " << *length << std::endl;
+    SWIFT_LOG(debug) << "serviceClass_: " << convertWStringToString(serviceClass_.c_str());
+    SWIFT_LOG(debug) << "serviceName_: " << convertWStringToString(serviceName_.c_str());
+    SWIFT_LOG(debug) << "instanceName_: " << convertWStringToString(instanceName_.c_str());
+    SWIFT_LOG(debug) << "referrer_: " << convertWStringToString(referrer_.c_str());
+    SWIFT_LOG(debug) << "instancePort_: " << instancePort_;
+    SWIFT_LOG(debug) << "length: " << *length;
 
     /* Call the Unicode function because that is recommended:
 https://msdn.microsoft.com/en-us/library/windows/desktop/ff381407%28v=vs.85%29.aspx */
@@ -97,7 +97,7 @@ https://msdn.microsoft.com/en-us/library/windows/desktop/ff381407%28v=vs.85%29.a
     if (status != ERROR_SUCCESS) {
         boost::system::error_code errorCode(status, boost::system::system_category());
 
-        SWIFT_LOG(debug) << std::hex << "status: 0x" << status << ": " << errorCode.message() << std::endl;
+        SWIFT_LOG(debug) << std::hex << "status: 0x" << status << ": " << errorCode.message();
     }
 
     return status;

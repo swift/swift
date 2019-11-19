@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2018 Isode Limited.
+ * Copyright (c) 2014-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -42,7 +42,7 @@ bool NATPMPInterface::isAvailable() {
 
 boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
     if (sendpublicaddressrequest(&p->natpmp) < 0) {
-        SWIFT_LOG(debug) << "Failed to send NAT-PMP public address request!" << std::endl;
+        SWIFT_LOG(debug) << "Failed to send NAT-PMP public address request!";
         return boost::optional<HostAddress>();
     }
 
@@ -67,7 +67,7 @@ boost::optional<HostAddress> NATPMPInterface::getPublicIP() {
         return boost::optional<HostAddress>(HostAddress(reinterpret_cast<const unsigned char*>(&(response.pnu.publicaddress.addr)), 4));
     }
     else {
-        SWIFT_LOG(debug) << "Inavlid NAT-PMP response." << std::endl;
+        SWIFT_LOG(debug) << "Inavlid NAT-PMP response.";
         return boost::optional<HostAddress>();
     }
 }
@@ -80,7 +80,7 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(unsigned short l
                 mapping.getLocalPort(),
                 mapping.getPublicPort(),
                 mapping.getLeaseInSeconds()) < 0) {
-        SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!" << std::endl;
+        SWIFT_LOG(debug) << "Failed to send NAT-PMP port forwarding request!";
         return boost::optional<NATPortMapping>();
     }
 
@@ -106,14 +106,14 @@ boost::optional<NATPortMapping> NATPMPInterface::addPortForward(unsigned short l
         return result;
     }
     else {
-        SWIFT_LOG(debug) << "Invalid NAT-PMP response." << std::endl;
+        SWIFT_LOG(debug) << "Invalid NAT-PMP response.";
         return boost::optional<NATPortMapping>();
     }
 }
 
 bool NATPMPInterface::removePortForward(const NATPortMapping& mapping) {
     if (sendnewportmappingrequest(&p->natpmp, mapping.getProtocol() == NATPortMapping::TCP ? NATPMP_PROTOCOL_TCP : NATPMP_PROTOCOL_UDP, mapping.getLocalPort(), 0, 0) < 0) {
-        SWIFT_LOG(debug) << "Failed to send NAT-PMP remove forwarding request!" << std::endl;
+        SWIFT_LOG(debug) << "Failed to send NAT-PMP remove forwarding request!";
         return false;
     }
 
@@ -133,7 +133,7 @@ bool NATPMPInterface::removePortForward(const NATPortMapping& mapping) {
         return true;
     }
     else {
-        SWIFT_LOG(debug) << "Invalid NAT-PMP response." << std::endl;
+        SWIFT_LOG(debug) << "Invalid NAT-PMP response.";
         return false;
     }
 }

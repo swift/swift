@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2018 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -37,7 +37,7 @@ ProxiedConnection::~ProxiedConnection() {
         connection_->onDisconnected.disconnect(boost::bind(&ProxiedConnection::handleDisconnected, shared_from_this(), _1));
     }
     if (connected_) {
-        SWIFT_LOG(warning) << "Connection was still established." << std::endl;
+        SWIFT_LOG(warning) << "Connection was still established.";
     }
 }
 

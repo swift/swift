@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -240,7 +240,7 @@ void QtTextEdit::setUpSpellChecker() {
         }
         else {
             // Spellchecking is not working, as we did not get a valid checker from the factory. Disable spellchecking.
-            SWIFT_LOG(warning) << "Spellchecking is currently misconfigured in Swift (e.g. missing dictionary or broken dictionary file). Disable spellchecking." << std::endl;
+            SWIFT_LOG(warning) << "Spellchecking is currently misconfigured in Swift (e.g. missing dictionary or broken dictionary file). Disable spellchecking.";
             settings_->storeSetting(QtUISettingConstants::SPELL_CHECKER, false);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -33,13 +33,13 @@ SOCKS5BytestreamServerSession::SOCKS5BytestreamServerSession(
 
 SOCKS5BytestreamServerSession::~SOCKS5BytestreamServerSession() {
     if (state != Finished && state != Initial) {
-        SWIFT_LOG(warning) << "SOCKS5BytestreamServerSession unfinished" << std::endl;
+        SWIFT_LOG(warning) << "SOCKS5BytestreamServerSession unfinished";
         finish();
     }
 }
 
 void SOCKS5BytestreamServerSession::start() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     dataReadConnection = connection->onDataRead.connect(
             boost::bind(&SOCKS5BytestreamServerSession::handleDataRead, this, _1));
     state = WaitingForAuthentication;
@@ -50,7 +50,7 @@ void SOCKS5BytestreamServerSession::stop() {
 }
 
 void SOCKS5BytestreamServerSession::startSending(std::shared_ptr<ReadBytestream> stream) {
-    if (state != ReadyForTransfer) { SWIFT_LOG(debug) << "Not ready for transfer!" << std::endl; return; }
+    if (state != ReadyForTransfer) { SWIFT_LOG(debug) << "Not ready for transfer!"; return; }
 
     readBytestream = stream;
     state = WritingData;
@@ -62,7 +62,7 @@ void SOCKS5BytestreamServerSession::startSending(std::shared_ptr<ReadBytestream>
 }
 
 void SOCKS5BytestreamServerSession::startReceiving(std::shared_ptr<WriteBytestream> stream) {
-    if (state != ReadyForTransfer) { SWIFT_LOG(debug) << "Not ready for transfer!" << std::endl; return; }
+    if (state != ReadyForTransfer) { SWIFT_LOG(debug) << "Not ready for transfer!"; return; }
 
     writeBytestream = stream;
     state = ReadingData;
@@ -93,7 +93,7 @@ void SOCKS5BytestreamServerSession::handleDataAvailable() {
 }
 
 void SOCKS5BytestreamServerSession::handleDisconnected(const boost::optional<Connection::Error>& error) {
-    SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error") << std::endl;
+    SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error");
     finish(error ? boost::optional<FileTransferError>(FileTransferError::PeerError) : boost::optional<FileTransferError>());
 }
 
@@ -109,7 +109,7 @@ void SOCKS5BytestreamServerSession::process() {
             if (i == 2 + authCount) {
                 // Authentication message is complete
                 if (i != unprocessedData.size()) {
-                    SWIFT_LOG(debug) << "Junk after authentication mechanism" << std::endl;
+                    SWIFT_LOG(debug) << "Junk after authentication mechanism";
                 }
                 unprocessedData.clear();
                 connection->write(createSafeByteArray("\x05\x00", 2));
@@ -130,7 +130,7 @@ void SOCKS5BytestreamServerSession::process() {
             i += 2;
             if (i <= unprocessedData.size()) {
                 if (i != unprocessedData.size()) {
-                    SWIFT_LOG(debug) << "Junk after authentication mechanism" << std::endl;
+                    SWIFT_LOG(debug) << "Junk after authentication mechanism";
                 }
                 unprocessedData.clear();
                 streamID = byteArrayToString(requestID);
@@ -142,18 +142,18 @@ void SOCKS5BytestreamServerSession::process() {
                     result.push_back(boost::numeric_cast<unsigned char>(requestID.size()));
                 }
                 catch (const boost::numeric::bad_numeric_cast& e) {
-                    SWIFT_LOG(warning) << "SOCKS5 request ID is too long (" << requestID.size() << "): " << e.what() << std::endl;
+                    SWIFT_LOG(warning) << "SOCKS5 request ID is too long (" << requestID.size() << "): " << e.what();
                     finish();
                     return;
                 }
                 append(result, concat(requestID, createByteArray("\x00\x00", 2)));
                 if (!hasBytestream) {
-                    SWIFT_LOG(debug) << "Readstream or Wrtiestream with ID " << streamID << " not found!" << std::endl;
+                    SWIFT_LOG(debug) << "Readstream or Wrtiestream with ID " << streamID << " not found!";
                     connection->write(result);
                     finish(boost::optional<FileTransferError>(FileTransferError::PeerError));
                 }
                 else {
-                    SWIFT_LOG(debug) << "Found stream. Sent OK." << std::endl;
+                    SWIFT_LOG(debug) << "Found stream. Sent OK.";
                     connection->write(result);
                     state = ReadyForTransfer;
                 }
@@ -185,7 +185,7 @@ void SOCKS5BytestreamServerSession::sendData() {
 }
 
 void SOCKS5BytestreamServerSession::finish(const boost::optional<FileTransferError>& error) {
-    SWIFT_LOG(debug) << "state: " << state << std::endl;
+    SWIFT_LOG(debug) << "state: " << state;
     if (state == Finished) {
         return;
     }

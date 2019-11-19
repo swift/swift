@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,7 +53,7 @@ SafeByteArray StanzaSerializer::serialize(std::shared_ptr<ToplevelElement> eleme
             serializedPayloads += serializer->serialize(payload);
         }
         else {
-            SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
+            SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(payload.get())).name();
         }
     }
     serializedPayloads = String::sanitizeXMPPString(serializedPayloads);

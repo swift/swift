@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ boost::filesystem::path ApplicationPathProvider::getProfileDir(const std::string
         boost::filesystem::create_directory(result);
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what();
     }
     return result;
 }

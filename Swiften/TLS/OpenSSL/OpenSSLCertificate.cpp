@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,7 +32,7 @@ OpenSSLCertificate::OpenSSLCertificate(const ByteArray& der) {
 #endif
     cert = std::shared_ptr<X509>(d2i_X509(nullptr, &p, der.size()), X509_free);
     if (!cert) {
-//        SWIFT_LOG(warning) << "Error creating certificate from DER data" << std::endl;
+//        SWIFT_LOG(warning) << "Error creating certificate from DER data";
     }
     parse();
 }

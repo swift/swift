@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -88,7 +88,7 @@ ClientSession::ClientSession(
             authenticationPort(-1) {
 #ifdef SWIFTEN_PLATFORM_WIN32
 if (WindowsRegistry::isFIPSEnabled()) {
-    SWIFT_LOG(info) << "Windows is running in FIPS-140 mode. Some authentication methods will be unavailable." << std::endl;
+    SWIFT_LOG(info) << "Windows is running in FIPS-140 mode. Some authentication methods will be unavailable.";
 }
 #endif
 }
@@ -531,7 +531,7 @@ void ClientSession::finish() {
         finishSession(std::shared_ptr<Error>());
     }
     else {
-        SWIFT_LOG(warning) << "Session already finished or finishing." << std::endl;
+        SWIFT_LOG(warning) << "Session already finished or finishing.";
     }
 }
 
@@ -544,7 +544,7 @@ void ClientSession::finishSession(std::shared_ptr<Swift::Error> error) {
         error_ = error;
     }
     else {
-        SWIFT_LOG(warning) << "Session finished twice" << std::endl;
+        SWIFT_LOG(warning) << "Session finished twice";
     }
     assert(stream->isOpen());
     if (stanzaAckResponder_) {

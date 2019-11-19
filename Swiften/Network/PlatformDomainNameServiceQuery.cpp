@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -58,7 +58,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
         return;
     }
 
-    SWIFT_LOG(debug) << "Querying " << service << std::endl;
+    SWIFT_LOG(debug) << "Querying " << service;
 
     std::vector<DomainNameServiceQuery::Result> records;
 
@@ -97,7 +97,7 @@ void PlatformDomainNameServiceQuery::runBlocking() {
     response.resize(NS_PACKETSZ);
     int responseLength = res_query(const_cast<char*>(service.c_str()), ns_c_in, ns_t_srv, reinterpret_cast<u_char*>(vecptr(response)), response.size());
     if (responseLength == -1) {
-        SWIFT_LOG(debug) << "Error" << std::endl;
+        SWIFT_LOG(debug) << "Error";
         emitError();
         return;
     }

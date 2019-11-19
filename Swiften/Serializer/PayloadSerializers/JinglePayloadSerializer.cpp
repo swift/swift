@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -93,7 +93,7 @@ std::string JinglePayloadSerializer::actionToString(JinglePayload::Action action
         case JinglePayload::TransportReplace:
             return "transport-replace";
         case JinglePayload::UnknownAction:
-            SWIFT_LOG(warning) << "Serializing unknown action value." << std::endl;
+            SWIFT_LOG(warning) << "Serializing unknown action value.";
             return "";
     }
     assert(false);
@@ -103,7 +103,7 @@ std::string JinglePayloadSerializer::actionToString(JinglePayload::Action action
 std::string JinglePayloadSerializer::reasonTypeToString(JinglePayload::Reason::Type type) const {
     switch(type) {
         case JinglePayload::Reason::UnknownType:
-            SWIFT_LOG(warning) << "Unknown jingle reason type!" << std::endl;
+            SWIFT_LOG(warning) << "Unknown jingle reason type!";
             return "";
         case JinglePayload::Reason::AlternativeSession:
             return "alternative-session";

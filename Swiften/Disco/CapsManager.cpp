@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -53,7 +53,7 @@ void CapsManager::handleDiscoInfoReceived(const JID& from, const std::string& ha
     requestedDiscoInfos.erase(hash);
     if (error || !discoInfo || CapsInfoGenerator("", crypto).generateCapsInfo(*discoInfo.get()).getVersion() != hash) {
         if (warnOnInvalidHash && !error &&  discoInfo) {
-            SWIFT_LOG(warning) << "Caps from " << from.toString() << " do not verify" << std::endl;
+            SWIFT_LOG(warning) << "Caps from " << from.toString() << " do not verify";
         }
         failingCaps.insert(std::make_pair(from, hash));
         std::map<std::string, std::set< std::pair<JID, std::string> > >::iterator i = fallbacks.find(hash);

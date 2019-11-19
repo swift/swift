@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2017 Isode Limited.
+ * Copyright (c) 2014-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -85,7 +85,7 @@ HighlightConfiguration HighlightManager::highlightConfigurationFromString(const 
     }
     catch (boost::archive::archive_exception&) {
         configuration = getDefaultConfig();
-        SWIFT_LOG(warning) << "Failed to load highlight configuration. Will use default configuration instead." << std::endl;
+        SWIFT_LOG(warning) << "Failed to load highlight configuration. Will use default configuration instead.";
     }
     return configuration;
 }

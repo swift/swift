@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,7 @@ namespace Swift {
 EnvironmentProxyProvider::EnvironmentProxyProvider() {
     socksProxy = getFromEnv("all_proxy", "socks");
     httpProxy = getFromEnv("http_proxy", "http");
-    SWIFT_LOG(debug) << "Environment: SOCKS5 => " << socksProxy.toString() << "; HTTP Connect => " << httpProxy.toString() << std::endl;
+    SWIFT_LOG(debug) << "Environment: SOCKS5 => " << socksProxy.toString() << "; HTTP Connect => " << httpProxy.toString();
 }
 
 HostAddressPort EnvironmentProxyProvider::getHTTPConnectProxy() const {

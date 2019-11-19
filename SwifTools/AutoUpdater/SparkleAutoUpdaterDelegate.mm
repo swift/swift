@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ using namespace Swift;
 - (void)updater:(SUUpdater *)updater failedToDownloadUpdate:(SUAppcastItem *)item error:(NSError *)error {
     (void)updater;
     (void)item;
-    SWIFT_LOG(error) << ns2StdString([error localizedDescription]) << std::endl;
+    SWIFT_LOG(error) << ns2StdString([error localizedDescription]);
     onNewUpdateState(AutoUpdater::State::ErrorCheckingForUpdate);
 }
 
@@ -71,7 +71,7 @@ using namespace Swift;
         onNewUpdateState(AutoUpdater::State::NoUpdateAvailable);
     }
     else {
-        SWIFT_LOG(error) << ns2StdString([error localizedDescription]) << std::endl;
+        SWIFT_LOG(error) << ns2StdString([error localizedDescription]);
         onNewUpdateState(AutoUpdater::State::ErrorCheckingForUpdate);
     }
 }

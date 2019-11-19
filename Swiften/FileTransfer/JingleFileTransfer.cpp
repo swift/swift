@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2018 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -78,7 +78,7 @@ boost::optional<FileTransferError> JingleFileTransfer::getFileTransferError(Jing
 
 void JingleFileTransfer::handleRemoteTransportCandidateSelectFinished(
         const std::string& s5bSessionID, const boost::optional<JingleS5BTransportPayload::Candidate>& candidate) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     ourCandidateChoice = candidate;
     ourCandidateSelectFinished = true;
@@ -98,42 +98,42 @@ void JingleFileTransfer::handleRemoteTransportCandidateSelectFinished(
 
 // decide on candidates according to http://xmpp.org/extensions/xep-0260.html#complete
 void JingleFileTransfer::decideOnCandidates() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     if (!ourCandidateSelectFinished || !theirCandidateSelectFinished) {
-        SWIFT_LOG(debug) << "Can't make a decision yet!" << std::endl;
+        SWIFT_LOG(debug) << "Can't make a decision yet!";
         return;
     }
     if (!ourCandidateChoice && !theirCandidateChoice) {
-        SWIFT_LOG(debug) << "No candidates succeeded." << std::endl;
+        SWIFT_LOG(debug) << "No candidates succeeded.";
         fallback();
     }
     else if (ourCandidateChoice && !theirCandidateChoice) {
-        SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << "." << std::endl;
+        SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << ".";
         startTransferViaRemoteCandidate();
     }
     else if (theirCandidateChoice && !ourCandidateChoice) {
-        SWIFT_LOG(debug) << "Start transfer using local candidate: " << theirCandidateChoice.get().cid << "." << std::endl;
+        SWIFT_LOG(debug) << "Start transfer using local candidate: " << theirCandidateChoice.get().cid << ".";
         startTransferViaLocalCandidate();
     }
     else {
         SWIFT_LOG(debug) << "Choosing between candidates "
             << ourCandidateChoice->cid << "(" << ourCandidateChoice->priority << ")" << " and "
-            << theirCandidateChoice->cid << "(" << theirCandidateChoice->priority << ")" << std::endl;
+            << theirCandidateChoice->cid << "(" << theirCandidateChoice->priority << ")";
         if (ourCandidateChoice->priority > theirCandidateChoice->priority) {
-            SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << "." << std::endl;
+            SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << ".";
             startTransferViaRemoteCandidate();
         }
         else if (ourCandidateChoice->priority < theirCandidateChoice->priority) {
-            SWIFT_LOG(debug) << "Start transfer using local candidate:" << theirCandidateChoice.get().cid << "." << std::endl;
+            SWIFT_LOG(debug) << "Start transfer using local candidate:" << theirCandidateChoice.get().cid << ".";
             startTransferViaLocalCandidate();
         }
         else {
             if (hasPriorityOnCandidateTie()) {
-                SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid << std::endl;
+                SWIFT_LOG(debug) << "Start transfer using remote candidate: " << ourCandidateChoice.get().cid;
                 startTransferViaRemoteCandidate();
             }
             else {
-                SWIFT_LOG(debug) << "Start transfer using local candidate: " << theirCandidateChoice.get().cid << std::endl;
+                SWIFT_LOG(debug) << "Start transfer using local candidate: " << theirCandidateChoice.get().cid;
                 startTransferViaLocalCandidate();
             }
         }
@@ -142,11 +142,11 @@ void JingleFileTransfer::decideOnCandidates() {
 
 void JingleFileTransfer::handleProxyActivateFinished(
         const std::string& s5bSessionID, ErrorPayload::ref error) {
-    SWIFT_LOG(debug) << std::endl;
-    if (!isWaitingForLocalProxyActivate()) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+    SWIFT_LOG(debug);
+    if (!isWaitingForLocalProxyActivate()) { SWIFT_LOG(warning) << "Incorrect state"; return; }
 
     if (error) {
-        SWIFT_LOG(debug) << "Error activating proxy" << std::endl;
+        SWIFT_LOG(debug) << "Error activating proxy";
         JingleS5BTransportPayload::ref proxyError = std::make_shared<JingleS5BTransportPayload>();
         proxyError->setSessionID(s5bSessionID);
         proxyError->setProxyError(true);
@@ -164,18 +164,18 @@ void JingleFileTransfer::handleProxyActivateFinished(
 
 void JingleFileTransfer::handleTransportInfoReceived(
         const JingleContentID& /* contentID */, JingleTransportPayload::ref transport) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
 
     if (JingleS5BTransportPayload::ref s5bPayload = std::dynamic_pointer_cast<JingleS5BTransportPayload>(transport)) {
         if (s5bPayload->hasCandidateError() || !s5bPayload->getCandidateUsed().empty()) {
-            SWIFT_LOG(debug) << "Received candidate decision from peer" << std::endl;
-            if (!isTryingCandidates()) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+            SWIFT_LOG(debug) << "Received candidate decision from peer";
+            if (!isTryingCandidates()) { SWIFT_LOG(warning) << "Incorrect state"; return; }
 
             theirCandidateSelectFinished = true;
             if (!s5bPayload->hasCandidateError()) {
                 auto theirCandidate = localCandidates.find(s5bPayload->getCandidateUsed());
                 if (theirCandidate == localCandidates.end()) {
-                    SWIFT_LOG(warning) << "Got invalid candidate" << std::endl;
+                    SWIFT_LOG(warning) << "Got invalid candidate";
                     terminate(JinglePayload::Reason::GeneralError);
                     return;
                 }
@@ -184,27 +184,27 @@ void JingleFileTransfer::handleTransportInfoReceived(
             decideOnCandidates();
         }
         else if (!s5bPayload->getActivated().empty()) {
-            SWIFT_LOG(debug) << "Received peer activate from peer" << std::endl;
-            if (!isWaitingForPeerProxyActivate()) { SWIFT_LOG(warning) << "Incorrect state" << std::endl; return; }
+            SWIFT_LOG(debug) << "Received peer activate from peer";
+            if (!isWaitingForPeerProxyActivate()) { SWIFT_LOG(warning) << "Incorrect state"; return; }
 
             if (ourCandidateChoice->cid == s5bPayload->getActivated()) {
                 startTransferring(createRemoteCandidateSession());
             }
             else {
-                SWIFT_LOG(warning) << "ourCandidateChoice doesn't match activated proxy candidate!" << std::endl;
+                SWIFT_LOG(warning) << "ourCandidateChoice doesn't match activated proxy candidate!";
                 terminate(JinglePayload::Reason::GeneralError);
             }
         }
         else if (s5bPayload->hasProxyError()) {
-            SWIFT_LOG(debug) << "Received proxy error. Trying to fall back to IBB." << std::endl;
+            SWIFT_LOG(debug) << "Received proxy error. Trying to fall back to IBB.";
             fallback();
         }
         else {
-            SWIFT_LOG(debug) << "Ignoring unknown info" << std::endl;
+            SWIFT_LOG(debug) << "Ignoring unknown info";
         }
     }
     else {
-        SWIFT_LOG(debug) << "Ignoring unknown info" << std::endl;
+        SWIFT_LOG(debug) << "Ignoring unknown info";
     }
 }
 

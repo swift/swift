@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ SOCKS5BytestreamClientSession::~SOCKS5BytestreamClientSession() {
 
 void SOCKS5BytestreamClientSession::start() {
     assert(state == Initial);
-    SWIFT_LOG(debug) << "Trying to connect via TCP to " << addressPort.toString() << "." << std::endl;
+    SWIFT_LOG(debug) << "Trying to connect via TCP to " << addressPort.toString() << ".";
     weFailedTimeout->start();
     connectFinishedConnection = connection->onConnectFinished.connect(
             boost::bind(&SOCKS5BytestreamClientSession::handleConnectFinished, this, _1));
@@ -57,7 +57,7 @@ void SOCKS5BytestreamClientSession::start() {
 }
 
 void SOCKS5BytestreamClientSession::stop() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     if (state < Ready) {
         weFailedTimeout->stop();
     }
@@ -70,7 +70,7 @@ void SOCKS5BytestreamClientSession::stop() {
 }
 
 void SOCKS5BytestreamClientSession::process() {
-    SWIFT_LOG(debug) << "unprocessedData.size(): " << unprocessedData.size() << std::endl;
+    SWIFT_LOG(debug) << "unprocessedData.size(): " << unprocessedData.size();
     ByteArray bndAddress;
     switch(state) {
         case Initial:
@@ -124,19 +124,19 @@ void SOCKS5BytestreamClientSession::process() {
             }
             unprocessedData.clear();
             state = Ready;
-            SWIFT_LOG(debug) << "session ready" << std::endl;
+            SWIFT_LOG(debug) << "session ready";
             // issue ready signal so the bytestream can be used for reading or writing
             weFailedTimeout->stop();
             onSessionReady(false);
             break;
         case Ready:
-            SWIFT_LOG(debug) << "Received further data in Ready state." << std::endl;
+            SWIFT_LOG(debug) << "Received further data in Ready state.";
             break;
         case Reading:
         case Writing:
         case Finished:
-            SWIFT_LOG(debug) << "Unexpected receive of data. Current state: " << state << std::endl;
-            SWIFT_LOG(debug) << "Data: " << Hexify::hexify(unprocessedData) << std::endl;
+            SWIFT_LOG(debug) << "Unexpected receive of data. Current state: " << state;
+            SWIFT_LOG(debug) << "Data: " << Hexify::hexify(unprocessedData);
             unprocessedData.clear();
             //assert(false);
     }
@@ -150,7 +150,7 @@ void SOCKS5BytestreamClientSession::hello() {
 }
 
 void SOCKS5BytestreamClientSession::authenticate() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     SafeByteArray header = createSafeByteArray("\x05\x01\x00\x03", 4);
     SafeByteArray message = header;
     append(message, createSafeByteArray(boost::numeric_cast<char>(destination.size())));
@@ -168,7 +168,7 @@ void SOCKS5BytestreamClientSession::startReceiving(std::shared_ptr<WriteBytestre
         writeBytestream->write(unprocessedData);
         unprocessedData.clear();
     } else {
-        SWIFT_LOG(debug) << "Session isn't ready for transfer yet!" << std::endl;
+        SWIFT_LOG(debug) << "Session isn't ready for transfer yet!";
     }
 }
 
@@ -180,7 +180,7 @@ void SOCKS5BytestreamClientSession::startSending(std::shared_ptr<ReadBytestream>
                 boost::bind(&SOCKS5BytestreamClientSession::sendData, this));
         sendData();
     } else {
-        SWIFT_LOG(debug) << "Session isn't ready for transfer yet!" << std::endl;
+        SWIFT_LOG(debug) << "Session isn't ready for transfer yet!";
     }
 }
 
@@ -205,7 +205,7 @@ void SOCKS5BytestreamClientSession::sendData() {
 }
 
 void SOCKS5BytestreamClientSession::finish(bool error) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     if (state < Ready) {
         weFailedTimeout->stop();
     }
@@ -227,10 +227,10 @@ void SOCKS5BytestreamClientSession::finish(bool error) {
 void SOCKS5BytestreamClientSession::handleConnectFinished(bool error) {
     connectFinishedConnection.disconnect();
     if (error) {
-        SWIFT_LOG(debug) << "Failed to connect via TCP to " << addressPort.toString() << "." << std::endl;
+        SWIFT_LOG(debug) << "Failed to connect via TCP to " << addressPort.toString() << ".";
         finish(true);
     } else {
-        SWIFT_LOG(debug) << "Successfully connected via TCP" << addressPort.toString() << "." << std::endl;
+        SWIFT_LOG(debug) << "Successfully connected via TCP" << addressPort.toString() << ".";
         disconnectedConnection = connection->onDisconnected.connect(
                 boost::bind(&SOCKS5BytestreamClientSession::handleDisconnected, this, _1));
         dataReadConnection = connection->onDataRead.connect(
@@ -242,7 +242,7 @@ void SOCKS5BytestreamClientSession::handleConnectFinished(bool error) {
 }
 
 void SOCKS5BytestreamClientSession::handleDataRead(std::shared_ptr<SafeByteArray> data) {
-    SWIFT_LOG(debug) << "state: " << state << " data.size() = " << data->size() << std::endl;
+    SWIFT_LOG(debug) << "state: " << state << " data.size() = " << data->size();
     if (state != Reading) {
         append(unprocessedData, *data);
         process();
@@ -254,14 +254,14 @@ void SOCKS5BytestreamClientSession::handleDataRead(std::shared_ptr<SafeByteArray
 }
 
 void SOCKS5BytestreamClientSession::handleDisconnected(const boost::optional<Connection::Error>& error) {
-    SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error") << std::endl;
+    SWIFT_LOG(debug) << (error ? (error == Connection::ReadError ? "Read Error" : "Write Error") : "No Error");
     if (error) {
         finish(true);
     }
 }
 
 void SOCKS5BytestreamClientSession::handleWeFailedTimeout() {
-    SWIFT_LOG(debug) << "Failed due to timeout!" << std::endl;
+    SWIFT_LOG(debug) << "Failed due to timeout!";
     finish(true);
 }
 

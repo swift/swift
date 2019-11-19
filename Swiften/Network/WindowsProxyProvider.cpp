@@ -52,7 +52,7 @@ WindowsProxyProvider::WindowsProxyProvider()
             for(auto&& proxy : proxies) {
                 if(proxy.find('=') != std::string::npos) {
                     protocolAndProxy = String::getSplittedAtFirst(proxy, '=');
-                    SWIFT_LOG(debug) << "Found proxy: " << protocolAndProxy.first << " => " << protocolAndProxy.second << std::endl;
+                    SWIFT_LOG(debug) << "Found proxy: " << protocolAndProxy.first << " => " << protocolAndProxy.second;
                     if(protocolAndProxy.first.compare("socks") == 0) {
                         socksProxy = getAsHostAddressPort(protocolAndProxy.second);
                     }
@@ -86,7 +86,7 @@ HostAddressPort WindowsProxyProvider::getAsHostAddressPort(std::string proxy) {
         ret = HostAddressPort(HostAddress::fromString(tmp.first).get(), port);
     }
     catch(...) {
-        SWIFT_LOG(error) << "Exception occured while parsing windows proxy \"getHostAddressPort\"." << std::endl;
+        SWIFT_LOG(error) << "Exception occured while parsing windows proxy \"getHostAddressPort\".";
     }
 
     return ret;

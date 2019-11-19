@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -49,7 +49,7 @@ boost::optional<ByteArray> LinkLocalServiceInfo::toTXTRecord() const {
         return result;
     }
     catch (const std::exception& e) {
-        SWIFT_LOG(warning) << "Failed to create TXT record for link local service info: " << e.what() << std::endl;
+        SWIFT_LOG(warning) << "Failed to create TXT record for link local service info: " << e.what();
         return boost::none;
     }
 }

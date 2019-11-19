@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -26,7 +26,7 @@ namespace Swift {
                     recordSize = boost::numeric_cast<unsigned short>(txtRecord.size());
                 }
                 catch (const boost::numeric::bad_numeric_cast&) {
-                    SWIFT_LOG(warning) << "Bonjour TXT record is too long (" << txtRecord.size() << " bytes), not registring service" << std::endl;
+                    SWIFT_LOG(warning) << "Bonjour TXT record is too long (" << txtRecord.size() << " bytes), not registring service";
                     return;
                 }
                 DNSServiceErrorType result = DNSServiceRegister(
@@ -34,7 +34,7 @@ namespace Swift {
                         recordSize, vecptr(txtRecord),
                         &BonjourRegisterQuery::handleServiceRegisteredStatic, this);
                 if (result != kDNSServiceErr_NoError) {
-                    SWIFT_LOG(warning) << "Failed to register Bonjour service" << std::endl;
+                    SWIFT_LOG(warning) << "Failed to register Bonjour service";
                     sdRef = nullptr;
                 }
             }
@@ -58,7 +58,7 @@ namespace Swift {
                     DNSServiceUpdateRecord(sdRef, nullptr, 0, boost::numeric_cast<unsigned short>(txtRecord.size()), vecptr(txtRecord), 0);
                 }
                 catch (const boost::numeric::bad_numeric_cast&) {
-                    SWIFT_LOG(warning) << "Bonjour TXT record is too long (" << txtRecord.size() << " bytes), not updating service record" << std::endl;
+                    SWIFT_LOG(warning) << "Bonjour TXT record is too long (" << txtRecord.size() << " bytes), not updating service record";
                 }
             }
 

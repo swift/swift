@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -47,7 +47,7 @@ std::string ComponentSessionStanzaChannel::getNewIQID() {
 
 void ComponentSessionStanzaChannel::send(std::shared_ptr<Stanza> stanza) {
     if (!isAvailable()) {
-        SWIFT_LOG(warning) << "Component: Trying to send a stanza while disconnected." << std::endl;
+        SWIFT_LOG(warning) << "Component: Trying to send a stanza while disconnected.";
         return;
     }
     session->sendStanza(stanza);

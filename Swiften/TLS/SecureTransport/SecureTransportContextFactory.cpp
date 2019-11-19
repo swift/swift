@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,7 @@ void SecureTransportContextFactory::setCheckCertificateRevocation(bool b) {
 void SecureTransportContextFactory::setDisconnectOnCardRemoval(bool b) {
     disconnectOnCardRemoval_ = b;
     if (disconnectOnCardRemoval_) {
-        SWIFT_LOG(warning) << "Smart cards have not been tested yet" << std::endl;
+        SWIFT_LOG(warning) << "Smart cards have not been tested yet";
     }
 }
 

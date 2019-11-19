@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,17 +39,17 @@ void CombinedAvatarProvider::handleAvatarChanged(const JID& jid) {
     }
     boost::optional<std::string> newHash = getCombinedAvatarAndCache(jid);
     if (newHash != oldHash) {
-        SWIFT_LOG(debug) << "Avatar changed: " << jid << ": " << oldHash << " -> " << (newHash ? newHash.get() : "NULL") << std::endl;
+        SWIFT_LOG(debug) << "Avatar changed: " << jid << ": " << oldHash << " -> " << (newHash ? newHash.get() : "NULL");
         onAvatarChanged(jid);
     }
 }
 
 boost::optional<std::string> CombinedAvatarProvider::getCombinedAvatarAndCache(const JID& jid) const {
-    SWIFT_LOG(debug) << "JID: " << jid << std::endl;
+    SWIFT_LOG(debug) << "JID: " << jid;
     boost::optional<std::string> hash;
     for (size_t i = 0; i < providers.size() && !hash; ++i) {
         hash = providers[i]->getAvatarHash(jid);
-        SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << (hash ? hash.get() : "NULL") << std::endl;
+        SWIFT_LOG(debug) << "Provider " << providers[i] << ": " << (hash ? hash.get() : "NULL");
     }
     if (hash) {
         avatars[jid] = *hash;

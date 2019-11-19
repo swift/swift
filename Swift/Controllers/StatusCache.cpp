@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -76,13 +76,13 @@ void StatusCache::loadRecents() {
                     previousStatuses_.push_back(PreviousStatus(boost::trim_copy(bits[1]), type));
                 }
                 catch (const boost::bad_lexical_cast& e) {
-                    SWIFT_LOG(error) << "Failed to load recent status cache entry: " << e.what() << std::endl;
+                    SWIFT_LOG(error) << "Failed to load recent status cache entry: " << e.what();
                 }
             }
         }
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << "Failed to load recents: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "Failed to load recents: " << e.what();
     }
 }
 
@@ -100,7 +100,7 @@ void StatusCache::saveRecents() {
         file.close();
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << "Failed to save recents: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "Failed to save recents: " << e.what();
     }
 }
 

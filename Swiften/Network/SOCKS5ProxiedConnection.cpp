@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2014-2018 Isode Limited.
+ * Copyright (c) 2014-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -50,7 +50,7 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByte
     assert(rawAddress.is_v4() || rawAddress.is_v6());
 
     if (proxyState_ == ProxyAuthenticating) {
-        SWIFT_LOG(debug) << "ProxyAuthenticating response received, reply with the connect BYTEs" << std::endl;
+        SWIFT_LOG(debug) << "ProxyAuthenticating response received, reply with the connect BYTEs";
         unsigned char choosenMethod = static_cast<unsigned char> ((*data)[1]);
         if ((*data)[0] == 0x05 && choosenMethod != 0xFF) {
             switch(choosenMethod) { // use the correct Method
@@ -79,7 +79,7 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByte
                         return;
                     }
                     catch(...) {
-                        SWIFT_LOG(error) << "exception caught" << std::endl;
+                        SWIFT_LOG(error) << "exception caught";
                     }
                     write(socksConnect);
                     break;
@@ -92,8 +92,8 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByte
         setProxyInitializeFinished(false);
     }
     else if (proxyState_ == ProxyConnecting) {
-        SWIFT_LOG(debug) << "Connect response received, check if successfully." << std::endl;
-        SWIFT_LOG(debug) << "Errorbyte: 0x" << std::hex << static_cast<int> ((*data)[1]) << std::dec << std::endl;
+        SWIFT_LOG(debug) << "Connect response received, check if successfully.";
+        SWIFT_LOG(debug) << "Errorbyte: 0x" << std::hex << static_cast<int> ((*data)[1]) << std::dec;
         /*
 
         data.at(1) can be one of the following:
@@ -109,11 +109,11 @@ void SOCKS5ProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByte
         0x09 bis 0xFF     unassigned
         */
         if ((*data)[0] == 0x05 && (*data)[1] == 0x0) {
-            SWIFT_LOG(debug) << "Successfully connected the server via the proxy." << std::endl;
+            SWIFT_LOG(debug) << "Successfully connected the server via the proxy.";
             setProxyInitializeFinished(true);
         }
         else {
-            SWIFT_LOG(error) << "SOCKS Proxy returned an error: " << std::hex << (*data)[1] << std::endl;
+            SWIFT_LOG(error) << "SOCKS Proxy returned an error: " << std::hex << (*data)[1];
             setProxyInitializeFinished(false);
         }
     }

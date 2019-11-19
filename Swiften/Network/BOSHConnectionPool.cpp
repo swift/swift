@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -266,7 +266,7 @@ std::shared_ptr<BOSHConnection> BOSHConnectionPool::createConnection() {
 
     if (boshURL.getScheme() == "https") {
         bool success = connection->setClientCertificate(clientCertificate);
-        SWIFT_LOG(debug) << "setClientCertificate, success: " << success << std::endl;
+        SWIFT_LOG(debug) << "setClientCertificate, success: " << success;
     }
 
     connection->connect();

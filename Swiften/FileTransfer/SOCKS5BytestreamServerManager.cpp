@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2018 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -48,12 +48,12 @@ SOCKS5BytestreamServerManager::SOCKS5BytestreamServerManager(
 }
 
 SOCKS5BytestreamServerManager::~SOCKS5BytestreamServerManager() {
-    SWIFT_LOG_ASSERT(!connectionServer, warning) << std::endl;
-    SWIFT_LOG_ASSERT(!getPublicIPRequest, warning) << std::endl;
-    SWIFT_LOG_ASSERT(!forwardPortRequest, warning) << std::endl;
-    SWIFT_LOG_ASSERT(state == Start, warning) << std::endl;
+    SWIFT_LOG_ASSERT(!connectionServer, warning);
+    SWIFT_LOG_ASSERT(!getPublicIPRequest, warning);
+    SWIFT_LOG_ASSERT(!forwardPortRequest, warning);
+    SWIFT_LOG_ASSERT(state == Start, warning);
     if (portMapping && !unforwardPortRequest) {
-        SWIFT_LOG(warning) << "Port forwarding still alive. Trying to remove it now." << std::endl;
+        SWIFT_LOG(warning) << "Port forwarding still alive. Trying to remove it now.";
         unforwardPortRequest = natTraverser->createRemovePortForwardingRequest(portMapping.get().getLocalPort(), portMapping.get().getPublicPort());
         unforwardPortRequest->start();
     }
@@ -116,25 +116,25 @@ void SOCKS5BytestreamServerManager::initialize() {
         assert(!connectionServer);
         unsigned short port;
         for (port = LISTEN_PORTS_BEGIN; port < LISTEN_PORTS_END; ++port) {
-            SWIFT_LOG(debug) << "Trying to start server on port " << port << std::endl;
+            SWIFT_LOG(debug) << "Trying to start server on port " << port;
             connectionServer = connectionServerFactory->createConnectionServer(HostAddress::fromString("::").get(), port);
             boost::optional<ConnectionServer::Error> error = connectionServer->tryStart();
             if (!error) {
                 break;
             }
             else if (*error != ConnectionServer::Conflict) {
-                SWIFT_LOG(debug) << "Error starting server" << std::endl;
+                SWIFT_LOG(debug) << "Error starting server";
                 onInitialized(false);
                 return;
             }
             connectionServer.reset();
         }
         if (!connectionServer) {
-            SWIFT_LOG(debug) << "Unable to find an open port" << std::endl;
+            SWIFT_LOG(debug) << "Unable to find an open port";
             onInitialized(false);
             return;
         }
-        SWIFT_LOG(debug) << "Server started succesfully" << std::endl;
+        SWIFT_LOG(debug) << "Server started succesfully";
         connectionServerPort = port;
 
         // Start bytestream server. Should actually happen before the connectionserver is started
@@ -211,10 +211,10 @@ void SOCKS5BytestreamServerManager::stop() {
 
 void SOCKS5BytestreamServerManager::handleGetPublicIPResult(boost::optional<HostAddress> address) {
     if (address) {
-        SWIFT_LOG(debug) << "Public IP discovered as " << address.get().toString() << "." << std::endl;
+        SWIFT_LOG(debug) << "Public IP discovered as " << address.get().toString() << ".";
     }
     else {
-        SWIFT_LOG(debug) << "No public IP discoverable." << std::endl;
+        SWIFT_LOG(debug) << "No public IP discoverable.";
     }
 
     publicAddress = address;
@@ -225,10 +225,10 @@ void SOCKS5BytestreamServerManager::handleGetPublicIPResult(boost::optional<Host
 
 void SOCKS5BytestreamServerManager::handleForwardPortResult(boost::optional<NATPortMapping> mapping) {
     if (mapping) {
-        SWIFT_LOG(debug) << "Mapping port was successful." << std::endl;
+        SWIFT_LOG(debug) << "Mapping port was successful.";
     }
     else {
-        SWIFT_LOG(debug) << "Mapping port has failed." << std::endl;
+        SWIFT_LOG(debug) << "Mapping port has failed.";
     }
 
     portMapping = mapping;
@@ -243,7 +243,7 @@ void SOCKS5BytestreamServerManager::handleUnforwardPortResult(boost::optional<bo
         portMapping.reset();
     }
     else {
-        SWIFT_LOG(warning) << "Failed to remove port forwarding." << std::endl;
+        SWIFT_LOG(warning) << "Failed to remove port forwarding.";
     }
     attemptedPortMapping_ = false;
     unforwardPortRequest.reset();

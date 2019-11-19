@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -54,7 +54,7 @@ boost::filesystem::path UnixApplicationPathProvider::getDataDir() const {
         boost::filesystem::create_directories(dataPath);
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << "file system error: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "file system error: " << e.what();
     }
     return dataPath;
 }

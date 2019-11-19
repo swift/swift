@@ -74,27 +74,27 @@ void BOSHConnection::cancelConnector() {
 }
 
 void BOSHConnection::handleTLSConnected() {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     onConnectFinished(false);
 }
 
 void BOSHConnection::handleTLSApplicationDataRead(const SafeByteArray& data) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     handleDataRead(std::make_shared<SafeByteArray>(data));
 }
 
 void BOSHConnection::handleTLSNetowrkDataWriteRequest(const SafeByteArray& data) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     connection_->write(data);
 }
 
 void BOSHConnection::handleRawDataRead(std::shared_ptr<SafeByteArray> data) {
-    SWIFT_LOG(debug) << std::endl;
+    SWIFT_LOG(debug);
     tlsLayer_->handleDataRead(*data.get());
 }
 
 void BOSHConnection::handleTLSError(std::shared_ptr<TLSError> error) {
-    SWIFT_LOG(debug) << (error ? error->getMessage() : "Unknown TLS error") << std::endl;
+    SWIFT_LOG(debug) << (error ? error->getMessage() : "Unknown TLS error");
 }
 
 void BOSHConnection::writeData(const SafeByteArray& data) {
@@ -123,7 +123,7 @@ void BOSHConnection::restartStream() {
 
 bool BOSHConnection::setClientCertificate(CertificateWithKey::ref cert) {
     if (tlsLayer_) {
-        SWIFT_LOG(debug) << "set client certificate" << std::endl;
+        SWIFT_LOG(debug) << "set client certificate";
         return tlsLayer_->setClientCertificate(cert);
     }
     else {
@@ -211,7 +211,7 @@ void BOSHConnection::write(const SafeByteArray& data, bool streamRestart, bool t
     writeData(safeHeader);
     pending_ = true;
 
-    SWIFT_LOG(debug) << "write data: " << safeByteArrayToString(safeHeader) << std::endl;
+    SWIFT_LOG(debug) << "write data: " << safeByteArrayToString(safeHeader);
 }
 
 void BOSHConnection::handleConnectFinished(Connection::ref connection) {
@@ -275,7 +275,7 @@ void BOSHConnection::startStream(const std::string& to, unsigned long long rid) 
     SafeByteArray safeHeader = createSafeByteArray(header.str());
     onBOSHDataWritten(safeHeader);
     writeData(safeHeader);
-    SWIFT_LOG(debug) << "write stream header: " << safeByteArrayToString(safeHeader) << std::endl;
+    SWIFT_LOG(debug) << "write stream header: " << safeByteArrayToString(safeHeader);
 }
 
 void BOSHConnection::handleDataRead(std::shared_ptr<SafeByteArray> data) {

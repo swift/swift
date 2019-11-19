@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -45,7 +45,7 @@ LocalJingleTransportCandidateGenerator::LocalJingleTransportCandidateGenerator(
 }
 
 LocalJingleTransportCandidateGenerator::~LocalJingleTransportCandidateGenerator() {
-    SWIFT_LOG_ASSERT(!s5bServerInitializeRequest, warning) << std::endl;
+    SWIFT_LOG_ASSERT(!s5bServerInitializeRequest, warning);
 }
 
 void LocalJingleTransportCandidateGenerator::start() {
@@ -98,7 +98,7 @@ void LocalJingleTransportCandidateGenerator::handleS5BServerInitialized(bool suc
         }
     }
     else {
-        SWIFT_LOG(warning) << "Unable to start SOCKS5 server" << std::endl;
+        SWIFT_LOG(warning) << "Unable to start SOCKS5 server";
         if (s5bServerResourceUser_) {
             s5bServerResourceUser_->onSuccessfulInitialized.disconnect(boost::bind(&LocalJingleTransportCandidateGenerator::handleS5BServerInitialized, this, _1));
         }

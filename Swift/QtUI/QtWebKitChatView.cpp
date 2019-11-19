@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -141,7 +141,7 @@ void QtWebKitChatView::addMessageBottom(std::shared_ptr<ChatSnippet> snippet) {
 
 void QtWebKitChatView::addMessageTop(std::shared_ptr<ChatSnippet> /* snippet */) {
     // TODO: Implement this in a sensible manner later.
-    SWIFT_LOG(error) << "Not yet implemented!" << std::endl;
+    SWIFT_LOG(error) << "Not yet implemented!";
 }
 
 void QtWebKitChatView::addToDOM(std::shared_ptr<ChatSnippet> snippet) {
@@ -384,7 +384,7 @@ void QtWebKitChatView::setFileTransferProgress(QString id, const int percentageD
     rememberScrolledToBottom();
     QWebElement ftElement = findElementWithID(document_, "div", id);
     if (ftElement.isNull()) {
-        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id!" << std::endl;
+        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id!";
         return;
     }
     QWebElement progressBar = ftElement.findFirst("div.progressbar");
@@ -398,7 +398,7 @@ void QtWebKitChatView::setFileTransferStatus(QString id, const ChatWindow::FileT
     rememberScrolledToBottom();
     QWebElement ftElement = findElementWithID(document_, "div", id);
     if (ftElement.isNull()) {
-        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
+        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id);
         return;
     }
 
@@ -483,7 +483,7 @@ int QtWebKitChatView::getSnippetPositionByDate(const QDate& date) {
 
 void QtWebKitChatView::resetTopInsertPoint() {
     // TODO: Implement or refactor later.
-    SWIFT_LOG(error) << "Not yet implemented!" << std::endl;
+    SWIFT_LOG(error) << "Not yet implemented!";
 }
 
 std::string QtWebKitChatView::addMessage(
@@ -624,7 +624,7 @@ void QtWebKitChatView::resizeEvent(QResizeEvent* event) {
 }
 
 std::string QtWebKitChatView::addFileTransfer(const std::string& senderName, const std::string& avatarPath, bool senderIsSelf, const std::string& filename, const boost::uintmax_t sizeInBytes, const std::string& description) {
-    SWIFT_LOG(debug) << "addFileTransfer" << std::endl;
+    SWIFT_LOG(debug) << "addFileTransfer";
     QString ft_id = QString("ft%1").arg(P2QSTRING(boost::lexical_cast<std::string>(idCounter_++)));
 
     QString actionText;
@@ -726,7 +726,7 @@ static bool isFilePathWritable(const QString& path) {
 void QtWebKitChatView::setFileTransferWarning(QString id, QString warningText) {
     QWebElement ftElement = findElementWithID(document_, "div", id);
     if (ftElement.isNull()) {
-        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
+        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id);
         return;
     }
 
@@ -737,7 +737,7 @@ void QtWebKitChatView::setFileTransferWarning(QString id, QString warningText) {
 void QtWebKitChatView::removeFileTransferWarning(QString id) {
     QWebElement ftElement = findElementWithID(document_, "div", id);
     if (ftElement.isNull()) {
-        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id) << std::endl;
+        SWIFT_LOG(debug) << "Tried to access FT UI via invalid id! id = " << Q2PSTRING(id);
         return;
     }
 
@@ -829,7 +829,7 @@ void QtWebKitChatView::handleHTMLButtonClicked(QString id, QString encodedArgume
         window_->resendMessage(Q2PSTRING(chatID));
     }
     else {
-        SWIFT_LOG(debug) << "Unknown HTML button! ( " << Q2PSTRING(id) << " )" << std::endl;
+        SWIFT_LOG(debug) << "Unknown HTML button! ( " << Q2PSTRING(id) << " )";
     }
 }
 

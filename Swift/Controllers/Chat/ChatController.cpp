@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -190,7 +190,7 @@ void ChatController::preHandleIncomingMessage(std::shared_ptr<MessageEvent> mess
     // handle XEP-0184 Message Receipts
     // incomming receipts
     if (std::shared_ptr<DeliveryReceipt> receipt = message->getPayload<DeliveryReceipt>()) {
-        SWIFT_LOG(debug) << "received receipt for id: " << receipt->getReceivedID() << std::endl;
+        SWIFT_LOG(debug) << "received receipt for id: " << receipt->getReceivedID();
         if (requestedReceipts_.find(receipt->getReceivedID()) != requestedReceipts_.end()) {
             chatWindow_->setMessageReceiptState(requestedReceipts_[receipt->getReceivedID()], ChatWindow::ReceiptReceived);
             requestedReceipts_.erase(receipt->getReceivedID());
@@ -407,7 +407,7 @@ void ChatController::handleWhiteboardStateChange(const ChatWindow::WhiteboardSes
 }
 
 void ChatController::handleFileTransferCancel(std::string id) {
-    SWIFT_LOG(debug) << "handleFileTransferCancel(" << id << ")" << std::endl;
+    SWIFT_LOG(debug) << "handleFileTransferCancel(" << id << ")";
     if (ftControllers.find(id) != ftControllers.end()) {
         ftControllers[id]->cancel();
     } else {
@@ -416,7 +416,7 @@ void ChatController::handleFileTransferCancel(std::string id) {
 }
 
 void ChatController::handleFileTransferStart(std::string id, std::string description) {
-    SWIFT_LOG(debug) << "handleFileTransferStart(" << id << ", " << description << ")" << std::endl;
+    SWIFT_LOG(debug) << "handleFileTransferStart(" << id << ", " << description << ")";
     if (ftControllers.find(id) != ftControllers.end()) {
         ftControllers[id]->start(description);
     } else {
@@ -425,7 +425,7 @@ void ChatController::handleFileTransferStart(std::string id, std::string descrip
 }
 
 void ChatController::handleFileTransferAccept(std::string id, std::string filename) {
-    SWIFT_LOG(debug) << "handleFileTransferAccept(" << id << ", " << filename << ")" << std::endl;
+    SWIFT_LOG(debug) << "handleFileTransferAccept(" << id << ", " << filename << ")";
     if (ftControllers.find(id) != ftControllers.end()) {
         ftControllers[id]->accept(filename);
     } else {
@@ -434,7 +434,7 @@ void ChatController::handleFileTransferAccept(std::string id, std::string filena
 }
 
 void ChatController::handleSendFileRequest(std::string filename) {
-    SWIFT_LOG(debug) << "ChatController::handleSendFileRequest(" << filename << ")" << std::endl;
+    SWIFT_LOG(debug) << "ChatController::handleSendFileRequest(" << filename << ")";
     eventStream_->send(std::make_shared<SendFileUIEvent>(getToJID(), filename));
 }
 

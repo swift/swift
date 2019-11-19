@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -69,21 +69,21 @@ void CoreClient::connect(const ClientOptions& o) {
     HostAddressPort systemHTTPConnectProxy = networkFactories->getProxyProvider()->getHTTPConnectProxy();
     switch (o.proxyType) {
         case ClientOptions::NoProxy:
-            SWIFT_LOG(debug) << " without a proxy" << std::endl;
+            SWIFT_LOG(debug) << " without a proxy";
             break;
         case ClientOptions::SystemConfiguredProxy:
-            SWIFT_LOG(debug) << " with a system configured proxy" << std::endl;
+            SWIFT_LOG(debug) << " with a system configured proxy";
             if (systemSOCKS5Proxy.isValid()) {
-                SWIFT_LOG(debug) << "Found SOCK5 Proxy: " << systemSOCKS5Proxy.getAddress().toString() << ":" << systemSOCKS5Proxy.getPort() << std::endl;
+                SWIFT_LOG(debug) << "Found SOCK5 Proxy: " << systemSOCKS5Proxy.getAddress().toString() << ":" << systemSOCKS5Proxy.getPort();
                 proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemSOCKS5Proxy.getAddress().toString(), systemSOCKS5Proxy.getPort()));
             }
             if (systemHTTPConnectProxy.isValid()) {
-                SWIFT_LOG(debug) << "Found HTTPConnect Proxy: " << systemHTTPConnectProxy.getAddress().toString() << ":" << systemHTTPConnectProxy.getPort() << std::endl;
+                SWIFT_LOG(debug) << "Found HTTPConnect Proxy: " << systemHTTPConnectProxy.getAddress().toString() << ":" << systemHTTPConnectProxy.getPort();
                 proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), systemHTTPConnectProxy.getAddress().toString(), systemHTTPConnectProxy.getPort()));
             }
             break;
         case ClientOptions::SOCKS5Proxy: {
-            SWIFT_LOG(debug) << " with manual configured SOCKS5 proxy" << std::endl;
+            SWIFT_LOG(debug) << " with manual configured SOCKS5 proxy";
             std::string proxyHostname = o.manualProxyHostname.empty() ? systemSOCKS5Proxy.getAddress().toString() : o.manualProxyHostname;
             auto proxyPort = systemSOCKS5Proxy.getPort();
             if (o.manualProxyPort != -1) {
@@ -91,18 +91,18 @@ void CoreClient::connect(const ClientOptions& o) {
                     proxyPort = boost::numeric_cast<unsigned short>(o.manualProxyPort);
                 }
                 catch (const boost::numeric::bad_numeric_cast& e) {
-                    SWIFT_LOG(warning) << "Manual proxy port " << o.manualProxyPort << " is invalid: " << e.what() << std::endl;
+                    SWIFT_LOG(warning) << "Manual proxy port " << o.manualProxyPort << " is invalid: " << e.what();
                     onDisconnected(boost::optional<ClientError>(ClientError::ConnectionError));
                     return;
                 }
             }
-            SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
+            SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort;
             proxyConnectionFactories.push_back(new SOCKS5ProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort));
             useDirectConnection = false;
             break;
         }
         case ClientOptions::HTTPConnectProxy: {
-            SWIFT_LOG(debug) << " with manual configured HTTPConnect proxy" << std::endl;
+            SWIFT_LOG(debug) << " with manual configured HTTPConnect proxy";
             std::string proxyHostname = o.manualProxyHostname.empty() ? systemHTTPConnectProxy.getAddress().toString() : o.manualProxyHostname;
             unsigned short proxyPort = systemHTTPConnectProxy.getPort();
             if (o.manualProxyPort != -1) {
@@ -110,12 +110,12 @@ void CoreClient::connect(const ClientOptions& o) {
                     proxyPort = boost::numeric_cast<unsigned short>(o.manualProxyPort);
                 }
                 catch (const boost::numeric::bad_numeric_cast& e) {
-                    SWIFT_LOG(warning) << "Manual proxy port " << o.manualProxyPort << " is invalid: " << e.what() << std::endl;
+                    SWIFT_LOG(warning) << "Manual proxy port " << o.manualProxyPort << " is invalid: " << e.what();
                     onDisconnected(boost::optional<ClientError>(ClientError::ConnectionError));
                     return;
                 }
             }
-            SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort << std::endl;
+            SWIFT_LOG(debug) << "Proxy: " << proxyHostname << ":" << proxyPort;
             proxyConnectionFactories.push_back(new HTTPConnectProxiedConnectionFactory(networkFactories->getDomainNameResolver(), networkFactories->getConnectionFactory(), networkFactories->getTimerFactory(), proxyHostname, proxyPort, o.httpTrafficFilter));
             useDirectConnection = false;
             break;
@@ -134,7 +134,7 @@ void CoreClient::connect(const ClientOptions& o) {
             port = boost::numeric_cast<unsigned short>(o.manualPort);
         }
         catch (const boost::numeric::bad_numeric_cast& e) {
-            SWIFT_LOG(warning) << "Invalid manual port " << o.manualPort << ": " << e.what() << std::endl;
+            SWIFT_LOG(warning) << "Invalid manual port " << o.manualPort << ": " << e.what();
             onDisconnected(boost::optional<ClientError>(ClientError::ConnectionError));
             return;
         }
@@ -174,7 +174,7 @@ void CoreClient::connect(const ClientOptions& o) {
         sessionStream_->onDataRead.connect(boost::bind(&CoreClient::handleDataRead, this, _1));
         sessionStream_->onDataWritten.connect(boost::bind(&CoreClient::handleDataWritten, this, _1));
         if (certificate_ && !certificate_->isNull()) {
-            SWIFT_LOG(debug) << "set certificate" << std::endl;
+            SWIFT_LOG(debug) << "set certificate";
             sessionStream_->setTLSCertificate(certificate_);
         }
         boshSessionStream_->open();
@@ -423,7 +423,7 @@ void CoreClient::sendPresence(std::shared_ptr<Presence> presence) {
 
 void CoreClient::sendData(const std::string& data) {
     if (!sessionStream_) {
-        SWIFT_LOG(warning) << "Client: Trying to send data while disconnected." << std::endl;
+        SWIFT_LOG(warning) << "Client: Trying to send data while disconnected.";
         return;
     }
     sessionStream_->writeData(data);
@@ -507,11 +507,11 @@ void CoreClient::resetSession() {
 
 void CoreClient::forceReset() {
     if (connector_) {
-        SWIFT_LOG(warning) << "Client not disconnected properly: Connector still active" << std::endl;
+        SWIFT_LOG(warning) << "Client not disconnected properly: Connector still active";
         resetConnector();
     }
     if (sessionStream_ || connection_) {
-        SWIFT_LOG(warning) << "Client not disconnected properly: Session still active" << std::endl;
+        SWIFT_LOG(warning) << "Client not disconnected properly: Session still active";
         resetSession();
     }
 }

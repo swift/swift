@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -20,7 +20,7 @@ DefaultElementConvertor::~DefaultElementConvertor() {
 }
 
 std::shared_ptr<Element> DefaultElementConvertor::convertFromLua(lua_State*, int, const std::string& type) {
-    SWIFT_LOG(warning) << "Unable to convert type '" << type << "'" << std::endl;
+    SWIFT_LOG(warning) << "Unable to convert type '" << type << "'";
     return std::shared_ptr<Element>();
 }
 

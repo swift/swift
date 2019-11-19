@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -30,13 +30,13 @@ AvatarFileStorage::AvatarFileStorage(const boost::filesystem::path& avatarsDir, 
                         jidAvatars.insert(std::make_pair(jid, r.first));
                     }
                     else if (!r.first.empty() || !r.second.empty()) {
-                        SWIFT_LOG(error) << "Invalid entry in avatars file: " << r.second << std::endl;
+                        SWIFT_LOG(error) << "Invalid entry in avatars file: " << r.second;
                     }
                 }
             }
         }
         catch (...) {
-            SWIFT_LOG(error) << "Error reading avatars file" << std::endl;
+            SWIFT_LOG(error) << "Error reading avatars file";
         }
     }
 }
@@ -54,7 +54,7 @@ void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avat
             boost::filesystem::create_directories(avatarPath.parent_path());
         }
         catch (const boost::filesystem::filesystem_error& e) {
-            SWIFT_LOG(error) << "filesystem error: " << e.what() << std::endl;
+            SWIFT_LOG(error) << "filesystem error: " << e.what();
         }
     }
 
@@ -63,7 +63,7 @@ void AvatarFileStorage::addAvatar(const std::string& hash, const ByteArray& avat
         file.write(reinterpret_cast<const char*>(vecptr(avatar)), static_cast<std::streamsize>(avatar.size()));
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << "filesystem error: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "filesystem error: " << e.what();
     }
 }
 
@@ -77,7 +77,7 @@ ByteArray AvatarFileStorage::getAvatar(const std::string& hash) const {
         readByteArrayFromFile(data, getAvatarPath(hash));
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << "filesystem error: " << e.what() << std::endl;
+        SWIFT_LOG(error) << "filesystem error: " << e.what();
     }
     return data;
 }
@@ -107,7 +107,7 @@ void AvatarFileStorage::saveJIDAvatars() {
         file.close();
     }
     catch (...) {
-        SWIFT_LOG(error) << "Error writing avatars file" << std::endl;
+        SWIFT_LOG(error) << "Error writing avatars file";
     }
 }
 

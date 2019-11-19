@@ -64,7 +64,7 @@ class UnboundDomainNameServiceQuery : public DomainNameServiceQuery, public Unbo
                           1 /* CLASS IN (internet) */,
                           helper, UnboundDomainNameResolver::unbound_callback_wrapper, NULL);
             if(retval != 0) {
-                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(retval) << std::endl;
+                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(retval);
                 delete helper;
             }
         }
@@ -73,7 +73,7 @@ class UnboundDomainNameServiceQuery : public DomainNameServiceQuery, public Unbo
             std::vector<DomainNameServiceQuery::Result> serviceRecords;
 
             if(err != 0) {
-                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(err) << std::endl;
+                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(err);
             } else {
                 if(result->havedata) {
                     ldns_pkt* replyPacket = 0;
@@ -105,7 +105,7 @@ class UnboundDomainNameServiceQuery : public DomainNameServiceQuery, public Unbo
 
                             serviceRecord.hostname = std::string(reinterpret_cast<char*>(ldns_buffer_at(buffer, 0)));
                             serviceRecords.push_back(serviceRecord);
-                            SWIFT_LOG(debug) << "hostname " << serviceRecord.hostname << " added" << std::endl;
+                            SWIFT_LOG(debug) << "hostname " << serviceRecord.hostname << " added";
                         }
                     }
                     if (replyPacket) ldns_pkt_free(replyPacket);
@@ -137,7 +137,7 @@ class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public Unbo
                           1 /* CLASS IN (internet) */,
                           helper, UnboundDomainNameResolver::unbound_callback_wrapper, NULL);
             if(retval != 0) {
-                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(retval) << std::endl;
+                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(retval);
                 delete helper;
             }
         }
@@ -145,10 +145,10 @@ class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public Unbo
         void handleResult(int err, struct ub_result* result) {
             std::vector<HostAddress> addresses;
             boost::optional<DomainNameResolveError> error;
-            SWIFT_LOG(debug) << "Result for: " << name << std::endl;
+            SWIFT_LOG(debug) << "Result for: " << name;
 
             if(err != 0) {
-                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(err) << std::endl;
+                SWIFT_LOG(debug) << "resolve error: " << ub_strerror(err);
                 error = DomainNameResolveError();
             } else {
                 if(result->havedata) {
@@ -156,13 +156,13 @@ class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public Unbo
                         char address[100];
                         const char* addressStr = 0;
                         if ((addressStr = inet_ntop(AF_INET, result->data[i], address, 100))) {
-                            SWIFT_LOG(debug) << "IPv4 address: " << addressStr << std::endl;
+                            SWIFT_LOG(debug) << "IPv4 address: " << addressStr;
                             addresses.push_back(HostAddress(std::string(addressStr)));
                         } else if ((addressStr = inet_ntop(AF_INET6, result->data[i], address, 100))) {
-                            SWIFT_LOG(debug) << "IPv6 address: " << addressStr << std::endl;
+                            SWIFT_LOG(debug) << "IPv6 address: " << addressStr;
                             addresses.push_back(HostAddress(std::string(addressStr)));
                         } else {
-                            SWIFT_LOG(debug) << "inet_ntop() failed" << std::endl;
+                            SWIFT_LOG(debug) << "inet_ntop() failed";
                             error = DomainNameResolveError();
                         }
                     }
@@ -182,7 +182,7 @@ class UnboundDomainNameAddressQuery : public DomainNameAddressQuery, public Unbo
 UnboundDomainNameResolver::UnboundDomainNameResolver(IDNConverter* idnConverter, std::shared_ptr<boost::asio::io_service> ioService, EventLoop* eventLoop) : idnConverter(idnConverter), ioService(ioService), ubDescriptior(*ioService), eventLoop(eventLoop) {
     ubContext = ub_ctx_create();
     if(!ubContext) {
-        SWIFT_LOG(debug) << "could not create unbound context" << std::endl;
+        SWIFT_LOG(debug) << "could not create unbound context";
     }
     eventOwner = std::make_shared<EventOwner>();
 
@@ -192,11 +192,11 @@ UnboundDomainNameResolver::UnboundDomainNameResolver(IDNConverter* idnConverter,
 
     /* read /etc/resolv.conf for DNS proxy settings (from DHCP) */
     if( (ret=ub_ctx_resolvconf(ubContext, const_cast<char*>("/etc/resolv.conf"))) != 0) {
-        SWIFT_LOG(error) << "error reading resolv.conf: " << ub_strerror(ret) << ". errno says: " << strerror(errno) << std::endl;
+        SWIFT_LOG(error) << "error reading resolv.conf: " << ub_strerror(ret) << ". errno says: " << strerror(errno);
     }
     /* read /etc/hosts for locally supplied host addresses */
     if( (ret=ub_ctx_hosts(ubContext, const_cast<char*>("/etc/hosts"))) != 0) {
-        SWIFT_LOG(error) << "error reading hosts: " << ub_strerror(ret) << ". errno says: " << strerror(errno) << std::endl;
+        SWIFT_LOG(error) << "error reading hosts: " << ub_strerror(ret) << ". errno says: " << strerror(errno);
     }
 
     ubDescriptior.assign(ub_fd(ubContext));
@@ -231,7 +231,7 @@ void UnboundDomainNameResolver::processData() {
     if (ub_poll(ubContext)) {
         int ret = ub_process(ubContext);
         if(ret != 0) {
-            SWIFT_LOG(debug) << "resolve error: " << ub_strerror(ret) << std::endl;
+            SWIFT_LOG(debug) << "resolve error: " << ub_strerror(ret);
         }
     }
 }

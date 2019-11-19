@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -32,17 +32,17 @@ bool JingleResponder::handleSetRequest(const JID& from, const JID& to, const std
                 JingleSessionImpl::ref session = std::make_shared<JingleSessionImpl>(payload->getInitiator(), from, payload->getSessionID(), router);
                 sessionManager->handleIncomingSession(from, to, session, payload->getContents());
             } else {
-                SWIFT_LOG(debug) << "Unable to create Jingle session due to initiator not being a full JID." << std::endl;
+                SWIFT_LOG(debug) << "Unable to create Jingle session due to initiator not being a full JID.";
             }
         }
     }
     else {
         JingleSessionImpl::ref session;
         if (payload->getInitiator().isValid()) {
-            SWIFT_LOG(debug) << "Lookup session by initiator." << std::endl;
+            SWIFT_LOG(debug) << "Lookup session by initiator.";
             session = sessionManager->getSession(payload->getInitiator(), payload->getSessionID());
         } else {
-            SWIFT_LOG(debug) << "Lookup session by from attribute." << std::endl;
+            SWIFT_LOG(debug) << "Lookup session by from attribute.";
             session = sessionManager->getSession(from, payload->getSessionID());
         }
         if (session) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -28,7 +28,7 @@ void StanzaAckRequester::handleAckReceived(unsigned int handledStanzasCount) {
     unsigned int i = lastHandledStanzasCount;
     while (i != handledStanzasCount) {
         if (unackedStanzas.empty()) {
-            SWIFT_LOG(warning) << "Server acked more stanzas than we sent" << std::endl;
+            SWIFT_LOG(warning) << "Server acked more stanzas than we sent";
             break;
         }
         std::shared_ptr<Stanza> ackedStanza = unackedStanzas.front();

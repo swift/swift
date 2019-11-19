@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -92,7 +92,7 @@ void MUCSearchController::handleSearchService(const JID& jid) {
         delete walker_;
     }
 
-    SWIFT_LOG(debug) << "Starting walking MUC services" << std::endl;
+    SWIFT_LOG(debug) << "Starting walking MUC services";
     itemsInProgress_ = 0;
     walker_ = new DiscoServiceWalker(jid, iqRouter_);
     walker_->onServiceFound.connect(boost::bind(&MUCSearchController::handleDiscoServiceFound, this, _1, _2));
@@ -113,14 +113,14 @@ void MUCSearchController::handleDiscoServiceFound(const JID& jid, std::shared_pt
             }
     }
     if (isMUC) {
-        SWIFT_LOG(debug) << "MUC Service found: " << jid << std::endl;
+        SWIFT_LOG(debug) << "MUC Service found: " << jid;
         services_.erase(std::remove(services_.begin(), services_.end(), jid), services_.end());
         services_.push_back(jid);
         serviceDetails_[jid].setName(name);
         serviceDetails_[jid].setJID(jid);
         serviceDetails_[jid].setComplete(false);
         itemsInProgress_++;
-        SWIFT_LOG(debug) << "Requesting items of " << jid << " (" << itemsInProgress_ << " item requests in progress)" << std::endl;
+        SWIFT_LOG(debug) << "Requesting items of " << jid << " (" << itemsInProgress_ << " item requests in progress)";
         GetDiscoItemsRequest::ref discoItemsRequest = GetDiscoItemsRequest::create(jid, iqRouter_);
         discoItemsRequest->onResponse.connect(boost::bind(&MUCSearchController::handleRoomsItemsResponse, this, _1, _2, jid));
         discoItemsRequest->send();
@@ -132,7 +132,7 @@ void MUCSearchController::handleDiscoServiceFound(const JID& jid, std::shared_pt
 }
 
 void MUCSearchController::handleDiscoWalkFinished() {
-    SWIFT_LOG(debug) << "MUC Walk finished" << std::endl;
+    SWIFT_LOG(debug) << "MUC Walk finished";
     updateInProgressness();
 }
 
@@ -144,7 +144,7 @@ void MUCSearchController::removeService(const JID& jid) {
 
 void MUCSearchController::handleRoomsItemsResponse(std::shared_ptr<DiscoItems> items, ErrorPayload::ref error, const JID& jid) {
     itemsInProgress_--;
-    SWIFT_LOG(debug) << "Items received for " << jid << " (" << itemsInProgress_ << " item requests in progress)" << std::endl;
+    SWIFT_LOG(debug) << "Items received for " << jid << " (" << itemsInProgress_ << " item requests in progress)";
     updateInProgressness();
     if (error) {
         handleDiscoError(jid, error);

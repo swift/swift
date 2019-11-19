@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2016 Isode Limited.
+ * Copyright (c) 2012-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ CrashReporter::CrashReporter(const boost::filesystem::path& path, const std::str
             boost::filesystem::create_directories(path);
         }
         catch (const boost::filesystem::filesystem_error& e) {
-            SWIFT_LOG(error) << "ERROR: " << e.what() << std::endl;
+            SWIFT_LOG(error) << "ERROR: " << e.what();
         }
     }
 

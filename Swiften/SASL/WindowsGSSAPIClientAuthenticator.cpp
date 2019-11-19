@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -44,7 +44,7 @@ WindowsGSSAPIClientAuthenticator::~WindowsGSSAPIClientAuthenticator() {
 }
 
 boost::optional<SafeByteArray> WindowsGSSAPIClientAuthenticator::getResponse() const {
-    SWIFT_LOG(debug) << "response_.size(): " << response_.size() << std::endl;
+    SWIFT_LOG(debug) << "response_.size(): " << response_.size();
     return response_;
 }
 
@@ -56,7 +56,7 @@ bool WindowsGSSAPIClientAuthenticator::setChallenge(const boost::optional<ByteAr
     }
     else if (step_ == SecurityLayerNegotiation) {
         if (!challengeData) {
-            SWIFT_LOG(debug) << "Empty message received from the server" << std::endl;
+            SWIFT_LOG(debug) << "Empty message received from the server";
             error_ = true;
             return false;
         }
@@ -68,7 +68,7 @@ bool WindowsGSSAPIClientAuthenticator::setChallenge(const boost::optional<ByteAr
         }
 
         if (challenge.size() != 4) {
-            SWIFT_LOG(debug) << "Token received from the server of incorrect length: " << challenge.size() << std::endl;
+            SWIFT_LOG(debug) << "Token received from the server of incorrect length: " << challenge.size();
             error_ = true;
             return false;
         }
@@ -77,14 +77,14 @@ bool WindowsGSSAPIClientAuthenticator::setChallenge(const boost::optional<ByteAr
 
         unsigned char serverSecurityLayer = challengePointer[0];
         if (serverSecurityLayer == 0) {
-            SWIFT_LOG(debug) << "Server supports unknown security layer, assuming no security layer" << std::endl;
+            SWIFT_LOG(debug) << "Server supports unknown security layer, assuming no security layer";
             serverSecurityLayer = SECURITY_LAYER_NONE;
         }
         else if (serverSecurityLayer == SECURITY_LAYER_NONE) {
-            SWIFT_LOG(debug) << "Server supports no security layer" << std::endl;
+            SWIFT_LOG(debug) << "Server supports no security layer";
         }
         else {
-            SWIFT_LOG(debug) << "Server supports security layer" << std::endl;
+            SWIFT_LOG(debug) << "Server supports security layer";
         }
 
         unsigned int serverMaximumBuffer = (challengePointer[1] << 16) |
@@ -92,7 +92,7 @@ bool WindowsGSSAPIClientAuthenticator::setChallenge(const boost::optional<ByteAr
                         (challengePointer[3] << 0);
 
         if ((serverSecurityLayer == SECURITY_LAYER_NONE) && (serverMaximumBuffer != 0)) {
-            SWIFT_LOG(debug) << "Server supports no security layer but has maximum buffer size" << serverMaximumBuffer << std::endl;
+            SWIFT_LOG(debug) << "Server supports no security layer but has maximum buffer size" << serverMaximumBuffer;
             error_ = true;
             return false;
         }
@@ -158,7 +158,7 @@ void WindowsGSSAPIClientAuthenticator::buildSecurityContext(const boost::optiona
     }
 
     if (contextSupported & ISC_REQ_MUTUAL_AUTH == 0) {
-        SWIFT_LOG(debug) << "Mutual authentication not supported" << std::endl;
+        SWIFT_LOG(debug) << "Mutual authentication not supported";
         error_ = true;
         return;
     }
@@ -181,14 +181,14 @@ void WindowsGSSAPIClientAuthenticator::buildSecurityContext(const boost::optiona
     }
 
     userName_ = names.sUserName;
-    SWIFT_LOG(debug) << "User name: " << userName_ << std::endl;
+    SWIFT_LOG(debug) << "User name: " << userName_;
 
     std::size_t position = userName_.find("\\");
     clientName_ = userName_.substr(position + 1);
-    SWIFT_LOG(debug) << "Client name: " << clientName_ << std::endl;
+    SWIFT_LOG(debug) << "Client name: " << clientName_;
 
     serverName_ = userName_.substr(0, position);
-    SWIFT_LOG(debug) << "Server name: " << serverName_ << std::endl;
+    SWIFT_LOG(debug) << "Server name: " << serverName_;
 
     freeContextBuffer(names.sUserName);
     step_ = SecurityLayerNegotiation;

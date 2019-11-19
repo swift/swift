@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -199,7 +199,7 @@ namespace Swift {
             case WhiteboardPayload::SessionTerminate:
                 return "session-terminate";
             case WhiteboardPayload::UnknownType:
-                SWIFT_LOG(warning) << "Serializing unknown action value." << std::endl;
+                SWIFT_LOG(warning) << "Serializing unknown action value.";
                 return "";
         }
         assert(false);

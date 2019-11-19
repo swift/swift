@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -16,14 +16,14 @@
 #define ASSIGN_ERROR(status, errorCode) \
 { \
     errorCode = std::make_shared<boost::system::error_code>(status, boost::system::system_category()); \
-    SWIFT_LOG(debug) << std::hex << "status: 0x" << status << ": " << errorCode->message() << std::endl; \
+    SWIFT_LOG(debug) << std::hex << "status: 0x" << status << ": " << errorCode->message(); \
 }
 
 #define ASSIGN_SEC_ERROR(status, errorCode) \
 { \
     if (status == SEC_E_OK) \
     { \
-        SWIFT_LOG(debug) << "success" << std::endl; \
+        SWIFT_LOG(debug) << "success"; \
     } \
     else { \
         ASSIGN_ERROR(status, errorCode); \
@@ -46,14 +46,14 @@ std::shared_ptr<boost::system::error_code> getUserNameEx(std::string& userName, 
             std::size_t position;
 
             userName = convertWStringToString(std::wstring(vecptr(value), length));
-            SWIFT_LOG(debug) << "User Name: " << userName << std::endl;
+            SWIFT_LOG(debug) << "User Name: " << userName;
 
             position = userName.find("\\");
             clientName = userName.substr(position + 1);
-            SWIFT_LOG(debug) << "Client name: " << clientName << std::endl;
+            SWIFT_LOG(debug) << "Client name: " << clientName;
 
             serverName = userName.substr(0, position);
-            SWIFT_LOG(debug) << "Server name: " << serverName << std::endl;
+            SWIFT_LOG(debug) << "Server name: " << serverName;
 
             break;
         }
@@ -161,7 +161,7 @@ std::shared_ptr<boost::system::error_code> initializeSecurityContext(const boost
     }
     if ((status == SEC_E_OK) || (status == SEC_I_COMPLETE_AND_CONTINUE) || (status == SEC_I_COMPLETE_NEEDED) || (status == SEC_I_CONTINUE_NEEDED)) {
         outputToken = createSafeByteArray (static_cast<unsigned char *>(outputTokenBuffer.pvBuffer), outputTokenBuffer.cbBuffer);
-        SWIFT_LOG(debug) << "outputToken.size(): " << outputToken.size() << std::endl;
+        SWIFT_LOG(debug) << "outputToken.size(): " << outputToken.size();
         freeContextBuffer(outputTokenBuffer.pvBuffer);
 
         return std::shared_ptr<boost::system::error_code>(); /* success */
@@ -229,7 +229,7 @@ std::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle cont
     messageBuffer[1].cbBuffer = 0;
     messageBuffer[1].pvBuffer = NULL;
 
-    SWIFT_LOG(debug) << "inputMessage.size(): " << inputMessage.size() << std::endl;
+    SWIFT_LOG(debug) << "inputMessage.size(): " << inputMessage.size();
 
     status = DecryptMessage(
             contextHandle,
@@ -239,13 +239,13 @@ std::shared_ptr<boost::system::error_code> decryptMessage(const PCtxtHandle cont
     ASSIGN_SEC_ERROR(status, errorCode);
     if (status == SEC_E_OK) {
         if (qualityOfProtection == SECQOP_WRAP_NO_ENCRYPT) {
-            SWIFT_LOG(debug) << "Message was signed only" << std::endl;
+            SWIFT_LOG(debug) << "Message was signed only";
         }
         else {
-            SWIFT_LOG(debug) << "Message was encrypted" << std::endl;
+            SWIFT_LOG(debug) << "Message was encrypted";
         }
 
-        SWIFT_LOG(debug) << "messageBuffer[1].cbBuffer: " << messageBuffer[1].cbBuffer << std::endl;
+        SWIFT_LOG(debug) << "messageBuffer[1].cbBuffer: " << messageBuffer[1].cbBuffer;
 
         decrypted = createSafeByteArray (static_cast<unsigned char *>(messageBuffer[1].pvBuffer), messageBuffer[1].cbBuffer);
     }
@@ -281,9 +281,9 @@ std::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle cont
     messageBuffer[2].cbBuffer = sizes.cbBlockSize;
     messageBuffer[2].pvBuffer = vecptr(blockSize);
 
-    SWIFT_LOG(debug) << "sizes.cbSecurityTrailer: " << sizes.cbSecurityTrailer << std::endl;
-    SWIFT_LOG(debug) << "inputMessage.size(): " << inputMessage.size() << std::endl;
-    SWIFT_LOG(debug) << "sizes.cbBlockSize: " << sizes.cbBlockSize << std::endl;
+    SWIFT_LOG(debug) << "sizes.cbSecurityTrailer: " << sizes.cbSecurityTrailer;
+    SWIFT_LOG(debug) << "inputMessage.size(): " << inputMessage.size();
+    SWIFT_LOG(debug) << "sizes.cbBlockSize: " << sizes.cbBlockSize;
 
     status = EncryptMessage(
             contextHandle,
@@ -294,9 +294,9 @@ std::shared_ptr<boost::system::error_code> encryptMessage(const PCtxtHandle cont
     if (status == SEC_E_OK) {
         unsigned char* pointer;
 
-        SWIFT_LOG(debug) << "messageBuffer[0].cbBuffer: " << messageBuffer[0].cbBuffer << std::endl;
-        SWIFT_LOG(debug) << "messageBuffer[1].cbBuffer: " << messageBuffer[1].cbBuffer << std::endl;
-        SWIFT_LOG(debug) << "messageBuffer[2].cbBuffer: " << messageBuffer[2].cbBuffer << std::endl;
+        SWIFT_LOG(debug) << "messageBuffer[0].cbBuffer: " << messageBuffer[0].cbBuffer;
+        SWIFT_LOG(debug) << "messageBuffer[1].cbBuffer: " << messageBuffer[1].cbBuffer;
+        SWIFT_LOG(debug) << "messageBuffer[2].cbBuffer: " << messageBuffer[2].cbBuffer;
 
         output.resize(messageBuffer[0].cbBuffer + messageBuffer[1].cbBuffer + messageBuffer[2].cbBuffer);
         pointer = vecptr(output);

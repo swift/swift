@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -88,7 +88,7 @@ void NotificationCenterNotifier::handleUserNotificationActivated(const std::stri
         }
     }
     else {
-        SWIFT_LOG(warning) << "Missing callback entry for activated notification. The activate notification may come from another instance." << std::endl;
+        SWIFT_LOG(warning) << "Missing callback entry for activated notification. The activate notification may come from another instance.";
     }
 }
 

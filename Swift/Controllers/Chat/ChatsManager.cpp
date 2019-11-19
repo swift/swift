@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -175,7 +175,7 @@ ChatsManager::~ChatsManager() {
     roster_->onRosterCleared.disconnect(boost::bind(&ChatsManager::handleRosterCleared, this));
     ftOverview_->onNewFileTransferController.disconnect(boost::bind(&ChatsManager::handleNewFileTransferController, this, _1));
     delete joinMUCWindow_;
-    SWIFT_LOG(debug) << "Destroying ChatsManager, containing " << chatControllers_.size() << " chats and " << mucControllers_.size() << " MUCs" << std::endl;
+    SWIFT_LOG(debug) << "Destroying ChatsManager, containing " << chatControllers_.size() << " chats and " << mucControllers_.size() << " MUCs";
     for (JIDChatControllerPair controllerPair : chatControllers_) {
         delete controllerPair.second;
     }
@@ -311,7 +311,7 @@ void ChatsManager::loadRecents() {
             boost::archive::text_iarchive ia(deserializeStream);
             ia >> recentChats;
         } catch (const boost::archive::archive_exception& e) {
-            SWIFT_LOG(debug) << "Failed to load recents: " << e.what() << std::endl;
+            SWIFT_LOG(debug) << "Failed to load recents: " << e.what();
             return;
         }
         recentChats.erase(std::remove(recentChats.begin(), recentChats.end(), ChatListWindow::Chat()), recentChats.end());
@@ -936,7 +936,7 @@ void ChatsManager::handleUserNicknameChanged(MUCController* mucController, const
     JID oldMUCChatJID = mucController->getToJID().withResource(oldNickname);
     JID newMUCChatJID = mucController->getToJID().withResource(newNickname);
 
-    SWIFT_LOG(debug) << "nickname change in " << mucController->getToJID().toString() << " from " << oldNickname << " to " << newNickname << std::endl;
+    SWIFT_LOG(debug) << "nickname change in " << mucController->getToJID().toString() << " from " << oldNickname << " to " << newNickname;
 
     // get current chat controller
     ChatController *chatController = getChatControllerIfExists(oldMUCChatJID);
@@ -983,7 +983,7 @@ void ChatsManager::handleIncomingMessage(std::shared_ptr<Message> incomingMessag
                 controller->handleIncomingOwnMessage(forwardedMessage);
             }
             else {
-                SWIFT_LOG(error) << "Carbons message ignored." << std::endl;
+                SWIFT_LOG(error) << "Carbons message ignored.";
             }
             return;
         }
@@ -1141,7 +1141,7 @@ void ChatsManager::handleLocalServiceFound(const JID& service, std::shared_ptr<D
                 && identity.getType() == "text")) {
                 localMUCServiceJID_ = service;
                 localMUCServiceFinderWalker_->endWalk();
-                SWIFT_LOG(debug) << "Use following MUC service for impromptu chats: " << localMUCServiceJID_ << std::endl;
+                SWIFT_LOG(debug) << "Use following MUC service for impromptu chats: " << localMUCServiceJID_;
                 break;
             }
     }

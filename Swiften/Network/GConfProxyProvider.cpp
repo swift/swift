@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016-2018 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -39,7 +39,7 @@ GConfProxyProvider::GConfProxyProvider() {
 
     socksProxy = getFromGConf("/system/proxy/socks_host", "/system/proxy/socks_port");
     httpProxy = getFromGConf("/system/http_proxy/host", "/system/http_proxy/port");
-    SWIFT_LOG(debug) << "GConf: SOCKS5 => " << socksProxy.toString() << "; HTTP Connect => " << httpProxy.toString() << std::endl;
+    SWIFT_LOG(debug) << "GConf: SOCKS5 => " << socksProxy.toString() << "; HTTP Connect => " << httpProxy.toString();
 }
 
 HostAddressPort GConfProxyProvider::getHTTPConnectProxy() const {

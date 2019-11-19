@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -71,10 +71,10 @@ void SOCKS5BytestreamProxyFinder::handleProxyResponse(std::shared_ptr<GenericReq
     requester->onResponse.disconnect(boost::bind(&SOCKS5BytestreamProxyFinder::handleProxyResponse, this, requester, _1, _2));
     pendingRequests.erase(requester);
     if (error) {
-        SWIFT_LOG(debug) << "ERROR" << std::endl;
+        SWIFT_LOG(debug) << "ERROR";
     } else {
         if (request) {
-            SWIFT_LOG(debug) << "add request" << std::endl;
+            SWIFT_LOG(debug) << "add request";
             proxyHosts.push_back(request);
         }
     }

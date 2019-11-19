@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -15,7 +15,7 @@
 namespace Swift {
 
 AvahiResolveHostnameQuery::AvahiResolveHostnameQuery(const std::string& hostname, int, std::shared_ptr<AvahiQuerier> querier, EventLoop* eventLoop) : AvahiQuery(querier, eventLoop), hostname(hostname) {
-    SWIFT_LOG(debug) << "Resolving hostname " << hostname << std::endl;
+    SWIFT_LOG(debug) << "Resolving hostname " << hostname;
 }
 
 void AvahiResolveHostnameQuery::run() {

@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2017 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -82,7 +82,7 @@ boost::uintmax_t FileTransferController::getSize() const {
 }
 
 void FileTransferController::start(std::string& description) {
-    SWIFT_LOG(debug) << "FileTransferController::start" << std::endl;
+    SWIFT_LOG(debug) << "FileTransferController::start";
     fileReadStream = std::make_shared<FileReadBytestream>(boost::filesystem::path(filename));
     OutgoingFileTransfer::ref outgoingTransfer = ftManager->createOutgoingFileTransfer(otherParty, boost::filesystem::path(filename), description, fileReadStream);
     if (outgoingTransfer) {
@@ -98,7 +98,7 @@ void FileTransferController::start(std::string& description) {
 }
 
 void FileTransferController::accept(std::string& file) {
-    SWIFT_LOG(debug) << "FileTransferController::accept" << std::endl;
+    SWIFT_LOG(debug) << "FileTransferController::accept";
     IncomingFileTransfer::ref incomingTransfer = std::dynamic_pointer_cast<IncomingFileTransfer>(transfer);
     if (incomingTransfer) {
         fileWriteStream = std::make_shared<FileWriteBytestream>(boost::filesystem::path(file));

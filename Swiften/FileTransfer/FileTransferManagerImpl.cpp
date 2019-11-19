@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2013-2016 Isode Limited.
+ * Copyright (c) 2013-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -156,7 +156,7 @@ OutgoingFileTransfer::ref FileTransferManagerImpl::createOutgoingFileTransfer(
         }
     }
     else {
-        SWIFT_LOG(warning) << "No entity capabilities information for " << receipient.toString() << std::endl;
+        SWIFT_LOG(warning) << "No entity capabilities information for " << receipient.toString();
     }
 
     return outgoingFTManager->createOutgoingFileTransfer(iqRouter->getJID(), receipient, bytestream, fileInfo, options);

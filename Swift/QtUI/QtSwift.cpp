@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -191,7 +191,7 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
             Log::setLogFile(fileName);
         }
         catch (...) {
-            SWIFT_LOG(error) << "Error while retrieving the specified log file name from the command line" << std::endl;
+            SWIFT_LOG(error) << "Error while retrieving the specified log file name from the command line";
         }
     }
     //TODO this old option can be purged
@@ -222,13 +222,13 @@ QtSwift::QtSwift(const po::variables_map& options) : networkFactories_(&clientMa
     for (auto&& fontName : fontNames) {
         std::string fontPath = std::string(":/") + fontName;
         int error = QFontDatabase::addApplicationFont(P2QSTRING(fontPath));
-        SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath << std::endl;
+        SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath;
     }
 
 #ifdef SWIFTEN_PLATFORM_LINUX
     std::string fontPath = std::string(":/themes/Default/Noto/NotoColorEmoji.ttf");
     int error = QFontDatabase::addApplicationFont(P2QSTRING(fontPath));
-    SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath << std::endl;
+    SWIFT_LOG_ASSERT(error != -1, error) << "Failed to load font " << fontPath;
     QFont::insertSubstitution(QApplication::font().family(),"NotoColorEmoji");
 #endif
 #ifdef SWIFTEN_PLATFORM_WINDOWS

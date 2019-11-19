@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2011-2018 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -77,7 +77,7 @@ void HTTPConnectProxiedConnection::initializeProxy() {
         nextHTTPRequestHeaders_.clear();
     }
     append(data, createSafeByteArray("\r\n"));
-    SWIFT_LOG(debug) << "HTTP Proxy send headers: " << byteArrayToString(ByteArray(data.begin(), data.end())) << std::endl;
+    SWIFT_LOG(debug) << "HTTP Proxy send headers: " << byteArrayToString(ByteArray(data.begin(), data.end()));
     write(data);
 }
 
@@ -111,7 +111,7 @@ void HTTPConnectProxiedConnection::sendHTTPRequest(const std::string& statusLine
 
 void HTTPConnectProxiedConnection::handleProxyInitializeData(std::shared_ptr<SafeByteArray> data) {
     std::string dataString = byteArrayToString(ByteArray(data->begin(), data->end()));
-    SWIFT_LOG(debug) << data << std::endl;
+    SWIFT_LOG(debug) << data;
     httpResponseBuffer_.append(dataString);
 
     std::string statusLine;
@@ -141,17 +141,17 @@ void HTTPConnectProxiedConnection::handleProxyInitializeData(std::shared_ptr<Saf
     if (tmp.size() > 1) {
         try {
             int status = boost::lexical_cast<int>(tmp[1]);
-            SWIFT_LOG(debug) << "Proxy Status: " << status << std::endl;
+            SWIFT_LOG(debug) << "Proxy Status: " << status;
             if (status / 100 == 2) { // all 2XX states are OK
                 setProxyInitializeFinished(true);
             }
             else {
-                SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << httpResponseBuffer_ << std::endl;
+                SWIFT_LOG(debug) << "HTTP Proxy returned an error: " << httpResponseBuffer_;
                 setProxyInitializeFinished(false);
             }
         }
         catch (boost::bad_lexical_cast&) {
-            SWIFT_LOG(warning) << "Unexpected response: " << tmp[1] << std::endl;
+            SWIFT_LOG(warning) << "Unexpected response: " << tmp[1];
             setProxyInitializeFinished(false);
         }
     }

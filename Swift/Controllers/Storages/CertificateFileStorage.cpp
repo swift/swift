@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -31,7 +31,7 @@ bool CertificateFileStorage::hasCertificate(Certificate::ref certificate) const 
             return true;
         }
         else {
-            SWIFT_LOG(warning) << "Stored certificate does not match received certificate" << std::endl;
+            SWIFT_LOG(warning) << "Stored certificate does not match received certificate";
             return false;
         }
     }
@@ -57,7 +57,7 @@ void CertificateFileStorage::addCertificate(Certificate::ref certificate) {
         file.close();
     }
     catch (...) {
-        SWIFT_LOG(warning) << "Failed to store certificate to " << certificatePath << std::endl;
+        SWIFT_LOG(warning) << "Failed to store certificate to " << certificatePath;
     }
 }
 

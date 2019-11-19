@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -238,7 +238,7 @@ private:
         std::shared_ptr<SafeByteArray> dataToSend;
         //ByteArray failingData = Hexify::unhexify("8417947d1d305c72c11520ea7d2c6e787396705e72c312c6ccc3f66613d7cae1b91b7ab48e8b59a17d559c15fb51");
         //append(dataToSend, failingData);
-        //SWIFT_LOG(debug) << "hexed: " << Hexify::hexify(failingData) << std::endl;
+        //SWIFT_LOG(debug) << "hexed: " << Hexify::hexify(failingData);
         do {
             ByteArray rndArray = generateRandomByteArray(correctData->size());
             dataToSend = createSafeByteArrayRef(vecptr(rndArray), rndArray.size());
@@ -255,7 +255,7 @@ private:
 
         void handleConnectionDataWritten(const SafeByteArray& data) {
             append(unprocessedInput, data);
-            //SWIFT_LOG(debug) << "unprocessedInput (" << unprocessedInput.size() <<  "): " << Hexify::hexify(unprocessedInput) << std::endl;
+            //SWIFT_LOG(debug) << "unprocessedInput (" << unprocessedInput.size() <<  "): " << Hexify::hexify(unprocessedInput);
         }
 
         void handleSessionReady(bool error) {

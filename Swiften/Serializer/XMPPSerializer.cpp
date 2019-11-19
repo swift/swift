@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2016 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -89,7 +89,7 @@ SafeByteArray XMPPSerializer::serializeElement(std::shared_ptr<ToplevelElement> 
         return (*i)->serialize(element);
     }
     else {
-        SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(element.get())).name() << std::endl;
+        SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(element.get())).name();
         return createSafeByteArray("");
     }
 }

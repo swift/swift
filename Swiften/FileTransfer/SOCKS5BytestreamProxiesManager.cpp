@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2015-2016 Isode Limited.
+ * Copyright (c) 2015-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ SOCKS5BytestreamProxiesManager::~SOCKS5BytestreamProxiesManager() {
 
 void SOCKS5BytestreamProxiesManager::addS5BProxy(S5BProxyRequest::ref proxy) {
     if (proxy) {
-        SWIFT_LOG_ASSERT(HostAddress::fromString(proxy->getStreamHost().get().host), warning) << std::endl;
+        SWIFT_LOG_ASSERT(HostAddress::fromString(proxy->getStreamHost().get().host), warning);
         if (!localS5BProxies_) {
             localS5BProxies_ = std::vector<S5BProxyRequest::ref>();
         }
@@ -62,7 +62,7 @@ const boost::optional<std::vector<S5BProxyRequest::ref> >& SOCKS5BytestreamProxi
 }
 
 void SOCKS5BytestreamProxiesManager::connectToProxies(const std::string& sessionID) {
-    SWIFT_LOG(debug) << "session ID: " << sessionID << std::endl;
+    SWIFT_LOG(debug) << "session ID: " << sessionID;
     ProxyJIDClientSessionVector clientSessions;
 
     if (localS5BProxies_) {
@@ -71,7 +71,7 @@ void SOCKS5BytestreamProxiesManager::connectToProxies(const std::string& session
             if (proxyHostAddress) {
                 std::shared_ptr<Connection> conn = connectionFactory_->createConnection();
                 HostAddressPort addressPort = HostAddressPort(proxyHostAddress.get(), proxy->getStreamHost().get().port);
-                SWIFT_LOG_ASSERT(addressPort.isValid(), warning) << std::endl;
+                SWIFT_LOG_ASSERT(addressPort.isValid(), warning);
                 std::shared_ptr<SOCKS5BytestreamClientSession> session = std::make_shared<SOCKS5BytestreamClientSession>(conn, addressPort, sessionID, timerFactory_);
                 JID proxyJid = proxy->getStreamHost().get().jid;
                 clientSessions.push_back(std::pair<JID, std::shared_ptr<SOCKS5BytestreamClientSession> >(proxyJid, session));
@@ -103,7 +103,7 @@ std::shared_ptr<SOCKS5BytestreamClientSession> SOCKS5BytestreamProxiesManager::g
             i->second->stop();
         }
     }
-    SWIFT_LOG_ASSERT(activeSession, warning) << "No active session with matching ID found." << std::endl;
+    SWIFT_LOG_ASSERT(activeSession, warning) << "No active session with matching ID found.";
 
     proxySessions_.erase(sessionID);
 
@@ -144,7 +144,7 @@ void SOCKS5BytestreamProxiesManager::handleNameLookupResult(const std::vector<Ho
     }
     else {
         if (addresses.empty()) {
-            SWIFT_LOG(warning) << "S5B proxy hostname does not resolve." << std::endl;
+            SWIFT_LOG(warning) << "S5B proxy hostname does not resolve.";
         }
         else {
             // generate proxy per returned address

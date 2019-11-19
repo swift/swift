@@ -84,12 +84,12 @@ bool HunspellChecker::isAutomaticallyDetectingLanguage() {
 void HunspellChecker::setActiveLanguage(const std::string& language) {
     auto dictionaries = detectedDictionaries();
     if (dictionaries.find(language) != dictionaries.end()) {
-        SWIFT_LOG(debug) << "Initialized Hunspell with dic,aff files " << dictionaries[language].dicPath << " , " << dictionaries[language].affPath << std::endl;
+        SWIFT_LOG(debug) << "Initialized Hunspell with dic,aff files " << dictionaries[language].dicPath << " , " << dictionaries[language].affPath;
         speller_ = std::unique_ptr<Hunspell>(new Hunspell(dictionaries[language].affPath.c_str(), dictionaries[language].dicPath.c_str()));
         activeLangauge_ = language;
     }
     else {
-        SWIFT_LOG(warning) << "Unsupported language '" << language << "'" << std::endl;
+        SWIFT_LOG(warning) << "Unsupported language '" << language << "'";
     }
 }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Isode Limited.
+ * Copyright (c) 2018-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -44,7 +44,7 @@ std::string ReferencePayloadSerializer::serializePayload(ReferencePayload::ref r
                 element.addNode(std::make_shared<XMLRawTextNode>(serializer->serialize(payload)));
             }
             else {
-                SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(payload.get())).name() << std::endl;
+                SWIFT_LOG(warning) << "Could not find serializer for " << typeid(*(payload.get())).name();
             }
         }
     }

@@ -15,7 +15,7 @@ DummyEventLoop::DummyEventLoop() {
 
 DummyEventLoop::~DummyEventLoop() {
     if (hasEvents()) {
-        SWIFT_LOG(warning) << "DummyEventLoop: Unhandled events at destruction time" << std::endl;
+        SWIFT_LOG(warning) << "DummyEventLoop: Unhandled events at destruction time";
     }
 }
 

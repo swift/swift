@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016-2017 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -46,7 +46,7 @@ SparkleAutoUpdater::SparkleAutoUpdater(const std::string& appcastFeed) : d(new P
 
     SWIFT_LOG(debug) << (canDoSilentUpdates ?
         "The current running user has enough permissions to do a silent update." :
-        "The current running user has insufficient permissions to do a silent update.") << std::endl;
+        "The current running user has insufficient permissions to do a silent update.");
 
     setAppcastFeed(appcastFeed);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2017 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -150,7 +150,7 @@ void QtAboutWidget::openPlainTextWindow(const QString& path) {
         text->activateWindow();
     }
     else {
-        SWIFT_LOG(error) << "Failed to open " << Q2PSTRING(path) << "." << std::endl;
+        SWIFT_LOG(error) << "Failed to open " << Q2PSTRING(path) << ".";
     }
 }
 

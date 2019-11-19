@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010-2018 Isode Limited.
+ * Copyright (c) 2010-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -25,7 +25,7 @@ void Connector::setTimeoutMilliseconds(int milliseconds) {
 }
 
 void Connector::start() {
-    SWIFT_LOG(debug) << "Starting connector for " << hostname << std::endl;
+    SWIFT_LOG(debug) << "Starting connector for " << hostname;
     assert(!currentConnection);
     assert(!serviceQuery);
     assert(!timer);
@@ -66,7 +66,7 @@ void Connector::queryAddress(const std::string& hostname) {
 }
 
 void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuery::Result>& result) {
-    SWIFT_LOG(debug) << result.size() << " SRV result(s)" << std::endl;
+    SWIFT_LOG(debug) << result.size() << " SRV result(s)";
     serviceQueryResults = std::deque<DomainNameServiceQuery::Result>(result.begin(), result.end());
     serviceQuery.reset();
     if (!serviceQueryResults.empty()) {
@@ -77,23 +77,23 @@ void Connector::handleServiceQueryResult(const std::vector<DomainNameServiceQuer
 
 void Connector::tryNextServiceOrFallback() {
     if (queriedAllServices) {
-        SWIFT_LOG(debug) << "Queried all services" << std::endl;
+        SWIFT_LOG(debug) << "Queried all services";
         finish(std::shared_ptr<Connection>());
     }
     else if (serviceQueryResults.empty()) {
-        SWIFT_LOG(debug) << "Falling back on A resolution" << std::endl;
+        SWIFT_LOG(debug) << "Falling back on A resolution";
         // Fall back on simple address resolving
         queriedAllServices = true;
         queryAddress(hostname);
     }
     else {
-        SWIFT_LOG(debug) << "Querying next address" << std::endl;
+        SWIFT_LOG(debug) << "Querying next address";
         queryAddress(serviceQueryResults.front().hostname);
     }
 }
 
 void Connector::handleAddressQueryResult(const std::vector<HostAddress>& addresses, boost::optional<DomainNameResolveError> error) {
-    SWIFT_LOG(debug) << addresses.size() << " addresses" << std::endl;
+    SWIFT_LOG(debug) << addresses.size() << " addresses";
     addressQuery.reset();
     if (error || addresses.empty()) {
         if (!serviceQueryResults.empty()) {
@@ -110,7 +110,7 @@ void Connector::handleAddressQueryResult(const std::vector<HostAddress>& address
 
 void Connector::tryNextAddress() {
     if (addressQueryResults.empty()) {
-        SWIFT_LOG(debug) << "Done trying addresses. Moving on." << std::endl;
+        SWIFT_LOG(debug) << "Done trying addresses. Moving on.";
         // Done trying all addresses. Move on to the next host.
         if (!serviceQueryResults.empty()) {
             serviceQueryResults.pop_front();
@@ -118,7 +118,7 @@ void Connector::tryNextAddress() {
         tryNextServiceOrFallback();
     }
     else {
-        SWIFT_LOG(debug) << "Trying next address" << std::endl;
+        SWIFT_LOG(debug) << "Trying next address";
         HostAddress address = addressQueryResults.front();
         addressQueryResults.pop_front();
 
@@ -133,7 +133,7 @@ void Connector::tryNextAddress() {
 
 void Connector::tryConnect(const HostAddressPort& target) {
     assert(!currentConnection);
-    SWIFT_LOG(debug) << "Trying to connect to " << target.getAddress().toString() << ":" << target.getPort() << std::endl;
+    SWIFT_LOG(debug) << "Trying to connect to " << target.getAddress().toString() << ":" << target.getPort();
     currentConnection = connectionFactory->createConnection();
     currentConnection->onConnectFinished.connect(boost::bind(&Connector::handleConnectionConnectFinished, shared_from_this(), _1));
     currentConnection->connect(target);
@@ -143,7 +143,7 @@ void Connector::tryConnect(const HostAddressPort& target) {
 }
 
 void Connector::handleConnectionConnectFinished(bool error) {
-    SWIFT_LOG(debug) << "ConnectFinished: " << (error ? "error" : "success") << std::endl;
+    SWIFT_LOG(debug) << "ConnectFinished: " << (error ? "error" : "success");
     if (timer) {
             timer->stop();
             timer.reset();
@@ -195,8 +195,8 @@ void Connector::finish(std::shared_ptr<Connection> connection) {
 }
 
 void Connector::handleTimeout() {
-    SWIFT_LOG(debug) << "Timeout" << std::endl;
-    SWIFT_LOG_ASSERT(currentConnection, error) << "Connection not valid but triggered a timeout" <<std::endl;
+    SWIFT_LOG(debug) << "Timeout";
+    SWIFT_LOG_ASSERT(currentConnection, error) << "Connection not valid but triggered a timeout";
     handleConnectionConnectFinished(true);
 }
 

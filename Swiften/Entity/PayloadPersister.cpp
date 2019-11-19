@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011-2016 Isode Limited.
+ * Copyright (c) 2011-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -34,7 +34,7 @@ void PayloadPersister::savePayload(std::shared_ptr<Payload> payload, const boost
         file.close();
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what();
     }
 }
 
@@ -50,7 +50,7 @@ std::shared_ptr<Payload> PayloadPersister::loadPayload(const boost::filesystem::
         }
     }
     catch (const boost::filesystem::filesystem_error& e) {
-        SWIFT_LOG(error) << e.what() << std::endl;
+        SWIFT_LOG(error) << e.what();
     }
     return std::shared_ptr<Payload>();
 }

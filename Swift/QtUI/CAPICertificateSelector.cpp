@@ -80,11 +80,11 @@ std::string selectCAPICertificate() {
     if (titleLength == 0 || promptLength == 0) {
         int error = GetLastError();
         switch (error) {
-            case ERROR_INSUFFICIENT_BUFFER: SWIFT_LOG(error) << "Insufficient buffer for rendering cert dialog" << std::endl;break;
-            case ERROR_INVALID_FLAGS: SWIFT_LOG(error) << "Invalid flags for rendering cert dialog" << std::endl;break;
-            case ERROR_INVALID_PARAMETER: SWIFT_LOG(error) << "Invalid parameter for rendering cert dialog" << std::endl;break;
-            case ERROR_NO_UNICODE_TRANSLATION: SWIFT_LOG(error) << "Invalid unicode for rendering cert dialog" << std::endl;break;
-            default: SWIFT_LOG(error) << "Unexpected multibyte conversion errorcode" << std::endl;
+            case ERROR_INSUFFICIENT_BUFFER: SWIFT_LOG(error) << "Insufficient buffer for rendering cert dialog"; break;
+            case ERROR_INVALID_FLAGS: SWIFT_LOG(error) << "Invalid flags for rendering cert dialog"; break;
+            case ERROR_INVALID_PARAMETER: SWIFT_LOG(error) << "Invalid parameter for rendering cert dialog"; break;
+            case ERROR_NO_UNICODE_TRANSLATION: SWIFT_LOG(error) << "Invalid unicode for rendering cert dialog"; break;
+            default: SWIFT_LOG(error) << "Unexpected multibyte conversion errorcode";
 
         }
     }
@@ -103,7 +103,7 @@ std::string selectCAPICertificate() {
 
     if (hstore) {
         if (CertCloseStore(hstore, 0) == FALSE) {
-            SWIFT_LOG(debug) << "Failed to close the certificate store handle." << std::endl;
+            SWIFT_LOG(debug) << "Failed to close the certificate store handle.";
         }
     }
 

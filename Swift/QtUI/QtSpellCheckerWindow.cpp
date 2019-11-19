@@ -5,7 +5,7 @@
  */
 
 /*
- * Copyright (c) 2016 Isode Limited.
+ * Copyright (c) 2016-2019 Isode Limited.
  * All rights reserved.
  * See the COPYING file for more information.
  */
@@ -64,7 +64,7 @@ void QtSpellCheckerWindow::setSupportedLanguages(const std::vector<std::string>&
 }
 
 void QtSpellCheckerWindow::setActiveLanguage(const std::string& language) {
-    SWIFT_LOG_ASSERT(languageItems_.find(language) != languageItems_.end(), warning) << "Language '" << language << "' is not available." << std::endl;
+    SWIFT_LOG_ASSERT(languageItems_.find(language) != languageItems_.end(), warning) << "Language '" << language << "' is not available.";
     if (languageItems_.find(language) != languageItems_.end()) {
         languageItems_[language]->setSelected(true);
     }
