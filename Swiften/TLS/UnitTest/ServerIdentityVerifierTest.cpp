@@ -60,6 +60,14 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
         }
 
+        void testCertificateVerifies_WithMatchingDNSNameMixedCase() {
+            ServerIdentityVerifier testling(JID("foo@baR.com/baz"), idnConverter.get());
+            SimpleCertificate::ref certificate(new SimpleCertificate());
+            certificate->addDNSName("Bar.com");
+
+            CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
+        }
+
         void testCertificateVerifies_WithSecondMatchingDNSName() {
             ServerIdentityVerifier testling(JID("foo@bar.com/baz"), idnConverter.get());
             SimpleCertificate::ref certificate(new SimpleCertificate());
@@ -159,6 +167,14 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
         }
 
+        void testCertificateVerifies_WithMatchingXmppAddrMixedCase() {
+            ServerIdentityVerifier testling(JID("foo@baR.com/baz"), idnConverter.get());
+            SimpleCertificate::ref certificate(new SimpleCertificate());
+            certificate->addXMPPAddress("bAr.com");
+
+            CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
+        }
+
         void testCertificateVerifies_WithMatchingXmppAddrWithWildcard() {
             ServerIdentityVerifier testling(JID("foo@im.bar.com/baz"), idnConverter.get());
             SimpleCertificate::ref certificate(new SimpleCertificate());
@@ -167,10 +183,26 @@ class ServerIdentityVerifierTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT(!testling.certificateVerifies(certificate));
         }
 
+        void testCertificateVerifies_WithMatchingXmppAddrWithWildcardMixedCase() {
+            ServerIdentityVerifier testling(JID("foo@im.bAr.com/baz"), idnConverter.get());
+            SimpleCertificate::ref certificate(new SimpleCertificate());
+            certificate->addXMPPAddress("*.baR.com");
+
+            CPPUNIT_ASSERT(!testling.certificateVerifies(certificate));
+        }
+
         void testCertificateVerifies_WithMatchingInternationalXmppAddr() {
             ServerIdentityVerifier testling(JID("foo@tron\xc3\xa7.com/baz"), idnConverter.get());
             SimpleCertificate::ref certificate(new SimpleCertificate());
             certificate->addXMPPAddress("tron\xc3\xa7.com");
+
+            CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
+        }
+
+        void testCertificateVerifies_WithMatchingInternationalXmppAddrMixedCase() {
+            ServerIdentityVerifier testling(JID("foo@tRon\xc3\xa7.com/baz"), idnConverter.get());
+            SimpleCertificate::ref certificate(new SimpleCertificate());
+            certificate->addXMPPAddress("trOn\xc3\xa7.com");
 
             CPPUNIT_ASSERT(testling.certificateVerifies(certificate));
         }

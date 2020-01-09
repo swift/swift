@@ -82,15 +82,15 @@ bool ServerIdentityVerifier::matchesDomain(const std::string& s) const {
         if (dotIndex != matchDomain.npos) {
             matchDomain = matchDomain.substr(dotIndex + 1, matchDomain.npos);
         }
-        return matchString == matchDomain;
+        return boost::iequals(matchString, matchDomain);
     }
     else {
-        return s == encodedDomain;
+        return boost::iequals(s, encodedDomain);
     }
 }
 
 bool ServerIdentityVerifier::matchesAddress(const std::string& s) const {
-    return s == domain;
+    return boost::iequals(s, domain);
 }
 
 }
