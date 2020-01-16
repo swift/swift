@@ -11,6 +11,7 @@
 #include <Swiften/Base/API.h>
 #include <Swiften/Network/BoostIOServiceThread.h>
 #include <Swiften/Network/NetworkFactories.h>
+#include <Swiften/TLS/TLSOptions.h>
 
 namespace Swift {
     class EventLoop;
@@ -21,10 +22,20 @@ namespace Swift {
         public:
             /**
              * Construct the network factories, using the provided EventLoop.
+             *
              * @param ioService If this optional parameter is provided, it will be
              * used for the construction of the BoostIOServiceThread.
+             *
+             * @param useOpportunisticTLS If set to true, the XMPP connection
+             * must be plaintext (usually on port 5222). Such connection may be later
+             * upgraded to an encrypted connection via "STARTTLS" command,
+             * a.k.a. opportunistic TLS. If set to false, the XMPP connection must be
+             * TLS-enabled from the very beginning.
+             *
+             * @param tlsOptions Options to pass to the TLS stack. Used only
+             * if useOpportunisticTLS is set to false.
              */
-            BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService = std::shared_ptr<boost::asio::io_service>());
+            BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService = std::shared_ptr<boost::asio::io_service>(), bool useOpportunisticTLS = true, TLSOptions tlsOptions = TLSOptions{});
             virtual ~BoostNetworkFactories() override;
 
             virtual TimerFactory* getTimerFactory() const override {
@@ -81,6 +92,7 @@ namespace Swift {
             BoostIOServiceThread ioServiceThread;
             TimerFactory* timerFactory;
             ConnectionFactory* connectionFactory;
+            ConnectionFactory* boostConnectionFactory;
             DomainNameResolver* domainNameResolver;
             ConnectionServerFactory* connectionServerFactory;
             NATTraverser* natTraverser;

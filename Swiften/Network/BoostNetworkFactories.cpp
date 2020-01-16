@@ -17,6 +17,7 @@
 #include <Swiften/Network/PlatformNATTraversalWorker.h>
 #include <Swiften/Network/PlatformNetworkEnvironment.h>
 #include <Swiften/Network/PlatformProxyProvider.h>
+#include <Swiften/Network/TLSConnectionFactory.h>
 #include <Swiften/Parser/PlatformXMLParserFactory.h>
 #include <Swiften/TLS/PlatformTLSFactories.h>
 
@@ -28,9 +29,21 @@
 
 namespace Swift {
 
-BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService) : ioServiceThread(ioService), eventLoop(eventLoop) {
+BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, std::shared_ptr<boost::asio::io_service> ioService, bool useOpportunisticTLS , TLSOptions tlsOptions) : ioServiceThread(ioService), eventLoop(eventLoop) {
     timerFactory = new BoostTimerFactory(ioServiceThread.getIOService(), eventLoop);
-    connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
+
+    tlsFactories = new PlatformTLSFactories();
+    if (useOpportunisticTLS)
+    {
+        boostConnectionFactory = nullptr;
+        connectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
+    }
+    else
+    {
+        boostConnectionFactory = new BoostConnectionFactory(ioServiceThread.getIOService(), eventLoop);
+        connectionFactory = new TLSConnectionFactory(tlsFactories->getTLSContextFactory(), boostConnectionFactory, tlsOptions);
+    }
+
     connectionServerFactory = new BoostConnectionServerFactory(ioServiceThread.getIOService(), eventLoop);
 #ifdef SWIFT_EXPERIMENTAL_FT
     natTraverser = new PlatformNATTraversalWorker(eventLoop);
@@ -39,7 +52,6 @@ BoostNetworkFactories::BoostNetworkFactories(EventLoop* eventLoop, std::shared_p
 #endif
     networkEnvironment = new PlatformNetworkEnvironment();
     xmlParserFactory = new PlatformXMLParserFactory();
-    tlsFactories = new PlatformTLSFactories();
     proxyProvider = new PlatformProxyProvider();
     idnConverter = PlatformIDNConverter::create();
 #ifdef USE_UNBOUND
@@ -62,6 +74,7 @@ BoostNetworkFactories::~BoostNetworkFactories() {
     delete connectionServerFactory;
     delete connectionFactory;
     delete timerFactory;
+    delete boostConnectionFactory;
 }
 
 TLSContextFactory* BoostNetworkFactories::getTLSContextFactory() const {
