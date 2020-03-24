@@ -19,6 +19,9 @@ namespace Swift {
      */
     class SWIFTEN_API DiscoItems : public Payload {
         public:
+
+            using ref = std::shared_ptr<DiscoItems>;
+
             /**
              * A single result item.
              */

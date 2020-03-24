@@ -24,6 +24,7 @@ class MIXImplTest : public ::testing::Test {
             channel_ = new DummyStanzaChannel();
             router_ = new IQRouter(channel_);
             successfulJoins_ = 0;
+            nickConflict_ = 0;
         }
 
         void TearDown() {
@@ -37,6 +38,7 @@ class MIXImplTest : public ::testing::Test {
             mix->onLeaveResponse.connect(boost::bind(&MIXImplTest::handleLeave, this, _1, _2));
             mix->onSubscriptionUpdateResponse.connect(boost::bind(&MIXImplTest::handleSubscriptionUpdate, this, _1, _2));
             mix->onPreferencesFormResponse.connect(boost::bind(&MIXImplTest::handlePreferencesForm, this, _1, _2));
+            mix->onNickResponse.connect(boost::bind(&MIXImplTest::handleNick, this, _1, _2));
             return mix;
         }
 
@@ -76,6 +78,16 @@ class MIXImplTest : public ::testing::Test {
             }
         }
 
+        void handleNick(const std::string& nick, ErrorPayload::ref  error) {
+            if (error) {
+                ASSERT_EQ(error->getCondition(), ErrorPayload::Condition::Conflict);
+                ++nickConflict_;
+            } else {
+                ASSERT_FALSE(error);
+                nick_ = nick;
+            }
+        }
+
         IQ::ref createJoinResult(const std::unordered_set<std::string>& nodes, Form::ref form) {
             auto joinResultPayload = std::make_shared<MIXJoin>();
             for (auto node : nodes) {
@@ -101,6 +113,19 @@ class MIXImplTest : public ::testing::Test {
             return std::find(subscribedNodes_.begin(), subscribedNodes_.end(), value) != subscribedNodes_.end();
         }
 
+        IQ::ref createRegisterNickResult(const std::string& nick) {
+            auto registerNickPayload = std::make_shared<MIXRegisterNick>();
+            registerNickPayload->setNick(nick);
+            return IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), registerNickPayload);
+        }
+
+        IQ::ref createSetNickResult(const std::string& nick) {
+            auto setNickPayload = std::make_shared<MIXSetNick>();
+            setNickPayload->setNick(nick);
+            return IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), setNickPayload);
+        }
+
+
         JID ownJID_;
         JID channelJID_;
         DummyStanzaChannel* channel_;
@@ -108,6 +133,8 @@ class MIXImplTest : public ::testing::Test {
         int successfulJoins_;
         Form::ref preferenceForm_;
         std::unordered_set<std::string> subscribedNodes_;
+        std::string nick_;
+        int nickConflict_;
 };
 
 TEST_F(MIXImplTest, testJoinError) {
@@ -309,4 +336,37 @@ TEST_F(MIXImplTest, preferenceFormRequest) {
 
     channel_->onIQReceived(IQ::createResult(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), preferenceResponse));
     ASSERT_TRUE(preferenceForm_);
+}
+
+TEST_F(MIXImplTest, testRegisterNick) {
+    MIX::ref testling = createMIXClient();
+    testling->registerNick(std::string("thirdwitch"));
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->isRequestAtIndex<MIXRegisterNick>(0, channelJID_, IQ::Set));
+
+    //fake response
+    channel_->onIQReceived(createRegisterNickResult("thirdwitch"));
+    ASSERT_EQ(nick_, std::string("thirdwitch"));
+}
+
+TEST_F(MIXImplTest, testSetNick) {
+    MIX::ref testling = createMIXClient();
+    testling->setNick(std::string("thirdwitch"));
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->isRequestAtIndex<MIXSetNick>(0, channelJID_, IQ::Set));
+
+    //fake response
+    channel_->onIQReceived(createSetNickResult("thirdwitch"));
+    ASSERT_EQ(nick_, std::string("thirdwitch"));
+}
+
+TEST_F(MIXImplTest, testSetNickConflict) {
+    MIX::ref testling = createMIXClient();
+    testling->setNick(std::string("thirdwitch"));
+    ASSERT_EQ(1, static_cast<int>(channel_->sentStanzas.size()));
+    ASSERT_TRUE(channel_->isRequestAtIndex<MIXSetNick>(0, channelJID_, IQ::Set));
+
+    //fake response
+    channel_->onIQReceived(IQ::createError(ownJID_, channel_->sentStanzas[0]->getTo(), channel_->sentStanzas[0]->getID(), ErrorPayload::Condition::Conflict));
+    ASSERT_EQ(nickConflict_, static_cast<int>(1));
 }
