@@ -36,6 +36,7 @@ std::string MUCUserPayloadSerializer::serializePayload(std::shared_ptr<MUCUserPa
     if (payload->getPassword()) {
         std::shared_ptr<XMLElement> passwordElement = std::make_shared<XMLElement>("password");
         passwordElement->addNode(std::make_shared<XMLTextNode>(*payload->getPassword()));
+        mucElement.addNode(passwordElement);
     }
 
     if (payload->getInvite()) {
